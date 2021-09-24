@@ -16,7 +16,9 @@
     this.result.textContent = JSON.stringify(this.albums,undefined,  2)    
   }
  
-   this.browseAlbums = () => {
+   this.browseAlbums = async () => {
+     if (!this.albums) await this.loadAlbums()
+   
       this.result.innerHTML = ""
       var album = this.albums[0]
       for(let ea of album.pictures) {
