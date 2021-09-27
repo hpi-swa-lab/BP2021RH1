@@ -2,12 +2,14 @@
 
 
 <script>
-  let apiBase = `https://lively-kernel.org/bp2021dev`
- 
- 
- 
- 
-  this.loadAlbums = async () => {
+
+class Gallery {
+
+  constructor() {
+    this.apiBase = `https://lively-kernel.org/bp2021dev`    
+  }
+
+  async loadAlbums() {
        this.albums = await fetch('https://lively-kernel.org/bp2021dev/albums/', {
         headers: {
           authorization: "Bearer " +  localStorage["bp2021jwt"] ,
@@ -15,19 +17,18 @@
       }).then(r => r.json())
     this.result.textContent = JSON.stringify(this.albums,undefined,  2)    
   }
- 
-   this.browseAlbums = async () => {
+  
+  async browseAlbums() {
      if (!this.albums) await this.loadAlbums()
    
       this.result.innerHTML = ""
       var album = this.albums[0]
       for(let ea of album.pictures) {
-        this.result.appendChild(<img src={apiBase + ea.Picture.media.formats.thumbnail.url}></img>)
+        this.result.appendChild(<img src={this.apiBase + ea.Picture.media.formats.thumbnail.url}></img>)
       }    
    }
-    
-  let loginButton = <button click={async () => {
-
+  
+  async login() {
     let username = localStorage["bp2021username"] || "user@foo"
     username = await lively.prompt("username", username)
 
@@ -54,38 +55,40 @@
       loginButton.style.background = "red" 
     }
     var loginData = await resp.json()
+    this.result.textContent = JSON.stringify(loginData, undefined, 2)
+    localStorage["bp2021jwt"] = loginData.jwt 
+  }
 
-  
-  this.result.textContent = JSON.stringify(loginData, undefined, 2)
-  
-  localStorage["bp2021jwt"] = loginData.jwt 
-
-
-}}>login</button>
-
- var logoutButton = <button click={() => {
+  async logout() {
       delete localStorage["bp2021jwt"] 
       lively.notify("logged out")
       this.result.textContent = ""
-       loginButton.style.background = "" 
-      
-    }}>logout</button>
+      this.loginButton.style.background = "" 
+  }
  
-  this.result = document.createElement("pre");
+  createUI(ctx) {  
+    this.loginButton = <button click={() => this.login()}>login</button>
+    this.logoutButton = <button click={() => this.logout()}>logout</button>
+ 
+    this.result = document.createElement("pre");
 
-  var albumsButton = <button click={async () => {
-    this.loadAlbums()
-  }}>albums</button>
-  
-  var browseButton = <button click={async () => {
+    var albumsButton = <button click={async () => {
+      this.loadAlbums()
+    }}>albums</button>
+
+    var browseButton = <button click={async () => {
+      this.browseAlbums()
+
+    }}>browse</button>
+
+    var pane = <div>{this.loginButton}{this.logoutButton}{albumsButton}{browseButton}{this.result}</div>;
+     
     this.browseAlbums()
-    
-  }}>browse</button>
-  
-
-
-  var pane = <div>{loginButton}{logoutButton}{albumsButton}{browseButton}{this.result}</div>;
-  pane
+   
+    return pane  
+  }
+}
+new Gallery().createUI(this)
 </script>
 
 
