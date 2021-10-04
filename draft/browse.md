@@ -6,11 +6,11 @@
 class Gallery {
 
   constructor() {
-    this.apiBase = `https://lively-kernel.org/bp2021dev`    
+    this.apiBase = `http://bp.bad-harzburg-stiftung.de` // https://lively-kernel.org/bp2021dev    
   }
 
   async loadAlbums() {
-       this.albums = await fetch('https://lively-kernel.org/bp2021dev/albums/', {
+       this.albums = await fetch(this.apiBase + '/albums/', {
         headers: {
           authorization: "Bearer " +  localStorage["bp2021jwt"] ,
         }
@@ -47,7 +47,7 @@ class Gallery {
   }
   
   async api(method=GET, path="/", data={}) {
-   let resp = await fetch('https://lively-kernel.org/bp2021dev' + path, {
+   let resp = await fetch(  this.apiBase + path, {
         method: method,
         headers: {
           authorization: "Bearer " +  localStorage["bp2021jwt"] ,
@@ -94,7 +94,7 @@ class Gallery {
       custom.get("#prompt").setAttribute("type", "password")
     })
 
-    var resp = await fetch(apiBase + '/auth/local', {
+    var resp = await fetch(this.apiBase + '/auth/local', {
         method: "POST",
         headers: {
           "content-type":  "application/json"
@@ -106,12 +106,12 @@ class Gallery {
       })
 
     if (resp.status == 200) {
-      loginButton.style.background = "green"
+      this.loginButton.style.background = "green"
     } else {
-      loginButton.style.background = "red" 
+      this.loginButton.style.background = "red" 
     }
     var loginData = await resp.json()
-    this.result.textContent = JSON.stringify(loginData, undefined, 2)
+    this.log.textContent = JSON.stringify(loginData, undefined, 2)
     localStorage["bp2021jwt"] = loginData.jwt 
   }
 
