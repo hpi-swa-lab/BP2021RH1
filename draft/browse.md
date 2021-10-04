@@ -10,7 +10,7 @@ class Gallery {
   }
 
   async loadAlbums() {
-       this.albums = await fetch(this.apiBase ] '/albums/', {
+       this.albums = await fetch(this.apiBase + '/albums/', {
         headers: {
           authorization: "Bearer " +  localStorage["bp2021jwt"] ,
         }
