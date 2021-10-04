@@ -124,6 +124,7 @@ class Gallery {
  
   async updateTitle() {
     var picture = this.selected
+    var title = this.details.querySelector("#title").value
     lively.notify("update picture " + picture.id +" title: " + title)
     var result = await this.api("PUT", "/pictures/" + picture.id, {
       id: picture.id,
