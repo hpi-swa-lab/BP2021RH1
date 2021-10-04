@@ -6,7 +6,7 @@
 class Gallery {
 
   constructor() {
-    this.apiBase = `http://bp.bad-harzburg-stiftung.de` // https://lively-kernel.org/bp2021dev    
+    this.apiBase = `https://bp.bad-harzburg-stiftung.de` // https://lively-kernel.org/bp2021dev    
   }
 
   async loadAlbums() {
