@@ -6,11 +6,11 @@
 class Gallery {
 
   constructor() {
-    this.apiBase = `https://lively-kernel.org/bp2021dev`    
+    this.apiBase = `http://bp.bad-harzburg-stiftung.de` // https://lively-kernel.org/bp2021dev    
   }
 
   async loadAlbums() {
-       this.albums = await fetch('https://lively-kernel.org/bp2021dev/albums/', {
+       this.albums = await fetch(this.apiBase ] '/albums/', {
         headers: {
           authorization: "Bearer " +  localStorage["bp2021jwt"] ,
         }
@@ -47,7 +47,7 @@ class Gallery {
   }
   
   async api(method=GET, path="/", data={}) {
-   let resp = await fetch('https://lively-kernel.org/bp2021dev' + path, {
+   let resp = await fetch(  this.apiBase + path, {
         method: method,
         headers: {
           authorization: "Bearer " +  localStorage["bp2021jwt"] ,
@@ -124,7 +124,6 @@ class Gallery {
  
   async updateTitle() {
     var picture = this.selected
-    var title = this.details.querySelector("#title").value
     lively.notify("update picture " + picture.id +" title: " + title)
     var result = await this.api("PUT", "/pictures/" + picture.id, {
       id: picture.id,
