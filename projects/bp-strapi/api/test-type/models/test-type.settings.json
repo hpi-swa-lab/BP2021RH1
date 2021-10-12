@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "test_types",
+  "info": {
+    "name": "test",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "number": {
+      "type": "integer"
+    }
+  }
+}

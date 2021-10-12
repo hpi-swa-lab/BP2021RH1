@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_content_comments",
+  "info": {
+    "name": "Comment",
+    "icon": "at"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "richtext"
+    },
+    "author": {
+      "type": "email"
+    }
+  }
+}

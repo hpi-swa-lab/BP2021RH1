@@ -1,0 +1,10 @@
+module.exports = ({ env }) => ({
+    host: env('HOST', '0.0.0.0'),
+    port: env.int('PORT', 9007),
+    url: "https://lively-kernel.org/bp2021dev/admin/",   
+    admin: {
+	auth: {
+	    secret: env('ADMIN_JWT_SECRET', '83ed5783afea9091ed95606f08c3c2a0'),
+	},
+    },
+});
