@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pictures",
+  "info": {
+    "name": "Picture",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "media": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "taken": {
+      "type": "date"
+    },
+    "comments": {
+      "type": "component",
+      "repeatable": true,
+      "component": "content.comment"
+    }
+  }
+}
