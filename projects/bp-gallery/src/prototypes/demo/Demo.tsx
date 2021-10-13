@@ -1,8 +1,8 @@
-import { Button, IconButton, Input, MenuItem, Select, TextField } from "@mui/material";
 import { Component } from "react";
-import { Collections, Login, Logout, OpenInNew, Refresh, Web } from '@mui/icons-material';
+import { Button, IconButton, MenuItem, Select, TextField } from "@mui/material";
+import { Login, Logout, OpenInNew, Refresh } from "@mui/icons-material";
 
-import './Demo.scss';
+import "./Demo.scss";
 
 class Demo extends Component {
 
@@ -42,9 +42,8 @@ class Demo extends Component {
             })
           })
     
-        if (resp.status == 200) {
+        if (resp.status === 200) {
             console.log('Logged in!');
-            // this.loggedIn = true;
             this.setState({loggedIn: true});
         } else {
             this.setState({loggedIn: false, albums: []});
@@ -130,10 +129,11 @@ class Demo extends Component {
                                 style={{animationDelay: (index * 0.1) + 's'}}
                                 onClick={() => this.selectPicture(image)} 
                             >
-                                <img src={this.apiBase + image.media.formats.thumbnail.url} 
-                                />
+                                <img src={this.apiBase + image.media.formats.thumbnail.url} alt="" />
                                 <div className="img-operations-overlay">
-                                    <IconButton onClick={() => {window.open(this.apiBase +  image.media.formats.large.url, '_blank'); }}><OpenInNew></OpenInNew></IconButton>
+                                    <IconButton onClick={() => {window.open(this.apiBase +  image.media.formats.large.url, '_blank'); }}>
+                                        <OpenInNew />
+                                    </IconButton>
                                 </div>
                             </div>
                         )
