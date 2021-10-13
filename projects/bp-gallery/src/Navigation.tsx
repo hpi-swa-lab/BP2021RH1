@@ -1,17 +1,23 @@
-import { Home } from "@mui/icons-material";
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { Home } from "@mui/icons-material";
 
-import './Navigation.scss';
+import "./Navigation.scss";
+
+const ACTIVE_LINK_CLASS_NAME: string = "selected";
 
 const Navigation = () => (
-  <div className='navbar'>
+  <div className="navbar">
     <ul>
       <li>
-        <NavLink exact={true} activeClassName='selected' to='/'><Home></Home></NavLink>
+        <NavLink exact to="/" activeClassName={ ACTIVE_LINK_CLASS_NAME }>
+          <Home />
+        </NavLink>
       </li>
       <li>
-        <NavLink activeClassName='selected' to='/prototypes/demo'>Demo</NavLink>
+        <NavLink to="/prototypes/demo" activeClassName={ ACTIVE_LINK_CLASS_NAME }>
+          Demo
+        </NavLink>
       </li>
     </ul>
   </div>
