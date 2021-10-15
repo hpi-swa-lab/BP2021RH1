@@ -1,9 +1,9 @@
 import React from "react";
-import { renderRoutes, RouteConfig } from "react-router-config";
+import { renderRoutes, RouteConfigComponentProps } from "react-router-config";
 import Navigation from "./Navigation";
 import "./App.scss";
 
-const App = ({ route }: RouteConfig) => (
+const App = ({ route }: RouteConfigComponentProps) => (
   <div className="App">
     <Navigation />
     { renderRoutes(route.routes) }
