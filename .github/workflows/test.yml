@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Test projects/bp-gallery
+      - name: Install dependencies
         # Using the 'frozen-lockfile' option, we invoke the equivalent of 'npm ci',
         # Which is explicitly faster than a regular install and optimized for CI.
         # Checkout https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable
-        run: |
-          yarn install --frozen-lockfile
-          yarn test  
+        run: yarn install --frozen-lockfile
+      - name: Test projects/bp-gallery
+        run: yarn test  
