@@ -1,161 +1,314 @@
-import { Component } from "react";
-import { Button, IconButton, MenuItem, Select, TextField } from "@mui/material";
-import { Login, Logout, OpenInNew, Refresh } from "@mui/icons-material";
+import { Component, Fragment } from "react";
+import { stringify } from "qs";
 
 import "./Demo.scss";
+import Actions from "./Actions";
+import Gallery from "./Gallery";
+import TagMultiSelect from "./TagMultiSelect";
+import PictureSidebar from "./PictureSidebar";
 
 class Demo extends Component {
 
-    private apiBase: string = `https://bp.bad-harzburg-stiftung.de/api/`;
+  private apiBase: string = "https://bp.bad-harzburg-stiftung.de/api/";
 
-    state = {loggedIn: false, albums: [], log: '', selected: null, selectAlbum: null};
+  private defaultPicturePageSize: number = 21;
 
-    async loadAlbums() {
-        const albums = await fetch(this.apiBase + '/albums/', {
-            headers: {
-            authorization: "Bearer " +  localStorage["bp2021jwt"] ,
-            }
-        }).then(r => r.json());
-        this.setState({albums, log: JSON.stringify(albums, undefined, 2), selectAlbum: albums[0]});
-    }
+  private initialState = {
+    loggedIn: false,
+    tagDataLoading: false,
+    categories: [],
+    keywords: [],
+    timeRanges: [],
+    selectedCategories: [],
+    selectedKeywords: [],
+    selectedTimeRanges: [],
+    pictures: [],
+    pictureCount: 0,
+    currentPicturePage: 1,
+    selectedPicture: null,
+    log: ""
+  };
 
-    async browseAlbums() {
-        if (!this.state.albums) await this.loadAlbums()
-    }
+  state = this.initialState;
 
-    async login() {
-        let username = localStorage["bp2021username"] || "user@foo"
-        username = prompt("username", username)
-    
-        localStorage["bp2021username"] = username
-    
-        var password = prompt("password", "");
-    
-        var resp = await fetch(this.apiBase + '/auth/local', {
-            method: "POST",
-            headers: {
-              "content-type":  "application/json"
-            },
-            body: JSON.stringify({
-              identifier: username,
-              password: password,
-            })
-          })
-    
-        if (resp.status === 200) {
-            console.log('Logged in!');
-            this.setState({loggedIn: true});
-        } else {
-            this.setState({loggedIn: false, albums: []});
-            return; 
-        }
-        var loginData = await resp.json();
-        localStorage["bp2021jwt"] = loginData.jwt;
-        this.loadAlbums();
-      }
+  resetState() {
+    this.setState(this.initialState);
+  }
 
-    async logout() {
-        delete localStorage["bp2021jwt"];
-        alert("logged out");
-        this.setState({loggedIn: false, log: '', albums: []});
-    }
+  async login() {
+    if (!localStorage["bp2021jwt"]) {
+      let username = localStorage["bp2021username"] || "user@foo";
+      username = prompt("Username", username);
+      localStorage["bp2021username"] = username;
 
-    async updateTitle(title: string) {
-        var picture = this.state.selected as any;
-        if (!picture) {return; }
-        var result = await this.api("PUT", "/pictures/" + picture.id, {
-          id: picture.id,
-          title: title
+      let password = prompt("Password", "");
+
+      const resp = await fetch(`${this.apiBase}/auth/local`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({
+          identifier: username,
+          password: password
         })
-        
-        picture.title = result.title
-        this.setState({selected: picture});
+      })
+
+      if (resp.status === 200) {
+        console.log("Logged in!");
+      } else {
+        this.resetState();
+        return;
       }
-
-    async api(method='GET', path="/", data={}) {
-        let resp = await fetch(  this.apiBase + path, {
-            method: method,
-            headers: {
-            authorization: "Bearer " +  localStorage["bp2021jwt"] ,
-            "content-type":  "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        return resp.json()
+      const loginData = await resp.json();
+      localStorage["bp2021jwt"] = loginData.jwt;
     }
 
-    async selectPicture(picture: any) {
-        this.setState({selected: picture});
-    }
+    this.setState({
+      loggedIn: true
+    });
+    await this.loadTagData();
+    await this.loadPictures(this.state.currentPicturePage);
+  }
 
-    render() {
-        document.body.addEventListener('pointerup', () => {
-            if (this.state.selected) {
-                this.setState({selected: null});
-            }
-        });
-        return <div className='demo-component'>
-            <div className='actions'>
-                {!this.state.loggedIn && <Button variant="contained" onClick={() => this.login()} startIcon={<Login />}>Log In</Button>}
-                {this.state.loggedIn && <Button variant="contained" onClick={() => this.logout()} startIcon={<Logout />}>Log Out</Button>}
-                {this.state.loggedIn && <Button variant="outlined" onClick={() => this.loadAlbums()} startIcon={<Refresh />}>Refresh</Button>}
-            </div>
-            <div className='log'></div>
-            {
-                this.state.loggedIn && this.state.albums && this.state.albums?.length > 0 &&
-                <div className='gallery-select'>
-                <span style={{marginRight: '1rem'}}>Album:</span>
-                <Select
-                    value={this.state.selectAlbum}
-                    onChange={(evt) => this.setState({selectAlbum: (evt.target as any).value})}
-                >
-                {
-                    this.state.albums.map(album => 
-                        <MenuItem key={album.id} value={album}>{album.title}</MenuItem>
-                    )
-                }
-                </Select>
-        </div>
-            }
-            {
-                this.state.selectAlbum && 
-                <div className='gallery'>
-                    {
-                    (this.state.albums && this.state.selectAlbum) &&
-                        (this.state.selectAlbum as any).pictures.map((image: any, index: number) => 
-                            <div 
-                                key={image.id}
-                                className={'picture' + (this.state.selected === image ? ' selected' : '')}
-                                style={{animationDelay: (index * 0.1) + 's'}}
-                                onClick={() => this.selectPicture(image)} 
-                            >
-                                <img src={this.apiBase + image.media.formats.thumbnail.url} alt="" />
-                                <div className="img-operations-overlay">
-                                    <IconButton onClick={() => {window.open(this.apiBase +  image.media.formats.large.url, '_blank'); }}>
-                                        <OpenInNew />
-                                    </IconButton>
-                                </div>
-                            </div>
-                        )
-                    }
-                </div>
-            }
-            {
-                <div className={this.state.selected !== null && this.state.loggedIn ? 'infos open' : 'infos'}>
-                    {
-                        (this.state.selected !== null && this.state.loggedIn) && 
-                        <div onPointerUp={(evt) => {evt.preventDefault(); evt.stopPropagation()}}>
-                            <h3>Image Metadata</h3>
-                            <TextField variant="filled" label='Description' id="title" onChange={evt => this.setState(() => ({
-                                selected: {...this.state.selected, title: evt.target.value}
-                            }))} onKeyDown={evt => (evt.keyCode === 13) && this.updateTitle((evt.target as any).value)} value={(this.state.selected as any).title}></TextField>
-                        </div>
-                    }
-                </div>
-            }
+  async logout() {
+    delete localStorage["bp2021jwt"];
+    alert("logged out");
+    this.resetState();
+  }
+
+  async api(method= "GET", path= "/", data = undefined)  {
+    const resp = await fetch(  `${this.apiBase}${path}`, {
+      method: method,
+      headers: {
+        authorization: `Bearer ${localStorage["bp2021jwt"]}`,
+        "content-type": "application/json"
+      },
+      body: data ? JSON.stringify(data) : undefined
+    });
+    return resp.json();
+  }
+
+  async loadCategories() {
+    const categories = await this.api("GET" , "Category-Tags?_limit=-1");
+    this.setState({
+      categories,
+      log: JSON.stringify(categories, undefined, 2),
+      selectedCategories: [ categories[0] ]
+    });
+  }
+
+  async loadKeywords() {
+    const keywords = await this.api("GET" , "Keyword-Tags?_limit=-1");
+    this.setState({
+      keywords,
+      log: JSON.stringify(keywords, undefined, 2)
+    });
+  }
+
+  /**
+   * currently unused
+   */
+  async loadTimeRanges() {
+    const timeRanges = await this.api("GET" , "Time-Range-Tags?_limit=-1");
+    const mappedTimeRanges = timeRanges.map(timeRange => ({
+      ...timeRange,
+      // Use only the year info of timeRanges
+      name: `${timeRange.start.substring(0,4)} - ${timeRange.end.substring(0,4)}`
+    }));
+    this.setState({
+      timeRanges: mappedTimeRanges,
+      log: JSON.stringify(timeRanges, undefined, 2)
+    });
+  }
+
+  async loadTagData() {
+    this.setState({
+      tagDataLoading: true
+    });
+    await this.loadCategories();
+    await this.loadKeywords();
+    // await this.loadTimeRanges();
+    this.setState({
+      tagDataLoading: false
+    });
+  }
+
+  async countPicturesForQuery(queryString: string) {
+    const pictureCount = await this.api("GET" , `pictures/count?${queryString}`);
+    this.setState({
+      pictureCount,
+      log: JSON.stringify(pictureCount, undefined, 2)
+    });
+  }
+
+  async loadPictures(currentPicturePage) {
+    const { selectedCategories, selectedKeywords, selectedTimeRanges } = this.state;
+
+    const queryString = stringify({
+      _where: {
+        _or: [
+          {
+            "category_tags.id": selectedCategories.map(category => category.id)
+          },
+          {
+            "keyword_tags.id": selectedKeywords.map(keyword => keyword.id)
+          },
+          {
+            "time_range_tag.id": selectedTimeRanges.map(timeRange => timeRange.id)
+          }
+        ]
+      },
+      _limit: this.defaultPicturePageSize,
+      _start: (currentPicturePage - 1) * this.defaultPicturePageSize
+    }, { encode: false });
+
+    const pictures = await this.api("GET" , `pictures?${queryString}`);
+    this.setState({
+      pictures,
+      log: JSON.stringify(pictures, undefined, 2)
+    });
+
+   await this.countPicturesForQuery(queryString);
+  }
+
+  /**
+   * currently unused
+   * Additionally, it probably won't work now, as title is a separate object now.
+   */
+  async updateTitle(title: string) {
+    let picture = this.state.selectedPicture as any;
+    if (!picture) { return; }
+    const result = await this.api("PUT", "/pictures/" + picture.id, {
+      id: picture.id,
+      title: title
+    });
+
+    picture.title = result.title;
+    this.setState({ selectedPicture: picture });
+  }
+
+  /**
+   * currently unused
+   */
+  changeTitle(title: string) {
+    this.setState({
+      selectedPicture: { ...this.state.selectedPicture, title: title}
+    });
+  }
+
+  selectPicture(picture: any) {
+    this.setState({
+      selectedPicture: picture
+    });
+  }
+
+  selectCategories(categories: any[]) {
+    this.setState({
+      selectedCategories: categories
+    });
+  }
+
+  selectKeywords(keywords: any[]) {
+    this.setState({
+      selectedKeywords: keywords
+    });
+  }
+
+  selectTimeRanges(timeRanges: any[]) {
+    this.setState({
+      selectedTimeRanges: timeRanges
+    });
+  }
+
+  async selectPage(page: number) {
+   await this.loadPictures(page);
+   this.setState({
+     currentPicturePage: page
+   });
+  }
+
+  render() {
+    const {
+      loggedIn,
+      tagDataLoading,
+      categories,
+      keywords,
+      timeRanges,
+      pictures,
+      pictureCount,
+      currentPicturePage,
+      selectedCategories,
+      selectedKeywords,
+      selectedTimeRanges,
+      selectedPicture } = this.state;
+
+    document.body.addEventListener("pointerup", () => {
+      if (this.state.selectedPicture) {
+        this.setState({ selectedPicture: null });
+      }
+    });
+
+    const tagMultiSelects = tagDataLoading
+      ? <h3>Loading Tag Data...</h3>
+      : <div className="gallery-select">
+          <TagMultiSelect
+            label="Categories"
+            values={ categories  }
+            selectedValues={ selectedCategories }
+            onValueChange={ (values) => this.selectCategories(values) }
+            onSelectClose={ () => this.loadPictures(currentPicturePage) }
+          />
+          <TagMultiSelect
+            label="Keywords"
+            values={ keywords }
+            selectedValues={ selectedKeywords }
+            onValueChange={ (values) => this.selectKeywords(values) }
+            onSelectClose={ () => this.loadPictures(currentPicturePage) }
+          />
+          <TagMultiSelect
+            disabled
+            label="Time-Ranges"
+            values={ timeRanges }
+            selectedValues={ selectedTimeRanges }
+            onValueChange={ (values) => this.selectTimeRanges(values) }
+            onSelectClose={ () => this.loadPictures(currentPicturePage) }
+          />
         </div>;
-    }
 
+    const loggedInContent =
+      <Fragment>
+        { tagMultiSelects }
+        <Gallery
+          apiBase={ this.apiBase }
+          pictures={ pictures }
+          pageCount={ Math.ceil(pictureCount / this.defaultPicturePageSize) }
+          currentPage={ currentPicturePage }
+          onPageChange={ (value) => this.selectPage(value) }
+          selectedPicture={ selectedPicture }
+          onPictureSelect={ (picture) => this.selectPicture(picture) }
+        />
+        <PictureSidebar
+          selectedPicture={ selectedPicture }
+          onTitleChange={ (value) => this.changeTitle(value) }
+          onTitleUpdate={ (value) => this.updateTitle(value) }
+        />
+      </Fragment>
+
+    return (
+      <div className="demo-component">
+        <Actions
+          loggedIn={ loggedIn }
+          onLogin={ () => this.login() }
+          onLogout={ () => this.logout() }
+          pictureLoadDisabled={ tagDataLoading }
+          onPictureLoad={ () => this.loadPictures(currentPicturePage) }
+        />
+        <div className="log" />
+        { loggedIn && loggedInContent }
+      </div>
+    );
+  }
 }
 
 export default Demo;
