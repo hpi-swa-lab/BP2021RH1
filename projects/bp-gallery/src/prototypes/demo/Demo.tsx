@@ -142,7 +142,7 @@ class Demo extends Component {
     });
   }
 
-  async loadPictures(currentPicturePage) {
+  async loadPictures(pageToLoad) {
     const { selectedCategories, selectedKeywords, selectedTimeRanges } = this.state;
 
     const queryString = stringify({
@@ -160,7 +160,7 @@ class Demo extends Component {
         ]
       },
       _limit: this.defaultPicturePageSize,
-      _start: (currentPicturePage - 1) * this.defaultPicturePageSize
+      _start: (pageToLoad - 1) * this.defaultPicturePageSize
     }, { encode: false });
 
     const pictures = await this.api("GET" , `pictures?${queryString}`);
@@ -257,14 +257,14 @@ class Demo extends Component {
             values={ categories  }
             selectedValues={ selectedCategories }
             onValueChange={ (values) => this.selectCategories(values) }
-            onSelectClose={ () => this.loadPictures(currentPicturePage) }
+            onSelectClose={ () => this.selectPage(1) }
           />
           <TagMultiSelect
             label="Keywords"
             values={ keywords }
             selectedValues={ selectedKeywords }
             onValueChange={ (values) => this.selectKeywords(values) }
-            onSelectClose={ () => this.loadPictures(currentPicturePage) }
+            onSelectClose={ () => this.selectPage(1) }
           />
           <TagMultiSelect
             disabled
@@ -272,7 +272,7 @@ class Demo extends Component {
             values={ timeRanges }
             selectedValues={ selectedTimeRanges }
             onValueChange={ (values) => this.selectTimeRanges(values) }
-            onSelectClose={ () => this.loadPictures(currentPicturePage) }
+            onSelectClose={ () => this.selectPage(1) }
           />
         </div>;
 
@@ -302,7 +302,7 @@ class Demo extends Component {
           onLogin={ () => this.login() }
           onLogout={ () => this.logout() }
           pictureLoadDisabled={ tagDataLoading }
-          onPictureLoad={ () => this.loadPictures(currentPicturePage) }
+          onPictureLoad={ () => this.selectPage(1) }
         />
         <div className="log" />
         { loggedIn && loggedInContent }
