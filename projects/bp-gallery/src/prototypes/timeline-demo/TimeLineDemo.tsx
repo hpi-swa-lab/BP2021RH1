@@ -1,4 +1,4 @@
-import { Component, createRef, MutableRefObject } from "react";
+import { Component, createRef } from "react";
 import { stringify } from 'qs';
 import { sanitize } from 'dompurify';
 
@@ -7,17 +7,20 @@ import dayjs from "dayjs";
 
 import Timeline from './Timeline';
 import BPImage from './BPImage';
+import { IconButton } from "@mui/material";
+import { NavigateNext, NavigateBefore } from '@mui/icons-material';
 
 export default class TimeLineDemo extends Component {
     state = {
         topLevelDescription: '',
-        currentImage: null,
         images: [],
         timeRange: {
             start: '1900',
             end: '1999'
         },
-        currentCategories: []
+        currentCategories: [],
+        currentSubCategories: [],
+        showControls: false
     };
 
     private apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
@@ -34,7 +37,8 @@ export default class TimeLineDemo extends Component {
                     'time_range_tag.end_lte': dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
                 }
             ],
-            _sort: 'time_range_tag.start:ASC'
+            _sort: 'time_range_tag.start:ASC',
+            categories: this.state.currentCategories.map(cat => cat.id)
         };
         const targets = ['descriptions.text_contains', 'title.text_contains', 'keyword_tags.name_contains'];
         let images = [];
@@ -53,20 +57,46 @@ export default class TimeLineDemo extends Component {
         this.setState({images});
     }
 
-    async componentDidMount() {
+    async querySubTags(tagId: number) {
         const query = stringify({
             _where: {
-                priority: 1
+                id: tagId
             }
         });
-        const categories = await fetch(this.apiBase + `category-tags?${query}`).then(resp => resp.json());
-        this.setState({topLevelDescription: categories[0].description, currentCategories: [categories[0]]});
+        const category = await fetch(this.apiBase + `category-tags?${query}`).then(resp => resp.json());
+        this.setState({
+            currentSubCategories: category[0].related_tags,
+            topLevelDescription: category[0].description,
+            currentCategories: this.state.currentCategories.concat([category[0]])
+        });
+    }
+
+    async componentDidMount() {
+        await this.querySubTags(1);
         this.queryApi();
     }
 
     private handleTimelineChange(start: number, end: number) {
         this.setState({timeRange: {start, end}});
         this.queryApi();
+    }
+
+    private nextImage() {
+        let prevIndex = -2;
+        this.setState({
+            images: this.state.images.map((img, index) => {
+                if (img.isCurrentImage) {prevIndex = index; }
+                return {...img, isCurrentImage: (index === prevIndex + 1 ? true : false)}
+            })
+        });
+    }
+
+    private previousImage() {
+        this.setState({
+            images: this.state.images.map((img, index) => {
+                return {...img, isCurrentImage: (this.state.images[index + 1]?.isCurrentImage ? true : false)}
+            })
+        });
     }
 
     render() {
@@ -78,15 +108,6 @@ export default class TimeLineDemo extends Component {
                 dangerouslySetInnerHTML={{__html: sanitize(this.state.topLevelDescription)}}
             ></p>
             <div className='center' style={{height: '64px'}}></div>
-            <div className='breadcrumbs'>
-                {
-                    this.state.currentCategories.map((cat, index) => {
-                        return <div key={index} className='breadcrumb'>
-                            <span>{cat.name}</span>
-                        </div>
-                    })
-                }
-            </div>
             <div className='center search-bar'>
                 <input autoComplete="off" placeholder="Suchen..." type='text'
                     onChange={(event) => {
@@ -102,20 +123,71 @@ export default class TimeLineDemo extends Component {
                     }}
                 id='search' name='search'/>
             </div>
-            <div className='center' style={{height: '28px'}}></div>
-            {/* <h3 className='center'>Kategorien</h3>
-            <div className='center' id='current_categories'></div>
-            <div className='center' id='categories'></div>
-            <div className='center' style={{height: '64px'}}></div> */}
+            <div className='center' style={{height: '64px'}}></div>
             <h3 className='center'>Aufnahmedatum</h3>
             <Timeline handleChange={this.handleTimelineChange.bind(this)}/>
+            <div className='breadcrumbs'>
+                {
+                    this.state.currentCategories.map((cat, index) => {
+                        return <div key={index} className='breadcrumb' onClick={async () => {
+                            if (this.state.currentCategories.length < 2) {return; }
+                            this.setState({
+                                currentCategories: this.state.currentCategories.slice(0, index)
+                            });
+                            await this.querySubTags(cat.id);
+                            this.queryApi();
+                        }}>
+                            <span>{cat.name}</span>
+                        </div>
+                    })
+                }
+            </div>
+            <div className='center' style={{height: '28px'}}></div>
+            {
+                this.state.currentSubCategories?.length > 0 &&
+                <div className='cats'>
+                    <h3 className='center'>Kategorien</h3>
+                    <div className='center category-grid'>
+                        {
+                            this.state.currentSubCategories?.map((cat, index) => {
+                                return <div key={index} className='category' onClick={async () => {
+                                    await this.querySubTags(cat.id);
+                                    this.queryApi();
+                                }}>
+                                    <span dangerouslySetInnerHTML={{__html: sanitize(cat.name)}}></span>
+                                </div>
+                            })
+                        }
+                    </div>
+                </div>
+            }
+            <div className='center' style={{height: '28px'}}></div>
             <div id='image-grid'>
                 {
                     this.state.images.map((img, index) =>
-                        <BPImage key={img.id} image={img} index={index} apiBase={this.apiBase}/>
+                        <BPImage key={img.id} image={img} index={index} apiBase={this.apiBase} onToggleView={(open: boolean) => {
+                            const imgs = this.state.images;
+                            imgs[index].isCurrentImage = open;
+                            this.setState({
+                                showControls: open,
+                                images: imgs
+                            })
+                        }}/>
                     )
                 }
             </div>
+            {
+                this.state.showControls &&
+                    <div className='buttons-next-previous'>
+                        <IconButton className='previous' onClick={() => {
+                            this.previousImage();
+                        }}
+                        ><NavigateBefore /></IconButton>
+                        <IconButton className='next' onClick={() => {
+                            this.nextImage();
+                        }}><NavigateNext /></IconButton>
+                    </div>
+            }
         </div>
     }
 }

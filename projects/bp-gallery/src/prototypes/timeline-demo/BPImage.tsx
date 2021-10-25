@@ -5,50 +5,25 @@ export default class BPImage extends Component<
     {
         image: any,
         index: number,
-        apiBase: string
+        apiBase: string,
+        onToggleView: (open: boolean) => void
     },
     {
-        isCurrentImage: boolean,
         imgPosBuffer?: DOMRect
     }
 > {
 
     state = {
-        isCurrentImage: false,
         imgPosBuffer: null
     }
 
     private containerRef = createRef<HTMLDivElement>();
 
-    private onImageViewToggle(event: any, img: any) {
-        let target = event.target as HTMLElement;
-        while (!target.classList.contains('image-container')) {
-            target = target.parentElement;
-        }
-        if (this.state.isCurrentImage) {
-            if (this.state.imgPosBuffer) {
-                const rect = this.state.imgPosBuffer;
-                target.style.left = `${rect.left}px`;
-                target.style.top = `${rect.top}px`;
-                target.style.width = `${rect.width}px`;
-                target.style.height = `${rect.height}px`;
-            }
-            setTimeout(() => {
-                this.setState({isCurrentImage: false});
-                target.style.left = target.style.top
-                = target.style.width = target.style.height = null;
-            }, 400);
+    private onImageViewToggle() {
+        if (this.props.image.isCurrentImage) {
+            this.removeCurrent();
         } else {
-            const rect = target.getBoundingClientRect();
-            target.style.left = `${rect.left}px`;
-            target.style.top = `${rect.top}px`;
-            target.style.width = `${rect.width}px`;
-            target.style.height = `${rect.height}px`;
-            this.setState({isCurrentImage: true, imgPosBuffer: rect});
-            setTimeout(() => {
-                target.style.left = target.style.top
-                = target.style.width = target.style.height = null;
-            }, 0);
+            this.makeCurrent();
         }
     }
 
@@ -72,10 +47,41 @@ export default class BPImage extends Component<
     }
 
     private wheelHandler(event) {
-        if (this.state.isCurrentImage) {
+        if (this.props.image.isCurrentImage) {
             event.preventDefault();
             event.stopPropagation();
         }
+    }
+
+    removeCurrent() {
+        if (!this.props.image.isCurrentImage){return; }
+        if (this.state.imgPosBuffer) {
+            const rect = this.state.imgPosBuffer;
+            this.containerRef.current.style.left = `${rect.left}px`;
+            this.containerRef.current.style.top = `${rect.top}px`;
+            this.containerRef.current.style.width = `${rect.width}px`;
+            this.containerRef.current.style.height = `${rect.height}px`;
+        }
+        setTimeout(() => {
+            this.props.onToggleView(false);
+            this.containerRef.current.style.left = this.containerRef.current.style.top
+            = this.containerRef.current.style.width = this.containerRef.current.style.height = null;
+        }, 400);
+    }
+
+    makeCurrent() {
+        if (this.props.image.isCurrentImage){return; }
+        const rect = this.containerRef.current.getBoundingClientRect();
+        this.containerRef.current.style.left = `${rect.left}px`;
+        this.containerRef.current.style.top = `${rect.top}px`;
+        this.containerRef.current.style.width = `${rect.width}px`;
+        this.containerRef.current.style.height = `${rect.height}px`;
+        this.props.onToggleView(true);
+        this.setState({imgPosBuffer: rect});
+        setTimeout(() => {
+            this.containerRef.current.style.left = this.containerRef.current.style.top
+            = this.containerRef.current.style.width = this.containerRef.current.style.height = null;
+        }, 0);
     }
 
     render(){
@@ -83,14 +89,14 @@ export default class BPImage extends Component<
         return <div className='image-placeholder'>
                 <div
                 ref={this.containerRef}
-                onClick={(event) => {this.onImageViewToggle(event, this.props.image)}}
-                className={'image-container' + (this.state.isCurrentImage ? ' view' : '')}
+                onClick={(event) => {this.onImageViewToggle()}}
+                className={'image-container' + (this.props.image.isCurrentImage ? ' view' : '')}
                 style={{
                     animationDelay: (Math.min(2, this.props.index * 0.03)) + 's'
                 }}
             >
                 <img alt={this.props.image.title.text} src={this.props.apiBase +
-                    (this.state.isCurrentImage ? this.props.image.media.url : this.props.image.media.formats.thumbnail.url)
+                    (this.props.image.isCurrentImage ? this.props.image.media.url : this.props.image.media.formats.thumbnail.url)
                 }/>
                 <img alt={'blur_' + this.props.image.title.text}className='blur-background' src={this.props.apiBase + this.props.image.media.formats.thumbnail.url}/>
                 <div className='gradient-overlay'></div>
