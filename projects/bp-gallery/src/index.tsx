@@ -1,20 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import { renderRoutes } from "react-router-config";
-
-import reportWebVitals from "./reportWebVitals";
-import routes from "./routes";
-
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { renderRoutes } from 'react-router-config';
+import reportWebVitals from './reportWebVitals';
+import routes from './routes';
+import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      { renderRoutes(routes) }
-    </BrowserRouter>
+    <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

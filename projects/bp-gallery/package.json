@@ -10,9 +10,11 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@types/dompurify": "^2.3.1",
     "@types/history": "^4.7.9",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.3",
+    "@types/qs": "^6.9.7",
     "@types/react": "^17.0.27",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-config": "^5.0.3",
@@ -29,18 +31,29 @@
     "typescript": "^4.4.3",
     "web-vitals": "^1.0.1"
   },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-unused-imports": "^1.1.5",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.4.1"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx src",
+    "format": "prettier --write src && yarn lint --fix"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
+  "pre-commit": [
+    "format"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
