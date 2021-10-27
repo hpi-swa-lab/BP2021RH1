@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "keyword_tags",
+  "info": {
+    "name": "Keyword_Tag"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "pictures": {
+      "collection": "picture",
+      "via": "keyword_tags",
+      "dominant": true
+    }
+  }
+}
