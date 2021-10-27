@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "time_range_tags",
+  "info": {
+    "name": "Time_Range_Tag"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "start": {
+      "type": "datetime"
+    },
+    "end": {
+      "type": "datetime"
+    },
+    "pictures": {
+      "collection": "picture",
+      "via": "time_range_tag"
+    }
+  }
+}

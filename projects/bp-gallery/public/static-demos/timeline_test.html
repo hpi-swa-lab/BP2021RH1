@@ -1,0 +1,654 @@
+<html>
+    <head>
+        <title>BP Timeline Test</title>
+        <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js" integrity="sha512-bwD3VD/j6ypSSnyjuaURidZksoVx3L1RPvTkleC48SbHCZsemT3VKMD39KknPnH728LLXVMTisESIBOAb5/W0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Crete+Round&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <canvas id='background-anim' width="1920" height="1080"></canvas>
+        <div class='center' style='height: 64px'></div>
+        <h1 class='center title'>Das Herbert-Ahrens-Bilderarchiv</h1>
+        <p class='center' style='width: 90%; max-width: 800px; margin-top: 2rem;' id='ha-description'></p>
+        <div class='center' style='height: 64px'></div>
+        <div class='center search-bar'>
+            <input autocomplete="off" placeholder="Suchen..." type='text' id='search' name='search'/>
+        </div>
+        <div class='center' style='height: 28px'></div>
+        <h3 class='center'>Kategorien</h3>
+        <div class='center' id='current_categories'></div>
+        <div class='center' id='categories'></div>
+        <div class='center' style='height: 64px'></div>
+        <h3 class='center'>Aufnahmedatum</h3>
+        <div id='timeline'>
+            <div class='line'></div>
+            <div class='pivot' id="pivot-1">
+                <div class='pivot-label'></div>
+            </div>
+            <div class='pivot' id="pivot-2">
+                <div class='pivot-label'></div>
+            </div>
+            <div id='selection'></div>
+        </div>
+        <div id='image-grid'>
+
+        </div>
+    </body>
+</html>
+
+<script>
+    var apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
+    const timeline = $('#timeline');
+    const imggrid = $('#image-grid');
+
+    const selection = {
+        start: 0,
+        end: 1
+    };
+
+    let currentCategories = [];
+
+    let searchQuery = "";
+
+    window.setTimeout(async () => {
+        const category = await fetch(apiBase + 'category-tags?' + new URLSearchParams({
+            'priority': 1
+        })).then(resp => resp.json());
+        $('#ha-description').html(category[0].description);
+    }, 0);
+
+    async function queryApi() {
+        const startTime = new Date(getYear(selection.start)+'-01-01');
+        const endTime = new Date(getYear(selection.end)+'-12-31');
+        imggrid.empty();
+        if (!currentCategories.length && searchQuery === '') {
+            return;
+        }
+        const params = {
+            'time_range_tag.start_gte': dayjs(startTime).format('YYYY-MM-DDTHH:mm'),
+            'time_range_tag.end_lte': dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
+            '_sort': 'time_range_tag.start:ASC'
+        };
+        if (searchQuery && searchQuery !== '') {
+            params['descriptions.text_contains'] = searchQuery;
+        }
+        const images = await fetch(apiBase + 'pictures?' + new URLSearchParams(params) +
+            currentCategories.reduce((acc, cat) => acc + '&category_tags='+cat, '')
+        ).then(resp => resp.json());
+        showImageGrid(images);
+    }
+
+    async function getCategories() {
+        const cats = await fetch(apiBase + 'category-tags?' + new URLSearchParams({
+                'priority': 2
+            })).then(resp => resp.json());
+        $('#categories').empty();
+        $('#current_categories').empty();
+        const obj = 
+        cats.forEach((cat) => {
+            const tag = $(`<span class="tag">${cat.name}</span>`);
+            tag.click(function(evt) {
+                if (currentCategories.includes(cat.id)) {
+                    currentCategories.splice(currentCategories.indexOf(cat.id), 1);
+                } else {
+                    currentCategories.push(cat.id);
+                }
+                queryApi();
+                getCategories();
+            });
+            if (currentCategories.includes(cat.id)) {
+                $('#current_categories').append(tag);
+                if (cat.description) {
+                    $('#current_categories').append($(`<div class='tag-description'>${cat.description}</div>`));
+                }
+            } else {
+                $('#categories').append(tag);
+            }
+        })
+    }
+
+    getCategories();
+
+    function formatTimeStamp(timeStamp) {
+        const duration = dayjs(timeStamp.end).diff(dayjs(timeStamp.start), 'days');
+        if (duration === 0) {
+            return dayjs(timeStamp.start).format('DD.MM.YYYY');
+        } else if (duration > 27 && duration < 40) {
+            return dayjs(timeStamp.start).format('MM.YYYY');
+        } else if (duration > 350 && duration < 400) {
+            return dayjs(timeStamp.start).format('YYYY');
+        } else if (duration > 400 && duration < 3700) {
+            return dayjs(timeStamp.start).format('YYYY').slice(0, 3) + 'X';
+        } else {
+            return '19XX';
+        }
+    }
+
+    function showImageGrid(images) {
+        imggrid.empty();
+        images.forEach((img, index) => {
+            let delaysum = 1;
+            const obj = $(`
+            <div class='image-container'>
+                <img src="${apiBase + img.media.formats.thumbnail.url}"/>
+                <img class='blur-background' src="${apiBase + img.media.formats.thumbnail.url}"/>
+                <div class='gradient-overlay'></div>
+                <div class='time-ind'>${formatTimeStamp(img.time_range_tag)}</div>
+                <div class='image-info'>
+                    <h1>${img.title.text}</h1>
+                    ${img.descriptions.reduce((acc, desc) => {
+                        return acc + `
+                            <p style='transition-delay: ${delaysum += 0.2}s'>${desc.text}</p>
+                        `;
+                    }, '')}
+                    <div class='tags'>
+                        ${
+                            img.keyword_tags.reduce((acc, keyword) => {
+                                return acc + `
+                                    <span style='transition-delay: ${delaysum += 0.2}s' class='tag keyword'>${keyword.name}</span>
+                                `;
+                            }, '')
+                        }
+                        ${
+                            img.category_tags.reduce((acc, keyword) => {
+                                return acc + `
+                                    <span style='transition-delay: ${delaysum += 0.2}s' class='tag category'>${keyword.name}</span>
+                                `;
+                            }, '')
+                        }
+                    </div>
+                </div>
+            </div>
+        `);
+            obj.click(function(event) {
+                if ($(this).hasClass('view')) {
+                    const originalPosition = JSON.parse($(this).attr('originalPosition'));
+                    $(this).find('img').attr('src', apiBase + img.media.formats.thumbnail.url)
+                    $(this).animate(originalPosition, 400, 'swing', function() {
+                        $(this).removeClass('view');
+                        $(this).next('.placeholder').remove();
+                        $(this).removeAttr('originalPosition');
+                        $(this).css({top: '', left: '', width: '', height: ''});
+                    });
+                } else {
+                    const positionBuffer = {
+                        top: $(this).offset().top - $(window).scrollTop(),
+                        left: $(this).offset().left - $(window).scrollLeft(),
+                        width: $(this).width(),
+                        height: $(this).height()
+                    };
+                    $(this).attr('originalPosition', JSON.stringify(positionBuffer));
+                    $(this).addClass('view');
+                    $(this).css(positionBuffer);
+                    $(this).find('img').attr('src', apiBase + img.media.url)
+                    $('<div class="image-container placeholder">').insertAfter($(this));
+                    $(this).animate({left: 0, top: 0, width: '100%', height: '100%'});
+                }
+            });
+            obj.on('wheel', function(event) {
+                if ($(this).hasClass('view')) {
+                    event.preventDefault();
+                }
+            })
+            obj.css('animation-delay', Math.min(2, index * 0.03) + 's');
+            imggrid.append(obj);
+        });
+    }
+
+    function getYear(perc) {
+        return Math.round(perc * 99 + 1900);
+    }
+
+    function updateProcessBar() {
+        $('#pivot-1').css('left', `${selection.start * 100}%`);
+        $('#pivot-1 .pivot-label').html(getYear(selection.start));
+        $('#pivot-2').css('left', `${selection.end * 100}%`);
+        $('#pivot-2 .pivot-label').html(getYear(selection.end));
+        $('#timeline #selection').css({
+            left: $('#pivot-1').css('left')
+        });
+        const diff = (parseFloat($('#pivot-2').css('left')) - parseFloat($('#pivot-1').css('left')))
+        $('#timeline #selection').width(`${diff}px`);
+    }
+
+    var currentPivot = null;
+
+    $('.pivot').mousedown(function (evt) {
+        const pivot = $(this);
+        currentPivot = pivot;
+    })
+
+    $('body').mousemove(function(evt) {
+        if (!currentPivot) {return; }
+        const process = (evt.clientX - timeline.offset().left) / timeline.width();
+        if (currentPivot.attr('id') === 'pivot-1') {
+            selection.start = Math.max(Math.min(selection.end, process), 0);
+        } else {
+            selection.end = Math.max(Math.min(1, process), selection.start);
+        }
+        updateProcessBar();
+    });
+
+    $('body').mouseup(function(evt) {
+        if (!currentPivot) {return; }
+        currentPivot = null;
+        queryApi();
+    })
+
+    $('body').mouseleave(function(evt) {
+        if (!currentPivot) {return; }
+        currentPivot = null;
+        queryApi();
+    })
+
+    queryApi();
+    updateProcessBar();
+    
+    /**
+    * Draws a rounded rectangle using the current state of the canvas.
+    * If you omit the last three params, it will draw a rectangle
+    * outline with a 5 pixel border radius
+    * @param {CanvasRenderingContext2D} ctx
+    * @param {Number} x The top left x coordinate
+    * @param {Number} y The top left y coordinate
+    * @param {Number} width The width of the rectangle
+    * @param {Number} height The height of the rectangle
+    * @param {Number} [radius = 5] The corner radius; It can also be an object 
+    *                 to specify different radii for corners
+    * @param {Number} [radius.tl = 0] Top left
+    * @param {Number} [radius.tr = 0] Top right
+    * @param {Number} [radius.br = 0] Bottom right
+    * @param {Number} [radius.bl = 0] Bottom left
+    * @param {Boolean} [fill = false] Whether to fill the rectangle.
+    * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
+    */
+    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+        if (typeof stroke === 'undefined') {
+        stroke = true;
+        }
+        if (typeof radius === 'undefined') {
+        radius = 5;
+        }
+        if (typeof radius === 'number') {
+        radius = {tl: radius, tr: radius, br: radius, bl: radius};
+        } else {
+        var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
+        for (var side in defaultRadius) {
+            radius[side] = radius[side] || defaultRadius[side];
+        }
+        }
+        ctx.beginPath();
+        ctx.moveTo(x + radius.tl, y);
+        ctx.lineTo(x + width - radius.tr, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+        ctx.lineTo(x + width, y + height - radius.br);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+        ctx.lineTo(x + radius.bl, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+        ctx.lineTo(x, y + radius.tl);
+        ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+        ctx.closePath();
+        if (fill) {
+        ctx.fill();
+        }
+        if (stroke) {
+        ctx.stroke();
+        }
+    
+    }
+
+    const canvas = $('#background-anim');
+    const ctx = canvas[0].getContext('2d');
+    let particles = [];
+    window.setInterval(() => {
+        ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+
+        if (Math.random() < 0.04) {
+            // New particle
+            particles.push({
+                x: Math.random(),
+                y: Math.random(),
+                time: Date.now(),
+                direction: Math.random() > 0.5 ? 1 : -1,
+                destroy: false
+            });
+        }
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        for (const particle of particles) {
+            // Draw particle
+            const progress = (Date.now() - particle.time) / 8000;
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.2 * (-Math.pow(2 * progress - 1, 2) + 1)})`;
+            roundRect(ctx, particle.x * canvas[0].width, particle.y * canvas[0].height, 150, 20, 15, true);
+            particle.x += particle.direction / canvas[0].width;
+            if (progress > 1) {particle.destroy = true;}
+        }
+        particles = particles.filter(p => !p.destroy);
+        // Draw hills
+        ctx.shadowColor = 'black';
+        ctx.shadowBlur = 15;
+        ctx.fillStyle='#000000';
+        ctx.beginPath();
+        const maxHeight = canvas[0].height / 5;
+        const progress = $(window).scrollTop() / 10;
+        for (let i = 0; i < 5; i++) {
+            const height = (Math.sin(12.9898 * i) * 43758.5453) % 1 + 0.6;
+            const startHeight = (Math.sin(13.9448528 * i) * 45756.5453) % 1;
+            const endHeight = (Math.sin(13.9448528 * (i + 1)) * 45756.5453) % 1;
+            const begin = i * (canvas[0].width / 5);
+            ctx.moveTo(begin, canvas[0].height * (3/4) - progress + startHeight * maxHeight);
+            ctx.lineTo(begin + canvas[0].width / (5 * 2) - 20, canvas[0].height * (3/4) - progress - height * maxHeight);
+            ctx.lineTo(begin + canvas[0].width / 5, canvas[0].height * (3/4) - progress + endHeight * maxHeight);
+        }
+        ctx.lineTo(canvas[0].width, canvas[0].height);
+        ctx.lineTo(0, canvas[0].height);
+        ctx.lineTo(0, canvas[0].height * (3/4) - progress );
+        ctx.fill();
+    }, 20);
+
+    $('#search').keyup(function(evt) {
+        if (evt.keyCode === 13) {queryApi(); }
+        searchQuery = $(this)[0].value;
+    });
+
+    $('#search').blur(function(evt) {
+        queryApi();
+    });
+</script>
+
+<style>
+    html, body{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    body {
+        background: #14182d;
+        font-family: 'Lato', sans-serif;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #background-anim {
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        position: fixed;
+        opacity: 0.2;
+    }
+
+    #image-grid {
+        width: 95%;
+        max-width: 1000px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+        grid-gap: 10px;
+        margin-bottom: 5rem;
+    }
+
+    @keyframes pop-up {
+        0% {transform: scale(0);}
+        95% {transform: scale(1.05);}
+        100% {transform: scale(1);}
+    }
+
+    .image-container {
+        cursor: pointer;
+        overflow: hidden;
+        background: black;
+        height:150px;
+        position: relative;
+        animation: pop-up 0.4s;
+        transform: scale(0);
+        animation-fill-mode: forwards;
+    }
+
+    .image-container:not(.view):hover img {
+        transform: scale(1.05);
+    }
+
+    .image-container img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #timeline {
+        display: flex;
+        flex-direction: row;
+        height: 5rem;
+        width: 80%;
+        max-width: 1000px;
+        margin: auto;
+        position: relative;
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    #timeline .pivot {
+        background: white;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 1rem;
+        top: 50%;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+        z-index: 99;
+        user-select: none;
+    }
+
+    #timeline .pivot .pivot-label {
+        position: absolute;
+        bottom: 0;
+        color: white;
+        left: 50%;
+        transform: translate(-50%, 150%);
+    }
+    
+    #timeline #selection {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        height: 5px;
+        background: #3f52ad;
+    }
+
+
+    #timeline .line {
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        height: 5px;
+        background: white;
+    }
+
+    .image-container .time-ind{
+        background: rgba(0, 0, 0, 0.7);
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: white;
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+    }
+
+    .image-container.view {
+        position: fixed;
+        z-index: 99;
+        background: #14182d;
+    }
+
+    .image-container.view img {
+        object-fit: contain;
+    }
+
+    .image-container img.blur-background {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(10px);
+        z-index: -1;
+        transform: scale(1.5);
+        opacity: 0.4;
+    }
+
+    .image-info {
+        position: absolute;
+        bottom: 4rem;
+        right: 4rem;
+        font-family: 'Crete Round', serif;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        max-width: 550px;
+        width: 40%;
+        filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.4));
+    }
+
+    .image-info * {
+        opacity: 0;
+        transition: transform 0.4s, opacity 0.4s;
+        transform: translateX(100%);
+    }
+
+    .image-container:not(.view) .image-info * {        
+        transition-delay: 0s !important;
+    }
+
+    .image-container.view .image-info * {
+        opacity: 1;
+        transition-delay: 1s;
+        transition: transform 1.5s, opacity 1.5s;
+        transform: translateX(0);
+    }
+
+    .image-info h1 {
+        background: white;
+        padding: 0.5rem 2rem;
+        margin-bottom: 0;
+    }
+
+    .image-info p {
+        background: black;
+        padding: 0.5rem 2rem;
+        color: white;
+    }
+
+    .image-info .tags {
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+        flex-wrap: wrap;
+    }
+
+    .image-info .tags .tag {
+        padding: 5px 15px;
+        border-radius: 15px;
+        color: #ffffff94;
+        font-size: 12px;
+        margin: 5px;
+        text-align: center;
+    }
+
+    .image-info .tags .tag.category {
+        background: #ba4b4b;
+    }
+
+    .image-info .tags .tag.keyword {
+        background: #382eb6;
+    }
+
+    .gradient-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background:radial-gradient(circle at 90% 100%, #000000e3 0, transparent 70%);
+    }
+
+    .center {
+        color: white;
+        display: block;
+        text-align: center;
+        margin: auto;
+    }
+
+    .title {
+        background: white;
+        color: #14182d;
+        padding: 0.5rem 2rem;
+        justify-self: center;
+    }
+
+    #categories, #current_categories {
+        width: 95%;
+        max-width: 1000px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    #current_categories {
+        border-bottom: 1px solid #ffffff;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        margin-top: 2rem;
+    }
+
+    #categories .tag, #current_categories .tag{
+        padding: 5px 15px;
+        background: white;
+        border-radius: 15px;
+        margin: 5px;
+        flex: 1 1 0;
+        height: 20px;
+        white-space: nowrap;
+        cursor: pointer;
+        color: #14182d;
+    }
+
+    .search-bar {
+        width: 95%;
+        max-width: 1000px;
+        background: #948dd05e;
+    }
+
+    .search-bar input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        padding: 1rem 2rem;
+        color: white;
+        border-bottom: 1px solid #7d7dc2;
+        transition: border-bottom 0.2s;
+    }
+
+    .search-bar input:focus {
+        outline: 0;
+        border-bottom: 2px solid white;
+    }
+
+    a {
+        color: white;
+    }
+
+</style>

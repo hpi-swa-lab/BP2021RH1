@@ -12,12 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
-      "type": "string"
-    },
-    "description": {
-      "type": "richtext"
-    },
     "media": {
       "model": "file",
       "via": "related",
@@ -33,10 +27,32 @@
     "taken": {
       "type": "date"
     },
-    "comments": {
+    "Comment": {
       "type": "component",
       "repeatable": true,
       "component": "content.comment"
+    },
+    "descriptions": {
+      "via": "pictures",
+      "collection": "description",
+      "dominant": true
+    },
+    "title": {
+      "model": "title",
+      "via": "pictures"
+    },
+    "category_tags": {
+      "via": "pictures",
+      "collection": "category-tag",
+      "dominant": true
+    },
+    "keyword_tags": {
+      "via": "pictures",
+      "collection": "keyword-tag"
+    },
+    "time_range_tag": {
+      "via": "pictures",
+      "model": "time-range-tag"
     }
   }
 }

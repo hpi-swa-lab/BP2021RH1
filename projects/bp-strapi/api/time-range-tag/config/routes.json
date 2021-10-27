@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/time-range-tags",
+      "handler": "time-range-tag.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/time-range-tags/count",
+      "handler": "time-range-tag.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/time-range-tags/:id",
+      "handler": "time-range-tag.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/time-range-tags",
+      "handler": "time-range-tag.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/time-range-tags/:id",
+      "handler": "time-range-tag.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/time-range-tags/:id",
+      "handler": "time-range-tag.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

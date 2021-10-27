@@ -1,0 +1,28 @@
+{
+  "name": "strapi-plugin-bulk-import",
+  "version": "0.0.1",
+  "description": "This is the description of the plugin.",
+  "strapi": {
+    "name": "bulk-import",
+    "icon": "plug",
+    "description": "Description of bulk-import plugin."
+  },
+  "dependencies": {},
+  "author": {
+    "name": "BP Leuts",
+    "email": "",
+    "url": ""
+  },
+  "maintainers": [
+    {
+      "name": "A Strapi developer",
+      "email": "",
+      "url": ""
+    }
+  ],
+  "engines": {
+    "node": ">=10.16.0 <=14.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
