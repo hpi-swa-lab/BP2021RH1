@@ -1,0 +1,36 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "handler": "bulk-import.index",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/import",
+      "handler": "bulk-import.import",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/check-missing",
+      "handler": "bulk-import.checkMissing",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/fill-category-tags",
+      "handler": "bulk-import.fillCategoryTags",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
