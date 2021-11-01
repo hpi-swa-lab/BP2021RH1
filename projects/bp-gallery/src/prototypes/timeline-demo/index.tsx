@@ -1,3 +1,3 @@
-import TimeLineDemo from "./TimeLineDemo";
+import TimeLineDemo from './TimeLineDemo';
 
 export default TimeLineDemo;

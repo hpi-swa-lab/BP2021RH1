@@ -1,8 +1,9 @@
-import { render } from "@testing-library/react";
-import { Router } from "react-router-dom";
-import { renderRoutes } from "react-router-config";
-import { createMemoryHistory, MemoryHistory } from "history";
-import routes from "./routes";
+import React from 'react';
+import { render } from '@testing-library/react';
+import { Router } from 'react-router-dom';
+import { renderRoutes } from 'react-router-config';
+import { createMemoryHistory, MemoryHistory } from 'history';
+import routes from './routes';
 
 /**
  * Enables test-rendering of components based on our prior defined routes
@@ -11,9 +12,5 @@ import routes from "./routes";
 export const renderRoute = (route: string) => {
   const history: MemoryHistory = createMemoryHistory();
   history.push(route);
-  return render(
-    <Router history={ history }>
-      { renderRoutes(routes) }
-    </Router>
-  );
-}
+  return render(<Router history={history}>{renderRoutes(routes)}</Router>);
+};

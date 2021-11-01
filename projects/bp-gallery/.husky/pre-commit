@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+cd projects/bp-gallery
+yarn pretty-quick --staged --verbose --pattern "projects/bp-gallery/src/**/*"
