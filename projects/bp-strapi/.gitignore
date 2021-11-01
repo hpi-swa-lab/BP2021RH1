@@ -113,4 +113,8 @@ exports
 *.cache
 build
 .strapi-updater.json
+
+############################
+# Environment files
+############################
 config/environments/*
