@@ -113,3 +113,4 @@ exports
 *.cache
 build
 .strapi-updater.json
+config/environments/*
