@@ -9,7 +9,7 @@ const { sanitizeEntity, convertRestQueryParams, buildQuery } = require("strapi-u
 module.exports = {
     async find(ctx) {
         const params = convertRestQueryParams(ctx.query);
-        const catField = params.where.find(field => field.field === 'categories');
+        const catField = params.where?.find(field => field.field === 'categories') || null;
         if (catField) {
             const category_ids = (await strapi.connections.default.raw(`
             select distinct "pictures".id from "pictures" 
