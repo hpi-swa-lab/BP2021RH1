@@ -1,0 +1,11 @@
+// color scheme
+
+:root{
+    --primary-color: #7E241D;
+    --secondary-color: #404272;
+    --background-color: #1E1E1E;
+}
+
+$primaryColor: var(---primary-color);
+$secondaryColor: var(--secondary-color);
+$backgroundColor: var(--background-color);

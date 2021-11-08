@@ -3,6 +3,7 @@ import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
 import Navigation from './Navigation';
 import './App.scss';
 import { drawBackground } from './helpers';
+import { useTranslation } from 'react-i18next';
 
 const AnimatedBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null!);
@@ -16,12 +17,14 @@ const AnimatedBackground = () => {
   return <canvas ref={canvasRef} id='background-anim' width='1920' height='1080' />;
 };
 
-const App = ({ route }: RouteConfigComponentProps) => (
-  <div className='App'>
+const App = ({ route }: RouteConfigComponentProps) => {
+  const { t } = useTranslation();
+
+  return <div className='App'>
     <AnimatedBackground />
     <Navigation />
     {renderRoutes(route?.routes)}
-  </div>
-);
-
+    <div>{t('common.search')}</div>
+  </div>;
+};
 export default App;
