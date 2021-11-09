@@ -34,6 +34,6 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_KEY }}
           source: "projects/bp-gallery/html/"
-          strip-components: 2
+          strip_components: 2
           target: ${{ secrets.REMOTE_TARGET }}
           rm: true
