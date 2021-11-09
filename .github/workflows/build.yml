@@ -1,6 +1,8 @@
 name: Build & Deploy CI
 
-on: [push]
+on:
+  push:
+    branches: [main]
 
 jobs:
   build_bp_gallery:
