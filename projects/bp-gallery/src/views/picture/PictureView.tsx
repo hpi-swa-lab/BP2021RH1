@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 const PictureView = ({ pictureId }: { pictureId: number }) => {
   const { t } = useTranslation();
 
-  const [picture, setPicture] = useState(null);
+  const [picture, setPicture] = useState<string | undefined>(undefined);
   //const [pictureDetails, setPictureDetails] = useState(null);
   //const [comments, setComments] = useState(null);
 
@@ -18,7 +18,7 @@ const PictureView = ({ pictureId }: { pictureId: number }) => {
     async function loadPictureIntoState(): Promise<void> {
       const pictureInfo = await apiConnector.getPicture(pictureId);
       console.log(pictureInfo[0].media.url);
-      setPicture(pictureInfo[0].media.url);
+      setPicture(pictureInfo[0].media.url as string);
     }
     loadPictureIntoState().then();
   }, [pictureId]);
@@ -48,7 +48,7 @@ const PictureView = ({ pictureId }: { pictureId: number }) => {
       default:
         return (
           <div>
-            <Picture pictureInfo={picture} />
+            {picture && <Picture pictureInfo={picture} />}
             <PictureDetails />
             <CommentsContainer />
           </div>
