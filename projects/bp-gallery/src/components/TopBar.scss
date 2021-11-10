@@ -1,0 +1,27 @@
+@import '../shared/style.scss';
+
+.top-bar {
+  background: $primaryColor;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 5rem;
+  padding: 0rem 2rem;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100% - 4rem);
+
+  .bh-logo {
+    img {
+      width: 75px;
+      max-width: 15vmin;
+    }
+  }
+
+  button {
+    color: white;
+  }
+}

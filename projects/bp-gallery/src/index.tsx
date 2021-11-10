@@ -5,7 +5,6 @@ import './i18n';
 import { renderRoutes } from 'react-router-config';
 import reportWebVitals from './reportWebVitals';
 import routes from './routes';
-import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>

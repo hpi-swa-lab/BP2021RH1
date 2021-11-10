@@ -1,5 +1,7 @@
 {
-    "common": {
-        "search": "Suchen"
-    }
+  "common": {
+    "search": "Suchen",
+    "browse": "Stöbern",
+    "menu": "Menü"
+  }
 }

@@ -14,12 +14,12 @@ i18n
     },
     resources: {
       de: {
-        translation: TRANSLATIONS_DE
-      }
-    }
+        translation: TRANSLATIONS_DE,
+      },
+    },
   })
-  .catch((error) => {
-      console.log(error);
+  .catch(error => {
+    console.log(error);
   });
 
 export default i18n;

@@ -1,0 +1,40 @@
+@import '../shared/style.scss';
+
+.nav-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background: $primaryColor;
+  color: white;
+  height: 4rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  .nav-element {
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    margin: 0px 2vmin;
+    height: calc(100% - 1rem);
+    width: 6rem;
+    text-decoration: none;
+    transition: background 0.3s;
+
+    &:not(.active) {
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+    }
+
+    &.active {
+      background: white;
+      color: $primaryColor;
+    }
+  }
+}

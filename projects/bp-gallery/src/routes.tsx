@@ -1,8 +1,9 @@
+import React from 'react';
 import { RouteConfig } from 'react-router-config';
 import App from './App';
-import Home from './Home';
 import Demo from './prototypes/demo';
 import TimeLineDemo from './prototypes/timeline-demo';
+import GalleryView from './views/gallery/GalleryView';
 
 const routes: RouteConfig[] = [
   {
@@ -11,7 +12,28 @@ const routes: RouteConfig[] = [
       {
         path: '/',
         exact: true,
-        component: Home,
+        render: () => {
+          return <GalleryView target='browse' />;
+        },
+      },
+      {
+        path: '/browse',
+        render: () => {
+          return <GalleryView target='browse' />;
+        },
+      },
+      {
+        path: '/search',
+        render: () => {
+          return <GalleryView target='search' />;
+        },
+        exact: true,
+      },
+      {
+        path: '/search/:query',
+        render: props => {
+          return <GalleryView target='search' searchParams={props.match.params.query} />;
+        },
       },
       {
         path: '/prototypes/demo',
@@ -23,7 +45,9 @@ const routes: RouteConfig[] = [
       },
       {
         // fallback component for unmatched routes
-        component: Home,
+        render: () => {
+          return <GalleryView />;
+        },
       },
     ],
   },
