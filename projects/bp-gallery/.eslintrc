@@ -50,7 +50,7 @@
     "no-constant-condition": ["error", { "checkLoops": false }],
     "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }],
     "@typescript-eslint/unbound-method": "off",
-    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-empty-function": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": [
