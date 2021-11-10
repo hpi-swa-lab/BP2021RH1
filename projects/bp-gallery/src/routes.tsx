@@ -4,6 +4,7 @@ import App from './App';
 import Demo from './prototypes/demo';
 import TimeLineDemo from './prototypes/timeline-demo';
 import GalleryView from './views/gallery/GalleryView';
+import PictureView from './views/picture/PictureView';
 
 const routes: RouteConfig[] = [
   {
@@ -33,6 +34,12 @@ const routes: RouteConfig[] = [
         path: '/search/:query',
         render: props => {
           return <GalleryView target='search' searchParams={props.match.params.query} />;
+        },
+      },
+      {
+        path: '/picture/:id',
+        render: props => {
+          return <PictureView pictureId={props.match.params.id} />;
         },
       },
       {

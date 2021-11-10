@@ -1,6 +1,6 @@
 import { stringify } from 'qs';
 
-export class APIConnector {
+class APIConnector {
   private apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
 
   private fetch(endpoint: string, query: { [key: string]: any }): Promise<any> {
@@ -25,9 +25,11 @@ export class APIConnector {
     throw new Error('Not implemented yet.');
   }
 
-  getImage(): Promise<any> {
-    // Return image, tags and details
-    throw new Error('Not implemented yet.');
+  getPicture(pictureId: number): Promise<any> {
+    // Return all data to a picture
+    const endpoint = 'pictures';
+    const query = JSON.parse(JSON.stringify({ id: pictureId }));
+    return this.fetch(endpoint, query);
   }
 
   getCommentsForImage(): Promise<any> {
@@ -40,3 +42,5 @@ export class APIConnector {
     throw new Error('Not implemented yet.');
   }
 }
+const apiConnector = new APIConnector();
+export default apiConnector;

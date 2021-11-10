@@ -2,6 +2,9 @@
   "common": {
     "search": "Suchen",
     "browse": "Stöbern",
-    "menu": "Menü"
+    "menu": "Menü",
+    "picture": "Bild",
+    "details": "Details",
+    "comments": "Kommentare"
   }
 }
