@@ -30,14 +30,11 @@ class APIConnector {
     return cats;
   }
 
-  async queryPictures(query: { [key: string]: any }): Promise<any> {
-    const images = await this.fetch('pictures', query);
-    return images;
-  }
-
-  getPicture(): Promise<any> {
-    // Return image, tags and details
-    throw new Error('Not implemented yet.');
+  getPicture(pictureId: number): Promise<any> {
+    // Return all data to a picture
+    const endpoint = 'pictures';
+    const query: { [key: string]: any } = JSON.parse(JSON.stringify({ id: pictureId }));
+    return this.fetch(endpoint, query);
   }
 
   getCommentsForPicture(): Promise<any> {
