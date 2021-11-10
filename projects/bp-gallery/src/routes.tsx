@@ -1,5 +1,6 @@
 import React from 'react';
 import { RouteConfig } from 'react-router-config';
+import { Redirect } from 'react-router-dom';
 import App from './App';
 import Demo from './prototypes/demo';
 import TimeLineDemo from './prototypes/timeline-demo';
@@ -9,13 +10,6 @@ const routes: RouteConfig[] = [
   {
     component: App,
     routes: [
-      {
-        path: '/',
-        exact: true,
-        render: () => {
-          return <GalleryView target='browse' />;
-        },
-      },
       {
         path: '/browse',
         render: () => {
@@ -46,7 +40,7 @@ const routes: RouteConfig[] = [
       {
         // fallback component for unmatched routes
         render: () => {
-          return <GalleryView />;
+          return <Redirect to='/browse' />;
         },
       },
     ],
