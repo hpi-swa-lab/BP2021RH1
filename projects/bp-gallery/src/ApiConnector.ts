@@ -30,6 +30,11 @@ class APIConnector {
     return cats;
   }
 
+  async queryPictures(query: { [key: string]: any }): Promise<any> {
+    const images = await this.fetch('pictures', query);
+    return images;
+  }
+
   getPicture(pictureId: number): Promise<any> {
     // Return all data to a picture
     const endpoint = 'pictures';

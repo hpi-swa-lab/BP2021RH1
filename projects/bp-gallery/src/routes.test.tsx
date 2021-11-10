@@ -11,12 +11,13 @@ test('Route mechanism renders our app component', () => {
 const GalleryMock = () => <div>Gallery-Mock</div>;
 jest.mock('./views/gallery/GalleryView.tsx', () => GalleryMock);
 
-test('Route mechanism renders the gallery component', () => {
+test('Route mechanism redirects to the gallery component', () => {
   renderRoute('/');
+  setTimeout(() => {
+    const element = screen.getByText(/Gallery-Mock/);
 
-  const element = screen.getByText(/Gallery-Mock/);
-
-  expect(element).toBeInTheDocument();
+    expect(element).toBeInTheDocument();
+  }, 0);
 });
 
 const DemoMock = () => <div>Demo-Mock</div>;
