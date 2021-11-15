@@ -5,13 +5,13 @@ import './GalleryView.scss';
 import NavigationBar from '../../components/NavigationBar';
 import { useTranslation } from 'react-i18next';
 
-const GalleryView = (params?: { target?: string; searchParams?: any }) => {
+const GalleryView = (params?: { target?: string; searchParams?: any; path?: string[] }) => {
   const { t } = useTranslation();
 
   const switchView = () => {
     switch (params?.target) {
       case 'browse':
-        return <BrowseView />;
+        return <BrowseView path={params.path} />;
       case 'search':
         return <SearchView params={params.searchParams} />;
       default:
