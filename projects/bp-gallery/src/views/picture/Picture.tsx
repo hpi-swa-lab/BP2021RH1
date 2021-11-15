@@ -1,9 +1,10 @@
 import React from 'react';
+import { apiBase } from '../../ApiConnector';
 
-const Picture = ({ pictureInfo }: { pictureInfo: string }) => {
-  const imageLink = 'https://bp.bad-harzburg-stiftung.de/api/' + pictureInfo;
+const Picture = ({ url }: { url: string }) => {
+  const imageLink = apiBase + url;
   return (
-    <div>
+    <div className='picture'>
       <img src={imageLink} alt={'test'} />
     </div>
   );

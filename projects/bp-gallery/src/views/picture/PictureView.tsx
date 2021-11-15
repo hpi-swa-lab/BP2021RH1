@@ -10,15 +10,19 @@ import { useTranslation } from 'react-i18next';
 const PictureView = ({ pictureId }: { pictureId: number }) => {
   const { t } = useTranslation();
 
-  const [picture, setPicture] = useState<string | undefined>(undefined);
-  //const [pictureDetails, setPictureDetails] = useState(null);
-  //const [comments, setComments] = useState(null);
+  const [loadedPicture, setLoadedPicture] = useState<boolean>(false);
+  const [pictureUrl, setPictureUrl] = useState<string>('');
+  const [pictureDetails, setPictureDetails] = useState<any | undefined>(undefined);
+  const [comments, setComments] = useState<any | undefined>(undefined);
 
   useEffect(() => {
     async function loadPictureIntoState(): Promise<void> {
       const pictureInfo = await apiConnector.getPicture(pictureId);
-      console.log(pictureInfo[0].media.url);
-      setPicture(pictureInfo[0].media.url as string);
+
+      setPictureUrl(pictureInfo.url as string);
+      setPictureDetails(pictureInfo.details);
+      setComments(pictureInfo.comments);
+      setLoadedPicture(true);
     }
     loadPictureIntoState().then();
   }, [pictureId]);
@@ -27,38 +31,30 @@ const PictureView = ({ pictureId }: { pictureId: number }) => {
     {
       name: t('common.picture'),
       icon: '',
-      target: '',
+      target: '/picture/' + `${pictureId}`,
     },
     {
       name: t('common.details'),
       icon: '',
-      target: '',
+      target: '/picture/' + `${pictureId}`,
     },
     {
       name: t('common.comments'),
       icon: '',
-      target: '',
+      target: '/picture/' + `${pictureId}`,
     },
   ];
 
-  const changeView = () => {
-    switch (picture) {
-      case null:
-        return 'Test';
-      default:
-        return (
-          <div>
-            {picture && <Picture pictureInfo={picture} />}
-            <PictureDetails />
-            <CommentsContainer />
-          </div>
-        );
-    }
-  };
-
   return (
     <div>
-      {changeView()}
+      {!loadedPicture && <div>{t('common.loading')}</div>}
+      {loadedPicture && (
+        <div className='picture-view'>
+          <Picture url={pictureUrl} />
+          <PictureDetails details={pictureDetails} />
+          <CommentsContainer comments={comments} />
+        </div>
+      )}
       <NavigationBar elements={menuItems} />
     </div>
   );
