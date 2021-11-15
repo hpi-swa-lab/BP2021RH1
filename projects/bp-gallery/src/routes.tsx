@@ -16,6 +16,14 @@ const routes: RouteConfig[] = [
         render: () => {
           return <GalleryView target='browse' />;
         },
+        exact: true,
+      },
+      {
+        path: '/browse/:path',
+        render: props => {
+          const path = props.location.pathname.split('/').slice(2);
+          return <GalleryView target='browse' path={path} />;
+        },
       },
       {
         path: '/search',

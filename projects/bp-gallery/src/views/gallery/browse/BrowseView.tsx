@@ -1,32 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import ItemList, { ItemListItem } from '../common/ItemList';
 import './BrowseView.scss';
-import apiConnector from '../../../ApiConnector';
+import apiConnector, { apiBase } from '../../../ApiConnector';
+import { useHistory } from 'react-router-dom';
 
-const BrowseView = () => {
+const BrowseView = (params?: { path?: string[] }) => {
+  const history = useHistory();
   const [items, setItems] = useState<ItemListItem[]>([]);
 
   useEffect(() => {
     apiConnector
-      .getCategories({
-        priority: 2,
-      })
-      .then(async (val: any[]) => {
+      .getCategories(params?.path ?? [])
+      .then(async (categories: { thumbnail: any[]; name: string }[]) => {
         setItems(
           await Promise.all(
-            val.map(async (i, indx) => ({
-              name: i.name,
-              background: `${apiConnector._apiBase}${
-                (
-                  await apiConnector.queryPictures({ _limit: 1, category_tags: i.id })
-                )[0].media.url as string
-              }`,
-              color: indx % 2 === 0 ? '#7E241D' : '#404272',
-            }))
+            categories.map(async (category, indx) => {
+              const formats = category.thumbnail[0].media.formats;
+
+              return {
+                name: decodeURIComponent(category.name),
+                background: `${apiBase}/${String(
+                  formats?.medium?.url || formats?.small?.url || formats?.thumbnail?.url || ''
+                )}`,
+                color: indx % 2 === 0 ? '#7E241D' : '#404272',
+                onClick: () => {
+                  console.log(params?.path);
+                  console.log(
+                    `/browse/${
+                      params?.path
+                        ?.map(folder => {
+                          return encodeURIComponent(folder);
+                        })
+                        .join('/') ?? ''
+                    }/${encodeURIComponent(category.name)}`.replace(/\/+/gm, '/')
+                  );
+                  history.push(
+                    `/browse/${
+                      params?.path
+                        ?.map(folder => {
+                          return encodeURIComponent(folder);
+                        })
+                        .join('/') ?? ''
+                    }/${encodeURIComponent(category.name)}`.replace(/\/+/gm, '/')
+                  );
+                },
+              };
+            })
           )
         );
       });
-  }, []);
+  }, [params?.path, history]);
 
   return (
     <div className='browse-view'>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.4.17",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.3",
@@ -22,6 +23,7 @@
     "canvas": "^2.8.0",
     "dayjs": "^1.10.7",
     "dompurify": "^2.3.3",
+    "graphql": "^16.0.1",
     "history": "^5.0.1",
     "i18next": "^21.4.1",
     "i18next-browser-languagedetector": "^6.1.2",

@@ -14,7 +14,15 @@ const ItemList = (props: { items: ItemListItem[] }) => {
     <div className='item-list large'>
       {props.items.map((item, index) => {
         return (
-          <div className='item' key={index}>
+          <div
+            className='item'
+            onClick={() => {
+              if (item.onClick) {
+                item.onClick();
+              }
+            }}
+            key={index}
+          >
             <div className='image-container'>
               <img src={item.background} />
             </div>
