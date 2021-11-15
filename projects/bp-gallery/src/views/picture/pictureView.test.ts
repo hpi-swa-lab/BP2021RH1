@@ -1,5 +1,5 @@
 import { renderRoute } from '../../testUtils';
-import { getByText, render, waitForElementToBeRemoved, screen, act } from '@testing-library/react';
+import { waitForElementToBeRemoved, screen } from '@testing-library/react';
 import { useTranslation } from 'react-i18next';
 
 test('Nav bar contains picture, details and commen button', () => {
@@ -17,7 +17,7 @@ test('Nav bar contains picture, details and commen button', () => {
 
 test('PictureView should include a picture, and a details,comments container', async () => {
   const { t } = useTranslation();
-  const { container } = renderRoute('/picture/1');
+  renderRoute('/picture/1');
 
   await waitForElementToBeRemoved(() => screen.getByText(t('common.loading').toString()));
   const pictureContainer = document.querySelectorAll('.picture-view > .picture');
