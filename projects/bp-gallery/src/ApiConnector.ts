@@ -83,11 +83,29 @@ class APIConnector {
     return images;
   }
 
-  getPicture(pictureId: number): Promise<any> {
+  async getPicture(pictureId: number): Promise<any> {
     // Return all data to a picture
-    const endpoint = 'pictures';
     const query: { [key: string]: any } = JSON.parse(JSON.stringify({ id: pictureId }));
-    return this.fetch(endpoint, query);
+    const pictureArray = await this.queryPictures(query);
+    const pictureInfo = {
+      url: pictureArray[0].media.url,
+      details: {
+        title: {
+          text: pictureArray[0].title.text,
+          id: pictureArray[0].title.id,
+        },
+        // eslint-disable-next-line  @typescript-eslint/no-unsafe-call
+        descriptions: pictureArray[0].descriptions.map((desc: any) => {
+          return {
+            text: desc.text,
+            id: desc.id,
+          };
+        }),
+      },
+      comments: pictureArray[0].comment,
+    };
+
+    return pictureInfo;
   }
 
   getCommentsForPicture(): Promise<any> {
