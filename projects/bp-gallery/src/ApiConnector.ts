@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import { ApolloClient, DocumentNode, gql, InMemoryCache } from '@apollo/client';
+import { decodeBrowsePathComponent } from './views/gallery/browse/BrowseView';
 
 export const apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
 
@@ -8,8 +9,8 @@ class APIConnector {
     return apiBase;
   }
 
-  apolloClient: ApolloClient<any> = new ApolloClient<any>({
-    uri: 'https://bp.bad-harzburg-stiftung.de/api/graphql',
+  apolloClient: ApolloClient<any> = new ApolloClient({
+    uri: `${apiBase}/graphql`,
     cache: new InMemoryCache(),
   });
 
@@ -37,20 +38,6 @@ class APIConnector {
   }
 
   async getCategories(path: string[]): Promise<any> {
-    // const cats = (
-    //   await this.fetchGraphQL(gql`
-    //     query {
-    //       categoryTags(where: { priority: 2 }) {
-    //         name
-    //         thumbnail: pictures(limit: 1) {
-    //           media {
-    //             formats
-    //           }
-    //         }
-    //       }
-    //     }
-    //   `)
-    // ).categoryTags;
     path.reverse();
     const query = `
     query {
@@ -58,7 +45,7 @@ class APIConnector {
         ${path.reduce(
           (accumulator, folder) => {
             return `
-            related_tags (where: {name: "${decodeURIComponent(folder)}"}){
+            related_tags (where: {name: "${decodeBrowsePathComponent(folder)}"}){
               ${accumulator}
             }`;
           },
@@ -71,7 +58,7 @@ class APIConnector {
                 }
              }
             }`
-        )} 
+        )}
       }
     }`;
     let cats = (

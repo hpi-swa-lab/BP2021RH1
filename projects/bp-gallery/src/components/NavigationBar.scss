@@ -8,11 +8,9 @@
   background: $primaryColor;
   color: white;
   height: 4rem;
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
   z-index: 99;
+  min-height: 0;
 
   .nav-element {
     padding: 0.5rem 1rem;

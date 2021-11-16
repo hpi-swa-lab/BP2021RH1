@@ -16,7 +16,14 @@ body {
   background-size: 100% 100%;
 }
 
+#root {
+  height: 100%;
+}
+
 .App {
-  padding-bottom: 4rem;
-  padding-top: 5rem;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 5rem 1fr;
+  height: 100%;
+  overflow: hidden;
 }

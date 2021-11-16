@@ -4,6 +4,7 @@ import SearchView from './search/SearchView';
 import './GalleryView.scss';
 import NavigationBar from '../../components/NavigationBar';
 import { useTranslation } from 'react-i18next';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const GalleryView = (params?: { target?: string; searchParams?: any; path?: string[] }) => {
   const { t } = useTranslation();
@@ -39,7 +40,9 @@ const GalleryView = (params?: { target?: string; searchParams?: any; path?: stri
 
   return (
     <div className='gallery-view'>
-      {switchView()}
+      <PerfectScrollbar options={{ suppressScrollX: true, useBothWheelAxes: false }}>
+        {switchView()}
+      </PerfectScrollbar>
       <NavigationBar elements={menuItems} />
     </div>
   );

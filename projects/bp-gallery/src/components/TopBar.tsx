@@ -1,14 +1,23 @@
-// import { Button, Icon } from '@mui/material';
+import { Button, Icon } from '@mui/material';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import './TopBar.scss';
 
 const TopBar = () => {
+  const hist = useHistory();
+  console.log(hist.location.state);
   return (
     <div className='top-bar'>
       <div className='actions'>
-        {/* <Button>
-          <Icon>arrow_back</Icon>Zurück zur Suche
-        </Button> */}
+        {hist.location.state?.showBack && (
+          <Button
+            onClick={() => {
+              hist.go(-1);
+            }}
+          >
+            <Icon>arrow_back</Icon>Zurück
+          </Button>
+        )}
       </div>
       <div className='bh-logo'>
         <img src='/bad-harzburg-stiftung-logo.png'></img>
