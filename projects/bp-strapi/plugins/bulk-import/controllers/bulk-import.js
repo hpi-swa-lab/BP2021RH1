@@ -119,7 +119,8 @@ module.exports = {
     //       descriptions: (previousDescription ? [{id: previousDescription.id}] : []),
     //       media: {id: mediaRef.id},
     //       keyword_tags: keywordRefs,
-    //       comment: commentRefs
+    //       comment: commentRefs,
+    //       wordpress_id: parseInt(picid),
     //     });
 
     //   }
