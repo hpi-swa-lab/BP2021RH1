@@ -102,7 +102,7 @@ class APIConnector {
           };
         }),
       },
-      comments: pictureArray[0].comment,
+      comments: pictureArray[0].Comment,
     };
 
     return pictureInfo;

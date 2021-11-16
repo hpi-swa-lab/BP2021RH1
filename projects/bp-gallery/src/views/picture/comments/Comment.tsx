@@ -9,11 +9,12 @@ export interface CommentInfo {
 const Comment = ({ comments }: { comments: CommentInfo[] }) => {
   return (
     <div className='comment'>
-      {/*{comments.map((comment: CommentInfo) => (*/}
-      {/*  <div className='comment' key={comment.id}>*/}
-      {/*    {comment.text}*/}
-      {/*  </div>*/}
-      {/*))}*/}
+      {comments.length > 0 &&
+        comments.map((comment: CommentInfo) => (
+          <div className='comment' key={comment.id}>
+            {comment.text}
+          </div>
+        ))}
     </div>
   );
 };

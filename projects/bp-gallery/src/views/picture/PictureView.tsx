@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
-import CommentsContainer from './CommentsContainer';
+import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
 import apiConnector from '../../ApiConnector';
 import NavigationBar from '../../components/NavigationBar';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 
 const PictureView = ({ pictureId }: { pictureId: number }) => {
@@ -30,33 +31,35 @@ const PictureView = ({ pictureId }: { pictureId: number }) => {
   const menuItems = [
     {
       name: t('common.picture'),
-      icon: '',
+      icon: 'photo',
       target: '/picture/' + `${pictureId}`,
     },
     {
       name: t('common.details'),
-      icon: '',
+      icon: 'info',
       target: '/picture/' + `${pictureId}`,
     },
     {
       name: t('common.comments'),
-      icon: '',
+      icon: 'comment',
       target: '/picture/' + `${pictureId}`,
     },
   ];
 
   return (
-    <div>
+    <>
       {!loadedPicture && <div>{t('common.loading')}</div>}
       {loadedPicture && (
-        <div className='picture-view'>
-          <Picture url={pictureUrl} />
-          <PictureDetails details={pictureDetails} />
-          <CommentsContainer comments={comments} />
-        </div>
+        <PerfectScrollbar options={{ suppressScrollX: true, useBothWheelAxes: false }}>
+          <div className='picture-view'>
+            <Picture url={pictureUrl} />
+            <PictureDetails details={pictureDetails} />
+            <CommentsContainer comments={comments} />
+          </div>
+        </PerfectScrollbar>
       )}
       <NavigationBar elements={menuItems} />
-    </div>
+    </>
   );
 };
 

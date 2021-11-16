@@ -1,35 +1,10 @@
-@import '../../shared/style.scss';
-
 .picture-view {
   color: white;
 
-  .picture img {
-    width: 80%;
-    height: 80%;
-
-    padding-top: 3%;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    position: relative;
-    z-index: 1;
-  }
-
-  .pictureDetails {
-    .title {
-      font-size: large;
-      font-weight: bold;
-      position: relative;
-      z-index: 2;
-      float: right;
-      margin-top: -5%;
-      margin-right: 5%;
-      color: $primaryColor;
-      background: white;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      padding-left: 15px;
-      padding-right: 15px;
-    }
-  }
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
