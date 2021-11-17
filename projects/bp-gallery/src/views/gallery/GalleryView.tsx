@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BrowseView from './browse/BrowseView';
 import SearchView from './search/SearchView';
 import './GalleryView.scss';
@@ -9,10 +9,19 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 const GalleryView = (params?: { target?: string; searchParams?: any; path?: string[] }) => {
   const { t } = useTranslation();
 
+  const [scrollPos, setScrollPos] = useState<number>();
+  const [scrollHeight, setScrollHeight] = useState<number>();
+
   const switchView = () => {
     switch (params?.target) {
       case 'browse':
-        return <BrowseView path={params.path} />;
+        return (
+          <BrowseView
+            path={params.path}
+            scrollPos={scrollPos ?? 0}
+            scrollHeight={scrollHeight ?? 0}
+          />
+        );
       case 'search':
         return <SearchView params={params.searchParams} />;
       default:
@@ -40,7 +49,13 @@ const GalleryView = (params?: { target?: string; searchParams?: any; path?: stri
 
   return (
     <div className='gallery-view'>
-      <PerfectScrollbar options={{ suppressScrollX: true, useBothWheelAxes: false }}>
+      <PerfectScrollbar
+        options={{ suppressScrollX: true, useBothWheelAxes: false }}
+        onScrollY={container => {
+          setScrollPos(container.scrollTop);
+          setScrollHeight(container.scrollHeight);
+        }}
+      >
         {switchView()}
       </PerfectScrollbar>
       <NavigationBar elements={menuItems} />

@@ -9,7 +9,7 @@ export interface ItemListItem {
   onClick?: () => void;
 }
 
-const ItemList = (props: { items: ItemListItem[] }) => {
+const ItemList = (props: { items: ItemListItem[]; compact?: boolean }) => {
   return (
     <div className='item-list large'>
       {props.items.map((item, index) => {
