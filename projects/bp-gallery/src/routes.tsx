@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteConfig } from 'react-router-config';
+import { RouteConfig, RouteConfigComponentProps } from 'react-router-config';
 import { Redirect } from 'react-router-dom';
 import App from './App';
 import Demo from './prototypes/demo';
@@ -20,7 +20,7 @@ const routes: RouteConfig[] = [
       },
       {
         path: '/browse/:path',
-        render: props => {
+        render: (props: RouteConfigComponentProps) => {
           const path = props.location.pathname.split('/').slice(2);
           return <GalleryView target='browse' path={path} />;
         },
@@ -41,7 +41,7 @@ const routes: RouteConfig[] = [
       {
         path: '/picture/:id',
         render: props => {
-          return <PictureView pictureId={props.match.params.id} />;
+          return <PictureView pictureId={props.match.params.id} thumbnailMode={false} />;
         },
       },
       {

@@ -3,12 +3,21 @@ import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
-import apiConnector from '../../ApiConnector';
+import apiConnector, { apiBase } from '../../ApiConnector';
 import NavigationBar from '../../components/NavigationBar';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
+//import { Parallax, ParallaxProvider } from 'react-scroll-parallax';
 
-const PictureView = ({ pictureId }: { pictureId: number }) => {
+const PictureView = ({
+  pictureId,
+  thumbnailUrl = '',
+  thumbnailMode = true,
+}: {
+  pictureId: number;
+  thumbnailUrl?: string;
+  thumbnailMode: boolean;
+}) => {
   const { t } = useTranslation();
 
   const [loadedPicture, setLoadedPicture] = useState<boolean>(false);
@@ -25,8 +34,10 @@ const PictureView = ({ pictureId }: { pictureId: number }) => {
       setComments(pictureInfo.comments);
       setLoadedPicture(true);
     }
-    loadPictureIntoState().then();
-  }, [pictureId]);
+    if (!thumbnailMode) {
+      loadPictureIntoState().then();
+    }
+  }, [pictureId, thumbnailMode]);
 
   const menuItems = [
     {
@@ -46,21 +57,26 @@ const PictureView = ({ pictureId }: { pictureId: number }) => {
     },
   ];
 
-  return (
-    <>
-      {!loadedPicture && <div>{t('common.loading')}</div>}
-      {loadedPicture && (
+  if (thumbnailMode) {
+    return <img src={apiBase + thumbnailUrl} />;
+  } else if (!loadedPicture) {
+    return <div>{t('common.loading')}</div>;
+  } else {
+    return (
+      // <ParallaxProvider>
+      <div className='picture-view'>
         <PerfectScrollbar options={{ suppressScrollX: true, useBothWheelAxes: false }}>
-          <div className='picture-view'>
-            <Picture url={pictureUrl} />
-            <PictureDetails details={pictureDetails} />
-            <CommentsContainer comments={comments} />
-          </div>
+          {/*<Parallax>*/}
+          <Picture url={pictureUrl} />
+          <PictureDetails details={pictureDetails} />
+          <CommentsContainer comments={comments} />
         </PerfectScrollbar>
-      )}
-      <NavigationBar elements={menuItems} />
-    </>
-  );
+        <NavigationBar elements={menuItems} />
+        {/*</Parallax>*/}
+      </div>
+      // </ParallaxProvider>
+    );
+  }
 };
 
 export default PictureView;
