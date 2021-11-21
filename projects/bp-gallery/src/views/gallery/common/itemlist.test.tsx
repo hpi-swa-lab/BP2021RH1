@@ -22,7 +22,7 @@ test('Item List should show elements', () => {
   ];
   const { container } = render(<ItemList items={items} />);
   const links = container.querySelectorAll('.item');
-  expect(links.length).toBe(items.length);
+  expect(links).toHaveLength(items.length);
   links.forEach((link: Element, key: number) => {
     expect(link.querySelector('img')?.src).toBe(items[key].background);
     expect(link.querySelector('.text-container')).toHaveTextContent(items[key].name.toUpperCase());
