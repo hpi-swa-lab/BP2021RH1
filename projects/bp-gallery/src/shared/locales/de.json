@@ -1,0 +1,11 @@
+{
+  "common": {
+    "search": "Suchen",
+    "browse": "Stöbern",
+    "menu": "Menü",
+    "picture": "Bild",
+    "details": "Details",
+    "comments": "Kommentare",
+    "loading": "Lädt..."
+  }
+}
