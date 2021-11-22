@@ -21,6 +21,7 @@ const routes: RouteConfig[] = [
       {
         path: '/browse/:path',
         render: (props: RouteConfigComponentProps) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           const path = props.location.pathname.split('/').slice(2);
           return <GalleryView target='browse' path={path} />;
         },
