@@ -6,7 +6,6 @@ import './TopBar.scss';
 
 const TopBar = () => {
   const hist: BrowserHistory = useHistory();
-  console.log(hist.location.state);
   return (
     <div className='top-bar'>
       <div className='actions'>
