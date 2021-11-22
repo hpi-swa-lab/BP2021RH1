@@ -1,27 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
-import Navigation from './Navigation';
+import TopBar from './components/TopBar';
 import './App.scss';
-import { drawBackground } from './helpers';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
-const AnimatedBackground = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null!);
-
-  useEffect(() => {
-    const canvas: HTMLCanvasElement = canvasRef.current;
-    const ctx: CanvasRenderingContext2D = canvas.getContext('2d')!;
-    drawBackground(ctx);
-  }, []);
-
-  return <canvas ref={canvasRef} id='background-anim' width='1920' height='1080' />;
+const App = ({ route }: RouteConfigComponentProps) => {
+  return (
+    <div className='App'>
+      <TopBar />
+      {renderRoutes(route?.routes)}
+    </div>
+  );
 };
-
-const App = ({ route }: RouteConfigComponentProps) => (
-  <div className='App'>
-    <AnimatedBackground />
-    <Navigation />
-    {renderRoutes(route?.routes)}
-  </div>
-);
-
 export default App;
