@@ -11,6 +11,7 @@
       animation: pop-up 0.4s;
       transform: scale(0);
       animation-fill-mode: forwards;
+      cursor: pointer;
 
       @keyframes pop-up {
         0% {
