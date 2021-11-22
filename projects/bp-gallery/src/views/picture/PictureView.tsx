@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
@@ -24,19 +24,15 @@ const PictureView = ({
   const [pictureDetails, setPictureDetails] = useState<any | undefined>(undefined);
   const [comments, setComments] = useState<any | undefined>(undefined);
 
-  const loadAllPictureInfo = () => {
-    apiConnector.getPicture(pictureId).then(pictureInfo => {
-      setPictureUrl(pictureInfo.url as string);
-      setPictureDetails(pictureInfo.details);
-      setComments(pictureInfo.comments);
-      setLoadedPicture(true);
-    });
-  };
-
-  //Loads the Information about a picture into state
+  //Loads the information about a picture into state
   useEffect(() => {
     if (!thumbnailMode) {
-      loadAllPictureInfo();
+      apiConnector.getPicture(pictureId).then(pictureInfo => {
+        setPictureUrl(pictureInfo.url as string);
+        setPictureDetails(pictureInfo.details);
+        setComments(pictureInfo.comments);
+        setLoadedPicture(true);
+      });
     }
   }, [pictureId, thumbnailMode]);
 
