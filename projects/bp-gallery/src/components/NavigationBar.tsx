@@ -16,19 +16,17 @@ export interface NavigationProps {
 const NavigationBar = (props: NavigationProps) => {
   return (
     <div className='nav-bar'>
-      {props.elements?.map(prop => {
-        return (
-          <NavLink
-            to={prop.target}
-            activeClassName='active'
-            key={prop.name}
-            className='nav-element'
-          >
-            <Icon>{prop.icon}</Icon>
-            <span className='nav-element-title'>{prop.name}</span>
-          </NavLink>
-        );
-      })}
+      {props.elements?.map(element => (
+        <NavLink
+          to={element.target}
+          activeClassName='active'
+          key={element.name}
+          className='nav-element'
+        >
+          <Icon>{element.icon}</Icon>
+          <span className='nav-element-title'>{element.name}</span>
+        </NavLink>
+      ))}
     </div>
   );
 };
