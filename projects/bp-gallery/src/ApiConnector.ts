@@ -17,7 +17,7 @@ class APIConnector {
   private fetch(endpoint: string, query: { [key: string]: any }): Promise<any> {
     return new Promise((resolve, reject) => {
       const stringified = stringify(query);
-      fetch(apiBase + `${endpoint}?${stringified}`).then(
+      fetch(`${apiBase}${endpoint}?${stringified}`).then(
         resp => {
           if (resp.ok) {
             resolve(resp.json());
