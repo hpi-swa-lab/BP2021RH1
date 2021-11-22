@@ -7,12 +7,11 @@ import apiConnector, { apiBase } from '../../ApiConnector';
 import NavigationBar from '../../components/NavigationBar';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
-//import { Parallax, ParallaxProvider } from 'react-scroll-parallax';
 
 const PictureView = ({
   pictureId,
   thumbnailUrl = '',
-  thumbnailMode = true,
+  thumbnailMode = false,
 }: {
   pictureId: number;
   thumbnailUrl?: string;
@@ -25,17 +24,19 @@ const PictureView = ({
   const [pictureDetails, setPictureDetails] = useState<any | undefined>(undefined);
   const [comments, setComments] = useState<any | undefined>(undefined);
 
-  useEffect(() => {
-    async function loadPictureIntoState(): Promise<void> {
-      const pictureInfo = await apiConnector.getPicture(pictureId);
-
+  const loadAllPictureInfo = () => {
+    apiConnector.getPicture(pictureId).then(pictureInfo => {
       setPictureUrl(pictureInfo.url as string);
       setPictureDetails(pictureInfo.details);
       setComments(pictureInfo.comments);
       setLoadedPicture(true);
-    }
+    });
+  };
+
+  //Loads the Information about a picture into state
+  useEffect(() => {
     if (!thumbnailMode) {
-      loadPictureIntoState().then();
+      loadAllPictureInfo();
     }
   }, [pictureId, thumbnailMode]);
 
@@ -63,18 +64,14 @@ const PictureView = ({
     return <div>{t('common.loading')}</div>;
   } else {
     return (
-      // <ParallaxProvider>
       <div className='picture-view'>
         <PerfectScrollbar options={{ suppressScrollX: true, useBothWheelAxes: false }}>
-          {/*<Parallax>*/}
           <Picture url={pictureUrl} />
           <PictureDetails details={pictureDetails} />
           <CommentsContainer comments={comments} />
         </PerfectScrollbar>
         <NavigationBar elements={menuItems} />
-        {/*</Parallax>*/}
       </div>
-      // </ParallaxProvider>
     );
   }
 };
