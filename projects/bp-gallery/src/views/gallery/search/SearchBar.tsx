@@ -16,7 +16,7 @@ const SearchBar = () => {
         }}
         placeholder='Stichworte suchen...'
         variant='outlined'
-      ></TextField>
+      />
     </div>
   );
 };

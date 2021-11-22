@@ -5,10 +5,6 @@ import { decodeBrowsePathComponent } from './views/gallery/browse/BrowseView';
 export const apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
 
 class APIConnector {
-  get _apiBase() {
-    return apiBase;
-  }
-
   apolloClient: ApolloClient<any> = new ApolloClient({
     uri: `${apiBase}/graphql`,
     cache: new InMemoryCache(),
