@@ -1,10 +1,11 @@
 import { Button, Icon } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { BrowserHistory } from 'history';
 import './TopBar.scss';
 
 const TopBar = () => {
-  const hist = useHistory();
+  const hist: BrowserHistory = useHistory();
   console.log(hist.location.state);
   return (
     <div className='top-bar'>
