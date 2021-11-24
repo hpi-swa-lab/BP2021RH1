@@ -13,6 +13,10 @@
     "author": {
       "type": "text",
       "required": true
+    },
+    "date": {
+      "type": "datetime",
+      "required": false
     }
   }
 }

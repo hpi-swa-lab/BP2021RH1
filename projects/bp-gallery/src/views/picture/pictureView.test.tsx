@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 test('Nav bar contains picture, details and comment button', async () => {
   const { t } = useTranslation();
-  const { container } = renderRoute('/picture/1');
+  const { container } = renderRoute('/picture/7600');
 
   await waitForElementToBeRemoved(() => screen.getByText(t('common.loading').toString()));
   const navBarLinks = container.querySelectorAll('.nav-element-title');
@@ -18,7 +18,7 @@ test('Nav bar contains picture, details and comment button', async () => {
 
 test('PictureView should include a picture, and a details,comments container', async () => {
   const { t } = useTranslation();
-  const { container } = renderRoute('/picture/1');
+  const { container } = renderRoute('/picture/7600');
 
   await waitForElementToBeRemoved(() => screen.getByText(t('common.loading').toString()));
   const pictureContainer = container.querySelectorAll('.picture');

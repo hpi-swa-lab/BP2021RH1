@@ -568,6 +568,9 @@
                 "time_range_tag": {
                   "type": "string"
                 },
+                "wordpress_id": {
+                  "type": "integer"
+                },
                 "published_at": {
                   "type": "string"
                 },

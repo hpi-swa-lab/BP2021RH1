@@ -610,6 +610,10 @@
                 },
                 "author": {
                   "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
                 }
               }
             }
@@ -678,6 +682,7 @@
             "items": {
               "required": [
                 "id",
+                "name",
                 "priority"
               ],
               "properties": {
@@ -780,6 +785,9 @@
               }
             }
           },
+          "wordpress_id": {
+            "type": "integer"
+          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -809,6 +817,10 @@
                 },
                 "author": {
                   "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
                 }
               }
             }
@@ -836,6 +848,9 @@
           },
           "time_range_tag": {
             "type": "string"
+          },
+          "wordpress_id": {
+            "type": "integer"
           },
           "published_at": {
             "type": "string",
