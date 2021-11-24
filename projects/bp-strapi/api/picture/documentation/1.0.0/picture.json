@@ -610,6 +610,10 @@
                 },
                 "author": {
                   "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
                 }
               }
             }
@@ -813,6 +817,10 @@
                 },
                 "author": {
                   "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
                 }
               }
             }
