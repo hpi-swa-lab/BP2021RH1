@@ -16,7 +16,7 @@
       "type": "string",
       "unique": true,
       "required": true,
-      "regex": "^[A-Za-z0-9- ]*$"
+      "regex": "^[A-Za-z0-9- \\|äöüÄÖÜß\\/\\\\\\&\\;\\:„“\\,\"\\.\\(\\)\\[\\]\\$\\§\\%\\=\\?\\!–\\<\\>\\^'’]*$"
     },
     "pictures": {
       "via": "category_tags",
