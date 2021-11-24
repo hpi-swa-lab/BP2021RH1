@@ -530,6 +530,7 @@
       "Category-tag": {
         "required": [
           "id",
+          "name",
           "priority"
         ],
         "properties": {
@@ -582,6 +583,9 @@
                 "time_range_tag": {
                   "type": "string"
                 },
+                "wordpress_id": {
+                  "type": "integer"
+                },
                 "published_at": {
                   "type": "string"
                 },
@@ -606,6 +610,7 @@
             "items": {
               "required": [
                 "id",
+                "name",
                 "priority"
               ],
               "properties": {
@@ -653,6 +658,7 @@
       },
       "NewCategory-tag": {
         "required": [
+          "name",
           "priority"
         ],
         "properties": {

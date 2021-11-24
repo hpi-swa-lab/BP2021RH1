@@ -27,107 +27,110 @@ module.exports = {
     // await strapi.connections.default.raw('DELETE FROM `titles_pictures__pictures_titles`');
     // ctx.send('ok');
     // return;
-    // strapi.services.title.delete();
-    // strapi.services.description.delete();
-    // strapi.services['keyword-tag'].delete();
-    // strapi.services['category-tag'].delete();
-    // strapi.services.picture.delete();
+    // await strapi.services.title.delete();
+    // await strapi.services.description.delete();
+    // await strapi.services['keyword-tag'].delete();
+    // await strapi.services['category-tag'].delete();
+    // await strapi.services['time-range-tag'].delete();
+    // await strapi.services.picture.delete();
+    // ctx.send('ok');
+    // return;
     const fs = require('fs');
     const data = fs.readFileSync(ctx.request.files['jsondata'].path, 'utf-8');
-    const parsed = JSON.parse(data);
+    const albumData = JSON.parse(data);
     const data2 = fs.readFileSync(ctx.request.files['jsondata2'].path, 'utf-8');
     const tagInfoData = JSON.parse(data2);
 
     const existingNames = fs.readdirSync('/home/dev/BP2021RH1/projects/bp-strapi/public/uploads/').map(name => name.replace(/_/gm, '-'));
 
     const buffer = {};
-    // for (const albumid of Object.keys(parsed)) {
-    //   const album = parsed[albumid];
-    //   const allFiles = [];
-    //   for (const picid of Object.keys(album.pictures)) {
-    //     // strapi.services['keyword-tag'].delete({'name': 'Bad Harzburg'});
-    //     const picture = album.pictures[picid];
-    //     const path = `/home/dev/images/gallery/${album.dirname}/${picture.filename}`;
-    //     if (fs.existsSync(path) && !existingNames.some(exName => 
-    //       exName.substring(0, -15) === picture.filename.substring(0, -4)
-    //     )) {
-    //       const stats = fs.statSync(path);
-    //       const file = {
-    //         path,
-    //         name: picture.filename,
-    //         size: stats.size,
-    //         type: 'image/jpeg'
-    //       };
-    //       allFiles.push(file);
-    //       console.log('New image found:' + picture.filename);
-    //     }
-    //   }
-    //   if (allFiles.length > 0) console.log('New images in folder:' + album.dirname)
-    //   await strapi.plugins['upload'].services.upload.upload({data: {
-    //     fileInfo: {}
-    //   }, files: allFiles});
+    for (const albumid of Object.keys(albumData)) {
+      const album = albumData[albumid];
+      const allFiles = [];
+      for (const picid of Object.keys(album.pictures)) {
+        // strapi.services['keyword-tag'].delete({'name': 'Bad Harzburg'});
+        const picture = album.pictures[picid];
+        const path = `/home/dev/images/gallery/${album.dirname}/${picture.filename}`;
+        if (fs.existsSync(path) && !existingNames.some(exName => 
+          exName.substring(0, -15) === picture.filename.substring(0, -4)
+        )) {
+          const stats = fs.statSync(path);
+          const file = {
+            path,
+            name: picture.filename,
+            size: stats.size,
+            type: 'image/jpeg'
+          };
+          allFiles.push(file);
+          console.log('New image found:' + picture.filename);
+        }
+      }
+      if (allFiles.length > 0) console.log('New images in folder:' + album.dirname)
+      await strapi.plugins['upload'].services.upload.upload({data: {
+        fileInfo: {}
+      }, files: allFiles});
       
-    //   for (const picid of Object.keys(album.pictures)) {
-    //     const picture = album.pictures[picid];
-    //     const mediaRef = await strapi.plugins['upload'].services.upload.fetch({
-    //       "name": picture.filename
-    //     });
-    //     if (!mediaRef) {
-    //       console.log(picture.filename);
-    //       continue;
-    //     }
-    //     if (mediaRef.related && mediaRef.related.length) {
-    //       continue;
-    //     }
-    //     console.log('Including image', picid);
-    //     let previousTitle = await strapi.services.title.findOne({text: picture.alttext});
+      for (const picid of Object.keys(album.pictures)) {
+        const picture = album.pictures[picid];
+        const mediaRef = await strapi.plugins['upload'].services.upload.fetch({
+          "name": picture.filename
+        });
+        if (!mediaRef) {
+          console.error(picture.filename);
+          continue;
+        }
+        // related means images that have been assigned this media file
+        // If there already is such a picture, don't include it again
+        if (mediaRef.related && mediaRef.related.length) {
+          continue;
+        }
+        console.log('Including image', picid);
+        let previousTitle = await strapi.services.title.findOne({text: picture.alttext});
 
-    //     if (!previousTitle) {
-    //       previousTitle = await strapi.services.title.create({
-    //         text: picture.alttext
-    //       });
-    //     }
-    //     let previousDescription = null;
-    //     if (picture.description && picture.description !== '') {
-    //       previousDescription = await strapi.services.description.findOne({text: picture.description});
-    //       if (!previousDescription) {
-    //         previousDescription = await strapi.services.description.create({
-    //           text: picture.description
-    //         });
-    //       }
-    //     }
-    //     const keywordRefs = [];
-    //     for (const keyword of picture.keywords) {
-    //       let previousKeyword = await strapi.services['keyword-tag'].findOne({name: keyword});
-    //       if (!previousKeyword) {
-    //         previousKeyword = await strapi.services['keyword-tag'].create({
-    //           name: keyword
-    //         });
-    //       }
-    //       keywordRefs.push({
-    //         id: previousKeyword.id
-    //       });
-    //     }
-    //     const commentRefs = picture.comments.map(comment => {
-    //       return {
-    //         text: comment.content,
-    //         author: comment.author
-    //       }
-    //     });
-    //     buffer[picid] = await strapi.services.picture.create({
-    //       title: {id: previousTitle.id},
-    //       descriptions: (previousDescription ? [{id: previousDescription.id}] : []),
-    //       media: {id: mediaRef.id},
-    //       keyword_tags: keywordRefs,
-    //       comment: commentRefs
-    //     });
+        if (!previousTitle) {
+          previousTitle = await strapi.services.title.create({
+            text: picture.alttext
+          });
+        }
+        let previousDescription = null;
+        if (picture.description && picture.description !== '') {
+          previousDescription = await strapi.services.description.findOne({text: picture.description});
+          if (!previousDescription) {
+            previousDescription = await strapi.services.description.create({
+              text: picture.description
+            });
+          }
+        }
+        const keywordRefs = [];
+        for (const keyword of picture.keywords) {
+          let previousKeyword = await strapi.services['keyword-tag'].findOne({name: keyword});
+          if (!previousKeyword) {
+            previousKeyword = await strapi.services['keyword-tag'].create({
+              name: keyword
+            });
+          }
+          keywordRefs.push({
+            id: previousKeyword.id
+          });
+        }
+        const commentRefs = picture.comments.map(comment => {
+          return {
+            text: comment.content,
+            author: comment.author,
+            date: comment.date
+          }
+        });
+        buffer[picid] = await strapi.services.picture.create({
+          title: {id: previousTitle.id},
+          descriptions: (previousDescription ? [{id: previousDescription.id}] : []),
+          media: {id: mediaRef.id},
+          keyword_tags: keywordRefs,
+          Comment: commentRefs,           // Is a Component, hence Caps
+          wordpress_id: parseInt(picid),
+        });
 
-    //   }
-    //   // for (const picid of Object.keys(album.pictures)) {
-    //   //   const picture = album.pictures[picid];
-    //   //   const uid = picture.media.id;
-    //   // }
-    // }
+      }
+    }
     console.log('Upload finished');
 
     const parseTagJson = async (cat, tagsSoFar) => {
@@ -143,15 +146,12 @@ module.exports = {
       tagsSoFar = tagsSoFar.concat([{id: tag.id}]);
       if (!isNaN(parseInt(cat.albumId))) {
         const newAlbumId = Object
-        .keys(parsed)
+        .keys(albumData)
         .find(albumid => parseInt(albumid) === parseInt(cat.albumId));
-        const allPicturesInAlbum = parsed[newAlbumId].pictures;
+        const allPicturesInAlbum = albumData[newAlbumId].pictures;
 
         for (const picid of Object.keys(allPicturesInAlbum)) {
-          const picture = allPicturesInAlbum[picid];
-          const mediaObject = await strapi.plugins['upload'].services.upload.fetch({name: picture.filename});
-          const imageIdInDatabase = mediaObject.related[0].id;
-          await strapi.services.picture.update({id: imageIdInDatabase}, {
+          await strapi.services.picture.update({wordpress_id: parseInt(picid)}, {
             category_tags: tagsSoFar
           });
         }
@@ -165,13 +165,7 @@ module.exports = {
 
     ctx.send(buffer);
   },
-  checkMissing: async (ctx) => {
-    // ctx.send((await strapi.plugins['upload'].services.upload.fetchAll({_limit: -1}))
-    //   .reduce((p,c) => {p[c.name] = c.related; return p;}, {})
-    // );
-    // ctx.send(await strapi.plugins['upload'].services.upload.fetchAll({
-    //   'name': '02.jpg'
-    // }));
+  addTimeRanges: async (ctx) => {
     const matchAnyTime = (text) => {
       const yearRegex = /19[Xx0-9]{2}/gm;
       const yearSpanRegex = /19[Xx0-9]{2}[\s]*[–|-|bis][\s]*19[Xx0-9]{2}/gm;
@@ -286,27 +280,26 @@ module.exports = {
       }
     }
     ctx.send(times);
-    // ctx.send((await strapi.services.picture.find({_limit: 50})));
   },
   fillCategoryTags: async (ctx) => {
     const fs = require('fs');
     const data = fs.readFileSync(ctx.request.files['jsondata'].path, 'utf-8');
-    const parsed = JSON.parse(data);
+    const tagInfoData = JSON.parse(data);
 
     const relateTags = async (tag) => {
       const relatedTags = await Promise.all(tag.children.map(async child => {
         return (await strapi.services['category-tag'].findOne({name: child.title})).id;
       }));
-      console.log(tag.title, relatedTags);
-      // await strapi.services['category-tag'].update({name: tag.title}, {
-      //   related_tags: relatedTags
-      // });
+      console.log(tag.title, relatedTags)
+      await strapi.services['category-tag'].update({name: tag.title}, {
+        related_tags: relatedTags
+      });
       for (const child of tag.children) {
         relateTags(child);
       }
     }
 
-    await relateTags(parsed);
+    await relateTags(tagInfoData);
     return {'success': true};
   }
 };

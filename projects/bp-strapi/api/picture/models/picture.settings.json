@@ -53,6 +53,10 @@
     "time_range_tag": {
       "via": "pictures",
       "model": "time-range-tag"
+    },
+    "wordpress_id": {
+      "type": "integer",
+      "unique": true
     }
   }
 }

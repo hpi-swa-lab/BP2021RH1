@@ -18,8 +18,8 @@
     },
     {
       "method": "GET",
-      "path": "/check-missing",
-      "handler": "bulk-import.checkMissing",
+      "path": "/add-time-ranges",
+      "handler": "bulk-import.addTimeRanges",
       "config": {
         "policies": []
       }
