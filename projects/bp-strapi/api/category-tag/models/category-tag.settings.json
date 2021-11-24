@@ -13,7 +13,10 @@
   "pluginOptions": {},
   "attributes": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "unique": true,
+      "required": true,
+      "regex": "^[A-Za-z0-9- ]*$"
     },
     "pictures": {
       "via": "category_tags",

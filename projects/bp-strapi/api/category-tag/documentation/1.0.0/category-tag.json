@@ -530,6 +530,7 @@
       "Category-tag": {
         "required": [
           "id",
+          "name",
           "priority"
         ],
         "properties": {
@@ -609,6 +610,7 @@
             "items": {
               "required": [
                 "id",
+                "name",
                 "priority"
               ],
               "properties": {
@@ -656,6 +658,7 @@
       },
       "NewCategory-tag": {
         "required": [
+          "name",
           "priority"
         ],
         "properties": {

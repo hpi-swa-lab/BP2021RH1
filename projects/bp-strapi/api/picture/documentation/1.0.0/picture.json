@@ -678,6 +678,7 @@
             "items": {
               "required": [
                 "id",
+                "name",
                 "priority"
               ],
               "properties": {
