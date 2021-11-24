@@ -1,8 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
-import { createMemoryHistory, MemoryHistory } from 'history';
 import routes from './routes';
 
 /**
@@ -10,7 +9,6 @@ import routes from './routes';
  * @see https://testing-library.com/docs/example-react-router/
  */
 export const renderRoute = (route: string) => {
-  const history: MemoryHistory = createMemoryHistory();
-  history.push(route);
-  return render(<Router history={history}>{renderRoutes(routes)}</Router>);
+  window.history.pushState({}, 'Test page', route);
+  return render(<BrowserRouter>{renderRoutes(routes)}</BrowserRouter>);
 };

@@ -1,0 +1,54 @@
+.picture-grid {
+  display: flex;
+  flex-direction: column;
+
+  .row {
+    display: flex;
+    flex-direction: row;
+
+    .picture-thumbnail {
+      margin: 5px;
+      animation: pop-up 0.4s;
+      transform: scale(0);
+      animation-fill-mode: forwards;
+      cursor: pointer;
+
+      @keyframes pop-up {
+        0% {
+          transform: scale(0);
+        }
+        95% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+        vertical-align: middle;
+      }
+    }
+
+    .picture-placeholder {
+      background: #474747;
+      margin: 5px;
+      animation: placeholder-sparkle 2.5s;
+      animation-iteration-count: infinite;
+
+      @keyframes placeholder-sparkle {
+        0% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 0.2;
+        }
+        100% {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+}

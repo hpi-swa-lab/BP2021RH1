@@ -8,13 +8,13 @@ test('Route mechanism renders our app component', () => {
   expect(container.firstChild).toHaveClass('App');
 });
 
-const HomeMock = () => <div>Home-Mock</div>;
-jest.mock('./Home', () => HomeMock);
+const GalleryMock = () => <div>Gallery-Mock</div>;
+jest.mock('./views/gallery/GalleryView.tsx', () => GalleryMock);
 
-test('Route mechanism renders the home component', () => {
+test('Route mechanism redirects empty route to the gallery component', () => {
   renderRoute('/');
 
-  const element = screen.getByText(/Home-Mock/);
+  const element = screen.getByText('Gallery-Mock');
 
   expect(element).toBeInTheDocument();
 });
@@ -25,7 +25,7 @@ jest.mock('./prototypes/demo', () => DemoMock);
 test('Route mechanism renders the demo component', () => {
   renderRoute('/prototypes/demo');
 
-  const element = screen.getByText(/Demo-Mock/);
+  const element = screen.getByText('Demo-Mock');
 
   expect(element).toBeInTheDocument();
 });
