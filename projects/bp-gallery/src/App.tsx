@@ -4,7 +4,8 @@ import TopBar from './components/TopBar';
 import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { apiBase } from './ApiConnector';
+
+export const apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
 
 const App = ({ route }: RouteConfigComponentProps) => {
   const apolloClient = new ApolloClient({

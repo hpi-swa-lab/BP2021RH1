@@ -1,6 +1,6 @@
 import React from 'react';
-import { apiBase } from '../../ApiConnector';
 import './Picture.scss';
+import { apiBase } from '../../App';
 
 const Picture = ({ url }: { url: string }) => {
   const imageLink = apiBase + url;

@@ -3,10 +3,11 @@ import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
-import apiConnector, { apiBase } from '../../ApiConnector';
+import apiConnector from '../../ApiConnector';
 import NavigationBar from '../../components/NavigationBar';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
+import { apiBase } from '../../App';
 
 const PictureView = ({
   pictureId,

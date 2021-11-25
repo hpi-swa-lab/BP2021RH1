@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { apiBase } from '../../../ApiConnector';
 import './PictureGrid.scss';
 import { History } from 'history';
+import { apiBase } from '../../../App';
 
 const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: string }) => {
   const [maxRowCount, setMaxRowCount] = useState<number>(
