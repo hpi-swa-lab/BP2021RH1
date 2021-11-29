@@ -1,5 +1,5 @@
 overwrite: true
-schema: "C:\\Users\\bened\\0\\Studium\\BP\\Git_Repo\\BP2021RH1\\projects\\bp-strapi\\exports\\graphql\\schema.graphql"
+schema: "https://bp.bad-harzburg-stiftung.de/api/schema.graphql"
 documents: 'src/graphql/*.graphql'
 generates:
   src/graphql/APIConnector.tsx:
