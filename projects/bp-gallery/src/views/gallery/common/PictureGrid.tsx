@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { apiBase } from '../../../ApiConnector';
+//import { apiBase } from '../../../ApiConnector';
 import './PictureGrid.scss';
 import { History } from 'history';
+import PictureView from '../../picture/PictureView';
 
 const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: string }) => {
   const [maxRowCount, setMaxRowCount] = useState<number>(
@@ -92,7 +93,13 @@ const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: strin
                       history.push(`/picture/${String(picture.id)}`, { showBack: true });
                     }}
                   >
-                    <img src={`${apiBase}/${String(picture.media?.formats?.small.url || '')}`} />
+                    {/*<img src={`${apiBase}/${String(picture.media?.formats?.small.url || '')}`} />*/}
+                    {/*<pictureView >*/}
+                    <PictureView
+                      pictureId={picture.id}
+                      thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
+                      thumbnailMode={true}
+                    />
                   </div>
                 );
               }

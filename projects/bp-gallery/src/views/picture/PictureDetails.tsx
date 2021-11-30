@@ -17,11 +17,52 @@ interface Description {
 const PictureDetails = ({ details }: { details: Details }) => {
   return (
     <div className='pictureDetails'>
-      <div className='title'>{details.title.text}</div>
       {details.descriptions.length > 0 &&
         details.descriptions.map((description: Description) => (
           <div key={description.id} className='description'>
             {' '}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
+            {description.text}
             {description.text}
           </div>
         ))}
