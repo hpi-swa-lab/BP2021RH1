@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
 import apiConnector from '../../ApiConnector';
-import NavigationBar from '../../components/NavigationBar';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { History } from 'history';
@@ -58,18 +57,14 @@ const PictureView = ({
     },
   ];
   const [scrollPos, setScrollPos] = useState<number>();
-  const [scrollHeight, setScrollHeight] = useState<number>();
-  const imageRef = useRef<HTMLImageElement>(null);
-  const [scrollBarRef, setScrollbarRef] = useState<HTMLElement>();
+  const [imageHeightRef, setImageHeightRef] = useState<number>(0.65 * window.innerHeight);
 
   const parallaxPosition = useMemo(() => {
-    if (thumbnailMode || !(imageRef as any)?.current) {
-      return window.innerHeight * 0.65; ///
+    if (thumbnailMode) {
+      return window.innerHeight * 0.65;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const rect = (imageRef as any).current.getBoundingClientRect();
-    return Math.max(-(scrollPos ?? 0) + window.innerHeight * 0.65, Number(rect.height || 0));
-  }, [scrollPos, thumbnailMode]);
+    return Math.max(window.innerHeight * 0.65 - (scrollPos ?? 0), imageHeightRef);
+  }, [scrollPos, thumbnailMode, imageHeightRef]);
 
   if (thumbnailMode) {
     return (
@@ -85,13 +80,7 @@ const PictureView = ({
   } else {
     return (
       <div className='picture-view'>
-        <Picture
-          url={pictureUrl}
-          scrollPos={scrollPos}
-          scrollHeight={scrollHeight}
-          ref={imageRef}
-          containerRef={scrollBarRef}
-        />
+        <Picture url={pictureUrl} scrollPos={scrollPos} ref={setImageHeightRef} />
         <div className={'parallax-container'} style={{ top: `${parallaxPosition}px` }}>
           <div className={'picture-background'}></div>
           <div className='title'>{pictureDetails.title.text}</div>
@@ -101,10 +90,6 @@ const PictureView = ({
           options={{ suppressScrollX: true, useBothWheelAxes: false }}
           onScrollY={container => {
             setScrollPos(container.scrollTop);
-            setScrollHeight(container.scrollHeight);
-          }}
-          containerRef={ref => {
-            setScrollbarRef(ref);
           }}
         >
           <div className={'picture-info-container'}>
@@ -112,7 +97,6 @@ const PictureView = ({
             <CommentsContainer comments={comments} />
           </div>
         </PerfectScrollbar>
-        <NavigationBar elements={menuItems} />
       </div>
     );
   }
