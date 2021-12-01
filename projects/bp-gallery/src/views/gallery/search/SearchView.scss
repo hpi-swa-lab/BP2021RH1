@@ -59,6 +59,14 @@
     max-width: 1200px;
     margin: auto;
     background: $backgroundColor;
+    width: 90%;
+  }
+
+  .search-result-banner + .search-content {
     margin-top: -2.9rem;
+  }
+
+  .picture-grid {
+    margin-top: 2rem;
   }
 }

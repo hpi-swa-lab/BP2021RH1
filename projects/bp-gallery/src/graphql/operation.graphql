@@ -5,6 +5,7 @@ query getAllPictureInfo($pictureId: ID!) {
 }
 
 fragment PictureFields on Picture {
+  id
   title {
     text
     id
@@ -13,11 +14,19 @@ fragment PictureFields on Picture {
     text
     id
   }
-  url: media {
-    url
+  media {
+    formats
+    width
+    height
   }
   Comment {
     text
     author
+  }
+}
+
+query searchImages($text: String) {
+  pictures(where: { descriptions: { text_contains: $text } }) {
+    ...PictureFields
   }
 }
