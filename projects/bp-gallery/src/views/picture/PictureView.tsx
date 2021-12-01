@@ -60,13 +60,15 @@ const PictureView = ({
   const [scrollPos, setScrollPos] = useState<number>();
   const [scrollHeight, setScrollHeight] = useState<number>();
   const imageRef = useRef<HTMLImageElement>(null);
+  const [scrollBarRef, setScrollbarRef] = useState<HTMLElement>();
 
   const parallaxPosition = useMemo(() => {
     if (thumbnailMode || !(imageRef as any)?.current) {
       return window.innerHeight * 0.65; ///
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const rect = (imageRef as any).current.getBoundingClientRect();
-    return Math.max(-(scrollPos ?? 0) + window.innerHeight * 0.65, rect.height);
+    return Math.max(-(scrollPos ?? 0) + window.innerHeight * 0.65, Number(rect.height || 0));
   }, [scrollPos, thumbnailMode]);
 
   if (thumbnailMode) {
@@ -88,6 +90,7 @@ const PictureView = ({
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           ref={imageRef}
+          containerRef={scrollBarRef}
         />
         <div className={'parallax-container'} style={{ top: `${parallaxPosition}px` }}>
           <div className={'picture-background'}></div>
@@ -99,6 +102,9 @@ const PictureView = ({
           onScrollY={container => {
             setScrollPos(container.scrollTop);
             setScrollHeight(container.scrollHeight);
+          }}
+          containerRef={ref => {
+            setScrollbarRef(ref);
           }}
         >
           <div className={'picture-info-container'}>

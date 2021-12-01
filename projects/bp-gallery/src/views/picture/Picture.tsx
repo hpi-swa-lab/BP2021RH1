@@ -9,12 +9,13 @@ const Picture = React.forwardRef(
       className = '',
       scrollPos,
       scrollHeight,
+      containerRef,
     }: {
       url: string;
       className?: string;
       scrollPos?: number;
       scrollHeight?: number;
-      ref: any;
+      containerRef?: HTMLElement;
     },
     ref: ForwardedRef<HTMLImageElement>
   ) => {
@@ -26,6 +27,7 @@ const Picture = React.forwardRef(
       if (!loaded || !(ref as any)?.current) {
         return 0;
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const rect = (ref as any).current.getBoundingClientRect();
       return Math.max(
         -(scrollPos ?? 0) * scrollSpeed + window.innerHeight * 0.325 - rect.height / 2,
@@ -34,18 +36,21 @@ const Picture = React.forwardRef(
     }, [scrollPos, loaded, ref]);
 
     const imageSize = useMemo(() => {
-      //return Math.max(50, Math.round(90 - (scrollPos ?? 90)));
-      return Math.max(50, 90 - (scrollPos ?? 0) / 5);
-      //return Math.max(50, Math.min(90, (scrollPos ?? 90) * 0.25));
-      //return Math.max(0.5, 100 / (scrollPos ?? 100));
-    }, [scrollPos]);
+      const containerHeight = containerRef?.getBoundingClientRect()?.height ?? 1;
+      const progress = (scrollPos ?? 0) / containerHeight;
+      const winh = window.innerHeight * 0.65;
+      console.log(progress);
+      const curHeight = Math.max(150, winh - progress * winh);
+      return `min(100%, ${curHeight}px)`;
+    }, [scrollPos, containerRef]);
 
     const backgroundHeight = useMemo(() => {
       if (!(ref as any)?.current) {
         return window.innerHeight * 0.65;
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const rect = (ref as any).current.getBoundingClientRect();
-      return Math.max(-(scrollPos ?? 0) + window.innerHeight * 0.65, rect.height);
+      return Math.max(-(scrollPos ?? 0) + window.innerHeight * 0.65, Number(rect.height || 0));
     }, [scrollPos, ref]);
 
     return (
@@ -59,8 +64,7 @@ const Picture = React.forwardRef(
           ref={ref}
           style={{
             top: `${imageYPos}px`,
-            maxHeight: `${imageSize}%`,
-            //transform: `scaleY(${imageSize})`,
+            maxHeight: `${imageSize}`,
           }}
           onLoad={() => setLoaded(true)}
         />
@@ -68,5 +72,7 @@ const Picture = React.forwardRef(
     );
   }
 );
+
+Picture.displayName = 'Picture';
 
 export default Picture;
