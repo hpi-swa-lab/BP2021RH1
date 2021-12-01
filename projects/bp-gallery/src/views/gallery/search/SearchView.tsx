@@ -1,66 +1,33 @@
 import React from 'react';
-import ItemList from '../common/ItemList';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
+import SearchHub from './SearchHub';
 
-const SearchView = (params: any) => {
+const SearchView = ({ params, scrollPos }: { params?: string[]; scrollPos: number }) => {
   return (
     <div className='search-view'>
-      <SearchBar />
-      <div className='search-section'>
-        <h3>VORSCHLÄGE</h3>
-        <ItemList
-          compact={true}
-          items={Array(10)
-            .fill(0)
-            .map((_, i) => ({
-              name: `Item ${i}`,
-              color: '#7E241D',
-              background: '/bad-harzburg-stiftung-logo.png',
-            }))}
-        />
+      <div className='search-result-banner'>
+        <div className='search-result-banner-background'>
+          <img
+            style={{ transform: `translateY(${scrollPos * 0.5}px)` }}
+            src='https://bp.bad-harzburg-stiftung.de/api//uploads/1_1972_Winter04_747f834344.jpg'
+          ></img>
+        </div>
+        <div className='search-result-breadcrumbs'>
+          {params?.map((crumb: string) => {
+            return (
+              <div key={crumb} className='breadcrumb'>
+                {crumb}
+              </div>
+            );
+          })}
+        </div>
       </div>
-
-      <div className='search-section'>
-        <h3>ORTE</h3>
-        <ItemList
-          compact={true}
-          items={Array(10)
-            .fill(0)
-            .map((_, i) => ({
-              name: `Item ${i}`,
-              color: '#7E241D',
-              background: '/bad-harzburg-stiftung-logo.png',
-            }))}
-        />
-      </div>
-
-      <div className='search-section'>
-        <h3>PERSONEN</h3>
-        <ItemList
-          compact={true}
-          items={Array(10)
-            .fill(0)
-            .map((_, i) => ({
-              name: `Item ${i}`,
-              color: '#7E241D',
-              background: '/bad-harzburg-stiftung-logo.png',
-            }))}
-        />
-      </div>
-
-      <div className='search-section'>
-        <h3>JAHRZEHNTE</h3>
-        <ItemList
-          compact={true}
-          items={Array(10)
-            .fill(0)
-            .map((_, i) => ({
-              name: `Item ${i}`,
-              color: '#7E241D',
-              background: '/bad-harzburg-stiftung-logo.png',
-            }))}
-        />
+      <div className='search-content'>
+        <SearchBar />
+        <div className='below-search-bar'>
+          <SearchHub />
+        </div>
       </div>
     </div>
   );

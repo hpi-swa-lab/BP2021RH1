@@ -23,7 +23,7 @@ const GalleryView = (params?: { target?: string; searchParams?: any; path?: stri
           />
         );
       case 'search':
-        return <SearchView params={params.searchParams} />;
+        return <SearchView params={params.searchParams} scrollPos={scrollPos ?? 0} />;
       default:
         return '404 - Not found';
     }
