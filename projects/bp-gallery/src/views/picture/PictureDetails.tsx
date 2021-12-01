@@ -22,48 +22,6 @@ const PictureDetails = ({ details }: { details: Details }) => {
           <div key={description.id} className='description'>
             {' '}
             {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
-            {description.text}
           </div>
         ))}
     </div>
