@@ -1,6 +1,6 @@
 import React, { ForwardedRef, useMemo, useState } from 'react';
-import { apiBase } from '../../ApiConnector';
 import './Picture.scss';
+import { apiBase } from '../../App';
 
 const Picture = React.forwardRef(
   (

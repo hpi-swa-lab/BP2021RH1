@@ -1,8 +1,7 @@
 import { stringify } from 'qs';
 import { ApolloClient, DocumentNode, gql, InMemoryCache } from '@apollo/client';
 import { decodeBrowsePathComponent } from './views/gallery/browse/BrowseView';
-
-export const apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
+import { apiBase } from './App';
 
 class APIConnector {
   apolloClient: ApolloClient<any> = new ApolloClient({

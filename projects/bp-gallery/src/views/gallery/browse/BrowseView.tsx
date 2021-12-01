@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ItemList, { ItemListItem } from '../common/ItemList';
 import './BrowseView.scss';
-import apiConnector, { apiBase } from '../../../ApiConnector';
+import apiConnector from '../../../ApiConnector';
 import { useHistory } from 'react-router-dom';
 import PictureGrid from '../common/PictureGrid';
 import { History } from 'history';
+import { apiBase } from '../../../App';
 
 export function encodeBrowsePathComponent(folder: string): string {
   return encodeURIComponent(folder.replace(/ /gm, '_'));

@@ -1,0 +1,23 @@
+query getAllPictureInfo($pictureId: ID!) {
+  picture(id: $pictureId) {
+    ...PictureFields
+  }
+}
+
+fragment PictureFields on Picture {
+  title {
+    text
+    id
+  }
+  descriptions {
+    text
+    id
+  }
+  url: media {
+    url
+  }
+  Comment {
+    text
+    author
+  }
+}
