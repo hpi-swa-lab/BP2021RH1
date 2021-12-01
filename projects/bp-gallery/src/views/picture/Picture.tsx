@@ -21,7 +21,6 @@ const Picture = React.forwardRef(
       const parentHeight = 0.65 * window.innerHeight;
 
       const calculatedHeight = parentHeight - (scrollPos ?? 0);
-      console.log(calculatedHeight);
 
       const height = Math.min(Math.max(calculatedHeight, 150), parentHeight);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call

@@ -39,23 +39,24 @@ const PictureView = ({
     }
   }, [pictureId, thumbnailMode]);
 
-  const menuItems = [
-    {
-      name: t('common.picture'),
-      icon: 'photo',
-      target: '/picture/' + `${pictureId}`,
-    },
-    {
-      name: t('common.details'),
-      icon: 'info',
-      target: '/picture/' + `${pictureId}`,
-    },
-    {
-      name: t('common.comments'),
-      icon: 'comment',
-      target: '/picture/' + `${pictureId}`,
-    },
-  ];
+  //   const menuItems = [
+  //     {
+  //       name: t('common.picture'),
+  //       icon: 'photo',
+  //       target: '/picture/' + `${pictureId}`,
+  //     },
+  //     {
+  //       name: t('common.details'),
+  //       icon: 'info',
+  //       target: '/picture/' + `${pictureId}`,
+  //     },
+  //     {
+  //       name: t('common.comments'),
+  //       icon: 'comment',
+  //       target: '/picture/' + `${pictureId}`,
+  //     },
+  //   ];
+
   const [scrollPos, setScrollPos] = useState<number>();
   const [imageHeightRef, setImageHeightRef] = useState<number>(0.65 * window.innerHeight);
 
