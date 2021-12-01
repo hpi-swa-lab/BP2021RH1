@@ -1,4 +1,5 @@
 import React from 'react';
+import ItemList from '../common/ItemList';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 
@@ -6,25 +7,61 @@ const SearchView = (params: any) => {
   return (
     <div className='search-view'>
       <SearchBar />
-      {/* <div className='search-section'>
+      <div className='search-section'>
         <h3>VORSCHLÄGE</h3>
-        <ItemList compact={true} />
+        <ItemList
+          compact={true}
+          items={Array(10)
+            .fill(0)
+            .map((_, i) => ({
+              name: `Item ${i}`,
+              color: '#7E241D',
+              background: '/bad-harzburg-stiftung-logo.png',
+            }))}
+        />
       </div>
 
       <div className='search-section'>
         <h3>ORTE</h3>
-        <ItemList compact={true} />
+        <ItemList
+          compact={true}
+          items={Array(10)
+            .fill(0)
+            .map((_, i) => ({
+              name: `Item ${i}`,
+              color: '#7E241D',
+              background: '/bad-harzburg-stiftung-logo.png',
+            }))}
+        />
       </div>
 
       <div className='search-section'>
         <h3>PERSONEN</h3>
-        <ItemList compact={true} />
+        <ItemList
+          compact={true}
+          items={Array(10)
+            .fill(0)
+            .map((_, i) => ({
+              name: `Item ${i}`,
+              color: '#7E241D',
+              background: '/bad-harzburg-stiftung-logo.png',
+            }))}
+        />
       </div>
 
       <div className='search-section'>
         <h3>JAHRZEHNTE</h3>
-        <ItemList compact={true} />
-      </div> */}
+        <ItemList
+          compact={true}
+          items={Array(10)
+            .fill(0)
+            .map((_, i) => ({
+              name: `Item ${i}`,
+              color: '#7E241D',
+              background: '/bad-harzburg-stiftung-logo.png',
+            }))}
+        />
+      </div>
     </div>
   );
 };
