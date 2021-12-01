@@ -1,11 +1,10 @@
 @import '../../../shared/style.scss';
 
 .item-list {
-  display: grid;
   position: relative;
 
   &.compact {
-    .ps {
+    .ps .items {
       display: flex;
       flex-direction: row;
       margin: 0 1rem;
@@ -34,7 +33,8 @@
     // Todo
   }
 
-  &.large {
+  &.large .ps .items {
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 0.5rem;
   }

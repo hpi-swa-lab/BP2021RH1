@@ -36,7 +36,9 @@ const routes: RouteConfig[] = [
       {
         path: '/search/:query',
         render: props => {
-          return <GalleryView target='search' searchParams={props.match.params.query} />;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          const path = props.location.pathname.split('/').slice(2);
+          return <GalleryView target='search' searchParams={path} />;
         },
       },
       {
