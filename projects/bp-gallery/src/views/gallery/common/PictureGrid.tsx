@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-//import { apiBase } from '../../../ApiConnector';
 import './PictureGrid.scss';
-import { History } from 'history';
 import PictureView from '../../picture/PictureView';
 
 const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: string }) => {
@@ -12,8 +9,6 @@ const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: strin
   let _maxRowCount = 5;
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<any[][]>([[]]);
-
-  const history: History = useHistory();
 
   const hashCode = (str: string) => {
     let hash = 0,
@@ -89,12 +84,7 @@ const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: strin
                       flex: `${String(picture.media.width / picture.media.height)} 1 0`,
                       animationDelay: `${colindex * 0.04}s`,
                     }}
-                    onClick={() => {
-                      history.push(`/picture/${String(picture.id)}`, { showBack: true });
-                    }}
                   >
-                    {/*<img src={`${apiBase}/${String(picture.media?.formats?.small.url || '')}`} />*/}
-                    {/*<pictureView >*/}
                     <PictureView
                       pictureId={picture.id}
                       thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}

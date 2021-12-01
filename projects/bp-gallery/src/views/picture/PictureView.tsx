@@ -7,6 +7,8 @@ import apiConnector, { apiBase } from '../../ApiConnector';
 import NavigationBar from '../../components/NavigationBar';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
+import { History } from 'history';
+import { useHistory } from 'react-router-dom';
 
 const PictureView = ({
   pictureId,
@@ -18,6 +20,7 @@ const PictureView = ({
   thumbnailMode: boolean;
 }) => {
   const { t } = useTranslation();
+  const history: History = useHistory();
 
   const [loadedPicture, setLoadedPicture] = useState<boolean>(false);
   const [pictureUrl, setPictureUrl] = useState<string>('');
@@ -66,7 +69,14 @@ const PictureView = ({
   }, [scrollPos, thumbnailMode]);
 
   if (thumbnailMode) {
-    return <img src={apiBase + thumbnailUrl} />;
+    return (
+      <img
+        src={apiBase + thumbnailUrl}
+        onClick={() => {
+          history.push(`/picture/${String(pictureId)}`, { showBack: true });
+        }}
+      />
+    );
   } else if (!loadedPicture) {
     return <div>{t('common.loading')}</div>;
   } else {
