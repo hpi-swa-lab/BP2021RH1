@@ -2076,6 +2076,32 @@ export type GetPictureInfoQuery = {
     | undefined;
 };
 
+export type PictureFieldsFragment = {
+  __typename?: 'Picture';
+  title?: { __typename?: 'Title'; text?: string | null | undefined; id: string } | null | undefined;
+  descriptions?:
+    | Array<
+        | { __typename?: 'Description'; text?: string | null | undefined; id: string }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+  media?: { __typename?: 'UploadFile'; url: string } | null | undefined;
+  Comment?:
+    | Array<
+        | {
+            __typename?: 'ComponentContentComment';
+            text?: string | null | undefined;
+            author: string;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+};
+
 export type GetPicturesQueryVariables = Exact<{
   where: Scalars['JSON'];
   limit: Scalars['Int'];
@@ -2152,26 +2178,76 @@ export type GetCategoryInfoQuery = {
     | undefined;
 };
 
+export type SearchImagesQueryVariables = Exact<{
+  text?: InputMaybe<Scalars['String']>;
+}>;
+
+export type SearchImagesQuery = {
+  __typename?: 'Query';
+  pictures?:
+    | Array<
+        | {
+            __typename?: 'Picture';
+            title?:
+              | { __typename?: 'Title'; text?: string | null | undefined; id: string }
+              | null
+              | undefined;
+            descriptions?:
+              | Array<
+                  | { __typename?: 'Description'; text?: string | null | undefined; id: string }
+                  | null
+                  | undefined
+                >
+              | null
+              | undefined;
+            media?: { __typename?: 'UploadFile'; url: string } | null | undefined;
+            Comment?:
+              | Array<
+                  | {
+                      __typename?: 'ComponentContentComment';
+                      text?: string | null | undefined;
+                      author: string;
+                    }
+                  | null
+                  | undefined
+                >
+              | null
+              | undefined;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+};
+
+export const PictureFieldsFragmentDoc = gql`
+  fragment PictureFields on Picture {
+    title {
+      text
+      id
+    }
+    descriptions {
+      text
+      id
+    }
+    media {
+      url
+    }
+    Comment {
+      text
+      author
+    }
+  }
+`;
+
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
-      title {
-        text
-        id
-      }
-      descriptions {
-        text
-        id
-      }
-      media {
-        url
-      }
-      Comment {
-        text
-        author
-      }
+      ...PictureFields
     }
   }
+  ${PictureFieldsFragmentDoc}
 `;
 
 /**
@@ -2337,4 +2413,58 @@ export type GetCategoryInfoLazyQueryHookResult = ReturnType<typeof useGetCategor
 export type GetCategoryInfoQueryResult = Apollo.QueryResult<
   GetCategoryInfoQuery,
   GetCategoryInfoQueryVariables
+>;
+
+export const SearchImagesDocument = gql`
+  query searchImages($text: String) {
+    pictures(where: { descriptions: { text_contains: $text } }) {
+      ...PictureFields
+    }
+  }
+  ${PictureFieldsFragmentDoc}
+`;
+
+/**
+ * __useSearchImagesQuery__
+ *
+ * To run a query within a React component, call `useSearchImagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchImagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchImagesQuery({
+ *   variables: {
+ *      text: // value for 'text'
+ *   },
+ * });
+ */
+export function useSearchImagesQuery(
+  baseOptions?: Apollo.QueryHookOptions<SearchImagesQuery, SearchImagesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SearchImagesQuery, SearchImagesQueryVariables>(
+    SearchImagesDocument,
+    options
+  );
+}
+
+export function useSearchImagesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchImagesQuery, SearchImagesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SearchImagesQuery, SearchImagesQueryVariables>(
+    SearchImagesDocument,
+    options
+  );
+}
+
+export type SearchImagesQueryHookResult = ReturnType<typeof useSearchImagesQuery>;
+
+export type SearchImagesLazyQueryHookResult = ReturnType<typeof useSearchImagesLazyQuery>;
+
+export type SearchImagesQueryResult = Apollo.QueryResult<
+  SearchImagesQuery,
+  SearchImagesQueryVariables
 >;

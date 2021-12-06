@@ -1,22 +1,17 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import './Comment.scss';
+import { ComponentContentComment } from '../../../graphql/APIConnector';
 
-export interface CommentInfo {
-  author: string;
-  text: string;
-  id: number;
-  date: string;
-}
-
-const Comment = ({ comments }: { comments: CommentInfo[] }) => {
+const Comment = ({ comments }: { comments: ComponentContentComment[] }) => {
   return (
     <div className='comment-container'>
       {comments.length > 0 &&
-        comments.map((comment: CommentInfo) => (
+        comments.map((comment: ComponentContentComment) => (
           <div className='comment' key={comment.id}>
             <div className='comment-details'>
-              {comment.author} schrieb am {dayjs(comment.date).format('DD.MM.YYYY')} : <br />
+              {comment.author} schrieb am {dayjs(comment.date as string).format('DD.MM.YYYY')} :{' '}
+              <br />
             </div>
 
             <div className='comment-text'> &quot; {comment.text} &quot; </div>

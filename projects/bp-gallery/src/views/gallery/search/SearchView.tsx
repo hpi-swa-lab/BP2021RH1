@@ -6,7 +6,7 @@ import { useSearchImagesQuery } from '../../../graphql/APIConnector';
 import PictureGrid from '../common/PictureGrid';
 
 const SearchView = ({ params, scrollPos }: { params?: string[]; scrollPos: number }) => {
-  const { data, loading, error } = useSearchImagesQuery({
+  const { data, loading } = useSearchImagesQuery({
     variables: {
       text: params ? params[params.length - 1] : '',
     },
