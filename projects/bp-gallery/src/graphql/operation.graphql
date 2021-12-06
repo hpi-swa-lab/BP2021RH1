@@ -1,27 +1,47 @@
-query getAllPictureInfo($pictureId: ID!) {
+query getPictureInfo($pictureId: ID!) {
   picture(id: $pictureId) {
-    ...PictureFields
+    title {
+      text
+      id
+    }
+    descriptions {
+      text
+      id
+    }
+    media {
+      url
+    }
+    Comment {
+      text
+      author
+    }
   }
 }
 
-fragment PictureFields on Picture {
-  id
-  title {
-    text
+query getPictures($where: JSON!, $limit: Int!, $start: Int!) {
+  pictures(where: $where, limit: $limit, start: $start) {
     id
+    media {
+      width
+      height
+      formats
+    }
   }
-  descriptions {
-    text
+}
+
+query getCategoryInfo($categoryName: String!) {
+  categoryTags(where: { name: $categoryName }) {
     id
-  }
-  media {
-    formats
-    width
-    height
-  }
-  Comment {
-    text
-    author
+    name
+    description
+    related_tags {
+      name
+      thumbnail: pictures(limit: 1) {
+        media {
+          formats
+        }
+      }
+    }
   }
 }
 

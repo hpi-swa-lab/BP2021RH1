@@ -46,7 +46,7 @@ export type CategoryTag = {
   created_at: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   pictures?: Maybe<Array<Maybe<Picture>>>;
   priority: Scalars['Int'];
   published_at?: Maybe<Scalars['DateTime']>;
@@ -161,7 +161,7 @@ export type CategoryTagGroupBy = {
 export type CategoryTagInput = {
   created_by?: InputMaybe<Scalars['ID']>;
   description?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   priority?: InputMaybe<Scalars['Int']>;
   published_at?: InputMaybe<Scalars['DateTime']>;
@@ -172,12 +172,14 @@ export type CategoryTagInput = {
 export type ComponentContentComment = {
   __typename?: 'ComponentContentComment';
   author: Scalars['String'];
+  date?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   text?: Maybe<Scalars['String']>;
 };
 
 export type ComponentContentCommentInput = {
   author: Scalars['String'];
+  date?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
 };
 
@@ -419,6 +421,10 @@ export type Morph =
   | KeywordTagGroupBy
   | Picture
   | PictureAggregator
+  | PictureAggregatorAvg
+  | PictureAggregatorMax
+  | PictureAggregatorMin
+  | PictureAggregatorSum
   | PictureConnection
   | PictureConnectionCreated_At
   | PictureConnectionId
@@ -428,6 +434,7 @@ export type Morph =
   | PictureConnectionTime_Range_Tag
   | PictureConnectionTitle
   | PictureConnectionUpdated_At
+  | PictureConnectionWordpress_Id
   | PictureGroupBy
   | TimeRangeTag
   | TimeRangeTagAggregator
@@ -727,6 +734,7 @@ export type Picture = {
   time_range_tag?: Maybe<TimeRangeTag>;
   title?: Maybe<Title>;
   updated_at: Scalars['DateTime'];
+  wordpress_id?: Maybe<Scalars['Int']>;
 };
 
 export type PictureCategory_TagsArgs = {
@@ -752,8 +760,32 @@ export type PictureKeyword_TagsArgs = {
 
 export type PictureAggregator = {
   __typename?: 'PictureAggregator';
+  avg?: Maybe<PictureAggregatorAvg>;
   count?: Maybe<Scalars['Int']>;
+  max?: Maybe<PictureAggregatorMax>;
+  min?: Maybe<PictureAggregatorMin>;
+  sum?: Maybe<PictureAggregatorSum>;
   totalCount?: Maybe<Scalars['Int']>;
+};
+
+export type PictureAggregatorAvg = {
+  __typename?: 'PictureAggregatorAvg';
+  wordpress_id?: Maybe<Scalars['Float']>;
+};
+
+export type PictureAggregatorMax = {
+  __typename?: 'PictureAggregatorMax';
+  wordpress_id?: Maybe<Scalars['Float']>;
+};
+
+export type PictureAggregatorMin = {
+  __typename?: 'PictureAggregatorMin';
+  wordpress_id?: Maybe<Scalars['Float']>;
+};
+
+export type PictureAggregatorSum = {
+  __typename?: 'PictureAggregatorSum';
+  wordpress_id?: Maybe<Scalars['Float']>;
 };
 
 export type PictureConnection = {
@@ -811,6 +843,12 @@ export type PictureConnectionUpdated_At = {
   key?: Maybe<Scalars['DateTime']>;
 };
 
+export type PictureConnectionWordpress_Id = {
+  __typename?: 'PictureConnectionWordpress_id';
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['Int']>;
+};
+
 export type PictureGroupBy = {
   __typename?: 'PictureGroupBy';
   created_at?: Maybe<Array<Maybe<PictureConnectionCreated_At>>>;
@@ -821,6 +859,7 @@ export type PictureGroupBy = {
   time_range_tag?: Maybe<Array<Maybe<PictureConnectionTime_Range_Tag>>>;
   title?: Maybe<Array<Maybe<PictureConnectionTitle>>>;
   updated_at?: Maybe<Array<Maybe<PictureConnectionUpdated_At>>>;
+  wordpress_id?: Maybe<Array<Maybe<PictureConnectionWordpress_Id>>>;
 };
 
 export type PictureInput = {
@@ -835,6 +874,7 @@ export type PictureInput = {
   time_range_tag?: InputMaybe<Scalars['ID']>;
   title?: InputMaybe<Scalars['ID']>;
   updated_by?: InputMaybe<Scalars['ID']>;
+  wordpress_id?: InputMaybe<Scalars['Int']>;
 };
 
 export enum PublicationState {
@@ -1813,6 +1853,7 @@ export type EditCategoryTagInput = {
 
 export type EditComponentContentCommentInput = {
   author?: InputMaybe<Scalars['String']>;
+  date?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['ID']>;
   text?: InputMaybe<Scalars['String']>;
 };
@@ -1872,6 +1913,7 @@ export type EditPictureInput = {
   time_range_tag?: InputMaybe<Scalars['ID']>;
   title?: InputMaybe<Scalars['ID']>;
   updated_by?: InputMaybe<Scalars['ID']>;
+  wordpress_id?: InputMaybe<Scalars['Int']>;
 };
 
 export type EditRoleInput = {
@@ -1995,28 +2037,15 @@ export type UpdateUserPayload = {
   user?: Maybe<UsersPermissionsUser>;
 };
 
-export type GetAllPictureInfoQueryVariables = Exact<{
+export type GetPictureInfoQueryVariables = Exact<{
   pictureId: Scalars['ID'];
 }>;
 
-export type GetAllPictureInfoQuery = {
+export type GetPictureInfoQuery = {
   __typename?: 'Query';
   picture?:
     | {
         __typename?: 'Picture';
-        url?: { __typename?: 'UploadFile'; url: string } | null | undefined;
-        Comment?:
-          | Array<
-              | {
-                  __typename?: 'ComponentContentComment';
-                  text?: string | null | undefined;
-                  author: string;
-                }
-              | null
-              | undefined
-            >
-          | null
-          | undefined;
         title?:
           | { __typename?: 'Title'; text?: string | null | undefined; id: string }
           | null
@@ -2029,30 +2058,93 @@ export type GetAllPictureInfoQuery = {
             >
           | null
           | undefined;
+        media?: { __typename?: 'UploadFile'; url: string } | null | undefined;
+        Comment?:
+          | Array<
+              | {
+                  __typename?: 'ComponentContentComment';
+                  text?: string | null | undefined;
+                  author: string;
+                }
+              | null
+              | undefined
+            >
+          | null
+          | undefined;
       }
     | null
     | undefined;
 };
 
-export type PictureFieldsFragment = {
-  __typename?: 'Picture';
-  url?: { __typename?: 'UploadFile'; url: string } | null | undefined;
-  Comment?:
+export type GetPicturesQueryVariables = Exact<{
+  where: Scalars['JSON'];
+  limit: Scalars['Int'];
+  start: Scalars['Int'];
+}>;
+
+export type GetPicturesQuery = {
+  __typename?: 'Query';
+  pictures?:
     | Array<
         | {
-            __typename?: 'ComponentContentComment';
-            text?: string | null | undefined;
-            author: string;
+            __typename?: 'Picture';
+            id: string;
+            media?:
+              | {
+                  __typename?: 'UploadFile';
+                  width?: number | null | undefined;
+                  height?: number | null | undefined;
+                  formats?: any | null | undefined;
+                }
+              | null
+              | undefined;
           }
         | null
         | undefined
       >
     | null
     | undefined;
-  title?: { __typename?: 'Title'; text?: string | null | undefined; id: string } | null | undefined;
-  descriptions?:
+};
+
+export type GetCategoryInfoQueryVariables = Exact<{
+  categoryName: Scalars['String'];
+}>;
+
+export type GetCategoryInfoQuery = {
+  __typename?: 'Query';
+  categoryTags?:
     | Array<
-        | { __typename?: 'Description'; text?: string | null | undefined; id: string }
+        | {
+            __typename?: 'CategoryTag';
+            id: string;
+            name: string;
+            description?: string | null | undefined;
+            related_tags?:
+              | Array<
+                  | {
+                      __typename?: 'CategoryTag';
+                      name: string;
+                      thumbnail?:
+                        | Array<
+                            | {
+                                __typename?: 'Picture';
+                                media?:
+                                  | { __typename?: 'UploadFile'; formats?: any | null | undefined }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined
+                          >
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined
+                >
+              | null
+              | undefined;
+          }
         | null
         | undefined
       >
@@ -2060,96 +2152,189 @@ export type PictureFieldsFragment = {
     | undefined;
 };
 
-export type DetailsFragment = {
-  __typename?: 'Picture';
-  title?: { __typename?: 'Title'; text?: string | null | undefined; id: string } | null | undefined;
-  descriptions?:
-    | Array<
-        | { __typename?: 'Description'; text?: string | null | undefined; id: string }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
-};
-
-export const DetailsFragmentDoc = gql`
-  fragment Details on Picture {
-    title {
-      text
-      id
-    }
-    descriptions {
-      text
-      id
-    }
-  }
-`;
-
-export const PictureFieldsFragmentDoc = gql`
-  fragment PictureFields on Picture {
-    ...Details
-    url: media {
-      url
-    }
-    Comment {
-      text
-      author
-    }
-  }
-  ${DetailsFragmentDoc}
-`;
-
-export const GetAllPictureInfoDocument = gql`
-  query getAllPictureInfo($pictureId: ID!) {
+export const GetPictureInfoDocument = gql`
+  query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
-      ...PictureFields
+      title {
+        text
+        id
+      }
+      descriptions {
+        text
+        id
+      }
+      media {
+        url
+      }
+      Comment {
+        text
+        author
+      }
     }
   }
-  ${PictureFieldsFragmentDoc}
 `;
 
 /**
- * __useGetAllPictureInfoQuery__
+ * __useGetPictureInfoQuery__
  *
- * To run a query within a React component, call `useGetAllPictureInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllPictureInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetPictureInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPictureInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllPictureInfoQuery({
+ * const { data, loading, error } = useGetPictureInfoQuery({
  *   variables: {
  *      pictureId: // value for 'pictureId'
  *   },
  * });
  */
-export function useGetAllPictureInfoQuery(
-  baseOptions: Apollo.QueryHookOptions<GetAllPictureInfoQuery, GetAllPictureInfoQueryVariables>
+export function useGetPictureInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPictureInfoQuery, GetPictureInfoQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetAllPictureInfoQuery, GetAllPictureInfoQueryVariables>(
-    GetAllPictureInfoDocument,
+  return Apollo.useQuery<GetPictureInfoQuery, GetPictureInfoQueryVariables>(
+    GetPictureInfoDocument,
     options
   );
 }
 
-export function useGetAllPictureInfoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetAllPictureInfoQuery, GetAllPictureInfoQueryVariables>
+export function useGetPictureInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPictureInfoQuery, GetPictureInfoQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetAllPictureInfoQuery, GetAllPictureInfoQueryVariables>(
-    GetAllPictureInfoDocument,
+  return Apollo.useLazyQuery<GetPictureInfoQuery, GetPictureInfoQueryVariables>(
+    GetPictureInfoDocument,
     options
   );
 }
 
-export type GetAllPictureInfoQueryHookResult = ReturnType<typeof useGetAllPictureInfoQuery>;
+export type GetPictureInfoQueryHookResult = ReturnType<typeof useGetPictureInfoQuery>;
 
-export type GetAllPictureInfoLazyQueryHookResult = ReturnType<typeof useGetAllPictureInfoLazyQuery>;
+export type GetPictureInfoLazyQueryHookResult = ReturnType<typeof useGetPictureInfoLazyQuery>;
 
-export type GetAllPictureInfoQueryResult = Apollo.QueryResult<
-  GetAllPictureInfoQuery,
-  GetAllPictureInfoQueryVariables
+export type GetPictureInfoQueryResult = Apollo.QueryResult<
+  GetPictureInfoQuery,
+  GetPictureInfoQueryVariables
+>;
+
+export const GetPicturesDocument = gql`
+  query getPictures($where: JSON!, $limit: Int!, $start: Int!) {
+    pictures(where: $where, limit: $limit, start: $start) {
+      id
+      media {
+        width
+        height
+        formats
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      start: // value for 'start'
+ *   },
+ * });
+ */
+export function useGetPicturesQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPicturesQuery, GetPicturesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesQuery, GetPicturesQueryVariables>(GetPicturesDocument, options);
+}
+
+export function useGetPicturesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPicturesQuery, GetPicturesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesQuery, GetPicturesQueryVariables>(
+    GetPicturesDocument,
+    options
+  );
+}
+
+export type GetPicturesQueryHookResult = ReturnType<typeof useGetPicturesQuery>;
+
+export type GetPicturesLazyQueryHookResult = ReturnType<typeof useGetPicturesLazyQuery>;
+
+export type GetPicturesQueryResult = Apollo.QueryResult<
+  GetPicturesQuery,
+  GetPicturesQueryVariables
+>;
+
+export const GetCategoryInfoDocument = gql`
+  query getCategoryInfo($categoryName: String!) {
+    categoryTags(where: { name: $categoryName }) {
+      id
+      name
+      description
+      related_tags {
+        name
+        thumbnail: pictures(limit: 1) {
+          media {
+            formats
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCategoryInfoQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryInfoQuery({
+ *   variables: {
+ *      categoryName: // value for 'categoryName'
+ *   },
+ * });
+ */
+export function useGetCategoryInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>(
+    GetCategoryInfoDocument,
+    options
+  );
+}
+
+export function useGetCategoryInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>(
+    GetCategoryInfoDocument,
+    options
+  );
+}
+
+export type GetCategoryInfoQueryHookResult = ReturnType<typeof useGetCategoryInfoQuery>;
+
+export type GetCategoryInfoLazyQueryHookResult = ReturnType<typeof useGetCategoryInfoLazyQuery>;
+
+export type GetCategoryInfoQueryResult = Apollo.QueryResult<
+  GetCategoryInfoQuery,
+  GetCategoryInfoQueryVariables
 >;
