@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import ItemList, { ItemListItem } from '../common/ItemList';
-import './BrowseView.scss';
-import apiConnector, { apiBase } from '../../../ApiConnector';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import ItemList from '../common/ItemList';
+import './BrowseView.scss';
+import apiConnector from '../../../ApiConnector';
 import PictureGrid from '../common/PictureGrid';
 import { History } from 'history';
+import { apiBase } from '../../../App';
+import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
 
 export function encodeBrowsePathComponent(folder: string): string {
   return encodeURIComponent(folder.replace(/ /gm, '_'));
@@ -14,54 +17,69 @@ export function decodeBrowsePathComponent(folder: string): string {
   return decodeURIComponent(folder).replace(/_/gm, ' ');
 }
 
-const BrowseView = (params?: { path?: string[]; scrollPos: number; scrollHeight: number }) => {
+const SubCategories = ({
+  relatedTags,
+  path,
+}: {
+  relatedTags?: { thumbnail: any[]; name: string }[];
+  path?: string[];
+}) => {
   const history: History = useHistory();
-  const [items, setItems] = useState<ItemListItem[]>([]);
+  const formatCategoryPath = (name: string) => {
+    return `/browse/${
+      path
+        ?.map(folder => {
+          return encodeBrowsePathComponent(folder);
+        })
+        .join('/') ?? ''
+    }/${encodeBrowsePathComponent(name)}`.replace(/\/+/gm, '/');
+  };
+  const buildItem = (category: { thumbnail: any[]; name: string }, index: number) => {
+    const formats = category.thumbnail[0].media.formats;
+    return {
+      name: decodeBrowsePathComponent(category.name),
+      background: `${apiBase}/${String(
+        formats?.medium?.url || formats?.small?.url || formats?.thumbnail?.url || ''
+      )}`,
+      color: index % 2 === 0 ? '#7E241D' : '#404272',
+      onClick: () => {
+        history.push(formatCategoryPath(category.name), { showBack: true });
+      },
+    };
+  };
+  const items = relatedTags?.map((tag, i) => buildItem(tag, i)) ?? [];
+  return <ItemList items={items} />;
+};
+
+const BrowseView = ({
+  path,
+  scrollPos,
+  scrollHeight,
+}: {
+  path?: string[];
+  scrollPos: number;
+  scrollHeight: number;
+}) => {
+  const { t } = useTranslation();
+  const history: History = useHistory();
   const [categoryInfo, setCategoryInfo] = useState<any>(null);
   const [pictures, setPictures] = useState<any>([]);
   const [_, setLastStart] = useState<number>(0);
 
+  const { data, loading, error } = useGetCategoryInfoQuery({
+    variables: {
+      categoryName: path?.length
+        ? decodeBrowsePathComponent(path[path.length - 1])
+        : 'Das Herbert-Ahrens-Bilderarchiv',
+    },
+  });
+
   // Load subcategories and category info on initial rendering of the component
   useEffect(() => {
-    const formatCategoryPath = (name: string) => {
-      return `/browse/${
-        params?.path
-          ?.map(folder => {
-            return encodeBrowsePathComponent(folder);
-          })
-          .join('/') ?? ''
-      }/${encodeBrowsePathComponent(name)}`.replace(/\/+/gm, '/');
-    };
-
-    const buildItem = (category: { thumbnail: any[]; name: string }, index: number) => {
-      const formats = category.thumbnail[0].media.formats;
-      return {
-        name: decodeBrowsePathComponent(category.name),
-        background: `${apiBase}/${String(
-          formats?.medium?.url || formats?.small?.url || formats?.thumbnail?.url || ''
-        )}`,
-        color: index % 2 === 0 ? '#7E241D' : '#404272',
-        onClick: () => {
-          history.push(formatCategoryPath(category.name), { showBack: true });
-        },
-      };
-    };
-
-    apiConnector
-      .getCategories(params?.path ?? [])
-      .then(async (categories: { thumbnail: any[]; name: string }[]) => {
-        setItems(
-          await Promise.all(
-            categories.map(async (category, index) => {
-              return buildItem(category, index);
-            })
-          )
-        );
-      });
-    apiConnector.getCategoryInfo(params?.path ?? []).then((info: any) => {
+    apiConnector.getCategoryInfo(path ?? []).then((info: any) => {
       setCategoryInfo(info);
     });
-  }, [params?.path, history]);
+  }, [path, history]);
 
   // Load images on category navigation
   useEffect(() => {
@@ -77,9 +95,9 @@ const BrowseView = (params?: { path?: string[]; scrollPos: number; scrollHeight:
   useEffect(() => {
     if (
       !categoryInfo ||
-      !params?.scrollPos ||
-      !params.scrollHeight ||
-      params.scrollPos <= params.scrollHeight - window.innerHeight
+      !scrollPos ||
+      !scrollHeight ||
+      scrollPos <= scrollHeight - window.innerHeight
     ) {
       return;
     }
@@ -91,14 +109,22 @@ const BrowseView = (params?: { path?: string[]; scrollPos: number; scrollHeight:
         });
       return lastStart + 100;
     });
-  }, [params?.scrollPos, params?.scrollHeight, categoryInfo]);
+  }, [scrollPos, scrollHeight, categoryInfo]);
 
-  return (
-    <div className='browse-view'>
-      <ItemList items={items} />
-      <PictureGrid pictures={pictures} hashBase={String(categoryInfo?.name || '')} />
-    </div>
-  );
+  if (loading) {
+    return <div>{t('common.loading')}</div>;
+  } else if (!error && data?.categoryTags?.length) {
+    return (
+      <div className='browse-view'>
+        <SubCategories
+          relatedTags={data.categoryTags[0]?.related_tags as { thumbnail: any[]; name: string }[]}
+        />
+        <PictureGrid pictures={pictures} hashBase={String(categoryInfo?.name || '')} />
+      </div>
+    );
+  } else {
+    return <div>Error</div>;
+  }
 };
 
 export default BrowseView;

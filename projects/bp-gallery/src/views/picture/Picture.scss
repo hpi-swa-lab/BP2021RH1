@@ -2,28 +2,39 @@
 
 .picture {
   width: 100%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  height: 65vh;
+  grid-row: 1;
+  grid-column: 1;
   position: relative;
+  pointer-events: none; // So that the image DOES NOT RESPOND TO
+  // any mouse/pointer input (e.g. scrolling scaling)
+  // replace if scaling etc is necessary
+
   img {
     max-width: 100%;
-    max-height: 90%;
-    position: sticky;
     object-fit: contain;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 15;
 
     &.blur-background {
-      object-fit: none;
+      object-fit: cover;
+      height: 65vh;
       width: 100%;
-      height: 100%;
-      max-height: 100%;
-      position: absolute;
       filter: blur(5px);
-      z-index: -1;
-      //transform: scale(1.5);
-      opacity: 0.4;
     }
+  }
+
+  .background-container {
+    //z-index: 11;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: $backgroundColor;
+    width: 100%;
+    z-index: 14;
   }
 }
