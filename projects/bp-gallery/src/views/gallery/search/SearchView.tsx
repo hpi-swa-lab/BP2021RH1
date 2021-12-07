@@ -4,6 +4,10 @@ import './SearchView.scss';
 import SearchHub from './SearchHub';
 import { useSearchImagesQuery } from '../../../graphql/APIConnector';
 import PictureGrid from '../common/PictureGrid';
+import { apiBase } from '../../../App';
+
+const DEFAULT_SEARCH_BANNER_PICTURE = '1_1972_Winter04_747f834344.jpg';
+const DEFAULT_PICTURE_GRID_HASH_BASE = 'Werner';
 
 const SearchView = ({ params, scrollPos }: { params?: string[]; scrollPos: number }) => {
   const { data, loading } = useSearchImagesQuery({
@@ -25,8 +29,9 @@ const SearchView = ({ params, scrollPos }: { params?: string[]; scrollPos: numbe
           <div className='search-result-banner-background'>
             <img
               style={{ transform: `translateY(${scrollPos * 0.5}px)` }}
-              src='https://bp.bad-harzburg-stiftung.de/api//uploads/1_1972_Winter04_747f834344.jpg'
-            ></img>
+              src={`${apiBase}/uploads/${DEFAULT_SEARCH_BANNER_PICTURE}`}
+              alt={DEFAULT_SEARCH_BANNER_PICTURE}
+            />
           </div>
           <div className='search-result-breadcrumbs'>
             {params.map((crumb: string) => {
@@ -44,7 +49,7 @@ const SearchView = ({ params, scrollPos }: { params?: string[]; scrollPos: numbe
         <div className='below-search-bar'>
           {loading || (!params?.length && <SearchHub />)}
           {!loading && data && params?.length && (
-            <PictureGrid pictures={pics} hashBase={'Werner'} />
+            <PictureGrid pictures={pics} hashBase={DEFAULT_PICTURE_GRID_HASH_BASE} />
           )}
         </div>
       </div>

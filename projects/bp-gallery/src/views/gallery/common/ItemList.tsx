@@ -29,7 +29,7 @@ const ItemList = (props: { items: ItemListItem[]; compact?: boolean }) => {
   };
 
   return (
-    <div className={'item-list' + (props.compact ? ' compact' : ' large')} ref={listRef}>
+    <div className={`item-list ${props.compact ? 'compact' : 'large'}`} ref={listRef}>
       <PerfectScrollbar
         containerRef={ref => {
           setScrollBarRef(ref);
@@ -42,15 +42,11 @@ const ItemList = (props: { items: ItemListItem[]; compact?: boolean }) => {
           {props.items.map((item, index) => (
             <div
               className='item'
-              onClick={() => {
-                if (item.onClick) {
-                  item.onClick();
-                }
-              }}
+              onClick={() => (item.onClick ? item.onClick() : undefined)}
               key={index}
             >
               <div className='image-container'>
-                <img src={item.background} />
+                <img src={item.background} alt={item.name} />
               </div>
               <div className='color-overlay' style={{ backgroundColor: item.color }} />
               <div className='text-container'>

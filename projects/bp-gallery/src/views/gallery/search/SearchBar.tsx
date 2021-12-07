@@ -1,11 +1,13 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { Search } from '@mui/icons-material';
 import { InputAdornment, TextField } from '@mui/material';
-import React from 'react';
 import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import './SearchBar.scss';
 
 const SearchBar = () => {
+  const { t } = useTranslation();
   const history: History = useHistory();
 
   return (
@@ -25,7 +27,7 @@ const SearchBar = () => {
             });
           }
         }}
-        placeholder='Stichworte suchen...'
+        placeholder={t('common.search-keywords')}
         variant='outlined'
       />
     </div>

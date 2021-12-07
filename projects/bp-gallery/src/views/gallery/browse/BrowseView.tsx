@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ItemList from '../common/ItemList';
 import './BrowseView.scss';
 import apiConnector from '../../../ApiConnector';
-import { useHistory } from 'react-router-dom';
 import PictureGrid from '../common/PictureGrid';
 import { History } from 'history';
 import { apiBase } from '../../../App';
@@ -59,6 +60,7 @@ const BrowseView = ({
   scrollPos: number;
   scrollHeight: number;
 }) => {
+  const { t } = useTranslation();
   const history: History = useHistory();
   const [categoryInfo, setCategoryInfo] = useState<any>(null);
   const [pictures, setPictures] = useState<any>([]);
@@ -110,7 +112,7 @@ const BrowseView = ({
   }, [scrollPos, scrollHeight, categoryInfo]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{t('common.loading')}</div>;
   } else if (!error && data?.categoryTags?.length) {
     return (
       <div className='browse-view'>

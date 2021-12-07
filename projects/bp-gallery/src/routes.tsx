@@ -19,11 +19,11 @@ const routes: RouteConfig[] = [
         exact: true,
       },
       {
-        path: '/browse/:path',
-        render: (props: RouteConfigComponentProps) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          const path = props.location.pathname.split('/').slice(2);
-          return <GalleryView target='browse' path={path} />;
+        path: '/browse/:path+',
+        // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
+        render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
+          const browseParams = match.params.path.split('/');
+          return <GalleryView target='browse' path={browseParams} />;
         },
       },
       {
@@ -34,17 +34,17 @@ const routes: RouteConfig[] = [
         exact: true,
       },
       {
-        path: '/search/:query',
-        render: props => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          const path = props.location.pathname.split('/').slice(2);
-          return <GalleryView target='search' searchParams={path} />;
+        path: '/search/:query+',
+        // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
+        render: ({ match }: RouteConfigComponentProps<{ query: '' }>) => {
+          const queryParams = match.params.query.split('/');
+          return <GalleryView target='search' searchParams={queryParams} />;
         },
       },
       {
         path: '/picture/:id',
-        render: props => {
-          return <PictureView pictureId={props.match.params.id} thumbnailMode={false} />;
+        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+          return <PictureView pictureId={match.params.id} thumbnailMode={false} />;
         },
       },
       {

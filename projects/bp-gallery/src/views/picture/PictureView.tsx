@@ -14,7 +14,7 @@ import {
   useGetPictureInfoQuery,
 } from '../../graphql/APIConnector';
 
-const BigPicture = ({ pictureId }: { pictureId: number }) => {
+const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
   const [scrollPos, setScrollPos] = useState<number>();
   const [imageHeightRef, setImageHeightRef] = useState<number>(0.65 * window.innerHeight);
@@ -25,7 +25,7 @@ const BigPicture = ({ pictureId }: { pictureId: number }) => {
 
   const { data, loading } = useGetPictureInfoQuery({
     variables: {
-      pictureId: String(pictureId),
+      pictureId: pictureId,
     },
   });
 
@@ -39,8 +39,8 @@ const BigPicture = ({ pictureId }: { pictureId: number }) => {
           scrollPos={scrollPos}
           ref={setImageHeightRef}
         />
-        <div className={'parallax-container'} style={{ top: `${parallaxPosition}px` }}>
-          <div className={'picture-background'}></div>
+        <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
+          <div className='picture-background' />
           <div className='title'>{data?.picture?.title?.text ?? ''}</div>
         </div>
 
@@ -50,7 +50,7 @@ const BigPicture = ({ pictureId }: { pictureId: number }) => {
             setScrollPos(container.scrollTop);
           }}
         >
-          <div className={'picture-info-container'}>
+          <div className='picture-info-container'>
             <PictureDetails descriptions={data?.picture?.descriptions as Description[]} />
             <CommentsContainer comments={data?.picture?.Comment as ComponentContentComment[]} />
           </div>
@@ -65,9 +65,9 @@ const PictureView = ({
   thumbnailUrl = '',
   thumbnailMode = false,
 }: {
-  pictureId: number;
+  pictureId: string;
   thumbnailUrl?: string;
-  thumbnailMode: boolean;
+  thumbnailMode?: boolean;
 }) => {
   const history: History = useHistory();
 
@@ -75,31 +75,32 @@ const PictureView = ({
   //     {
   //       name: t('common.picture'),
   //       icon: 'photo',
-  //       target: '/picture/' + `${pictureId}`,
+  //       target: `/picture/${pictureId}`,
   //     },
   //     {
   //       name: t('common.details'),
   //       icon: 'info',
-  //       target: '/picture/' + `${pictureId}`,
+  //       target: `/picture/${pictureId}`,
   //     },
   //     {
   //       name: t('common.comments'),
   //       icon: 'comment',
-  //       target: '/picture/' + `${pictureId}`,
+  //       target: `/picture/${pictureId}`,
   //     },
   //   ];
 
   if (thumbnailMode) {
     return (
       <img
-        src={apiBase + thumbnailUrl}
+        src={`${apiBase}${thumbnailUrl}`}
+        alt={thumbnailUrl}
         onClick={() => {
-          history.push(`/picture/${String(pictureId)}`, { showBack: true });
+          history.push(`/picture/${pictureId}`, { showBack: true });
         }}
       />
     );
   } else {
-    return <BigPicture pictureId={pictureId} />;
+    return <DetailedPictureView pictureId={pictureId} />;
   }
 };
 
