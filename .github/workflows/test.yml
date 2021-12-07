@@ -3,8 +3,31 @@ name: Lint & Test CI
 on: [push]
 
 jobs:
+  lint_bp_gallery:
+    name: Lint bp-gallery
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./projects/bp-gallery
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Lint bp-gallery
+        run: yarn lint
+
   test_bp_gallery:
-    name: Lint & Test bp-gallery
+    name: Test bp-gallery
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,11 +45,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
-        # Using the 'frozen-lockfile' option, we invoke the equivalent of 'npm ci',
-        # which is explicitly faster than a regular install and optimized for CI.
-        # Checkout https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable
         run: yarn install --frozen-lockfile
-      - name: Lint bp-gallery
-        run: yarn lint
       - name: Test bp-gallery
         run: yarn test
