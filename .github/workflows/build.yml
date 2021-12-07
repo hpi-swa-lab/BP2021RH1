@@ -25,6 +25,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Generate APIConnector
+        run: yarn generate-api
       - name: Build bp-gallery
         run: yarn build
       - name: Deploy build files on the server
