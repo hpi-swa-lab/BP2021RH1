@@ -23,6 +23,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Generate APIConnector
+        run: yarn generate-api
       - name: Lint bp-gallery
         run: yarn lint
 
@@ -46,5 +48,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Generate APIConnector
+        run: yarn generate-api
       - name: Test bp-gallery
         run: yarn test
