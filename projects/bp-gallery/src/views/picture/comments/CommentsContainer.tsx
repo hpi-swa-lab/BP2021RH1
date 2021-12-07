@@ -1,8 +1,9 @@
 import React from 'react';
-import Comment, { CommentInfo } from './Comment';
+import { ComponentContentComment } from '../../../graphql/APIConnector';
 import NewCommentForm from './NewCommentForm';
+import Comment from './Comment';
 
-const CommentsContainer = ({ comments }: { comments: CommentInfo[] }) => {
+const CommentsContainer = ({ comments }: { comments: ComponentContentComment[] }) => {
   return (
     <div className='pictureComments'>
       <Comment comments={comments} />

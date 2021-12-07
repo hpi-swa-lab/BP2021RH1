@@ -6,6 +6,12 @@
     "picture": "Bild",
     "details": "Details",
     "comments": "Kommentare",
-    "loading": "Lädt..."
+    "loading": "Lädt...",
+    "wrote-on": "schrieb am",
+    "search-keywords": "Stichworte suchen...",
+    "decades": "Jahrzehnte",
+    "suggestions": "Vorschläge",
+    "persons": "Personen",
+    "locations": "Orte"
   }
 }

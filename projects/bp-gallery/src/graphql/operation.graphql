@@ -1,0 +1,56 @@
+query getPictureInfo($pictureId: ID!) {
+  picture(id: $pictureId) {
+    ...PictureFields
+  }
+}
+
+fragment PictureFields on Picture {
+  title {
+    text
+    id
+  }
+  descriptions {
+    text
+    id
+  }
+  media {
+    url
+  }
+  Comment {
+    text
+    author
+  }
+}
+
+query getPictures($where: JSON!, $limit: Int!, $start: Int!) {
+  pictures(where: $where, limit: $limit, start: $start) {
+    id
+    media {
+      width
+      height
+      formats
+    }
+  }
+}
+
+query getCategoryInfo($categoryName: String!) {
+  categoryTags(where: { name: $categoryName }) {
+    id
+    name
+    description
+    related_tags {
+      name
+      thumbnail: pictures(limit: 1) {
+        media {
+          formats
+        }
+      }
+    }
+  }
+}
+
+query searchImages($text: String) {
+  pictures(where: { descriptions: { text_contains: $text } }) {
+    ...PictureFields
+  }
+}
