@@ -45,7 +45,6 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
         target: `/picture/${pictureId}#comments`,
       },
     ];
-    console.log('Calling... Picture');
     setNavigationElements(menuItems);
   }, [setNavigationElements, t, pictureId]);
 

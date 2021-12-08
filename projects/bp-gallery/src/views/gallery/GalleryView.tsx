@@ -55,7 +55,6 @@ const GalleryView = (props?: { target?: string; searchParams?: any; path?: strin
         target: '/menu',
       },
     ];
-    console.log('Calling... Gallery');
     setNavigationElements(menuItems);
   }, [setNavigationElements, t]);
 
