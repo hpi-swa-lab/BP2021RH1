@@ -1,7 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { Picture, Scalars, useGetPicturesQuery } from '../../../graphql/APIConnector';
 import PictureGrid from './PictureGrid';
+import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
+import Loading from '../../../components/Loading';
 
 const PictureScrollGrid = ({
   where,
@@ -14,7 +15,6 @@ const PictureScrollGrid = ({
   scrollHeight: number;
   hashbase: string;
 }) => {
-  const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
 
   const { data, loading, error, fetchMore } = useGetPicturesQuery({
@@ -41,12 +41,12 @@ const PictureScrollGrid = ({
   }, [scrollPos, scrollHeight, lastScrollHeight, data, loading, fetchMore]);
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <QueryErrorDisplay error={error} />;
   } else {
     if (data?.pictures?.length) {
       return <PictureGrid pictures={data.pictures as Picture[]} hashBase={hashbase} />;
     } else {
-      return <div>{t('common.loading')}</div>;
+      return <Loading />;
     }
   }
 };
