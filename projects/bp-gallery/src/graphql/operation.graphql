@@ -48,9 +48,3 @@ query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
     }
   }
 }
-
-query searchImages($text: String) {
-  pictures(where: { descriptions: { text_contains: $text } }) {
-    ...PictureFields
-  }
-}

@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './BrowseView.scss';
-import PictureGrid from '../common/PictureGrid';
-import {
-  Picture,
-  useGetCategoryInfoQuery,
-  useGetPicturesQuery,
-} from '../../../graphql/APIConnector';
+import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
 import SubCategories from './SubCategories';
+import PictureScrollGrid from '../common/PictureScrollGrid';
 
 export function encodeBrowsePathComponent(folder: string): string {
   return encodeURIComponent(folder.replace(/ /gm, '_'));
@@ -16,52 +12,6 @@ export function encodeBrowsePathComponent(folder: string): string {
 export function decodeBrowsePathComponent(folder: string): string {
   return decodeURIComponent(folder).replace(/_/gm, ' ');
 }
-
-const PicturesInCategory = ({
-  categoryId,
-  scrollPos,
-  scrollHeight,
-}: {
-  categoryId: string;
-  scrollPos: number;
-  scrollHeight: number;
-}) => {
-  const { t } = useTranslation();
-  const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
-
-  const { data, loading, error, fetchMore } = useGetPicturesQuery({
-    variables: {
-      where: { category_tags: categoryId },
-      limit: 100,
-      start: 0,
-    },
-    notifyOnNetworkStatusChange: true,
-  });
-
-  //Loads the next 100 Pictures when the user scrolled to the bottom
-  useEffect(() => {
-    if (
-      !loading &&
-      scrollPos &&
-      scrollHeight &&
-      scrollHeight !== lastScrollHeight &&
-      scrollPos > scrollHeight - 1.5 * window.innerHeight
-    ) {
-      fetchMore({ variables: { start: data?.pictures?.length } });
-      setLastScrollHeight(scrollHeight);
-    }
-  }, [scrollPos, scrollHeight, lastScrollHeight, data, loading, fetchMore]);
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else {
-    if (data?.pictures?.length) {
-      return <PictureGrid pictures={data.pictures as Picture[]} hashBase={'Werner'} />;
-    } else {
-      return <div>{t('common.loading')}</div>;
-    }
-  }
-};
 
 const BrowseView = ({
   path,
@@ -93,10 +43,11 @@ const BrowseView = ({
         <SubCategories
           relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
         />
-        <PicturesInCategory
-          categoryId={category.id}
+        <PictureScrollGrid
+          where={{ category_tags: category.id }}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
+          hashbase={category.name}
         />
       </div>
     );

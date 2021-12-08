@@ -2179,11 +2179,11 @@ export type GetCategoryInfoQuery = {
     | undefined;
 };
 
-export type SearchImagesQueryVariables = Exact<{
+export type SearchPicturesQueryVariables = Exact<{
   text?: InputMaybe<Scalars['String']>;
 }>;
 
-export type SearchImagesQuery = {
+export type SearchPicturesQuery = {
   __typename?: 'Query';
   pictures?:
     | Array<
@@ -2417,8 +2417,8 @@ export type GetCategoryInfoQueryResult = Apollo.QueryResult<
   GetCategoryInfoQueryVariables
 >;
 
-export const SearchImagesDocument = gql`
-  query searchImages($text: String) {
+export const SearchPicturesDocument = gql`
+  query searchPictures($text: String) {
     pictures(where: { descriptions: { text_contains: $text } }) {
       ...PictureFields
     }
@@ -2427,46 +2427,46 @@ export const SearchImagesDocument = gql`
 `;
 
 /**
- * __useSearchImagesQuery__
+ * __useSearchPicturesQuery__
  *
- * To run a query within a React component, call `useSearchImagesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchImagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSearchPicturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPicturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useSearchImagesQuery({
+ * const { data, loading, error } = useSearchPicturesQuery({
  *   variables: {
  *      text: // value for 'text'
  *   },
  * });
  */
-export function useSearchImagesQuery(
-  baseOptions?: Apollo.QueryHookOptions<SearchImagesQuery, SearchImagesQueryVariables>
+export function useSearchPicturesQuery(
+  baseOptions?: Apollo.QueryHookOptions<SearchPicturesQuery, SearchPicturesQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<SearchImagesQuery, SearchImagesQueryVariables>(
-    SearchImagesDocument,
+  return Apollo.useQuery<SearchPicturesQuery, SearchPicturesQueryVariables>(
+    SearchPicturesDocument,
     options
   );
 }
 
-export function useSearchImagesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<SearchImagesQuery, SearchImagesQueryVariables>
+export function useSearchPicturesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchPicturesQuery, SearchPicturesQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<SearchImagesQuery, SearchImagesQueryVariables>(
-    SearchImagesDocument,
+  return Apollo.useLazyQuery<SearchPicturesQuery, SearchPicturesQueryVariables>(
+    SearchPicturesDocument,
     options
   );
 }
 
-export type SearchImagesQueryHookResult = ReturnType<typeof useSearchImagesQuery>;
+export type SearchPicturesQueryHookResult = ReturnType<typeof useSearchPicturesQuery>;
 
-export type SearchImagesLazyQueryHookResult = ReturnType<typeof useSearchImagesLazyQuery>;
+export type SearchPicturesLazyQueryHookResult = ReturnType<typeof useSearchPicturesLazyQuery>;
 
-export type SearchImagesQueryResult = Apollo.QueryResult<
-  SearchImagesQuery,
-  SearchImagesQueryVariables
+export type SearchPicturesQueryResult = Apollo.QueryResult<
+  SearchPicturesQuery,
+  SearchPicturesQueryVariables
 >;
