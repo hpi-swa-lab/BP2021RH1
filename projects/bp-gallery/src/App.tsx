@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
 import TopBar from './components/TopBar';
 import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import NavigationBar, { NavigationElement } from './components/NavigationBar';
 
 export const apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
 
@@ -27,12 +28,20 @@ const apolloClient = new ApolloClient({
   }),
 });
 
+export const NavigationContext = React.createContext<(elements: NavigationElement[]) => void>(
+  (elements: NavigationElement[]) => {}
+);
+
 const App = ({ route }: RouteConfigComponentProps) => {
+  const [navigationElements, setNavigationElements] = useState<NavigationElement[]>([]);
   return (
     <ApolloProvider client={apolloClient}>
       <div className='App'>
         <TopBar />
-        {renderRoutes(route?.routes)}
+        <NavigationContext.Provider value={setNavigationElements}>
+          {renderRoutes(route?.routes)}
+        </NavigationContext.Provider>
+        <NavigationBar elements={navigationElements} />
       </div>
     </ApolloProvider>
   );
