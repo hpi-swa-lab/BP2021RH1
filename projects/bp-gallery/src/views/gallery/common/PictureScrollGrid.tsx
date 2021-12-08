@@ -16,7 +16,6 @@ const PictureScrollGrid = ({
   scrollHeight: number;
   hashbase: string;
 }) => {
-  const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
 
   const { data, loading, error, fetchMore } = useGetPicturesQuery({
