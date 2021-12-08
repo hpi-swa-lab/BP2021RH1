@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { Picture, Scalars, useGetPicturesQuery } from '../../../graphql/APIConnector';
 import PictureGrid from './PictureGrid';
