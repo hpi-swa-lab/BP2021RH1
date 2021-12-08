@@ -1,14 +1,20 @@
 import React from 'react';
-import { TextField } from '@mui/material';
+import './NewCommentForm.scss';
 
 const NewCommentForm = () => {
   return (
-    <form>
-      <TextField id='outlined-basic' label='name' variant='outlined' />
-      <br />
-      <TextField id='outlined-basic' label='text' variant='outlined' />
-      <br />
-      <input type='submit' value='Submit' />
+    <form className={'new-comment-form'}>
+      <div className={'name'}>
+        Name
+        <input id='name' type='text' name='name' />
+        <br />
+      </div>
+
+      <div className={'text'}>
+        Kommentar
+        <input id='text' type='text' name='text' />
+        <br />
+      </div>
     </form>
   );
 };

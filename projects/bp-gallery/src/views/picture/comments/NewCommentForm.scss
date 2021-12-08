@@ -1,0 +1,24 @@
+@import '../../../shared/style.scss';
+
+.new-comment-form {
+  background-color: aliceblue;
+  border-radius: 0.5rem;
+  margin: 2rem;
+  //margin: auto;
+  padding: 1rem;
+  color: black;
+  text-align: center;
+
+  input {
+    border-radius: 0.5rem;
+  }
+
+  .text {
+    background: blue;
+
+    input {
+      width: 20rem;
+      height: 5rem;
+    }
+  }
+}
