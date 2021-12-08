@@ -4,6 +4,8 @@ import './BrowseView.scss';
 import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
 import SubCategories from './SubCategories';
 import PictureScrollGrid from '../common/PictureScrollGrid';
+import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
+import Loading from '../../../components/Loading';
 
 export function encodeBrowsePathComponent(folder: string): string {
   return encodeURIComponent(folder.replace(/ /gm, '_'));
@@ -33,9 +35,9 @@ const BrowseView = ({
   });
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <QueryErrorDisplay error={error} />;
   } else if (loading) {
-    return <div>{t('common.loading')}</div>;
+    return <Loading />;
   } else if (data?.categoryTags?.length && data.categoryTags[0]) {
     const category = data.categoryTags[0];
     return (

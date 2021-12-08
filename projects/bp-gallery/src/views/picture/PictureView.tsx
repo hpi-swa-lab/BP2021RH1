@@ -13,6 +13,8 @@ import {
   Description,
   useGetPictureInfoQuery,
 } from '../../graphql/APIConnector';
+import QueryErrorDisplay from '../../components/QueryErrorDisplay';
+import Loading from '../../components/Loading';
 
 const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
@@ -30,9 +32,9 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
   });
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <QueryErrorDisplay error={error} />;
   } else if (loading) {
-    return <div>{t('common.loading')}</div>;
+    return <Loading />;
   } else if (data?.picture) {
     return (
       <div className='picture-view'>
