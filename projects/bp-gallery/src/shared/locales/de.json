@@ -13,6 +13,7 @@
     "suggestions": "Vorschläge",
     "persons": "Personen",
     "locations": "Orte",
-    "no-category": "Es gibt keine Kategorie, die der Anfrage entspricht"
+    "no-category": "Es gibt keine Kategorie, die der Anfrage entspricht",
+    "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht"
   }
 }

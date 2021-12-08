@@ -6,7 +6,6 @@ import { apiBase } from '../../../App';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 
 const DEFAULT_SEARCH_BANNER_PICTURE = '1_1972_Winter04_747f834344.jpg';
-const DEFAULT_PICTURE_GRID_HASH_BASE = 'Werner';
 
 const SearchView = ({
   params,
