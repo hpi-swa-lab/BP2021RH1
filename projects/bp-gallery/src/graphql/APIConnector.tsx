@@ -2133,7 +2133,8 @@ export type GetPicturesQuery = {
 };
 
 export type GetCategoryInfoQueryVariables = Exact<{
-  categoryName: Scalars['String'];
+  categoryName?: InputMaybe<Scalars['String']>;
+  categoryPriority?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type GetCategoryInfoQuery = {
@@ -2353,8 +2354,8 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
 >;
 
 export const GetCategoryInfoDocument = gql`
-  query getCategoryInfo($categoryName: String!) {
-    categoryTags(where: { name: $categoryName }) {
+  query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
+    categoryTags(where: { name: $categoryName, priority: $categoryPriority }) {
       id
       name
       description
@@ -2383,11 +2384,12 @@ export const GetCategoryInfoDocument = gql`
  * const { data, loading, error } = useGetCategoryInfoQuery({
  *   variables: {
  *      categoryName: // value for 'categoryName'
+ *      categoryPriority: // value for 'categoryPriority'
  *   },
  * });
  */
 export function useGetCategoryInfoQuery(
-  baseOptions: Apollo.QueryHookOptions<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>(

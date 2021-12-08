@@ -12,6 +12,7 @@
     "decades": "Jahrzehnte",
     "suggestions": "Vorschläge",
     "persons": "Personen",
-    "locations": "Orte"
+    "locations": "Orte",
+    "no-category": "Es gibt keine Kategorie, die der Anfrage entspricht"
   }
 }
