@@ -13,6 +13,8 @@ import {
   Description,
   useGetPictureInfoQuery,
 } from '../../graphql/APIConnector';
+import QueryErrorDisplay from '../../components/QueryErrorDisplay';
+import Loading from '../../components/Loading';
 
 const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
@@ -23,25 +25,27 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
     return Math.max(window.innerHeight * 0.65 - (scrollPos ?? 0), imageHeightRef);
   }, [scrollPos, imageHeightRef]);
 
-  const { data, loading } = useGetPictureInfoQuery({
+  const { data, loading, error } = useGetPictureInfoQuery({
     variables: {
       pictureId: pictureId,
     },
   });
 
-  if (loading) {
-    return <div>{t('common.loading')}</div>;
-  } else {
+  if (error) {
+    return <QueryErrorDisplay error={error} />;
+  } else if (loading) {
+    return <Loading />;
+  } else if (data?.picture) {
     return (
       <div className='picture-view'>
         <Picture
-          url={data?.picture?.media?.url ?? ''}
+          url={data.picture.media?.url ?? ''}
           scrollPos={scrollPos}
           ref={setImageHeightRef}
         />
         <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
           <div className='picture-background' />
-          <div className='title'>{data?.picture?.title?.text ?? ''}</div>
+          <div className='title'>{data.picture.title?.text ?? ''}</div>
         </div>
 
         <PerfectScrollbar
@@ -51,12 +55,14 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
           }}
         >
           <div className='picture-info-container'>
-            <PictureDetails descriptions={data?.picture?.descriptions as Description[]} />
-            <CommentsContainer comments={data?.picture?.Comment as ComponentContentComment[]} />
+            <PictureDetails descriptions={data.picture.descriptions as Description[]} />
+            <CommentsContainer comments={data.picture.Comment as ComponentContentComment[]} />
           </div>
         </PerfectScrollbar>
       </div>
     );
+  } else {
+    return <div>{t('common.no-picture')}</div>;
   }
 };
 

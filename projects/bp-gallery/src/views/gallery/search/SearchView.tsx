@@ -2,26 +2,20 @@ import React from 'react';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './SearchHub';
-import { useSearchImagesQuery } from '../../../graphql/APIConnector';
-import PictureGrid from '../common/PictureGrid';
 import { apiBase } from '../../../App';
+import PictureScrollGrid from '../common/PictureScrollGrid';
 
 const DEFAULT_SEARCH_BANNER_PICTURE = '1_1972_Winter04_747f834344.jpg';
-const DEFAULT_PICTURE_GRID_HASH_BASE = 'Werner';
 
-const SearchView = ({ params, scrollPos }: { params?: string[]; scrollPos: number }) => {
-  const { data, loading } = useSearchImagesQuery({
-    variables: {
-      text: params ? params[params.length - 1] : '',
-    },
-  });
-
-  let pics: any[] = [];
-
-  if (data?.pictures && !loading) {
-    pics = data.pictures;
-  }
-
+const SearchView = ({
+  params,
+  scrollPos,
+  scrollHeight,
+}: {
+  params?: string[];
+  scrollPos: number;
+  scrollHeight: number;
+}) => {
   return (
     <div className='search-view'>
       {params && params.length > 0 && (
@@ -47,9 +41,15 @@ const SearchView = ({ params, scrollPos }: { params?: string[]; scrollPos: numbe
       <div className='search-content'>
         <SearchBar />
         <div className='below-search-bar'>
-          {loading || (!params?.length && <SearchHub />)}
-          {!loading && data && params?.length && (
-            <PictureGrid pictures={pics} hashBase={DEFAULT_PICTURE_GRID_HASH_BASE} />
+          {!params || params.length === 0 ? (
+            <SearchHub />
+          ) : (
+            <PictureScrollGrid
+              where={{ descriptions: { text_contains: params[params.length - 1] } }}
+              scrollPos={scrollPos}
+              scrollHeight={scrollHeight}
+              hashbase={params[params.length - 1]}
+            />
           )}
         </div>
       </div>

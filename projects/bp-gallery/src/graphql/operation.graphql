@@ -33,8 +33,8 @@ query getPictures($where: JSON!, $limit: Int!, $start: Int!) {
   }
 }
 
-query getCategoryInfo($categoryName: String!) {
-  categoryTags(where: { name: $categoryName }) {
+query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
+  categoryTags(where: { name: $categoryName, priority: $categoryPriority }) {
     id
     name
     description
@@ -46,11 +46,5 @@ query getCategoryInfo($categoryName: String!) {
         }
       }
     }
-  }
-}
-
-query searchImages($text: String) {
-  pictures(where: { descriptions: { text_contains: $text } }) {
-    ...PictureFields
   }
 }
