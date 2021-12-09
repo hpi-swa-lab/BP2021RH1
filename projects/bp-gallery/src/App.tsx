@@ -10,16 +10,13 @@ export const apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
 const apolloClient = new ApolloClient({
   uri: `${apiBase}/graphql`,
   cache: new InMemoryCache({
-    //Source: https://www.apollographql.com/docs/react/pagination/core-api/#merging-paginated-results
     typePolicies: {
       Query: {
         fields: {
           pictures: {
-            // Don't cache separate results based on
-            // any of this field's arguments.
-            keyArgs: false,
-            // Concatenate the incoming list items with
-            // the existing list items.
+            // Treat picture queries as the same query, as long as the where clause is equal
+            // Queries which only differ in other fields as 'start' or 'limit' get treated as one query and the results get merged
+            keyArgs: ['where'],
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
