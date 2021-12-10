@@ -1,5 +1,5 @@
-import routes from './routes';
-import { renderRoute } from './testUtils';
+import routes from '../routes';
+import { renderRoute } from '../testUtils';
 
 test('Top bar is always visible', () => {
   routes[0]?.routes?.forEach(route => {

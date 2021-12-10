@@ -1,6 +1,6 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { renderRoute } from './testUtils';
+import { renderRoute } from '../testUtils';
 
 test('Route mechanism renders our app component', () => {
   const { container } = renderRoute('/');
@@ -9,7 +9,7 @@ test('Route mechanism renders our app component', () => {
 });
 
 const GalleryMock = () => <div>Gallery-Mock</div>;
-jest.mock('./views/gallery/GalleryView.tsx', () => GalleryMock);
+jest.mock('../views/gallery/GalleryView.tsx', () => GalleryMock);
 
 test('Route mechanism redirects empty route to the gallery component', () => {
   renderRoute('/');
@@ -20,7 +20,7 @@ test('Route mechanism redirects empty route to the gallery component', () => {
 });
 
 const DemoMock = () => <div>Demo-Mock</div>;
-jest.mock('./prototypes/demo', () => DemoMock);
+jest.mock('../prototypes/demo', () => DemoMock);
 
 test('Route mechanism renders the demo component', () => {
   renderRoute('/prototypes/demo');

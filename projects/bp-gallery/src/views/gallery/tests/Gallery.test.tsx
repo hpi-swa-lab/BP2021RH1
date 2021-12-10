@@ -1,4 +1,4 @@
-import { renderRoute } from '../../testUtils';
+import { renderRoute } from '../../../testUtils';
 
 test('Nav bar contains search, browse and menu button', () => {
   const { container } = renderRoute('/browse');
