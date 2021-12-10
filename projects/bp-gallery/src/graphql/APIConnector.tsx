@@ -34,7 +34,6 @@ export type Scalars = {
 };
 
 export type AdminUser = {
-  __typename?: 'AdminUser';
   firstname: Scalars['String'];
   id: Scalars['ID'];
   lastname: Scalars['String'];
@@ -42,7 +41,6 @@ export type AdminUser = {
 };
 
 export type CategoryTag = {
-  __typename?: 'CategoryTag';
   created_at: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -69,7 +67,6 @@ export type CategoryTagRelated_TagsArgs = {
 };
 
 export type CategoryTagAggregator = {
-  __typename?: 'CategoryTagAggregator';
   avg?: Maybe<CategoryTagAggregatorAvg>;
   count?: Maybe<Scalars['Int']>;
   max?: Maybe<CategoryTagAggregatorMax>;
@@ -79,76 +76,63 @@ export type CategoryTagAggregator = {
 };
 
 export type CategoryTagAggregatorAvg = {
-  __typename?: 'CategoryTagAggregatorAvg';
   priority?: Maybe<Scalars['Float']>;
 };
 
 export type CategoryTagAggregatorMax = {
-  __typename?: 'CategoryTagAggregatorMax';
   priority?: Maybe<Scalars['Float']>;
 };
 
 export type CategoryTagAggregatorMin = {
-  __typename?: 'CategoryTagAggregatorMin';
   priority?: Maybe<Scalars['Float']>;
 };
 
 export type CategoryTagAggregatorSum = {
-  __typename?: 'CategoryTagAggregatorSum';
   priority?: Maybe<Scalars['Float']>;
 };
 
 export type CategoryTagConnection = {
-  __typename?: 'CategoryTagConnection';
   aggregate?: Maybe<CategoryTagAggregator>;
   groupBy?: Maybe<CategoryTagGroupBy>;
   values?: Maybe<Array<Maybe<CategoryTag>>>;
 };
 
 export type CategoryTagConnectionCreated_At = {
-  __typename?: 'CategoryTagConnectionCreated_at';
   connection?: Maybe<CategoryTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type CategoryTagConnectionDescription = {
-  __typename?: 'CategoryTagConnectionDescription';
   connection?: Maybe<CategoryTagConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type CategoryTagConnectionId = {
-  __typename?: 'CategoryTagConnectionId';
   connection?: Maybe<CategoryTagConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type CategoryTagConnectionName = {
-  __typename?: 'CategoryTagConnectionName';
   connection?: Maybe<CategoryTagConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type CategoryTagConnectionPriority = {
-  __typename?: 'CategoryTagConnectionPriority';
   connection?: Maybe<CategoryTagConnection>;
   key?: Maybe<Scalars['Int']>;
 };
 
 export type CategoryTagConnectionPublished_At = {
-  __typename?: 'CategoryTagConnectionPublished_at';
   connection?: Maybe<CategoryTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type CategoryTagConnectionUpdated_At = {
-  __typename?: 'CategoryTagConnectionUpdated_at';
   connection?: Maybe<CategoryTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type CategoryTagGroupBy = {
-  __typename?: 'CategoryTagGroupBy';
   created_at?: Maybe<Array<Maybe<CategoryTagConnectionCreated_At>>>;
   description?: Maybe<Array<Maybe<CategoryTagConnectionDescription>>>;
   id?: Maybe<Array<Maybe<CategoryTagConnectionId>>>;
@@ -170,7 +154,6 @@ export type CategoryTagInput = {
 };
 
 export type ComponentContentComment = {
-  __typename?: 'ComponentContentComment';
   author: Scalars['String'];
   date?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
@@ -184,7 +167,6 @@ export type ComponentContentCommentInput = {
 };
 
 export type Description = {
-  __typename?: 'Description';
   created_at: Scalars['DateTime'];
   id: Scalars['ID'];
   pictures?: Maybe<Array<Maybe<Picture>>>;
@@ -201,50 +183,42 @@ export type DescriptionPicturesArgs = {
 };
 
 export type DescriptionAggregator = {
-  __typename?: 'DescriptionAggregator';
   count?: Maybe<Scalars['Int']>;
   totalCount?: Maybe<Scalars['Int']>;
 };
 
 export type DescriptionConnection = {
-  __typename?: 'DescriptionConnection';
   aggregate?: Maybe<DescriptionAggregator>;
   groupBy?: Maybe<DescriptionGroupBy>;
   values?: Maybe<Array<Maybe<Description>>>;
 };
 
 export type DescriptionConnectionCreated_At = {
-  __typename?: 'DescriptionConnectionCreated_at';
   connection?: Maybe<DescriptionConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type DescriptionConnectionId = {
-  __typename?: 'DescriptionConnectionId';
   connection?: Maybe<DescriptionConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type DescriptionConnectionPublished_At = {
-  __typename?: 'DescriptionConnectionPublished_at';
   connection?: Maybe<DescriptionConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type DescriptionConnectionText = {
-  __typename?: 'DescriptionConnectionText';
   connection?: Maybe<DescriptionConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type DescriptionConnectionUpdated_At = {
-  __typename?: 'DescriptionConnectionUpdated_at';
   connection?: Maybe<DescriptionConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type DescriptionGroupBy = {
-  __typename?: 'DescriptionGroupBy';
   created_at?: Maybe<Array<Maybe<DescriptionConnectionCreated_At>>>;
   id?: Maybe<Array<Maybe<DescriptionConnectionId>>>;
   published_at?: Maybe<Array<Maybe<DescriptionConnectionPublished_At>>>;
@@ -287,7 +261,6 @@ export type FileInput = {
 };
 
 export type I18NLocale = {
-  __typename?: 'I18NLocale';
   code?: Maybe<Scalars['String']>;
   created_at: Scalars['DateTime'];
   id: Scalars['ID'];
@@ -300,7 +273,6 @@ export type InputId = {
 };
 
 export type KeywordTag = {
-  __typename?: 'KeywordTag';
   created_at: Scalars['DateTime'];
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -317,50 +289,42 @@ export type KeywordTagPicturesArgs = {
 };
 
 export type KeywordTagAggregator = {
-  __typename?: 'KeywordTagAggregator';
   count?: Maybe<Scalars['Int']>;
   totalCount?: Maybe<Scalars['Int']>;
 };
 
 export type KeywordTagConnection = {
-  __typename?: 'KeywordTagConnection';
   aggregate?: Maybe<KeywordTagAggregator>;
   groupBy?: Maybe<KeywordTagGroupBy>;
   values?: Maybe<Array<Maybe<KeywordTag>>>;
 };
 
 export type KeywordTagConnectionCreated_At = {
-  __typename?: 'KeywordTagConnectionCreated_at';
   connection?: Maybe<KeywordTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type KeywordTagConnectionId = {
-  __typename?: 'KeywordTagConnectionId';
   connection?: Maybe<KeywordTagConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type KeywordTagConnectionName = {
-  __typename?: 'KeywordTagConnectionName';
   connection?: Maybe<KeywordTagConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type KeywordTagConnectionPublished_At = {
-  __typename?: 'KeywordTagConnectionPublished_at';
   connection?: Maybe<KeywordTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type KeywordTagConnectionUpdated_At = {
-  __typename?: 'KeywordTagConnectionUpdated_at';
   connection?: Maybe<KeywordTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type KeywordTagGroupBy = {
-  __typename?: 'KeywordTagGroupBy';
   created_at?: Maybe<Array<Maybe<KeywordTagConnectionCreated_At>>>;
   id?: Maybe<Array<Maybe<KeywordTagConnectionId>>>;
   name?: Maybe<Array<Maybe<KeywordTagConnectionName>>>;
@@ -533,7 +497,6 @@ export type Morph =
   | UpdateUserPayload;
 
 export type Mutation = {
-  __typename?: 'Mutation';
   createCategoryTag?: Maybe<CreateCategoryTagPayload>;
   createDescription?: Maybe<CreateDescriptionPayload>;
   createKeywordTag?: Maybe<CreateKeywordTagPayload>;
@@ -721,7 +684,6 @@ export type MutationUploadArgs = {
 };
 
 export type Picture = {
-  __typename?: 'Picture';
   Comment?: Maybe<Array<Maybe<ComponentContentComment>>>;
   category_tags?: Maybe<Array<Maybe<CategoryTag>>>;
   created_at: Scalars['DateTime'];
@@ -759,7 +721,6 @@ export type PictureKeyword_TagsArgs = {
 };
 
 export type PictureAggregator = {
-  __typename?: 'PictureAggregator';
   avg?: Maybe<PictureAggregatorAvg>;
   count?: Maybe<Scalars['Int']>;
   max?: Maybe<PictureAggregatorMax>;
@@ -769,88 +730,73 @@ export type PictureAggregator = {
 };
 
 export type PictureAggregatorAvg = {
-  __typename?: 'PictureAggregatorAvg';
   wordpress_id?: Maybe<Scalars['Float']>;
 };
 
 export type PictureAggregatorMax = {
-  __typename?: 'PictureAggregatorMax';
   wordpress_id?: Maybe<Scalars['Float']>;
 };
 
 export type PictureAggregatorMin = {
-  __typename?: 'PictureAggregatorMin';
   wordpress_id?: Maybe<Scalars['Float']>;
 };
 
 export type PictureAggregatorSum = {
-  __typename?: 'PictureAggregatorSum';
   wordpress_id?: Maybe<Scalars['Float']>;
 };
 
 export type PictureConnection = {
-  __typename?: 'PictureConnection';
   aggregate?: Maybe<PictureAggregator>;
   groupBy?: Maybe<PictureGroupBy>;
   values?: Maybe<Array<Maybe<Picture>>>;
 };
 
 export type PictureConnectionCreated_At = {
-  __typename?: 'PictureConnectionCreated_at';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type PictureConnectionId = {
-  __typename?: 'PictureConnectionId';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type PictureConnectionMedia = {
-  __typename?: 'PictureConnectionMedia';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type PictureConnectionPublished_At = {
-  __typename?: 'PictureConnectionPublished_at';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type PictureConnectionTaken = {
-  __typename?: 'PictureConnectionTaken';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type PictureConnectionTime_Range_Tag = {
-  __typename?: 'PictureConnectionTime_range_tag';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type PictureConnectionTitle = {
-  __typename?: 'PictureConnectionTitle';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type PictureConnectionUpdated_At = {
-  __typename?: 'PictureConnectionUpdated_at';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type PictureConnectionWordpress_Id = {
-  __typename?: 'PictureConnectionWordpress_id';
   connection?: Maybe<PictureConnection>;
   key?: Maybe<Scalars['Int']>;
 };
 
 export type PictureGroupBy = {
-  __typename?: 'PictureGroupBy';
   created_at?: Maybe<Array<Maybe<PictureConnectionCreated_At>>>;
   id?: Maybe<Array<Maybe<PictureConnectionId>>>;
   media?: Maybe<Array<Maybe<PictureConnectionMedia>>>;
@@ -883,7 +829,6 @@ export enum PublicationState {
 }
 
 export type Query = {
-  __typename?: 'Query';
   categoryTag?: Maybe<CategoryTag>;
   categoryTags?: Maybe<Array<Maybe<CategoryTag>>>;
   categoryTagsConnection?: Maybe<CategoryTagConnection>;
@@ -1100,7 +1045,6 @@ export type RoleInput = {
 };
 
 export type TimeRangeTag = {
-  __typename?: 'TimeRangeTag';
   created_at: Scalars['DateTime'];
   end?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
@@ -1118,56 +1062,47 @@ export type TimeRangeTagPicturesArgs = {
 };
 
 export type TimeRangeTagAggregator = {
-  __typename?: 'TimeRangeTagAggregator';
   count?: Maybe<Scalars['Int']>;
   totalCount?: Maybe<Scalars['Int']>;
 };
 
 export type TimeRangeTagConnection = {
-  __typename?: 'TimeRangeTagConnection';
   aggregate?: Maybe<TimeRangeTagAggregator>;
   groupBy?: Maybe<TimeRangeTagGroupBy>;
   values?: Maybe<Array<Maybe<TimeRangeTag>>>;
 };
 
 export type TimeRangeTagConnectionCreated_At = {
-  __typename?: 'TimeRangeTagConnectionCreated_at';
   connection?: Maybe<TimeRangeTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type TimeRangeTagConnectionEnd = {
-  __typename?: 'TimeRangeTagConnectionEnd';
   connection?: Maybe<TimeRangeTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type TimeRangeTagConnectionId = {
-  __typename?: 'TimeRangeTagConnectionId';
   connection?: Maybe<TimeRangeTagConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type TimeRangeTagConnectionPublished_At = {
-  __typename?: 'TimeRangeTagConnectionPublished_at';
   connection?: Maybe<TimeRangeTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type TimeRangeTagConnectionStart = {
-  __typename?: 'TimeRangeTagConnectionStart';
   connection?: Maybe<TimeRangeTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type TimeRangeTagConnectionUpdated_At = {
-  __typename?: 'TimeRangeTagConnectionUpdated_at';
   connection?: Maybe<TimeRangeTagConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type TimeRangeTagGroupBy = {
-  __typename?: 'TimeRangeTagGroupBy';
   created_at?: Maybe<Array<Maybe<TimeRangeTagConnectionCreated_At>>>;
   end?: Maybe<Array<Maybe<TimeRangeTagConnectionEnd>>>;
   id?: Maybe<Array<Maybe<TimeRangeTagConnectionId>>>;
@@ -1186,7 +1121,6 @@ export type TimeRangeTagInput = {
 };
 
 export type Title = {
-  __typename?: 'Title';
   created_at: Scalars['DateTime'];
   id: Scalars['ID'];
   pictures?: Maybe<Array<Maybe<Picture>>>;
@@ -1203,50 +1137,42 @@ export type TitlePicturesArgs = {
 };
 
 export type TitleAggregator = {
-  __typename?: 'TitleAggregator';
   count?: Maybe<Scalars['Int']>;
   totalCount?: Maybe<Scalars['Int']>;
 };
 
 export type TitleConnection = {
-  __typename?: 'TitleConnection';
   aggregate?: Maybe<TitleAggregator>;
   groupBy?: Maybe<TitleGroupBy>;
   values?: Maybe<Array<Maybe<Title>>>;
 };
 
 export type TitleConnectionCreated_At = {
-  __typename?: 'TitleConnectionCreated_at';
   connection?: Maybe<TitleConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type TitleConnectionId = {
-  __typename?: 'TitleConnectionId';
   connection?: Maybe<TitleConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type TitleConnectionPublished_At = {
-  __typename?: 'TitleConnectionPublished_at';
   connection?: Maybe<TitleConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type TitleConnectionText = {
-  __typename?: 'TitleConnectionText';
   connection?: Maybe<TitleConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type TitleConnectionUpdated_At = {
-  __typename?: 'TitleConnectionUpdated_at';
   connection?: Maybe<TitleConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type TitleGroupBy = {
-  __typename?: 'TitleGroupBy';
   created_at?: Maybe<Array<Maybe<TitleConnectionCreated_At>>>;
   id?: Maybe<Array<Maybe<TitleConnectionId>>>;
   published_at?: Maybe<Array<Maybe<TitleConnectionPublished_At>>>;
@@ -1263,7 +1189,6 @@ export type TitleInput = {
 };
 
 export type UploadFile = {
-  __typename?: 'UploadFile';
   alternativeText?: Maybe<Scalars['String']>;
   caption?: Maybe<Scalars['String']>;
   created_at: Scalars['DateTime'];
@@ -1292,7 +1217,6 @@ export type UploadFileRelatedArgs = {
 };
 
 export type UploadFileAggregator = {
-  __typename?: 'UploadFileAggregator';
   avg?: Maybe<UploadFileAggregatorAvg>;
   count?: Maybe<Scalars['Int']>;
   max?: Maybe<UploadFileAggregatorMax>;
@@ -1302,144 +1226,121 @@ export type UploadFileAggregator = {
 };
 
 export type UploadFileAggregatorAvg = {
-  __typename?: 'UploadFileAggregatorAvg';
   height?: Maybe<Scalars['Float']>;
   size?: Maybe<Scalars['Float']>;
   width?: Maybe<Scalars['Float']>;
 };
 
 export type UploadFileAggregatorMax = {
-  __typename?: 'UploadFileAggregatorMax';
   height?: Maybe<Scalars['Float']>;
   size?: Maybe<Scalars['Float']>;
   width?: Maybe<Scalars['Float']>;
 };
 
 export type UploadFileAggregatorMin = {
-  __typename?: 'UploadFileAggregatorMin';
   height?: Maybe<Scalars['Float']>;
   size?: Maybe<Scalars['Float']>;
   width?: Maybe<Scalars['Float']>;
 };
 
 export type UploadFileAggregatorSum = {
-  __typename?: 'UploadFileAggregatorSum';
   height?: Maybe<Scalars['Float']>;
   size?: Maybe<Scalars['Float']>;
   width?: Maybe<Scalars['Float']>;
 };
 
 export type UploadFileConnection = {
-  __typename?: 'UploadFileConnection';
   aggregate?: Maybe<UploadFileAggregator>;
   groupBy?: Maybe<UploadFileGroupBy>;
   values?: Maybe<Array<Maybe<UploadFile>>>;
 };
 
 export type UploadFileConnectionAlternativeText = {
-  __typename?: 'UploadFileConnectionAlternativeText';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionCaption = {
-  __typename?: 'UploadFileConnectionCaption';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionCreated_At = {
-  __typename?: 'UploadFileConnectionCreated_at';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type UploadFileConnectionExt = {
-  __typename?: 'UploadFileConnectionExt';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionFormats = {
-  __typename?: 'UploadFileConnectionFormats';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['JSON']>;
 };
 
 export type UploadFileConnectionHash = {
-  __typename?: 'UploadFileConnectionHash';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionHeight = {
-  __typename?: 'UploadFileConnectionHeight';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['Int']>;
 };
 
 export type UploadFileConnectionId = {
-  __typename?: 'UploadFileConnectionId';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type UploadFileConnectionMime = {
-  __typename?: 'UploadFileConnectionMime';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionName = {
-  __typename?: 'UploadFileConnectionName';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionPreviewUrl = {
-  __typename?: 'UploadFileConnectionPreviewUrl';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionProvider = {
-  __typename?: 'UploadFileConnectionProvider';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionProvider_Metadata = {
-  __typename?: 'UploadFileConnectionProvider_metadata';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['JSON']>;
 };
 
 export type UploadFileConnectionSize = {
-  __typename?: 'UploadFileConnectionSize';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['Float']>;
 };
 
 export type UploadFileConnectionUpdated_At = {
-  __typename?: 'UploadFileConnectionUpdated_at';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type UploadFileConnectionUrl = {
-  __typename?: 'UploadFileConnectionUrl';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UploadFileConnectionWidth = {
-  __typename?: 'UploadFileConnectionWidth';
   connection?: Maybe<UploadFileConnection>;
   key?: Maybe<Scalars['Int']>;
 };
 
 export type UploadFileGroupBy = {
-  __typename?: 'UploadFileGroupBy';
   alternativeText?: Maybe<Array<Maybe<UploadFileConnectionAlternativeText>>>;
   caption?: Maybe<Array<Maybe<UploadFileConnectionCaption>>>;
   created_at?: Maybe<Array<Maybe<UploadFileConnectionCreated_At>>>;
@@ -1474,7 +1375,6 @@ export type UserInput = {
 };
 
 export type UserPermissionsPasswordPayload = {
-  __typename?: 'UserPermissionsPasswordPayload';
   ok: Scalars['Boolean'];
 };
 
@@ -1485,13 +1385,11 @@ export type UsersPermissionsLoginInput = {
 };
 
 export type UsersPermissionsLoginPayload = {
-  __typename?: 'UsersPermissionsLoginPayload';
   jwt?: Maybe<Scalars['String']>;
   user: UsersPermissionsMe;
 };
 
 export type UsersPermissionsMe = {
-  __typename?: 'UsersPermissionsMe';
   blocked?: Maybe<Scalars['Boolean']>;
   confirmed?: Maybe<Scalars['Boolean']>;
   email: Scalars['String'];
@@ -1501,7 +1399,6 @@ export type UsersPermissionsMe = {
 };
 
 export type UsersPermissionsMeRole = {
-  __typename?: 'UsersPermissionsMeRole';
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -1509,7 +1406,6 @@ export type UsersPermissionsMeRole = {
 };
 
 export type UsersPermissionsPermission = {
-  __typename?: 'UsersPermissionsPermission';
   action: Scalars['String'];
   controller: Scalars['String'];
   enabled: Scalars['Boolean'];
@@ -1526,7 +1422,6 @@ export type UsersPermissionsRegisterInput = {
 };
 
 export type UsersPermissionsRole = {
-  __typename?: 'UsersPermissionsRole';
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -1550,44 +1445,37 @@ export type UsersPermissionsRoleUsersArgs = {
 };
 
 export type UsersPermissionsRoleAggregator = {
-  __typename?: 'UsersPermissionsRoleAggregator';
   count?: Maybe<Scalars['Int']>;
   totalCount?: Maybe<Scalars['Int']>;
 };
 
 export type UsersPermissionsRoleConnection = {
-  __typename?: 'UsersPermissionsRoleConnection';
   aggregate?: Maybe<UsersPermissionsRoleAggregator>;
   groupBy?: Maybe<UsersPermissionsRoleGroupBy>;
   values?: Maybe<Array<Maybe<UsersPermissionsRole>>>;
 };
 
 export type UsersPermissionsRoleConnectionDescription = {
-  __typename?: 'UsersPermissionsRoleConnectionDescription';
   connection?: Maybe<UsersPermissionsRoleConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UsersPermissionsRoleConnectionId = {
-  __typename?: 'UsersPermissionsRoleConnectionId';
   connection?: Maybe<UsersPermissionsRoleConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type UsersPermissionsRoleConnectionName = {
-  __typename?: 'UsersPermissionsRoleConnectionName';
   connection?: Maybe<UsersPermissionsRoleConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UsersPermissionsRoleConnectionType = {
-  __typename?: 'UsersPermissionsRoleConnectionType';
   connection?: Maybe<UsersPermissionsRoleConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UsersPermissionsRoleGroupBy = {
-  __typename?: 'UsersPermissionsRoleGroupBy';
   description?: Maybe<Array<Maybe<UsersPermissionsRoleConnectionDescription>>>;
   id?: Maybe<Array<Maybe<UsersPermissionsRoleConnectionId>>>;
   name?: Maybe<Array<Maybe<UsersPermissionsRoleConnectionName>>>;
@@ -1595,7 +1483,6 @@ export type UsersPermissionsRoleGroupBy = {
 };
 
 export type UsersPermissionsUser = {
-  __typename?: 'UsersPermissionsUser';
   blocked?: Maybe<Scalars['Boolean']>;
   confirmed?: Maybe<Scalars['Boolean']>;
   created_at: Scalars['DateTime'];
@@ -1608,74 +1495,62 @@ export type UsersPermissionsUser = {
 };
 
 export type UsersPermissionsUserAggregator = {
-  __typename?: 'UsersPermissionsUserAggregator';
   count?: Maybe<Scalars['Int']>;
   totalCount?: Maybe<Scalars['Int']>;
 };
 
 export type UsersPermissionsUserConnection = {
-  __typename?: 'UsersPermissionsUserConnection';
   aggregate?: Maybe<UsersPermissionsUserAggregator>;
   groupBy?: Maybe<UsersPermissionsUserGroupBy>;
   values?: Maybe<Array<Maybe<UsersPermissionsUser>>>;
 };
 
 export type UsersPermissionsUserConnectionBlocked = {
-  __typename?: 'UsersPermissionsUserConnectionBlocked';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['Boolean']>;
 };
 
 export type UsersPermissionsUserConnectionConfirmed = {
-  __typename?: 'UsersPermissionsUserConnectionConfirmed';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['Boolean']>;
 };
 
 export type UsersPermissionsUserConnectionCreated_At = {
-  __typename?: 'UsersPermissionsUserConnectionCreated_at';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type UsersPermissionsUserConnectionEmail = {
-  __typename?: 'UsersPermissionsUserConnectionEmail';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UsersPermissionsUserConnectionId = {
-  __typename?: 'UsersPermissionsUserConnectionId';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type UsersPermissionsUserConnectionProvider = {
-  __typename?: 'UsersPermissionsUserConnectionProvider';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UsersPermissionsUserConnectionRole = {
-  __typename?: 'UsersPermissionsUserConnectionRole';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['ID']>;
 };
 
 export type UsersPermissionsUserConnectionUpdated_At = {
-  __typename?: 'UsersPermissionsUserConnectionUpdated_at';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['DateTime']>;
 };
 
 export type UsersPermissionsUserConnectionUsername = {
-  __typename?: 'UsersPermissionsUserConnectionUsername';
   connection?: Maybe<UsersPermissionsUserConnection>;
   key?: Maybe<Scalars['String']>;
 };
 
 export type UsersPermissionsUserGroupBy = {
-  __typename?: 'UsersPermissionsUserGroupBy';
   blocked?: Maybe<Array<Maybe<UsersPermissionsUserConnectionBlocked>>>;
   confirmed?: Maybe<Array<Maybe<UsersPermissionsUserConnectionConfirmed>>>;
   created_at?: Maybe<Array<Maybe<UsersPermissionsUserConnectionCreated_At>>>;
@@ -1692,7 +1567,6 @@ export type CreateCategoryTagInput = {
 };
 
 export type CreateCategoryTagPayload = {
-  __typename?: 'createCategoryTagPayload';
   categoryTag?: Maybe<CategoryTag>;
 };
 
@@ -1701,7 +1575,6 @@ export type CreateDescriptionInput = {
 };
 
 export type CreateDescriptionPayload = {
-  __typename?: 'createDescriptionPayload';
   description?: Maybe<Description>;
 };
 
@@ -1710,7 +1583,6 @@ export type CreateKeywordTagInput = {
 };
 
 export type CreateKeywordTagPayload = {
-  __typename?: 'createKeywordTagPayload';
   keywordTag?: Maybe<KeywordTag>;
 };
 
@@ -1719,7 +1591,6 @@ export type CreatePictureInput = {
 };
 
 export type CreatePicturePayload = {
-  __typename?: 'createPicturePayload';
   picture?: Maybe<Picture>;
 };
 
@@ -1728,7 +1599,6 @@ export type CreateRoleInput = {
 };
 
 export type CreateRolePayload = {
-  __typename?: 'createRolePayload';
   role?: Maybe<UsersPermissionsRole>;
 };
 
@@ -1737,7 +1607,6 @@ export type CreateTimeRangeTagInput = {
 };
 
 export type CreateTimeRangeTagPayload = {
-  __typename?: 'createTimeRangeTagPayload';
   timeRangeTag?: Maybe<TimeRangeTag>;
 };
 
@@ -1746,7 +1615,6 @@ export type CreateTitleInput = {
 };
 
 export type CreateTitlePayload = {
-  __typename?: 'createTitlePayload';
   title?: Maybe<Title>;
 };
 
@@ -1755,7 +1623,6 @@ export type CreateUserInput = {
 };
 
 export type CreateUserPayload = {
-  __typename?: 'createUserPayload';
   user?: Maybe<UsersPermissionsUser>;
 };
 
@@ -1764,7 +1631,6 @@ export type DeleteCategoryTagInput = {
 };
 
 export type DeleteCategoryTagPayload = {
-  __typename?: 'deleteCategoryTagPayload';
   categoryTag?: Maybe<CategoryTag>;
 };
 
@@ -1773,7 +1639,6 @@ export type DeleteDescriptionInput = {
 };
 
 export type DeleteDescriptionPayload = {
-  __typename?: 'deleteDescriptionPayload';
   description?: Maybe<Description>;
 };
 
@@ -1782,7 +1647,6 @@ export type DeleteFileInput = {
 };
 
 export type DeleteFilePayload = {
-  __typename?: 'deleteFilePayload';
   file?: Maybe<UploadFile>;
 };
 
@@ -1791,7 +1655,6 @@ export type DeleteKeywordTagInput = {
 };
 
 export type DeleteKeywordTagPayload = {
-  __typename?: 'deleteKeywordTagPayload';
   keywordTag?: Maybe<KeywordTag>;
 };
 
@@ -1800,7 +1663,6 @@ export type DeletePictureInput = {
 };
 
 export type DeletePicturePayload = {
-  __typename?: 'deletePicturePayload';
   picture?: Maybe<Picture>;
 };
 
@@ -1809,7 +1671,6 @@ export type DeleteRoleInput = {
 };
 
 export type DeleteRolePayload = {
-  __typename?: 'deleteRolePayload';
   role?: Maybe<UsersPermissionsRole>;
 };
 
@@ -1818,7 +1679,6 @@ export type DeleteTimeRangeTagInput = {
 };
 
 export type DeleteTimeRangeTagPayload = {
-  __typename?: 'deleteTimeRangeTagPayload';
   timeRangeTag?: Maybe<TimeRangeTag>;
 };
 
@@ -1827,7 +1687,6 @@ export type DeleteTitleInput = {
 };
 
 export type DeleteTitlePayload = {
-  __typename?: 'deleteTitlePayload';
   title?: Maybe<Title>;
 };
 
@@ -1836,7 +1695,6 @@ export type DeleteUserInput = {
 };
 
 export type DeleteUserPayload = {
-  __typename?: 'deleteUserPayload';
   user?: Maybe<UsersPermissionsUser>;
 };
 
@@ -1963,7 +1821,6 @@ export type UpdateCategoryTagInput = {
 };
 
 export type UpdateCategoryTagPayload = {
-  __typename?: 'updateCategoryTagPayload';
   categoryTag?: Maybe<CategoryTag>;
 };
 
@@ -1973,7 +1830,6 @@ export type UpdateDescriptionInput = {
 };
 
 export type UpdateDescriptionPayload = {
-  __typename?: 'updateDescriptionPayload';
   description?: Maybe<Description>;
 };
 
@@ -1983,7 +1839,6 @@ export type UpdateKeywordTagInput = {
 };
 
 export type UpdateKeywordTagPayload = {
-  __typename?: 'updateKeywordTagPayload';
   keywordTag?: Maybe<KeywordTag>;
 };
 
@@ -1993,7 +1848,6 @@ export type UpdatePictureInput = {
 };
 
 export type UpdatePicturePayload = {
-  __typename?: 'updatePicturePayload';
   picture?: Maybe<Picture>;
 };
 
@@ -2003,7 +1857,6 @@ export type UpdateRoleInput = {
 };
 
 export type UpdateRolePayload = {
-  __typename?: 'updateRolePayload';
   role?: Maybe<UsersPermissionsRole>;
 };
 
@@ -2013,7 +1866,6 @@ export type UpdateTimeRangeTagInput = {
 };
 
 export type UpdateTimeRangeTagPayload = {
-  __typename?: 'updateTimeRangeTagPayload';
   timeRangeTag?: Maybe<TimeRangeTag>;
 };
 
@@ -2023,7 +1875,6 @@ export type UpdateTitleInput = {
 };
 
 export type UpdateTitlePayload = {
-  __typename?: 'updateTitlePayload';
   title?: Maybe<Title>;
 };
 
@@ -2033,7 +1884,6 @@ export type UpdateUserInput = {
 };
 
 export type UpdateUserPayload = {
-  __typename?: 'updateUserPayload';
   user?: Maybe<UsersPermissionsUser>;
 };
 
@@ -2042,62 +1892,19 @@ export type GetPictureInfoQueryVariables = Exact<{
 }>;
 
 export type GetPictureInfoQuery = {
-  __typename?: 'Query';
   picture?:
     | {
-        __typename?: 'Picture';
-        title?:
-          | { __typename?: 'Title'; text?: string | null | undefined; id: string }
-          | null
-          | undefined;
+        title?: { text?: string | null | undefined; id: string } | null | undefined;
         descriptions?:
-          | Array<
-              | { __typename?: 'Description'; text?: string | null | undefined; id: string }
-              | null
-              | undefined
-            >
+          | Array<{ text?: string | null | undefined; id: string } | null | undefined>
           | null
           | undefined;
-        media?: { __typename?: 'UploadFile'; url: string } | null | undefined;
+        media?: { url: string } | null | undefined;
         Comment?:
-          | Array<
-              | {
-                  __typename?: 'ComponentContentComment';
-                  text?: string | null | undefined;
-                  author: string;
-                }
-              | null
-              | undefined
-            >
+          | Array<{ text?: string | null | undefined; author: string } | null | undefined>
           | null
           | undefined;
       }
-    | null
-    | undefined;
-};
-
-export type PictureFieldsFragment = {
-  __typename?: 'Picture';
-  title?: { __typename?: 'Title'; text?: string | null | undefined; id: string } | null | undefined;
-  descriptions?:
-    | Array<
-        | { __typename?: 'Description'; text?: string | null | undefined; id: string }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
-  media?: { __typename?: 'UploadFile'; url: string } | null | undefined;
-  Comment?:
-    | Array<
-        | {
-            __typename?: 'ComponentContentComment';
-            text?: string | null | undefined;
-            author: string;
-          }
-        | null
-        | undefined
-      >
     | null
     | undefined;
 };
@@ -2109,15 +1916,12 @@ export type GetPicturesQueryVariables = Exact<{
 }>;
 
 export type GetPicturesQuery = {
-  __typename?: 'Query';
   pictures?:
     | Array<
         | {
-            __typename?: 'Picture';
             id: string;
             media?:
               | {
-                  __typename?: 'UploadFile';
                   width?: number | null | undefined;
                   height?: number | null | undefined;
                   formats?: any | null | undefined;
@@ -2138,28 +1942,19 @@ export type GetCategoryInfoQueryVariables = Exact<{
 }>;
 
 export type GetCategoryInfoQuery = {
-  __typename?: 'Query';
   categoryTags?:
     | Array<
         | {
-            __typename?: 'CategoryTag';
             id: string;
             name: string;
             description?: string | null | undefined;
             related_tags?:
               | Array<
                   | {
-                      __typename?: 'CategoryTag';
                       name: string;
                       thumbnail?:
                         | Array<
-                            | {
-                                __typename?: 'Picture';
-                                media?:
-                                  | { __typename?: 'UploadFile'; formats?: any | null | undefined }
-                                  | null
-                                  | undefined;
-                              }
+                            | { media?: { formats?: any | null | undefined } | null | undefined }
                             | null
                             | undefined
                           >
@@ -2179,76 +1974,26 @@ export type GetCategoryInfoQuery = {
     | undefined;
 };
 
-export type SearchPicturesQueryVariables = Exact<{
-  text?: InputMaybe<Scalars['String']>;
-}>;
-
-export type SearchPicturesQuery = {
-  __typename?: 'Query';
-  pictures?:
-    | Array<
-        | {
-            __typename?: 'Picture';
-            title?:
-              | { __typename?: 'Title'; text?: string | null | undefined; id: string }
-              | null
-              | undefined;
-            descriptions?:
-              | Array<
-                  | { __typename?: 'Description'; text?: string | null | undefined; id: string }
-                  | null
-                  | undefined
-                >
-              | null
-              | undefined;
-            media?: { __typename?: 'UploadFile'; url: string } | null | undefined;
-            Comment?:
-              | Array<
-                  | {
-                      __typename?: 'ComponentContentComment';
-                      text?: string | null | undefined;
-                      author: string;
-                    }
-                  | null
-                  | undefined
-                >
-              | null
-              | undefined;
-          }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
-};
-
-export const PictureFieldsFragmentDoc = gql`
-  fragment PictureFields on Picture {
-    title {
-      text
-      id
-    }
-    descriptions {
-      text
-      id
-    }
-    media {
-      url
-    }
-    Comment {
-      text
-      author
-    }
-  }
-`;
-
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
-      ...PictureFields
+      title {
+        text
+        id
+      }
+      descriptions {
+        text
+        id
+      }
+      media {
+        url
+      }
+      Comment {
+        text
+        author
+      }
     }
   }
-  ${PictureFieldsFragmentDoc}
 `;
 
 /**
@@ -2415,58 +2160,4 @@ export type GetCategoryInfoLazyQueryHookResult = ReturnType<typeof useGetCategor
 export type GetCategoryInfoQueryResult = Apollo.QueryResult<
   GetCategoryInfoQuery,
   GetCategoryInfoQueryVariables
->;
-
-export const SearchPicturesDocument = gql`
-  query searchPictures($text: String) {
-    pictures(where: { descriptions: { text_contains: $text } }) {
-      ...PictureFields
-    }
-  }
-  ${PictureFieldsFragmentDoc}
-`;
-
-/**
- * __useSearchPicturesQuery__
- *
- * To run a query within a React component, call `useSearchPicturesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchPicturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchPicturesQuery({
- *   variables: {
- *      text: // value for 'text'
- *   },
- * });
- */
-export function useSearchPicturesQuery(
-  baseOptions?: Apollo.QueryHookOptions<SearchPicturesQuery, SearchPicturesQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<SearchPicturesQuery, SearchPicturesQueryVariables>(
-    SearchPicturesDocument,
-    options
-  );
-}
-
-export function useSearchPicturesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<SearchPicturesQuery, SearchPicturesQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<SearchPicturesQuery, SearchPicturesQueryVariables>(
-    SearchPicturesDocument,
-    options
-  );
-}
-
-export type SearchPicturesQueryHookResult = ReturnType<typeof useSearchPicturesQuery>;
-
-export type SearchPicturesLazyQueryHookResult = ReturnType<typeof useSearchPicturesLazyQuery>;
-
-export type SearchPicturesQueryResult = Apollo.QueryResult<
-  SearchPicturesQuery,
-  SearchPicturesQueryVariables
 >;
