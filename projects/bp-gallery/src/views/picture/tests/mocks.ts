@@ -24,8 +24,14 @@ export const DescriptionMocks: Description[] = [
   {
     text: 'My fancy description',
     id: '1',
-    updated_at: new Date('2021-04-21'),
-    created_at: new Date('2021-04-21'),
+    updated_at: undefined,
+    created_at: undefined,
+  },
+  {
+    text: 'My fancy description yeah',
+    id: '2',
+    updated_at: undefined,
+    created_at: undefined,
   },
 ];
 
@@ -42,7 +48,7 @@ export const GetInfoPictureDocumentMocks = [
         picture: {
           title: {
             id: '1',
-            text: 'Picture with comment and description',
+            text: 'Picture with comments and descriptions',
           },
           media: {
             url: 'test-image.jpg',
