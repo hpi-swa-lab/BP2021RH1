@@ -16,7 +16,15 @@ import {
 import QueryErrorDisplay from '../../components/QueryErrorDisplay';
 import Loading from '../../components/Loading';
 
-const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
+const DetailedPictureView = ({
+  pictureId,
+  onNextPicture,
+  onPreviousPicture,
+}: {
+  pictureId: string;
+  onNextPicture: () => void;
+  onPreviousPicture: () => void;
+}) => {
   const { t } = useTranslation();
   const [scrollPos, setScrollPos] = useState<number>();
   const [pictureHeight, setPictureHeight] = useState<number>(0.65 * window.innerHeight);
@@ -60,29 +68,33 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
     return <Loading />;
   } else if (data?.picture) {
     return (
-      <div className='picture-view'>
-        <Picture
-          url={data.picture.media?.url ?? ''}
-          scrollPos={scrollPos}
-          onPictureHeightChange={setPictureHeight}
-        />
-        <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
-          <div className='picture-background' />
-          <div className='title'>{data.picture.title?.text ?? ''}</div>
-        </div>
-
-        <PerfectScrollbar
-          options={{ suppressScrollX: true, useBothWheelAxes: false }}
-          onScrollY={container => {
-            setScrollPos(container.scrollTop);
-          }}
-        >
-          <div className='picture-info-container'>
-            <PictureDetails descriptions={data.picture.descriptions as Description[]} />
-            <CommentsContainer comments={data.picture.Comment as ComponentContentComment[]} />
+      <>
+        <button onClick={onNextPicture}>Next</button>
+        <button onClick={onPreviousPicture}> Previous</button>
+        <div className='picture-view'>
+          <Picture
+            url={data.picture.media?.url ?? ''}
+            scrollPos={scrollPos}
+            onPictureHeightChange={setPictureHeight}
+          />
+          <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
+            <div className='picture-background' />
+            <div className='title'>{data.picture.title?.text ?? ''}</div>
           </div>
-        </PerfectScrollbar>
-      </div>
+
+          <PerfectScrollbar
+            options={{ suppressScrollX: true, useBothWheelAxes: false }}
+            onScrollY={container => {
+              setScrollPos(container.scrollTop);
+            }}
+          >
+            <div className='picture-info-container'>
+              <PictureDetails descriptions={data.picture.descriptions as Description[]} />
+              <CommentsContainer comments={data.picture.Comment as ComponentContentComment[]} />
+            </div>
+          </PerfectScrollbar>
+        </div>
+      </>
     );
   } else {
     return <div>{t('common.no-picture')}</div>;
@@ -91,14 +103,25 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
 
 const PictureView = ({
   pictureId,
+  pictures = [],
   thumbnailUrl = '',
   thumbnailMode = false,
 }: {
   pictureId: string;
   thumbnailUrl?: string;
   thumbnailMode?: boolean;
+  pictures?: string[];
 }) => {
   const history: History = useHistory();
+
+  // function getNextPicture(pictures: string[], pictureId: string): string {
+  //   // if (pictures[pictureId] == pictures?.length) {
+  //   //   return pictures?.at(0);
+  //   // }
+  //   const key = pictures.indexOf(pictureId) || 0;
+  //   return pictures.at(key + 1) || pictureId;
+  // }
+  // function getPreviousPicture(pictureId) {}
 
   if (thumbnailMode) {
     return (
@@ -106,12 +129,35 @@ const PictureView = ({
         src={`${apiBase}${thumbnailUrl}`}
         alt={thumbnailUrl}
         onClick={() => {
-          history.push(`/picture/${pictureId}`, { showBack: true });
+          history.push(`/picture/${pictureId}`, { showBack: true, picturesInContext: pictures });
         }}
       />
     );
   } else {
-    return <DetailedPictureView pictureId={pictureId} />;
+    const showNextPicture = () => {
+      // if (pictures[pictureId] == pictures?.length) {
+      //   return pictures?.at(0);
+      // }
+      if (!history.location.state?.picturesInContext) {
+        return undefined;
+      }
+      const picturesInContext = history.location.state.picturesInContext;
+      const indexOfCurrentPicture: number = picturesInContext.indexOf(pictureId);
+      const nextPictureId: string =
+        picturesInContext.at(indexOfCurrentPicture + 1) ?? (picturesInContext.at(0) || pictureId);
+
+      history.push(`/picture/${nextPictureId}`, { showBack: true, picturesInContext });
+    };
+
+    return (
+      <DetailedPictureView
+        pictureId={pictureId}
+        onNextPicture={showNextPicture}
+        onPreviousPicture={() => {
+          history.push(`/picture/${(parseInt(pictureId) - 1).toString()}`, { showBack: true });
+        }}
+      />
+    );
   }
 };
 
