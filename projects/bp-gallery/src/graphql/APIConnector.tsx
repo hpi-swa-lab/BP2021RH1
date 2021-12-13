@@ -1901,7 +1901,16 @@ export type GetPictureInfoQuery = {
           | undefined;
         media?: { url: string } | null | undefined;
         Comment?:
-          | Array<{ text?: string | null | undefined; author: string } | null | undefined>
+          | Array<
+              | {
+                  text?: string | null | undefined;
+                  author: string;
+                  id: string;
+                  date?: any | null | undefined;
+                }
+              | null
+              | undefined
+            >
           | null
           | undefined;
       }
@@ -1991,6 +2000,8 @@ export const GetPictureInfoDocument = gql`
       Comment {
         text
         author
+        id
+        date
       }
     }
   }
