@@ -19,11 +19,11 @@ import Loading from '../../components/Loading';
 const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
   const [scrollPos, setScrollPos] = useState<number>();
-  const [imageHeightRef, setImageHeightRef] = useState<number>(0.65 * window.innerHeight);
+  const [pictureHeight, setPictureHeight] = useState<number>(0.65 * window.innerHeight);
 
   const parallaxPosition = useMemo(() => {
-    return Math.max(window.innerHeight * 0.65 - (scrollPos ?? 0), imageHeightRef);
-  }, [scrollPos, imageHeightRef]);
+    return Math.max(window.innerHeight * 0.65 - (scrollPos ?? 0), pictureHeight);
+  }, [scrollPos, pictureHeight]);
 
   const { data, loading, error } = useGetPictureInfoQuery({
     variables: {
@@ -41,7 +41,7 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
         <Picture
           url={data.picture.media?.url ?? ''}
           scrollPos={scrollPos}
-          ref={setImageHeightRef}
+          onPictureHeightChange={setPictureHeight}
         />
         <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
           <div className='picture-background' />
