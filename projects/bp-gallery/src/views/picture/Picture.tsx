@@ -2,38 +2,41 @@ import React, { useMemo } from 'react';
 import './Picture.scss';
 import { apiBase } from '../../App';
 
-const Picture = React.forwardRef(
-  ({ url, scrollPos = 0 }: { url: string; scrollPos?: number }, setImageHeightRef: any) => {
-    const imageLink = `${apiBase}${url}`;
+const Picture = ({
+  url,
+  scrollPos = 0,
+  onPictureHeightChange = () => {},
+}: {
+  url: string;
+  scrollPos?: number;
+  onPictureHeightChange?: (height: number) => void;
+}) => {
+  const pictureLink = `${apiBase}${url}`;
 
-    const imageSize = useMemo(() => {
-      const parentHeight = 0.65 * window.innerHeight;
+  const pictureHeight = useMemo(() => {
+    const parentHeight = 0.65 * window.innerHeight;
 
-      const calculatedHeight = parentHeight - scrollPos;
+    const calculatedHeight = parentHeight - scrollPos;
 
-      const height = Math.min(Math.max(calculatedHeight, 150), parentHeight);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      setImageHeightRef(height);
-      return height;
-    }, [scrollPos, setImageHeightRef]);
+    const height = Math.min(Math.max(calculatedHeight, 150), parentHeight);
+    onPictureHeightChange(height);
+    return height;
+  }, [scrollPos, onPictureHeightChange]);
 
-    return (
-      <div className='picture'>
-        <div className='background-container' style={{ height: `${imageSize}px` }}>
-          <img src={imageLink} alt={imageLink} className='blur-background' />
-        </div>
-        <img
-          src={imageLink}
-          alt={imageLink}
-          style={{
-            height: `${imageSize}px`,
-          }}
-        />
+  return (
+    <div className='picture'>
+      <div className='background-container' style={{ height: `${pictureHeight}px` }}>
+        <img src={pictureLink} alt={pictureLink} className='blur-background' />
       </div>
-    );
-  }
-);
-
-Picture.displayName = 'Picture';
+      <img
+        src={pictureLink}
+        alt={pictureLink}
+        style={{
+          height: `${pictureHeight}px`,
+        }}
+      />
+    </div>
+  );
+};
 
 export default Picture;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import ItemList, { ItemListItem } from './ItemList';
+import ItemList, { ItemListItem } from '../ItemList';
 
 test('Item List should show elements', () => {
   const items: ItemListItem[] = [
