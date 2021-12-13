@@ -1,9 +1,9 @@
 import routes from '../routes';
-import { renderRoute } from '../testUtils';
+import { renderRouteWithAPIMocks } from '../testUtils';
 
 test('Top bar is always visible', () => {
-  routes[0]?.routes?.forEach(route => {
-    const { container } = renderRoute(route.path as string);
+  routes[0].routes?.forEach(route => {
+    const { container } = renderRouteWithAPIMocks(route.path as string, []);
 
     const topBars = container.getElementsByClassName('top-bar');
 
