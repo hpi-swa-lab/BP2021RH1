@@ -1,24 +1,15 @@
 @import '../../../shared/style.scss';
 
 .new-comment-form {
-  background-color: aliceblue;
-  border-radius: 0.5rem;
-  margin: 2rem;
-  //margin: auto;
-  padding: 1rem;
-  color: black;
-  text-align: center;
 
-  input {
-    border-radius: 0.5rem;
+  .MuiOutlinedInput-input{
+    color: white;
+    border-color: white;
+    margin: 0.5rem;
   }
 
-  .text {
-    background: blue;
-
-    input {
-      width: 20rem;
-      height: 5rem;
-    }
+  .submit{
+    color: white;
   }
+
 }

@@ -153,6 +153,89 @@ export type CategoryTagInput = {
   updated_by?: InputMaybe<Scalars['ID']>;
 };
 
+export type Comment = {
+  author?: Maybe<Scalars['String']>;
+  created_at: Scalars['DateTime'];
+  date?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  picture?: Maybe<Picture>;
+  published_at?: Maybe<Scalars['DateTime']>;
+  text?: Maybe<Scalars['String']>;
+  updated_at: Scalars['DateTime'];
+};
+
+export type CommentAggregator = {
+  count?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
+};
+
+export type CommentConnection = {
+  aggregate?: Maybe<CommentAggregator>;
+  groupBy?: Maybe<CommentGroupBy>;
+  values?: Maybe<Array<Maybe<Comment>>>;
+};
+
+export type CommentConnectionAuthor = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type CommentConnectionCreated_At = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentConnectionDate = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentConnectionId = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type CommentConnectionPicture = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type CommentConnectionPublished_At = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentConnectionText = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type CommentConnectionUpdated_At = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentGroupBy = {
+  author?: Maybe<Array<Maybe<CommentConnectionAuthor>>>;
+  created_at?: Maybe<Array<Maybe<CommentConnectionCreated_At>>>;
+  date?: Maybe<Array<Maybe<CommentConnectionDate>>>;
+  id?: Maybe<Array<Maybe<CommentConnectionId>>>;
+  picture?: Maybe<Array<Maybe<CommentConnectionPicture>>>;
+  published_at?: Maybe<Array<Maybe<CommentConnectionPublished_At>>>;
+  text?: Maybe<Array<Maybe<CommentConnectionText>>>;
+  updated_at?: Maybe<Array<Maybe<CommentConnectionUpdated_At>>>;
+};
+
+export type CommentInput = {
+  author?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  date?: InputMaybe<Scalars['DateTime']>;
+  picture?: InputMaybe<Scalars['ID']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  text?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
 export type ComponentContentComment = {
   author: Scalars['String'];
   date?: Maybe<Scalars['DateTime']>;
@@ -363,6 +446,18 @@ export type Morph =
   | CategoryTagConnectionPublished_At
   | CategoryTagConnectionUpdated_At
   | CategoryTagGroupBy
+  | Comment
+  | CommentAggregator
+  | CommentConnection
+  | CommentConnectionAuthor
+  | CommentConnectionCreated_At
+  | CommentConnectionDate
+  | CommentConnectionId
+  | CommentConnectionPicture
+  | CommentConnectionPublished_At
+  | CommentConnectionText
+  | CommentConnectionUpdated_At
+  | CommentGroupBy
   | ComponentContentComment
   | Description
   | DescriptionAggregator
@@ -471,6 +566,7 @@ export type Morph =
   | UsersPermissionsUserConnectionUsername
   | UsersPermissionsUserGroupBy
   | CreateCategoryTagPayload
+  | CreateCommentPayload
   | CreateDescriptionPayload
   | CreateKeywordTagPayload
   | CreatePicturePayload
@@ -479,6 +575,7 @@ export type Morph =
   | CreateTitlePayload
   | CreateUserPayload
   | DeleteCategoryTagPayload
+  | DeleteCommentPayload
   | DeleteDescriptionPayload
   | DeleteFilePayload
   | DeleteKeywordTagPayload
@@ -488,6 +585,7 @@ export type Morph =
   | DeleteTitlePayload
   | DeleteUserPayload
   | UpdateCategoryTagPayload
+  | UpdateCommentPayload
   | UpdateDescriptionPayload
   | UpdateKeywordTagPayload
   | UpdatePicturePayload
@@ -498,6 +596,7 @@ export type Morph =
 
 export type Mutation = {
   createCategoryTag?: Maybe<CreateCategoryTagPayload>;
+  createComment?: Maybe<CreateCommentPayload>;
   createDescription?: Maybe<CreateDescriptionPayload>;
   createKeywordTag?: Maybe<CreateKeywordTagPayload>;
   createPicture?: Maybe<CreatePicturePayload>;
@@ -508,6 +607,7 @@ export type Mutation = {
   /** Create a new user */
   createUser?: Maybe<CreateUserPayload>;
   deleteCategoryTag?: Maybe<DeleteCategoryTagPayload>;
+  deleteComment?: Maybe<DeleteCommentPayload>;
   deleteDescription?: Maybe<DeleteDescriptionPayload>;
   /** Delete one file */
   deleteFile?: Maybe<DeleteFilePayload>;
@@ -526,6 +626,7 @@ export type Mutation = {
   register: UsersPermissionsLoginPayload;
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateCategoryTag?: Maybe<UpdateCategoryTagPayload>;
+  updateComment?: Maybe<UpdateCommentPayload>;
   updateDescription?: Maybe<UpdateDescriptionPayload>;
   updateFileInfo: UploadFile;
   updateKeywordTag?: Maybe<UpdateKeywordTagPayload>;
@@ -541,6 +642,10 @@ export type Mutation = {
 
 export type MutationCreateCategoryTagArgs = {
   input?: InputMaybe<CreateCategoryTagInput>;
+};
+
+export type MutationCreateCommentArgs = {
+  input?: InputMaybe<CreateCommentInput>;
 };
 
 export type MutationCreateDescriptionArgs = {
@@ -573,6 +678,10 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeleteCategoryTagArgs = {
   input?: InputMaybe<DeleteCategoryTagInput>;
+};
+
+export type MutationDeleteCommentArgs = {
+  input?: InputMaybe<DeleteCommentInput>;
 };
 
 export type MutationDeleteDescriptionArgs = {
@@ -641,6 +750,10 @@ export type MutationUpdateCategoryTagArgs = {
   input?: InputMaybe<UpdateCategoryTagInput>;
 };
 
+export type MutationUpdateCommentArgs = {
+  input?: InputMaybe<UpdateCommentInput>;
+};
+
 export type MutationUpdateDescriptionArgs = {
   input?: InputMaybe<UpdateDescriptionInput>;
 };
@@ -686,6 +799,7 @@ export type MutationUploadArgs = {
 export type Picture = {
   Comment?: Maybe<Array<Maybe<ComponentContentComment>>>;
   category_tags?: Maybe<Array<Maybe<CategoryTag>>>;
+  comments?: Maybe<Array<Maybe<Comment>>>;
   created_at: Scalars['DateTime'];
   descriptions?: Maybe<Array<Maybe<Description>>>;
   id: Scalars['ID'];
@@ -700,6 +814,13 @@ export type Picture = {
 };
 
 export type PictureCategory_TagsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type PictureCommentsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['String']>;
   start?: InputMaybe<Scalars['Int']>;
@@ -811,6 +932,7 @@ export type PictureGroupBy = {
 export type PictureInput = {
   Comment?: InputMaybe<Array<InputMaybe<ComponentContentCommentInput>>>;
   category_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   created_by?: InputMaybe<Scalars['ID']>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -832,6 +954,9 @@ export type Query = {
   categoryTag?: Maybe<CategoryTag>;
   categoryTags?: Maybe<Array<Maybe<CategoryTag>>>;
   categoryTagsConnection?: Maybe<CategoryTagConnection>;
+  comment?: Maybe<Comment>;
+  comments?: Maybe<Array<Maybe<Comment>>>;
+  commentsConnection?: Maybe<CommentConnection>;
   description?: Maybe<Description>;
   descriptions?: Maybe<Array<Maybe<Description>>>;
   descriptionsConnection?: Maybe<DescriptionConnection>;
@@ -873,6 +998,26 @@ export type QueryCategoryTagsArgs = {
 };
 
 export type QueryCategoryTagsConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryCommentArgs = {
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
+};
+
+export type QueryCommentsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryCommentsConnectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['String']>;
   start?: InputMaybe<Scalars['Int']>;
@@ -1570,6 +1715,14 @@ export type CreateCategoryTagPayload = {
   categoryTag?: Maybe<CategoryTag>;
 };
 
+export type CreateCommentInput = {
+  data?: InputMaybe<CommentInput>;
+};
+
+export type CreateCommentPayload = {
+  comment?: Maybe<Comment>;
+};
+
 export type CreateDescriptionInput = {
   data?: InputMaybe<DescriptionInput>;
 };
@@ -1632,6 +1785,14 @@ export type DeleteCategoryTagInput = {
 
 export type DeleteCategoryTagPayload = {
   categoryTag?: Maybe<CategoryTag>;
+};
+
+export type DeleteCommentInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteCommentPayload = {
+  comment?: Maybe<Comment>;
 };
 
 export type DeleteDescriptionInput = {
@@ -1709,6 +1870,16 @@ export type EditCategoryTagInput = {
   updated_by?: InputMaybe<Scalars['ID']>;
 };
 
+export type EditCommentInput = {
+  author?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  date?: InputMaybe<Scalars['DateTime']>;
+  picture?: InputMaybe<Scalars['ID']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  text?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
 export type EditComponentContentCommentInput = {
   author?: InputMaybe<Scalars['String']>;
   date?: InputMaybe<Scalars['DateTime']>;
@@ -1762,6 +1933,7 @@ export type EditLocaleInput = {
 export type EditPictureInput = {
   Comment?: InputMaybe<Array<InputMaybe<EditComponentContentCommentInput>>>;
   category_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   created_by?: InputMaybe<Scalars['ID']>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1822,6 +1994,15 @@ export type UpdateCategoryTagInput = {
 
 export type UpdateCategoryTagPayload = {
   categoryTag?: Maybe<CategoryTag>;
+};
+
+export type UpdateCommentInput = {
+  data?: InputMaybe<EditCommentInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateCommentPayload = {
+  comment?: Maybe<Comment>;
 };
 
 export type UpdateDescriptionInput = {
@@ -1916,6 +2097,18 @@ export type GetPictureInfoQuery = {
       }
     | null
     | undefined;
+  comments?:
+    | Array<
+        | {
+            text?: string | null | undefined;
+            author?: string | null | undefined;
+            date?: any | null | undefined;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
 };
 
 export type GetPicturesQueryVariables = Exact<{
@@ -1983,6 +2176,20 @@ export type GetCategoryInfoQuery = {
     | undefined;
 };
 
+export type PostCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  author: Scalars['String'];
+  text: Scalars['String'];
+  date: Scalars['DateTime'];
+}>;
+
+export type PostCommentMutation = {
+  createComment?:
+    | { comment?: { text?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
@@ -2003,6 +2210,11 @@ export const GetPictureInfoDocument = gql`
         id
         date
       }
+    }
+    comments {
+      text
+      author
+      date
     }
   }
 `;
@@ -2171,4 +2383,62 @@ export type GetCategoryInfoLazyQueryHookResult = ReturnType<typeof useGetCategor
 export type GetCategoryInfoQueryResult = Apollo.QueryResult<
   GetCategoryInfoQuery,
   GetCategoryInfoQueryVariables
+>;
+
+export const PostCommentDocument = gql`
+  mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
+    createComment(
+      input: {
+        data: { author: $author, text: $text, picture: $id, date: $date, published_at: null }
+      }
+    ) {
+      comment {
+        text
+      }
+    }
+  }
+`;
+
+export type PostCommentMutationFn = Apollo.MutationFunction<
+  PostCommentMutation,
+  PostCommentMutationVariables
+>;
+
+/**
+ * __usePostCommentMutation__
+ *
+ * To run a mutation, you first call `usePostCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postCommentMutation, { data, loading, error }] = usePostCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      author: // value for 'author'
+ *      text: // value for 'text'
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function usePostCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<PostCommentMutation, PostCommentMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<PostCommentMutation, PostCommentMutationVariables>(
+    PostCommentDocument,
+    options
+  );
+}
+
+export type PostCommentMutationHookResult = ReturnType<typeof usePostCommentMutation>;
+
+export type PostCommentMutationResult = Apollo.MutationResult<PostCommentMutation>;
+
+export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
+  PostCommentMutation,
+  PostCommentMutationVariables
 >;
