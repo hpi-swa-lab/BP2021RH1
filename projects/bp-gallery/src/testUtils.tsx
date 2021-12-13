@@ -20,6 +20,11 @@ export const renderWithAPIMocks = (
   );
 };
 
+/**
+ * Enables test-rendering of components based on our prior defined routes
+ * @see https://testing-library.com/docs/example-react-router/
+ * @private
+ */
 const _renderRoute = (route: string, apiMocks?: MockedResponse[]) => {
   window.history.pushState({}, 'Test page', route);
 
@@ -30,16 +35,12 @@ const _renderRoute = (route: string, apiMocks?: MockedResponse[]) => {
   return render(<BrowserRouter>{contentToWrapInRouter}</BrowserRouter>);
 };
 
-/**
- * Enables test-rendering of components based on our prior defined routes
- * @see https://testing-library.com/docs/example-react-router/
- */
 export const renderRoute = (route: string) => {
   return _renderRoute(route);
 };
 
 /**
- * Merges the functionalities of the exported util functions above
+ * Merges the functionalities of renderRoute and renderWithAPIMocks
  */
 export const renderRouteWithAPIMocks = (route: string, apiMocks: MockedResponse[] = []) => {
   return _renderRoute(route, apiMocks);
