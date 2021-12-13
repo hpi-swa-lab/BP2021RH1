@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
@@ -7,7 +7,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
-import { apiBase } from '../../App';
+import { apiBase, NavigationContext } from '../../App';
 import {
   ComponentContentComment,
   Description,
@@ -24,6 +24,29 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
   const parallaxPosition = useMemo(() => {
     return Math.max(window.innerHeight * 0.65 - (scrollPos ?? 0), pictureHeight);
   }, [scrollPos, pictureHeight]);
+
+  const setNavigationElements = useContext(NavigationContext);
+
+  useEffect(() => {
+    const menuItems = [
+      {
+        name: t('common.picture'),
+        icon: 'photo',
+        target: `/picture/${pictureId}#photo`,
+      },
+      {
+        name: t('common.details'),
+        icon: 'info',
+        target: `/picture/${pictureId}#info`,
+      },
+      {
+        name: t('common.comments'),
+        icon: 'comment',
+        target: `/picture/${pictureId}#comments`,
+      },
+    ];
+    setNavigationElements(menuItems);
+  }, [setNavigationElements, t, pictureId]);
 
   const { data, loading, error } = useGetPictureInfoQuery({
     variables: {
@@ -76,24 +99,6 @@ const PictureView = ({
   thumbnailMode?: boolean;
 }) => {
   const history: History = useHistory();
-
-  //   const menuItems = [
-  //     {
-  //       name: t('common.picture'),
-  //       icon: 'photo',
-  //       target: `/picture/${pictureId}`,
-  //     },
-  //     {
-  //       name: t('common.details'),
-  //       icon: 'info',
-  //       target: `/picture/${pictureId}`,
-  //     },
-  //     {
-  //       name: t('common.comments'),
-  //       icon: 'comment',
-  //       target: `/picture/${pictureId}`,
-  //     },
-  //   ];
 
   if (thumbnailMode) {
     return (
