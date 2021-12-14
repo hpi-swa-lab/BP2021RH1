@@ -6,7 +6,7 @@ import './NavigationBar.scss';
 export interface NavigationElement {
   name: string;
   icon: string;
-  target: string;
+  target: any;
 }
 
 export interface NavigationProps {
