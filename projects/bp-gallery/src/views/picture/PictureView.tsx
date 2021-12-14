@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { History, Location } from 'history';
+import { History } from 'history';
 import { Icon, IconButton } from '@mui/material';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
@@ -153,7 +153,8 @@ const PictureView = ({
       />
     );
   } else {
-    const pictureIdsInContext: string[] | undefined = history.location.state?.pictureIdsInContext;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const pictureIdsInContext: string[] | undefined = history?.location.state?.pictureIdsInContext;
 
     const showNewPicture = (target: PictureNavigationTarget) => {
       if (!pictureIdsInContext) {
