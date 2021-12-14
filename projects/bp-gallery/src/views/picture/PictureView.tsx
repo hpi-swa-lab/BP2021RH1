@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { History, Location } from 'history';
+import { Icon, IconButton } from '@mui/material';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useTranslation } from 'react-i18next';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import { apiBase, NavigationContext } from '../../App';
 import {
   ComponentContentComment,
@@ -22,8 +23,8 @@ const DetailedPictureView = ({
   onPreviousPicture,
 }: {
   pictureId: string;
-  onNextPicture: () => void;
-  onPreviousPicture: () => void;
+  onNextPicture?: () => void;
+  onPreviousPicture?: () => void;
 }) => {
   const { t } = useTranslation();
   const [scrollPos, setScrollPos] = useState<number>();
@@ -68,60 +69,78 @@ const DetailedPictureView = ({
     return <Loading />;
   } else if (data?.picture) {
     return (
-      <>
-        <button onClick={onNextPicture}>Next</button>
-        <button onClick={onPreviousPicture}> Previous</button>
-        <div className='picture-view'>
-          <Picture
-            url={data.picture.media?.url ?? ''}
-            scrollPos={scrollPos}
-            onPictureHeightChange={setPictureHeight}
-          />
-          <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
-            <div className='picture-background' />
-            <div className='title'>{data.picture.title?.text ?? ''}</div>
-          </div>
-
-          <PerfectScrollbar
-            options={{ suppressScrollX: true, useBothWheelAxes: false }}
-            onScrollY={container => {
-              setScrollPos(container.scrollTop);
-            }}
-          >
-            <div className='picture-info-container'>
-              <PictureDetails descriptions={data.picture.descriptions as Description[]} />
-              <CommentsContainer comments={data.picture.Comment as ComponentContentComment[]} />
-            </div>
-          </PerfectScrollbar>
+      <div className='picture-view'>
+        <Picture
+          url={data.picture.media?.url ?? ''}
+          scrollPos={scrollPos}
+          onPictureHeightChange={setPictureHeight}
+        />
+        <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
+          <div className='picture-background' />
+          <div className='title'>{data.picture.title?.text ?? ''}</div>
         </div>
-      </>
+
+        <PerfectScrollbar
+          options={{ suppressScrollX: true, useBothWheelAxes: false }}
+          onScrollY={container => {
+            setScrollPos(container.scrollTop);
+          }}
+        >
+          <div className='picture-navigation-buttons'>
+            {onPreviousPicture && (
+              <IconButton onClick={onPreviousPicture} size='large'>
+                <Icon>fast_rewind</Icon>
+              </IconButton>
+            )}
+            {onNextPicture && (
+              <IconButton onClick={onNextPicture} size='large'>
+                <Icon>fast_forward</Icon>
+              </IconButton>
+            )}
+          </div>
+          <div className='picture-info-container'>
+            <PictureDetails descriptions={data.picture.descriptions as Description[]} />
+            <CommentsContainer comments={data.picture.Comment as ComponentContentComment[]} />
+          </div>
+        </PerfectScrollbar>
+      </div>
     );
   } else {
     return <div>{t('common.no-picture')}</div>;
   }
 };
 
+enum PictureNavigationTarget {
+  NEXT,
+  PREVIOUS,
+}
+
+export const getNextPictureId = (currentPictureId: string, pictureIds: string[]) => {
+  const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
+  return pictureIds.at(indexOfCurrentPictureId + 1) ?? pictureIds.at(0) ?? currentPictureId;
+};
+
+export const getPreviousPictureId = (currentPictureId: string, pictureIds: string[]): string => {
+  const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
+  return (
+    pictureIds.at(indexOfCurrentPictureId - 1) ??
+    pictureIds.at(pictureIds.length - 1) ??
+    currentPictureId
+  );
+};
+
 const PictureView = ({
   pictureId,
-  pictures = [],
+  pictureIdsInContext,
   thumbnailUrl = '',
   thumbnailMode = false,
 }: {
   pictureId: string;
+  pictureIdsInContext?: string[];
   thumbnailUrl?: string;
   thumbnailMode?: boolean;
-  pictures?: string[];
 }) => {
   const history: History = useHistory();
-
-  // function getNextPicture(pictures: string[], pictureId: string): string {
-  //   // if (pictures[pictureId] == pictures?.length) {
-  //   //   return pictures?.at(0);
-  //   // }
-  //   const key = pictures.indexOf(pictureId) || 0;
-  //   return pictures.at(key + 1) || pictureId;
-  // }
-  // function getPreviousPicture(pictureId) {}
 
   if (thumbnailMode) {
     return (
@@ -129,33 +148,45 @@ const PictureView = ({
         src={`${apiBase}${thumbnailUrl}`}
         alt={thumbnailUrl}
         onClick={() => {
-          history.push(`/picture/${pictureId}`, { showBack: true, picturesInContext: pictures });
+          history.push(`/picture/${pictureId}`, { showBack: true, pictureIdsInContext });
         }}
       />
     );
   } else {
-    const showNextPicture = () => {
-      // if (pictures[pictureId] == pictures?.length) {
-      //   return pictures?.at(0);
-      // }
-      if (!history.location.state?.picturesInContext) {
-        return undefined;
-      }
-      const picturesInContext = history.location.state.picturesInContext;
-      const indexOfCurrentPicture: number = picturesInContext.indexOf(pictureId);
-      const nextPictureId: string =
-        picturesInContext.at(indexOfCurrentPicture + 1) ?? (picturesInContext.at(0) || pictureId);
+    const pictureIdsInContext: string[] | undefined = history.location.state?.pictureIdsInContext;
 
-      history.push(`/picture/${nextPictureId}`, { showBack: true, picturesInContext });
+    const showNewPicture = (target: PictureNavigationTarget) => {
+      if (!pictureIdsInContext) {
+        return;
+      }
+
+      let newPictureId: string = pictureId;
+      switch (target) {
+        case PictureNavigationTarget.NEXT:
+          newPictureId = getNextPictureId(pictureId, pictureIdsInContext);
+          break;
+        case PictureNavigationTarget.PREVIOUS:
+          newPictureId = getPreviousPictureId(pictureId, pictureIdsInContext);
+          break;
+        default:
+          break;
+      }
+
+      history.push(`/picture/${newPictureId}`, {
+        showBack: true,
+        pictureIdsInContext: pictureIdsInContext,
+      });
     };
 
     return (
       <DetailedPictureView
         pictureId={pictureId}
-        onNextPicture={showNextPicture}
-        onPreviousPicture={() => {
-          history.push(`/picture/${(parseInt(pictureId) - 1).toString()}`, { showBack: true });
-        }}
+        onNextPicture={
+          pictureIdsInContext ? () => showNewPicture(PictureNavigationTarget.NEXT) : undefined
+        }
+        onPreviousPicture={
+          pictureIdsInContext ? () => showNewPicture(PictureNavigationTarget.PREVIOUS) : undefined
+        }
       />
     );
   }

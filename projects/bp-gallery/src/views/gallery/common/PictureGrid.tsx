@@ -87,9 +87,8 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
                     }}
                   >
                     <PictureView
-                      // pictures={props?.pictures}
-                      pictures={props?.pictures.map(picture => picture.id)}
                       pictureId={picture.id}
+                      pictureIdsInContext={props?.pictures.map(pic => pic.id)}
                       thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
                       thumbnailMode={true}
                     />
