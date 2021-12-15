@@ -3,6 +3,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { History, Location } from 'history';
+import { Icon, IconButton } from '@mui/material';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
@@ -16,7 +17,15 @@ import {
 import QueryErrorDisplay from '../../components/QueryErrorDisplay';
 import Loading from '../../components/Loading';
 
-const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
+const DetailedPictureView = ({
+  pictureId,
+  onNextPicture,
+  onPreviousPicture,
+}: {
+  pictureId: string;
+  onNextPicture?: () => void;
+  onPreviousPicture?: () => void;
+}) => {
   const { t } = useTranslation();
   const [scrollPos, setScrollPos] = useState<number>();
   const [pictureHeight, setPictureHeight] = useState<number>(0.65 * window.innerHeight);
@@ -90,6 +99,18 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
             setScrollPos(container.scrollTop);
           }}
         >
+          <div className='picture-navigation-buttons'>
+            {onPreviousPicture && (
+              <IconButton onClick={onPreviousPicture} size='large'>
+                <Icon>fast_rewind</Icon>
+              </IconButton>
+            )}
+            {onNextPicture && (
+              <IconButton onClick={onNextPicture} size='large'>
+                <Icon>fast_forward</Icon>
+              </IconButton>
+            )}
+          </div>
           <div className='picture-info-container'>
             <PictureDetails descriptions={data.picture.descriptions as Description[]} />
             <CommentsContainer comments={data.picture.Comment as ComponentContentComment[]} />
@@ -102,12 +123,33 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
   }
 };
 
+enum PictureNavigationTarget {
+  NEXT,
+  PREVIOUS,
+}
+
+export const getNextPictureId = (currentPictureId: string, pictureIds: string[]) => {
+  const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
+  return pictureIds.at(indexOfCurrentPictureId + 1) ?? pictureIds.at(0) ?? currentPictureId;
+};
+
+export const getPreviousPictureId = (currentPictureId: string, pictureIds: string[]): string => {
+  const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
+  return (
+    pictureIds.at(indexOfCurrentPictureId - 1) ??
+    pictureIds.at(pictureIds.length - 1) ??
+    currentPictureId
+  );
+};
+
 const PictureView = ({
   pictureId,
+  pictureIdsInContext,
   thumbnailUrl = '',
   thumbnailMode = false,
 }: {
   pictureId: string;
+  pictureIdsInContext?: string[];
   thumbnailUrl?: string;
   thumbnailMode?: boolean;
 }) => {
@@ -119,12 +161,48 @@ const PictureView = ({
         src={`${apiBase}${thumbnailUrl}`}
         alt={thumbnailUrl}
         onClick={() => {
-          history.push(`/picture/${pictureId}`, { showBack: true });
+          history.push(`/picture/${pictureId}`, { showBack: true, pictureIdsInContext });
         }}
       />
     );
   } else {
-    return <DetailedPictureView pictureId={pictureId} />;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const pictureIdsInContext: string[] | undefined = history?.location.state?.pictureIdsInContext;
+
+    const showNewPicture = (target: PictureNavigationTarget) => {
+      if (!pictureIdsInContext) {
+        return;
+      }
+
+      let newPictureId: string = pictureId;
+      switch (target) {
+        case PictureNavigationTarget.NEXT:
+          newPictureId = getNextPictureId(pictureId, pictureIdsInContext);
+          break;
+        case PictureNavigationTarget.PREVIOUS:
+          newPictureId = getPreviousPictureId(pictureId, pictureIdsInContext);
+          break;
+        default:
+          break;
+      }
+
+      history.push(`/picture/${newPictureId}`, {
+        showBack: true,
+        pictureIdsInContext: pictureIdsInContext,
+      });
+    };
+
+    return (
+      <DetailedPictureView
+        pictureId={pictureId}
+        onNextPicture={
+          pictureIdsInContext ? () => showNewPicture(PictureNavigationTarget.NEXT) : undefined
+        }
+        onPreviousPicture={
+          pictureIdsInContext ? () => showNewPicture(PictureNavigationTarget.PREVIOUS) : undefined
+        }
+      />
+    );
   }
 };
 
