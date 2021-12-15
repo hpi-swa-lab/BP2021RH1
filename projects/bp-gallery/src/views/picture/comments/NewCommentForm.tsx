@@ -36,6 +36,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       });
       setCommentAuthor('');
       setCommentText('');
+      //eslint-disable-next-line no-alert
       alert(
         'Ihr Kommentar wurde abgeschickt. Nachdem er von der Bad-Harzburg-Stiftung geprüft wurde, wird er hier veröffentlicht.'
       );

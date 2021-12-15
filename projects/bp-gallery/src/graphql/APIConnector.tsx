@@ -2081,11 +2081,11 @@ export type GetPictureInfoQuery = {
           | null
           | undefined;
         media?: { url: string } | null | undefined;
-        Comment?:
+        comments?:
           | Array<
               | {
                   text?: string | null | undefined;
-                  author: string;
+                  author?: string | null | undefined;
                   id: string;
                   date?: any | null | undefined;
                 }
@@ -2095,18 +2095,6 @@ export type GetPictureInfoQuery = {
           | null
           | undefined;
       }
-    | null
-    | undefined;
-  comments?:
-    | Array<
-        | {
-            text?: string | null | undefined;
-            author?: string | null | undefined;
-            date?: any | null | undefined;
-          }
-        | null
-        | undefined
-      >
     | null
     | undefined;
 };
@@ -2204,17 +2192,12 @@ export const GetPictureInfoDocument = gql`
       media {
         url
       }
-      Comment {
+      comments {
         text
         author
         id
         date
       }
-    }
-    comments {
-      text
-      author
-      date
     }
   }
 `;

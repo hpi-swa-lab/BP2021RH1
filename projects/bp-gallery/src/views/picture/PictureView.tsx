@@ -112,9 +112,9 @@ const DetailedPictureView = ({
             )}
           </div>
           <div className='picture-info-container'>
-            <PictureDetails descriptions={data?.picture?.descriptions as Description[]} />
+            <PictureDetails descriptions={data.picture.descriptions as Description[]} />
             <CommentsContainer
-              comments={data?.picture?.comments as ComponentContentComment[]}
+              comments={data.picture.comments as ComponentContentComment[]}
               pictureId={pictureId}
             />
           </div>

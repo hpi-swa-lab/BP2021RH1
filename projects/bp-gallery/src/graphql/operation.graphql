@@ -11,17 +11,13 @@ query getPictureInfo($pictureId: ID!) {
     media {
       url
     }
-    Comment {
+
+    comments {
       text
       author
       id
       date
     }
-  }
-  comments {
-    text
-    author
-    date
   }
 }
 
