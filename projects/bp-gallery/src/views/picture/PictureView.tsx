@@ -47,7 +47,8 @@ const DetailedPictureView = ({
     let elementPosition =
       targetElement.getBoundingClientRect().y +
       containerRef.current.scrollTop -
-      containerRef.current.getBoundingClientRect().y;
+      containerRef.current.getBoundingClientRect().y -
+      150; // The 150 is to account for the image in its smallest form
     if (window.location.hash === '#photo') {
       elementPosition = 0;
     }
