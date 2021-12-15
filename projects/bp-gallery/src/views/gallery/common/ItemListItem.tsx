@@ -14,8 +14,8 @@ export const ItemListItem = ({ item }: { item: ItemListItemModel }) => {
     for (let i = 0; i < from.length; i++) {
       hash = from.charCodeAt(i) + ((hash << 5) - hash);
     }
-    const colour = `hsl(${(hash % 90) - 45}deg, 40%, 50%)`;
-    return colour;
+    const color = `hsl(${(hash % 90) - 45}deg, 40%, 50%)`;
+    return color;
   };
 
   const [fontSize, setFontSize] = useState<number>(0);
