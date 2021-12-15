@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -29,12 +29,34 @@ const DetailedPictureView = ({
   const { t } = useTranslation();
   const [scrollPos, setScrollPos] = useState<number>();
   const [pictureHeight, setPictureHeight] = useState<number>(0.65 * window.innerHeight);
+  const containerRef = useRef<HTMLElement>();
 
   const parallaxPosition = useMemo(() => {
     return Math.max(window.innerHeight * 0.65 - (scrollPos ?? 0), pictureHeight);
   }, [scrollPos, pictureHeight]);
 
   const setNavigationElements = useContext(NavigationContext);
+  const scrollToElement = () => {
+    if (!containerRef.current || !window.location.hash || window.location.hash === '') {
+      return;
+    }
+    const targetElement = document.querySelector(window.location.hash);
+    if (!targetElement) {
+      return;
+    }
+    let elementPosition =
+      targetElement.getBoundingClientRect().y +
+      containerRef.current.scrollTop -
+      containerRef.current.getBoundingClientRect().y;
+    if (window.location.hash === '#photo') {
+      elementPosition = 0;
+    }
+    containerRef.current.scroll({
+      top: elementPosition,
+      left: 0,
+      behavior: 'smooth',
+    });
+  };
 
   useEffect(() => {
     const pictureLink = `/picture/${pictureId}`;
@@ -42,11 +64,17 @@ const DetailedPictureView = ({
       {
         name: t('common.picture'),
         icon: 'photo',
-        target: (previousLocation: Location) => ({
-          pathname: pictureLink,
-          hash: '#photo',
-          state: { ...previousLocation.state, showBack: true },
-        }),
+        target: (previousLocation: Location) => {
+          scrollToElement();
+          return {
+            pathname: pictureLink,
+            hash: '#photo',
+            state: { ...previousLocation.state, showBack: true },
+          };
+        },
+        isActive: () => {
+          return window.location.hash !== '#info' && window.location.hash !== '#comments';
+        },
       },
       {
         name: t('common.details'),
@@ -56,6 +84,9 @@ const DetailedPictureView = ({
           hash: '#info',
           state: { ...previousLocation.state, showBack: true },
         }),
+        isActive: () => {
+          return window.location.hash === '#info';
+        },
       },
       {
         name: t('common.comments'),
@@ -65,6 +96,9 @@ const DetailedPictureView = ({
           hash: '#comments',
           state: { ...previousLocation.state, showBack: true },
         }),
+        isActive: () => {
+          return window.location.hash === '#comments';
+        },
       },
     ];
     setNavigationElements(menuItems);
@@ -98,6 +132,7 @@ const DetailedPictureView = ({
           onScrollY={container => {
             setScrollPos(container.scrollTop);
           }}
+          containerRef={container => (containerRef.current = container)}
         >
           <div className='picture-navigation-buttons'>
             {onPreviousPicture && (
