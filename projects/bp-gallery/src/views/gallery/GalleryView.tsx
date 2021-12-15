@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { NavigationContext } from '../../App';
 
-const GalleryView = (props?: { target?: string; searchParams?: any; path?: string[] }) => {
+const GalleryView = (props?: { target?: string; searchParams?: string[]; path?: string[] }) => {
   const { t } = useTranslation();
 
   const [scrollPos, setScrollPos] = useState<number>();
