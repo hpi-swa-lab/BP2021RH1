@@ -11,7 +11,7 @@ const CommentsContainer = ({
   pictureId: string;
 }) => {
   return (
-    <div className='pictureComments'>
+    <div className='pictureComments' id='comments'>
       <Comment comments={comments} />
       <NewCommentForm pictureId={pictureId} />
     </div>
