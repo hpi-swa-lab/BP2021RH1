@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/descriptions": {
+    "/comments": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -12,7 +12,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Description"
+                    "$ref": "#/components/schemas/Comment"
                   }
                 }
               }
@@ -51,7 +51,7 @@
         },
         "summary": "",
         "tags": [
-          "Description"
+          "Comment"
         ],
         "parameters": [
           {
@@ -201,7 +201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Description"
+                  "$ref": "#/components/schemas/Comment"
                 }
               }
             }
@@ -239,7 +239,7 @@
         },
         "summary": "",
         "tags": [
-          "Description"
+          "Comment"
         ],
         "requestBody": {
           "description": "",
@@ -247,14 +247,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewDescription"
+                "$ref": "#/components/schemas/NewComment"
               }
             }
           }
         }
       }
     },
-    "/descriptions/count": {
+    "/comments/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -306,12 +306,12 @@
         },
         "summary": "",
         "tags": [
-          "Description"
+          "Comment"
         ],
         "parameters": []
       }
     },
-    "/descriptions/{id}": {
+    "/comments/{id}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -321,7 +321,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Description"
+                  "$ref": "#/components/schemas/Comment"
                 }
               }
             }
@@ -359,7 +359,7 @@
         },
         "summary": "",
         "tags": [
-          "Description"
+          "Comment"
         ],
         "parameters": [
           {
@@ -383,7 +383,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Description"
+                  "$ref": "#/components/schemas/Comment"
                 }
               }
             }
@@ -421,7 +421,7 @@
         },
         "summary": "",
         "tags": [
-          "Description"
+          "Comment"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +429,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewDescription"
+                "$ref": "#/components/schemas/NewComment"
               }
             }
           }
@@ -495,7 +495,7 @@
         },
         "summary": "",
         "tags": [
-          "Description"
+          "Comment"
         ],
         "parameters": [
           {
@@ -514,7 +514,7 @@
   },
   "components": {
     "schemas": {
-      "Description": {
+      "Comment": {
         "required": [
           "id"
         ],
@@ -522,70 +522,74 @@
           "id": {
             "type": "string"
           },
+          "author": {
+            "type": "string"
+          },
           "text": {
             "type": "string"
           },
-          "pictures": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "media": {
-                  "type": "string"
-                },
-                "taken": {
-                  "type": "string"
-                },
-                "Comment": {
-                  "type": "component"
-                },
-                "descriptions": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "title": {
-                  "type": "string"
-                },
-                "category_tags": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "keyword_tags": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "time_range_tag": {
-                  "type": "string"
-                },
-                "wordpress_id": {
-                  "type": "integer"
-                },
-                "comments": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "published_at": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "picture": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "media": {
+                "type": "string"
+              },
+              "taken": {
+                "type": "string"
+              },
+              "Comment": {
+                "type": "component"
+              },
+              "descriptions": {
+                "type": "array",
+                "items": {
                   "type": "string"
                 }
+              },
+              "title": {
+                "type": "string"
+              },
+              "category_tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "keyword_tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "time_range_tag": {
+                "type": "string"
+              },
+              "wordpress_id": {
+                "type": "integer"
+              },
+              "comments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published_at": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
               }
             }
           },
@@ -595,16 +599,20 @@
           }
         }
       },
-      "NewDescription": {
+      "NewComment": {
         "properties": {
+          "author": {
+            "type": "string"
+          },
           "text": {
             "type": "string"
           },
-          "pictures": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "picture": {
+            "type": "string"
           },
           "published_at": {
             "type": "string",
@@ -622,7 +630,7 @@
   },
   "tags": [
     {
-      "name": "Description"
+      "name": "Comment"
     }
   ]
 }
