@@ -6,7 +6,7 @@ import './NavigationBar.scss';
 export interface NavigationElement {
   name: string;
   icon: string;
-  target: string;
+  target: string | ((previousLocation: Location) => {pathname: string; hash: string; state: any});
 }
 
 export interface NavigationProps {

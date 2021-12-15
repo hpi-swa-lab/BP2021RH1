@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { History, Location } from 'history';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useTranslation } from 'react-i18next';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import { apiBase, NavigationContext } from '../../App';
 import {
   ComponentContentComment,
@@ -28,21 +28,34 @@ const DetailedPictureView = ({ pictureId }: { pictureId: string }) => {
   const setNavigationElements = useContext(NavigationContext);
 
   useEffect(() => {
+    const pictureLink = `/picture/${pictureId}`;
     const menuItems = [
       {
         name: t('common.picture'),
         icon: 'photo',
-        target: `/picture/${pictureId}#photo`,
+        target: (previousLocation: Location) => ({
+          pathname: pictureLink,
+          hash: '#photo',
+          state: { ...previousLocation.state, showBack: true },
+        }),
       },
       {
         name: t('common.details'),
         icon: 'info',
-        target: `/picture/${pictureId}#info`,
+        target: (previousLocation: Location) => ({
+          pathname: pictureLink,
+          hash: '#info',
+          state: { ...previousLocation.state, showBack: true },
+        }),
       },
       {
         name: t('common.comments'),
         icon: 'comment',
-        target: `/picture/${pictureId}#comments`,
+        target: (previousLocation: Location) => ({
+          pathname: pictureLink,
+          hash: '#comments',
+          state: { ...previousLocation.state, showBack: true },
+        }),
       },
     ];
     setNavigationElements(menuItems);
