@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { History } from 'history';
+import { History, Location } from 'history';
 import { Icon, IconButton } from '@mui/material';
 import './PictureView.scss';
 import PictureDetails from './PictureDetails';
@@ -37,21 +37,34 @@ const DetailedPictureView = ({
   const setNavigationElements = useContext(NavigationContext);
 
   useEffect(() => {
+    const pictureLink = `/picture/${pictureId}`;
     const menuItems = [
       {
         name: t('common.picture'),
         icon: 'photo',
-        target: `/picture/${pictureId}#photo`,
+        target: (previousLocation: Location) => ({
+          pathname: pictureLink,
+          hash: '#photo',
+          state: { ...previousLocation.state, showBack: true },
+        }),
       },
       {
         name: t('common.details'),
         icon: 'info',
-        target: `/picture/${pictureId}#info`,
+        target: (previousLocation: Location) => ({
+          pathname: pictureLink,
+          hash: '#info',
+          state: { ...previousLocation.state, showBack: true },
+        }),
       },
       {
         name: t('common.comments'),
         icon: 'comment',
-        target: `/picture/${pictureId}#comments`,
+        target: (previousLocation: Location) => ({
+          pathname: pictureLink,
+          hash: '#comments',
+          state: { ...previousLocation.state, showBack: true },
+        }),
       },
     ];
     setNavigationElements(menuItems);
