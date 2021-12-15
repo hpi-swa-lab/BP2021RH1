@@ -18,6 +18,7 @@
     "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht",
     "name": "Name",
     "submit": "Absenden",
-    "comment-alert": "Ihr Kommentar wurde abgeschickt. Nachdem er von der Bad-Harzburg-Stiftung geprüft wurde, wird er hier veröffentlicht."
+    "comment-alert": "Ihr Kommentar wurde abgeschickt. Nachdem er von der Bad-Harzburg-Stiftung geprüft wurde, wird er hier veröffentlicht.",
+    "titleFor": "Titelbild für {{query}}"
   }
 }
