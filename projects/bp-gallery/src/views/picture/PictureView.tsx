@@ -16,6 +16,7 @@ import {
 } from '../../graphql/APIConnector';
 import QueryErrorDisplay from '../../components/QueryErrorDisplay';
 import Loading from '../../components/Loading';
+import { NavigationElement } from '../../components/NavigationBar';
 
 const DetailedPictureView = ({
   pictureId,
@@ -38,7 +39,7 @@ const DetailedPictureView = ({
 
   useEffect(() => {
     const pictureLink = `/picture/${pictureId}`;
-    const menuItems = [
+    const menuItems: NavigationElement[] = [
       {
         name: t('common.picture'),
         icon: 'photo',
