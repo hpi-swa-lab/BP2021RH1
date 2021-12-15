@@ -2204,6 +2204,39 @@ export type GetKeywordTagSuggestionsQuery = {
     | undefined;
 };
 
+export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetDecadePreviewThumbnailsQuery = {
+  s30?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s40?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s50?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s60?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s70?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s80?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s90?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+};
+
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
@@ -2519,4 +2552,119 @@ export type GetKeywordTagSuggestionsLazyQueryHookResult = ReturnType<
 export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
   GetKeywordTagSuggestionsQuery,
   GetKeywordTagSuggestionsQueryVariables
+>;
+
+export const GetDecadePreviewThumbnailsDocument = gql`
+  query getDecadePreviewThumbnails {
+    s30: pictures(
+      where: { time_range_tag: { start_gte: "1930-01-01T00:00", end_lte: "1939-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s40: pictures(
+      where: { time_range_tag: { start_gte: "1940-01-01T00:00", end_lte: "1949-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s50: pictures(
+      where: { time_range_tag: { start_gte: "1950-01-01T00:00", end_lte: "1959-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s60: pictures(
+      where: { time_range_tag: { start_gte: "1960-01-01T00:00", end_lte: "1969-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s70: pictures(
+      where: { time_range_tag: { start_gte: "1970-01-01T00:00", end_lte: "1979-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s80: pictures(
+      where: { time_range_tag: { start_gte: "1980-01-01T00:00", end_lte: "1989-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s90: pictures(
+      where: { time_range_tag: { start_gte: "1990-01-01T00:00", end_lte: "1999-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetDecadePreviewThumbnailsQuery__
+ *
+ * To run a query within a React component, call `useGetDecadePreviewThumbnailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDecadePreviewThumbnailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDecadePreviewThumbnailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDecadePreviewThumbnailsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetDecadePreviewThumbnailsQuery,
+    GetDecadePreviewThumbnailsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetDecadePreviewThumbnailsQuery, GetDecadePreviewThumbnailsQueryVariables>(
+    GetDecadePreviewThumbnailsDocument,
+    options
+  );
+}
+
+export function useGetDecadePreviewThumbnailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetDecadePreviewThumbnailsQuery,
+    GetDecadePreviewThumbnailsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetDecadePreviewThumbnailsQuery,
+    GetDecadePreviewThumbnailsQueryVariables
+  >(GetDecadePreviewThumbnailsDocument, options);
+}
+
+export type GetDecadePreviewThumbnailsQueryHookResult = ReturnType<
+  typeof useGetDecadePreviewThumbnailsQuery
+>;
+
+export type GetDecadePreviewThumbnailsLazyQueryHookResult = ReturnType<
+  typeof useGetDecadePreviewThumbnailsLazyQuery
+>;
+
+export type GetDecadePreviewThumbnailsQueryResult = Apollo.QueryResult<
+  GetDecadePreviewThumbnailsQuery,
+  GetDecadePreviewThumbnailsQueryVariables
 >;

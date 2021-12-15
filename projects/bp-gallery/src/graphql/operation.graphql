@@ -69,3 +69,62 @@ query getKeywordTagSuggestions($name: String) {
     }
   }
 }
+
+query getDecadePreviewThumbnails {
+  s30: pictures(
+    where: { time_range_tag: { start_gte: "1930-01-01T00:00", end_lte: "1939-12-31T23:59" } }
+    limit: 1
+  ) {
+    media {
+      formats
+    }
+  }
+  s40: pictures(
+    where: { time_range_tag: { start_gte: "1940-01-01T00:00", end_lte: "1949-12-31T23:59" } }
+    limit: 1
+  ) {
+    media {
+      formats
+    }
+  }
+  s50: pictures(
+    where: { time_range_tag: { start_gte: "1950-01-01T00:00", end_lte: "1959-12-31T23:59" } }
+    limit: 1
+  ) {
+    media {
+      formats
+    }
+  }
+  s60: pictures(
+    where: { time_range_tag: { start_gte: "1960-01-01T00:00", end_lte: "1969-12-31T23:59" } }
+    limit: 1
+  ) {
+    media {
+      formats
+    }
+  }
+  s70: pictures(
+    where: { time_range_tag: { start_gte: "1970-01-01T00:00", end_lte: "1979-12-31T23:59" } }
+    limit: 1
+  ) {
+    media {
+      formats
+    }
+  }
+  s80: pictures(
+    where: { time_range_tag: { start_gte: "1980-01-01T00:00", end_lte: "1989-12-31T23:59" } }
+    limit: 1
+  ) {
+    media {
+      formats
+    }
+  }
+  s90: pictures(
+    where: { time_range_tag: { start_gte: "1990-01-01T00:00", end_lte: "1999-12-31T23:59" } }
+    limit: 1
+  ) {
+    media {
+      formats
+    }
+  }
+}
