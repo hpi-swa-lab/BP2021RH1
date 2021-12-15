@@ -57,3 +57,15 @@ mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime
     }
   }
 }
+
+query getKeywordTagSuggestions($name: String) {
+  keywordTags(where: { name_contains: $name }) {
+    id
+    name
+    thumbnail: pictures(limit: 1) {
+      media {
+        formats
+      }
+    }
+  }
+}
