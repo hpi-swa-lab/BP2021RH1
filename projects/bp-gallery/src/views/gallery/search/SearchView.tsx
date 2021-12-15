@@ -21,6 +21,7 @@ const SearchView = ({
   const { t } = useTranslation();
   const { search } = useLocation();
   const queryParams = useMemo(() => new URLSearchParams(search as string), [search]);
+  const [searchSnippet, setSearchSnippet] = useState<string>('');
 
   const [previewPicture, setPreviewPicture] = useState<Picture>();
 
@@ -71,9 +72,14 @@ const SearchView = ({
       )}
       <div className='search-content'>
         <div className='below-search-bar'>
-          <SearchBar value={params?.length ? params[0] : undefined} />
+          <SearchBar
+            value={params?.length ? params[0] : undefined}
+            onValueChange={(snippet?: string) => {
+              setSearchSnippet(snippet ?? '');
+            }}
+          />
           {(!params || params.length === 0) && (!decade || decade === -1) ? (
-            <SearchHub />
+            <SearchHub searchSnippet={searchSnippet} />
           ) : (
             <PictureScrollGrid
               where={queryObject}

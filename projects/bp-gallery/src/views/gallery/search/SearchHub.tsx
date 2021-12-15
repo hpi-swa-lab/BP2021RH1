@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -6,11 +6,11 @@ import { apiBase } from '../../../App';
 import Loading from '../../../components/Loading';
 import {
   useGetDecadePreviewThumbnailsQuery,
-  useGetKeywordTagSuggestionsQuery,
+  useGetKeywordTagSuggestionsLazyQuery,
 } from '../../../graphql/APIConnector';
 import ItemList from '../common/ItemList';
 
-const SearchHub = () => {
+const SearchHub = ({ searchSnippet }: { searchSnippet?: string }) => {
   const history: History = useHistory();
   const { t } = useTranslation();
 
@@ -38,11 +38,19 @@ const SearchHub = () => {
         })}
     />
   );
-  const keywordTagsResponse = useGetKeywordTagSuggestionsQuery({
+  const [getKeywordTagSuggestions, keywordTagsResponse] = useGetKeywordTagSuggestionsLazyQuery({
     variables: {
       name: '',
     },
   });
+
+  useEffect(() => {
+    getKeywordTagSuggestions({
+      variables: {
+        name: searchSnippet ?? '',
+      },
+    });
+  }, [getKeywordTagSuggestions, searchSnippet]);
 
   return (
     <div className='search-hub'>

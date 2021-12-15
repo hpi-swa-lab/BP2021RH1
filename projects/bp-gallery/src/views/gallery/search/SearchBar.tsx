@@ -6,7 +6,13 @@ import { InputAdornment, TextField } from '@mui/material';
 import { History } from 'history';
 import './SearchBar.scss';
 
-const SearchBar = ({ value }: { value?: string }) => {
+const SearchBar = ({
+  value,
+  onValueChange,
+}: {
+  value?: string;
+  onValueChange?: (snippet?: string) => void;
+}) => {
   const { t } = useTranslation();
   const history: History = useHistory();
   const { search } = useLocation();
@@ -23,6 +29,11 @@ const SearchBar = ({ value }: { value?: string }) => {
     <div className='search-bar'>
       <TextField
         inputRef={textFieldRef}
+        onChange={event => {
+          if (onValueChange) {
+            onValueChange(String(event.target.value));
+          }
+        }}
         InputProps={{
           startAdornment: (
             <InputAdornment position='start'>
