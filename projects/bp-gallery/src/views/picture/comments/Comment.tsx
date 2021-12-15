@@ -7,6 +7,8 @@ import { ComponentContentComment } from '../../../graphql/APIConnector';
 const Comment = ({ comments }: { comments: ComponentContentComment[] }) => {
   const { t } = useTranslation();
 
+  const parseNewLine = (text: string) => text.replace(/\\n/gm, '\n');
+
   return (
     <div className='comment-container'>
       {comments.length > 0 &&
@@ -16,7 +18,7 @@ const Comment = ({ comments }: { comments: ComponentContentComment[] }) => {
               {comment.author} {t('common.wrote-on')}{' '}
               {dayjs(comment.date as string).format('DD.MM.YYYY')}:<br />
             </div>
-            <div className='comment-text'>&quot; {comment.text} &quot;</div>
+            <div className='comment-text'>&quot; {parseNewLine(comment.text ?? '')} &quot;</div>
           </div>
         ))}
     </div>

@@ -1,15 +1,28 @@
 @import '../../../shared/style.scss';
 
 .new-comment-form {
-
-  .MuiOutlinedInput-input{
-    color: white;
-    border-color: white;
-    margin: 0.5rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  .MuiInputLabel-root {
+    color: white !important;
   }
 
-  .submit{
+  .MuiOutlinedInput-input {
     color: white;
   }
 
+  .MuiOutlinedInput-root {
+    background: #787878;
+    margin-bottom: 1rem;
+
+    &.Mui-focused .MuiOutlinedInput-notchedOutline {
+      border-color: White;
+    }
+  }
+
+  .MuiButton-root {
+    color: white;
+    border-color: white !important;
+    margin-bottom: 2rem;    
+  }
 }

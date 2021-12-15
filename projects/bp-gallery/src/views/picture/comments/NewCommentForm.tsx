@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import { usePostCommentMutation } from '../../../graphql/APIConnector';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
-  const [postCommentMutation, { data, loading, error }] = usePostCommentMutation({
+  const [postCommentMutation] = usePostCommentMutation({
     variables: {
       id: pictureId,
       author: '',
@@ -25,50 +25,48 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
 
   const postComment = () => {
     if (commentText !== '') {
-      console.log(`${commentAuthor} schreibt ${commentText}`);
-      const date = new Date();
+      const today = new Date();
       postCommentMutation({
         variables: {
           id: pictureId,
           author: commentAuthor,
           text: commentText,
-          date: date.toISOString(),
+          date: today.toISOString(),
         },
       });
+      setCommentAuthor('');
+      setCommentText('');
       alert(
         'Ihr Kommentar wurde abgeschickt. Nachdem er von der Bad-Harzburg-Stiftung geprüft wurde, wird er hier veröffentlicht.'
       );
-      setCommentAuthor('');
-      setCommentText('');
     }
   };
 
   return (
     <div className='new-comment-form'>
-      <div className='input-field'>
-        <TextField
-          id='name'
-          label='Name'
-          variant='outlined'
-          fullWidth
-          value={commentAuthor}
-          onChange={handleAuthorChange}
-        />
-      </div>
-      <div className='input-field'>
-        <TextField
-          id='text'
-          label='Kommentar'
-          required
-          color='warning'
-          multiline
-          fullWidth
-          rows={4}
-          variant='outlined'
-          value={commentText}
-          onChange={handleTextChange}
-        />
-      </div>
+      <TextField
+        className='input-field'
+        id='name'
+        label='Name'
+        variant='outlined'
+        fullWidth
+        value={commentAuthor}
+        onChange={handleAuthorChange}
+      />
+
+      <TextField
+        className='input-field'
+        InputLabelProps={{ className: 'textfield__label' }}
+        InputProps={{ className: 'border__label' }}
+        id='text'
+        label='Kommentar'
+        variant='outlined'
+        value={commentText}
+        onChange={handleTextChange}
+        fullWidth
+        multiline
+        rows={4}
+      />
       <div className='Submit'>
         <Button variant='outlined' onClick={postComment}>
           Absenden
