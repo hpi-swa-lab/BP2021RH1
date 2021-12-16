@@ -315,7 +315,7 @@ module.exports = {
           const strapiPicture = await strapi.services["picture"].findOne({
             wordpress_id: picture,
           });
-          console.log(`uplpoading comments for ${strapiPicture.id}`)
+          console.log(`Uploading comments for ${strapiPicture.id}`)
           await strapi.services["comment"].create({
             text: comment.content,
             author: comment.author,
