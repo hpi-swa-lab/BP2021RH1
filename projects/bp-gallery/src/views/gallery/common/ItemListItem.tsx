@@ -38,11 +38,7 @@ export const ItemListItem = ({ item }: { item: ItemListItemModel }) => {
   });
 
   return (
-    <div
-      className='item'
-      ref={containerRef}
-      onClick={() => (item.onClick ? item.onClick() : undefined)}
-    >
+    <div className='item' ref={containerRef} onClick={item.onClick ? item.onClick : undefined}>
       <div className='image-container'>
         <img src={item.background} alt={item.name} />
       </div>
