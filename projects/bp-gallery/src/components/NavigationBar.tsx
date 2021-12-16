@@ -2,11 +2,12 @@ import { Icon } from '@mui/material';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './NavigationBar.scss';
+import { Location } from 'history';
 
 export interface NavigationElement {
   name: string;
   icon: string;
-  target: string | ((previousLocation: Location) => {pathname: string; hash: string; state: any});
+  target: string | ((previousLocation: Location) => { pathname: string; hash: string; state: any });
 }
 
 export interface NavigationProps {

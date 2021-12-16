@@ -113,7 +113,10 @@ const DetailedPictureView = ({
           </div>
           <div className='picture-info-container'>
             <PictureDetails descriptions={data.picture.descriptions as Description[]} />
-            <CommentsContainer comments={data.picture.Comment as ComponentContentComment[]} />
+            <CommentsContainer
+              comments={data.picture.comments as ComponentContentComment[]}
+              pictureId={pictureId}
+            />
           </div>
         </PerfectScrollbar>
       </div>

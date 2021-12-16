@@ -11,7 +11,8 @@ query getPictureInfo($pictureId: ID!) {
     media {
       url
     }
-    Comment {
+
+    comments {
       text
       author
       id
@@ -43,6 +44,16 @@ query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
           formats
         }
       }
+    }
+  }
+}
+
+mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
+  createComment(
+    input: { data: { author: $author, text: $text, picture: $id, date: $date, published_at: null } }
+  ) {
+    comment {
+      text
     }
   }
 }

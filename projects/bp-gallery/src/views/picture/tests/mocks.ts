@@ -54,7 +54,7 @@ export const GetInfoPictureDocumentMocks = [
             url: 'test-image.jpg',
           },
           descriptions: DescriptionMocks,
-          Comment: CommentMocks,
+          comments: CommentMocks,
         },
       },
     },
