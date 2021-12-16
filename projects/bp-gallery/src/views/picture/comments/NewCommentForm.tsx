@@ -3,16 +3,12 @@ import React, { useState } from 'react';
 import './NewCommentForm.scss';
 import { Button } from '@mui/material';
 import { usePostCommentMutation } from '../../../graphql/APIConnector';
+import { useTranslation } from 'react-i18next';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
-  const [postCommentMutation] = usePostCommentMutation({
-    variables: {
-      id: pictureId,
-      author: '',
-      text: '',
-      date: Date.now(),
-    },
-  });
+  const { t } = useTranslation();
+
+  const [postCommentMutation] = usePostCommentMutation();
   const [commentAuthor, setCommentAuthor] = useState('');
   const [commentText, setCommentText] = useState('');
 
@@ -37,9 +33,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       setCommentAuthor('');
       setCommentText('');
       //eslint-disable-next-line no-alert
-      alert(
-        'Ihr Kommentar wurde abgeschickt. Nachdem er von der Bad-Harzburg-Stiftung geprüft wurde, wird er hier veröffentlicht.'
-      );
+      alert(t('common.comment-alert'));
     }
   };
 
@@ -48,7 +42,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       <TextField
         className='input-field'
         id='name'
-        label='Name'
+        label={t('common.name')}
         variant='outlined'
         fullWidth
         value={commentAuthor}
@@ -60,7 +54,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         InputLabelProps={{ className: 'textfield__label' }}
         InputProps={{ className: 'border__label' }}
         id='text'
-        label='Kommentar'
+        label={t('common.comment')}
         variant='outlined'
         value={commentText}
         onChange={handleTextChange}
@@ -70,7 +64,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       />
       <div className='Submit'>
         <Button variant='outlined' onClick={postComment}>
-          Absenden
+          {t('common.submit')}
         </Button>
       </div>
     </div>

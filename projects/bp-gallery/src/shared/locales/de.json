@@ -6,6 +6,7 @@
     "picture": "Bild",
     "details": "Details",
     "comments": "Kommentare",
+    "comment": "Kommentar",
     "loading": "Lädt...",
     "wrote-on": "schrieb am",
     "search-keywords": "Stichworte suchen...",
@@ -14,6 +15,9 @@
     "persons": "Personen",
     "locations": "Orte",
     "no-category": "Es gibt keine Kategorie, die der Anfrage entspricht",
-    "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht"
+    "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht",
+    "name": "Name",
+    "submit": "Absenden",
+    "comment-alert": "Ihr Kommentar wurde abgeschickt. Nachdem er von der Bad-Harzburg-Stiftung geprüft wurde, wird er hier veröffentlicht."
   }
 }
