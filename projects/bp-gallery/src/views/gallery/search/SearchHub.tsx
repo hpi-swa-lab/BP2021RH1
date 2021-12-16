@@ -68,7 +68,7 @@ const SearchHub = ({ searchSnippet }: { searchSnippet?: string }) => {
                 history.push(`/search/${encodeURIComponent(tag?.name ?? '')}`, { showBack: true });
               },
             }))}
-          ></ItemList>
+          />
         ) : (
           <Loading />
         )}
