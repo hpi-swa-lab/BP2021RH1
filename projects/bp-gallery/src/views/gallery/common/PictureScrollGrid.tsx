@@ -10,11 +10,13 @@ const PictureScrollGrid = ({
   scrollPos,
   scrollHeight,
   hashbase,
+  previewPictureCallback,
 }: {
   where: Scalars['JSON'];
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
+  previewPictureCallback?: (picture: Picture) => void;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -27,6 +29,12 @@ const PictureScrollGrid = ({
     },
     notifyOnNetworkStatusChange: true,
   });
+
+  useEffect(() => {
+    if (previewPictureCallback && data?.pictures && data.pictures.length) {
+      previewPictureCallback(data.pictures[0] as Picture);
+    }
+  }, [data?.pictures, previewPictureCallback]);
 
   //Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {

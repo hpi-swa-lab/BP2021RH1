@@ -85,6 +85,12 @@
       font-size: 1.8rem;
       font-weight: 900;
       text-shadow: 0px 0px 5px #000;
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
     }
   }
 

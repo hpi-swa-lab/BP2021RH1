@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './SearchHub';
-import { apiBase } from '../../../App';
 import PictureScrollGrid from '../common/PictureScrollGrid';
-
-const DEFAULT_SEARCH_BANNER_PICTURE = '1_1972_Winter04_747f834344.jpg';
+import { useLocation } from 'react-router-dom';
+import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+import { Picture } from '../../../graphql/APIConnector';
+import { apiBase } from '../../../App';
 
 const SearchView = ({
   params,
@@ -16,39 +18,81 @@ const SearchView = ({
   scrollPos: number;
   scrollHeight: number;
 }) => {
+  const { t } = useTranslation();
+  const { search } = useLocation();
+  const queryParams = useMemo(() => new URLSearchParams(search as string), [search]);
+  const [searchSnippet, setSearchSnippet] = useState<string>('');
+
+  const [previewPicture, setPreviewPicture] = useState<Picture>();
+
+  const decade = parseInt(queryParams.get('decade') ?? '-1');
+
+  const queryObject: { [key: string]: any } = {};
+  if (params && params.length !== 0) {
+    queryObject['descriptions'] = { text_contains: params[params.length - 1] };
+  }
+
+  if (decade && decade !== -1) {
+    const startTime = new Date(`19${decade / 10}0-01-01`);
+    const endTime = new Date(`19${decade / 10}9-12-31`);
+    queryObject['time_range_tag'] = {
+      start_gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm'),
+      end_lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
+    };
+  }
+
   return (
     <div className='search-view'>
-      {params && params.length > 0 && (
+      {((params && params.length > 0) || (decade && decade !== -1)) && (
         <div className='search-result-banner'>
           <div className='search-result-banner-background'>
             <img
               style={{ transform: `translateY(${scrollPos * 0.5}px)` }}
-              src={`${apiBase}/uploads/${DEFAULT_SEARCH_BANNER_PICTURE}`}
-              alt={DEFAULT_SEARCH_BANNER_PICTURE}
+              src={`${apiBase}${String(previewPicture?.media?.formats.large.url ?? '')}`}
+              alt={`${t('common.titleFor', {
+                query: `${params?.join(',') ?? ''}, ${String(decade)}`,
+              })}`}
             />
           </div>
           <div className='search-result-breadcrumbs'>
-            {params.map((crumb: string) => {
+            {params?.map((crumb: string) => {
               return (
                 <div key={crumb} className='breadcrumb'>
                   {crumb}
                 </div>
               );
             })}
+            {decade && decade !== -1 && (
+              <div key={decade} className='breadcrumb decade'>
+                {`${decade}er`}
+              </div>
+            )}
           </div>
         </div>
       )}
       <div className='search-content'>
-        <SearchBar />
         <div className='below-search-bar'>
-          {!params || params.length === 0 ? (
-            <SearchHub />
+          <SearchBar
+            value={params?.length ? params[0] : undefined}
+            onValueChange={(snippet?: string) => {
+              setSearchSnippet(snippet ?? '');
+            }}
+          />
+          {(!params || params.length === 0) && (!decade || decade === -1) ? (
+            <SearchHub searchSnippet={searchSnippet} />
           ) : (
             <PictureScrollGrid
-              where={{ descriptions: { text_contains: params[params.length - 1] } }}
+              where={queryObject}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
-              hashbase={params[params.length - 1]}
+              hashbase={
+                params ? params[params.length - 1] : String(queryParams.get('decade') ?? '')
+              }
+              previewPictureCallback={(pic: Picture) => {
+                if (pic !== previewPicture) {
+                  setPreviewPicture(pic);
+                }
+              }}
             />
           )}
         </div>

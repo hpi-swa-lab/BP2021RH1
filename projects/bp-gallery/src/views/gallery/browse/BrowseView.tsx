@@ -44,6 +44,7 @@ const BrowseView = ({
       <div className='browse-view'>
         <SubCategories
           relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
+          path={path}
         />
         <PictureScrollGrid
           where={{ category_tags: category.id }}

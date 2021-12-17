@@ -26,6 +26,10 @@
         }
       }
 
+      input {
+        z-index: 99;
+      }
+
       .MuiSvgIcon-root {
         color: white;
       }

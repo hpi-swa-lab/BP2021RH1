@@ -2178,6 +2178,65 @@ export type PostCommentMutation = {
     | undefined;
 };
 
+export type GetKeywordTagSuggestionsQueryVariables = Exact<{
+  name?: InputMaybe<Scalars['String']>;
+}>;
+
+export type GetKeywordTagSuggestionsQuery = {
+  keywordTags?:
+    | Array<
+        | {
+            id: string;
+            name: string;
+            thumbnail?:
+              | Array<
+                  | { media?: { formats?: any | null | undefined } | null | undefined }
+                  | null
+                  | undefined
+                >
+              | null
+              | undefined;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+};
+
+export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetDecadePreviewThumbnailsQuery = {
+  s30?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s40?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s50?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s60?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s70?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s80?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+  s90?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
+};
+
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
@@ -2424,4 +2483,188 @@ export type PostCommentMutationResult = Apollo.MutationResult<PostCommentMutatio
 export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
   PostCommentMutation,
   PostCommentMutationVariables
+>;
+
+export const GetKeywordTagSuggestionsDocument = gql`
+  query getKeywordTagSuggestions($name: String) {
+    keywordTags(where: { name_contains: $name }) {
+      id
+      name
+      thumbnail: pictures(limit: 1) {
+        media {
+          formats
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetKeywordTagSuggestionsQuery__
+ *
+ * To run a query within a React component, call `useGetKeywordTagSuggestionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetKeywordTagSuggestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetKeywordTagSuggestionsQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useGetKeywordTagSuggestionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetKeywordTagSuggestionsQuery,
+    GetKeywordTagSuggestionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetKeywordTagSuggestionsQuery, GetKeywordTagSuggestionsQueryVariables>(
+    GetKeywordTagSuggestionsDocument,
+    options
+  );
+}
+
+export function useGetKeywordTagSuggestionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetKeywordTagSuggestionsQuery,
+    GetKeywordTagSuggestionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetKeywordTagSuggestionsQuery, GetKeywordTagSuggestionsQueryVariables>(
+    GetKeywordTagSuggestionsDocument,
+    options
+  );
+}
+
+export type GetKeywordTagSuggestionsQueryHookResult = ReturnType<
+  typeof useGetKeywordTagSuggestionsQuery
+>;
+
+export type GetKeywordTagSuggestionsLazyQueryHookResult = ReturnType<
+  typeof useGetKeywordTagSuggestionsLazyQuery
+>;
+
+export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
+  GetKeywordTagSuggestionsQuery,
+  GetKeywordTagSuggestionsQueryVariables
+>;
+
+export const GetDecadePreviewThumbnailsDocument = gql`
+  query getDecadePreviewThumbnails {
+    s30: pictures(
+      where: { time_range_tag: { start_gte: "1930-01-01T00:00", end_lte: "1939-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s40: pictures(
+      where: { time_range_tag: { start_gte: "1940-01-01T00:00", end_lte: "1949-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s50: pictures(
+      where: { time_range_tag: { start_gte: "1950-01-01T00:00", end_lte: "1959-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s60: pictures(
+      where: { time_range_tag: { start_gte: "1960-01-01T00:00", end_lte: "1969-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s70: pictures(
+      where: { time_range_tag: { start_gte: "1970-01-01T00:00", end_lte: "1979-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s80: pictures(
+      where: { time_range_tag: { start_gte: "1980-01-01T00:00", end_lte: "1989-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+    s90: pictures(
+      where: { time_range_tag: { start_gte: "1990-01-01T00:00", end_lte: "1999-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetDecadePreviewThumbnailsQuery__
+ *
+ * To run a query within a React component, call `useGetDecadePreviewThumbnailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDecadePreviewThumbnailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDecadePreviewThumbnailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDecadePreviewThumbnailsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetDecadePreviewThumbnailsQuery,
+    GetDecadePreviewThumbnailsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetDecadePreviewThumbnailsQuery, GetDecadePreviewThumbnailsQueryVariables>(
+    GetDecadePreviewThumbnailsDocument,
+    options
+  );
+}
+
+export function useGetDecadePreviewThumbnailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetDecadePreviewThumbnailsQuery,
+    GetDecadePreviewThumbnailsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetDecadePreviewThumbnailsQuery,
+    GetDecadePreviewThumbnailsQueryVariables
+  >(GetDecadePreviewThumbnailsDocument, options);
+}
+
+export type GetDecadePreviewThumbnailsQueryHookResult = ReturnType<
+  typeof useGetDecadePreviewThumbnailsQuery
+>;
+
+export type GetDecadePreviewThumbnailsLazyQueryHookResult = ReturnType<
+  typeof useGetDecadePreviewThumbnailsLazyQuery
+>;
+
+export type GetDecadePreviewThumbnailsQueryResult = Apollo.QueryResult<
+  GetDecadePreviewThumbnailsQuery,
+  GetDecadePreviewThumbnailsQueryVariables
 >;
