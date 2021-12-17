@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
 
-const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
+const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: string }) => {
   const [maxRowCount, setMaxRowCount] = useState<number>(
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200))
   );
-  let _maxRowCount = 5;
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<any[][]>([[]]);
 
@@ -52,14 +51,21 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
     setTable(buffer);
   }, [maxRowCount, minRowCount, props?.pictures, props?.hashBase]);
 
-  window.addEventListener('resize', () => {
+  const onResize = useCallback(() => {
     const newMaxRowCount = Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
-    if (newMaxRowCount !== _maxRowCount) {
-      _maxRowCount = newMaxRowCount; // if we would use maxWRowCount, the useEffect() would be triggered multipe times until the state is changed
-      setMaxRowCount(_maxRowCount);
-      setMinRowCount(Math.max(2, maxRowCount - 2));
+    if (newMaxRowCount !== maxRowCount) {
+      setMaxRowCount(newMaxRowCount);
+      setMinRowCount(Math.max(2, newMaxRowCount - 2));
     }
-  });
+  }, [maxRowCount]);
+
+  //Set up eventListener on mount and cleanup on unmount
+  useEffect(() => {
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
+  }, [onResize]);
 
   return (
     <div className='picture-grid'>
@@ -73,10 +79,9 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
                     key={`${rowindex}${colindex}`}
                     className='picture-placeholder'
                     style={{ flex: `1 1 0` }}
-                  />
+                  ></div>
                 );
               } else {
-                //@ts-ignore
                 return (
                   <div
                     key={`${rowindex}${colindex}`}
@@ -88,7 +93,6 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
                   >
                     <PictureView
                       pictureId={picture.id}
-                      pictureIdsInContext={props?.pictures.map(pic => pic.id)}
                       thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
                       thumbnailMode={true}
                     />
