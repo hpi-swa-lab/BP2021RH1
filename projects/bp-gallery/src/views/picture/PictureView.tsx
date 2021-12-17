@@ -28,12 +28,18 @@ const DetailedPictureView = ({
   onPreviousPicture?: () => void;
 }) => {
   const { t } = useTranslation();
-  const [scrollPos, setScrollPos] = useState<number>();
-  const [pictureHeight, setPictureHeight] = useState<number>(0.65 * window.innerHeight);
+  const [scrollPos, setScrollPos] = useState<number>(0);
   const containerRef = useRef<HTMLElement>();
 
+  const pictureHeight = useMemo(() => {
+    const parentHeight = 0.65 * window.innerHeight;
+    const calculatedHeight = parentHeight - scrollPos;
+    const height = Math.min(Math.max(calculatedHeight, 150), parentHeight);
+    return height;
+  }, [scrollPos]);
+
   const parallaxPosition = useMemo(() => {
-    return Math.max(window.innerHeight * 0.65 - (scrollPos ?? 0), pictureHeight);
+    return Math.max(window.innerHeight * 0.65 - scrollPos, pictureHeight);
   }, [scrollPos, pictureHeight]);
 
   const setNavigationElements = useContext(NavigationContext);
@@ -124,11 +130,7 @@ const DetailedPictureView = ({
   } else if (data?.picture) {
     return (
       <div className='picture-view'>
-        <Picture
-          url={data.picture.media?.url ?? ''}
-          scrollPos={scrollPos}
-          onPictureHeightChange={setPictureHeight}
-        />
+        <Picture url={data.picture.media?.url ?? ''} pictureHeight={pictureHeight} />
         <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
           <div className='picture-background' />
           <div className='title'>{data.picture.title?.text ?? ''}</div>

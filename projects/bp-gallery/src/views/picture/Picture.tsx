@@ -1,27 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import './Picture.scss';
 import { apiBase } from '../../App';
 
 const Picture = ({
   url,
-  scrollPos = 0,
-  onPictureHeightChange = () => {},
+  pictureHeight = window.innerHeight * 0.65,
 }: {
   url: string;
-  scrollPos?: number;
-  onPictureHeightChange?: (height: number) => void;
+  pictureHeight?: number;
 }) => {
   const pictureLink = `${apiBase}${url}`;
-
-  const pictureHeight = useMemo(() => {
-    const parentHeight = 0.65 * window.innerHeight;
-
-    const calculatedHeight = parentHeight - scrollPos;
-
-    const height = Math.min(Math.max(calculatedHeight, 150), parentHeight);
-    onPictureHeightChange(height);
-    return height;
-  }, [scrollPos, onPictureHeightChange]);
 
   return (
     <div className='picture' id='photo'>
