@@ -24,7 +24,7 @@ const Picture = ({
   }, [scrollPos, onPictureHeightChange]);
 
   return (
-    <div className='picture'>
+    <div className='picture' id='photo'>
       <div className='background-container' style={{ height: `${pictureHeight}px` }}>
         <img src={pictureLink} alt={pictureLink} className='blur-background' />
       </div>

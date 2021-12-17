@@ -4,7 +4,7 @@ import './PictureDetails.scss';
 
 const PictureDetails = ({ descriptions }: { descriptions?: Description[] }) => {
   return (
-    <div className='pictureDetails'>
+    <div className='pictureDetails' id='info'>
       {descriptions &&
         descriptions.length > 0 &&
         descriptions.map((description: Description) => (
