@@ -57,6 +57,10 @@
     "wordpress_id": {
       "type": "integer",
       "unique": true
+    },
+    "comments": {
+      "via": "picture",
+      "collection": "comment"
     }
   }
 }
