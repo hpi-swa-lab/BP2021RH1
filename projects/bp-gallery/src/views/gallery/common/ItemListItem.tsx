@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import getColorSchema from '../../helpers/color-schema';
+import getColorSchema from './helpers/color-schema';
 
 export interface ItemListItemModel {
   name: string;
