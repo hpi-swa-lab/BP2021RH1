@@ -65,6 +65,12 @@ const DetailedPictureView = ({
         name: t('common.picture'),
         icon: 'photo',
         target: (previousLocation: Location) => {
+          /**
+           * It is sufficient to call scrollToElement here once and not in the other targets, because the base Location
+           * (meaning '/picture') is the same, so all targets are checked once a navigation event is triggered.
+           * This means that the scrolling will be executed regardless of the hash (#) value currently assinged to
+           * the url. It is called here to reduce code duplication.
+           */
           scrollToElement();
           return {
             pathname: pictureLink,
