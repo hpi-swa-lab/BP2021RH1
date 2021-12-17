@@ -52,7 +52,7 @@ const PictureScrollGrid = ({
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
+  } else if (loading && !data?.pictures) {
     return <Loading />;
   } else if (data?.pictures?.length) {
     return <PictureGrid pictures={data.pictures as Picture[]} hashBase={hashbase} />;
