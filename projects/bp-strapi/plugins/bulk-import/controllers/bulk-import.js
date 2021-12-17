@@ -301,5 +301,29 @@ module.exports = {
 
     await relateTags(tagInfoData);
     return {'success': true};
+  },
+
+  convertComments: async (ctx) => {
+    const fs = require("fs");
+    const data = fs.readFileSync(ctx.request.files["jsondata"].path, "utf-8");
+    const pictureInfoData = JSON.parse(data);
+
+    for (const album in pictureInfoData) {
+      for (const picture in pictureInfoData[album].pictures) {
+        for (const comment of pictureInfoData[album].pictures[picture]
+          .comments) {
+          const strapiPicture = await strapi.services["picture"].findOne({
+            wordpress_id: picture,
+          });
+          console.log(`Uploading comments for ${strapiPicture.id}`)
+          await strapi.services["comment"].create({
+            text: comment.content,
+            author: comment.author,
+            date: comment.date,
+            picture: strapiPicture.id,
+          });
+        }
+      }
+    }
   }
 };

@@ -788,6 +788,40 @@
           "wordpress_id": {
             "type": "integer"
           },
+          "comments": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "author": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "picture": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -851,6 +885,12 @@
           },
           "wordpress_id": {
             "type": "integer"
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "published_at": {
             "type": "string",

@@ -2,16 +2,9 @@ import React, { useRef, useState } from 'react';
 import './ItemList.scss';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Icon, IconButton } from '@mui/material';
+import { ItemListItem, ItemListItemModel } from './ItemListItem';
 
-export interface ItemListItem {
-  name: string;
-  background: string;
-  color: string;
-  target?: string;
-  onClick?: () => void;
-}
-
-const ItemList = (props: { items: ItemListItem[]; compact?: boolean }) => {
+const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
   const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
   const [scrollPosition, setScrollPosition] = useState<number>(0);
   const listRef = useRef<HTMLDivElement>(null);
@@ -40,19 +33,7 @@ const ItemList = (props: { items: ItemListItem[]; compact?: boolean }) => {
       >
         <div className='items'>
           {props.items.map((item, index) => (
-            <div
-              className='item'
-              onClick={() => (item.onClick ? item.onClick() : undefined)}
-              key={index}
-            >
-              <div className='image-container'>
-                <img src={item.background} alt={item.name} />
-              </div>
-              <div className='color-overlay' style={{ backgroundColor: item.color }} />
-              <div className='text-container'>
-                <span> {item.name.toUpperCase()} </span>
-              </div>
-            </div>
+            <ItemListItem item={item} key={index} />
           ))}
         </div>
       </PerfectScrollbar>
