@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
 
-const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: string }) => {
+const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
   const [maxRowCount, setMaxRowCount] = useState<number>(
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200))
   );
@@ -79,7 +79,7 @@ const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: strin
                     key={`${rowindex}${colindex}`}
                     className='picture-placeholder'
                     style={{ flex: `1 1 0` }}
-                  ></div>
+                  />
                 );
               } else {
                 return (
@@ -93,6 +93,7 @@ const PictureGrid = (props?: { pictures: { [key: number]: any }; hashBase: strin
                   >
                     <PictureView
                       pictureId={picture.id}
+                      pictureIdsInContext={props?.pictures.map(pic => pic.id)}
                       thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
                       thumbnailMode={true}
                     />
