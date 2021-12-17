@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -31,16 +31,17 @@ const DetailedPictureView = ({
   const [scrollPos, setScrollPos] = useState<number>(0);
   const containerRef = useRef<HTMLElement>();
 
-  const pictureHeight = useMemo(() => {
-    const parentHeight = 0.65 * window.innerHeight;
-    const calculatedHeight = parentHeight - scrollPos;
-    const height = Math.min(Math.max(calculatedHeight, 150), parentHeight);
-    return height;
-  }, [scrollPos]);
+  const MINIMUM_PICTURE_HEIGHT = 150;
+  const MAXIMUM_PICTURE_HEIGHT = 0.65 * window.innerHeight;
 
-  const parallaxPosition = useMemo(() => {
-    return Math.max(window.innerHeight * 0.65 - scrollPos, pictureHeight);
-  }, [scrollPos, pictureHeight]);
+  const pictureHeight = Math.min(
+    Math.max(MAXIMUM_PICTURE_HEIGHT - scrollPos, MINIMUM_PICTURE_HEIGHT),
+    MAXIMUM_PICTURE_HEIGHT
+  );
+
+  useEffect(() => {
+    setScrollPos(0);
+  }, [pictureId]);
 
   const setNavigationElements = useContext(NavigationContext);
   const scrollToElement = () => {
@@ -57,7 +58,7 @@ const DetailedPictureView = ({
         : targetElement.getBoundingClientRect().y +
           containerRef.current.scrollTop -
           containerRef.current.getBoundingClientRect().y -
-          150; // The 150 is to account for the image in its smallest form
+          MINIMUM_PICTURE_HEIGHT;
     containerRef.current.scroll({
       top: elementPosition,
       left: 0,
@@ -131,7 +132,7 @@ const DetailedPictureView = ({
     return (
       <div className='picture-view'>
         <Picture url={data.picture.media?.url ?? ''} pictureHeight={pictureHeight} />
-        <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
+        <div className='parallax-container' style={{ top: `${pictureHeight}px` }}>
           <div className='picture-background' />
           <div className='title'>{data.picture.title?.text ?? ''}</div>
         </div>
