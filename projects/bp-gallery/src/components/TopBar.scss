@@ -18,6 +18,10 @@
       width: 75px;
       max-width: 15vmin;
     }
+
+    &.clickable {
+      cursor: pointer;
+    }
   }
 
   button {
