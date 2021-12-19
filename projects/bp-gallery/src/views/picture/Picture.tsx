@@ -1,6 +1,6 @@
 import React from 'react';
 import './Picture.scss';
-import { apiBase } from '../../App';
+import { fullApiPath } from '../../App';
 
 const Picture = ({
   url,
@@ -9,7 +9,7 @@ const Picture = ({
   url: string;
   pictureHeight?: number;
 }) => {
-  const pictureLink = `${apiBase}${url}`;
+  const pictureLink = fullApiPath(url);
 
   return (
     <div className='picture' id='photo'>

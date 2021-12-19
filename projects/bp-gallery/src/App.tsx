@@ -6,7 +6,13 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import NavigationBar, { NavigationElement } from './components/NavigationBar';
 
-export const apiBase = 'https://bp.bad-harzburg-stiftung.de/api/';
+const apiBase = 'https://bp.bad-harzburg-stiftung.de/api';
+
+export const fullApiPath = (pathEnding: string) => {
+  //Removes any multiple occurences of a "/" except those who follow a ":"
+  const formattedPathEnding = `/${pathEnding}`.replace(/\/{2,}/gm, '/');
+  return `${apiBase}${formattedPathEnding}`;
+};
 
 const apolloClient = new ApolloClient({
   uri: `${apiBase}/graphql`,

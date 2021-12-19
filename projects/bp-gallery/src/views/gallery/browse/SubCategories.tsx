@@ -1,6 +1,6 @@
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
-import { apiBase } from '../../../App';
+import { fullApiPath } from '../../../App';
 import ItemList from '../common/ItemList';
 import React from 'react';
 import { decodeBrowsePathComponent, encodeBrowsePathComponent } from './BrowseView';
@@ -26,9 +26,9 @@ const SubCategories = ({
     const formats = category.thumbnail[0].media.formats;
     return {
       name: decodeBrowsePathComponent(category.name),
-      background: `${apiBase}/${String(
-        formats?.medium?.url || formats?.small?.url || formats?.thumbnail?.url || ''
-      )}`,
+      background: fullApiPath(
+        String(formats?.medium?.url || formats?.small?.url || formats?.thumbnail?.url || '')
+      ),
       color: index % 2 === 0 ? '#7E241D' : '#404272',
       onClick: () => {
         history.push(formatCategoryPath(category.name), { showBack: true });
