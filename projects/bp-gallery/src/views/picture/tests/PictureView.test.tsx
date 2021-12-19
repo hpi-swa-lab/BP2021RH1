@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderWithAPIMocks } from '../../../testUtils';
-import { apiBase } from '../../../App';
+import { fullApiPath } from '../../../App';
 import { CommentMocks, DescriptionMocks, GetInfoPictureDocumentMocks } from './mocks';
 import PictureView from '../PictureView';
 
@@ -126,7 +126,7 @@ describe('PictureView in thumbnailMode', () => {
 
     const imageTags = container.getElementsByTagName('img');
     expect(imageTags).toHaveLength(1);
-    expect(imageTags.item(0)).toHaveAttribute('src', `${apiBase}${thumbnailUrl}`);
+    expect(imageTags.item(0)).toHaveAttribute('src', fullApiPath(thumbnailUrl));
   });
 
   it('should not render the Picture component', () => {
