@@ -9,7 +9,7 @@ const SubCategories = ({
   relatedTags,
   path,
 }: {
-  relatedTags?: { thumbnail: any[]; name: string }[];
+  relatedTags: { thumbnail: any[]; name: string }[];
   path?: string[];
 }) => {
   const history: History = useHistory();
@@ -35,7 +35,7 @@ const SubCategories = ({
       },
     };
   };
-  const items = relatedTags?.map((tag, i) => buildItem(tag, i)) ?? [];
+  const items = relatedTags.map((tag, i) => buildItem(tag, i));
   return <ItemList items={items} />;
 };
 

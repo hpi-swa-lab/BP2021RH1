@@ -40,12 +40,15 @@ const BrowseView = ({
     return <Loading />;
   } else if (data?.categoryTags?.length && data.categoryTags[0]) {
     const category = data.categoryTags[0];
+    const relatedTagsSize = category.related_tags?.length ?? 0;
     return (
       <div className='browse-view'>
-        <SubCategories
-          relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
-          path={path}
-        />
+        {relatedTagsSize > 0 && (
+          <SubCategories
+            relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
+            path={path}
+          />
+        )}
         <PictureScrollGrid
           where={{ category_tags: category.id }}
           scrollPos={scrollPos}
