@@ -40,7 +40,11 @@ const DetailedPictureView = ({
   );
 
   useEffect(() => {
-    setScrollPos(0);
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    } else {
+      setScrollPos(0);
+    }
   }, [pictureId]);
 
   const setNavigationElements = useContext(NavigationContext);
@@ -89,6 +93,7 @@ const DetailedPictureView = ({
         isActive: () => {
           return window.location.hash !== '#info' && window.location.hash !== '#comments';
         },
+        replace: true,
       },
       {
         name: t('common.details'),
@@ -101,6 +106,7 @@ const DetailedPictureView = ({
         isActive: () => {
           return window.location.hash === '#info';
         },
+        replace: true,
       },
       {
         name: t('common.comments'),
@@ -113,6 +119,7 @@ const DetailedPictureView = ({
         isActive: () => {
           return window.location.hash === '#comments';
         },
+        replace: true,
       },
     ];
     setNavigationElements(menuItems);
@@ -234,7 +241,7 @@ const PictureView = ({
           break;
       }
 
-      history.push(`/picture/${newPictureId}`, {
+      history.replace(`/picture/${newPictureId}`, {
         showBack: true,
         pictureIdsInContext: pictureIdsInContext,
       });

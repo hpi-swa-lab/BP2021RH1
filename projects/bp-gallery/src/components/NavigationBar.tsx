@@ -1,6 +1,6 @@
 import { Icon } from '@mui/material';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, NavLinkProps } from 'react-router-dom';
 import './NavigationBar.scss';
 import { Location } from 'history';
 
@@ -9,6 +9,7 @@ export interface NavigationElement {
   icon: string;
   target: string | ((previousLocation: Location) => { pathname: string; hash: string; state: any });
   isActive?: () => boolean;
+  replace?: boolean;
 }
 
 export interface NavigationProps {
@@ -18,24 +19,20 @@ export interface NavigationProps {
 const NavigationBar = (props: NavigationProps) => {
   return (
     <div className='nav-bar'>
-      {props.elements?.map(element =>
-        element.isActive ? (
-          <NavLink
-            to={element.target}
-            key={element.name}
-            isActive={element.isActive}
-            className='nav-element'
-          >
+      {props.elements?.map(element => {
+        const navLinkProps: NavLinkProps = {
+          to: element.target,
+          replace: element.replace ?? false,
+          className: 'nav-element',
+        };
+        if (element.isActive) navLinkProps.isActive = element.isActive;
+        return (
+          <NavLink {...navLinkProps} key={element.name}>
             <Icon>{element.icon}</Icon>
             <span className='nav-element-title'>{element.name}</span>
           </NavLink>
-        ) : (
-          <NavLink to={element.target} key={element.name} className='nav-element'>
-            <Icon>{element.icon}</Icon>
-            <span className='nav-element-title'>{element.name}</span>
-          </NavLink>
-        )
-      )}
+        );
+      })}
     </div>
   );
 };
