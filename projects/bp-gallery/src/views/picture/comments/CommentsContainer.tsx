@@ -9,7 +9,9 @@ const CommentsContainer = ({ pictureId, comments }: { comments: Comment[]; pictu
     <div className='pictureComments' id='comments'>
       <div className='comment-container'>
         {comments.length > 0 &&
-          comments.map((comment: Comment) => <FormattedComment comment={comment} />)}
+          comments.map((comment: Comment) => (
+            <FormattedComment comment={comment} key={comment.id} />
+          ))}
       </div>
       <NewCommentForm pictureId={pictureId} />
     </div>
