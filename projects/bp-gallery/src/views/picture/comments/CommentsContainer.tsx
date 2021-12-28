@@ -1,7 +1,7 @@
 import React from 'react';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
-import './FormattedComment.scss';
+import './CommentsContainer.scss';
 import { Comment } from '../../../graphql/APIConnector';
 
 const CommentsContainer = ({ pictureId, comments }: { comments: Comment[]; pictureId: string }) => {
