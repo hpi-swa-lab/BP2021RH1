@@ -2,7 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
 
-const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
+const PictureGrid = ({
+  pictures,
+  hashBase,
+  loading,
+}: {
+  pictures: any[];
+  hashBase: string;
+  loading: boolean;
+}) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
@@ -26,21 +34,13 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
   useEffect(() => {
     const buffer: any[][] = [[]];
     let currentRowCount = 0;
-    let randCount = Math.round(
-      hashCode(props?.hashBase ?? '') * (maxRowCount - minRowCount) + minRowCount
-    );
-    for (
-      let i = 0;
-      i <= Math.max(...(Object.keys(props?.pictures || {}) as unknown as number[]));
-      i++
-    ) {
-      buffer[buffer.length - 1].push(props?.pictures[i] || { placeholder: true });
+    let randCount = Math.round(hashCode(hashBase) * (maxRowCount - minRowCount) + minRowCount);
+    for (let i = 0; i <= Math.max(...(Object.keys(pictures) as unknown as number[])); i++) {
+      buffer[buffer.length - 1].push(pictures[i] || { placeholder: true });
       currentRowCount++;
       if (currentRowCount >= randCount) {
         randCount = Math.round(
-          hashCode((props?.hashBase ?? '') + String(i * 124.22417246)) *
-            (maxRowCount - minRowCount) +
-            minRowCount
+          hashCode(hashBase + String(i * 124.22417246)) * (maxRowCount - minRowCount) + minRowCount
         );
         currentRowCount = 0;
         buffer.push([]);
@@ -50,7 +50,7 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
       buffer[buffer.length - 1].push({ placeholder: true });
     }
     setTable(buffer);
-  }, [maxRowCount, minRowCount, props?.pictures, props?.hashBase]);
+  }, [maxRowCount, minRowCount, pictures, hashBase]);
 
   const onResize = useCallback(() => {
     const newMaxRowCount = calculateMaxRowCount();
@@ -79,7 +79,7 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
                   <div
                     key={`${rowindex}${colindex}`}
                     className='picture-placeholder'
-                    style={{ flex: `1 1 0` }}
+                    style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
                   />
                 );
               } else {
@@ -94,7 +94,7 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
                   >
                     <PictureView
                       pictureId={picture.id}
-                      pictureIdsInContext={props?.pictures.map(pic => pic.id)}
+                      pictureIdsInContext={pictures.map(pic => pic.id)}
                       thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
                       thumbnailMode={true}
                     />
