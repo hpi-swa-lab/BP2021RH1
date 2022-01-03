@@ -3,9 +3,10 @@ import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
 
 const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
-  const [maxRowCount, setMaxRowCount] = useState<number>(
-    Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200))
-  );
+  const calculateMaxRowCount = () =>
+    Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
+
+  const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<any[][]>([[]]);
 
@@ -52,7 +53,7 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
   }, [maxRowCount, minRowCount, props?.pictures, props?.hashBase]);
 
   const onResize = useCallback(() => {
-    const newMaxRowCount = Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
+    const newMaxRowCount = calculateMaxRowCount();
     if (newMaxRowCount !== maxRowCount) {
       setMaxRowCount(newMaxRowCount);
       setMinRowCount(Math.max(2, newMaxRowCount - 2));
