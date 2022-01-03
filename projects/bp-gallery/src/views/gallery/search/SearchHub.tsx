@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -58,28 +58,33 @@ const SearchHub = ({ searchSnippet }: { searchSnippet?: string }) => {
 
   const decadeThumbnails = useGetDecadePreviewThumbnailsQuery();
 
-  const decadesList = (
-    <ItemList
-      compact={true}
-      items={Array(7)
-        .fill(0)
-        .map((_, index) => {
-          const thumbnailData = decadeThumbnails.data
-            ? (decadeThumbnails.data as any)[`s${(index + 3) * 10}`]
-            : null;
-          const thumbnail: string = thumbnailData
-            ? thumbnailData[0]?.media?.formats?.small?.url ?? ''
-            : '';
-          return {
-            name: `${(index + 3) * 10}er`,
-            background: asApiPath(thumbnail),
-            onClick: () => {
-              history.push(`/search/?decade=${(index + 3) * 10}s`, { showBack: true });
-            },
-          };
-        })}
-    />
-  );
+  const decadesList = useMemo(() => {
+    if (decadeThumbnails.error) {
+      return <QueryErrorDisplay error={decadeThumbnails.error} />;
+    } else if (decadeThumbnails.loading) {
+      return <Loading />;
+    } else if (decadeThumbnails.data) {
+      return (
+        <ItemList
+          compact={true}
+          items={Array(7)
+            .fill(0)
+            .map((_, index) => {
+              const thumbnailData = (decadeThumbnails.data as any)[`s${(index + 3) * 10}`];
+              const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url ?? '';
+              return {
+                name: `${(index + 3) * 10}er`,
+                background: asApiPath(thumbnail),
+                onClick: () => {
+                  history.push(`/search/?decade=${(index + 3) * 10}s`, { showBack: true });
+                },
+              };
+            })}
+        />
+      );
+    } else return <div>Something went wrong</div>;
+  }, [decadeThumbnails.loading, decadeThumbnails.data, decadeThumbnails.error, history]);
+
   const [getKeywordTagSuggestions, keywordTagsResponse] = useGetKeywordTagSuggestionsLazyQuery({
     variables: {
       name: '',

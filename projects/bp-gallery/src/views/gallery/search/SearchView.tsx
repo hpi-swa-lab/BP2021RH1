@@ -43,12 +43,12 @@ const SearchView = ({
 
   return (
     <div className='search-view'>
-      {((params && params.length > 0) || (decade && decade !== -1)) && (
+      {((params && params.length > 0) || (decade && decade !== -1)) && previewPicture && (
         <div className='search-result-banner'>
           <div className='search-result-banner-background'>
             <img
               style={{ transform: `translateY(${scrollPos * 0.5}px)` }}
-              src={asApiPath(String(previewPicture?.media?.formats.large.url ?? ''))}
+              src={asApiPath(String(previewPicture.media?.formats.large.url ?? ''))}
               alt={`${t('common.titleFor', {
                 query: `${params?.join(',') ?? ''}, ${String(decade)}`,
               })}`}
