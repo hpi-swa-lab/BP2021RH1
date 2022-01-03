@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -8,7 +8,7 @@ import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
-import { apiBase, NavigationContext } from '../../App';
+import { asApiPath, NavigationContext } from '../../App';
 import {
   ComponentContentComment,
   Description,
@@ -28,13 +28,24 @@ const DetailedPictureView = ({
   onPreviousPicture?: () => void;
 }) => {
   const { t } = useTranslation();
-  const [scrollPos, setScrollPos] = useState<number>();
-  const [pictureHeight, setPictureHeight] = useState<number>(0.65 * window.innerHeight);
+  const [scrollPos, setScrollPos] = useState<number>(0);
   const containerRef = useRef<HTMLElement>();
 
-  const parallaxPosition = useMemo(() => {
-    return Math.max(window.innerHeight * 0.65 - (scrollPos ?? 0), pictureHeight);
-  }, [scrollPos, pictureHeight]);
+  const MINIMUM_PICTURE_HEIGHT = 150;
+  const MAXIMUM_PICTURE_HEIGHT = 0.65 * window.innerHeight;
+
+  const pictureHeight = Math.min(
+    Math.max(MAXIMUM_PICTURE_HEIGHT - scrollPos, MINIMUM_PICTURE_HEIGHT),
+    MAXIMUM_PICTURE_HEIGHT
+  );
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    } else {
+      setScrollPos(0);
+    }
+  }, [pictureId]);
 
   const setNavigationElements = useContext(NavigationContext);
   const scrollToElement = () => {
@@ -51,7 +62,7 @@ const DetailedPictureView = ({
         : targetElement.getBoundingClientRect().y +
           containerRef.current.scrollTop -
           containerRef.current.getBoundingClientRect().y -
-          150; // The 150 is to account for the image in its smallest form
+          MINIMUM_PICTURE_HEIGHT;
     containerRef.current.scroll({
       top: elementPosition,
       left: 0,
@@ -82,6 +93,7 @@ const DetailedPictureView = ({
         isActive: () => {
           return window.location.hash !== '#info' && window.location.hash !== '#comments';
         },
+        replace: true,
       },
       {
         name: t('common.details'),
@@ -94,6 +106,7 @@ const DetailedPictureView = ({
         isActive: () => {
           return window.location.hash === '#info';
         },
+        replace: true,
       },
       {
         name: t('common.comments'),
@@ -106,6 +119,7 @@ const DetailedPictureView = ({
         isActive: () => {
           return window.location.hash === '#comments';
         },
+        replace: true,
       },
     ];
     setNavigationElements(menuItems);
@@ -124,12 +138,8 @@ const DetailedPictureView = ({
   } else if (data?.picture) {
     return (
       <div className='picture-view'>
-        <Picture
-          url={data.picture.media?.url ?? ''}
-          scrollPos={scrollPos}
-          onPictureHeightChange={setPictureHeight}
-        />
-        <div className='parallax-container' style={{ top: `${parallaxPosition}px` }}>
+        <Picture url={data.picture.media?.url ?? ''} pictureHeight={pictureHeight} />
+        <div className='parallax-container' style={{ top: `${pictureHeight}px` }}>
           <div className='picture-background' />
           <div className='title'>{data.picture.title?.text ?? ''}</div>
         </div>
@@ -203,7 +213,7 @@ const PictureView = ({
   if (thumbnailMode) {
     return (
       <img
-        src={`${apiBase}${thumbnailUrl}`}
+        src={asApiPath(thumbnailUrl)}
         alt={thumbnailUrl}
         onClick={() => {
           history.push(`/picture/${pictureId}`, { showBack: true, pictureIdsInContext });
@@ -231,7 +241,7 @@ const PictureView = ({
           break;
       }
 
-      history.push(`/picture/${newPictureId}`, {
+      history.replace(`/picture/${newPictureId}`, {
         showBack: true,
         pictureIdsInContext: pictureIdsInContext,
       });

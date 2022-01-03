@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { apiBase } from '../../../App';
+import { asApiPath } from '../../../App';
 import Loading from '../../../components/Loading';
 import {
   Exact,
@@ -39,7 +39,7 @@ const KeywordTagsSearchList = ({
         items={keywordTagsResponse.data.keywordTags.map(tag => ({
           name: tag?.name ?? '',
           background: tag?.thumbnail?.length
-            ? `${apiBase}/${String(tag.thumbnail[0]?.media?.formats?.small?.url || '')}`
+            ? asApiPath(String(tag.thumbnail[0]?.media?.formats?.small?.url || ''))
             : '',
           onClick: () => {
             history.push(`/search/${encodeURIComponent(tag?.name ?? '')}`, { showBack: true });
@@ -72,7 +72,7 @@ const SearchHub = ({ searchSnippet }: { searchSnippet?: string }) => {
             : '';
           return {
             name: `${(index + 3) * 10}er`,
-            background: `${apiBase}${thumbnail}`,
+            background: asApiPath(thumbnail),
             onClick: () => {
               history.push(`/search/?decade=${(index + 3) * 10}s`, { showBack: true });
             },

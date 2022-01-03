@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import './ItemList.scss';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Icon, IconButton } from '@mui/material';
@@ -6,8 +6,8 @@ import { ItemListItem, ItemListItemModel } from './ItemListItem';
 
 const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
   const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
-  const [scrollPosition, setScrollPosition] = useState<number>(0);
-  const listRef = useRef<HTMLDivElement>(null);
+  const [showLeftButton, setShowLeftButton] = useState<boolean>(false);
+  const [showRightButton, setShowRightButton] = useState<boolean>(true);
 
   const scrollElements = (count: number) => {
     if (!scrollBarRef) {
@@ -22,13 +22,20 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
   };
 
   return (
-    <div className={`item-list ${props.compact ? 'compact' : 'large'}`} ref={listRef}>
+    <div className={`item-list ${props.compact ? 'compact' : 'large'}`}>
       <PerfectScrollbar
         containerRef={ref => {
           setScrollBarRef(ref);
         }}
         onScrollX={() => {
-          setScrollPosition(scrollBarRef?.scrollLeft ?? 0);
+          setShowLeftButton(true);
+          setShowRightButton(true);
+        }}
+        onXReachStart={() => {
+          setShowLeftButton(false);
+        }}
+        onXReachEnd={() => {
+          setShowRightButton(false);
         }}
       >
         <div className='items'>
@@ -39,7 +46,7 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
       </PerfectScrollbar>
       <div className='button-container'>
         <IconButton
-          style={{ visibility: scrollPosition > 0 ? 'visible' : 'hidden' }}
+          style={{ visibility: showLeftButton ? 'visible' : 'hidden' }}
           onClick={() => {
             scrollElements(-3);
           }}
@@ -47,14 +54,7 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
           <Icon>fast_rewind</Icon>
         </IconButton>
         <IconButton
-          style={{
-            visibility:
-              scrollPosition <
-              (scrollBarRef?.scrollWidth || 0) -
-                (listRef.current?.getBoundingClientRect()?.width ?? 0)
-                ? 'visible'
-                : 'hidden',
-          }}
+          style={{ visibility: showRightButton ? 'visible' : 'hidden' }}
           onClick={() => {
             scrollElements(3);
           }}
