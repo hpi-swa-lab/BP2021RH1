@@ -10,7 +10,7 @@ const apiBase = 'https://bp.bad-harzburg-stiftung.de/api';
 
 export const asApiPath = (pathEnding: string) => {
   //Removes any multiple occurences of a "/"
-  const formattedPathEnding = `/${pathEnding}`.replace(/\/{2,}/gm, '/');
+  const formattedPathEnding = `/${pathEnding}`.replace(/\/+/gm, '/');
   return `${apiBase}${formattedPathEnding}`;
 };
 
