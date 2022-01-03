@@ -1,6 +1,6 @@
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
-import { fullApiPath } from '../../../App';
+import { asApiPath } from '../../../App';
 import ItemList from '../common/ItemList';
 import React from 'react';
 import { decodeBrowsePathComponent, encodeBrowsePathComponent } from './BrowseView';
@@ -26,7 +26,7 @@ const SubCategories = ({
     const formats = category.thumbnail[0].media.formats;
     return {
       name: decodeBrowsePathComponent(category.name),
-      background: fullApiPath(
+      background: asApiPath(
         String(formats?.medium?.url || formats?.small?.url || formats?.thumbnail?.url || '')
       ),
       color: index % 2 === 0 ? '#7E241D' : '#404272',

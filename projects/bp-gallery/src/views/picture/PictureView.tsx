@@ -8,7 +8,7 @@ import './PictureView.scss';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
-import { fullApiPath, NavigationContext } from '../../App';
+import { asApiPath, NavigationContext } from '../../App';
 import {
   ComponentContentComment,
   Description,
@@ -213,7 +213,7 @@ const PictureView = ({
   if (thumbnailMode) {
     return (
       <img
-        src={fullApiPath(thumbnailUrl)}
+        src={asApiPath(thumbnailUrl)}
         alt={thumbnailUrl}
         onClick={() => {
           history.push(`/picture/${pictureId}`, { showBack: true, pictureIdsInContext });

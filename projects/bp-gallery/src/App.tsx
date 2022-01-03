@@ -8,7 +8,7 @@ import NavigationBar, { NavigationElement } from './components/NavigationBar';
 
 const apiBase = 'https://bp.bad-harzburg-stiftung.de/api';
 
-export const fullApiPath = (pathEnding: string) => {
+export const asApiPath = (pathEnding: string) => {
   //Removes any multiple occurences of a "/"
   const formattedPathEnding = `/${pathEnding}`.replace(/\/{2,}/gm, '/');
   return `${apiBase}${formattedPathEnding}`;

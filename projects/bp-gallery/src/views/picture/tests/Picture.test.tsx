@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { fullApiPath } from '../../../App';
+import { asApiPath } from '../../../App';
 import Picture from '../Picture';
 
 test('Picture renders blur-background and actual picture', () => {
@@ -11,8 +11,8 @@ test('Picture renders blur-background and actual picture', () => {
   const imageTags = container.getElementsByTagName('img');
   expect(imageTags).toHaveLength(2);
 
-  expect(imageTags.item(0)).toHaveAttribute('src', fullApiPath(pictureUrl));
+  expect(imageTags.item(0)).toHaveAttribute('src', asApiPath(pictureUrl));
   expect(imageTags.item(0)).toHaveClass('blur-background');
-  expect(imageTags.item(1)).toHaveAttribute('src', fullApiPath(pictureUrl));
+  expect(imageTags.item(1)).toHaveAttribute('src', asApiPath(pictureUrl));
   expect(imageTags.item(1)).not.toHaveClass('blur-background');
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import './Picture.scss';
-import { fullApiPath } from '../../App';
+import { asApiPath } from '../../App';
 
 const Picture = ({
   url,
@@ -9,7 +9,7 @@ const Picture = ({
   url: string;
   pictureHeight?: number;
 }) => {
-  const pictureLink = fullApiPath(url);
+  const pictureLink = asApiPath(url);
 
   return (
     <div className='picture' id='photo'>
