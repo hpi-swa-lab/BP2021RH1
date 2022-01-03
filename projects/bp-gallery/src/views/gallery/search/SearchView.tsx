@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { Picture } from '../../../graphql/APIConnector';
-import { apiBase } from '../../../App';
+import { asApiPath } from '../../../App';
 
 const SearchView = ({
   params,
@@ -48,7 +48,7 @@ const SearchView = ({
           <div className='search-result-banner-background'>
             <img
               style={{ transform: `translateY(${scrollPos * 0.5}px)` }}
-              src={`${apiBase}${String(previewPicture?.media?.formats.large.url ?? '')}`}
+              src={asApiPath(String(previewPicture?.media?.formats.large.url ?? ''))}
               alt={`${t('common.titleFor', {
                 query: `${params?.join(',') ?? ''}, ${String(decade)}`,
               })}`}
