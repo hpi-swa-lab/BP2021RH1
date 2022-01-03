@@ -24,8 +24,8 @@ const NavigationBar = (props: NavigationProps) => {
           to: element.target,
           replace: element.replace ?? false,
           className: 'nav-element',
+          isActive: !!element.isActive,
         };
-        if (element.isActive) navLinkProps.isActive = element.isActive;
         return (
           <NavLink {...navLinkProps} key={element.name}>
             <Icon>{element.icon}</Icon>
