@@ -68,6 +68,19 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
+query getLatestPicturesCategoryInfo($date: JSON!) {
+  pictures(where: { published_at_gt: $date }) {
+    category_tags {
+      id
+      name
+      related_tags {
+        id
+        name
+      }
+    }
+  }
+}
+
 query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
   categoryTags(filters: { name: { eq: $categoryName }, priority: { eq: $categoryPriority } }) {
     data {

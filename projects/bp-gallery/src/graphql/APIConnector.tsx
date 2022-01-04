@@ -1386,6 +1386,37 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
+export type GetLatestPicturesCategoryInfoQueryVariables = Exact<{
+  date: Scalars['JSON'];
+}>;
+
+export type GetLatestPicturesCategoryInfoQuery = {
+  pictures?:
+    | Array<
+        | {
+            category_tags?:
+              | Array<
+                  | {
+                      id: string;
+                      name: string;
+                      related_tags?:
+                        | Array<{ id: string; name: string } | null | undefined>
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined
+                >
+              | null
+              | undefined;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+};
+
 export type GetCategoryInfoQueryVariables = Exact<{
   categoryName?: InputMaybe<Scalars['String']>;
   categoryPriority?: InputMaybe<Scalars['Int']>;
@@ -1805,6 +1836,76 @@ export type GetPicturesLazyQueryHookResult = ReturnType<typeof useGetPicturesLaz
 export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQuery,
   GetPicturesQueryVariables
+>;
+
+export const GetLatestPicturesCategoryInfoDocument = gql`
+  query getLatestPicturesCategoryInfo($date: JSON!) {
+    pictures(where: { published_at_gt: $date }) {
+      category_tags {
+        id
+        name
+        related_tags {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLatestPicturesCategoryInfoQuery__
+ *
+ * To run a query within a React component, call `useGetLatestPicturesCategoryInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestPicturesCategoryInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestPicturesCategoryInfoQuery({
+ *   variables: {
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useGetLatestPicturesCategoryInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetLatestPicturesCategoryInfoQuery,
+    GetLatestPicturesCategoryInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetLatestPicturesCategoryInfoQuery,
+    GetLatestPicturesCategoryInfoQueryVariables
+  >(GetLatestPicturesCategoryInfoDocument, options);
+}
+
+export function useGetLatestPicturesCategoryInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetLatestPicturesCategoryInfoQuery,
+    GetLatestPicturesCategoryInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetLatestPicturesCategoryInfoQuery,
+    GetLatestPicturesCategoryInfoQueryVariables
+  >(GetLatestPicturesCategoryInfoDocument, options);
+}
+
+export type GetLatestPicturesCategoryInfoQueryHookResult = ReturnType<
+  typeof useGetLatestPicturesCategoryInfoQuery
+>;
+
+export type GetLatestPicturesCategoryInfoLazyQueryHookResult = ReturnType<
+  typeof useGetLatestPicturesCategoryInfoLazyQuery
+>;
+
+export type GetLatestPicturesCategoryInfoQueryResult = Apollo.QueryResult<
+  GetLatestPicturesCategoryInfoQuery,
+  GetLatestPicturesCategoryInfoQueryVariables
 >;
 
 export const GetCategoryInfoDocument = gql`

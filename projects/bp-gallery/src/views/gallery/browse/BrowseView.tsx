@@ -1,13 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './BrowseView.scss';
-import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
-import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
+import {
+  useGetCategoryInfoQuery,
+  useGetLatestPicturesCategoryInfoQuery,
+} from '../../../graphql/APIConnector';
 import SubCategories from './SubCategories';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 import Loading from '../../../components/Loading';
-import CategoryDescription from './CategoryDescription';
 
 export function encodeBrowsePathComponent(folder: string): string {
   return encodeURIComponent(folder.replace(/ /gm, '_'));
@@ -21,31 +22,41 @@ const BrowseView = ({
   path,
   scrollPos,
   scrollHeight,
+  communityMode = false,
 }: {
   path?: string[];
   scrollPos: number;
   scrollHeight: number;
+  communityMode: boolean;
 }) => {
+  let result;
   const { t } = useTranslation();
+
+  const communityDate = '2021-11-24';
 
   const variables = path?.length
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
     : { categoryPriority: 1 };
 
-  const { data, loading, error } = useGetCategoryInfoQuery({ variables });
-  const categoryTags = useFlatQueryResponseData(data)?.categoryTags;
+  if (communityMode) {
+    var communityResult = useGetLatestPicturesCategoryInfoQuery({
+      variables: { date: communityDate },
+    });
+  } else {
+    var defaultResult = useGetCategoryInfoQuery({
+      variables,
+    });
+  }
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else if (categoryTags?.length && categoryTags[0]) {
-    const category = categoryTags[0];
+  } else if (data?.categoryTags?.length && data.categoryTags[0]) {
+    const category = data.categoryTags[0];
     const relatedTagsSize = category.related_tags?.length ?? 0;
-
     return (
       <div className='browse-view'>
-        <CategoryDescription description={category.description ?? ''} name={category.name} />
         {relatedTagsSize > 0 && (
           <SubCategories
             relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
@@ -53,13 +64,7 @@ const BrowseView = ({
           />
         )}
         <PictureScrollGrid
-          filters={{
-            category_tags: {
-              id: {
-                eq: category.id,
-              },
-            },
-          }}
+          where={{ category_tags: category.id }}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={category.name}
