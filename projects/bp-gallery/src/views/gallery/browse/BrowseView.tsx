@@ -4,6 +4,7 @@ import './BrowseView.scss';
 import {
   useGetCategoryInfoQuery,
   useGetLatestPicturesCategoryInfoQuery,
+  GetLatestPicturesCategoryInfoQueryVariables,
 } from '../../../graphql/APIConnector';
 import SubCategories from './SubCategories';
 import PictureScrollGrid from '../common/PictureScrollGrid';
@@ -17,7 +18,41 @@ export function encodeBrowsePathComponent(folder: string): string {
 export function decodeBrowsePathComponent(folder: string): string {
   return decodeURIComponent(folder).replace(/_/gm, ' ');
 }
-
+function displayPicturesByCategories(
+  result: any,
+  categoryTags: any,
+  where: JSON,
+  path: string[],
+  scrollPos: number,
+  scrollHeight: number
+) {
+  if (result.error) {
+    return <QueryErrorDisplay error={result.error} />;
+  } else if (result.loading) {
+    return <Loading />;
+  } else if (categoryTags.length && categoryTags[0]) {
+    const category = categoryTags[0];
+    const relatedTagsSize = category.related_tags?.length ?? 0;
+    return (
+      <div className='browse-view'>
+        {relatedTagsSize > 0 && (
+          <SubCategories
+            relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
+            path={path}
+          />
+        )}
+        <PictureScrollGrid
+          where
+          scrollPos={scrollPos}
+          scrollHeight={scrollHeight}
+          hashbase={category.name}
+        />
+      </div>
+    );
+  } else {
+    return <div>{t('common.no-category')}</div>;
+  }
+}
 const BrowseView = ({
   path,
   scrollPos,
@@ -29,8 +64,8 @@ const BrowseView = ({
   scrollHeight: number;
   communityMode: boolean;
 }) => {
-  let result;
   const { t } = useTranslation();
+  let result, categoryTags;
 
   const communityDate = '2021-11-24';
 
@@ -39,40 +74,18 @@ const BrowseView = ({
     : { categoryPriority: 1 };
 
   if (communityMode) {
-    var communityResult = useGetLatestPicturesCategoryInfoQuery({
+    result = useGetLatestPicturesCategoryInfoQuery({
       variables: { date: communityDate },
     });
+    categoryTags = new Set<GetLatestPicturesCategoryInfoQueryVariables>();
+    categoryTags = result?.data?.pictures?.map(picture => {
+      picture?.category_tags;
+    });
   } else {
-    var defaultResult = useGetCategoryInfoQuery({
+    result = useGetCategoryInfoQuery({
       variables,
     });
-  }
-
-  if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
-    return <Loading />;
-  } else if (data?.categoryTags?.length && data.categoryTags[0]) {
-    const category = data.categoryTags[0];
-    const relatedTagsSize = category.related_tags?.length ?? 0;
-    return (
-      <div className='browse-view'>
-        {relatedTagsSize > 0 && (
-          <SubCategories
-            relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
-            path={path}
-          />
-        )}
-        <PictureScrollGrid
-          where={{ category_tags: category.id }}
-          scrollPos={scrollPos}
-          scrollHeight={scrollHeight}
-          hashbase={category.name}
-        />
-      </div>
-    );
-  } else {
-    return <div>{t('common.no-category')}</div>;
+    categoryTags = result?.data?.categoryTags;
   }
 };
 
