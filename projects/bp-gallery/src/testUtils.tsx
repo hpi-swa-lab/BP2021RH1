@@ -37,9 +37,7 @@ export const renderWithAPIMocks = (
   return render(_wrapInMockedProvider(component, apiMocks, enableCache));
 };
 
-/**
- * @private
- */
+// In order to supply the `MockedProvider` with the same config as the real client gets
 const cache = new InMemoryCache({
   addTypename: false,
   typePolicies: {
@@ -57,6 +55,10 @@ const cache = new InMemoryCache({
     },
   },
 });
+
+/**
+ * @private
+ */
 const _wrapInMockedProvider = (
   component: ReactComponentElement<any>,
   apiMocks: MockedResponse[],
