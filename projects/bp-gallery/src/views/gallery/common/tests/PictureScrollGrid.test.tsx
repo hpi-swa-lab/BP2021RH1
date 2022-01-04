@@ -51,27 +51,30 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
 
 describe('Refetch functionality in PictureScrollGrid', () => {
   it('should render more pictures after refetching', async () => {
-    const { container, rerender } = renderWithAPIMocks(
+    const { container } = renderWithAPIMocks(
       <PictureScrollGrid
         where={''}
         scrollPos={0}
         scrollHeight={2 * window.innerHeight}
         hashbase={'A'}
       />,
-      PictureViewMocks
+      PictureViewMocks,
+      true
     );
     await waitFor(() => {
       const imageTags = container.getElementsByTagName('img');
       expect(imageTags.length).toBeLessThanOrEqual(4);
     });
 
-    rerender(
+    renderWithAPIMocks(
       <PictureScrollGrid
         where={''}
-        scrollPos={2 * window.innerHeight}
+        scrollPos={2 * window.innerHeight} //simulates scrolling to the bottom
         scrollHeight={2 * window.innerHeight}
         hashbase={'A'}
-      />
+      />,
+      PictureViewMocks,
+      true
     );
 
     await waitFor(() => {
