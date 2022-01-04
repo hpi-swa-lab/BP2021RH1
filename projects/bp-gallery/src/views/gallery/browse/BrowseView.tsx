@@ -4,7 +4,7 @@ import './BrowseView.scss';
 import {
   useGetCategoryInfoQuery,
   useGetLatestPicturesCategoryInfoQuery,
-  GetLatestPicturesCategoryInfoQueryVariables,
+  CategoryTag,
 } from '../../../graphql/APIConnector';
 import SubCategories from './SubCategories';
 import PictureScrollGrid from '../common/PictureScrollGrid';
@@ -18,14 +18,23 @@ export function encodeBrowsePathComponent(folder: string): string {
 export function decodeBrowsePathComponent(folder: string): string {
   return decodeURIComponent(folder).replace(/_/gm, ' ');
 }
-function displayPicturesByCategories(
-  result: any,
-  categoryTags: any,
-  where: JSON,
-  path: string[],
-  scrollPos: number,
-  scrollHeight: number
-) {
+
+const DisplayPicturesByCategories = ({
+  result,
+  categoryTags,
+  path,
+  scrollPos,
+  scrollHeight,
+  where,
+}: {
+  result: any;
+  categoryTags: any;
+  path: string[] | undefined;
+  scrollPos: number;
+  scrollHeight: number;
+  where?: JSON | null;
+}) => {
+  const { t } = useTranslation();
   if (result.error) {
     return <QueryErrorDisplay error={result.error} />;
   } else if (result.loading) {
@@ -33,6 +42,12 @@ function displayPicturesByCategories(
   } else if (categoryTags.length && categoryTags[0]) {
     const category = categoryTags[0];
     const relatedTagsSize = category.related_tags?.length ?? 0;
+    let baum = {};
+    if (!where) {
+      baum = { category_tags: category.id };
+    } else {
+      baum = { ...baum, ...where };
+    }
     return (
       <div className='browse-view'>
         {relatedTagsSize > 0 && (
@@ -42,7 +57,7 @@ function displayPicturesByCategories(
           />
         )}
         <PictureScrollGrid
-          where
+          where={baum}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={category.name}
@@ -52,7 +67,42 @@ function displayPicturesByCategories(
   } else {
     return <div>{t('common.no-category')}</div>;
   }
-}
+};
+
+const CommunityView = ({
+  path,
+  scrollPos,
+  scrollHeight,
+}: {
+  path?: string[];
+  scrollPos: number;
+  scrollHeight: number;
+}) => {
+  const where = null;
+  const communityDate = '2021-11-24';
+
+  const result = useGetLatestPicturesCategoryInfoQuery({
+    variables: { date: communityDate },
+  });
+  {
+    ('published_at_gt: 2021-11-24');
+  }
+  //var categoryTags = new Set<CategoryTag>();
+  const categoryTags = new Set<CategoryTag | void>(
+    result.data?.pictures?.map(picture => {
+      picture?.category_tags;
+    })
+  );
+  return DisplayPicturesByCategories({
+    result,
+    categoryTags,
+    path,
+    scrollPos,
+    scrollHeight,
+    where,
+  });
+};
+
 const BrowseView = ({
   path,
   scrollPos,
@@ -62,31 +112,43 @@ const BrowseView = ({
   path?: string[];
   scrollPos: number;
   scrollHeight: number;
-  communityMode: boolean;
+  communityMode?: boolean;
+}) => {
+  //const communityDate = '2021-11-24';
+  if (communityMode) {
+    return <CommunityView scrollPos={scrollPos} scrollHeight={scrollHeight} path={path} />;
+  } else {
+    return <DefaultBrowseView scrollPos={scrollPos} scrollHeight={scrollHeight} path={path} />;
+  }
+};
+
+const DefaultBrowseView = ({
+  path,
+  scrollPos,
+  scrollHeight,
+}: {
+  path?: string[];
+  scrollPos: number;
+  scrollHeight: number;
 }) => {
   const { t } = useTranslation();
-  let result, categoryTags;
-
-  const communityDate = '2021-11-24';
-
+  const where = null;
   const variables = path?.length
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
     : { categoryPriority: 1 };
 
-  if (communityMode) {
-    result = useGetLatestPicturesCategoryInfoQuery({
-      variables: { date: communityDate },
-    });
-    categoryTags = new Set<GetLatestPicturesCategoryInfoQueryVariables>();
-    categoryTags = result?.data?.pictures?.map(picture => {
-      picture?.category_tags;
-    });
-  } else {
-    result = useGetCategoryInfoQuery({
-      variables,
-    });
-    categoryTags = result?.data?.categoryTags;
-  }
-};
+  const result = useGetCategoryInfoQuery({
+    variables,
+  });
+  const categoryTags = result.data?.categoryTags;
 
+  return DisplayPicturesByCategories({
+    result,
+    categoryTags,
+    path,
+    scrollPos,
+    scrollHeight,
+    where,
+  });
+};
 export default BrowseView;
