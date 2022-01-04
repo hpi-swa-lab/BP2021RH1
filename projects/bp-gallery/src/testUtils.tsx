@@ -8,7 +8,7 @@ import NavigationBar, { NavigationElement } from './components/NavigationBar';
 import TopBar from './components/TopBar';
 import { NavigationContext } from './App';
 import { InMemoryCache } from '@apollo/client';
-import { Picture } from './graphql/APIConnector';
+import { PictureEntityResponseCollection } from './graphql/APIConnector';
 
 /**
  * Enables using Navigation-Context in tests
@@ -45,17 +45,14 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         pictures: {
-          // Treat picture queries as the same query, as long as the where clause is equal
-          // Queries which only differ in other fields as 'start' or 'limit' get treated as one query and the results get merged
-          keyArgs: ['where'],
-          //Deduplication of pictures in cache
-          merge(existing: Picture[] = [], incoming: Picture[]) {
-            const result = [...existing];
-            const ids = result.map((picture: Picture) => picture.id);
-            incoming.forEach((picture: Picture) => {
-              if (!ids.includes(picture.id)) result.push(picture);
-            });
-            return result;
+          // Treat picture queries as the same query, as long as the filters clause is equal.
+          // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
+          // get treated as one query and the results get merged.
+          keyArgs: ['filters'],
+          merge(existing = { data: [] }, incoming: PictureEntityResponseCollection) {
+            return {
+              data: [...existing.data, ...incoming.data],
+            };
           },
         },
       },
