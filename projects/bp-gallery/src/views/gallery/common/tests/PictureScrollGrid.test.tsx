@@ -2,7 +2,7 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import PictureScrollGrid from '../PictureScrollGrid';
 import { renderWithAPIMocks } from '../../../../testUtils';
-import { PictureViewMocks } from './mocks';
+import { GetPicturesDocumentMocks } from './mocks';
 import { asApiPath } from '../../../../App';
 
 describe('PictureScrollGrid in basic functionality without refetching', () => {
@@ -14,7 +14,7 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
         scrollHeight={2 * window.innerHeight}
         hashbase={'A'}
       />,
-      PictureViewMocks
+      GetPicturesDocumentMocks
     );
     await waitFor(() => {
       const imageTags = container.getElementsByTagName('img');
@@ -27,7 +27,7 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
   it('should render the error message related to a network error', async () => {
     renderWithAPIMocks(
       <PictureScrollGrid where={'{id: 0}'} scrollPos={0} scrollHeight={0} hashbase={'A'} />,
-      PictureViewMocks
+      GetPicturesDocumentMocks
     );
 
     await waitFor(() => {
@@ -39,7 +39,7 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
   it('should render the error message related to an api error', async () => {
     renderWithAPIMocks(
       <PictureScrollGrid where={'{id: -1}'} scrollPos={0} scrollHeight={0} hashbase={'A'} />,
-      PictureViewMocks
+      GetPicturesDocumentMocks
     );
 
     await waitFor(() => {
@@ -58,7 +58,7 @@ describe('Refetch functionality in PictureScrollGrid', () => {
         scrollHeight={2 * window.innerHeight}
         hashbase={'A'}
       />,
-      PictureViewMocks,
+      GetPicturesDocumentMocks,
       true
     );
     await waitFor(() => {
@@ -73,7 +73,7 @@ describe('Refetch functionality in PictureScrollGrid', () => {
         scrollHeight={2 * window.innerHeight}
         hashbase={'A'}
       />,
-      PictureViewMocks,
+      GetPicturesDocumentMocks,
       true
     );
 

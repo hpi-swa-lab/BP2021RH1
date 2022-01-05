@@ -1,7 +1,7 @@
 import { GetPicturesDocument } from '../../../../graphql/APIConnector';
 import { GraphQLError } from 'graphql';
 
-export const PictureViewMocks = [
+export const GetPicturesDocumentMocks = [
   {
     request: {
       query: GetPicturesDocument,
