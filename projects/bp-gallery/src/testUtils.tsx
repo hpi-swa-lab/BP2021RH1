@@ -49,7 +49,7 @@ const cache = new InMemoryCache({
           // Queries which only differ in other fields as 'start' or 'limit' get treated as one query and the results get merged
           keyArgs: ['where'],
           //Deduplication of pictures in cache
-          merge(existing = [], incoming) {
+          merge(existing: Picture[] = [], incoming: Picture[]) {
             const result = [...existing];
             const ids = result.map((picture: Picture) => picture.id);
             incoming.forEach((picture: Picture) => {
