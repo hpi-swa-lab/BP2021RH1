@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './BrowseView.scss';
 import {
@@ -42,11 +42,11 @@ const DisplayPicturesByCategories = ({
   } else if (categoryTags.length && categoryTags[0]) {
     const category = categoryTags[0];
     const relatedTagsSize = category.related_tags?.length ?? 0;
-    let baum = {};
+    let filter = {};
     if (!where) {
-      baum = { category_tags: category.id };
+      filter = { category_tags: category.id };
     } else {
-      baum = { ...baum, ...where };
+      filter = { ...filter, ...where };
     }
     return (
       <div className='browse-view'>
@@ -57,7 +57,7 @@ const DisplayPicturesByCategories = ({
           />
         )}
         <PictureScrollGrid
-          where={baum}
+          where={filter}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={category.name}
@@ -115,11 +115,29 @@ const BrowseView = ({
   communityMode?: boolean;
 }) => {
   //const communityDate = '2021-11-24';
-  if (communityMode) {
-    return <CommunityView scrollPos={scrollPos} scrollHeight={scrollHeight} path={path} />;
-  } else {
-    return <DefaultBrowseView scrollPos={scrollPos} scrollHeight={scrollHeight} path={path} />;
-  }
+  const [mode, setMode] = useState<boolean>();
+  //setMode(communityMode);
+  const modeName = () => {
+    if (mode) {
+      return 'To Browse View';
+    }
+    return 'To Community View';
+  };
+
+  const view = () => {
+    if (mode) {
+      return <CommunityView scrollPos={scrollPos} scrollHeight={scrollHeight} path={path} />;
+    } else {
+      return <DefaultBrowseView scrollPos={scrollPos} scrollHeight={scrollHeight} path={path} />;
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={() => setMode(!mode)}>{modeName()}</button>
+      {view()}
+    </div>
+  );
 };
 
 const DefaultBrowseView = ({
@@ -131,7 +149,6 @@ const DefaultBrowseView = ({
   scrollPos: number;
   scrollHeight: number;
 }) => {
-  const { t } = useTranslation();
   const where = null;
   const variables = path?.length
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
