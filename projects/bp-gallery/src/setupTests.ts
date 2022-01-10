@@ -37,3 +37,12 @@ document.createRange = () => {
 
   return range;
 };
+
+// needs to be done here because the list item tests as well as
+// the app tests need this behavior
+(window.SVGElement.prototype as any).getBBox = () => ({
+  x: 0,
+  y: 0,
+});
+
+(window.HTMLDivElement.prototype as any).scroll = () => {};

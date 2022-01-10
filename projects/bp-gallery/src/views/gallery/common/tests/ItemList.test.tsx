@@ -21,20 +21,6 @@ const items: ItemListItemModel[] = [
   },
 ];
 
-beforeAll(() => {
-  (window.SVGElement.prototype as any).getBBox = () => ({
-    x: 0,
-    y: 0,
-  });
-
-  (window.HTMLDivElement.prototype as any).scroll = () => {};
-});
-
-afterAll(() => {
-  delete (window.SVGElement.prototype as any).getBBox;
-  delete (window.HTMLDivElement.prototype as any).scroll;
-});
-
 test('Item List should show elements', () => {
   const { container } = render(<ItemList items={items} />);
   const links = container.querySelectorAll('.item');
