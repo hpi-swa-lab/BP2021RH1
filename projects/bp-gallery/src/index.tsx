@@ -5,6 +5,7 @@ import './i18n';
 import { renderRoutes } from 'react-router-config';
 import reportWebVitals from './reportWebVitals';
 import routes from './routes';
+import smoothscroll from 'smoothscroll-polyfill';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,3 +18,6 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+// kick off the polyfill!
+smoothscroll.polyfill();

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@types/smoothscroll-polyfill": "^0.3.1"
+  }
+}
