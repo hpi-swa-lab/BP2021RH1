@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
-import { Picture } from '../../../graphql/APIConnector';
 
 const PictureGrid = ({
   pictures,
   hashBase,
   loading,
 }: {
-  pictures: Picture[];
+  pictures: any[];
   hashBase: string;
   loading: boolean;
 }) => {
@@ -17,7 +16,7 @@ const PictureGrid = ({
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
-  const [table, setTable] = useState<(Picture | undefined)[][]>([[]]);
+  const [table, setTable] = useState<(any | undefined)[][]>([[]]);
 
   const hashCode = (str: string) => {
     let hash = 0,
@@ -32,9 +31,9 @@ const PictureGrid = ({
     return Math.abs(hash) / Math.pow(2, 31);
   };
 
-  //Initialize table with pictures from props
+  // Initialize table with pictures from props
   useEffect(() => {
-    const buffer: (Picture | undefined)[][] = [[]];
+    const buffer: (any | undefined)[][] = [[]];
     let currentRow = 0;
     let currentRowCount = 0;
     let rowLength = Math.round(hashCode(hashBase) * (maxRowCount - minRowCount) + minRowCount);
@@ -42,7 +41,7 @@ const PictureGrid = ({
       buffer[currentRow].push(pictures[i]);
       currentRowCount++;
       if (currentRowCount >= rowLength) {
-        //In the next iteration the next row starts
+        // In the next iteration the next row starts
         currentRow++;
         buffer.push([]);
         currentRowCount = 0;
@@ -65,7 +64,7 @@ const PictureGrid = ({
     }
   }, [maxRowCount]);
 
-  //Set up eventListener on mount and cleanup on unmount
+  // Set up eventListener on mount and cleanup on unmount
   useEffect(() => {
     window.addEventListener('resize', onResize);
     return () => {

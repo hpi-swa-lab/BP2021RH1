@@ -6,7 +6,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import NavigationBar, { NavigationElement } from './components/NavigationBar';
 
-const apiBase = 'https://bp.bad-harzburg-stiftung.de/api';
+const apiBase = 'https://bp.bad-harzburg-stiftung.de/api-dev';
 
 export const asApiPath = (pathEnding: string) => {
   //Removes any multiple occurences of a "/"
@@ -22,11 +22,14 @@ const apolloClient = new ApolloClient({
       Query: {
         fields: {
           pictures: {
-            // Treat picture queries as the same query, as long as the where clause is equal
-            // Queries which only differ in other fields as 'start' or 'limit' get treated as one query and the results get merged
-            keyArgs: ['where'],
-            merge(existing = [], incoming) {
-              return [...existing, ...incoming];
+            // Treat picture queries as the same query, as long as the filters clause is equal.
+            // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
+            // get treated as one query and the results get merged.
+            keyArgs: ['filters'],
+            merge(existing = { data: [] }, incoming) {
+              return {
+                data: [...existing.data, ...incoming.data],
+              };
             },
           },
         },

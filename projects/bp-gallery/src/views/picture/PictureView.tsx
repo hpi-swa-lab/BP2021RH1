@@ -9,7 +9,8 @@ import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
 import { asApiPath, NavigationContext } from '../../App';
-import { Comment, Description, useGetPictureInfoQuery } from '../../graphql/APIConnector';
+import { useGetPictureInfoQuery } from '../../graphql/APIConnector';
+import { flattenQueryResponseData } from '../../graphql/queryUtils';
 import QueryErrorDisplay from '../../components/QueryErrorDisplay';
 import Loading from '../../components/Loading';
 import { NavigationElement } from '../../components/NavigationBar';
@@ -126,18 +127,19 @@ const DetailedPictureView = ({
       pictureId: pictureId,
     },
   });
+  const { picture } = flattenQueryResponseData(data) || {};
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else if (data?.picture) {
+  } else if (picture) {
     return (
       <div className='picture-view'>
-        <Picture url={data.picture.media?.url ?? ''} pictureHeight={pictureHeight} />
+        <Picture url={picture.media?.url ?? ''} pictureHeight={pictureHeight} />
         <div className='parallax-container' style={{ top: `${pictureHeight}px` }}>
           <div className='picture-background' />
-          <div className='title'>{data.picture.title?.text ?? ''}</div>
+          <div className='title'>{picture.title?.text ?? ''}</div>
         </div>
 
         <PerfectScrollbar
@@ -160,11 +162,8 @@ const DetailedPictureView = ({
             )}
           </div>
           <div className='picture-info-container'>
-            <PictureDetails descriptions={data.picture.descriptions as Description[]} />
-            <CommentsContainer
-              comments={data.picture.comments as Comment[]}
-              pictureId={pictureId}
-            />
+            <PictureDetails descriptions={picture.descriptions} />
+            <CommentsContainer comments={picture.comments} pictureId={pictureId} />
           </div>
         </PerfectScrollbar>
       </div>

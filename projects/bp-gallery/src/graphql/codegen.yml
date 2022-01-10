@@ -1,5 +1,9 @@
 overwrite: true
-schema: 'https://bp.bad-harzburg-stiftung.de/api/schema.graphql'
+# Strapi v4 doesn't export a separate schema file anymore, so we need to query the GraphQL-playground ('/graphql') here instead.
+# Note that the schema there is only available when the Strapi instance is currently running on the server in development mode.
+# In a production version there is no GraphQL-playground. So if we switch to production on the server one day,
+# we will need to generate stuff against a local Strapi instance here instead.
+schema: 'https://bp.bad-harzburg-stiftung.de/api-dev/graphql'
 documents: 'src/graphql/*.graphql'
 generates:
   src/graphql/APIConnector.tsx:

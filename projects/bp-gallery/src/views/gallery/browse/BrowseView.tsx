@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './BrowseView.scss';
 import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
+import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import SubCategories from './SubCategories';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
@@ -34,13 +35,14 @@ const BrowseView = ({
   const { data, loading, error } = useGetCategoryInfoQuery({
     variables,
   });
+  const { categoryTags } = flattenQueryResponseData(data) || {};
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else if (data?.categoryTags?.length && data.categoryTags[0]) {
-    const category = data.categoryTags[0];
+  } else if (categoryTags?.length && categoryTags[0]) {
+    const category = categoryTags[0];
     const relatedTagsSize = category.related_tags?.length ?? 0;
 
     return (
@@ -53,7 +55,13 @@ const BrowseView = ({
           />
         )}
         <PictureScrollGrid
-          where={{ category_tags: category.id }}
+          filters={{
+            category_tags: {
+              id: {
+                eq: category.id,
+              },
+            },
+          }}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={category.name}
