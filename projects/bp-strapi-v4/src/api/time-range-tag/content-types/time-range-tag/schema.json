@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "time_range_tags",
+  "info": {
+    "singularName": "time-range-tag",
+    "pluralName": "time-range-tags",
+    "displayName": "Time_Range_Tag"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "start": {
+      "type": "datetime"
+    },
+    "end": {
+      "type": "datetime"
+    },
+    "pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "time_range_tag"
+    }
+  }
+}

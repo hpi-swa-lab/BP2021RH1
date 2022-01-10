@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "category_tags",
+  "info": {
+    "singularName": "category-tag",
+    "pluralName": "category-tags",
+    "displayName": "Category_Tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "regex": "^[A-Za-z0-9- \\|äöüÄÖÜß\\/\\\\\\&\\;\\:„“\\,\"\\.\\(\\)\\[\\]\\$\\§\\%\\=\\?\\!–\\<\\>\\^'’]*$"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "priority": {
+      "type": "integer",
+      "required": true,
+      "default": -1
+    },
+    "pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "category_tags"
+    },
+    "related_tags": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category-tag.category-tag"
+    }
+  }
+}
