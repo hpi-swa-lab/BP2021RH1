@@ -23,19 +23,26 @@ const DecadesList = () => {
     return (
       <ItemList
         compact={true}
-        items={Array(7)
+        items={Array(6)
           .fill(0)
           .map((_, index) => {
-            const thumbnailData = (decadeThumbnails.data as any)[`s${(index + 3) * 10}`];
+            let name: string;
+            let thumbnailData;
+            if (index === 0) {
+              name = 'Davor';
+              thumbnailData = (decadeThumbnails.data as any)['s00'];
+            } else {
+              name = `${(index + 4) * 10}er`;
+              thumbnailData = (decadeThumbnails.data as any)[`s${(index + 4) * 10}`];
+            }
             const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url ?? '';
             return {
-              name: `${(index + 3) * 10}er`,
+              name,
               background: asApiPath(thumbnail),
               onClick: () => {
-                history.push(
-                  asSearchPath([{ value: String((index + 3) * 10), type: SearchType.DECADE }]),
-                  { showBack: true }
-                );
+                history.push(asSearchPath([{ value: name, type: SearchType.DECADE }]), {
+                  showBack: true,
+                });
               },
             };
           })}

@@ -40,6 +40,7 @@ const SearchView = ({
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [previewPicture, setPreviewPicture] = useState<Picture>();
 
+  //Converts the string params to SearchParam objects
   const searchParams = useMemo(
     () =>
       params?.map((param: string) => {
@@ -77,9 +78,16 @@ const SearchView = ({
       switch (param.type) {
         case SearchType.DECADE:
           if (!isNaN(parseInt(param.value))) {
-            const decade = parseInt(param.value);
+            const decade = parseInt(param.value.substr(0, 2));
             const startTime = new Date(`19${decade / 10}0-01-01`);
             const endTime = new Date(`19${decade / 10}9-12-31`);
+            where['time_range_tag'] = {
+              start_gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm'),
+              end_lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
+            };
+          } else if (param.value === 'Davor') {
+            const startTime = new Date(`1900-01-01`);
+            const endTime = new Date(`1949-12-31`);
             where['time_range_tag'] = {
               start_gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm'),
               end_lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
