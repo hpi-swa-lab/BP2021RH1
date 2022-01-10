@@ -8,3 +8,32 @@ import '@testing-library/jest-dom';
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: any) => key }),
 }));
+
+// Mocks necessary for item list item tests
+document.createRange = () => {
+  const range = new Range();
+
+  range.getBoundingClientRect = jest.fn(() => {
+    return {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      toJSON: () => {},
+    };
+  });
+
+  range.getClientRects = () => {
+    return {
+      item: () => null,
+      length: 0,
+      [Symbol.iterator]: jest.fn(),
+    };
+  };
+
+  return range;
+};
