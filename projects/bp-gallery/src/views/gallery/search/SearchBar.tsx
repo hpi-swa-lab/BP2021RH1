@@ -1,21 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Search } from '@mui/icons-material';
 import { InputAdornment, TextField } from '@mui/material';
 import { History } from 'history';
 import './SearchBar.scss';
+import { asSearchPath, SearchParam, SearchType } from './SearchView';
 
 const SearchBar = ({
+  searchParams,
   value,
   onValueChange,
 }: {
+  searchParams?: SearchParam[];
   value?: string;
   onValueChange?: (snippet?: string) => void;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
-  const { search } = useLocation();
 
   const textFieldRef = useRef<any>();
 
@@ -43,9 +45,16 @@ const SearchBar = ({
         }}
         onKeyUp={event => {
           if (event.key === 'Enter') {
-            history.push(`/search/${String((event.target as any).value)}${String(search ?? '')}`, {
-              showBack: true,
-            });
+            history.push(
+              asSearchPath([
+                ...(searchParams ?? []),
+                { value: String((event.target as any).value), type: SearchType.DEFAULT },
+              ]),
+              {
+                showBack: true,
+              }
+            );
+            textFieldRef.current.value = '';
           }
         }}
         placeholder={t('common.search-keywords')}

@@ -1,13 +1,32 @@
 import React, { useMemo, useState } from 'react';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
-import SearchHub from './SearchHub';
+import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../common/PictureScrollGrid';
-import { useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
 import { Picture } from '../../../graphql/APIConnector';
-import { asApiPath } from '../../../App';
+import SearchResultBanner from './SearchResultBanner';
+
+export interface SearchParam {
+  value: string;
+  type: SearchType;
+}
+
+export const enum SearchType {
+  DEFAULT = '',
+  DECADE = 'decade',
+  KEYWORD = 'keyword',
+}
+
+export const asSearchPath = (params: SearchParam[]): string => {
+  const paramsFormatted = params
+    .map(
+      (param: SearchParam) =>
+        (param.type === SearchType.DEFAULT ? '/' : `/${param.type}=`) + param.value
+    )
+    .join('');
+  return `/search${paramsFormatted}`;
+};
 
 const SearchView = ({
   params,
@@ -18,76 +37,92 @@ const SearchView = ({
   scrollPos: number;
   scrollHeight: number;
 }) => {
-  const { t } = useTranslation();
-  const { search } = useLocation();
-  const queryParams = useMemo(() => new URLSearchParams(search as string), [search]);
   const [searchSnippet, setSearchSnippet] = useState<string>('');
-
   const [previewPicture, setPreviewPicture] = useState<Picture>();
 
-  const decade = parseInt(queryParams.get('decade') ?? '-1');
+  const searchParams = useMemo(
+    () =>
+      params?.map((param: string) => {
+        if (param.includes('=')) {
+          const typeStr = param.substr(0, param.indexOf('='));
+          let value = param.substr(param.indexOf('=') + 1);
+          let type = SearchType.DEFAULT;
+          //Reverse-mapping of enum:
+          switch (typeStr) {
+            case 'decade':
+              type = SearchType.DECADE;
+              break;
+            case 'keyword':
+              type = SearchType.KEYWORD;
+              break;
+            default:
+              value = param;
+              break;
+          }
+          return { value, type };
+        } else {
+          return { value: param, type: SearchType.DEFAULT };
+        }
+      }) ?? [],
+    [params]
+  );
 
-  const queryObject: { [key: string]: any } = {};
-  if (params && params.length !== 0) {
-    queryObject['descriptions'] = { text_contains: params[params.length - 1] };
-  }
+  //Builds query from search params in the path
+  const whereClause = useMemo(() => {
+    console.log(searchParams);
+    const where: { [key: string]: any } = {};
 
-  if (decade && decade !== -1) {
-    const startTime = new Date(`19${decade / 10}0-01-01`);
-    const endTime = new Date(`19${decade / 10}9-12-31`);
-    queryObject['time_range_tag'] = {
-      start_gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm'),
-      end_lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
-    };
-  }
+    //TODO: Change definition of where clause here when implementing nested search
+    searchParams.map((param: SearchParam) => {
+      switch (param.type) {
+        case SearchType.DECADE:
+          if (!isNaN(parseInt(param.value))) {
+            const decade = parseInt(param.value);
+            const startTime = new Date(`19${decade / 10}0-01-01`);
+            const endTime = new Date(`19${decade / 10}9-12-31`);
+            where['time_range_tag'] = {
+              start_gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm'),
+              end_lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
+            };
+          }
+          break;
+        case SearchType.KEYWORD:
+          where['keyword_tags'] = { name_contains: param.value };
+          break;
+        default:
+          where['descriptions'] = { text_contains: param.value };
+          break;
+      }
+    });
+
+    return where;
+  }, [searchParams]);
 
   return (
     <div className='search-view'>
-      {((params && params.length > 0) || (decade && decade !== -1)) && previewPicture && (
-        <div className='search-result-banner'>
-          <div className='search-result-banner-background'>
-            <img
-              style={{ transform: `translateY(${scrollPos * 0.5}px)` }}
-              src={asApiPath(String(previewPicture.media?.formats.large.url ?? ''))}
-              alt={`${t('common.titleFor', {
-                query: `${params?.join(',') ?? ''}, ${String(decade)}`,
-              })}`}
-            />
-          </div>
-          <div className='search-result-breadcrumbs'>
-            {params?.map((crumb: string) => {
-              return (
-                <div key={crumb} className='breadcrumb'>
-                  {crumb}
-                </div>
-              );
-            })}
-            {decade && decade !== -1 && (
-              <div key={decade} className='breadcrumb decade'>
-                {`${decade}er`}
-              </div>
-            )}
-          </div>
-        </div>
+      {searchParams.length > 0 && previewPicture && (
+        <SearchResultBanner
+          scrollPos={scrollPos}
+          searchParams={searchParams}
+          previewPicture={previewPicture}
+        />
       )}
       <div className='search-content'>
         <div className='below-search-bar'>
           <SearchBar
-            value={params?.length ? params[0] : undefined}
             onValueChange={(snippet?: string) => {
               setSearchSnippet(snippet ?? '');
             }}
+            searchParams={searchParams}
           />
-          {(!params || params.length === 0) && (!decade || decade === -1) ? (
+          {!searchParams.length ? (
             <SearchHub searchSnippet={searchSnippet} />
           ) : (
             <PictureScrollGrid
-              where={queryObject}
+              where={whereClause}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
-              hashbase={
-                params ? params[params.length - 1] : String(queryParams.get('decade') ?? '')
-              }
+              hashbase={searchParams[0].value}
               previewPictureCallback={(pic: Picture) => {
                 if (pic !== previewPicture) {
                   setPreviewPicture(pic);
