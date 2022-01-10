@@ -49,7 +49,15 @@
 
     &:hover {
       .image-container img {
-        transform: scale(1.02);
+        @supports (scale: 0) {
+          //this works for safari
+          scale: 1.02;
+        }
+
+        @supports not (scale: 0) {
+          //this works for literally everything else
+          transform: scale(1.02);
+        }
       }
     }
 

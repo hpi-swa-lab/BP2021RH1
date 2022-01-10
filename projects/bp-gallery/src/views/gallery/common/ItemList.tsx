@@ -16,7 +16,7 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
     const elementWidth = 0.22 * Math.min(window.innerHeight, window.innerWidth);
     scrollBarRef.scroll({
       top: 0,
-      left: scrollBarRef.scrollLeft + elementWidth * count,
+      left:  scrollBarRef.scrollLeft + elementWidth * count,
       behavior: 'smooth',
     });
   };
