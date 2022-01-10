@@ -264,22 +264,19 @@ module.exports = ({ strapi }) => ({
 
   async importDraftComments(pathToDraftCommentData) {
     const data = fs.readFileSync(pathToDraftCommentData, 'utf-8');
-    const draftCommentData = JSON.parse(data);
+    const draftComments = JSON.parse(data);
 
     const pictureQuery = strapi.db.query('api::picture.picture');
     const commentService = strapi.service('api::comment.comment');
 
-
-    // TODO: Create JSON-file for new draft-comments and adjust code here to match the structure
-    // first of all get all draft comments from the old server!
-    // https://bp.bad-harzburg-stiftung.de/api/comments?_publicationState=preview&published_at_null=true
-    for (const comment in draftCommentData) {
+    for (const idx in draftComments) {
+      const comment = draftComments[idx];
       const strapiPicture = await pictureQuery.findOne({
         where: {
           wordpress_id: comment.picture.wordpress_id,
         },
       });
-      console.log(`Uploading draft comments for ${strapiPicture.id}`);
+      console.log(`Uploading draft comment for ${strapiPicture.id}`);
       await commentService.create({
         data: {
           text: comment.text,
