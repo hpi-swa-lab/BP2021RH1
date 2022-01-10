@@ -21,10 +21,6 @@
         &:last-child {
           margin-right: 0;
         }
-
-        .text-container {
-          font-size: 4vmin;
-        }
       }
     }
   }
@@ -77,19 +73,19 @@
       grid-row: 1;
       grid-column: 1;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: baseline;
-      padding: 0.5rem 1rem;
+      padding: 1vmin;
       z-index: 5;
-      font-size: 1.8rem;
-      font-weight: 900;
-      text-shadow: 0px 0px 5px #000;
+      align-items: flex-end;
 
-      span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100%;
+      svg {
+        height: 100%;
+        width: 100%;
+
+        text {
+          fill: white;
+          font-weight: 900;
+          font-size: 50px;
+        }
       }
     }
   }
@@ -110,5 +106,14 @@
       box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 76%);
       z-index: 99;
     }
+  }
+}
+
+// These values are simply heuristics as well
+._buffer_for_line_breaks_ {
+  width: 220px;
+
+  &.compact {
+    width: 60px;
   }
 }
