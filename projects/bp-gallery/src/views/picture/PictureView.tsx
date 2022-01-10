@@ -181,7 +181,7 @@ enum PictureNavigationTarget {
 
 export const getNextPictureId = (currentPictureId: string, pictureIds: string[]) => {
   const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
-  return pictureIds[indexOfCurrentPictureId] ?? pictureIds[0];
+  return pictureIds[indexOfCurrentPictureId];
 };
 
 export const getPreviousPictureId = (currentPictureId: string, pictureIds: string[]): string => {
