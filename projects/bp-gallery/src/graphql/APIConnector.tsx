@@ -1387,7 +1387,7 @@ export type GetPicturesQuery = {
 };
 
 export type GetLatestPicturesCategoryInfoQueryVariables = Exact<{
-  date: Scalars['JSON'];
+  date: Scalars['DateTime'];
 }>;
 
 export type GetLatestPicturesCategoryInfoQuery = {
@@ -1400,7 +1400,27 @@ export type GetLatestPicturesCategoryInfoQuery = {
                       id: string;
                       name: string;
                       related_tags?:
-                        | Array<{ id: string; name: string } | null | undefined>
+                        | Array<
+                            | {
+                                id: string;
+                                name: string;
+                                thumbnail?:
+                                  | Array<
+                                      | {
+                                          media?:
+                                            | { formats?: any | null | undefined }
+                                            | null
+                                            | undefined;
+                                        }
+                                      | null
+                                      | undefined
+                                    >
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined
+                          >
                         | null
                         | undefined;
                     }
@@ -1839,7 +1859,7 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
 >;
 
 export const GetLatestPicturesCategoryInfoDocument = gql`
-  query getLatestPicturesCategoryInfo($date: JSON!) {
+  query getLatestPicturesCategoryInfo($date: DateTime!) {
     pictures(where: { published_at_gt: $date }) {
       category_tags {
         id
@@ -1847,6 +1867,11 @@ export const GetLatestPicturesCategoryInfoDocument = gql`
         related_tags {
           id
           name
+          thumbnail: pictures(limit: 1) {
+            media {
+              formats
+            }
+          }
         }
       }
     }
