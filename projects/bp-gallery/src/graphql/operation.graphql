@@ -69,7 +69,7 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
-query getLatestPicturesCategoryInfo($date: JSON!) {
+query getLatestPicturesCategoryInfo($date: DateTime!) {
   pictures(where: { published_at_gt: $date }) {
     category_tags {
       id
@@ -77,6 +77,11 @@ query getLatestPicturesCategoryInfo($date: JSON!) {
       related_tags {
         id
         name
+        thumbnail: pictures(limit: 1) {
+          media {
+            formats
+          }
+        }
       }
     }
   }

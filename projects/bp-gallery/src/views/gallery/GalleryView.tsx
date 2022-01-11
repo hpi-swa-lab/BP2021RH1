@@ -3,6 +3,7 @@ import BrowseView from './browse/BrowseView';
 import SearchView from './search/SearchView';
 import './GalleryView.scss';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import CommunityView from './browse/CommunityView';
 
 const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => {
   const [scrollPos, setScrollPos] = useState<number>();
@@ -13,6 +14,14 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
       case 'browse':
         return (
           <BrowseView path={path} scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />
+        );
+      case 'browse/latest':
+        return (
+          <CommunityView
+            path={path}
+            scrollPos={scrollPos ?? 0}
+            scrollHeight={scrollHeight ?? 0}
+          />
         );
       case 'search':
         return <SearchView scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />;
