@@ -1,256 +1,196 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
-import { History, Location } from 'history';
-import { Icon, IconButton } from '@mui/material';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './PictureView.scss';
-import PictureDetails from './PictureDetails';
-import CommentsContainer from './comments/CommentsContainer';
-import Picture from './Picture';
-import { asApiPath, NavigationContext } from '../../App';
-import { useGetPictureInfoQuery } from '../../graphql/APIConnector';
-import { useFlatQueryResponseData } from '../../graphql/queryUtils';
+import { asApiPath } from '../../App';
+import { useHistory } from 'react-router-dom';
+import { History } from 'history';
+import { useGetPictureInfoLazyQuery } from '../../graphql/APIConnector';
 import { FlatPicture } from '../../graphql/additionalFlatTypes';
-import QueryErrorDisplay from '../../components/QueryErrorDisplay';
-import Loading from '../../components/Loading';
-import { NavigationElement } from '../../components/NavigationBar';
+import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture.helpers';
+import PictureViewUI, { PictureNavigationTarget } from './PictureViewUI';
+import { useFlatQueryResponseData } from '../../graphql/queryUtils';
 
-const DetailedPictureView = ({
+const PictureView = ({
   pictureId,
-  onNextPicture,
-  onPreviousPicture,
+  thumbnailUrl = '',
+  initialThumbnail = false,
+  flexValue = '0',
+  hasPrevious,
+  hasNext,
+  openCallback,
+  navigateCallback,
 }: {
   pictureId: string;
-  onNextPicture?: () => void;
-  onPreviousPicture?: () => void;
+  thumbnailUrl?: string;
+  initialThumbnail?: boolean;
+  flexValue?: string;
+  hasPrevious?: boolean;
+  hasNext?: boolean;
+  openCallback?: (open?: boolean) => void;
+  navigateCallback?: (target: PictureNavigationTarget) => void;
 }) => {
-  const { t } = useTranslation();
-  const [scrollPos, setScrollPos] = useState<number>(0);
-  const containerRef = useRef<HTMLElement>();
+  const history: History = useHistory();
+  //   const [scrollPos, setScrollPos] = useState<number>(0);
+  const [thumbnailMode, setThumbnailMode] = useState<boolean | undefined>(undefined);
+  const [transitioning, setTransitioning] = useState<boolean>(false);
 
-  const MINIMUM_PICTURE_HEIGHT = 150;
-  const MAXIMUM_PICTURE_HEIGHT = 0.65 * window.innerHeight;
+  const [smallRect, setSmallRect] = useState<DOMRect | undefined>(undefined);
 
-  const pictureHeight = Math.min(
-    Math.max(MAXIMUM_PICTURE_HEIGHT - scrollPos, MINIMUM_PICTURE_HEIGHT),
-    MAXIMUM_PICTURE_HEIGHT
-  );
+  const [maxHeight, setMaxHeight] = useState<string>('100%');
 
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = 0;
+  const calculateHeight = useCallback((container: HTMLElement) => {
+    const height = container.parentElement?.getBoundingClientRect().height;
+    if (height) {
+      setMaxHeight(`calc(100% - ${height}px)`);
     } else {
-      setScrollPos(0);
+      setMaxHeight(`100%`);
     }
-  }, [pictureId]);
+  }, []);
 
-  const setNavigationElements = useContext(NavigationContext);
-  const scrollToElement = () => {
-    if (!containerRef.current || !window.location.hash || window.location.hash === '') {
-      return;
-    }
-    const targetElement = document.querySelector(window.location.hash);
-    if (!targetElement) {
-      return;
-    }
-    const elementPosition =
-      window.location.hash === '#photo'
-        ? 0
-        : targetElement.getBoundingClientRect().y +
-          containerRef.current.scrollTop -
-          containerRef.current.getBoundingClientRect().y -
-          MINIMUM_PICTURE_HEIGHT;
-    containerRef.current.scroll({
-      top: elementPosition,
-      left: 0,
-      behavior: 'smooth',
-    });
-  };
+  const containerRef = useRef<any>();
 
-  useEffect(() => {
-    const pictureLink = `/picture/${pictureId}`;
-    const menuItems: NavigationElement[] = [
-      {
-        name: t('common.picture'),
-        icon: 'photo',
-        target: (previousLocation: Location) => {
-          /**
-           * It is sufficient to call scrollToElement here once and not in the other targets, because the base Location
-           * (meaning '/picture') is the same, so all targets are checked once a navigation event is triggered.
-           * This means that the scrolling will be executed regardless of the hash (#) value currently assinged to
-           * the url. It is called here to reduce code duplication.
-           */
-          scrollToElement();
-          return {
-            pathname: pictureLink,
-            hash: '#photo',
-            state: { ...previousLocation.state, showBack: true },
-          };
-        },
-        isActive: () => {
-          return window.location.hash !== '#info' && window.location.hash !== '#comments';
-        },
-        replace: true,
-      },
-      {
-        name: t('common.details'),
-        icon: 'info',
-        target: (previousLocation: Location) => ({
-          pathname: pictureLink,
-          hash: '#info',
-          state: { ...previousLocation.state, showBack: true },
-        }),
-        isActive: () => {
-          return window.location.hash === '#info';
-        },
-        replace: true,
-      },
-      {
-        name: t('common.comments'),
-        icon: 'comment',
-        target: (previousLocation: Location) => ({
-          pathname: pictureLink,
-          hash: '#comments',
-          state: { ...previousLocation.state, showBack: true },
-        }),
-        isActive: () => {
-          return window.location.hash === '#comments';
-        },
-        replace: true,
-      },
-    ];
-    setNavigationElements(menuItems);
-  }, [setNavigationElements, t, pictureId]);
-
-  const { data, loading, error } = useGetPictureInfoQuery({
+  const [getPictureInfo, { data, loading, error }] = useGetPictureInfoLazyQuery({
     variables: {
       pictureId: pictureId,
     },
   });
   const picture: FlatPicture | undefined = useFlatQueryResponseData(data)?.picture;
 
-  if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
-    return <Loading />;
-  } else if (picture) {
-    return (
-      <div className='picture-view'>
-        <Picture url={picture.media?.url ?? ''} pictureHeight={pictureHeight} />
-        <div className='parallax-container' style={{ top: `${pictureHeight}px` }}>
-          <div className='picture-background' />
-          <div className='title'>{picture.title?.text ?? ''}</div>
-        </div>
-
-        <PerfectScrollbar
-          options={{ suppressScrollX: true, useBothWheelAxes: false }}
-          onScrollY={container => {
-            setScrollPos(container.scrollTop);
-          }}
-          containerRef={container => (containerRef.current = container)}
-        >
-          <div className='picture-navigation-buttons'>
-            {onPreviousPicture && (
-              <IconButton onClick={onPreviousPicture} size='large'>
-                <Icon>fast_rewind</Icon>
-              </IconButton>
-            )}
-            {onNextPicture && (
-              <IconButton onClick={onNextPicture} size='large'>
-                <Icon>fast_forward</Icon>
-              </IconButton>
-            )}
-          </div>
-          <div className='picture-info-container'>
-            <PictureDetails descriptions={picture.descriptions} />
-            <CommentsContainer comments={picture.comments} pictureId={pictureId} />
-          </div>
-        </PerfectScrollbar>
-      </div>
-    );
-  } else {
-    return <div>{t('common.no-picture')}</div>;
-  }
-};
-
-enum PictureNavigationTarget {
-  NEXT,
-  PREVIOUS,
-}
-
-export const getNextPictureId = (currentPictureId: string, pictureIds: string[]) => {
-  const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
-  return pictureIds[indexOfCurrentPictureId + 1];
-};
-
-export const getPreviousPictureId = (currentPictureId: string, pictureIds: string[]): string => {
-  const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
-  return pictureIds[indexOfCurrentPictureId - 1] ?? pictureIds[pictureIds.length - 1];
-};
-
-const PictureView = ({
-  pictureId,
-  pictureIdsInContext,
-  thumbnailUrl = '',
-  thumbnailMode = false,
-}: {
-  pictureId: string;
-  pictureIdsInContext?: string[];
-  thumbnailUrl?: string;
-  thumbnailMode?: boolean;
-}) => {
-  const history: History = useHistory();
-
-  if (thumbnailMode) {
-    return (
-      <img
-        src={asApiPath(thumbnailUrl)}
-        alt={thumbnailUrl}
-        onClick={() => {
-          history.push(`/picture/${pictureId}`, { showBack: true, pictureIdsInContext });
-        }}
-      />
-    );
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const pictureIdsInContext: string[] | undefined = history?.location.state?.pictureIdsInContext;
-
-    const showNewPicture = (target: PictureNavigationTarget) => {
-      if (!pictureIdsInContext) {
-        return;
-      }
-
-      let newPictureId: string = pictureId;
-      switch (target) {
-        case PictureNavigationTarget.NEXT:
-          newPictureId = getNextPictureId(pictureId, pictureIdsInContext);
-          break;
-        case PictureNavigationTarget.PREVIOUS:
-          newPictureId = getPreviousPictureId(pictureId, pictureIdsInContext);
-          break;
-        default:
-          break;
-      }
-
-      history.replace(`/picture/${newPictureId}`, {
-        showBack: true,
-        pictureIdsInContext: pictureIdsInContext,
+  const setUpPicture = useCallback(
+    (id: string) => {
+      getPictureInfo({
+        variables: {
+          pictureId: id,
+        },
       });
-    };
+    },
+    [getPictureInfo]
+  );
 
-    return (
-      <DetailedPictureView
-        pictureId={pictureId}
-        onNextPicture={
-          pictureIdsInContext ? () => showNewPicture(PictureNavigationTarget.NEXT) : undefined
+  useEffect(() => {
+    setThumbnailMode(initialThumbnail);
+    if (!initialThumbnail) {
+      setUpPicture(pictureId);
+    }
+  }, [initialThumbnail, setUpPicture, pictureId]);
+
+  const pictureLink = useMemo(() => {
+    if (picture?.media?.url) {
+      return asApiPath(picture.media.url);
+    } else if (thumbnailUrl) {
+      return asApiPath(thumbnailUrl);
+    } else {
+      return '';
+    }
+  }, [picture, thumbnailUrl]);
+
+  const openDetails = () => {
+    const sRect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
+    setSmallRect(sRect);
+    window.setTimeout(() => {
+      setTransitioning(true);
+      setThumbnailMode(false);
+    }, 0);
+    window.history.pushState({}, '', `/picture/${pictureId}`);
+    zoomIntoPicture(pictureId, containerRef.current as HTMLDivElement, sRect).then(() => {
+      setTransitioning(false);
+    });
+    setUpPicture(pictureId);
+    if (openCallback) {
+      openCallback(true);
+    }
+  };
+
+  const navigatePicture = useCallback(
+    (target: PictureNavigationTarget) => {
+      if (navigateCallback) {
+        setTransitioning(false);
+        nextImageAnimation(containerRef.current as HTMLDivElement, target).then(() => {
+          setThumbnailMode(true);
+          if (openCallback) {
+            openCallback(false);
+          }
+          navigateCallback(target);
+        });
+      }
+    },
+    [navigateCallback, openCallback]
+  );
+
+  useEffect(() => {
+    if ((initialThumbnail || openCallback) && thumbnailMode === false) {
+      const unblock = history.block(() => {
+        setTransitioning(true);
+        zoomOutOfPicture(containerRef.current as HTMLDivElement, smallRect).then(() => {
+          setTransitioning(false);
+          setThumbnailMode(true);
+          if (openCallback) {
+            openCallback(false);
+          }
+        });
+      });
+
+      const navigateKeyboardAction = (event: KeyboardEvent) => {
+        if (event.key === 'ArrowRight') {
+          navigatePicture(PictureNavigationTarget.NEXT);
+        } else if (event.key === 'ArrowLeft') {
+          navigatePicture(PictureNavigationTarget.PREVIOUS);
         }
-        onPreviousPicture={
-          pictureIdsInContext ? () => showNewPicture(PictureNavigationTarget.PREVIOUS) : undefined
-        }
-      />
-    );
-  }
+      };
+      window.addEventListener('keyup', navigateKeyboardAction);
+      return () => {
+        window.removeEventListener('keyup', navigateKeyboardAction);
+        unblock();
+      };
+    }
+    if (thumbnailMode === undefined && containerRef.current) {
+      const sRect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
+      setSmallRect(sRect);
+    }
+  }, [
+    history,
+    initialThumbnail,
+    smallRect,
+    thumbnailMode,
+    setUpPicture,
+    pictureId,
+    openCallback,
+    navigatePicture,
+  ]);
+
+  return (
+    <div
+      className='picture-view-container'
+      style={{
+        flex: `${flexValue} 1 0`,
+      }}
+    >
+      <div
+        className={`picture-view${
+          thumbnailMode || (thumbnailMode === undefined && initialThumbnail) ? ' thumbnail' : ''
+        }${transitioning ? ' transitioning' : ''}`}
+        ref={containerRef}
+        onClick={thumbnailMode ? openDetails : () => {}}
+      >
+        {thumbnailMode === false && (
+          <div className='background-container'>
+            <img src={pictureLink} alt={pictureLink} className='blur-background' />
+          </div>
+        )}
+        <div className='picture-container' style={{ maxHeight }}>
+          <img src={pictureLink} alt={pictureLink} />
+        </div>
+        {thumbnailMode === false && !loading && !error && data?.picture && (
+          <PictureViewUI
+            picture={data.picture as FlatPicture}
+            hasPrevious={hasPrevious}
+            hasNext={hasNext}
+            navigateCallback={navigatePicture}
+            calculateHeight={calculateHeight}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default PictureView;

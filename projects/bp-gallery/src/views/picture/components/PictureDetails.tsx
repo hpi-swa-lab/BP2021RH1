@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatDescription } from '../../graphql/additionalFlatTypes';
+import { FlatDescription } from '../../../graphql/additionalFlatTypes';
 import './PictureDetails.scss';
 
 const PictureDetails = ({ descriptions }: { descriptions?: FlatDescription[] }) => {

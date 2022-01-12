@@ -1,29 +1,15 @@
 .picture-grid {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 
   .row {
     display: flex;
     flex-direction: row;
+    gap: 10px;
 
-    .picture-thumbnail {
-      margin: 5px;
-      animation: pop-up 0.4s;
-      transform: scale(0);
-      animation-fill-mode: forwards;
+    .picture-view {
       cursor: pointer;
-
-      @keyframes pop-up {
-        0% {
-          transform: scale(0);
-        }
-        95% {
-          transform: scale(1.05);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
 
       img {
         width: 100%;
