@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './NewCommentForm.scss';
 import { Button, TextField } from '@mui/material';
-import { usePostCommentMutation } from '../../../graphql/APIConnector';
+import { usePostCommentMutation } from '../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
