@@ -23,6 +23,7 @@
     "comment-alert": "Ihr Kommentar wurde abgeschickt. Nachdem er von der Bad-Harzburg-Stiftung geprüft wurde, wird er hier veröffentlicht.",
     "titleFor": "Titelbild für {{query}}",
     "no-keywords": "Keine Schlagwörter für diese Suchanfrage gefunden...",
-    "something-went-wrong": "Es ist etwas schiefgelaufen"
+    "something-went-wrong": "Es ist etwas schiefgelaufen",
+    "previous": "Davor"
   }
 }

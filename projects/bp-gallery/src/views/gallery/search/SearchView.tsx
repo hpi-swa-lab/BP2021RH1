@@ -6,6 +6,7 @@ import PictureScrollGrid from '../common/PictureScrollGrid';
 import dayjs from 'dayjs';
 import { Picture } from '../../../graphql/APIConnector';
 import SearchResultBanner from './SearchResultBanner';
+import { useTranslation } from 'react-i18next';
 
 export interface SearchParam {
   value: string;
@@ -39,6 +40,7 @@ const SearchView = ({
 }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [previewPicture, setPreviewPicture] = useState<Picture>();
+  const { t } = useTranslation();
 
   //Converts the string params to SearchParam objects
   const searchParams = useMemo(
@@ -84,7 +86,7 @@ const SearchView = ({
               start_gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm'),
               end_lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
             };
-          } else if (param.value === 'Davor') {
+          } else if (param.value === t('common.previous')) {
             const startTime = new Date(`1900-01-01`);
             const endTime = new Date(`1949-12-31`);
             where['time_range_tag'] = {
@@ -103,7 +105,7 @@ const SearchView = ({
     });
 
     return where;
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   return (
     <div className='search-view'>

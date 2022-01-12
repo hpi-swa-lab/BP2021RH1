@@ -29,7 +29,7 @@ const DecadesList = () => {
             let name: string;
             let thumbnailData;
             if (index === 0) {
-              name = 'Davor';
+              name = t('common.previous');
               thumbnailData = (decadeThumbnails.data as any)['s00'];
             } else {
               name = `${(index + 4) * 10}er`;
