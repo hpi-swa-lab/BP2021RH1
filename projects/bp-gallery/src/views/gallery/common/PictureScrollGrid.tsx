@@ -20,6 +20,7 @@ const PictureScrollGrid = ({
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const { data, loading, error, fetchMore } = useGetPicturesQuery({
     variables: {
@@ -45,7 +46,8 @@ const PictureScrollGrid = ({
       scrollHeight !== lastScrollHeight &&
       scrollPos > scrollHeight - 1.5 * window.innerHeight
     ) {
-      fetchMore({ variables: { start: data?.pictures?.length } });
+      setIsFetching(true);
+      fetchMore({ variables: { start: data?.pictures?.length } }).then(() => setIsFetching(false));
       setLastScrollHeight(scrollHeight);
     }
   }, [scrollPos, scrollHeight, lastScrollHeight, data, loading, fetchMore]);
@@ -55,7 +57,9 @@ const PictureScrollGrid = ({
   } else if (loading && !data?.pictures) {
     return <Loading />;
   } else if (data?.pictures?.length) {
-    return <PictureGrid pictures={data.pictures as Picture[]} hashBase={hashbase} />;
+    return (
+      <PictureGrid pictures={data.pictures as Picture[]} hashBase={hashbase} loading={isFetching} />
+    );
   } else {
     return <div>{t('common.no-picture')}</div>;
   }
