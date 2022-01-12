@@ -40,7 +40,7 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
       >
         <div className='items'>
           {props.items.map((item, index) => (
-            <ItemListItem item={item} key={index} />
+            <ItemListItem item={item} key={index} compact={props.compact} />
           ))}
         </div>
       </PerfectScrollbar>
