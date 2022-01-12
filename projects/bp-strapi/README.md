@@ -1,3 +1,3 @@
-# Strapi application
+# bp-strapi
 
-Project Directory for our strapi instance
+The backend system to manage picture and tag data.
