@@ -70,7 +70,6 @@ const SearchView = ({
 
   //Builds query from search params in the path
   const whereClause = useMemo(() => {
-    console.log(searchParams);
     const where: { [key: string]: any } = {};
 
     //TODO: Change definition of where clause here when implementing nested search
