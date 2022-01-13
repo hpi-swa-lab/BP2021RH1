@@ -2,7 +2,6 @@ import React from 'react';
 import { renderRoute, renderRouteWithAPIMocks } from '../../../../testUtils';
 import { screen, waitFor } from '@testing-library/react';
 import { GetPicturesSearchMocks } from './mocks';
-import { asApiPath } from '../../../../App';
 
 const SearchHubMock = () => <div>SearchHubMock</div>;
 jest.mock('../searchHub/SearchHub', () => SearchHubMock);
