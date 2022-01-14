@@ -5,5 +5,6 @@ const backendRoutes = require('./content-api');
 
 module.exports = {
   admin: adminInterfaceRoutes,
-  'content-api': backendRoutes, // important damit die Routen im Permissions-Plugin berücksichtigt werden
+  // Important in order to make these routes accessible to the User-Permissions-Plugin.
+  'content-api': backendRoutes,
 };

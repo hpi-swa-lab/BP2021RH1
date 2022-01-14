@@ -1,7 +1,9 @@
 'use strict';
 
 module.exports = {
-  type: 'content-api', // important damit die Routen im Permissions-Plugin berücksichtigt werden
+  // Important in order to make these routes accessible to the User-Permissions-Plugin.
+  type: 'content-api',
+  // Note that these routes will be prefixed with '/api', which applies to all routes related to content-types.
   routes: [
     {
       method: 'GET',
