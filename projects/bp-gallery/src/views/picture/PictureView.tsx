@@ -33,8 +33,6 @@ const PictureView = ({
   const [thumbnailMode, setThumbnailMode] = useState<boolean | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
-  const [smallRect, setSmallRect] = useState<DOMRect | undefined>(undefined);
-
   const [maxHeight, setMaxHeight] = useState<string>('100%');
 
   const calculateHeight = useCallback((container: HTMLElement) => {
@@ -84,14 +82,12 @@ const PictureView = ({
   }, [picture, thumbnailUrl]);
 
   const openDetails = () => {
-    const sRect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
-    setSmallRect(sRect);
     window.setTimeout(() => {
       setTransitioning(true);
       setThumbnailMode(false);
     }, 0);
     window.history.pushState({}, '', `/picture/${pictureId}`);
-    zoomIntoPicture(pictureId, containerRef.current as HTMLDivElement, sRect).then(() => {
+    zoomIntoPicture(pictureId, containerRef.current as HTMLDivElement).then(() => {
       setTransitioning(false);
     });
     setUpPicture(pictureId);
@@ -120,7 +116,7 @@ const PictureView = ({
     if ((initialThumbnail || openCallback) && thumbnailMode === false) {
       const unblock = history.block(() => {
         setTransitioning(true);
-        zoomOutOfPicture(containerRef.current as HTMLDivElement, smallRect).then(() => {
+        zoomOutOfPicture(containerRef.current as HTMLDivElement).then(() => {
           setTransitioning(false);
           setThumbnailMode(true);
           if (openCallback) {
@@ -142,14 +138,9 @@ const PictureView = ({
         unblock();
       };
     }
-    if (thumbnailMode === undefined && containerRef.current) {
-      const sRect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
-      setSmallRect(sRect);
-    }
   }, [
     history,
     initialThumbnail,
-    smallRect,
     thumbnailMode,
     setUpPicture,
     pictureId,

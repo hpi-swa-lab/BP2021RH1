@@ -2,14 +2,18 @@ import { PictureNavigationTarget } from './PictureViewUI';
 
 const TRANSITION_LENGTH = 500;
 
-export const zoomIntoPicture = (pictureId: string, element: HTMLDivElement, startSize: DOMRect) => {
-  element.style.top = `${startSize.y}px`;
-  element.style.left = `${startSize.x}px`;
-  element.style.width = `${startSize.width}px`;
-  element.style.height = `${startSize.height}px`;
+export const zoomIntoPicture = (pictureId: string, element: HTMLDivElement) => {
+  const startSize = element.parentElement?.getBoundingClientRect();
+  if (startSize) {
+    element.style.top = `${startSize.y}px`;
+    element.style.left = `${startSize.x}px`;
+    element.style.width = `${startSize.width}px`;
+    element.style.height = `${startSize.height}px`;
+  }
   return new Promise<void>(resolve => {
     window.setTimeout(() => {
-      element.parentNode?.insertBefore(document.createElement('div'), element);
+      const placeholder = document.createElement('div');
+      element.parentNode?.insertBefore(placeholder, element);
     }, 0);
     window.setTimeout(() => {
       element.style.top = '0px';
@@ -27,11 +31,14 @@ export const zoomIntoPicture = (pictureId: string, element: HTMLDivElement, star
   });
 };
 
-export const zoomOutOfPicture = (element: HTMLDivElement, targetSize?: DOMRect) => {
-  element.style.top = `${targetSize?.y ?? 0}px`;
-  element.style.left = `${targetSize?.x ?? 0}px`;
-  element.style.width = `${targetSize?.width ?? 0}px`;
-  element.style.height = `${targetSize?.height ?? 0}px`;
+export const zoomOutOfPicture = (element: HTMLDivElement) => {
+  const targetSize = element.parentElement?.getBoundingClientRect();
+  if (targetSize) {
+    element.style.top = `${targetSize.y}px`;
+    element.style.left = `${targetSize.x}px`;
+    element.style.width = `${targetSize.width}px`;
+    element.style.height = `${targetSize.height}px`;
+  }
   return new Promise<void>(resolve => {
     window.setTimeout(() => {
       element.style.top = '';
