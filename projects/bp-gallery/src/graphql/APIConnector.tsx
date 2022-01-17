@@ -1392,33 +1392,27 @@ export type GetLatestPicturesCategoryInfoQueryVariables = Exact<{
 }>;
 
 export type GetLatestPicturesCategoryInfoQuery = {
-  pictures?:
+  categoryTags?:
     | Array<
         | {
-            category_tags?:
+            id: string;
+            name: string;
+            thumbnail?:
+              | Array<
+                  | { media?: { formats?: any | null | undefined } | null | undefined }
+                  | null
+                  | undefined
+                >
+              | null
+              | undefined;
+            related_tags?:
               | Array<
                   | {
                       id: string;
                       name: string;
-                      related_tags?:
+                      thumbnail?:
                         | Array<
-                            | {
-                                id: string;
-                                name: string;
-                                thumbnail?:
-                                  | Array<
-                                      | {
-                                          media?:
-                                            | { formats?: any | null | undefined }
-                                            | null
-                                            | undefined;
-                                        }
-                                      | null
-                                      | undefined
-                                    >
-                                  | null
-                                  | undefined;
-                              }
+                            | { media?: { formats?: any | null | undefined } | null | undefined }
                             | null
                             | undefined
                           >
@@ -1882,17 +1876,20 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
 
 export const GetLatestPicturesCategoryInfoDocument = gql`
   query getLatestPicturesCategoryInfo($date: DateTime!) {
-    pictures(where: { published_at_gt: $date }) {
-      category_tags {
+    categoryTags(where: { updated_at_gt: $date }) {
+      id
+      name
+      thumbnail: pictures(limit: 1) {
+        media {
+          formats
+        }
+      }
+      related_tags {
         id
         name
-        related_tags {
-          id
-          name
-          thumbnail: pictures(limit: 1) {
-            media {
-              formats
-            }
+        thumbnail: pictures(limit: 1) {
+          media {
+            formats
           }
         }
       }
