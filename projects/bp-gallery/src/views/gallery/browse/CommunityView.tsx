@@ -12,17 +12,12 @@ const CommunityView = ({
   scrollPos: number;
   scrollHeight: number;
 }) => {
-  const communityDate = '2021-11-24';
+  const communityDate = '2021-11-28';
 
   const result = useGetLatestPicturesCategoryInfoQuery({
     variables: { date: new Date(communityDate) },
   });
-  const tags = result.data?.pictures?.map(picture => {
-    return picture?.category_tags;
-  });
-  const categoryTags = Array.from(
-    new Set(tags?.reduce((previous, next) => previous?.concat(next), []))
-  );
+  const categoryTags = Array.from(new Set(result.data?.categoryTags));
   return (
     <CategoryPictureDisplay
       result={result}

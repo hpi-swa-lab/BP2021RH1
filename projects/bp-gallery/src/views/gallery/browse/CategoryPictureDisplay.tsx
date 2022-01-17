@@ -27,18 +27,20 @@ const CategoryPictureDisplay = ({
     return <Loading />;
   } else if (categoryTags.length && categoryTags[0]) {
     const category = categoryTags[0];
-    const relatedTagsSize = category.related_tags?.length ?? 0;
+    let relatedTagsSize = category.related_tags?.length ?? 0;
     let relatedTags = category.related_tags;
     if (communityView) {
-      relatedTags = category.related_tags.filter((relatedTag: any) =>
-        categoryTags.map((tag: any) => tag.id).includes(relatedTag.id)
-      );
+      relatedTagsSize = 1;
+      relatedTags = categoryTags;
+      // relatedTags = category.related_tags.filter((relatedTag: any) =>
+      //   categoryTags.map((tag: any) => tag.id).includes(relatedTag.id)
+      // );
     }
     return (
       <div className='browse-view'>
         {relatedTagsSize > 0 && (
           <SubCategories
-            relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
+            relatedTags={relatedTags as { thumbnail: any[]; name: string }[]}
             path={path}
           />
         )}
