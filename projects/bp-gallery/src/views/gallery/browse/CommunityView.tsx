@@ -17,7 +17,14 @@ const CommunityView = ({
   const result = useGetLatestPicturesCategoryInfoQuery({
     variables: { date: new Date(communityDate) },
   });
-  const categoryTags = Array.from(new Set(result.data?.categoryTags));
+  const categoryTags = Array.from(new Set(result.data?.pictures?.category_tags));
+  // const tags = result.data?.pictures?.map(picture => {
+  //   return picture?.category_tags;
+  // });
+
+  // const categoryTags = Array.from(
+  //   new Set(tags?.reduce((previous, next) => previous?.concat(next), []))
+  // );
   return (
     <CategoryPictureDisplay
       result={result}

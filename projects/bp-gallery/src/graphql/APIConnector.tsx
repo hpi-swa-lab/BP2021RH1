@@ -1391,32 +1391,16 @@ export type GetLatestPicturesCategoryInfoQueryVariables = Exact<{
 }>;
 
 export type GetLatestPicturesCategoryInfoQuery = {
-  categoryTags?:
+  pictures?:
     | Array<
         | {
             id: string;
-            name: string;
-            thumbnail?:
-              | Array<
-                  | { media?: { formats?: any | null | undefined } | null | undefined }
-                  | null
-                  | undefined
-                >
-              | null
-              | undefined;
-            related_tags?:
+            category_tags?:
               | Array<
                   | {
                       id: string;
                       name: string;
-                      thumbnail?:
-                        | Array<
-                            | { media?: { formats?: any | null | undefined } | null | undefined }
-                            | null
-                            | undefined
-                          >
-                        | null
-                        | undefined;
+                      thumbnail?: Array<{ id: string } | null | undefined> | null | undefined;
                     }
                   | null
                   | undefined
@@ -1854,21 +1838,13 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
 
 export const GetLatestPicturesCategoryInfoDocument = gql`
   query getLatestPicturesCategoryInfo($date: DateTime!) {
-    categoryTags(where: { updated_at_gt: $date }) {
+    pictures(where: { published_at_gt: $date }) {
       id
-      name
-      thumbnail: pictures(limit: 1) {
-        media {
-          formats
-        }
-      }
-      related_tags {
+      category_tags {
         id
         name
         thumbnail: pictures(limit: 1) {
-          media {
-            formats
-          }
+          id
         }
       }
     }
