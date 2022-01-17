@@ -21,7 +21,7 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
     scrollBarRef.scroll({
       top: 0,
       left: scrollBarRef.scrollLeft + elementWidth * count,
-      behavior:  isFirefox || isSafari ? 'auto' : 'smooth',
+      behavior: isFirefox || isSafari ? 'auto' : 'smooth',
     });
   };
 
