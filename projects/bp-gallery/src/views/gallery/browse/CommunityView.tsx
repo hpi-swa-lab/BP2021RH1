@@ -1,7 +1,11 @@
 import React from 'react';
 import './BrowseView.scss';
-import { useGetLatestPicturesCategoryInfoQuery } from '../../../graphql/APIConnector';
+import {
+  useGetCategoryInfoQuery,
+  useGetLatestPicturesCategoryInfoQuery,
+} from '../../../graphql/APIConnector';
 import CategoryPictureDisplay from './CategoryPictureDisplay';
+import { decodeBrowsePathComponent } from './BrowseView';
 
 const CommunityView = ({
   path,
@@ -18,6 +22,17 @@ const CommunityView = ({
     variables: { date: new Date(communityDate) },
   });
 
+  // for testing
+  const test = path?.length ? decodeBrowsePathComponent(path[path.length - 1]) : 'nope';
+
+  const variables = path?.length
+    ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
+    : { categoryPriority: 1 };
+  const related_tags_result = useGetCategoryInfoQuery({ variables: variables });
+  const related_tags = related_tags_result.data?.categoryTags?.map(tag => {
+    return tag?.related_tags;
+  });
+
   const tags = result.data?.pictures?.map(picture => {
     return picture?.category_tags;
   });
@@ -30,6 +45,11 @@ const CommunityView = ({
   const unique_tags = Array.from(new Set(categoryTags.map(a => a?.name))).map(name => {
     return categoryTags.find(a => a?.name === name);
   });
+
+  //filter from unique_tags only current related_tags
+  const filtered_tags = unique_tags.filter((c_tag: any) =>
+    related_tags?.map((r_tag: any) => r_tag.id).includes(c_tag.id)
+  );
   return (
     <CategoryPictureDisplay
       result={result}
