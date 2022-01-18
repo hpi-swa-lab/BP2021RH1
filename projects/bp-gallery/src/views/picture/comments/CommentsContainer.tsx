@@ -14,7 +14,8 @@ const CommentsContainer = ({
   return (
     <div className='pictureComments' id='comments'>
       <div className='comment-container'>
-        {comments && comments.length > 0 &&
+        {comments &&
+          comments.length > 0 &&
           comments.map((comment: FlatComment) => (
             <FormattedComment comment={comment} key={comment.id} />
           ))}

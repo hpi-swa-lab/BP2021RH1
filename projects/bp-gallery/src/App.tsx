@@ -5,6 +5,7 @@ import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import NavigationBar, { NavigationElement } from './components/NavigationBar';
+import { PictureEntityResponseCollection } from './graphql/APIConnector';
 
 const apiBase = 'https://bp.bad-harzburg-stiftung.de/api-dev';
 
@@ -26,7 +27,7 @@ const apolloClient = new ApolloClient({
             // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
             // get treated as one query and the results get merged.
             keyArgs: ['filters'],
-            merge(existing = { data: [] }, incoming) {
+            merge(existing = { data: [] }, incoming: PictureEntityResponseCollection) {
               return {
                 data: [...existing.data, ...incoming.data],
               };

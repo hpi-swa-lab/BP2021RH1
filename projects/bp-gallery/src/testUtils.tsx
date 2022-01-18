@@ -3,11 +3,11 @@ import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { InMemoryCache } from '@apollo/client';
 import routes from './routes';
 import NavigationBar, { NavigationElement } from './components/NavigationBar';
 import TopBar from './components/TopBar';
 import { NavigationContext } from './App';
-import { InMemoryCache } from '@apollo/client';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 
 /**
