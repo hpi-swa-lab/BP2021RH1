@@ -31,10 +31,13 @@ const CategoryPictureDisplay = ({
     let relatedTags = category.related_tags;
     if (communityView) {
       relatedTagsSize = 1;
-      relatedTags = categoryTags;
+      // relatedTags = categoryTags;
       // relatedTags = category.related_tags.filter((relatedTag: any) =>
-      //   categoryTags.map((tag: any) => tag.id).includes(relatedTag.id)
-      // );
+      //    categoryTags.map((tag: any) => {tag.id, tag.thumbnail, tag.name}).includes(relatedTag.id)
+      //    );
+      relatedTags = categoryTags.filter((c_tag: any) =>
+        relatedTags.map((r_tag: any) => r_tag.id).includes(c_tag.id)
+      );
     }
     return (
       <div className='browse-view'>
@@ -42,6 +45,7 @@ const CategoryPictureDisplay = ({
           <SubCategories
             relatedTags={relatedTags as { thumbnail: any[]; name: string }[]}
             path={path}
+            communityView={communityView}
           />
         )}
         <PictureScrollGrid

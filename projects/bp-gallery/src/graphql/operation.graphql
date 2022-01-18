@@ -73,9 +73,14 @@ query getLatestPicturesCategoryInfo($date: DateTime!) {
   pictures(where: { published_at_gt: $date }) {
     id
     category_tags {
-      id
       name
+      id
       thumbnail: pictures(limit: 1) {
+        media {
+          formats
+        }
+      }
+      related_tags {
         id
       }
     }

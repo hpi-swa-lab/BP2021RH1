@@ -1399,9 +1399,17 @@ export type GetLatestPicturesCategoryInfoQuery = {
             category_tags?:
               | Array<
                   | {
-                      id: string;
                       name: string;
-                      thumbnail?: Array<{ id: string } | null | undefined> | null | undefined;
+                      id: string;
+                      thumbnail?:
+                        | Array<
+                            | { media?: { formats?: any | null | undefined } | null | undefined }
+                            | null
+                            | undefined
+                          >
+                        | null
+                        | undefined;
+                      related_tags?: Array<{ id: string } | null | undefined> | null | undefined;
                     }
                   | null
                   | undefined
@@ -1863,9 +1871,14 @@ export const GetLatestPicturesCategoryInfoDocument = gql`
     pictures(where: { published_at_gt: $date }) {
       id
       category_tags {
-        id
         name
+        id
         thumbnail: pictures(limit: 1) {
+          media {
+            formats
+          }
+        }
+        related_tags {
           id
         }
       }
