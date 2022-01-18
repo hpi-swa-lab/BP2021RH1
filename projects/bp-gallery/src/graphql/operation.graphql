@@ -104,7 +104,7 @@ mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime
 }
 
 query getKeywordTagSuggestions($name: String) {
-  keywordTags(filters: { name: { contains: $name } }) {
+  keywordTags(filters: { name: { containsi: $name } }) {
     data {
       id
       attributes {

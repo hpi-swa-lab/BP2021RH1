@@ -1946,7 +1946,7 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
 
 export const GetKeywordTagSuggestionsDocument = gql`
   query getKeywordTagSuggestions($name: String) {
-    keywordTags(filters: { name: { contains: $name } }) {
+    keywordTags(filters: { name: { containsi: $name } }) {
       data {
         id
         attributes {
