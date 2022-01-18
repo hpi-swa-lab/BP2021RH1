@@ -8,13 +8,19 @@ import { decodeBrowsePathComponent, encodeBrowsePathComponent } from './BrowseVi
 const SubCategories = ({
   relatedTags,
   path,
+  communityView,
 }: {
   relatedTags: { thumbnail: any[]; name: string }[];
   path?: string[];
+  communityView?: boolean;
 }) => {
   const history: History = useHistory();
+  let browsePath = '/browse/';
   const formatCategoryPath = (name: string) => {
-    return `/browse/${
+    if (communityView) {
+      browsePath = '/browse/latest/';
+    }
+    return `${browsePath}${
       path
         ?.map(folder => {
           return encodeBrowsePathComponent(folder);
