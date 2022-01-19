@@ -31,7 +31,7 @@ const CategoryDescription = ({ description, name }: { description: string; name:
       )}
       {isDescriptionLong && (
         <IconButton
-          className='IconButton'
+          className='icon-button'
           onClick={() => {
             setIsOpen(!isOpen);
           }}
