@@ -5,6 +5,7 @@ import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import dayjs from 'dayjs';
 import { Picture } from '../../../graphql/APIConnector';
+import { Location } from 'history';
 import { useLocation } from 'react-router-dom';
 
 export const enum SearchType {
@@ -26,7 +27,7 @@ export const asSearchPath = (
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [previewPicture, setPreviewPicture] = useState<Picture>();
-  const { search } = useLocation();
+  const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
     return new URLSearchParams(search);
@@ -81,7 +82,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             }}
             searchParams={searchParams}
           />
-          {!search ? (
+          {!location.search ? (
             <SearchHub searchSnippet={searchSnippet} />
           ) : (
             <PictureScrollGrid
