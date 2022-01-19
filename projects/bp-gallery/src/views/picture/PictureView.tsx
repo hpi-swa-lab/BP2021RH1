@@ -17,6 +17,7 @@ import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture
 import PictureViewUI, { PictureNavigationTarget } from './PictureViewUI';
 import { useFlatQueryResponseData } from '../../graphql/queryUtils';
 import PictureInfo from './components/PictureInfo';
+import useBlockScroll from './scrollBlock.hook';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -50,47 +51,17 @@ const PictureView = ({
   initialParams?: PictureViewContextFields;
 }) => {
   const history: History = useHistory();
-  //   const [scrollPos, setScrollPos] = useState<number>(0);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const [thumbnailMode, setThumbnailMode] = useState<boolean | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
-
   const [maxHeight, setMaxHeight] = useState<string>('85vh');
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(!!initialParams?.sideBarOpen);
 
-  useEffect(() => {
-    if (initialParams?.sideBarOpen !== undefined) {
-      setSideBarOpen(!!initialParams.sideBarOpen);
-    }
-  }, [initialParams]);
+  const shouldBeThumbnail = thumbnailMode || (thumbnailMode === undefined && initialThumbnail);
 
-  const calculateHeight = useCallback((container: HTMLElement) => {
-    const posy = container.querySelector('.picture-infos')?.getBoundingClientRect().top;
-    if (posy) {
-      setMaxHeight(`${Math.max(posy, 256)}px`);
-    } else {
-      setMaxHeight(`85vh`);
-    }
-  }, []);
-
-  const containerRef = useRef<any>();
-
-  useEffect(() => {
-    const container: HTMLDivElement = containerRef.current;
-    const preventScroll = (event: WheelEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-    };
-    if (!thumbnailMode) {
-      container.addEventListener('wheel', preventScroll);
-    } else {
-      container.removeEventListener('wheel', preventScroll);
-    }
-
-    return () => {
-      container.removeEventListener('wheel', preventScroll);
-    };
-  }, [containerRef, thumbnailMode]);
-
+  // Api connection
   const [getPictureInfo, { data, loading, error }] = useGetPictureInfoLazyQuery({
     variables: {
       pictureId: pictureId,
@@ -98,6 +69,18 @@ const PictureView = ({
   });
   const picture: FlatPicture | undefined = useFlatQueryResponseData(data)?.picture;
 
+  // Switch between using the thumbnail url and the "loaded" picture's url
+  const pictureLink = useMemo(() => {
+    if (picture?.media?.url) {
+      return asApiPath(picture.media.url);
+    } else if (thumbnailUrl) {
+      return asApiPath(thumbnailUrl);
+    } else {
+      return '';
+    }
+  }, [picture, thumbnailUrl]);
+
+  // Execute lazy query (e.g. when triggering the picture from the picture grid)
   const setUpPicture = useCallback(
     (id: string) => {
       getPictureInfo({
@@ -109,23 +92,34 @@ const PictureView = ({
     [getPictureInfo]
   );
 
-  useEffect(() => {
-    setThumbnailMode(initialThumbnail);
-    if (!initialThumbnail) {
-      setUpPicture(pictureId);
-    }
-  }, [initialThumbnail, setUpPicture, pictureId]);
+  // Call the previous or next picture
+  const navigatePicture = useCallback(
+    (target: PictureNavigationTarget) => {
+      if (navigateCallback) {
+        setTransitioning(false);
+        nextImageAnimation(containerRef.current as HTMLDivElement, target).then(() => {
+          setThumbnailMode(true);
+          if (openCallback) {
+            openCallback(false);
+          }
+          navigateCallback(target, { sideBarOpen });
+        });
+      }
+    },
+    [navigateCallback, openCallback, sideBarOpen]
+  );
 
-  const pictureLink = useMemo(() => {
-    if (picture?.media?.url) {
-      return asApiPath(picture.media.url);
-    } else if (thumbnailUrl) {
-      return asApiPath(thumbnailUrl);
+  // The image's height (is dependent on the "info" container - this is only relevant for mobile)
+  const calculateHeight = useCallback((container: HTMLElement) => {
+    const posy = container.querySelector('.picture-infos')?.getBoundingClientRect().top;
+    if (posy) {
+      setMaxHeight(`${Math.max(posy, 256)}px`);
     } else {
-      return '';
+      setMaxHeight(`85vh`);
     }
-  }, [picture, thumbnailUrl]);
+  }, []);
 
+  // Open the "detail" view of the image using an external animation
   const openDetails = () => {
     window.setTimeout(() => {
       setTransitioning(true);
@@ -143,22 +137,34 @@ const PictureView = ({
     }
   };
 
-  const navigatePicture = useCallback(
-    (target: PictureNavigationTarget) => {
-      if (navigateCallback) {
-        setTransitioning(false);
-        nextImageAnimation(containerRef.current as HTMLDivElement, target).then(() => {
-          setThumbnailMode(true);
-          if (openCallback) {
-            openCallback(false);
-          }
-          navigateCallback(target, { sideBarOpen });
-        });
-      }
-    },
-    [navigateCallback, openCallback, sideBarOpen]
-  );
+  // Wrap all context information in this variable
+  const contextValue: PictureViewContextFields = {
+    navigatePicture,
+    hasNext,
+    hasPrevious,
+    sideBarOpen,
+    setSideBarOpen,
+  };
 
+  // Open Sidebar if initialParams dictate it
+  useEffect(() => {
+    if (initialParams?.sideBarOpen !== undefined) {
+      setSideBarOpen(!!initialParams.sideBarOpen);
+    }
+  }, [initialParams]);
+
+  // Apply initial thumbnail preference to state variable
+  useEffect(() => {
+    setThumbnailMode(initialThumbnail);
+    if (!initialThumbnail) {
+      setUpPicture(pictureId);
+    }
+  }, [initialThumbnail, setUpPicture, pictureId]);
+
+  useBlockScroll(containerRef, thumbnailMode);
+
+  // Block navigation and handle yourself, i.e. block browser navigation and
+  // just close picture if it was called from the picture grid
   useEffect(() => {
     if ((initialThumbnail || openCallback) && thumbnailMode === false) {
       const unblock = history.block(() => {
@@ -193,19 +199,11 @@ const PictureView = ({
         flex: `${flexValue} 1 0`,
       }}
     >
-      <PictureViewContext.Provider
-        value={{
-          navigatePicture,
-          hasNext,
-          hasPrevious,
-          sideBarOpen,
-          setSideBarOpen,
-        }}
-      >
+      <PictureViewContext.Provider value={contextValue}>
         <div
-          className={`picture-view${
-            thumbnailMode || (thumbnailMode === undefined && initialThumbnail) ? ' thumbnail' : ''
-          }${transitioning ? ' transitioning' : ''}`}
+          className={`picture-view${shouldBeThumbnail ? ' thumbnail' : ''}${
+            transitioning ? ' transitioning' : ''
+          }`}
           ref={containerRef}
           onClick={thumbnailMode ? openDetails : () => {}}
         >
