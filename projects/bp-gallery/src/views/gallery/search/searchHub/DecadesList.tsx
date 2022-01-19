@@ -5,47 +5,37 @@ import Loading from '../../../../components/Loading';
 import ItemList from '../../common/ItemList';
 import { asApiPath } from '../../../../App';
 import { asSearchPath, SearchType } from '../SearchView';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+
+const DECADE_NAMES: string[] = ['40', '50', '60', '70', '80', '90'];
 
 const DecadesList = () => {
-  const history: History = useHistory();
   const { t } = useTranslation();
+  const history = useHistory();
 
-  const decadeThumbnails = useGetDecadePreviewThumbnailsQuery();
+  const { data, loading, error } = useGetDecadePreviewThumbnailsQuery();
 
-  if (decadeThumbnails.error) {
-    return <QueryErrorDisplay error={decadeThumbnails.error} />;
-  } else if (decadeThumbnails.loading) {
+  if (error) {
+    return <QueryErrorDisplay error={error} />;
+  } else if (loading) {
     return <Loading />;
-  } else if (decadeThumbnails.data) {
+  } else if (data) {
     return (
       <ItemList
         compact={true}
-        items={Array(6)
-          .fill(0)
-          .map((_, index) => {
-            let name: string;
-            let thumbnailData;
-            if (index === 0) {
-              name = t('common.previous');
-              thumbnailData = (decadeThumbnails.data as any)['s00'];
-            } else {
-              name = `${(index + 4) * 10}er`;
-              thumbnailData = (decadeThumbnails.data as any)[`s${(index + 4) * 10}`];
-            }
-            const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url ?? '';
-            return {
-              name,
-              background: asApiPath(thumbnail),
-              onClick: () => {
-                history.push(asSearchPath([{ value: name, type: SearchType.DECADE }]), {
-                  showBack: true,
-                });
-              },
-            };
-          })}
+        items={DECADE_NAMES.map((name: string) => {
+          const thumbnailData = (data as any)[`s${name}`];
+          const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url ?? '';
+          const displayedName = name === '40' ? 'pre50' : `${name}er`;
+          return {
+            name: displayedName,
+            background: asApiPath(thumbnail),
+            onClick: () => {
+              history.push(asSearchPath(SearchType.DECADE, name), { showBack: true });
+            },
+          };
+        })}
       />
     );
   } else return <div>{t('something-went-wrong')}</div>;

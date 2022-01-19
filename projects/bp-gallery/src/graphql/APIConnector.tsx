@@ -2207,7 +2207,7 @@ export type GetKeywordTagSuggestionsQuery = {
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
-  s00?:
+  s40?:
     | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
     | null
     | undefined;
@@ -2552,7 +2552,7 @@ export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
 
 export const GetDecadePreviewThumbnailsDocument = gql`
   query getDecadePreviewThumbnails {
-    s00: pictures(
+    s40: pictures(
       where: { time_range_tag: { start_gte: "1900-01-01T00:00", end_lte: "1949-12-31T23:59" } }
       limit: 1
     ) {

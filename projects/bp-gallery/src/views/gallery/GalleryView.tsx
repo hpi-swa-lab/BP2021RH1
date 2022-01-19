@@ -23,13 +23,7 @@ const GalleryView = (props?: { target?: string; searchParams?: string[]; path?: 
           />
         );
       case 'search':
-        return (
-          <SearchView
-            params={props.searchParams}
-            scrollPos={scrollPos ?? 0}
-            scrollHeight={scrollHeight ?? 0}
-          />
-        );
+        return <SearchView scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />;
       default:
         return '404 - Not found';
     }

@@ -41,15 +41,9 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
             ? asApiPath(String(tag.thumbnail[0]?.media?.formats?.small?.url || ''))
             : '',
           onClick: () => {
-            history.push(
-              asSearchPath([
-                {
-                  value: encodeURIComponent(tag?.name ?? ''),
-                  type: SearchType.KEYWORD,
-                },
-              ]),
-              { showBack: true }
-            );
+            history.push(asSearchPath(SearchType.KEYWORD, encodeURIComponent(tag?.name ?? '')), {
+              showBack: true,
+            });
           },
         }))}
       />

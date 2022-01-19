@@ -71,7 +71,7 @@ query getKeywordTagSuggestions($name: String) {
 }
 
 query getDecadePreviewThumbnails {
-  s00: pictures(
+  s40: pictures(
     where: { time_range_tag: { start_gte: "1900-01-01T00:00", end_lte: "1949-12-31T23:59" } }
     limit: 1
   ) {

@@ -5,7 +5,7 @@ export const GetPicturesSearchMocks = [
     request: {
       query: GetPicturesDocument,
       variables: {
-        where: { descriptions: { text_contains: 'Onkel-Pelle' } },
+        where: { descriptions: { text_contains: 'Onkel Pelle' } },
         limit: 100,
         start: 0,
       },
@@ -33,7 +33,7 @@ export const GetPicturesSearchMocks = [
     request: {
       query: GetPicturesDocument,
       variables: {
-        where: { descriptions: { text_contains: 'invalid-params' } },
+        where: { descriptions: { text_contains: 'invalid params' } },
         limit: 100,
         start: 0,
       },

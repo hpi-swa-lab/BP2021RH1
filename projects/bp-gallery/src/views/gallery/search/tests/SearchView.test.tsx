@@ -9,9 +9,6 @@ jest.mock('../searchHub/SearchHub', () => SearchHubMock);
 const SearchBarMock = () => <div>SearchBarMock</div>;
 jest.mock('../SearchBar', () => SearchBarMock);
 
-const SearchResultBannerMock = () => <div>SearchResultBannerMock</div>;
-jest.mock('../SearchResultBanner', () => SearchResultBannerMock);
-
 describe('SearchView called without any parameters', () => {
   beforeEach(() => renderRoute('/search'));
 
@@ -25,10 +22,6 @@ describe('SearchView called without any parameters', () => {
     expect(searchHub).toBeInTheDocument();
   });
 
-  it('should not render a SearchResultBanner', () => {
-    expect(() => screen.getAllByText('SearchResultBannerMock')).toThrow();
-  });
-
   it('should not render any pictures', () => {
     const searchViewContainer = document.getElementsByClassName('search-view')[0];
     const picturesInSearchView = searchViewContainer.getElementsByTagName('img');
@@ -37,7 +30,7 @@ describe('SearchView called without any parameters', () => {
 });
 
 describe('SearchView called with parameters which do not match any pictures', () => {
-  beforeEach(() => renderRouteWithAPIMocks('/search/invalid-params', GetPicturesSearchMocks));
+  beforeEach(() => renderRouteWithAPIMocks('/search?q=invalid+params', GetPicturesSearchMocks));
 
   it('should render a SearchBar', async () => {
     await waitFor(() => {
@@ -58,16 +51,10 @@ describe('SearchView called with parameters which do not match any pictures', ()
       expect(() => screen.getAllByText('SearchHubMock')).toThrow();
     });
   });
-
-  it('should not render a SearchResultBanner', async () => {
-    await waitFor(() => {
-      expect(() => screen.getAllByText('SearchResultBannerMock')).toThrow();
-    });
-  });
 });
 
 describe('SearchView called with parameters which match at least one picture', () => {
-  beforeEach(() => renderRouteWithAPIMocks('/search/Onkel-Pelle', GetPicturesSearchMocks));
+  beforeEach(() => renderRouteWithAPIMocks('/search?q=Onkel+Pelle', GetPicturesSearchMocks));
 
   it('should render a SearchBar', async () => {
     await waitFor(() => {
@@ -88,12 +75,6 @@ describe('SearchView called with parameters which match at least one picture', (
   it('should not render the SearchHub', async () => {
     await waitFor(() => {
       expect(() => screen.getAllByText('SearchHubMock')).toThrow();
-    });
-  });
-
-  it('should render a SearchResultBanner', async () => {
-    await waitFor(() => {
-      expect(screen.getByText('SearchResultBannerMock')).toBeInTheDocument();
     });
   });
 });

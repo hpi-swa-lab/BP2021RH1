@@ -5,14 +5,14 @@ import { Search } from '@mui/icons-material';
 import { InputAdornment, TextField } from '@mui/material';
 import { History } from 'history';
 import './SearchBar.scss';
-import { asSearchPath, SearchParam, SearchType } from './SearchView';
+import { asSearchPath, SearchType } from './SearchView';
 
 const SearchBar = ({
   searchParams,
   value,
   onValueChange,
 }: {
-  searchParams?: SearchParam[];
+  searchParams?: URLSearchParams;
   value?: string;
   onValueChange?: (snippet?: string) => void;
 }) => {
@@ -46,10 +46,7 @@ const SearchBar = ({
         onKeyUp={event => {
           if (event.key === 'Enter') {
             history.push(
-              asSearchPath([
-                ...(searchParams ?? []),
-                { value: String((event.target as any).value), type: SearchType.DEFAULT },
-              ]),
+              asSearchPath(SearchType.DEFAULT, String((event.target as any).value), searchParams),
               {
                 showBack: true,
               }
