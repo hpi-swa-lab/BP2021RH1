@@ -36,7 +36,11 @@ const SubCategories = ({
     };
   };
   const items = relatedTags.map((tag, i) => buildItem(tag, i));
-  return <ItemList items={items} />;
+  return (
+    <div>
+      <ItemList items={items} />
+    </div>
+  );
 };
 
 export default SubCategories;
