@@ -12,10 +12,11 @@ const FormattedComment = ({ comment }: { comment: FlatComment }) => {
   return (
     <div className='comment' key={comment.id}>
       <div className='comment-details'>
-        {comment.author} {t('common.wrote-on')} {dayjs(comment.date as string).format('DD.MM.YYYY')}
+        <strong>{comment.author}</strong> {t('common.wrote-on')}{' '}
+        {dayjs(comment.date as string).format('DD.MM.YYYY')}
         :<br />
       </div>
-      <div className='comment-text'>&quot; {parseNewLine(comment.text ?? '')} &quot;</div>
+      <div className='comment-text'>{parseNewLine(comment.text ?? '')}</div>
     </div>
   );
 };

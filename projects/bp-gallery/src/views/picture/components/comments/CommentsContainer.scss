@@ -1,5 +1,15 @@
-.comment-container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 5rem;
+@import '../../../../shared/style.scss';
+
+.pictureComments {
+  .comment-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
+  h2 {
+    padding-left: 1rem;
+    color: $primaryColor;
+  }
 }
