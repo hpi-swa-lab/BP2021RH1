@@ -27,7 +27,7 @@ const DecadesList = () => {
         items={DECADE_NAMES.map((name: string) => {
           const thumbnailData = (data as any)[`s${name}`];
           const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url ?? '';
-          const displayedName = name === '40' ? 'pre50' : `${name}er`;
+          const displayedName = name === '40' ? t('common.past') : `${name}er`;
           return {
             name: displayedName,
             background: asApiPath(thumbnail),
