@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
-import PictureView from '../../picture/PictureView';
+import PictureView, { PictureViewContextFields } from '../../picture/PictureView';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import { PictureNavigationTarget } from '../../picture/PictureViewUI';
 
@@ -19,7 +19,13 @@ const PictureGrid = ({
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
-  const [focusedPicture, setFocusedPicture] = useState<string>('-1');
+  const [focusedPicture, setFocusedPicture] = useState<{
+    id: string;
+    params: PictureViewContextFields;
+  }>({
+    id: '-1',
+    params: {},
+  });
 
   const hashCode = (str: string) => {
     let hash = 0,
@@ -75,8 +81,11 @@ const PictureGrid = ({
     };
   }, [onResize]);
 
-  const navigateToPicture = (picture: FlatPicture) => {
-    setFocusedPicture(picture.id);
+  const navigateToPicture = (picture: FlatPicture, params: PictureViewContextFields) => {
+    setFocusedPicture({
+      id: picture.id,
+      params,
+    });
     window.history.replaceState({}, '', `/picture/${picture.id}`);
   };
 
@@ -90,7 +99,11 @@ const PictureGrid = ({
     return pictures.at(indexOfCurrentPictureId - 1) ?? pictures.at(pictures.length - 1);
   };
 
-  const nextOrPrevPicture = (picture: FlatPicture, target: PictureNavigationTarget) => {
+  const nextOrPrevPicture = (
+    picture: FlatPicture,
+    target: PictureNavigationTarget,
+    params: PictureViewContextFields
+  ) => {
     let newPicture: FlatPicture | undefined = picture;
     switch (target) {
       case PictureNavigationTarget.NEXT:
@@ -104,7 +117,7 @@ const PictureGrid = ({
     }
 
     if (newPicture) {
-      navigateToPicture(newPicture);
+      navigateToPicture(newPicture, params);
     }
   };
 
@@ -128,15 +141,29 @@ const PictureGrid = ({
                     key={`${rowindex}${colindex}`}
                     flexValue={String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))}
                     pictureId={picture.id}
-                    navigateCallback={(target: PictureNavigationTarget) => {
-                      nextOrPrevPicture(picture, target);
+                    navigateCallback={(
+                      target: PictureNavigationTarget,
+                      params?: PictureViewContextFields
+                    ) => {
+                      nextOrPrevPicture(picture, target, params ?? {});
                     }}
+                    initialParams={focusedPicture.id === picture.id ? focusedPicture.params : {}}
                     hasPrevious={pictures.indexOf(picture) > 0}
                     hasNext={pictures.indexOf(picture) < pictures.length - 1}
                     thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
-                    initialThumbnail={focusedPicture === picture.id ? false : true}
+                    initialThumbnail={focusedPicture.id === picture.id ? false : true}
                     openCallback={(open?: boolean) => {
-                      setFocusedPicture(open ? picture.id : '-1');
+                      setFocusedPicture(
+                        open
+                          ? {
+                              id: picture.id,
+                              params: {},
+                            }
+                          : {
+                              id: '-1',
+                              params: {},
+                            }
+                      );
                     }}
                   />
                 );

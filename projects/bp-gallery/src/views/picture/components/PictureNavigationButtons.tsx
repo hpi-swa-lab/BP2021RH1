@@ -1,28 +1,40 @@
 import { Icon, IconButton } from '@mui/material';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { PictureViewContext } from '../PictureView';
+import { PictureNavigationTarget } from '../PictureViewUI';
 
-const PictureNavigationButtons = ({
-  onNextPicture,
-  onPreviousPicture,
-}: {
-  onNextPicture?: () => void;
-  onPreviousPicture?: () => void;
-}) => {
+const PictureNavigationButtons = () => {
+  const { navigatePicture, hasNext, hasPrevious } = useContext(PictureViewContext);
+
+  useEffect(() => {
+    const navigateKeyboardAction = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowRight' && hasNext && navigatePicture) {
+        navigatePicture(PictureNavigationTarget.NEXT);
+      } else if (event.key === 'ArrowLeft' && hasPrevious && navigatePicture) {
+        navigatePicture(PictureNavigationTarget.PREVIOUS);
+      }
+    };
+    window.addEventListener('keyup', navigateKeyboardAction);
+    return () => {
+      window.removeEventListener('keyup', navigateKeyboardAction);
+    };
+  }, [hasNext, hasPrevious, navigatePicture]);
+
   return (
     <div className='picture-navigation-buttons'>
       <IconButton
-        style={{ visibility: onPreviousPicture ? 'visible' : 'hidden' }}
-        onClick={() => (onPreviousPicture ? onPreviousPicture() : null)}
+        style={{ visibility: hasPrevious ? 'visible' : 'hidden' }}
+        onClick={() => (navigatePicture ? navigatePicture(PictureNavigationTarget.PREVIOUS) : null)}
         size='large'
       >
-        <Icon>fast_rewind</Icon>
+        <Icon>chevron_left</Icon>
       </IconButton>
       <IconButton
-        style={{ visibility: onNextPicture ? 'visible' : 'hidden' }}
-        onClick={() => (onNextPicture ? onNextPicture() : null)}
+        style={{ visibility: hasNext ? 'visible' : 'hidden' }}
+        onClick={() => (navigatePicture ? navigatePicture(PictureNavigationTarget.NEXT) : null)}
         size='large'
       >
-        <Icon>fast_forward</Icon>
+        <Icon>chevron_right</Icon>
       </IconButton>
     </div>
   );

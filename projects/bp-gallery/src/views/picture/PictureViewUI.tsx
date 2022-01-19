@@ -1,9 +1,7 @@
 import React from 'react';
 import { Button, Icon } from '@mui/material';
-import PictureInfo from './components/PictureInfo';
 import PictureNavigationButtons from './components/PictureNavigationButtons';
 import { useTranslation } from 'react-i18next';
-import { FlatPicture } from '../../graphql/additionalFlatTypes';
 
 export enum PictureNavigationTarget {
   NEXT,
@@ -11,17 +9,11 @@ export enum PictureNavigationTarget {
 }
 
 export const PictureViewUI = ({
-  picture,
-  hasPrevious,
-  hasNext,
-  navigateCallback,
-  calculateHeight,
+  maxHeight,
+  calledViaLink,
 }: {
-  picture: FlatPicture;
-  hasPrevious?: boolean;
-  hasNext?: boolean;
-  navigateCallback?: (target: PictureNavigationTarget) => void;
-  calculateHeight: (container: HTMLElement) => void;
+  maxHeight: string;
+  calledViaLink: boolean;
 }) => {
   const { t } = useTranslation();
 
@@ -30,21 +22,20 @@ export const PictureViewUI = ({
   };
 
   return (
-    <div className='picture-ui'>
-      <PictureInfo picture={picture} pictureId={picture.id} calculateHeight={calculateHeight} />
-      {navigateCallback && (
-        <PictureNavigationButtons
-          onNextPicture={hasNext ? () => navigateCallback(PictureNavigationTarget.NEXT) : undefined}
-          onPreviousPicture={
-            hasPrevious ? () => navigateCallback(PictureNavigationTarget.PREVIOUS) : undefined
-          }
-        />
-      )}
+    <div className='picture-ui' style={{ maxHeight }}>
+      <PictureNavigationButtons />
       <div className='picture-toolbar'>
-        <Button onClick={onBack}>
+        <Button onClick={onBack} style={{ visibility: calledViaLink ? 'hidden' : 'visible' }}>
           <Icon>arrow_back</Icon>
           {t('common.back')}
         </Button>
+        <div
+          className={`bh-logo`}
+          title={t('common.back-to-home')}
+          onClick={() => (calledViaLink ? (location.href = '/browse') : null)}
+        >
+          <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
+        </div>
       </div>
     </div>
   );

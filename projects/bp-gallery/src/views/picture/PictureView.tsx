@@ -1,4 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import './PictureView.scss';
 import { asApiPath } from '../../App';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +16,17 @@ import { FlatPicture } from '../../graphql/additionalFlatTypes';
 import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture.helpers';
 import PictureViewUI, { PictureNavigationTarget } from './PictureViewUI';
 import { useFlatQueryResponseData } from '../../graphql/queryUtils';
+import PictureInfo from './components/PictureInfo';
+
+export interface PictureViewContextFields {
+  navigatePicture?: (target: PictureNavigationTarget) => void;
+  hasNext?: boolean;
+  hasPrevious?: boolean;
+  sideBarOpen?: boolean;
+  setSideBarOpen?: Dispatch<SetStateAction<boolean>>;
+}
+
+export const PictureViewContext = React.createContext<PictureViewContextFields>({});
 
 const PictureView = ({
   pictureId,
@@ -18,6 +37,7 @@ const PictureView = ({
   hasNext,
   openCallback,
   navigateCallback,
+  initialParams,
 }: {
   pictureId: string;
   thumbnailUrl?: string;
@@ -26,25 +46,50 @@ const PictureView = ({
   hasPrevious?: boolean;
   hasNext?: boolean;
   openCallback?: (open?: boolean) => void;
-  navigateCallback?: (target: PictureNavigationTarget) => void;
+  navigateCallback?: (target: PictureNavigationTarget, params?: PictureViewContextFields) => void;
+  initialParams?: PictureViewContextFields;
 }) => {
   const history: History = useHistory();
   //   const [scrollPos, setScrollPos] = useState<number>(0);
   const [thumbnailMode, setThumbnailMode] = useState<boolean | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
-  const [maxHeight, setMaxHeight] = useState<string>('100%');
+  const [maxHeight, setMaxHeight] = useState<string>('85vh');
+  const [sideBarOpen, setSideBarOpen] = useState<boolean>(!!initialParams?.sideBarOpen);
+
+  useEffect(() => {
+    if (initialParams?.sideBarOpen !== undefined) {
+      setSideBarOpen(!!initialParams.sideBarOpen);
+    }
+  }, [initialParams]);
 
   const calculateHeight = useCallback((container: HTMLElement) => {
-    const height = container.parentElement?.getBoundingClientRect().height;
-    if (height) {
-      setMaxHeight(`calc(100% - ${height}px)`);
+    const posy = container.querySelector('.picture-infos')?.getBoundingClientRect().top;
+    if (posy) {
+      setMaxHeight(`${Math.max(posy, 256)}px`);
     } else {
-      setMaxHeight(`100%`);
+      setMaxHeight(`85vh`);
     }
   }, []);
 
   const containerRef = useRef<any>();
+
+  useEffect(() => {
+    const container: HTMLDivElement = containerRef.current;
+    const preventScroll = (event: WheelEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    if (!thumbnailMode) {
+      container.addEventListener('wheel', preventScroll);
+    } else {
+      container.removeEventListener('wheel', preventScroll);
+    }
+
+    return () => {
+      container.removeEventListener('wheel', preventScroll);
+    };
+  }, [containerRef, thumbnailMode]);
 
   const [getPictureInfo, { data, loading, error }] = useGetPictureInfoLazyQuery({
     variables: {
@@ -87,8 +132,10 @@ const PictureView = ({
       setThumbnailMode(false);
     }, 0);
     window.history.pushState({}, '', `/picture/${pictureId}`);
+    setSideBarOpen(false);
     zoomIntoPicture(pictureId, containerRef.current as HTMLDivElement).then(() => {
       setTransitioning(false);
+      setSideBarOpen(true);
     });
     setUpPicture(pictureId);
     if (openCallback) {
@@ -105,16 +152,17 @@ const PictureView = ({
           if (openCallback) {
             openCallback(false);
           }
-          navigateCallback(target);
+          navigateCallback(target, { sideBarOpen });
         });
       }
     },
-    [navigateCallback, openCallback]
+    [navigateCallback, openCallback, sideBarOpen]
   );
 
   useEffect(() => {
     if ((initialThumbnail || openCallback) && thumbnailMode === false) {
       const unblock = history.block(() => {
+        setSideBarOpen(false);
         setTransitioning(true);
         zoomOutOfPicture(containerRef.current as HTMLDivElement).then(() => {
           setTransitioning(false);
@@ -124,17 +172,7 @@ const PictureView = ({
           }
         });
       });
-
-      const navigateKeyboardAction = (event: KeyboardEvent) => {
-        if (event.key === 'ArrowRight') {
-          navigatePicture(PictureNavigationTarget.NEXT);
-        } else if (event.key === 'ArrowLeft') {
-          navigatePicture(PictureNavigationTarget.PREVIOUS);
-        }
-      };
-      window.addEventListener('keyup', navigateKeyboardAction);
       return () => {
-        window.removeEventListener('keyup', navigateKeyboardAction);
         unblock();
       };
     }
@@ -155,31 +193,39 @@ const PictureView = ({
         flex: `${flexValue} 1 0`,
       }}
     >
-      <div
-        className={`picture-view${
-          thumbnailMode || (thumbnailMode === undefined && initialThumbnail) ? ' thumbnail' : ''
-        }${transitioning ? ' transitioning' : ''}`}
-        ref={containerRef}
-        onClick={thumbnailMode ? openDetails : () => {}}
+      <PictureViewContext.Provider
+        value={{
+          navigatePicture,
+          hasNext,
+          hasPrevious,
+          sideBarOpen,
+          setSideBarOpen,
+        }}
       >
-        {thumbnailMode === false && (
-          <div className='background-container'>
-            <img src={pictureLink} alt={pictureLink} className='blur-background' />
+        <div
+          className={`picture-view${
+            thumbnailMode || (thumbnailMode === undefined && initialThumbnail) ? ' thumbnail' : ''
+          }${transitioning ? ' transitioning' : ''}`}
+          ref={containerRef}
+          onClick={thumbnailMode ? openDetails : () => {}}
+        >
+          <div className='picture-wrapper'>
+            <div className='picture-container' style={{ maxHeight }}>
+              <img src={pictureLink} alt={pictureLink} />
+            </div>
+            {thumbnailMode === false && !loading && !error && picture && (
+              <PictureViewUI maxHeight={maxHeight} calledViaLink={openCallback === undefined} />
+            )}
           </div>
-        )}
-        <div className='picture-container' style={{ maxHeight }}>
-          <img src={pictureLink} alt={pictureLink} />
+          {thumbnailMode === false && !loading && !error && picture && (
+            <PictureInfo
+              picture={picture}
+              pictureId={pictureId}
+              calculateHeight={calculateHeight}
+            />
+          )}
         </div>
-        {thumbnailMode === false && !loading && !error && data?.picture && (
-          <PictureViewUI
-            picture={data.picture as FlatPicture}
-            hasPrevious={hasPrevious}
-            hasNext={hasNext}
-            navigateCallback={navigatePicture}
-            calculateHeight={calculateHeight}
-          />
-        )}
-      </div>
+      </PictureViewContext.Provider>
     </div>
   );
 };

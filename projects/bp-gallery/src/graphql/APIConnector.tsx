@@ -1296,6 +1296,21 @@ export type GetPictureInfoQuery = {
                         }
                       | null
                       | undefined;
+                    time_range_tag?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?:
+                                  | { start?: any | null | undefined; end?: any | null | undefined }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
                     media?:
                       | {
                           data?:
@@ -1648,6 +1663,15 @@ export const GetPictureInfoDocument = gql`
               id
               attributes {
                 text
+              }
+            }
+          }
+          time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
               }
             }
           }

@@ -1,0 +1,120 @@
+@import '../../../shared/style.scss';
+
+.picture-info-container {
+  max-width: 430px;
+  background: white;
+  z-index: 1002;
+  padding: 10px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  margin-right: 0px;
+  transition: margin-right 0.5s;
+
+  &.closed {
+    margin-right: -450px;
+
+    .open-close-button {
+      transform: translate(-90%, -50%) rotate(180deg);
+    }
+  }
+
+  .picture-infos {
+    padding: 10px;
+  }
+
+  .open-close-button {
+    position: absolute;
+    top: 50%;
+    transform: translate(-90%, -50%);
+    background: white;
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
+    transition: transform 0.5s;
+
+    &:hover {
+      background: #efefef;
+    }
+  }
+
+  .title {
+    color: $primaryColor;
+    font-weight: 900;
+    font-size: 1.5rem;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  @media only screen and (max-width: 550px) {
+    position: absolute;
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    bottom: 0;
+    left: 0;
+    padding-left: 0;
+    z-index: 999;
+    background: transparent;
+
+    .mobile-only {
+      display: flex;
+    }
+
+    .quick-access-buttons {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      padding-top: 20px;
+      z-index: 1005;
+      transform: translateY(0);
+      transition: transform 0.5s;
+
+      &::before {
+        content: '';
+        background: #efefef;
+        width: 80%;
+        left: 10%;
+        top: 10px;
+        height: 2px;
+        position: absolute;
+      }
+
+      .MuiButton-root {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: $primaryColor;
+        width: 33.33333%;
+
+        &.selected {
+          background: $primaryColor;
+          color: white;
+        }
+      }
+    }
+
+    .open-close-button {
+      display: none;
+    }
+
+    .scrollbar-container {
+      height: calc(100% - 85vh + 0.5rem);
+      max-height: calc(100% - 85vh + 0.5rem);
+      padding-top: 85vh;
+
+      .picture-infos {
+        background: white;
+        padding-bottom: 5rem;
+      }
+    }
+  }
+}
