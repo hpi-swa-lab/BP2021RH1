@@ -52,6 +52,7 @@ const SearchBar = ({
               }
             );
             textFieldRef.current.value = '';
+            if (onValueChange) onValueChange('');
           }
         }}
         placeholder={t('common.search-keywords')}

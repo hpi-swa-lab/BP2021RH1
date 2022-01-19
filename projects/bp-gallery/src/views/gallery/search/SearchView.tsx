@@ -82,7 +82,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             }}
             searchParams={searchParams}
           />
-          {!location.search ? (
+          {!search ? (
             <SearchHub searchSnippet={searchSnippet} />
           ) : (
             <PictureScrollGrid
