@@ -9,8 +9,9 @@
     gap: 10px;
 
     .picture-view {
-      cursor: pointer;
-
+      &.thumbnail {
+        cursor: pointer;
+      }
       img {
         width: 100%;
         height: auto;
