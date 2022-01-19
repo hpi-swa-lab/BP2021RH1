@@ -1,14 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
+import { Picture } from '../../../graphql/APIConnector';
 
-const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
+const PictureGrid = ({
+  pictures,
+  hashBase,
+  loading,
+}: {
+  pictures: Picture[];
+  hashBase: string;
+  loading: boolean;
+}) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
-  const [table, setTable] = useState<any[][]>([[]]);
+  const [table, setTable] = useState<(Picture | undefined)[][]>([[]]);
 
   const hashCode = (str: string) => {
     let hash = 0,
@@ -23,34 +32,30 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
     return Math.abs(hash) / Math.pow(2, 31);
   };
 
+  //Initialize table with pictures from props
   useEffect(() => {
-    const buffer: any[][] = [[]];
+    const buffer: (Picture | undefined)[][] = [[]];
+    let currentRow = 0;
     let currentRowCount = 0;
-    let randCount = Math.round(
-      hashCode(props?.hashBase ?? '') * (maxRowCount - minRowCount) + minRowCount
-    );
-    for (
-      let i = 0;
-      i <= Math.max(...(Object.keys(props?.pictures || {}) as unknown as number[]));
-      i++
-    ) {
-      buffer[buffer.length - 1].push(props?.pictures[i] || { placeholder: true });
+    let rowLength = Math.round(hashCode(hashBase) * (maxRowCount - minRowCount) + minRowCount);
+    for (let i = 0; i < pictures.length; i++) {
+      buffer[currentRow].push(pictures[i]);
       currentRowCount++;
-      if (currentRowCount >= randCount) {
-        randCount = Math.round(
-          hashCode((props?.hashBase ?? '') + String(i * 124.22417246)) *
-            (maxRowCount - minRowCount) +
-            minRowCount
-        );
-        currentRowCount = 0;
+      if (currentRowCount >= rowLength) {
+        //In the next iteration the next row starts
+        currentRow++;
         buffer.push([]);
+        currentRowCount = 0;
+        rowLength = Math.round(
+          hashCode(hashBase + String(i * 124.22417246)) * (maxRowCount - minRowCount) + minRowCount
+        );
       }
     }
-    for (let i = currentRowCount; i < randCount; i++) {
-      buffer[buffer.length - 1].push({ placeholder: true });
+    for (let i = currentRowCount; i < rowLength; i++) {
+      buffer[buffer.length - 1].push(undefined);
     }
     setTable(buffer);
-  }, [maxRowCount, minRowCount, props?.pictures, props?.hashBase]);
+  }, [maxRowCount, minRowCount, pictures, hashBase]);
 
   const onResize = useCallback(() => {
     const newMaxRowCount = calculateMaxRowCount();
@@ -74,12 +79,12 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
         return (
           <div key={rowindex} className='row'>
             {row.map((picture, colindex) => {
-              if (picture.placeholder) {
+              if (!picture) {
                 return (
                   <div
                     key={`${rowindex}${colindex}`}
                     className='picture-placeholder'
-                    style={{ flex: `1 1 0` }}
+                    style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
                   />
                 );
               } else {
@@ -88,13 +93,15 @@ const PictureGrid = (props?: { pictures: any[]; hashBase: string }) => {
                     key={`${rowindex}${colindex}`}
                     className='picture-thumbnail'
                     style={{
-                      flex: `${String(picture.media.width / picture.media.height)} 1 0`,
+                      flex: `${String(
+                        (picture.media?.width ?? 1) / (picture.media?.height ?? 1)
+                      )} 1 0`,
                       animationDelay: `${colindex * 0.04}s`,
                     }}
                   >
                     <PictureView
                       pictureId={picture.id}
-                      pictureIdsInContext={props?.pictures.map(pic => pic.id)}
+                      pictureIdsInContext={pictures.map(pic => pic.id)}
                       thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
                       thumbnailMode={true}
                     />
