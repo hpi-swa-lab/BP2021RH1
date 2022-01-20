@@ -24,13 +24,17 @@ export const GetPicturesSearchMocks = [
               id: '1',
               attributes: {
                 media: {
-                  formats: {
-                    small: {
-                      url: 'test-image.jpg',
+                  data: {
+                    attributes: {
+                      formats: {
+                        small: {
+                          url: 'test-image.jpg',
+                        },
+                      },
+                      width: 1,
+                      height: 1,
                     },
                   },
-                  width: 1,
-                  height: 1,
                 },
               },
             },

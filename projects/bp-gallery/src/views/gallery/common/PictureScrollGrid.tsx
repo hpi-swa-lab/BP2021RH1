@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
@@ -32,7 +32,10 @@ const PictureScrollGrid = ({
     },
     notifyOnNetworkStatusChange: true,
   });
-  const { pictures }: { pictures?: FlatPicture[] } = flattenQueryResponseData(data) || {};
+  const { pictures }: { pictures?: FlatPicture[] } = useMemo(
+    () => flattenQueryResponseData(data) || {},
+    [data]
+  );
 
   useEffect(() => {
     if (previewPictureCallback && pictures && pictures.length) {
@@ -40,7 +43,7 @@ const PictureScrollGrid = ({
     }
   }, [pictures, previewPictureCallback]);
 
-  //Loads the next 100 Pictures when the user scrolled to the bottom
+  // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {
     if (
       !loading &&
