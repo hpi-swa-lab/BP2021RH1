@@ -8,7 +8,7 @@ import { asSearchPath, SearchType } from '../SearchView';
 import { useTranslation } from 'react-i18next';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
-import { flattenQueryResponseData } from '../../../../graphql/queryUtils';
+import { useFlatQueryResponseData } from '../../../../graphql/queryUtils';
 
 const DECADE_NAMES: string[] = ['40', '50', '60', '70', '80', '90'];
 
@@ -17,7 +17,7 @@ const DecadesList = () => {
   const history: History = useHistory();
 
   const { data, loading, error } = useGetDecadePreviewThumbnailsQuery();
-  const decadeThumbnails: any = flattenQueryResponseData(data);
+  const decadeThumbnails = useFlatQueryResponseData(data);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;

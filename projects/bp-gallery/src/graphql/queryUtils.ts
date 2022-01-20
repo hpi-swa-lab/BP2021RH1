@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 /**
  * Simplifies the structure of the GraphQL-Response-Objects that got more complexity with Strapi v4.
  * The `data` and `attributes` layers in between the relevant data get removed.
@@ -44,48 +46,8 @@ export const flattenQueryResponseData = (queryResponseData?: { [key: string]: an
 };
 
 /**
- * Supposedly does the same job as the own function above, but it is from the Strapi forum.
- * Testing for that still open!
- * @see https://forum.strapi.io/t/discussion-regarding-the-complex-response-structure-for-rest-graphql-developer-experience/13400/9
+ * Implements using {@link flattenQueryResponseData} as a custom React-Hook,
+ * which includes memoization of the result based on the input.
  */
-/*const normalize = (data: any): any => {
-  const isObject = (data: any) => Object.prototype.toString.call(data) === '[object Object]';
-  const isArray = (data: any) => Object.prototype.toString.call(data) === '[object Array]';
-
-  const flatten = (data: any) => {
-    if (!data.attributes) return data;
-
-    return {
-      id: data.id,
-      ...data.attributes,
-    };
-  };
-
-  if (isArray(data)) {
-    return (data as any[]).map((item: any) => normalize(item));
-  }
-
-  if (isObject(data)) {
-    if (isArray(data.data)) {
-      data = [...data.data];
-    } else if (isObject(data.data)) {
-      data = flatten({ ...data.data });
-    } else if (data.data === null) {
-      data = null;
-    } else {
-      data = flatten(data);
-    }
-
-    for (const key in data) {
-      data[key] = normalize(data[key]);
-    }
-
-    return data;
-  }
-
-  return data;
-};
-
-export const flattenQueryResponseData = (data: any) => {
-  return normalize(data);
-};*/
+export const useFlatQueryResponseData = (queryResponseData?: { [key: string]: any }) =>
+  useMemo(() => flattenQueryResponseData(queryResponseData), [queryResponseData]);

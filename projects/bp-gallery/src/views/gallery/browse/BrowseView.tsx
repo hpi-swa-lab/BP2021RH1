@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './BrowseView.scss';
 import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
-import { flattenQueryResponseData } from '../../../graphql/queryUtils';
+import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
 import SubCategories from './SubCategories';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
@@ -32,10 +32,8 @@ const BrowseView = ({
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
     : { categoryPriority: 1 };
 
-  const { data, loading, error } = useGetCategoryInfoQuery({
-    variables,
-  });
-  const { categoryTags } = flattenQueryResponseData(data) || {};
+  const { data, loading, error } = useGetCategoryInfoQuery({ variables });
+  const { categoryTags } = useFlatQueryResponseData(data) || {};
 
   if (error) {
     return <QueryErrorDisplay error={error} />;

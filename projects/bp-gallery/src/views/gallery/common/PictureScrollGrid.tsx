@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
+import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
-import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 import Loading from '../../../components/Loading';
@@ -32,10 +32,7 @@ const PictureScrollGrid = ({
     },
     notifyOnNetworkStatusChange: true,
   });
-  const { pictures }: { pictures?: FlatPicture[] } = useMemo(
-    () => flattenQueryResponseData(data) || {},
-    [data]
-  );
+  const { pictures }: { pictures?: FlatPicture[] } = useFlatQueryResponseData(data) || {};
 
   useEffect(() => {
     if (previewPictureCallback && pictures && pictures.length) {

@@ -10,7 +10,7 @@ import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
 import { asApiPath, NavigationContext } from '../../App';
 import { useGetPictureInfoQuery } from '../../graphql/APIConnector';
-import { flattenQueryResponseData } from '../../graphql/queryUtils';
+import { useFlatQueryResponseData } from '../../graphql/queryUtils';
 import QueryErrorDisplay from '../../components/QueryErrorDisplay';
 import Loading from '../../components/Loading';
 import { NavigationElement } from '../../components/NavigationBar';
@@ -127,7 +127,7 @@ const DetailedPictureView = ({
       pictureId: pictureId,
     },
   });
-  const { picture } = flattenQueryResponseData(data) || {};
+  const { picture } = useFlatQueryResponseData(data) || {};
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
