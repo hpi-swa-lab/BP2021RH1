@@ -6,6 +6,7 @@ import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../common/PictureScrollGrid';
+import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 
 export const enum SearchType {
   DEFAULT = 'q',
@@ -25,7 +26,7 @@ export const asSearchPath = (
 
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
-  const [previewPicture, setPreviewPicture] = useState<any>();
+  const [previewPicture, setPreviewPicture] = useState<FlatPicture>();
   const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
@@ -67,7 +68,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
       filters['keyword_tags'] = {
         name: {
           containsi: keywords[0],
-        }
+        },
       };
     }
 
@@ -77,7 +78,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
       filters['descriptions'] = {
         text: {
           containsi: q[0],
-        }
+        },
       };
     }
 
@@ -102,7 +103,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={search}
-              previewPictureCallback={(pic: any) => {
+              previewPictureCallback={(pic: FlatPicture) => {
                 if (pic !== previewPicture) {
                   setPreviewPicture(pic);
                 }

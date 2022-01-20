@@ -5,27 +5,37 @@ export const GetPicturesSearchMocks = [
     request: {
       query: GetPicturesDocument,
       variables: {
-        where: { descriptions: { text_contains: 'Onkel Pelle' } },
-        limit: 100,
+        filters: {
+          descriptions: {
+            text: {
+              containsi: 'Onkel Pelle',
+            },
+          },
+        },
         start: 0,
+        limit: 100,
       },
     },
     result: {
       data: {
-        pictures: [
-          {
-            id: '1',
-            media: {
-              formats: {
-                small: {
-                  url: 'test-image.jpg',
+        pictures: {
+          data: [
+            {
+              id: '1',
+              attributes: {
+                media: {
+                  formats: {
+                    small: {
+                      url: 'test-image.jpg',
+                    },
+                  },
+                  width: 1,
+                  height: 1,
                 },
               },
-              width: 1,
-              height: 1,
             },
-          },
-        ],
+          ],
+        },
       },
     },
   },
@@ -33,9 +43,15 @@ export const GetPicturesSearchMocks = [
     request: {
       query: GetPicturesDocument,
       variables: {
-        where: { descriptions: { text_contains: 'invalid params' } },
-        limit: 100,
+        filters: {
+          descriptions: {
+            text: {
+              containsi: 'invalid params',
+            },
+          },
+        },
         start: 0,
+        limit: 100,
       },
     },
     result: {

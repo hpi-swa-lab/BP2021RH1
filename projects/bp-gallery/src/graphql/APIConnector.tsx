@@ -1503,27 +1503,6 @@ export type GetKeywordTagSuggestionsQuery = {
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
-  s30?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
   s40?:
     | {
         data: Array<{
@@ -2027,31 +2006,10 @@ export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
 
 export const GetDecadePreviewThumbnailsDocument = gql`
   query getDecadePreviewThumbnails {
-    s30: pictures(
-      filters: {
-        time_range_tag: {
-          start: { gte: "1930-01-01T00:00:00Z" }
-          end: { lte: "1939-12-31T23:59:59Z" }
-        }
-      }
-      pagination: { limit: 1 }
-    ) {
-      data {
-        attributes {
-          media {
-            data {
-              attributes {
-                formats
-              }
-            }
-          }
-        }
-      }
-    }
     s40: pictures(
       filters: {
         time_range_tag: {
-          start: { gte: "1940-01-01T00:00:00Z" }
+          start: { gte: "1900-01-01T00:00:00Z" }
           end: { lte: "1949-12-31T23:59:59Z" }
         }
       }
