@@ -1,6 +1,6 @@
 import React from 'react';
-import { renderRoute, renderRouteWithAPIMocks } from '../../../../testUtils';
 import { screen, waitFor } from '@testing-library/react';
+import { renderRoute, renderRouteWithAPIMocks } from '../../../../testUtils';
 import { GetPicturesSearchMocks } from './mocks';
 
 const SearchHubMock = () => <div>SearchHubMock</div>;
@@ -30,7 +30,12 @@ describe('SearchView called without any parameters', () => {
 });
 
 describe('SearchView called with parameters which do not match any pictures', () => {
-  beforeEach(() => renderRouteWithAPIMocks('/search?q=invalid+params', GetPicturesSearchMocks));
+  beforeEach(() =>
+    renderRouteWithAPIMocks(
+      `/search?q=${encodeURIComponent('invalid params')}`,
+      GetPicturesSearchMocks
+    )
+  );
 
   it('should render a SearchBar', async () => {
     await waitFor(() => {
@@ -54,7 +59,12 @@ describe('SearchView called with parameters which do not match any pictures', ()
 });
 
 describe('SearchView called with parameters which match at least one picture', () => {
-  beforeEach(() => renderRouteWithAPIMocks('/search?q=Onkel+Pelle', GetPicturesSearchMocks));
+  beforeEach(() =>
+    renderRouteWithAPIMocks(
+      `/search?q=${encodeURIComponent('Onkel Pelle')}`,
+      GetPicturesSearchMocks
+    )
+  );
 
   it('should render a SearchBar', async () => {
     await waitFor(() => {
@@ -65,7 +75,7 @@ describe('SearchView called with parameters which match at least one picture', (
 
   it('should render at least one picture', async () => {
     await waitFor(() => {
-      //As every other component besides the PictureScrollGrid is mocked, the remaining image(s) have to be the query results
+      // As every other component besides the PictureScrollGrid is mocked, the remaining image(s) have to be the query results
       const imageTags = document.querySelector('.search-view')?.getElementsByTagName('img');
       expect(imageTags).toBeDefined();
       expect(imageTags?.length).toBeGreaterThan(0);

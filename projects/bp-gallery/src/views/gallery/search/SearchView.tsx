@@ -63,7 +63,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     }
 
     if (searchParams.has(SearchType.KEYWORD)) {
-      const keywords = searchParams.getAll(SearchType.KEYWORD);
+      const keywords = searchParams.getAll(SearchType.KEYWORD).map(decodeURIComponent);
       // TODO: combine multiple keywords with 'and' operator when implementing nested search
       filters['keyword_tags'] = {
         name: {
@@ -73,7 +73,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     }
 
     if (searchParams.has(SearchType.DEFAULT)) {
-      const q = searchParams.getAll(SearchType.DEFAULT);
+      const q = searchParams.getAll(SearchType.DEFAULT).map(decodeURIComponent);
       // TODO: combine multiple descriptions/default query params with 'and' operator when implementing nested search
       filters['descriptions'] = {
         text: {

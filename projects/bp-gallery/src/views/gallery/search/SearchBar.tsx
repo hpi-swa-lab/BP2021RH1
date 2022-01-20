@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Search } from '@mui/icons-material';
@@ -9,23 +9,14 @@ import { asSearchPath, SearchType } from './SearchView';
 
 const SearchBar = ({
   searchParams,
-  value,
   onValueChange,
 }: {
   searchParams?: URLSearchParams;
-  value?: string;
   onValueChange?: (snippet?: string) => void;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
-
   const textFieldRef = useRef<any>();
-
-  useEffect(() => {
-    if (textFieldRef.current && value) {
-      textFieldRef.current.value = value;
-    }
-  }, [value]);
 
   return (
     <div className='search-bar'>
