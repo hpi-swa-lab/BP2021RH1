@@ -25,15 +25,11 @@ export const PictureViewUI = ({
     <div className='picture-ui' style={{ maxHeight }}>
       <PictureNavigationButtons />
       <div className='picture-toolbar'>
-        <Button onClick={onBack} style={{ visibility: calledViaLink ? 'hidden' : 'visible' }}>
+        <Button onClick={calledViaLink ? () => (location.href = '/browse') : onBack}>
           <Icon>arrow_back</Icon>
-          {t('common.back')}
+          {calledViaLink ? t('common.back-to-home') : t('common.back')}
         </Button>
-        <div
-          className={`bh-logo`}
-          title={t('common.back-to-home')}
-          onClick={() => (calledViaLink ? (location.href = '/browse') : null)}
-        >
+        <div className={`bh-logo`}>
           <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
         </div>
       </div>

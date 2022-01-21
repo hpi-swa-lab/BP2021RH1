@@ -53,7 +53,7 @@ const PictureViewNavigationBar = ({
         onClick={() => setFocusedArea(FocusArea.DETAILS)}
       >
         <Icon>info</Icon>
-        <span>{t('common.details')}</span>
+        <span>{t('common.information')}</span>
       </Button>
       <Button
         className={focusedArea === FocusArea.COMMENTS ? 'selected' : ''}
