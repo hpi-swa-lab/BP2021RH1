@@ -127,7 +127,7 @@ const DetailedPictureView = ({
       pictureId: pictureId,
     },
   });
-  const { picture } = useFlatQueryResponseData(data) || {};
+  const picture = useFlatQueryResponseData(data)?.picture;
 
   if (error) {
     return <QueryErrorDisplay error={error} />;

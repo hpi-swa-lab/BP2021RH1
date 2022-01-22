@@ -33,7 +33,7 @@ const BrowseView = ({
     : { categoryPriority: 1 };
 
   const { data, loading, error } = useGetCategoryInfoQuery({ variables });
-  const { categoryTags } = useFlatQueryResponseData(data) || {};
+  const categoryTags = useFlatQueryResponseData(data)?.categoryTags;
 
   if (error) {
     return <QueryErrorDisplay error={error} />;

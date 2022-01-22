@@ -32,7 +32,7 @@ const PictureScrollGrid = ({
     },
     notifyOnNetworkStatusChange: true,
   });
-  const { pictures }: { pictures?: FlatPicture[] } = useFlatQueryResponseData(data) || {};
+  const pictures: FlatPicture[] | undefined = useFlatQueryResponseData(data)?.pictures;
 
   useEffect(() => {
     if (previewPictureCallback && pictures && pictures.length) {

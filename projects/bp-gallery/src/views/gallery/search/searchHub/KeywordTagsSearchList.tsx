@@ -14,11 +14,13 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
   const history: History = useHistory();
   const { t } = useTranslation();
 
-  const [getKeywordTagSuggestions, keywordTagsResponse] = useGetKeywordTagSuggestionsLazyQuery({
-    variables: {
-      name: '',
-    },
-  });
+  const [getKeywordTagSuggestions, { data, loading, error }] = useGetKeywordTagSuggestionsLazyQuery(
+    {
+      variables: {
+        name: '',
+      },
+    }
+  );
 
   useEffect(() => {
     getKeywordTagSuggestions({
@@ -28,12 +30,11 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
     });
   }, [getKeywordTagSuggestions, searchSnippet]);
 
-  const { keywordTags }: { keywordTags?: any[] } =
-    useFlatQueryResponseData(keywordTagsResponse.data) || {};
+  const keywordTags: any[] | undefined = useFlatQueryResponseData(data)?.keywordTags;
 
-  if (keywordTagsResponse.error) {
-    return <QueryErrorDisplay error={keywordTagsResponse.error} />;
-  } else if (keywordTagsResponse.loading) {
+  if (error) {
+    return <QueryErrorDisplay error={error} />;
+  } else if (loading) {
     return <Loading />;
   } else if (keywordTags?.length) {
     return (
