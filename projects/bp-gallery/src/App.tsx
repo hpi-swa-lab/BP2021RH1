@@ -7,7 +7,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import NavigationBar, { NavigationElement } from './components/NavigationBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 
-const apiBase = 'https://bp.bad-harzburg-stiftung.de/api-dev';
+const apiBase = 'https://bp.bad-harzburg-stiftung.de/api';
 
 export const asApiPath = (pathEnding: string) => {
   //Removes any multiple occurences of a "/"
