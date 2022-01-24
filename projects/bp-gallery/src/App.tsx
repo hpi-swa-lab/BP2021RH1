@@ -17,6 +17,7 @@ export const asApiPath = (pathEnding: string) => {
 const apolloClient = new ApolloClient({
   uri: `${apiBase}/graphql`,
   cache: new InMemoryCache({
+    addTypename: false,
     typePolicies: {
       Query: {
         fields: {

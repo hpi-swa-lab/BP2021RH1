@@ -9,11 +9,7 @@ import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import Picture from './Picture';
 import { asApiPath, NavigationContext } from '../../App';
-import {
-  ComponentContentComment,
-  Description,
-  useGetPictureInfoQuery,
-} from '../../graphql/APIConnector';
+import { Comment, Description, useGetPictureInfoQuery } from '../../graphql/APIConnector';
 import QueryErrorDisplay from '../../components/QueryErrorDisplay';
 import Loading from '../../components/Loading';
 import { NavigationElement } from '../../components/NavigationBar';
@@ -166,7 +162,7 @@ const DetailedPictureView = ({
           <div className='picture-info-container'>
             <PictureDetails descriptions={data.picture.descriptions as Description[]} />
             <CommentsContainer
-              comments={data.picture.comments as ComponentContentComment[]}
+              comments={data.picture.comments as Comment[]}
               pictureId={pictureId}
             />
           </div>
@@ -185,16 +181,12 @@ enum PictureNavigationTarget {
 
 export const getNextPictureId = (currentPictureId: string, pictureIds: string[]) => {
   const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
-  return pictureIds.at(indexOfCurrentPictureId + 1) ?? pictureIds.at(0) ?? currentPictureId;
+  return pictureIds[indexOfCurrentPictureId + 1];
 };
 
 export const getPreviousPictureId = (currentPictureId: string, pictureIds: string[]): string => {
   const indexOfCurrentPictureId: number = pictureIds.indexOf(currentPictureId);
-  return (
-    pictureIds.at(indexOfCurrentPictureId - 1) ??
-    pictureIds.at(pictureIds.length - 1) ??
-    currentPictureId
-  );
+  return pictureIds[indexOfCurrentPictureId - 1] ?? pictureIds[pictureIds.length - 1];
 };
 
 const PictureView = ({
