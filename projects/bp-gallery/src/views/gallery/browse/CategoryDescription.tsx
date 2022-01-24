@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { sanitize } from 'dompurify';
 import './CategoryDescription.scss';
 import { Icon, IconButton } from '@mui/material';
@@ -7,14 +7,16 @@ import getLineBreaks from './../helpers/get-linebreaks';
 const CategoryDescription = ({ description, name }: { description: string; name: string }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const buffer = document.createElement('div');
-  buffer.className = 'category-description open';
-  buffer.innerText = description;
-  document.body.appendChild(buffer);
-  const split = getLineBreaks(buffer.childNodes[0]);
-  buffer.remove();
+  const isDescriptionLong = useMemo(() => {
+    const buffer = document.createElement('div');
+    buffer.className = 'category-description open';
+    buffer.innerText = description;
+    document.body.appendChild(buffer);
+    const split = getLineBreaks(buffer.childNodes[0]);
+    buffer.remove();
 
-  const isDescriptionLong = split.length > 3;
+    return split.length > 3;
+  }, [description]);
 
   return (
     <div className='category-container'>
@@ -36,7 +38,7 @@ const CategoryDescription = ({ description, name }: { description: string; name:
             setIsOpen(!isOpen);
           }}
         >
-          <Icon className='icon'>{isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_downw'}</Icon>
+          <Icon className='icon'>{isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}</Icon>
         </IconButton>
       )}
     </div>
