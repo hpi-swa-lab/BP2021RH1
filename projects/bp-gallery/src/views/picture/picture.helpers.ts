@@ -1,4 +1,4 @@
-import { PictureNavigationTarget } from './PictureViewUI';
+import { PictureNavigationTarget } from './components/PictureViewUI';
 
 const TRANSITION_LENGTH = 500;
 

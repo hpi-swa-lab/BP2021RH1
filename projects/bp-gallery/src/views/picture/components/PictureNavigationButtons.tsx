@@ -1,7 +1,7 @@
 import { Icon, IconButton } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
 import { PictureViewContext } from '../PictureView';
-import { PictureNavigationTarget } from '../PictureViewUI';
+import { PictureNavigationTarget } from './PictureViewUI';
 
 const PictureNavigationButtons = () => {
   const { navigatePicture, hasNext, hasPrevious } = useContext(PictureViewContext);

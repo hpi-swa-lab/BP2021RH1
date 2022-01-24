@@ -3,6 +3,7 @@ import {
   CommentEntity,
   DescriptionEntity,
   GetPictureInfoDocument,
+  TimeRangeTagEntity,
 } from '../../../graphql/APIConnector';
 
 export const CommentMocks: CommentEntity[] = [
@@ -24,6 +25,13 @@ export const CommentMocks: CommentEntity[] = [
   },
 ];
 
+export const TimeRangeTagMocks: TimeRangeTagEntity = {
+  attributes: {
+    start: new Date('1955-10-10'),
+    end: new Date('1955-10-12'),
+  },
+};
+
 export const DescriptionMocks: DescriptionEntity[] = [
   {
     id: '1',
@@ -39,6 +47,37 @@ export const DescriptionMocks: DescriptionEntity[] = [
   },
 ];
 
+export const PictureMocks: any = {
+  data: {
+    attributes: {
+      title: {
+        data: {
+          id: '1',
+          attributes: {
+            text: 'Picture with comments and descriptions',
+          },
+        },
+      },
+      media: {
+        data: {
+          attributes: {
+            url: 'test-image.jpg',
+          },
+        },
+      },
+      descriptions: {
+        data: DescriptionMocks,
+      },
+      comments: {
+        data: CommentMocks,
+      },
+      time_range_tag: {
+        data: TimeRangeTagMocks,
+      },
+    },
+  },
+};
+
 export const GetPictureInfoDocumentMocks = [
   {
     request: {
@@ -49,33 +88,7 @@ export const GetPictureInfoDocumentMocks = [
     },
     result: {
       data: {
-        picture: {
-          data: {
-            attributes: {
-              title: {
-                data: {
-                  id: '1',
-                  attributes: {
-                    text: 'Picture with comments and descriptions',
-                  },
-                },
-              },
-              media: {
-                data: {
-                  attributes: {
-                    url: 'test-image.jpg',
-                  },
-                },
-              },
-              descriptions: {
-                data: DescriptionMocks,
-              },
-              comments: {
-                data: CommentMocks,
-              },
-            },
-          },
-        },
+        picture: PictureMocks,
       },
     },
   },

@@ -14,10 +14,12 @@ import { History } from 'history';
 import { useGetPictureInfoLazyQuery } from '../../graphql/APIConnector';
 import { FlatPicture } from '../../graphql/additionalFlatTypes';
 import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture.helpers';
-import PictureViewUI, { PictureNavigationTarget } from './PictureViewUI';
-import { useFlatQueryResponseData } from '../../graphql/queryUtils';
+import PictureViewUI, { PictureNavigationTarget } from './components/PictureViewUI';
 import PictureInfo from './components/PictureInfo';
 import useBlockScroll from './scrollBlock.hook';
+import Loading from '../../components/Loading';
+import QueryErrorDisplay from '../../components/QueryErrorDisplay';
+import { useFlatQueryResponseData } from '../../graphql/queryUtils';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -207,6 +209,8 @@ const PictureView = ({
           ref={containerRef}
           onClick={thumbnailMode ? openDetails : () => {}}
         >
+          {loading && <Loading />}
+          {error && <QueryErrorDisplay error={error} />}
           <div className='picture-wrapper'>
             <div className='picture-container' style={{ maxHeight }}>
               <img src={pictureLink} alt={pictureLink} />

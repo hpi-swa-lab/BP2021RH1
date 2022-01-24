@@ -1,138 +1,136 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import { renderWithAPIMocks } from '../../../testUtils';
 import { asApiPath } from '../../../App';
-import { CommentMocks, DescriptionMocks, GetPictureInfoDocumentMocks } from './mocks';
+import { GetPictureInfoDocumentMocks, PictureMocks } from './mocks';
 import PictureView from '../PictureView';
 
-const PictureMock = jest.fn();
-const PictureMockComponent = (props: any) => {
-  PictureMock(props);
-  return <div>PictureMock</div>;
+const PictureViewUIMock = jest.fn();
+const PictureViewUIMockComponent = (props: any) => {
+  PictureViewUIMock(props);
+  return <div>PictureViewUIMock</div>;
 };
-jest.mock('../Picture', () => PictureMockComponent);
+jest.mock('../components/PictureViewUI', () => PictureViewUIMockComponent);
 
-const PictureDetailsMock = jest.fn();
-const PictureDetailsMockComponent = (props: any) => {
-  PictureDetailsMock(props);
-  return <div>PictureDetailsMock</div>;
+const PictureInfoMock = jest.fn();
+const PictureInfoMockComponent = (props: any) => {
+  PictureInfoMock(props);
+  return <div>PictureInfoMock</div>;
 };
-jest.mock('../PictureDetails', () => PictureDetailsMockComponent);
+jest.mock('../components/PictureInfo', () => PictureInfoMockComponent);
 
-const CommentsContainerMock = jest.fn();
-const CommentsContainerMockComponent = (props: any) => {
-  CommentsContainerMock(props);
-  return <div>CommentsContainerMock</div>;
-};
-jest.mock('../comments/CommentsContainer', () => CommentsContainerMockComponent);
+describe('PictureView', () => {
+  describe('in non-thumbnailMode', () => {
+    const imageURL = 'test-image.jpg';
 
-describe('PictureView in non-thumbnailMode', () => {
-  it('should render the Picture component', async () => {
-    renderWithAPIMocks(
-      <PictureView pictureId='1' thumbnailMode={false} />,
-      GetPictureInfoDocumentMocks
-    );
-
-    await waitFor(() => {
-      const pictureElement = screen.getByText('PictureMock');
-      expect(pictureElement).toBeInTheDocument();
-
-      expect(PictureMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          url: 'test-image.jpg',
-        })
+    it('should render the picture', async () => {
+      const { container } = renderWithAPIMocks(
+        <PictureView pictureId='1' initialThumbnail={false} />,
+        GetPictureInfoDocumentMocks
       );
+
+      await waitFor(() => {
+        const imageTags = container.getElementsByTagName('img');
+        expect(imageTags).toHaveLength(1);
+        expect(imageTags.item(0)).toBeInTheDocument();
+        expect(imageTags.item(0)).toHaveAttribute('src', asApiPath(imageURL));
+      });
     });
-  });
 
-  it('should render the CommentsContainer component', async () => {
-    renderWithAPIMocks(
-      <PictureView pictureId='1' thumbnailMode={false} />,
-      GetPictureInfoDocumentMocks
-    );
-
-    await waitFor(() => {
-      const commentsContainer = screen.getByText('CommentsContainerMock');
-      expect(commentsContainer).toBeInTheDocument();
-
-      expect(CommentsContainerMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          comments: flattenQueryResponseData(CommentMocks),
-        })
+    it('should render the PictureInfo component', async () => {
+      renderWithAPIMocks(
+        <PictureView pictureId='1' initialThumbnail={false} />,
+        GetPictureInfoDocumentMocks
       );
+
+      await waitFor(() => {
+        const pictureDetails = screen.getByText('PictureInfoMock');
+        expect(pictureDetails).toBeInTheDocument();
+
+        expect(PictureInfoMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            picture: PictureMocks,
+          })
+        );
+      });
     });
-  });
 
-  it('should render the PictureDetails component', async () => {
-    renderWithAPIMocks(
-      <PictureView pictureId='1' thumbnailMode={false} />,
-      GetPictureInfoDocumentMocks
-    );
-
-    await waitFor(() => {
-      const pictureDetails = screen.getByText('PictureDetailsMock');
-      expect(pictureDetails).toBeInTheDocument();
-
-      expect(PictureDetailsMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          descriptions: flattenQueryResponseData(DescriptionMocks),
-        })
+    it('should render the PictureViewUI component', async () => {
+      renderWithAPIMocks(
+        <PictureView pictureId='1' initialThumbnail={false} />,
+        GetPictureInfoDocumentMocks
       );
+
+      await waitFor(() => {
+        const pictureDetails = screen.getByText('PictureViewUIMock');
+        expect(pictureDetails).toBeInTheDocument();
+
+        expect(PictureViewUIMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            calledViaLink: true,
+          })
+        );
+      });
+    });
+
+    it('should render a loading indicator when data is loading', async () => {
+      renderWithAPIMocks(
+        <PictureView pictureId='1' initialThumbnail={false} />,
+        GetPictureInfoDocumentMocks
+      );
+      await waitFor(() => {
+        const loadingElement = screen.getByText(/loading/);
+        expect(loadingElement).toBeInTheDocument();
+      });
+    });
+
+    it('should render the error message related to a network error', async () => {
+      renderWithAPIMocks(
+        <PictureView pictureId='2' initialThumbnail={false} />,
+        GetPictureInfoDocumentMocks
+      );
+
+      await waitFor(() => {
+        const errorMessage = screen.getByText('mocked network error');
+        expect(errorMessage).toBeInTheDocument();
+      });
+    });
+
+    it('should render the error message related to an api error', async () => {
+      renderWithAPIMocks(
+        <PictureView pictureId='3' initialThumbnail={false} />,
+        GetPictureInfoDocumentMocks
+      );
+
+      await waitFor(() => {
+        const errorMessage = screen.getByText('mocked api error');
+        expect(errorMessage).toBeInTheDocument();
+      });
     });
   });
+  describe('in thumbnailMode', () => {
+    it('should render the picture thumbnail', () => {
+      const thumbnailUrl = 'test-image.png';
 
-  it('should render a loading indicator when data is loading', () => {
-    renderWithAPIMocks(
-      <PictureView pictureId='1' thumbnailMode={false} />,
-      GetPictureInfoDocumentMocks
-    );
+      const { container } = render(
+        <PictureView pictureId='1' initialThumbnail={true} thumbnailUrl={thumbnailUrl} />
+      );
 
-    const loadingElement = screen.getByText(/loading/);
-    expect(loadingElement).toBeInTheDocument();
-  });
-
-  it('should render the error message related to a network error', async () => {
-    renderWithAPIMocks(
-      <PictureView pictureId='2' thumbnailMode={false} />,
-      GetPictureInfoDocumentMocks
-    );
-
-    await waitFor(() => {
-      const errorMessage = screen.getByText('mocked network error');
-      expect(errorMessage).toBeInTheDocument();
+      const imageTags = container.getElementsByTagName('img');
+      expect(imageTags).toHaveLength(1);
+      expect(imageTags.item(0)).toHaveAttribute('src', asApiPath(thumbnailUrl));
     });
-  });
 
-  it('should render the error message related to an api error', async () => {
-    renderWithAPIMocks(
-      <PictureView pictureId='3' thumbnailMode={false} />,
-      GetPictureInfoDocumentMocks
-    );
+    it('should not render the info component', () => {
+      render(<PictureView pictureId='1' initialThumbnail={true} thumbnailUrl='test-image.png' />);
 
-    await waitFor(() => {
-      const errorMessage = screen.getByText('mocked api error');
-      expect(errorMessage).toBeInTheDocument();
+      expect(() => screen.getByText('PictureInfoMock')).toThrow();
     });
-  });
-});
 
-describe('PictureView in thumbnailMode', () => {
-  it('should render the picture thumbnail', () => {
-    const thumbnailUrl = 'test-image.png';
+    it('should not render the picture ui component', () => {
+      render(<PictureView pictureId='1' initialThumbnail={true} thumbnailUrl='test-image.png' />);
 
-    const { container } = render(
-      <PictureView pictureId='1' thumbnailMode={true} thumbnailUrl={thumbnailUrl} />
-    );
-
-    const imageTags = container.getElementsByTagName('img');
-    expect(imageTags).toHaveLength(1);
-    expect(imageTags.item(0)).toHaveAttribute('src', asApiPath(thumbnailUrl));
-  });
-
-  it('should not render the Picture component', () => {
-    render(<PictureView pictureId='1' thumbnailMode={true} thumbnailUrl='test-image.png' />);
-
-    expect(() => screen.getByText('PictureMock')).toThrow();
+      expect(() => screen.getByText('PictureViewUIMock')).toThrow();
+    });
   });
 });
