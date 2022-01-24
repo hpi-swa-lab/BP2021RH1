@@ -3,11 +3,15 @@ import './ItemList.scss';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Icon, IconButton } from '@mui/material';
 import { ItemListItem, ItemListItemModel } from './ItemListItem';
+import { browserName } from 'react-device-detect';
 
 const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
   const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
   const [showLeftButton, setShowLeftButton] = useState<boolean>(false);
   const [showRightButton, setShowRightButton] = useState<boolean>(true);
+
+  const isFirefox = browserName === 'Firefox';
+  const isSafari = browserName === 'Safari';
 
   const scrollElements = (count: number) => {
     if (!scrollBarRef) {
@@ -17,7 +21,7 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
     scrollBarRef.scroll({
       top: 0,
       left: scrollBarRef.scrollLeft + elementWidth * count,
-      behavior: 'smooth',
+      behavior: isFirefox || isSafari ? 'auto' : 'smooth',
     });
   };
 

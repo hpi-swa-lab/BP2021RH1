@@ -6,30 +6,20 @@ import { useTranslation } from 'react-i18next';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { NavigationContext } from '../../App';
 
-const GalleryView = (props?: { target?: string; searchParams?: string[]; path?: string[] }) => {
+const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => {
   const { t } = useTranslation();
 
   const [scrollPos, setScrollPos] = useState<number>();
   const [scrollHeight, setScrollHeight] = useState<number>();
 
   const switchView = () => {
-    switch (props?.target) {
+    switch (target) {
       case 'browse':
         return (
-          <BrowseView
-            path={props.path}
-            scrollPos={scrollPos ?? 0}
-            scrollHeight={scrollHeight ?? 0}
-          />
+          <BrowseView path={path} scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />
         );
       case 'search':
-        return (
-          <SearchView
-            params={props.searchParams}
-            scrollPos={scrollPos ?? 0}
-            scrollHeight={scrollHeight ?? 0}
-          />
-        );
+        return <SearchView scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />;
       default:
         return '404 - Not found';
     }

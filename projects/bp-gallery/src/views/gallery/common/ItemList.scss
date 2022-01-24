@@ -45,7 +45,12 @@
 
     &:hover {
       .image-container img {
-        transform: scale(1.02);
+        @supports not (scale: 1.02) {
+          transform: scale(1.02);
+        }
+        @supports (scale: 1.02) {
+          scale: 1.02;
+        }
       }
     }
 
