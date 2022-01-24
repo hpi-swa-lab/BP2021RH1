@@ -2,7 +2,7 @@
 // as we render the text in getLineBreaks which does not have a specific width
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import CategoryDescription from '../CategoryDescription';
 
 test('category page shows the coresponding category info', () => {
