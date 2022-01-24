@@ -6,6 +6,7 @@ import SubCategories from './SubCategories';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 import Loading from '../../../components/Loading';
+import CategoryDescription from './CategoryDescription';
 
 export function encodeBrowsePathComponent(folder: string): string {
   return encodeURIComponent(folder.replace(/ /gm, '_'));
@@ -41,8 +42,10 @@ const BrowseView = ({
   } else if (data?.categoryTags?.length && data.categoryTags[0]) {
     const category = data.categoryTags[0];
     const relatedTagsSize = category.related_tags?.length ?? 0;
+
     return (
       <div className='browse-view'>
+        <CategoryDescription description={category.description ?? ''} name={category.name} />
         {relatedTagsSize > 0 && (
           <SubCategories
             relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}

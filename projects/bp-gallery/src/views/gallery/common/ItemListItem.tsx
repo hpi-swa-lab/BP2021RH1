@@ -1,5 +1,6 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import getColorSchema from './helpers/color-schema';
+import getLineBreaks from './../helpers/get-linebreaks';
 
 export interface ItemListItemModel {
   name: string;
@@ -9,25 +10,38 @@ export interface ItemListItemModel {
   onClick?: () => void;
 }
 
-export const ItemListItem = ({ item }: { item: ItemListItemModel }) => {
-  const [fontSize, setFontSize] = useState<number>(0);
-
+export const ItemListItem = ({ item, compact }: { item: ItemListItemModel; compact?: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [textDimensions, setTextDimensions] = useState<DOMRect>();
+  const [splitText, setSplitText] = useState<string[]>();
 
-  const updateFontSize = useCallback(() => {
-    if (!containerRef.current) {
-      return;
-    }
-    const maxWidth = containerRef.current.getBoundingClientRect().width;
-    setFontSize(1.25 * Math.min(Math.max(maxWidth / item.name.length, 0.02 * maxWidth), 28));
-  }, [containerRef, item.name]);
+  // Based on font-size 50
+  const MAXIMUM_TEXT_WIDTH = 200;
 
-  useLayoutEffect(() => {
-    if (!containerRef.current || !item.name) {
-      return;
+  // Abridged from: https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
+  const measuredRef = useCallback(node => {
+    if (node !== null) {
+      const bbox = (node as SVGSVGElement).getBBox();
+      bbox.height = Math.max(bbox.height, MAXIMUM_TEXT_WIDTH);
+      setTextDimensions(bbox);
     }
-    updateFontSize();
-  });
+  }, []);
+
+  const checkLineBreaks = () => {
+    // The following uses in-browser means to determine where a line-break should be set
+    const buffer = document.createElement('p');
+    buffer.className = `_buffer_for_line_breaks_${compact ? ' compact' : ''}`;
+    buffer.innerHTML = item.name;
+    document.body.appendChild(buffer);
+    let split = getLineBreaks(buffer.childNodes[0]);
+    buffer.remove();
+    if (split.length > 2) {
+      split = [split[0], `${split[1]}...`];
+    }
+    setSplitText(split);
+  };
+
+  useEffect(checkLineBreaks, [item.name, compact]);
 
   return (
     <div className='item' ref={containerRef} onClick={item.onClick ? item.onClick : undefined}>
@@ -39,7 +53,27 @@ export const ItemListItem = ({ item }: { item: ItemListItemModel }) => {
         style={{ backgroundColor: item.color ?? getColorSchema(item.name) }}
       />
       <div className='text-container'>
-        <span style={{ fontSize: `${fontSize}px` }}>{item.name.toUpperCase()}</span>
+        <svg
+          viewBox={`0 -${textDimensions?.height ?? 0} ${textDimensions?.width ?? 0} ${
+            textDimensions?.height ?? 0
+          }`}
+          dominantBaseline='ideographic'
+          preserveAspectRatio='xMinYMax meet'
+          xmlns='http://www.w3.org/2000/svg'
+        >
+          {splitText?.length && (
+            <text x='0' y='0' ref={measuredRef}>
+              <tspan x='0'>
+                {splitText.length > 1 ? splitText[1].toUpperCase() : splitText[0].toUpperCase()}
+              </tspan>
+              {splitText.length > 1 && (
+                <tspan x='0' dy='-1.2em'>
+                  {splitText[0].toUpperCase()}
+                </tspan>
+              )}
+            </text>
+          )}
+        </svg>
       </div>
     </div>
   );
