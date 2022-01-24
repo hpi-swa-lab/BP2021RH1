@@ -25,6 +25,7 @@
   .picture-wrapper {
     flex: 1 1 0;
     position: relative;
+    pointer-events: none;
   }
 
   &.thumbnail {
@@ -44,6 +45,7 @@
   }
 
   .picture-navigation-buttons {
+    pointer-events: none;
     display: flex;
     position: absolute;
     top: 0;
@@ -58,6 +60,7 @@
       background: rgba(0, 0, 0, 0.7);
       color: white;
       z-index: 99;
+      pointer-events: all;
     }
   }
 
@@ -153,6 +156,7 @@
 
   .picture-ui {
     position: relative;
+    pointer-events: all;
     height: 100%;
 
     @media only screen and (min-width: $mobile-breakpoint) {
