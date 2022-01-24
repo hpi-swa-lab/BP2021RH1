@@ -1,5 +1,5 @@
 // Source: https://stackoverflow.com/questions/55604798/find-rendered-line-breaks-with-javascript
-function getLineBreaks(node?: Node) {
+const getLineBreaks = (node?: Node) => {
   if (!node || !node.parentNode || node.nodeType !== 3) return [];
   const range = document.createRange();
   const lines = [];
@@ -23,6 +23,6 @@ function getLineBreaks(node?: Node) {
   lines.push(str.substr(lastFound));
 
   return lines;
-}
+};
 
 export default getLineBreaks;
