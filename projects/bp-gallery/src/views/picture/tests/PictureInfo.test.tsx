@@ -1,7 +1,8 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import PictureInfo from '../components/PictureInfo';
-import { PictureMocks } from './mocks';
+import { FocusArea } from '../components/PictureViewNavigationBar';
+import { CommentMocks, DescriptionMocks, PictureMocks } from './mocks';
 import { renderWithPictureContextMocks } from './pictureTestUtils';
 
 const CommentsContainerMock = jest.fn();
@@ -61,5 +62,59 @@ describe('PictureInfo', () => {
     await waitFor(async () => {
       expect(container.querySelector('.picture-info-container')?.className).not.toContain('closed');
     });
+  });
+
+  it('should render the images time range tag', async () => {
+    renderWithPictureContextMocks(
+      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+    );
+
+    const timeRangeTags = screen.getByText('10.10.1955 - 12.10.1955');
+    expect(timeRangeTags).toBeInTheDocument();
+  });
+
+  it('should render the picture details', async () => {
+    renderWithPictureContextMocks(
+      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+    );
+
+    const pictureDetails = screen.getByText('PictureDetailsMock');
+    expect(pictureDetails).toBeInTheDocument();
+
+    expect(PictureDetailsMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        descriptions: DescriptionMocks,
+      })
+    );
+  });
+
+  it('should render the comments container', async () => {
+    renderWithPictureContextMocks(
+      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+    );
+
+    const commentsContainer = screen.getByText('CommentsContainerMock');
+    expect(commentsContainer).toBeInTheDocument();
+
+    expect(CommentsContainerMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        comments: CommentMocks,
+      })
+    );
+  });
+
+  it('should render the picture view navigation bar', async () => {
+    renderWithPictureContextMocks(
+      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+    );
+
+    const navigationBar = screen.getByText('PictureViewNavigationBarMock');
+    expect(navigationBar).toBeInTheDocument();
+
+    expect(PictureViewNavigationBarMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        focusedArea: FocusArea.PICTURE,
+      })
+    );
   });
 });
