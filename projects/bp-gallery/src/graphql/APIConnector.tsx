@@ -19,226 +19,302 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Date: any;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Long` scalar type represents 52-bit integers */
+  Long: any;
+  /** A time string with format: HH:mm:ss.SSS */
+  Time: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
-export type BooleanFilterInput = {
-  and?: InputMaybe<Array<InputMaybe<Scalars['Boolean']>>>;
-  between?: InputMaybe<Array<InputMaybe<Scalars['Boolean']>>>;
-  contains?: InputMaybe<Scalars['Boolean']>;
-  containsi?: InputMaybe<Scalars['Boolean']>;
-  endsWith?: InputMaybe<Scalars['Boolean']>;
-  eq?: InputMaybe<Scalars['Boolean']>;
-  gt?: InputMaybe<Scalars['Boolean']>;
-  gte?: InputMaybe<Scalars['Boolean']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']>>>;
-  lt?: InputMaybe<Scalars['Boolean']>;
-  lte?: InputMaybe<Scalars['Boolean']>;
-  ne?: InputMaybe<Scalars['Boolean']>;
-  not?: InputMaybe<BooleanFilterInput>;
-  notContains?: InputMaybe<Scalars['Boolean']>;
-  notContainsi?: InputMaybe<Scalars['Boolean']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['Boolean']>>>;
-  notNull?: InputMaybe<Scalars['Boolean']>;
-  null?: InputMaybe<Scalars['Boolean']>;
-  or?: InputMaybe<Array<InputMaybe<Scalars['Boolean']>>>;
-  startsWith?: InputMaybe<Scalars['Boolean']>;
+export type AdminUser = {
+  firstname: Scalars['String'];
+  id: Scalars['ID'];
+  lastname: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 export type CategoryTag = {
-  createdAt?: Maybe<Scalars['DateTime']>;
+  created_at: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
   name: Scalars['String'];
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  pictures?: Maybe<Array<Maybe<Picture>>>;
   priority: Scalars['Int'];
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  related_tags?: Maybe<CategoryTagRelationResponseCollection>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  published_at?: Maybe<Scalars['DateTime']>;
+  related_tags?: Maybe<Array<Maybe<CategoryTag>>>;
+  updated_at: Scalars['DateTime'];
 };
 
 export type CategoryTagPicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type CategoryTagRelated_TagsArgs = {
-  filters?: InputMaybe<CategoryTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type CategoryTagEntity = {
-  attributes?: Maybe<CategoryTag>;
-  id?: Maybe<Scalars['ID']>;
+export type CategoryTagAggregator = {
+  avg?: Maybe<CategoryTagAggregatorAvg>;
+  count?: Maybe<Scalars['Int']>;
+  max?: Maybe<CategoryTagAggregatorMax>;
+  min?: Maybe<CategoryTagAggregatorMin>;
+  sum?: Maybe<CategoryTagAggregatorSum>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type CategoryTagEntityResponse = {
-  data?: Maybe<CategoryTagEntity>;
+export type CategoryTagAggregatorAvg = {
+  priority?: Maybe<Scalars['Float']>;
 };
 
-export type CategoryTagEntityResponseCollection = {
-  data: Array<CategoryTagEntity>;
-  meta: ResponseCollectionMeta;
+export type CategoryTagAggregatorMax = {
+  priority?: Maybe<Scalars['Float']>;
 };
 
-export type CategoryTagFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<CategoryTagFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  description?: InputMaybe<StringFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  name?: InputMaybe<StringFilterInput>;
-  not?: InputMaybe<CategoryTagFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<CategoryTagFiltersInput>>>;
-  pictures?: InputMaybe<PictureFiltersInput>;
-  priority?: InputMaybe<IntFilterInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  related_tags?: InputMaybe<CategoryTagFiltersInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
+export type CategoryTagAggregatorMin = {
+  priority?: Maybe<Scalars['Float']>;
+};
+
+export type CategoryTagAggregatorSum = {
+  priority?: Maybe<Scalars['Float']>;
+};
+
+export type CategoryTagConnection = {
+  aggregate?: Maybe<CategoryTagAggregator>;
+  groupBy?: Maybe<CategoryTagGroupBy>;
+  values?: Maybe<Array<Maybe<CategoryTag>>>;
+};
+
+export type CategoryTagConnectionCreated_At = {
+  connection?: Maybe<CategoryTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CategoryTagConnectionDescription = {
+  connection?: Maybe<CategoryTagConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type CategoryTagConnectionId = {
+  connection?: Maybe<CategoryTagConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type CategoryTagConnectionName = {
+  connection?: Maybe<CategoryTagConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type CategoryTagConnectionPriority = {
+  connection?: Maybe<CategoryTagConnection>;
+  key?: Maybe<Scalars['Int']>;
+};
+
+export type CategoryTagConnectionPublished_At = {
+  connection?: Maybe<CategoryTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CategoryTagConnectionUpdated_At = {
+  connection?: Maybe<CategoryTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CategoryTagGroupBy = {
+  created_at?: Maybe<Array<Maybe<CategoryTagConnectionCreated_At>>>;
+  description?: Maybe<Array<Maybe<CategoryTagConnectionDescription>>>;
+  id?: Maybe<Array<Maybe<CategoryTagConnectionId>>>;
+  name?: Maybe<Array<Maybe<CategoryTagConnectionName>>>;
+  priority?: Maybe<Array<Maybe<CategoryTagConnectionPriority>>>;
+  published_at?: Maybe<Array<Maybe<CategoryTagConnectionPublished_At>>>;
+  updated_at?: Maybe<Array<Maybe<CategoryTagConnectionUpdated_At>>>;
 };
 
 export type CategoryTagInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
   description?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   priority?: InputMaybe<Scalars['Int']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
   related_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-};
-
-export type CategoryTagRelationResponseCollection = {
-  data: Array<CategoryTagEntity>;
+  updated_by?: InputMaybe<Scalars['ID']>;
 };
 
 export type Comment = {
   author?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
+  created_at: Scalars['DateTime'];
   date?: Maybe<Scalars['DateTime']>;
-  picture?: Maybe<PictureEntityResponse>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  picture?: Maybe<Picture>;
+  published_at?: Maybe<Scalars['DateTime']>;
   text?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  updated_at: Scalars['DateTime'];
 };
 
-export type CommentEntity = {
-  attributes?: Maybe<Comment>;
-  id?: Maybe<Scalars['ID']>;
+export type CommentAggregator = {
+  count?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type CommentEntityResponse = {
-  data?: Maybe<CommentEntity>;
+export type CommentConnection = {
+  aggregate?: Maybe<CommentAggregator>;
+  groupBy?: Maybe<CommentGroupBy>;
+  values?: Maybe<Array<Maybe<Comment>>>;
 };
 
-export type CommentEntityResponseCollection = {
-  data: Array<CommentEntity>;
-  meta: ResponseCollectionMeta;
+export type CommentConnectionAuthor = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['String']>;
 };
 
-export type CommentFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<CommentFiltersInput>>>;
-  author?: InputMaybe<StringFilterInput>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  date?: InputMaybe<DateTimeFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  not?: InputMaybe<CommentFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<CommentFiltersInput>>>;
-  picture?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  text?: InputMaybe<StringFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
+export type CommentConnectionCreated_At = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentConnectionDate = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentConnectionId = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type CommentConnectionPicture = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type CommentConnectionPublished_At = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentConnectionText = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type CommentConnectionUpdated_At = {
+  connection?: Maybe<CommentConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentGroupBy = {
+  author?: Maybe<Array<Maybe<CommentConnectionAuthor>>>;
+  created_at?: Maybe<Array<Maybe<CommentConnectionCreated_At>>>;
+  date?: Maybe<Array<Maybe<CommentConnectionDate>>>;
+  id?: Maybe<Array<Maybe<CommentConnectionId>>>;
+  picture?: Maybe<Array<Maybe<CommentConnectionPicture>>>;
+  published_at?: Maybe<Array<Maybe<CommentConnectionPublished_At>>>;
+  text?: Maybe<Array<Maybe<CommentConnectionText>>>;
+  updated_at?: Maybe<Array<Maybe<CommentConnectionUpdated_At>>>;
 };
 
 export type CommentInput = {
   author?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
   date?: InputMaybe<Scalars['DateTime']>;
   picture?: InputMaybe<Scalars['ID']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
 };
 
-export type CommentRelationResponseCollection = {
-  data: Array<CommentEntity>;
+export type ComponentContentComment = {
+  author: Scalars['String'];
+  date?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  text?: Maybe<Scalars['String']>;
 };
 
-export type DateTimeFilterInput = {
-  and?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  between?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  contains?: InputMaybe<Scalars['DateTime']>;
-  containsi?: InputMaybe<Scalars['DateTime']>;
-  endsWith?: InputMaybe<Scalars['DateTime']>;
-  eq?: InputMaybe<Scalars['DateTime']>;
-  gt?: InputMaybe<Scalars['DateTime']>;
-  gte?: InputMaybe<Scalars['DateTime']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  lt?: InputMaybe<Scalars['DateTime']>;
-  lte?: InputMaybe<Scalars['DateTime']>;
-  ne?: InputMaybe<Scalars['DateTime']>;
-  not?: InputMaybe<DateTimeFilterInput>;
-  notContains?: InputMaybe<Scalars['DateTime']>;
-  notContainsi?: InputMaybe<Scalars['DateTime']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  notNull?: InputMaybe<Scalars['Boolean']>;
-  null?: InputMaybe<Scalars['Boolean']>;
-  or?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  startsWith?: InputMaybe<Scalars['DateTime']>;
+export type ComponentContentCommentInput = {
+  author: Scalars['String'];
+  date?: InputMaybe<Scalars['DateTime']>;
+  text?: InputMaybe<Scalars['String']>;
 };
 
 export type Description = {
-  createdAt?: Maybe<Scalars['DateTime']>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  text: Scalars['String'];
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  created_at: Scalars['DateTime'];
+  id: Scalars['ID'];
+  pictures?: Maybe<Array<Maybe<Picture>>>;
+  published_at?: Maybe<Scalars['DateTime']>;
+  text?: Maybe<Scalars['String']>;
+  updated_at: Scalars['DateTime'];
 };
 
 export type DescriptionPicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type DescriptionEntity = {
-  attributes?: Maybe<Description>;
-  id?: Maybe<Scalars['ID']>;
+export type DescriptionAggregator = {
+  count?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type DescriptionEntityResponse = {
-  data?: Maybe<DescriptionEntity>;
+export type DescriptionConnection = {
+  aggregate?: Maybe<DescriptionAggregator>;
+  groupBy?: Maybe<DescriptionGroupBy>;
+  values?: Maybe<Array<Maybe<Description>>>;
 };
 
-export type DescriptionEntityResponseCollection = {
-  data: Array<DescriptionEntity>;
-  meta: ResponseCollectionMeta;
+export type DescriptionConnectionCreated_At = {
+  connection?: Maybe<DescriptionConnection>;
+  key?: Maybe<Scalars['DateTime']>;
 };
 
-export type DescriptionFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<DescriptionFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  not?: InputMaybe<DescriptionFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<DescriptionFiltersInput>>>;
-  pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  text?: InputMaybe<StringFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
+export type DescriptionConnectionId = {
+  connection?: Maybe<DescriptionConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type DescriptionConnectionPublished_At = {
+  connection?: Maybe<DescriptionConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type DescriptionConnectionText = {
+  connection?: Maybe<DescriptionConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type DescriptionConnectionUpdated_At = {
+  connection?: Maybe<DescriptionConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type DescriptionGroupBy = {
+  created_at?: Maybe<Array<Maybe<DescriptionConnectionCreated_At>>>;
+  id?: Maybe<Array<Maybe<DescriptionConnectionId>>>;
+  published_at?: Maybe<Array<Maybe<DescriptionConnectionPublished_At>>>;
+  text?: Maybe<Array<Maybe<DescriptionConnectionText>>>;
+  updated_at?: Maybe<Array<Maybe<DescriptionConnectionUpdated_At>>>;
 };
 
 export type DescriptionInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
-};
-
-export type DescriptionRelationResponseCollection = {
-  data: Array<DescriptionEntity>;
+  updated_by?: InputMaybe<Scalars['ID']>;
 };
 
 export type FileInfoInput = {
@@ -247,292 +323,397 @@ export type FileInfoInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
-export type FloatFilterInput = {
-  and?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  between?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  contains?: InputMaybe<Scalars['Float']>;
-  containsi?: InputMaybe<Scalars['Float']>;
-  endsWith?: InputMaybe<Scalars['Float']>;
-  eq?: InputMaybe<Scalars['Float']>;
-  gt?: InputMaybe<Scalars['Float']>;
-  gte?: InputMaybe<Scalars['Float']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  lt?: InputMaybe<Scalars['Float']>;
-  lte?: InputMaybe<Scalars['Float']>;
-  ne?: InputMaybe<Scalars['Float']>;
-  not?: InputMaybe<FloatFilterInput>;
-  notContains?: InputMaybe<Scalars['Float']>;
-  notContainsi?: InputMaybe<Scalars['Float']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  notNull?: InputMaybe<Scalars['Boolean']>;
-  null?: InputMaybe<Scalars['Boolean']>;
-  or?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  startsWith?: InputMaybe<Scalars['Float']>;
+export type FileInput = {
+  alternativeText?: InputMaybe<Scalars['String']>;
+  caption?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  ext?: InputMaybe<Scalars['String']>;
+  formats?: InputMaybe<Scalars['JSON']>;
+  hash: Scalars['String'];
+  height?: InputMaybe<Scalars['Int']>;
+  mime: Scalars['String'];
+  name: Scalars['String'];
+  previewUrl?: InputMaybe<Scalars['String']>;
+  provider: Scalars['String'];
+  provider_metadata?: InputMaybe<Scalars['JSON']>;
+  related?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  size: Scalars['Float'];
+  updated_by?: InputMaybe<Scalars['ID']>;
+  url: Scalars['String'];
+  width?: InputMaybe<Scalars['Int']>;
 };
 
-export type GenericMorph =
-  | CategoryTag
-  | Comment
-  | Description
-  | KeywordTag
-  | Picture
-  | TimeRangeTag
-  | Title
-  | UploadFile
-  | UsersPermissionsPermission
-  | UsersPermissionsRole
-  | UsersPermissionsUser;
-
-export type IdFilterInput = {
-  and?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  between?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  contains?: InputMaybe<Scalars['ID']>;
-  containsi?: InputMaybe<Scalars['ID']>;
-  endsWith?: InputMaybe<Scalars['ID']>;
-  eq?: InputMaybe<Scalars['ID']>;
-  gt?: InputMaybe<Scalars['ID']>;
-  gte?: InputMaybe<Scalars['ID']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  lt?: InputMaybe<Scalars['ID']>;
-  lte?: InputMaybe<Scalars['ID']>;
-  ne?: InputMaybe<Scalars['ID']>;
-  not?: InputMaybe<IdFilterInput>;
-  notContains?: InputMaybe<Scalars['ID']>;
-  notContainsi?: InputMaybe<Scalars['ID']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  notNull?: InputMaybe<Scalars['Boolean']>;
-  null?: InputMaybe<Scalars['Boolean']>;
-  or?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  startsWith?: InputMaybe<Scalars['ID']>;
+export type I18NLocale = {
+  code?: Maybe<Scalars['String']>;
+  created_at: Scalars['DateTime'];
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  updated_at: Scalars['DateTime'];
 };
 
-export type IntFilterInput = {
-  and?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-  between?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-  contains?: InputMaybe<Scalars['Int']>;
-  containsi?: InputMaybe<Scalars['Int']>;
-  endsWith?: InputMaybe<Scalars['Int']>;
-  eq?: InputMaybe<Scalars['Int']>;
-  gt?: InputMaybe<Scalars['Int']>;
-  gte?: InputMaybe<Scalars['Int']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-  lt?: InputMaybe<Scalars['Int']>;
-  lte?: InputMaybe<Scalars['Int']>;
-  ne?: InputMaybe<Scalars['Int']>;
-  not?: InputMaybe<IntFilterInput>;
-  notContains?: InputMaybe<Scalars['Int']>;
-  notContainsi?: InputMaybe<Scalars['Int']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-  notNull?: InputMaybe<Scalars['Boolean']>;
-  null?: InputMaybe<Scalars['Boolean']>;
-  or?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-  startsWith?: InputMaybe<Scalars['Int']>;
-};
-
-export type JsonFilterInput = {
-  and?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
-  between?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
-  contains?: InputMaybe<Scalars['JSON']>;
-  containsi?: InputMaybe<Scalars['JSON']>;
-  endsWith?: InputMaybe<Scalars['JSON']>;
-  eq?: InputMaybe<Scalars['JSON']>;
-  gt?: InputMaybe<Scalars['JSON']>;
-  gte?: InputMaybe<Scalars['JSON']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
-  lt?: InputMaybe<Scalars['JSON']>;
-  lte?: InputMaybe<Scalars['JSON']>;
-  ne?: InputMaybe<Scalars['JSON']>;
-  not?: InputMaybe<JsonFilterInput>;
-  notContains?: InputMaybe<Scalars['JSON']>;
-  notContainsi?: InputMaybe<Scalars['JSON']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
-  notNull?: InputMaybe<Scalars['Boolean']>;
-  null?: InputMaybe<Scalars['Boolean']>;
-  or?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
-  startsWith?: InputMaybe<Scalars['JSON']>;
+export type InputId = {
+  id: Scalars['ID'];
 };
 
 export type KeywordTag = {
-  createdAt?: Maybe<Scalars['DateTime']>;
+  created_at: Scalars['DateTime'];
+  id: Scalars['ID'];
   name: Scalars['String'];
-  pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  pictures?: Maybe<Array<Maybe<Picture>>>;
+  published_at?: Maybe<Scalars['DateTime']>;
+  updated_at: Scalars['DateTime'];
 };
 
 export type KeywordTagPicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type KeywordTagEntity = {
-  attributes?: Maybe<KeywordTag>;
-  id?: Maybe<Scalars['ID']>;
+export type KeywordTagAggregator = {
+  count?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type KeywordTagEntityResponse = {
-  data?: Maybe<KeywordTagEntity>;
+export type KeywordTagConnection = {
+  aggregate?: Maybe<KeywordTagAggregator>;
+  groupBy?: Maybe<KeywordTagGroupBy>;
+  values?: Maybe<Array<Maybe<KeywordTag>>>;
 };
 
-export type KeywordTagEntityResponseCollection = {
-  data: Array<KeywordTagEntity>;
-  meta: ResponseCollectionMeta;
+export type KeywordTagConnectionCreated_At = {
+  connection?: Maybe<KeywordTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
 };
 
-export type KeywordTagFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  name?: InputMaybe<StringFilterInput>;
-  not?: InputMaybe<KeywordTagFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
-  pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
+export type KeywordTagConnectionId = {
+  connection?: Maybe<KeywordTagConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type KeywordTagConnectionName = {
+  connection?: Maybe<KeywordTagConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type KeywordTagConnectionPublished_At = {
+  connection?: Maybe<KeywordTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type KeywordTagConnectionUpdated_At = {
+  connection?: Maybe<KeywordTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type KeywordTagGroupBy = {
+  created_at?: Maybe<Array<Maybe<KeywordTagConnectionCreated_At>>>;
+  id?: Maybe<Array<Maybe<KeywordTagConnectionId>>>;
+  name?: Maybe<Array<Maybe<KeywordTagConnectionName>>>;
+  published_at?: Maybe<Array<Maybe<KeywordTagConnectionPublished_At>>>;
+  updated_at?: Maybe<Array<Maybe<KeywordTagConnectionUpdated_At>>>;
 };
 
 export type KeywordTagInput = {
-  name?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
 };
 
-export type KeywordTagRelationResponseCollection = {
-  data: Array<KeywordTagEntity>;
+export type LocaleInput = {
+  code?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
 };
+
+export type Morph =
+  | CategoryTag
+  | CategoryTagAggregator
+  | CategoryTagAggregatorAvg
+  | CategoryTagAggregatorMax
+  | CategoryTagAggregatorMin
+  | CategoryTagAggregatorSum
+  | CategoryTagConnection
+  | CategoryTagConnectionCreated_At
+  | CategoryTagConnectionDescription
+  | CategoryTagConnectionId
+  | CategoryTagConnectionName
+  | CategoryTagConnectionPriority
+  | CategoryTagConnectionPublished_At
+  | CategoryTagConnectionUpdated_At
+  | CategoryTagGroupBy
+  | Comment
+  | CommentAggregator
+  | CommentConnection
+  | CommentConnectionAuthor
+  | CommentConnectionCreated_At
+  | CommentConnectionDate
+  | CommentConnectionId
+  | CommentConnectionPicture
+  | CommentConnectionPublished_At
+  | CommentConnectionText
+  | CommentConnectionUpdated_At
+  | CommentGroupBy
+  | ComponentContentComment
+  | Description
+  | DescriptionAggregator
+  | DescriptionConnection
+  | DescriptionConnectionCreated_At
+  | DescriptionConnectionId
+  | DescriptionConnectionPublished_At
+  | DescriptionConnectionText
+  | DescriptionConnectionUpdated_At
+  | DescriptionGroupBy
+  | I18NLocale
+  | KeywordTag
+  | KeywordTagAggregator
+  | KeywordTagConnection
+  | KeywordTagConnectionCreated_At
+  | KeywordTagConnectionId
+  | KeywordTagConnectionName
+  | KeywordTagConnectionPublished_At
+  | KeywordTagConnectionUpdated_At
+  | KeywordTagGroupBy
+  | Picture
+  | PictureAggregator
+  | PictureAggregatorAvg
+  | PictureAggregatorMax
+  | PictureAggregatorMin
+  | PictureAggregatorSum
+  | PictureConnection
+  | PictureConnectionCreated_At
+  | PictureConnectionId
+  | PictureConnectionMedia
+  | PictureConnectionPublished_At
+  | PictureConnectionTaken
+  | PictureConnectionTime_Range_Tag
+  | PictureConnectionTitle
+  | PictureConnectionUpdated_At
+  | PictureConnectionWordpress_Id
+  | PictureGroupBy
+  | TimeRangeTag
+  | TimeRangeTagAggregator
+  | TimeRangeTagConnection
+  | TimeRangeTagConnectionCreated_At
+  | TimeRangeTagConnectionEnd
+  | TimeRangeTagConnectionId
+  | TimeRangeTagConnectionPublished_At
+  | TimeRangeTagConnectionStart
+  | TimeRangeTagConnectionUpdated_At
+  | TimeRangeTagGroupBy
+  | Title
+  | TitleAggregator
+  | TitleConnection
+  | TitleConnectionCreated_At
+  | TitleConnectionId
+  | TitleConnectionPublished_At
+  | TitleConnectionText
+  | TitleConnectionUpdated_At
+  | TitleGroupBy
+  | UploadFile
+  | UploadFileAggregator
+  | UploadFileAggregatorAvg
+  | UploadFileAggregatorMax
+  | UploadFileAggregatorMin
+  | UploadFileAggregatorSum
+  | UploadFileConnection
+  | UploadFileConnectionAlternativeText
+  | UploadFileConnectionCaption
+  | UploadFileConnectionCreated_At
+  | UploadFileConnectionExt
+  | UploadFileConnectionFormats
+  | UploadFileConnectionHash
+  | UploadFileConnectionHeight
+  | UploadFileConnectionId
+  | UploadFileConnectionMime
+  | UploadFileConnectionName
+  | UploadFileConnectionPreviewUrl
+  | UploadFileConnectionProvider
+  | UploadFileConnectionProvider_Metadata
+  | UploadFileConnectionSize
+  | UploadFileConnectionUpdated_At
+  | UploadFileConnectionUrl
+  | UploadFileConnectionWidth
+  | UploadFileGroupBy
+  | UserPermissionsPasswordPayload
+  | UsersPermissionsLoginPayload
+  | UsersPermissionsMe
+  | UsersPermissionsMeRole
+  | UsersPermissionsPermission
+  | UsersPermissionsRole
+  | UsersPermissionsRoleAggregator
+  | UsersPermissionsRoleConnection
+  | UsersPermissionsRoleConnectionDescription
+  | UsersPermissionsRoleConnectionId
+  | UsersPermissionsRoleConnectionName
+  | UsersPermissionsRoleConnectionType
+  | UsersPermissionsRoleGroupBy
+  | UsersPermissionsUser
+  | UsersPermissionsUserAggregator
+  | UsersPermissionsUserConnection
+  | UsersPermissionsUserConnectionBlocked
+  | UsersPermissionsUserConnectionConfirmed
+  | UsersPermissionsUserConnectionCreated_At
+  | UsersPermissionsUserConnectionEmail
+  | UsersPermissionsUserConnectionId
+  | UsersPermissionsUserConnectionProvider
+  | UsersPermissionsUserConnectionRole
+  | UsersPermissionsUserConnectionUpdated_At
+  | UsersPermissionsUserConnectionUsername
+  | UsersPermissionsUserGroupBy
+  | CreateCategoryTagPayload
+  | CreateCommentPayload
+  | CreateDescriptionPayload
+  | CreateKeywordTagPayload
+  | CreatePicturePayload
+  | CreateRolePayload
+  | CreateTimeRangeTagPayload
+  | CreateTitlePayload
+  | CreateUserPayload
+  | DeleteCategoryTagPayload
+  | DeleteCommentPayload
+  | DeleteDescriptionPayload
+  | DeleteFilePayload
+  | DeleteKeywordTagPayload
+  | DeletePicturePayload
+  | DeleteRolePayload
+  | DeleteTimeRangeTagPayload
+  | DeleteTitlePayload
+  | DeleteUserPayload
+  | UpdateCategoryTagPayload
+  | UpdateCommentPayload
+  | UpdateDescriptionPayload
+  | UpdateKeywordTagPayload
+  | UpdatePicturePayload
+  | UpdateRolePayload
+  | UpdateTimeRangeTagPayload
+  | UpdateTitlePayload
+  | UpdateUserPayload;
 
 export type Mutation = {
-  createCategoryTag?: Maybe<CategoryTagEntityResponse>;
-  createComment?: Maybe<CommentEntityResponse>;
-  createDescription?: Maybe<DescriptionEntityResponse>;
-  createKeywordTag?: Maybe<KeywordTagEntityResponse>;
-  createPicture?: Maybe<PictureEntityResponse>;
-  createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  createTitle?: Maybe<TitleEntityResponse>;
-  createUploadFile?: Maybe<UploadFileEntityResponse>;
+  createCategoryTag?: Maybe<CreateCategoryTagPayload>;
+  createComment?: Maybe<CreateCommentPayload>;
+  createDescription?: Maybe<CreateDescriptionPayload>;
+  createKeywordTag?: Maybe<CreateKeywordTagPayload>;
+  createPicture?: Maybe<CreatePicturePayload>;
   /** Create a new role */
-  createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
+  createRole?: Maybe<CreateRolePayload>;
+  createTimeRangeTag?: Maybe<CreateTimeRangeTagPayload>;
+  createTitle?: Maybe<CreateTitlePayload>;
   /** Create a new user */
-  createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
-  deleteCategoryTag?: Maybe<CategoryTagEntityResponse>;
-  deleteComment?: Maybe<CommentEntityResponse>;
-  deleteDescription?: Maybe<DescriptionEntityResponse>;
-  deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
-  deletePicture?: Maybe<PictureEntityResponse>;
-  deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  deleteTitle?: Maybe<TitleEntityResponse>;
-  deleteUploadFile?: Maybe<UploadFileEntityResponse>;
+  createUser?: Maybe<CreateUserPayload>;
+  deleteCategoryTag?: Maybe<DeleteCategoryTagPayload>;
+  deleteComment?: Maybe<DeleteCommentPayload>;
+  deleteDescription?: Maybe<DeleteDescriptionPayload>;
+  /** Delete one file */
+  deleteFile?: Maybe<DeleteFilePayload>;
+  deleteKeywordTag?: Maybe<DeleteKeywordTagPayload>;
+  deletePicture?: Maybe<DeletePicturePayload>;
   /** Delete an existing role */
-  deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
-  /** Update an existing user */
-  deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
-  /** Confirm an email users email address */
+  deleteRole?: Maybe<DeleteRolePayload>;
+  deleteTimeRangeTag?: Maybe<DeleteTimeRangeTagPayload>;
+  deleteTitle?: Maybe<DeleteTitlePayload>;
+  /** Delete an existing user */
+  deleteUser?: Maybe<DeleteUserPayload>;
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
-  /** Request a reset password token */
-  forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
+  forgotPassword?: Maybe<UserPermissionsPasswordPayload>;
   login: UsersPermissionsLoginPayload;
-  multipleUpload: Array<Maybe<UploadFileEntityResponse>>;
-  /** Register a user */
+  multipleUpload: Array<Maybe<UploadFile>>;
   register: UsersPermissionsLoginPayload;
-  removeFile?: Maybe<UploadFileEntityResponse>;
-  /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
-  updateCategoryTag?: Maybe<CategoryTagEntityResponse>;
-  updateComment?: Maybe<CommentEntityResponse>;
-  updateDescription?: Maybe<DescriptionEntityResponse>;
-  updateFileInfo: UploadFileEntityResponse;
-  updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
-  updatePicture?: Maybe<PictureEntityResponse>;
-  updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  updateTitle?: Maybe<TitleEntityResponse>;
-  updateUploadFile?: Maybe<UploadFileEntityResponse>;
+  updateCategoryTag?: Maybe<UpdateCategoryTagPayload>;
+  updateComment?: Maybe<UpdateCommentPayload>;
+  updateDescription?: Maybe<UpdateDescriptionPayload>;
+  updateFileInfo: UploadFile;
+  updateKeywordTag?: Maybe<UpdateKeywordTagPayload>;
+  updatePicture?: Maybe<UpdatePicturePayload>;
   /** Update an existing role */
-  updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>;
+  updateRole?: Maybe<UpdateRolePayload>;
+  updateTimeRangeTag?: Maybe<UpdateTimeRangeTagPayload>;
+  updateTitle?: Maybe<UpdateTitlePayload>;
   /** Update an existing user */
-  updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
-  upload: UploadFileEntityResponse;
+  updateUser?: Maybe<UpdateUserPayload>;
+  upload: UploadFile;
 };
 
 export type MutationCreateCategoryTagArgs = {
-  data: CategoryTagInput;
+  input?: InputMaybe<CreateCategoryTagInput>;
 };
 
 export type MutationCreateCommentArgs = {
-  data: CommentInput;
+  input?: InputMaybe<CreateCommentInput>;
 };
 
 export type MutationCreateDescriptionArgs = {
-  data: DescriptionInput;
+  input?: InputMaybe<CreateDescriptionInput>;
 };
 
 export type MutationCreateKeywordTagArgs = {
-  data: KeywordTagInput;
+  input?: InputMaybe<CreateKeywordTagInput>;
 };
 
 export type MutationCreatePictureArgs = {
-  data: PictureInput;
+  input?: InputMaybe<CreatePictureInput>;
+};
+
+export type MutationCreateRoleArgs = {
+  input?: InputMaybe<CreateRoleInput>;
 };
 
 export type MutationCreateTimeRangeTagArgs = {
-  data: TimeRangeTagInput;
+  input?: InputMaybe<CreateTimeRangeTagInput>;
 };
 
 export type MutationCreateTitleArgs = {
-  data: TitleInput;
+  input?: InputMaybe<CreateTitleInput>;
 };
 
-export type MutationCreateUploadFileArgs = {
-  data: UploadFileInput;
-};
-
-export type MutationCreateUsersPermissionsRoleArgs = {
-  data: UsersPermissionsRoleInput;
-};
-
-export type MutationCreateUsersPermissionsUserArgs = {
-  data: UsersPermissionsUserInput;
+export type MutationCreateUserArgs = {
+  input?: InputMaybe<CreateUserInput>;
 };
 
 export type MutationDeleteCategoryTagArgs = {
-  id: Scalars['ID'];
+  input?: InputMaybe<DeleteCategoryTagInput>;
 };
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['ID'];
+  input?: InputMaybe<DeleteCommentInput>;
 };
 
 export type MutationDeleteDescriptionArgs = {
-  id: Scalars['ID'];
+  input?: InputMaybe<DeleteDescriptionInput>;
+};
+
+export type MutationDeleteFileArgs = {
+  input?: InputMaybe<DeleteFileInput>;
 };
 
 export type MutationDeleteKeywordTagArgs = {
-  id: Scalars['ID'];
+  input?: InputMaybe<DeleteKeywordTagInput>;
 };
 
 export type MutationDeletePictureArgs = {
-  id: Scalars['ID'];
+  input?: InputMaybe<DeletePictureInput>;
+};
+
+export type MutationDeleteRoleArgs = {
+  input?: InputMaybe<DeleteRoleInput>;
 };
 
 export type MutationDeleteTimeRangeTagArgs = {
-  id: Scalars['ID'];
+  input?: InputMaybe<DeleteTimeRangeTagInput>;
 };
 
 export type MutationDeleteTitleArgs = {
-  id: Scalars['ID'];
+  input?: InputMaybe<DeleteTitleInput>;
 };
 
-export type MutationDeleteUploadFileArgs = {
-  id: Scalars['ID'];
-};
-
-export type MutationDeleteUsersPermissionsRoleArgs = {
-  id: Scalars['ID'];
-};
-
-export type MutationDeleteUsersPermissionsUserArgs = {
-  id: Scalars['ID'];
+export type MutationDeleteUserArgs = {
+  input?: InputMaybe<DeleteUserInput>;
 };
 
 export type MutationEmailConfirmationArgs = {
@@ -552,14 +733,11 @@ export type MutationMultipleUploadArgs = {
   files: Array<InputMaybe<Scalars['Upload']>>;
   ref?: InputMaybe<Scalars['String']>;
   refId?: InputMaybe<Scalars['ID']>;
+  source?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationRegisterArgs = {
   input: UsersPermissionsRegisterInput;
-};
-
-export type MutationRemoveFileArgs = {
-  id: Scalars['ID'];
 };
 
 export type MutationResetPasswordArgs = {
@@ -569,58 +747,44 @@ export type MutationResetPasswordArgs = {
 };
 
 export type MutationUpdateCategoryTagArgs = {
-  data: CategoryTagInput;
-  id: Scalars['ID'];
+  input?: InputMaybe<UpdateCategoryTagInput>;
 };
 
 export type MutationUpdateCommentArgs = {
-  data: CommentInput;
-  id: Scalars['ID'];
+  input?: InputMaybe<UpdateCommentInput>;
 };
 
 export type MutationUpdateDescriptionArgs = {
-  data: DescriptionInput;
-  id: Scalars['ID'];
+  input?: InputMaybe<UpdateDescriptionInput>;
 };
 
 export type MutationUpdateFileInfoArgs = {
   id: Scalars['ID'];
-  info?: InputMaybe<FileInfoInput>;
+  info: FileInfoInput;
 };
 
 export type MutationUpdateKeywordTagArgs = {
-  data: KeywordTagInput;
-  id: Scalars['ID'];
+  input?: InputMaybe<UpdateKeywordTagInput>;
 };
 
 export type MutationUpdatePictureArgs = {
-  data: PictureInput;
-  id: Scalars['ID'];
+  input?: InputMaybe<UpdatePictureInput>;
+};
+
+export type MutationUpdateRoleArgs = {
+  input?: InputMaybe<UpdateRoleInput>;
 };
 
 export type MutationUpdateTimeRangeTagArgs = {
-  data: TimeRangeTagInput;
-  id: Scalars['ID'];
+  input?: InputMaybe<UpdateTimeRangeTagInput>;
 };
 
 export type MutationUpdateTitleArgs = {
-  data: TitleInput;
-  id: Scalars['ID'];
+  input?: InputMaybe<UpdateTitleInput>;
 };
 
-export type MutationUpdateUploadFileArgs = {
-  data: UploadFileInput;
-  id: Scalars['ID'];
-};
-
-export type MutationUpdateUsersPermissionsRoleArgs = {
-  data: UsersPermissionsRoleInput;
-  id: Scalars['ID'];
-};
-
-export type MutationUpdateUsersPermissionsUserArgs = {
-  data: UsersPermissionsUserInput;
-  id: Scalars['ID'];
+export type MutationUpdateUserArgs = {
+  input?: InputMaybe<UpdateUserInput>;
 };
 
 export type MutationUploadArgs = {
@@ -629,109 +793,156 @@ export type MutationUploadArgs = {
   info?: InputMaybe<FileInfoInput>;
   ref?: InputMaybe<Scalars['String']>;
   refId?: InputMaybe<Scalars['ID']>;
-};
-
-export type Pagination = {
-  page: Scalars['Int'];
-  pageCount: Scalars['Int'];
-  pageSize: Scalars['Int'];
-  total: Scalars['Int'];
-};
-
-export type PaginationArg = {
-  limit?: InputMaybe<Scalars['Int']>;
-  page?: InputMaybe<Scalars['Int']>;
-  pageSize?: InputMaybe<Scalars['Int']>;
-  start?: InputMaybe<Scalars['Int']>;
+  source?: InputMaybe<Scalars['String']>;
 };
 
 export type Picture = {
-  category_tags?: Maybe<CategoryTagRelationResponseCollection>;
-  comments?: Maybe<CommentRelationResponseCollection>;
-  createdAt?: Maybe<Scalars['DateTime']>;
-  descriptions?: Maybe<DescriptionRelationResponseCollection>;
-  keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
-  media?: Maybe<UploadFileEntityResponse>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
-  title?: Maybe<TitleEntityResponse>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  Comment?: Maybe<Array<Maybe<ComponentContentComment>>>;
+  category_tags?: Maybe<Array<Maybe<CategoryTag>>>;
+  comments?: Maybe<Array<Maybe<Comment>>>;
+  created_at: Scalars['DateTime'];
+  descriptions?: Maybe<Array<Maybe<Description>>>;
+  id: Scalars['ID'];
+  keyword_tags?: Maybe<Array<Maybe<KeywordTag>>>;
+  media?: Maybe<UploadFile>;
+  published_at?: Maybe<Scalars['DateTime']>;
+  taken?: Maybe<Scalars['Date']>;
+  time_range_tag?: Maybe<TimeRangeTag>;
+  title?: Maybe<Title>;
+  updated_at: Scalars['DateTime'];
   wordpress_id?: Maybe<Scalars['Int']>;
 };
 
 export type PictureCategory_TagsArgs = {
-  filters?: InputMaybe<CategoryTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type PictureCommentsArgs = {
-  filters?: InputMaybe<CommentFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type PictureDescriptionsArgs = {
-  filters?: InputMaybe<DescriptionFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type PictureKeyword_TagsArgs = {
-  filters?: InputMaybe<KeywordTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type PictureEntity = {
-  attributes?: Maybe<Picture>;
-  id?: Maybe<Scalars['ID']>;
+export type PictureAggregator = {
+  avg?: Maybe<PictureAggregatorAvg>;
+  count?: Maybe<Scalars['Int']>;
+  max?: Maybe<PictureAggregatorMax>;
+  min?: Maybe<PictureAggregatorMin>;
+  sum?: Maybe<PictureAggregatorSum>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type PictureEntityResponse = {
-  data?: Maybe<PictureEntity>;
+export type PictureAggregatorAvg = {
+  wordpress_id?: Maybe<Scalars['Float']>;
 };
 
-export type PictureEntityResponseCollection = {
-  data: Array<PictureEntity>;
-  meta: ResponseCollectionMeta;
+export type PictureAggregatorMax = {
+  wordpress_id?: Maybe<Scalars['Float']>;
 };
 
-export type PictureFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
-  category_tags?: InputMaybe<CategoryTagFiltersInput>;
-  comments?: InputMaybe<CommentFiltersInput>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  descriptions?: InputMaybe<DescriptionFiltersInput>;
-  id?: InputMaybe<IdFilterInput>;
-  keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
-  not?: InputMaybe<PictureFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
-  title?: InputMaybe<TitleFiltersInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
-  wordpress_id?: InputMaybe<IntFilterInput>;
+export type PictureAggregatorMin = {
+  wordpress_id?: Maybe<Scalars['Float']>;
+};
+
+export type PictureAggregatorSum = {
+  wordpress_id?: Maybe<Scalars['Float']>;
+};
+
+export type PictureConnection = {
+  aggregate?: Maybe<PictureAggregator>;
+  groupBy?: Maybe<PictureGroupBy>;
+  values?: Maybe<Array<Maybe<Picture>>>;
+};
+
+export type PictureConnectionCreated_At = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type PictureConnectionId = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type PictureConnectionMedia = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type PictureConnectionPublished_At = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type PictureConnectionTaken = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type PictureConnectionTime_Range_Tag = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type PictureConnectionTitle = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type PictureConnectionUpdated_At = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type PictureConnectionWordpress_Id = {
+  connection?: Maybe<PictureConnection>;
+  key?: Maybe<Scalars['Int']>;
+};
+
+export type PictureGroupBy = {
+  created_at?: Maybe<Array<Maybe<PictureConnectionCreated_At>>>;
+  id?: Maybe<Array<Maybe<PictureConnectionId>>>;
+  media?: Maybe<Array<Maybe<PictureConnectionMedia>>>;
+  published_at?: Maybe<Array<Maybe<PictureConnectionPublished_At>>>;
+  taken?: Maybe<Array<Maybe<PictureConnectionTaken>>>;
+  time_range_tag?: Maybe<Array<Maybe<PictureConnectionTime_Range_Tag>>>;
+  title?: Maybe<Array<Maybe<PictureConnectionTitle>>>;
+  updated_at?: Maybe<Array<Maybe<PictureConnectionUpdated_At>>>;
+  wordpress_id?: Maybe<Array<Maybe<PictureConnectionWordpress_Id>>>;
 };
 
 export type PictureInput = {
+  Comment?: InputMaybe<Array<InputMaybe<ComponentContentCommentInput>>>;
   category_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  created_by?: InputMaybe<Scalars['ID']>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  taken?: InputMaybe<Scalars['Date']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   title?: InputMaybe<Scalars['ID']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
   wordpress_id?: InputMaybe<Scalars['Int']>;
-};
-
-export type PictureRelationResponseCollection = {
-  data: Array<PictureEntity>;
 };
 
 export enum PublicationState {
@@ -740,346 +951,582 @@ export enum PublicationState {
 }
 
 export type Query = {
-  categoryTag?: Maybe<CategoryTagEntityResponse>;
-  categoryTags?: Maybe<CategoryTagEntityResponseCollection>;
-  comment?: Maybe<CommentEntityResponse>;
-  comments?: Maybe<CommentEntityResponseCollection>;
-  description?: Maybe<DescriptionEntityResponse>;
-  descriptions?: Maybe<DescriptionEntityResponseCollection>;
-  keywordTag?: Maybe<KeywordTagEntityResponse>;
-  keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
+  categoryTag?: Maybe<CategoryTag>;
+  categoryTags?: Maybe<Array<Maybe<CategoryTag>>>;
+  categoryTagsConnection?: Maybe<CategoryTagConnection>;
+  comment?: Maybe<Comment>;
+  comments?: Maybe<Array<Maybe<Comment>>>;
+  commentsConnection?: Maybe<CommentConnection>;
+  description?: Maybe<Description>;
+  descriptions?: Maybe<Array<Maybe<Description>>>;
+  descriptionsConnection?: Maybe<DescriptionConnection>;
+  files?: Maybe<Array<Maybe<UploadFile>>>;
+  filesConnection?: Maybe<UploadFileConnection>;
+  keywordTag?: Maybe<KeywordTag>;
+  keywordTags?: Maybe<Array<Maybe<KeywordTag>>>;
+  keywordTagsConnection?: Maybe<KeywordTagConnection>;
   me?: Maybe<UsersPermissionsMe>;
-  picture?: Maybe<PictureEntityResponse>;
-  pictures?: Maybe<PictureEntityResponseCollection>;
-  timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
-  title?: Maybe<TitleEntityResponse>;
-  titles?: Maybe<TitleEntityResponseCollection>;
-  uploadFile?: Maybe<UploadFileEntityResponse>;
-  uploadFiles?: Maybe<UploadFileEntityResponseCollection>;
-  usersPermissionsRole?: Maybe<UsersPermissionsRoleEntityResponse>;
-  usersPermissionsRoles?: Maybe<UsersPermissionsRoleEntityResponseCollection>;
-  usersPermissionsUser?: Maybe<UsersPermissionsUserEntityResponse>;
-  usersPermissionsUsers?: Maybe<UsersPermissionsUserEntityResponseCollection>;
+  picture?: Maybe<Picture>;
+  pictures?: Maybe<Array<Maybe<Picture>>>;
+  picturesConnection?: Maybe<PictureConnection>;
+  role?: Maybe<UsersPermissionsRole>;
+  /** Retrieve all the existing roles. You can't apply filters on this query. */
+  roles?: Maybe<Array<Maybe<UsersPermissionsRole>>>;
+  rolesConnection?: Maybe<UsersPermissionsRoleConnection>;
+  timeRangeTag?: Maybe<TimeRangeTag>;
+  timeRangeTags?: Maybe<Array<Maybe<TimeRangeTag>>>;
+  timeRangeTagsConnection?: Maybe<TimeRangeTagConnection>;
+  title?: Maybe<Title>;
+  titles?: Maybe<Array<Maybe<Title>>>;
+  titlesConnection?: Maybe<TitleConnection>;
+  user?: Maybe<UsersPermissionsUser>;
+  users?: Maybe<Array<Maybe<UsersPermissionsUser>>>;
+  usersConnection?: Maybe<UsersPermissionsUserConnection>;
 };
 
 export type QueryCategoryTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
 };
 
 export type QueryCategoryTagsArgs = {
-  filters?: InputMaybe<CategoryTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
+  limit?: InputMaybe<Scalars['Int']>;
   publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryCategoryTagsConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type QueryCommentArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
 };
 
 export type QueryCommentsArgs = {
-  filters?: InputMaybe<CommentFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
+  limit?: InputMaybe<Scalars['Int']>;
   publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryCommentsConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type QueryDescriptionArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
 };
 
 export type QueryDescriptionsArgs = {
-  filters?: InputMaybe<DescriptionFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
+  limit?: InputMaybe<Scalars['Int']>;
   publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryDescriptionsConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryFilesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryFilesConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type QueryKeywordTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
 };
 
 export type QueryKeywordTagsArgs = {
-  filters?: InputMaybe<KeywordTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
+  limit?: InputMaybe<Scalars['Int']>;
   publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryKeywordTagsConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type QueryPictureArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
 };
 
 export type QueryPicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
+  limit?: InputMaybe<Scalars['Int']>;
   publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryPicturesConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryRoleArgs = {
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
+};
+
+export type QueryRolesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryRolesConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type QueryTimeRangeTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
 };
 
 export type QueryTimeRangeTagsArgs = {
-  filters?: InputMaybe<TimeRangeTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
+  limit?: InputMaybe<Scalars['Int']>;
   publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
+};
+
+export type QueryTimeRangeTagsConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type QueryTitleArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
 };
 
 export type QueryTitlesArgs = {
-  filters?: InputMaybe<TitleFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
+  limit?: InputMaybe<Scalars['Int']>;
   publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type QueryUploadFileArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+export type QueryTitlesConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type QueryUploadFilesArgs = {
-  filters?: InputMaybe<UploadFileFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+export type QueryUserArgs = {
+  id: Scalars['ID'];
+  publicationState?: InputMaybe<PublicationState>;
 };
 
-export type QueryUsersPermissionsRoleArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+export type QueryUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type QueryUsersPermissionsRolesArgs = {
-  filters?: InputMaybe<UsersPermissionsRoleFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+export type QueryUsersConnectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type QueryUsersPermissionsUserArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-export type QueryUsersPermissionsUsersArgs = {
-  filters?: InputMaybe<UsersPermissionsUserFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type ResponseCollectionMeta = {
-  pagination: Pagination;
-};
-
-export type StringFilterInput = {
-  and?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  between?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  contains?: InputMaybe<Scalars['String']>;
-  containsi?: InputMaybe<Scalars['String']>;
-  endsWith?: InputMaybe<Scalars['String']>;
-  eq?: InputMaybe<Scalars['String']>;
-  gt?: InputMaybe<Scalars['String']>;
-  gte?: InputMaybe<Scalars['String']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  lt?: InputMaybe<Scalars['String']>;
-  lte?: InputMaybe<Scalars['String']>;
-  ne?: InputMaybe<Scalars['String']>;
-  not?: InputMaybe<StringFilterInput>;
-  notContains?: InputMaybe<Scalars['String']>;
-  notContainsi?: InputMaybe<Scalars['String']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  notNull?: InputMaybe<Scalars['Boolean']>;
-  null?: InputMaybe<Scalars['Boolean']>;
-  or?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  startsWith?: InputMaybe<Scalars['String']>;
+export type RoleInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  permissions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  type?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+  users?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
 export type TimeRangeTag = {
-  createdAt?: Maybe<Scalars['DateTime']>;
+  created_at: Scalars['DateTime'];
   end?: Maybe<Scalars['DateTime']>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  pictures?: Maybe<Array<Maybe<Picture>>>;
+  published_at?: Maybe<Scalars['DateTime']>;
   start?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  updated_at: Scalars['DateTime'];
 };
 
 export type TimeRangeTagPicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type TimeRangeTagEntity = {
-  attributes?: Maybe<TimeRangeTag>;
-  id?: Maybe<Scalars['ID']>;
+export type TimeRangeTagAggregator = {
+  count?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type TimeRangeTagEntityResponse = {
-  data?: Maybe<TimeRangeTagEntity>;
+export type TimeRangeTagConnection = {
+  aggregate?: Maybe<TimeRangeTagAggregator>;
+  groupBy?: Maybe<TimeRangeTagGroupBy>;
+  values?: Maybe<Array<Maybe<TimeRangeTag>>>;
 };
 
-export type TimeRangeTagEntityResponseCollection = {
-  data: Array<TimeRangeTagEntity>;
-  meta: ResponseCollectionMeta;
+export type TimeRangeTagConnectionCreated_At = {
+  connection?: Maybe<TimeRangeTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
 };
 
-export type TimeRangeTagFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<TimeRangeTagFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  end?: InputMaybe<DateTimeFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  not?: InputMaybe<TimeRangeTagFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<TimeRangeTagFiltersInput>>>;
-  pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  start?: InputMaybe<DateTimeFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
+export type TimeRangeTagConnectionEnd = {
+  connection?: Maybe<TimeRangeTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type TimeRangeTagConnectionId = {
+  connection?: Maybe<TimeRangeTagConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type TimeRangeTagConnectionPublished_At = {
+  connection?: Maybe<TimeRangeTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type TimeRangeTagConnectionStart = {
+  connection?: Maybe<TimeRangeTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type TimeRangeTagConnectionUpdated_At = {
+  connection?: Maybe<TimeRangeTagConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type TimeRangeTagGroupBy = {
+  created_at?: Maybe<Array<Maybe<TimeRangeTagConnectionCreated_At>>>;
+  end?: Maybe<Array<Maybe<TimeRangeTagConnectionEnd>>>;
+  id?: Maybe<Array<Maybe<TimeRangeTagConnectionId>>>;
+  published_at?: Maybe<Array<Maybe<TimeRangeTagConnectionPublished_At>>>;
+  start?: Maybe<Array<Maybe<TimeRangeTagConnectionStart>>>;
+  updated_at?: Maybe<Array<Maybe<TimeRangeTagConnectionUpdated_At>>>;
 };
 
 export type TimeRangeTagInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
   end?: InputMaybe<Scalars['DateTime']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
   start?: InputMaybe<Scalars['DateTime']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
 };
 
 export type Title = {
-  createdAt?: Maybe<Scalars['DateTime']>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
+  created_at: Scalars['DateTime'];
+  id: Scalars['ID'];
+  pictures?: Maybe<Array<Maybe<Picture>>>;
+  published_at?: Maybe<Scalars['DateTime']>;
   text?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  updated_at: Scalars['DateTime'];
 };
 
 export type TitlePicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type TitleEntity = {
-  attributes?: Maybe<Title>;
-  id?: Maybe<Scalars['ID']>;
+export type TitleAggregator = {
+  count?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type TitleEntityResponse = {
-  data?: Maybe<TitleEntity>;
+export type TitleConnection = {
+  aggregate?: Maybe<TitleAggregator>;
+  groupBy?: Maybe<TitleGroupBy>;
+  values?: Maybe<Array<Maybe<Title>>>;
 };
 
-export type TitleEntityResponseCollection = {
-  data: Array<TitleEntity>;
-  meta: ResponseCollectionMeta;
+export type TitleConnectionCreated_At = {
+  connection?: Maybe<TitleConnection>;
+  key?: Maybe<Scalars['DateTime']>;
 };
 
-export type TitleFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<TitleFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  not?: InputMaybe<TitleFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<TitleFiltersInput>>>;
-  pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  text?: InputMaybe<StringFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
+export type TitleConnectionId = {
+  connection?: Maybe<TitleConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type TitleConnectionPublished_At = {
+  connection?: Maybe<TitleConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type TitleConnectionText = {
+  connection?: Maybe<TitleConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type TitleConnectionUpdated_At = {
+  connection?: Maybe<TitleConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type TitleGroupBy = {
+  created_at?: Maybe<Array<Maybe<TitleConnectionCreated_At>>>;
+  id?: Maybe<Array<Maybe<TitleConnectionId>>>;
+  published_at?: Maybe<Array<Maybe<TitleConnectionPublished_At>>>;
+  text?: Maybe<Array<Maybe<TitleConnectionText>>>;
+  updated_at?: Maybe<Array<Maybe<TitleConnectionUpdated_At>>>;
 };
 
 export type TitleInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
 };
 
 export type UploadFile = {
   alternativeText?: Maybe<Scalars['String']>;
   caption?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
+  created_at: Scalars['DateTime'];
   ext?: Maybe<Scalars['String']>;
   formats?: Maybe<Scalars['JSON']>;
   hash: Scalars['String'];
   height?: Maybe<Scalars['Int']>;
+  id: Scalars['ID'];
   mime: Scalars['String'];
   name: Scalars['String'];
   previewUrl?: Maybe<Scalars['String']>;
   provider: Scalars['String'];
   provider_metadata?: Maybe<Scalars['JSON']>;
-  related?: Maybe<Array<Maybe<GenericMorph>>>;
+  related?: Maybe<Array<Maybe<Morph>>>;
   size: Scalars['Float'];
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  updated_at: Scalars['DateTime'];
   url: Scalars['String'];
   width?: Maybe<Scalars['Int']>;
 };
 
-export type UploadFileEntity = {
-  attributes?: Maybe<UploadFile>;
-  id?: Maybe<Scalars['ID']>;
+export type UploadFileRelatedArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type UploadFileEntityResponse = {
-  data?: Maybe<UploadFileEntity>;
+export type UploadFileAggregator = {
+  avg?: Maybe<UploadFileAggregatorAvg>;
+  count?: Maybe<Scalars['Int']>;
+  max?: Maybe<UploadFileAggregatorMax>;
+  min?: Maybe<UploadFileAggregatorMin>;
+  sum?: Maybe<UploadFileAggregatorSum>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type UploadFileEntityResponseCollection = {
-  data: Array<UploadFileEntity>;
-  meta: ResponseCollectionMeta;
+export type UploadFileAggregatorAvg = {
+  height?: Maybe<Scalars['Float']>;
+  size?: Maybe<Scalars['Float']>;
+  width?: Maybe<Scalars['Float']>;
 };
 
-export type UploadFileFiltersInput = {
-  alternativeText?: InputMaybe<StringFilterInput>;
-  and?: InputMaybe<Array<InputMaybe<UploadFileFiltersInput>>>;
-  caption?: InputMaybe<StringFilterInput>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  ext?: InputMaybe<StringFilterInput>;
-  formats?: InputMaybe<JsonFilterInput>;
-  hash?: InputMaybe<StringFilterInput>;
-  height?: InputMaybe<IntFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  mime?: InputMaybe<StringFilterInput>;
-  name?: InputMaybe<StringFilterInput>;
-  not?: InputMaybe<UploadFileFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<UploadFileFiltersInput>>>;
-  previewUrl?: InputMaybe<StringFilterInput>;
-  provider?: InputMaybe<StringFilterInput>;
-  provider_metadata?: InputMaybe<JsonFilterInput>;
-  size?: InputMaybe<FloatFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
-  url?: InputMaybe<StringFilterInput>;
-  width?: InputMaybe<IntFilterInput>;
+export type UploadFileAggregatorMax = {
+  height?: Maybe<Scalars['Float']>;
+  size?: Maybe<Scalars['Float']>;
+  width?: Maybe<Scalars['Float']>;
 };
 
-export type UploadFileInput = {
-  alternativeText?: InputMaybe<Scalars['String']>;
-  caption?: InputMaybe<Scalars['String']>;
-  ext?: InputMaybe<Scalars['String']>;
-  formats?: InputMaybe<Scalars['JSON']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['Int']>;
-  mime?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  previewUrl?: InputMaybe<Scalars['String']>;
+export type UploadFileAggregatorMin = {
+  height?: Maybe<Scalars['Float']>;
+  size?: Maybe<Scalars['Float']>;
+  width?: Maybe<Scalars['Float']>;
+};
+
+export type UploadFileAggregatorSum = {
+  height?: Maybe<Scalars['Float']>;
+  size?: Maybe<Scalars['Float']>;
+  width?: Maybe<Scalars['Float']>;
+};
+
+export type UploadFileConnection = {
+  aggregate?: Maybe<UploadFileAggregator>;
+  groupBy?: Maybe<UploadFileGroupBy>;
+  values?: Maybe<Array<Maybe<UploadFile>>>;
+};
+
+export type UploadFileConnectionAlternativeText = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionCaption = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionCreated_At = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type UploadFileConnectionExt = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionFormats = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['JSON']>;
+};
+
+export type UploadFileConnectionHash = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionHeight = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['Int']>;
+};
+
+export type UploadFileConnectionId = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type UploadFileConnectionMime = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionName = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionPreviewUrl = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionProvider = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionProvider_Metadata = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['JSON']>;
+};
+
+export type UploadFileConnectionSize = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['Float']>;
+};
+
+export type UploadFileConnectionUpdated_At = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type UploadFileConnectionUrl = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UploadFileConnectionWidth = {
+  connection?: Maybe<UploadFileConnection>;
+  key?: Maybe<Scalars['Int']>;
+};
+
+export type UploadFileGroupBy = {
+  alternativeText?: Maybe<Array<Maybe<UploadFileConnectionAlternativeText>>>;
+  caption?: Maybe<Array<Maybe<UploadFileConnectionCaption>>>;
+  created_at?: Maybe<Array<Maybe<UploadFileConnectionCreated_At>>>;
+  ext?: Maybe<Array<Maybe<UploadFileConnectionExt>>>;
+  formats?: Maybe<Array<Maybe<UploadFileConnectionFormats>>>;
+  hash?: Maybe<Array<Maybe<UploadFileConnectionHash>>>;
+  height?: Maybe<Array<Maybe<UploadFileConnectionHeight>>>;
+  id?: Maybe<Array<Maybe<UploadFileConnectionId>>>;
+  mime?: Maybe<Array<Maybe<UploadFileConnectionMime>>>;
+  name?: Maybe<Array<Maybe<UploadFileConnectionName>>>;
+  previewUrl?: Maybe<Array<Maybe<UploadFileConnectionPreviewUrl>>>;
+  provider?: Maybe<Array<Maybe<UploadFileConnectionProvider>>>;
+  provider_metadata?: Maybe<Array<Maybe<UploadFileConnectionProvider_Metadata>>>;
+  size?: Maybe<Array<Maybe<UploadFileConnectionSize>>>;
+  updated_at?: Maybe<Array<Maybe<UploadFileConnectionUpdated_At>>>;
+  url?: Maybe<Array<Maybe<UploadFileConnectionUrl>>>;
+  width?: Maybe<Array<Maybe<UploadFileConnectionWidth>>>;
+};
+
+export type UserInput = {
+  blocked?: InputMaybe<Scalars['Boolean']>;
+  confirmationToken?: InputMaybe<Scalars['String']>;
+  confirmed?: InputMaybe<Scalars['Boolean']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  email: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   provider?: InputMaybe<Scalars['String']>;
-  provider_metadata?: InputMaybe<Scalars['JSON']>;
-  size?: InputMaybe<Scalars['Float']>;
-  url?: InputMaybe<Scalars['String']>;
-  width?: InputMaybe<Scalars['Int']>;
+  resetPasswordToken?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['ID']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+  username: Scalars['String'];
 };
 
-export type UsersPermissionsCreateRolePayload = {
-  ok: Scalars['Boolean'];
-};
-
-export type UsersPermissionsDeleteRolePayload = {
+export type UserPermissionsPasswordPayload = {
   ok: Scalars['Boolean'];
 };
 
 export type UsersPermissionsLoginInput = {
   identifier: Scalars['String'];
   password: Scalars['String'];
-  provider?: Scalars['String'];
+  provider?: InputMaybe<Scalars['String']>;
 };
 
 export type UsersPermissionsLoginPayload = {
@@ -1090,7 +1537,7 @@ export type UsersPermissionsLoginPayload = {
 export type UsersPermissionsMe = {
   blocked?: Maybe<Scalars['Boolean']>;
   confirmed?: Maybe<Scalars['Boolean']>;
-  email?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
   id: Scalars['ID'];
   role?: Maybe<UsersPermissionsMeRole>;
   username: Scalars['String'];
@@ -1103,35 +1550,14 @@ export type UsersPermissionsMeRole = {
   type?: Maybe<Scalars['String']>;
 };
 
-export type UsersPermissionsPasswordPayload = {
-  ok: Scalars['Boolean'];
-};
-
 export type UsersPermissionsPermission = {
   action: Scalars['String'];
-  createdAt?: Maybe<Scalars['DateTime']>;
-  role?: Maybe<UsersPermissionsRoleEntityResponse>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type UsersPermissionsPermissionEntity = {
-  attributes?: Maybe<UsersPermissionsPermission>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type UsersPermissionsPermissionFiltersInput = {
-  action?: InputMaybe<StringFilterInput>;
-  and?: InputMaybe<Array<InputMaybe<UsersPermissionsPermissionFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  not?: InputMaybe<UsersPermissionsPermissionFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<UsersPermissionsPermissionFiltersInput>>>;
-  role?: InputMaybe<UsersPermissionsRoleFiltersInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
-};
-
-export type UsersPermissionsPermissionRelationResponseCollection = {
-  data: Array<UsersPermissionsPermissionEntity>;
+  controller: Scalars['String'];
+  enabled: Scalars['Boolean'];
+  id: Scalars['ID'];
+  policy?: Maybe<Scalars['String']>;
+  role?: Maybe<UsersPermissionsRole>;
+  type: Scalars['String'];
 };
 
 export type UsersPermissionsRegisterInput = {
@@ -1141,124 +1567,505 @@ export type UsersPermissionsRegisterInput = {
 };
 
 export type UsersPermissionsRole = {
-  createdAt?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
   name: Scalars['String'];
-  permissions?: Maybe<UsersPermissionsPermissionRelationResponseCollection>;
+  permissions?: Maybe<Array<Maybe<UsersPermissionsPermission>>>;
   type?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  users?: Maybe<UsersPermissionsUserRelationResponseCollection>;
+  users?: Maybe<Array<Maybe<UsersPermissionsUser>>>;
 };
 
 export type UsersPermissionsRolePermissionsArgs = {
-  filters?: InputMaybe<UsersPermissionsPermissionFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
 export type UsersPermissionsRoleUsersArgs = {
-  filters?: InputMaybe<UsersPermissionsUserFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Scalars['JSON']>;
 };
 
-export type UsersPermissionsRoleEntity = {
-  attributes?: Maybe<UsersPermissionsRole>;
-  id?: Maybe<Scalars['ID']>;
+export type UsersPermissionsRoleAggregator = {
+  count?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type UsersPermissionsRoleEntityResponse = {
-  data?: Maybe<UsersPermissionsRoleEntity>;
+export type UsersPermissionsRoleConnection = {
+  aggregate?: Maybe<UsersPermissionsRoleAggregator>;
+  groupBy?: Maybe<UsersPermissionsRoleGroupBy>;
+  values?: Maybe<Array<Maybe<UsersPermissionsRole>>>;
 };
 
-export type UsersPermissionsRoleEntityResponseCollection = {
-  data: Array<UsersPermissionsRoleEntity>;
-  meta: ResponseCollectionMeta;
+export type UsersPermissionsRoleConnectionDescription = {
+  connection?: Maybe<UsersPermissionsRoleConnection>;
+  key?: Maybe<Scalars['String']>;
 };
 
-export type UsersPermissionsRoleFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<UsersPermissionsRoleFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  description?: InputMaybe<StringFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  name?: InputMaybe<StringFilterInput>;
-  not?: InputMaybe<UsersPermissionsRoleFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<UsersPermissionsRoleFiltersInput>>>;
-  permissions?: InputMaybe<UsersPermissionsPermissionFiltersInput>;
-  type?: InputMaybe<StringFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
-  users?: InputMaybe<UsersPermissionsUserFiltersInput>;
+export type UsersPermissionsRoleConnectionId = {
+  connection?: Maybe<UsersPermissionsRoleConnection>;
+  key?: Maybe<Scalars['ID']>;
 };
 
-export type UsersPermissionsRoleInput = {
-  description?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  permissions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  type?: InputMaybe<Scalars['String']>;
-  users?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+export type UsersPermissionsRoleConnectionName = {
+  connection?: Maybe<UsersPermissionsRoleConnection>;
+  key?: Maybe<Scalars['String']>;
 };
 
-export type UsersPermissionsUpdateRolePayload = {
-  ok: Scalars['Boolean'];
+export type UsersPermissionsRoleConnectionType = {
+  connection?: Maybe<UsersPermissionsRoleConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UsersPermissionsRoleGroupBy = {
+  description?: Maybe<Array<Maybe<UsersPermissionsRoleConnectionDescription>>>;
+  id?: Maybe<Array<Maybe<UsersPermissionsRoleConnectionId>>>;
+  name?: Maybe<Array<Maybe<UsersPermissionsRoleConnectionName>>>;
+  type?: Maybe<Array<Maybe<UsersPermissionsRoleConnectionType>>>;
 };
 
 export type UsersPermissionsUser = {
   blocked?: Maybe<Scalars['Boolean']>;
   confirmed?: Maybe<Scalars['Boolean']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
+  created_at: Scalars['DateTime'];
   email: Scalars['String'];
+  id: Scalars['ID'];
   provider?: Maybe<Scalars['String']>;
-  role?: Maybe<UsersPermissionsRoleEntityResponse>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  role?: Maybe<UsersPermissionsRole>;
+  updated_at: Scalars['DateTime'];
   username: Scalars['String'];
 };
 
-export type UsersPermissionsUserEntity = {
-  attributes?: Maybe<UsersPermissionsUser>;
-  id?: Maybe<Scalars['ID']>;
+export type UsersPermissionsUserAggregator = {
+  count?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type UsersPermissionsUserEntityResponse = {
-  data?: Maybe<UsersPermissionsUserEntity>;
+export type UsersPermissionsUserConnection = {
+  aggregate?: Maybe<UsersPermissionsUserAggregator>;
+  groupBy?: Maybe<UsersPermissionsUserGroupBy>;
+  values?: Maybe<Array<Maybe<UsersPermissionsUser>>>;
 };
 
-export type UsersPermissionsUserEntityResponseCollection = {
-  data: Array<UsersPermissionsUserEntity>;
-  meta: ResponseCollectionMeta;
+export type UsersPermissionsUserConnectionBlocked = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['Boolean']>;
 };
 
-export type UsersPermissionsUserFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<UsersPermissionsUserFiltersInput>>>;
-  blocked?: InputMaybe<BooleanFilterInput>;
-  confirmationToken?: InputMaybe<StringFilterInput>;
-  confirmed?: InputMaybe<BooleanFilterInput>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  email?: InputMaybe<StringFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  not?: InputMaybe<UsersPermissionsUserFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<UsersPermissionsUserFiltersInput>>>;
-  password?: InputMaybe<StringFilterInput>;
-  provider?: InputMaybe<StringFilterInput>;
-  resetPasswordToken?: InputMaybe<StringFilterInput>;
-  role?: InputMaybe<UsersPermissionsRoleFiltersInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
-  username?: InputMaybe<StringFilterInput>;
+export type UsersPermissionsUserConnectionConfirmed = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['Boolean']>;
 };
 
-export type UsersPermissionsUserInput = {
+export type UsersPermissionsUserConnectionCreated_At = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type UsersPermissionsUserConnectionEmail = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UsersPermissionsUserConnectionId = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type UsersPermissionsUserConnectionProvider = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UsersPermissionsUserConnectionRole = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['ID']>;
+};
+
+export type UsersPermissionsUserConnectionUpdated_At = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['DateTime']>;
+};
+
+export type UsersPermissionsUserConnectionUsername = {
+  connection?: Maybe<UsersPermissionsUserConnection>;
+  key?: Maybe<Scalars['String']>;
+};
+
+export type UsersPermissionsUserGroupBy = {
+  blocked?: Maybe<Array<Maybe<UsersPermissionsUserConnectionBlocked>>>;
+  confirmed?: Maybe<Array<Maybe<UsersPermissionsUserConnectionConfirmed>>>;
+  created_at?: Maybe<Array<Maybe<UsersPermissionsUserConnectionCreated_At>>>;
+  email?: Maybe<Array<Maybe<UsersPermissionsUserConnectionEmail>>>;
+  id?: Maybe<Array<Maybe<UsersPermissionsUserConnectionId>>>;
+  provider?: Maybe<Array<Maybe<UsersPermissionsUserConnectionProvider>>>;
+  role?: Maybe<Array<Maybe<UsersPermissionsUserConnectionRole>>>;
+  updated_at?: Maybe<Array<Maybe<UsersPermissionsUserConnectionUpdated_At>>>;
+  username?: Maybe<Array<Maybe<UsersPermissionsUserConnectionUsername>>>;
+};
+
+export type CreateCategoryTagInput = {
+  data?: InputMaybe<CategoryTagInput>;
+};
+
+export type CreateCategoryTagPayload = {
+  categoryTag?: Maybe<CategoryTag>;
+};
+
+export type CreateCommentInput = {
+  data?: InputMaybe<CommentInput>;
+};
+
+export type CreateCommentPayload = {
+  comment?: Maybe<Comment>;
+};
+
+export type CreateDescriptionInput = {
+  data?: InputMaybe<DescriptionInput>;
+};
+
+export type CreateDescriptionPayload = {
+  description?: Maybe<Description>;
+};
+
+export type CreateKeywordTagInput = {
+  data?: InputMaybe<KeywordTagInput>;
+};
+
+export type CreateKeywordTagPayload = {
+  keywordTag?: Maybe<KeywordTag>;
+};
+
+export type CreatePictureInput = {
+  data?: InputMaybe<PictureInput>;
+};
+
+export type CreatePicturePayload = {
+  picture?: Maybe<Picture>;
+};
+
+export type CreateRoleInput = {
+  data?: InputMaybe<RoleInput>;
+};
+
+export type CreateRolePayload = {
+  role?: Maybe<UsersPermissionsRole>;
+};
+
+export type CreateTimeRangeTagInput = {
+  data?: InputMaybe<TimeRangeTagInput>;
+};
+
+export type CreateTimeRangeTagPayload = {
+  timeRangeTag?: Maybe<TimeRangeTag>;
+};
+
+export type CreateTitleInput = {
+  data?: InputMaybe<TitleInput>;
+};
+
+export type CreateTitlePayload = {
+  title?: Maybe<Title>;
+};
+
+export type CreateUserInput = {
+  data?: InputMaybe<UserInput>;
+};
+
+export type CreateUserPayload = {
+  user?: Maybe<UsersPermissionsUser>;
+};
+
+export type DeleteCategoryTagInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteCategoryTagPayload = {
+  categoryTag?: Maybe<CategoryTag>;
+};
+
+export type DeleteCommentInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteCommentPayload = {
+  comment?: Maybe<Comment>;
+};
+
+export type DeleteDescriptionInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteDescriptionPayload = {
+  description?: Maybe<Description>;
+};
+
+export type DeleteFileInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteFilePayload = {
+  file?: Maybe<UploadFile>;
+};
+
+export type DeleteKeywordTagInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteKeywordTagPayload = {
+  keywordTag?: Maybe<KeywordTag>;
+};
+
+export type DeletePictureInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeletePicturePayload = {
+  picture?: Maybe<Picture>;
+};
+
+export type DeleteRoleInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteRolePayload = {
+  role?: Maybe<UsersPermissionsRole>;
+};
+
+export type DeleteTimeRangeTagInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteTimeRangeTagPayload = {
+  timeRangeTag?: Maybe<TimeRangeTag>;
+};
+
+export type DeleteTitleInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteTitlePayload = {
+  title?: Maybe<Title>;
+};
+
+export type DeleteUserInput = {
+  where?: InputMaybe<InputId>;
+};
+
+export type DeleteUserPayload = {
+  user?: Maybe<UsersPermissionsUser>;
+};
+
+export type EditCategoryTagInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
+  description?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  priority?: InputMaybe<Scalars['Int']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  related_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
+export type EditCommentInput = {
+  author?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  date?: InputMaybe<Scalars['DateTime']>;
+  picture?: InputMaybe<Scalars['ID']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  text?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
+export type EditComponentContentCommentInput = {
+  author?: InputMaybe<Scalars['String']>;
+  date?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['ID']>;
+  text?: InputMaybe<Scalars['String']>;
+};
+
+export type EditDescriptionInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  text?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
+export type EditFileInput = {
+  alternativeText?: InputMaybe<Scalars['String']>;
+  caption?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  ext?: InputMaybe<Scalars['String']>;
+  formats?: InputMaybe<Scalars['JSON']>;
+  hash?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['Int']>;
+  mime?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  previewUrl?: InputMaybe<Scalars['String']>;
+  provider?: InputMaybe<Scalars['String']>;
+  provider_metadata?: InputMaybe<Scalars['JSON']>;
+  related?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  size?: InputMaybe<Scalars['Float']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+  url?: InputMaybe<Scalars['String']>;
+  width?: InputMaybe<Scalars['Int']>;
+};
+
+export type EditKeywordTagInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
+export type EditLocaleInput = {
+  code?: InputMaybe<Scalars['String']>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
+export type EditPictureInput = {
+  Comment?: InputMaybe<Array<InputMaybe<EditComponentContentCommentInput>>>;
+  category_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  created_by?: InputMaybe<Scalars['ID']>;
+  descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  media?: InputMaybe<Scalars['ID']>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  taken?: InputMaybe<Scalars['Date']>;
+  time_range_tag?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['ID']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+  wordpress_id?: InputMaybe<Scalars['Int']>;
+};
+
+export type EditRoleInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
+  description?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  permissions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  type?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+  users?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+};
+
+export type EditTimeRangeTagInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
+  end?: InputMaybe<Scalars['DateTime']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  start?: InputMaybe<Scalars['DateTime']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
+export type EditTitleInput = {
+  created_by?: InputMaybe<Scalars['ID']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  published_at?: InputMaybe<Scalars['DateTime']>;
+  text?: InputMaybe<Scalars['String']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
+};
+
+export type EditUserInput = {
   blocked?: InputMaybe<Scalars['Boolean']>;
   confirmationToken?: InputMaybe<Scalars['String']>;
   confirmed?: InputMaybe<Scalars['Boolean']>;
+  created_by?: InputMaybe<Scalars['ID']>;
   email?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   provider?: InputMaybe<Scalars['String']>;
   resetPasswordToken?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<Scalars['ID']>;
+  updated_by?: InputMaybe<Scalars['ID']>;
   username?: InputMaybe<Scalars['String']>;
 };
 
-export type UsersPermissionsUserRelationResponseCollection = {
-  data: Array<UsersPermissionsUserEntity>;
+export type UpdateCategoryTagInput = {
+  data?: InputMaybe<EditCategoryTagInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateCategoryTagPayload = {
+  categoryTag?: Maybe<CategoryTag>;
+};
+
+export type UpdateCommentInput = {
+  data?: InputMaybe<EditCommentInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateCommentPayload = {
+  comment?: Maybe<Comment>;
+};
+
+export type UpdateDescriptionInput = {
+  data?: InputMaybe<EditDescriptionInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateDescriptionPayload = {
+  description?: Maybe<Description>;
+};
+
+export type UpdateKeywordTagInput = {
+  data?: InputMaybe<EditKeywordTagInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateKeywordTagPayload = {
+  keywordTag?: Maybe<KeywordTag>;
+};
+
+export type UpdatePictureInput = {
+  data?: InputMaybe<EditPictureInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdatePicturePayload = {
+  picture?: Maybe<Picture>;
+};
+
+export type UpdateRoleInput = {
+  data?: InputMaybe<EditRoleInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateRolePayload = {
+  role?: Maybe<UsersPermissionsRole>;
+};
+
+export type UpdateTimeRangeTagInput = {
+  data?: InputMaybe<EditTimeRangeTagInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateTimeRangeTagPayload = {
+  timeRangeTag?: Maybe<TimeRangeTag>;
+};
+
+export type UpdateTitleInput = {
+  data?: InputMaybe<EditTitleInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateTitlePayload = {
+  title?: Maybe<Title>;
+};
+
+export type UpdateUserInput = {
+  data?: InputMaybe<EditUserInput>;
+  where?: InputMaybe<InputId>;
+};
+
+export type UpdateUserPayload = {
+  user?: Maybe<UsersPermissionsUser>;
 };
 
 export type GetPictureInfoQueryVariables = Exact<{
@@ -1268,79 +2075,23 @@ export type GetPictureInfoQueryVariables = Exact<{
 export type GetPictureInfoQuery = {
   picture?:
     | {
-        data?:
-          | {
-              id?: string | null | undefined;
-              attributes?:
-                | {
-                    title?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?:
-                                  | { text?: string | null | undefined }
-                                  | null
-                                  | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                    descriptions?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?: { text: string } | null | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    time_range_tag?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?:
-                                  | { start?: any | null | undefined; end?: any | null | undefined }
-                                  | null
-                                  | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                    media?:
-                      | {
-                          data?:
-                            | { attributes?: { url: string } | null | undefined }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                    comments?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  text?: string | null | undefined;
-                                  author?: string | null | undefined;
-                                  date?: any | null | undefined;
-                                }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                  }
-                | null
-                | undefined;
-            }
+        title?: { text?: string | null | undefined; id: string } | null | undefined;
+        descriptions?:
+          | Array<{ text?: string | null | undefined; id: string } | null | undefined>
+          | null
+          | undefined;
+        media?: { url: string } | null | undefined;
+        comments?:
+          | Array<
+              | {
+                  text?: string | null | undefined;
+                  author?: string | null | undefined;
+                  id: string;
+                  date?: any | null | undefined;
+                }
+              | null
+              | undefined
+            >
           | null
           | undefined;
       }
@@ -1349,40 +2100,28 @@ export type GetPictureInfoQuery = {
 };
 
 export type GetPicturesQueryVariables = Exact<{
-  filters: PictureFiltersInput;
-  pagination: PaginationArg;
+  where: Scalars['JSON'];
+  limit: Scalars['Int'];
+  start: Scalars['Int'];
 }>;
 
 export type GetPicturesQuery = {
   pictures?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                media?:
-                  | {
-                      data?:
-                        | {
-                            attributes?:
-                              | {
-                                  width?: number | null | undefined;
-                                  height?: number | null | undefined;
-                                  formats?: any | null | undefined;
-                                }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
+    | Array<
+        | {
+            id: string;
+            media?:
+              | {
+                  width?: number | null | undefined;
+                  height?: number | null | undefined;
+                  formats?: any | null | undefined;
+                }
+              | null
+              | undefined;
+          }
+        | null
+        | undefined
+      >
     | null
     | undefined;
 };
@@ -1431,57 +2170,34 @@ export type GetCategoryInfoQueryVariables = Exact<{
 
 export type GetCategoryInfoQuery = {
   categoryTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                description?: string | null | undefined;
-                related_tags?:
+    | Array<
+        | {
+            id: string;
+            name: string;
+            description?: string | null | undefined;
+            related_tags?:
+              | Array<
                   | {
-                      data: Array<{
-                        attributes?:
-                          | {
-                              name: string;
-                              thumbnail?:
-                                | {
-                                    data: Array<{
-                                      attributes?:
-                                        | {
-                                            media?:
-                                              | {
-                                                  data?:
-                                                    | {
-                                                        attributes?:
-                                                          | { formats?: any | null | undefined }
-                                                          | null
-                                                          | undefined;
-                                                      }
-                                                    | null
-                                                    | undefined;
-                                                }
-                                              | null
-                                              | undefined;
-                                          }
-                                        | null
-                                        | undefined;
-                                    }>;
-                                  }
-                                | null
-                                | undefined;
-                            }
-                          | null
-                          | undefined;
-                      }>;
+                      name: string;
+                      id: string;
+                      thumbnail?:
+                        | Array<
+                            | { media?: { formats?: any | null | undefined } | null | undefined }
+                            | null
+                            | undefined
+                          >
+                        | null
+                        | undefined;
                     }
                   | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
+                  | undefined
+                >
+              | null
+              | undefined;
+          }
+        | null
+        | undefined
+      >
     | null
     | undefined;
 };
@@ -1495,12 +2211,7 @@ export type PostCommentMutationVariables = Exact<{
 
 export type PostCommentMutation = {
   createComment?:
-    | {
-        data?:
-          | { attributes?: { text?: string | null | undefined } | null | undefined }
-          | null
-          | undefined;
-      }
+    | { comment?: { text?: string | null | undefined } | null | undefined }
     | null
     | undefined;
 };
@@ -1511,43 +2222,22 @@ export type GetKeywordTagSuggestionsQueryVariables = Exact<{
 
 export type GetKeywordTagSuggestionsQuery = {
   keywordTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                thumbnail?:
-                  | {
-                      data: Array<{
-                        attributes?:
-                          | {
-                              media?:
-                                | {
-                                    data?:
-                                      | {
-                                          attributes?:
-                                            | { formats?: any | null | undefined }
-                                            | null
-                                            | undefined;
-                                        }
-                                      | null
-                                      | undefined;
-                                  }
-                                | null
-                                | undefined;
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
+    | Array<
+        | {
+            id: string;
+            name: string;
+            thumbnail?:
+              | Array<
+                  | { media?: { formats?: any | null | undefined } | null | undefined }
                   | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
+                  | undefined
+                >
+              | null
+              | undefined;
+          }
+        | null
+        | undefined
+      >
     | null
     | undefined;
 };
@@ -1555,150 +2245,32 @@ export type GetKeywordTagSuggestionsQuery = {
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
+  s30?:
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
+    | null
+    | undefined;
   s40?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
     | null
     | undefined;
   s50?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
     | null
     | undefined;
   s60?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
     | null
     | undefined;
   s70?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
     | null
     | undefined;
   s80?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
     | null
     | undefined;
   s90?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
-};
-
-export type LoginMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-export type LoginMutation = { login: { jwt?: string | null | undefined } };
-
-export type MeQueryVariables = Exact<{ [key: string]: never }>;
-
-export type MeQuery = {
-  me?:
-    | {
-        username: string;
-        email?: string | null | undefined;
-        role?: { name: string } | null | undefined;
-      }
+    | Array<{ media?: { formats?: any | null | undefined } | null | undefined } | null | undefined>
     | null
     | undefined;
 };
@@ -1706,52 +2278,22 @@ export type MeQuery = {
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
-      data {
+      title {
+        text
         id
-        attributes {
-          title {
-            data {
-              id
-              attributes {
-                text
-              }
-            }
-          }
-          descriptions {
-            data {
-              id
-              attributes {
-                text
-              }
-            }
-          }
-          time_range_tag {
-            data {
-              id
-              attributes {
-                start
-                end
-              }
-            }
-          }
-          media {
-            data {
-              attributes {
-                url
-              }
-            }
-          }
-          comments {
-            data {
-              id
-              attributes {
-                text
-                author
-                date
-              }
-            }
-          }
-        }
+      }
+      descriptions {
+        text
+        id
+      }
+      media {
+        url
+      }
+      comments {
+        text
+        author
+        id
+        date
       }
     }
   }
@@ -1803,21 +2345,13 @@ export type GetPictureInfoQueryResult = Apollo.QueryResult<
 >;
 
 export const GetPicturesDocument = gql`
-  query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-    pictures(filters: $filters, pagination: $pagination) {
-      data {
-        id
-        attributes {
-          media {
-            data {
-              attributes {
-                width
-                height
-                formats
-              }
-            }
-          }
-        }
+  query getPictures($where: JSON!, $limit: Int!, $start: Int!) {
+    pictures(where: $where, limit: $limit, start: $start) {
+      id
+      media {
+        width
+        height
+        formats
       }
     }
   }
@@ -1835,8 +2369,9 @@ export const GetPicturesDocument = gql`
  * @example
  * const { data, loading, error } = useGetPicturesQuery({
  *   variables: {
- *      filters: // value for 'filters'
- *      pagination: // value for 'pagination'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      start: // value for 'start'
  *   },
  * });
  */
@@ -1943,31 +2478,16 @@ export type GetLatestPicturesCategoryInfoQueryResult = Apollo.QueryResult<
 
 export const GetCategoryInfoDocument = gql`
   query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
-    categoryTags(filters: { name: { eq: $categoryName }, priority: { eq: $categoryPriority } }) {
-      data {
+    categoryTags(where: { name: $categoryName, priority: $categoryPriority }) {
+      id
+      name
+      description
+      related_tags {
+        name
         id
-        attributes {
-          name
-          description
-          related_tags {
-            data {
-              attributes {
-                name
-                thumbnail: pictures(pagination: { limit: 1 }) {
-                  data {
-                    attributes {
-                      media {
-                        data {
-                          attributes {
-                            formats
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+        thumbnail: pictures(limit: 1) {
+          media {
+            formats
           }
         }
       }
@@ -2024,12 +2544,12 @@ export type GetCategoryInfoQueryResult = Apollo.QueryResult<
 export const PostCommentDocument = gql`
   mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
     createComment(
-      data: { author: $author, text: $text, date: $date, picture: $id, publishedAt: null }
+      input: {
+        data: { author: $author, text: $text, picture: $id, date: $date, published_at: null }
+      }
     ) {
-      data {
-        attributes {
-          text
-        }
+      comment {
+        text
       }
     }
   }
@@ -2081,24 +2601,12 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
 
 export const GetKeywordTagSuggestionsDocument = gql`
   query getKeywordTagSuggestions($name: String) {
-    keywordTags(filters: { name: { containsi: $name } }) {
-      data {
-        id
-        attributes {
-          name
-          thumbnail: pictures(pagination: { limit: 1 }) {
-            data {
-              attributes {
-                media {
-                  data {
-                    attributes {
-                      formats
-                    }
-                  }
-                }
-              }
-            }
-          }
+    keywordTags(where: { name_contains: $name }) {
+      id
+      name
+      thumbnail: pictures(limit: 1) {
+        media {
+          formats
         }
       }
     }
@@ -2162,130 +2670,60 @@ export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
 
 export const GetDecadePreviewThumbnailsDocument = gql`
   query getDecadePreviewThumbnails {
-    s40: pictures(
-      filters: {
-        time_range_tag: {
-          start: { gte: "1900-01-01T00:00:00Z" }
-          end: { lte: "1949-12-31T23:59:59Z" }
-        }
-      }
-      pagination: { limit: 1 }
+    s30: pictures(
+      where: { time_range_tag: { start_gte: "1930-01-01T00:00", end_lte: "1939-12-31T23:59" } }
+      limit: 1
     ) {
-      data {
-        attributes {
-          media {
-            data {
-              attributes {
-                formats
-              }
-            }
-          }
-        }
+      media {
+        formats
+      }
+    }
+    s40: pictures(
+      where: { time_range_tag: { start_gte: "1940-01-01T00:00", end_lte: "1949-12-31T23:59" } }
+      limit: 1
+    ) {
+      media {
+        formats
       }
     }
     s50: pictures(
-      filters: {
-        time_range_tag: {
-          start: { gte: "1950-01-01T00:00:00Z" }
-          end: { lte: "1959-12-31T23:59:59Z" }
-        }
-      }
-      pagination: { limit: 1 }
+      where: { time_range_tag: { start_gte: "1950-01-01T00:00", end_lte: "1959-12-31T23:59" } }
+      limit: 1
     ) {
-      data {
-        attributes {
-          media {
-            data {
-              attributes {
-                formats
-              }
-            }
-          }
-        }
+      media {
+        formats
       }
     }
     s60: pictures(
-      filters: {
-        time_range_tag: {
-          start: { gte: "1960-01-01T00:00:00Z" }
-          end: { lte: "1969-12-31T23:59:59Z" }
-        }
-      }
-      pagination: { limit: 1 }
+      where: { time_range_tag: { start_gte: "1960-01-01T00:00", end_lte: "1969-12-31T23:59" } }
+      limit: 1
     ) {
-      data {
-        attributes {
-          media {
-            data {
-              attributes {
-                formats
-              }
-            }
-          }
-        }
+      media {
+        formats
       }
     }
     s70: pictures(
-      filters: {
-        time_range_tag: {
-          start: { gte: "1970-01-01T00:00:00Z" }
-          end: { lte: "1979-12-31T23:59:59Z" }
-        }
-      }
-      pagination: { limit: 1 }
+      where: { time_range_tag: { start_gte: "1970-01-01T00:00", end_lte: "1979-12-31T23:59" } }
+      limit: 1
     ) {
-      data {
-        attributes {
-          media {
-            data {
-              attributes {
-                formats
-              }
-            }
-          }
-        }
+      media {
+        formats
       }
     }
     s80: pictures(
-      filters: {
-        time_range_tag: {
-          start: { gte: "1980-01-01T00:00:00Z" }
-          end: { lte: "1989-12-31T23:59:59Z" }
-        }
-      }
-      pagination: { limit: 1 }
+      where: { time_range_tag: { start_gte: "1980-01-01T00:00", end_lte: "1989-12-31T23:59" } }
+      limit: 1
     ) {
-      data {
-        attributes {
-          media {
-            data {
-              attributes {
-                formats
-              }
-            }
-          }
-        }
+      media {
+        formats
       }
     }
     s90: pictures(
-      filters: {
-        time_range_tag: {
-          start: { gte: "1990-01-01T00:00:00Z" }
-          end: { lte: "1999-12-31T23:59:59Z" }
-        }
-      }
-      pagination: { limit: 1 }
+      where: { time_range_tag: { start_gte: "1990-01-01T00:00", end_lte: "1999-12-31T23:59" } }
+      limit: 1
     ) {
-      data {
-        attributes {
-          media {
-            data {
-              attributes {
-                formats
-              }
-            }
-          }
-        }
+      media {
+        formats
       }
     }
   }
@@ -2344,92 +2782,3 @@ export type GetDecadePreviewThumbnailsQueryResult = Apollo.QueryResult<
   GetDecadePreviewThumbnailsQuery,
   GetDecadePreviewThumbnailsQueryVariables
 >;
-
-export const LoginDocument = gql`
-  mutation login($username: String!, $password: String!) {
-    login(input: { identifier: $username, password: $password }) {
-      jwt
-    }
-  }
-`;
-
-export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
-
-/**
- * __useLoginMutation__
- *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
- *   variables: {
- *      username: // value for 'username'
- *      password: // value for 'password'
- *   },
- * });
- */
-export function useLoginMutation(
-  baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
-}
-
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-
-export type LoginMutationOptions = Apollo.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->;
-
-export const MeDocument = gql`
-  query me {
-    me {
-      role {
-        name
-      }
-      username
-      email
-    }
-  }
-`;
-
-/**
- * __useMeQuery__
- *
- * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-}
-
-export function useMeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-}
-
-export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
-
-export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
-
-export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;

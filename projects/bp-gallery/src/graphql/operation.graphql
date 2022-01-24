@@ -19,15 +19,15 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        time_range_tag {
-          data {
-            id
-            attributes {
-              start
-              end
-            }
-          }
-        }
+				time_range_tag {
+					data {
+						id
+						attributes {
+							start
+							end
+						}
+					}
+				}
         media {
           data {
             attributes {
@@ -70,21 +70,39 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
 }
 
 query getLatestPicturesCategoryInfo($date: DateTime!) {
-  pictures(where: { published_at_gt: $date }) {
-    id
-    category_tags {
-      name
-      id
-      thumbnail: pictures(limit: 1) {
-        media {
-          formats
-        }
-      }
-      related_tags {
-        id
-      }
-    }
-  }
+	pictures(filters: { publishedAt: { gte: $date } }) {
+		data {
+			id
+			attributes {
+				category_tags {
+					data {
+						id
+						attributes {
+							name
+							related_tags {
+								data {
+									id
+								}
+							}
+							thumbnail: pictures(pagination: { limit: 1 }){
+								data {
+									attributes {
+										media {
+											data {
+												attributes {
+													formats
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
@@ -96,6 +114,7 @@ query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
         description
         related_tags {
           data {
+						id
             attributes {
               name
               thumbnail: pictures(pagination: { limit: 1 }) {

@@ -8,17 +8,21 @@ import React from 'react';
 const CategoryPictureDisplay = ({
   result,
   categoryTags,
+
   path,
   scrollPos,
   scrollHeight,
   communityView,
+  multi_picture_mode = true,
 }: {
   result: any;
   categoryTags: any;
+
   path: string[] | undefined;
   scrollPos: number;
   scrollHeight: number;
   communityView: boolean;
+  multi_picture_mode: boolean;
 }) => {
   const { t } = useTranslation();
   if (result.error) {
@@ -30,7 +34,10 @@ const CategoryPictureDisplay = ({
     let relatedTagsSize = category.related_tags?.length ?? 0;
     let relatedTags = category.related_tags;
     if (communityView) {
-      relatedTagsSize = 1;
+      relatedTagsSize = 0;
+      if (multi_picture_mode) {
+        relatedTagsSize = 1;
+      }
       // relatedTags = categoryTags;
       // relatedTags = category.related_tags.filter((relatedTag: any) =>
       //    categoryTags.map((tag: any) => {tag.id, tag.thumbnail, tag.name}).includes(relatedTag.id)
@@ -38,6 +45,7 @@ const CategoryPictureDisplay = ({
       relatedTags = categoryTags.filter((c_tag: any) =>
         relatedTags.map((r_tag: any) => r_tag.id).includes(c_tag.id)
       );
+      relatedTags = categoryTags;
     }
     return (
       <div className='browse-view'>

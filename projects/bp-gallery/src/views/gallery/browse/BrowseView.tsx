@@ -37,6 +37,7 @@ const BrowseView = ({
       scrollPos={scrollPos}
       scrollHeight={scrollHeight}
       communityView={false}
+      multi_picture_mode={true}
     />
   );
 };
