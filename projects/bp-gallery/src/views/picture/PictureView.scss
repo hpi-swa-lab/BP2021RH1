@@ -1,4 +1,5 @@
 @import '../../shared/style.scss';
+@import './shared.scss';
 
 .picture-view {
   color: #303030;
@@ -17,7 +18,7 @@
   display: flex;
   flex-direction: row;
 
-  @media only screen and (max-width: 550px) {
+  @media only screen and (max-width: $mobile-breakpoint) {
     flex-direction: column;
   }
 
@@ -85,11 +86,11 @@
       z-index: 14;
       background: black;
 
-      @media only screen and (min-width: 550px) {
+      @media only screen and (min-width: $mobile-breakpoint) {
         max-height: 100% !important;
       }
 
-      @media only screen and (max-width: 550px) {
+      @media only screen and (max-width: $mobile-breakpoint) {
         z-index: 1001;
       }
 
@@ -154,7 +155,7 @@
     position: relative;
     height: 100%;
 
-    @media only screen and (min-width: 550px) {
+    @media only screen and (min-width: $mobile-breakpoint) {
       max-height: 100% !important;
     }
   }

@@ -39,7 +39,7 @@ const routes: RouteConfig[] = [
           return (
             <PictureView
               pictureId={match.params.id}
-              initialThumbnail={false}
+              isInitialThumbnail={false}
               initialParams={{ sideBarOpen: true }}
             />
           );

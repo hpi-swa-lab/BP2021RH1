@@ -1,7 +1,8 @@
 @import '../../../shared/style.scss';
+@import '../shared.scss';
 
 .picture-info-container {
-  max-width: 430px;
+  width: 430px;
   background: white;
   z-index: 1002;
   padding: 10px;
@@ -48,7 +49,7 @@
     display: none;
   }
 
-  @media only screen and (max-width: 550px) {
+  @media only screen and (max-width: $mobile-breakpoint) {
     position: absolute;
     width: 100%;
     max-width: 100%;

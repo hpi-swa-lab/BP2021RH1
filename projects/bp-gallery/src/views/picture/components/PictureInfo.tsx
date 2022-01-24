@@ -8,6 +8,9 @@ import { PictureViewContext } from '../PictureView';
 import dayjs from 'dayjs';
 import PictureViewNavigationBar, { FocusArea } from './PictureViewNavigationBar';
 import { FlatPicture, FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
+import { ApolloError } from '@apollo/client';
+import Loading from '../../../components/Loading';
+import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   if (!timeStamp?.start || !timeStamp.end) {
@@ -35,13 +38,42 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   }
 };
 
-const PictureInfo = ({
+const PictureInfoContent = ({
   picture,
-  pictureId,
   calculateHeight,
 }: {
   picture: FlatPicture;
+  calculateHeight: (container: HTMLElement) => void;
+}) => {
+  return (
+    <PerfectScrollbar
+      options={{ suppressScrollX: true, wheelPropagation: false }}
+      onScrollY={container => {
+        calculateHeight(container);
+      }}
+    >
+      <div className='picture-infos'>
+        <div className='title'>
+          <Icon style={{ marginRight: '0.5rem' }}>today</Icon>
+          <span>{formatTimeStamp(picture.time_range_tag ?? undefined)}</span>
+        </div>
+        <PictureDetails descriptions={picture.descriptions} />
+        <CommentsContainer comments={picture.comments} pictureId={picture.id} />
+      </div>
+    </PerfectScrollbar>
+  );
+};
+
+const PictureInfo = ({
+  picture,
+  loading,
+  error,
+  calculateHeight,
+}: {
+  picture?: FlatPicture;
   pictureId: string;
+  loading?: boolean;
+  error?: ApolloError;
   calculateHeight: (container: HTMLElement) => void;
 }) => {
   const { sideBarOpen, setSideBarOpen } = useContext(PictureViewContext);
@@ -60,21 +92,11 @@ const PictureInfo = ({
       >
         <Icon>chevron_right</Icon>
       </IconButton>
-      <PerfectScrollbar
-        options={{ suppressScrollX: true, wheelPropagation: false }}
-        onScrollY={container => {
-          calculateHeight(container);
-        }}
-      >
-        <div className='picture-infos'>
-          <div className='title'>
-            <Icon style={{ marginRight: '0.5rem' }}>today</Icon>
-            <span>{formatTimeStamp(picture.time_range_tag ?? undefined)}</span>
-          </div>
-          <PictureDetails descriptions={picture.descriptions} />
-          <CommentsContainer comments={picture.comments} pictureId={pictureId} />
-        </div>
-      </PerfectScrollbar>
+      {loading && <Loading />}
+      {error && <QueryErrorDisplay error={error} />}
+      {!loading && !error && picture && (
+        <PictureInfoContent picture={picture} calculateHeight={calculateHeight} />
+      )}
       <PictureViewNavigationBar
         focusedArea={focusedArea}
         setFocusedArea={setFocusedArea}

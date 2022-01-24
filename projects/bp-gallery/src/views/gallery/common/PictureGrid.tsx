@@ -81,45 +81,51 @@ const PictureGrid = ({
     };
   }, [onResize]);
 
-  const navigateToPicture = (picture: FlatPicture, params: PictureViewContextFields) => {
-    setFocusedPicture({
-      id: picture.id,
-      params,
-    });
-    window.history.replaceState({}, '', `/picture/${picture.id}`);
-  };
+  const navigateToPicture = useCallback(
+    (picture: FlatPicture, params: PictureViewContextFields) => {
+      setFocusedPicture({
+        id: picture.id,
+        params,
+      });
+      window.history.replaceState({}, '', `/picture/${picture.id}`);
+    },
+    [setFocusedPicture]
+  );
 
-  const getNextPicture = (currentPictureId: string): FlatPicture | undefined => {
-    const indexOfCurrentPictureId: number = pictures.findIndex(pic => pic.id === currentPictureId);
-    return pictures.at(indexOfCurrentPictureId + 1);
-  };
+  const nextOrPrevPicture = useCallback(
+    (picture: FlatPicture, target: PictureNavigationTarget, params: PictureViewContextFields) => {
+      const getNextPicture = (currentPictureId: string): FlatPicture | undefined => {
+        const indexOfCurrentPictureId: number = pictures.findIndex(
+          pic => pic.id === currentPictureId
+        );
+        return pictures.at(indexOfCurrentPictureId + 1);
+      };
 
-  const getPreviousPicture = (currentPictureId: string): FlatPicture | undefined => {
-    const indexOfCurrentPictureId: number = pictures.findIndex(pic => pic.id === currentPictureId);
-    return pictures.at(indexOfCurrentPictureId - 1) ?? pictures.at(pictures.length - 1);
-  };
+      const getPreviousPicture = (currentPictureId: string): FlatPicture | undefined => {
+        const indexOfCurrentPictureId: number = pictures.findIndex(
+          pic => pic.id === currentPictureId
+        );
+        return pictures.at(indexOfCurrentPictureId - 1) ?? pictures.at(pictures.length - 1);
+      };
 
-  const nextOrPrevPicture = (
-    picture: FlatPicture,
-    target: PictureNavigationTarget,
-    params: PictureViewContextFields
-  ) => {
-    let newPicture: FlatPicture | undefined = picture;
-    switch (target) {
-      case PictureNavigationTarget.NEXT:
-        newPicture = getNextPicture(picture.id);
-        break;
-      case PictureNavigationTarget.PREVIOUS:
-        newPicture = getPreviousPicture(picture.id);
-        break;
-      default:
-        break;
-    }
+      let newPicture: FlatPicture | undefined = picture;
+      switch (target) {
+        case PictureNavigationTarget.NEXT:
+          newPicture = getNextPicture(picture.id);
+          break;
+        case PictureNavigationTarget.PREVIOUS:
+          newPicture = getPreviousPicture(picture.id);
+          break;
+        default:
+          break;
+      }
 
-    if (newPicture) {
-      navigateToPicture(newPicture, params);
-    }
-  };
+      if (newPicture) {
+        navigateToPicture(newPicture, params);
+      }
+    },
+    [navigateToPicture, pictures]
+  );
 
   return (
     <div className='picture-grid'>
@@ -151,7 +157,7 @@ const PictureGrid = ({
                     hasPrevious={pictures.indexOf(picture) > 0}
                     hasNext={pictures.indexOf(picture) < pictures.length - 1}
                     thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
-                    initialThumbnail={focusedPicture.id === picture.id ? false : true}
+                    isInitialThumbnail={focusedPicture.id !== picture.id}
                     openCallback={(open?: boolean) => {
                       setFocusedPicture(
                         open

@@ -17,8 +17,6 @@ import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture
 import PictureViewUI, { PictureNavigationTarget } from './components/PictureViewUI';
 import PictureInfo from './components/PictureInfo';
 import useBlockScroll from './scrollBlock.hook';
-import Loading from '../../components/Loading';
-import QueryErrorDisplay from '../../components/QueryErrorDisplay';
 import { useFlatQueryResponseData } from '../../graphql/queryUtils';
 
 export interface PictureViewContextFields {
@@ -34,7 +32,7 @@ export const PictureViewContext = React.createContext<PictureViewContextFields>(
 const PictureView = ({
   pictureId,
   thumbnailUrl = '',
-  initialThumbnail = false,
+  isInitialThumbnail = false,
   flexValue = '0',
   hasPrevious,
   hasNext,
@@ -44,7 +42,7 @@ const PictureView = ({
 }: {
   pictureId: string;
   thumbnailUrl?: string;
-  initialThumbnail?: boolean;
+  isInitialThumbnail?: boolean;
   flexValue?: string;
   hasPrevious?: boolean;
   hasNext?: boolean;
@@ -61,7 +59,7 @@ const PictureView = ({
   const [maxHeight, setMaxHeight] = useState<string>('85vh');
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(!!initialParams?.sideBarOpen);
 
-  const shouldBeThumbnail = thumbnailMode || (thumbnailMode === undefined && initialThumbnail);
+  const shouldBeThumbnail = thumbnailMode || (thumbnailMode === undefined && isInitialThumbnail);
 
   // Api connection
   const [getPictureInfo, { data, loading, error }] = useGetPictureInfoLazyQuery({
@@ -100,11 +98,11 @@ const PictureView = ({
       if (navigateCallback) {
         setTransitioning(false);
         nextImageAnimation(containerRef.current as HTMLDivElement, target).then(() => {
-          setThumbnailMode(true);
           if (openCallback) {
             openCallback(false);
           }
           navigateCallback(target, { sideBarOpen });
+          setThumbnailMode(true);
         });
       }
     },
@@ -157,18 +155,18 @@ const PictureView = ({
 
   // Apply initial thumbnail preference to state variable
   useEffect(() => {
-    setThumbnailMode(initialThumbnail);
-    if (!initialThumbnail) {
+    setThumbnailMode(isInitialThumbnail);
+    if (!isInitialThumbnail) {
       setUpPicture(pictureId);
     }
-  }, [initialThumbnail, setUpPicture, pictureId]);
+  }, [isInitialThumbnail, setUpPicture, pictureId]);
 
   useBlockScroll(containerRef, thumbnailMode);
 
   // Block navigation and handle yourself, i.e. block browser navigation and
   // just close picture if it was called from the picture grid
   useEffect(() => {
-    if ((initialThumbnail || openCallback) && thumbnailMode === false) {
+    if ((isInitialThumbnail || openCallback) && thumbnailMode === false) {
       const unblock = history.block(() => {
         setSideBarOpen(false);
         setTransitioning(true);
@@ -186,7 +184,7 @@ const PictureView = ({
     }
   }, [
     history,
-    initialThumbnail,
+    isInitialThumbnail,
     thumbnailMode,
     setUpPicture,
     pictureId,
@@ -209,8 +207,6 @@ const PictureView = ({
           ref={containerRef}
           onClick={thumbnailMode ? openDetails : () => {}}
         >
-          {loading && <Loading />}
-          {error && <QueryErrorDisplay error={error} />}
           <div className='picture-wrapper'>
             <div className='picture-container' style={{ maxHeight }}>
               <img src={pictureLink} alt={pictureLink} />
@@ -219,8 +215,10 @@ const PictureView = ({
               <PictureViewUI maxHeight={maxHeight} calledViaLink={openCallback === undefined} />
             )}
           </div>
-          {thumbnailMode === false && !loading && !error && picture && (
+          {thumbnailMode === false && (
             <PictureInfo
+              loading={loading}
+              error={error}
               picture={picture}
               pictureId={pictureId}
               calculateHeight={calculateHeight}
