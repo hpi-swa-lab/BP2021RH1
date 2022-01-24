@@ -26,8 +26,12 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
         .format('YYYY')
         .slice(0, 3) + 'X'
     );
-  } else {
+  } else if (duration >= 3700) {
     return '19XX';
+  } else {
+    return `${dayjs(timeStamp.start as string).format('DD.MM.YYYY')} - ${dayjs(
+      timeStamp.end as string
+    ).format('DD.MM.YYYY')}`;
   }
 };
 
