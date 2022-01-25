@@ -1,41 +1,45 @@
 import { GraphQLError } from 'graphql';
 import {
-  ComponentContentComment,
-  Description,
+  CommentEntity,
+  DescriptionEntity,
   GetPictureInfoDocument,
 } from '../../../graphql/APIConnector';
 
-export const CommentMocks: ComponentContentComment[] = [
+export const CommentMocks: CommentEntity[] = [
   {
-    text: 'My fancy comment',
-    author: 'Onkel Pelle',
     id: '1',
-    date: new Date('2021-04-21'),
+    attributes: {
+      text: 'My fancy comment',
+      author: 'Onkel Pelle',
+      date: new Date('2021-04-21'),
+    },
   },
   {
-    text: 'My fancy comment yeah',
-    author: 'Onkel Pelle',
     id: '2',
-    date: new Date('2021-04-22'),
+    attributes: {
+      text: 'My fancy comment yeah',
+      author: 'Onkel Pelle',
+      date: new Date('2021-04-22'),
+    },
   },
 ];
 
-export const DescriptionMocks: Description[] = [
+export const DescriptionMocks: DescriptionEntity[] = [
   {
-    text: 'My fancy description',
     id: '1',
-    updated_at: undefined,
-    created_at: undefined,
+    attributes: {
+      text: 'My fancy description',
+    },
   },
   {
-    text: 'My fancy description yeah',
     id: '2',
-    updated_at: undefined,
-    created_at: undefined,
+    attributes: {
+      text: 'My fancy description yeah',
+    },
   },
 ];
 
-export const GetInfoPictureDocumentMocks = [
+export const GetPictureInfoDocumentMocks = [
   {
     request: {
       query: GetPictureInfoDocument,
@@ -46,15 +50,31 @@ export const GetInfoPictureDocumentMocks = [
     result: {
       data: {
         picture: {
-          title: {
-            id: '1',
-            text: 'Picture with comments and descriptions',
+          data: {
+            attributes: {
+              title: {
+                data: {
+                  id: '1',
+                  attributes: {
+                    text: 'Picture with comments and descriptions',
+                  },
+                },
+              },
+              media: {
+                data: {
+                  attributes: {
+                    url: 'test-image.jpg',
+                  },
+                },
+              },
+              descriptions: {
+                data: DescriptionMocks,
+              },
+              comments: {
+                data: CommentMocks,
+              },
+            },
           },
-          media: {
-            url: 'test-image.jpg',
-          },
-          descriptions: DescriptionMocks,
-          comments: CommentMocks,
         },
       },
     },

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Description } from '../../graphql/APIConnector';
+import { FlatDescription } from '../../graphql/additionalFlatTypes';
 import './PictureDetails.scss';
 
-const PictureDetails = ({ descriptions }: { descriptions?: Description[] }) => {
+const PictureDetails = ({ descriptions }: { descriptions?: FlatDescription[] }) => {
   return (
     <div className='pictureDetails' id='info'>
       {descriptions &&
         descriptions.length > 0 &&
-        descriptions.map((description: Description) => (
+        descriptions.map((description: FlatDescription) => (
           <div key={description.id} className='description'>
             {' '}
             {description.text}

@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Location } from 'history';
+import dayjs from 'dayjs';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../common/PictureScrollGrid';
-import dayjs from 'dayjs';
-import { Picture } from '../../../graphql/APIConnector';
-import { Location } from 'history';
-import { useLocation } from 'react-router-dom';
+import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 
 export const enum SearchType {
   DEFAULT = 'q',
@@ -26,19 +26,18 @@ export const asSearchPath = (
 
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
-  const [previewPicture, setPreviewPicture] = useState<Picture>();
+  const [previewPicture, setPreviewPicture] = useState<FlatPicture>();
   const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
     return new URLSearchParams(search);
   }, [search]);
 
-  //Builds query from search params in the path
-  const whereClause = useMemo(() => {
-    const where: { [key: string]: any } = {};
+  // Builds query from search params in the path
+  const filtersClause = useMemo(() => {
+    const filters: { [key: string]: any } = {};
 
-    //TODO: Change definition of where clause here when implementing nested search
-
+    // TODO: Change definition of filters clause here when implementing nested search
     if (searchParams.has(SearchType.DECADE)) {
       if (searchParams.get(SearchType.DECADE) === 'pre50')
         searchParams.set(SearchType.DECADE, '40');
@@ -52,24 +51,38 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
           startTime = new Date(`19${decade / 10}0-01-01`);
         }
         const endTime = new Date(`19${decade / 10}9-12-31`);
-        where['time_range_tag'] = {
-          start_gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm'),
-          end_lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm'),
+        filters['time_range_tag'] = {
+          start: {
+            gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm:ssZ'),
+          },
+          end: {
+            lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm:ssZ'),
+          },
         };
       }
     }
 
     if (searchParams.has(SearchType.KEYWORD)) {
-      const keywords = searchParams.getAll(SearchType.KEYWORD);
-      where['keyword_tags'] = { name_contains: keywords[0] };
+      const keywords = searchParams.getAll(SearchType.KEYWORD).map(decodeURIComponent);
+      // TODO: combine multiple keywords with 'and' operator when implementing nested search
+      filters['keyword_tags'] = {
+        name: {
+          containsi: keywords[0],
+        },
+      };
     }
 
     if (searchParams.has(SearchType.DEFAULT)) {
-      const q = searchParams.getAll(SearchType.DEFAULT);
-      where['descriptions'] = { text_contains: q[0] };
+      const q = searchParams.getAll(SearchType.DEFAULT).map(decodeURIComponent);
+      // TODO: combine multiple descriptions/default query params with 'and' operator when implementing nested search
+      filters['descriptions'] = {
+        text: {
+          containsi: q[0],
+        },
+      };
     }
 
-    return where;
+    return filters;
   }, [searchParams]);
 
   return (
@@ -86,11 +99,11 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             <SearchHub searchSnippet={searchSnippet} />
           ) : (
             <PictureScrollGrid
-              where={whereClause}
+              filters={filtersClause}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={search}
-              previewPictureCallback={(pic: Picture) => {
+              previewPictureCallback={(pic: FlatPicture) => {
                 if (pic !== previewPicture) {
                   setPreviewPicture(pic);
                 }

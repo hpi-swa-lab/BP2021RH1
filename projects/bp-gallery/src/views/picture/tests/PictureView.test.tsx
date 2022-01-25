@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import { renderWithAPIMocks } from '../../../testUtils';
 import { asApiPath } from '../../../App';
-import { CommentMocks, DescriptionMocks, GetInfoPictureDocumentMocks } from './mocks';
+import { CommentMocks, DescriptionMocks, GetPictureInfoDocumentMocks } from './mocks';
 import PictureView from '../PictureView';
 
 const PictureMock = jest.fn();
@@ -30,7 +31,7 @@ describe('PictureView in non-thumbnailMode', () => {
   it('should render the Picture component', async () => {
     renderWithAPIMocks(
       <PictureView pictureId='1' thumbnailMode={false} />,
-      GetInfoPictureDocumentMocks
+      GetPictureInfoDocumentMocks
     );
 
     await waitFor(() => {
@@ -48,7 +49,7 @@ describe('PictureView in non-thumbnailMode', () => {
   it('should render the CommentsContainer component', async () => {
     renderWithAPIMocks(
       <PictureView pictureId='1' thumbnailMode={false} />,
-      GetInfoPictureDocumentMocks
+      GetPictureInfoDocumentMocks
     );
 
     await waitFor(() => {
@@ -57,7 +58,7 @@ describe('PictureView in non-thumbnailMode', () => {
 
       expect(CommentsContainerMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          comments: CommentMocks,
+          comments: flattenQueryResponseData(CommentMocks),
         })
       );
     });
@@ -66,7 +67,7 @@ describe('PictureView in non-thumbnailMode', () => {
   it('should render the PictureDetails component', async () => {
     renderWithAPIMocks(
       <PictureView pictureId='1' thumbnailMode={false} />,
-      GetInfoPictureDocumentMocks
+      GetPictureInfoDocumentMocks
     );
 
     await waitFor(() => {
@@ -75,7 +76,7 @@ describe('PictureView in non-thumbnailMode', () => {
 
       expect(PictureDetailsMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          descriptions: DescriptionMocks,
+          descriptions: flattenQueryResponseData(DescriptionMocks),
         })
       );
     });
@@ -84,7 +85,7 @@ describe('PictureView in non-thumbnailMode', () => {
   it('should render a loading indicator when data is loading', () => {
     renderWithAPIMocks(
       <PictureView pictureId='1' thumbnailMode={false} />,
-      GetInfoPictureDocumentMocks
+      GetPictureInfoDocumentMocks
     );
 
     const loadingElement = screen.getByText(/loading/);
@@ -94,7 +95,7 @@ describe('PictureView in non-thumbnailMode', () => {
   it('should render the error message related to a network error', async () => {
     renderWithAPIMocks(
       <PictureView pictureId='2' thumbnailMode={false} />,
-      GetInfoPictureDocumentMocks
+      GetPictureInfoDocumentMocks
     );
 
     await waitFor(() => {
@@ -106,7 +107,7 @@ describe('PictureView in non-thumbnailMode', () => {
   it('should render the error message related to an api error', async () => {
     renderWithAPIMocks(
       <PictureView pictureId='3' thumbnailMode={false} />,
-      GetInfoPictureDocumentMocks
+      GetPictureInfoDocumentMocks
     );
 
     await waitFor(() => {

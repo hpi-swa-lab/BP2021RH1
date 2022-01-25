@@ -1,13 +1,15 @@
-import { useGetDecadePreviewThumbnailsQuery } from '../../../../graphql/APIConnector';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { History } from 'history';
+import { useHistory } from 'react-router-dom';
 import QueryErrorDisplay from '../../../../components/QueryErrorDisplay';
 import Loading from '../../../../components/Loading';
 import ItemList from '../../common/ItemList';
 import { asApiPath } from '../../../../App';
 import { asSearchPath, SearchType } from '../SearchView';
-import { useTranslation } from 'react-i18next';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
+import { useGetDecadePreviewThumbnailsQuery } from '../../../../graphql/APIConnector';
+import { useFlatQueryResponseData } from '../../../../graphql/queryUtils';
+import { FlatDecadeThumbnails } from '../../../../graphql/additionalFlatTypes';
 
 const DECADE_NAMES: string[] = ['40', '50', '60', '70', '80', '90'];
 
@@ -16,17 +18,18 @@ const DecadesList = () => {
   const history: History = useHistory();
 
   const { data, loading, error } = useGetDecadePreviewThumbnailsQuery();
+  const decadeThumbnails: FlatDecadeThumbnails | undefined = useFlatQueryResponseData(data);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else if (data) {
+  } else if (decadeThumbnails) {
     return (
       <ItemList
         compact={true}
         items={DECADE_NAMES.map((name: string) => {
-          const thumbnailData = (data as any)[`s${name}`];
+          const thumbnailData = decadeThumbnails[`s${name}`];
           const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url ?? '';
           const displayedName = name === '40' ? t('common.past') : `${name}er`;
           return {

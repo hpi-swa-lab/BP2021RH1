@@ -1,7 +1,6 @@
-import { TextField } from '@mui/material';
 import React, { useState } from 'react';
 import './NewCommentForm.scss';
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { usePostCommentMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 

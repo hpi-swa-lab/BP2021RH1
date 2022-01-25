@@ -1,47 +1,90 @@
 query getPictureInfo($pictureId: ID!) {
   picture(id: $pictureId) {
-    title {
-      text
-      id
-    }
-    descriptions {
-      text
-      id
-    }
-    media {
-      url
-    }
-
-    comments {
-      text
-      author
-      id
-      date
+    data {
+      attributes {
+        title {
+          data {
+            id
+            attributes {
+              text
+            }
+          }
+        }
+        descriptions {
+          data {
+            id
+            attributes {
+              text
+            }
+          }
+        }
+        media {
+          data {
+            attributes {
+              url
+            }
+          }
+        }
+        comments {
+          data {
+            id
+            attributes {
+              text
+              author
+              date
+            }
+          }
+        }
+      }
     }
   }
 }
 
-query getPictures($where: JSON!, $limit: Int!, $start: Int!) {
-  pictures(where: $where, limit: $limit, start: $start) {
-    id
-    media {
-      width
-      height
-      formats
+query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+  pictures(filters: $filters, pagination: $pagination) {
+    data {
+      id
+      attributes {
+        media {
+          data {
+            attributes {
+              width
+              height
+              formats
+            }
+          }
+        }
+      }
     }
   }
 }
 
 query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
-  categoryTags(where: { name: $categoryName, priority: $categoryPriority }) {
-    id
-    name
-    description
-    related_tags {
-      name
-      thumbnail: pictures(limit: 1) {
-        media {
-          formats
+  categoryTags(filters: { name: { eq: $categoryName }, priority: { eq: $categoryPriority } }) {
+    data {
+      id
+      attributes {
+        name
+        description
+        related_tags {
+          data {
+            attributes {
+              name
+              thumbnail: pictures(pagination: { limit: 1 }) {
+                data {
+                  attributes {
+                    media {
+                      data {
+                        attributes {
+                          formats
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -50,21 +93,35 @@ query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
 
 mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
   createComment(
-    input: { data: { author: $author, text: $text, picture: $id, date: $date, published_at: null } }
+    data: { author: $author, text: $text, date: $date, picture: $id, publishedAt: null }
   ) {
-    comment {
-      text
+    data {
+      attributes {
+        text
+      }
     }
   }
 }
 
 query getKeywordTagSuggestions($name: String) {
-  keywordTags(where: { name_contains: $name }) {
-    id
-    name
-    thumbnail: pictures(limit: 1) {
-      media {
-        formats
+  keywordTags(filters: { name: { containsi: $name } }) {
+    data {
+      id
+      attributes {
+        name
+        thumbnail: pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -72,51 +129,129 @@ query getKeywordTagSuggestions($name: String) {
 
 query getDecadePreviewThumbnails {
   s40: pictures(
-    where: { time_range_tag: { start_gte: "1900-01-01T00:00", end_lte: "1949-12-31T23:59" } }
-    limit: 1
+    filters: {
+      time_range_tag: {
+        start: { gte: "1900-01-01T00:00:00Z" }
+        end: { lte: "1949-12-31T23:59:59Z" }
+      }
+    }
+    pagination: { limit: 1 }
   ) {
-    media {
-      formats
+    data {
+      attributes {
+        media {
+          data {
+            attributes {
+              formats
+            }
+          }
+        }
+      }
     }
   }
   s50: pictures(
-    where: { time_range_tag: { start_gte: "1950-01-01T00:00", end_lte: "1959-12-31T23:59" } }
-    limit: 1
+    filters: {
+      time_range_tag: {
+        start: { gte: "1950-01-01T00:00:00Z" }
+        end: { lte: "1959-12-31T23:59:59Z" }
+      }
+    }
+    pagination: { limit: 1 }
   ) {
-    media {
-      formats
+    data {
+      attributes {
+        media {
+          data {
+            attributes {
+              formats
+            }
+          }
+        }
+      }
     }
   }
   s60: pictures(
-    where: { time_range_tag: { start_gte: "1960-01-01T00:00", end_lte: "1969-12-31T23:59" } }
-    limit: 1
+    filters: {
+      time_range_tag: {
+        start: { gte: "1960-01-01T00:00:00Z" }
+        end: { lte: "1969-12-31T23:59:59Z" }
+      }
+    }
+    pagination: { limit: 1 }
   ) {
-    media {
-      formats
+    data {
+      attributes {
+        media {
+          data {
+            attributes {
+              formats
+            }
+          }
+        }
+      }
     }
   }
   s70: pictures(
-    where: { time_range_tag: { start_gte: "1970-01-01T00:00", end_lte: "1979-12-31T23:59" } }
-    limit: 1
+    filters: {
+      time_range_tag: {
+        start: { gte: "1970-01-01T00:00:00Z" }
+        end: { lte: "1979-12-31T23:59:59Z" }
+      }
+    }
+    pagination: { limit: 1 }
   ) {
-    media {
-      formats
+    data {
+      attributes {
+        media {
+          data {
+            attributes {
+              formats
+            }
+          }
+        }
+      }
     }
   }
   s80: pictures(
-    where: { time_range_tag: { start_gte: "1980-01-01T00:00", end_lte: "1989-12-31T23:59" } }
-    limit: 1
+    filters: {
+      time_range_tag: {
+        start: { gte: "1980-01-01T00:00:00Z" }
+        end: { lte: "1989-12-31T23:59:59Z" }
+      }
+    }
+    pagination: { limit: 1 }
   ) {
-    media {
-      formats
+    data {
+      attributes {
+        media {
+          data {
+            attributes {
+              formats
+            }
+          }
+        }
+      }
     }
   }
   s90: pictures(
-    where: { time_range_tag: { start_gte: "1990-01-01T00:00", end_lte: "1999-12-31T23:59" } }
-    limit: 1
+    filters: {
+      time_range_tag: {
+        start: { gte: "1990-01-01T00:00:00Z" }
+        end: { lte: "1999-12-31T23:59:59Z" }
+      }
+    }
+    pagination: { limit: 1 }
   ) {
-    media {
-      formats
+    data {
+      attributes {
+        media {
+          data {
+            attributes {
+              formats
+            }
+          }
+        }
+      }
     }
   }
 }

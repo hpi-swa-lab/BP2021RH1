@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Picture, Scalars, useGetPicturesQuery } from '../../../graphql/APIConnector';
+import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
+import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
+import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 import Loading from '../../../components/Loading';
 
 const PictureScrollGrid = ({
-  where,
+  filters,
   scrollPos,
   scrollHeight,
   hashbase,
   previewPictureCallback,
 }: {
-  where: Scalars['JSON'];
+  filters: PictureFiltersInput;
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
-  previewPictureCallback?: (picture: Picture) => void;
+  previewPictureCallback?: (picture: FlatPicture) => void;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -24,20 +26,23 @@ const PictureScrollGrid = ({
 
   const { data, loading, error, fetchMore } = useGetPicturesQuery({
     variables: {
-      where,
-      limit: 100,
-      start: 0,
+      filters,
+      pagination: {
+        start: 0,
+        limit: 100,
+      },
     },
     notifyOnNetworkStatusChange: true,
   });
+  const pictures: FlatPicture[] | undefined = useFlatQueryResponseData(data)?.pictures;
 
   useEffect(() => {
-    if (previewPictureCallback && data?.pictures && data.pictures.length) {
-      previewPictureCallback(data.pictures[0] as Picture);
+    if (previewPictureCallback && pictures && pictures.length) {
+      previewPictureCallback(pictures[0]);
     }
-  }, [data?.pictures, previewPictureCallback]);
+  }, [pictures, previewPictureCallback]);
 
-  //Loads the next 100 Pictures when the user scrolled to the bottom
+  // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {
     if (
       !loading &&
@@ -47,19 +52,24 @@ const PictureScrollGrid = ({
       scrollPos > scrollHeight - 1.5 * window.innerHeight
     ) {
       setIsFetching(true);
-      fetchMore({ variables: { start: data?.pictures?.length } }).then(() => setIsFetching(false));
+      fetchMore({
+        variables: {
+          pagination: {
+            start: pictures?.length,
+            limit: 100,
+          },
+        },
+      }).then(() => setIsFetching(false));
       setLastScrollHeight(scrollHeight);
     }
-  }, [scrollPos, scrollHeight, lastScrollHeight, data, loading, fetchMore]);
+  }, [scrollPos, scrollHeight, lastScrollHeight, pictures, loading, fetchMore]);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
-  } else if (loading && !data?.pictures) {
+  } else if (loading && !pictures) {
     return <Loading />;
-  } else if (data?.pictures?.length) {
-    return (
-      <PictureGrid pictures={data.pictures as Picture[]} hashBase={hashbase} loading={isFetching} />
-    );
+  } else if (pictures?.length) {
+    return <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />;
   } else {
     return <div>{t('common.no-picture')}</div>;
   }

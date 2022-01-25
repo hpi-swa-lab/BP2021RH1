@@ -2,9 +2,9 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import './FormattedComment.scss';
-import { Comment } from '../../../graphql/APIConnector';
+import { FlatComment } from '../../../graphql/additionalFlatTypes';
 
-const FormattedComment = ({ comment }: { comment: Comment }) => {
+const FormattedComment = ({ comment }: { comment: FlatComment }) => {
   const { t } = useTranslation();
 
   const parseNewLine = (text: string) => text.replace(/\\n/gm, '\n');
