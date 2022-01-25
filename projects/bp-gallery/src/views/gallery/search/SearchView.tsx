@@ -36,6 +36,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
   // Builds query from search params in the path
   const filtersClause = useMemo(() => {
     const filters: { [key: string]: any } = {};
+    filters['and'] = [];
 
     // TODO: Change definition of filters clause here when implementing nested search
     if (searchParams.has(SearchType.DECADE)) {
@@ -51,35 +52,45 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
           startTime = new Date(`19${decade / 10}0-01-01`);
         }
         const endTime = new Date(`19${decade / 10}9-12-31`);
-        filters['time_range_tag'] = {
-          start: {
-            gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm:ssZ'),
+        filters['and'].push({
+          time_range_tag: {
+            start: {
+              gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm:ssZ'),
+            },
+            end: {
+              lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm:ssZ'),
+            },
           },
-          end: {
-            lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm:ssZ'),
-          },
-        };
+        });
       }
     }
 
     if (searchParams.has(SearchType.KEYWORD)) {
       const keywords = searchParams.getAll(SearchType.KEYWORD).map(decodeURIComponent);
       // TODO: combine multiple keywords with 'and' operator when implementing nested search
-      filters['keyword_tags'] = {
-        name: {
-          containsi: keywords[0],
-        },
-      };
+      keywords.forEach((keyword: string) => {
+        filters['and'].push({
+          keyword_tags: {
+            name: {
+              containsi: keyword,
+            },
+          },
+        });
+      });
     }
 
     if (searchParams.has(SearchType.DEFAULT)) {
       const q = searchParams.getAll(SearchType.DEFAULT).map(decodeURIComponent);
       // TODO: combine multiple descriptions/default query params with 'and' operator when implementing nested search
-      filters['descriptions'] = {
-        text: {
-          containsi: q[0],
-        },
-      };
+      q.forEach((param: string) => {
+        filters['and'].push({
+          descriptions: {
+            text: {
+              containsi: param,
+            },
+          },
+        });
+      });
     }
 
     return filters;
