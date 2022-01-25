@@ -264,3 +264,9 @@ query getDecadePreviewThumbnails {
     }
   }
 }
+
+mutation login($username: String!, $password: String!) {
+  login(input: { identifier: $username, password: $password }) {
+    jwt
+  }
+}
