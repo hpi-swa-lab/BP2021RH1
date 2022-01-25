@@ -38,13 +38,6 @@ const CategoryPictureDisplay = ({
       if (multi_picture_mode) {
         relatedTagsSize = 1;
       }
-      // relatedTags = categoryTags;
-      // relatedTags = category.related_tags.filter((relatedTag: any) =>
-      //    categoryTags.map((tag: any) => {tag.id, tag.thumbnail, tag.name}).includes(relatedTag.id)
-      //    );
-      relatedTags = categoryTags.filter((c_tag: any) =>
-        relatedTags.map((r_tag: any) => r_tag.id).includes(c_tag.id)
-      );
       relatedTags = categoryTags;
     }
     return (
