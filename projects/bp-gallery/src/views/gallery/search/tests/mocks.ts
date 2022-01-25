@@ -12,8 +12,10 @@ export const GetPicturesSearchMocks = [
             },
           },
         },
-        start: 0,
-        limit: 100,
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
       },
     },
     result: {
@@ -54,8 +56,10 @@ export const GetPicturesSearchMocks = [
             },
           },
         },
-        start: 0,
-        limit: 100,
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
       },
     },
     result: {

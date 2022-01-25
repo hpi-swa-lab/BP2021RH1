@@ -1334,8 +1334,7 @@ export type GetPictureInfoQuery = {
 
 export type GetPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
-  start: Scalars['Int'];
-  limit: Scalars['Int'];
+  pagination: PaginationArg;
 }>;
 
 export type GetPicturesQuery = {
@@ -1721,8 +1720,8 @@ export type GetPictureInfoQueryResult = Apollo.QueryResult<
 >;
 
 export const GetPicturesDocument = gql`
-  query getPictures($filters: PictureFiltersInput!, $start: Int!, $limit: Int!) {
-    pictures(filters: $filters, pagination: { start: $start, limit: $limit }) {
+  query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+    pictures(filters: $filters, pagination: $pagination) {
       data {
         id
         attributes {
@@ -1754,8 +1753,7 @@ export const GetPicturesDocument = gql`
  * const { data, loading, error } = useGetPicturesQuery({
  *   variables: {
  *      filters: // value for 'filters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *   },
  * });
  */

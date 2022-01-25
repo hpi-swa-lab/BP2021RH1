@@ -7,8 +7,10 @@ export const GetPicturesDocumentMocks = [
       query: GetPicturesDocument,
       variables: {
         filters: {},
-        start: 0,
-        limit: 100,
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
       },
     },
     result: {
@@ -97,8 +99,10 @@ export const GetPicturesDocumentMocks = [
       query: GetPicturesDocument,
       variables: {
         filters: {},
-        start: 4,
-        limit: 100,
+        pagination: {
+          start: 4,
+          limit: 100,
+        },
       },
     },
     result: {
@@ -151,8 +155,10 @@ export const GetPicturesDocumentMocks = [
       query: GetPicturesDocument,
       variables: {
         filters: { id: { eq: '0' } },
-        start: 0,
-        limit: 100,
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
       },
     },
     error: new Error('mocked network error'),
@@ -162,8 +168,10 @@ export const GetPicturesDocumentMocks = [
       query: GetPicturesDocument,
       variables: {
         filters: { id: { eq: '-1' } },
-        start: 0,
-        limit: 100,
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
       },
     },
     result: {

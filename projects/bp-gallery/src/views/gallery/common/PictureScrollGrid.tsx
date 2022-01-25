@@ -27,8 +27,10 @@ const PictureScrollGrid = ({
   const { data, loading, error, fetchMore } = useGetPicturesQuery({
     variables: {
       filters,
-      start: 0,
-      limit: 100,
+      pagination: {
+        start: 0,
+        limit: 100,
+      },
     },
     notifyOnNetworkStatusChange: true,
   });
@@ -50,7 +52,14 @@ const PictureScrollGrid = ({
       scrollPos > scrollHeight - 1.5 * window.innerHeight
     ) {
       setIsFetching(true);
-      fetchMore({ variables: { start: pictures?.length } }).then(() => setIsFetching(false));
+      fetchMore({
+        variables: {
+          pagination: {
+            start: pictures?.length,
+            limit: 100,
+          },
+        },
+      }).then(() => setIsFetching(false));
       setLastScrollHeight(scrollHeight);
     }
   }, [scrollPos, scrollHeight, lastScrollHeight, pictures, loading, fetchMore]);

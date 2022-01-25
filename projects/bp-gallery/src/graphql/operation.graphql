@@ -40,8 +40,8 @@ query getPictureInfo($pictureId: ID!) {
   }
 }
 
-query getPictures($filters: PictureFiltersInput!, $start: Int!, $limit: Int!) {
-  pictures(filters: $filters, pagination: { start: $start, limit: $limit }) {
+query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+  pictures(filters: $filters, pagination: $pagination) {
     data {
       id
       attributes {
