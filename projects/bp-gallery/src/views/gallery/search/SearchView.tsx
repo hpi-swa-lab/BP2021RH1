@@ -38,7 +38,6 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     const filters: { [key: string]: any } = {};
     filters['and'] = [];
 
-    // TODO: Change definition of filters clause here when implementing nested search
     if (searchParams.has(SearchType.DECADE)) {
       if (searchParams.get(SearchType.DECADE) === 'pre50')
         searchParams.set(SearchType.DECADE, '40');
@@ -67,7 +66,6 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
 
     if (searchParams.has(SearchType.KEYWORD)) {
       const keywords = searchParams.getAll(SearchType.KEYWORD).map(decodeURIComponent);
-      // TODO: combine multiple keywords with 'and' operator when implementing nested search
       keywords.forEach((keyword: string) => {
         filters['and'].push({
           keyword_tags: {
@@ -81,7 +79,6 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
 
     if (searchParams.has(SearchType.DEFAULT)) {
       const q = searchParams.getAll(SearchType.DEFAULT).map(decodeURIComponent);
-      // TODO: combine multiple descriptions/default query params with 'and' operator when implementing nested search
       q.forEach((param: string) => {
         filters['and'].push({
           descriptions: {
