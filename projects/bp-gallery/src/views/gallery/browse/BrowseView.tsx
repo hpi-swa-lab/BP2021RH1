@@ -5,6 +5,7 @@ import CategoryPictureDisplay from './CategoryPictureDisplay';
 import { FormControlLabel, Switch } from '@mui/material';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
+import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
 
 export function encodeBrowsePathComponent(folder: string): string {
   return encodeURIComponent(folder.replace(/ /gm, '_'));
@@ -31,6 +32,7 @@ const BrowseView = ({
   const result = useGetCategoryInfoQuery({
     variables: variables,
   });
+  result.data = useFlatQueryResponseData(result.data);
   const categoryTags = result.data?.categoryTags;
 
   return (
