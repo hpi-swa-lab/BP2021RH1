@@ -6,63 +6,91 @@ export const GetPicturesDocumentMocks = [
     request: {
       query: GetPicturesDocument,
       variables: {
-        where: '',
-        limit: 100,
-        start: 0,
+        filters: {},
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
       },
     },
     result: {
       data: {
-        pictures: [
-          {
-            id: '1',
-            media: {
-              formats: {
-                small: {
-                  url: 'test-image.jpg',
+        pictures: {
+          data: [
+            {
+              id: '1',
+              attributes: {
+                media: {
+                  data: {
+                    attributes: {
+                      formats: {
+                        small: {
+                          url: 'test-image.jpg',
+                        },
+                      },
+                      width: 1,
+                      height: 1,
+                    },
+                  },
                 },
               },
-              width: 1,
-              height: 1,
             },
-          },
-          {
-            id: '2',
-            media: {
-              formats: {
-                small: {
-                  url: 'test-image2.jpg',
+            {
+              id: '2',
+              attributes: {
+                media: {
+                  data: {
+                    attributes: {
+                      formats: {
+                        small: {
+                          url: 'test-image2.jpg',
+                        },
+                      },
+                      width: 1,
+                      height: 1,
+                    },
+                  },
                 },
               },
-              width: 1,
-              height: 1,
             },
-          },
-          {
-            id: '3',
-            media: {
-              formats: {
-                small: {
-                  url: 'test-image3.jpg',
+            {
+              id: '3',
+              attributes: {
+                media: {
+                  data: {
+                    attributes: {
+                      formats: {
+                        small: {
+                          url: 'test-image3.jpg',
+                        },
+                      },
+                      width: 1,
+                      height: 1,
+                    },
+                  },
                 },
               },
-              width: 1,
-              height: 1,
             },
-          },
-          {
-            id: '4',
-            media: {
-              formats: {
-                small: {
-                  url: 'test-image4.jpg',
+            {
+              id: '4',
+              attributes: {
+                media: {
+                  data: {
+                    attributes: {
+                      formats: {
+                        small: {
+                          url: 'test-image4.jpg',
+                        },
+                      },
+                      width: 1,
+                      height: 1,
+                    },
+                  },
                 },
               },
-              width: 1,
-              height: 1,
             },
-          },
-        ],
+          ],
+        },
       },
     },
   },
@@ -70,39 +98,55 @@ export const GetPicturesDocumentMocks = [
     request: {
       query: GetPicturesDocument,
       variables: {
-        where: '',
-        limit: 100,
-        start: 4,
+        filters: {},
+        pagination: {
+          start: 4,
+          limit: 100,
+        },
       },
     },
     result: {
       data: {
-        pictures: [
-          {
-            id: '5',
-            media: {
-              formats: {
-                small: {
-                  url: 'test-image5.jpg',
+        pictures: {
+          data: [
+            {
+              id: '5',
+              attributes: {
+                media: {
+                  data: {
+                    attributes: {
+                      formats: {
+                        small: {
+                          url: 'test-image5.jpg',
+                        },
+                      },
+                      width: 1,
+                      height: 1,
+                    },
+                  },
                 },
               },
-              width: 1,
-              height: 1,
             },
-          },
-          {
-            id: '6',
-            media: {
-              formats: {
-                small: {
-                  url: 'test-image6.jpg',
+            {
+              id: '6',
+              attributes: {
+                media: {
+                  data: {
+                    attributes: {
+                      formats: {
+                        small: {
+                          url: 'test-image6.jpg',
+                        },
+                      },
+                      width: 1,
+                      height: 1,
+                    },
+                  },
                 },
               },
-              width: 1,
-              height: 1,
             },
-          },
-        ],
+          ],
+        },
       },
     },
   },
@@ -110,9 +154,11 @@ export const GetPicturesDocumentMocks = [
     request: {
       query: GetPicturesDocument,
       variables: {
-        where: '{id: 0}',
-        limit: 100,
-        start: 0,
+        filters: { id: { eq: '0' } },
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
       },
     },
     error: new Error('mocked network error'),
@@ -121,9 +167,11 @@ export const GetPicturesDocumentMocks = [
     request: {
       query: GetPicturesDocument,
       variables: {
-        where: '{id: -1}',
-        limit: 100,
-        start: 0,
+        filters: { id: { eq: '-1' } },
+        pagination: {
+          start: 0,
+          limit: 100,
+        },
       },
     },
     result: {

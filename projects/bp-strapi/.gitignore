@@ -117,4 +117,4 @@ build
 ############################
 # Environment files
 ############################
-config/environments/*
+config/environments/*/.env

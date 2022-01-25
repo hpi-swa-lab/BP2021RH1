@@ -1,15 +1,22 @@
 import React from 'react';
+import { FlatComment } from '../../../graphql/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';
-import { Comment } from '../../../graphql/APIConnector';
 
-const CommentsContainer = ({ pictureId, comments }: { comments: Comment[]; pictureId: string }) => {
+const CommentsContainer = ({
+  pictureId,
+  comments,
+}: {
+  comments?: FlatComment[];
+  pictureId: string;
+}) => {
   return (
     <div className='pictureComments' id='comments'>
       <div className='comment-container'>
-        {comments.length > 0 &&
-          comments.map((comment: Comment) => (
+        {comments &&
+          comments.length > 0 &&
+          comments.map((comment: FlatComment) => (
             <FormattedComment comment={comment} key={comment.id} />
           ))}
       </div>

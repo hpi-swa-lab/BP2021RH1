@@ -9,10 +9,10 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
   it('should render all queried pictures in thumbnail-mode', async () => {
     const { container } = renderWithAPIMocks(
       <PictureScrollGrid
-        where={''}
+        filters={{}}
         scrollPos={0}
         scrollHeight={2 * window.innerHeight}
-        hashbase={'A'}
+        hashbase='A'
       />,
       GetPicturesDocumentMocks
     );
@@ -26,7 +26,12 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
 
   it('should render the error message related to a network error', async () => {
     renderWithAPIMocks(
-      <PictureScrollGrid where={'{id: 0}'} scrollPos={0} scrollHeight={0} hashbase={'A'} />,
+      <PictureScrollGrid
+        filters={{ id: { eq: '0' } }}
+        scrollPos={0}
+        scrollHeight={0}
+        hashbase='A'
+      />,
       GetPicturesDocumentMocks
     );
 
@@ -38,7 +43,12 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
 
   it('should render the error message related to an api error', async () => {
     renderWithAPIMocks(
-      <PictureScrollGrid where={'{id: -1}'} scrollPos={0} scrollHeight={0} hashbase={'A'} />,
+      <PictureScrollGrid
+        filters={{ id: { eq: '-1' } }}
+        scrollPos={0}
+        scrollHeight={0}
+        hashbase='A'
+      />,
       GetPicturesDocumentMocks
     );
 
@@ -53,10 +63,10 @@ describe('Refetch functionality in PictureScrollGrid', () => {
   it('should render more pictures after refetching', async () => {
     const { container } = renderWithAPIMocks(
       <PictureScrollGrid
-        where={''}
+        filters={{}}
         scrollPos={0}
         scrollHeight={2 * window.innerHeight}
-        hashbase={'A'}
+        hashbase='A'
       />,
       GetPicturesDocumentMocks,
       true
@@ -68,10 +78,10 @@ describe('Refetch functionality in PictureScrollGrid', () => {
 
     renderWithAPIMocks(
       <PictureScrollGrid
-        where={''}
-        scrollPos={2 * window.innerHeight} //simulates scrolling to the bottom
+        filters={{}}
+        scrollPos={2 * window.innerHeight} // simulates scrolling to the bottom
         scrollHeight={2 * window.innerHeight}
-        hashbase={'A'}
+        hashbase='A'
       />,
       GetPicturesDocumentMocks,
       true

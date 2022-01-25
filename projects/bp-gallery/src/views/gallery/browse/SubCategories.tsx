@@ -23,7 +23,7 @@ const SubCategories = ({
     }/${encodeBrowsePathComponent(name)}`.replace(/\/+/gm, '/');
   };
   const buildItem = (category: { thumbnail: any[]; name: string }, index: number) => {
-    const formats = category.thumbnail[0].media.formats;
+    const formats = category.thumbnail[0].media?.formats;
     return {
       name: decodeBrowsePathComponent(category.name),
       background: asApiPath(
