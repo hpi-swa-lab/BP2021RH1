@@ -23,10 +23,10 @@ const CommunityView = ({
 }) => {
   const history: History = useHistory();
   const communityDate = '2021-11-24T10:50:45.978Z';
-  const variables_related = path?.length
+  const variables_related_tags = path?.length
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
     : { categoryPriority: 1 };
-  const related_tags_result = useGetCategoryInfoQuery({ variables: variables_related });
+  const related_tags_result = useGetCategoryInfoQuery({ variables: variables_related_tags });
   const result = useGetLatestPicturesCategoryInfoQuery({
     variables: { date: new Date(communityDate) },
   });
@@ -35,7 +35,7 @@ const CommunityView = ({
     return <QueryErrorDisplay error={result.error} />;
   } else if (related_tags_result.error) {
     return <QueryErrorDisplay error={related_tags_result.error} />;
-  } else if (result.loading) {
+  } else if (result.loading || related_tags_result.loading) {
     return <Loading />;
   } else if (related_tags_result.loading) {
     return <Loading />;
@@ -46,15 +46,17 @@ const CommunityView = ({
     const tags = result.data?.pictures?.map(picture => {
       return picture?.category_tags;
     });
-    const categoryTags = Array.from(
+    // flatten
+    let categoryTags = Array.from(
       new Set(tags?.reduce((previous, next) => previous?.concat(next), []))
     );
-    const unique_tags = Array.from(new Set(categoryTags.map(a => a?.name))).map(name => {
-      return categoryTags.find(a => a?.name === name);
+    // remove duplicates from categoryTags
+    categoryTags = Array.from(new Set(categoryTags.map(a => a?.id))).map(id => {
+      return categoryTags.find(a => a?.id === id);
     });
-
+    // intersection between unique categoryTags and related_tags
     let filtered_tags;
-    filtered_tags = unique_tags.filter((c_tag: any) =>
+    filtered_tags = categoryTags.filter((c_tag: any) =>
       related_tags?.map((r_tag: any) => r_tag.id).includes(c_tag.id)
     );
     let multi_picture_mode = true;

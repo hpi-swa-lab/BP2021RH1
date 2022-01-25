@@ -8,7 +8,6 @@ import React from 'react';
 const CategoryPictureDisplay = ({
   result,
   categoryTags,
-
   path,
   scrollPos,
   scrollHeight,
@@ -17,7 +16,6 @@ const CategoryPictureDisplay = ({
 }: {
   result: any;
   categoryTags: any;
-
   path: string[] | undefined;
   scrollPos: number;
   scrollHeight: number;
