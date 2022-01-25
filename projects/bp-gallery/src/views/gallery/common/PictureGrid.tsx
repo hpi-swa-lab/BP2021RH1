@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
+import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 
 const PictureGrid = ({
   pictures,
   hashBase,
   loading,
 }: {
-  pictures: any[];
+  pictures: FlatPicture[];
   hashBase: string;
   loading: boolean;
 }) => {
@@ -16,7 +17,7 @@ const PictureGrid = ({
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
-  const [table, setTable] = useState<(any | undefined)[][]>([[]]);
+  const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
 
   const hashCode = (str: string) => {
     let hash = 0,
@@ -33,7 +34,7 @@ const PictureGrid = ({
 
   // Initialize table with pictures from props
   useEffect(() => {
-    const buffer: (any | undefined)[][] = [[]];
+    const buffer: (FlatPicture | undefined)[][] = [[]];
     let currentRow = 0;
     let currentRowCount = 0;
     let rowLength = Math.round(hashCode(hashBase) * (maxRowCount - minRowCount) + minRowCount);

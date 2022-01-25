@@ -11,6 +11,7 @@ import Picture from './Picture';
 import { asApiPath, NavigationContext } from '../../App';
 import { useGetPictureInfoQuery } from '../../graphql/APIConnector';
 import { useFlatQueryResponseData } from '../../graphql/queryUtils';
+import { FlatPicture } from '../../graphql/additionalFlatTypes';
 import QueryErrorDisplay from '../../components/QueryErrorDisplay';
 import Loading from '../../components/Loading';
 import { NavigationElement } from '../../components/NavigationBar';
@@ -127,7 +128,7 @@ const DetailedPictureView = ({
       pictureId: pictureId,
     },
   });
-  const picture = useFlatQueryResponseData(data)?.picture;
+  const picture: FlatPicture | undefined = useFlatQueryResponseData(data)?.picture;
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
