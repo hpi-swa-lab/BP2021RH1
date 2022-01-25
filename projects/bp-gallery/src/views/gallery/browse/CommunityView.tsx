@@ -11,6 +11,7 @@ import Loading from '../../../components/Loading';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import { FormControlLabel, Switch } from '@mui/material';
+import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
 
 const CommunityView = ({
   path,
@@ -26,10 +27,14 @@ const CommunityView = ({
   const variables_related_tags = path?.length
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
     : { categoryPriority: 1 };
+
   const related_tags_result = useGetCategoryInfoQuery({ variables: variables_related_tags });
+  related_tags_result.data = useFlatQueryResponseData(related_tags_result.data);
+
   const result = useGetLatestPicturesCategoryInfoQuery({
     variables: { date: new Date(communityDate) },
   });
+  result.data = useFlatQueryResponseData(result.data);
 
   if (result.error) {
     return <QueryErrorDisplay error={result.error} />;

@@ -4,6 +4,7 @@ import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import SubCategories from './SubCategories';
 import React from 'react';
+import CategoryDescription from './CategoryDescription';
 
 const CategoryPictureDisplay = ({
   result,
@@ -40,6 +41,7 @@ const CategoryPictureDisplay = ({
     }
     return (
       <div className='browse-view'>
+        <CategoryDescription description={category.description ?? ''} name={category.name} />
         {relatedTagsSize > 0 && (
           <SubCategories
             relatedTags={relatedTags as { thumbnail: any[]; name: string }[]}
@@ -48,7 +50,13 @@ const CategoryPictureDisplay = ({
           />
         )}
         <PictureScrollGrid
-          where={{ category_tags: category.id }}
+          filters={{
+            category_tags: {
+              id: {
+                eq: category.id,
+              },
+            },
+          }}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={category.name}
