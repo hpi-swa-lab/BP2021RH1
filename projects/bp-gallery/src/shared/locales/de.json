@@ -24,6 +24,7 @@
     "titleFor": "Titelbild für {{query}}",
     "no-keywords": "Keine Schlagwörter für diese Suchanfrage gefunden...",
     "something-went-wrong": "Es ist etwas schiefgelaufen",
-    "past": "Früher"
+    "past": "Früher",
+    "information": "Informationen"
   }
 }

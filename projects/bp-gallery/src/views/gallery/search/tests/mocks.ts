@@ -6,11 +6,15 @@ export const GetPicturesSearchMocks = [
       query: GetPicturesDocument,
       variables: {
         filters: {
-          descriptions: {
-            text: {
-              containsi: 'Onkel Pelle',
+          and: [
+            {
+              descriptions: {
+                text: {
+                  containsi: 'Onkel Pelle',
+                },
+              },
             },
-          },
+          ],
         },
         pagination: {
           start: 0,
@@ -50,11 +54,15 @@ export const GetPicturesSearchMocks = [
       query: GetPicturesDocument,
       variables: {
         filters: {
-          descriptions: {
-            text: {
-              containsi: 'invalid params',
+          and: [
+            {
+              descriptions: {
+                text: {
+                  containsi: 'invalid params',
+                },
+              },
             },
-          },
+          ],
         },
         pagination: {
           start: 0,

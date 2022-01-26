@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './NewCommentForm.scss';
 import { Button, TextField } from '@mui/material';
-import { usePostCommentMutation } from '../../../graphql/APIConnector';
+import { usePostCommentMutation } from '../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
@@ -42,7 +42,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         className='input-field'
         id='name'
         label={t('common.name')}
-        variant='outlined'
+        variant='filled'
         fullWidth
         value={commentAuthor}
         onChange={handleAuthorChange}
@@ -54,7 +54,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         InputProps={{ className: 'border__label' }}
         id='text'
         label={t('common.comment')}
-        variant='outlined'
+        variant='filled'
         value={commentText}
         onChange={handleTextChange}
         fullWidth
@@ -62,7 +62,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         rows={4}
       />
       <div className='Submit'>
-        <Button variant='outlined' onClick={postComment}>
+        <Button variant='contained' onClick={postComment}>
           {t('common.submit')}
         </Button>
       </div>

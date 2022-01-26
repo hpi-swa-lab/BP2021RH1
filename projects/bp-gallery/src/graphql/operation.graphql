@@ -18,6 +18,15 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        time_range_tag {
+          data {
+            id
+            attributes {
+              start
+              end
+            }
+          }
+        }
         media {
           data {
             attributes {
