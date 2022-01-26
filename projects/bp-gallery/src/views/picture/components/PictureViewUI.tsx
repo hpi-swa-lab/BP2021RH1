@@ -3,11 +3,6 @@ import { Button, Icon } from '@mui/material';
 import PictureNavigationButtons from './PictureNavigationButtons';
 import { useTranslation } from 'react-i18next';
 
-export enum PictureNavigationTarget {
-  NEXT,
-  PREVIOUS,
-}
-
 export const PictureViewUI = ({
   maxHeight,
   calledViaLink,
