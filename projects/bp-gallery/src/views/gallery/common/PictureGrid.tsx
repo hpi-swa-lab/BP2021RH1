@@ -140,17 +140,8 @@ const PictureGrid = ({
                     thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
                     isInitialThumbnail={focusedPicture.id !== picture.id}
                     openCallback={(open?: boolean) => {
-                      setFocusedPicture(
-                        open
-                          ? {
-                              id: picture.id,
-                              params: {},
-                            }
-                          : {
-                              id: '-1',
-                              params: {},
-                            }
-                      );
+                      const params = {};
+                      setFocusedPicture(open ? { id: picture.id, params } : { id: '-1', params });
                     }}
                   />
                 );
