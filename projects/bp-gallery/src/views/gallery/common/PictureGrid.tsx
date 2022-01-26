@@ -94,31 +94,12 @@ const PictureGrid = ({
 
   const nextOrPrevPicture = useCallback(
     (picture: FlatPicture, target: PictureNavigationTarget, params: PictureViewContextFields) => {
-      const getNextPicture = (currentPictureId: string): FlatPicture | undefined => {
-        const indexOfCurrentPictureId: number = pictures.findIndex(
-          pic => pic.id === currentPictureId
-        );
-        return pictures.at(indexOfCurrentPictureId + 1);
-      };
+      const indexOfCurrentPictureId: number = pictures.findIndex(pic => pic.id === picture.id);
+      const nextPicture = pictures.at(indexOfCurrentPictureId + 1);
+      const previousPicture = pictures.at(indexOfCurrentPictureId - 1);
 
-      const getPreviousPicture = (currentPictureId: string): FlatPicture | undefined => {
-        const indexOfCurrentPictureId: number = pictures.findIndex(
-          pic => pic.id === currentPictureId
-        );
-        return pictures.at(indexOfCurrentPictureId - 1) ?? pictures.at(pictures.length - 1);
-      };
-
-      let newPicture: FlatPicture | undefined = picture;
-      switch (target) {
-        case PictureNavigationTarget.NEXT:
-          newPicture = getNextPicture(picture.id);
-          break;
-        case PictureNavigationTarget.PREVIOUS:
-          newPicture = getPreviousPicture(picture.id);
-          break;
-        default:
-          break;
-      }
+      const newPicture: FlatPicture | undefined =
+        target === PictureNavigationTarget.NEXT ? nextPicture : previousPicture;
 
       if (newPicture) {
         navigateToPicture(newPicture, params);
