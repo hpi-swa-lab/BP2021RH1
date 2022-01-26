@@ -27,6 +27,7 @@ export const CommentMocks: CommentEntity[] = [
 ];
 
 export const TimeRangeTagMocks: TimeRangeTagEntity = {
+  id: '1',
   attributes: {
     start: '1955-10-10T00:00:00Z',
     end: '1955-10-12T00:00:00Z',
