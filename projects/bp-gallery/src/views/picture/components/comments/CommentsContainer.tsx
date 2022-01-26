@@ -1,8 +1,9 @@
 import React from 'react';
-import { FlatComment } from '../../../graphql/additionalFlatTypes';
+import { FlatComment } from '../../../../graphql/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';
+import { useTranslation } from 'react-i18next';
 
 const CommentsContainer = ({
   pictureId,
@@ -11,8 +12,11 @@ const CommentsContainer = ({
   comments?: FlatComment[];
   pictureId: string;
 }) => {
+  const { t } = useTranslation();
+
   return (
-    <div className='pictureComments' id='comments'>
+    <div className='picture-info-section pictureComments' id='comments'>
+      <h2>{t('common.comments')}</h2>
       <div className='comment-container'>
         {comments &&
           comments.length > 0 &&
