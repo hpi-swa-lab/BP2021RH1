@@ -3,6 +3,7 @@ import {
   CommentEntity,
   DescriptionEntity,
   GetPictureInfoDocument,
+  PictureEntity,
   TimeRangeTagEntity,
 } from '../../../graphql/APIConnector';
 
@@ -27,8 +28,8 @@ export const CommentMocks: CommentEntity[] = [
 
 export const TimeRangeTagMocks: TimeRangeTagEntity = {
   attributes: {
-    start: new Date('1955-10-10'),
-    end: new Date('1955-10-12'),
+    start: '1955-10-10T00:00:00Z',
+    end: '1955-10-12T00:00:00Z',
   },
 };
 
@@ -47,33 +48,36 @@ export const DescriptionMocks: DescriptionEntity[] = [
   },
 ];
 
-export const PictureMocks: any = {
-  data: {
-    attributes: {
-      title: {
-        data: {
-          id: '1',
-          attributes: {
-            text: 'Picture with comments and descriptions',
-          },
+export const PictureMocks: PictureEntity = {
+  attributes: {
+    title: {
+      data: {
+        id: '1',
+        attributes: {
+          text: 'Picture with comments and descriptions',
         },
       },
-      media: {
-        data: {
-          attributes: {
-            url: 'test-image.jpg',
-          },
+    },
+    media: {
+      data: {
+        attributes: {
+          url: 'test-image.jpg',
+          hash: '',
+          mime: 'image/jpeg',
+          name: 'Test Image',
+          provider: '',
+          size: -1,
         },
       },
-      descriptions: {
-        data: DescriptionMocks,
-      },
-      comments: {
-        data: CommentMocks,
-      },
-      time_range_tag: {
-        data: TimeRangeTagMocks,
-      },
+    },
+    descriptions: {
+      data: DescriptionMocks,
+    },
+    comments: {
+      data: CommentMocks,
+    },
+    time_range_tag: {
+      data: TimeRangeTagMocks,
     },
   },
 };
@@ -88,7 +92,9 @@ export const GetPictureInfoDocumentMocks = [
     },
     result: {
       data: {
-        picture: PictureMocks,
+        picture: {
+          data: PictureMocks,
+        },
       },
     },
   },

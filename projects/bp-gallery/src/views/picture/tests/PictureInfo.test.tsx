@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
+import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import PictureInfo from '../components/PictureInfo';
 import { FocusArea } from '../components/PictureViewNavigationBar';
 import { CommentMocks, DescriptionMocks, PictureMocks } from './mocks';
@@ -39,7 +40,11 @@ const calculateHeightMock = jest.fn();
 describe('PictureInfo', () => {
   it('should display open-close-button', () => {
     const { container } = renderWithPictureContextMocks(
-      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+      <PictureInfo
+        calculateHeight={calculateHeightMock}
+        picture={flattenQueryResponseData(PictureMocks)}
+        pictureId={'1'}
+      />
     );
     const openCloseButtons = container.getElementsByClassName('open-close-button');
     expect(openCloseButtons.length).toBe(1);
@@ -48,7 +53,11 @@ describe('PictureInfo', () => {
 
   it('should be able to open and close', async () => {
     const { container } = renderWithPictureContextMocks(
-      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+      <PictureInfo
+        calculateHeight={calculateHeightMock}
+        picture={flattenQueryResponseData(PictureMocks)}
+        pictureId={'1'}
+      />
     );
     const openCloseButton = container.getElementsByClassName('open-close-button')[0];
     expect(container.querySelector('.picture-info-container')?.className).toContain('closed');
@@ -64,9 +73,13 @@ describe('PictureInfo', () => {
     });
   });
 
-  it('should render the images time range tag', async () => {
+  it('should render the pictures time range tag', async () => {
     renderWithPictureContextMocks(
-      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+      <PictureInfo
+        calculateHeight={calculateHeightMock}
+        picture={flattenQueryResponseData(PictureMocks)}
+        pictureId={'1'}
+      />
     );
 
     const timeRangeTags = screen.getByText('10.10.1955 - 12.10.1955');
@@ -75,7 +88,11 @@ describe('PictureInfo', () => {
 
   it('should render the picture details', async () => {
     renderWithPictureContextMocks(
-      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+      <PictureInfo
+        calculateHeight={calculateHeightMock}
+        picture={flattenQueryResponseData(PictureMocks)}
+        pictureId={'1'}
+      />
     );
 
     const pictureDetails = screen.getByText('PictureDetailsMock');
@@ -83,14 +100,18 @@ describe('PictureInfo', () => {
 
     expect(PictureDetailsMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        descriptions: DescriptionMocks,
+        descriptions: flattenQueryResponseData(DescriptionMocks),
       })
     );
   });
 
   it('should render the comments container', async () => {
     renderWithPictureContextMocks(
-      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+      <PictureInfo
+        calculateHeight={calculateHeightMock}
+        picture={flattenQueryResponseData(PictureMocks)}
+        pictureId={'1'}
+      />
     );
 
     const commentsContainer = screen.getByText('CommentsContainerMock');
@@ -98,14 +119,18 @@ describe('PictureInfo', () => {
 
     expect(CommentsContainerMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        comments: CommentMocks,
+        comments: flattenQueryResponseData(CommentMocks),
       })
     );
   });
 
   it('should render the picture view navigation bar', async () => {
     renderWithPictureContextMocks(
-      <PictureInfo calculateHeight={calculateHeightMock} picture={PictureMocks} pictureId={'1'} />
+      <PictureInfo
+        calculateHeight={calculateHeightMock}
+        picture={flattenQueryResponseData(PictureMocks)}
+        pictureId={'1'}
+      />
     );
 
     const navigationBar = screen.getByText('PictureViewNavigationBarMock');
