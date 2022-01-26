@@ -25,6 +25,10 @@
     "no-keywords": "Keine Schlagwörter für diese Suchanfrage gefunden...",
     "something-went-wrong": "Es ist etwas schiefgelaufen",
     "past": "Früher",
+    "invalid-inputs": "Ungültige Eingaben",
+    "login": "Login",
+    "username": "Nutzername",
+    "password": "Passwort",
     "information": "Informationen"
   }
 }

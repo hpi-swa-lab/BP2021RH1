@@ -270,3 +270,13 @@ mutation login($username: String!, $password: String!) {
     jwt
   }
 }
+
+query me {
+  me {
+    role {
+      name
+    }
+    username
+    email
+  }
+}

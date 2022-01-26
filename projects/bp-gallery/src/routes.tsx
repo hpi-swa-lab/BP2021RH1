@@ -6,6 +6,7 @@ import Demo from './prototypes/demo';
 import TimeLineDemo from './prototypes/timeline-demo';
 import GalleryView from './views/gallery/GalleryView';
 import PictureView from './views/picture/PictureView';
+import LoginScreen from './components/LoginScreen';
 
 const routes: RouteConfig[] = [
   {
@@ -44,6 +45,13 @@ const routes: RouteConfig[] = [
             />
           );
         },
+      },
+      {
+        path: '/login',
+        render: () => {
+          return <LoginScreen />;
+        },
+        exact: true,
       },
       {
         path: '/prototypes/demo',
