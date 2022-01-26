@@ -64,7 +64,7 @@ test('Route mechanism renders the PictureView to a picture in non-thumbnailMode'
   expect(PictureViewMock).toHaveBeenCalledWith(
     expect.objectContaining({
       pictureId: '1',
-      thumbnailMode: false,
+      isInitialThumbnail: false,
     })
   );
 });
