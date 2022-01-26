@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import PictureViewUI from '../PictureViewUI';
+import PictureViewUI from '../components/PictureViewUI';
 
 describe('Picture View UI', () => {
   it('should display bh-logo', async () => {
