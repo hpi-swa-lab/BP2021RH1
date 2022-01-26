@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import { useGetPictureInfoLazyQuery } from '../../graphql/APIConnector';
 import { FlatPicture } from '../../graphql/additionalFlatTypes';
-import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture.helpers';
+import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture-animation.helpers';
 import PictureViewUI, { PictureNavigationTarget } from './components/PictureViewUI';
 import PictureInfo from './components/PictureInfo';
 import useBlockScroll from './scrollBlock.hook';
