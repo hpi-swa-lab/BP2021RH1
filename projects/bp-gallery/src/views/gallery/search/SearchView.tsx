@@ -7,6 +7,7 @@ import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { PictureFiltersInput } from '../../../graphql/APIConnector';
 
 export const enum SearchType {
   DEFAULT = 'q',
@@ -35,8 +36,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
 
   // Builds query from search params in the path
   const filtersClause = useMemo(() => {
-    const filters: { [key: string]: any } = {};
-    filters['and'] = [];
+    const filters: { and: PictureFiltersInput[] } = { and: [] };
 
     if (searchParams.has(SearchType.DECADE)) {
       if (searchParams.get(SearchType.DECADE) === 'pre50')
