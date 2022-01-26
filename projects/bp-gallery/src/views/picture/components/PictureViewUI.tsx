@@ -29,7 +29,7 @@ export const PictureViewUI = ({
           <Icon>arrow_back</Icon>
           {calledViaLink ? t('common.back-to-home') : t('common.back')}
         </Button>
-        <div className={`bh-logo`}>
+        <div className='bh-logo'>
           <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
         </div>
       </div>
