@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
-import dayjs from 'dayjs';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
@@ -33,20 +32,17 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
     const decade = parseInt(searchParams.get(SearchType.DECADE) ?? '');
 
     if (!isNaN(decade)) {
-      let startTime;
-      if (decade === 40) {
-        startTime = new Date(`1900-01-01`);
-      } else {
-        startTime = new Date(`19${decade / 10}0-01-01`);
-      }
-      const endTime = new Date(`19${decade / 10}9-12-31`);
+      const startTime =
+        decade === 40 ? '1900-01-01T00:00:00Z' : `19${decade / 10}0-01-01T00:00:00Z`;
+      const endTime = `19${decade / 10}9-12-31T23:59:59Z`;
+
       filters.and?.push({
         time_range_tag: {
           start: {
-            gte: dayjs(startTime).format('YYYY-MM-DDTHH:mm:ssZ'),
+            gte: startTime,
           },
           end: {
-            lte: dayjs(endTime).format('YYYY-MM-DDTHH:mm:ssZ'),
+            lte: endTime,
           },
         },
       });
