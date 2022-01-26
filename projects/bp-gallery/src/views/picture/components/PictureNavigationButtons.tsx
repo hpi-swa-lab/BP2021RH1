@@ -28,14 +28,16 @@ const PictureNavigationButtons = () => {
     <div className='picture-navigation-buttons'>
       <IconButton
         style={{ visibility: hasPrevious ? 'visible' : 'hidden' }}
-        onClick={() => (navigatePicture ? navigatePicture(PictureNavigationTarget.PREVIOUS) : null)}
+        onClick={
+          navigatePicture ? () => navigatePicture(PictureNavigationTarget.PREVIOUS) : undefined
+        }
         size='large'
       >
         <Icon>chevron_left</Icon>
       </IconButton>
       <IconButton
         style={{ visibility: hasNext ? 'visible' : 'hidden' }}
-        onClick={() => (navigatePicture ? navigatePicture(PictureNavigationTarget.NEXT) : null)}
+        onClick={navigatePicture ? () => navigatePicture(PictureNavigationTarget.NEXT) : undefined}
         size='large'
       >
         <Icon>chevron_right</Icon>
