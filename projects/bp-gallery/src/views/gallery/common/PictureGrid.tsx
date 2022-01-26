@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
-import PictureView from '../../picture/PictureView';
+import PictureView, { PictureViewContextFields } from '../../picture/PictureView';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { PictureNavigationTarget } from '../../picture/components/PictureNavigationButtons';
 
 const PictureGrid = ({
   pictures,
@@ -18,6 +19,13 @@ const PictureGrid = ({
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
+  const [focusedPicture, setFocusedPicture] = useState<{
+    id: string;
+    params: PictureViewContextFields;
+  }>({
+    id: '-1',
+    params: {},
+  });
 
   const hashCode = (str: string) => {
     let hash = 0,
@@ -73,6 +81,33 @@ const PictureGrid = ({
     };
   }, [onResize]);
 
+  const navigateToPicture = useCallback(
+    (picture: FlatPicture, params: PictureViewContextFields) => {
+      setFocusedPicture({
+        id: picture.id,
+        params,
+      });
+      window.history.replaceState({}, '', `/picture/${picture.id}`);
+    },
+    [setFocusedPicture]
+  );
+
+  const nextOrPrevPicture = useCallback(
+    (picture: FlatPicture, target: PictureNavigationTarget, params: PictureViewContextFields) => {
+      const indexOfCurrentPictureId: number = pictures.findIndex(pic => pic.id === picture.id);
+      const nextPicture = pictures.at(indexOfCurrentPictureId + 1);
+      const previousPicture = pictures.at(indexOfCurrentPictureId - 1);
+
+      const newPicture: FlatPicture | undefined =
+        target === PictureNavigationTarget.NEXT ? nextPicture : previousPicture;
+
+      if (newPicture) {
+        navigateToPicture(newPicture, params);
+      }
+    },
+    [navigateToPicture, pictures]
+  );
+
   return (
     <div className='picture-grid'>
       {table.map((row, rowindex) => {
@@ -89,23 +124,26 @@ const PictureGrid = ({
                 );
               } else {
                 return (
-                  <div
+                  <PictureView
                     key={`${rowindex}${colindex}`}
-                    className='picture-thumbnail'
-                    style={{
-                      flex: `${String(
-                        (picture.media?.width ?? 1) / (picture.media?.height ?? 1)
-                      )} 1 0`,
-                      animationDelay: `${colindex * 0.04}s`,
+                    flexValue={String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))}
+                    pictureId={picture.id}
+                    navigateCallback={(
+                      target: PictureNavigationTarget,
+                      params?: PictureViewContextFields
+                    ) => {
+                      nextOrPrevPicture(picture, target, params ?? {});
                     }}
-                  >
-                    <PictureView
-                      pictureId={picture.id}
-                      pictureIdsInContext={pictures.map(pic => pic.id)}
-                      thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
-                      thumbnailMode={true}
-                    />
-                  </div>
+                    initialParams={focusedPicture.id === picture.id ? focusedPicture.params : {}}
+                    hasPrevious={pictures.indexOf(picture) > 0}
+                    hasNext={pictures.indexOf(picture) < pictures.length - 1}
+                    thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
+                    isInitialThumbnail={focusedPicture.id !== picture.id}
+                    openCallback={(open?: boolean) => {
+                      const params = {};
+                      setFocusedPicture(open ? { id: picture.id, params } : { id: '-1', params });
+                    }}
+                  />
                 );
               }
             })}

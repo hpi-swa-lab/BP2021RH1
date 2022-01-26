@@ -3,6 +3,8 @@ import {
   CommentEntity,
   DescriptionEntity,
   GetPictureInfoDocument,
+  PictureEntity,
+  TimeRangeTagEntity,
 } from '../../../graphql/APIConnector';
 
 export const CommentMocks: CommentEntity[] = [
@@ -24,6 +26,14 @@ export const CommentMocks: CommentEntity[] = [
   },
 ];
 
+export const TimeRangeTagMocks: TimeRangeTagEntity = {
+  id: '1',
+  attributes: {
+    start: '1955-10-10T00:00:00Z',
+    end: '1955-10-12T00:00:00Z',
+  },
+};
+
 export const DescriptionMocks: DescriptionEntity[] = [
   {
     id: '1',
@@ -39,6 +49,40 @@ export const DescriptionMocks: DescriptionEntity[] = [
   },
 ];
 
+export const PictureMocks: PictureEntity = {
+  attributes: {
+    title: {
+      data: {
+        id: '1',
+        attributes: {
+          text: 'Picture with comments and descriptions',
+        },
+      },
+    },
+    media: {
+      data: {
+        attributes: {
+          url: 'test-image.jpg',
+          hash: '',
+          mime: 'image/jpeg',
+          name: 'Test Image',
+          provider: '',
+          size: -1,
+        },
+      },
+    },
+    descriptions: {
+      data: DescriptionMocks,
+    },
+    comments: {
+      data: CommentMocks,
+    },
+    time_range_tag: {
+      data: TimeRangeTagMocks,
+    },
+  },
+};
+
 export const GetPictureInfoDocumentMocks = [
   {
     request: {
@@ -50,31 +94,7 @@ export const GetPictureInfoDocumentMocks = [
     result: {
       data: {
         picture: {
-          data: {
-            attributes: {
-              title: {
-                data: {
-                  id: '1',
-                  attributes: {
-                    text: 'Picture with comments and descriptions',
-                  },
-                },
-              },
-              media: {
-                data: {
-                  attributes: {
-                    url: 'test-image.jpg',
-                  },
-                },
-              },
-              descriptions: {
-                data: DescriptionMocks,
-              },
-              comments: {
-                data: CommentMocks,
-              },
-            },
-          },
+          data: PictureMocks,
         },
       },
     },
