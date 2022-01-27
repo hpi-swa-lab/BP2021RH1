@@ -7,14 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
 import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCategoryTag } from '../../../graphql/additionalFlatTypes';
-
-export function encodeBrowsePathComponent(folder: string): string {
-  return encodeURIComponent(folder.replace(/ /gm, '_'));
-}
-
-export function decodeBrowsePathComponent(folder: string): string {
-  return decodeURIComponent(folder).replace(/_/gm, ' ');
-}
+import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
 
 const BrowseView = ({
   path,
@@ -36,7 +29,12 @@ const BrowseView = ({
   return (
     <>
       <FormControlLabel
-        control={<Switch defaultChecked onChange={() => history.push('/browse/latest')} />}
+        control={
+          <Switch
+            defaultChecked
+            onChange={() => history.push(formatBrowsePath(path, true), { showBack: true })}
+          />
+        }
         label='Browse View'
       />
       <CategoryPictureDisplay

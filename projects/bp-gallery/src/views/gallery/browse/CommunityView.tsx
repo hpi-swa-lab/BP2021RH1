@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { FormControlLabel, Switch } from '@mui/material';
 import './BrowseView.scss';
 import CategoryPictureDisplay from './CategoryPictureDisplay';
-import { decodeBrowsePathComponent } from './BrowseView';
+import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
 import {
   useGetCategoryInfoQuery,
   useGetCategoryTagsByPicturePublishingDateQuery,
@@ -60,7 +60,12 @@ const CommunityView = ({
   return (
     <>
       <FormControlLabel
-        control={<Switch defaultChecked onChange={() => history.push('/browse')} />}
+        control={
+          <Switch
+            defaultChecked
+            onChange={() => history.push(formatBrowsePath(path), { showBack: true })}
+          />
+        }
         label='Community View'
       />
       <CategoryPictureDisplay
