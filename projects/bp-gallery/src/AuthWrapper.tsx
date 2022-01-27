@@ -86,7 +86,7 @@ const AuthWrapper = ({ children }: { children: any }) => {
               getUserInfo();
               resolve();
             } else {
-              reject('Unknown Error');
+              reject('The Login-Mutation did not return a token');
             }
           }
         });
