@@ -8,19 +8,20 @@ import routes from './routes';
 import NavigationBar from './components/NavigationBar';
 import TopBar from './components/TopBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
+import AuthWrapper from './AuthWrapper';
 
 /**
  * Enables using Navigation-Context in tests
  */
 const MockedApp = ({ children }: { children: any }) => {
   return (
-    <div className='App'>
-      <TopBar />
-      {/*<NavigationContext.Provider value={setNavigationElements}>*/}
-      {children}
-      {/*</NavigationContext.Provider>*/}
-      <NavigationBar />
-    </div>
+    <AuthWrapper>
+      <div className='App'>
+        <TopBar />
+        {children}
+        <NavigationBar />
+      </div>
+    </AuthWrapper>
   );
 };
 
