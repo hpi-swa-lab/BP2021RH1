@@ -26,7 +26,7 @@ const NavigationBar = () => {
         <Icon>search</Icon>
         <span className='nav-element-title'>{t('common.search')}</span>
       </NavLink>
-      <Button
+      <div
         className='nav-element'
         onClick={role === authRole.PUBLIC ? () => setOpenLogin(true) : logout}
       >
@@ -34,10 +34,10 @@ const NavigationBar = () => {
         <span className='nav-element-title'>
           {role === authRole.PUBLIC ? t('common.login') : t('common.logout')}
         </span>
-      </Button>
-      <Dialog open={openLogin} fullWidth={true}>
+      </div>
+      <Dialog open={openLogin} fullWidth={true} onBackdropClick={() => setOpenLogin(false)}>
         <Button onClick={() => setOpenLogin(false)} className='close-button'>
-          <Icon>close</Icon>
+          <Icon fontSize='large'>close</Icon>
         </Button>
         <LoginScreen />
       </Dialog>

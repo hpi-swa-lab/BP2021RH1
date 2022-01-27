@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import './LoginScreen.scss';
-import { Button, TextField } from '@mui/material';
+import { Alert, Button, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../AuthWrapper';
 
@@ -18,17 +18,20 @@ const LoginScreen = () => {
     setErrorMessage(undefined);
     if (username === '' || password === '') return;
     login(username, password).catch((err: string) => {
-      setErrorMessage(err);
+      if (err === 'Invalid identifier or password')
+        setErrorMessage(t('common.invalid-credentials'));
+      else setErrorMessage(err);
     });
   };
 
   return (
     <div className='login-screen'>
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
       <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
       <div className='text-container'>{t('common.login')}</div>
       <form onSubmit={submitForm}>
         <TextField
+          error={errorMessage !== undefined}
           className='input-field'
           id='username'
           label={t('common.username')}
@@ -37,6 +40,7 @@ const LoginScreen = () => {
           onChange={event => setUsername(event.target.value)}
         />
         <TextField
+          error={errorMessage !== undefined}
           className='input-field'
           type='password'
           id='password'

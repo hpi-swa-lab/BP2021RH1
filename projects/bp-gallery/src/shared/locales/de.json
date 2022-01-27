@@ -30,6 +30,7 @@
     "logout": "Logout",
     "username": "Nutzername",
     "password": "Passwort",
-    "information": "Informationen"
+    "information": "Informationen",
+    "invalid-credentials": "Benutzername oder Passwort sind falsch"
   }
 }
