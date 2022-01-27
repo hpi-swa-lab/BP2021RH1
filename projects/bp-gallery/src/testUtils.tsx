@@ -1,27 +1,25 @@
-import React, { ReactComponentElement, useState } from 'react';
+import React, { ReactComponentElement } from 'react';
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { InMemoryCache } from '@apollo/client';
 import routes from './routes';
-import NavigationBar, { NavigationElement } from './components/NavigationBar';
+import NavigationBar from './components/NavigationBar';
 import TopBar from './components/TopBar';
-import { NavigationContext } from './App';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 
 /**
  * Enables using Navigation-Context in tests
  */
 const MockedApp = ({ children }: { children: any }) => {
-  const [navigationElements, setNavigationElements] = useState<NavigationElement[]>([]);
   return (
     <div className='App'>
       <TopBar />
-      <NavigationContext.Provider value={setNavigationElements}>
-        {children}
-      </NavigationContext.Provider>
-      <NavigationBar elements={navigationElements} />
+      {/*<NavigationContext.Provider value={setNavigationElements}>*/}
+      {children}
+      {/*</NavigationContext.Provider>*/}
+      <NavigationBar />
     </div>
   );
 };

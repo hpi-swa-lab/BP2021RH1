@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
 import TopBar from './components/TopBar';
 import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client';
-import NavigationBar, { NavigationElement } from './components/NavigationBar';
+import NavigationBar from './components/NavigationBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
 
@@ -48,21 +48,14 @@ const apolloClient = new ApolloClient({
   }),
 });
 
-export const NavigationContext = React.createContext<(elements: NavigationElement[]) => void>(
-  (elements: NavigationElement[]) => {}
-);
-
 const App = ({ route }: RouteConfigComponentProps) => {
-  const [navigationElements, setNavigationElements] = useState<NavigationElement[]>([]);
   return (
     <ApolloProvider client={apolloClient}>
       <AuthWrapper>
         <div className='App'>
           <TopBar />
-          <NavigationContext.Provider value={setNavigationElements}>
-            {renderRoutes(route?.routes)}
-          </NavigationContext.Provider>
-          <NavigationBar elements={navigationElements} />
+          {renderRoutes(route?.routes)}
+          <NavigationBar />
         </div>
       </AuthWrapper>
     </ApolloProvider>

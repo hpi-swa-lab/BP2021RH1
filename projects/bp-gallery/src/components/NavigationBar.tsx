@@ -1,38 +1,38 @@
-import { Icon } from '@mui/material';
-import React from 'react';
-import { NavLink, NavLinkProps } from 'react-router-dom';
+import { Button, Dialog, Icon } from '@mui/material';
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import './NavigationBar.scss';
-import { Location } from 'history';
+import { useTranslation } from 'react-i18next';
+import LoginScreen from './LoginScreen';
+import { authRole, useAuth } from '../AuthWrapper';
 
-export interface NavigationElement {
-  name: string;
-  icon: string;
-  target: string | ((previousLocation: Location) => { pathname: string; hash: string; state: any });
-  isActive?: () => boolean;
-  replace?: boolean;
-}
+const NavigationBar = () => {
+  const [openLogin, setOpenLogin] = useState<boolean>(false);
+  const { t } = useTranslation();
 
-export interface NavigationProps {
-  elements?: NavigationElement[];
-}
+  const { role, logout } = useAuth();
 
-const NavigationBar = (props: NavigationProps) => {
   return (
     <div className='nav-bar'>
-      {props.elements?.map(element => {
-        const navLinkProps: NavLinkProps = {
-          to: element.target,
-          replace: element.replace ?? false,
-          className: 'nav-element',
-          isActive: element.isActive ? element.isActive : undefined,
-        };
-        return (
-          <NavLink {...navLinkProps} key={element.name}>
-            <Icon>{element.icon}</Icon>
-            <span className='nav-element-title'>{element.name}</span>
-          </NavLink>
-        );
-      })}
+      <NavLink to={'/browse'} className='nav-element'>
+        <Icon>book</Icon>
+        <span className='nav-element-title'>{t('common.browse')}</span>
+      </NavLink>
+      <NavLink to={'/search'} className='nav-element'>
+        <Icon>search</Icon>
+        <span className='nav-element-title'>{t('common.search')}</span>
+      </NavLink>
+      <Button
+        className='nav-element'
+        onClick={role === authRole.PUBLIC ? () => setOpenLogin(true) : logout}
+      >
+        <Icon>login</Icon>
+        <span>{role === authRole.PUBLIC ? t('common.login') : t('common.logout')}</span>
+      </Button>
+      <Dialog open={openLogin}>
+        <LoginScreen />
+        <Button onClick={() => setOpenLogin(false)}>Close</Button>
+      </Dialog>
     </div>
   );
 };

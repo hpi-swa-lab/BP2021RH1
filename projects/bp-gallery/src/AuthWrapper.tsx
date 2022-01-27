@@ -94,6 +94,9 @@ const AuthWrapper = ({ children }: { children: any }) => {
   const logout = useCallback(() => {
     apolloClient.setLink(httpLink(null));
     sessionStorage.removeItem('jwt');
+    setRole(authRole.PUBLIC);
+    setUsername(undefined);
+    setEmail(undefined);
   }, [apolloClient]);
 
   return (
