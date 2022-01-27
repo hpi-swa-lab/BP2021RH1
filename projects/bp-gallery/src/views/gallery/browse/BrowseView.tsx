@@ -1,11 +1,12 @@
 import React from 'react';
 import './BrowseView.scss';
-import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
 import CategoryPictureDisplay from './CategoryPictureDisplay';
 import { FormControlLabel, Switch } from '@mui/material';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
+import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
 import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
+import { FlatCategoryTag } from '../../../graphql/additionalFlatTypes';
 
 export function encodeBrowsePathComponent(folder: string): string {
   return encodeURIComponent(folder.replace(/ /gm, '_'));
@@ -29,33 +30,22 @@ const BrowseView = ({
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
     : { categoryPriority: 1 };
 
-  const result = useGetCategoryInfoQuery({
-    variables: variables,
-  });
-  result.data = useFlatQueryResponseData(result.data);
-  const categoryTags = result.data?.categoryTags;
+  const { data, loading, error } = useGetCategoryInfoQuery({ variables });
+  const categoryTags: FlatCategoryTag[] | undefined = useFlatQueryResponseData(data)?.categoryTags;
 
   return (
     <>
       <FormControlLabel
-        control={
-          <Switch
-            defaultChecked
-            onChange={() => {
-              history.push('/browse/latest');
-            }}
-          />
-        }
+        control={<Switch defaultChecked onChange={() => history.push('/browse/latest')} />}
         label='Browse View'
       />
       <CategoryPictureDisplay
-        result={result}
         categoryTags={categoryTags}
+        loading={loading}
+        error={error}
         path={path}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
-        communityView={false}
-        multi_picture_mode={true}
       />
     </>
   );

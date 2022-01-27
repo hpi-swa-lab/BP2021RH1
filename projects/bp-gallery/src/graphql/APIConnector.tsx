@@ -1386,68 +1386,12 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
-export type GetLatestPicturesCategoryInfoQueryVariables = Exact<{
+export type GetCategoryTagsByPicturePublishingDateQueryVariables = Exact<{
   date: Scalars['DateTime'];
 }>;
 
-export type GetLatestPicturesCategoryInfoQuery = {
-  pictures?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                category_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | {
-                              name: string;
-                              related_tags?:
-                                | { data: Array<{ id?: string | null | undefined }> }
-                                | null
-                                | undefined;
-                              thumbnail?:
-                                | {
-                                    data: Array<{
-                                      attributes?:
-                                        | {
-                                            media?:
-                                              | {
-                                                  data?:
-                                                    | {
-                                                        attributes?:
-                                                          | { formats?: any | null | undefined }
-                                                          | null
-                                                          | undefined;
-                                                      }
-                                                    | null
-                                                    | undefined;
-                                                }
-                                              | null
-                                              | undefined;
-                                          }
-                                        | null
-                                        | undefined;
-                                    }>;
-                                  }
-                                | null
-                                | undefined;
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+export type GetCategoryTagsByPicturePublishingDateQuery = {
+  categoryTags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
 };
 
 export type GetCategoryInfoQueryVariables = Exact<{
@@ -1872,97 +1816,69 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQueryVariables
 >;
 
-export const GetLatestPicturesCategoryInfoDocument = gql`
-  query getLatestPicturesCategoryInfo($date: DateTime!) {
-    pictures(filters: { publishedAt: { gte: $date } }) {
+export const GetCategoryTagsByPicturePublishingDateDocument = gql`
+  query getCategoryTagsByPicturePublishingDate($date: DateTime!) {
+    categoryTags(filters: { pictures: { publishedAt: { gt: $date } } }) {
       data {
         id
-        attributes {
-          category_tags {
-            data {
-              id
-              attributes {
-                name
-                related_tags {
-                  data {
-                    id
-                  }
-                }
-                thumbnail: pictures(pagination: { limit: 1 }) {
-                  data {
-                    attributes {
-                      media {
-                        data {
-                          attributes {
-                            formats
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   }
 `;
 
 /**
- * __useGetLatestPicturesCategoryInfoQuery__
+ * __useGetCategoryTagsByPicturePublishingDateQuery__
  *
- * To run a query within a React component, call `useGetLatestPicturesCategoryInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLatestPicturesCategoryInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCategoryTagsByPicturePublishingDateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryTagsByPicturePublishingDateQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetLatestPicturesCategoryInfoQuery({
+ * const { data, loading, error } = useGetCategoryTagsByPicturePublishingDateQuery({
  *   variables: {
  *      date: // value for 'date'
  *   },
  * });
  */
-export function useGetLatestPicturesCategoryInfoQuery(
+export function useGetCategoryTagsByPicturePublishingDateQuery(
   baseOptions: Apollo.QueryHookOptions<
-    GetLatestPicturesCategoryInfoQuery,
-    GetLatestPicturesCategoryInfoQueryVariables
+    GetCategoryTagsByPicturePublishingDateQuery,
+    GetCategoryTagsByPicturePublishingDateQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
-    GetLatestPicturesCategoryInfoQuery,
-    GetLatestPicturesCategoryInfoQueryVariables
-  >(GetLatestPicturesCategoryInfoDocument, options);
+    GetCategoryTagsByPicturePublishingDateQuery,
+    GetCategoryTagsByPicturePublishingDateQueryVariables
+  >(GetCategoryTagsByPicturePublishingDateDocument, options);
 }
 
-export function useGetLatestPicturesCategoryInfoLazyQuery(
+export function useGetCategoryTagsByPicturePublishingDateLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetLatestPicturesCategoryInfoQuery,
-    GetLatestPicturesCategoryInfoQueryVariables
+    GetCategoryTagsByPicturePublishingDateQuery,
+    GetCategoryTagsByPicturePublishingDateQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    GetLatestPicturesCategoryInfoQuery,
-    GetLatestPicturesCategoryInfoQueryVariables
-  >(GetLatestPicturesCategoryInfoDocument, options);
+    GetCategoryTagsByPicturePublishingDateQuery,
+    GetCategoryTagsByPicturePublishingDateQueryVariables
+  >(GetCategoryTagsByPicturePublishingDateDocument, options);
 }
 
-export type GetLatestPicturesCategoryInfoQueryHookResult = ReturnType<
-  typeof useGetLatestPicturesCategoryInfoQuery
+export type GetCategoryTagsByPicturePublishingDateQueryHookResult = ReturnType<
+  typeof useGetCategoryTagsByPicturePublishingDateQuery
 >;
 
-export type GetLatestPicturesCategoryInfoLazyQueryHookResult = ReturnType<
-  typeof useGetLatestPicturesCategoryInfoLazyQuery
+export type GetCategoryTagsByPicturePublishingDateLazyQueryHookResult = ReturnType<
+  typeof useGetCategoryTagsByPicturePublishingDateLazyQuery
 >;
 
-export type GetLatestPicturesCategoryInfoQueryResult = Apollo.QueryResult<
-  GetLatestPicturesCategoryInfoQuery,
-  GetLatestPicturesCategoryInfoQueryVariables
+export type GetCategoryTagsByPicturePublishingDateQueryResult = Apollo.QueryResult<
+  GetCategoryTagsByPicturePublishingDateQuery,
+  GetCategoryTagsByPicturePublishingDateQueryVariables
 >;
 
 export const GetCategoryInfoDocument = gql`
