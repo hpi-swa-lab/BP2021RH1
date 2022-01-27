@@ -15,13 +15,11 @@ import AuthWrapper from './AuthWrapper';
  */
 const MockedApp = ({ children }: { children: any }) => {
   return (
-    <AuthWrapper>
-      <div className='App'>
-        <TopBar />
-        {children}
-        <NavigationBar />
-      </div>
-    </AuthWrapper>
+    <div className='App'>
+      <TopBar />
+      {children}
+      <NavigationBar />
+    </div>
   );
 };
 
@@ -70,7 +68,7 @@ const _wrapInMockedProvider = (
   const optionalCache = enableCache ? cache : undefined;
   return (
     <MockedProvider addTypename={false} mocks={apiMocks} cache={optionalCache}>
-      {component}
+      <AuthWrapper>{component}</AuthWrapper>
     </MockedProvider>
   );
 };

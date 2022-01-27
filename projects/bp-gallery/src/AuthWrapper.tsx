@@ -14,6 +14,10 @@ const asAuthRole = (roleName: string) => {
   switch (roleName) {
     case 'Curator':
       return authRole.CURATOR;
+    case 'Moderator':
+      return authRole.MODERATOR;
+    case 'Authenticated':
+      return authRole.AUTHENTICATED;
     default:
       return authRole.PUBLIC;
   }

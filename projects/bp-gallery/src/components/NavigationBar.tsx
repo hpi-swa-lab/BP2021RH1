@@ -31,7 +31,9 @@ const NavigationBar = () => {
         onClick={role === authRole.PUBLIC ? () => setOpenLogin(true) : logout}
       >
         <Icon>login</Icon>
-        <span>{role === authRole.PUBLIC ? t('common.login') : t('common.logout')}</span>
+        <span className='nav-element-title'>
+          {role === authRole.PUBLIC ? t('common.login') : t('common.logout')}
+        </span>
       </Button>
       <Dialog open={openLogin} fullWidth={true}>
         <Button onClick={() => setOpenLogin(false)} className='close-button'>
