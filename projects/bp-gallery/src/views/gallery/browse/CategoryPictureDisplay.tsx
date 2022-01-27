@@ -1,62 +1,73 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../../components/Loading';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import SubCategories from './SubCategories';
-import React from 'react';
 import CategoryDescription from './CategoryDescription';
+import { PictureFiltersInput } from '../../../graphql/APIConnector';
+
+const getPictureFilters = (categoryId: string, picturePublishingDate?: string) => {
+  const filters: PictureFiltersInput = { and: [] };
+
+  filters.and?.push({
+    category_tags: {
+      id: {
+        eq: categoryId,
+      },
+    },
+  });
+
+  if (picturePublishingDate) {
+    filters.and?.push({
+      publishedAt: {
+        gt: picturePublishingDate,
+      },
+    });
+  }
+
+  return filters;
+};
 
 const CategoryPictureDisplay = ({
-  result,
+  error,
+  loading = false,
   categoryTags,
   path,
   scrollPos,
   scrollHeight,
-  communityView,
-  multi_picture_mode = true,
+  picturePublishingDate,
 }: {
-  result: any;
-  categoryTags: any;
+  error?: any;
+  loading?: boolean;
+  categoryTags?: any;
   path: string[] | undefined;
   scrollPos: number;
   scrollHeight: number;
-  communityView: boolean;
-  multi_picture_mode: boolean;
+  picturePublishingDate?: string;
 }) => {
   const { t } = useTranslation();
-  if (result.error) {
-    return <QueryErrorDisplay error={result.error} />;
-  } else if (result.loading) {
+
+  if (error) {
+    return <QueryErrorDisplay error={error} />;
+  } else if (loading) {
     return <Loading />;
-  } else if (categoryTags.length && categoryTags[0]) {
+  } else if (categoryTags?.length && categoryTags[0]) {
     const category = categoryTags[0];
-    let relatedTagsSize = category.related_tags?.length ?? 0;
-    let relatedTags = category.related_tags;
-    if (communityView) {
-      relatedTagsSize = 0;
-      if (multi_picture_mode) {
-        relatedTagsSize = 1;
-      }
-      relatedTags = categoryTags;
-    }
+    const relatedTagsSize = category.related_tags?.length ?? 0;
+
     return (
       <div className='browse-view'>
         <CategoryDescription description={category.description ?? ''} name={category.name} />
         {relatedTagsSize > 0 && (
           <SubCategories
-            relatedTags={relatedTags as { thumbnail: any[]; name: string }[]}
+            relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
             path={path}
-            communityView={communityView}
+            communityView={!!picturePublishingDate}
           />
         )}
         <PictureScrollGrid
-          filters={{
-            category_tags: {
-              id: {
-                eq: category.id,
-              },
-            },
-          }}
+          filters={getPictureFilters(category.id as string, picturePublishingDate)}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={category.name}
