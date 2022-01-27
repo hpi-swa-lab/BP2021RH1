@@ -1,8 +1,9 @@
+@import '../shared/style.scss';
+
 .login-screen {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: white;
   padding: 1em;
 
   img {
@@ -15,28 +16,22 @@
   .text-container {
     font-size: 1.8rem;
     font-weight: 900;
-    text-shadow: 0px 0px 5px #000;
     padding: 0.3em;
   }
 
-  .input-field {
-    margin: 0.1em;
-    color: white;
-    background: #787878;
-    border-color: white;
-
-    .MuiInputLabel-root {
-      color: white !important;
-    }
-    .MuiOutlinedInput-input {
-      color: white;
-    }
-    .Mui-focused .MuiOutlinedInput-notchedOutline {
-      border-color: white;
-    }
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .login-button {
-    margin: 0.3em;
+  .MuiFilledInput-root {
+    margin-bottom: 1rem;
+  }
+
+  .MuiButton-root {
+    margin-bottom: 2rem;
+    width: 100%;
+    background-color: $primaryColor;
   }
 }

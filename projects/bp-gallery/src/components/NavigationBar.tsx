@@ -1,5 +1,5 @@
 import { Button, Dialog, Icon } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './NavigationBar.scss';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,10 @@ const NavigationBar = () => {
   const { t } = useTranslation();
 
   const { role, logout } = useAuth();
+
+  useEffect(() => {
+    setOpenLogin(false);
+  }, [role]);
 
   return (
     <div className='nav-bar'>
@@ -29,9 +33,11 @@ const NavigationBar = () => {
         <Icon>login</Icon>
         <span>{role === authRole.PUBLIC ? t('common.login') : t('common.logout')}</span>
       </Button>
-      <Dialog open={openLogin}>
+      <Dialog open={openLogin} fullWidth={true}>
+        <Button onClick={() => setOpenLogin(false)} className='close-button'>
+          <Icon>close</Icon>
+        </Button>
         <LoginScreen />
-        <Button onClick={() => setOpenLogin(false)}>Close</Button>
       </Dialog>
     </div>
   );
