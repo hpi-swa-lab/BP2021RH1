@@ -14,21 +14,18 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
   const [scrollHeight, setScrollHeight] = useState<number>();
 
   const switchView = () => {
+    const scrollParams = {
+      scrollPos: scrollPos ?? 0,
+      scrollHeight: scrollHeight ?? 0,
+    };
+
     switch (target) {
       case 'browse':
-        return (
-          <BrowseView path={path} scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />
-        );
+        return <BrowseView path={path} {...scrollParams} />;
       case 'browse/latest':
-        return (
-          <CommunityView
-            path={props.path}
-            scrollPos={scrollPos ?? 0}
-            scrollHeight={scrollHeight ?? 0}
-          />
-        );
+        return <CommunityView path={path} {...scrollParams} />;
       case 'search':
-        return <SearchView scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />;
+        return <SearchView {...scrollParams} />;
       default:
         return '404 - Not found';
     }
