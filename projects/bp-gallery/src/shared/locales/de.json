@@ -31,6 +31,8 @@
     "username": "Nutzername",
     "password": "Passwort",
     "information": "Informationen",
-    "invalid-credentials": "Benutzername oder Passwort sind falsch"
+    "invalid-credentials": "Benutzername oder Passwort sind falsch",
+    "successful-login": "Erfolgreich eingeloggt",
+    "successful-logout": "Erfolgreich ausgeloggt"
   }
 }
