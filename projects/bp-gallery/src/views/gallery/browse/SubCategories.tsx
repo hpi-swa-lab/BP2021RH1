@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { asApiPath } from '../../../App';
 import ItemList from '../common/ItemList';
 import React from 'react';
-import { decodeBrowsePathComponent, encodeBrowsePathComponent } from './BrowseView';
+import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
 
 const SubCategories = ({
   relatedTags,
@@ -15,19 +15,6 @@ const SubCategories = ({
   communityView?: boolean;
 }) => {
   const history: History = useHistory();
-  let browsePath = '/browse/';
-  const formatCategoryPath = (name: string) => {
-    if (communityView) {
-      browsePath = '/browse/latest/';
-    }
-    return `${browsePath}${
-      path
-        ?.map(folder => {
-          return encodeBrowsePathComponent(folder);
-        })
-        .join('/') ?? ''
-    }/${encodeBrowsePathComponent(name)}`.replace(/\/+/gm, '/');
-  };
   const buildItem = (category: { thumbnail: any[]; name: string }, index: number) => {
     const formats = category.thumbnail[0].media?.formats;
     return {
@@ -37,7 +24,7 @@ const SubCategories = ({
       ),
       color: index % 2 === 0 ? '#7E241D' : '#404272',
       onClick: () => {
-        history.push(formatCategoryPath(category.name), { showBack: true });
+        history.push(formatBrowsePath(path, communityView, category.name), { showBack: true });
       },
     };
   };
