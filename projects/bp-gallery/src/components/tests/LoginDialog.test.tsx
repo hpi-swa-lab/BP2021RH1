@@ -1,10 +1,10 @@
 import React from 'react';
-import LoginScreen from '../LoginScreen';
+import LoginDialog from '../LoginDialog';
 import { render } from '@testing-library/react';
 
 describe('LoginScreen', () => {
   it('should render two input fields and a submit button', () => {
-    const { container } = render(<LoginScreen />);
+    const { container } = render(<LoginDialog open={true} onClose={() => {}} />);
 
     const inputFields = container.getElementsByClassName('input-field');
     expect(inputFields).toHaveLength(2);
@@ -15,7 +15,7 @@ describe('LoginScreen', () => {
   });
 
   it('should not show any error messages by default', () => {
-    const { container } = render(<LoginScreen />);
+    const { container } = render(<LoginDialog open={true} onClose={() => {}} />);
 
     const errorAlert = container.getElementsByClassName('MuiAlert-message');
     expect(errorAlert.length).toBe(0);

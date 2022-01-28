@@ -1,29 +1,22 @@
-import { Alert, Button, Dialog, Icon, Snackbar } from '@mui/material';
+import { Icon } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './NavigationBar.scss';
 import { useTranslation } from 'react-i18next';
-import LoginScreen from './LoginScreen';
+import LoginDialog from './LoginDialog';
 import { authRole, useAuth } from '../AuthWrapper';
 
 const NavigationBar = () => {
-  const [openLogin, setOpenLogin] = useState<boolean>(false);
-  const [successAlertMessage, setSuccessAlertMessage] = useState<string | undefined>(undefined);
   const { t } = useTranslation();
+
+  const [openLogin, setOpenLogin] = useState<boolean>(false);
 
   const { role, logout } = useAuth();
 
-  // When a user successfully logs in, the Dialog closes and a success-message gets displayed
+  // When a user successfully logs in, the Dialog closes
   useEffect(() => {
-    if (role === authRole.PUBLIC) return;
     setOpenLogin(false);
-    setSuccessAlertMessage(t('common.successful-login'));
-  }, [role, t]);
-
-  const onLogout = () => {
-    logout();
-    setSuccessAlertMessage(t('common.successful-logout'));
-  };
+  }, [role]);
 
   return (
     <>
@@ -38,7 +31,7 @@ const NavigationBar = () => {
         </NavLink>
         <div
           className='nav-element'
-          onClick={role === authRole.PUBLIC ? () => setOpenLogin(true) : onLogout}
+          onClick={role === authRole.PUBLIC ? () => setOpenLogin(true) : logout}
         >
           <Icon>login</Icon>
           <span className='nav-element-title'>
@@ -46,22 +39,8 @@ const NavigationBar = () => {
           </span>
         </div>
       </div>
-      <Dialog open={openLogin} fullWidth={true} onBackdropClick={() => setOpenLogin(false)}>
-        <Button onClick={() => setOpenLogin(false)} className='close-button'>
-          <Icon fontSize='large'>close</Icon>
-        </Button>
-        <LoginScreen />
-      </Dialog>
-      <Snackbar
-        open={successAlertMessage !== undefined}
-        autoHideDuration={2000}
-        onClose={() => setSuccessAlertMessage(undefined)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity='success'>{successAlertMessage}</Alert>
-      </Snackbar>
+      <LoginDialog open={openLogin} onClose={() => setOpenLogin(false)} />
     </>
   );
 };
-
 export default NavigationBar;

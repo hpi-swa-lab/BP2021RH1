@@ -2,6 +2,8 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useLoginMutation, useMeLazyQuery } from './graphql/APIConnector';
 import { httpLink } from './App';
 import { useApolloClient } from '@apollo/client';
+import { AlertContext, AlertType } from './components/AlertWrapper';
+import { useTranslation } from 'react-i18next';
 
 export enum authRole {
   PUBLIC,
@@ -46,6 +48,8 @@ const AuthWrapper = ({ children }: { children: any }) => {
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);
 
+  const { t } = useTranslation();
+
   const [getUserInfo, { data, loading, error, called }] = useMeLazyQuery({
     fetchPolicy: 'network-only',
   });
@@ -72,6 +76,15 @@ const AuthWrapper = ({ children }: { children: any }) => {
     setEmail(data?.me?.email ?? undefined);
   }, [data, loading, error]);
 
+  const setAlertOptions = useContext(AlertContext);
+
+  const displaySuccess = useCallback(
+    (message: string) => {
+      setAlertOptions({ open: true, alertType: AlertType.SUCCESS, message });
+    },
+    [setAlertOptions]
+  );
+
   const login = useCallback(
     (username: string, password: string) => {
       return new Promise<void>((resolve, reject) => {
@@ -84,6 +97,7 @@ const AuthWrapper = ({ children }: { children: any }) => {
               sessionStorage.setItem('jwt', token);
               apolloClient.setLink(httpLink(token));
               getUserInfo();
+              displaySuccess(t('common.successful-login'));
               resolve();
             } else {
               reject('The Login-Mutation did not return a token');
@@ -92,7 +106,7 @@ const AuthWrapper = ({ children }: { children: any }) => {
         });
       });
     },
-    [loginMutation, apolloClient, getUserInfo]
+    [loginMutation, apolloClient, getUserInfo, displaySuccess, t]
   );
 
   const logout = useCallback(() => {
@@ -101,7 +115,8 @@ const AuthWrapper = ({ children }: { children: any }) => {
     setRole(authRole.PUBLIC);
     setUsername(undefined);
     setEmail(undefined);
-  }, [apolloClient]);
+    displaySuccess(t('common.successful-logout'));
+  }, [apolloClient, displaySuccess, t]);
 
   return (
     <AuthContext.Provider value={{ role, username, email, login, logout }}>

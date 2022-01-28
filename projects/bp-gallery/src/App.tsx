@@ -7,6 +7,7 @@ import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@ap
 import NavigationBar from './components/NavigationBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
+import AlertWrapper from './components/AlertWrapper';
 
 const apiBase = 'https://bp.bad-harzburg-stiftung.de/api';
 
@@ -51,13 +52,15 @@ const apolloClient = new ApolloClient({
 const App = ({ route }: RouteConfigComponentProps) => {
   return (
     <ApolloProvider client={apolloClient}>
-      <AuthWrapper>
-        <div className='App'>
-          <TopBar />
-          {renderRoutes(route?.routes)}
-          <NavigationBar />
-        </div>
-      </AuthWrapper>
+      <AlertWrapper>
+        <AuthWrapper>
+          <div className='App'>
+            <TopBar />
+            {renderRoutes(route?.routes)}
+            <NavigationBar />
+          </div>
+        </AuthWrapper>
+      </AlertWrapper>
     </ApolloProvider>
   );
 };
