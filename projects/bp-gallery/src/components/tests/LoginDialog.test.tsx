@@ -4,23 +4,22 @@ import { render } from '@testing-library/react';
 
 describe('LoginScreen', () => {
   it('should render two input fields and a submit button', () => {
-    const { container } = render(<LoginDialog open={true} onClose={() => {}} />);
+    render(<LoginDialog open={true} onClose={() => {}} />);
 
-    const inputFields = container.getElementsByClassName('input-field');
+    const inputFields = document.getElementsByClassName('input-field');
     expect(inputFields).toHaveLength(2);
 
-    const submitButton = container.getElementsByTagName('button');
-    expect(submitButton).toHaveLength(1);
-    expect(submitButton[0]).toHaveAttribute('type', 'submit');
+    const submitButton = document.querySelector('button[type="submit"]');
+    expect(submitButton).toBeInTheDocument();
   });
 
   it('should not show any error messages by default', () => {
-    const { container } = render(<LoginDialog open={true} onClose={() => {}} />);
+    render(<LoginDialog open={true} onClose={() => {}} />);
 
-    const errorAlert = container.getElementsByClassName('MuiAlert-message');
+    const errorAlert = document.getElementsByClassName('MuiAlert-message');
     expect(errorAlert.length).toBe(0);
 
-    const inputFielsInErrorState = container.getElementsByClassName('Mui-error');
+    const inputFielsInErrorState = document.getElementsByClassName('Mui-error');
     expect(inputFielsInErrorState.length).toBe(0);
   });
 });
