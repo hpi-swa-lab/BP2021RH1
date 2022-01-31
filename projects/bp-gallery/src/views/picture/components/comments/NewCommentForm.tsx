@@ -19,7 +19,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
     setCommentText(event.target.value);
   };
 
-  const setAlertOptions = useContext(AlertContext);
+  const openAlert = useContext(AlertContext);
 
   const postComment = () => {
     if (commentText !== '') {
@@ -34,8 +34,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       });
       setCommentAuthor('');
       setCommentText('');
-      setAlertOptions({
-        open: true,
+      openAlert({
         alertType: AlertType.INFO,
         message: t('common.comment-alert'),
       });

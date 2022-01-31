@@ -76,13 +76,13 @@ const AuthWrapper = ({ children }: { children: any }) => {
     setEmail(data?.me?.email ?? undefined);
   }, [data, loading, error]);
 
-  const setAlertOptions = useContext(AlertContext);
+  const openAlert = useContext(AlertContext);
 
   const displaySuccess = useCallback(
     (message: string) => {
-      setAlertOptions({ open: true, alertType: AlertType.SUCCESS, message });
+      openAlert({ alertType: AlertType.SUCCESS, message });
     },
-    [setAlertOptions]
+    [openAlert]
   );
 
   const login = useCallback(

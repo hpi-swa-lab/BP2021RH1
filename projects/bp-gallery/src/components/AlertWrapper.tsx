@@ -9,7 +9,6 @@ export enum AlertType {
 }
 
 export interface AlertOptions {
-  open: boolean;
   message: string;
   alertType: AlertType;
   duration?: number;
@@ -25,15 +24,15 @@ const AlertWrapper = ({ children }: { children: any }) => {
   const [alertType, setAlertType] = useState<AlertType>(AlertType.SUCCESS);
   const [message, setMessage] = useState<string>('');
 
-  const setAlertOptions = (alertOptions: AlertOptions) => {
+  const openAlert = (alertOptions: AlertOptions) => {
     setMessage(alertOptions.message);
     setAlertType(alertOptions.alertType);
     if (alertOptions.duration) setHideAfter(alertOptions.duration);
-    setOpen(alertOptions.open);
+    setOpen(true);
   };
 
   return (
-    <AlertContext.Provider value={setAlertOptions}>
+    <AlertContext.Provider value={openAlert}>
       <Snackbar
         open={open}
         autoHideDuration={hideAfter}
