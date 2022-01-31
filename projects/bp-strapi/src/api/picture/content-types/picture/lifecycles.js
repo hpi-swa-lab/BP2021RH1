@@ -2,11 +2,16 @@ module.exports = {
   async beforeUpdate(event) {
     const { data } = event.params;
 
-    console.log(event);
+    console.log(data);
 
     if (!data) return;
 
-    if (!data.title || !data.title.customUpdate) return;
+    if (!data.title) return;
+
+    const titleObject = JSON.parse(data.title);
+    console.log(titleObject);
+
+    if (!titleObject.customUpload) return;
 
     const titleQuery = strapi.db.query("api::title.title");
     const titleService = strapi.service("api::title.title");
@@ -15,7 +20,7 @@ module.exports = {
     const newTitleInDB = await titleQuery.findOne({
       where: {
         text: {
-          $containsi: data.title.text,
+          $containsi: titleObject.text,
         },
       },
     });
@@ -27,7 +32,7 @@ module.exports = {
     } else {
       const createdTitle = await titleService.create({
         data: {
-          text: data.title.text,
+          text: titleObject.text,
         },
       });
       if (createdTitle) newTitleId = createdTitle.id;
