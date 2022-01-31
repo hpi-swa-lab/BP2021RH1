@@ -97,7 +97,7 @@ const AuthWrapper = ({ children }: { children: any }) => {
               sessionStorage.setItem('jwt', token);
               apolloClient.setLink(httpLink(token));
               getUserInfo();
-              displaySuccess(t('common.successful-login'));
+              displaySuccess(t('login.successful-login'));
               resolve();
             } else {
               reject('The Login-Mutation did not return a token');
@@ -115,7 +115,7 @@ const AuthWrapper = ({ children }: { children: any }) => {
     setRole(authRole.PUBLIC);
     setUsername(undefined);
     setEmail(undefined);
-    displaySuccess(t('common.successful-logout'));
+    displaySuccess(t('login.successful-logout'));
   }, [apolloClient, displaySuccess, t]);
 
   return (

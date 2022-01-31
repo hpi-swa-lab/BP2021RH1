@@ -35,7 +35,7 @@ const NavigationBar = () => {
         >
           <Icon>login</Icon>
           <span className='nav-element-title'>
-            {role === authRole.PUBLIC ? t('common.login') : t('common.logout')}
+            {role === authRole.PUBLIC ? t('login.title') : t('login.logout')}
           </span>
         </div>
       </div>
