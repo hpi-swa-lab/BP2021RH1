@@ -1,6 +1,14 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useCallback, useState } from 'react';
 import './LoginDialog.scss';
-import { Alert, Button, Dialog, Icon, TextField } from '@mui/material';
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../AuthWrapper';
 
@@ -13,30 +21,36 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
 
   const { login } = useAuth();
 
-  const submitForm = (evt: FormEvent<HTMLFormElement>) => {
+  const close = useCallback(() => {
+    setErrorMessage(undefined);
+    setUsername('');
+    setPassword('');
+    onClose();
+  }, [setUsername, setPassword, setErrorMessage, onClose]);
+
+  const submitForm = (evt: FormEvent<HTMLFormElement | HTMLButtonElement>) => {
     evt.preventDefault();
     setErrorMessage(undefined);
     if (username === '' || password === '') return;
     login(username, password).catch((err: string) => {
-      if (err === 'Invalid identifier or password')
-        setErrorMessage(t('common.invalid-credentials'));
+      if (err === 'Invalid identifier or password') setErrorMessage(t('login.invalid-credentials'));
       else setErrorMessage(err);
     });
+    close();
   };
 
   return (
-    <Dialog open={open} fullWidth={true} onClose={onClose}>
-      <div className='login-screen'>
-        {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
-        <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
-        <div className='text-container'>{t('common.login')}</div>
-        <form onSubmit={submitForm}>
+    <Dialog open={open} fullWidth={false} onClose={close} className='login-screen'>
+      <form onSubmit={submitForm}>
+        <DialogTitle>{t('login.title')}</DialogTitle>
+        <DialogContent>
+          {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
           <TextField
             error={errorMessage !== undefined}
             className='input-field'
             id='username'
-            label={t('common.username')}
-            variant='filled'
+            label={t('login.username')}
+            variant='outlined'
             value={username}
             onChange={event => setUsername(event.target.value)}
           />
@@ -45,19 +59,21 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
             className='input-field'
             type='password'
             id='password'
-            label={t('common.password')}
-            variant='filled'
+            label={t('login.password')}
+            variant='outlined'
             value={password}
             onChange={event => setPassword(event.target.value)}
           />
-          <Button variant='contained' type='submit'>
-            {t('common.login')}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={close} color='primary'>
+            {t('common.close')}
           </Button>
-        </form>
-        <Button onClick={onClose} className='close-button'>
-          <Icon fontSize='large'>close</Icon>
-        </Button>
-      </div>
+          <Button type='submit' autoFocus>
+            {t('login.title')}
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };

@@ -1,37 +1,23 @@
 @import '../shared/style.scss';
 
 .login-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1em;
-
-  img {
-    width: 150px;
-    max-width: 30vmin;
-    height: fit-content;
-    padding: 0.3em;
-  }
-
-  .text-container {
-    font-size: 1.8rem;
-    font-weight: 900;
-    padding: 0.3em;
-  }
-
-  form {
+  .MuiDialogContent-root {
     display: flex;
     flex-direction: column;
-    align-items: center;
+  }
+  .MuiFormControl-root {
+    width: 350px;
+    max-width: 80vw;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    }
   }
 
-  .MuiFilledInput-root {
-    margin-bottom: 1rem;
-  }
-
-  .MuiButton-root {
-    margin-bottom: 2rem;
-    width: 100%;
-    background-color: $primaryColor;
+  .MuiDialogActions-root {
+    justify-content: space-between;
+    padding: 24px;
+    padding-top: 0;
   }
 }
