@@ -54,6 +54,7 @@ describe('CommunityView', () => {
           const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
             return testElement.alt == 'Sole-Therme not latest';
           });
+
           expect(testImgSole).toHaveLength(0);
           const items = container.getElementsByClassName('item');
           expect(items.length).toBe(2);
@@ -67,10 +68,16 @@ describe('CommunityView', () => {
         ]);
 
         await waitFor(() => {
+          //Component Test approach - black box
+          const pictureDetails = screen.getByText('SOLE-THERME');
+          expect(pictureDetails).toBeInTheDocument();
+
+          //White Box approach
           const testElements = container.getElementsByTagName('img');
           const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
             return testElement.alt == 'Sole-Therme';
           });
+
           const testImgSole2 = Array.prototype.filter.call(testElements, function (testElement) {
             return testElement.alt == 'Onkel-Pelle';
           });
