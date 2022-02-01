@@ -16,10 +16,10 @@ describe('LoginScreen', () => {
   it('should not show any error messages by default', () => {
     render(<LoginDialog open={true} onClose={() => {}} />);
 
-    const errorAlert = document.getElementsByClassName('MuiAlert-message');
-    expect(errorAlert.length).toBe(0);
+    const errorAlerts = document.getElementsByClassName('MuiAlert-message');
+    expect(errorAlerts).toHaveLength(0);
 
-    const inputFielsInErrorState = document.getElementsByClassName('Mui-error');
-    expect(inputFielsInErrorState.length).toBe(0);
+    const inputFieldsInErrorState = document.getElementsByClassName('Mui-error');
+    expect(inputFieldsInErrorState).toHaveLength(0);
   });
 });

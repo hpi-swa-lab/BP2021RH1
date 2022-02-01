@@ -21,7 +21,7 @@ export const AlertContext = React.createContext<(alertOptions: AlertOptions) => 
 const AlertWrapper = ({ children }: { children: any }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [hideAfter, setHideAfter] = useState<number>(2000);
-  const [alertType, setAlertType] = useState<AlertType>(AlertType.SUCCESS);
+  const [alertType, setAlertType] = useState<AlertType>(AlertType.INFO);
   const [message, setMessage] = useState<string>('');
 
   const openAlert = (alertOptions: AlertOptions) => {

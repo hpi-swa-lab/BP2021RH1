@@ -5,7 +5,7 @@ import { useApolloClient } from '@apollo/client';
 import { AlertContext, AlertType } from './components/AlertWrapper';
 import { useTranslation } from 'react-i18next';
 
-export enum authRole {
+export enum AuthRole {
   PUBLIC,
   AUTHENTICATED,
   MODERATOR,
@@ -15,26 +15,26 @@ export enum authRole {
 const asAuthRole = (roleName: string) => {
   switch (roleName) {
     case 'Curator':
-      return authRole.CURATOR;
+      return AuthRole.CURATOR;
     case 'Moderator':
-      return authRole.MODERATOR;
+      return AuthRole.MODERATOR;
     case 'Authenticated':
-      return authRole.AUTHENTICATED;
+      return AuthRole.AUTHENTICATED;
     default:
-      return authRole.PUBLIC;
+      return AuthRole.PUBLIC;
   }
 };
 
-export interface authFields {
-  role: authRole;
+export interface AuthFields {
+  role: AuthRole;
   username?: string;
   email?: string;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
-export const AuthContext = React.createContext<authFields>({
-  role: authRole.PUBLIC,
+export const AuthContext = React.createContext<AuthFields>({
+  role: AuthRole.PUBLIC,
   login: async () => {},
   logout: () => {},
 });
@@ -44,7 +44,7 @@ export const useAuth = () => {
 };
 
 const AuthWrapper = ({ children }: { children: any }) => {
-  const [role, setRole] = useState<authRole>(authRole.PUBLIC);
+  const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);
 
@@ -112,7 +112,7 @@ const AuthWrapper = ({ children }: { children: any }) => {
   const logout = useCallback(() => {
     apolloClient.setLink(httpLink(null));
     sessionStorage.removeItem('jwt');
-    setRole(authRole.PUBLIC);
+    setRole(AuthRole.PUBLIC);
     setUsername(undefined);
     setEmail(undefined);
     displaySuccess(t('login.successful-logout'));
