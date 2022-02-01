@@ -47,7 +47,8 @@ module.exports = {
       where: { title: oldTitleInDB.id },
     });
 
-    if (picturesWithOldTitle.length < 2) {
+    // Cleanup old title if it is going to be unrelated after our custom update
+    if (titleIdForUpdate !== oldTitleInDB.id && picturesWithOldTitle.length < 2) {
       await titleQuery.delete({
         where: { id: oldTitleInDB.id },
       });
