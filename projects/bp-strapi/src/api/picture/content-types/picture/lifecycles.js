@@ -19,9 +19,13 @@ module.exports = {
       populate: ['title'],
       where: { id: where.id },
     });
+    strapi.log.info(`Custom title update for picture with id ${pictureToUpdate.id}`);
+
     const oldTitleInDB = pictureToUpdate.title;
-    strapi.log.info(`Custom title update for picture with id ${pictureToUpdate.id}`)
-    strapi.log.debug(`Old title "${oldTitleInDB.text}" with id ${oldTitleInDB.id}`);
+    strapi.log.debug(oldTitleInDB
+      ? `Old title "${oldTitleInDB.text}" with id ${oldTitleInDB.id}`
+      : `Picture with id ${pictureToUpdate.id} previously had no title`
+    );
 
     let titleIdForUpdate;
     const newTitleAlreadyInDB = await titleQuery.findOne({
@@ -43,6 +47,11 @@ module.exports = {
       strapi.log.debug(`Created new title "${createdTitle.text}" in DB with id ${createdTitle.id}`);
     }
 
+    event.params.data.title = titleIdForUpdate;
+
+    // There is no cleanup needed if the picture previously didn't have a title.
+    if (!oldTitleInDB) return;
+
     const picturesWithOldTitle = await pictureQuery.findMany({
       where: { title: oldTitleInDB.id },
     });
@@ -54,7 +63,5 @@ module.exports = {
       });
       strapi.log.debug(`Deleted the old title "${oldTitleInDB.text}" with id ${oldTitleInDB.id} as its not related anymore`);
     }
-
-    event.params.data.title = titleIdForUpdate;
   },
 };
