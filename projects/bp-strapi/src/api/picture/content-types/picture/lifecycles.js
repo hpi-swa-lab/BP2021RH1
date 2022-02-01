@@ -2,65 +2,58 @@ module.exports = {
   async beforeUpdate(event) {
     const { data, where } = event.params;
 
-    console.log(event);
-
     if (!data || !data.title) return;
 
-    const titleObject = JSON.parse(data.title);
-    console.log(titleObject);
-
-    if (!titleObject.customUpload) return;
+    // That will fail here, if you don't escape the double quotes
+    // so e.g. like "{\"customUpdate\":true,\"text\":\"1975\"}"
+    // Maybe we need to fallback on the old title in a try/catch block then.
+    const parsedTitleObject = JSON.parse(data.title);
+    if (!parsedTitleObject.customUpdate) return;
+    const newTitleText = parsedTitleObject.text;
 
     const titleQuery = strapi.db.query("api::title.title");
     const titleService = strapi.service("api::title.title");
-
     const pictureQuery = strapi.db.query("api::picture.picture");
 
-    let newTitleId;
-    const newTitleInDB = await titleQuery.findOne({
+    const pictureToUpdate = await pictureQuery.findOne({
+      populate: ['title'],
+      where: { id: where.id },
+    });
+    const oldTitleInDB = pictureToUpdate.title;
+    strapi.log.info(`Custom title update for picture with id ${pictureToUpdate.id}`)
+    strapi.log.debug(`Old title "${oldTitleInDB.text}" with id ${oldTitleInDB.id}`);
+
+    let titleIdForUpdate;
+    const newTitleAlreadyInDB = await titleQuery.findOne({
       where: {
         text: {
-          $containsi: titleObject.text,
+          $containsi: newTitleText, // is case-insensitive really wanted?
         },
       },
     });
-    console.log("New title already in DB: " + newTitleInDB);
 
-    if (newTitleInDB) {
-      newTitleId = newTitleInDB.id;
-      console.log("Use of existing title, id: " + newTitleInDB.id);
+    if (newTitleAlreadyInDB) {
+      titleIdForUpdate = newTitleAlreadyInDB.id;
+      strapi.log.debug(`New title "${newTitleAlreadyInDB.text}" already exists in DB with id ${newTitleAlreadyInDB.id}`);
     } else {
       const createdTitle = await titleService.create({
-        data: {
-          text: titleObject.text,
-        },
+        data: { text: parsedTitleObject.text },
       });
-      if (createdTitle) newTitleId = createdTitle.id;
-      console.log("Use of created title, id: " + createdTitle.id);
+      titleIdForUpdate = createdTitle.id;
+      strapi.log.debug(`Created new title "${createdTitle.text}" in DB with id ${createdTitle.id}`);
     }
-
-    // delete old title entity if picture was the only one related to it
-    const thisPicture = await pictureQuery.findOne({
-      populate: true,
-      //   select: ["title"],  //whats my mistake here?
-      where: {
-        id: where.id,
-      },
-    });
-    const oldTitleInDB = thisPicture.title.id;
 
     const picturesWithOldTitle = await pictureQuery.findMany({
-      where: { title: oldTitleInDB },
+      where: { title: oldTitleInDB.id },
     });
-    console.log(picturesWithOldTitle.length);
+
     if (picturesWithOldTitle.length < 2) {
       await titleQuery.delete({
-        where: { id: oldTitleInDB },
+        where: { id: oldTitleInDB.id },
       });
-      console.log("Deleted old title, id " + oldTitleInDB);
+      strapi.log.debug(`Deleted the old title "${oldTitleInDB.text}" with id ${oldTitleInDB.id} as its not related anymore`);
     }
 
-    // add fallback - if input is not valid, the title is deleted
-    event.params.data.title = newTitleId;
+    event.params.data.title = titleIdForUpdate;
   },
 };
