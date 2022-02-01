@@ -1,6 +1,7 @@
 query getPictureInfo($pictureId: ID!) {
   picture(id: $pictureId) {
     data {
+      id
       attributes {
         title {
           data {
