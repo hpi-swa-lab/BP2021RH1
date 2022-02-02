@@ -5,10 +5,32 @@ import { usePostCommentMutation } from '../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../../../components/AlertWrapper';
 
-const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
+const NewCommentForm = ({
+  pictureId,
+  externalDateString,
+}: {
+  pictureId: string;
+  externalDateString?: string; // needed for testing
+}) => {
   const { t } = useTranslation();
 
-  const [postCommentMutation] = usePostCommentMutation();
+  const openAlert = useContext(AlertContext);
+  const [postCommentMutation] = usePostCommentMutation({
+    onCompleted: _ => {
+      setCommentAuthor('');
+      setCommentText('');
+      openAlert({
+        alertType: AlertType.INFO,
+        message: t('common.comment-alert'),
+      });
+    },
+    onError: error => {
+      openAlert({
+        alertType: AlertType.ERROR,
+        message: error.message,
+      });
+    },
+  });
   const [commentAuthor, setCommentAuthor] = useState('');
   const [commentText, setCommentText] = useState('');
 
@@ -19,8 +41,6 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
     setCommentText(event.target.value);
   };
 
-  const openAlert = useContext(AlertContext);
-
   const postComment = () => {
     if (commentText !== '') {
       const today = new Date();
@@ -29,14 +49,8 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
           id: pictureId,
           author: commentAuthor,
           text: commentText,
-          date: today.toISOString(),
+          date: externalDateString ? externalDateString : today.toISOString(),
         },
-      });
-      setCommentAuthor('');
-      setCommentText('');
-      openAlert({
-        alertType: AlertType.INFO,
-        message: t('common.comment-alert'),
       });
     }
   };
@@ -67,7 +81,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         rows={4}
       />
       <div className='Submit'>
-        <Button variant='contained' onClick={postComment}>
+        <Button variant='contained' type='submit' onClick={postComment}>
           {t('common.submit')}
         </Button>
       </div>
