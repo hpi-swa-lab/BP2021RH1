@@ -1270,6 +1270,7 @@ export type GetPictureInfoQuery = {
     | {
         data?:
           | {
+              id?: string | null | undefined;
               attributes?:
                 | {
                     title?:
@@ -1678,6 +1679,7 @@ export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
       data {
+        id
         attributes {
           title {
             data {
