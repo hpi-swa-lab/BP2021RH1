@@ -4,6 +4,7 @@ import { Button, TextField } from '@mui/material';
 import { usePostCommentMutation } from '../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../../../components/AlertWrapper';
+import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
@@ -38,13 +39,12 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
 
   const postComment = useCallback(() => {
     if (commentText !== '') {
-      const today = new Date();
       postCommentMutation({
         variables: {
           id: pictureId,
           author: commentAuthor,
           text: commentText,
-          date: today.toISOString(),
+          date: getCurrentDateTimeString(),
         },
       });
     }

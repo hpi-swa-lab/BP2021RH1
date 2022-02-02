@@ -33,7 +33,9 @@ export const renderWithAPIMocks = (
   apiMocks: MockedResponse[] = [],
   enableCache: boolean = false
 ) => {
-  return render(_wrapInMockedProvider(component, apiMocks, enableCache));
+  return render(
+    <AlertWrapper>{_wrapInMockedProvider(component, apiMocks, enableCache)}</AlertWrapper>
+  );
 };
 
 // In order to supply the `MockedProvider` with the same config as the real client gets
