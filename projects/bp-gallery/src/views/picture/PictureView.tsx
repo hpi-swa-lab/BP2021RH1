@@ -16,9 +16,9 @@ import { FlatPicture } from '../../graphql/additionalFlatTypes';
 import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture-animation.helpers';
 import PictureViewUI from './components/PictureViewUI';
 import PictureInfo from './components/PictureInfo';
-import useBlockScroll from './scrollBlock.hook';
 import { useFlatQueryResponseData } from '../../graphql/queryUtils';
 import { PictureNavigationTarget } from './components/PictureNavigationButtons';
+import ZoomWrapper from './ZoomWrapper';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -57,7 +57,6 @@ const PictureView = ({
 
   const [thumbnailMode, setThumbnailMode] = useState<boolean | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
-  const [maxHeight, setMaxHeight] = useState<string>('85vh');
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(!!initialParams?.sideBarOpen);
 
   const shouldBeThumbnail = thumbnailMode || (thumbnailMode === undefined && isInitialThumbnail);
@@ -110,16 +109,6 @@ const PictureView = ({
     [navigateCallback, openCallback, sideBarOpen]
   );
 
-  // The image's height (is dependent on the "info" container - this is only relevant for mobile)
-  const calculateHeight = useCallback((container: HTMLElement) => {
-    const posy = container.querySelector('.picture-infos')?.getBoundingClientRect().top;
-    if (posy) {
-      setMaxHeight(`${Math.max(posy, 256)}px`);
-    } else {
-      setMaxHeight(`85vh`);
-    }
-  }, []);
-
   // Open the "detail" view of the image using an external animation
   const openDetails = () => {
     window.setTimeout(() => {
@@ -161,8 +150,6 @@ const PictureView = ({
       setUpPicture(pictureId);
     }
   }, [isInitialThumbnail, setUpPicture, pictureId]);
-
-  useBlockScroll(containerRef, thumbnailMode);
 
   // Block navigation and handle yourself, i.e. block browser navigation and
   // just close picture if it was called from the picture grid
@@ -208,22 +195,18 @@ const PictureView = ({
           ref={containerRef}
           onClick={thumbnailMode ? openDetails : () => {}}
         >
-          <div className='picture-wrapper'>
-            <div className='picture-container' style={{ maxHeight }}>
-              <img src={pictureLink} alt={pictureLink} />
+          <ZoomWrapper blockScroll={!thumbnailMode}>
+            <div className='picture-wrapper'>
+              <div className='picture-container'>
+                <img src={pictureLink} alt={pictureLink} />
+              </div>
+              {thumbnailMode === false && !loading && !error && picture && (
+                <PictureViewUI calledViaLink={openCallback === undefined} />
+              )}
             </div>
-            {thumbnailMode === false && !loading && !error && picture && (
-              <PictureViewUI maxHeight={maxHeight} calledViaLink={openCallback === undefined} />
-            )}
-          </div>
+          </ZoomWrapper>
           {thumbnailMode === false && (
-            <PictureInfo
-              loading={loading}
-              error={error}
-              picture={picture}
-              pictureId={pictureId}
-              calculateHeight={calculateHeight}
-            />
+            <PictureInfo loading={loading} error={error} picture={picture} pictureId={pictureId} />
           )}
         </div>
       </PictureViewContext.Provider>
