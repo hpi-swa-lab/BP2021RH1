@@ -1,20 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import './NewCommentForm.scss';
 import { Button, TextField } from '@mui/material';
 import { usePostCommentMutation } from '../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../../../components/AlertWrapper';
 
-const NewCommentForm = ({
-  pictureId,
-  externalDateString,
-}: {
-  pictureId: string;
-  externalDateString?: string; // needed for testing
-}) => {
+const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
-
   const openAlert = useContext(AlertContext);
+
+  const [commentAuthor, setCommentAuthor] = useState('');
+  const [commentText, setCommentText] = useState('');
+
   const [postCommentMutation] = usePostCommentMutation({
     onCompleted: _ => {
       setCommentAuthor('');
@@ -31,8 +28,6 @@ const NewCommentForm = ({
       });
     },
   });
-  const [commentAuthor, setCommentAuthor] = useState('');
-  const [commentText, setCommentText] = useState('');
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCommentAuthor(event.target.value);
@@ -41,7 +36,7 @@ const NewCommentForm = ({
     setCommentText(event.target.value);
   };
 
-  const postComment = () => {
+  const postComment = useCallback(() => {
     if (commentText !== '') {
       const today = new Date();
       postCommentMutation({
@@ -49,11 +44,11 @@ const NewCommentForm = ({
           id: pictureId,
           author: commentAuthor,
           text: commentText,
-          date: externalDateString ? externalDateString : today.toISOString(),
+          date: today.toISOString(),
         },
       });
     }
-  };
+  }, [commentAuthor, commentText, pictureId, postCommentMutation]);
 
   return (
     <div className='new-comment-form'>
