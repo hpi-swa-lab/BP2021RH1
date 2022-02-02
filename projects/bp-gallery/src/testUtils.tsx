@@ -9,6 +9,7 @@ import NavigationBar from './components/NavigationBar';
 import TopBar from './components/TopBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
+import AlertWrapper from './components/AlertWrapper';
 
 /**
  * Enables using Navigation-Context in tests
@@ -32,7 +33,9 @@ export const renderWithAPIMocks = (
   apiMocks: MockedResponse[] = [],
   enableCache: boolean = false
 ) => {
-  return render(_wrapInMockedProvider(component, apiMocks, enableCache));
+  return render(
+    <AlertWrapper>{_wrapInMockedProvider(component, apiMocks, enableCache)}</AlertWrapper>
+  );
 };
 
 // In order to supply the `MockedProvider` with the same config as the real client gets
@@ -85,7 +88,11 @@ const _renderRoute = (route: string, apiMocks?: MockedResponse[], enableCache: b
   const contentToWrapInRouter = apiMocks
     ? _wrapInMockedProvider(routesContent, apiMocks, enableCache)
     : routesContent;
-  return render(<BrowserRouter>{contentToWrapInRouter}</BrowserRouter>);
+  return render(
+    <BrowserRouter>
+      <AlertWrapper>{contentToWrapInRouter}</AlertWrapper>
+    </BrowserRouter>
+  );
 };
 
 export const renderRoute = (route: string) => {

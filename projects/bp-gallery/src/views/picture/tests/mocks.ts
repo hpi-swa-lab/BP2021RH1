@@ -50,6 +50,7 @@ export const DescriptionMocks: DescriptionEntity[] = [
 ];
 
 export const PictureMocks: PictureEntity = {
+  id: '1',
   attributes: {
     title: {
       data: {

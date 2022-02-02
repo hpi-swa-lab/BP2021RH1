@@ -1,16 +1,34 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import './NewCommentForm.scss';
 import { Button, TextField } from '@mui/material';
 import { usePostCommentMutation } from '../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../../../components/AlertWrapper';
+import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
+  const openAlert = useContext(AlertContext);
 
-  const [postCommentMutation] = usePostCommentMutation();
   const [commentAuthor, setCommentAuthor] = useState('');
   const [commentText, setCommentText] = useState('');
+
+  const [postCommentMutation] = usePostCommentMutation({
+    onCompleted: _ => {
+      setCommentAuthor('');
+      setCommentText('');
+      openAlert({
+        alertType: AlertType.INFO,
+        message: t('common.comment-alert'),
+      });
+    },
+    onError: error => {
+      openAlert({
+        alertType: AlertType.ERROR,
+        message: error.message,
+      });
+    },
+  });
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCommentAuthor(event.target.value);
@@ -19,27 +37,18 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
     setCommentText(event.target.value);
   };
 
-  const openAlert = useContext(AlertContext);
-
-  const postComment = () => {
+  const postComment = useCallback(() => {
     if (commentText !== '') {
-      const today = new Date();
       postCommentMutation({
         variables: {
           id: pictureId,
           author: commentAuthor,
           text: commentText,
-          date: today.toISOString(),
+          date: getCurrentDateTimeString(),
         },
       });
-      setCommentAuthor('');
-      setCommentText('');
-      openAlert({
-        alertType: AlertType.INFO,
-        message: t('common.comment-alert'),
-      });
     }
-  };
+  }, [commentAuthor, commentText, pictureId, postCommentMutation]);
 
   return (
     <div className='new-comment-form'>
@@ -67,7 +76,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         rows={4}
       />
       <div className='Submit'>
-        <Button variant='contained' onClick={postComment}>
+        <Button variant='contained' type='submit' onClick={postComment}>
           {t('common.submit')}
         </Button>
       </div>
