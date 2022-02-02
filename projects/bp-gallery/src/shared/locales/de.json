@@ -25,6 +25,16 @@
     "no-keywords": "Keine Schlagwörter für diese Suchanfrage gefunden...",
     "something-went-wrong": "Es ist etwas schiefgelaufen",
     "past": "Früher",
-    "information": "Informationen"
+    "information": "Informationen",
+    "close": "Schließen"
+  },
+  "login": {
+    "title": "Login",
+    "logout": "Logout",
+    "username": "Nutzername",
+    "password": "Passwort",
+    "invalid-credentials": "Benutzername oder Passwort sind falsch",
+    "successful-login": "Erfolgreich eingeloggt",
+    "successful-logout": "Erfolgreich ausgeloggt"
   }
 }

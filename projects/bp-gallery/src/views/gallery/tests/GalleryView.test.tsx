@@ -12,7 +12,7 @@ test('Nav bar in browse-context contains search, browse and menu nav link', () =
   expect(navBarLinks).toHaveLength(3);
 
   const actualLinkTitles = Array.from(navBarLinks).map(linkNode => linkNode.innerHTML);
-  ['common.search', 'common.browse', 'common.menu'].forEach(expectedLinkTitle =>
+  ['common.search', 'common.browse', 'login.title'].forEach(expectedLinkTitle =>
     expect(actualLinkTitles).toContain(expectedLinkTitle)
   );
 });

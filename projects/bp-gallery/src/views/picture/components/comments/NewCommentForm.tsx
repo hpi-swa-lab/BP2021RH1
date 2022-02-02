@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './NewCommentForm.scss';
 import { Button, TextField } from '@mui/material';
 import { usePostCommentMutation } from '../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
+import { AlertContext, AlertType } from '../../../../components/AlertWrapper';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
@@ -18,6 +19,8 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
     setCommentText(event.target.value);
   };
 
+  const openAlert = useContext(AlertContext);
+
   const postComment = () => {
     if (commentText !== '') {
       const today = new Date();
@@ -31,8 +34,10 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       });
       setCommentAuthor('');
       setCommentText('');
-      //eslint-disable-next-line no-alert
-      alert(t('common.comment-alert'));
+      openAlert({
+        alertType: AlertType.INFO,
+        message: t('common.comment-alert'),
+      });
     }
   };
 
