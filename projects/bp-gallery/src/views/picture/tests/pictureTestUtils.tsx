@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, ReactComponentElement } from 'react';
 import { render } from '@testing-library/react';
-import { ReactComponentElement } from 'react';
+import { MockedResponse } from '@apollo/client/testing';
 import { PictureViewContext, PictureViewContextFields } from '../PictureView';
+import { renderWithAPIMocks } from '../../../testUtils';
 
 const MockedPictureView = ({
   state,
@@ -31,4 +32,17 @@ export const renderWithPictureContextMocks = (
   state?: PictureViewContextFields
 ) => {
   return render(<MockedPictureView state={state}>{component}</MockedPictureView>);
+};
+
+export const renderWithAPIMocksAndMockedPictureContext = (
+  component: ReactComponentElement<any>,
+  state?: PictureViewContextFields,
+  apiMocks: MockedResponse[] = [],
+  enableCache: boolean = false
+) => {
+  return renderWithAPIMocks(
+    <MockedPictureView state={state}>{component}</MockedPictureView>,
+    apiMocks,
+    enableCache
+  );
 };

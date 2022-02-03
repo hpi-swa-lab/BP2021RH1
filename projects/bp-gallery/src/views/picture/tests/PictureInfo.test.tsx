@@ -3,7 +3,7 @@ import React from 'react';
 import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import PictureInfo from '../components/PictureInfo';
 import { CommentMocks, DescriptionMocks, PictureMocks } from './mocks';
-import { renderWithPictureContextMocks } from './pictureTestUtils';
+import { renderWithAPIMocksAndMockedPictureContext } from './pictureTestUtils';
 
 const CommentsContainerMock = jest.fn();
 const CommentsContainerMockComponent = (props: any) => {
@@ -21,7 +21,7 @@ jest.mock('../components/PictureDetails', () => PictureDetailsMockComponent);
 
 describe('PictureInfo', () => {
   it('should be able to open and close', async () => {
-    const { container } = renderWithPictureContextMocks(
+    const { container } = renderWithAPIMocksAndMockedPictureContext(
       <PictureInfo picture={flattenQueryResponseData(PictureMocks)} pictureId={'1'} />
     );
     const openCloseButton = container.querySelector('.quick-access-buttons button');
@@ -40,7 +40,7 @@ describe('PictureInfo', () => {
   });
 
   it('should render the pictures time range tag', async () => {
-    renderWithPictureContextMocks(
+    renderWithAPIMocksAndMockedPictureContext(
       <PictureInfo picture={flattenQueryResponseData(PictureMocks)} pictureId={'1'} />
     );
 
@@ -49,7 +49,7 @@ describe('PictureInfo', () => {
   });
 
   it('should render the picture details', async () => {
-    renderWithPictureContextMocks(
+    renderWithAPIMocksAndMockedPictureContext(
       <PictureInfo picture={flattenQueryResponseData(PictureMocks)} pictureId={'1'} />
     );
 
@@ -64,7 +64,7 @@ describe('PictureInfo', () => {
   });
 
   it('should render the comments container', async () => {
-    renderWithPictureContextMocks(
+    renderWithAPIMocksAndMockedPictureContext(
       <PictureInfo picture={flattenQueryResponseData(PictureMocks)} pictureId={'1'} />
     );
 
