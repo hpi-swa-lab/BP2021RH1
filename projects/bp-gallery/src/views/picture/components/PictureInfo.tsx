@@ -1,15 +1,17 @@
-import React, { useContext, useRef } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import './PictureInfo.scss';
-import { Icon } from '@mui/material';
+import { Button, Icon, TextField } from '@mui/material';
 import { PictureViewContext } from '../PictureView';
 import dayjs from 'dayjs';
 import PictureViewNavigationBar from './PictureViewNavigationBar';
+import { useUpdatePictureTitleMutation } from '../../../graphql/APIConnector';
 import { FlatPicture, FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
 import { ApolloError } from '@apollo/client';
 import Loading from '../../../components/Loading';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
+import { AlertContext, AlertType } from '../../../components/AlertWrapper';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   if (!timeStamp?.start || !timeStamp.end) {
@@ -38,12 +40,58 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
 };
 
 const PictureInfoContent = ({ picture }: { picture: FlatPicture }) => {
+  const openAlert = useContext(AlertContext);
+  const [currentTitle, setCurrentTitle] = useState<string>(picture.title?.text ?? '');
+
+  const [updatePictureTitleMutation] = useUpdatePictureTitleMutation({
+    onCompleted: _ => {
+      openAlert({
+        alertType: AlertType.SUCCESS,
+        message: 'Title successfully changed',
+      });
+    },
+    onError: error => {
+      openAlert({
+        alertType: AlertType.ERROR,
+        message: error.message,
+      });
+    },
+  });
+
+  const updatePictureTitle = useCallback(() => {
+    if (currentTitle !== '') {
+      updatePictureTitleMutation({
+        variables: {
+          picture: picture.id,
+          // Stringify the object as GraphQL validates this to be a string
+          title: JSON.stringify({
+            customUpdate: true,
+            text: currentTitle,
+          }),
+        },
+      });
+    }
+  }, [currentTitle, picture.id, updatePictureTitleMutation]);
+
   return (
     <div className='scrollbar-container'>
       <div className='picture-infos'>
         <div className='title'>
           <Icon style={{ marginRight: '0.5rem' }}>today</Icon>
           <span>{formatTimeStamp(picture.time_range_tag ?? undefined)}</span>
+        </div>
+        <div>
+          <TextField
+            id='title'
+            label='title'
+            variant='filled'
+            fullWidth
+            value={currentTitle}
+            onChange={event => setCurrentTitle(event.target.value)}
+          />
+          <Button variant='contained' type='submit' onClick={updatePictureTitle}>
+            Change title
+          </Button>
         </div>
         <PictureDetails descriptions={picture.descriptions} />
         <CommentsContainer comments={picture.comments} pictureId={picture.id} />

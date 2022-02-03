@@ -1477,6 +1477,34 @@ export type PostCommentMutation = {
     | undefined;
 };
 
+export type UpdatePictureTitleMutationVariables = Exact<{
+  picture: Scalars['ID'];
+  title: Scalars['ID'];
+}>;
+
+export type UpdatePictureTitleMutation = {
+  updatePicture?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    title?:
+                      | { data?: { id?: string | null | undefined } | null | undefined }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type GetKeywordTagSuggestionsQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
 }>;
@@ -2040,6 +2068,68 @@ export type PostCommentMutationResult = Apollo.MutationResult<PostCommentMutatio
 export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
   PostCommentMutation,
   PostCommentMutationVariables
+>;
+
+export const UpdatePictureTitleDocument = gql`
+  mutation updatePictureTitle($picture: ID!, $title: ID!) {
+    updatePicture(id: $picture, data: { title: $title }) {
+      data {
+        id
+        attributes {
+          title {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export type UpdatePictureTitleMutationFn = Apollo.MutationFunction<
+  UpdatePictureTitleMutation,
+  UpdatePictureTitleMutationVariables
+>;
+
+/**
+ * __useUpdatePictureTitleMutation__
+ *
+ * To run a mutation, you first call `useUpdatePictureTitleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePictureTitleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePictureTitleMutation, { data, loading, error }] = useUpdatePictureTitleMutation({
+ *   variables: {
+ *      picture: // value for 'picture'
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useUpdatePictureTitleMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePictureTitleMutation,
+    UpdatePictureTitleMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdatePictureTitleMutation, UpdatePictureTitleMutationVariables>(
+    UpdatePictureTitleDocument,
+    options
+  );
+}
+
+export type UpdatePictureTitleMutationHookResult = ReturnType<typeof useUpdatePictureTitleMutation>;
+
+export type UpdatePictureTitleMutationResult = Apollo.MutationResult<UpdatePictureTitleMutation>;
+
+export type UpdatePictureTitleMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePictureTitleMutation,
+  UpdatePictureTitleMutationVariables
 >;
 
 export const GetKeywordTagSuggestionsDocument = gql`

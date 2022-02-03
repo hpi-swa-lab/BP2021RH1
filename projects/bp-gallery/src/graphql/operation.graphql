@@ -122,6 +122,21 @@ mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime
   }
 }
 
+mutation updatePictureTitle($picture: ID!, $title: ID!) {
+  updatePicture(id: $picture, data: { title: $title }) {
+    data {
+      id
+      attributes {
+        title {
+          data {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
 query getKeywordTagSuggestions($name: String) {
   keywordTags(filters: { name: { containsi: $name } }) {
     data {
