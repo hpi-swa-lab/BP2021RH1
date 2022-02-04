@@ -1,13 +1,19 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
-import { renderRoute, renderRouteWithAPIMocks, renderWithAPIMocks } from '../../../../testUtils';
+import { MockedResponse } from '@apollo/client/testing';
+import { renderRouteWithAPIMocks, renderWithAPIMocks } from '../../../../testUtils';
 import CommunityView from '../CommunityView';
 import { GetCategoryInfoDocumentMocks, GetCategoryTagsByPicturePublishingDateMocks } from './mocks';
-import { CommentMocks } from '../../../picture/tests/mocks';
-import { GetCategoryTagsByPicturePublishingDateDocument } from '../../../../graphql/APIConnector';
+// import { CommentMocks } from '../../../picture/tests/mocks';
+// import { GetCategoryTagsByPicturePublishingDateDocument } from '../../../../graphql/APIConnector';
 
 // const CommunityViewFirstLevelMock = () => <CommunityView scrollPos={0} scrollHeight={0} />;
 // jest.mock('../CommunityView', () => CommunityViewFirstLevelMock);
+
+const CommunityViewMocks: MockedResponse[] = [
+  ...GetCategoryTagsByPicturePublishingDateMocks,
+  ...GetCategoryInfoDocumentMocks,
+];
 
 describe('CommunityView', () => {
   describe('Integration', () => {
@@ -16,7 +22,7 @@ describe('CommunityView', () => {
       jest.mock('../../common/PictureScrollGrid', () => PictureScrollGridMock);
 
       test('CommunityView does not render/contain Das Herbert-Ahrens-Bilderarchiv as a category', () => {
-        renderRoute('/browse/latest');
+        renderRouteWithAPIMocks('/browse/latest', CommunityViewMocks);
 
         const communityView = screen.getByText('Das Herbert-Ahrens-Bilderarchiv');
         expect(communityView).not.toBeInTheDocument();
@@ -25,18 +31,18 @@ describe('CommunityView', () => {
       });
 
       test('When visiting browse/latest/Sole-Therme it renders and shows the sub categories of Sole-Therme that are latest categories', async () => {
-        const { container, unmount } = renderRouteWithAPIMocks('/browse/latest/Sole-Therme', [
-          ...GetCategoryTagsByPicturePublishingDateMocks,
-          ...GetCategoryInfoDocumentMocks,
-        ]);
+        const { container } = renderRouteWithAPIMocks(
+          '/browse/latest/Sole-Therme',
+          CommunityViewMocks
+        );
 
         await waitFor(() => {
           const testElements = container.getElementsByTagName('img');
           const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-            return testElement.alt == 'Sole-Therme 1956-1970';
+            return testElement.alt === 'Sole-Therme 1956-1970';
           });
           const testImgSole2 = Array.prototype.filter.call(testElements, function (testElement) {
-            return testElement.alt == 'Sole-Therme 1980-1990';
+            return testElement.alt === 'Sole-Therme 1980-1990';
           });
           expect(testImgSole).toHaveLength(1);
           expect(testImgSole2).toHaveLength(1);
@@ -44,15 +50,15 @@ describe('CommunityView', () => {
       });
 
       test('When visiting browse/latest/Sole-Therme it renders and does not show the sub categories of Sole-Therme that are not latest categories', async () => {
-        const { container, unmount } = renderRouteWithAPIMocks('/browse/latest/Sole-Therme', [
-          ...GetCategoryTagsByPicturePublishingDateMocks,
-          ...GetCategoryInfoDocumentMocks,
-        ]);
+        const { container } = renderRouteWithAPIMocks(
+          '/browse/latest/Sole-Therme',
+          CommunityViewMocks
+        );
 
         await waitFor(() => {
           const testElements = container.getElementsByTagName('img');
           const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-            return testElement.alt == 'Sole-Therme not latest';
+            return testElement.alt === 'Sole-Therme not latest';
           });
 
           expect(testImgSole).toHaveLength(0);
@@ -62,10 +68,7 @@ describe('CommunityView', () => {
       });
 
       test('When visiting browse/latest/ it renders and shows the sub categories of the first level category that are latest categories', async () => {
-        const { container, unmount } = renderRouteWithAPIMocks('/browse/latest/', [
-          ...GetCategoryTagsByPicturePublishingDateMocks,
-          ...GetCategoryInfoDocumentMocks,
-        ]);
+        const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
         await waitFor(() => {
           //Component Test approach - black box
@@ -75,11 +78,11 @@ describe('CommunityView', () => {
           //White Box approach
           const testElements = container.getElementsByTagName('img');
           const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-            return testElement.alt == 'Sole-Therme';
+            return testElement.alt === 'Sole-Therme';
           });
 
           const testImgSole2 = Array.prototype.filter.call(testElements, function (testElement) {
-            return testElement.alt == 'Onkel-Pelle';
+            return testElement.alt === 'Onkel-Pelle';
           });
           expect(testImgSole).toHaveLength(1);
           expect(testImgSole2).toHaveLength(1);
@@ -87,15 +90,12 @@ describe('CommunityView', () => {
       });
 
       test('When visiting browse/latest/ it renders and does not show the sub categories of first level category that are not latest categories', async () => {
-        const { container, unmount } = renderRouteWithAPIMocks('/browse/latest/', [
-          ...GetCategoryTagsByPicturePublishingDateMocks,
-          ...GetCategoryInfoDocumentMocks,
-        ]);
+        const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
         await waitFor(() => {
           const testElements = container.getElementsByTagName('img');
           const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-            return testElement.alt == 'Not latest';
+            return testElement.alt === 'Not latest';
           });
           expect(testImgSole).toHaveLength(0);
           const items = container.getElementsByClassName('item');
@@ -104,15 +104,12 @@ describe('CommunityView', () => {
       });
 
       test('When visiting browse/latest/ it does not show the first level category', async () => {
-        const { container, unmount } = renderRouteWithAPIMocks('/browse/latest/', [
-          ...GetCategoryTagsByPicturePublishingDateMocks,
-          ...GetCategoryInfoDocumentMocks,
-        ]);
+        const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
         await waitFor(() => {
           const testElements = container.getElementsByTagName('img');
           const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-            return testElement.alt == 'Herbert-Ahrens-Bilder-Archiv';
+            return testElement.alt === 'Herbert-Ahrens-Bilder-Archiv';
           });
           expect(testImgSole).toHaveLength(0);
 
@@ -127,18 +124,15 @@ describe('CommunityView', () => {
   describe('Unit', () => {
     const communityDate = '2021-11-24T10:50:45.978Z';
 
-    const CategoryPictureDisplayMock = jest.fn();
-    const CategoryPictureDisplayMockComponent = (props: any) => {
-      CategoryPictureDisplayMock(props);
-      return <div>CategoryPictureMock</div>;
-    };
+    // const CategoryPictureDisplayMock = jest.fn();
+    // const CategoryPictureDisplayMockComponent = (props: any) => {
+    //   CategoryPictureDisplayMock(props);
+    //   return <div>CategoryPictureMock</div>;
+    // };
     //jest.mock('../CategoryPictureDisplay', () => CategoryPictureDisplayMockComponent);
 
     test('CommunitView renders contains Sole-Therme', async () => {
-      renderWithAPIMocks(<CommunityView scrollPos={0} scrollHeight={0} />, [
-        ...GetCategoryTagsByPicturePublishingDateMocks,
-        ...GetCategoryInfoDocumentMocks,
-      ]);
+      renderWithAPIMocks(<CommunityView scrollPos={0} scrollHeight={0} />, CommunityViewMocks);
 
       await waitFor(() => {
         const categoryContainer = screen.getByText('CategoryPictureMock');

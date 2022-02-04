@@ -78,7 +78,7 @@ describe('CategoryPictureDisplay', () => {
       const picturePublishingDate = '05.05.2000';
 
       test('Renders CategoryDescription component', async () => {
-        const { container } = render(
+        render(
           <CategoryPictureDisplay
             path={path}
             scrollPos={0}
@@ -102,7 +102,7 @@ describe('CategoryPictureDisplay', () => {
       });
 
       test('Renders SubCategories component', async () => {
-        const { container } = render(
+        render(
           <CategoryPictureDisplay
             path={path}
             scrollPos={0}
@@ -130,7 +130,7 @@ describe('CategoryPictureDisplay', () => {
       });
 
       test('Renders PictureScrollGrid component', () => {
-        const { container } = render(
+        render(
           <CategoryPictureDisplay
             path={path}
             scrollPos={0}
