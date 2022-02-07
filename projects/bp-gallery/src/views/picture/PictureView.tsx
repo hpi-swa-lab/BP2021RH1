@@ -193,7 +193,7 @@ const PictureView = ({
             transitioning ? ' transitioning' : ''
           }`}
           ref={containerRef}
-          onClick={thumbnailMode ? openDetails : () => {}}
+          onClick={thumbnailMode ? openDetails : undefined}
         >
           <ZoomWrapper blockScroll={!thumbnailMode}>
             <div className='picture-wrapper'>
