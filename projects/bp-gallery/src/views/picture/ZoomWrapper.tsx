@@ -5,17 +5,22 @@ const MAX_ZOOM = 5.0;
 const MIN_ZOOM = 1.0;
 const DEFAULT_ZOOM = 1.0;
 
-const ZoomWrapper = ({ blockScroll, children }: { blockScroll: boolean; children: any }) => {
-  const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
-  const [viewport, setViewport] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement | null>(null);
-
-  const pointers = useRef<PointerEvent[]>([]);
-  const prevPos = useRef<{ x: number; y: number } | null>(null);
-  const prevDiff = useRef<number>(-1);
-
+// This hook was extracted here to enable testing for
+// different position changes
+export const useMoveView = ({
+  prevPos,
+  setZoomLevel,
+  setViewport,
+  imageRef,
+}: {
+  prevPos: React.MutableRefObject<{
+    x: number;
+    y: number;
+  } | null>;
+  setZoomLevel: React.Dispatch<React.SetStateAction<number>>;
+  setViewport: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
+  imageRef: React.MutableRefObject<HTMLImageElement | null>;
+}) => {
   const moveView = useCallback(
     (curPos: { x: number; y: number }) => {
       setZoomLevel(zoomLevel => {
@@ -69,8 +74,29 @@ const ZoomWrapper = ({ blockScroll, children }: { blockScroll: boolean; children
         return zoomLevel;
       });
     },
-    [setZoomLevel, setViewport]
+    [setZoomLevel, setViewport, prevPos, imageRef]
   );
+
+  return moveView;
+};
+
+const ZoomWrapper = ({ blockScroll, children }: { blockScroll: boolean; children: any }) => {
+  const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
+  const [viewport, setViewport] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+
+  const pointers = useRef<PointerEvent[]>([]);
+  const prevPos = useRef<{ x: number; y: number } | null>(null);
+  const prevDiff = useRef<number>(-1);
+
+  const moveView = useMoveView({
+    prevPos,
+    setZoomLevel,
+    setViewport,
+    imageRef,
+  });
 
   const onScroll = useCallback(
     (event: WheelEvent) => {
