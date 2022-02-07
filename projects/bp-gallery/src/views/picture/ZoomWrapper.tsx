@@ -3,9 +3,10 @@ import './ZoomWrapper.scss';
 
 const MAX_ZOOM = 5.0;
 const MIN_ZOOM = 1.0;
+const DEFAULT_ZOOM = 1.0;
 
 const ZoomWrapper = ({ blockScroll, children }: { blockScroll: boolean; children: any }) => {
-  const [zoomLevel, setZoomLevel] = useState<number>(1.0);
+  const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
   const [viewport, setViewport] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
