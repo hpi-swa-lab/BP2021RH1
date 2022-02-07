@@ -1,6 +1,7 @@
 query getPictureInfo($pictureId: ID!) {
   picture(id: $pictureId) {
     data {
+      id
       attributes {
         title {
           data {
@@ -262,5 +263,21 @@ query getDecadePreviewThumbnails {
         }
       }
     }
+  }
+}
+
+mutation login($username: String!, $password: String!) {
+  login(input: { identifier: $username, password: $password }) {
+    jwt
+  }
+}
+
+query me {
+  me {
+    role {
+      name
+    }
+    username
+    email
   }
 }

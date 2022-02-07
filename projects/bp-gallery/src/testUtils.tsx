@@ -1,27 +1,25 @@
-import React, { ReactComponentElement, useState } from 'react';
+import React, { ReactComponentElement } from 'react';
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { InMemoryCache } from '@apollo/client';
 import routes from './routes';
-import NavigationBar, { NavigationElement } from './components/NavigationBar';
+import NavigationBar from './components/NavigationBar';
 import TopBar from './components/TopBar';
-import { NavigationContext } from './App';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
+import AuthWrapper from './AuthWrapper';
+import AlertWrapper from './components/AlertWrapper';
 
 /**
  * Enables using Navigation-Context in tests
  */
 const MockedApp = ({ children }: { children: any }) => {
-  const [navigationElements, setNavigationElements] = useState<NavigationElement[]>([]);
   return (
     <div className='App'>
       <TopBar />
-      <NavigationContext.Provider value={setNavigationElements}>
-        {children}
-      </NavigationContext.Provider>
-      <NavigationBar elements={navigationElements} />
+      {children}
+      <NavigationBar />
     </div>
   );
 };
@@ -35,7 +33,9 @@ export const renderWithAPIMocks = (
   apiMocks: MockedResponse[] = [],
   enableCache: boolean = false
 ) => {
-  return render(_wrapInMockedProvider(component, apiMocks, enableCache));
+  return render(
+    <AlertWrapper>{_wrapInMockedProvider(component, apiMocks, enableCache)}</AlertWrapper>
+  );
 };
 
 // In order to supply the `MockedProvider` with the same config as the real client gets
@@ -71,7 +71,7 @@ const _wrapInMockedProvider = (
   const optionalCache = enableCache ? cache : undefined;
   return (
     <MockedProvider addTypename={false} mocks={apiMocks} cache={optionalCache}>
-      {component}
+      <AuthWrapper>{component}</AuthWrapper>
     </MockedProvider>
   );
 };
@@ -88,7 +88,11 @@ const _renderRoute = (route: string, apiMocks?: MockedResponse[], enableCache: b
   const contentToWrapInRouter = apiMocks
     ? _wrapInMockedProvider(routesContent, apiMocks, enableCache)
     : routesContent;
-  return render(<BrowserRouter>{contentToWrapInRouter}</BrowserRouter>);
+  return render(
+    <BrowserRouter>
+      <AlertWrapper>{contentToWrapInRouter}</AlertWrapper>
+    </BrowserRouter>
+  );
 };
 
 export const renderRoute = (route: string) => {
