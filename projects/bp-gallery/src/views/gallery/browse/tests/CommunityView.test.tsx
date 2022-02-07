@@ -2,7 +2,6 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { MockedResponse } from '@apollo/client/testing';
 import { renderRouteWithAPIMocks } from '../../../../testUtils';
-import CommunityView from '../CommunityView';
 import { GetCategoryInfoDocumentMocks, GetCategoryTagsByPicturePublishingDateMocks } from './mocks';
 
 const CommunityViewMocks: MockedResponse[] = [

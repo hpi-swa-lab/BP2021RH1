@@ -5,7 +5,6 @@ import './GalleryView.scss';
 import { useTranslation } from 'react-i18next';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { NavigationContext } from '../../App';
-import CommunityView from './browse/CommunityView';
 
 const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => {
   const { t } = useTranslation();
@@ -21,9 +20,9 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
 
     switch (target) {
       case 'browse':
-        return <BrowseView path={path} {...scrollParams} />;
+        return <BrowseView path={path} {...scrollParams} communityView={false} />;
       case 'browse/latest':
-        return <CommunityView path={path} {...scrollParams} />;
+        return <BrowseView path={path} {...scrollParams} communityView={true} />;
       case 'search':
         return <SearchView {...scrollParams} />;
       default:
