@@ -1,71 +1,50 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import React from 'react';
-import PictureViewNavigationBar, { FocusArea } from '../components/PictureViewNavigationBar';
+import PictureViewNavigationBar from '../components/PictureViewNavigationBar';
+import { renderWithPictureContextMocks } from './pictureTestUtils';
+
+const setSideBarOpenMock = jest.fn();
 
 describe('PictureViewNavigationBar', () => {
-  const setFocusedAreaMock = jest.fn();
+  it('should display the open/close button', async () => {
+    const { container } = renderWithPictureContextMocks(<PictureViewNavigationBar />, {
+      setSideBarOpen: setSideBarOpenMock,
+      sideBarOpen: true,
+    });
 
-  it('should display focus buttons', async () => {
-    render(
-      <PictureViewNavigationBar
-        focusedArea={FocusArea.PICTURE}
-        setFocusedArea={setFocusedAreaMock}
-        containerRef={{ current: null }}
-      />
-    );
+    const button = container.getElementsByTagName('button')[0];
 
-    const pictureButton = screen.getByText('common.picture');
-    expect(pictureButton).toBeInTheDocument();
-
-    const infoButton = screen.getByText('common.information');
-    expect(infoButton).toBeInTheDocument();
-
-    const commentsButton = screen.getByText('common.comments');
-    expect(commentsButton).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
   });
 
-  it('should call focusCallback when picture button is clicked', async () => {
-    render(
-      <PictureViewNavigationBar
-        focusedArea={FocusArea.PICTURE}
-        setFocusedArea={setFocusedAreaMock}
-        containerRef={{ current: null }}
-      />
-    );
+  it('should open the sidebar when the button is clicked', async () => {
+    const { container } = renderWithPictureContextMocks(<PictureViewNavigationBar />, {
+      setSideBarOpen: setSideBarOpenMock,
+      sideBarOpen: true,
+    });
 
-    const pictureButton = screen.getByText('common.picture');
-
-    pictureButton.parentElement?.click();
-    expect(setFocusedAreaMock).toHaveBeenCalledWith(FocusArea.PICTURE);
+    const button = container.getElementsByTagName('button')[0];
+    button.click();
+    expect(setSideBarOpenMock).toHaveBeenCalledWith(false);
   });
 
-  it('should call focusCallback when info button is clicked', async () => {
-    render(
-      <PictureViewNavigationBar
-        focusedArea={FocusArea.PICTURE}
-        setFocusedArea={setFocusedAreaMock}
-        containerRef={{ current: null }}
-      />
-    );
+  it('should show showPicture when Sidebar is open', async () => {
+    renderWithPictureContextMocks(<PictureViewNavigationBar />, {
+      setSideBarOpen: setSideBarOpenMock,
+      sideBarOpen: true,
+    });
 
-    const infoButton = screen.getByText('common.information');
-
-    infoButton.parentElement?.click();
-    expect(setFocusedAreaMock).toHaveBeenCalledWith(FocusArea.DETAILS);
+    const button = screen.getByText('common.showPicture');
+    expect(button).toBeInTheDocument();
   });
 
-  it('should call focusCallback when comments button is clicked', async () => {
-    render(
-      <PictureViewNavigationBar
-        focusedArea={FocusArea.PICTURE}
-        setFocusedArea={setFocusedAreaMock}
-        containerRef={{ current: null }}
-      />
-    );
+  it('should show showInfo when Sidebar is closed', async () => {
+    renderWithPictureContextMocks(<PictureViewNavigationBar />, {
+      setSideBarOpen: setSideBarOpenMock,
+      sideBarOpen: false,
+    });
 
-    const commentsButton = screen.getByText('common.comments');
-
-    commentsButton.parentElement?.click();
-    expect(setFocusedAreaMock).toHaveBeenCalledWith(FocusArea.COMMENTS);
+    const button = screen.getByText('common.showInfo');
+    expect(button).toBeInTheDocument();
   });
 });

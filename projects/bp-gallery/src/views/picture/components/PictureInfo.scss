@@ -9,30 +9,14 @@
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
   margin-right: 0px;
   transition: margin-right 0.5s;
+  position: relative;
 
   &.closed {
     margin-right: -450px;
-
-    .open-close-button {
-      transform: translate(-90%, -50%) rotate(180deg);
-    }
   }
 
   .picture-infos {
     padding: 10px;
-  }
-
-  .open-close-button {
-    position: absolute;
-    top: 50%;
-    transform: translate(-90%, -50%);
-    background: white;
-    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
-    transition: transform 0.5s;
-
-    &:hover {
-      background: #efefef;
-    }
   }
 
   .title {
@@ -45,23 +29,60 @@
     align-items: center;
   }
 
-  .mobile-only {
-    display: none;
+  .quick-access-buttons {
+    position: absolute;
+    bottom: 2rem;
+    left: 0;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    z-index: 1005;
+    transform: translateX(-100%);
+    border-radius: 0.3rem 0 0 0.3rem;
+
+    .MuiButton-root {
+      display: flex;
+      border-radius: 0;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      color: $primaryColor;
+      flex: 1 1 0;
+      font-size: 1.1rem;
+
+      & > span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        & > .material-icons {
+          margin-right: 0.5rem;
+        }
+      }
+
+      &.selected .exp-icon {
+        transform: rotate(90deg);
+      }
+
+      .exp-icon {
+        transform: rotate(-90deg);
+        transition: transform 0.5s;
+      }
+    }
   }
 
   @media only screen and (max-width: $mobile-breakpoint) {
-    position: absolute;
     width: 100%;
     max-width: 100%;
-    height: 100vh;
-    bottom: 0;
-    left: 0;
+    max-height: 80vh;
     padding-left: 0;
+    padding-top: 0;
     z-index: 999;
     background: transparent;
+    transition: max-height 0.5s;
 
-    .mobile-only {
-      display: flex;
+    &.closed {
+      max-height: 5rem;
     }
 
     .quick-access-buttons {
@@ -69,14 +90,11 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      background: white;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
       padding-top: 20px;
-      z-index: 1005;
       transform: translateY(0);
       transition: transform 0.5s;
+      height: 4rem;
+      border-radius: 0;
 
       &::before {
         content: '';
@@ -89,28 +107,20 @@
       }
 
       .MuiButton-root {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: $primaryColor;
-        width: 33.33333%;
+        &.selected .exp-icon {
+          transform: rotate(180deg);
+        }
 
-        &.selected {
-          background: $primaryColor;
-          color: white;
+        .exp-icon {
+          transform: rotate(0deg);
         }
       }
     }
 
-    .open-close-button {
-      display: none;
-    }
-
     .scrollbar-container {
-      height: calc(100% - 85vh + 0.5rem);
-      max-height: calc(100% - 85vh + 0.5rem);
-      padding-top: 85vh;
+      height: 100%;
+      max-height: 100%;
+      overflow: auto;
 
       .picture-infos {
         background: white;
