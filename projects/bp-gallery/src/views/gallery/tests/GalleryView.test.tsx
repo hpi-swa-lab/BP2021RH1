@@ -34,12 +34,9 @@ test('GalleryView with search target renders SearchView', () => {
   expect(searchView).toBeInTheDocument();
 });
 
-const CommunityViewMock = () => <div>CommunityViewMock</div>;
-jest.mock('../browse/CommunityView', () => CommunityViewMock);
-
-test('GalleryView with browse/latest target renders CommunityView', () => {
+test('GalleryView with browse/latest target renders BrowseView', () => {
   renderRoute('/browse/latest');
 
-  const communityView = screen.getByText('CommunityViewMock');
-  expect(communityView).toBeInTheDocument();
+  const browseView = screen.getByText('BrowseViewMock');
+  expect(browseView).toBeInTheDocument();
 });

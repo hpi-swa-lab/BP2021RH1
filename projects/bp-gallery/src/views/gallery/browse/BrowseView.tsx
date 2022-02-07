@@ -30,8 +30,6 @@ const BrowseView = ({
 
   const { data, loading, error } = useGetCategoryInfoQuery({ variables });
   const categoryTags: FlatCategoryTag[] | undefined = useFlatQueryResponseData(data)?.categoryTags;
-
-  let toCommunityView = true;
   let filteredCategoryTags = categoryTags;
 
   const picturePublishingDate = '2022-01-03T17:25:00Z'; // highly debatable
@@ -41,15 +39,15 @@ const BrowseView = ({
     variables: {
       date: picturePublishingDate,
     },
+    skip: !communityView,
   });
   const latestCategoryTags: { id: string }[] | undefined = useFlatQueryResponseData(
     latestCategoryTagsResult.data
   )?.categoryTags;
+
   if (communityView) {
     const latestCategoryTagIds = latestCategoryTags?.map(tag => tag.id);
-
     if (latestCategoryTagIds && categoryTags) {
-      toCommunityView = false;
       // Filter related tags to only accept those which got new pictures
       filteredCategoryTags = categoryTags.map(tag => ({
         ...tag,
@@ -64,18 +62,19 @@ const BrowseView = ({
       <FormControlLabel
         control={
           <Switch
-            defaultChecked
+            defaultChecked={!communityView}
             onChange={() =>
-              history.push(formatBrowsePath(path, toCommunityView), { showBack: true })
+              history.replace(formatBrowsePath(path, !communityView), { showBack: true })
             }
           />
         }
-        label='Browse View'
+        label={communityView ? 'Community-View' : 'Browse-View'}
       />
       <CategoryPictureDisplay
+        picturePublishingDate={communityView ? picturePublishingDate : undefined}
         categoryTags={filteredCategoryTags}
-        loading={loading}
-        error={error}
+        loading={loading || latestCategoryTagsResult.loading}
+        error={error ?? latestCategoryTagsResult.error}
         path={path}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
