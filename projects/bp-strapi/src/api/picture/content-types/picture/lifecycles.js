@@ -29,11 +29,8 @@ module.exports = {
 
     let titleIdForUpdate;
     const newTitleAlreadyInDB = await titleQuery.findOne({
-      where: {
-        text: {
-          $containsi: newTitleText, // is case-insensitive really wanted?
-        },
-      },
+      //  implicit $eq filter on the text here
+      where: { text: newTitleText },
     });
 
     if (newTitleAlreadyInDB) {
