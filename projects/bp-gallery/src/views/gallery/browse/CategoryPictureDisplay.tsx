@@ -57,7 +57,7 @@ const CategoryPictureDisplay = ({
     const relatedTagsSize = category.related_tags?.length ?? 0;
 
     return (
-      <div className='browse-view'>
+      <div className='category-picture-display'>
         <CategoryDescription description={category.description ?? ''} name={category.name} />
         {relatedTagsSize > 0 && (
           <SubCategories
