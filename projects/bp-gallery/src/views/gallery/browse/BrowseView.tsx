@@ -1,12 +1,12 @@
 import React from 'react';
-import './BrowseView.scss';
+import './CategoryPictureDisplay.scss';
 import CategoryPictureDisplay from './CategoryPictureDisplay';
 import { FormControlLabel, Switch } from '@mui/material';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import {
   useGetCategoryInfoQuery,
-  useGetCategoryTagsByPicturePublishingDateQuery,
+  useGetCategoryTagsPublishedAfterDateQuery,
 } from '../../../graphql/APIConnector';
 import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCategoryTag } from '../../../graphql/additionalFlatTypes';
@@ -37,7 +37,7 @@ const BrowseView = ({
   const picturePublishingDate = '2022-01-03T17:25:00Z'; // highly debatable
 
   // Query the IDs of all CategoryTags that got new pictures inside them
-  const latestCategoryTagsResult = useGetCategoryTagsByPicturePublishingDateQuery({
+  const latestCategoryTagsResult = useGetCategoryTagsPublishedAfterDateQuery({
     variables: {
       date: picturePublishingDate,
     },

@@ -1387,11 +1387,11 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
-export type GetCategoryTagsByPicturePublishingDateQueryVariables = Exact<{
+export type GetCategoryTagsPublishedAfterDateQueryVariables = Exact<{
   date: Scalars['DateTime'];
 }>;
 
-export type GetCategoryTagsByPicturePublishingDateQuery = {
+export type GetCategoryTagsPublishedAfterDateQuery = {
   categoryTags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
 };
 
@@ -1838,8 +1838,8 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQueryVariables
 >;
 
-export const GetCategoryTagsByPicturePublishingDateDocument = gql`
-  query getCategoryTagsByPicturePublishingDate($date: DateTime!) {
+export const GetCategoryTagsPublishedAfterDateDocument = gql`
+  query getCategoryTagsPublishedAfterDate($date: DateTime!) {
     categoryTags(filters: { pictures: { publishedAt: { gt: $date } } }) {
       data {
         id
@@ -1849,58 +1849,58 @@ export const GetCategoryTagsByPicturePublishingDateDocument = gql`
 `;
 
 /**
- * __useGetCategoryTagsByPicturePublishingDateQuery__
+ * __useGetCategoryTagsPublishedAfterDateQuery__
  *
- * To run a query within a React component, call `useGetCategoryTagsByPicturePublishingDateQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryTagsByPicturePublishingDateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCategoryTagsPublishedAfterDateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryTagsPublishedAfterDateQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoryTagsByPicturePublishingDateQuery({
+ * const { data, loading, error } = useGetCategoryTagsPublishedAfterDateQuery({
  *   variables: {
  *      date: // value for 'date'
  *   },
  * });
  */
-export function useGetCategoryTagsByPicturePublishingDateQuery(
+export function useGetCategoryTagsPublishedAfterDateQuery(
   baseOptions: Apollo.QueryHookOptions<
-    GetCategoryTagsByPicturePublishingDateQuery,
-    GetCategoryTagsByPicturePublishingDateQueryVariables
+    GetCategoryTagsPublishedAfterDateQuery,
+    GetCategoryTagsPublishedAfterDateQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
-    GetCategoryTagsByPicturePublishingDateQuery,
-    GetCategoryTagsByPicturePublishingDateQueryVariables
-  >(GetCategoryTagsByPicturePublishingDateDocument, options);
+    GetCategoryTagsPublishedAfterDateQuery,
+    GetCategoryTagsPublishedAfterDateQueryVariables
+  >(GetCategoryTagsPublishedAfterDateDocument, options);
 }
 
-export function useGetCategoryTagsByPicturePublishingDateLazyQuery(
+export function useGetCategoryTagsPublishedAfterDateLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCategoryTagsByPicturePublishingDateQuery,
-    GetCategoryTagsByPicturePublishingDateQueryVariables
+    GetCategoryTagsPublishedAfterDateQuery,
+    GetCategoryTagsPublishedAfterDateQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    GetCategoryTagsByPicturePublishingDateQuery,
-    GetCategoryTagsByPicturePublishingDateQueryVariables
-  >(GetCategoryTagsByPicturePublishingDateDocument, options);
+    GetCategoryTagsPublishedAfterDateQuery,
+    GetCategoryTagsPublishedAfterDateQueryVariables
+  >(GetCategoryTagsPublishedAfterDateDocument, options);
 }
 
-export type GetCategoryTagsByPicturePublishingDateQueryHookResult = ReturnType<
-  typeof useGetCategoryTagsByPicturePublishingDateQuery
+export type GetCategoryTagsPublishedAfterDateQueryHookResult = ReturnType<
+  typeof useGetCategoryTagsPublishedAfterDateQuery
 >;
 
-export type GetCategoryTagsByPicturePublishingDateLazyQueryHookResult = ReturnType<
-  typeof useGetCategoryTagsByPicturePublishingDateLazyQuery
+export type GetCategoryTagsPublishedAfterDateLazyQueryHookResult = ReturnType<
+  typeof useGetCategoryTagsPublishedAfterDateLazyQuery
 >;
 
-export type GetCategoryTagsByPicturePublishingDateQueryResult = Apollo.QueryResult<
-  GetCategoryTagsByPicturePublishingDateQuery,
-  GetCategoryTagsByPicturePublishingDateQueryVariables
+export type GetCategoryTagsPublishedAfterDateQueryResult = Apollo.QueryResult<
+  GetCategoryTagsPublishedAfterDateQuery,
+  GetCategoryTagsPublishedAfterDateQueryVariables
 >;
 
 export const GetCategoryInfoDocument = gql`

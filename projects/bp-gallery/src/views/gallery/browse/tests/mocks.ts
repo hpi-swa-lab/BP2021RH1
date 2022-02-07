@@ -1,6 +1,6 @@
 import {
   GetCategoryInfoDocument,
-  GetCategoryTagsByPicturePublishingDateDocument,
+  GetCategoryTagsPublishedAfterDateDocument,
 } from '../../../../graphql/APIConnector';
 
 export const RelatedTagsMocks = [
@@ -259,10 +259,10 @@ export const GetCategoryInfoDocumentMocks = [
 ];
 
 const communityDate = '2022-01-03T17:25:00Z';
-export const GetCategoryTagsByPicturePublishingDateMocks = [
+export const GetCategoryTagsPublishedAfterDateMocks = [
   {
     request: {
-      query: GetCategoryTagsByPicturePublishingDateDocument,
+      query: GetCategoryTagsPublishedAfterDateDocument,
       variables: {
         date: communityDate,
       },
