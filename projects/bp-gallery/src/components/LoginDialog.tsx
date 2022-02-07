@@ -32,11 +32,13 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
     evt.preventDefault();
     setErrorMessage(undefined);
     if (username === '' || password === '') return;
-    login(username, password).catch((err: string) => {
-      if (err === 'Invalid identifier or password') setErrorMessage(t('login.invalid-credentials'));
-      else setErrorMessage(err);
-    });
-    close();
+    login(username, password)
+      .then(close)
+      .catch((err: string) => {
+        if (err === 'Invalid identifier or password')
+          setErrorMessage(t('login.invalid-credentials'));
+        else setErrorMessage(err);
+      });
   };
 
   return (
