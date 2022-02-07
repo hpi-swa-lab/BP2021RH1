@@ -1,14 +1,9 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { MockedResponse } from '@apollo/client/testing';
-import { renderRouteWithAPIMocks, renderWithAPIMocks } from '../../../../testUtils';
+import { renderRouteWithAPIMocks } from '../../../../testUtils';
 import CommunityView from '../CommunityView';
 import { GetCategoryInfoDocumentMocks, GetCategoryTagsByPicturePublishingDateMocks } from './mocks';
-// import { CommentMocks } from '../../../picture/tests/mocks';
-// import { GetCategoryTagsByPicturePublishingDateDocument } from '../../../../graphql/APIConnector';
-
-// const CommunityViewFirstLevelMock = () => <CommunityView scrollPos={0} scrollHeight={0} />;
-// jest.mock('../CommunityView', () => CommunityViewFirstLevelMock);
 
 const CommunityViewMocks: MockedResponse[] = [
   ...GetCategoryTagsByPicturePublishingDateMocks,
@@ -24,8 +19,8 @@ describe('CommunityView', () => {
       test('CommunityView does not render/contain Das Herbert-Ahrens-Bilderarchiv as a category', () => {
         renderRouteWithAPIMocks('/browse/latest', CommunityViewMocks);
 
-        const communityView = screen.getByText('Das Herbert-Ahrens-Bilderarchiv');
-        expect(communityView).not.toBeInTheDocument();
+        const communityView = screen.queryByText('Das Herbert-Ahrens-Bilderarchiv');
+        expect(communityView).toBeNull();
 
         //const communityView = screen.get;
       });
@@ -117,32 +112,6 @@ describe('CommunityView', () => {
           const items = container.getElementsByClassName('item');
           expect(items.length).toBe(2);
         });
-      });
-    });
-  });
-
-  describe('Unit', () => {
-    const communityDate = '2021-11-24T10:50:45.978Z';
-
-    // const CategoryPictureDisplayMock = jest.fn();
-    // const CategoryPictureDisplayMockComponent = (props: any) => {
-    //   CategoryPictureDisplayMock(props);
-    //   return <div>CategoryPictureMock</div>;
-    // };
-    //jest.mock('../CategoryPictureDisplay', () => CategoryPictureDisplayMockComponent);
-
-    test('CommunitView renders contains Sole-Therme', async () => {
-      renderWithAPIMocks(<CommunityView scrollPos={0} scrollHeight={0} />, CommunityViewMocks);
-
-      await waitFor(() => {
-        const categoryContainer = screen.getByText('CategoryPictureMock');
-        expect(categoryContainer).toBeInTheDocument();
-
-        expect(categoryContainer).toHaveBeenCalledWith(
-          expect.objectContaining({
-            date: new Date(communityDate),
-          })
-        );
       });
     });
   });
