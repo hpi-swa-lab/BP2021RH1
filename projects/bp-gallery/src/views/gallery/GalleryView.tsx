@@ -1,14 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BrowseView from './browse/BrowseView';
 import SearchView from './search/SearchView';
 import './GalleryView.scss';
-import { useTranslation } from 'react-i18next';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { NavigationContext } from '../../App';
 
 const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => {
-  const { t } = useTranslation();
-
   const [scrollPos, setScrollPos] = useState<number>();
   const [scrollHeight, setScrollHeight] = useState<number>();
 
@@ -24,29 +20,6 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
         return '404 - Not found';
     }
   };
-
-  const setNavigationElements = useContext(NavigationContext);
-
-  useEffect(() => {
-    const menuItems = [
-      {
-        name: t('common.browse'),
-        icon: 'book',
-        target: '/browse',
-      },
-      {
-        name: t('common.search'),
-        icon: 'search',
-        target: '/search',
-      },
-      {
-        name: t('common.menu'),
-        icon: 'menu',
-        target: '/menu',
-      },
-    ];
-    setNavigationElements(menuItems);
-  }, [setNavigationElements, t]);
 
   return (
     <div className='gallery-view'>

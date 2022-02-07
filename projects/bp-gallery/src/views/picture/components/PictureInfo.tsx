@@ -1,12 +1,11 @@
-import React, { useContext, useRef, useState } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import React, { useContext, useRef } from 'react';
 import PictureDetails from './PictureDetails';
 import CommentsContainer from './comments/CommentsContainer';
 import './PictureInfo.scss';
-import { Icon, IconButton } from '@mui/material';
+import { Icon } from '@mui/material';
 import { PictureViewContext } from '../PictureView';
 import dayjs from 'dayjs';
-import PictureViewNavigationBar, { FocusArea } from './PictureViewNavigationBar';
+import PictureViewNavigationBar from './PictureViewNavigationBar';
 import { FlatPicture, FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
 import { ApolloError } from '@apollo/client';
 import Loading from '../../../components/Loading';
@@ -38,20 +37,9 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   }
 };
 
-const PictureInfoContent = ({
-  picture,
-  calculateHeight,
-}: {
-  picture: FlatPicture;
-  calculateHeight: (container: HTMLElement) => void;
-}) => {
+const PictureInfoContent = ({ picture }: { picture: FlatPicture }) => {
   return (
-    <PerfectScrollbar
-      options={{ suppressScrollX: true, wheelPropagation: false }}
-      onScrollY={container => {
-        calculateHeight(container);
-      }}
-    >
+    <div className='scrollbar-container'>
       <div className='picture-infos'>
         <div className='title'>
           <Icon style={{ marginRight: '0.5rem' }}>today</Icon>
@@ -60,7 +48,7 @@ const PictureInfoContent = ({
         <PictureDetails descriptions={picture.descriptions} />
         <CommentsContainer comments={picture.comments} pictureId={picture.id} />
       </div>
-    </PerfectScrollbar>
+    </div>
   );
 };
 
@@ -68,40 +56,21 @@ const PictureInfo = ({
   picture,
   loading,
   error,
-  calculateHeight,
 }: {
   picture?: FlatPicture;
   pictureId: string;
   loading?: boolean;
   error?: ApolloError;
-  calculateHeight: (container: HTMLElement) => void;
 }) => {
-  const { sideBarOpen, setSideBarOpen } = useContext(PictureViewContext);
-  const [focusedArea, setFocusedArea] = useState<FocusArea>(FocusArea.PICTURE);
+  const { sideBarOpen } = useContext(PictureViewContext);
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className={`picture-info-container${!sideBarOpen ? ' closed' : ''}`} ref={containerRef}>
-      <IconButton
-        className='open-close-button'
-        onClick={() => {
-          if (setSideBarOpen) {
-            setSideBarOpen(!sideBarOpen);
-          }
-        }}
-      >
-        <Icon>chevron_right</Icon>
-      </IconButton>
       {loading && <Loading />}
       {error && <QueryErrorDisplay error={error} />}
-      {!loading && !error && picture && (
-        <PictureInfoContent picture={picture} calculateHeight={calculateHeight} />
-      )}
-      <PictureViewNavigationBar
-        focusedArea={focusedArea}
-        setFocusedArea={setFocusedArea}
-        containerRef={containerRef}
-      />
+      {!loading && !error && picture && <PictureInfoContent picture={picture} />}
+      <PictureViewNavigationBar />
     </div>
   );
 };

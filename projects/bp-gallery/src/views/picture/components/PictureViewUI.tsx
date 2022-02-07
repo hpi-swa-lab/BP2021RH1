@@ -3,13 +3,7 @@ import { Button, Icon } from '@mui/material';
 import PictureNavigationButtons from './PictureNavigationButtons';
 import { useTranslation } from 'react-i18next';
 
-export const PictureViewUI = ({
-  maxHeight,
-  calledViaLink,
-}: {
-  maxHeight: string;
-  calledViaLink: boolean;
-}) => {
+export const PictureViewUI = ({ calledViaLink }: { calledViaLink: boolean }) => {
   const { t } = useTranslation();
 
   const onBack = () => {
@@ -17,7 +11,7 @@ export const PictureViewUI = ({
   };
 
   return (
-    <div className='picture-ui' style={{ maxHeight }}>
+    <div className='picture-ui'>
       <PictureNavigationButtons />
       <div className='picture-toolbar'>
         <Button onClick={calledViaLink ? () => (location.href = '/browse') : onBack}>

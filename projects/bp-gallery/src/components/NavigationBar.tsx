@@ -1,40 +1,46 @@
 import { Icon } from '@mui/material';
-import React from 'react';
-import { NavLink, NavLinkProps } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import './NavigationBar.scss';
-import { Location } from 'history';
+import { useTranslation } from 'react-i18next';
+import LoginDialog from './LoginDialog';
+import { AuthRole, useAuth } from '../AuthWrapper';
 
-export interface NavigationElement {
-  name: string;
-  icon: string;
-  target: string | ((previousLocation: Location) => { pathname: string; hash: string; state: any });
-  isActive?: () => boolean;
-  replace?: boolean;
-}
+const NavigationBar = () => {
+  const { t } = useTranslation();
 
-export interface NavigationProps {
-  elements?: NavigationElement[];
-}
+  const [openLogin, setOpenLogin] = useState<boolean>(false);
 
-const NavigationBar = (props: NavigationProps) => {
+  const { role, logout } = useAuth();
+
+  // When a user successfully logs in, the Dialog closes
+  useEffect(() => {
+    setOpenLogin(false);
+  }, [role]);
+
   return (
-    <div className='nav-bar'>
-      {props.elements?.map(element => {
-        const navLinkProps: NavLinkProps = {
-          to: element.target,
-          replace: element.replace ?? false,
-          className: 'nav-element',
-          isActive: element.isActive ? element.isActive : undefined,
-        };
-        return (
-          <NavLink {...navLinkProps} key={element.name}>
-            <Icon>{element.icon}</Icon>
-            <span className='nav-element-title'>{element.name}</span>
-          </NavLink>
-        );
-      })}
-    </div>
+    <>
+      <div className='nav-bar'>
+        <NavLink to='/browse' className='nav-element'>
+          <Icon>book</Icon>
+          <span className='nav-element-title'>{t('common.browse')}</span>
+        </NavLink>
+        <NavLink to='/search' className='nav-element'>
+          <Icon>search</Icon>
+          <span className='nav-element-title'>{t('common.search')}</span>
+        </NavLink>
+        <div
+          className='nav-element'
+          onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}
+        >
+          <Icon>login</Icon>
+          <span className='nav-element-title'>
+            {role === AuthRole.PUBLIC ? t('login.title') : t('login.logout')}
+          </span>
+        </div>
+      </div>
+      <LoginDialog open={openLogin} onClose={() => setOpenLogin(false)} />
+    </>
   );
 };
-
 export default NavigationBar;
