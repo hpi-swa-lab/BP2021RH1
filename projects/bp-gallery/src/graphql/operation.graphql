@@ -69,6 +69,14 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
+query getCategoryTagsWithPicturesPublishedAfter($date: DateTime!) {
+  categoryTags(filters: { pictures: { publishedAt: { gt: $date } } }) {
+    data {
+      id
+    }
+  }
+}
+
 query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
   categoryTags(filters: { name: { eq: $categoryName }, priority: { eq: $categoryPriority } }) {
     data {
@@ -78,6 +86,7 @@ query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
         description
         related_tags {
           data {
+            id
             attributes {
               name
               thumbnail: pictures(pagination: { limit: 1 }) {

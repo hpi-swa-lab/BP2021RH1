@@ -9,13 +9,18 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
   const [scrollHeight, setScrollHeight] = useState<number>();
 
   const switchView = () => {
+    const scrollParams = {
+      scrollPos: scrollPos ?? 0,
+      scrollHeight: scrollHeight ?? 0,
+    };
+
     switch (target) {
       case 'browse':
-        return (
-          <BrowseView path={path} scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />
-        );
+        return <BrowseView path={path} {...scrollParams} communityView={false} />;
+      case 'browse/latest':
+        return <BrowseView path={path} {...scrollParams} communityView={true} />;
       case 'search':
-        return <SearchView scrollPos={scrollPos ?? 0} scrollHeight={scrollHeight ?? 0} />;
+        return <SearchView {...scrollParams} />;
       default:
         return '404 - Not found';
     }
@@ -24,7 +29,7 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
   return (
     <div className='gallery-view'>
       <PerfectScrollbar
-        options={{ suppressScrollX: true, useBothWheelAxes: false, wheelSpeed: 0.2 }}
+        options={{ suppressScrollX: true, useBothWheelAxes: false }}
         onScrollY={container => {
           setScrollPos(container.scrollTop);
           setScrollHeight(container.scrollHeight);

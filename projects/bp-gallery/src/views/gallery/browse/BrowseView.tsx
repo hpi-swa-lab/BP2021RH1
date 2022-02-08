@@ -1,74 +1,85 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import './BrowseView.scss';
-import { useGetCategoryInfoQuery } from '../../../graphql/APIConnector';
+import './CategoryPictureDisplay.scss';
+import CategoryPictureDisplay from './CategoryPictureDisplay';
+import { FormControlLabel, Switch } from '@mui/material';
+import { History } from 'history';
+import { useHistory } from 'react-router-dom';
+import {
+  useGetCategoryInfoQuery,
+  useGetCategoryTagsWithPicturesPublishedAfterQuery,
+} from '../../../graphql/APIConnector';
 import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
-import SubCategories from './SubCategories';
-import PictureScrollGrid from '../common/PictureScrollGrid';
-import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
-import Loading from '../../../components/Loading';
-import CategoryDescription from './CategoryDescription';
-
-export function encodeBrowsePathComponent(folder: string): string {
-  return encodeURIComponent(folder.replace(/ /gm, '_'));
-}
-
-export function decodeBrowsePathComponent(folder: string): string {
-  return decodeURIComponent(folder).replace(/_/gm, ' ');
-}
+import { FlatCategoryTag } from '../../../graphql/additionalFlatTypes';
+import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
 
 const BrowseView = ({
   path,
   scrollPos,
   scrollHeight,
+  communityView = false,
 }: {
   path?: string[];
   scrollPos: number;
   scrollHeight: number;
+  communityView: boolean;
 }) => {
-  const { t } = useTranslation();
-
+  const history: History = useHistory();
   const variables = path?.length
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
     : { categoryPriority: 1 };
 
   const { data, loading, error } = useGetCategoryInfoQuery({ variables });
-  const categoryTags = useFlatQueryResponseData(data)?.categoryTags;
+  const categoryTags: FlatCategoryTag[] | undefined = useFlatQueryResponseData(data)?.categoryTags;
+  let filteredCategoryTags = categoryTags;
 
-  if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
-    return <Loading />;
-  } else if (categoryTags?.length && categoryTags[0]) {
-    const category = categoryTags[0];
-    const relatedTagsSize = category.related_tags?.length ?? 0;
+  const picturePublishingDate = '2022-01-03T17:25:00Z'; // highly debatable
 
-    return (
-      <div className='browse-view'>
-        <CategoryDescription description={category.description ?? ''} name={category.name} />
-        {relatedTagsSize > 0 && (
-          <SubCategories
-            relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
-            path={path}
-          />
-        )}
-        <PictureScrollGrid
-          filters={{
-            category_tags: {
-              id: {
-                eq: category.id,
-              },
-            },
-          }}
-          scrollPos={scrollPos}
-          scrollHeight={scrollHeight}
-          hashbase={category.name}
-        />
-      </div>
-    );
-  } else {
-    return <div>{t('common.no-category')}</div>;
+  // Query the IDs of all CategoryTags that got new pictures inside them
+  const latestCategoryTagsResult = useGetCategoryTagsWithPicturesPublishedAfterQuery({
+    variables: {
+      date: picturePublishingDate,
+    },
+    skip: !communityView,
+  });
+  const latestCategoryTags: { id: string }[] | undefined = useFlatQueryResponseData(
+    latestCategoryTagsResult.data
+  )?.categoryTags;
+
+  if (communityView) {
+    const latestCategoryTagIds = latestCategoryTags?.map(tag => tag.id);
+    if (latestCategoryTagIds && categoryTags) {
+      // Filter related tags to only accept those which got new pictures
+      filteredCategoryTags = categoryTags.map(tag => ({
+        ...tag,
+        related_tags: tag.related_tags?.filter(relatedTag =>
+          latestCategoryTagIds.includes(relatedTag.id)
+        ),
+      }));
+    }
   }
+  return (
+    <>
+      <FormControlLabel
+        control={
+          <Switch
+            defaultChecked={!communityView}
+            onChange={() =>
+              history.replace(formatBrowsePath(path, !communityView), { showBack: true })
+            }
+          />
+        }
+        label={communityView ? 'Community-View' : 'Browse-View'}
+      />
+      <CategoryPictureDisplay
+        picturePublishingDate={communityView ? picturePublishingDate : undefined}
+        categoryTags={filteredCategoryTags}
+        loading={loading || latestCategoryTagsResult.loading}
+        error={error ?? latestCategoryTagsResult.error}
+        path={path}
+        scrollPos={scrollPos}
+        scrollHeight={scrollHeight}
+      />
+    </>
+  );
 };
-
 export default BrowseView;

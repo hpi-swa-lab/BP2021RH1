@@ -1387,6 +1387,14 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
+export type GetCategoryTagsWithPicturesPublishedAfterQueryVariables = Exact<{
+  date: Scalars['DateTime'];
+}>;
+
+export type GetCategoryTagsWithPicturesPublishedAfterQuery = {
+  categoryTags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
+};
+
 export type GetCategoryInfoQueryVariables = Exact<{
   categoryName?: InputMaybe<Scalars['String']>;
   categoryPriority?: InputMaybe<Scalars['Int']>;
@@ -1404,6 +1412,7 @@ export type GetCategoryInfoQuery = {
                 related_tags?:
                   | {
                       data: Array<{
+                        id?: string | null | undefined;
                         attributes?:
                           | {
                               name: string;
@@ -1829,6 +1838,71 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQueryVariables
 >;
 
+export const GetCategoryTagsWithPicturesPublishedAfterDocument = gql`
+  query getCategoryTagsWithPicturesPublishedAfter($date: DateTime!) {
+    categoryTags(filters: { pictures: { publishedAt: { gt: $date } } }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCategoryTagsWithPicturesPublishedAfterQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryTagsWithPicturesPublishedAfterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryTagsWithPicturesPublishedAfterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryTagsWithPicturesPublishedAfterQuery({
+ *   variables: {
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useGetCategoryTagsWithPicturesPublishedAfterQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCategoryTagsWithPicturesPublishedAfterQuery,
+    GetCategoryTagsWithPicturesPublishedAfterQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetCategoryTagsWithPicturesPublishedAfterQuery,
+    GetCategoryTagsWithPicturesPublishedAfterQueryVariables
+  >(GetCategoryTagsWithPicturesPublishedAfterDocument, options);
+}
+
+export function useGetCategoryTagsWithPicturesPublishedAfterLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCategoryTagsWithPicturesPublishedAfterQuery,
+    GetCategoryTagsWithPicturesPublishedAfterQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetCategoryTagsWithPicturesPublishedAfterQuery,
+    GetCategoryTagsWithPicturesPublishedAfterQueryVariables
+  >(GetCategoryTagsWithPicturesPublishedAfterDocument, options);
+}
+
+export type GetCategoryTagsWithPicturesPublishedAfterQueryHookResult = ReturnType<
+  typeof useGetCategoryTagsWithPicturesPublishedAfterQuery
+>;
+
+export type GetCategoryTagsWithPicturesPublishedAfterLazyQueryHookResult = ReturnType<
+  typeof useGetCategoryTagsWithPicturesPublishedAfterLazyQuery
+>;
+
+export type GetCategoryTagsWithPicturesPublishedAfterQueryResult = Apollo.QueryResult<
+  GetCategoryTagsWithPicturesPublishedAfterQuery,
+  GetCategoryTagsWithPicturesPublishedAfterQueryVariables
+>;
+
 export const GetCategoryInfoDocument = gql`
   query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
     categoryTags(filters: { name: { eq: $categoryName }, priority: { eq: $categoryPriority } }) {
@@ -1839,6 +1913,7 @@ export const GetCategoryInfoDocument = gql`
           description
           related_tags {
             data {
+              id
               attributes {
                 name
                 thumbnail: pictures(pagination: { limit: 1 }) {
