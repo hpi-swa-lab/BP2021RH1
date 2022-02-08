@@ -29,7 +29,7 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
   return (
     <div className='gallery-view'>
       <PerfectScrollbar
-        options={{ suppressScrollX: true, useBothWheelAxes: false, wheelSpeed: 0.2 }}
+        options={{ suppressScrollX: true, useBothWheelAxes: false }}
         onScrollY={container => {
           setScrollPos(container.scrollTop);
           setScrollHeight(container.scrollHeight);
