@@ -1,6 +1,6 @@
 import React from 'react';
 import CategoryPictureDisplay from '../CategoryPictureDisplay';
-import { render, waitFor, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 const CategoryDescriptionMock = jest.fn();
 const CategoryDescriptionMockComponent = (props: any) => {
@@ -88,17 +88,14 @@ describe('CategoryPictureDisplay', () => {
           />
         );
 
-        await waitFor(() => {
-          const categoryDescriptionDetails = screen.getByText('CategoryDescriptionMock');
-          expect(categoryDescriptionDetails).toBeInTheDocument();
-
-          expect(CategoryDescriptionMock).toHaveBeenCalledWith(
-            expect.objectContaining({
-              description: categoryTags[0].description,
-              name: categoryTags[0].name,
-            })
-          );
-        });
+        const categoryDescriptionDetails = screen.getByText('CategoryDescriptionMock');
+        expect(categoryDescriptionDetails).toBeInTheDocument();
+        expect(CategoryDescriptionMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            description: categoryTags[0].description,
+            name: categoryTags[0].name,
+          })
+        );
       });
 
       test('Renders SubCategories component', async () => {
@@ -112,21 +109,18 @@ describe('CategoryPictureDisplay', () => {
           />
         );
 
-        await waitFor(() => {
-          const subCategoriesDetails = screen.getByText('SubCategoriesMock');
-          expect(subCategoriesDetails).toBeInTheDocument();
-
-          expect(SubCategoriesMock).toHaveBeenCalledWith(
-            expect.objectContaining({
-              relatedTags: categoryTags[0].related_tags as unknown as {
-                thumbnail: any[];
-                name: string;
-              }[],
-              path: path,
-              communityView: !!picturePublishingDate,
-            })
-          );
-        });
+        const subCategoriesDetails = screen.getByText('SubCategoriesMock');
+        expect(subCategoriesDetails).toBeInTheDocument();
+        expect(SubCategoriesMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            relatedTags: categoryTags[0].related_tags as unknown as {
+              thumbnail: any[];
+              name: string;
+            }[],
+            path: path,
+            communityView: !!picturePublishingDate,
+          })
+        );
       });
 
       test('Renders PictureScrollGrid component', () => {

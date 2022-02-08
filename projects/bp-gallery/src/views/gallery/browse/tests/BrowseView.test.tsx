@@ -21,8 +21,6 @@ describe('BrowseView', () => {
 
           const communityView = screen.queryByText('Das Herbert-Ahrens-Bilderarchiv');
           expect(communityView).toBeNull();
-
-          //const communityView = screen.get;
         });
 
         test('When visiting browse/latest/Sole-Therme it renders and shows the sub categories of Sole-Therme that are latest categories', async () => {
@@ -32,13 +30,13 @@ describe('BrowseView', () => {
           );
 
           await waitFor(() => {
-            const testElements = container.getElementsByTagName('img');
-            const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-              return testElement.alt === 'Sole-Therme 1956-1970';
-            });
-            const testImgSole2 = Array.prototype.filter.call(testElements, function (testElement) {
-              return testElement.alt === 'Sole-Therme 1980-1990';
-            });
+            const testElements = Array.from(container.getElementsByTagName('img'));
+            const testImgSole = testElements.filter(
+              testElement => testElement.alt === 'Sole-Therme 1956-1970'
+            );
+            const testImgSole2 = testElements.filter(
+              testElement => testElement.alt === 'Sole-Therme 1980-1990'
+            );
             expect(testImgSole).toHaveLength(1);
             expect(testImgSole2).toHaveLength(1);
           });
@@ -51,12 +49,11 @@ describe('BrowseView', () => {
           );
 
           await waitFor(() => {
-            const testElements = container.getElementsByTagName('img');
-            const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-              return testElement.alt === 'Sole-Therme not latest';
-            });
-
-            expect(testImgSole).toHaveLength(0);
+            const testElements = Array.from(container.getElementsByTagName('img'));
+            const testImgSoleNotLatest = testElements.filter(
+              testElement => testElement.alt === 'Sole-Therme not latest'
+            );
+            expect(testImgSoleNotLatest).toHaveLength(0);
             const items = container.getElementsByClassName('item');
             expect(items.length).toBe(2);
           });
@@ -66,21 +63,20 @@ describe('BrowseView', () => {
           const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
           await waitFor(() => {
-            //Component Test approach - black box
+            // Component Test approach - black box
             const pictureDetails = screen.getByText('SOLE-THERME');
             expect(pictureDetails).toBeInTheDocument();
 
-            //White Box approach
-            const testElements = container.getElementsByTagName('img');
-            const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-              return testElement.alt === 'Sole-Therme';
-            });
-
-            const testImgSole2 = Array.prototype.filter.call(testElements, function (testElement) {
-              return testElement.alt === 'Onkel-Pelle';
-            });
+            // White Box approach
+            const testElements = Array.from(container.getElementsByTagName('img'));
+            const testImgSole = testElements.filter(
+              testElement => testElement.alt === 'Sole-Therme'
+            );
+            const testImgOnkelPelle = testElements.filter(
+              testElement => testElement.alt === 'Onkel-Pelle'
+            );
             expect(testImgSole).toHaveLength(1);
-            expect(testImgSole2).toHaveLength(1);
+            expect(testImgOnkelPelle).toHaveLength(1);
           });
         });
 
@@ -88,11 +84,11 @@ describe('BrowseView', () => {
           const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
           await waitFor(() => {
-            const testElements = container.getElementsByTagName('img');
-            const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-              return testElement.alt === 'Not latest';
-            });
-            expect(testImgSole).toHaveLength(0);
+            const testElements = Array.from(container.getElementsByTagName('img'));
+            const testImgNotLatest = testElements.filter(
+              testElement => testElement.alt === 'Not latest'
+            );
+            expect(testImgNotLatest).toHaveLength(0);
             const items = container.getElementsByClassName('item');
             expect(items.length).toBe(2);
           });
@@ -102,13 +98,13 @@ describe('BrowseView', () => {
           const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
           await waitFor(() => {
-            const testElements = container.getElementsByTagName('img');
-            const testImgSole = Array.prototype.filter.call(testElements, function (testElement) {
-              return testElement.alt === 'Herbert-Ahrens-Bilder-Archiv';
-            });
-            expect(testImgSole).toHaveLength(0);
+            const testElements = Array.from(container.getElementsByTagName('img'));
+            const testImgHerbertAhrens = testElements.filter(
+              testElement => testElement.alt === 'Herbert-Ahrens-Bilder-Archiv'
+            );
+            expect(testImgHerbertAhrens).toHaveLength(0);
 
-            //count occurences of tags displayed-has to be 2
+            // count occurrences of tags displayed-has to be 2
             const items = container.getElementsByClassName('item');
             expect(items.length).toBe(2);
           });
