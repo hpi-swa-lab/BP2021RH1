@@ -33,3 +33,10 @@ test('GalleryView with search target renders SearchView', () => {
   const searchView = screen.getByText('SearchViewMock');
   expect(searchView).toBeInTheDocument();
 });
+
+test('GalleryView with browse/latest target renders BrowseView', () => {
+  renderRoute('/browse/latest');
+
+  const browseView = screen.getByText('BrowseViewMock');
+  expect(browseView).toBeInTheDocument();
+});
