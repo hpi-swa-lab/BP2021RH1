@@ -28,7 +28,9 @@
     "information": "Informationen",
     "showPicture": "Bild anzeigen",
     "showInfo": "Infos & Kommentare anzeigen",
-    "close": "Schließen"
+    "close": "Schließen",
+    "browse-view": "Alle Bilder",
+    "community-view": "Neueste Bilder"
   },
   "login": {
     "title": "Login",

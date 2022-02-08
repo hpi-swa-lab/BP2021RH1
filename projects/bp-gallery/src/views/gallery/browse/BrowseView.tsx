@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './CategoryPictureDisplay.scss';
 import CategoryPictureDisplay from './CategoryPictureDisplay';
 import { FormControlLabel, Switch } from '@mui/material';
@@ -23,6 +24,7 @@ const BrowseView = ({
   scrollHeight: number;
   communityView: boolean;
 }) => {
+  const { t } = useTranslation();
   const history: History = useHistory();
   const variables = path?.length
     ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
@@ -68,7 +70,7 @@ const BrowseView = ({
             }
           />
         }
-        label={communityView ? 'Community-View' : 'Browse-View'}
+        label={String(communityView ? t('common.community-view') : t('common.browse-view'))}
       />
       <CategoryPictureDisplay
         picturePublishingDate={communityView ? picturePublishingDate : undefined}
