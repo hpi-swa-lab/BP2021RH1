@@ -6,7 +6,7 @@ import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import {
   useGetCategoryInfoQuery,
-  useGetCategoryTagsPublishedAfterDateQuery,
+  useGetCategoryTagsWithPicturesPublishedAfterQuery,
 } from '../../../graphql/APIConnector';
 import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCategoryTag } from '../../../graphql/additionalFlatTypes';
@@ -35,7 +35,7 @@ const BrowseView = ({
   const picturePublishingDate = '2022-01-03T17:25:00Z'; // highly debatable
 
   // Query the IDs of all CategoryTags that got new pictures inside them
-  const latestCategoryTagsResult = useGetCategoryTagsPublishedAfterDateQuery({
+  const latestCategoryTagsResult = useGetCategoryTagsWithPicturesPublishedAfterQuery({
     variables: {
       date: picturePublishingDate,
     },

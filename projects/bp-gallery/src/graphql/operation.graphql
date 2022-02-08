@@ -69,7 +69,7 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
-query getCategoryTagsPublishedAfterDate($date: DateTime!) {
+query getCategoryTagsWithPicturesPublishedAfter($date: DateTime!) {
   categoryTags(filters: { pictures: { publishedAt: { gt: $date } } }) {
     data {
       id
