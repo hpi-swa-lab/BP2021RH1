@@ -30,7 +30,9 @@
     "showInfo": "Infos & Kommentare anzeigen",
     "close": "Schließen",
     "browse-view": "Alle Bilder",
-    "community-view": "Neueste Bilder"
+    "community-view": "Neueste Bilder",
+    "confirm": "Bestätigen",
+    "cancel": "Abbruch"
   },
   "login": {
     "title": "Login",
@@ -40,5 +42,10 @@
     "invalid-credentials": "Benutzername oder Passwort sind falsch",
     "successful-login": "Erfolgreich eingeloggt",
     "successful-logout": "Erfolgreich ausgeloggt"
+  },
+  "remove": {
+    "success": "Dieses Bild ist von nun an nicht mehr öffentlich sichtbar",
+    "picture": "Bild löschen",
+    "confirmation": "Sind Sie sich sicher, dass Sie dieses Bild entfernen wollen? Es ist danach für Besucher der Seite nicht mehr sichtbar."
   }
 }

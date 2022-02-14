@@ -14,7 +14,7 @@ export const PictureViewUI = ({ calledViaLink }: { calledViaLink: boolean }) => 
     <div className='picture-ui'>
       <PictureNavigationButtons />
       <div className='picture-toolbar'>
-        <Button onClick={calledViaLink ? () => (location.href = '/browse') : onBack}>
+        <Button onClick={calledViaLink ? () => (location.href = '/') : onBack}>
           <Icon>arrow_back</Icon>
           {calledViaLink ? t('common.back-to-home') : t('common.back')}
         </Button>
