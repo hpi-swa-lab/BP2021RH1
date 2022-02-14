@@ -290,3 +290,11 @@ query me {
     email
   }
 }
+
+mutation unpublishPicture($pictureId: ID!) {
+  updatePicture(id: $pictureId, data: { publishedAt: null }) {
+    data {
+      id
+    }
+  }
+}

@@ -1675,6 +1675,17 @@ export type MeQuery = {
     | undefined;
 };
 
+export type UnpublishPictureMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type UnpublishPictureMutation = {
+  updatePicture?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
@@ -2396,3 +2407,57 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+
+export const UnpublishPictureDocument = gql`
+  mutation unpublishPicture($pictureId: ID!) {
+    updatePicture(id: $pictureId, data: { publishedAt: null }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UnpublishPictureMutationFn = Apollo.MutationFunction<
+  UnpublishPictureMutation,
+  UnpublishPictureMutationVariables
+>;
+
+/**
+ * __useUnpublishPictureMutation__
+ *
+ * To run a mutation, you first call `useUnpublishPictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnpublishPictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unpublishPictureMutation, { data, loading, error }] = useUnpublishPictureMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useUnpublishPictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UnpublishPictureMutation,
+    UnpublishPictureMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UnpublishPictureMutation, UnpublishPictureMutationVariables>(
+    UnpublishPictureDocument,
+    options
+  );
+}
+
+export type UnpublishPictureMutationHookResult = ReturnType<typeof useUnpublishPictureMutation>;
+
+export type UnpublishPictureMutationResult = Apollo.MutationResult<UnpublishPictureMutation>;
+
+export type UnpublishPictureMutationOptions = Apollo.BaseMutationOptions<
+  UnpublishPictureMutation,
+  UnpublishPictureMutationVariables
+>;
