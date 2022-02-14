@@ -10,6 +10,9 @@ import { FlatPicture, FlatTimeRangeTag } from '../../../graphql/additionalFlatTy
 import { ApolloError } from '@apollo/client';
 import Loading from '../../../components/Loading';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
+import RemovePicture from './RemovePicture';
+import { PictureNavigationTarget } from './PictureNavigationButtons';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   if (!timeStamp?.start || !timeStamp.end) {
@@ -38,9 +41,23 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
 };
 
 const PictureInfoContent = ({ picture }: { picture: FlatPicture }) => {
+  const { role } = useAuth();
+  const { hasNext, hasPrevious, navigatePicture } = useContext(PictureViewContext);
+
+  const onRemove = () => {
+    if (hasNext && navigatePicture) {
+      navigatePicture(PictureNavigationTarget.NEXT);
+    } else if (hasPrevious && navigatePicture) {
+      navigatePicture(PictureNavigationTarget.PREVIOUS);
+    } else {
+      location.href = '/';
+    }
+  };
+
   return (
     <div className='scrollbar-container'>
       <div className='picture-infos'>
+        {role >= AuthRole.CURATOR && <RemovePicture pictureId={picture.id} onRemove={onRemove} />}
         <div className='title'>
           <Icon style={{ marginRight: '0.5rem' }}>today</Icon>
           <span>{formatTimeStamp(picture.time_range_tag ?? undefined)}</span>
@@ -58,7 +75,6 @@ const PictureInfo = ({
   error,
 }: {
   picture?: FlatPicture;
-  pictureId: string;
   loading?: boolean;
   error?: ApolloError;
 }) => {

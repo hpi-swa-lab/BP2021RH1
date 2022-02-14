@@ -206,7 +206,7 @@ const PictureView = ({
             </div>
           </ZoomWrapper>
           {thumbnailMode === false && (
-            <PictureInfo loading={loading} error={error} picture={picture} pictureId={pictureId} />
+            <PictureInfo loading={loading} error={error} picture={picture} />
           )}
         </div>
       </PictureViewContext.Provider>
