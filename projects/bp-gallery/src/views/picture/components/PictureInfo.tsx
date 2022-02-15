@@ -65,8 +65,13 @@ const PictureInfoContent = ({ picture }: { picture: FlatPicture }) => {
           picture: picture.id,
           // Stringify the object as GraphQL validates this to be a string
           title: JSON.stringify({
-            customUpdate: true,
             text: currentTitle,
+            meta: {
+              // Control whether all pictures related to the old title should be updated as well
+              updateAllRelatedPictures: true,
+              // Specify additional picture ids here that should be updated as well
+              updateAdditionalPictures: [],
+            },
           }),
         },
       });
