@@ -2,11 +2,11 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { MockedResponse } from '@apollo/client/testing';
 import { renderRouteWithAPIMocks } from '../../../../testUtils';
-import { GetCategoryInfoDocumentMocks, GetCategoryTagsPublishedAfterDateMocks } from './mocks';
+import { GetCollectionInfoDocumentMocks, GetCollectionsPublishedAfterDateMocks } from './mocks';
 
 const CommunityViewMocks: MockedResponse[] = [
-  ...GetCategoryTagsPublishedAfterDateMocks,
-  ...GetCategoryInfoDocumentMocks,
+  ...GetCollectionsPublishedAfterDateMocks,
+  ...GetCollectionInfoDocumentMocks,
 ];
 
 describe('BrowseView', () => {
@@ -16,14 +16,14 @@ describe('BrowseView', () => {
         const PictureScrollGridMock = () => <div>PictureScrollGridMock</div>;
         jest.mock('../../common/PictureScrollGrid', () => PictureScrollGridMock);
 
-        test('CommunityView does not render/contain Das Herbert-Ahrens-Bilderarchiv as a category', () => {
+        test('CommunityView does not render/contain Das Herbert-Ahrens-Bilderarchiv as a collection', () => {
           renderRouteWithAPIMocks('/browse/latest', CommunityViewMocks);
 
           const communityView = screen.queryByText('Das Herbert-Ahrens-Bilderarchiv');
           expect(communityView).toBeNull();
         });
 
-        test('When visiting browse/latest/Sole-Therme it renders and shows the sub categories of Sole-Therme that are latest categories', async () => {
+        test('When visiting browse/latest/Sole-Therme it renders and shows the sub collections of Sole-Therme that are latest collections', async () => {
           const { container } = renderRouteWithAPIMocks(
             '/browse/latest/Sole-Therme',
             CommunityViewMocks
@@ -42,7 +42,7 @@ describe('BrowseView', () => {
           });
         });
 
-        test('When visiting browse/latest/Sole-Therme it renders and does not show the sub categories of Sole-Therme that are not latest categories', async () => {
+        test('When visiting browse/latest/Sole-Therme it renders and does not show the sub collections of Sole-Therme that are not latest collections', async () => {
           const { container } = renderRouteWithAPIMocks(
             '/browse/latest/Sole-Therme',
             CommunityViewMocks
@@ -59,7 +59,7 @@ describe('BrowseView', () => {
           });
         });
 
-        test('When visiting browse/latest/ it renders and shows the sub categories of the first level category that are latest categories', async () => {
+        test('When visiting browse/latest/ it renders and shows the sub collections of the first level collection that are latest collections', async () => {
           const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
           await waitFor(() => {
@@ -80,7 +80,7 @@ describe('BrowseView', () => {
           });
         });
 
-        test('When visiting browse/latest/ it renders and does not show the sub categories of first level category that are not latest categories', async () => {
+        test('When visiting browse/latest/ it renders and does not show the sub collections of first level collection that are not latest collections', async () => {
           const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
           await waitFor(() => {
@@ -94,7 +94,7 @@ describe('BrowseView', () => {
           });
         });
 
-        test('When visiting browse/latest/ it does not show the first level category', async () => {
+        test('When visiting browse/latest/ it does not show the first level collection', async () => {
           const { container } = renderRouteWithAPIMocks('/browse/latest/', CommunityViewMocks);
 
           await waitFor(() => {

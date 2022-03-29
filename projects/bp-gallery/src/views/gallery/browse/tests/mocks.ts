@@ -1,9 +1,9 @@
 import {
-  GetCategoryInfoDocument,
-  GetCategoryTagsWithPicturesPublishedAfterDocument,
+  GetCollectionInfoDocument,
+  GetCollectionWithPicturesPublishedAfterDocument,
 } from '../../../../graphql/APIConnector';
 
-export const RelatedTagsMocks = [
+export const ChildCollectionsMocks = [
   {
     data: {
       id: 51,
@@ -105,7 +105,7 @@ export const RelatedTagsMocks = [
   },
 ];
 
-export const RelatedTagsFirstLevelMocks = [
+export const ChildCollectionsFirstLevelMocks = [
   {
     data: {
       id: 49,
@@ -207,24 +207,24 @@ export const RelatedTagsFirstLevelMocks = [
   },
 ];
 
-export const GetCategoryInfoDocumentMocks = [
+export const GetCollectionInfoDocumentMocks = [
   {
     request: {
-      query: GetCategoryInfoDocument,
+      query: GetCollectionInfoDocument,
       variables: {
         categoryPriority: 1,
       },
     },
     result: {
       data: {
-        categoryTags: {
+        collections: {
           data: [
             {
               id: '1',
               attributes: {
                 name: 'Herbert-Ahrens-Bilder-Archiv',
                 description: '',
-                related_tags: RelatedTagsFirstLevelMocks,
+                child_collections: ChildCollectionsFirstLevelMocks,
               },
             },
           ],
@@ -234,21 +234,21 @@ export const GetCategoryInfoDocumentMocks = [
   },
   {
     request: {
-      query: GetCategoryInfoDocument,
+      query: GetCollectionInfoDocument,
       variables: {
-        categoryName: 'Sole-Therme',
+        collectionName: 'Sole-Therme',
       },
     },
     result: {
       data: {
-        categoryTags: {
+        collections: {
           data: [
             {
               id: '49',
               attributes: {
                 name: 'Sole-Therme',
                 description: '',
-                related_tags: RelatedTagsMocks,
+                child_collections: ChildCollectionsMocks,
               },
             },
           ],
@@ -259,17 +259,17 @@ export const GetCategoryInfoDocumentMocks = [
 ];
 
 const communityDate = '2022-01-03T17:25:00Z';
-export const GetCategoryTagsPublishedAfterDateMocks = [
+export const GetCollectionsPublishedAfterDateMocks = [
   {
     request: {
-      query: GetCategoryTagsWithPicturesPublishedAfterDocument,
+      query: GetCollectionWithPicturesPublishedAfterDocument,
       variables: {
         date: communityDate,
       },
     },
     result: {
       data: {
-        categoryTags: {
+        collections: {
           data: [{ id: 51 }, { id: 49 }, { id: 50 }, { id: 42 }],
         },
       },

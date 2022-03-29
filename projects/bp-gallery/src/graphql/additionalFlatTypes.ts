@@ -1,5 +1,5 @@
 import {
-  CategoryTag,
+  Collection,
   Comment,
   Description,
   KeywordTag,
@@ -12,7 +12,7 @@ import {
 
 type ID = { id: Scalars['ID'] };
 
-type FlatCategoryTagWithoutRelations = ID & Omit<CategoryTag, 'pictures' | 'related_tags'>;
+type FlatCollectionWithoutRelations = ID & Omit<Collection, 'pictures' | 'child_collections'>;
 
 type FlatCommentWithoutRelations = ID & Omit<Comment, 'picture'>;
 
@@ -23,7 +23,7 @@ type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures'>;
 type FlatPictureWithoutRelations = ID &
   Omit<
     Picture,
-    | 'category_tags'
+    | 'collections'
     | 'comments'
     | 'descriptions'
     | 'keyword_tags'
@@ -56,13 +56,13 @@ export type FlatTitle = FlatTitleWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
 };
 
-export type FlatCategoryTag = FlatCategoryTagWithoutRelations & {
+export type FlatCollection = FlatCollectionWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
-  related_tags?: FlatCategoryTagWithoutRelations[];
+  child_collections?: FlatCollectionWithoutRelations[];
 };
 
 export type FlatPicture = FlatPictureWithoutRelations & {
-  category_tags?: FlatCategoryTagWithoutRelations[];
+  collections?: FlatCollectionWithoutRelations[];
   comments?: FlatCommentWithoutRelations[];
   descriptions?: FlatDescriptionWithoutRelations[];
   keyword_tags?: FlatKeywordTagWithoutRelations[];

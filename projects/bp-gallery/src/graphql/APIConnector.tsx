@@ -50,6 +50,27 @@ export type BooleanFilterInput = {
   startsWith?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type BrowseRootCollection = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  current?: Maybe<CollectionEntityResponse>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type BrowseRootCollectionEntity = {
+  attributes?: Maybe<BrowseRootCollection>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type BrowseRootCollectionEntityResponse = {
+  data?: Maybe<BrowseRootCollectionEntity>;
+};
+
+export type BrowseRootCollectionInput = {
+  current?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
 export type CategoryTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
@@ -115,6 +136,80 @@ export type CategoryTagInput = {
 
 export type CategoryTagRelationResponseCollection = {
   data: Array<CategoryTagEntity>;
+};
+
+export type Collection = {
+  child_collections?: Maybe<CollectionRelationResponseCollection>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  parent_collections?: Maybe<CollectionRelationResponseCollection>;
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type CollectionChild_CollectionsArgs = {
+  filters?: InputMaybe<CollectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CollectionParent_CollectionsArgs = {
+  filters?: InputMaybe<CollectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CollectionPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CollectionEntity = {
+  attributes?: Maybe<Collection>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type CollectionEntityResponse = {
+  data?: Maybe<CollectionEntity>;
+};
+
+export type CollectionEntityResponseCollection = {
+  data: Array<CollectionEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type CollectionFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<CollectionFiltersInput>>>;
+  child_collections?: InputMaybe<CollectionFiltersInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  description?: InputMaybe<StringFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<CollectionFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<CollectionFiltersInput>>>;
+  parent_collections?: InputMaybe<CollectionFiltersInput>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type CollectionInput = {
+  child_collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  description?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  parent_collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type CollectionRelationResponseCollection = {
+  data: Array<CollectionEntity>;
 };
 
 export type Comment = {
@@ -271,7 +366,9 @@ export type FloatFilterInput = {
 };
 
 export type GenericMorph =
+  | BrowseRootCollection
   | CategoryTag
+  | Collection
   | Comment
   | Description
   | KeywordTag
@@ -405,6 +502,7 @@ export type KeywordTagRelationResponseCollection = {
 
 export type Mutation = {
   createCategoryTag?: Maybe<CategoryTagEntityResponse>;
+  createCollection?: Maybe<CollectionEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
   createDescription?: Maybe<DescriptionEntityResponse>;
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
@@ -416,7 +514,9 @@ export type Mutation = {
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
   /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
+  deleteBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
   deleteCategoryTag?: Maybe<CategoryTagEntityResponse>;
+  deleteCollection?: Maybe<CollectionEntityResponse>;
   deleteComment?: Maybe<CommentEntityResponse>;
   deleteDescription?: Maybe<DescriptionEntityResponse>;
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
@@ -439,7 +539,9 @@ export type Mutation = {
   removeFile?: Maybe<UploadFileEntityResponse>;
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
+  updateBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
   updateCategoryTag?: Maybe<CategoryTagEntityResponse>;
+  updateCollection?: Maybe<CollectionEntityResponse>;
   updateComment?: Maybe<CommentEntityResponse>;
   updateDescription?: Maybe<DescriptionEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
@@ -457,6 +559,10 @@ export type Mutation = {
 
 export type MutationCreateCategoryTagArgs = {
   data: CategoryTagInput;
+};
+
+export type MutationCreateCollectionArgs = {
+  data: CollectionInput;
 };
 
 export type MutationCreateCommentArgs = {
@@ -496,6 +602,10 @@ export type MutationCreateUsersPermissionsUserArgs = {
 };
 
 export type MutationDeleteCategoryTagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteCollectionArgs = {
   id: Scalars['ID'];
 };
 
@@ -568,8 +678,17 @@ export type MutationResetPasswordArgs = {
   passwordConfirmation: Scalars['String'];
 };
 
+export type MutationUpdateBrowseRootCollectionArgs = {
+  data: BrowseRootCollectionInput;
+};
+
 export type MutationUpdateCategoryTagArgs = {
   data: CategoryTagInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateCollectionArgs = {
+  data: CollectionInput;
   id: Scalars['ID'];
 };
 
@@ -647,6 +766,7 @@ export type PaginationArg = {
 
 export type Picture = {
   category_tags?: Maybe<CategoryTagRelationResponseCollection>;
+  collections?: Maybe<CollectionRelationResponseCollection>;
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
@@ -661,6 +781,13 @@ export type Picture = {
 
 export type PictureCategory_TagsArgs = {
   filters?: InputMaybe<CategoryTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureCollectionsArgs = {
+  filters?: InputMaybe<CollectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -704,6 +831,7 @@ export type PictureEntityResponseCollection = {
 export type PictureFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   category_tags?: InputMaybe<CategoryTagFiltersInput>;
+  collections?: InputMaybe<CollectionFiltersInput>;
   comments?: InputMaybe<CommentFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
@@ -720,6 +848,7 @@ export type PictureFiltersInput = {
 
 export type PictureInput = {
   category_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -740,8 +869,11 @@ export enum PublicationState {
 }
 
 export type Query = {
+  browseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
   categoryTag?: Maybe<CategoryTagEntityResponse>;
   categoryTags?: Maybe<CategoryTagEntityResponseCollection>;
+  collection?: Maybe<CollectionEntityResponse>;
+  collections?: Maybe<CollectionEntityResponseCollection>;
   comment?: Maybe<CommentEntityResponse>;
   comments?: Maybe<CommentEntityResponseCollection>;
   description?: Maybe<DescriptionEntityResponse>;
@@ -763,12 +895,27 @@ export type Query = {
   usersPermissionsUsers?: Maybe<UsersPermissionsUserEntityResponseCollection>;
 };
 
+export type QueryBrowseRootCollectionArgs = {
+  publicationState?: InputMaybe<PublicationState>;
+};
+
 export type QueryCategoryTagArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
 export type QueryCategoryTagsArgs = {
   filters?: InputMaybe<CategoryTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryCollectionArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryCollectionsArgs = {
+  filters?: InputMaybe<CollectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1273,21 +1420,6 @@ export type GetPictureInfoQuery = {
               id?: string | null | undefined;
               attributes?:
                 | {
-                    title?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?:
-                                  | { text?: string | null | undefined }
-                                  | null
-                                  | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
                     descriptions?:
                       | {
                           data: Array<{
@@ -1387,21 +1519,20 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
-export type GetCategoryTagsWithPicturesPublishedAfterQueryVariables = Exact<{
+export type GetCollectionWithPicturesPublishedAfterQueryVariables = Exact<{
   date: Scalars['DateTime'];
 }>;
 
-export type GetCategoryTagsWithPicturesPublishedAfterQuery = {
-  categoryTags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
+export type GetCollectionWithPicturesPublishedAfterQuery = {
+  collections?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
 };
 
-export type GetCategoryInfoQueryVariables = Exact<{
-  categoryName?: InputMaybe<Scalars['String']>;
-  categoryPriority?: InputMaybe<Scalars['Int']>;
+export type GetCollectionInfoQueryVariables = Exact<{
+  collectionName?: InputMaybe<Scalars['String']>;
 }>;
 
-export type GetCategoryInfoQuery = {
-  categoryTags?:
+export type GetCollectionInfoQuery = {
+  collections?:
     | {
         data: Array<{
           id?: string | null | undefined;
@@ -1409,7 +1540,7 @@ export type GetCategoryInfoQuery = {
             | {
                 name: string;
                 description?: string | null | undefined;
-                related_tags?:
+                child_collections?:
                   | {
                       data: Array<{
                         id?: string | null | undefined;
@@ -1681,14 +1812,6 @@ export const GetPictureInfoDocument = gql`
       data {
         id
         attributes {
-          title {
-            data {
-              id
-              attributes {
-                text
-              }
-            }
-          }
           descriptions(sort: "createdAt:desc") {
             data {
               id
@@ -1838,9 +1961,9 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQueryVariables
 >;
 
-export const GetCategoryTagsWithPicturesPublishedAfterDocument = gql`
-  query getCategoryTagsWithPicturesPublishedAfter($date: DateTime!) {
-    categoryTags(filters: { pictures: { publishedAt: { gt: $date } } }) {
+export const GetCollectionWithPicturesPublishedAfterDocument = gql`
+  query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
+    collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
       data {
         id
       }
@@ -1849,69 +1972,69 @@ export const GetCategoryTagsWithPicturesPublishedAfterDocument = gql`
 `;
 
 /**
- * __useGetCategoryTagsWithPicturesPublishedAfterQuery__
+ * __useGetCollectionWithPicturesPublishedAfterQuery__
  *
- * To run a query within a React component, call `useGetCategoryTagsWithPicturesPublishedAfterQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryTagsWithPicturesPublishedAfterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCollectionWithPicturesPublishedAfterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCollectionWithPicturesPublishedAfterQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoryTagsWithPicturesPublishedAfterQuery({
+ * const { data, loading, error } = useGetCollectionWithPicturesPublishedAfterQuery({
  *   variables: {
  *      date: // value for 'date'
  *   },
  * });
  */
-export function useGetCategoryTagsWithPicturesPublishedAfterQuery(
+export function useGetCollectionWithPicturesPublishedAfterQuery(
   baseOptions: Apollo.QueryHookOptions<
-    GetCategoryTagsWithPicturesPublishedAfterQuery,
-    GetCategoryTagsWithPicturesPublishedAfterQueryVariables
+    GetCollectionWithPicturesPublishedAfterQuery,
+    GetCollectionWithPicturesPublishedAfterQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
-    GetCategoryTagsWithPicturesPublishedAfterQuery,
-    GetCategoryTagsWithPicturesPublishedAfterQueryVariables
-  >(GetCategoryTagsWithPicturesPublishedAfterDocument, options);
+    GetCollectionWithPicturesPublishedAfterQuery,
+    GetCollectionWithPicturesPublishedAfterQueryVariables
+  >(GetCollectionWithPicturesPublishedAfterDocument, options);
 }
 
-export function useGetCategoryTagsWithPicturesPublishedAfterLazyQuery(
+export function useGetCollectionWithPicturesPublishedAfterLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCategoryTagsWithPicturesPublishedAfterQuery,
-    GetCategoryTagsWithPicturesPublishedAfterQueryVariables
+    GetCollectionWithPicturesPublishedAfterQuery,
+    GetCollectionWithPicturesPublishedAfterQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    GetCategoryTagsWithPicturesPublishedAfterQuery,
-    GetCategoryTagsWithPicturesPublishedAfterQueryVariables
-  >(GetCategoryTagsWithPicturesPublishedAfterDocument, options);
+    GetCollectionWithPicturesPublishedAfterQuery,
+    GetCollectionWithPicturesPublishedAfterQueryVariables
+  >(GetCollectionWithPicturesPublishedAfterDocument, options);
 }
 
-export type GetCategoryTagsWithPicturesPublishedAfterQueryHookResult = ReturnType<
-  typeof useGetCategoryTagsWithPicturesPublishedAfterQuery
+export type GetCollectionWithPicturesPublishedAfterQueryHookResult = ReturnType<
+  typeof useGetCollectionWithPicturesPublishedAfterQuery
 >;
 
-export type GetCategoryTagsWithPicturesPublishedAfterLazyQueryHookResult = ReturnType<
-  typeof useGetCategoryTagsWithPicturesPublishedAfterLazyQuery
+export type GetCollectionWithPicturesPublishedAfterLazyQueryHookResult = ReturnType<
+  typeof useGetCollectionWithPicturesPublishedAfterLazyQuery
 >;
 
-export type GetCategoryTagsWithPicturesPublishedAfterQueryResult = Apollo.QueryResult<
-  GetCategoryTagsWithPicturesPublishedAfterQuery,
-  GetCategoryTagsWithPicturesPublishedAfterQueryVariables
+export type GetCollectionWithPicturesPublishedAfterQueryResult = Apollo.QueryResult<
+  GetCollectionWithPicturesPublishedAfterQuery,
+  GetCollectionWithPicturesPublishedAfterQueryVariables
 >;
 
-export const GetCategoryInfoDocument = gql`
-  query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
-    categoryTags(filters: { name: { eq: $categoryName }, priority: { eq: $categoryPriority } }) {
+export const GetCollectionInfoDocument = gql`
+  query getCollectionInfo($collectionName: String) {
+    collections(filters: { name: { eq: $collectionName } }) {
       data {
         id
         attributes {
           name
           description
-          related_tags {
+          child_collections {
             data {
               id
               attributes {
@@ -1939,49 +2062,48 @@ export const GetCategoryInfoDocument = gql`
 `;
 
 /**
- * __useGetCategoryInfoQuery__
+ * __useGetCollectionInfoQuery__
  *
- * To run a query within a React component, call `useGetCategoryInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCollectionInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCollectionInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoryInfoQuery({
+ * const { data, loading, error } = useGetCollectionInfoQuery({
  *   variables: {
- *      categoryName: // value for 'categoryName'
- *      categoryPriority: // value for 'categoryPriority'
+ *      collectionName: // value for 'collectionName'
  *   },
  * });
  */
-export function useGetCategoryInfoQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>
+export function useGetCollectionInfoQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>(
-    GetCategoryInfoDocument,
+  return Apollo.useQuery<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>(
+    GetCollectionInfoDocument,
     options
   );
 }
 
-export function useGetCategoryInfoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>
+export function useGetCollectionInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetCategoryInfoQuery, GetCategoryInfoQueryVariables>(
-    GetCategoryInfoDocument,
+  return Apollo.useLazyQuery<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>(
+    GetCollectionInfoDocument,
     options
   );
 }
 
-export type GetCategoryInfoQueryHookResult = ReturnType<typeof useGetCategoryInfoQuery>;
+export type GetCollectionInfoQueryHookResult = ReturnType<typeof useGetCollectionInfoQuery>;
 
-export type GetCategoryInfoLazyQueryHookResult = ReturnType<typeof useGetCategoryInfoLazyQuery>;
+export type GetCollectionInfoLazyQueryHookResult = ReturnType<typeof useGetCollectionInfoLazyQuery>;
 
-export type GetCategoryInfoQueryResult = Apollo.QueryResult<
-  GetCategoryInfoQuery,
-  GetCategoryInfoQueryVariables
+export type GetCollectionInfoQueryResult = Apollo.QueryResult<
+  GetCollectionInfoQuery,
+  GetCollectionInfoQueryVariables
 >;
 
 export const PostCommentDocument = gql`

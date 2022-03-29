@@ -3,17 +3,17 @@ import { useTranslation } from 'react-i18next';
 import Loading from '../../../components/Loading';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 import PictureScrollGrid from '../common/PictureScrollGrid';
-import SubCategories from './SubCategories';
-import CategoryDescription from './CategoryDescription';
+import SubCollections from './SubCollections';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
+import CollectionDescription from './CollectionDescription';
 
-const getPictureFilters = (categoryId: string, picturePublishingDate?: string) => {
+const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
   const filters: PictureFiltersInput = { and: [] };
 
   filters.and?.push({
-    category_tags: {
+    collections: {
       id: {
-        eq: categoryId,
+        eq: collectionId,
       },
     },
   });
@@ -29,10 +29,10 @@ const getPictureFilters = (categoryId: string, picturePublishingDate?: string) =
   return filters;
 };
 
-const CategoryPictureDisplay = ({
+const CollectionPictureDisplay = ({
   error,
   loading = false,
-  categoryTags,
+  collections,
   path,
   scrollPos,
   scrollHeight,
@@ -40,7 +40,7 @@ const CategoryPictureDisplay = ({
 }: {
   error?: any;
   loading?: boolean;
-  categoryTags?: any;
+  collections?: any;
   path: string[] | undefined;
   scrollPos: number;
   scrollHeight: number;
@@ -52,31 +52,31 @@ const CategoryPictureDisplay = ({
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else if (categoryTags?.length && categoryTags[0]) {
-    const category = categoryTags[0];
-    const relatedTagsSize = category.related_tags?.length ?? 0;
+  } else if (collections?.length && collections[0]) {
+    const collection = collections[0];
+    const childCount = collection.child_collections?.length ?? 0;
 
     return (
-      <div className='category-picture-display'>
-        <CategoryDescription description={category.description ?? ''} name={category.name} />
-        {relatedTagsSize > 0 && (
-          <SubCategories
-            relatedTags={category.related_tags as { thumbnail: any[]; name: string }[]}
+      <div className='collection-picture-display'>
+        <CollectionDescription description={collection.description ?? ''} name={collection.name} />
+        {childCount > 0 && (
+          <SubCollections
+            childCollections={collection.child_collections as { thumbnail: any[]; name: string }[]}
             path={path}
             communityView={!!picturePublishingDate}
           />
         )}
         <PictureScrollGrid
-          filters={getPictureFilters(category.id as string, picturePublishingDate)}
+          filters={getPictureFilters(collection.id as string, picturePublishingDate)}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
-          hashbase={category.name}
+          hashbase={collection.name}
         />
       </div>
     );
   } else {
-    return <div>{t('common.no-category')}</div>;
+    return <div>{t('common.no-collection')}</div>;
   }
 };
 
-export default CategoryPictureDisplay;
+export default CollectionPictureDisplay;

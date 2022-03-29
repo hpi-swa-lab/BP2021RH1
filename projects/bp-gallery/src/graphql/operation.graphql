@@ -61,22 +61,22 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
-query getCategoryTagsWithPicturesPublishedAfter($date: DateTime!) {
-  categoryTags(filters: { pictures: { publishedAt: { gt: $date } } }) {
+query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
+  collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
     data {
       id
     }
   }
 }
 
-query getCategoryInfo($categoryName: String, $categoryPriority: Int) {
-  categoryTags(filters: { name: { eq: $categoryName }, priority: { eq: $categoryPriority } }) {
+query getCollectionInfo($collectionName: String) {
+  collections(filters: { name: { eq: $collectionName } }) {
     data {
       id
       attributes {
         name
         description
-        related_tags {
+        child_collections {
           data {
             id
             attributes {
