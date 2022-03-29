@@ -6,7 +6,6 @@ import {
   Picture,
   Scalars,
   TimeRangeTag,
-  Title,
   UploadFile,
 } from './APIConnector';
 
@@ -23,18 +22,10 @@ type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures'>;
 type FlatPictureWithoutRelations = ID &
   Omit<
     Picture,
-    | 'collections'
-    | 'comments'
-    | 'descriptions'
-    | 'keyword_tags'
-    | 'media'
-    | 'time_range_tag'
-    | 'title'
+    'collections' | 'comments' | 'descriptions' | 'keyword_tags' | 'media' | 'time_range_tag'
   >;
 
 type FlatTimeRangeTagWithoutRelations = ID & Omit<TimeRangeTag, 'pictures'>;
-
-type FlatTitleWithoutRelations = ID & Omit<Title, 'pictures'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -52,10 +43,6 @@ export type FlatTimeRangeTag = FlatTimeRangeTagWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
 };
 
-export type FlatTitle = FlatTitleWithoutRelations & {
-  pictures?: FlatPictureWithoutRelations[];
-};
-
 export type FlatCollection = FlatCollectionWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
   child_collections?: FlatCollectionWithoutRelations[];
@@ -68,7 +55,6 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   keyword_tags?: FlatKeywordTagWithoutRelations[];
   media?: UploadFile;
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
-  title?: FlatTitleWithoutRelations;
 };
 
 type Thumbnail = {
