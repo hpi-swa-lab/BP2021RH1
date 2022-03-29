@@ -15,10 +15,12 @@
       "type": "string"
     },
     "text": {
-      "type": "richtext"
+      "type": "richtext",
+      "required": true
     },
     "date": {
-      "type": "datetime"
+      "type": "datetime",
+      "required": true
     },
     "picture": {
       "type": "relation",

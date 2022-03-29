@@ -18,7 +18,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::picture.picture",
-      "inversedBy": "descriptions"
+      "mappedBy": "descriptions"
     }
   }
 }

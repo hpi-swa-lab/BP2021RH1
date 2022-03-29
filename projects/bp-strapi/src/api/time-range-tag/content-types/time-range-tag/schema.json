@@ -4,17 +4,20 @@
   "info": {
     "singularName": "time-range-tag",
     "pluralName": "time-range-tags",
-    "displayName": "Time_Range_Tag"
+    "displayName": "Time_Range_Tag",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "attributes": {
     "start": {
-      "type": "datetime"
+      "type": "datetime",
+      "required": true
     },
     "end": {
-      "type": "datetime"
+      "type": "datetime",
+      "required": true
     },
     "pictures": {
       "type": "relation",
