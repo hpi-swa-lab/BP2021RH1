@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * title service.
+ * collection service.
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
 
-module.exports = createCoreService('api::title.title');
+module.exports = createCoreService('api::collection.collection');

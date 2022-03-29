@@ -4,20 +4,22 @@
   "info": {
     "singularName": "picture",
     "pluralName": "pictures",
-    "displayName": "Picture"
+    "displayName": "Picture",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "attributes": {
     "media": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
       "allowedTypes": [
         "images",
         "files",
         "videos"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "wordpress_id": {
       "type": "integer",
@@ -29,23 +31,11 @@
       "target": "api::description.description",
       "inversedBy": "pictures"
     },
-    "title": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::title.title",
-      "inversedBy": "pictures"
-    },
     "comments": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::comment.comment",
       "mappedBy": "picture"
-    },
-    "category_tags": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::category-tag.category-tag",
-      "mappedBy": "pictures"
     },
     "keyword_tags": {
       "type": "relation",
@@ -57,6 +47,12 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::time-range-tag.time-range-tag",
+      "inversedBy": "pictures"
+    },
+    "collections": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::collection.collection",
       "inversedBy": "pictures"
     }
   }

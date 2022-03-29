@@ -19,7 +19,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::picture.picture",
-      "inversedBy": "keyword_tags"
+      "mappedBy": "keyword_tags"
     }
   }
 }

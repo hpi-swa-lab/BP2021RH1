@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * title router.
+ * collection router.
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::title.title');
+module.exports = createCoreRouter('api::collection.collection');
