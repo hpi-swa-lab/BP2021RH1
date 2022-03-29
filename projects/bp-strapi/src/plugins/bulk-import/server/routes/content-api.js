@@ -35,5 +35,10 @@ module.exports = {
       path: '/import-draft-comments',
       handler: 'bulkImport.importDraftComments',
     },
+    {
+      method: 'POST',
+      path: '/migrate-titles',
+      handler: 'titleMigration.migrateTitles',
+    },
   ]
 };

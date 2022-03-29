@@ -5,8 +5,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 1.5rem;
 
   .description {
+    h1 {
+      margin: 0;
+      color: #5a5a5a;
+      font-size: 1.5rem;
+    }
     width: calc(100% - 2rem);
     padding: 1rem;
   }
