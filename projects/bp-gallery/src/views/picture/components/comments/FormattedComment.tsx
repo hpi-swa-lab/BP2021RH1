@@ -16,7 +16,7 @@ const FormattedComment = ({ comment }: { comment: FlatComment }) => {
         {dayjs(comment.date as string).format('DD.MM.YYYY')}
         :<br />
       </div>
-      <div className='comment-text'>{parseNewLine(comment.text ?? '')}</div>
+      <div className='comment-text'>{parseNewLine(comment.text)}</div>
     </div>
   );
 };
