@@ -215,10 +215,10 @@ export type CollectionRelationResponseCollection = {
 export type Comment = {
   author?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
-  date?: Maybe<Scalars['DateTime']>;
+  date: Scalars['DateTime'];
   picture?: Maybe<PictureEntityResponse>;
   publishedAt?: Maybe<Scalars['DateTime']>;
-  text?: Maybe<Scalars['String']>;
+  text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -754,7 +754,7 @@ export type Picture = {
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
-  media?: Maybe<UploadFileEntityResponse>;
+  media: UploadFileEntityResponse;
   publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1013,10 +1013,10 @@ export type StringFilterInput = {
 
 export type TimeRangeTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
-  end?: Maybe<Scalars['DateTime']>;
+  end: Scalars['DateTime'];
   pictures?: Maybe<PictureRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']>;
-  start?: Maybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -1354,35 +1354,22 @@ export type GetPictureInfoQuery = {
                           data?:
                             | {
                                 id?: string | null | undefined;
-                                attributes?:
-                                  | { start?: any | null | undefined; end?: any | null | undefined }
-                                  | null
-                                  | undefined;
+                                attributes?: { start: any; end: any } | null | undefined;
                               }
                             | null
                             | undefined;
                         }
                       | null
                       | undefined;
-                    media?:
-                      | {
-                          data?:
-                            | { attributes?: { url: string } | null | undefined }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
+                    media: {
+                      data?: { attributes?: { url: string } | null | undefined } | null | undefined;
+                    };
                     comments?:
                       | {
                           data: Array<{
                             id?: string | null | undefined;
                             attributes?:
-                              | {
-                                  text?: string | null | undefined;
-                                  author?: string | null | undefined;
-                                  date?: any | null | undefined;
-                                }
+                              | { text: string; author?: string | null | undefined; date: any }
                               | null
                               | undefined;
                           }>;
@@ -1412,24 +1399,21 @@ export type GetPicturesQuery = {
           id?: string | null | undefined;
           attributes?:
             | {
-                media?:
-                  | {
-                      data?:
-                        | {
-                            attributes?:
-                              | {
-                                  width?: number | null | undefined;
-                                  height?: number | null | undefined;
-                                  formats?: any | null | undefined;
-                                }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
+                media: {
+                  data?:
+                    | {
+                        attributes?:
+                          | {
+                              width?: number | null | undefined;
+                              height?: number | null | undefined;
+                              formats?: any | null | undefined;
+                            }
+                          | null
+                          | undefined;
+                      }
+                    | null
+                    | undefined;
+                };
               }
             | null
             | undefined;
@@ -1472,20 +1456,17 @@ export type GetCollectionInfoQuery = {
                                     data: Array<{
                                       attributes?:
                                         | {
-                                            media?:
-                                              | {
-                                                  data?:
-                                                    | {
-                                                        attributes?:
-                                                          | { formats?: any | null | undefined }
-                                                          | null
-                                                          | undefined;
-                                                      }
-                                                    | null
-                                                    | undefined;
-                                                }
-                                              | null
-                                              | undefined;
+                                            media: {
+                                              data?:
+                                                | {
+                                                    attributes?:
+                                                      | { formats?: any | null | undefined }
+                                                      | null
+                                                      | undefined;
+                                                  }
+                                                | null
+                                                | undefined;
+                                            };
                                           }
                                         | null
                                         | undefined;
@@ -1547,12 +1528,7 @@ export type PostCommentMutationVariables = Exact<{
 
 export type PostCommentMutation = {
   createComment?:
-    | {
-        data?:
-          | { attributes?: { text?: string | null | undefined } | null | undefined }
-          | null
-          | undefined;
-      }
+    | { data?: { attributes?: { text: string } | null | undefined } | null | undefined }
     | null
     | undefined;
 };
@@ -1574,20 +1550,17 @@ export type GetKeywordTagSuggestionsQuery = {
                       data: Array<{
                         attributes?:
                           | {
-                              media?:
-                                | {
-                                    data?:
-                                      | {
-                                          attributes?:
-                                            | { formats?: any | null | undefined }
-                                            | null
-                                            | undefined;
-                                        }
-                                      | null
-                                      | undefined;
-                                  }
-                                | null
-                                | undefined;
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
                             }
                           | null
                           | undefined;
@@ -1612,15 +1585,12 @@ export type GetDecadePreviewThumbnailsQuery = {
         data: Array<{
           attributes?:
             | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
+                media: {
+                  data?:
+                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | null
+                    | undefined;
+                };
               }
             | null
             | undefined;
@@ -1633,15 +1603,12 @@ export type GetDecadePreviewThumbnailsQuery = {
         data: Array<{
           attributes?:
             | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
+                media: {
+                  data?:
+                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | null
+                    | undefined;
+                };
               }
             | null
             | undefined;
@@ -1654,15 +1621,12 @@ export type GetDecadePreviewThumbnailsQuery = {
         data: Array<{
           attributes?:
             | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
+                media: {
+                  data?:
+                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | null
+                    | undefined;
+                };
               }
             | null
             | undefined;
@@ -1675,15 +1639,12 @@ export type GetDecadePreviewThumbnailsQuery = {
         data: Array<{
           attributes?:
             | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
+                media: {
+                  data?:
+                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | null
+                    | undefined;
+                };
               }
             | null
             | undefined;
@@ -1696,15 +1657,12 @@ export type GetDecadePreviewThumbnailsQuery = {
         data: Array<{
           attributes?:
             | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
+                media: {
+                  data?:
+                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | null
+                    | undefined;
+                };
               }
             | null
             | undefined;
@@ -1717,15 +1675,12 @@ export type GetDecadePreviewThumbnailsQuery = {
         data: Array<{
           attributes?:
             | {
-                media?:
-                  | {
-                      data?:
-                        | { attributes?: { formats?: any | null | undefined } | null | undefined }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
+                media: {
+                  data?:
+                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | null
+                    | undefined;
+                };
               }
             | null
             | undefined;
