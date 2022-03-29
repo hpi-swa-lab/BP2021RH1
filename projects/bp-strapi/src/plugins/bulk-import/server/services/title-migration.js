@@ -3,7 +3,7 @@
 module.exports = ({ strapi }) => ({
     async migrateTitles() {
         const titleQuery = strapi.db.query('api::title.title');
-        // const titleService = strapi.service('api::title.title');
+        const descriptionService = strapi.service('api::description.description');
 
         const titles = await titleQuery.findMany({
             select: ['id', 'text'],
@@ -36,7 +36,7 @@ module.exports = ({ strapi }) => ({
 
         // Step 3: Join strings that are basically the same just with a number
         const seenTitles = [];
-        const discardedTitles = filteredTitles.filter(title => {
+        filteredTitles.filter(title => {
             const sm = (s) => s.replace(/(.*)[-|_]\d{1,2}$/gm, (_, group1) => `${group1}`).toLowerCase();
             const firstMatchingSeenTitle = seenTitles.find(seenTitle => seenTitle.text === sm(title.text))
             if (firstMatchingSeenTitle) {
@@ -51,7 +51,27 @@ module.exports = ({ strapi }) => ({
         });
         filteredTitles = seenTitles;
 
-        // const unfilteredTitles = titles.filter(title => !filteredTitles.includes(title));
+        // Convert titles to descriptions
+        for (const title of filteredTitles) {
+          const response = await descriptionService.create({
+            data: {
+              text: `<h1>${title.text}</h1>`,
+              pictures: title.pictures.map(p => p.id)
+            }
+          });
+          strapi.log.debug(`Converted title ${title.id} (${title.text}) into description with id ${response.id}`);
+        }
+
+        // Delete **all** titles
+        for (const title of titles) {
+          strapi.log.debug(`Deleting title ${title.id}: ${title.text}`);
+          await titleQuery.delete({
+            where: { id: title.id }
+          });
+        }
+
+        // Delte title-picture relation field in content type (do manually)
+        // Delete title content type (do manually)
 
         // Cleanup response
         filteredTitles = filteredTitles.map(title => ({ id: title.id, text: title.text }));
@@ -59,8 +79,7 @@ module.exports = ({ strapi }) => ({
         return {
             filteredTitles,
             filteredCount: filteredTitles.length,
-            // unfilteredTitles,
-            discardedTitles
+            count: titles.length
         };
     },
 });
