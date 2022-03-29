@@ -1689,7 +1689,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          descriptions {
+          descriptions(sort: "createdAt:desc") {
             data {
               id
               attributes {
