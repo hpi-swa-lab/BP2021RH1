@@ -1,17 +1,18 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import './CategoryPictureDisplay.scss';
-import CategoryPictureDisplay from './CategoryPictureDisplay';
+import './CollectionPictureDisplay.scss';
 import { FormControlLabel, Switch } from '@mui/material';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import {
-  useGetCategoryInfoQuery,
-  useGetCategoryTagsWithPicturesPublishedAfterQuery,
+  useGetCollectionInfoQuery,
+  useGetCollectionWithPicturesPublishedAfterQuery,
+  useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatCategoryTag } from '../../../graphql/additionalFlatTypes';
+import { FlatCollection } from '../../../graphql/additionalFlatTypes';
 import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
+import CollectionPictureDisplay from './CollectionPictureDisplay';
 
 const BrowseView = ({
   path,
@@ -26,35 +27,46 @@ const BrowseView = ({
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
-  const variables = path?.length
-    ? { categoryName: decodeBrowsePathComponent(path[path.length - 1]) }
-    : { categoryPriority: 1 };
 
-  const { data, loading, error } = useGetCategoryInfoQuery({ variables });
-  const categoryTags: FlatCategoryTag[] | undefined = useFlatQueryResponseData(data)?.categoryTags;
-  let filteredCategoryTags = categoryTags;
+  // Query the name of the root-collection if there is no path
+  const rootCollectionResult = useGetRootCollectionQuery({
+    skip: path && path.length > 0,
+  });
+  const rootCollectionName = useFlatQueryResponseData(rootCollectionResult.data)
+    ?.browseRootCollection.current.name;
+
+  const collectionQueryVariables = {
+    collectionName: path?.length
+      ? decodeBrowsePathComponent(path[path.length - 1])
+      : rootCollectionName,
+  };
+  const { data, loading, error } = useGetCollectionInfoQuery({
+    variables: collectionQueryVariables,
+  });
+  const collections: FlatCollection[] | undefined = useFlatQueryResponseData(data)?.collections;
+  let filteredCollections = collections;
 
   const picturePublishingDate = '2022-01-03T17:25:00Z'; // highly debatable
 
-  // Query the IDs of all CategoryTags that got new pictures inside them
-  const latestCategoryTagsResult = useGetCategoryTagsWithPicturesPublishedAfterQuery({
+  // Query the IDs of all Collections that got new pictures inside them
+  const latestCollectionsResult = useGetCollectionWithPicturesPublishedAfterQuery({
     variables: {
       date: picturePublishingDate,
     },
     skip: !communityView,
   });
-  const latestCategoryTags: { id: string }[] | undefined = useFlatQueryResponseData(
-    latestCategoryTagsResult.data
-  )?.categoryTags;
+  const latestCollections: { id: string }[] | undefined = useFlatQueryResponseData(
+    latestCollectionsResult.data
+  )?.collections;
 
   if (communityView) {
-    const latestCategoryTagIds = latestCategoryTags?.map(tag => tag.id);
-    if (latestCategoryTagIds && categoryTags) {
-      // Filter related tags to only accept those which got new pictures
-      filteredCategoryTags = categoryTags.map(tag => ({
-        ...tag,
-        related_tags: tag.related_tags?.filter(relatedTag =>
-          latestCategoryTagIds.includes(relatedTag.id)
+    const latestCollectionIds = latestCollections?.map(collection => collection.id);
+    if (latestCollectionIds && collections) {
+      // Filter child_collections to only accept those which got new pictures
+      filteredCollections = collections.map(collection => ({
+        ...collection,
+        child_collections: collection.child_collections?.filter(child =>
+          latestCollectionIds.includes(child.id)
         ),
       }));
     }
@@ -72,11 +84,11 @@ const BrowseView = ({
         }
         label={String(communityView ? t('common.community-view') : t('common.browse-view'))}
       />
-      <CategoryPictureDisplay
+      <CollectionPictureDisplay
         picturePublishingDate={communityView ? picturePublishingDate : undefined}
-        categoryTags={filteredCategoryTags}
-        loading={loading || latestCategoryTagsResult.loading}
-        error={error ?? latestCategoryTagsResult.error}
+        collections={filteredCollections}
+        loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
+        error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}
         path={path}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
