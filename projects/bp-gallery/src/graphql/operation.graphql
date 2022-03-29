@@ -11,7 +11,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        descriptions {
+        descriptions(sort: "createdAt:desc") {
           data {
             id
             attributes {
