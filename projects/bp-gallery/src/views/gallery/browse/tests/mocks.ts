@@ -212,7 +212,7 @@ export const GetCollectionInfoDocumentMocks = [
     request: {
       query: GetCollectionInfoDocument,
       variables: {
-        categoryPriority: 1,
+        collectionName: 'Das Herbert-Ahrens-Bilderarchiv',
       },
     },
     result: {
