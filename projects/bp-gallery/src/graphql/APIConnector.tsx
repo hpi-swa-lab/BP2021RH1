@@ -374,7 +374,6 @@ export type GenericMorph =
   | KeywordTag
   | Picture
   | TimeRangeTag
-  | Title
   | UploadFile
   | UsersPermissionsPermission
   | UsersPermissionsRole
@@ -508,7 +507,6 @@ export type Mutation = {
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  createTitle?: Maybe<TitleEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Create a new role */
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
@@ -522,7 +520,6 @@ export type Mutation = {
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  deleteTitle?: Maybe<TitleEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
@@ -548,7 +545,6 @@ export type Mutation = {
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  updateTitle?: Maybe<TitleEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Update an existing role */
   updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>;
@@ -583,10 +579,6 @@ export type MutationCreatePictureArgs = {
 
 export type MutationCreateTimeRangeTagArgs = {
   data: TimeRangeTagInput;
-};
-
-export type MutationCreateTitleArgs = {
-  data: TitleInput;
 };
 
 export type MutationCreateUploadFileArgs = {
@@ -626,10 +618,6 @@ export type MutationDeletePictureArgs = {
 };
 
 export type MutationDeleteTimeRangeTagArgs = {
-  id: Scalars['ID'];
-};
-
-export type MutationDeleteTitleArgs = {
   id: Scalars['ID'];
 };
 
@@ -722,11 +710,6 @@ export type MutationUpdateTimeRangeTagArgs = {
   id: Scalars['ID'];
 };
 
-export type MutationUpdateTitleArgs = {
-  data: TitleInput;
-  id: Scalars['ID'];
-};
-
 export type MutationUpdateUploadFileArgs = {
   data: UploadFileInput;
   id: Scalars['ID'];
@@ -774,7 +757,6 @@ export type Picture = {
   media?: Maybe<UploadFileEntityResponse>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
-  title?: Maybe<TitleEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   wordpress_id?: Maybe<Scalars['Int']>;
 };
@@ -841,7 +823,6 @@ export type PictureFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
-  title?: InputMaybe<TitleFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   wordpress_id?: InputMaybe<IntFilterInput>;
 };
@@ -855,7 +836,6 @@ export type PictureInput = {
   media?: InputMaybe<Scalars['ID']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
-  title?: InputMaybe<Scalars['ID']>;
   wordpress_id?: InputMaybe<Scalars['Int']>;
 };
 
@@ -885,8 +865,6 @@ export type Query = {
   pictures?: Maybe<PictureEntityResponseCollection>;
   timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
-  title?: Maybe<TitleEntityResponse>;
-  titles?: Maybe<TitleEntityResponseCollection>;
   uploadFile?: Maybe<UploadFileEntityResponse>;
   uploadFiles?: Maybe<UploadFileEntityResponseCollection>;
   usersPermissionsRole?: Maybe<UsersPermissionsRoleEntityResponse>;
@@ -971,17 +949,6 @@ export type QueryTimeRangeTagArgs = {
 
 export type QueryTimeRangeTagsArgs = {
   filters?: InputMaybe<TimeRangeTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type QueryTitleArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-export type QueryTitlesArgs = {
-  filters?: InputMaybe<TitleFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1092,53 +1059,6 @@ export type TimeRangeTagInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   start?: InputMaybe<Scalars['DateTime']>;
-};
-
-export type Title = {
-  createdAt?: Maybe<Scalars['DateTime']>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  text?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type TitlePicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type TitleEntity = {
-  attributes?: Maybe<Title>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type TitleEntityResponse = {
-  data?: Maybe<TitleEntity>;
-};
-
-export type TitleEntityResponseCollection = {
-  data: Array<TitleEntity>;
-  meta: ResponseCollectionMeta;
-};
-
-export type TitleFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<TitleFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  not?: InputMaybe<TitleFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<TitleFiltersInput>>>;
-  pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  text?: InputMaybe<StringFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
-};
-
-export type TitleInput = {
-  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
-  text?: InputMaybe<Scalars['String']>;
 };
 
 export type UploadFile = {
@@ -1584,6 +1504,35 @@ export type GetCollectionInfoQuery = {
             | null
             | undefined;
         }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetRootCollectionQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetRootCollectionQuery = {
+  browseRootCollection?:
+    | {
+        data?:
+          | {
+              attributes?:
+                | {
+                    current?:
+                      | {
+                          data?:
+                            | { attributes?: { name: string } | null | undefined }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
       }
     | null
     | undefined;
@@ -2104,6 +2053,68 @@ export type GetCollectionInfoLazyQueryHookResult = ReturnType<typeof useGetColle
 export type GetCollectionInfoQueryResult = Apollo.QueryResult<
   GetCollectionInfoQuery,
   GetCollectionInfoQueryVariables
+>;
+
+export const GetRootCollectionDocument = gql`
+  query getRootCollection {
+    browseRootCollection {
+      data {
+        attributes {
+          current {
+            data {
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetRootCollectionQuery__
+ *
+ * To run a query within a React component, call `useGetRootCollectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRootCollectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRootCollectionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetRootCollectionQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetRootCollectionQuery, GetRootCollectionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetRootCollectionQuery, GetRootCollectionQueryVariables>(
+    GetRootCollectionDocument,
+    options
+  );
+}
+
+export function useGetRootCollectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetRootCollectionQuery, GetRootCollectionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetRootCollectionQuery, GetRootCollectionQueryVariables>(
+    GetRootCollectionDocument,
+    options
+  );
+}
+
+export type GetRootCollectionQueryHookResult = ReturnType<typeof useGetRootCollectionQuery>;
+
+export type GetRootCollectionLazyQueryHookResult = ReturnType<typeof useGetRootCollectionLazyQuery>;
+
+export type GetRootCollectionQueryResult = Apollo.QueryResult<
+  GetRootCollectionQuery,
+  GetRootCollectionQueryVariables
 >;
 
 export const PostCommentDocument = gql`

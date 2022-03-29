@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import {
   useGetCollectionInfoQuery,
   useGetCollectionWithPicturesPublishedAfterQuery,
+  useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../graphql/additionalFlatTypes';
@@ -26,11 +27,22 @@ const BrowseView = ({
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
-  const variables = path?.length
-    ? { collectionName: decodeBrowsePathComponent(path[path.length - 1]) }
-    : { collectionName: 'Das Herbert-Ahrens-Bilderarchiv' }; // TODO
 
-  const { data, loading, error } = useGetCollectionInfoQuery({ variables });
+  // Query the name of the root-collection if there is no path
+  const rootCollectionResult = useGetRootCollectionQuery({
+    skip: path && path.length > 0,
+  });
+  const rootCollectionName = useFlatQueryResponseData(rootCollectionResult.data)
+    ?.browseRootCollection.current.name;
+
+  const collectionQueryVariables = {
+    collectionName: path?.length
+      ? decodeBrowsePathComponent(path[path.length - 1])
+      : rootCollectionName,
+  };
+  const { data, loading, error } = useGetCollectionInfoQuery({
+    variables: collectionQueryVariables,
+  });
   const collections: FlatCollection[] | undefined = useFlatQueryResponseData(data)?.collections;
   let filteredCollections = collections;
 
@@ -75,8 +87,8 @@ const BrowseView = ({
       <CollectionPictureDisplay
         picturePublishingDate={communityView ? picturePublishingDate : undefined}
         collections={filteredCollections}
-        loading={loading || latestCollectionsResult.loading}
-        error={error ?? latestCollectionsResult.error}
+        loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
+        error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}
         path={path}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
