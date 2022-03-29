@@ -40,5 +40,10 @@ module.exports = {
       path: '/migrate-titles',
       handler: 'titleMigration.migrateTitles',
     },
+    {
+      method: 'POST',
+      path: '/migrate-collections',
+      handler: 'collectionMigration.migrateCollections',
+    },
   ]
 };

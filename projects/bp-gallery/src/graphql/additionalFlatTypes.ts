@@ -1,18 +1,17 @@
 import {
-  CategoryTag,
+  Collection,
   Comment,
   Description,
   KeywordTag,
   Picture,
   Scalars,
   TimeRangeTag,
-  Title,
   UploadFile,
 } from './APIConnector';
 
 type ID = { id: Scalars['ID'] };
 
-type FlatCategoryTagWithoutRelations = ID & Omit<CategoryTag, 'pictures' | 'related_tags'>;
+type FlatCollectionWithoutRelations = ID & Omit<Collection, 'pictures' | 'child_collections'>;
 
 type FlatCommentWithoutRelations = ID & Omit<Comment, 'picture'>;
 
@@ -23,18 +22,10 @@ type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures'>;
 type FlatPictureWithoutRelations = ID &
   Omit<
     Picture,
-    | 'category_tags'
-    | 'comments'
-    | 'descriptions'
-    | 'keyword_tags'
-    | 'media'
-    | 'time_range_tag'
-    | 'title'
+    'collections' | 'comments' | 'descriptions' | 'keyword_tags' | 'media' | 'time_range_tag'
   >;
 
 type FlatTimeRangeTagWithoutRelations = ID & Omit<TimeRangeTag, 'pictures'>;
-
-type FlatTitleWithoutRelations = ID & Omit<Title, 'pictures'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -52,23 +43,18 @@ export type FlatTimeRangeTag = FlatTimeRangeTagWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
 };
 
-export type FlatTitle = FlatTitleWithoutRelations & {
+export type FlatCollection = FlatCollectionWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
-};
-
-export type FlatCategoryTag = FlatCategoryTagWithoutRelations & {
-  pictures?: FlatPictureWithoutRelations[];
-  related_tags?: FlatCategoryTagWithoutRelations[];
+  child_collections?: FlatCollectionWithoutRelations[];
 };
 
 export type FlatPicture = FlatPictureWithoutRelations & {
-  category_tags?: FlatCategoryTagWithoutRelations[];
+  collections?: FlatCollectionWithoutRelations[];
   comments?: FlatCommentWithoutRelations[];
   descriptions?: FlatDescriptionWithoutRelations[];
   keyword_tags?: FlatKeywordTagWithoutRelations[];
   media?: UploadFile;
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
-  title?: FlatTitleWithoutRelations;
 };
 
 type Thumbnail = {

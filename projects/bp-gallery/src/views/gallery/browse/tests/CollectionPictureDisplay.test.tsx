@@ -1,20 +1,20 @@
 import React from 'react';
-import CategoryPictureDisplay from '../CategoryPictureDisplay';
 import { render, screen } from '@testing-library/react';
+import CollectionPictureDisplay from '../CollectionPictureDisplay';
 
-const CategoryDescriptionMock = jest.fn();
-const CategoryDescriptionMockComponent = (props: any) => {
-  CategoryDescriptionMock(props);
-  return <div>CategoryDescriptionMock</div>;
+const CollectionDescriptionMock = jest.fn();
+const CollectionDescriptionMockComponent = (props: any) => {
+  CollectionDescriptionMock(props);
+  return <div>CollectionDescriptionMock</div>;
 };
-jest.mock('../CategoryDescription', () => CategoryDescriptionMockComponent);
+jest.mock('../CollectionDescription', () => CollectionDescriptionMockComponent);
 
-const SubCategoriesMock = jest.fn();
-const SubCategoriesMockComponent = (props: any) => {
-  SubCategoriesMock(props);
-  return <div>SubCategoriesMock</div>;
+const SubCollectionsMock = jest.fn();
+const SubCollectionsMockComponent = (props: any) => {
+  SubCollectionsMock(props);
+  return <div>SubCollectionsMock</div>;
 };
-jest.mock('../SubCategories', () => SubCategoriesMockComponent);
+jest.mock('../SubCollections', () => SubCollectionsMockComponent);
 
 const PictureScrollGridMock = jest.fn();
 const PictureScrollGridMockComponent = (props: any) => {
@@ -22,11 +22,11 @@ const PictureScrollGridMockComponent = (props: any) => {
   return <div>PictureScrollGridMock</div>;
 };
 jest.mock('../../common/PictureScrollGrid', () => PictureScrollGridMockComponent);
-describe('CategoryPictureDisplay', () => {
+describe('CollectionPictureDisplay', () => {
   describe('CommunityViewMode', () => {
     describe('Unit', () => {
-      //potentially not necessary to specify relatedTags
-      const relatedTags = [
+      //potentially not necessary to specify child collections
+      const childCollections = [
         {
           name: 'Hohegeiß',
           thumbnail: {
@@ -66,54 +66,54 @@ describe('CategoryPictureDisplay', () => {
           id: '3',
         },
       ];
-      const categoryTags = [
+      const collections = [
         {
           name: 'Das Herbert-Ahrens-Bilderarchiv',
           description: 'Einen „unglaublichen Schatz“ ...',
-          related_tags: relatedTags,
+          child_collections: childCollections,
           id: '1',
         },
       ];
       const path = ['test/path'];
       const picturePublishingDate = '05.05.2000';
 
-      test('Renders CategoryDescription component', async () => {
+      test('Renders CollectionDescription component', async () => {
         render(
-          <CategoryPictureDisplay
+          <CollectionPictureDisplay
             path={path}
             scrollPos={0}
             scrollHeight={0}
-            categoryTags={categoryTags}
+            collections={collections}
             picturePublishingDate={picturePublishingDate}
           />
         );
 
-        const categoryDescriptionDetails = screen.getByText('CategoryDescriptionMock');
-        expect(categoryDescriptionDetails).toBeInTheDocument();
-        expect(CategoryDescriptionMock).toHaveBeenCalledWith(
+        const collectionDescriptionDetails = screen.getByText('CollectionDescriptionMock');
+        expect(collectionDescriptionDetails).toBeInTheDocument();
+        expect(CollectionDescriptionMock).toHaveBeenCalledWith(
           expect.objectContaining({
-            description: categoryTags[0].description,
-            name: categoryTags[0].name,
+            description: collections[0].description,
+            name: collections[0].name,
           })
         );
       });
 
-      test('Renders SubCategories component', async () => {
+      test('Renders SubCollections component', async () => {
         render(
-          <CategoryPictureDisplay
+          <CollectionPictureDisplay
             path={path}
             scrollPos={0}
             scrollHeight={0}
-            categoryTags={categoryTags}
+            collections={collections}
             picturePublishingDate={picturePublishingDate}
           />
         );
 
-        const subCategoriesDetails = screen.getByText('SubCategoriesMock');
-        expect(subCategoriesDetails).toBeInTheDocument();
-        expect(SubCategoriesMock).toHaveBeenCalledWith(
+        const subCollectionsDetails = screen.getByText('SubCollectionsMock');
+        expect(subCollectionsDetails).toBeInTheDocument();
+        expect(SubCollectionsMock).toHaveBeenCalledWith(
           expect.objectContaining({
-            relatedTags: categoryTags[0].related_tags as unknown as {
+            childCollections: collections[0].child_collections as unknown as {
               thumbnail: any[];
               name: string;
             }[],
@@ -125,11 +125,11 @@ describe('CategoryPictureDisplay', () => {
 
       test('Renders PictureScrollGrid component', () => {
         render(
-          <CategoryPictureDisplay
+          <CollectionPictureDisplay
             path={path}
             scrollPos={0}
             scrollHeight={0}
-            categoryTags={categoryTags}
+            collections={collections}
             picturePublishingDate={picturePublishingDate}
           />
         );
@@ -141,13 +141,13 @@ describe('CategoryPictureDisplay', () => {
           expect.objectContaining({
             filters: {
               and: [
-                { category_tags: { id: { eq: categoryTags[0].id } } },
+                { collections: { id: { eq: collections[0].id } } },
                 { publishedAt: { gt: picturePublishingDate } },
               ],
             },
             scrollPos: 0,
             scrollHeight: 0,
-            hashbase: categoryTags[0].name,
+            hashbase: collections[0].name,
           })
         );
       });

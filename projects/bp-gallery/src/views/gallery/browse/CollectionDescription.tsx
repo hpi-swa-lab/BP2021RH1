@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import { sanitize } from 'dompurify';
-import './CategoryDescription.scss';
+import './CollectionDescription.scss';
 import { Icon, IconButton } from '@mui/material';
-import getLineBreaks from './../helpers/get-linebreaks';
+import getLineBreaks from '../helpers/get-linebreaks';
 
-const CategoryDescription = ({ description, name }: { description: string; name: string }) => {
+const CollectionDescription = ({ description, name }: { description: string; name: string }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const isDescriptionLong = useMemo(() => {
     const buffer = document.createElement('div');
-    buffer.className = 'category-description open';
+    buffer.className = 'collection-description open';
     buffer.innerText = description;
     document.body.appendChild(buffer);
     const split = getLineBreaks(buffer.childNodes[0]);
@@ -19,14 +19,14 @@ const CategoryDescription = ({ description, name }: { description: string; name:
   }, [description]);
 
   return (
-    <div className='category-container'>
+    <div className='collection-container'>
       <h2>{name}</h2>
       {description && (
         <div
           className={
             isOpen || !isDescriptionLong
-              ? 'category-description open'
-              : 'category-description closed'
+              ? 'collection-description open'
+              : 'collection-description closed'
           }
           dangerouslySetInnerHTML={{ __html: sanitize(description) }}
         />
@@ -44,4 +44,4 @@ const CategoryDescription = ({ description, name }: { description: string; name:
     </div>
   );
 };
-export default CategoryDescription;
+export default CollectionDescription;
