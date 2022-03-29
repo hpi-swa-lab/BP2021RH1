@@ -11,7 +11,7 @@
   },
   "attributes": {
     "text": {
-      "type": "text",
+      "type": "richtext",
       "required": true
     },
     "pictures": {
