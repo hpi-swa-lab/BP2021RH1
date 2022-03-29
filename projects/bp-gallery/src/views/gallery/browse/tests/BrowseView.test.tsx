@@ -2,11 +2,16 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { MockedResponse } from '@apollo/client/testing';
 import { renderRouteWithAPIMocks } from '../../../../testUtils';
-import { GetCollectionInfoDocumentMocks, GetCollectionsPublishedAfterDateMocks } from './mocks';
+import {
+  GetCollectionInfoDocumentMocks,
+  GetCollectionsPublishedAfterDateMocks,
+  GetRootCollectionMocks,
+} from './mocks';
 
 const CommunityViewMocks: MockedResponse[] = [
   ...GetCollectionsPublishedAfterDateMocks,
   ...GetCollectionInfoDocumentMocks,
+  ...GetRootCollectionMocks,
 ];
 
 describe('BrowseView', () => {

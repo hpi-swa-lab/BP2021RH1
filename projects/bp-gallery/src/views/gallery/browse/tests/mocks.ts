@@ -1,6 +1,7 @@
 import {
   GetCollectionInfoDocument,
   GetCollectionWithPicturesPublishedAfterDocument,
+  GetRootCollectionDocument,
 } from '../../../../graphql/APIConnector';
 
 export const ChildCollectionsMocks = [
@@ -202,6 +203,31 @@ export const ChildCollectionsFirstLevelMocks = [
             },
           },
         ],
+      },
+    },
+  },
+];
+
+export const GetRootCollectionMocks = [
+  {
+    request: {
+      query: GetRootCollectionDocument,
+    },
+    result: {
+      data: {
+        browseRootCollection: {
+          data: {
+            attributes: {
+              current: {
+                data: {
+                  attributes: {
+                    name: 'Das Herbert-Ahrens-Bilderarchiv',
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     },
   },
