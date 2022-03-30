@@ -24,7 +24,13 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::picture.picture",
-      "inversedBy": "location_tags"
+      "mappedBy": "location_tags"
+    },
+    "verified_pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "verified_location_tags"
     }
   }
 }

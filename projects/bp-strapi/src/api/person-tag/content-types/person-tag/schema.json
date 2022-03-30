@@ -20,7 +20,13 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::picture.picture",
-      "inversedBy": "person_tags"
+      "mappedBy": "person_tags"
+    },
+    "verified_pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "verified_person_tags"
     }
   }
 }

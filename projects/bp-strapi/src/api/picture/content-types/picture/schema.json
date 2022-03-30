@@ -66,6 +66,30 @@
       "relation": "manyToMany",
       "target": "api::location-tag.location-tag",
       "inversedBy": "pictures"
+    },
+    "verified_person_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::person-tag.person-tag",
+      "inversedBy": "verified_pictures"
+    },
+    "verified_location_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::location-tag.location-tag",
+      "inversedBy": "verified_pictures"
+    },
+    "verified_keyword_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword-tag.keyword-tag",
+      "inversedBy": "verified_pictures"
+    },
+    "verified_time_range_tag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::time-range-tag.time-range-tag",
+      "inversedBy": "verified_pictures"
     }
   }
 }

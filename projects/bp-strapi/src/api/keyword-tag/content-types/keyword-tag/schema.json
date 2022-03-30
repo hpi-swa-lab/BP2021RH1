@@ -20,6 +20,12 @@
       "relation": "manyToMany",
       "target": "api::picture.picture",
       "mappedBy": "keyword_tags"
+    },
+    "verified_pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "verified_keyword_tags"
     }
   }
 }
