@@ -1,4 +1,4 @@
-import { flattenQueryResponseData } from '../queryUtils';
+import { flattenQueryResponseData, mergeVerifiedWithUnverifiedData } from '../queryUtils';
 
 describe('flattenQueryResponseData', () => {
   it('should not throw when passed undefined', () => {
@@ -103,5 +103,76 @@ describe('flattenQueryResponseData', () => {
     ];
 
     expect(flattenQueryResponseData(input)).toEqual(expectedOutput);
+  });
+});
+
+describe('mergeVerifiedWithUnverifiedData', () => {
+  it('should merge verified with unverified data recursively', () => {
+    const input = {
+      keywordTag: {
+        id: '15',
+        pictures: [
+          {
+            id: '661',
+            time_range_tag: {
+              id: '14',
+            },
+            verified_time_range_tag: {
+              id: '63',
+            },
+          },
+          {
+            id: '670',
+            time_range_tag: {
+              id: '14',
+            },
+            verified_time_range_tag: null,
+          },
+        ],
+        verified_pictures: [
+          {
+            id: '660',
+            time_range_tag: null,
+            verified_time_range_tag: {
+              id: '14',
+            },
+          },
+        ],
+      },
+    };
+
+    const expectedOutput = {
+      keywordTag: {
+        id: '15',
+        pictures: [
+          {
+            id: '660',
+            time_range_tag: {
+              id: '14',
+              verified: true,
+            },
+            verified: true,
+          },
+          {
+            id: '661',
+            time_range_tag: {
+              id: '63',
+              verified: true,
+            },
+            verified: false,
+          },
+          {
+            id: '670',
+            time_range_tag: {
+              id: '14',
+              verified: false,
+            },
+            verified: false,
+          },
+        ],
+      },
+    };
+
+    expect(mergeVerifiedWithUnverifiedData(input)).toEqual(expectedOutput);
   });
 });
