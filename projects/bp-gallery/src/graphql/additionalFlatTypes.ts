@@ -3,6 +3,8 @@ import {
   Comment,
   Description,
   KeywordTag,
+  LocationTag,
+  PersonTag,
   Picture,
   Scalars,
   TimeRangeTag,
@@ -17,15 +19,28 @@ type FlatCommentWithoutRelations = ID & Omit<Comment, 'picture'>;
 
 type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
-type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures'>;
+type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
 type FlatPictureWithoutRelations = ID &
   Omit<
     Picture,
-    'collections' | 'comments' | 'descriptions' | 'keyword_tags' | 'media' | 'time_range_tag'
+    | 'collections'
+    | 'comments'
+    | 'descriptions'
+    | 'keyword_tags'
+    | 'media'
+    | 'time_range_tag'
+    | 'verified_keyword_tags'
+    | 'verified_time_range_tag'
+    | 'verified_location_tags'
+    | 'verified_person_tags'
   >;
 
-type FlatTimeRangeTagWithoutRelations = ID & Omit<TimeRangeTag, 'pictures'>;
+type FlatLocationTagWithoutRelations = ID & Omit<LocationTag, 'pictures' | 'verified_pictures'>;
+
+type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'verified_pictures'>;
+
+type FlatTimeRangeTagWithoutRelations = ID & Omit<TimeRangeTag, 'pictures' | 'verified_pictures'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -36,6 +51,14 @@ export type FlatDescription = FlatDescriptionWithoutRelations & {
 };
 
 export type FlatKeywordTag = FlatKeywordTagWithoutRelations & {
+  pictures?: FlatPictureWithoutRelations[];
+};
+
+export type FlatLocationTag = FlatLocationTagWithoutRelations & {
+  pictures?: FlatPictureWithoutRelations[];
+};
+
+export type FlatPersonTag = FlatPersonTagWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
 };
 
@@ -53,6 +76,8 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   comments?: FlatCommentWithoutRelations[];
   descriptions?: FlatDescriptionWithoutRelations[];
   keyword_tags?: FlatKeywordTagWithoutRelations[];
+  person_tags?: FlatPersonTagWithoutRelations[];
+  location_tags?: FlatLocationTagWithoutRelations[];
   media?: UploadFile;
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
 };
