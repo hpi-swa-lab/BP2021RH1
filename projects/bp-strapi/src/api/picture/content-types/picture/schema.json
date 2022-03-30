@@ -54,6 +54,18 @@
       "relation": "manyToMany",
       "target": "api::collection.collection",
       "inversedBy": "pictures"
+    },
+    "person_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::person-tag.person-tag",
+      "inversedBy": "pictures"
+    },
+    "location_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::location-tag.location-tag",
+      "inversedBy": "pictures"
     }
   }
 }

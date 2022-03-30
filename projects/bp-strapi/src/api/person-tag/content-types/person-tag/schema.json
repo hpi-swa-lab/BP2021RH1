@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "person_tags",
+  "info": {
+    "singularName": "person-tag",
+    "pluralName": "person-tags",
+    "displayName": "Person_Tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "person_tags"
+    }
+  }
+}
