@@ -42,6 +42,7 @@ const BrowseView = ({
   };
   const { data, loading, error } = useGetCollectionInfoQuery({
     variables: collectionQueryVariables,
+    skip: !!rootCollectionResult.loading,
   });
   const collections: FlatCollection[] | undefined =
     useSimplifiedQueryResponseData(data)?.collections;

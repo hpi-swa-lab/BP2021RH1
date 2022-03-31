@@ -71,7 +71,7 @@ const PictureScrollGrid = ({
   } else if (pictures?.length) {
     return <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />;
   } else {
-    return <div>{t('common.no-picture')}</div>;
+    return null;
   }
 };
 
