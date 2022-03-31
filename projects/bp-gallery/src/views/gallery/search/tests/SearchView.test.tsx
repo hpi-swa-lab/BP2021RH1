@@ -45,13 +45,6 @@ describe('SearchView called with parameters which do not match any pictures', ()
     });
   });
 
-  it('should render a text which informs, that there is no matching picture', async () => {
-    await waitFor(() => {
-      const noPictureMessage = screen.getByText('common.no-picture');
-      expect(noPictureMessage).toBeInTheDocument();
-    });
-  });
-
   it('should not render the SearchHub', async () => {
     await waitFor(() => {
       expect(() => screen.getAllByText('SearchHubMock')).toThrow();

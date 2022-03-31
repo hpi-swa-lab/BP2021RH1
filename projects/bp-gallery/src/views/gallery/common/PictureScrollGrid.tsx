@@ -20,7 +20,6 @@ const PictureScrollGrid = ({
   hashbase: string;
   previewPictureCallback?: (picture: FlatPicture) => void;
 }) => {
-  const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
