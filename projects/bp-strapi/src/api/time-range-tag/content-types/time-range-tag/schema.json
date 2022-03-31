@@ -24,6 +24,12 @@
       "relation": "oneToMany",
       "target": "api::picture.picture",
       "mappedBy": "time_range_tag"
+    },
+    "verified_pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "verified_time_range_tag"
     }
   }
 }

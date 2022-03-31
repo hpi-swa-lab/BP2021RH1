@@ -17,6 +17,11 @@ module.exports = {
     },
     {
       method: 'POST',
+      path: '/import-from-excel',
+      handler: 'bulkImport.importFromExcel'
+    },
+    {
+      method: 'POST',
       path: '/add-time-ranges',
       handler: 'bulkImport.addTimeRanges',
     },
@@ -45,5 +50,10 @@ module.exports = {
       path: '/migrate-collections',
       handler: 'collectionMigration.migrateCollections',
     },
+    {
+      method: 'POST',
+      path: '/reduce-picture-collection-relations',
+      handler: 'bulkImport.reducePictureCollectionRelations'
+    }
   ]
 };

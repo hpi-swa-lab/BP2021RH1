@@ -71,73 +71,6 @@ export type BrowseRootCollectionInput = {
   publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
-export type CategoryTag = {
-  createdAt?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  pictures?: Maybe<PictureRelationResponseCollection>;
-  priority: Scalars['Int'];
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  related_tags?: Maybe<CategoryTagRelationResponseCollection>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type CategoryTagPicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type CategoryTagRelated_TagsArgs = {
-  filters?: InputMaybe<CategoryTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type CategoryTagEntity = {
-  attributes?: Maybe<CategoryTag>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type CategoryTagEntityResponse = {
-  data?: Maybe<CategoryTagEntity>;
-};
-
-export type CategoryTagEntityResponseCollection = {
-  data: Array<CategoryTagEntity>;
-  meta: ResponseCollectionMeta;
-};
-
-export type CategoryTagFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<CategoryTagFiltersInput>>>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  description?: InputMaybe<StringFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
-  name?: InputMaybe<StringFilterInput>;
-  not?: InputMaybe<CategoryTagFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<CategoryTagFiltersInput>>>;
-  pictures?: InputMaybe<PictureFiltersInput>;
-  priority?: InputMaybe<IntFilterInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
-  related_tags?: InputMaybe<CategoryTagFiltersInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
-};
-
-export type CategoryTagInput = {
-  description?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  priority?: InputMaybe<Scalars['Int']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
-  related_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-};
-
-export type CategoryTagRelationResponseCollection = {
-  data: Array<CategoryTagEntity>;
-};
-
 export type Collection = {
   child_collections?: Maybe<CollectionRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
@@ -262,6 +195,18 @@ export type CommentRelationResponseCollection = {
   data: Array<CommentEntity>;
 };
 
+export type ComponentLocationCoordinates = {
+  id: Scalars['ID'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+};
+
+export type ComponentLocationCoordinatesInput = {
+  id?: InputMaybe<Scalars['ID']>;
+  latitude?: InputMaybe<Scalars['Float']>;
+  longitude?: InputMaybe<Scalars['Float']>;
+};
+
 export type DateTimeFilterInput = {
   and?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   between?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
@@ -367,11 +312,13 @@ export type FloatFilterInput = {
 
 export type GenericMorph =
   | BrowseRootCollection
-  | CategoryTag
   | Collection
   | Comment
+  | ComponentLocationCoordinates
   | Description
   | KeywordTag
+  | LocationTag
+  | PersonTag
   | Picture
   | TimeRangeTag
   | UploadFile
@@ -454,9 +401,17 @@ export type KeywordTag = {
   pictures?: Maybe<PictureRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+  verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
 
 export type KeywordTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type KeywordTagVerified_PicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
@@ -487,24 +442,90 @@ export type KeywordTagFiltersInput = {
   pictures?: InputMaybe<PictureFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
+  verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
 
 export type KeywordTagInput = {
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
+  verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
 export type KeywordTagRelationResponseCollection = {
   data: Array<KeywordTagEntity>;
 };
 
+export type LocationTag = {
+  coordinates?: Maybe<ComponentLocationCoordinates>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  name: Scalars['String'];
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  verified_pictures?: Maybe<PictureRelationResponseCollection>;
+};
+
+export type LocationTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type LocationTagVerified_PicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type LocationTagEntity = {
+  attributes?: Maybe<LocationTag>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type LocationTagEntityResponse = {
+  data?: Maybe<LocationTagEntity>;
+};
+
+export type LocationTagEntityResponseCollection = {
+  data: Array<LocationTagEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type LocationTagFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<LocationTagFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  verified_pictures?: InputMaybe<PictureFiltersInput>;
+};
+
+export type LocationTagInput = {
+  coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
+  name?: InputMaybe<Scalars['String']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+};
+
+export type LocationTagRelationResponseCollection = {
+  data: Array<LocationTagEntity>;
+};
+
 export type Mutation = {
-  createCategoryTag?: Maybe<CategoryTagEntityResponse>;
   createCollection?: Maybe<CollectionEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
   createDescription?: Maybe<DescriptionEntityResponse>;
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  createLocationTag?: Maybe<LocationTagEntityResponse>;
+  createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -513,11 +534,12 @@ export type Mutation = {
   /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   deleteBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
-  deleteCategoryTag?: Maybe<CategoryTagEntityResponse>;
   deleteCollection?: Maybe<CollectionEntityResponse>;
   deleteComment?: Maybe<CommentEntityResponse>;
   deleteDescription?: Maybe<DescriptionEntityResponse>;
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  deleteLocationTag?: Maybe<LocationTagEntityResponse>;
+  deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -537,12 +559,13 @@ export type Mutation = {
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
-  updateCategoryTag?: Maybe<CategoryTagEntityResponse>;
   updateCollection?: Maybe<CollectionEntityResponse>;
   updateComment?: Maybe<CommentEntityResponse>;
   updateDescription?: Maybe<DescriptionEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  updateLocationTag?: Maybe<LocationTagEntityResponse>;
+  updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -551,10 +574,6 @@ export type Mutation = {
   /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
-};
-
-export type MutationCreateCategoryTagArgs = {
-  data: CategoryTagInput;
 };
 
 export type MutationCreateCollectionArgs = {
@@ -571,6 +590,14 @@ export type MutationCreateDescriptionArgs = {
 
 export type MutationCreateKeywordTagArgs = {
   data: KeywordTagInput;
+};
+
+export type MutationCreateLocationTagArgs = {
+  data: LocationTagInput;
+};
+
+export type MutationCreatePersonTagArgs = {
+  data: PersonTagInput;
 };
 
 export type MutationCreatePictureArgs = {
@@ -593,10 +620,6 @@ export type MutationCreateUsersPermissionsUserArgs = {
   data: UsersPermissionsUserInput;
 };
 
-export type MutationDeleteCategoryTagArgs = {
-  id: Scalars['ID'];
-};
-
 export type MutationDeleteCollectionArgs = {
   id: Scalars['ID'];
 };
@@ -610,6 +633,14 @@ export type MutationDeleteDescriptionArgs = {
 };
 
 export type MutationDeleteKeywordTagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteLocationTagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeletePersonTagArgs = {
   id: Scalars['ID'];
 };
 
@@ -670,11 +701,6 @@ export type MutationUpdateBrowseRootCollectionArgs = {
   data: BrowseRootCollectionInput;
 };
 
-export type MutationUpdateCategoryTagArgs = {
-  data: CategoryTagInput;
-  id: Scalars['ID'];
-};
-
 export type MutationUpdateCollectionArgs = {
   data: CollectionInput;
   id: Scalars['ID'];
@@ -697,6 +723,16 @@ export type MutationUpdateFileInfoArgs = {
 
 export type MutationUpdateKeywordTagArgs = {
   data: KeywordTagInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateLocationTagArgs = {
+  data: LocationTagInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdatePersonTagArgs = {
+  data: PersonTagInput;
   id: Scalars['ID'];
 };
 
@@ -747,25 +783,85 @@ export type PaginationArg = {
   start?: InputMaybe<Scalars['Int']>;
 };
 
+export type PersonTag = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  name: Scalars['String'];
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  verified_pictures?: Maybe<PictureRelationResponseCollection>;
+};
+
+export type PersonTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PersonTagVerified_PicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PersonTagEntity = {
+  attributes?: Maybe<PersonTag>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PersonTagEntityResponse = {
+  data?: Maybe<PersonTagEntity>;
+};
+
+export type PersonTagEntityResponseCollection = {
+  data: Array<PersonTagEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type PersonTagFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<PersonTagFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<PersonTagFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<PersonTagFiltersInput>>>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  verified_pictures?: InputMaybe<PictureFiltersInput>;
+};
+
+export type PersonTagInput = {
+  name?: InputMaybe<Scalars['String']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+};
+
+export type PersonTagRelationResponseCollection = {
+  data: Array<PersonTagEntity>;
+};
+
 export type Picture = {
-  category_tags?: Maybe<CategoryTagRelationResponseCollection>;
+  collection?: Maybe<CollectionEntityResponse>;
   collections?: Maybe<CollectionRelationResponseCollection>;
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
+  location_tags?: Maybe<LocationTagRelationResponseCollection>;
   media: UploadFileEntityResponse;
+  person_tags?: Maybe<PersonTagRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+  verified_keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
+  verified_location_tags?: Maybe<LocationTagRelationResponseCollection>;
+  verified_person_tags?: Maybe<PersonTagRelationResponseCollection>;
+  verified_time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   wordpress_id?: Maybe<Scalars['Int']>;
-};
-
-export type PictureCategory_TagsArgs = {
-  filters?: InputMaybe<CategoryTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureCollectionsArgs = {
@@ -796,6 +892,41 @@ export type PictureKeyword_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureLocation_TagsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PicturePerson_TagsArgs = {
+  filters?: InputMaybe<PersonTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureVerified_Keyword_TagsArgs = {
+  filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureVerified_Location_TagsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureVerified_Person_TagsArgs = {
+  filters?: InputMaybe<PersonTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureEntity = {
   attributes?: Maybe<Picture>;
   id?: Maybe<Scalars['ID']>;
@@ -812,30 +943,42 @@ export type PictureEntityResponseCollection = {
 
 export type PictureFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
-  category_tags?: InputMaybe<CategoryTagFiltersInput>;
+  collection?: InputMaybe<CollectionFiltersInput>;
   collections?: InputMaybe<CollectionFiltersInput>;
   comments?: InputMaybe<CommentFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
+  location_tags?: InputMaybe<LocationTagFiltersInput>;
   not?: InputMaybe<PictureFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
+  person_tags?: InputMaybe<PersonTagFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
+  verified_keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
+  verified_location_tags?: InputMaybe<LocationTagFiltersInput>;
+  verified_person_tags?: InputMaybe<PersonTagFiltersInput>;
+  verified_time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   wordpress_id?: InputMaybe<IntFilterInput>;
 };
 
 export type PictureInput = {
-  category_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  collection?: InputMaybe<Scalars['ID']>;
   collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
+  person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
+  verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  verified_location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  verified_person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  verified_time_range_tag?: InputMaybe<Scalars['ID']>;
   wordpress_id?: InputMaybe<Scalars['Int']>;
 };
 
@@ -850,8 +993,6 @@ export enum PublicationState {
 
 export type Query = {
   browseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
-  categoryTag?: Maybe<CategoryTagEntityResponse>;
-  categoryTags?: Maybe<CategoryTagEntityResponseCollection>;
   collection?: Maybe<CollectionEntityResponse>;
   collections?: Maybe<CollectionEntityResponseCollection>;
   comment?: Maybe<CommentEntityResponse>;
@@ -860,7 +1001,11 @@ export type Query = {
   descriptions?: Maybe<DescriptionEntityResponseCollection>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
+  locationTag?: Maybe<LocationTagEntityResponse>;
+  locationTags?: Maybe<LocationTagEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
+  personTag?: Maybe<PersonTagEntityResponse>;
+  personTags?: Maybe<PersonTagEntityResponseCollection>;
   picture?: Maybe<PictureEntityResponse>;
   pictures?: Maybe<PictureEntityResponseCollection>;
   timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
@@ -875,17 +1020,6 @@ export type Query = {
 
 export type QueryBrowseRootCollectionArgs = {
   publicationState?: InputMaybe<PublicationState>;
-};
-
-export type QueryCategoryTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-export type QueryCategoryTagsArgs = {
-  filters?: InputMaybe<CategoryTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type QueryCollectionArgs = {
@@ -927,6 +1061,28 @@ export type QueryKeywordTagArgs = {
 
 export type QueryKeywordTagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryLocationTagArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryLocationTagsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryPersonTagArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPersonTagsArgs = {
+  filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1018,9 +1174,17 @@ export type TimeRangeTag = {
   publishedAt?: Maybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
   updatedAt?: Maybe<Scalars['DateTime']>;
+  verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
 
 export type TimeRangeTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type TimeRangeTagVerified_PicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
@@ -1052,6 +1216,7 @@ export type TimeRangeTagFiltersInput = {
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   start?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
+  verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
 
 export type TimeRangeTagInput = {
@@ -1059,6 +1224,7 @@ export type TimeRangeTagInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   start?: InputMaybe<Scalars['DateTime']>;
+  verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
 export type UploadFile = {
@@ -1350,6 +1516,18 @@ export type GetPictureInfoQuery = {
                       | null
                       | undefined;
                     time_range_tag?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?: { start: any; end: any } | null | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                    verified_time_range_tag?:
                       | {
                           data?:
                             | {
@@ -1725,6 +1903,15 @@ export const GetPictureInfoDocument = gql`
             }
           }
           time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+              }
+            }
+          }
+          verified_time_range_tag {
             data {
               id
               attributes {
