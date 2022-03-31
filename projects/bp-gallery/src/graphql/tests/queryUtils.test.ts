@@ -19,6 +19,20 @@ describe('flattenQueryResponseData', () => {
     expect(flattenQueryResponseData(input)).toEqual(expectedOutput);
   });
 
+  it('should replace data key with null value inside it', () => {
+    const input = {
+      singleData: {
+        data: null,
+      },
+    };
+
+    const expectedOutput = {
+      singleData: null,
+    };
+
+    expect(flattenQueryResponseData(input)).toEqual(expectedOutput);
+  });
+
   it('should replace data and attributes key with objects inside them', () => {
     const input = {
       singleData: {

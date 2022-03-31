@@ -5,7 +5,9 @@ import { useMemo } from 'react';
  * The `data` and `attributes` layers in between the relevant data get removed.
  * @see https://stackoverflow.com/a/68047417
  */
-export const flattenQueryResponseData = (queryResponseData?: { [key: string]: any }): any => {
+export const flattenQueryResponseData = (queryResponseData?: {
+  [key: string]: any;
+}): { [key: string]: any } | undefined => {
   if (!queryResponseData) return;
 
   if (queryResponseData instanceof Array) {
@@ -28,6 +30,9 @@ export const flattenQueryResponseData = (queryResponseData?: { [key: string]: an
       // If only a single entity was requested, replace `data` key with this entity (object)
       // and initiate recursion inside it.
       result = flattenQueryResponseData(value);
+    } else if (key === 'data' && !value) {
+      // If there is no value under the `data` key, replace this key with `null`.
+      result = null;
     } else if (key === 'attributes' && value instanceof Object) {
       result = {
         // Replace the `attributes` key with its value object
