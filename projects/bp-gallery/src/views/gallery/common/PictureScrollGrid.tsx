@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
-import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
@@ -20,7 +19,6 @@ const PictureScrollGrid = ({
   hashbase: string;
   previewPictureCallback?: (picture: FlatPicture) => void;
 }) => {
-  const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -34,7 +32,7 @@ const PictureScrollGrid = ({
     },
     notifyOnNetworkStatusChange: true,
   });
-  const pictures: FlatPicture[] | undefined = useFlatQueryResponseData(data)?.pictures;
+  const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   useEffect(() => {
     if (previewPictureCallback && pictures && pictures.length) {
@@ -71,7 +69,7 @@ const PictureScrollGrid = ({
   } else if (pictures?.length) {
     return <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />;
   } else {
-    return <div>{t('common.no-picture')}</div>;
+    return null;
   }
 };
 

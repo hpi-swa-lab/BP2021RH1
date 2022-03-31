@@ -1,10 +1,11 @@
 {
   "kind": "collectionType",
-  "collectionName": "keyword_tags",
+  "collectionName": "person_tags",
   "info": {
-    "singularName": "keyword-tag",
-    "pluralName": "keyword-tags",
-    "displayName": "Keyword_Tag"
+    "singularName": "person-tag",
+    "pluralName": "person-tags",
+    "displayName": "Person_Tag",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,13 +20,13 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::picture.picture",
-      "mappedBy": "keyword_tags"
+      "mappedBy": "person_tags"
     },
     "verified_pictures": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::picture.picture",
-      "mappedBy": "verified_keyword_tags"
+      "mappedBy": "verified_person_tags"
     }
   }
 }

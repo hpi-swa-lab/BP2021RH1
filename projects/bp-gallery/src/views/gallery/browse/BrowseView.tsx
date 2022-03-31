@@ -9,7 +9,7 @@ import {
   useGetCollectionWithPicturesPublishedAfterQuery,
   useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
-import { useFlatQueryResponseData } from '../../../graphql/queryUtils';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../graphql/additionalFlatTypes';
 import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
 import CollectionPictureDisplay from './CollectionPictureDisplay';
@@ -32,7 +32,7 @@ const BrowseView = ({
   const rootCollectionResult = useGetRootCollectionQuery({
     skip: path && path.length > 0,
   });
-  const rootCollectionName = useFlatQueryResponseData(rootCollectionResult.data)
+  const rootCollectionName = useSimplifiedQueryResponseData(rootCollectionResult.data)
     ?.browseRootCollection.current.name;
 
   const collectionQueryVariables = {
@@ -42,8 +42,10 @@ const BrowseView = ({
   };
   const { data, loading, error } = useGetCollectionInfoQuery({
     variables: collectionQueryVariables,
+    skip: !!rootCollectionResult.loading,
   });
-  const collections: FlatCollection[] | undefined = useFlatQueryResponseData(data)?.collections;
+  const collections: FlatCollection[] | undefined =
+    useSimplifiedQueryResponseData(data)?.collections;
   let filteredCollections = collections;
 
   const picturePublishingDate = '2022-01-03T17:25:00Z'; // highly debatable
@@ -55,7 +57,7 @@ const BrowseView = ({
     },
     skip: !communityView,
   });
-  const latestCollections: { id: string }[] | undefined = useFlatQueryResponseData(
+  const latestCollections: { id: string }[] | undefined = useSimplifiedQueryResponseData(
     latestCollectionsResult.data
   )?.collections;
 

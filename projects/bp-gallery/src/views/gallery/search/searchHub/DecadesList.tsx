@@ -8,7 +8,7 @@ import ItemList from '../../common/ItemList';
 import { asApiPath } from '../../../../App';
 import { asSearchPath, SearchType } from '../SearchView';
 import { useGetDecadePreviewThumbnailsQuery } from '../../../../graphql/APIConnector';
-import { useFlatQueryResponseData } from '../../../../graphql/queryUtils';
+import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { FlatDecadeThumbnails } from '../../../../graphql/additionalFlatTypes';
 
 const DECADE_NAMES: string[] = ['40', '50', '60', '70', '80', '90'];
@@ -18,7 +18,7 @@ const DecadesList = () => {
   const history: History = useHistory();
 
   const { data, loading, error } = useGetDecadePreviewThumbnailsQuery();
-  const decadeThumbnails: FlatDecadeThumbnails | undefined = useFlatQueryResponseData(data);
+  const decadeThumbnails: FlatDecadeThumbnails | undefined = useSimplifiedQueryResponseData(data);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
