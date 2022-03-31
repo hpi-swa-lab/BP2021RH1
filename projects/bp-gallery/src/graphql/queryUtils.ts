@@ -54,9 +54,16 @@ export const useFlatQueryResponseData = (queryResponseData?: { [key: string]: an
 
 const VERIFIED_PREFIX = 'verified_';
 
+/**
+ * Recursively merges the data of verified and unverified relations.<br>
+ * When it comes to an *n:m* relation, it will output an array first filled with the verified entities
+ * and the unverified ones afterwords.<br>
+ * When it comes to a *1:n* relation, it will always use the verified entity if there is one.<br>
+ * **Important note**: the input data needs to be flattened via {@link flattenQueryResponseData} before!
+ */
 export const mergeVerifiedWithUnverifiedData = (flatQueryResponseData?: {
   [key: string]: any;
-}): any => {
+}): { [key: string]: any } | undefined => {
   if (!flatQueryResponseData) return;
 
   if (flatQueryResponseData instanceof Array) {
@@ -67,21 +74,27 @@ export const mergeVerifiedWithUnverifiedData = (flatQueryResponseData?: {
   const result: any = {};
   for (const [key, value] of Object.entries<unknown>(flatQueryResponseData)) {
     if (!key.startsWith(VERIFIED_PREFIX) && value instanceof Object) {
-      // Keep the semantically relevant key and initiate recursion within its value object.
-      result[key] = mergeVerifiedWithUnverifiedData(value);
+      const alreadyStoredResult = result[key];
+      result[key] = alreadyStoredResult
+        ? // If there is already a result stored under that key,
+          // it must have been put there by the function before.
+          alreadyStoredResult
+        : // Otherwise, keep initiate further recursion inside the value object.
+          mergeVerifiedWithUnverifiedData(value);
     } else if (key.startsWith(VERIFIED_PREFIX) && value instanceof Array) {
       // Omit the verified prefix to get the regular key of the relation
       const regularKey = key.slice(VERIFIED_PREFIX.length);
+      const regularData = flatQueryResponseData[regularKey];
 
       // First add verified entities to the result.
       let mergedEntities = value.map(entity => ({ ...entity, verified: true }));
 
-      if (result[regularKey] && result[regularKey] instanceof Array) {
+      if (regularData && regularData instanceof Array) {
         // Merge verified with unverified entities.
         mergedEntities = [
           ...mergedEntities,
           // Mark regular entities as unverified.
-          ...result[regularKey].map((entity: any) => ({ ...entity, verified: false })),
+          ...regularData.map(entity => ({ ...entity, verified: false })),
         ];
       }
 
@@ -99,9 +112,13 @@ export const mergeVerifiedWithUnverifiedData = (flatQueryResponseData?: {
     } else if (key.startsWith(VERIFIED_PREFIX) && !value) {
       // Omit the verified prefix to get the regular key of the relation.
       const regularKey = key.slice(VERIFIED_PREFIX.length);
+      const regularData = flatQueryResponseData[regularKey];
 
-      // If the verified data has no value, use the unverified one.
-      const entityToUse = { ...result[regularKey], verified: false };
+      let entityToUse: { [key: string]: any } | undefined;
+      if (regularData instanceof Object) {
+        // If the verified data has no value, use the unverified one (if it exists).
+        entityToUse = { ...regularData, verified: false };
+      }
 
       // Store the chosen entity under the regular key and initiate further recursion.
       result[regularKey] = mergeVerifiedWithUnverifiedData(entityToUse);

@@ -107,6 +107,96 @@ describe('flattenQueryResponseData', () => {
 });
 
 describe('mergeVerifiedWithUnverifiedData', () => {
+  it('should not throw when passed undefined', () => {
+    expect(mergeVerifiedWithUnverifiedData(undefined)).not.toBeDefined();
+  });
+
+  it('should merge verified with unverified entities', () => {
+    const input = {
+      keywordTag: {
+        id: '15',
+        pictures: [
+          {
+            id: '661',
+          },
+        ],
+        verified_pictures: [
+          {
+            id: '660',
+          },
+        ],
+      },
+    };
+
+    const expectedOutput = {
+      keywordTag: {
+        id: '15',
+        pictures: [
+          {
+            id: '660',
+            verified: true,
+          },
+          {
+            id: '661',
+            verified: false,
+          },
+        ],
+      },
+    };
+
+    expect(mergeVerifiedWithUnverifiedData(input)).toEqual(expectedOutput);
+  });
+
+  it('should prefer a verified over a unverified single entity ', () => {
+    const input = {
+      keywordTag: {
+        id: '15',
+        time_range_tag: {
+          id: '14',
+        },
+        verified_time_range_tag: {
+          id: '63',
+        },
+      },
+    };
+
+    const expectedOutput = {
+      keywordTag: {
+        id: '15',
+        time_range_tag: {
+          id: '63',
+          verified: true,
+        },
+      },
+    };
+
+    expect(mergeVerifiedWithUnverifiedData(input)).toEqual(expectedOutput);
+  });
+
+  it('should use an unverified single entity when the there is no verified one', () => {
+    const input = {
+      keywordTag: {
+        id: '15',
+        time_range_tag: {
+          id: '14',
+        },
+        verified_time_range_tag: null,
+      },
+    };
+
+    const expectedOutput = {
+      keywordTag: {
+        id: '15',
+        time_range_tag: {
+          id: '14',
+          verified: false,
+        },
+      },
+    };
+
+    expect(mergeVerifiedWithUnverifiedData(input)).toEqual(expectedOutput);
+  });
+
   it('should merge verified with unverified data recursively', () => {
     const input = {
       keywordTag: {
@@ -166,6 +256,62 @@ describe('mergeVerifiedWithUnverifiedData', () => {
             time_range_tag: {
               id: '14',
               verified: false,
+            },
+            verified: false,
+          },
+        ],
+      },
+    };
+
+    expect(mergeVerifiedWithUnverifiedData(input)).toEqual(expectedOutput);
+  });
+
+  it('should merge verified with unverified data ignoring the order', () => {
+    const input = {
+      keywordTag: {
+        id: '15',
+        pictures: [
+          {
+            id: '661',
+            verified_time_range_tag: {
+              id: '63',
+            },
+            time_range_tag: {
+              id: '14',
+            },
+          },
+        ],
+        verified_pictures: [
+          {
+            id: '660',
+            verified_time_range_tag: {
+              id: '63',
+            },
+            time_range_tag: {
+              id: '14',
+            },
+          },
+        ],
+      },
+    };
+
+    const expectedOutput = {
+      keywordTag: {
+        id: '15',
+        pictures: [
+          {
+            id: '660',
+            time_range_tag: {
+              id: '63',
+              verified: true,
+            },
+            verified: true,
+          },
+          {
+            id: '661',
+            time_range_tag: {
+              id: '63',
+              verified: true,
             },
             verified: false,
           },
