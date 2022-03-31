@@ -90,6 +90,9 @@
       "relation": "manyToOne",
       "target": "api::time-range-tag.time-range-tag",
       "inversedBy": "verified_pictures"
+    },
+    "archive_identifier": {
+      "type": "string"
     }
   }
 }
