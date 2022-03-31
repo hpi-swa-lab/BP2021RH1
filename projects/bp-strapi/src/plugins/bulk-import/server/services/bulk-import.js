@@ -1,6 +1,60 @@
 'use strict';
 
 const fs = require('fs');
+const XLSX = require('xlsx');
+
+
+const parseTimes = (arr) => {
+  const months = ['januar', 'februar', 'märz', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'dezember'];
+  return arr.map(str => {
+    const parts = str.replace(/[\s]+/gm, '').replace(/(januar|februar|märz|april|mai|juni|juli|august|september|oktober|november|dezember)/gmi, (match) => {
+      return (months.indexOf(match.toLowerCase())+1) + '.';
+    }).split('.');
+    if (parts.length > 2) {
+      parts[2] = parts[2].replace(/x/gim, '0');
+      const start = new Date(`${parts[1]}.${parts[0]}.${parts[2]}`);
+      const end = new Date(start);
+      end.setDate(end.getDate()+1);
+      end.setMilliseconds(end.getMilliseconds()-1);
+      return [start, end];
+    } else if (parts.length > 1) {
+      parts[1] = parts[1].replace(/x/gim, '0');
+      const start = new Date(`${parts[0]}.01.${parts[1]}`);
+      const end = new Date(start);
+      end.setMonth(end.getMonth()+1);
+      end.setDate(end.getDate()-1);
+      return [start, end];
+    } else if (parts[0].match(/[–|\-|bis]/gm)) {
+      let [start, end] = parts[0].split(/[\s]*[–|\-|bis][\s]*/gm);
+      start = new Date(`${start}`);
+      end = new Date(`${end}`);
+      end.setFullYear(end.getFullYear()+1);
+      end.setDate(end.getDate()-1);
+      return [start, end];
+    } else {
+      if (parts[0][3].toLowerCase() === 'x') {
+        let start, end;
+        if (parts[0][2].toLowerCase() === 'x'){
+          start = new Date(`${parts[0].slice(0,2)}00`);
+          end = new Date(start);
+          end.setFullYear(end.getFullYear()+100);
+          end.setDate(end.getDate()-1);
+        } else {
+          start = new Date(`${parts[0].slice(0,3)}0`);
+          end = new Date(start);
+          end.setFullYear(end.getFullYear()+10);
+          end.setDate(end.getDate()-1);
+        }
+        return [start, end];
+      }
+      const start = new Date(parts[0]);
+      const end = new Date(start);
+      end.setFullYear(end.getFullYear()+1);
+      end.setDate(end.getDate()-1);
+      return [start, end];
+    }
+  });
+};
 
 module.exports = ({ strapi }) => ({
   getIndexMessage() {
@@ -43,6 +97,13 @@ module.exports = ({ strapi }) => ({
       .map(name => name.replace(/_/gm, '-'))
       .filter(filename => filename !== '.gitkeep' && filename !== '.gitignore'); // don't miss-interpret any git related stuff as real picture files
  
+    const mediaIds = (await pictureQuery.findMany({
+      populate: {
+        media: {
+          select: ['id']
+        }
+      }})).map(img => img.media.id);
+  
     const pictureBuffer = {};
     for (const albumId of Object.keys(albumData)) {
       const album = albumData[albumId];
@@ -85,9 +146,10 @@ module.exports = ({ strapi }) => ({
         }
         // related means images that have been assigned this media file
         // If there already is such a picture, don't include it again
-        if (mediaRef.related && mediaRef.related.length) {
+        if (mediaIds.includes(mediaRef.id)) {
           continue;
         }
+  
         console.log('Including picture with wordpress_id: ', picId);
         let previousTitle = await titleQuery.findOne({
           where: {
@@ -151,6 +213,9 @@ module.exports = ({ strapi }) => ({
             wordpress_id: parseInt(picId),
           },
         });
+
+        
+        mediaIds.push(mediaRef.id);
 
       }
     }
@@ -292,7 +357,7 @@ module.exports = ({ strapi }) => ({
   async addTimeRanges() {
     const matchAnyTime = (text) => {
       const yearRegex = /19[Xx0-9]{2}/gm;
-      const yearSpanRegex = /19[Xx0-9]{2}[\s]*[–|-|bis][\s]*19[Xx0-9]{2}/gm;
+      const yearSpanRegex = /19[Xx0-9]{2}[\s]*[–|\-|bis][\s]*19[Xx0-9]{2}/gm;
       const monthYearMatch = /(?:januar|februar|märz|april|mai|juni|juli|august|september|oktober|november|dezember)[\s]+19[Xx0-9]{2}/gmi;
       const wholeDateRegex = /([\s]+|^)[\d]{1,2}\.[\s]*(januar|februar|märz|april|mai|juni|juli|august|september|oktober|november|dezember|[\d]{1,2})(?:[\s]+|\.)19[Xx0-9]{2}/gmi;
       const exactMatch = text.match(wholeDateRegex) || [];
@@ -300,58 +365,6 @@ module.exports = ({ strapi }) => ({
       const spanMatch = text.match(yearSpanRegex) || [];
       const yearMatch = text.replace(yearSpanRegex, '').match(yearRegex) || [];
       return exactMatch.concat(monthMatch).concat(spanMatch).concat(yearMatch);
-    };
-
-    const parseTimes = (arr) => {
-      const months = ['januar', 'februar', 'märz', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'dezember'];
-      return arr.map(str => {
-        const parts = str.replace(/[\s]+/gm, '').replace(/(januar|februar|märz|april|mai|juni|juli|august|september|oktober|november|dezember)/gmi, (match) => {
-          return (months.indexOf(match.toLowerCase())+1) + '.';
-        }).split('.');
-        if (parts.length > 2) {
-          parts[2] = parts[2].replace(/x/gim, '0');
-          const start = new Date(`${parts[1]}.${parts[0]}.${parts[2]}`);
-          const end = new Date(start);
-          end.setDate(end.getDate()+1);
-          end.setMilliseconds(end.getMilliseconds()-1);
-          return [start, end];
-        } else if (parts.length > 1) {
-          parts[1] = parts[1].replace(/x/gim, '0');
-          const start = new Date(`${parts[0]}.01.${parts[1]}`);
-          const end = new Date(start);
-          end.setMonth(end.getMonth()+1);
-          end.setDate(end.getDate()-1);
-          return [start, end];
-        } else if (parts[0].match(/[–|-|bis]/gm)) {
-          let [start, end] = parts[0].split(/[\s]*[–|-|bis][\s]*/gm);
-          start = new Date(`${start}`);
-          end = new Date(`${end}`);
-          end.setFullYear(end.getFullYear()+1);
-          end.setDate(end.getDate()-1);
-          return [start, end];
-        } else {
-          if (parts[0][3].toLowerCase() === 'x') {
-            let start, end;
-            if (parts[0][2].toLowerCase() === 'x'){
-              start = new Date(`${parts[0].slice(0,2)}00`);
-              end = new Date(start);
-              end.setFullYear(end.getFullYear()+100);
-              end.setDate(end.getDate()-1);
-            } else {
-              start = new Date(`${parts[0].slice(0,3)}0`);
-              end = new Date(start);
-              end.setFullYear(end.getFullYear()+10);
-              end.setDate(end.getDate()-1);
-            }
-            return [start, end];
-          }
-          const start = new Date(parts[0]);
-          const end = new Date(start);
-          end.setFullYear(end.getFullYear()+1);
-          end.setDate(end.getDate()-1);
-          return [start, end];
-        }
-      });
     };
 
     const findTimes = (picture) => {
@@ -437,4 +450,345 @@ module.exports = ({ strapi }) => ({
     }
     return timeRangeBuffer;
   },
+
+  async importFromExcel(pathToExcelData) {
+    const keywordTagQuery = strapi.db.query('api::keyword-tag.keyword-tag');
+    const keywordTagService = strapi.service('api::keyword-tag.keyword-tag');
+
+    const locationTagQuery = strapi.db.query('api::location-tag.location-tag');
+    const locationTagService = strapi.service('api::location-tag.location-tag');
+
+    const personTagQuery = strapi.db.query('api::person-tag.person-tag');
+    const personTagService = strapi.service('api::person-tag.person-tag');
+
+    const timeRangeTagQuery = strapi.db.query('api::time-range-tag.time-range-tag');
+    const timeRangeTagService = strapi.service('api::time-range-tag.time-range-tag');
+
+    const collectionQuery = strapi.db.query('api::collection.collection');
+    const collectionService = strapi.service('api::collection.collection');
+
+    const pictureQuery = strapi.db.query('api::picture.picture');
+    const pictureService = strapi.service('api::picture.picture');
+
+    const descriptionQuery = strapi.db.query('api::description.description');
+    const descriptionService = strapi.service('api::description.description');
+
+    const uploadPluginFileQuery = strapi.db.query('plugin::upload.file');
+    const uploadPluginService = strapi.service('plugin::upload.upload');
+
+    const workbook = XLSX.readFile(pathToExcelData);
+    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]).slice(1);
+
+    const existingFilenames = fs.readdirSync('/home/dev/BP2021RH1/projects/bp-strapi/public/uploads/')
+      .map(name => name.replace(/_/gm, '-'))
+      .filter(filename => filename !== '.gitkeep' && filename !== '.gitignore'); // don't miss-interpret any git related stuff as real picture files
+    
+      
+    const allFiles = [];
+    for (const row of json) {
+      // Upload image...
+      const path = `/home/dev/images/excel/${row["Ordnername"]}/${row["Dateiname"]}`;
+      if (fs.existsSync(path)) {
+        const alreadyUploadedFile = existingFilenames.find(existingName =>
+          existingName.slice(0, -15) === row["Dateiname"].slice(0, -4)
+        );
+        if (!alreadyUploadedFile) {
+          const stats = fs.statSync(path);
+          const file = {
+            path,
+            name: row["Dateiname"],
+            size: stats.size,
+            type: 'image/jpeg'
+          };
+          allFiles.push(file);
+          strapi.log.info('New image file found: ' + row["Dateiname"]);
+        } else {
+          strapi.log.info(`File ${row["Dateiname"].slice(0, -4)} already exists as ${alreadyUploadedFile.slice(0, -15)}`);
+        }
+      } else {
+        strapi.log.error(`File ${path} doesn't exist`);
+      }
+    }
+
+    await uploadPluginService.upload({
+      data: {
+        fileInfo: {}
+      },
+      files: allFiles,
+    });
+
+    strapi.log.info('Upload finished');
+
+    const splitTags = (rowdata) => rowdata.split(/,|;/gm).filter(r => r && r !== '').map(keyword => ({
+      text: keyword.replace(/\(?\?+\)?/gm, '').trim(),
+      verified: !keyword.includes('?')
+    })); 
+
+    const pictureBuffer = [];
+    
+    for (const row of json) {
+      const categories = splitTags(row["Kategorien"] || '');
+      categories.reverse();
+
+      let parent = await collectionQuery.findOne({
+        where: {
+          name: 'Das Herbert-Ahrens-Bilderarchiv',
+        },
+      });
+      for (const cat of categories) {
+        if (cat && cat.text) {
+          let previousCollection = await collectionQuery.findOne({
+            populate: ['parent_collections'],
+            where: {
+              name: cat.text,
+            },
+          });
+          if (!previousCollection) {
+            previousCollection = await collectionService.create({
+              populate: ['parent_collections'],
+              data: {
+                name: cat.text,
+              },
+            });
+            strapi.log.info(`Created new collection "${cat.text}"`);
+          }
+          if (!previousCollection.parent_collections.some(p => p.id === parent.id)) {
+            await collectionQuery.update({
+              where: {
+                id: previousCollection.id,
+              },
+              data: {
+                parent_collections: previousCollection.parent_collections.map(c => c.id).concat([parent.id])
+              },
+            });
+          }
+          parent = previousCollection;
+        }
+      }
+    }
+
+    strapi.log.info('All collections created!');
+
+    let i = 1;
+
+    const mediaIds = (await pictureQuery.findMany({
+      populate: {
+        media: {
+          select: ['id']
+        }
+      }})).map(img => img.media.id);
+
+    for (const row of json) {
+      const mediaRef = await uploadPluginFileQuery.findOne({
+        where: {
+          name: row["Dateiname"],
+        },
+      });
+      if (!mediaRef) {
+        strapi.log.error('No media object found in db for: ' + row["Dateiname"]);
+        continue;
+      }
+      // related means images that have been assigned this media file
+      // If there already is such a picture, don't include it again
+
+      if (mediaIds.includes(mediaRef.id)) {
+        continue;
+      }
+
+      let previousDescription = null;
+      let description = row["Beschreibung"] || '';
+
+      if (row["Link"]) {
+        description += `<br/><br/><a href="${row["Link"]}">${row["Link"]}</a>`;
+      }
+      
+      if (description && description !== '') {
+        previousDescription = await descriptionQuery.findOne({
+          where: {
+            text: description,
+          },
+        });
+        if (!previousDescription) {
+          previousDescription = await descriptionService.create({
+            data: {
+              text: description,
+            },
+          });
+        }
+      }
+
+      const keywordRefs = [];
+      const keywords = splitTags(row["Schlagwörter"] || '');
+      
+      for (const keyword of keywords) {
+        let previousKeyword = await keywordTagQuery.findOne({
+          where: {
+            name: keyword.text,
+          },
+        });
+        if (!previousKeyword) {
+          previousKeyword = await keywordTagService.create({
+            data: {
+              name: keyword.text,
+            },
+          });
+        }
+        keywordRefs.push({id: previousKeyword.id, verified: keyword.verified});
+      }
+
+      const locationRefs = [];
+      const locations = splitTags(row["Orte"] || '');
+      
+      for (const location of locations) {
+        let previousLocation = await locationTagQuery.findOne({
+          where: {
+            name: location.text,
+          },
+        });
+        if (!previousLocation) {
+          previousLocation = await locationTagService.create({
+            data: {
+              name: location.text,
+            },
+          });
+        }
+        locationRefs.push({id: previousLocation.id, verified: location.verified});
+      }
+
+      const personRefs = [];
+      const people = splitTags(row["Personen"] || '');
+      
+      for (const person of people) {
+        let previousPerson = await personTagQuery.findOne({
+          where: {
+            name: person.text,
+          },
+        });
+        if (!previousPerson) {
+          previousPerson = await personTagService.create({
+            data: {
+              name: person.text,
+            },
+          });
+        }
+        personRefs.push({id: previousPerson.id, verified: person.verified});
+      }
+
+      let timeRef = null;
+      const timeRange = (row["Datum/Zeiträume"] && row["Datum/Zeiträume"] !== '') ? parseTimes([row["Datum/Zeiträume"]]) : null;
+      
+      if (timeRange && timeRange.length) {
+        let previousTimeRangeTag = await timeRangeTagQuery.findOne({
+          where: {
+            start: timeRange[0][0],
+            end: timeRange[0][1]
+          },
+        });
+        if (!previousTimeRangeTag) {
+          previousTimeRangeTag = await timeRangeTagService.create({
+            data: {
+              start: timeRange[0][0],
+              end: timeRange[0][1]
+            },
+          });
+        }
+        timeRef = {id: previousTimeRangeTag.id, verified: true};
+      }
+
+      // Categories
+      const categories = splitTags(row["Kategorien"] || '');
+      let previousCollection = await collectionQuery.findOne({
+        where: {
+          name: categories[0].text
+        },
+      });
+
+      const picdata = {
+        data: {
+          descriptions: (
+            previousDescription ? [{
+              id: previousDescription.id,
+            }] : []
+          ),
+          media: {
+            id: mediaRef.id,
+          },
+          keyword_tags: keywordRefs.filter(key => !key.verified).map(key => key.id),
+          verified_keyword_tags: keywordRefs.filter(key => key.verified).map(key => key.id),
+          location_tags: locationRefs.filter(key => !key.verified).map(key => key.id),
+          verified_location_tags: locationRefs.filter(key => key.verified).map(key => key.id),
+          person_tags: personRefs.filter(key => !key.verified).map(key => key.id),
+          verified_person_tags: personRefs.filter(key => key.verified).map(key => key.id),
+          archive_identifier: row["Archiv-Kennung"] || row["Ordner"] || null,
+          collections: (
+            previousCollection ? [{
+              id: previousCollection.id,
+            }] : []
+          )
+        },
+      }
+
+      if (timeRef) {
+        if (timeRef.verified) {
+          picdata.data['verified_time_range_tag'] =  timeRef.id;
+        } else {
+          picdata.data['time_range_tag'] =  timeRef.id;
+        }
+      }
+
+      const newlyCreatedPicture = await pictureService.create(picdata);
+      pictureBuffer.push(newlyCreatedPicture);
+      mediaIds.push(mediaRef.id);
+
+      strapi.log.info(`[${i++}/${json.length}] Created picture ${row["Dateiname"]} -> id: ${newlyCreatedPicture.id}`);
+
+    }
+
+    strapi.log.info('Import finished!');
+
+    return pictureBuffer;
+  },
+
+  async reducePictureCollectionRelations() {
+    
+    const pictureQuery = strapi.db.query('api::picture.picture');
+
+    const pictures = await pictureQuery.findMany({
+      select: ['id'],
+      populate: {
+        collections: {
+          select: ['id'],
+          populate: {
+            parent_collections: {
+              select: ['id']
+            }
+          }
+        }
+      }
+    });
+
+    let responsebuffer = [];
+
+    for (const picture of pictures) {
+      const parents = picture.collections.reduce((acc, collection) => {
+        return acc.concat(collection.parent_collections.map(p => p.id));
+      }, []);
+
+      const mostSpecificCollections = picture.collections.filter(collection => !parents.includes(collection.id));
+
+      strapi.log.info(`Reduced collections for picture ${picture.id} to [${mostSpecificCollections.map(c => c.id).join(',')}]`);
+      await pictureQuery.update({
+        where: {
+          id: picture.id
+        },
+        data: {
+          collections: mostSpecificCollections.map(collection => collection.id)
+        }
+      });
+      
+      responsebuffer.push({picture, mostSpecificCollections});
+    }
+
+    return responsebuffer;
+  }
 });

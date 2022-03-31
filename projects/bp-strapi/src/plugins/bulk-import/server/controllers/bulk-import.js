@@ -34,4 +34,15 @@ module.exports = ({ strapi }) => ({
     const timeRangeBuffer = await this._getService().addTimeRanges();
     ctx.send(timeRangeBuffer);
   },
+
+  async importFromExcel(ctx) {
+    const { files } = ctx.request;
+    const pictureBuffer = await this._getService().importFromExcel(files['exceldata'].path);
+    ctx.send(pictureBuffer);
+  },
+
+  async reducePictureCollectionRelations(ctx) {
+    const response = await this._getService().reducePictureCollectionRelations();
+    ctx.send(response);
+  }
 });
