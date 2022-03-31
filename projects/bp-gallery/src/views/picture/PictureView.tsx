@@ -16,7 +16,7 @@ import { FlatPicture } from '../../graphql/additionalFlatTypes';
 import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture-animation.helpers';
 import PictureViewUI from './components/PictureViewUI';
 import PictureInfo from './components/PictureInfo';
-import { useFlatQueryResponseData } from '../../graphql/queryUtils';
+import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { PictureNavigationTarget } from './components/PictureNavigationButtons';
 import ZoomWrapper from './ZoomWrapper';
 
@@ -67,7 +67,7 @@ const PictureView = ({
       pictureId: pictureId,
     },
   });
-  const picture: FlatPicture | undefined = useFlatQueryResponseData(data)?.picture;
+  const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
 
   // Switch between using the thumbnail url and the "loaded" picture's url
   const pictureLink = useMemo(() => {

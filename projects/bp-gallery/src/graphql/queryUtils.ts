@@ -46,11 +46,14 @@ export const flattenQueryResponseData = (queryResponseData?: { [key: string]: an
 };
 
 /**
- * Implements using {@link flattenQueryResponseData} as a custom React-Hook,
- * which includes memoization of the result based on the input.
+ * Implements using {@link flattenQueryResponseData} and {@link mergeVerifiedWithUnverifiedData}
+ * as a custom React-Hook, which includes memoization of the result based on the input.
  */
-export const useFlatQueryResponseData = (queryResponseData?: { [key: string]: any }) =>
-  useMemo(() => flattenQueryResponseData(queryResponseData), [queryResponseData]);
+export const useSimplifiedQueryResponseData = (queryResponseData?: { [key: string]: any }) =>
+  useMemo(
+    () => mergeVerifiedWithUnverifiedData(flattenQueryResponseData(queryResponseData)),
+    [queryResponseData]
+  );
 
 const VERIFIED_PREFIX = 'verified_';
 
