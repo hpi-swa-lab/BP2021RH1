@@ -3,7 +3,7 @@ import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetKeywordTagSuggestionsLazyQuery } from '../../../../graphql/APIConnector';
-import { useFlatQueryResponseData } from '../../../../graphql/queryUtils';
+import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { FlatKeywordTagSuggestion } from '../../../../graphql/additionalFlatTypes';
 import QueryErrorDisplay from '../../../../components/QueryErrorDisplay';
 import Loading from '../../../../components/Loading';
@@ -32,7 +32,7 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
   }, [getKeywordTagSuggestions, searchSnippet]);
 
   const keywordTags: FlatKeywordTagSuggestion[] | undefined =
-    useFlatQueryResponseData(data)?.keywordTags;
+    useSimplifiedQueryResponseData(data)?.keywordTags;
 
   if (error) {
     return <QueryErrorDisplay error={error} />;

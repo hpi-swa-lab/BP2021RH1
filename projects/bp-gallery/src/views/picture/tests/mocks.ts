@@ -73,6 +73,9 @@ export const PictureMocks: PictureEntity = {
     time_range_tag: {
       data: TimeRangeTagMocks,
     },
+    verified_time_range_tag: {
+      data: null,
+    },
   },
 };
 
