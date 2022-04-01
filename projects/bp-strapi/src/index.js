@@ -23,8 +23,10 @@ const resolveThumbnail = async (strapi, collectionId, alreadySeenIds) => {
       }
     },
   });
-  if (response.pictures[0] && response.pictures[0].media.formats.thumbnail.url) {
-    return response.pictures[0].media.formats.thumbnail.url;
+  if (response.pictures[0] && response.pictures[0].media.formats) {
+    const formats = response.pictures[0].media.formats;
+    const targetFormat = formats.medium || formats.small || formats.thumbnail;
+    return targetFormat ? targetFormat.url : null;
   } else {
     for (const child of response.child_collections) {
       if (alreadySeenIds.includes(child.id)) {continue; }
