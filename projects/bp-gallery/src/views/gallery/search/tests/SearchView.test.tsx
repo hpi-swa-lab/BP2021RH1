@@ -92,14 +92,28 @@ describe('convertSearchParamsToPictureFilters', () => {
     expect(result).toEqual({
       and: [
         {
-          time_range_tag: {
-            start: {
-              gte: '1970-01-01T00:00:00Z',
+          or: [
+            {
+              time_range_tag: {
+                start: {
+                  gte: '1970-01-01T00:00:00Z',
+                },
+                end: {
+                  lte: '1979-12-31T23:59:59Z',
+                },
+              },
             },
-            end: {
-              lte: '1979-12-31T23:59:59Z',
+            {
+              verified_time_range_tag: {
+                start: {
+                  gte: '1970-01-01T00:00:00Z',
+                },
+                end: {
+                  lte: '1979-12-31T23:59:59Z',
+                },
+              },
             },
-          },
+          ],
         },
       ],
     });
@@ -113,14 +127,28 @@ describe('convertSearchParamsToPictureFilters', () => {
     expect(result).toEqual({
       and: [
         {
-          time_range_tag: {
-            start: {
-              gte: '1900-01-01T00:00:00Z',
+          or: [
+            {
+              time_range_tag: {
+                start: {
+                  gte: '1900-01-01T00:00:00Z',
+                },
+                end: {
+                  lte: '1949-12-31T23:59:59Z',
+                },
+              },
             },
-            end: {
-              lte: '1949-12-31T23:59:59Z',
+            {
+              verified_time_range_tag: {
+                start: {
+                  gte: '1900-01-01T00:00:00Z',
+                },
+                end: {
+                  lte: '1949-12-31T23:59:59Z',
+                },
+              },
             },
-          },
+          ],
         },
       ],
     });
@@ -135,11 +163,22 @@ describe('convertSearchParamsToPictureFilters', () => {
     expect(result).toEqual({
       and: [
         {
-          keyword_tags: {
-            name: {
-              containsi: keyword,
+          or: [
+            {
+              keyword_tags: {
+                name: {
+                  containsi: keyword,
+                },
+              },
             },
-          },
+            {
+              verified_keyword_tags: {
+                name: {
+                  containsi: keyword,
+                },
+              },
+            },
+          ],
         },
       ],
     });
@@ -156,11 +195,22 @@ describe('convertSearchParamsToPictureFilters', () => {
     expect(result).toEqual({
       and: [
         {
-          keyword_tags: {
-            name: {
-              containsi: keyword,
+          or: [
+            {
+              keyword_tags: {
+                name: {
+                  containsi: keyword,
+                },
+              },
             },
-          },
+            {
+              verified_keyword_tags: {
+                name: {
+                  containsi: keyword,
+                },
+              },
+            },
+          ],
         },
       ],
     });
@@ -177,18 +227,40 @@ describe('convertSearchParamsToPictureFilters', () => {
     expect(result).toEqual({
       and: [
         {
-          keyword_tags: {
-            name: {
-              containsi: keyword1,
+          or: [
+            {
+              keyword_tags: {
+                name: {
+                  containsi: keyword1,
+                },
+              },
             },
-          },
+            {
+              verified_keyword_tags: {
+                name: {
+                  containsi: keyword1,
+                },
+              },
+            },
+          ],
         },
         {
-          keyword_tags: {
-            name: {
-              containsi: keyword2,
+          or: [
+            {
+              keyword_tags: {
+                name: {
+                  containsi: keyword2,
+                },
+              },
             },
-          },
+            {
+              verified_keyword_tags: {
+                name: {
+                  containsi: keyword2,
+                },
+              },
+            },
+          ],
         },
       ],
     });

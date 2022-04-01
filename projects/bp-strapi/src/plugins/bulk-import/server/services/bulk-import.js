@@ -519,10 +519,10 @@ module.exports = ({ strapi }) => ({
 
     strapi.log.info('Upload finished');
 
-    const splitTags = (rowdata) => rowdata.split(/,|;/gm).filter(r => r && r !== '').map(keyword => ({
+    const splitTags = (rowdata) => rowdata.split(/,|;/gm).filter(r => r && !(r.match(/^\s*$/gm))).map(keyword => ({
       text: keyword.replace(/\(?\?+\)?/gm, '').trim(),
       verified: !keyword.includes('?')
-    })); 
+    }));
 
     const pictureBuffer = [];
     
@@ -535,7 +535,9 @@ module.exports = ({ strapi }) => ({
           name: 'Das Herbert-Ahrens-Bilderarchiv',
         },
       });
+      let i = 0;
       for (const cat of categories) {
+        let created = false;
         if (cat && cat.text) {
           let previousCollection = await collectionQuery.findOne({
             populate: ['parent_collections'],
@@ -550,18 +552,22 @@ module.exports = ({ strapi }) => ({
                 name: cat.text,
               },
             });
+            created = true;
             strapi.log.info(`Created new collection "${cat.text}"`);
           }
-          if (!previousCollection.parent_collections.some(p => p.id === parent.id)) {
-            await collectionQuery.update({
-              where: {
-                id: previousCollection.id,
-              },
-              data: {
-                parent_collections: previousCollection.parent_collections.map(c => c.id).concat([parent.id])
-              },
-            });
+          if (i !== 0 || created) {
+            if (!previousCollection.parent_collections.some(p => p.id === parent.id)) {
+              await collectionQuery.update({
+                where: {
+                  id: previousCollection.id,
+                },
+                data: {
+                  parent_collections: previousCollection.parent_collections.map(c => c.id).concat([parent.id])
+                },
+              });
+            }
           }
+          i++;
           parent = previousCollection;
         }
       }
