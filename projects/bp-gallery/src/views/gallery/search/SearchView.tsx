@@ -36,15 +36,23 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
         decade === 40 ? '1900-01-01T00:00:00Z' : `19${decade / 10}0-01-01T00:00:00Z`;
       const endTime = `19${decade / 10}9-12-31T23:59:59Z`;
 
-      filters.and?.push({
-        time_range_tag: {
-          start: {
-            gte: startTime,
-          },
-          end: {
-            lte: endTime,
-          },
+      const time_range_tag_filter = {
+        start: {
+          gte: startTime,
         },
+        end: {
+          lte: endTime,
+        },
+      };
+      filters.and?.push({
+        or: [
+          {
+            time_range_tag: time_range_tag_filter,
+          },
+          {
+            verified_time_range_tag: time_range_tag_filter,
+          },
+        ],
       });
     }
   }
@@ -52,12 +60,20 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
   if (searchParams.has(SearchType.KEYWORD)) {
     const keywords = searchParams.getAll(SearchType.KEYWORD).map(decodeURIComponent);
     keywords.forEach((keyword: string) => {
-      filters.and?.push({
-        keyword_tags: {
-          name: {
-            containsi: keyword,
-          },
+      const keyword_tag_filter = {
+        name: {
+          containsi: keyword,
         },
+      };
+      filters.and?.push({
+        or: [
+          {
+            keyword_tags: keyword_tag_filter,
+          },
+          {
+            verified_keyword_tags: keyword_tag_filter,
+          },
+        ],
       });
     });
   }
