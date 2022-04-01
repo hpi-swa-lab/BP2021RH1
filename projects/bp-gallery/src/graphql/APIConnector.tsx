@@ -79,6 +79,7 @@ export type Collection = {
   parent_collections?: Maybe<CollectionRelationResponseCollection>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']>;
+  thumbnail?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -129,6 +130,7 @@ export type CollectionFiltersInput = {
   parent_collections?: InputMaybe<CollectionFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
+  thumbnail?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
@@ -139,6 +141,7 @@ export type CollectionInput = {
   parent_collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
 };
 
 export type CollectionRelationResponseCollection = {
@@ -845,7 +848,7 @@ export type PersonTagRelationResponseCollection = {
 };
 
 export type Picture = {
-  collection?: Maybe<CollectionEntityResponse>;
+  archive_identifier?: Maybe<Scalars['String']>;
   collections?: Maybe<CollectionRelationResponseCollection>;
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
@@ -943,7 +946,7 @@ export type PictureEntityResponseCollection = {
 
 export type PictureFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
-  collection?: InputMaybe<CollectionFiltersInput>;
+  archive_identifier?: InputMaybe<StringFilterInput>;
   collections?: InputMaybe<CollectionFiltersInput>;
   comments?: InputMaybe<CommentFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
@@ -965,7 +968,7 @@ export type PictureFiltersInput = {
 };
 
 export type PictureInput = {
-  collection?: InputMaybe<Scalars['ID']>;
+  archive_identifier?: InputMaybe<Scalars['String']>;
   collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1627,32 +1630,7 @@ export type GetCollectionInfoQuery = {
                       data: Array<{
                         id?: string | null | undefined;
                         attributes?:
-                          | {
-                              name: string;
-                              thumbnail?:
-                                | {
-                                    data: Array<{
-                                      attributes?:
-                                        | {
-                                            media: {
-                                              data?:
-                                                | {
-                                                    attributes?:
-                                                      | { formats?: any | null | undefined }
-                                                      | null
-                                                      | undefined;
-                                                  }
-                                                | null
-                                                | undefined;
-                                            };
-                                          }
-                                        | null
-                                        | undefined;
-                                    }>;
-                                  }
-                                | null
-                                | undefined;
-                            }
+                          | { name: string; thumbnail?: string | null | undefined }
                           | null
                           | undefined;
                       }>;
@@ -1724,6 +1702,29 @@ export type GetKeywordTagSuggestionsQuery = {
             | {
                 name: string;
                 thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_thumbnail?:
                   | {
                       data: Array<{
                         attributes?:
@@ -2130,19 +2131,7 @@ export const GetCollectionInfoDocument = gql`
               id
               attributes {
                 name
-                thumbnail: pictures(pagination: { limit: 1 }) {
-                  data {
-                    attributes {
-                      media {
-                        data {
-                          attributes {
-                            formats
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
+                thumbnail
               }
             }
           }
@@ -2337,6 +2326,19 @@ export const GetKeywordTagSuggestionsDocument = gql`
               }
             }
           }
+          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -2402,10 +2404,20 @@ export const GetDecadePreviewThumbnailsDocument = gql`
   query getDecadePreviewThumbnails {
     s40: pictures(
       filters: {
-        time_range_tag: {
-          start: { gte: "1900-01-01T00:00:00Z" }
-          end: { lte: "1949-12-31T23:59:59Z" }
-        }
+        or: [
+          {
+            time_range_tag: {
+              start: { gte: "1900-01-01T00:00:00Z" }
+              end: { lte: "1949-12-31T23:59:59Z" }
+            }
+          }
+          {
+            verified_time_range_tag: {
+              start: { gte: "1900-01-01T00:00:00Z" }
+              end: { lte: "1949-12-31T23:59:59Z" }
+            }
+          }
+        ]
       }
       pagination: { limit: 1 }
     ) {
@@ -2423,10 +2435,20 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     }
     s50: pictures(
       filters: {
-        time_range_tag: {
-          start: { gte: "1950-01-01T00:00:00Z" }
-          end: { lte: "1959-12-31T23:59:59Z" }
-        }
+        or: [
+          {
+            time_range_tag: {
+              start: { gte: "1950-01-01T00:00:00Z" }
+              end: { lte: "1959-12-31T23:59:59Z" }
+            }
+          }
+          {
+            verified_time_range_tag: {
+              start: { gte: "1950-01-01T00:00:00Z" }
+              end: { lte: "1959-12-31T23:59:59Z" }
+            }
+          }
+        ]
       }
       pagination: { limit: 1 }
     ) {
@@ -2444,10 +2466,20 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     }
     s60: pictures(
       filters: {
-        time_range_tag: {
-          start: { gte: "1960-01-01T00:00:00Z" }
-          end: { lte: "1969-12-31T23:59:59Z" }
-        }
+        or: [
+          {
+            time_range_tag: {
+              start: { gte: "1960-01-01T00:00:00Z" }
+              end: { lte: "1969-12-31T23:59:59Z" }
+            }
+          }
+          {
+            verified_time_range_tag: {
+              start: { gte: "1960-01-01T00:00:00Z" }
+              end: { lte: "1969-12-31T23:59:59Z" }
+            }
+          }
+        ]
       }
       pagination: { limit: 1 }
     ) {
@@ -2465,10 +2497,20 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     }
     s70: pictures(
       filters: {
-        time_range_tag: {
-          start: { gte: "1970-01-01T00:00:00Z" }
-          end: { lte: "1979-12-31T23:59:59Z" }
-        }
+        or: [
+          {
+            time_range_tag: {
+              start: { gte: "1970-01-01T00:00:00Z" }
+              end: { lte: "1979-12-31T23:59:59Z" }
+            }
+          }
+          {
+            verified_time_range_tag: {
+              start: { gte: "1970-01-01T00:00:00Z" }
+              end: { lte: "1979-12-31T23:59:59Z" }
+            }
+          }
+        ]
       }
       pagination: { limit: 1 }
     ) {
@@ -2486,10 +2528,20 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     }
     s80: pictures(
       filters: {
-        time_range_tag: {
-          start: { gte: "1980-01-01T00:00:00Z" }
-          end: { lte: "1989-12-31T23:59:59Z" }
-        }
+        or: [
+          {
+            time_range_tag: {
+              start: { gte: "1980-01-01T00:00:00Z" }
+              end: { lte: "1989-12-31T23:59:59Z" }
+            }
+          }
+          {
+            verified_time_range_tag: {
+              start: { gte: "1980-01-01T00:00:00Z" }
+              end: { lte: "1989-12-31T23:59:59Z" }
+            }
+          }
+        ]
       }
       pagination: { limit: 1 }
     ) {
@@ -2507,10 +2559,20 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     }
     s90: pictures(
       filters: {
-        time_range_tag: {
-          start: { gte: "1990-01-01T00:00:00Z" }
-          end: { lte: "1999-12-31T23:59:59Z" }
-        }
+        or: [
+          {
+            time_range_tag: {
+              start: { gte: "1990-01-01T00:00:00Z" }
+              end: { lte: "1999-12-31T23:59:59Z" }
+            }
+          }
+          {
+            verified_time_range_tag: {
+              start: { gte: "1990-01-01T00:00:00Z" }
+              end: { lte: "1999-12-31T23:59:59Z" }
+            }
+          }
+        ]
       }
       pagination: { limit: 1 }
     ) {
