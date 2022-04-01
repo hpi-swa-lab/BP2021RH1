@@ -61,7 +61,7 @@ const CollectionPictureDisplay = ({
         <CollectionDescription description={collection.description ?? ''} name={collection.name} />
         {childCount > 0 && (
           <SubCollections
-            childCollections={collection.child_collections as { thumbnail: any[]; name: string }[]}
+            childCollections={collection.child_collections as { thumbnail: string; name: string }[]}
             path={path}
             communityView={!!picturePublishingDate}
           />

@@ -10,19 +10,16 @@ const SubCollections = ({
   path,
   communityView,
 }: {
-  childCollections: { thumbnail: any[]; name: string }[];
+  childCollections: { thumbnail: string; name: string }[];
   path?: string[];
   communityView?: boolean;
 }) => {
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
   const history: History = useHistory();
-  const buildItem = (collection: { thumbnail: any[]; name: string }, index: number) => {
-    const formats = collection.thumbnail[0]?.media?.formats;
+  const buildItem = (collection: { thumbnail: string; name: string }, index: number) => {
     return {
       name: decodeBrowsePathComponent(collection.name),
-      background: formats
-        ? asApiPath(String(formats.medium?.url || formats.small?.url || formats.thumbnail?.url))
-        : DEFAULT_THUMBNAIL_URL,
+      background: collection.thumbnail ? asApiPath(collection.thumbnail) : DEFAULT_THUMBNAIL_URL,
       color: index % 2 === 0 ? '#7E241D' : '#404272',
       onClick: () => {
         history.push(formatBrowsePath(path, communityView, collection.name), { showBack: true });
