@@ -90,19 +90,7 @@ query getCollectionInfo($collectionName: String) {
             id
             attributes {
               name
-              thumbnail: pictures(pagination: { limit: 1 }) {
-                data {
-                  attributes {
-                    media {
-                      data {
-                        attributes {
-                          formats
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              thumbnail
             }
           }
         }
