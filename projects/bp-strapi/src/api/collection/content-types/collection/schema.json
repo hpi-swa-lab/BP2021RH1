@@ -37,6 +37,9 @@
       "relation": "manyToMany",
       "target": "api::picture.picture",
       "mappedBy": "collections"
+    },
+    "thumbnail": {
+      "type": "string"
     }
   }
 }
