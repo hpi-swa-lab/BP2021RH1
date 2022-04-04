@@ -51,4 +51,4 @@ jobs:
       - name: Generate APIConnector
         run: yarn generate-api
       - name: Test bp-gallery
-        run: yarn test --verbose
+        run: yarn test:ci
