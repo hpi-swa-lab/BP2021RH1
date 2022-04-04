@@ -1,10 +1,10 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { renderWithPictureContextMocks } from '../../views/picture/tests/pictureTestUtils';
-import { DescriptionMocks, PictureMocks } from '../../views/picture/tests/mocks';
-import { flattenQueryResponseData } from '../../graphql/queryUtils';
+import { renderWithPictureContextMocks } from '../../picture/tests/pictureTestUtils';
+import { DescriptionMocks, PictureMocks } from '../../picture/tests/mocks';
+import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import PictureInfo from '../PictureInfo';
-import { FlatPicture } from '../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 
 const PictureDetailsMock = jest.fn();
 const PictureDetailsMockComponent = (props: any) => {

@@ -21,7 +21,7 @@ const PictureScrollGridMockComponent = (props: any) => {
   PictureScrollGridMock(props);
   return <div>PictureScrollGridMock</div>;
 };
-jest.mock('../../common/PictureScrollGrid', () => PictureScrollGridMockComponent);
+jest.mock('../../shared/PictureScrollGrid', () => PictureScrollGridMockComponent);
 describe('CollectionPictureDisplay', () => {
   describe('CommunityViewMode', () => {
     describe('Unit', () => {

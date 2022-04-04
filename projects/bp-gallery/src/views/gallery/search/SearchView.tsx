@@ -4,7 +4,7 @@ import { Location } from 'history';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
-import PictureScrollGrid from '../common/PictureScrollGrid';
+import PictureScrollGrid from '../shared/PictureScrollGrid';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 

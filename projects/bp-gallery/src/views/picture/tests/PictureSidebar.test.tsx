@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import { flattenQueryResponseData } from '../../../graphql/queryUtils';
-import PictureSidebar from '../components/PictureSidebar';
+import PictureSidebar from '../PictureSidebar';
 import { CommentMocks, PictureMocks } from './mocks';
 import { renderWithPictureContextMocks } from './pictureTestUtils';
 
@@ -11,7 +11,7 @@ const CommentsContainerMockComponent = (props: any) => {
   CommentsContainerMock(props);
   return <div>CommentsContainerMock</div>;
 };
-jest.mock('../components/comments/CommentsContainer', () => CommentsContainerMockComponent);
+jest.mock('../comments/CommentsContainer', () => CommentsContainerMockComponent);
 
 describe('PictureInfo', () => {
   it('should be able to open and close', async () => {

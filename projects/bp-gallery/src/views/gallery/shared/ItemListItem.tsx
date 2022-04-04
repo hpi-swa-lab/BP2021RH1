@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import getColorSchema from './helpers/color-schema';
-import getLineBreaks from './../helpers/get-linebreaks';
+import getLineBreaks from '../helpers/get-linebreaks';
 
 export interface ItemListItemModel {
   name: string;

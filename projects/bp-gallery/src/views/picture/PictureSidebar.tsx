@@ -1,13 +1,13 @@
 import React, { useContext, useRef } from 'react';
 import './PictureInfo.scss';
-import { PictureViewContext } from '../PictureView';
 import PictureViewNavigationBar from './PictureViewNavigationBar';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import { ApolloError } from '@apollo/client';
-import Loading from '../../../components/Loading';
-import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
-import PictureInfo from '../../../components/PictureInfo';
 import CommentsContainer from './comments/CommentsContainer';
+import { FlatPicture } from '../../graphql/additionalFlatTypes';
+import { PictureViewContext } from './PictureView';
+import Loading from '../shared/Loading';
+import QueryErrorDisplay from '../shared/QueryErrorDisplay';
+import PictureInfo from '../shared/PictureInfo';
 
 const PictureSidebar = ({
   picture,

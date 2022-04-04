@@ -10,7 +10,7 @@ const PictureViewUIMockComponent = (props: any) => {
   PictureViewUIMock(props);
   return <div>PictureViewUIMock</div>;
 };
-jest.mock('../components/PictureViewUI', () => PictureViewUIMockComponent);
+jest.mock('../PictureViewUI', () => PictureViewUIMockComponent);
 
 describe('PictureView', () => {
   describe('in non-thumbnailMode', () => {

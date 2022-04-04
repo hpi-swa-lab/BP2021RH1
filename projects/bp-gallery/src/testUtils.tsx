@@ -5,11 +5,11 @@ import { renderRoutes } from 'react-router-config';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { InMemoryCache } from '@apollo/client';
 import routes from './routes';
-import NavigationBar from './components/NavigationBar';
-import TopBar from './components/TopBar';
+import NavigationBar from './views/shared/NavigationBar';
+import TopBar from './views/shared/TopBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
-import AlertWrapper from './components/AlertWrapper';
+import AlertWrapper from './views/shared/AlertWrapper';
 
 /**
  * Enables using Navigation-Context in tests

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView, { PictureViewContextFields } from '../../picture/PictureView';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
-import { PictureNavigationTarget } from '../../picture/components/PictureNavigationButtons';
+import { PictureNavigationTarget } from '../../picture/PictureNavigationButtons';
 
 const PictureGrid = ({
   pictures,

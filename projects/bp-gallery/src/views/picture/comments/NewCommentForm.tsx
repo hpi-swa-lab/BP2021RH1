@@ -1,9 +1,9 @@
 import React, { useCallback, useContext, useState } from 'react';
 import './NewCommentForm.scss';
 import { Button, TextField } from '@mui/material';
-import { usePostCommentMutation } from '../../../../graphql/APIConnector';
+import { usePostCommentMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
-import { AlertContext, AlertType } from '../../../../components/AlertWrapper';
+import { AlertContext, AlertType } from '../../shared/AlertWrapper';
 import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {

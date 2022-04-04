@@ -1,4 +1,4 @@
-import { PictureNavigationTarget } from './components/PictureNavigationButtons';
+import { PictureNavigationTarget } from './PictureNavigationButtons';
 
 const TRANSITION_LENGTH = 500;
 

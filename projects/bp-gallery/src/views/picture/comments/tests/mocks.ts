@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { PostCommentDocument } from '../../../../../graphql/APIConnector';
+import { PostCommentDocument } from '../../../../graphql/APIConnector';
 
 export const MOCKED_COMMENT_POST_DATE = '2022-02-02T10:00:00.000Z';
 
