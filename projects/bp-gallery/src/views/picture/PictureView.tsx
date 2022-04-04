@@ -15,7 +15,7 @@ import { useGetPictureInfoLazyQuery } from '../../graphql/APIConnector';
 import { FlatPicture } from '../../graphql/additionalFlatTypes';
 import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture-animation.helpers';
 import PictureViewUI from './components/PictureViewUI';
-import PictureInfo from './components/PictureInfo';
+import PictureSidebar from './components/PictureSidebar';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { PictureNavigationTarget } from './components/PictureNavigationButtons';
 import ZoomWrapper from './ZoomWrapper';
@@ -206,7 +206,12 @@ const PictureView = ({
             </div>
           </ZoomWrapper>
           {thumbnailMode === false && (
-            <PictureInfo loading={loading} error={error} picture={picture} pictureId={pictureId} />
+            <PictureSidebar
+              loading={loading}
+              error={error}
+              picture={picture}
+              pictureId={pictureId}
+            />
           )}
         </div>
       </PictureViewContext.Provider>

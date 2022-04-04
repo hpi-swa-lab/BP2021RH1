@@ -1,15 +1,8 @@
-import React, { useContext, useRef } from 'react';
-import PictureDetails from './PictureDetails';
-import CommentsContainer from './comments/CommentsContainer';
-import './PictureInfo.scss';
+import React from 'react';
 import { Icon } from '@mui/material';
-import { PictureViewContext } from '../PictureView';
 import dayjs from 'dayjs';
-import PictureViewNavigationBar from './PictureViewNavigationBar';
-import { FlatPicture, FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
-import { ApolloError } from '@apollo/client';
-import Loading from '../../../components/Loading';
-import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
+import { FlatPicture, FlatTimeRangeTag } from '../graphql/additionalFlatTypes';
+import PictureDetails from './PictureDetails';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   if (!timeStamp?.start || !timeStamp.end) {
@@ -37,7 +30,7 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   }
 };
 
-const PictureInfoContent = ({ picture }: { picture: FlatPicture }) => {
+const PictureInfo = ({ picture, children }: { picture: FlatPicture; children: any }) => {
   return (
     <div className='scrollbar-container'>
       <div className='picture-infos'>
@@ -46,31 +39,8 @@ const PictureInfoContent = ({ picture }: { picture: FlatPicture }) => {
           <span>{formatTimeStamp(picture.time_range_tag ?? undefined)}</span>
         </div>
         <PictureDetails descriptions={picture.descriptions} />
-        <CommentsContainer comments={picture.comments} pictureId={picture.id} />
+        {children}
       </div>
-    </div>
-  );
-};
-
-const PictureInfo = ({
-  picture,
-  loading,
-  error,
-}: {
-  picture?: FlatPicture;
-  pictureId: string;
-  loading?: boolean;
-  error?: ApolloError;
-}) => {
-  const { sideBarOpen } = useContext(PictureViewContext);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <div className={`picture-info-container${!sideBarOpen ? ' closed' : ''}`} ref={containerRef}>
-      {loading && <Loading />}
-      {error && <QueryErrorDisplay error={error} />}
-      {!loading && !error && picture && <PictureInfoContent picture={picture} />}
-      <PictureViewNavigationBar />
     </div>
   );
 };
