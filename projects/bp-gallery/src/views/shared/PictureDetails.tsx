@@ -1,7 +1,7 @@
 import React from 'react';
 import './PictureDetails.scss';
 import { sanitize } from 'dompurify';
-import { FlatDescription } from '../graphql/additionalFlatTypes';
+import { FlatDescription } from '../../graphql/additionalFlatTypes';
 
 const PictureDetails = ({ descriptions }: { descriptions?: FlatDescription[] }) => {
   return (

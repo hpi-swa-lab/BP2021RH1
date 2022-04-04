@@ -1,7 +1,7 @@
 import { Button, Icon } from '@mui/material';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PictureViewContext } from '../PictureView';
+import { PictureViewContext } from './PictureView';
 
 const PictureViewNavigationBar = () => {
   const { t } = useTranslation();

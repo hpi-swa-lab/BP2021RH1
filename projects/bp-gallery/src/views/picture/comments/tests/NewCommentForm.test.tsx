@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { renderWithAPIMocks } from '../../../../../testUtils';
+import { renderWithAPIMocks } from '../../../../testUtils';
 import NewCommentForm from '../NewCommentForm';
 import { MOCKED_COMMENT_POST_DATE, PostCommentDocumentMocks } from './mocks';
 

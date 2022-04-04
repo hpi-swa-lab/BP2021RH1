@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatComment } from '../../../../graphql/additionalFlatTypes';
+import { FlatComment } from '../../../graphql/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';

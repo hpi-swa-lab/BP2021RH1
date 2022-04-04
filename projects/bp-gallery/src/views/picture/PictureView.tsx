@@ -14,10 +14,10 @@ import { History } from 'history';
 import { useGetPictureInfoLazyQuery } from '../../graphql/APIConnector';
 import { FlatPicture } from '../../graphql/additionalFlatTypes';
 import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture-animation.helpers';
-import PictureViewUI from './components/PictureViewUI';
-import PictureSidebar from './components/PictureSidebar';
+import PictureViewUI from './PictureViewUI';
+import PictureSidebar from './PictureSidebar';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
-import { PictureNavigationTarget } from './components/PictureNavigationButtons';
+import { PictureNavigationTarget } from './PictureNavigationButtons';
 import ZoomWrapper from './ZoomWrapper';
 
 export interface PictureViewContextFields {

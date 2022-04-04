@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import './NavigationBar.scss';
 import { useTranslation } from 'react-i18next';
 import LoginDialog from './LoginDialog';
-import { AuthRole, useAuth } from '../AuthWrapper';
+import { AuthRole, useAuth } from '../../AuthWrapper';
 
 const NavigationBar = () => {
   const { t } = useTranslation();

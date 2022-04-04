@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import './FormattedComment.scss';
-import { FlatComment } from '../../../../graphql/additionalFlatTypes';
+import { FlatComment } from '../../../graphql/additionalFlatTypes';
 
 const FormattedComment = ({ comment }: { comment: FlatComment }) => {
   const { t } = useTranslation();

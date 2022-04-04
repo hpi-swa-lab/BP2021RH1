@@ -3,8 +3,8 @@ import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APICo
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
-import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
-import Loading from '../../../components/Loading';
+import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
+import Loading from '../../shared/Loading';
 
 const PictureScrollGrid = ({
   filters,

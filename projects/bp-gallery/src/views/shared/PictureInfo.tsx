@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from '@mui/material';
 import dayjs from 'dayjs';
-import { FlatPicture, FlatTimeRangeTag } from '../graphql/additionalFlatTypes';
+import { FlatPicture, FlatTimeRangeTag } from '../../graphql/additionalFlatTypes';
 import PictureDetails from './PictureDetails';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {

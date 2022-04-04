@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Loading from '../../../components/Loading';
-import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
-import PictureScrollGrid from '../common/PictureScrollGrid';
+import Loading from '../../shared/Loading';
+import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
+import PictureScrollGrid from '../shared/PictureScrollGrid';
 import SubCollections from './SubCollections';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import CollectionDescription from './CollectionDescription';

@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { flattenQueryResponseData } from '../../graphql/queryUtils';
-import { DescriptionMocks } from '../../views/picture/tests/mocks';
+import { flattenQueryResponseData } from '../../../graphql/queryUtils';
+import { DescriptionMocks } from '../../picture/tests/mocks';
 import PictureDetails from '../PictureDetails';
-import { FlatDescription } from '../../graphql/additionalFlatTypes';
+import { FlatDescription } from '../../../graphql/additionalFlatTypes';
 
 test('PictureDetails renders passed descriptions', () => {
   const { container } = render(
