@@ -1,12 +1,15 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { flattenQueryResponseData } from '../../../graphql/queryUtils';
-import { DescriptionMocks } from './mocks';
-import PictureDetails from '../components/PictureDetails';
+import { flattenQueryResponseData } from '../../graphql/queryUtils';
+import { DescriptionMocks } from '../../views/picture/tests/mocks';
+import PictureDetails from '../PictureDetails';
+import { FlatDescription } from '../../graphql/additionalFlatTypes';
 
 test('PictureDetails renders passed descriptions', () => {
   const { container } = render(
-    <PictureDetails descriptions={flattenQueryResponseData(DescriptionMocks)} />
+    <PictureDetails
+      descriptions={flattenQueryResponseData(DescriptionMocks) as FlatDescription[]}
+    />
   );
 
   const descriptions = container.querySelectorAll('.pictureDetails > .description');
