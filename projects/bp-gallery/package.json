@@ -49,6 +49,7 @@
     "@graphql-codegen/typescript-react-apollo": "3.2.2",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
+    "cypress": "^9.5.3",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
@@ -56,13 +57,16 @@
     "eslint-plugin-unused-imports": "^1.1.5",
     "husky": "^7.0.4",
     "prettier": "^2.4.1",
-    "pretty-quick": "^3.1.1"
+    "pretty-quick": "^3.1.1",
+    "start-server-and-test": "^1.14.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll",
     "test:ci": "react-scripts test --verbose",
+    "cy:run": "cypress open",
+    "cy": "start-server-and-test start http://localhost:3000 cy:run",
     "eject": "react-scripts eject",
     "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
     "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx src",
