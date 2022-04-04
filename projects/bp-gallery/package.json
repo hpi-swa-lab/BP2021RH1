@@ -61,7 +61,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll",
     "eject": "react-scripts eject",
     "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
     "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx src",
