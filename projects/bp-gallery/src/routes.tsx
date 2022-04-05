@@ -8,6 +8,7 @@ import TagOverview from './views/curator/TagOverview';
 import GalleryView from './views/gallery/GalleryView';
 import PictureView from './views/picture/PictureView';
 import CommentOverview from './views/curator/CommentOverview';
+import Map from './prototypes/Map/Map';
 
 const routes: RouteConfig[] = [
   {
@@ -102,6 +103,10 @@ const routes: RouteConfig[] = [
       {
         path: '/prototypes/timeline-demo',
         component: TimeLineDemo,
+      },
+      {
+        path: '/prototypes/map',
+        component: Map,
       },
       {
         // fallback component for unmatched routes
