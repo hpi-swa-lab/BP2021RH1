@@ -1,8 +1,12 @@
 name: End-to-end test
 
 on:
-  push:
-    branches: [feat/frontend-editing]
+  pull_request:
+    types:
+        - opened
+        - ready_for_review
+    branches:
+        - main
 
 jobs:
   run_e2e_tests:
