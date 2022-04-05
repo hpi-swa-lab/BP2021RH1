@@ -96,14 +96,14 @@ module.exports = ({ strapi }) => ({
     const existingFilenames = fs.readdirSync('/home/dev/BP2021RH1/projects/bp-strapi/public/uploads/')
       .map(name => name.replace(/_/gm, '-'))
       .filter(filename => filename !== '.gitkeep' && filename !== '.gitignore'); // don't miss-interpret any git related stuff as real picture files
- 
+
     const mediaIds = (await pictureQuery.findMany({
       populate: {
         media: {
           select: ['id']
         }
       }})).map(img => img.media.id);
-  
+
     const pictureBuffer = {};
     for (const albumId of Object.keys(albumData)) {
       const album = albumData[albumId];
@@ -149,7 +149,7 @@ module.exports = ({ strapi }) => ({
         if (mediaIds.includes(mediaRef.id)) {
           continue;
         }
-  
+
         console.log('Including picture with wordpress_id: ', picId);
         let previousTitle = await titleQuery.findOne({
           where: {
@@ -214,7 +214,7 @@ module.exports = ({ strapi }) => ({
           },
         });
 
-        
+
         mediaIds.push(mediaRef.id);
 
       }
@@ -479,15 +479,15 @@ module.exports = ({ strapi }) => ({
     const workbook = XLSX.readFile(pathToExcelData);
     const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]).slice(1);
 
-    const existingFilenames = fs.readdirSync('/home/dev/BP2021RH1/projects/bp-strapi/public/uploads/')
+    const existingFilenames = fs.readdirSync('C:\\Users\\bened\\0\\Studium\\BP\\Git_Repo\\BP2021RH1\\projects\\bp-strapi\\public\\uploads')
       .map(name => name.replace(/_/gm, '-'))
       .filter(filename => filename !== '.gitkeep' && filename !== '.gitignore'); // don't miss-interpret any git related stuff as real picture files
-    
-      
+
+
     const allFiles = [];
     for (const row of json) {
       // Upload image...
-      const path = `/home/dev/images/excel/${row["Ordnername"]}/${row["Dateiname"]}`;
+      const path = `C:/Users/bened/0/Studium/BP/Werners_Excel-Tabellen/02/${row["Ordnername"]}/${row["Dateiname"]}`;
       if (fs.existsSync(path)) {
         const alreadyUploadedFile = existingFilenames.find(existingName =>
           existingName.slice(0, -15) === row["Dateiname"].slice(0, -4)
@@ -520,55 +520,58 @@ module.exports = ({ strapi }) => ({
     strapi.log.info('Upload finished');
 
     const splitTags = (rowdata) => rowdata.split(/,|;/gm).filter(r => r && !(r.match(/^\s*$/gm))).map(keyword => ({
-      text: keyword.replace(/\(?\?+\)?/gm, '').trim(),
+      text: keyword.replace(/\(?\?+\)?/gm, '').replace(/[–|\-]/gm, '-').trim(),
       verified: !keyword.includes('?')
     }));
 
     const pictureBuffer = [];
-    
-    for (const row of json) {
-      const categories = splitTags(row["Kategorien"] || '');
-      categories.reverse();
 
-      let parent = await collectionQuery.findOne({
-        where: {
-          name: 'Das Herbert-Ahrens-Bilderarchiv',
-        },
-      });
-      let i = 0;
-      for (const cat of categories) {
-        let created = false;
-        if (cat && cat.text) {
-          let previousCollection = await collectionQuery.findOne({
-            populate: ['parent_collections'],
-            where: {
-              name: cat.text,
-            },
-          });
-          if (!previousCollection) {
-            previousCollection = await collectionService.create({
+    for (const row of json) {
+      const categoryGroups = row["Kategorien"].split("|");
+      for (const categoryGroup of categoryGroups) {
+        const categories = splitTags(categoryGroup || '');
+        categories.reverse();
+
+        let parent = await collectionQuery.findOne({
+          where: {
+            name: 'Das Herbert-Ahrens-Bilderarchiv',
+          },
+        });
+        let i = 0;
+        for (const cat of categories) {
+          let created = false;
+          if (cat && cat.text) {
+            let previousCollection = await collectionQuery.findOne({
               populate: ['parent_collections'],
-              data: {
+              where: {
                 name: cat.text,
               },
             });
-            created = true;
-            strapi.log.info(`Created new collection "${cat.text}"`);
-          }
-          if (i !== 0 || created) {
-            if (!previousCollection.parent_collections.some(p => p.id === parent.id)) {
-              await collectionQuery.update({
-                where: {
-                  id: previousCollection.id,
-                },
+            if (!previousCollection) {
+              previousCollection = await collectionService.create({
+                populate: ['parent_collections'],
                 data: {
-                  parent_collections: previousCollection.parent_collections.map(c => c.id).concat([parent.id])
+                  name: cat.text,
                 },
               });
+              created = true;
+              strapi.log.info(`Created new collection "${cat.text}"`);
             }
+            if (i !== 0 || created) {
+              if (!previousCollection.parent_collections.some(p => p.id === parent.id)) {
+                await collectionQuery.update({
+                  where: {
+                    id: previousCollection.id,
+                  },
+                  data: {
+                    parent_collections: previousCollection.parent_collections.map(c => c.id).concat([parent.id])
+                  },
+                });
+              }
+            }
+            i++;
+            parent = previousCollection;
           }
-          i++;
-          parent = previousCollection;
         }
       }
     }
@@ -607,7 +610,7 @@ module.exports = ({ strapi }) => ({
       if (row["Link"]) {
         description += `<br/><br/><a href="${row["Link"]}">${row["Link"]}</a>`;
       }
-      
+
       if (description && description !== '') {
         previousDescription = await descriptionQuery.findOne({
           where: {
@@ -625,7 +628,7 @@ module.exports = ({ strapi }) => ({
 
       const keywordRefs = [];
       const keywords = splitTags(row["Schlagwörter"] || '');
-      
+
       for (const keyword of keywords) {
         let previousKeyword = await keywordTagQuery.findOne({
           where: {
@@ -644,7 +647,7 @@ module.exports = ({ strapi }) => ({
 
       const locationRefs = [];
       const locations = splitTags(row["Orte"] || '');
-      
+
       for (const location of locations) {
         let previousLocation = await locationTagQuery.findOne({
           where: {
@@ -663,7 +666,7 @@ module.exports = ({ strapi }) => ({
 
       const personRefs = [];
       const people = splitTags(row["Personen"] || '');
-      
+
       for (const person of people) {
         let previousPerson = await personTagQuery.findOne({
           where: {
@@ -682,7 +685,7 @@ module.exports = ({ strapi }) => ({
 
       let timeRef = null;
       const timeRange = (row["Datum/Zeiträume"] && row["Datum/Zeiträume"] !== '') ? parseTimes([row["Datum/Zeiträume"]]) : null;
-      
+
       if (timeRange && timeRange.length) {
         let previousTimeRangeTag = await timeRangeTagQuery.findOne({
           where: {
@@ -702,12 +705,16 @@ module.exports = ({ strapi }) => ({
       }
 
       // Categories
-      const categories = splitTags(row["Kategorien"] || '');
-      let previousCollection = await collectionQuery.findOne({
-        where: {
-          name: categories[0].text
-        },
-      });
+      const previousCollections = [];
+      const categoryGroups = row["Kategorien"].split('|');
+      for (const categoryGroup of categoryGroups) {
+        let previousCollection = await collectionQuery.findOne({
+          where: {
+            name: splitTags(categoryGroup)[0].text
+          },
+        });
+        previousCollections.push(previousCollection);
+      }
 
       const picdata = {
         data: {
@@ -726,11 +733,7 @@ module.exports = ({ strapi }) => ({
           person_tags: personRefs.filter(key => !key.verified).map(key => key.id),
           verified_person_tags: personRefs.filter(key => key.verified).map(key => key.id),
           archive_identifier: row["Archiv-Kennung"] || row["Ordner"] || null,
-          collections: (
-            previousCollection ? [{
-              id: previousCollection.id,
-            }] : []
-          )
+          collections: previousCollections.map(collection => collection.id)
         },
       }
 
@@ -756,7 +759,7 @@ module.exports = ({ strapi }) => ({
   },
 
   async reducePictureCollectionRelations() {
-    
+
     const pictureQuery = strapi.db.query('api::picture.picture');
 
     const pictures = await pictureQuery.findMany({
@@ -791,7 +794,7 @@ module.exports = ({ strapi }) => ({
           collections: mostSpecificCollections.map(collection => collection.id)
         }
       });
-      
+
       responsebuffer.push({picture, mostSpecificCollections});
     }
 
