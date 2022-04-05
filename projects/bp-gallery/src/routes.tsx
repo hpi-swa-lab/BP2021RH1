@@ -6,6 +6,7 @@ import Demo from './prototypes/demo';
 import TimeLineDemo from './prototypes/timeline-demo';
 import GalleryView from './views/gallery/GalleryView';
 import PictureView from './views/picture/PictureView';
+import Map from './prototypes/Map/Map';
 
 const routes: RouteConfig[] = [
   {
@@ -67,6 +68,10 @@ const routes: RouteConfig[] = [
       {
         path: '/prototypes/timeline-demo',
         component: TimeLineDemo,
+      },
+      {
+        path: '/prototypes/map',
+        component: Map,
       },
       {
         // fallback component for unmatched routes
