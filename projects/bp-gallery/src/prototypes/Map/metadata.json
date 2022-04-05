@@ -14,7 +14,7 @@
   "1": {
     "id": 2336,
     "descriptions": [
-      { "attributes": { "text": "1958 â€“ Winter an der B4, Warnschild, Schneekettenpflicht" } }
+      { "attributes": { "text": "1958 Winter an der B4, Warnschild, Schneekettenpflicht" } }
     ],
     "time": { "start": "1958-01-01T00:00:00.000Z", "end": "1958-12-31T00:00:00.000Z" },
     "position": { "latitude": 51.896940804809226, "longitude": 10.556336831505178 }
@@ -24,7 +24,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "1975. Weihnachtsbeleuchtung in der Innenstadt.  Weihnachtszeit am Platz Stadtmitte/Herzog-Wilhelm-StraÃŸe"
+          "text": "1975. Weihnachtsbeleuchtung in der Innenstadt.  Weihnachtszeit am Platz Stadtmitte/Herzog-Wilhelm-Straße"
         }
       }
     ],
@@ -33,7 +33,7 @@
   },
   "3": {
     "id": 2154,
-    "descriptions": [{ "attributes": { "text": "1954. GestÃ¼t. Pferde auf Koppeln" } }],
+    "descriptions": [{ "attributes": { "text": "1954. Gestüt. Pferde auf Koppeln" } }],
     "time": { "start": "1954-01-01T00:00:00.000Z", "end": "1954-12-31T00:00:00.000Z" },
     "position": { "latitude": 51.88753421485542, "longitude": 10.538652172253933 }
   },
@@ -69,7 +69,7 @@
   },
   "7": {
     "id": 621,
-    "descriptions": [{ "attributes": { "text": "<h1>1973_wildimporte01</h1>" } }],
+    "descriptions": [{ "attributes": { "text": "1973" } }],
     "time": { "start": "1973-01-01T00:00:00.000Z", "end": "1973-12-31T00:00:00.000Z" },
     "position": { "latitude": 51.879914535190025, "longitude": 10.55908437778271 }
   },
@@ -118,7 +118,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "ErÃ¶ffnung des Automatenspiels der Spielbank in der Stadtmitte am 14./15. Dezember 1981."
+          "text": "Eröffnung des Automatenspiels der Spielbank in der Stadtmitte am 14./15. Dezember 1981."
         }
       }
     ],
@@ -142,7 +142,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "Bahnhofs(vor)platz, alte Staatsbank, LÃ¶wendenkmal. Zeitangabe: 1953"
+          "text": "Bahnhofs(vor)platz, alte Staatsbank, Löwendenkmal. Zeitangabe: 1953"
         }
       }
     ],
@@ -154,7 +154,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "Benefiz-BÃ¼hnenschau des MTK Bad Harzburg am 11. November 1967 im Kurhaus Bad Harzburg."
+          "text": "Benefiz-Bühnenschau des MTK Bad Harzburg am 11. November 1967 im Kurhaus Bad Harzburg."
         }
       }
     ],
@@ -202,7 +202,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "05. Oktober 1955. Menschen genieÃŸen Goldenen Oktober im Stadtpark"
+          "text": "05. Oktober 1955. Menschen genießen Goldenen Oktober im Stadtpark"
         }
       }
     ],
@@ -214,10 +214,10 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "Prof. Dr. Otto Antrick war Politikwissenschaftler und SPD-Politiker. Aufnahmen aus dem Jahr 1979 bei der Verleihung des Bundesverdienstkreuzes im Bad Harzburger Rathaus durch Staatssekret채r Dockhorn. Zu den Gratulanten z채hlte auch B체rgermeister Klaus Homann. Ebenfalls zugegen die SPD-Politiker Wilhelm Baumgarten sen. (Landtagspr채sident) und Wilhelm Baumgarten."
+          "text": "Prof. Dr. Otto Antrick war Politikwissenschaftler und SPD-Politiker. Aufnahmen aus dem Jahr 1979 bei der Verleihung des Bundesverdienstkreuzes im Bad Harzburger Rathaus durch Staatssekretär Dockhorn. Zu den Gratulanten zählte auch Bürgermeister Klaus Homann. Ebenfalls zugegen die SPD-Politiker Wilhelm Baumgarten sen. (Landtagspräsident) und Wilhelm Baumgarten."
         }
       },
-      { "attributes": { "text": "<h1>antrick, otto</h1>" } }
+      { "attributes": { "text": "antrick, otto" } }
     ],
     "time": { "start": "1979-01-01T00:00:00.000Z", "end": "1979-12-31T00:00:00.000Z" },
     "position": { "latitude": 51.8848022309465, "longitude": 10.559352699692683 }
@@ -233,10 +233,10 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "1951. Britische Armee lÃ¤dt Bad Harzburger Kinder zu Weihnachtsfeier im Kurhaus ein."
+          "text": "1951. Britische Armee lädt Bad Harzburger Kinder zu Weihnachtsfeier im Kurhaus ein."
         }
       },
-      { "attributes": { "text": "<h1>1945-1955</h1>" } }
+      { "attributes": { "text": "1945-1955" } }
     ],
     "time": { "start": "1945-04-10T00:00:00.000Z", "end": "1945-04-10T23:59:59.999Z" },
     "position": { "latitude": 51.873049226410124, "longitude": 10.55992882456849 }
@@ -296,7 +296,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "Der Schlagerkomponist Michael Jary filmt bei einem Kuraufenthalt in Bad Harzburg am 13. April 1954 die WildfÃ¼tterung an der Marienteichbaude."
+          "text": "Der Schlagerkomponist Michael Jary filmt bei einem Kuraufenthalt in Bad Harzburg am 13. April 1954 die Wildfütterung an der Marienteichbaude."
         }
       }
     ],
@@ -342,7 +342,7 @@
   "33": {
     "id": 695,
     "descriptions": [
-      { "attributes": { "text": "Sportplatz WaldhÃ¶he, Richtfest Jugendheim 1958" } }
+      { "attributes": { "text": "Sportplatz Waldhöhe, Richtfest Jugendheim 1958" } }
     ],
     "time": { "start": "1958-01-01T00:00:00.000Z", "end": "1958-12-31T00:00:00.000Z" },
     "position": { "latitude": 51.88200026003337, "longitude": 10.583099750656404 }
@@ -364,7 +364,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "Burgberg-Seilbahn 1956, siebenmillionste Fahrgast 23. August 1956, Irmgard Busch, Stenotypistin aus Hamburg, Begleiterinnen Waltraud und Ingrid Lohscheid aus KÃ¶ln"
+          "text": "Burgberg-Seilbahn 1956, siebenmillionste Fahrgast 23. August 1956, Irmgard Busch, Stenotypistin aus Hamburg, Begleiterinnen Waltraud und Ingrid Lohscheid aus Köln"
         }
       }
     ],
@@ -376,7 +376,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "1953. Finkenmanöver in Hohegeiß im Jahr 1953. Auf einzelnen Fotos Vermerke „55“ und „54“, die auf die Jahre 1955 und 1954 hindeuten.  Außer allgemeinen Hinweisen zur Tradition des Finkenschlagens keine weiteren Angaben zu den Fotos."
+          "text": "1953. Finkenmanöver in Hohegeiß im Jahr 1953. Auf einzelnen Fotos Vermerke „55“ und „54“, die auf die Jahre 1955 und 1954 hindeuten. Außer allgemeinen Hinweisen zur Tradition des Finkenschlagens keine weiteren Angaben zu den Fotos."
         }
       }
     ],
@@ -388,7 +388,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "April 1953. Stadtpark und Casino ( Haus des Kurgastes ) im April noch tief verschneit"
+          "text": "April 1953. Stadtpark und Casino (Haus des Kurgastes) im April noch tief verschneit"
         }
       }
     ],
@@ -421,7 +421,7 @@
   },
   "41": {
     "id": 1041,
-    "descriptions": [{ "attributes": { "text": "SchÃ¼tzenfest 1973," } }],
+    "descriptions": [{ "attributes": { "text": "Schützenfest 1973," } }],
     "time": { "start": "1973-01-01T00:00:00.000Z", "end": "1973-12-31T00:00:00.000Z" },
     "position": { "latitude": 51.88972140454856, "longitude": 10.553994285364753 }
   },
@@ -440,7 +440,7 @@
   "43": {
     "id": 1127,
     "descriptions": [
-      { "attributes": { "text": "Galopprennwoche 1949 Sprung Ã¼ber den Silberbornbach" } }
+      { "attributes": { "text": "Galopprennwoche 1949 Sprung über den Silberbornbach" } }
     ],
     "time": { "start": "1949-01-01T00:00:00.000Z", "end": "1949-12-31T00:00:00.000Z" },
     "position": { "latitude": 51.883786080679336, "longitude": 10.527830221435579 }
@@ -453,7 +453,7 @@
           "text": "1951. Britische Armee lÃ¤dt Bad Harzburger Kinder zu Weihnachtsfeier im Kurhaus ein."
         }
       },
-      { "attributes": { "text": "<h1>1945-1955</h1>" } }
+      { "attributes": { "text": "1945-1955" } }
     ],
     "time": { "start": "1945-04-10T00:00:00.000Z", "end": "1945-04-10T23:59:59.999Z" },
     "position": { "latitude": 51.87302949510898, "longitude": 10.560499935527336 }
@@ -463,7 +463,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "1958 Heimatfest in St. Andreasberg. Festumzug in historischen KostÃ¼men am 30. August 1958."
+          "text": "1958 Heimatfest in St. Andreasberg. Festumzug in historischen Kostümen am 30. August 1958."
         }
       }
     ],
@@ -487,7 +487,7 @@
     "descriptions": [
       {
         "attributes": {
-          "text": "1953. Trainingslager der Top-Teams in Bad Harzburg. Testspiel Hannover 96 gegen SPV FÃ¼rth. Endstand 2:2 vor 5000 Zuschauern."
+          "text": "1953. Trainingslager der Top-Teams in Bad Harzburg. Testspiel Hannover 96 gegen SPV Fürth. Endstand 2:2 vor 5000 Zuschauern."
         }
       }
     ],
