@@ -45,4 +45,7 @@ jobs:
             cd ../bp-strapi
         - name: Run E2E script
           run: ./test/setup.sh
+          env:
+            PGPASSWORD: ${{ secrets.E2E_DB_PASSWORD }}
+
 
