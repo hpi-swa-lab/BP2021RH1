@@ -9,7 +9,7 @@ import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
 import AlertWrapper from './views/shared/AlertWrapper';
 
-const apiBase = 'https://bp.bad-harzburg-stiftung.de/api';
+const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
 export const asApiPath = (pathEnding: string) => {
   //Removes any multiple occurences of a "/"
