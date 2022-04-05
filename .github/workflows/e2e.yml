@@ -1,0 +1,48 @@
+name: End-to-end test
+
+on:
+  push:
+    branches: [feat/frontend-editing]
+
+jobs:
+  run_e2e_tests:
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./projects/bp-strapi
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: abc1234
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
+        - name: Setup Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v2
+          with:
+            node-version: ${{ matrix.node-version }}
+        - name: Install strapi dependencies
+          run: yarn install --frozen-lockfile
+        - name: Install bp-gallery dependencies
+          run: |
+            cd ../bp-gallery
+            yarn install --frozen-lockfile
+            cd ../bp-strapi
+        - name: Run E2E script
+          run: ./test/setup.sh
+
