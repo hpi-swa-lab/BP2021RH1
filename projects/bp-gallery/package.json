@@ -22,6 +22,7 @@
     "@types/react-router-dom": "^5.3.1",
     "dayjs": "^1.10.7",
     "dompurify": "^2.3.3",
+    "env-cmd": "^10.1.0",
     "graphql": "^16.0.1",
     "history": "^5.1.0",
     "i18next": "^21.4.1",
@@ -61,17 +62,21 @@
     "start-server-and-test": "^1.14.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --watchAll",
-    "test:ci": "react-scripts test --verbose",
-    "cy:run": "cypress open",
-    "cy": "start-server-and-test start http://localhost:3000 cy:run",
+    "start": "env-cmd -f ./environments/.env.development react-scripts start",
+    "build": "env-cmd -f ./environments/.env.development react-scripts build",
+    "test": "env-cmd -f ./environments/.test.development react-scripts test --watchAll",
+    "test:ci": "env-cmd -f ./environments/.env.development react-scripts test --verbose",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "start:e2e": "env-cmd -f ./environments/.env.test react-scripts start",
+    "cy": "start-server-and-test start:e2e http://localhost:3000 cy:open",
+    "cy:ci": "start-server-and-test start:e2e http://localhost:3000 cy:run",
     "eject": "react-scripts eject",
     "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
     "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx src",
     "format": "prettier --write src && yarn lint --fix",
-    "generate-api": "graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx"
+    "generate-api": "graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx",
+    "generate-api:e2e": "env-cmd -f ./environments/.env.test graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx"
   },
   "browserslist": {
     "production": [
