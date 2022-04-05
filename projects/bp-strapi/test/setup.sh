@@ -4,7 +4,7 @@
 # Create and import data into test database
 # The test data is located in the ./test/data.sql file
 # and was exported via pg_dump
-sudo -u postgres -- createdb -T template0 strapi-e2e
+createdb -h localhost -U postgres -T template0 strapi-e2e
 pg_restore -h localhost -c -U postgres --no-owner -d strapi-e2e ./test/data.sql
 
 # Copy images to uploads folder
