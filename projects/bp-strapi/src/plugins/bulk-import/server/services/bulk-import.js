@@ -479,7 +479,7 @@ module.exports = ({ strapi }) => ({
     const workbook = XLSX.readFile(pathToExcelData);
     const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]).slice(1);
 
-    const existingFilenames = fs.readdirSync('C:\\Users\\bened\\0\\Studium\\BP\\Git_Repo\\BP2021RH1\\projects\\bp-strapi\\public\\uploads')
+    const existingFilenames = fs.readdirSync('/home/dev/BP2021RH1/projects/bp-strapi/public/uploads/')
       .map(name => name.replace(/_/gm, '-'))
       .filter(filename => filename !== '.gitkeep' && filename !== '.gitignore'); // don't miss-interpret any git related stuff as real picture files
 
@@ -487,7 +487,7 @@ module.exports = ({ strapi }) => ({
     const allFiles = [];
     for (const row of json) {
       // Upload image...
-      const path = `C:/Users/bened/0/Studium/BP/Werners_Excel-Tabellen/02/${row["Ordnername"]}/${row["Dateiname"]}`;
+      const path = `/home/dev/images/excel/${row["Ordnername"]}/${row["Dateiname"]}`;
       if (fs.existsSync(path)) {
         const alreadyUploadedFile = existingFilenames.find(existingName =>
           existingName.slice(0, -15) === row["Dateiname"].slice(0, -4)
