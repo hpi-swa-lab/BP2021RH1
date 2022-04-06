@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import './Map.scss';
 import PictureMarker from './PictureMarker';
@@ -41,7 +41,7 @@ const Map = () => {
   const pictureInfos: { [key: string]: PictureInfo } = metadata as unknown as {
     [key: string]: PictureInfo;
   };
-
+  const [map, setMap] = useState(null);
   const saveMarkersPosition = () => {
     const url = window.URL.createObjectURL(new Blob([JSON.stringify(pictureInfos)]));
     const link = document.createElement('a');
@@ -50,12 +50,24 @@ const Map = () => {
     document.body.appendChild(link);
     link.click();
   };
-
+  function FlyToButton() {
+    const onClick = () => {
+      //@ts-ignore
+      map.flyTo([51.8848022309465, 10.559352699692683], 13);
+    };
+    return (
+      <button onClick={onClick} className={'fly-to-bh-button'}>
+        Bad Harzburg
+      </button>
+    );
+  }
   return (
-    <MapContainer center={[51.871020514341126, 10.562439542954966]} zoom={13}>
+    //@ts-ignore
+    <MapContainer center={[51.8848022309465, 10.559352699692683]} zoom={13} whenCreated={setMap}>
       {/* <Button className='marker-save-button' onClick={saveMarkersPosition}>
         save marker
       </Button> */}
+      <FlyToButton></FlyToButton>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
