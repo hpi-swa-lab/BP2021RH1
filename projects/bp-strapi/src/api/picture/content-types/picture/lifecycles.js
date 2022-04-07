@@ -74,23 +74,69 @@ const findExistingOrCreateNewTag = async (tagQuery, tagService, tagKeyInPictureR
 };
 
 /**
- * Updates the previous tag with the new data or, if there already exists a tag with that data,
- * merges the two tags together. Afterwards, it returns the tag id to be used for the update.
+ * Updates the previous description with the new text or, if there already exists a description with that data,
+ * merges the two descriptions together (with prioritization of the already existing one).<br>
+ * Afterwards, it returns the description id to be used for the update of the current picture.
  */
-const updatePreviousOrMergeWithExistingTag = async (tagQuery, tagKeyInPictureRelation, previousTagId, newTagValueData) => {
-  const tagKeyForApi = getTagKeyForApiFromRelationKey(tagKeyInPictureRelation); // just for prettier logs
-  const newTagAlreadyInDB = await tagQuery.findOne({ where: newTagValueData });
+const updatePreviousOrMergeWithExistingDescription = async (pictureQuery, currentPictureId, descriptionQuery, previousDescriptionId, newDescriptionData) => {
+  const descriptionKeyForApi = getTagKeyForApiFromRelationKey(DESCRIPTIONS_KEY); // just for prettier logs
+  const newDescriptionAlreadyInDb = await descriptionQuery.findOne({
+    where: newDescriptionData,
+    populate: ['pictures'],
+  });
 
-  let updatedTagId;
-  if (!newTagAlreadyInDB) {
-    await tagQuery.update({ where: { id: previousTagId }, data: newTagValueData });
-    strapi.log.debug(`Updated previous ${tagKeyForApi} with id ${previousTagId}`);
-    updatedTagId = previousTagId;
+  let updatedDescriptionId;
+  if (!newDescriptionAlreadyInDb) {
+    await descriptionQuery.update({
+      where: {
+        id: previousDescriptionId,
+      },
+      data: newDescriptionData
+    });
+    strapi.log.debug(`Updated previous ${descriptionKeyForApi} with id ${previousDescriptionId}`);
+    updatedDescriptionId = previousDescriptionId;
   } else {
-    // TODO implement merging of the tag that should be updated (previousTagId) with the existing one
+    const picturesWithPreviousDescriptions = await pictureQuery.findMany({
+      where: {
+        [DESCRIPTIONS_KEY]: previousDescriptionId
+      },
+      populate: [DESCRIPTIONS_KEY],
+    });
+
+    strapi.log.debug(`New ${descriptionKeyForApi} already exists with id ${newDescriptionAlreadyInDb.id}`);
+    strapi.log.debug(`Now merging the previous ${descriptionKeyForApi} with id ${previousDescriptionId} with the existing one`);
+
+    // Filter out the current picture (as this gets updated separately, because we are still in the beforeUpdate hook)
+    const newPicturesForTheExistingDescription = picturesWithPreviousDescriptions.filter(picture => picture.id !== currentPictureId);
+    strapi.log.debug(`The merging process will also effect the following pictures: [${newPicturesForTheExistingDescription}]`);
+
+    // Relate all pictures (but the current one) to the existing description
+    await descriptionQuery.update({
+      where: {
+        id: newDescriptionAlreadyInDb.id
+      },
+      data: {
+        pictures: [
+          ...newDescriptionAlreadyInDb.pictures.map(picture => picture.id),
+          ...newPicturesForTheExistingDescription,
+        ],
+      },
+    });
+
+    // Un-relate every picture from the previous description
+    await descriptionQuery.update({
+      where: {
+        id: previousDescriptionId,
+      },
+      data: {
+        pictures: [],
+      },
+    });
+
+    updatedDescriptionId = newDescriptionAlreadyInDb.id;
   }
 
-  return updatedTagId;
+  return updatedDescriptionId;
 };
 
 /**
@@ -104,7 +150,7 @@ const deletePreviousTagIfNeeded = async (pictureQuery, tagQuery, tagKeyInPicture
       $or: [
         { [tagKeyInPictureRelation]: previousTagId },
       ],
-    }
+    },
   };
 
   if (tagHasVerifiedHandling) {
@@ -136,7 +182,7 @@ const deletePreviousTagIfNeeded = async (pictureQuery, tagQuery, tagKeyInPicture
  *   <li>But also make it possible to just pass simple ids for descriptions that didn't change.</li>
  * </ul>
  */
-const processUpdatesForDescriptions = async (pictureQuery, data) => {
+const processUpdatesForDescriptions = async (pictureQuery, currentPictureId, data) => {
   // Check whether we actually need to update stuff for that type.
   if (!data[DESCRIPTIONS_KEY]) return;
 
@@ -159,7 +205,7 @@ const processUpdatesForDescriptions = async (pictureQuery, data) => {
 
     let newDescriptionId;
     if (parsedDescription.updatePrevious) {
-      newDescriptionId = await updatePreviousOrMergeWithExistingTag(tagQuery, DESCRIPTIONS_KEY, parsedDescription.id, newDescriptionData);
+      newDescriptionId = await updatePreviousOrMergeWithExistingDescription(pictureQuery, currentPictureId, tagQuery, parsedDescription.id, newDescriptionData);
     } else {
       newDescriptionId = await findExistingOrCreateNewTag(tagQuery, tagService, DESCRIPTIONS_KEY, newDescriptionData);
     }
@@ -251,9 +297,9 @@ const processUpdatesForLocationTags = data => processSimpleTagRelationUpdates(LO
 
 const processUpdatesForPersonTags = data => processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
 
-const processTagUpdates = async (pictureQuery, data) => {
+const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   // Process updates of tag relations with additional editing capabilities.
-  await processUpdatesForDescriptions(pictureQuery, data);
+  await processUpdatesForDescriptions(pictureQuery, currentPictureId, data);
   await processUpdatesForTimeRangeTag(pictureQuery, data);
 
   // Process simple updates of tag relations without further editing capabilities.
@@ -274,6 +320,6 @@ module.exports = {
 
     strapi.log.debug(`Custom tag updates for the picture with id ${where.id}`);
     const pictureQuery = strapi.db.query('api::picture.picture');
-    await processTagUpdates(pictureQuery, data);
+    await processTagUpdates(pictureQuery, where.id, data);
   },
 };
