@@ -1,7 +1,7 @@
 const { ApplicationError  } = require('@strapi/utils').errors;
 
 const VERIFIED_PREFIX = 'verified_';
-const withVerifiedPrefix = (relationKey) => `${VERIFIED_PREFIX}${relationKey}`;
+const withVerifiedPrefix = (tagKeyInPictureRelation) => `${VERIFIED_PREFIX}${tagKeyInPictureRelation}`;
 
 const DESCRIPTIONS_KEY = 'descriptions';
 const KEYWORD_TAGS_KEY = 'keyword_tags';
@@ -9,7 +9,12 @@ const LOCATION_TAGS_KEY = 'location_tags';
 const PERSON_TAGS_KEY = 'person_tags';
 const TIME_RANGE_TAG_KEY = 'time_range_tag';
 
-const getQueryEngineAndServiceForTag = (tagKeyInPictureRelation) => {
+/**
+ * Returns the key of the tag type that is used for the API (so e.g. "person-tag")
+ * based on the key of the relation to this tag type in the picture type (so e.g. "person_tags").<br>
+ * <i>Currently, only used for prettier/cleaner log statements.</i>
+ */
+const getTagKeyForApiFromRelationKey = tagKeyInPictureRelation => {
   let tagKeyForApi;
 
   switch (tagKeyInPictureRelation) {
@@ -32,135 +37,81 @@ const getQueryEngineAndServiceForTag = (tagKeyInPictureRelation) => {
       throw new ApplicationError(`There exists no relation field on a picture called ${tagKeyInPictureRelation}`);
   }
 
+  return tagKeyForApi;
+}
+
+/**
+ * Returns the Strapi internal query engine and service for the tag type
+ * based on the key of the relation to this tag type in the picture relation (so e.g. "person_tags").
+ */
+const getQueryEngineAndServiceForTag = tagKeyInPictureRelation => {
+  const tagKeyForApi = getTagKeyForApiFromRelationKey(tagKeyInPictureRelation);
   return {
     tagQuery: strapi.db.query(`api::${tagKeyForApi}.${tagKeyForApi}`),
     tagService: strapi.service(`api::${tagKeyForApi}.${tagKeyForApi}`),
   };
 };
 
-const getPreviousPictureInfo = async (pictureQuery, pictureId) => {
-  const currentPicture = await pictureQuery.findOne({
-    where: { id: pictureId },
-    populate: [
-      DESCRIPTIONS_KEY,
-      KEYWORD_TAGS_KEY,
-      withVerifiedPrefix(KEYWORD_TAGS_KEY),
-      LOCATION_TAGS_KEY,
-      withVerifiedPrefix(LOCATION_TAGS_KEY),
-      PERSON_TAGS_KEY,
-      withVerifiedPrefix(PERSON_TAGS_KEY),
-      TIME_RANGE_TAG_KEY,
-      withVerifiedPrefix(TIME_RANGE_TAG_KEY),
-    ],
-  });
-
-  return {
-    previousDescriptions: currentPicture[DESCRIPTIONS_KEY],
-    previousKeywordTags: currentPicture[KEYWORD_TAGS_KEY],
-    previousVerifiedKeywordTags: currentPicture[withVerifiedPrefix(KEYWORD_TAGS_KEY)],
-    previousLocationTags: currentPicture[LOCATION_TAGS_KEY],
-    previousVerifiedLocationTags: currentPicture[withVerifiedPrefix(LOCATION_TAGS_KEY)],
-    previousPersonTags: currentPicture[PERSON_TAGS_KEY],
-    previousVerifiedPersonTags: currentPicture[withVerifiedPrefix(PERSON_TAGS_KEY)],
-    previousTimeRangeTag: currentPicture[TIME_RANGE_TAG_KEY],
-    previousVerifiedTimeRangeTag: currentPicture[withVerifiedPrefix(TIME_RANGE_TAG_KEY)],
-  };
-};
-
-const getNewTagId = async (tagQuery, tagService, tagKeyInPictureRelation, newTagValueData, previousTagId) => {
-  let newTagId;
+/**
+ * Checks if a tag already exists with the new data or otherwise creates a new one.
+ * Afterwards, it returns the tag id to be used for the update.
+ */
+const findExistingOrCreateNewTag = async (tagQuery, tagService, tagKeyInPictureRelation, newTagValueData) => {
+  const tagKeyForApi = getTagKeyForApiFromRelationKey(tagKeyInPictureRelation); // just for prettier logs
   const newTagAlreadyInDB = await tagQuery.findOne({ where: newTagValueData });
 
+  let newTagId;
   if (newTagAlreadyInDB) {
     newTagId = newTagAlreadyInDB.id;
-    strapi.log.debug(`New ${tagKeyInPictureRelation} already exists with id ${newTagAlreadyInDB.id}`);
-  } else if (!newTagAlreadyInDB && !previousTagId) {
+    strapi.log.debug(`New ${tagKeyForApi} already exists with id ${newTagAlreadyInDB.id}`);
+  } else {
     const createdTag = await tagService.create({ data: newTagValueData });
     newTagId = createdTag.id;
-    strapi.log.debug(`Created new ${tagKeyInPictureRelation} with id ${createdTag.id}`);
-  } else {
-    await tagQuery.update({ where: { id: previousTagId }, data: newTagValueData });
-    strapi.log.debug(`Updated previous ${tagKeyInPictureRelation} with id ${previousTagId}`);
-    newTagId = previousTagId;
+    strapi.log.debug(`Created new ${tagKeyForApi} with id ${createdTag.id}`);
   }
 
   return newTagId;
 };
 
-const getVerifiedStatusForTagAndPictureRelation = async (tagQuery, tagKeyInPictureRelation, currentPictureId, tagId) => {
-  const unchangedTagInDB = await tagQuery.findOne({
-    where: { id: tagId },
-    populate: {
-      pictures: {
-        select: ['id']
-      },
-      verified_pictures: {
-        select: ['id']
-      }
-    }
-  });
+/**
+ * Updates the previous tag with the new data or, if there already exists a tag with that data,
+ * merges the two tags together. Afterwards, it returns the tag id to be used for the update.
+ */
+const updatePreviousOrMergeWithExistingTag = async (tagQuery, tagKeyInPictureRelation, previousTagId, newTagValueData) => {
+  const tagKeyForApi = getTagKeyForApiFromRelationKey(tagKeyInPictureRelation); // just for prettier logs
+  const newTagAlreadyInDB = await tagQuery.findOne({ where: newTagValueData });
 
-  if (unchangedTagInDB.pictures.map(picture => picture.id).includes(parseInt(currentPictureId))) {
-    strapi.log.debug(`Keep unchanged ${tagKeyInPictureRelation} with id ${tagId} in an unverified relation to picture with id ${currentPictureId}`);
-    return false;
-  } else if (unchangedTagInDB.verified_pictures.map(picture => picture.id).includes(parseInt(currentPictureId))) {
-    strapi.log.debug(`Keep unchanged ${tagKeyInPictureRelation} with id ${tagId} in a verified relation to picture with id ${currentPictureId}`);
-    return true;
+  let updatedTagId;
+  if (!newTagAlreadyInDB) {
+    await tagQuery.update({ where: { id: previousTagId }, data: newTagValueData });
+    strapi.log.debug(`Updated previous ${tagKeyForApi} with id ${previousTagId}`);
+    updatedTagId = previousTagId;
   } else {
-    strapi.log.debug(`Relate the (for the picture with id ${currentPictureId}) new, but already existing ${tagKeyInPictureRelation} with id ${tagId} as verified`);
-    return true;
+    // TODO implement merging of the tag that should be updated (previousTagId) with the existing one
   }
+
+  return updatedTagId;
 };
 
-// TODO
-// const getAdditionalPicturesToUpdate = (meta) => {
-//   let additionalPicturesToUpdate = [];
-//
-//   // If additional picture ids are specified whose pictures should be updated as well, then these are relevant for a recursive update later.
-//   // Note that Array.isArray() is undefined safe, so if `updateAdditionalPictures` is undefined, the if statement will result in false.
-//   if (Array.isArray(meta.updateAdditionalPictures)) {
-//     additionalPicturesToUpdate = meta.updateAdditionalPictures;
-//   }
-//
-//   return additionalPicturesToUpdate;
-// };
-
-// Filter out duplicates and the id of the current picture (which shouldn't be updated again)
-// const filterAdditionalPictures = (additionalPicturesToUpdate, currentPictureId) =>
-//   [...new Set(additionalPicturesToUpdate)].filter(id => id !== currentPictureId);
-
-// TODO
-// const updateAdditionalPictures = async (pictureQuery, additionalPicturesToUpdate, tagKeyInPictureRelation, newTagValueData, previousTagId) => {
-//   // If additional picture ids are specified that should be updated as well,
-//   // fire a recursive update for those pictures (which each trigger this whole lifecycle).
-//   if (additionalPicturesToUpdate.length) {
-//     const data = {};
-//     data[tagKeyInPictureRelation] = JSON.stringify({
-//       ...newTagValueData,
-//       // Don't trigger further recursive calls.
-//       meta: {},
-//     });
-//
-//     for (const pictureId of additionalPicturesToUpdate) {
-//       await pictureQuery.update({ where: { id: pictureId }, data });
-//     }
-//   }
-// };
-
-// TODO
-// const handleAdditionalPictureUpdates = async (pictureQuery, currentPictureId, tagKeyInPictureRelation, newTagValueData, meta, previousTagId) => {
-//   const additionalPicturesToUpdate = filterAdditionalPictures(getAdditionalPicturesToUpdate(meta), currentPictureId);
-//   await updateAdditionalPictures(pictureQuery, additionalPicturesToUpdate, tagKeyInPictureRelation, newTagValueData, previousTagId);
-// };
-
-const deletePreviousTagIfNeeded = async (pictureQuery, tagQuery, tagKeyInPictureRelation, previousTagId) => {
+/**
+ * Deletes the given tag, if it will be completely unrelated after the custom update.
+ */
+const deletePreviousTagIfNeeded = async (pictureQuery, tagQuery, tagKeyInPictureRelation, previousTagId, tagHasVerifiedHandling = true) => {
   if (!previousTagId) return;
 
-  const pictureQueryObject = { where: { $or: [] } };
-  pictureQueryObject.where.$or = [
-    { [tagKeyInPictureRelation]: previousTagId },
-    { [withVerifiedPrefix(tagKeyInPictureRelation)]: previousTagId }
-  ];
+  const pictureQueryObject = {
+    where: {
+      $or: [
+        { [tagKeyInPictureRelation]: previousTagId },
+      ],
+    }
+  };
+
+  if (tagHasVerifiedHandling) {
+    // We also need to query for pictures in verified relation to the tag here.
+    pictureQueryObject.where.$or.push({ [withVerifiedPrefix(tagKeyInPictureRelation)]: previousTagId });
+  }
+
   const picturesWithPreviousTag = await pictureQuery.findMany(pictureQueryObject);
 
   // No cleanup needed when there are still pictures related to the previous tag.
@@ -168,18 +119,24 @@ const deletePreviousTagIfNeeded = async (pictureQuery, tagQuery, tagKeyInPicture
   // so after the hook the regular update will un-relate one picture if we get here.
   if (picturesWithPreviousTag.length >= 2) return;
 
-  // Otherwise, clean up the previous tag
+  // Otherwise, clean up the previous tag.
   await tagQuery.delete({ where: { id: previousTagId } });
-  strapi.log.debug(`Deleted the previous ${tagKeyInPictureRelation} with id ${previousTagId} as its not related anymore`);
+
+  const tagKeyForApi = getTagKeyForApiFromRelationKey(tagKeyInPictureRelation); // just for prettier logs
+  strapi.log.debug(`Deleted the previous ${tagKeyForApi} with id ${previousTagId} as its not related anymore`);
 };
 
-const processUpdateForSingleTag = async (pictureQuery, currentPictureId, tagKeyInPictureRelation, tagQuery, tagService, newTagValueData, meta, previousTagId) => {
-  const newTagId = await getNewTagId(tagQuery, tagService, tagKeyInPictureRelation, newTagValueData, previousTagId);
-  // await handleAdditionalPictureUpdates(pictureQuery, currentPictureId, tagKeyInPictureRelation, newTagValueData, meta, previousTagId);
-  return newTagId;
-};
-
-const processUpdatesForDescriptions = async (pictureQuery, currentPictureId, data) => {
+/**
+ * Updates the descriptions related to the current picture. There are following use-cases:
+ * <ul>
+ *   <li>Update the previous description with a new text.</li>
+ *   <li>Create a new description with this text.</li>
+ *   <li>Use an existing description in both cases, if there is any.</li>
+ *   <li>Delete previous related descriptions if those will be unrelated after the update.</li>
+ *   <li>But also make it possible to just pass simple ids for descriptions that didn't change.</li>
+ * </ul>
+ */
+const processUpdatesForDescriptions = async (pictureQuery, data) => {
   // Check whether we actually need to update stuff for that type.
   if (!data[DESCRIPTIONS_KEY]) return;
 
@@ -189,8 +146,8 @@ const processUpdatesForDescriptions = async (pictureQuery, currentPictureId, dat
   for (const description of data[DESCRIPTIONS_KEY]) {
     const parsedDescription = JSON.parse(description);
 
-    // Here we make sure that it is really our custom handling that triggered the update.
-    if (!parsedDescription.meta) {
+    // Check if custom data is present.
+    if (!parsedDescription.text) {
       // If not, then it is already a valid ID here that needs to be kept.
       newDescriptions.push(parsedDescription);
       continue;
@@ -200,215 +157,33 @@ const processUpdatesForDescriptions = async (pictureQuery, currentPictureId, dat
       text: parsedDescription.text
     };
 
-    const newDescriptionId = await processUpdateForSingleTag(
-      pictureQuery,
-      currentPictureId,
-      DESCRIPTIONS_KEY,
-      tagQuery,
-      tagService,
-      newDescriptionData,
-      parsedDescription.meta,
-      parsedDescription.prevId
-    );
+    let newDescriptionId;
+    if (parsedDescription.updatePrevious) {
+      newDescriptionId = await updatePreviousOrMergeWithExistingTag(tagQuery, DESCRIPTIONS_KEY, parsedDescription.id, newDescriptionData);
+    } else {
+      newDescriptionId = await findExistingOrCreateNewTag(tagQuery, tagService, DESCRIPTIONS_KEY, newDescriptionData);
+    }
 
     newDescriptions.push(newDescriptionId);
+
+    // Delete previous description if it will be unrelated after the current picture update
+    await deletePreviousTagIfNeeded(pictureQuery, tagQuery, DESCRIPTIONS_KEY, parsedDescription.id, false);
   }
 
   data[DESCRIPTIONS_KEY] = newDescriptions;
 
-  // Delete previous descriptions that will be unrelated after the current picture update
-  const { previousDescriptions } = await getPreviousPictureInfo(pictureQuery, currentPictureId);
-  const previousDescriptionsToDelete = [...previousDescriptions]
-    // Description is defined
-    .filter(description => description)
-    // Description will be unrelated to the current picture afterwards
-    .filter(description => !newDescriptions.includes(description.id))
-  for (const descriptionToDelete of previousDescriptionsToDelete) {
-    await deletePreviousTagIfNeeded(pictureQuery, tagQuery, DESCRIPTIONS_KEY, descriptionToDelete.id);
-  }
+  strapi.log.debug(`New ${DESCRIPTIONS_KEY}: [${newDescriptions}]`);
 };
 
-const processUpdatesForKeywordTags = async (pictureQuery, currentPictureId, data) => {
-  // Check whether we actually need to update stuff for that tag type.
-  if (!data[KEYWORD_TAGS_KEY]) return;
-
-  const { tagQuery, tagService } = getQueryEngineAndServiceForTag(KEYWORD_TAGS_KEY);
-
-  const newKeywordTags = [];
-  const newVerifiedKeywordTags = [];
-  for (const keywordTag of data[KEYWORD_TAGS_KEY]) {
-    const parsedKeywordTag = JSON.parse(keywordTag);
-
-    // Here we make sure that it is really our custom handling that triggered the update.
-    if (!parsedKeywordTag.meta) {
-      // If not, then it is already a valid ID here that needs to be kept.
-      // But it needs to be queried whether it should be in a verified or unverified relation first.
-      const shouldBeInVerifiedRelation = await getVerifiedStatusForTagAndPictureRelation(
-        tagQuery,
-        KEYWORD_TAGS_KEY,
-        currentPictureId,
-        parsedKeywordTag
-      );
-      (shouldBeInVerifiedRelation ? newVerifiedKeywordTags : newKeywordTags).push(parsedKeywordTag);
-      continue;
-    }
-
-    const newKeywordTagData = {
-      name: parsedKeywordTag.name
-    };
-
-    const newKeywordTagId = await processUpdateForSingleTag(
-      pictureQuery,
-      currentPictureId,
-      KEYWORD_TAGS_KEY,
-      tagQuery,
-      tagService,
-      newKeywordTagData,
-      parsedKeywordTag.meta,
-      parsedKeywordTag.prevId
-    );
-
-    (parsedKeywordTag.verified ? newVerifiedKeywordTags : newKeywordTags).push(newKeywordTagId);
-  }
-
-  data[KEYWORD_TAGS_KEY] = newKeywordTags;
-  data[withVerifiedPrefix(KEYWORD_TAGS_KEY)] = newVerifiedKeywordTags;
-
-  // Delete previous tags that will be unrelated after the current picture update
-  const { previousKeywordTags, previousVerifiedKeywordTags } = await getPreviousPictureInfo(pictureQuery, currentPictureId);
-  const previousTagsToDelete = [...previousKeywordTags, ...previousVerifiedKeywordTags]
-    // Tag is defined
-    .filter(tag => tag)
-    // Tag will be unrelated to the current picture afterwards
-    .filter(tag => !newKeywordTags.includes(tag.id) && !newVerifiedKeywordTags.includes(tag.id))
-  for (const tagToDelete of previousTagsToDelete) {
-    await deletePreviousTagIfNeeded(pictureQuery, tagQuery, KEYWORD_TAGS_KEY, tagToDelete.id);
-  }
-};
-
-const processUpdatesForLocationTags = async (pictureQuery, currentPictureId, data) => {
-  // Check whether we actually need to update stuff for that tag type.
-  if (!data[LOCATION_TAGS_KEY]) return;
-
-  const { tagQuery, tagService } = getQueryEngineAndServiceForTag(LOCATION_TAGS_KEY);
-
-  const newLocationTags = [];
-  const newVerifiedLocationTags = [];
-  for (const locationTag of data[LOCATION_TAGS_KEY]) {
-    const parsedLocationTag = JSON.parse(locationTag);
-
-    // Here we make sure that it is really our custom handling that triggered the update.
-    if (!parsedLocationTag.meta) {
-      // If not, then it is already a valid ID here that needs to be kept.
-      // But it needs to be queried whether it should be in a verified or unverified relation first.
-      const shouldBeInVerifiedRelation = await getVerifiedStatusForTagAndPictureRelation(
-        tagQuery,
-        LOCATION_TAGS_KEY,
-        currentPictureId,
-        parsedLocationTag
-      );
-      (shouldBeInVerifiedRelation ? newVerifiedLocationTags : newLocationTags).push(parsedLocationTag);
-      continue;
-    }
-
-    const newLocationTagData = {
-      name: parsedLocationTag.name
-    };
-    if (parsedLocationTag.coordinates) {
-      newLocationTagData.coordinates = {
-        latitude: parsedLocationTag.coordinates.latitude,
-        longitude: parsedLocationTag.coordinates.longitude
-      };
-    }
-
-    const newLocationTagId = await processUpdateForSingleTag(
-      pictureQuery,
-      currentPictureId,
-      LOCATION_TAGS_KEY,
-      tagQuery,
-      tagService,
-      newLocationTagData,
-      parsedLocationTag.meta,
-      parsedLocationTag.prevId
-    );
-
-    (parsedLocationTag.verified ? newVerifiedLocationTags : newLocationTags).push(newLocationTagId);
-  }
-
-  data[LOCATION_TAGS_KEY] = newLocationTags;
-  data[withVerifiedPrefix(LOCATION_TAGS_KEY)] = newVerifiedLocationTags;
-
-  // Delete previous tags that will be unrelated after the current picture update
-  const { previousLocationTags, previousVerifiedLocationTags } = await getPreviousPictureInfo(pictureQuery, currentPictureId);
-  const previousTagsToDelete = [...previousLocationTags, ...previousVerifiedLocationTags]
-    // Tag is defined
-    .filter(tag => tag)
-    // Tag will be unrelated to the current picture afterwards
-    .filter(tag => !newLocationTags.includes(tag.id) && !newVerifiedLocationTags.includes(tag.id))
-  for (const tagToDelete of previousTagsToDelete) {
-    await deletePreviousTagIfNeeded(pictureQuery, tagQuery, LOCATION_TAGS_KEY, tagToDelete.id);
-  }
-};
-
-const processUpdatesForPersonTags = async (pictureQuery, currentPictureId, data) => {
-  // Check whether we actually need to update stuff for that tag type.
-  if (!data[PERSON_TAGS_KEY]) return;
-
-  const { tagQuery, tagService } = getQueryEngineAndServiceForTag(PERSON_TAGS_KEY);
-
-  const newPersonTags = [];
-  const newVerifiedPersonTags = [];
-  for (const personTag of data[PERSON_TAGS_KEY]) {
-    const parsedPersonTag = JSON.parse(personTag);
-
-    // Here we make sure that it is really our custom handling that triggered the update.
-    if (!parsedPersonTag.meta) {
-      // If not, then it is already a valid ID here that needs to be kept.
-      // But it needs to be queried whether it should be in a verified or unverified relation first.
-      const shouldBeInVerifiedRelation = await getVerifiedStatusForTagAndPictureRelation(
-        tagQuery,
-        PERSON_TAGS_KEY,
-        currentPictureId,
-        parsedPersonTag
-      );
-      (shouldBeInVerifiedRelation ? newVerifiedPersonTags : newPersonTags).push(parsedPersonTag);
-      continue;
-    }
-
-    const newPersonTagData = {
-      name: parsedPersonTag.name
-    };
-
-    const newPersonTagId = await processUpdateForSingleTag(
-      pictureQuery,
-      currentPictureId,
-      PERSON_TAGS_KEY,
-      tagQuery,
-      tagService,
-      newPersonTagData,
-      parsedPersonTag.meta,
-      parsedPersonTag.prevId
-    );
-
-    (parsedPersonTag.verified ? newVerifiedPersonTags : newPersonTags).push(newPersonTagId);
-  }
-
-  data[PERSON_TAGS_KEY] = newPersonTags;
-  data[withVerifiedPrefix(PERSON_TAGS_KEY)] = newVerifiedPersonTags;
-
-  // Delete previous tags that will be unrelated after the current picture update
-  const { previousPersonTags, previousVerifiedPersonTags } = await getPreviousPictureInfo(pictureQuery, currentPictureId);
-  const previousTagsToDelete = [...previousPersonTags, ...previousVerifiedPersonTags]
-    // Tag is defined
-    .filter(tag => tag)
-    // Tag will be unrelated to the current picture afterwards
-    .filter(tag => !newPersonTags.includes(tag.id) && !newVerifiedPersonTags.includes(tag.id))
-  for (const tagToDelete of previousTagsToDelete) {
-    await deletePreviousTagIfNeeded(pictureQuery, tagQuery, PERSON_TAGS_KEY, tagToDelete.id);
-  }
-};
-
-const processUpdatesForTimeRangeTag = async (pictureQuery, currentPictureId, data) => {
+/**
+ * Updates the time-range-tag related to the current picture. There are following use-cases:
+ * <ul>
+ *   <li>Create a new time-range-tag with new data.</li>
+ *   <li>Use an existing time-range-tag with that data, if there is any.</li>
+ *   <li>Delete the previous related time-range-tag if it will be unrelated after the update.</li>
+ * </ul>
+ */
+const processUpdatesForTimeRangeTag = async (pictureQuery, data) => {
   // Check whether we actually need to update stuff for that tag type.
   if (!data[TIME_RANGE_TAG_KEY]) return;
 
@@ -416,47 +191,75 @@ const processUpdatesForTimeRangeTag = async (pictureQuery, currentPictureId, dat
 
   const parsedTimeRangeTag = JSON.parse(data[TIME_RANGE_TAG_KEY]);
 
-  // Here we make sure that it is really our custom handling that triggered the update.
-  if (!parsedTimeRangeTag.meta) return;
+  // Check if custom data is present.
+  if (!parsedTimeRangeTag.start || !parsedTimeRangeTag.end) return;
 
   const newTimeRangeTagData = {
     start: parsedTimeRangeTag.start,
     end: parsedTimeRangeTag.end,
   };
 
-  const newTimeRangeTagId = await processUpdateForSingleTag(
-    pictureQuery,
-    currentPictureId,
-    TIME_RANGE_TAG_KEY,
-    tagQuery,
-    tagService,
-    newTimeRangeTagData,
-    parsedTimeRangeTag.meta,
-    parsedTimeRangeTag.prevId
-  )
+  const newTimeRangeTagId = await findExistingOrCreateNewTag(tagQuery, tagService, TIME_RANGE_TAG_KEY, newTimeRangeTagData);
 
-  // Assert the picture only gets one time-range-tag assigned (independent of the verified status)
+  // Assert the picture only gets one time-range-tag assigned (independent of the verified status).
   data[TIME_RANGE_TAG_KEY] = parsedTimeRangeTag.verified ? null : newTimeRangeTagId;
   data[withVerifiedPrefix(TIME_RANGE_TAG_KEY)] = parsedTimeRangeTag.verified ? newTimeRangeTagId : null;
 
-  // Delete previous tags that will be unrelated after the current picture update
-  const { previousTimeRangeTag, previousVerifiedTimeRangeTag } = await getPreviousPictureInfo(pictureQuery, currentPictureId);
-  const previousTagsToDelete = [previousTimeRangeTag, previousVerifiedTimeRangeTag]
-    // Tag is defined
-    .filter(tag => tag)
-    // Tag will be unrelated to the current picture afterwards
-    .filter(tag => tag.id !== newTimeRangeTagId)
-  for (const tagToDelete of previousTagsToDelete) {
-    await deletePreviousTagIfNeeded(pictureQuery, tagQuery, TIME_RANGE_TAG_KEY, tagToDelete.id);
-  }
+  strapi.log.debug(`New ${parsedTimeRangeTag.verified ? 'verified ' : ''}${TIME_RANGE_TAG_KEY}: ${newTimeRangeTagId}`);
+
+  // Delete previous tag if it will be unrelated after the current picture update.
+  await deletePreviousTagIfNeeded(pictureQuery, tagQuery, TIME_RANGE_TAG_KEY, parsedTimeRangeTag.id, true);
 };
 
-const processUpdates = async (pictureQuery, currentPictureId, data) => {
-  await processUpdatesForDescriptions(pictureQuery, currentPictureId, data);
-  await processUpdatesForKeywordTags(pictureQuery, currentPictureId, data);
-  await processUpdatesForLocationTags(pictureQuery, currentPictureId, data);
-  await processUpdatesForPersonTags(pictureQuery, currentPictureId, data);
-  await processUpdatesForTimeRangeTag(pictureQuery, currentPictureId, data);
+/**
+ * Updates tag relations to the current picture without further editing capabilities.
+ * Thereby, it checks whether a tag should be in a verified or unverified relation.<br>
+ * <i>Currently, it is suitable for keyword, location and person tags.</i>
+ */
+const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
+  // Check whether we actually need to update stuff for that tag type.
+  if (!data[tagKeyInPictureRelation]) return;
+
+  const newTags = [];
+  const newVerifiedTags = [];
+  for (const tag of data[tagKeyInPictureRelation]) {
+    const parsedTag = JSON.parse(tag);
+
+    // Check if custom data is present.
+    if (!parsedTag.id) {
+      // If not, then it is already a valid tag id here that needs to be kept.
+      // Per default these will be in a verified relation to the current picture.
+      newVerifiedTags.push(parsedTag);
+      continue;
+    }
+
+    // Relate the tag in a verified relation to the current picture if not specified otherwise.
+    const verified = parsedTag.verified === undefined ? true : parsedTag.verified;
+    (verified ? newVerifiedTags : newTags).push(parsedTag.id);
+  }
+
+  data[tagKeyInPictureRelation] = newTags;
+  data[withVerifiedPrefix(tagKeyInPictureRelation)] = newVerifiedTags;
+
+  strapi.log.debug(`New ${tagKeyInPictureRelation}: [${newTags}]`);
+  strapi.log.debug(`New verified ${tagKeyInPictureRelation}: [${newVerifiedTags}]`);
+};
+
+const processUpdatesForKeywordTags = data => processSimpleTagRelationUpdates(KEYWORD_TAGS_KEY, data);
+
+const processUpdatesForLocationTags = data => processSimpleTagRelationUpdates(LOCATION_TAGS_KEY, data);
+
+const processUpdatesForPersonTags = data => processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
+
+const processTagUpdates = async (pictureQuery, data) => {
+  // Process updates of tag relations with additional editing capabilities.
+  await processUpdatesForDescriptions(pictureQuery, data);
+  await processUpdatesForTimeRangeTag(pictureQuery, data);
+
+  // Process simple updates of tag relations without further editing capabilities.
+  processUpdatesForKeywordTags(data);
+  processUpdatesForLocationTags(data);
+  processUpdatesForPersonTags(data);
 };
 
 module.exports = {
@@ -471,6 +274,6 @@ module.exports = {
 
     strapi.log.debug(`Custom tag updates for the picture with id ${where.id}`);
     const pictureQuery = strapi.db.query('api::picture.picture');
-    await processUpdates(pictureQuery, where.id, data);
+    await processTagUpdates(pictureQuery, data);
   },
 };
