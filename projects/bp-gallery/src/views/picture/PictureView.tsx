@@ -10,15 +10,15 @@ import React, {
 import './PictureView.scss';
 import { asApiPath } from '../../App';
 import { useHistory } from 'react-router-dom';
-import { History } from 'history';
-import { useGetPictureInfoLazyQuery } from '../../graphql/APIConnector';
+import { History, Transition } from 'history';
 import { FlatPicture } from '../../graphql/additionalFlatTypes';
-import { nextImageAnimation, zoomIntoPicture, zoomOutOfPicture } from './picture-animation.helpers';
 import PictureViewUI from './PictureViewUI';
 import PictureSidebar from './PictureSidebar';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { PictureNavigationTarget } from './PictureNavigationButtons';
 import ZoomWrapper from './ZoomWrapper';
+import usePrefetchPictureHook from './prefetch.hook';
+import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -31,54 +31,33 @@ export interface PictureViewContextFields {
 export const PictureViewContext = React.createContext<PictureViewContextFields>({});
 
 const PictureView = ({
-  pictureId,
-  thumbnailUrl = '',
-  isInitialThumbnail = false,
-  flexValue = '0',
-  hasPrevious = false,
-  hasNext = false,
-  openCallback,
-  navigateCallback,
-  initialParams,
+  initialPictureId,
+  siblingIds,
+  onBack,
 }: {
-  pictureId: string;
-  thumbnailUrl?: string;
-  isInitialThumbnail?: boolean;
-  flexValue?: string;
-  hasPrevious?: boolean;
-  hasNext?: boolean;
-  openCallback?: (open?: boolean) => void;
-  navigateCallback?: (target: PictureNavigationTarget, params?: PictureViewContextFields) => void;
-  initialParams?: PictureViewContextFields;
+  initialPictureId: string;
+  siblingIds?: string[];
+  onBack?: (picid: string) => void;
 }) => {
   const history: History = useHistory();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [thumbnailMode, setThumbnailMode] = useState<boolean | undefined>(undefined);
+  const [pictureId, setPictureId] = useState<string>(initialPictureId);
   const [transitioning, setTransitioning] = useState<boolean>(false);
-  const [sideBarOpen, setSideBarOpen] = useState<boolean>(!!initialParams?.sideBarOpen);
+  const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
 
-  const shouldBeThumbnail = thumbnailMode || (thumbnailMode === undefined && isInitialThumbnail);
+  const [hasPrevious, hasNext] = useMemo(() => {
+    return [
+      Boolean(getPreviousPictureId(pictureId, siblingIds)),
+      Boolean(getNextPictureId(pictureId, siblingIds)),
+    ];
+  }, [pictureId, siblingIds]);
 
   // Api connection
-  const [getPictureInfo, { data, loading, error }] = useGetPictureInfoLazyQuery({
-    variables: {
-      pictureId: pictureId,
-    },
-  });
+  const [getPictureInfo, { data, loading, error }] = usePrefetchPictureHook(pictureId, siblingIds);
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-
-  // Switch between using the thumbnail url and the "loaded" picture's url
-  const pictureLink = useMemo(() => {
-    if (picture?.media?.url) {
-      return asApiPath(picture.media.url);
-    } else if (thumbnailUrl) {
-      return asApiPath(thumbnailUrl);
-    } else {
-      return '';
-    }
-  }, [picture, thumbnailUrl]);
+  const pictureLink = picture?.media?.url ? asApiPath(picture.media.url) : '';
 
   // Execute lazy query (e.g. when triggering the picture from the picture grid)
   const setUpPicture = useCallback(
@@ -92,40 +71,24 @@ const PictureView = ({
     [getPictureInfo]
   );
 
+  useEffect(() => {
+    setUpPicture(pictureId);
+  }, [setUpPicture, pictureId]);
+
   // Call the previous or next picture
   const navigatePicture = useCallback(
     (target: PictureNavigationTarget) => {
-      if (navigateCallback) {
-        setTransitioning(false);
-        nextImageAnimation(containerRef.current as HTMLDivElement, target).then(() => {
-          if (openCallback) {
-            openCallback(false);
-          }
-          navigateCallback(target, { sideBarOpen });
-          setThumbnailMode(true);
-        });
+      const targetId =
+        target === PictureNavigationTarget.NEXT
+          ? getNextPictureId(pictureId, siblingIds)
+          : getPreviousPictureId(pictureId, siblingIds);
+      if (targetId) {
+        window.history.replaceState({}, '', `/picture/${targetId}`);
+        setPictureId(targetId);
       }
     },
-    [navigateCallback, openCallback, sideBarOpen]
+    [pictureId, siblingIds, setPictureId]
   );
-
-  // Open the "detail" view of the image using an external animation
-  const openDetails = () => {
-    window.setTimeout(() => {
-      setTransitioning(true);
-      setThumbnailMode(false);
-    }, 0);
-    window.history.pushState({}, '', `/picture/${pictureId}`);
-    setSideBarOpen(false);
-    zoomIntoPicture(pictureId, containerRef.current as HTMLDivElement).then(() => {
-      setTransitioning(false);
-      setSideBarOpen(true);
-    });
-    setUpPicture(pictureId);
-    if (openCallback) {
-      openCallback(true);
-    }
-  };
 
   // Wrap all context information in this variable
   const contextValue: PictureViewContextFields = {
@@ -136,83 +99,33 @@ const PictureView = ({
     setSideBarOpen,
   };
 
-  // Open Sidebar if initialParams dictate it
-  useEffect(() => {
-    if (initialParams?.sideBarOpen !== undefined) {
-      setSideBarOpen(!!initialParams.sideBarOpen);
-    }
-  }, [initialParams]);
-
-  // Apply initial thumbnail preference to state variable
-  useEffect(() => {
-    setThumbnailMode(isInitialThumbnail);
-    if (!isInitialThumbnail) {
-      setUpPicture(pictureId);
-    }
-  }, [isInitialThumbnail, setUpPicture, pictureId]);
-
   // Block navigation and handle yourself, i.e. block browser navigation and
   // just close picture if it was called from the picture grid
   useEffect(() => {
-    if ((isInitialThumbnail || openCallback) && thumbnailMode === false) {
-      const unblock = history.block(() => {
-        setSideBarOpen(false);
-        setTransitioning(true);
-        zoomOutOfPicture(containerRef.current as HTMLDivElement).then(() => {
-          setTransitioning(false);
-          setThumbnailMode(true);
-          if (openCallback) {
-            openCallback(false);
-          }
-        });
-      });
-      return () => {
-        unblock();
-      };
-    }
-  }, [
-    history,
-    isInitialThumbnail,
-    thumbnailMode,
-    setUpPicture,
-    pictureId,
-    openCallback,
-    navigatePicture,
-  ]);
+    const unblock = history.block((tx: Transition) => {
+      setSideBarOpen(false);
+      if (onBack) {
+        onBack(pictureId);
+      }
+    });
+    return () => {
+      unblock();
+    };
+  }, [history, pictureId, navigatePicture, onBack]);
 
   return (
-    <div
-      className='picture-view-container'
-      style={{
-        flex: `${flexValue} 1 0`,
-      }}
-    >
+    <div className='picture-view-container'>
       <PictureViewContext.Provider value={contextValue}>
-        <div
-          className={`picture-view${shouldBeThumbnail ? ' thumbnail' : ''}${
-            transitioning ? ' transitioning' : ''
-          }`}
-          ref={containerRef}
-          onClick={thumbnailMode ? openDetails : undefined}
-        >
-          <ZoomWrapper blockScroll={!thumbnailMode}>
+        <div className={`picture-view${transitioning ? ' transitioning' : ''}`} ref={containerRef}>
+          <ZoomWrapper blockScroll={true}>
             <div className='picture-wrapper'>
               <div className='picture-container'>
                 <img src={pictureLink} alt={pictureLink} />
               </div>
-              {thumbnailMode === false && !loading && !error && picture && (
-                <PictureViewUI calledViaLink={openCallback === undefined} />
-              )}
+              {!loading && !error && picture && <PictureViewUI calledViaLink={!onBack} />}
             </div>
           </ZoomWrapper>
-          {thumbnailMode === false && (
-            <PictureSidebar
-              loading={loading}
-              error={error}
-              picture={picture}
-              pictureId={pictureId}
-            />
-          )}
+          <PictureSidebar loading={loading} error={error} picture={picture} />
         </div>
       </PictureViewContext.Provider>
     </div>

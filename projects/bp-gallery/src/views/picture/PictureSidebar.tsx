@@ -15,7 +15,6 @@ const PictureSidebar = ({
   error,
 }: {
   picture?: FlatPicture;
-  pictureId: string;
   loading?: boolean;
   error?: ApolloError;
 }) => {

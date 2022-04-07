@@ -51,13 +51,7 @@ const routes: RouteConfig[] = [
       {
         path: '/picture/:id',
         render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
-          return (
-            <PictureView
-              pictureId={match.params.id}
-              isInitialThumbnail={false}
-              initialParams={{ sideBarOpen: true }}
-            />
-          );
+          return <PictureView initialPictureId={match.params.id} />;
         },
       },
       {
