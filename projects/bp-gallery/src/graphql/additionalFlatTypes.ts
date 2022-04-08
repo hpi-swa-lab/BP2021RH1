@@ -34,13 +34,17 @@ type FlatPictureWithoutRelations = ID &
     | 'verified_time_range_tag'
     | 'verified_location_tags'
     | 'verified_person_tags'
+    | 'location_tags'
+    | 'person_tags'
   >;
 
-type FlatLocationTagWithoutRelations = ID & Omit<LocationTag, 'pictures' | 'verified_pictures'>;
+export type FlatLocationTagWithoutRelations = ID &
+  Omit<LocationTag, 'pictures' | 'verified_pictures'>;
 
-type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'verified_pictures'>;
+export type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'verified_pictures'>;
 
-type FlatTimeRangeTagWithoutRelations = ID & Omit<TimeRangeTag, 'pictures' | 'verified_pictures'>;
+export type FlatTimeRangeTagWithoutRelations = ID &
+  Omit<TimeRangeTag, 'pictures' | 'verified_pictures'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;

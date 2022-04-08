@@ -29,6 +29,54 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        keyword_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        verified_keyword_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        location_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        verified_location_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        person_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        verified_person_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
         media {
           data {
             attributes {
@@ -159,6 +207,39 @@ query getKeywordTagSuggestions($name: String) {
             }
           }
         }
+      }
+    }
+  }
+}
+
+query getAllKeywordTags {
+  keywordTags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+}
+
+query getAllLocationTags {
+  locationTags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+}
+
+query getAllPersonTags {
+  personTags {
+    data {
+      id
+      attributes {
+        name
       }
     }
   }
@@ -356,6 +437,30 @@ query getDecadePreviewThumbnails {
 mutation login($username: String!, $password: String!) {
   login(input: { identifier: $username, password: $password }) {
     jwt
+  }
+}
+
+mutation createPersonTag($name: String!) {
+  createPersonTag(data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createKeywordTag($name: String!) {
+  createKeywordTag(data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createLocationTag($name: String!) {
+  createLocationTag(data: { name: $name }) {
+    data {
+      id
+    }
   }
 }
 

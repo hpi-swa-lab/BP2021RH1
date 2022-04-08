@@ -26,11 +26,12 @@
     "something-went-wrong": "Es ist etwas schiefgelaufen",
     "past": "Früher",
     "information": "Informationen",
-    "showPicture": "Bild anzeigen",
+    "showPicture": "Vollbild",
     "showInfo": "Infos & Kommentare anzeigen",
     "close": "Schließen",
     "browse-view": "Alle Bilder",
-    "community-view": "Neueste Bilder"
+    "community-view": "Neueste Bilder",
+    "create": "{{value}} hinzufügen"
   },
   "login": {
     "title": "Login",
@@ -40,5 +41,12 @@
     "invalid-credentials": "Benutzername oder Passwort sind falsch",
     "successful-login": "Erfolgreich eingeloggt",
     "successful-logout": "Erfolgreich ausgeloggt"
+  },
+  "pictureFields": {
+    "time": "Zeit",
+    "locations": "Orte",
+    "descriptions": "Beschreibungen",
+    "people": "Personen",
+    "keywords": "Stichworte"
   }
 }

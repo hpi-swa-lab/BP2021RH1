@@ -1,0 +1,47 @@
+@import '../../../shared/style.scss';
+
+.picture-info-field {
+  background: #e8dddc;
+  border-radius: 10px;
+  padding: 15px;
+  position: relative;
+  padding-right: 2rem;
+  margin-right: 1.5rem;
+
+  &:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+
+  .icon-container {
+    position: absolute;
+    background-color: $primaryColor;
+    color: white;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    top: 50%;
+    right: 0;
+    transform: translate(50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .field-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .tag-selection {
+      width: 100%;
+    }
+  }
+
+  .field-title {
+    color: $primaryColor;
+    opacity: 0.8;
+    font-weight: 200;
+    font-size: 0.9rem;
+    text-align: right;
+  }
+}

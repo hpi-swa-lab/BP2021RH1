@@ -1,8 +1,5 @@
-import React from 'react';
-import { Icon } from '@mui/material';
 import dayjs from 'dayjs';
-import { FlatPicture, FlatTimeRangeTag } from '../../graphql/additionalFlatTypes';
-import PictureDetails from './PictureDetails';
+import { FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   if (!timeStamp?.start || !timeStamp.end) {
@@ -29,20 +26,3 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
     ).format('DD.MM.YYYY')}`;
   }
 };
-
-const PictureInfo = ({ picture, children }: { picture: FlatPicture; children: any }) => {
-  return (
-    <div className='scrollbar-container'>
-      <div className='picture-infos'>
-        <div className='title'>
-          <Icon style={{ marginRight: '0.5rem' }}>today</Icon>
-          <span>{formatTimeStamp(picture.time_range_tag ?? undefined)}</span>
-        </div>
-        <PictureDetails descriptions={picture.descriptions} />
-        {children}
-      </div>
-    </div>
-  );
-};
-
-export default PictureInfo;

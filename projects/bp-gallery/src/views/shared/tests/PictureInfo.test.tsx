@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import { renderWithPictureContextMocks } from '../../picture/tests/pictureTestUtils';
 import { DescriptionMocks, PictureMocks } from '../../picture/tests/mocks';
 import { flattenQueryResponseData } from '../../../graphql/queryUtils';
-import PictureInfo from '../PictureInfo';
+import PictureInfo from '../picture-info/PictureInfo';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 
 const PictureDetailsMock = jest.fn();
@@ -16,9 +16,7 @@ jest.mock('../PictureDetails', () => PictureDetailsMockComponent);
 describe('PictureInfo', () => {
   it('should render the pictures time range tag', async () => {
     renderWithPictureContextMocks(
-      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture}>
-        <span></span>
-      </PictureInfo>
+      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
 
     const timeRangeTags = screen.getByText('10.10.1955 - 12.10.1955');
@@ -27,9 +25,7 @@ describe('PictureInfo', () => {
 
   it('should render the picture details', async () => {
     renderWithPictureContextMocks(
-      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture}>
-        <span></span>
-      </PictureInfo>
+      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
 
     const pictureDetails = screen.getByText('PictureDetailsMock');

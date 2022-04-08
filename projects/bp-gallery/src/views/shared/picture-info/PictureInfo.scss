@@ -1,0 +1,15 @@
+@import '../../../shared/style.scss';
+
+.picture-info {
+  padding-bottom: 5rem;
+
+  .title {
+    color: $primaryColor;
+    font-weight: 900;
+    font-size: 1.5rem;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}

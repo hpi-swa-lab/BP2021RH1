@@ -1542,6 +1542,60 @@ export type GetPictureInfoQuery = {
                         }
                       | null
                       | undefined;
+                    keyword_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    verified_keyword_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    location_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    verified_location_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    person_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    verified_person_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
                     media: {
                       data?: { attributes?: { url: string } | null | undefined } | null | undefined;
                     };
@@ -1756,6 +1810,48 @@ export type GetKeywordTagSuggestionsQuery = {
     | undefined;
 };
 
+export type GetAllKeywordTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllKeywordTagsQuery = {
+  keywordTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllLocationTagsQuery = {
+  locationTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetAllPersonTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllPersonTagsQuery = {
+  personTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
@@ -1876,6 +1972,39 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { login: { jwt?: string | null | undefined } };
 
+export type CreatePersonTagMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+export type CreatePersonTagMutation = {
+  createPersonTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreateKeywordTagMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+export type CreateKeywordTagMutation = {
+  createKeywordTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreateLocationTagMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+export type CreateLocationTagMutation = {
+  createLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -1918,6 +2047,54 @@ export const GetPictureInfoDocument = gql`
               attributes {
                 start
                 end
+              }
+            }
+          }
+          keyword_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          verified_keyword_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          location_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          verified_location_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          person_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          verified_person_tags {
+            data {
+              id
+              attributes {
+                name
               }
             }
           }
@@ -2400,6 +2577,182 @@ export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
   GetKeywordTagSuggestionsQueryVariables
 >;
 
+export const GetAllKeywordTagsDocument = gql`
+  query getAllKeywordTags {
+    keywordTags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllKeywordTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllKeywordTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllKeywordTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllKeywordTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllKeywordTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>(
+    GetAllKeywordTagsDocument,
+    options
+  );
+}
+
+export function useGetAllKeywordTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>(
+    GetAllKeywordTagsDocument,
+    options
+  );
+}
+
+export type GetAllKeywordTagsQueryHookResult = ReturnType<typeof useGetAllKeywordTagsQuery>;
+
+export type GetAllKeywordTagsLazyQueryHookResult = ReturnType<typeof useGetAllKeywordTagsLazyQuery>;
+
+export type GetAllKeywordTagsQueryResult = Apollo.QueryResult<
+  GetAllKeywordTagsQuery,
+  GetAllKeywordTagsQueryVariables
+>;
+
+export const GetAllLocationTagsDocument = gql`
+  query getAllLocationTags {
+    locationTags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllLocationTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllLocationTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllLocationTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllLocationTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllLocationTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllLocationTagsQuery, GetAllLocationTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllLocationTagsQuery, GetAllLocationTagsQueryVariables>(
+    GetAllLocationTagsDocument,
+    options
+  );
+}
+
+export function useGetAllLocationTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllLocationTagsQuery,
+    GetAllLocationTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllLocationTagsQuery, GetAllLocationTagsQueryVariables>(
+    GetAllLocationTagsDocument,
+    options
+  );
+}
+
+export type GetAllLocationTagsQueryHookResult = ReturnType<typeof useGetAllLocationTagsQuery>;
+
+export type GetAllLocationTagsLazyQueryHookResult = ReturnType<
+  typeof useGetAllLocationTagsLazyQuery
+>;
+
+export type GetAllLocationTagsQueryResult = Apollo.QueryResult<
+  GetAllLocationTagsQuery,
+  GetAllLocationTagsQueryVariables
+>;
+
+export const GetAllPersonTagsDocument = gql`
+  query getAllPersonTags {
+    personTags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllPersonTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllPersonTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPersonTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPersonTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllPersonTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>(
+    GetAllPersonTagsDocument,
+    options
+  );
+}
+
+export function useGetAllPersonTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>(
+    GetAllPersonTagsDocument,
+    options
+  );
+}
+
+export type GetAllPersonTagsQueryHookResult = ReturnType<typeof useGetAllPersonTagsQuery>;
+
+export type GetAllPersonTagsLazyQueryHookResult = ReturnType<typeof useGetAllPersonTagsLazyQuery>;
+
+export type GetAllPersonTagsQueryResult = Apollo.QueryResult<
+  GetAllPersonTagsQuery,
+  GetAllPersonTagsQueryVariables
+>;
+
 export const GetDecadePreviewThumbnailsDocument = gql`
   query getDecadePreviewThumbnails {
     s40: pictures(
@@ -2687,6 +3040,168 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
+>;
+
+export const CreatePersonTagDocument = gql`
+  mutation createPersonTag($name: String!) {
+    createPersonTag(data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePersonTagMutationFn = Apollo.MutationFunction<
+  CreatePersonTagMutation,
+  CreatePersonTagMutationVariables
+>;
+
+/**
+ * __useCreatePersonTagMutation__
+ *
+ * To run a mutation, you first call `useCreatePersonTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePersonTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPersonTagMutation, { data, loading, error }] = useCreatePersonTagMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreatePersonTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePersonTagMutation,
+    CreatePersonTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePersonTagMutation, CreatePersonTagMutationVariables>(
+    CreatePersonTagDocument,
+    options
+  );
+}
+
+export type CreatePersonTagMutationHookResult = ReturnType<typeof useCreatePersonTagMutation>;
+
+export type CreatePersonTagMutationResult = Apollo.MutationResult<CreatePersonTagMutation>;
+
+export type CreatePersonTagMutationOptions = Apollo.BaseMutationOptions<
+  CreatePersonTagMutation,
+  CreatePersonTagMutationVariables
+>;
+
+export const CreateKeywordTagDocument = gql`
+  mutation createKeywordTag($name: String!) {
+    createKeywordTag(data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateKeywordTagMutationFn = Apollo.MutationFunction<
+  CreateKeywordTagMutation,
+  CreateKeywordTagMutationVariables
+>;
+
+/**
+ * __useCreateKeywordTagMutation__
+ *
+ * To run a mutation, you first call `useCreateKeywordTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateKeywordTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createKeywordTagMutation, { data, loading, error }] = useCreateKeywordTagMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateKeywordTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateKeywordTagMutation,
+    CreateKeywordTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateKeywordTagMutation, CreateKeywordTagMutationVariables>(
+    CreateKeywordTagDocument,
+    options
+  );
+}
+
+export type CreateKeywordTagMutationHookResult = ReturnType<typeof useCreateKeywordTagMutation>;
+
+export type CreateKeywordTagMutationResult = Apollo.MutationResult<CreateKeywordTagMutation>;
+
+export type CreateKeywordTagMutationOptions = Apollo.BaseMutationOptions<
+  CreateKeywordTagMutation,
+  CreateKeywordTagMutationVariables
+>;
+
+export const CreateLocationTagDocument = gql`
+  mutation createLocationTag($name: String!) {
+    createLocationTag(data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateLocationTagMutationFn = Apollo.MutationFunction<
+  CreateLocationTagMutation,
+  CreateLocationTagMutationVariables
+>;
+
+/**
+ * __useCreateLocationTagMutation__
+ *
+ * To run a mutation, you first call `useCreateLocationTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLocationTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLocationTagMutation, { data, loading, error }] = useCreateLocationTagMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateLocationTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateLocationTagMutation,
+    CreateLocationTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateLocationTagMutation, CreateLocationTagMutationVariables>(
+    CreateLocationTagDocument,
+    options
+  );
+}
+
+export type CreateLocationTagMutationHookResult = ReturnType<typeof useCreateLocationTagMutation>;
+
+export type CreateLocationTagMutationResult = Apollo.MutationResult<CreateLocationTagMutation>;
+
+export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
+  CreateLocationTagMutation,
+  CreateLocationTagMutationVariables
 >;
 
 export const MeDocument = gql`
