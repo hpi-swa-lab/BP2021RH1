@@ -15,12 +15,14 @@ const PictureScrollGrid = ({
   scrollHeight,
   hashbase,
   uploadAreaProps,
+  resultPictureCallback,
 }: {
   filters: PictureFiltersInput;
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
+  resultPictureCallback?: (pictures: boolean) => void;
 }) => {
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -40,6 +42,12 @@ const PictureScrollGrid = ({
     notifyOnNetworkStatusChange: true,
   });
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+
+  useEffect(() => {
+    if (resultPictureCallback) {
+      resultPictureCallback(pictures?.length !== 0);
+    }
+  }, [pictures, resultPictureCallback]);
 
   // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {
@@ -103,7 +111,7 @@ const PictureScrollGrid = ({
       </>
     );
   } else {
-    return null;
+    return <div>Leider gibt es keine Bilder für deine Anfrage.</div>;
   }
 };
 
