@@ -7,6 +7,16 @@ import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../common/PictureScrollGrid';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
+import {
+  Button,
+  IconButton,
+  styled,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
+  Typography,
+} from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 export const enum SearchType {
   DEFAULT = 'q',
@@ -97,6 +107,8 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [previewPicture, setPreviewPicture] = useState<FlatPicture>();
+  const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
+
   const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
@@ -109,16 +121,50 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     [searchParams]
   );
 
+  const SearchInfoTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }}>
+      <IconButton className={'info-icon'}>
+        <HelpOutlineIcon />
+      </IconButton>
+    </Tooltip>
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      maxWidth: 220,
+
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+    },
+  }));
+
   return (
     <div className='search-view'>
       <div className='search-content'>
         <div className='below-search-bar'>
-          <SearchBar
-            onValueChange={(snippet?: string) => {
-              setSearchSnippet(snippet ?? '');
-            }}
-            searchParams={searchParams}
-          />
+          <div>
+            {' '}
+            {(isSearchBarVisible || !search) && (
+              <SearchBar
+                onValueChange={(snippet?: string) => {
+                  setSearchSnippet(snippet ?? '');
+                }}
+                searchParams={searchParams}
+              />
+            )}
+            <SearchInfoTooltip
+              title={
+                <React.Fragment>
+                  <Typography color='inherit'>Was passiert, wenn ich Stichworte suche?</Typography>
+                  <p>
+                    {'Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n' +
+                      '                  Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen.'}
+                  </p>{' '}
+                </React.Fragment>
+              }
+            >
+              <Button>HTML</Button>
+            </SearchInfoTooltip>
+          </div>
+
           {!search ? (
             <SearchHub searchSnippet={searchSnippet} />
           ) : (
@@ -131,6 +177,9 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
                 if (pic !== previewPicture) {
                   setPreviewPicture(pic);
                 }
+              }}
+              resultPictureCallback={(result: boolean) => {
+                setIsSearchBarVisible(result);
               }}
             />
           )}

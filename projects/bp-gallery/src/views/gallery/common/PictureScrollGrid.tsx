@@ -12,12 +12,14 @@ const PictureScrollGrid = ({
   scrollHeight,
   hashbase,
   previewPictureCallback,
+  resultPictureCallback,
 }: {
   filters: PictureFiltersInput;
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
   previewPictureCallback?: (picture: FlatPicture) => void;
+  resultPictureCallback?: (pictures: boolean) => void;
 }) => {
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -40,6 +42,11 @@ const PictureScrollGrid = ({
     }
   }, [pictures, previewPictureCallback]);
 
+  useEffect(() => {
+    if (resultPictureCallback) {
+      resultPictureCallback(pictures?.length !== 0);
+    }
+  }, [pictures, resultPictureCallback]);
   // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {
     if (
@@ -69,7 +76,7 @@ const PictureScrollGrid = ({
   } else if (pictures?.length) {
     return <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />;
   } else {
-    return null;
+    return <div>Leider gibt es keine Bilder für deine Anfrage.</div>;
   }
 };
 
