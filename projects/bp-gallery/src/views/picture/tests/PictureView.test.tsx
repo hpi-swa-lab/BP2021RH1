@@ -35,14 +35,14 @@ describe('PictureView', () => {
     });
   });
 
-  it('should render the PictureInfo component', async () => {
+  it('should render the Sidebar component', async () => {
     const { container } = renderWithAPIMocks(
       <PictureView initialPictureId='1' />,
       GetPictureInfoDocumentMocks
     );
 
     await waitFor(() => {
-      const pictureDetails = container.querySelector('.picture-info-container');
+      const pictureDetails = container.querySelector('.picture-sidebar');
       expect(pictureDetails).toBeInTheDocument();
     });
   });

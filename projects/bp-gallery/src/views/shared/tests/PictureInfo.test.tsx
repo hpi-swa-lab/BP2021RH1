@@ -1,21 +1,14 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { renderWithPictureContextMocks } from '../../picture/tests/pictureTestUtils';
-import { DescriptionMocks, PictureMocks } from '../../picture/tests/mocks';
+import { PictureMocks } from '../../picture/tests/mocks';
 import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import PictureInfo from '../picture-info/PictureInfo';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
-
-const PictureDetailsMock = jest.fn();
-const PictureDetailsMockComponent = (props: any) => {
-  PictureDetailsMock(props);
-  return <div>PictureDetailsMock</div>;
-};
-jest.mock('../PictureDetails', () => PictureDetailsMockComponent);
+import { renderWithAPIMocks } from '../../../testUtils';
 
 describe('PictureInfo', () => {
   it('should render the pictures time range tag', async () => {
-    renderWithPictureContextMocks(
+    renderWithAPIMocks(
       <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
 
@@ -23,18 +16,41 @@ describe('PictureInfo', () => {
     expect(timeRangeTags).toBeInTheDocument();
   });
 
-  it('should render the picture details', async () => {
-    renderWithPictureContextMocks(
+  it('should render the pictures descriptions', async () => {
+    renderWithAPIMocks(
       <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
 
-    const pictureDetails = screen.getByText('PictureDetailsMock');
-    expect(pictureDetails).toBeInTheDocument();
+    const description1 = screen.getByText('My fancy description');
+    expect(description1).toBeInTheDocument();
+    const description2 = screen.getByText('My fancy description yeah');
+    expect(description2).toBeInTheDocument();
+  });
 
-    expect(PictureDetailsMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        descriptions: flattenQueryResponseData(DescriptionMocks),
-      })
+  it('should render the pictures keyword tags', async () => {
+    renderWithAPIMocks(
+      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
+
+    const tag = screen.getByText('keyword_tag');
+    expect(tag).toBeInTheDocument();
+  });
+
+  it('should render the pictures person tags', async () => {
+    renderWithAPIMocks(
+      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+    );
+
+    const tag = screen.getByText('Person test');
+    expect(tag).toBeInTheDocument();
+  });
+
+  it('should render the pictures location tags', async () => {
+    renderWithAPIMocks(
+      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+    );
+
+    const tag = screen.getByText('A place in Bad Harzburg');
+    expect(tag).toBeInTheDocument();
   });
 });
