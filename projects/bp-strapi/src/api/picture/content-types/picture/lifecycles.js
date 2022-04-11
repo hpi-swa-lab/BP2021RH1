@@ -269,7 +269,7 @@ const processUpdatesForDescriptions = async (
     newDescriptions.push(newDescriptionId);
 
     // Delete previous description if it will be unrelated after the current picture update
-    if (newDescriptionId !== parsedDescription.id) {
+    if (Number(newDescriptionId) !== Number(parsedDescription.id)) {
       await deletePreviousTagIfNeeded(
         pictureQuery,
         tagQuery,
@@ -332,7 +332,7 @@ const processUpdatesForTimeRangeTag = async (pictureQuery, data) => {
   );
 
   // Delete previous tag if it will be unrelated after the current picture update.
-  if (parsedTimeRangeTag.id !== newTimeRangeTagId) {
+  if (Number(parsedTimeRangeTag.id) !== Number(newTimeRangeTagId)) {
     await deletePreviousTagIfNeeded(
       pictureQuery,
       tagQuery,
