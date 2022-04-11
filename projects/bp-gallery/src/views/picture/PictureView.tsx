@@ -10,7 +10,7 @@ import React, {
 import './PictureView.scss';
 import { asApiPath } from '../../App';
 import { useHistory } from 'react-router-dom';
-import { History, Transition } from 'history';
+import { History } from 'history';
 import { FlatPicture } from '../../graphql/additionalFlatTypes';
 import PictureViewUI from './PictureViewUI';
 import PictureSidebar from './PictureSidebar';
@@ -19,6 +19,8 @@ import { PictureNavigationTarget } from './PictureNavigationButtons';
 import ZoomWrapper from './ZoomWrapper';
 import usePrefetchPictureHook from './prefetch.hook';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
+import usePresentationChannel from './presentationChannel';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -44,8 +46,17 @@ const PictureView = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [pictureId, setPictureId] = useState<string>(initialPictureId);
-  const [transitioning, setTransitioning] = useState<boolean>(false);
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
+
+  const search = window.location.search;
+  const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {
+    const params = new URLSearchParams(search);
+    return [
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      params.get('presentation') ?? uuidv4(),
+      !!params.get('presentation'),
+    ];
+  }, [search]);
 
   const [hasPrevious, hasNext] = useMemo(() => {
     return [
@@ -75,6 +86,13 @@ const PictureView = ({
     setUpPicture(pictureId);
   }, [setUpPicture, pictureId]);
 
+  const onNavigateMessage = useCallback((pictureId: string) => {
+    window.history.replaceState({}, '', `/picture/${pictureId}${window.location.search}`);
+    setPictureId(pictureId);
+  }, []);
+
+  const navigateToPicture = usePresentationChannel(sessionId, onNavigateMessage);
+
   // Call the previous or next picture
   const navigatePicture = useCallback(
     (target: PictureNavigationTarget) => {
@@ -83,11 +101,10 @@ const PictureView = ({
           ? getNextPictureId(pictureId, siblingIds)
           : getPreviousPictureId(pictureId, siblingIds);
       if (targetId) {
-        window.history.replaceState({}, '', `/picture/${targetId}`);
-        setPictureId(targetId);
+        navigateToPicture(targetId);
       }
     },
-    [pictureId, siblingIds, setPictureId]
+    [pictureId, siblingIds, navigateToPicture]
   );
 
   // Wrap all context information in this variable
@@ -102,7 +119,7 @@ const PictureView = ({
   // Block navigation and handle yourself, i.e. block browser navigation and
   // just close picture if it was called from the picture grid
   useEffect(() => {
-    const unblock = history.block((tx: Transition) => {
+    const unblock = history.block(() => {
       setSideBarOpen(false);
       if (onBack) {
         onBack(pictureId);
@@ -111,21 +128,29 @@ const PictureView = ({
     return () => {
       unblock();
     };
-  }, [history, pictureId, navigatePicture, onBack]);
+  }, [history, pictureId, onBack]);
 
   return (
     <div className='picture-view-container'>
       <PictureViewContext.Provider value={contextValue}>
-        <div className={`picture-view${transitioning ? ' transitioning' : ''}`} ref={containerRef}>
+        <div className={`picture-view`} ref={containerRef}>
           <ZoomWrapper blockScroll={true}>
             <div className='picture-wrapper'>
               <div className='picture-container'>
                 <img src={pictureLink} alt={pictureLink} />
               </div>
-              {!loading && !error && picture && <PictureViewUI calledViaLink={!onBack} />}
+              {!isPresentationMode && !loading && !error && picture && (
+                <PictureViewUI
+                  calledViaLink={!onBack}
+                  pictureId={picture.id}
+                  sessionId={sessionId}
+                />
+              )}
             </div>
           </ZoomWrapper>
-          <PictureSidebar loading={loading} error={error} picture={picture} />
+          {!isPresentationMode && (
+            <PictureSidebar loading={loading} error={error} picture={picture} />
+          )}
         </div>
       </PictureViewContext.Provider>
     </div>

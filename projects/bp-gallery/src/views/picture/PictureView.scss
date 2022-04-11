@@ -139,6 +139,23 @@
 
     @media only screen and (min-width: $mobile-breakpoint) {
       max-height: 100% !important;
+
+      .presentation-mode-button {
+        display: flex !important;
+      }
+    }
+
+    .presentation-mode-button {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      display: none;
+      background: rgba(0, 0, 0, 0.8);
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
+      color: white;
+      z-index: 99;
+      padding: 0.5rem;
+      gap: 10px;
     }
   }
 

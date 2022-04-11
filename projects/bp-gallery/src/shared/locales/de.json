@@ -31,7 +31,8 @@
     "close": "Schließen",
     "browse-view": "Alle Bilder",
     "community-view": "Neueste Bilder",
-    "create": "{{value}} hinzufügen"
+    "create": "{{value}} hinzufügen",
+    "presentationMode": "Präsentationsmodus"
   },
   "login": {
     "title": "Login",
