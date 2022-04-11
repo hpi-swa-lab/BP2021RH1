@@ -27,6 +27,12 @@
       "relation": "manyToMany",
       "target": "api::picture.picture",
       "mappedBy": "verified_keyword_tags"
+    },
+    "synonyms": {
+      "displayName": "synonyms",
+      "type": "component",
+      "repeatable": true,
+      "component": "common.synonyms"
     }
   }
 }

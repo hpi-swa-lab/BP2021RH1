@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import App from './App';
 import Demo from './prototypes/demo';
 import TimeLineDemo from './prototypes/timeline-demo';
+import TagOverview from './views/curator/TagOverview';
 import GalleryView from './views/gallery/GalleryView';
 import PictureView from './views/picture/PictureView';
 
@@ -52,6 +53,12 @@ const routes: RouteConfig[] = [
         path: '/picture/:id',
         render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
           return <PictureView initialPictureId={match.params.id} />;
+        },
+      },
+      {
+        path: '/tags/:type',
+        render: ({ match }: RouteConfigComponentProps<{ type: '' }>) => {
+          return <TagOverview />;
         },
       },
       {

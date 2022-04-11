@@ -218,7 +218,26 @@ query getAllKeywordTags {
       id
       attributes {
         name
+        synonyms {
+          name
+        }
       }
+    }
+  }
+}
+
+mutation updateKeywordName($tagId: ID!, $name: String!) {
+  updateKeywordTag(id: $tagId, data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+  updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
+    data {
+      id
     }
   }
 }

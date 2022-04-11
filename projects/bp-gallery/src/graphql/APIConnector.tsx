@@ -198,6 +198,23 @@ export type CommentRelationResponseCollection = {
   data: Array<CommentEntity>;
 };
 
+export type ComponentCommonSynonyms = {
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
+export type ComponentCommonSynonymsFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsFiltersInput>>>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsFiltersInput>>>;
+};
+
+export type ComponentCommonSynonymsInput = {
+  id?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
 export type ComponentLocationCoordinates = {
   id: Scalars['ID'];
   latitude: Scalars['Float'];
@@ -317,6 +334,7 @@ export type GenericMorph =
   | BrowseRootCollection
   | Collection
   | Comment
+  | ComponentCommonSynonyms
   | ComponentLocationCoordinates
   | Description
   | KeywordTag
@@ -402,6 +420,7 @@ export type KeywordTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
+  synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
@@ -410,6 +429,12 @@ export type KeywordTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type KeywordTagSynonymsArgs = {
+  filters?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -449,6 +474,7 @@ export type KeywordTagFiltersInput = {
 export type KeywordTagInput = {
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
@@ -1795,9 +1821,41 @@ export type GetAllKeywordTagsQuery = {
     | {
         data: Array<{
           id?: string | null | undefined;
-          attributes?: { name: string } | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+              }
+            | null
+            | undefined;
         }>;
       }
+    | null
+    | undefined;
+};
+
+export type UpdateKeywordNameMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  name: Scalars['String'];
+}>;
+
+export type UpdateKeywordNameMutation = {
+  updateKeywordTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateKeywordSynonymsMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  synonyms:
+    | Array<InputMaybe<ComponentCommonSynonymsInput>>
+    | InputMaybe<ComponentCommonSynonymsInput>;
+}>;
+
+export type UpdateKeywordSynonymsMutation = {
+  updateKeywordTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
 };
@@ -2574,6 +2632,9 @@ export const GetAllKeywordTagsDocument = gql`
         id
         attributes {
           name
+          synonyms {
+            name
+          }
         }
       }
     }
@@ -2622,6 +2683,119 @@ export type GetAllKeywordTagsLazyQueryHookResult = ReturnType<typeof useGetAllKe
 export type GetAllKeywordTagsQueryResult = Apollo.QueryResult<
   GetAllKeywordTagsQuery,
   GetAllKeywordTagsQueryVariables
+>;
+
+export const UpdateKeywordNameDocument = gql`
+  mutation updateKeywordName($tagId: ID!, $name: String!) {
+    updateKeywordTag(id: $tagId, data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateKeywordNameMutationFn = Apollo.MutationFunction<
+  UpdateKeywordNameMutation,
+  UpdateKeywordNameMutationVariables
+>;
+
+/**
+ * __useUpdateKeywordNameMutation__
+ *
+ * To run a mutation, you first call `useUpdateKeywordNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateKeywordNameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateKeywordNameMutation, { data, loading, error }] = useUpdateKeywordNameMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateKeywordNameMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateKeywordNameMutation,
+    UpdateKeywordNameMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateKeywordNameMutation, UpdateKeywordNameMutationVariables>(
+    UpdateKeywordNameDocument,
+    options
+  );
+}
+
+export type UpdateKeywordNameMutationHookResult = ReturnType<typeof useUpdateKeywordNameMutation>;
+
+export type UpdateKeywordNameMutationResult = Apollo.MutationResult<UpdateKeywordNameMutation>;
+
+export type UpdateKeywordNameMutationOptions = Apollo.BaseMutationOptions<
+  UpdateKeywordNameMutation,
+  UpdateKeywordNameMutationVariables
+>;
+
+export const UpdateKeywordSynonymsDocument = gql`
+  mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+    updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateKeywordSynonymsMutationFn = Apollo.MutationFunction<
+  UpdateKeywordSynonymsMutation,
+  UpdateKeywordSynonymsMutationVariables
+>;
+
+/**
+ * __useUpdateKeywordSynonymsMutation__
+ *
+ * To run a mutation, you first call `useUpdateKeywordSynonymsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateKeywordSynonymsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateKeywordSynonymsMutation, { data, loading, error }] = useUpdateKeywordSynonymsMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      synonyms: // value for 'synonyms'
+ *   },
+ * });
+ */
+export function useUpdateKeywordSynonymsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateKeywordSynonymsMutation,
+    UpdateKeywordSynonymsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateKeywordSynonymsMutation, UpdateKeywordSynonymsMutationVariables>(
+    UpdateKeywordSynonymsDocument,
+    options
+  );
+}
+
+export type UpdateKeywordSynonymsMutationHookResult = ReturnType<
+  typeof useUpdateKeywordSynonymsMutation
+>;
+
+export type UpdateKeywordSynonymsMutationResult =
+  Apollo.MutationResult<UpdateKeywordSynonymsMutation>;
+
+export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
+  UpdateKeywordSynonymsMutation,
+  UpdateKeywordSynonymsMutationVariables
 >;
 
 export const GetAllLocationTagsDocument = gql`
