@@ -84,6 +84,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       <PictureInfoField
         title={t('pictureFields.time')}
         icon='event'
+        type='date'
         empty={!picture.time_range_tag}
       >
         <DateRangeSelectionField
@@ -96,6 +97,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       <PictureInfoField
         title={t('pictureFields.descriptions')}
         icon='description'
+        type='description'
         empty={!picture.descriptions?.length}
       >
         <DescriptionsEditField
@@ -108,6 +110,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       <PictureInfoField
         title={t('pictureFields.people')}
         icon='person'
+        type='person'
         empty={!picture.person_tags?.length}
       >
         <TagSelectionField
@@ -122,6 +125,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       <PictureInfoField
         title={t('pictureFields.locations')}
         icon='map'
+        type='location'
         empty={!picture.location_tags?.length}
       >
         <TagSelectionField
@@ -136,6 +140,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       <PictureInfoField
         title={t('pictureFields.keywords')}
         icon='sell'
+        type='keywords'
         empty={!picture.keyword_tags?.length}
       >
         <TagSelectionField

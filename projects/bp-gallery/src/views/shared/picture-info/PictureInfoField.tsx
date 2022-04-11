@@ -7,11 +7,13 @@ const PictureInfoField = ({
   title,
   icon,
   children,
+  type,
   empty = false,
 }: {
   title: string;
   icon: string;
   children: any;
+  type?: string;
   empty?: boolean;
 }) => {
   const { role } = useAuth();
@@ -20,7 +22,7 @@ const PictureInfoField = ({
     return null;
   }
   return (
-    <div className='picture-info-field'>
+    <div className='picture-info-field' data-type={type}>
       <div className='icon-container'>
         <Icon>{icon}</Icon>
       </div>
