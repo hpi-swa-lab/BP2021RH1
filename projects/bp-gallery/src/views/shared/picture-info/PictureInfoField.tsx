@@ -1,16 +1,24 @@
 import React from 'react';
 import { Icon } from '@mui/material';
 import './PictureInfoField.scss';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
 
 const PictureInfoField = ({
   title,
   icon,
   children,
+  empty = false,
 }: {
   title: string;
   icon: string;
   children: any;
+  empty?: boolean;
 }) => {
+  const { role } = useAuth();
+
+  if (empty && role < AuthRole.CURATOR) {
+    return null;
+  }
   return (
     <div className='picture-info-field'>
       <div className='icon-container'>

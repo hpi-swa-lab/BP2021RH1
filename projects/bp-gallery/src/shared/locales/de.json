@@ -47,6 +47,7 @@
     "locations": "Orte",
     "descriptions": "Beschreibungen",
     "people": "Personen",
-    "keywords": "Stichworte"
+    "keywords": "Stichworte",
+    "noTime": "Keine Zeit angegeben"
   }
 }

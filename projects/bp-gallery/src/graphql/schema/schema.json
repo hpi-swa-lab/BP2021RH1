@@ -5603,16 +5603,6 @@
             "defaultValue": null
           },
           {
-            "name": "publishedAt",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DateTimeFilterInput",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "and",
             "description": null,
             "type": {
@@ -5696,16 +5686,6 @@
                 "name": "ID",
                 "ofType": null
               }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "publishedAt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "DateTime",
-              "ofType": null
             },
             "defaultValue": null
           }
@@ -5863,18 +5843,6 @@
           },
           {
             "name": "updatedAt",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "DateTime",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "publishedAt",
             "description": null,
             "args": [],
             "type": {
@@ -6102,16 +6070,6 @@
             "defaultValue": null
           },
           {
-            "name": "publishedAt",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DateTimeFilterInput",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "and",
             "description": null,
             "type": {
@@ -6205,16 +6163,6 @@
                 "name": "ID",
                 "ofType": null
               }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "publishedAt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "DateTime",
-              "ofType": null
             },
             "defaultValue": null
           }
@@ -6384,18 +6332,6 @@
           },
           {
             "name": "updatedAt",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "DateTime",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "publishedAt",
             "description": null,
             "args": [],
             "type": {
@@ -6623,16 +6559,6 @@
             "defaultValue": null
           },
           {
-            "name": "publishedAt",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DateTimeFilterInput",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "and",
             "description": null,
             "type": {
@@ -6716,16 +6642,6 @@
                 "name": "ID",
                 "ofType": null
               }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "publishedAt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "DateTime",
-              "ofType": null
             },
             "defaultValue": null
           }
@@ -6883,18 +6799,6 @@
           },
           {
             "name": "updatedAt",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "DateTime",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "publishedAt",
             "description": null,
             "args": [],
             "type": {
@@ -7655,16 +7559,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -7781,16 +7675,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -7838,16 +7722,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -7895,16 +7769,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -7952,16 +7816,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -8009,16 +7863,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -8316,16 +8160,6 @@
             "defaultValue": null
           },
           {
-            "name": "publishedAt",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DateTimeFilterInput",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "and",
             "description": null,
             "type": {
@@ -8419,16 +8253,6 @@
                 "name": "ID",
                 "ofType": null
               }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "publishedAt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "DateTime",
-              "ofType": null
             },
             "defaultValue": null
           }
@@ -8602,18 +8426,6 @@
           },
           {
             "name": "updatedAt",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "DateTime",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "publishedAt",
             "description": null,
             "args": [],
             "type": {
@@ -9861,16 +9673,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -9941,16 +9743,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -10021,16 +9813,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {
@@ -10181,16 +9963,6 @@
                   }
                 },
                 "defaultValue": "[]"
-              },
-              {
-                "name": "publicationState",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "PublicationState",
-                  "ofType": null
-                },
-                "defaultValue": "LIVE"
               }
             ],
             "type": {

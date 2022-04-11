@@ -35,6 +35,24 @@
     .tag-selection {
       width: 100%;
     }
+
+    .jodit-react-container {
+      background: white;
+      text-align: left;
+      padding: 0.25rem 0.5rem;
+      border-radius: 5px;
+      width: calc(100% - 1rem);
+
+      &:not(:last-child) {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .date-indicator {
+      font-weight: 900;
+      color: $primaryColor;
+      font-weight: 1.2rem;
+    }
   }
 
   .field-title {

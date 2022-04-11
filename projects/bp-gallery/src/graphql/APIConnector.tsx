@@ -402,7 +402,6 @@ export type KeywordTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
@@ -443,7 +442,6 @@ export type KeywordTagFiltersInput = {
   not?: InputMaybe<KeywordTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
@@ -451,7 +449,6 @@ export type KeywordTagFiltersInput = {
 export type KeywordTagInput = {
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
@@ -464,7 +461,6 @@ export type LocationTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
@@ -505,7 +501,6 @@ export type LocationTagFiltersInput = {
   not?: InputMaybe<LocationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
@@ -514,7 +509,6 @@ export type LocationTagInput = {
   coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
@@ -790,7 +784,6 @@ export type PersonTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
@@ -831,7 +824,6 @@ export type PersonTagFiltersInput = {
   not?: InputMaybe<PersonTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PersonTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
@@ -839,7 +831,6 @@ export type PersonTagFiltersInput = {
 export type PersonTagInput = {
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
@@ -891,42 +882,36 @@ export type PictureDescriptionsArgs = {
 export type PictureKeyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureLocation_TagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PicturePerson_TagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureVerified_Keyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureVerified_Location_TagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureVerified_Person_TagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1065,7 +1050,6 @@ export type QueryKeywordTagArgs = {
 export type QueryKeywordTagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1076,7 +1060,6 @@ export type QueryLocationTagArgs = {
 export type QueryLocationTagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1087,7 +1070,6 @@ export type QueryPersonTagArgs = {
 export type QueryPersonTagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1109,7 +1091,6 @@ export type QueryTimeRangeTagArgs = {
 export type QueryTimeRangeTagsArgs = {
   filters?: InputMaybe<TimeRangeTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1174,7 +1155,6 @@ export type TimeRangeTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   end: Scalars['DateTime'];
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
@@ -1216,7 +1196,6 @@ export type TimeRangeTagFiltersInput = {
   not?: InputMaybe<TimeRangeTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<TimeRangeTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   start?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
@@ -1225,7 +1204,6 @@ export type TimeRangeTagFiltersInput = {
 export type TimeRangeTagInput = {
   end?: InputMaybe<Scalars['DateTime']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   start?: InputMaybe<Scalars['DateTime']>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
@@ -2000,6 +1978,18 @@ export type CreateLocationTagMutationVariables = Exact<{
 
 export type CreateLocationTagMutation = {
   createLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdatePictureMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+  data: PictureInput;
+}>;
+
+export type UpdatePictureMutation = {
+  updatePicture?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -3202,6 +3192,58 @@ export type CreateLocationTagMutationResult = Apollo.MutationResult<CreateLocati
 export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationTagMutation,
   CreateLocationTagMutationVariables
+>;
+
+export const UpdatePictureDocument = gql`
+  mutation updatePicture($pictureId: ID!, $data: PictureInput!) {
+    updatePicture(id: $pictureId, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdatePictureMutationFn = Apollo.MutationFunction<
+  UpdatePictureMutation,
+  UpdatePictureMutationVariables
+>;
+
+/**
+ * __useUpdatePictureMutation__
+ *
+ * To run a mutation, you first call `useUpdatePictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePictureMutation, { data, loading, error }] = useUpdatePictureMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdatePictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdatePictureMutation, UpdatePictureMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdatePictureMutation, UpdatePictureMutationVariables>(
+    UpdatePictureDocument,
+    options
+  );
+}
+
+export type UpdatePictureMutationHookResult = ReturnType<typeof useUpdatePictureMutation>;
+
+export type UpdatePictureMutationResult = Apollo.MutationResult<UpdatePictureMutation>;
+
+export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePictureMutation,
+  UpdatePictureMutationVariables
 >;
 
 export const MeDocument = gql`

@@ -464,6 +464,14 @@ mutation createLocationTag($name: String!) {
   }
 }
 
+mutation updatePicture($pictureId: ID!, $data: PictureInput!) {
+  updatePicture(id: $pictureId, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
 query me {
   me {
     role {
