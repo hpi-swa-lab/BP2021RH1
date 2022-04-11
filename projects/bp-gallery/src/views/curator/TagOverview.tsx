@@ -1,15 +1,8 @@
 import React, { useCallback, useContext, useMemo } from 'react';
 import './TagOverview.scss';
-import {
-  ComponentCommonSynonyms,
-  ComponentCommonSynonymsInput,
-  useGetAllKeywordTagsQuery,
-  useUpdateKeywordNameMutation,
-  useUpdateKeywordSynonymsMutation,
-} from '../../graphql/APIConnector';
+import { ComponentCommonSynonyms, ComponentCommonSynonymsInput } from '../../graphql/APIConnector';
 import QueryErrorDisplay from '../shared/QueryErrorDisplay';
 import Loading from '../shared/Loading';
-import { FlatKeywordTag } from '../../graphql/additionalFlatTypes';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import {
   DataGrid,
@@ -20,6 +13,7 @@ import {
 } from '@mui/x-data-grid';
 import { AlertContext, AlertType } from '../shared/AlertWrapper';
 import { Chip } from '@mui/material';
+import useGenericTagEndpoints from './endpoints';
 
 interface TagRow {
   id: string;
@@ -28,23 +22,31 @@ interface TagRow {
   add: string;
 }
 
-const TagOverview = () => {
+interface FlatTag {
+  id: string;
+  name: string;
+  synonyms?: (ComponentCommonSynonyms | undefined)[];
+}
+
+const TagOverview = ({ type }: { type: string }) => {
   const openAlert = useContext(AlertContext);
 
-  const { data, loading, error, refetch } = useGetAllKeywordTagsQuery();
-  const flattenedKeywordtags: FlatKeywordTag[] | undefined =
-    useSimplifiedQueryResponseData(data)?.keywordTags;
+  const { tagQuery, updateTagNameMutationSource, updateSynonymsMutationSource } =
+    useGenericTagEndpoints(type);
+  const { data, loading, error, refetch } = tagQuery();
+  const flattened = useSimplifiedQueryResponseData(data);
+  const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  // Store keywordTags in object
-  const keywordTags: { [key: string]: FlatKeywordTag } = useMemo(() => {
-    const tags: { [key: string]: FlatKeywordTag } = {};
-    flattenedKeywordtags?.forEach(tag => {
+  // Store tags in object
+  const tags: { [key: string]: FlatTag } = useMemo(() => {
+    const tags: { [key: string]: FlatTag } = {};
+    flattenedTags?.forEach(tag => {
       tags[tag.id] = tag;
     });
     return tags;
-  }, [flattenedKeywordtags]);
+  }, [flattenedTags]);
 
-  const [updateSynonymsMutation] = useUpdateKeywordSynonymsMutation({
+  const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: _ => {
       refetch();
     },
@@ -56,7 +58,7 @@ const TagOverview = () => {
     },
   });
 
-  const [updateNameMutation] = useUpdateKeywordNameMutation({
+  const [updateTagNameMutation] = updateTagNameMutationSource({
     onCompleted: _ => {
       refetch();
     },
@@ -71,7 +73,7 @@ const TagOverview = () => {
   const addSynonym = useCallback(
     (tagId: string, synonymName: string) => {
       const synonyms: ComponentCommonSynonymsInput[] =
-        keywordTags[tagId].synonyms?.map(s => ({ name: s?.name })) ?? [];
+        tags[tagId].synonyms?.map(s => ({ name: s?.name })) ?? [];
       synonyms.push({ name: synonymName });
       updateSynonymsMutation({
         variables: {
@@ -80,7 +82,7 @@ const TagOverview = () => {
         },
       });
     },
-    [updateSynonymsMutation, keywordTags]
+    [updateSynonymsMutation, tags]
   );
 
   const deleteSynonym = useCallback(
@@ -89,29 +91,29 @@ const TagOverview = () => {
         variables: {
           tagId,
           synonyms:
-            keywordTags[tagId].synonyms?.filter(s => s?.name !== '' && s?.name !== synonymName) ??
-            [],
+            tags[tagId].synonyms?.filter(s => s?.name !== '' && s?.name !== synonymName) ??
+            ([] as any),
         },
       });
     },
-    [updateSynonymsMutation, keywordTags]
+    [updateSynonymsMutation, tags]
   );
 
   const processRowUpdate = useCallback(
     (row: GridRowModel<TagRow>) => {
       if (row.add !== '') {
-        if (!keywordTags[row.id].synonyms?.some(s => s?.name === row.add)) {
+        if (!tags[row.id].synonyms?.some(s => s?.name === row.add)) {
           addSynonym(row.id, row.add);
         } else {
           openAlert({ alertType: AlertType.ERROR, message: 'Dieses Synonym existiert schon' });
         }
         row.add = '';
-      } else if (row.name !== keywordTags[row.id].name) {
-        updateNameMutation({ variables: { tagId: row.id, name: row.name } });
+      } else if (row.name !== tags[row.id].name) {
+        updateTagNameMutation({ variables: { tagId: row.id, name: row.name } });
       }
       return row;
     },
-    [addSynonym, keywordTags, openAlert, updateNameMutation]
+    [addSynonym, tags, openAlert, updateTagNameMutation]
   );
 
   const columns: GridColDef[] = [
@@ -143,11 +145,11 @@ const TagOverview = () => {
     },
   ];
 
-  const rows: GridRowsProp = Object.values(keywordTags).map(keywordTag => {
+  const rows: GridRowsProp = Object.values(tags).map(tag => {
     return {
-      id: keywordTag.id,
-      name: keywordTag.name,
-      synonyms: { synonyms: keywordTag.synonyms, tagId: keywordTag.id },
+      id: tag.id,
+      name: tag.name,
+      synonyms: { synonyms: tag.synonyms, tagId: tag.id },
       add: '',
     } as TagRow;
   });
@@ -156,7 +158,7 @@ const TagOverview = () => {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else if (Object.values(keywordTags).length) {
+  } else if (Object.values(tags).length) {
     return (
       <div className='grid'>
         <DataGrid

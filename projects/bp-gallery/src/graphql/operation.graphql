@@ -248,7 +248,26 @@ query getAllLocationTags {
       id
       attributes {
         name
+        synonyms {
+          name
+        }
       }
+    }
+  }
+}
+
+mutation updateLocationName($tagId: ID!, $name: String!) {
+  updateLocationTag(id: $tagId, data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+  updateLocationTag(id: $tagId, data: { synonyms: $synonyms }) {
+    data {
+      id
     }
   }
 }
@@ -259,7 +278,26 @@ query getAllPersonTags {
       id
       attributes {
         name
+        synonyms {
+          name
+        }
       }
+    }
+  }
+}
+
+mutation updatePersonName($tagId: ID!, $name: String!) {
+  updatePersonTag(id: $tagId, data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updatePersonSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+  updatePersonTag(id: $tagId, data: { synonyms: $synonyms }) {
+    data {
+      id
     }
   }
 }

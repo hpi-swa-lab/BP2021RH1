@@ -56,9 +56,21 @@ const routes: RouteConfig[] = [
         },
       },
       {
-        path: '/tags/:type',
-        render: ({ match }: RouteConfigComponentProps<{ type: '' }>) => {
-          return <TagOverview />;
+        path: '/tags/keywords',
+        render: () => {
+          return <TagOverview type='keywords' />;
+        },
+      },
+      {
+        path: '/tags/locations',
+        render: () => {
+          return <TagOverview type='locations' />;
+        },
+      },
+      {
+        path: '/tags/people',
+        render: () => {
+          return <TagOverview type='people' />;
         },
       },
       {
