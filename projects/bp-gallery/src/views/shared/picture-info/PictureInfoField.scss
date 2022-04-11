@@ -36,16 +36,46 @@
       width: 100%;
     }
 
-    .jodit-react-container {
-      background: white;
-      text-align: left;
-      padding: 0.25rem 0.5rem;
-      border-radius: 5px;
+    .description-content {
       width: calc(100% - 1rem);
+      padding: 0.25rem 0.5rem;
+      background: white;
+      border-radius: 5px;
+      position: relative;
+      margin-bottom: 2rem;
+      min-height: 3rem;
+      display: flex;
+      align-items: center;
 
-      &:not(:last-child) {
+      .jodit-react-container {
+        background-color: transparent;
+        text-align: left;
+        width: 100%;
+      }
+
+      &:not(:last-of-type) {
         margin-bottom: 0.5rem;
       }
+
+      .delete-button {
+        position: absolute;
+        opacity: 0.5;
+        right: 3px;
+        bottom: 3px;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .add-button {
+      background: $primaryColor;
+      color: white;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, -1rem);
     }
 
     .date-indicator {
@@ -61,5 +91,6 @@
     font-weight: 200;
     font-size: 0.9rem;
     text-align: right;
+    margin-bottom: 0.6rem;
   }
 }

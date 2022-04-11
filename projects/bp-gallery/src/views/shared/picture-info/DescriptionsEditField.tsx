@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import JoditEditor from 'jodit-react';
 import { FlatDescription } from '../../../graphql/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
+import { Icon, IconButton } from '@mui/material';
+import { isEmpty } from 'lodash';
 
 const DescriptionsEditField = ({
   descriptions,
@@ -27,23 +29,57 @@ const DescriptionsEditField = ({
 
   return (
     <>
-      {descriptions.map((description, index) => {
+      {descriptionState.map((description, index) => {
         return (
-          <JoditEditor
-            key={description.id}
-            value={description.text}
-            config={config}
-            onBlur={() => onChange(descriptionState)}
-            onChange={newText => {
-              setDescriptionState(allDescriptions => {
-                allDescriptions[index].text = newText;
-                (allDescriptions[index] as any).updatePrevious = true;
-                return allDescriptions;
-              });
-            }}
-          />
+          <div className='description-content' key={description.id}>
+            <JoditEditor
+              value={description.text}
+              config={config}
+              onBlur={() =>
+                onChange(descriptionState.filter(description => !isEmpty(description.text)))
+              }
+              onChange={newText => {
+                setDescriptionState(allDescriptions => {
+                  allDescriptions[index].text = newText;
+                  return allDescriptions;
+                });
+              }}
+            />
+            {role >= AuthRole.CURATOR && (
+              <IconButton
+                onClick={() => {
+                  setDescriptionState(allDescriptions => {
+                    allDescriptions.splice(index, 1);
+                    onChange(allDescriptions.filter(description => !isEmpty(description.text)));
+                    return [...allDescriptions];
+                  });
+                }}
+                className='delete-button'
+              >
+                <Icon>delete</Icon>
+              </IconButton>
+            )}
+          </div>
         );
       })}
+      {role >= AuthRole.CURATOR && (
+        <IconButton
+          onClick={() => {
+            setDescriptionState(allDescriptions => {
+              return [
+                ...allDescriptions,
+                {
+                  text: '',
+                  id: `${allDescriptions.length + 1}`,
+                },
+              ];
+            });
+          }}
+          className='add-button'
+        >
+          <Icon>add</Icon>
+        </IconButton>
+      )}
     </>
   );
 };
