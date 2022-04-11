@@ -1,6 +1,6 @@
 import { Autocomplete, Chip, createFilterOptions, Icon, Stack, TextField } from '@mui/material';
 import { GraphQLError } from 'graphql';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { AlertContext, AlertType } from '../AlertWrapper';
@@ -34,6 +34,17 @@ const TagSelectionField = <T extends TagFields>({
   useEffect(() => {
     setTagList(allTags);
   }, [allTags, setTagList]);
+
+  const toggleVerified = useCallback(
+    (list: T[], index: number) => {
+      if (!onChange) {
+        return;
+      }
+      list[index].verified = !list[index].verified;
+      onChange(list);
+    },
+    [onChange]
+  );
 
   const filter = createFilterOptions<T>();
 
@@ -101,6 +112,19 @@ const TagSelectionField = <T extends TagFields>({
               </li>
             );
           }}
+          renderTags={(value, props) => {
+            return value.map((option, index) => (
+              <Chip
+                {...props({ index })}
+                key={index}
+                icon={!option.verified ? <Icon>help</Icon> : undefined}
+                label={option.name}
+                onClick={() => {
+                  toggleVerified(value, index);
+                }}
+              />
+            ));
+          }}
           getOptionLabel={(option: T) => {
             return option.name;
           }}
@@ -111,7 +135,7 @@ const TagSelectionField = <T extends TagFields>({
     );
   } else {
     return (
-      <Stack direction='row'>
+      <Stack direction='row' spacing={1}>
         {tags.map(tag => {
           return <Chip key={tag.id} label={tag.name} />;
         })}
