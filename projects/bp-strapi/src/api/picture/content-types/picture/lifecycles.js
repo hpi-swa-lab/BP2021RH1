@@ -230,6 +230,20 @@ const processUpdatesForDescriptions = async (
   // Check whether we actually need to update stuff for that type.
   if (!data[DESCRIPTIONS_KEY]) return;
 
+  const previousDescriptions =
+    (
+      await pictureQuery.findOne({
+        where: {
+          id: currentPictureId,
+        },
+        populate: {
+          descriptions: {
+            select: ["id"],
+          },
+        },
+      })
+    )?.descriptions ?? [];
+
   const { tagQuery, tagService } =
     getQueryEngineAndServiceForTag(DESCRIPTIONS_KEY);
 
@@ -278,6 +292,20 @@ const processUpdatesForDescriptions = async (
         false
       );
     }
+  }
+
+  // Delete all descriptions that were assigned to the picture before and are not needed anymore
+  const unused = previousDescriptions
+    .filter((description) => !newDescriptions.includes(description.id))
+    .map((description) => description.id);
+  for (const unusedId of unused) {
+    await deletePreviousTagIfNeeded(
+      pictureQuery,
+      tagQuery,
+      DESCRIPTIONS_KEY,
+      unusedId,
+      false
+    );
   }
 
   data[DESCRIPTIONS_KEY] = newDescriptions;
