@@ -15,7 +15,7 @@
     margin-right: -450px;
   }
 
-  .picture-infos {
+  .picture-info {
     padding: 10px;
   }
 
@@ -73,8 +73,7 @@
     max-height: 80vh;
     padding-left: 0;
     padding-top: 0;
-    z-index: 999;
-    background: transparent;
+    z-index: 1005;
     transition: max-height 0.5s;
 
     &.closed {
