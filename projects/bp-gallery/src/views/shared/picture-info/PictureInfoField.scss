@@ -13,8 +13,11 @@
   }
 
   &[data-type='person'] {
-    .icon-container {
+    .icon-container,
+    .MuiChip-filled,
+    .MuiChip-deleteIcon {
       background: rgb(48, 48, 182);
+      color: white;
     }
 
     .field-title {
@@ -24,8 +27,11 @@
   }
 
   &[data-type='location'] {
-    .icon-container {
+    .icon-container,
+    .MuiChip-filled,
+    .MuiChip-deleteIcon {
       background: rgb(19, 137, 50);
+      color: white;
     }
 
     .field-title {
@@ -35,8 +41,11 @@
   }
 
   &[data-type='keywords'] {
-    .icon-container {
+    .icon-container,
+    .MuiChip-filled,
+    .MuiChip-deleteIcon {
       background: rgb(172, 113, 11);
+      color: white;
     }
 
     .field-title {
