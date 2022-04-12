@@ -27,8 +27,6 @@ const PictureScrollGrid = ({
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  const { t } = useTranslation();
-
   const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
   const { data, loading, error, fetchMore, refetch } = useGetPicturesQuery({
@@ -42,6 +40,7 @@ const PictureScrollGrid = ({
     notifyOnNetworkStatusChange: true,
   });
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (resultPictureCallback) {
@@ -111,7 +110,7 @@ const PictureScrollGrid = ({
       </>
     );
   } else {
-    return <div>Leider gibt es keine Bilder für deine Anfrage.</div>;
+    return <div> {t('common.no-picture')} </div>;
   }
 };
 
