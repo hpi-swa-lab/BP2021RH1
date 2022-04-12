@@ -42,7 +42,8 @@ class FallbackChannel {
 /* ========== FALLBACK END ========== */
 
 const channelFactory = (id: string) => {
-  if (BroadcastChannel as any) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (window.BroadcastChannel) {
     return new BroadcastChannel(id);
   } else {
     console.debug(
