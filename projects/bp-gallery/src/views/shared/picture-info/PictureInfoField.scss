@@ -81,6 +81,11 @@
       }
     }
 
+    .chip-stack {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     .description-content {
       width: calc(100% - 1rem);
       padding: 0.25rem 0.5rem;

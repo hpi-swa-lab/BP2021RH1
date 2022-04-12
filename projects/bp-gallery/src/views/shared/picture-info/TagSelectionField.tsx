@@ -135,7 +135,7 @@ const TagSelectionField = <T extends TagFields>({
     );
   } else {
     return (
-      <Stack direction='row' spacing={1}>
+      <Stack direction='row' spacing={1} className='chip-stack'>
         {tags.map(tag => {
           return <Chip key={tag.id} label={tag.name} />;
         })}

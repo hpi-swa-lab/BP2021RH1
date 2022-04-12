@@ -35,6 +35,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       const fieldCopy: { [key: string]: any } = cloneDeep(field);
       Object.keys(fieldCopy).forEach(key => {
         if (Array.isArray(fieldCopy[key])) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           fieldCopy[key] = fieldCopy[key].map((f: any) => JSON.stringify(f));
         } else {
           fieldCopy[key] = JSON.stringify(fieldCopy[key]);
