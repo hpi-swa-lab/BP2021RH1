@@ -41,17 +41,18 @@ class FallbackChannel {
 }
 /* ========== FALLBACK END ========== */
 
+const channelFactory = (id: string) => {
+  if (BroadcastChannel as any) {
+    return new BroadcastChannel(id);
+  } else {
+    console.debug(
+      'Broadcast Channel not found on this system. Falling back to using local storage.'
+    );
+    return new FallbackChannel(id);
+  }
+};
+
 const usePresentationChannel = (id: string, onNavigate: (pictureId: string) => void) => {
-  const channelFactory = (id: string) => {
-    if (BroadcastChannel as any) {
-      return new BroadcastChannel(id);
-    } else {
-      console.debug(
-        'Broadcast Channel not found on this system. Falling back to using local storage.'
-      );
-      return new FallbackChannel(id);
-    }
-  };
   const producer = useMemo(() => channelFactory(id), [id]);
   const consumer = useMemo(() => channelFactory(id), [id]);
 
