@@ -6,6 +6,8 @@ import PictureScrollGrid from '../shared/PictureScrollGrid';
 import SubCollections from './SubCollections';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import CollectionDescription from './CollectionDescription';
+import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
 
 const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -47,6 +49,7 @@ const CollectionPictureDisplay = ({
   picturePublishingDate?: string;
 }) => {
   const { t } = useTranslation();
+  const { role } = useAuth();
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -71,6 +74,20 @@ const CollectionPictureDisplay = ({
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={collection.name}
+          gridProps={
+            role >= AuthRole.CURATOR
+              ? {
+                  beforeAddPictures: (pictures: FlatPicture[]) => {
+                    return pictures.map(picture => ({
+                      ...picture,
+                      publishedAt: new Date().toISOString(),
+                      collections: [collection.id],
+                    }));
+                  },
+                  folderName: collection.name,
+                }
+              : undefined
+          }
         />
       </div>
     );

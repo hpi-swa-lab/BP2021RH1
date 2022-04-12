@@ -21,6 +21,8 @@ type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
 type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
+type FlatUploadFile = ID & UploadFile;
+
 type FlatPictureWithoutRelations = ID &
   Omit<
     Picture,
@@ -82,12 +84,12 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   keyword_tags?: FlatKeywordTagWithoutRelations[];
   person_tags?: FlatPersonTagWithoutRelations[];
   location_tags?: FlatLocationTagWithoutRelations[];
-  media?: UploadFile;
+  media?: FlatUploadFile;
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
 };
 
 type Thumbnail = {
-  media?: UploadFile;
+  media?: FlatUploadFile;
 };
 
 export type FlatKeywordTagSuggestion = FlatKeywordTagWithoutRelations & {

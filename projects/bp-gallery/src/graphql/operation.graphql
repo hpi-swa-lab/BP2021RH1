@@ -79,6 +79,7 @@ query getPictureInfo($pictureId: ID!) {
         }
         media {
           data {
+            id
             attributes {
               url
             }
@@ -106,6 +107,7 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
       attributes {
         media {
           data {
+            id
             attributes {
               width
               height
@@ -523,6 +525,30 @@ mutation createLocationTag($name: String!) {
 
 mutation updatePicture($pictureId: ID!, $data: PictureInput!) {
   updatePicture(id: $pictureId, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createPicture($data: PictureInput!) {
+  createPicture(data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteUpload($id: ID!) {
+  deleteUploadFile(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deletePicture($id: ID!) {
+  deletePicture(id: $id) {
     data {
       id
     }

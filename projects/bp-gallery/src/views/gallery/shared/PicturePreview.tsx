@@ -1,0 +1,61 @@
+import { Icon } from '@mui/material';
+import { isFunction } from 'lodash';
+import React, { MouseEventHandler, useMemo, useRef } from 'react';
+import { asApiPath } from '../../../App';
+import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import './PicturePreview.scss';
+
+export interface PicturePreviewAdornment {
+  position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+  onClick: (picture: FlatPicture) => void;
+  icon: string | ((picture: FlatPicture) => string);
+}
+
+const PicturePreview = ({
+  picture,
+  onClick,
+  local,
+  adornments,
+}: {
+  picture: FlatPicture;
+  onClick: MouseEventHandler<HTMLDivElement>;
+  local?: boolean;
+  adornments?: PicturePreviewAdornment[];
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const thumbnailUrl = useMemo(() => {
+    return `${String(picture.media?.formats?.small.url || '')}`;
+  }, [picture]);
+
+  return (
+    <div
+      onClick={onClick}
+      id={`picture-preview-for-${picture.id}`}
+      className='picture-preview'
+      ref={containerRef}
+      style={{
+        flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
+      }}
+    >
+      <img src={!local ? asApiPath(`/${thumbnailUrl}`) : thumbnailUrl} />
+      <div className='adornments'>
+        {adornments?.map((adornment, index) => (
+          <div
+            className={`adornment ${adornment.position}`}
+            key={index}
+            onClick={event => {
+              event.preventDefault();
+              event.stopPropagation();
+              adornment.onClick(picture);
+            }}
+          >
+            <Icon>{isFunction(adornment.icon) ? adornment.icon(picture) : adornment.icon}</Icon>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PicturePreview;

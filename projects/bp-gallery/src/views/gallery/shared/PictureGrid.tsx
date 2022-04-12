@@ -1,20 +1,69 @@
-import React, { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
-import { asApiPath } from '../../../App';
 import hashCode from './helpers/hash-code';
 import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animation.helpers';
+import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
+import PicturePreview from './PicturePreview';
+import { useDeletePictureMutation, useDeleteUploadMutation } from '../../../graphql/APIConnector';
+import { DialogContext } from '../../shared/DialogWrapper';
+import { useTranslation } from 'react-i18next';
+
+export type PictureGridProps = {
+  pictures: FlatPicture[];
+  hashBase: string;
+  loading: boolean;
+  refetch: () => void;
+} & Partial<PictureUploadAreaProps>;
+
+const useDeletePicture = () => {
+  const [deleteFile] = useDeleteUploadMutation();
+  const [deletePicture] = useDeletePictureMutation();
+  const prompt = useContext(DialogContext);
+  const { t } = useTranslation();
+
+  return useCallback(
+    (picture: FlatPicture) => {
+      // eslint-disable-next-line no-async-promise-executor
+      return new Promise<void>(async resolve => {
+        const mediaId = picture.media?.id;
+        if (!mediaId) {
+          return;
+        }
+        const reallyDelete = await prompt({
+          title: t('curator.reallyDelete'),
+          content: t('curator.reallyDeleteText'),
+          preset: 'confirm',
+        });
+        if (!reallyDelete) {
+          resolve();
+          return;
+        }
+        deleteFile({
+          variables: { id: mediaId },
+        }).then(() => {
+          deletePicture({
+            variables: {
+              id: picture.id,
+            },
+          }).then(() => {
+            resolve();
+          });
+        });
+      });
+    },
+    [deleteFile, deletePicture, t, prompt]
+  );
+};
 
 const PictureGrid = ({
   pictures,
   hashBase,
   loading,
-}: {
-  pictures: FlatPicture[];
-  hashBase: string;
-  loading: boolean;
-}) => {
+  refetch,
+  ...uploadAreaProps
+}: PictureGridProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
@@ -23,6 +72,8 @@ const PictureGrid = ({
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
+
+  const deletePicture = useDeletePicture();
 
   // Initialize table with pictures from props
   useEffect(() => {
@@ -79,6 +130,7 @@ const PictureGrid = ({
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
+      {uploadAreaProps.beforeAddPictures && <PictureUploadArea {...uploadAreaProps} />}
       <div className='picture-grid'>
         {table.map((row, rowindex) => {
           return (
@@ -98,6 +150,15 @@ const PictureGrid = ({
                       key={`${rowindex}${colindex}`}
                       picture={picture}
                       onClick={() => navigateToPicture(picture.id)}
+                      adornments={[
+                        {
+                          icon: 'delete',
+                          onClick: picture => {
+                            deletePicture(picture).then(() => refetch());
+                          },
+                          position: 'top-right',
+                        },
+                      ]}
                     />
                   );
                 }
@@ -119,34 +180,6 @@ const PictureGrid = ({
           }}
         />
       )}
-    </div>
-  );
-};
-
-const PicturePreview = ({
-  picture,
-  onClick,
-}: {
-  picture: FlatPicture;
-  onClick: MouseEventHandler<HTMLDivElement>;
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const thumbnailUrl = useMemo(() => {
-    return `/${String(picture.media?.formats?.small.url || '')}`;
-  }, [picture]);
-
-  return (
-    <div
-      onClick={onClick}
-      id={`picture-preview-for-${picture.id}`}
-      className='picture-preview'
-      ref={containerRef}
-      style={{
-        flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
-      }}
-    >
-      <img src={asApiPath(thumbnailUrl)} />
     </div>
   );
 };
