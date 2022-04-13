@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Location } from 'history';
+import { useHistory, useLocation } from 'react-router-dom';
+import { History, Location } from 'history';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
@@ -15,6 +15,7 @@ import {
   tooltipClasses,
   TooltipProps,
   Typography,
+  Chip,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
@@ -24,14 +25,32 @@ export const enum SearchType {
   KEYWORD = 'keyword',
 }
 
-export const asSearchPath = (
+const filterDuplicateSearchParams = (element: string, prevParams: URLSearchParams): boolean => {
+  const prevValues = prevParams.getAll('q');
+  let r = false;
+  prevValues.forEach(e => {
+    if (element === e) r = true;
+  });
+  return r;
+};
+
+export const asSearchPath = (searchParams: URLSearchParams): string => {
+  return `/search?${searchParams.toString()}`;
+};
+
+export const addNewParamToSearchPath = (
   newParamType: SearchType,
   newParamValue: string,
   prevParams?: URLSearchParams
 ): string => {
   const searchParams = prevParams ? prevParams : new URLSearchParams();
-  searchParams.append(newParamType, newParamValue);
-  return `/search?${searchParams.toString()}`;
+  const paramValues = newParamValue.split(' ');
+  paramValues.forEach(element => {
+    if (!filterDuplicateSearchParams(element, searchParams)) {
+      searchParams.append(newParamType, element);
+    }
+  });
+  return asSearchPath(searchParams);
 };
 
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
@@ -108,7 +127,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [previewPicture, setPreviewPicture] = useState<FlatPicture>();
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
-
+  const history: History = useHistory();
   const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
@@ -136,54 +155,72 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     },
   }));
 
+  const searchParamValues: string[] = [];
+  searchParams.forEach(element => {
+    searchParamValues.push(element.toString());
+  });
+
+  const deleteParam = (deleteValue: string) => {
+    const params = searchParams.getAll('q');
+    const remainingParams = params.filter(el => el !== deleteValue);
+    const newSearchParams = new URLSearchParams();
+    remainingParams.forEach(el => newSearchParams.append(SearchType.DEFAULT, el));
+    history.push(asSearchPath(newSearchParams), {
+      showBack: true,
+    });
+  };
+
   return (
     <div className='search-view'>
+      <div className='breadcrumb'>
+        {searchParamValues.map((el, idx) => {
+          return <Chip key={idx} label={el} onDelete={event => deleteParam(el)} />;
+        })}
+      </div>
       <div className='search-content'>
         <div className='below-search-bar'>
-          <div>
-            {' '}
-            {(isSearchBarVisible || !search) && (
-              <SearchBar
-                onValueChange={(snippet?: string) => {
-                  setSearchSnippet(snippet ?? '');
-                }}
-                searchParams={searchParams}
-              />
-            )}
-            <SearchInfoTooltip
-              title={
-                <React.Fragment>
-                  <Typography color='inherit'>Was passiert, wenn ich Stichworte suche?</Typography>
-                  <p>
-                    {'Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n' +
-                      '                  Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen.'}
-                  </p>{' '}
-                </React.Fragment>
-              }
-            >
-              <Button>HTML</Button>
-            </SearchInfoTooltip>
-          </div>
-
-          {!search ? (
-            <SearchHub searchSnippet={searchSnippet} />
-          ) : (
-            <PictureScrollGrid
-              filters={filtersClause}
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              hashbase={search}
-              previewPictureCallback={(pic: FlatPicture) => {
-                if (pic !== previewPicture) {
-                  setPreviewPicture(pic);
-                }
+          {' '}
+          {(isSearchBarVisible || !search) && (
+            <SearchBar
+              onValueChange={(snippet?: string) => {
+                setSearchSnippet(snippet ?? '');
               }}
-              resultPictureCallback={(result: boolean) => {
-                setIsSearchBarVisible(result);
-              }}
+              searchParams={searchParams}
             />
           )}
+          <SearchInfoTooltip
+            title={
+              <React.Fragment>
+                <Typography color='inherit'>Was passiert, wenn ich Stichworte suche?</Typography>
+                <p>
+                  {'Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n' +
+                    '                  Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen.'}
+                </p>{' '}
+              </React.Fragment>
+            }
+          >
+            <Button></Button>
+          </SearchInfoTooltip>
         </div>
+
+        {!search ? (
+          <SearchHub searchSnippet={searchSnippet} />
+        ) : (
+          <PictureScrollGrid
+            filters={filtersClause}
+            scrollPos={scrollPos}
+            scrollHeight={scrollHeight}
+            hashbase={search}
+            previewPictureCallback={(pic: FlatPicture) => {
+              if (pic !== previewPicture) {
+                setPreviewPicture(pic);
+              }
+            }}
+            resultPictureCallback={(result: boolean) => {
+              setIsSearchBarVisible(result);
+            }}
+          />
+        )}
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Search } from '@mui/icons-material';
-import { InputAdornment, TextField } from '@mui/material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
 import { History } from 'history';
 import './SearchBar.scss';
-import { asSearchPath, SearchType } from './SearchView';
+import { addNewParamToSearchPath, SearchType } from './SearchView';
+import SearchIcon from '@mui/icons-material/Search';
 
 const SearchBar = ({
   searchParams,
@@ -18,6 +18,15 @@ const SearchBar = ({
   const history: History = useHistory();
   const textFieldRef = useRef<any>();
 
+  const onSearchStart = (searchValue: string) => {
+    if (searchValue === '') return;
+    history.push(addNewParamToSearchPath(SearchType.DEFAULT, searchValue, searchParams), {
+      showBack: true,
+    });
+    textFieldRef.current.value = '';
+    if (onValueChange) onValueChange('');
+  };
+
   return (
     <div className='search-bar'>
       <TextField
@@ -28,27 +37,26 @@ const SearchBar = ({
           }
         }}
         InputProps={{
-          startAdornment: (
-            <InputAdornment position='start'>
-              <Search />
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton
+                onClick={event => {
+                  onSearchStart(String(textFieldRef.current.value));
+                }}
+              >
+                <SearchIcon />
+              </IconButton>
             </InputAdornment>
           ),
         }}
         onKeyUp={event => {
           if (event.key === 'Enter') {
-            history.push(
-              asSearchPath(SearchType.DEFAULT, String((event.target as any).value), searchParams),
-              {
-                showBack: true,
-              }
-            );
-            textFieldRef.current.value = '';
-            if (onValueChange) onValueChange('');
+            onSearchStart(String(textFieldRef.current.value));
           }
         }}
         placeholder={t('common.search-keywords')}
         variant='outlined'
-      />
+      ></TextField>
     </div>
   );
 };

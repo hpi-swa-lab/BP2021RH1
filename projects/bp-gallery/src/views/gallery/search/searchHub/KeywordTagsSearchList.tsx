@@ -9,7 +9,7 @@ import QueryErrorDisplay from '../../../../components/QueryErrorDisplay';
 import Loading from '../../../../components/Loading';
 import ItemList from '../../common/ItemList';
 import { asApiPath } from '../../../../App';
-import { asSearchPath, SearchType } from '../SearchView';
+import { addNewParamToSearchPath, SearchType } from '../SearchView';
 
 const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => {
   const history: History = useHistory();
@@ -48,9 +48,12 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
             ? asApiPath(String(tag.thumbnail[0].media?.formats?.small?.url || ''))
             : '',
           onClick: () => {
-            history.push(asSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name))), {
-              showBack: true,
-            });
+            history.push(
+              addNewParamToSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name))),
+              {
+                showBack: true,
+              }
+            );
           },
         }))}
       />

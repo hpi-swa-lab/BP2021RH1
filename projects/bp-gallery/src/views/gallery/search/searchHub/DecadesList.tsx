@@ -6,7 +6,7 @@ import QueryErrorDisplay from '../../../../components/QueryErrorDisplay';
 import Loading from '../../../../components/Loading';
 import ItemList from '../../common/ItemList';
 import { asApiPath } from '../../../../App';
-import { asSearchPath, SearchType } from '../SearchView';
+import { addNewParamToSearchPath, SearchType } from '../SearchView';
 import { useGetDecadePreviewThumbnailsQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { FlatDecadeThumbnails } from '../../../../graphql/additionalFlatTypes';
@@ -36,7 +36,7 @@ const DecadesList = () => {
             name: displayedName,
             background: asApiPath(thumbnail),
             onClick: () => {
-              history.push(asSearchPath(SearchType.DECADE, name), { showBack: true });
+              history.push(addNewParamToSearchPath(SearchType.DECADE, name), { showBack: true });
             },
           };
         })}
