@@ -1,10 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { History, Location } from 'history';
+import { useLocation } from 'react-router-dom';
+import { Location } from 'history';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
+import SearchBreadcrumbs from './SearchBreadcrumbs';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import {
   Button,
@@ -14,7 +15,6 @@ import {
   tooltipClasses,
   TooltipProps,
   Typography,
-  Chip,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
@@ -22,15 +22,22 @@ export const enum SearchType {
   DEFAULT = 'q',
   DECADE = 'decade',
   KEYWORD = 'keyword',
-  ALL = 'all',
+  ALL = 'ALL',
 }
 
-const filterDuplicateSearchParams = (element: string, prevParams: URLSearchParams): boolean => {
-  const prevValues = prevParams.getAll('q');
+const isDuplicatedSearchParam = (
+  element: string,
+  type: string,
+  prevParams: URLSearchParams
+): boolean => {
   let r = false;
-  prevValues.forEach(e => {
-    if (element === e) r = true;
-  });
+  const prevParamsIterator = prevParams.entries();
+  let nextParam = prevParamsIterator.next();
+  while (!nextParam.done) {
+    if (nextParam.value[1] === element && nextParam.value[0] === type) r = true;
+    nextParam = prevParamsIterator.next();
+  }
+
   return r;
 };
 
@@ -40,14 +47,18 @@ export const asSearchPath = (searchParams: URLSearchParams): string => {
 
 export const addNewParamToSearchPath = (
   newParamType: SearchType,
-  newParamValue: string,
+  searchRequest: string,
   prevParams?: URLSearchParams
 ): string => {
   const searchParams = prevParams ? prevParams : new URLSearchParams();
-  const paramValues = newParamValue.split(' ');
-  //paramValues = paramValues.filter((e, i, a) => a.indexOf(e) === i)
-  paramValues.forEach(element => searchParams.append(newParamType, element));
-  return `/search?${searchParams.toString()}`;
+  const paramValues = searchRequest.split(' ');
+
+  paramValues.forEach(element => {
+    if (!isDuplicatedSearchParam(element, newParamType, searchParams)) {
+      searchParams.append(newParamType, element);
+    }
+  });
+  return asSearchPath(searchParams);
 };
 
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
@@ -194,7 +205,6 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
-  const history: History = useHistory();
   const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
@@ -222,27 +232,10 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     },
   }));
 
-  const searchParamValues: string[] = [];
-  searchParams.forEach(element => {
-    searchParamValues.push(element.toString());
-  });
-
-  const deleteParam = (deleteValue: string) => {
-    const params = searchParams.getAll('q');
-    const remainingParams = params.filter(el => el !== deleteValue);
-    const newSearchParams = new URLSearchParams();
-    remainingParams.forEach(el => newSearchParams.append(SearchType.DEFAULT, el));
-    history.push(asSearchPath(newSearchParams), {
-      showBack: true,
-    });
-  };
-
   return (
     <div className='search-view'>
       <div className='breadcrumb'>
-        {searchParamValues.map((el, idx) => {
-          return <Chip key={idx} label={el} onDelete={event => deleteParam(el)} />;
-        })}
+        <SearchBreadcrumbs searchParams={searchParams} />
       </div>
       <div className='search-content'>
         <div className='below-search-bar'>
