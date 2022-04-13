@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, IconButton, Snackbar } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 export enum AlertType {
   SUCCESS = 'success',
@@ -20,7 +21,7 @@ export const AlertContext = React.createContext<(alertOptions: AlertOptions) => 
 
 const AlertWrapper = ({ children }: { children: any }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [hideAfter, setHideAfter] = useState<number>(2000);
+  const [hideAfter, setHideAfter] = useState<number>(8000);
   const [alertType, setAlertType] = useState<AlertType>(AlertType.INFO);
   const [message, setMessage] = useState<string>('');
 
@@ -31,15 +32,28 @@ const AlertWrapper = ({ children }: { children: any }) => {
     setOpen(true);
   };
 
+  const close = () => {
+    setOpen(false);
+  };
+
   return (
     <AlertContext.Provider value={openAlert}>
       <Snackbar
         open={open}
         autoHideDuration={hideAfter}
-        onClose={() => setOpen(false)}
+        onClose={close}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert severity={alertType}>{message}</Alert>
+        <Alert
+          severity={alertType}
+          action={
+            <IconButton aria-label='close' color='inherit' size='small' onClick={close}>
+              <CloseIcon fontSize='inherit' />
+            </IconButton>
+          }
+        >
+          {message}
+        </Alert>
       </Snackbar>
       {children}
     </AlertContext.Provider>
