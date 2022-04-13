@@ -9,7 +9,7 @@ import QueryErrorDisplay from '../../../shared/QueryErrorDisplay';
 import Loading from '../../../shared/Loading';
 import ItemList from '../../shared/ItemList';
 import { asApiPath } from '../../../../App';
-import { asSearchPath, SearchType } from '../SearchView';
+import { addNewParamToSearchPath, SearchType } from '../SearchView';
 
 const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => {
   const history: History = useHistory();
@@ -52,9 +52,12 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
               )
             : DEFAULT_THUMBNAIL_URL,
           onClick: () => {
-            history.push(asSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name))), {
-              showBack: true,
-            });
+            history.push(
+              addNewParamToSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name))),
+              {
+                showBack: true,
+              }
+            );
           },
         }))}
       />

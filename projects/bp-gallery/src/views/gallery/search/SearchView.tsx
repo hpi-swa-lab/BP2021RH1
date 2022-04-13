@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Location } from 'history';
+import { useHistory, useLocation } from 'react-router-dom';
+import { History, Location } from 'history';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
@@ -14,6 +14,7 @@ import {
   tooltipClasses,
   TooltipProps,
   Typography,
+  Chip,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
@@ -23,14 +24,32 @@ export const enum SearchType {
   KEYWORD = 'keyword',
 }
 
-export const asSearchPath = (
+const filterDuplicateSearchParams = (element: string, prevParams: URLSearchParams): boolean => {
+  const prevValues = prevParams.getAll('q');
+  let r = false;
+  prevValues.forEach(e => {
+    if (element === e) r = true;
+  });
+  return r;
+};
+
+export const asSearchPath = (searchParams: URLSearchParams): string => {
+  return `/search?${searchParams.toString()}`;
+};
+
+export const addNewParamToSearchPath = (
   newParamType: SearchType,
   newParamValue: string,
   prevParams?: URLSearchParams
 ): string => {
   const searchParams = prevParams ? prevParams : new URLSearchParams();
-  searchParams.append(newParamType, newParamValue);
-  return `/search?${searchParams.toString()}`;
+  const paramValues = newParamValue.split(' ');
+  paramValues.forEach(element => {
+    if (!filterDuplicateSearchParams(element, searchParams)) {
+      searchParams.append(newParamType, element);
+    }
+  });
+  return asSearchPath(searchParams);
 };
 
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
@@ -106,7 +125,7 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
-
+  const history: History = useHistory();
   const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
@@ -134,8 +153,28 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     },
   }));
 
+  const searchParamValues: string[] = [];
+  searchParams.forEach(element => {
+    searchParamValues.push(element.toString());
+  });
+
+  const deleteParam = (deleteValue: string) => {
+    const params = searchParams.getAll('q');
+    const remainingParams = params.filter(el => el !== deleteValue);
+    const newSearchParams = new URLSearchParams();
+    remainingParams.forEach(el => newSearchParams.append(SearchType.DEFAULT, el));
+    history.push(asSearchPath(newSearchParams), {
+      showBack: true,
+    });
+  };
+
   return (
     <div className='search-view'>
+      <div className='breadcrumb'>
+        {searchParamValues.map((el, idx) => {
+          return <Chip key={idx} label={el} onDelete={event => deleteParam(el)} />;
+        })}
+      </div>
       <div className='search-content'>
         <div className='below-search-bar'>
           <div>
@@ -162,21 +201,20 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
               <Button>HTML</Button>
             </SearchInfoTooltip>
           </div>
-
-          {!search ? (
-            <SearchHub searchSnippet={searchSnippet} />
-          ) : (
-            <PictureScrollGrid
-              filters={filtersClause}
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              hashbase={search}
-              resultPictureCallback={(result: boolean) => {
-                setIsSearchBarVisible(result);
-              }}
-            />
-          )}
         </div>
+        {!search ? (
+          <SearchHub searchSnippet={searchSnippet} />
+        ) : (
+          <PictureScrollGrid
+            filters={filtersClause}
+            scrollPos={scrollPos}
+            scrollHeight={scrollHeight}
+            hashbase={search}
+            resultPictureCallback={(result: boolean) => {
+              setIsSearchBarVisible(result);
+            }}
+          />
+        )}
       </div>
     </div>
   );
