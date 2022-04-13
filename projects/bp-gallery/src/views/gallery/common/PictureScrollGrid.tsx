@@ -5,6 +5,7 @@ import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../../components/QueryErrorDisplay';
 import Loading from '../../../components/Loading';
+import { useTranslation } from 'react-i18next';
 
 const PictureScrollGrid = ({
   filters,
@@ -35,6 +36,7 @@ const PictureScrollGrid = ({
     notifyOnNetworkStatusChange: true,
   });
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (previewPictureCallback && pictures && pictures.length) {
@@ -75,8 +77,10 @@ const PictureScrollGrid = ({
     return <Loading />;
   } else if (pictures?.length) {
     return <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />;
+  } else if (pictures?.length === 0 && resultPictureCallback) {
+    return <div> {t('common.no-picture')} </div>;
   } else {
-    return <div>Leider gibt es keine Bilder für deine Anfrage.</div>;
+    return null;
   }
 };
 
