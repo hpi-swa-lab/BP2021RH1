@@ -48,6 +48,16 @@
       display: flex;
       align-items: center;
     }
+
+    .scanner-select {
+      background: white;
+      color: $backgroundColor;
+      margin: -20px;
+      margin-top: 1rem;
+      width: calc(100% + 20px);
+      padding: 10px;
+      text-align: center;
+    }
   }
 }
 

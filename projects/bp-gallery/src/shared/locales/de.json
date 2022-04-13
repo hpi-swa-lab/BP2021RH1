@@ -59,6 +59,7 @@
     "scan": "Direkt vom Scanner einlesen",
     "addPictures": "Bilder hinzufügen",
     "reallyDelete": "Bild wirklich endgültig löschen?",
-    "reallyDeleteText": "Wenn das Bild gelöscht ist, kann es nicht wiederhergestellt werden! Wirklich löschen?"
+    "reallyDeleteText": "Wenn das Bild gelöscht ist, kann es nicht wiederhergestellt werden! Wirklich löschen?",
+    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?"
   }
 }

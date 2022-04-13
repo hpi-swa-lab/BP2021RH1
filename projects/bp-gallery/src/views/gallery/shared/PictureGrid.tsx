@@ -9,6 +9,7 @@ import PicturePreview from './PicturePreview';
 import { useDeletePictureMutation, useDeleteUploadMutation } from '../../../graphql/APIConnector';
 import { DialogContext } from '../../shared/DialogWrapper';
 import { useTranslation } from 'react-i18next';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -66,6 +67,8 @@ const PictureGrid = ({
 }: PictureGridProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
+
+  const { role } = useAuth();
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
@@ -150,15 +153,19 @@ const PictureGrid = ({
                       key={`${rowindex}${colindex}`}
                       picture={picture}
                       onClick={() => navigateToPicture(picture.id)}
-                      adornments={[
-                        {
-                          icon: 'delete',
-                          onClick: picture => {
-                            deletePicture(picture).then(() => refetch());
-                          },
-                          position: 'top-right',
-                        },
-                      ]}
+                      adornments={
+                        role >= AuthRole.CURATOR
+                          ? [
+                              {
+                                icon: 'delete',
+                                onClick: picture => {
+                                  deletePicture(picture).then(() => refetch());
+                                },
+                                position: 'top-right',
+                              },
+                            ]
+                          : undefined
+                      }
                     />
                   );
                 }

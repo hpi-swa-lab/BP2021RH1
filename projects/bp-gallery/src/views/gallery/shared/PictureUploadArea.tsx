@@ -5,27 +5,16 @@ import { useTranslation } from 'react-i18next';
 import { asApiPath } from '../../../App';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
+import { asFlatPicture } from './helpers/as-flat-picture';
 import PicturePreview from './PicturePreview';
 import './PictureUploadArea.scss';
+import ScannerInput from './ScannerInput';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
   beforeAddPictures?: (pictures: FlatPicture[]) => FlatPicture[];
   onUploaded?: () => void;
 }
-
-const asFlatPicture = (file: File): FlatPicture => {
-  return {
-    id: file.name,
-    media: {
-      formats: {
-        small: {
-          url: URL.createObjectURL(file),
-        },
-      },
-    } as any,
-  };
-};
 
 // Using fetch (REST) because upload with GraphQL is a lot more difficult
 const uploadFiles = (files: File[]): Promise<string[]> => {
@@ -100,6 +89,16 @@ const PictureUploadArea = ({
     });
   }, [newFiles, createPicture, beforeAddPictures, onUploaded, setLoading]);
 
+  const onScan = useCallback((file: File) => {
+    setNewFiles(fileList => [
+      ...fileList,
+      {
+        file,
+        preview: asFlatPicture(file),
+      },
+    ]);
+  }, []);
+
   return (
     <div className='add-pictures'>
       <div className='upload-area'>
@@ -111,15 +110,24 @@ const PictureUploadArea = ({
           </p>
         </div>
         <span className='or-label'>{t('common.or')}</span>
-        <div className='access-printer'>
-          <Icon>print</Icon>
-          <p>{t('curator.scan')}</p>
-        </div>
+        <ScannerInput onScan={onScan} />
       </div>
       <div className='uploaded-pictures'>
         {newFiles.map((file, index) => (
           <PicturePreview
             key={`${file.file.name}-${index}`}
+            adornments={[
+              {
+                position: 'top-right',
+                icon: 'close',
+                onClick: () => {
+                  setNewFiles(fileList => {
+                    fileList.splice(index, 1);
+                    return [...fileList];
+                  });
+                },
+              },
+            ]}
             picture={file.preview}
             onClick={() => {}}
             local={true}
