@@ -1756,6 +1756,71 @@ export type GetKeywordTagSuggestionsQuery = {
     | undefined;
 };
 
+export type GetLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetLocationTagsQuery = {
+  locationTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
@@ -2398,6 +2463,89 @@ export type GetKeywordTagSuggestionsLazyQueryHookResult = ReturnType<
 export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
   GetKeywordTagSuggestionsQuery,
   GetKeywordTagSuggestionsQueryVariables
+>;
+
+export const GetLocationTagsDocument = gql`
+  query getLocationTags {
+    locationTags {
+      data {
+        id
+        attributes {
+          name
+          thumbnail: pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLocationTagsQuery__
+ *
+ * To run a query within a React component, call `useGetLocationTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLocationTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLocationTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLocationTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetLocationTagsQuery, GetLocationTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetLocationTagsQuery, GetLocationTagsQueryVariables>(
+    GetLocationTagsDocument,
+    options
+  );
+}
+
+export function useGetLocationTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetLocationTagsQuery, GetLocationTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetLocationTagsQuery, GetLocationTagsQueryVariables>(
+    GetLocationTagsDocument,
+    options
+  );
+}
+
+export type GetLocationTagsQueryHookResult = ReturnType<typeof useGetLocationTagsQuery>;
+
+export type GetLocationTagsLazyQueryHookResult = ReturnType<typeof useGetLocationTagsLazyQuery>;
+
+export type GetLocationTagsQueryResult = Apollo.QueryResult<
+  GetLocationTagsQuery,
+  GetLocationTagsQueryVariables
 >;
 
 export const GetDecadePreviewThumbnailsDocument = gql`

@@ -21,7 +21,7 @@ type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
 type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
-type FlatPictureWithoutRelations = ID &
+export type FlatPictureWithoutRelations = ID &
   Omit<
     Picture,
     | 'collections'
@@ -36,7 +36,8 @@ type FlatPictureWithoutRelations = ID &
     | 'verified_person_tags'
   >;
 
-type FlatLocationTagWithoutRelations = ID & Omit<LocationTag, 'pictures' | 'verified_pictures'>;
+export type FlatLocationTagWithoutRelations = ID &
+  Omit<LocationTag, 'pictures' | 'verified_pictures'>;
 
 type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'verified_pictures'>;
 
@@ -87,6 +88,10 @@ type Thumbnail = {
 };
 
 export type FlatKeywordTagSuggestion = FlatKeywordTagWithoutRelations & {
+  thumbnail: Thumbnail[];
+};
+
+export type FlatLocationTagPreview = FlatKeywordTagWithoutRelations & {
   thumbnail: Thumbnail[];
 };
 
