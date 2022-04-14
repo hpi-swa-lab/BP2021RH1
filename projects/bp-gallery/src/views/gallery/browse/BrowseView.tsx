@@ -66,9 +66,7 @@ const BrowseView = ({
       }));
     }
   }
-  return (
-    <>
-      <CollectionPictureDisplay
+  return <CollectionPictureDisplay
         picturePublishingDate={communityView ? picturePublishingDate : undefined}
         collections={filteredCollections}
         loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
@@ -76,8 +74,6 @@ const BrowseView = ({
         path={path}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
-      />
-    </>
-  );
+      />;
 };
 export default BrowseView;
