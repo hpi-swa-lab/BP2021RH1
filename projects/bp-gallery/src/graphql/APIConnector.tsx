@@ -1941,6 +1941,52 @@ export type GetAllLocationTagsQuery = {
             | {
                 name: string;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+                thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
               }
             | null
             | undefined;
@@ -3197,6 +3243,32 @@ export const GetAllLocationTagsDocument = gql`
           name
           synonyms {
             name
+          }
+          thumbnail: pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
