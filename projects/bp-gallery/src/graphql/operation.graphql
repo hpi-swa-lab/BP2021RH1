@@ -164,6 +164,43 @@ query getKeywordTagSuggestions($name: String) {
   }
 }
 
+query getLocationTags {
+  locationTags {
+    data {
+      id
+      attributes {
+        name
+        thumbnail: pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getDecadePreviewThumbnails {
   s40: pictures(
     filters: {
