@@ -52,6 +52,14 @@
     "pictureCount": "{{count}} Bild(er)",
     "moreThanPictureCount": "Mehr als {{count}} Bilder"
   },
+  "search": {
+    "search-decade": "Jahreszahlen",
+    "search-keyword": "Schlagwörter",
+    "search-description": "Beschreibungen",
+    "search-all": "Gesamtes Bilderarchiv",
+    "search-for-type": "durchsuchen",
+    "choose-searchtypes": "Suchtyp auswählen"
+  },
   "login": {
     "title": "Login",
     "logout": "Logout",
