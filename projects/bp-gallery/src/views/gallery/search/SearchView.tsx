@@ -20,7 +20,7 @@ import {
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 export const enum SearchType {
-  DEFAULT = 'q',
+  DESCRIPTION = 'description',
   DECADE = 'decade',
   KEYWORD = 'keyword',
   ALL = 'ALL',
@@ -54,6 +54,11 @@ export const addNewParamToSearchPath = (
   const searchParams = prevParams ? prevParams : new URLSearchParams();
   const paramValues = searchRequest.split(' ');
 
+  if (newParamType === SearchType.DECADE) {
+    if (!(parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4)))
+      return asSearchPath(searchParams);
+  }
+
   paramValues.forEach(element => {
     if (!isDuplicatedSearchParam(element, newParamType, searchParams)) {
       searchParams.append(newParamType, element);
@@ -65,9 +70,9 @@ export const addNewParamToSearchPath = (
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
   const filters: PictureFiltersInput = { and: [], or: [] };
 
-  //'baum'.toURLSearchParams();
   if (searchParams.has(SearchType.ALL)) {
-    searchParams.forEach(function (value, key) {
+    const params = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
+    params.forEach(function (value, key) {
       if (value === 'pre50') {
         value = '40';
       }
@@ -138,32 +143,10 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
     });
   }
   if (searchParams.has(SearchType.DECADE)) {
-    if (searchParams.get(SearchType.DECADE) === 'pre50') searchParams.set(SearchType.DECADE, '40');
-    const decade = parseInt(searchParams.get(SearchType.DECADE) ?? '');
-
-    if (!isNaN(decade)) {
-      const startTime = decade === 40 ? '1900-01-01T00:00:00Z' : `19${decade}0-01-01T00:00:00Z`;
-      const endTime = `19${decade}9-12-31T23:59:59Z`;
-
-      const time_range_tag_filter = {
-        start: {
-          gte: startTime,
-        },
-        end: {
-          lte: endTime,
-        },
-      };
-      filters.and?.push({
-        or: [
-          {
-            time_range_tag: time_range_tag_filter,
-          },
-          {
-            verified_time_range_tag: time_range_tag_filter,
-          },
-        ],
-      });
-    }
+    const timeParams = searchParams.getAll(SearchType.DECADE);
+    timeParams.forEach(timeParam => {
+      filters.and?.push(paramToTimefilter(timeParam) as PictureFiltersInput);
+    });
   }
 
   if (searchParams.has(SearchType.KEYWORD)) {
@@ -187,8 +170,8 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
     });
   }
 
-  if (searchParams.has(SearchType.DEFAULT)) {
-    const q = searchParams.getAll(SearchType.DEFAULT).map(decodeURIComponent);
+  if (searchParams.has(SearchType.DESCRIPTION)) {
+    const q = searchParams.getAll(SearchType.DESCRIPTION).map(decodeURIComponent);
     q.forEach((param: string) => {
       filters.and?.push({
         descriptions: {
@@ -199,8 +182,49 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
       });
     });
   }
-
+  const it = searchParams.entries();
+  let e = it.next();
+  while (!e.done) {
+    console.log(e.value);
+    e = it.next();
+  }
+  console.log(filters);
   return filters;
+};
+
+const paramToTimefilter = (timeParam: string) => {
+  console.log(timeParam);
+  // if (searchParams.get(SearchType.DECADE) === 'pre50') searchParams.set(SearchType.DECADE, '40');
+  const year = parseInt(timeParam);
+
+  if (!isNaN(year)) {
+    let startTime = `${year}-01-01T00:00:00Z`;
+    let endTime = `${year}-12-31T23:59:59Z`;
+    if (year < 100) {
+      startTime = year === 40 ? '1900-01-01T00:00:00Z' : `19${year}-01-01T00:00:00Z`;
+      endTime = `19${year}-12-31T23:59:59Z`;
+    }
+
+    const time_range_tag_filter = {
+      start: {
+        gte: startTime,
+      },
+      end: {
+        lte: endTime,
+      },
+    };
+
+    return {
+      or: [
+        {
+          time_range_tag: time_range_tag_filter,
+        },
+        {
+          verified_time_range_tag: time_range_tag_filter,
+        },
+      ],
+    };
+  }
 };
 
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {

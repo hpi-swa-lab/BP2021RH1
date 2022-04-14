@@ -11,7 +11,7 @@
     "comment": "Kommentar",
     "loading": "Lädt...",
     "wrote-on": "schrieb am",
-    "search-keywords": "In Bildbeschreibung suchen...",
+
     "decades": "Jahrzehnte",
     "suggestions": "Vorschläge",
     "keywords": "Stichworte",
@@ -32,6 +32,14 @@
     "close": "Schließen",
     "browse-view": "Alle Bilder",
     "community-view": "Neueste Bilder"
+  },
+  "search": {
+    "search-decade": "Jahreszahlen",
+    "search-keyword": "Schlagwörter",
+    "search-description": "Beschreibungen",
+    "search-all": "Gesamtes Bilderarchiv",
+    "search-for-type": "durchsuchen",
+    "choose-searchtypes": "Suchtyp auswählen"
   },
   "login": {
     "title": "Login",
