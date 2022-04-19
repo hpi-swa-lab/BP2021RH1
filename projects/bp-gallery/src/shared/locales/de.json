@@ -58,7 +58,10 @@
     "search-description": "Beschreibungen",
     "search-all": "Gesamtes Bilderarchiv",
     "search-for-type": "durchsuchen",
-    "choose-searchtypes": "Suchtyp auswählen"
+    "start-search": "Suche Starten",
+    "choose-searchtypes": "Suchtyp auswählen",
+    "explanation-headline": "Was passiert, wenn ich Stichworte suche?",
+    "explanation": "Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen."
   },
   "login": {
     "title": "Login",

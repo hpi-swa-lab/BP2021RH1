@@ -17,6 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { useTranslation } from 'react-i18next';
 
 export const enum SearchType {
   DESCRIPTION = 'description',
@@ -181,13 +182,7 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
       });
     });
   }
-  const it = searchParams.entries();
-  let e = it.next();
-  while (!e.done) {
-    console.log(e.value);
-    e = it.next();
-  }
-  console.log(filters);
+
   return filters;
 };
 
@@ -230,6 +225,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
   const { search }: Location = useLocation();
+  const { t } = useTranslation();
 
   const searchParams = useMemo(() => {
     return new URLSearchParams(search);
@@ -276,11 +272,8 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             <SearchInfoTooltip
               title={
                 <React.Fragment>
-                  <Typography color='inherit'>Was passiert, wenn ich Stichworte suche?</Typography>
-                  <p>
-                    {'Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n' +
-                      '                  Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen.'}
-                  </p>{' '}
+                  <Typography color='inherit'>{t('search.explanation-headline')}</Typography>
+                  <p>{t('search.explanation')}</p>
                 </React.Fragment>
               }
             >
