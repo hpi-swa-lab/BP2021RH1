@@ -9,7 +9,7 @@ const SearchHub = ({ searchSnippet }: { searchSnippet: string }) => {
   return (
     <div className='search-hub'>
       <div className='search-section'>
-        <h3>{t('common.suggestions').toUpperCase()}</h3>
+        <h3>{t('common.keywords').toUpperCase()}</h3>
         <KeywordTagsSearchList searchSnippet={searchSnippet} />
       </div>
       <div className='search-section'>
