@@ -58,11 +58,13 @@ const SearchBar = ({
           endAdornment: (
             <InputAdornment position='end'>
               <IconButton
-                onClick={event => {
+                onClick={() => {
                   onSearchStart(String(textFieldRef.current.value));
                 }}
+                className='searchbutton'
               >
                 <SearchIcon />
+                <div className='searchbutton-label'>Suche</div>
               </IconButton>
             </InputAdornment>
           ),
