@@ -26,7 +26,6 @@
   .picture-wrapper {
     flex: 1 1 0;
     position: relative;
-    pointer-events: none;
 
     @media only screen and (max-width: $mobile-breakpoint) {
       flex-direction: column;

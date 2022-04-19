@@ -1617,7 +1617,13 @@ export type GetPictureInfoQuery = {
                       | null
                       | undefined;
                     media: {
-                      data?: { attributes?: { url: string } | null | undefined } | null | undefined;
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { url: string } | null | undefined;
+                          }
+                        | null
+                        | undefined;
                     };
                     comments?:
                       | {
@@ -1657,6 +1663,7 @@ export type GetPicturesQuery = {
                 media: {
                   data?:
                     | {
+                        id?: string | null | undefined;
                         attributes?:
                           | {
                               width?: number | null | undefined;
@@ -2133,6 +2140,39 @@ export type UpdatePictureMutation = {
     | undefined;
 };
 
+export type CreatePictureMutationVariables = Exact<{
+  data: PictureInput;
+}>;
+
+export type CreatePictureMutation = {
+  createPicture?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeleteUploadMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteUploadMutation = {
+  deleteUploadFile?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeletePictureMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeletePictureMutation = {
+  deletePicture?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -2228,6 +2268,7 @@ export const GetPictureInfoDocument = gql`
           }
           media {
             data {
+              id
               attributes {
                 url
               }
@@ -2302,6 +2343,7 @@ export const GetPicturesDocument = gql`
         attributes {
           media {
             data {
+              id
               attributes {
                 width
                 height
@@ -3730,6 +3772,159 @@ export type UpdatePictureMutationResult = Apollo.MutationResult<UpdatePictureMut
 export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
   UpdatePictureMutation,
   UpdatePictureMutationVariables
+>;
+
+export const CreatePictureDocument = gql`
+  mutation createPicture($data: PictureInput!) {
+    createPicture(data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePictureMutationFn = Apollo.MutationFunction<
+  CreatePictureMutation,
+  CreatePictureMutationVariables
+>;
+
+/**
+ * __useCreatePictureMutation__
+ *
+ * To run a mutation, you first call `useCreatePictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPictureMutation, { data, loading, error }] = useCreatePictureMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreatePictureMutation, CreatePictureMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePictureMutation, CreatePictureMutationVariables>(
+    CreatePictureDocument,
+    options
+  );
+}
+
+export type CreatePictureMutationHookResult = ReturnType<typeof useCreatePictureMutation>;
+
+export type CreatePictureMutationResult = Apollo.MutationResult<CreatePictureMutation>;
+
+export type CreatePictureMutationOptions = Apollo.BaseMutationOptions<
+  CreatePictureMutation,
+  CreatePictureMutationVariables
+>;
+
+export const DeleteUploadDocument = gql`
+  mutation deleteUpload($id: ID!) {
+    deleteUploadFile(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteUploadMutationFn = Apollo.MutationFunction<
+  DeleteUploadMutation,
+  DeleteUploadMutationVariables
+>;
+
+/**
+ * __useDeleteUploadMutation__
+ *
+ * To run a mutation, you first call `useDeleteUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUploadMutation, { data, loading, error }] = useDeleteUploadMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteUploadMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteUploadMutation, DeleteUploadMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteUploadMutation, DeleteUploadMutationVariables>(
+    DeleteUploadDocument,
+    options
+  );
+}
+
+export type DeleteUploadMutationHookResult = ReturnType<typeof useDeleteUploadMutation>;
+
+export type DeleteUploadMutationResult = Apollo.MutationResult<DeleteUploadMutation>;
+
+export type DeleteUploadMutationOptions = Apollo.BaseMutationOptions<
+  DeleteUploadMutation,
+  DeleteUploadMutationVariables
+>;
+
+export const DeletePictureDocument = gql`
+  mutation deletePicture($id: ID!) {
+    deletePicture(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeletePictureMutationFn = Apollo.MutationFunction<
+  DeletePictureMutation,
+  DeletePictureMutationVariables
+>;
+
+/**
+ * __useDeletePictureMutation__
+ *
+ * To run a mutation, you first call `useDeletePictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePictureMutation, { data, loading, error }] = useDeletePictureMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeletePictureMutation, DeletePictureMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeletePictureMutation, DeletePictureMutationVariables>(
+    DeletePictureDocument,
+    options
+  );
+}
+
+export type DeletePictureMutationHookResult = ReturnType<typeof useDeletePictureMutation>;
+
+export type DeletePictureMutationResult = Apollo.MutationResult<DeletePictureMutation>;
+
+export type DeletePictureMutationOptions = Apollo.BaseMutationOptions<
+  DeletePictureMutation,
+  DeletePictureMutationVariables
 >;
 
 export const MeDocument = gql`

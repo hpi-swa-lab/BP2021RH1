@@ -5,6 +5,7 @@ import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';
+import { PictureUploadAreaProps } from './PictureUploadArea';
 
 const PictureScrollGrid = ({
   filters,
@@ -12,17 +13,19 @@ const PictureScrollGrid = ({
   scrollHeight,
   hashbase,
   previewPictureCallback,
+  uploadAreaProps,
 }: {
   filters: PictureFiltersInput;
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
   previewPictureCallback?: (picture: FlatPicture) => void;
+  uploadAreaProps?: Partial<PictureUploadAreaProps>;
 }) => {
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  const { data, loading, error, fetchMore } = useGetPicturesQuery({
+  const { data, loading, error, fetchMore, refetch } = useGetPicturesQuery({
     variables: {
       filters,
       pagination: {
@@ -67,7 +70,21 @@ const PictureScrollGrid = ({
   } else if (loading && !pictures) {
     return <Loading />;
   } else if (pictures?.length) {
-    return <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />;
+    return (
+      <PictureGrid
+        {...uploadAreaProps}
+        onUploaded={() => {
+          refetch();
+          if (uploadAreaProps?.onUploaded) {
+            uploadAreaProps.onUploaded();
+          }
+        }}
+        refetch={refetch}
+        pictures={pictures}
+        hashBase={hashbase}
+        loading={isFetching}
+      />
+    );
   } else {
     return null;
   }

@@ -32,7 +32,10 @@
     "browse-view": "Alle Bilder",
     "community-view": "Neueste Bilder",
     "create": "{{value}} hinzufügen",
-    "presentationMode": "Präsentationsmodus"
+    "presentationMode": "Präsentationsmodus",
+    "or": "oder",
+    "confirm": "Bestätigen",
+    "abort": "Abbrechen"
   },
   "login": {
     "title": "Login",
@@ -50,5 +53,13 @@
     "people": "Personen",
     "keywords": "Stichworte",
     "noTime": "Keine Zeit angegeben"
+  },
+  "curator": {
+    "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
+    "scan": "Direkt vom Scanner einlesen",
+    "addPictures": "Bilder hinzufügen",
+    "reallyDelete": "Bild wirklich endgültig löschen?",
+    "reallyDeleteText": "Wenn das Bild gelöscht ist, kann es nicht wiederhergestellt werden! Wirklich löschen?",
+    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?"
   }
 }

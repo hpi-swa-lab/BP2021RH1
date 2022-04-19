@@ -2,6 +2,10 @@
   .picture-view-container {
     visibility: hidden;
   }
+
+  .adornments {
+    display: none;
+  }
 }
 .picture-grid {
   display: flex;
@@ -12,26 +16,6 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-
-    .picture-preview {
-      cursor: pointer;
-      img {
-        width: 100%;
-        height: auto;
-        vertical-align: middle;
-      }
-
-      &.transitioning {
-        z-index: 9999;
-        transition: width 0.5s, height 0.5s, top 0.5s, left 0.5s;
-        position: fixed;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-      }
-    }
 
     .picture-placeholder {
       background: #474747;

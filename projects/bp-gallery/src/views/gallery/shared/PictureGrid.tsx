@@ -1,28 +1,40 @@
-import React, { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
-import { asApiPath } from '../../../App';
 import hashCode from './helpers/hash-code';
 import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animation.helpers';
+import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
+import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
+import useDeletePicture from './helpers/delete-picture.hook';
+
+export type PictureGridProps = {
+  pictures: FlatPicture[];
+  hashBase: string;
+  loading: boolean;
+  refetch: () => void;
+} & Partial<PictureUploadAreaProps>;
 
 const PictureGrid = ({
   pictures,
   hashBase,
   loading,
-}: {
-  pictures: FlatPicture[];
-  hashBase: string;
-  loading: boolean;
-}) => {
+  refetch,
+  ...uploadAreaProps
+}: PictureGridProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
+
+  const { role } = useAuth();
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
+
+  const deletePicture = useDeletePicture();
 
   // Initialize table with pictures from props
   useEffect(() => {
@@ -77,8 +89,22 @@ const PictureGrid = ({
     [setFocusedPicture]
   );
 
+  const pictureAdornments =
+    role >= AuthRole.CURATOR
+      ? [
+          {
+            icon: 'delete',
+            onClick: (clickedPicture: FlatPicture) => {
+              deletePicture(clickedPicture).then(() => refetch());
+            },
+            position: 'top-right',
+          } as PicturePreviewAdornment,
+        ]
+      : undefined;
+
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
+      <PictureUploadArea {...uploadAreaProps} />
       <div className='picture-grid'>
         {table.map((row, rowindex) => {
           return (
@@ -98,6 +124,7 @@ const PictureGrid = ({
                       key={`${rowindex}${colindex}`}
                       picture={picture}
                       onClick={() => navigateToPicture(picture.id)}
+                      adornments={pictureAdornments}
                     />
                   );
                 }
@@ -119,34 +146,6 @@ const PictureGrid = ({
           }}
         />
       )}
-    </div>
-  );
-};
-
-const PicturePreview = ({
-  picture,
-  onClick,
-}: {
-  picture: FlatPicture;
-  onClick: MouseEventHandler<HTMLDivElement>;
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const thumbnailUrl = useMemo(() => {
-    return `/${String(picture.media?.formats?.small.url || '')}`;
-  }, [picture]);
-
-  return (
-    <div
-      onClick={onClick}
-      id={`picture-preview-for-${picture.id}`}
-      className='picture-preview'
-      ref={containerRef}
-      style={{
-        flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
-      }}
-    >
-      <img src={asApiPath(thumbnailUrl)} />
     </div>
   );
 };
