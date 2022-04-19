@@ -6,6 +6,14 @@
   .MuiFormControl-root {
     width: 100%;
 
+    .searchbutton {
+      display: 'flex';
+      flex-direction: 'column';
+      .searchbutton-label {
+        font-size: 8;
+      }
+    }
+
     @media only screen and (min-width: 651px) {
       max-width: 800px;
       margin: auto;
