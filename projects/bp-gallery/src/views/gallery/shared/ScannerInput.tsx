@@ -1,12 +1,13 @@
 import { Icon, Menu, MenuItem } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import React, { useEffect } from 'react';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useScanner from './helpers/scanner-hook';
 
 const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
   const { t } = useTranslation();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLDivElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLDivElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
@@ -18,9 +19,14 @@ const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
       selectScanner(index);
     }
   };
-  const scanFields = useScanner();
-  const { scanners, scannedDocument, scan, selectedScannerId, selectScanner } = scanFields;
-  const scannerLoading = scanFields.loading;
+  const {
+    scanners,
+    scannedDocument,
+    scan,
+    selectedScannerId,
+    selectScanner,
+    loading: scannerLoading,
+  } = useScanner();
 
   useEffect(() => {
     if (!scannedDocument) {
@@ -38,7 +44,9 @@ const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
         if (!blob) {
           return;
         }
-        const file = new File([blob], 'scan.jpg', { type: 'image/jpeg' });
+        const file = new File([blob], `${dayjs().format('YYYYMMDDHHmm_ss')}.jpg`, {
+          type: 'image/jpeg',
+        });
         onScan(file);
       });
     };

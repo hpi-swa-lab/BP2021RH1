@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
-import PictureGrid, { PictureGridProps } from './PictureGrid';
+import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';
+import { PictureUploadAreaProps } from './PictureUploadArea';
 
 const PictureScrollGrid = ({
   filters,
@@ -12,14 +13,14 @@ const PictureScrollGrid = ({
   scrollHeight,
   hashbase,
   previewPictureCallback,
-  gridProps,
+  uploadAreaProps,
 }: {
   filters: PictureFiltersInput;
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
   previewPictureCallback?: (picture: FlatPicture) => void;
-  gridProps?: Partial<PictureGridProps>;
+  uploadAreaProps?: Partial<PictureUploadAreaProps>;
 }) => {
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -71,9 +72,12 @@ const PictureScrollGrid = ({
   } else if (pictures?.length) {
     return (
       <PictureGrid
-        {...gridProps}
+        {...uploadAreaProps}
         onUploaded={() => {
           refetch();
+          if (uploadAreaProps?.onUploaded) {
+            uploadAreaProps.onUploaded();
+          }
         }}
         refetch={refetch}
         pictures={pictures}

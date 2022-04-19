@@ -2,59 +2,33 @@ import { Button, Icon, CircularProgress } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { asApiPath } from '../../../App';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
 import { asFlatPicture } from './helpers/as-flat-picture';
-import PicturePreview from './PicturePreview';
+import uploadMediaFiles from './helpers/upload-media-files';
+import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
-  beforeAddPictures?: (pictures: FlatPicture[]) => FlatPicture[];
+  preprocessPictures?: (pictures: FlatPicture[]) => FlatPicture[];
   onUploaded?: () => void;
 }
 
-// Using fetch (REST) because upload with GraphQL is a lot more difficult
-const uploadFiles = (files: File[]): Promise<string[]> => {
-  const jwt = sessionStorage.getItem('jwt') ?? '';
-  const fd = new FormData();
-  files.forEach((file, i) => {
-    fd.append(`files`, file, file.name);
-  });
-
-  return new Promise<string[]>(resolve => {
-    fetch(asApiPath('/upload'), {
-      body: fd,
-      method: 'post',
-      headers: {
-        authorization: `Bearer ${jwt}`,
-      },
-    })
-      .then(resp => resp.json())
-      .then(json => {
-        const ids: string[] = (json as any[]).map(mediaFile => mediaFile.id);
-        resolve(ids);
-      });
-  });
-};
-
 const PictureUploadArea = ({
   folderName,
-  beforeAddPictures,
+  preprocessPictures,
   onUploaded,
 }: PictureUploadAreaProps) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: 'image/jpeg,image/png',
   });
   const { t } = useTranslation();
-  const [newFiles, setNewFiles] = useState<
-    {
-      file: File;
-      preview: FlatPicture;
-    }[]
-  >([]);
+  const { role } = useAuth();
+
+  const [newFiles, setNewFiles] = useState<{ file: File; preview: FlatPicture }[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -66,12 +40,12 @@ const PictureUploadArea = ({
   }, [acceptedFiles]);
 
   const uploadPictures = useCallback(() => {
-    if (!beforeAddPictures) {
+    if (!preprocessPictures) {
       return;
     }
     setLoading(true);
-    uploadFiles(newFiles.map(f => f.file)).then(async fileIds => {
-      const pictures = beforeAddPictures(
+    uploadMediaFiles(newFiles.map(f => f.file)).then(async fileIds => {
+      const pictures = preprocessPictures(
         fileIds.map(f => ({ media: f } as unknown as FlatPicture))
       );
       for (const picture of pictures) {
@@ -87,17 +61,16 @@ const PictureUploadArea = ({
       }
       setLoading(false);
     });
-  }, [newFiles, createPicture, beforeAddPictures, onUploaded, setLoading]);
+  }, [newFiles, createPicture, preprocessPictures, onUploaded, setLoading]);
 
   const onScan = useCallback((file: File) => {
-    setNewFiles(fileList => [
-      ...fileList,
-      {
-        file,
-        preview: asFlatPicture(file),
-      },
-    ]);
+    setNewFiles(fileList => [...fileList, { file, preview: asFlatPicture(file) }]);
   }, []);
+
+  // Do we really want to allow uploading only when preprocessing is enabled?
+  if (role < AuthRole.CURATOR || !preprocessPictures) {
+    return null;
+  }
 
   return (
     <div className='add-pictures'>
@@ -130,7 +103,7 @@ const PictureUploadArea = ({
             ]}
             picture={file.preview}
             onClick={() => {}}
-            local={true}
+            pictureOrigin={PictureOrigin.LOCAL}
           />
         ))}
       </div>

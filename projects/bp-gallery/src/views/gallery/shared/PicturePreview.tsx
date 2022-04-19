@@ -11,15 +11,20 @@ export interface PicturePreviewAdornment {
   icon: string | ((picture: FlatPicture) => string);
 }
 
+export enum PictureOrigin {
+  LOCAL,
+  REMOTE,
+}
+
 const PicturePreview = ({
   picture,
   onClick,
-  local,
+  pictureOrigin = PictureOrigin.REMOTE,
   adornments,
 }: {
   picture: FlatPicture;
   onClick: MouseEventHandler<HTMLDivElement>;
-  local?: boolean;
+  pictureOrigin?: PictureOrigin;
   adornments?: PicturePreviewAdornment[];
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,7 +43,9 @@ const PicturePreview = ({
         flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
       }}
     >
-      <img src={!local ? asApiPath(`/${thumbnailUrl}`) : thumbnailUrl} />
+      <img
+        src={pictureOrigin === PictureOrigin.REMOTE ? asApiPath(`/${thumbnailUrl}`) : thumbnailUrl}
+      />
       <div className='adornments'>
         {adornments?.map((adornment, index) => (
           <div

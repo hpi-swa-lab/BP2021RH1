@@ -1,15 +1,13 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import hashCode from './helpers/hash-code';
 import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animation.helpers';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
-import PicturePreview from './PicturePreview';
-import { useDeletePictureMutation, useDeleteUploadMutation } from '../../../graphql/APIConnector';
-import { DialogContext } from '../../shared/DialogWrapper';
-import { useTranslation } from 'react-i18next';
+import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
+import useDeletePicture from './helpers/delete-picture.hook';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -17,46 +15,6 @@ export type PictureGridProps = {
   loading: boolean;
   refetch: () => void;
 } & Partial<PictureUploadAreaProps>;
-
-const useDeletePicture = () => {
-  const [deleteFile] = useDeleteUploadMutation();
-  const [deletePicture] = useDeletePictureMutation();
-  const prompt = useContext(DialogContext);
-  const { t } = useTranslation();
-
-  return useCallback(
-    (picture: FlatPicture) => {
-      // eslint-disable-next-line no-async-promise-executor
-      return new Promise<void>(async resolve => {
-        const mediaId = picture.media?.id;
-        if (!mediaId) {
-          return;
-        }
-        const reallyDelete = await prompt({
-          title: t('curator.reallyDelete'),
-          content: t('curator.reallyDeleteText'),
-          preset: 'confirm',
-        });
-        if (!reallyDelete) {
-          resolve();
-          return;
-        }
-        deleteFile({
-          variables: { id: mediaId },
-        }).then(() => {
-          deletePicture({
-            variables: {
-              id: picture.id,
-            },
-          }).then(() => {
-            resolve();
-          });
-        });
-      });
-    },
-    [deleteFile, deletePicture, t, prompt]
-  );
-};
 
 const PictureGrid = ({
   pictures,
@@ -131,9 +89,22 @@ const PictureGrid = ({
     [setFocusedPicture]
   );
 
+  const pictureAdornments =
+    role >= AuthRole.CURATOR
+      ? [
+          {
+            icon: 'delete',
+            onClick: (clickedPicture: FlatPicture) => {
+              deletePicture(clickedPicture).then(() => refetch());
+            },
+            position: 'top-right',
+          } as PicturePreviewAdornment,
+        ]
+      : undefined;
+
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
-      {uploadAreaProps.beforeAddPictures && <PictureUploadArea {...uploadAreaProps} />}
+      <PictureUploadArea {...uploadAreaProps} />
       <div className='picture-grid'>
         {table.map((row, rowindex) => {
           return (
@@ -153,19 +124,7 @@ const PictureGrid = ({
                       key={`${rowindex}${colindex}`}
                       picture={picture}
                       onClick={() => navigateToPicture(picture.id)}
-                      adornments={
-                        role >= AuthRole.CURATOR
-                          ? [
-                              {
-                                icon: 'delete',
-                                onClick: picture => {
-                                  deletePicture(picture).then(() => refetch());
-                                },
-                                position: 'top-right',
-                              },
-                            ]
-                          : undefined
-                      }
+                      adornments={pictureAdornments}
                     />
                   );
                 }

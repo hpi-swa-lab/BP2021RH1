@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 const SCANNER_PORT = 8000;
-const ALIVE_CHECK_INTERVAL = 5000;
+
+const COMMANDS = {
+  SELECT_SCANNER: 'set_scanner',
+  LIST_SCANNERS: 'list',
+  SCAN: 'scan',
+};
 
 const useScanner = () => {
   const socket = useMemo(() => new WebSocket(`ws://localhost:${SCANNER_PORT}`), []);
@@ -14,9 +19,9 @@ const useScanner = () => {
 
   const selectScanner = useCallback(
     (id: number) => {
-      socket.send(`set_scanner ${id}`);
+      socket.send(`${COMMANDS.SELECT_SCANNER} ${id}`);
       setSelectedScannerId(id);
-      socket.send('list');
+      socket.send(COMMANDS.LIST_SCANNERS);
     },
     [socket]
   );
@@ -24,7 +29,7 @@ const useScanner = () => {
   useEffect(() => {
     socket.addEventListener('open', () => {
       setLoading(true);
-      socket.send('list');
+      socket.send(COMMANDS.LIST_SCANNERS);
     });
 
     socket.addEventListener('message', event => {
@@ -53,7 +58,7 @@ const useScanner = () => {
 
   const scan = useCallback(() => {
     setLoading(true);
-    socket.send('scan');
+    socket.send(COMMANDS.SCAN);
   }, [socket]);
 
   return { scanners, scannedDocument, loading, scan, selectedScannerId, selectScanner };

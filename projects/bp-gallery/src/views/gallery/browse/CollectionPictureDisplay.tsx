@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../shared/Loading';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
@@ -6,8 +6,9 @@ import PictureScrollGrid from '../shared/PictureScrollGrid';
 import SubCollections from './SubCollections';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import CollectionDescription from './CollectionDescription';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatCollection, FlatPicture } from '../../../graphql/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
+import { PictureUploadAreaProps } from '../shared/PictureUploadArea';
 
 const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -42,7 +43,7 @@ const CollectionPictureDisplay = ({
 }: {
   error?: any;
   loading?: boolean;
-  collections?: any;
+  collections?: FlatCollection[];
   path: string[] | undefined;
   scrollPos: number;
   scrollHeight: number;
@@ -50,6 +51,24 @@ const CollectionPictureDisplay = ({
 }) => {
   const { t } = useTranslation();
   const { role } = useAuth();
+
+  const uploadAreaProps = useCallback(
+    (collection: FlatCollection): Partial<PictureUploadAreaProps> | undefined => {
+      return role >= AuthRole.CURATOR
+        ? {
+            preprocessPictures: (pictures: FlatPicture[]) => {
+              return pictures.map(picture => ({
+                ...picture,
+                publishedAt: new Date().toISOString(),
+                collections: [collection.id as any],
+              }));
+            },
+            folderName: collection.name,
+          }
+        : undefined;
+    },
+    [role]
+  );
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -70,24 +89,11 @@ const CollectionPictureDisplay = ({
           />
         )}
         <PictureScrollGrid
-          filters={getPictureFilters(collection.id as string, picturePublishingDate)}
+          filters={getPictureFilters(collection.id, picturePublishingDate)}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={collection.name}
-          gridProps={
-            role >= AuthRole.CURATOR
-              ? {
-                  beforeAddPictures: (pictures: FlatPicture[]) => {
-                    return pictures.map(picture => ({
-                      ...picture,
-                      publishedAt: new Date().toISOString(),
-                      collections: [collection.id],
-                    }));
-                  },
-                  folderName: collection.name,
-                }
-              : undefined
-          }
+          uploadAreaProps={uploadAreaProps(collection)}
         />
       </div>
     );

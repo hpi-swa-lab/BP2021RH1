@@ -31,11 +31,10 @@ def get_images():
   return buffer
 
 def list_scanners(params):
-  return json.dumps({"list": sm.GetSourceList(), "selected_scanner": current_scanner_id}) 
+  return json.dumps({"list": sm.GetSourceList(), "selected_scanner": current_scanner_id})
 
 def scan(params):
-  data = get_images()
-  return data
+  return get_images()
 
 def set_scanner(params):
   global current_scanner_id
@@ -49,9 +48,9 @@ messages = {
 }
 
 def handle(data):
-  ops = data.split()
-  if ops[0] in messages:
-    resp = messages[ops[0]](ops[1:])
+  received_message_data = data.split()
+  if received_message_data[0] in messages:
+    resp = messages[received_message_data[0]](received_message_data[1:])
   else:
     resp = json.dumps({"error": f'Unknown message {data}'})
 
@@ -72,7 +71,6 @@ async def handler(websocket, path):
       else:
         await websocket.send(resp)
 
- 
 
 start_server = websockets.serve(handler, "localhost", 8000)
 

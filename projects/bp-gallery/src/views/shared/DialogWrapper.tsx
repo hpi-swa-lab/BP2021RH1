@@ -16,10 +16,14 @@ export interface DialogOption {
   value: any;
 }
 
+export enum DialogPreset {
+  CONFIRM,
+}
+
 export interface DialogProps {
   title?: string;
   content: any;
-  preset?: 'confirm';
+  preset?: DialogPreset;
   options?: DialogOption[];
 }
 
@@ -30,11 +34,14 @@ export const DialogContext = React.createContext<(dialogProps: DialogProps) => P
 const DialogWrapper = ({ children }: { children: any }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [dialogState, setDialogState] = useState<DialogProps>();
+
+  // We save a function callback here to call once the currently active dialog has
+  // been closed. The resolve function is set below where prompt is triggered
   const resolve = useRef<undefined | ((value: any) => void)>(undefined);
   const { t } = useTranslation();
 
   const prompt = (dialogProps: DialogProps): Promise<any> => {
-    if (dialogProps.preset && !dialogProps.options) {
+    if (dialogProps.preset === DialogPreset.CONFIRM && !dialogProps.options) {
       dialogProps.options = [
         {
           name: t('common.abort'),
@@ -51,6 +58,7 @@ const DialogWrapper = ({ children }: { children: any }) => {
     setDialogState(dialogProps);
     setOpen(true);
     return new Promise<any>(r => {
+      // The callback function of this Promise is saved to the ref here
       resolve.current = r;
     });
   };
@@ -66,7 +74,14 @@ const DialogWrapper = ({ children }: { children: any }) => {
   return (
     <DialogContext.Provider value={prompt}>
       {children}
-      <Dialog open={open} onClose={() => handleClose(null)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          // If we close the dialog by clicking outside its boundaries, it as treated
+          // as if we didn't choose any of the options - hence null
+          handleClose(null);
+        }}
+      >
         <DialogTitle>{dialogState?.title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialogState?.content}</DialogContentText>
