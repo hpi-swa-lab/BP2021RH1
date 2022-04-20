@@ -8,6 +8,7 @@ import NavigationBar from './views/shared/NavigationBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
 import AlertWrapper from './views/shared/AlertWrapper';
+import DialogWrapper from './views/shared/DialogWrapper';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -53,13 +54,15 @@ const App = ({ route }: RouteConfigComponentProps) => {
   return (
     <ApolloProvider client={apolloClient}>
       <AlertWrapper>
-        <AuthWrapper>
-          <div className='App'>
-            <TopBar />
-            {renderRoutes(route?.routes)}
-            <NavigationBar />
-          </div>
-        </AuthWrapper>
+        <DialogWrapper>
+          <AuthWrapper>
+            <div className='App'>
+              <TopBar />
+              {renderRoutes(route?.routes)}
+              <NavigationBar />
+            </div>
+          </AuthWrapper>
+        </DialogWrapper>
       </AlertWrapper>
     </ApolloProvider>
   );

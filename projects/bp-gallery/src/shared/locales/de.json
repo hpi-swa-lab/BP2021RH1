@@ -26,11 +26,17 @@
     "something-went-wrong": "Es ist etwas schiefgelaufen",
     "past": "Früher",
     "information": "Informationen",
-    "showPicture": "Bild anzeigen",
+    "showPicture": "Vollbild",
     "showInfo": "Infos & Kommentare anzeigen",
     "close": "Schließen",
     "browse-view": "Alle Bilder",
-    "community-view": "Neueste Bilder"
+    "community-view": "Neueste Bilder",
+    "create": "{{value}} hinzufügen",
+    "presentationMode": "Präsentationsmodus",
+    "or": "oder",
+    "confirm": "Bestätigen",
+    "abort": "Abbrechen",
+    "0s": "0er Jahre"
   },
   "login": {
     "title": "Login",
@@ -40,5 +46,24 @@
     "invalid-credentials": "Benutzername oder Passwort sind falsch",
     "successful-login": "Erfolgreich eingeloggt",
     "successful-logout": "Erfolgreich ausgeloggt"
+  },
+  "pictureFields": {
+    "time": "Zeit",
+    "locations": "Orte",
+    "descriptions": "Beschreibungen",
+    "people": "Personen",
+    "keywords": "Stichworte",
+    "noTime": "Keine Zeit angegeben"
+  },
+  "curator": {
+    "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
+    "scan": "Direkt vom Scanner einlesen",
+    "addPictures": "Bilder hinzufügen",
+    "reallyDelete": "Bild wirklich endgültig löschen?",
+    "reallyDeleteText": "Wenn das Bild gelöscht ist, kann es nicht wiederhergestellt werden! Wirklich löschen?",
+    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
+    "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
+    "synonyms": "Synonyme",
+    "add": "Hinzufügen"
   }
 }

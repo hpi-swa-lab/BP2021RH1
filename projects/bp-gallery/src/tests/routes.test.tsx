@@ -55,7 +55,7 @@ const PictureViewMockComponent = (props: any) => {
 };
 jest.mock('../views/picture/PictureView', () => PictureViewMockComponent);
 
-test('Route mechanism renders the PictureView to a picture in non-thumbnailMode', () => {
+test('Route mechanism renders the PictureView to a picture', () => {
   renderRoute('/picture/1');
 
   const pictureView = screen.getByText('PictureViewMock');
@@ -63,8 +63,7 @@ test('Route mechanism renders the PictureView to a picture in non-thumbnailMode'
 
   expect(PictureViewMock).toHaveBeenCalledWith(
     expect.objectContaining({
-      pictureId: '1',
-      isInitialThumbnail: false,
+      initialPictureId: '1',
     })
   );
 });
