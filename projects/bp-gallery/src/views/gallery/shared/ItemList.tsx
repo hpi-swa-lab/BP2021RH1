@@ -5,7 +5,11 @@ import { Icon, IconButton } from '@mui/material';
 import { ItemListItem, ItemListItemModel } from './ItemListItem';
 import { browserName } from 'react-device-detect';
 
-const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
+const ItemList = (props: {
+  items: ItemListItemModel[];
+  compact?: boolean;
+  reloadOnScroll?: (count: number) => void;
+}) => {
   const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
   const [showLeftButton, setShowLeftButton] = useState<boolean>(false);
   const [showRightButton, setShowRightButton] = useState<boolean>(true);
@@ -23,6 +27,9 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
       left: scrollBarRef.scrollLeft + elementWidth * count,
       behavior: isFirefox || isSafari ? 'auto' : 'smooth',
     });
+    if (props.reloadOnScroll && count > 0) {
+      props.reloadOnScroll(count);
+    }
   };
 
   return (
@@ -40,6 +47,9 @@ const ItemList = (props: { items: ItemListItemModel[]; compact?: boolean }) => {
         }}
         onXReachEnd={() => {
           setShowRightButton(false);
+          if (props.reloadOnScroll) {
+            props.reloadOnScroll(5);
+          }
         }}
       >
         <div className='items'>

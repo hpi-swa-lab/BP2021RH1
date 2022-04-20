@@ -81,6 +81,17 @@ const apolloClient = new ApolloClient({
               };
             },
           },
+          keywordTags: {
+            // Treat picture queries as the same query, as long as the filters clause is equal.
+            // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
+            // get treated as one query and the results get merged.
+            keyArgs: ['filters'],
+            merge(existing = { data: [] }, incoming: PictureEntityResponseCollection) {
+              return {
+                data: [...existing.data, ...incoming.data],
+              };
+            },
+          },
         },
       },
     },

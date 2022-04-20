@@ -1817,6 +1817,8 @@ export type PostCommentMutation = {
 
 export type GetKeywordTagSuggestionsQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type GetKeywordTagSuggestionsQuery = {
@@ -2915,8 +2917,11 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetKeywordTagSuggestionsDocument = gql`
-  query getKeywordTagSuggestions($name: String) {
-    keywordTags(filters: { name: { containsi: $name } }) {
+  query getKeywordTagSuggestions($name: String, $start: Int, $limit: Int) {
+    keywordTags(
+      filters: { name: { containsi: $name } }
+      pagination: { start: $start, limit: $limit }
+    ) {
       data {
         id
         attributes {
@@ -2966,6 +2971,8 @@ export const GetKeywordTagSuggestionsDocument = gql`
  * const { data, loading, error } = useGetKeywordTagSuggestionsQuery({
  *   variables: {
  *      name: // value for 'name'
+ *      start: // value for 'start'
+ *      limit: // value for 'limit'
  *   },
  * });
  */

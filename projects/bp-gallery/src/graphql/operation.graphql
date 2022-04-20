@@ -202,8 +202,11 @@ mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime
   }
 }
 
-query getKeywordTagSuggestions($name: String) {
-  keywordTags(filters: { name: { containsi: $name } }) {
+query getKeywordTagSuggestions($name: String, $start: Int, $limit: Int) {
+  keywordTags(
+    filters: { name: { containsi: $name } }
+    pagination: { start: $start, limit: $limit }
+  ) {
     data {
       id
       attributes {

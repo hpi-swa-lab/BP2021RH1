@@ -17,24 +17,38 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
 
-  const [getKeywordTagSuggestions, { data, loading, error }] = useGetKeywordTagSuggestionsLazyQuery(
-    {
+  const [getKeywordTagSuggestions, { data, loading, error, fetchMore }] =
+    useGetKeywordTagSuggestionsLazyQuery({
       variables: {
         name: '',
+        start: 0,
       },
-    }
-  );
+    });
+
+  const keywordTags: FlatKeywordTagSuggestion[] | undefined =
+    useSimplifiedQueryResponseData(data)?.keywordTags;
 
   useEffect(() => {
     getKeywordTagSuggestions({
       variables: {
         name: searchSnippet,
+        start: 0,
+        limit: 30,
       },
     });
   }, [getKeywordTagSuggestions, searchSnippet]);
 
-  const keywordTags: FlatKeywordTagSuggestion[] | undefined =
-    useSimplifiedQueryResponseData(data)?.keywordTags;
+  const reloadOnScroll = (count: number) => {
+    if (fetchMore) {
+      fetchMore({
+        variables: {
+          name: searchSnippet,
+          start: keywordTags?.length,
+          limit: count,
+        },
+      });
+    }
+  };
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -44,6 +58,7 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
     return (
       <ItemList
         compact={true}
+        reloadOnScroll={reloadOnScroll}
         items={keywordTags.map(tag => ({
           name: tag.name,
           background: tag.thumbnail.length
