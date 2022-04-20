@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
 import { FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
+import i18n from '../../../i18n';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
+  const t = i18n.t;
   if (!timeStamp?.start || !timeStamp.end) {
     return '---';
   }
@@ -16,7 +18,7 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
     return (
       dayjs(timeStamp.start as string)
         .format('YYYY')
-        .slice(0, 3) + '0er Jahre'
+        .slice(0, 3) + t('common.0s')
     );
   } else {
     return `${dayjs(timeStamp.start as string).format('DD.MM.YYYY')} - ${dayjs(

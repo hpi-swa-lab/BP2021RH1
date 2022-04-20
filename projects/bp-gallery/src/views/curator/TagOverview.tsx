@@ -14,6 +14,7 @@ import {
 import { AlertContext, AlertType } from '../shared/AlertWrapper';
 import { Chip } from '@mui/material';
 import useGenericTagEndpoints from './endpoints';
+import { useTranslation } from 'react-i18next';
 
 interface TagRow {
   id: string;
@@ -30,6 +31,7 @@ interface FlatTag {
 
 const TagOverview = ({ type }: { type: string }) => {
   const openAlert = useContext(AlertContext);
+  const { t } = useTranslation();
 
   const { tagQuery, updateTagNameMutationSource, updateSynonymsMutationSource } =
     useGenericTagEndpoints(type);
@@ -85,7 +87,7 @@ const TagOverview = ({ type }: { type: string }) => {
     [updateSynonymsMutation, tags]
   );
 
-  const deleteSynonym = useCallback(
+  const deleteSynonym: (tagId: string, synonymName: string) => void = useCallback(
     (tagId: string, synonymName: string) => {
       updateSynonymsMutation({
         variables: {
@@ -105,7 +107,7 @@ const TagOverview = ({ type }: { type: string }) => {
         if (!tags[row.id].synonyms?.some(s => s?.name === row.add)) {
           addSynonym(row.id, row.add);
         } else {
-          openAlert({ alertType: AlertType.ERROR, message: 'Dieses Synonym existiert schon' });
+          openAlert({ alertType: AlertType.ERROR, message: t('curator.synonymAlreadyExists') });
         }
         row.add = '';
       } else if (row.name !== tags[row.id].name) {
@@ -113,46 +115,53 @@ const TagOverview = ({ type }: { type: string }) => {
       }
       return row;
     },
-    [addSynonym, tags, openAlert, updateTagNameMutation]
+    [addSynonym, tags, openAlert, updateTagNameMutation, t]
   );
 
-  const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', flex: 1, editable: true },
-    {
-      field: 'synonyms',
-      headerName: 'Synonyme',
-      flex: 3,
-      renderCell: (
-        params: GridRenderCellParams<{
-          synonyms: ComponentCommonSynonyms[];
-          tagId: string;
-        }>
-      ) => {
-        return params.value?.synonyms.map((s: ComponentCommonSynonyms) => (
-          <Chip
-            key={s.name}
-            label={s.name}
-            onDelete={params.value ? () => deleteSynonym(params.value!.tagId, s.name) : undefined}
-          />
-        ));
+  const columns: GridColDef[] = useMemo(
+    () => [
+      { field: 'name', headerName: 'Name', flex: 1, editable: true },
+      {
+        field: 'synonyms',
+        headerName: t('curator.synonyms'),
+        flex: 3,
+        renderCell: (
+          params: GridRenderCellParams<{
+            synonyms: ComponentCommonSynonyms[];
+            tagId: string;
+          }>
+        ) => {
+          return params.value?.synonyms.map((s: ComponentCommonSynonyms) => (
+            <Chip
+              key={s.name}
+              label={s.name}
+              onDelete={params.value ? () => deleteSynonym(params.value!.tagId, s.name) : undefined}
+            />
+          ));
+        },
       },
-    },
-    {
-      field: 'add',
-      headerName: 'Hinzufügen',
-      flex: 1,
-      editable: true,
-    },
-  ];
+      {
+        field: 'add',
+        headerName: t('curator.add'),
+        flex: 1,
+        editable: true,
+      },
+    ],
+    [t, deleteSynonym]
+  );
 
-  const rows: GridRowsProp = Object.values(tags).map(tag => {
-    return {
-      id: tag.id,
-      name: tag.name,
-      synonyms: { synonyms: tag.synonyms, tagId: tag.id },
-      add: '',
-    } as TagRow;
-  });
+  const rows: GridRowsProp = useMemo(
+    () =>
+      Object.values(tags).map(tag => {
+        return {
+          id: tag.id,
+          name: tag.name,
+          synonyms: { synonyms: tag.synonyms, tagId: tag.id },
+          add: '',
+        } as TagRow;
+      }),
+    [tags]
+  );
 
   if (error) {
     return <QueryErrorDisplay error={error} />;

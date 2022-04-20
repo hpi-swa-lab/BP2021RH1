@@ -33,6 +33,8 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   const setPictureState = useCallback(
     (field: any) => {
       const fieldCopy: { [key: string]: any } = cloneDeep(field);
+      // We need to stringify the fields here so that the API can handle the data
+      // since it only accepts string input, not JSON data
       Object.keys(fieldCopy).forEach(key => {
         if (Array.isArray(fieldCopy[key])) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call

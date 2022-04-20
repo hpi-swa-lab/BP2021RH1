@@ -9,6 +9,7 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { de } from 'date-fns/locale';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
+import i18n from '../../../i18n';
 
 const DateRangeSelectionField = ({
   timeRangeTag,
@@ -129,7 +130,7 @@ const INPUT_RANGES: InputRange[] = [
     },
   },
   {
-    label: '0 er Jahre',
+    label: i18n.t('common.0s'),
     range(value: number, props) {
       decadeValue = `${value}`.slice(-1);
       if (decadeValue.length !== 1) {

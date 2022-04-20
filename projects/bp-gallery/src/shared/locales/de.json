@@ -35,7 +35,8 @@
     "presentationMode": "Präsentationsmodus",
     "or": "oder",
     "confirm": "Bestätigen",
-    "abort": "Abbrechen"
+    "abort": "Abbrechen",
+    "0s": "0er Jahre"
   },
   "login": {
     "title": "Login",
@@ -60,6 +61,9 @@
     "addPictures": "Bilder hinzufügen",
     "reallyDelete": "Bild wirklich endgültig löschen?",
     "reallyDeleteText": "Wenn das Bild gelöscht ist, kann es nicht wiederhergestellt werden! Wirklich löschen?",
-    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?"
+    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
+    "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
+    "synonyms": "Synonyme",
+    "add": "Hinzufügen"
   }
 }
