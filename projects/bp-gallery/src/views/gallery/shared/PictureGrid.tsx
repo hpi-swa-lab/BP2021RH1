@@ -1,44 +1,40 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
-import PictureView, { PictureViewContextFields } from '../../picture/PictureView';
+import PictureView from '../../picture/PictureView';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
-import { PictureNavigationTarget } from '../../picture/PictureNavigationButtons';
+import hashCode from './helpers/hash-code';
+import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animation.helpers';
+import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
+import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
+import useDeletePicture from './helpers/delete-picture.hook';
+
+export type PictureGridProps = {
+  pictures: FlatPicture[];
+  hashBase: string;
+  loading: boolean;
+  refetch: () => void;
+} & Partial<PictureUploadAreaProps>;
 
 const PictureGrid = ({
   pictures,
   hashBase,
   loading,
-}: {
-  pictures: FlatPicture[];
-  hashBase: string;
-  loading: boolean;
-}) => {
+  refetch,
+  ...uploadAreaProps
+}: PictureGridProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
+
+  const { role } = useAuth();
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
-  const [focusedPicture, setFocusedPicture] = useState<{
-    id: string;
-    params: PictureViewContextFields;
-  }>({
-    id: '-1',
-    params: {},
-  });
+  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
+  const [transitioning, setTransitioning] = useState<boolean>(false);
 
-  const hashCode = (str: string) => {
-    let hash = 0,
-      i,
-      chr;
-    if (str.length === 0) return hash;
-    for (i = 0; i < str.length; i++) {
-      chr = str.charCodeAt(i);
-      hash = (hash << 5) - hash + chr;
-      hash |= 0;
-    }
-    return Math.abs(hash) / Math.pow(2, 31);
-  };
+  const deletePicture = useDeletePicture();
 
   // Initialize table with pictures from props
   useEffect(() => {
@@ -82,74 +78,74 @@ const PictureGrid = ({
   }, [onResize]);
 
   const navigateToPicture = useCallback(
-    (picture: FlatPicture, params: PictureViewContextFields) => {
-      setFocusedPicture({
-        id: picture.id,
-        params,
+    (id: string) => {
+      setTransitioning(true);
+      setFocusedPicture(id);
+      window.history.pushState({}, '', `/picture/${id}`);
+      zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
+        setTransitioning(false);
       });
-      window.history.replaceState({}, '', `/picture/${picture.id}`);
     },
     [setFocusedPicture]
   );
 
-  const nextOrPrevPicture = useCallback(
-    (picture: FlatPicture, target: PictureNavigationTarget, params: PictureViewContextFields) => {
-      const indexOfCurrentPictureId: number = pictures.findIndex(pic => pic.id === picture.id);
-      const nextPicture = pictures.at(indexOfCurrentPictureId + 1);
-      const previousPicture = pictures.at(indexOfCurrentPictureId - 1);
-
-      const newPicture: FlatPicture | undefined =
-        target === PictureNavigationTarget.NEXT ? nextPicture : previousPicture;
-
-      if (newPicture) {
-        navigateToPicture(newPicture, params);
-      }
-    },
-    [navigateToPicture, pictures]
-  );
+  const pictureAdornments =
+    role >= AuthRole.CURATOR
+      ? [
+          {
+            icon: 'delete',
+            onClick: (clickedPicture: FlatPicture) => {
+              deletePicture(clickedPicture).then(() => refetch());
+            },
+            position: 'top-right',
+          } as PicturePreviewAdornment,
+        ]
+      : undefined;
 
   return (
-    <div className='picture-grid'>
-      {table.map((row, rowindex) => {
-        return (
-          <div key={rowindex} className='row'>
-            {row.map((picture, colindex) => {
-              if (!picture) {
-                return (
-                  <div
-                    key={`${rowindex}${colindex}`}
-                    className='picture-placeholder'
-                    style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
-                  />
-                );
-              } else {
-                return (
-                  <PictureView
-                    key={`${rowindex}${colindex}`}
-                    flexValue={String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))}
-                    pictureId={picture.id}
-                    navigateCallback={(
-                      target: PictureNavigationTarget,
-                      params?: PictureViewContextFields
-                    ) => {
-                      nextOrPrevPicture(picture, target, params ?? {});
-                    }}
-                    initialParams={focusedPicture.id === picture.id ? focusedPicture.params : {}}
-                    hasPrevious={pictures.indexOf(picture) > 0}
-                    hasNext={pictures.indexOf(picture) < pictures.length - 1}
-                    thumbnailUrl={`/${String(picture.media?.formats?.small.url || '')}`}
-                    isInitialThumbnail={focusedPicture.id !== picture.id}
-                    openCallback={(open?: boolean) => {
-                      const params = {};
-                      setFocusedPicture(open ? { id: picture.id, params } : { id: '-1', params });
-                    }}
-                  />
-                );
-              }
-            })}
-          </div>
-        );
-      })}
+    <div className={`${transitioning ? 'transitioning' : ''}`}>
+      <PictureUploadArea {...uploadAreaProps} />
+      <div className='picture-grid'>
+        {table.map((row, rowindex) => {
+          return (
+            <div key={rowindex} className='row'>
+              {row.map((picture, colindex) => {
+                if (!picture) {
+                  return (
+                    <div
+                      key={`${rowindex}${colindex}`}
+                      className='picture-placeholder'
+                      style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
+                    />
+                  );
+                } else {
+                  return (
+                    <PicturePreview
+                      key={`${rowindex}${colindex}`}
+                      picture={picture}
+                      onClick={() => navigateToPicture(picture.id)}
+                      adornments={pictureAdornments}
+                    />
+                  );
+                }
+              })}
+            </div>
+          );
+        })}
+      </div>
+      {focusedPicture && (
+        <PictureView
+          initialPictureId={focusedPicture}
+          siblingIds={pictures.map(p => p.id)}
+          onBack={(picid: string) => {
+            setTransitioning(true);
+            zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
+              setTransitioning(false);
+              setFocusedPicture(undefined);
+            });
+          }}
+        />
+      )}
     </div>
   );
 };

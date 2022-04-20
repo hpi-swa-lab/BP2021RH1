@@ -198,6 +198,23 @@ export type CommentRelationResponseCollection = {
   data: Array<CommentEntity>;
 };
 
+export type ComponentCommonSynonyms = {
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
+export type ComponentCommonSynonymsFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsFiltersInput>>>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsFiltersInput>>>;
+};
+
+export type ComponentCommonSynonymsInput = {
+  id?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
 export type ComponentLocationCoordinates = {
   id: Scalars['ID'];
   latitude: Scalars['Float'];
@@ -317,6 +334,7 @@ export type GenericMorph =
   | BrowseRootCollection
   | Collection
   | Comment
+  | ComponentCommonSynonyms
   | ComponentLocationCoordinates
   | Description
   | KeywordTag
@@ -402,7 +420,7 @@ export type KeywordTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
+  synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
@@ -411,6 +429,12 @@ export type KeywordTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type KeywordTagSynonymsArgs = {
+  filters?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -443,7 +467,6 @@ export type KeywordTagFiltersInput = {
   not?: InputMaybe<KeywordTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
@@ -451,7 +474,7 @@ export type KeywordTagFiltersInput = {
 export type KeywordTagInput = {
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
@@ -464,7 +487,7 @@ export type LocationTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
+  synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
@@ -473,6 +496,12 @@ export type LocationTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type LocationTagSynonymsArgs = {
+  filters?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -505,7 +534,6 @@ export type LocationTagFiltersInput = {
   not?: InputMaybe<LocationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
@@ -514,7 +542,7 @@ export type LocationTagInput = {
   coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
@@ -790,7 +818,7 @@ export type PersonTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
+  synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
 };
@@ -799,6 +827,12 @@ export type PersonTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PersonTagSynonymsArgs = {
+  filters?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -831,7 +865,6 @@ export type PersonTagFiltersInput = {
   not?: InputMaybe<PersonTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PersonTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
@@ -839,7 +872,7 @@ export type PersonTagFiltersInput = {
 export type PersonTagInput = {
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
@@ -891,42 +924,36 @@ export type PictureDescriptionsArgs = {
 export type PictureKeyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureLocation_TagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PicturePerson_TagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureVerified_Keyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureVerified_Location_TagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureVerified_Person_TagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1065,7 +1092,6 @@ export type QueryKeywordTagArgs = {
 export type QueryKeywordTagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1076,7 +1102,6 @@ export type QueryLocationTagArgs = {
 export type QueryLocationTagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1087,7 +1112,6 @@ export type QueryPersonTagArgs = {
 export type QueryPersonTagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1109,7 +1133,6 @@ export type QueryTimeRangeTagArgs = {
 export type QueryTimeRangeTagsArgs = {
   filters?: InputMaybe<TimeRangeTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1174,7 +1197,6 @@ export type TimeRangeTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   end: Scalars['DateTime'];
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
@@ -1216,7 +1238,6 @@ export type TimeRangeTagFiltersInput = {
   not?: InputMaybe<TimeRangeTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<TimeRangeTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   start?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
@@ -1225,7 +1246,6 @@ export type TimeRangeTagFiltersInput = {
 export type TimeRangeTagInput = {
   end?: InputMaybe<Scalars['DateTime']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   start?: InputMaybe<Scalars['DateTime']>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
@@ -1542,8 +1562,68 @@ export type GetPictureInfoQuery = {
                         }
                       | null
                       | undefined;
+                    keyword_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    verified_keyword_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    location_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    verified_location_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    person_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    verified_person_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
                     media: {
-                      data?: { attributes?: { url: string } | null | undefined } | null | undefined;
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { url: string } | null | undefined;
+                          }
+                        | null
+                        | undefined;
                     };
                     comments?:
                       | {
@@ -1583,6 +1663,7 @@ export type GetPicturesQuery = {
                 media: {
                   data?:
                     | {
+                        id?: string | null | undefined;
                         attributes?:
                           | {
                               width?: number | null | undefined;
@@ -1756,6 +1837,144 @@ export type GetKeywordTagSuggestionsQuery = {
     | undefined;
 };
 
+export type GetAllKeywordTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllKeywordTagsQuery = {
+  keywordTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type UpdateKeywordNameMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  name: Scalars['String'];
+}>;
+
+export type UpdateKeywordNameMutation = {
+  updateKeywordTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateKeywordSynonymsMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  synonyms:
+    | Array<InputMaybe<ComponentCommonSynonymsInput>>
+    | InputMaybe<ComponentCommonSynonymsInput>;
+}>;
+
+export type UpdateKeywordSynonymsMutation = {
+  updateKeywordTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllLocationTagsQuery = {
+  locationTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type UpdateLocationNameMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  name: Scalars['String'];
+}>;
+
+export type UpdateLocationNameMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateLocationSynonymsMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  synonyms:
+    | Array<InputMaybe<ComponentCommonSynonymsInput>>
+    | InputMaybe<ComponentCommonSynonymsInput>;
+}>;
+
+export type UpdateLocationSynonymsMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type GetAllPersonTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllPersonTagsQuery = {
+  personTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type UpdatePersonNameMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  name: Scalars['String'];
+}>;
+
+export type UpdatePersonNameMutation = {
+  updatePersonTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdatePersonSynonymsMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  synonyms:
+    | Array<InputMaybe<ComponentCommonSynonymsInput>>
+    | InputMaybe<ComponentCommonSynonymsInput>;
+}>;
+
+export type UpdatePersonSynonymsMutation = {
+  updatePersonTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
@@ -1876,6 +2095,84 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { login: { jwt?: string | null | undefined } };
 
+export type CreatePersonTagMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+export type CreatePersonTagMutation = {
+  createPersonTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreateKeywordTagMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+export type CreateKeywordTagMutation = {
+  createKeywordTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreateLocationTagMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+export type CreateLocationTagMutation = {
+  createLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdatePictureMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+  data: PictureInput;
+}>;
+
+export type UpdatePictureMutation = {
+  updatePicture?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreatePictureMutationVariables = Exact<{
+  data: PictureInput;
+}>;
+
+export type CreatePictureMutation = {
+  createPicture?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeleteUploadMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteUploadMutation = {
+  deleteUploadFile?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeletePictureMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeletePictureMutation = {
+  deletePicture?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -1921,8 +2218,57 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
+          keyword_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          verified_keyword_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          location_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          verified_location_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          person_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          verified_person_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
           media {
             data {
+              id
               attributes {
                 url
               }
@@ -1997,6 +2343,7 @@ export const GetPicturesDocument = gql`
         attributes {
           media {
             data {
+              id
               attributes {
                 width
                 height
@@ -2400,6 +2747,530 @@ export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
   GetKeywordTagSuggestionsQueryVariables
 >;
 
+export const GetAllKeywordTagsDocument = gql`
+  query getAllKeywordTags {
+    keywordTags {
+      data {
+        id
+        attributes {
+          name
+          synonyms {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllKeywordTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllKeywordTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllKeywordTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllKeywordTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllKeywordTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>(
+    GetAllKeywordTagsDocument,
+    options
+  );
+}
+
+export function useGetAllKeywordTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>(
+    GetAllKeywordTagsDocument,
+    options
+  );
+}
+
+export type GetAllKeywordTagsQueryHookResult = ReturnType<typeof useGetAllKeywordTagsQuery>;
+
+export type GetAllKeywordTagsLazyQueryHookResult = ReturnType<typeof useGetAllKeywordTagsLazyQuery>;
+
+export type GetAllKeywordTagsQueryResult = Apollo.QueryResult<
+  GetAllKeywordTagsQuery,
+  GetAllKeywordTagsQueryVariables
+>;
+
+export const UpdateKeywordNameDocument = gql`
+  mutation updateKeywordName($tagId: ID!, $name: String!) {
+    updateKeywordTag(id: $tagId, data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateKeywordNameMutationFn = Apollo.MutationFunction<
+  UpdateKeywordNameMutation,
+  UpdateKeywordNameMutationVariables
+>;
+
+/**
+ * __useUpdateKeywordNameMutation__
+ *
+ * To run a mutation, you first call `useUpdateKeywordNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateKeywordNameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateKeywordNameMutation, { data, loading, error }] = useUpdateKeywordNameMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateKeywordNameMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateKeywordNameMutation,
+    UpdateKeywordNameMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateKeywordNameMutation, UpdateKeywordNameMutationVariables>(
+    UpdateKeywordNameDocument,
+    options
+  );
+}
+
+export type UpdateKeywordNameMutationHookResult = ReturnType<typeof useUpdateKeywordNameMutation>;
+
+export type UpdateKeywordNameMutationResult = Apollo.MutationResult<UpdateKeywordNameMutation>;
+
+export type UpdateKeywordNameMutationOptions = Apollo.BaseMutationOptions<
+  UpdateKeywordNameMutation,
+  UpdateKeywordNameMutationVariables
+>;
+
+export const UpdateKeywordSynonymsDocument = gql`
+  mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+    updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateKeywordSynonymsMutationFn = Apollo.MutationFunction<
+  UpdateKeywordSynonymsMutation,
+  UpdateKeywordSynonymsMutationVariables
+>;
+
+/**
+ * __useUpdateKeywordSynonymsMutation__
+ *
+ * To run a mutation, you first call `useUpdateKeywordSynonymsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateKeywordSynonymsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateKeywordSynonymsMutation, { data, loading, error }] = useUpdateKeywordSynonymsMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      synonyms: // value for 'synonyms'
+ *   },
+ * });
+ */
+export function useUpdateKeywordSynonymsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateKeywordSynonymsMutation,
+    UpdateKeywordSynonymsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateKeywordSynonymsMutation, UpdateKeywordSynonymsMutationVariables>(
+    UpdateKeywordSynonymsDocument,
+    options
+  );
+}
+
+export type UpdateKeywordSynonymsMutationHookResult = ReturnType<
+  typeof useUpdateKeywordSynonymsMutation
+>;
+
+export type UpdateKeywordSynonymsMutationResult =
+  Apollo.MutationResult<UpdateKeywordSynonymsMutation>;
+
+export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
+  UpdateKeywordSynonymsMutation,
+  UpdateKeywordSynonymsMutationVariables
+>;
+
+export const GetAllLocationTagsDocument = gql`
+  query getAllLocationTags {
+    locationTags {
+      data {
+        id
+        attributes {
+          name
+          synonyms {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllLocationTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllLocationTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllLocationTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllLocationTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllLocationTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllLocationTagsQuery, GetAllLocationTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllLocationTagsQuery, GetAllLocationTagsQueryVariables>(
+    GetAllLocationTagsDocument,
+    options
+  );
+}
+
+export function useGetAllLocationTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllLocationTagsQuery,
+    GetAllLocationTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllLocationTagsQuery, GetAllLocationTagsQueryVariables>(
+    GetAllLocationTagsDocument,
+    options
+  );
+}
+
+export type GetAllLocationTagsQueryHookResult = ReturnType<typeof useGetAllLocationTagsQuery>;
+
+export type GetAllLocationTagsLazyQueryHookResult = ReturnType<
+  typeof useGetAllLocationTagsLazyQuery
+>;
+
+export type GetAllLocationTagsQueryResult = Apollo.QueryResult<
+  GetAllLocationTagsQuery,
+  GetAllLocationTagsQueryVariables
+>;
+
+export const UpdateLocationNameDocument = gql`
+  mutation updateLocationName($tagId: ID!, $name: String!) {
+    updateLocationTag(id: $tagId, data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationNameMutationFn = Apollo.MutationFunction<
+  UpdateLocationNameMutation,
+  UpdateLocationNameMutationVariables
+>;
+
+/**
+ * __useUpdateLocationNameMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationNameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationNameMutation, { data, loading, error }] = useUpdateLocationNameMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateLocationNameMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationNameMutation,
+    UpdateLocationNameMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLocationNameMutation, UpdateLocationNameMutationVariables>(
+    UpdateLocationNameDocument,
+    options
+  );
+}
+
+export type UpdateLocationNameMutationHookResult = ReturnType<typeof useUpdateLocationNameMutation>;
+
+export type UpdateLocationNameMutationResult = Apollo.MutationResult<UpdateLocationNameMutation>;
+
+export type UpdateLocationNameMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationNameMutation,
+  UpdateLocationNameMutationVariables
+>;
+
+export const UpdateLocationSynonymsDocument = gql`
+  mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+    updateLocationTag(id: $tagId, data: { synonyms: $synonyms }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationSynonymsMutationFn = Apollo.MutationFunction<
+  UpdateLocationSynonymsMutation,
+  UpdateLocationSynonymsMutationVariables
+>;
+
+/**
+ * __useUpdateLocationSynonymsMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationSynonymsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationSynonymsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationSynonymsMutation, { data, loading, error }] = useUpdateLocationSynonymsMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      synonyms: // value for 'synonyms'
+ *   },
+ * });
+ */
+export function useUpdateLocationSynonymsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationSynonymsMutation,
+    UpdateLocationSynonymsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateLocationSynonymsMutation,
+    UpdateLocationSynonymsMutationVariables
+  >(UpdateLocationSynonymsDocument, options);
+}
+
+export type UpdateLocationSynonymsMutationHookResult = ReturnType<
+  typeof useUpdateLocationSynonymsMutation
+>;
+
+export type UpdateLocationSynonymsMutationResult =
+  Apollo.MutationResult<UpdateLocationSynonymsMutation>;
+
+export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationSynonymsMutation,
+  UpdateLocationSynonymsMutationVariables
+>;
+
+export const GetAllPersonTagsDocument = gql`
+  query getAllPersonTags {
+    personTags {
+      data {
+        id
+        attributes {
+          name
+          synonyms {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllPersonTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllPersonTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPersonTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPersonTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllPersonTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>(
+    GetAllPersonTagsDocument,
+    options
+  );
+}
+
+export function useGetAllPersonTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>(
+    GetAllPersonTagsDocument,
+    options
+  );
+}
+
+export type GetAllPersonTagsQueryHookResult = ReturnType<typeof useGetAllPersonTagsQuery>;
+
+export type GetAllPersonTagsLazyQueryHookResult = ReturnType<typeof useGetAllPersonTagsLazyQuery>;
+
+export type GetAllPersonTagsQueryResult = Apollo.QueryResult<
+  GetAllPersonTagsQuery,
+  GetAllPersonTagsQueryVariables
+>;
+
+export const UpdatePersonNameDocument = gql`
+  mutation updatePersonName($tagId: ID!, $name: String!) {
+    updatePersonTag(id: $tagId, data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdatePersonNameMutationFn = Apollo.MutationFunction<
+  UpdatePersonNameMutation,
+  UpdatePersonNameMutationVariables
+>;
+
+/**
+ * __useUpdatePersonNameMutation__
+ *
+ * To run a mutation, you first call `useUpdatePersonNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePersonNameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePersonNameMutation, { data, loading, error }] = useUpdatePersonNameMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdatePersonNameMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePersonNameMutation,
+    UpdatePersonNameMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdatePersonNameMutation, UpdatePersonNameMutationVariables>(
+    UpdatePersonNameDocument,
+    options
+  );
+}
+
+export type UpdatePersonNameMutationHookResult = ReturnType<typeof useUpdatePersonNameMutation>;
+
+export type UpdatePersonNameMutationResult = Apollo.MutationResult<UpdatePersonNameMutation>;
+
+export type UpdatePersonNameMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePersonNameMutation,
+  UpdatePersonNameMutationVariables
+>;
+
+export const UpdatePersonSynonymsDocument = gql`
+  mutation updatePersonSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+    updatePersonTag(id: $tagId, data: { synonyms: $synonyms }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdatePersonSynonymsMutationFn = Apollo.MutationFunction<
+  UpdatePersonSynonymsMutation,
+  UpdatePersonSynonymsMutationVariables
+>;
+
+/**
+ * __useUpdatePersonSynonymsMutation__
+ *
+ * To run a mutation, you first call `useUpdatePersonSynonymsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePersonSynonymsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePersonSynonymsMutation, { data, loading, error }] = useUpdatePersonSynonymsMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      synonyms: // value for 'synonyms'
+ *   },
+ * });
+ */
+export function useUpdatePersonSynonymsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePersonSynonymsMutation,
+    UpdatePersonSynonymsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdatePersonSynonymsMutation, UpdatePersonSynonymsMutationVariables>(
+    UpdatePersonSynonymsDocument,
+    options
+  );
+}
+
+export type UpdatePersonSynonymsMutationHookResult = ReturnType<
+  typeof useUpdatePersonSynonymsMutation
+>;
+
+export type UpdatePersonSynonymsMutationResult =
+  Apollo.MutationResult<UpdatePersonSynonymsMutation>;
+
+export type UpdatePersonSynonymsMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePersonSynonymsMutation,
+  UpdatePersonSynonymsMutationVariables
+>;
+
 export const GetDecadePreviewThumbnailsDocument = gql`
   query getDecadePreviewThumbnails {
     s40: pictures(
@@ -2687,6 +3558,373 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
+>;
+
+export const CreatePersonTagDocument = gql`
+  mutation createPersonTag($name: String!) {
+    createPersonTag(data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePersonTagMutationFn = Apollo.MutationFunction<
+  CreatePersonTagMutation,
+  CreatePersonTagMutationVariables
+>;
+
+/**
+ * __useCreatePersonTagMutation__
+ *
+ * To run a mutation, you first call `useCreatePersonTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePersonTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPersonTagMutation, { data, loading, error }] = useCreatePersonTagMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreatePersonTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePersonTagMutation,
+    CreatePersonTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePersonTagMutation, CreatePersonTagMutationVariables>(
+    CreatePersonTagDocument,
+    options
+  );
+}
+
+export type CreatePersonTagMutationHookResult = ReturnType<typeof useCreatePersonTagMutation>;
+
+export type CreatePersonTagMutationResult = Apollo.MutationResult<CreatePersonTagMutation>;
+
+export type CreatePersonTagMutationOptions = Apollo.BaseMutationOptions<
+  CreatePersonTagMutation,
+  CreatePersonTagMutationVariables
+>;
+
+export const CreateKeywordTagDocument = gql`
+  mutation createKeywordTag($name: String!) {
+    createKeywordTag(data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateKeywordTagMutationFn = Apollo.MutationFunction<
+  CreateKeywordTagMutation,
+  CreateKeywordTagMutationVariables
+>;
+
+/**
+ * __useCreateKeywordTagMutation__
+ *
+ * To run a mutation, you first call `useCreateKeywordTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateKeywordTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createKeywordTagMutation, { data, loading, error }] = useCreateKeywordTagMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateKeywordTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateKeywordTagMutation,
+    CreateKeywordTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateKeywordTagMutation, CreateKeywordTagMutationVariables>(
+    CreateKeywordTagDocument,
+    options
+  );
+}
+
+export type CreateKeywordTagMutationHookResult = ReturnType<typeof useCreateKeywordTagMutation>;
+
+export type CreateKeywordTagMutationResult = Apollo.MutationResult<CreateKeywordTagMutation>;
+
+export type CreateKeywordTagMutationOptions = Apollo.BaseMutationOptions<
+  CreateKeywordTagMutation,
+  CreateKeywordTagMutationVariables
+>;
+
+export const CreateLocationTagDocument = gql`
+  mutation createLocationTag($name: String!) {
+    createLocationTag(data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateLocationTagMutationFn = Apollo.MutationFunction<
+  CreateLocationTagMutation,
+  CreateLocationTagMutationVariables
+>;
+
+/**
+ * __useCreateLocationTagMutation__
+ *
+ * To run a mutation, you first call `useCreateLocationTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLocationTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLocationTagMutation, { data, loading, error }] = useCreateLocationTagMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateLocationTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateLocationTagMutation,
+    CreateLocationTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateLocationTagMutation, CreateLocationTagMutationVariables>(
+    CreateLocationTagDocument,
+    options
+  );
+}
+
+export type CreateLocationTagMutationHookResult = ReturnType<typeof useCreateLocationTagMutation>;
+
+export type CreateLocationTagMutationResult = Apollo.MutationResult<CreateLocationTagMutation>;
+
+export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
+  CreateLocationTagMutation,
+  CreateLocationTagMutationVariables
+>;
+
+export const UpdatePictureDocument = gql`
+  mutation updatePicture($pictureId: ID!, $data: PictureInput!) {
+    updatePicture(id: $pictureId, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdatePictureMutationFn = Apollo.MutationFunction<
+  UpdatePictureMutation,
+  UpdatePictureMutationVariables
+>;
+
+/**
+ * __useUpdatePictureMutation__
+ *
+ * To run a mutation, you first call `useUpdatePictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePictureMutation, { data, loading, error }] = useUpdatePictureMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdatePictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdatePictureMutation, UpdatePictureMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdatePictureMutation, UpdatePictureMutationVariables>(
+    UpdatePictureDocument,
+    options
+  );
+}
+
+export type UpdatePictureMutationHookResult = ReturnType<typeof useUpdatePictureMutation>;
+
+export type UpdatePictureMutationResult = Apollo.MutationResult<UpdatePictureMutation>;
+
+export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePictureMutation,
+  UpdatePictureMutationVariables
+>;
+
+export const CreatePictureDocument = gql`
+  mutation createPicture($data: PictureInput!) {
+    createPicture(data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePictureMutationFn = Apollo.MutationFunction<
+  CreatePictureMutation,
+  CreatePictureMutationVariables
+>;
+
+/**
+ * __useCreatePictureMutation__
+ *
+ * To run a mutation, you first call `useCreatePictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPictureMutation, { data, loading, error }] = useCreatePictureMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreatePictureMutation, CreatePictureMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePictureMutation, CreatePictureMutationVariables>(
+    CreatePictureDocument,
+    options
+  );
+}
+
+export type CreatePictureMutationHookResult = ReturnType<typeof useCreatePictureMutation>;
+
+export type CreatePictureMutationResult = Apollo.MutationResult<CreatePictureMutation>;
+
+export type CreatePictureMutationOptions = Apollo.BaseMutationOptions<
+  CreatePictureMutation,
+  CreatePictureMutationVariables
+>;
+
+export const DeleteUploadDocument = gql`
+  mutation deleteUpload($id: ID!) {
+    deleteUploadFile(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteUploadMutationFn = Apollo.MutationFunction<
+  DeleteUploadMutation,
+  DeleteUploadMutationVariables
+>;
+
+/**
+ * __useDeleteUploadMutation__
+ *
+ * To run a mutation, you first call `useDeleteUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUploadMutation, { data, loading, error }] = useDeleteUploadMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteUploadMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteUploadMutation, DeleteUploadMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteUploadMutation, DeleteUploadMutationVariables>(
+    DeleteUploadDocument,
+    options
+  );
+}
+
+export type DeleteUploadMutationHookResult = ReturnType<typeof useDeleteUploadMutation>;
+
+export type DeleteUploadMutationResult = Apollo.MutationResult<DeleteUploadMutation>;
+
+export type DeleteUploadMutationOptions = Apollo.BaseMutationOptions<
+  DeleteUploadMutation,
+  DeleteUploadMutationVariables
+>;
+
+export const DeletePictureDocument = gql`
+  mutation deletePicture($id: ID!) {
+    deletePicture(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeletePictureMutationFn = Apollo.MutationFunction<
+  DeletePictureMutation,
+  DeletePictureMutationVariables
+>;
+
+/**
+ * __useDeletePictureMutation__
+ *
+ * To run a mutation, you first call `useDeletePictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePictureMutation, { data, loading, error }] = useDeletePictureMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeletePictureMutation, DeletePictureMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeletePictureMutation, DeletePictureMutationVariables>(
+    DeletePictureDocument,
+    options
+  );
+}
+
+export type DeletePictureMutationHookResult = ReturnType<typeof useDeletePictureMutation>;
+
+export type DeletePictureMutationResult = Apollo.MutationResult<DeletePictureMutation>;
+
+export type DeletePictureMutationOptions = Apollo.BaseMutationOptions<
+  DeletePictureMutation,
+  DeletePictureMutationVariables
 >;
 
 export const MeDocument = gql`

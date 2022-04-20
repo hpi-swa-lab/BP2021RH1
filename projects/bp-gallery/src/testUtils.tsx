@@ -10,6 +10,7 @@ import TopBar from './views/shared/TopBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
 import AlertWrapper from './views/shared/AlertWrapper';
+import DialogWrapper from './views/shared/DialogWrapper';
 
 /**
  * Enables using Navigation-Context in tests
@@ -34,7 +35,9 @@ export const renderWithAPIMocks = (
   enableCache: boolean = false
 ) => {
   return render(
-    <AlertWrapper>{_wrapInMockedProvider(component, apiMocks, enableCache)}</AlertWrapper>
+    <DialogWrapper>
+      <AlertWrapper>{_wrapInMockedProvider(component, apiMocks, enableCache)}</AlertWrapper>
+    </DialogWrapper>
   );
 };
 
@@ -90,7 +93,9 @@ const _renderRoute = (route: string, apiMocks?: MockedResponse[], enableCache: b
     : routesContent;
   return render(
     <BrowserRouter>
-      <AlertWrapper>{contentToWrapInRouter}</AlertWrapper>
+      <DialogWrapper>
+        <AlertWrapper>{contentToWrapInRouter}</AlertWrapper>
+      </DialogWrapper>
     </BrowserRouter>
   );
 };

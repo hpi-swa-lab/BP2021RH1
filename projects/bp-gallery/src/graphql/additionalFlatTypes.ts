@@ -21,6 +21,8 @@ type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
 type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
+type FlatUploadFile = ID & UploadFile;
+
 type FlatPictureWithoutRelations = ID &
   Omit<
     Picture,
@@ -34,13 +36,17 @@ type FlatPictureWithoutRelations = ID &
     | 'verified_time_range_tag'
     | 'verified_location_tags'
     | 'verified_person_tags'
+    | 'location_tags'
+    | 'person_tags'
   >;
 
-type FlatLocationTagWithoutRelations = ID & Omit<LocationTag, 'pictures' | 'verified_pictures'>;
+export type FlatLocationTagWithoutRelations = ID &
+  Omit<LocationTag, 'pictures' | 'verified_pictures'>;
 
-type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'verified_pictures'>;
+export type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'verified_pictures'>;
 
-type FlatTimeRangeTagWithoutRelations = ID & Omit<TimeRangeTag, 'pictures' | 'verified_pictures'>;
+export type FlatTimeRangeTagWithoutRelations = ID &
+  Omit<TimeRangeTag, 'pictures' | 'verified_pictures'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -78,12 +84,12 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   keyword_tags?: FlatKeywordTagWithoutRelations[];
   person_tags?: FlatPersonTagWithoutRelations[];
   location_tags?: FlatLocationTagWithoutRelations[];
-  media?: UploadFile;
+  media?: FlatUploadFile;
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
 };
 
 type Thumbnail = {
-  media?: UploadFile;
+  media?: FlatUploadFile;
 };
 
 export type FlatKeywordTagSuggestion = FlatKeywordTagWithoutRelations & {

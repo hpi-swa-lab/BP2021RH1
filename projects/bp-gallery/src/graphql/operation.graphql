@@ -29,8 +29,57 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        keyword_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        verified_keyword_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        location_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        verified_location_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        person_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        verified_person_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
         media {
           data {
+            id
             attributes {
               url
             }
@@ -58,6 +107,7 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
       attributes {
         media {
           data {
+            id
             attributes {
               width
               height
@@ -160,6 +210,96 @@ query getKeywordTagSuggestions($name: String) {
           }
         }
       }
+    }
+  }
+}
+
+query getAllKeywordTags {
+  keywordTags {
+    data {
+      id
+      attributes {
+        name
+        synonyms {
+          name
+        }
+      }
+    }
+  }
+}
+
+mutation updateKeywordName($tagId: ID!, $name: String!) {
+  updateKeywordTag(id: $tagId, data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+  updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
+    data {
+      id
+    }
+  }
+}
+
+query getAllLocationTags {
+  locationTags {
+    data {
+      id
+      attributes {
+        name
+        synonyms {
+          name
+        }
+      }
+    }
+  }
+}
+
+mutation updateLocationName($tagId: ID!, $name: String!) {
+  updateLocationTag(id: $tagId, data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+  updateLocationTag(id: $tagId, data: { synonyms: $synonyms }) {
+    data {
+      id
+    }
+  }
+}
+
+query getAllPersonTags {
+  personTags {
+    data {
+      id
+      attributes {
+        name
+        synonyms {
+          name
+        }
+      }
+    }
+  }
+}
+
+mutation updatePersonName($tagId: ID!, $name: String!) {
+  updatePersonTag(id: $tagId, data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updatePersonSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
+  updatePersonTag(id: $tagId, data: { synonyms: $synonyms }) {
+    data {
+      id
     }
   }
 }
@@ -356,6 +496,62 @@ query getDecadePreviewThumbnails {
 mutation login($username: String!, $password: String!) {
   login(input: { identifier: $username, password: $password }) {
     jwt
+  }
+}
+
+mutation createPersonTag($name: String!) {
+  createPersonTag(data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createKeywordTag($name: String!) {
+  createKeywordTag(data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createLocationTag($name: String!) {
+  createLocationTag(data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updatePicture($pictureId: ID!, $data: PictureInput!) {
+  updatePicture(id: $pictureId, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createPicture($data: PictureInput!) {
+  createPicture(data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteUpload($id: ID!) {
+  deleteUploadFile(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deletePicture($id: ID!) {
+  deletePicture(id: $id) {
+    data {
+      id
+    }
   }
 }
 

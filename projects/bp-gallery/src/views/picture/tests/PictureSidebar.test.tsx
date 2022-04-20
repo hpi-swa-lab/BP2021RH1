@@ -13,17 +13,21 @@ const CommentsContainerMockComponent = (props: any) => {
 };
 jest.mock('../comments/CommentsContainer', () => CommentsContainerMockComponent);
 
-describe('PictureInfo', () => {
+const PictureInfoMock = jest.fn();
+const PictureInfoMockComponent = (props: any) => {
+  PictureInfoMock(props);
+  return <div>PictureInfoMock</div>;
+};
+jest.mock('../../shared/picture-info/PictureInfo.tsx', () => PictureInfoMockComponent);
+
+describe('PictureSidebar', () => {
   it('should be able to open and close', async () => {
     const { container } = renderWithPictureContextMocks(
-      <PictureSidebar
-        picture={flattenQueryResponseData(PictureMocks) as FlatPicture}
-        pictureId={'1'}
-      />
+      <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
     const openCloseButton = container.querySelector('.quick-access-buttons button');
     expect(openCloseButton).toBeInTheDocument();
-    expect(container.querySelector('.picture-info-container')?.className).toContain('closed');
+    expect(container.querySelector('.picture-sidebar')?.className).toContain('closed');
     fireEvent(
       openCloseButton!,
       new MouseEvent('click', {
@@ -32,16 +36,13 @@ describe('PictureInfo', () => {
       })
     );
     await waitFor(async () => {
-      expect(container.querySelector('.picture-info-container')?.className).not.toContain('closed');
+      expect(container.querySelector('.picture-sidebar')?.className).not.toContain('closed');
     });
   });
 
   it('should render the comments container', async () => {
     renderWithPictureContextMocks(
-      <PictureSidebar
-        picture={flattenQueryResponseData(PictureMocks) as FlatPicture}
-        pictureId={'1'}
-      />
+      <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
 
     const commentsContainer = screen.getByText('CommentsContainerMock');
