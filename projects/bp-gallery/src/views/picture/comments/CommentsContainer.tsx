@@ -22,6 +22,7 @@ const CommentsContainer = ({
         <Icon>question_answer</Icon>
         {t('common.comments')}
       </h2>
+      <p>{t('common.comments-info')}</p>
       <div className='comment-container'>
         {comments?.map((comment: FlatComment) => (
           <CommentVerification comment={comment} key={comment.id}>
