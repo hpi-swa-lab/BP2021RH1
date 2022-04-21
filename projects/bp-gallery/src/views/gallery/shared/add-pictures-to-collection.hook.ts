@@ -20,7 +20,7 @@ const useAddPicturesToCollection = () => {
       if (!id) {
         return;
       }
-      const pictureData: any[] | undefined = data.collection?.data?.attributes?.pictures?.data; // ugh
+      const pictureData: any[] | undefined = data.collection?.data?.attributes?.pictures?.data; // ugly but more performant than simplify hook
       const pictures: string[] = pictureData?.map((p: any) => p.id as string) ?? [];
       setPicturesForCollection({
         variables: {
