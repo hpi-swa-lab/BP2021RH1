@@ -1,3 +1,5 @@
+@import '../../../shared/style.scss';
+
 .picture-preview {
   cursor: pointer;
   position: relative;
@@ -29,15 +31,16 @@
     .adornment {
       cursor: pointer;
       position: absolute;
-      color: #5a5a5a;
+      color: #0c0c0c;
       width: 2rem;
       height: 2rem;
       background: white;
-      border-radius: 1rem;
+      border-radius: 0.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+      border: 1px solid $backgroundColor;
       z-index: 2;
 
       &:hover {
@@ -45,24 +48,20 @@
       }
 
       &.top-left {
-        top: 0;
-        left: 0;
-        transform: translate(-50%, -50%);
+        top: 5px;
+        left: 5px;
       }
       &.top-right {
-        top: 0;
-        right: 0;
-        transform: translate(50%, -50%);
+        top: 5px;
+        right: 5px;
       }
       &.bottom-left {
-        bottom: 0;
-        left: 0;
-        transform: translate(-50%, 50%);
+        bottom: 5px;
+        left: 5px;
       }
       &.bottom-right {
-        bottom: 0;
-        right: 0;
-        transform: translate(50%, 50%);
+        bottom: 5px;
+        right: 5px;
       }
     }
   }

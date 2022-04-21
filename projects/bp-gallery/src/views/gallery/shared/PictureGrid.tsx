@@ -7,6 +7,9 @@ import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animati
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
+import BulkOperationsPanel from './BulkOperationsPanel';
+import { useTranslation } from 'react-i18next';
+import useAddPicturesToCollection from './add-pictures-to-collection.hook';
 import useDeletePicture from './helpers/delete-picture.hook';
 
 export type PictureGridProps = {
@@ -27,6 +30,9 @@ const PictureGrid = ({
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
   const { role } = useAuth();
+  const { t } = useTranslation();
+
+  const addPicturesToCollection = useAddPicturesToCollection();
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
@@ -89,6 +95,8 @@ const PictureGrid = ({
     [setFocusedPicture]
   );
 
+  const [selectedPictures, setSelectedPictures] = useState<FlatPicture[]>([]);
+
   const pictureAdornments =
     role >= AuthRole.CURATOR
       ? [
@@ -99,12 +107,41 @@ const PictureGrid = ({
             },
             position: 'top-right',
           } as PicturePreviewAdornment,
+          {
+            icon: picture =>
+              selectedPictures.includes(picture) ? 'check_box' : 'check_box_outline_blank',
+            onClick: clickedPicture => {
+              setSelectedPictures(currentSelected =>
+                currentSelected.includes(clickedPicture)
+                  ? currentSelected.filter(p => p !== clickedPicture)
+                  : [...currentSelected, clickedPicture]
+              );
+            },
+            position: 'bottom-left',
+          } as PicturePreviewAdornment,
         ]
       : undefined;
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
       <PictureUploadArea {...uploadAreaProps} />
+      {Boolean(selectedPictures.length) && (
+        <BulkOperationsPanel
+          operations={[
+            {
+              name: t('curator.addToCollection'),
+              icon: 'add',
+              action: () => {
+                // Hardcoded id! Just for test purposes!
+                addPicturesToCollection(
+                  '6',
+                  selectedPictures.map(p => p.id)
+                );
+              },
+            },
+          ]}
+        />
+      )}
       <div className='picture-grid'>
         {table.map((row, rowindex) => {
           return (
