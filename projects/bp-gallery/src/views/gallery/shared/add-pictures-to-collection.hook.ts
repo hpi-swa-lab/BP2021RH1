@@ -15,7 +15,6 @@ const useAddPicturesToCollection = () => {
       }
       const pictures: string[] =
         data.collection?.data?.attributes?.pictures?.data.map(p => p.id as string) ?? [];
-      console.log(pictures.concat(newPictures));
       setPicturesForCollection({
         variables: {
           collectionId: id,
