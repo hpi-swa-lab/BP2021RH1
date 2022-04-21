@@ -19,7 +19,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('PictureView', () => {
-  const imageURL = 'test-image.jpg';
+  const imageURL = 'test-image.jpg?updatedAt=21042022';
 
   it('should render the picture', async () => {
     const { container } = renderWithAPIMocks(
