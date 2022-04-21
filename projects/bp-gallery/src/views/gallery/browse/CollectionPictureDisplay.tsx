@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../shared/Loading';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
-import PictureScrollGrid from '../shared/PictureScrollGrid';
+import PictureScrollOverview from '../shared/PictureScrollOverview';
 import SubCollections from './SubCollections';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import CollectionDescription from './CollectionDescription';
@@ -88,11 +88,10 @@ const CollectionPictureDisplay = ({
             communityView={!!picturePublishingDate}
           />
         )}
-        <PictureScrollGrid
+        <PictureScrollOverview
           filters={getPictureFilters(collection.id, picturePublishingDate)}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
-          hashbase={collection.name}
           uploadAreaProps={uploadAreaProps(collection)}
         />
       </div>

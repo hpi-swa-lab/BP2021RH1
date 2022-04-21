@@ -1,46 +1,34 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import './PictureGrid.scss';
-import PictureView from '../../picture/PictureView';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import hashCode from './helpers/hash-code';
-import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animation.helpers';
-import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
-import BulkOperationsPanel from './BulkOperationsPanel';
-import { useTranslation } from 'react-i18next';
-import useAddPicturesToCollection from './add-pictures-to-collection.hook';
-import useDeletePicture from './helpers/delete-picture.hook';
+import { PictureOverviewContext } from './PictureOverview';
 
-export type PictureGridProps = {
-  pictures: FlatPicture[];
-  hashBase: string;
-  loading: boolean;
-  refetch: () => void;
-} & Partial<PictureUploadAreaProps>;
+const PictureGrid = () => {
+  const {
+    selectedPictures,
+    setSelectedPictures,
+    navigateToPicture,
+    pictures,
+    loading,
+    refetch,
+    deletePicture,
+  } = useContext(PictureOverviewContext);
 
-const PictureGrid = ({
-  pictures,
-  hashBase,
-  loading,
-  refetch,
-  ...uploadAreaProps
-}: PictureGridProps) => {
   const calculateMaxRowCount = () =>
-    Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
+    Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 150));
+
+  const hashBase = useMemo(() => {
+    return pictures.length ? pictures[0].media?.url ?? '' : '';
+  }, [pictures]);
 
   const { role } = useAuth();
-  const { t } = useTranslation();
-
-  const addPicturesToCollection = useAddPicturesToCollection();
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
-  const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
-  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
-  const [transitioning, setTransitioning] = useState<boolean>(false);
-
-  const deletePicture = useDeletePicture();
+  const [grid, setGrid] = useState<(FlatPicture | undefined)[][]>([[]]);
 
   // Initialize table with pictures from props
   useEffect(() => {
@@ -64,7 +52,7 @@ const PictureGrid = ({
     for (let i = currentRowCount; i < rowLength; i++) {
       buffer[buffer.length - 1].push(undefined);
     }
-    setTable(buffer);
+    setGrid(buffer);
   }, [maxRowCount, minRowCount, pictures, hashBase]);
 
   const onResize = useCallback(() => {
@@ -83,20 +71,6 @@ const PictureGrid = ({
     };
   }, [onResize]);
 
-  const navigateToPicture = useCallback(
-    (id: string) => {
-      setTransitioning(true);
-      setFocusedPicture(id);
-      window.history.pushState({}, '', `/picture/${id}`);
-      zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
-        setTransitioning(false);
-      });
-    },
-    [setFocusedPicture]
-  );
-
-  const [selectedPictures, setSelectedPictures] = useState<FlatPicture[]>([]);
-
   const pictureAdornments =
     role >= AuthRole.CURATOR
       ? [
@@ -111,7 +85,7 @@ const PictureGrid = ({
             icon: picture =>
               selectedPictures.includes(picture) ? 'check_box' : 'check_box_outline_blank',
             onClick: clickedPicture => {
-              setSelectedPictures(currentSelected =>
+              setSelectedPictures((currentSelected: FlatPicture[]) =>
                 currentSelected.includes(clickedPicture)
                   ? currentSelected.filter(p => p !== clickedPicture)
                   : [...currentSelected, clickedPicture]
@@ -123,66 +97,33 @@ const PictureGrid = ({
       : undefined;
 
   return (
-    <div className={`${transitioning ? 'transitioning' : ''}`}>
-      <PictureUploadArea {...uploadAreaProps} />
-      {Boolean(selectedPictures.length) && (
-        <BulkOperationsPanel
-          operations={[
-            {
-              name: t('curator.addToCollection'),
-              icon: 'add',
-              action: () => {
-                // Hardcoded id! Just for test purposes!
-                addPicturesToCollection(
-                  '232',
-                  selectedPictures.map(p => p.id)
+    <div className='picture-grid'>
+      {grid.map((row, rowindex) => {
+        return (
+          <div key={rowindex} className='row'>
+            {row.map((picture, colindex) => {
+              if (!picture) {
+                return (
+                  <div
+                    key={`${rowindex}${colindex}`}
+                    className='picture-placeholder'
+                    style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
+                  />
                 );
-              },
-            },
-          ]}
-        />
-      )}
-      <div className='picture-grid'>
-        {table.map((row, rowindex) => {
-          return (
-            <div key={rowindex} className='row'>
-              {row.map((picture, colindex) => {
-                if (!picture) {
-                  return (
-                    <div
-                      key={`${rowindex}${colindex}`}
-                      className='picture-placeholder'
-                      style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
-                    />
-                  );
-                } else {
-                  return (
-                    <PicturePreview
-                      key={`${rowindex}${colindex}`}
-                      picture={picture}
-                      onClick={() => navigateToPicture(picture.id)}
-                      adornments={pictureAdornments}
-                    />
-                  );
-                }
-              })}
-            </div>
-          );
-        })}
-      </div>
-      {focusedPicture && (
-        <PictureView
-          initialPictureId={focusedPicture}
-          siblingIds={pictures.map(p => p.id)}
-          onBack={(picid: string) => {
-            setTransitioning(true);
-            zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
-              setTransitioning(false);
-              setFocusedPicture(undefined);
-            });
-          }}
-        />
-      )}
+              } else {
+                return (
+                  <PicturePreview
+                    key={`${rowindex}${colindex}`}
+                    picture={picture}
+                    onClick={() => navigateToPicture(picture.id)}
+                    adornments={pictureAdornments}
+                  />
+                );
+              }
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 };

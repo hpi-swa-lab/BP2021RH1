@@ -2,23 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';
 import { PictureUploadAreaProps } from './PictureUploadArea';
+import PictureOverview from './PictureOverview';
 
-const PictureScrollGrid = ({
+const PictureScrollOverview = ({
   filters,
   scrollPos,
   scrollHeight,
-  hashbase,
   previewPictureCallback,
   uploadAreaProps,
 }: {
   filters: PictureFiltersInput;
   scrollPos: number;
   scrollHeight: number;
-  hashbase: string;
   previewPictureCallback?: (picture: FlatPicture) => void;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
 }) => {
@@ -71,7 +69,7 @@ const PictureScrollGrid = ({
     return <Loading />;
   } else if (pictures?.length) {
     return (
-      <PictureGrid
+      <PictureOverview
         {...uploadAreaProps}
         onUploaded={() => {
           refetch();
@@ -81,7 +79,6 @@ const PictureScrollGrid = ({
         }}
         refetch={refetch}
         pictures={pictures}
-        hashBase={hashbase}
         loading={isFetching}
       />
     );
@@ -90,4 +87,4 @@ const PictureScrollGrid = ({
   }
 };
 
-export default PictureScrollGrid;
+export default PictureScrollOverview;

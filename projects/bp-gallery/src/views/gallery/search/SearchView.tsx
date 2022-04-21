@@ -4,7 +4,7 @@ import { Location } from 'history';
 import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
-import PictureScrollGrid from '../shared/PictureScrollGrid';
+import PictureScrollOverview from '../shared/PictureScrollOverview';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 
@@ -122,11 +122,10 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
           {!search ? (
             <SearchHub searchSnippet={searchSnippet} />
           ) : (
-            <PictureScrollGrid
+            <PictureScrollOverview
               filters={filtersClause}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
-              hashbase={search}
               previewPictureCallback={(pic: FlatPicture) => {
                 if (pic !== previewPicture) {
                   setPreviewPicture(pic);
