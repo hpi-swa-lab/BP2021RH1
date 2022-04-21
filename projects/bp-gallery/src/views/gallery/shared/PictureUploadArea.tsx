@@ -10,6 +10,7 @@ import uploadMediaFiles from './helpers/upload-media-files';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
+import { cloneDeep } from 'lodash';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
@@ -95,8 +96,9 @@ const PictureUploadArea = ({
                 icon: 'close',
                 onClick: () => {
                   setNewFiles(fileList => {
-                    fileList.splice(index, 1);
-                    return [...fileList];
+                    const clone = cloneDeep(fileList);
+                    clone.splice(index, 1);
+                    return clone;
                   });
                 },
               },
