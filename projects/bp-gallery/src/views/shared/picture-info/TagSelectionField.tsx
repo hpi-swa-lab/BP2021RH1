@@ -3,6 +3,7 @@ import { GraphQLError } from 'graphql';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
+import { ComponentCommonSynonyms, Maybe } from '../../../graphql/APIConnector';
 import { AlertContext, AlertType } from '../AlertWrapper';
 
 interface TagFields {
@@ -10,6 +11,7 @@ interface TagFields {
   id: string;
   verified?: boolean;
   createValue?: string;
+  synonyms?: Maybe<Maybe<ComponentCommonSynonyms>[]> | undefined;
   icon?: string;
   onClick?: () => void;
 }
@@ -46,7 +48,13 @@ const TagSelectionField = <T extends TagFields>({
     [onChange]
   );
 
-  const filter = createFilterOptions<T>();
+  const filter = createFilterOptions<T>({
+    ignoreCase: true,
+    matchFrom: 'any',
+    stringify: (option: T) => {
+      return option.name + '' + (option.synonyms?.map(s => s?.name ?? '').join() ?? '');
+    },
+  });
 
   if (role >= AuthRole.CURATOR) {
     return (

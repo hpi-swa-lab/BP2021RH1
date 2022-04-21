@@ -30,7 +30,9 @@ const PicturePreview = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const thumbnailUrl = useMemo(() => {
-    return `${String(picture.media?.formats?.small.url || '')}`;
+    return `${String(
+      (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || ''
+    )}`;
   }, [picture]);
 
   return (
@@ -44,7 +46,13 @@ const PicturePreview = ({
       }}
     >
       <img
-        src={pictureOrigin === PictureOrigin.REMOTE ? asApiPath(`/${thumbnailUrl}`) : thumbnailUrl}
+        src={
+          pictureOrigin === PictureOrigin.REMOTE
+            ? asApiPath(
+                `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
+              )
+            : thumbnailUrl
+        }
       />
       <div className='adornments'>
         {adornments?.map((adornment, index) => (

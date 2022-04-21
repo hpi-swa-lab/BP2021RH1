@@ -10,13 +10,16 @@ import 'react-date-range/dist/theme/default.css';
 import { de } from 'date-fns/locale';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import i18n from '../../../i18n';
+import { cloneDeep } from 'lodash';
 
 const DateRangeSelectionField = ({
   timeRangeTag,
   onChange,
+  onTouch,
 }: {
   timeRangeTag?: FlatTimeRangeTag;
   onChange: (timeRangeTag: FlatTimeRangeTag) => void;
+  onTouch: () => void;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -25,7 +28,7 @@ const DateRangeSelectionField = ({
   const [timeRange, setTimeRange] = useState<FlatTimeRangeTag | undefined>();
 
   useEffect(() => {
-    setTimeRange(timeRangeTag);
+    setTimeRange(cloneDeep(timeRangeTag));
   }, [setTimeRange, timeRangeTag]);
 
   const open = Boolean(anchorElement);
@@ -88,6 +91,7 @@ const DateRangeSelectionField = ({
               if (range.selection.startDate && range.selection.endDate) {
                 const s = range.selection.startDate.toISOString();
                 const e = range.selection.endDate.toISOString();
+                onTouch();
                 setTimeRange(oldTimeRange => {
                   const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
                   tRT.start = s;

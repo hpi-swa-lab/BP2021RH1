@@ -68,7 +68,9 @@ const PictureView = ({
   // Api connection
   const [getPictureInfo, { data, loading, error }] = usePrefetchPictureHook(pictureId, siblingIds);
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-  const pictureLink = picture?.media?.url ? asApiPath(picture.media.url) : '';
+  const pictureLink = picture?.media?.url
+    ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
+    : '';
 
   // Execute lazy query (e.g. when triggering the picture from the picture grid)
   const setUpPicture = useCallback(
