@@ -258,9 +258,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
 
   return (
     <div className='search-view'>
-      <div className='breadcrumb'>
-        <SearchBreadcrumbs searchParams={searchParams} />
-      </div>
+      <div className='breadcrumb'></div>
       <div className='search-content'>
         <div className='below-search-bar'>
           <div>
@@ -286,9 +284,8 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             >
               <Button />
             </SearchInfoTooltip>
-            {!isValidSearch && (
-              <div>Jahreszahlen müssen in der Form 1989 oder 89 angegeben werden.</div>
-            )}
+            {!isValidSearch && <div>{t('search.wrong-time-input-info')}</div>}
+            <SearchBreadcrumbs searchParams={searchParams} />
           </div>
         </div>
         {!search ? (
