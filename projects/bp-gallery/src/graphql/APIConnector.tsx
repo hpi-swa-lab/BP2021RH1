@@ -1721,6 +1721,15 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
+export type GetPicturesIdQueryVariables = Exact<{
+  filters: PictureFiltersInput;
+  pagination: PaginationArg;
+}>;
+
+export type GetPicturesIdQuery = {
+  pictures?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
+};
+
 export type GetCollectionWithPicturesPublishedAfterQueryVariables = Exact<{
   date: Scalars['DateTime'];
 }>;
@@ -2594,6 +2603,62 @@ export type GetPicturesLazyQueryHookResult = ReturnType<typeof useGetPicturesLaz
 export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQuery,
   GetPicturesQueryVariables
+>;
+
+export const GetPicturesIdDocument = gql`
+  query getPicturesId($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+    pictures(filters: $filters, pagination: $pagination) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesIdQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesIdQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetPicturesIdQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPicturesIdQuery, GetPicturesIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesIdQuery, GetPicturesIdQueryVariables>(
+    GetPicturesIdDocument,
+    options
+  );
+}
+
+export function useGetPicturesIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPicturesIdQuery, GetPicturesIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesIdQuery, GetPicturesIdQueryVariables>(
+    GetPicturesIdDocument,
+    options
+  );
+}
+
+export type GetPicturesIdQueryHookResult = ReturnType<typeof useGetPicturesIdQuery>;
+
+export type GetPicturesIdLazyQueryHookResult = ReturnType<typeof useGetPicturesIdLazyQuery>;
+
+export type GetPicturesIdQueryResult = Apollo.QueryResult<
+  GetPicturesIdQuery,
+  GetPicturesIdQueryVariables
 >;
 
 export const GetCollectionWithPicturesPublishedAfterDocument = gql`

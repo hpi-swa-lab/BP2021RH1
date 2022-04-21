@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
+import {
+  PictureFiltersInput,
+  useGetPicturesIdQuery,
+  useGetPicturesQuery,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
@@ -24,6 +28,7 @@ const PictureScrollGrid = ({
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
   resultPictureCallback?: (pictures: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -39,8 +44,19 @@ const PictureScrollGrid = ({
     },
     notifyOnNetworkStatusChange: true,
   });
+
+  const totalPictureData = useGetPicturesIdQuery({
+    variables: {
+      filters,
+      pagination: {},
+    },
+    notifyOnNetworkStatusChange: true,
+  });
+
+  const totalPicturesIds: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
+    totalPictureData.data
+  )?.pictures;
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (resultPictureCallback) {
