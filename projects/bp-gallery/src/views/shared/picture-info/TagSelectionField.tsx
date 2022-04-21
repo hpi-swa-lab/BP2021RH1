@@ -52,6 +52,8 @@ const TagSelectionField = <T extends TagFields>({
     ignoreCase: true,
     matchFrom: 'any',
     stringify: (option: T) => {
+      // This function is returning the value used when searching. In order to also be
+      // able to search for synonyms, we conccat it with the real name here
       return option.name + '' + (option.synonyms?.map(s => s?.name ?? '').join() ?? '');
     },
   });

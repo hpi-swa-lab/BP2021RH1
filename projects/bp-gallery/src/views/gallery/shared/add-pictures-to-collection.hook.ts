@@ -4,31 +4,42 @@ import {
   useSetPicturesForCollectionMutation,
 } from '../../../graphql/APIConnector';
 
+/**
+ * This convoluted function does:
+ *  - load all existing pictures for the collection to add new pictures to
+ *  - concats the new pictures to that array
+ *  - set the pictures array on that collection
+ */
 const useAddPicturesToCollection = () => {
-  const [newPictures, setNewPictures] = useState<string[]>([]);
+  const [picturesToAdd, setPicturesToAdd] = useState<string[]>([]);
   const [setPicturesForCollection] = useSetPicturesForCollectionMutation();
-  const [getPicturesForCollection] = useGetPicturesForCollectionLazyQuery({
-    onCompleted: data => {
+
+  const setNewPictures = useCallback(
+    data => {
       const id = data.collection?.data?.id;
       if (!id) {
         return;
       }
-      const pictures: string[] =
-        data.collection?.data?.attributes?.pictures?.data.map(p => p.id as string) ?? [];
-      console.log(pictures.concat(newPictures));
+      const pictureData: any[] | undefined = data.collection?.data?.attributes?.pictures?.data; // ugh
+      const pictures: string[] = pictureData?.map((p: any) => p.id as string) ?? [];
       setPicturesForCollection({
         variables: {
           collectionId: id,
-          pictureIds: pictures.concat(newPictures),
+          pictureIds: pictures.concat(picturesToAdd),
         },
       });
     },
+    [picturesToAdd, setPicturesForCollection]
+  );
+
+  const [getPicturesForCollection] = useGetPicturesForCollectionLazyQuery({
+    onCompleted: setNewPictures,
     fetchPolicy: 'network-only',
   });
 
   return useCallback(
     (collectionId: string, pictureIds: string[]) => {
-      setNewPictures(pictureIds);
+      setPicturesToAdd(pictureIds);
       getPicturesForCollection({
         variables: {
           collectionId,

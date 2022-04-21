@@ -31,7 +31,9 @@ const PictureEditDialog = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const editorInstance = editorRef.current?.getInstance();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const dataUrl = editorInstance.toDataURL() as string;
+    const dataUrl = editorInstance.toDataURL({
+      format: 'jpeg',
+    }) as string;
     const blob = await (await fetch(dataUrl)).blob();
     const file = new File([blob], `${dayjs().format('YYYYMMDDHHmm_ss')}.jpg`, {
       type: 'image/jpeg',

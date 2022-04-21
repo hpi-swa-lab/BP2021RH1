@@ -29,10 +29,8 @@ const PicturePreview = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const thumbnailUrl = useMemo(() => {
-    return `${String(
-      (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || ''
-    )}`;
+  const thumbnailUrl = useMemo((): string => {
+    return (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || '';
   }, [picture]);
 
   return (
@@ -45,6 +43,7 @@ const PicturePreview = ({
         flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
       }}
     >
+      {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
       <img
         src={
           pictureOrigin === PictureOrigin.REMOTE
