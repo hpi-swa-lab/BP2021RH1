@@ -10,9 +10,11 @@ import SearchIcon from '@mui/icons-material/Search';
 const SearchBar = ({
   searchParams,
   onValueChange,
+  onInvalidEntry,
 }: {
   searchParams?: URLSearchParams;
   onValueChange?: (snippet?: string) => void;
+  onInvalidEntry: (value: boolean) => void;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -21,7 +23,11 @@ const SearchBar = ({
 
   const onSearchStart = (searchValue: string) => {
     if (searchValue === '') return;
-    history.push(addNewParamToSearchPath(searchType, searchValue, searchParams), {
+
+    const searchRes = addNewParamToSearchPath(searchType, searchValue, searchParams);
+    onInvalidEntry(searchRes.isValid);
+
+    history.push(searchRes.searchVal, {
       showBack: true,
     });
     textFieldRef.current.value = '';
@@ -97,7 +103,7 @@ const SearchBar = ({
         }}
         placeholder={t('search.search-for-type')}
         variant='outlined'
-      ></TextField>
+      />
     </div>
   );
 };

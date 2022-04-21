@@ -50,13 +50,16 @@ export const addNewParamToSearchPath = (
   newParamType: SearchType,
   searchRequest: string,
   prevParams?: URLSearchParams
-): string => {
+): {
+  isValid: boolean;
+  searchVal: any;
+} => {
   const searchParams = prevParams ? prevParams : new URLSearchParams();
   const paramValues = searchRequest.split(' ');
 
   if (newParamType === SearchType.DECADE) {
     if (!(parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4)))
-      return asSearchPath(searchParams);
+      return { searchVal: asSearchPath(searchParams), isValid: false };
   }
 
   paramValues.forEach(element => {
@@ -64,7 +67,7 @@ export const addNewParamToSearchPath = (
       searchParams.append(newParamType, element);
     }
   });
-  return asSearchPath(searchParams);
+  return { searchVal: asSearchPath(searchParams), isValid: true };
 };
 
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
@@ -72,7 +75,7 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
 
   if (searchParams.has(SearchType.ALL)) {
     const params = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
-    params.forEach(function (value, key) {
+    params.forEach(function (value) {
       if (value === 'pre50') {
         value = '40';
       }
@@ -224,6 +227,7 @@ const paramToTimefilter = (timeParam: string) => {
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
+  const [isValidSearch, setIsValidSearch] = useState<boolean>(true);
   const { search }: Location = useLocation();
   const { t } = useTranslation();
 
@@ -267,6 +271,9 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
                   setSearchSnippet(snippet ?? '');
                 }}
                 searchParams={searchParams}
+                onInvalidEntry={(value: boolean) => {
+                  setIsValidSearch(value);
+                }}
               />
             )}
             <SearchInfoTooltip
@@ -279,6 +286,9 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             >
               <Button />
             </SearchInfoTooltip>
+            {!isValidSearch && (
+              <div>Jahreszahlen müssen in der Form 1989 oder 89 angegeben werden.</div>
+            )}
           </div>
         </div>
         {!search ? (
