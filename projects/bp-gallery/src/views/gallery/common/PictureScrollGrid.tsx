@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
+import {
+  PictureFiltersInput,
+  useGetPicturesIdQuery,
+  useGetPicturesQuery,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
@@ -22,6 +26,7 @@ const PictureScrollGrid = ({
   previewPictureCallback?: (picture: FlatPicture) => void;
   resultPictureCallback?: (pictures: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -35,8 +40,19 @@ const PictureScrollGrid = ({
     },
     notifyOnNetworkStatusChange: true,
   });
+
+  const totalPictureData = useGetPicturesIdQuery({
+    variables: {
+      filters,
+      pagination: {},
+    },
+    notifyOnNetworkStatusChange: true,
+  });
+
+  const totalPicturesIds: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
+    totalPictureData.data
+  )?.pictures;
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (previewPictureCallback && pictures && pictures.length) {
@@ -76,7 +92,15 @@ const PictureScrollGrid = ({
   } else if (loading && !pictures) {
     return <Loading />;
   } else if (pictures?.length) {
-    return <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />;
+    return (
+      <>
+        <div>
+          {new Intl.NumberFormat('de-DE').format(totalPicturesIds?.length ?? 0)}{' '}
+          {t('common.pictures')}
+        </div>
+        <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />
+      </>
+    );
   } else if (pictures?.length === 0 && resultPictureCallback) {
     return <div> {t('common.no-picture')} </div>;
   } else {
