@@ -82,6 +82,7 @@ query getPictureInfo($pictureId: ID!) {
             id
             attributes {
               url
+              updatedAt
             }
           }
         }
@@ -112,6 +113,7 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
               width
               height
               formats
+              updatedAt
             }
           }
         }
@@ -539,16 +541,31 @@ mutation createPicture($data: PictureInput!) {
   }
 }
 
-mutation deleteUpload($id: ID!) {
-  deleteUploadFile(id: $id) {
+mutation unpublishPicture($id: ID!) {
+  updatePicture(id: $id, data: { publishedAt: null }) {
     data {
       id
     }
   }
 }
 
-mutation deletePicture($id: ID!) {
-  deletePicture(id: $id) {
+query getPicturesForCollection($collectionId: ID!) {
+  collection(id: $collectionId) {
+    data {
+      id
+      attributes {
+        pictures {
+          data {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
+  updateCollection(id: $collectionId, data: { pictures: $pictureIds }) {
     data {
       id
     }
