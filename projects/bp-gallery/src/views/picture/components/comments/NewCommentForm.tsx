@@ -19,7 +19,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       setCommentText('');
       openAlert({
         alertType: AlertType.INFO,
-        message: t('common.comment-alert'),
+        message: t('common.comments-alert'),
       });
     },
     onError: error => {
