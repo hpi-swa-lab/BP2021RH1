@@ -69,7 +69,7 @@ describe('SearchView called with parameters which match at least one picture', (
 
   it('should render at least one picture', async () => {
     await waitFor(() => {
-      // As every other component besides the PictureScrollGrid is mocked, the remaining image(s) have to be the query results
+      // As every other component besides the PictureScrollOverview is mocked, the remaining image(s) have to be the query results
       const imageTags = document.querySelector('.search-view')?.getElementsByTagName('img');
       expect(imageTags).toBeDefined();
       expect(imageTags?.length).toBeGreaterThan(0);

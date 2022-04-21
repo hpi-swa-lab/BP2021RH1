@@ -17,9 +17,9 @@ const CommunityViewMocks: MockedResponse[] = [
 describe('BrowseView', () => {
   describe('CommunityView', () => {
     describe('Integration', () => {
-      describe('With PictureScrollGrid Mock', () => {
-        const PictureScrollGridMock = () => <div>PictureScrollGridMock</div>;
-        jest.mock('../../shared/PictureScrollGrid', () => PictureScrollGridMock);
+      describe('With PictureScrollOverview Mock', () => {
+        const PictureScrollOverviewMock = () => <div>PictureScrollOverviewMock</div>;
+        jest.mock('../../shared/PictureScrollOverview', () => PictureScrollOverviewMock);
 
         test('CommunityView does not render/contain Das Herbert-Ahrens-Bilderarchiv as a collection', () => {
           renderRouteWithAPIMocks('/browse/latest', CommunityViewMocks);

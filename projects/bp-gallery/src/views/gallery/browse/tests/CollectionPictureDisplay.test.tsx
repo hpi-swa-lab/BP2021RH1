@@ -16,12 +16,12 @@ const SubCollectionsMockComponent = (props: any) => {
 };
 jest.mock('../SubCollections', () => SubCollectionsMockComponent);
 
-const PictureScrollGridMock = jest.fn();
-const PictureScrollGridMockComponent = (props: any) => {
-  PictureScrollGridMock(props);
-  return <div>PictureScrollGridMock</div>;
+const PictureScrollOverviewMock = jest.fn();
+const PictureScrollOverviewMockComponent = (props: any) => {
+  PictureScrollOverviewMock(props);
+  return <div>PictureScrollOverviewMock</div>;
 };
-jest.mock('../../shared/PictureScrollGrid', () => PictureScrollGridMockComponent);
+jest.mock('../../shared/PictureScrollOverview', () => PictureScrollOverviewMockComponent);
 describe('CollectionPictureDisplay', () => {
   describe('CommunityViewMode', () => {
     describe('Unit', () => {
@@ -29,40 +29,12 @@ describe('CollectionPictureDisplay', () => {
       const childCollections = [
         {
           name: 'Hohegeiß',
-          thumbnail: {
-            media: {
-              formats: {
-                medium: {
-                  ext: '.jpg',
-                  url: 'test-image2.jpg',
-                  hash: '',
-                  mime: 'image2/jpeg',
-                  name: 'Hohegeiß',
-                  path: null,
-                  size: -1,
-                },
-              },
-            },
-          },
+          thumbnail: 'test-image2.jpg',
           id: '6',
         },
         {
           name: 'Walpurgis',
-          thumbnail: {
-            media: {
-              formats: {
-                medium: {
-                  ext: '.jpg',
-                  url: 'test-image2.jpg',
-                  hash: '',
-                  mime: 'image2/jpeg',
-                  name: 'Walpurgis',
-                  path: null,
-                  size: -1,
-                },
-              },
-            },
-          },
+          thumbnail: 'test-image2.jpg',
           id: '3',
         },
       ];
@@ -123,7 +95,7 @@ describe('CollectionPictureDisplay', () => {
         );
       });
 
-      test('Renders PictureScrollGrid component', () => {
+      test('Renders PictureScrollOverview component', () => {
         render(
           <CollectionPictureDisplay
             path={path}
@@ -134,10 +106,10 @@ describe('CollectionPictureDisplay', () => {
           />
         );
 
-        const pictureScrollGridDetails = screen.getByText('PictureScrollGridMock');
-        expect(pictureScrollGridDetails).toBeInTheDocument();
+        const PictureScrollOverviewDetails = screen.getByText('PictureScrollOverviewMock');
+        expect(PictureScrollOverviewDetails).toBeInTheDocument();
 
-        expect(PictureScrollGridMock).toHaveBeenCalledWith(
+        expect(PictureScrollOverviewMock).toHaveBeenCalledWith(
           expect.objectContaining({
             filters: {
               and: [
@@ -147,7 +119,6 @@ describe('CollectionPictureDisplay', () => {
             },
             scrollPos: 0,
             scrollHeight: 0,
-            hashbase: collections[0].name,
           })
         );
       });

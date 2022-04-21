@@ -31,6 +31,7 @@ export const GetPicturesSearchMocks = [
               attributes: {
                 media: {
                   data: {
+                    id: 1,
                     attributes: {
                       formats: {
                         small: {
@@ -39,6 +40,7 @@ export const GetPicturesSearchMocks = [
                       },
                       width: 1,
                       height: 1,
+                      updatedAt: '21042022',
                     },
                   },
                 },

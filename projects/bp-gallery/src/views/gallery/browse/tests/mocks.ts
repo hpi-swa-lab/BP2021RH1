@@ -10,31 +10,7 @@ export const ChildCollectionsMocks = [
       id: 51,
       attributes: {
         name: 'Sole-Therme 1956-1970',
-        thumbnail: [
-          {
-            data: {
-              attributes: {
-                media: {
-                  data: {
-                    attributes: {
-                      formats: {
-                        medium: {
-                          ext: '.jpg',
-                          url: 'test-image2.jpg',
-                          hash: '',
-                          mime: 'image2/jpeg',
-                          name: 'Sole-Therme 1956-1970',
-                          path: null,
-                          size: -1,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ],
+        thumbnail: 'test-image2.jpg',
       },
     },
   },
@@ -43,31 +19,7 @@ export const ChildCollectionsMocks = [
       id: 50,
       attributes: {
         name: 'Sole-Therme 1980-1990',
-        thumbnail: [
-          {
-            data: {
-              attributes: {
-                media: {
-                  data: {
-                    attributes: {
-                      formats: {
-                        medium: {
-                          ext: '.jpg',
-                          url: 'test-image.jpg',
-                          hash: '',
-                          mime: 'image/jpeg',
-                          name: 'Sole-Therme 1980-1990',
-                          path: null,
-                          size: -1,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ],
+        thumbnail: 'test-image.jpg',
       },
     },
   },
@@ -76,31 +28,7 @@ export const ChildCollectionsMocks = [
       id: 52,
       attributes: {
         name: 'Sole-Therme not latest',
-        thumbnail: [
-          {
-            data: {
-              attributes: {
-                media: {
-                  data: {
-                    attributes: {
-                      formats: {
-                        medium: {
-                          ext: '.jpg',
-                          url: 'test-image.jpg',
-                          hash: '',
-                          mime: 'image/jpeg',
-                          name: 'Sole-Therme not latest',
-                          path: null,
-                          size: -1,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ],
+        thumbnail: 'test-image.jpg',
       },
     },
   },
@@ -112,31 +40,7 @@ export const ChildCollectionsFirstLevelMocks = [
       id: 49,
       attributes: {
         name: 'Sole-Therme',
-        thumbnail: [
-          {
-            data: {
-              attributes: {
-                media: {
-                  data: {
-                    attributes: {
-                      formats: {
-                        medium: {
-                          ext: '.jpg',
-                          url: 'test-image2.jpg',
-                          hash: '',
-                          mime: 'image2/jpeg',
-                          name: 'Sole-Therme',
-                          path: null,
-                          size: -1,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ],
+        thumbnail: 'test-image2.jpg',
       },
     },
   },
@@ -145,31 +49,7 @@ export const ChildCollectionsFirstLevelMocks = [
       id: 42,
       attributes: {
         name: 'Onkel-Pelle',
-        thumbnail: [
-          {
-            data: {
-              attributes: {
-                media: {
-                  data: {
-                    attributes: {
-                      formats: {
-                        medium: {
-                          ext: '.jpg',
-                          url: 'test-image.jpg',
-                          hash: '',
-                          mime: 'image/jpeg',
-                          name: 'Onkel-Pelle',
-                          path: null,
-                          size: -1,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ],
+        thumbnail: 'test-image.jpg',
       },
     },
   },
@@ -178,31 +58,7 @@ export const ChildCollectionsFirstLevelMocks = [
       id: 2,
       attributes: {
         name: 'Not latest',
-        thumbnail: [
-          {
-            data: {
-              attributes: {
-                media: {
-                  data: {
-                    attributes: {
-                      formats: {
-                        medium: {
-                          ext: '.jpg',
-                          url: 'test-image.jpg',
-                          hash: '',
-                          mime: 'image/jpeg',
-                          name: 'Not latest',
-                          path: null,
-                          size: -1,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ],
+        thumbnail: 'test-image.jpg',
       },
     },
   },

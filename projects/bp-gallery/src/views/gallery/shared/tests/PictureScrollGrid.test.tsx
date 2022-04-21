@@ -1,14 +1,14 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
-import PictureScrollGrid from '../PictureScrollOverview';
+import PictureScrollOverview from '../PictureScrollOverview';
 import { renderWithAPIMocks } from '../../../../testUtils';
 import { GetPicturesDocumentMocks } from './mocks';
 import { asApiPath } from '../../../../App';
 
-describe('PictureScrollGrid in basic functionality without refetching', () => {
+describe('PictureScrollOverview in basic functionality without refetching', () => {
   it('should render all queried pictures in thumbnail-mode', async () => {
     const { container } = renderWithAPIMocks(
-      <PictureScrollGrid filters={{}} scrollPos={0} scrollHeight={2 * window.innerHeight} />,
+      <PictureScrollOverview filters={{}} scrollPos={0} scrollHeight={2 * window.innerHeight} />,
       GetPicturesDocumentMocks
     );
     await waitFor(() => {
@@ -27,7 +27,7 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
 
   it('should render the error message related to a network error', async () => {
     renderWithAPIMocks(
-      <PictureScrollGrid filters={{ id: { eq: '0' } }} scrollPos={0} scrollHeight={0} />,
+      <PictureScrollOverview filters={{ id: { eq: '0' } }} scrollPos={0} scrollHeight={0} />,
       GetPicturesDocumentMocks
     );
 
@@ -39,7 +39,7 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
 
   it('should render the error message related to an api error', async () => {
     renderWithAPIMocks(
-      <PictureScrollGrid filters={{ id: { eq: '-1' } }} scrollPos={0} scrollHeight={0} />,
+      <PictureScrollOverview filters={{ id: { eq: '-1' } }} scrollPos={0} scrollHeight={0} />,
       GetPicturesDocumentMocks
     );
 
@@ -50,10 +50,10 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
   });
 });
 
-describe('Refetch functionality in PictureScrollGrid', () => {
+describe('Refetch functionality in PictureScrollOverview', () => {
   it('should render more pictures after refetching', async () => {
     const { container } = renderWithAPIMocks(
-      <PictureScrollGrid filters={{}} scrollPos={0} scrollHeight={2 * window.innerHeight} />,
+      <PictureScrollOverview filters={{}} scrollPos={0} scrollHeight={2 * window.innerHeight} />,
       GetPicturesDocumentMocks,
       true
     );
@@ -63,7 +63,7 @@ describe('Refetch functionality in PictureScrollGrid', () => {
     });
 
     renderWithAPIMocks(
-      <PictureScrollGrid
+      <PictureScrollOverview
         filters={{}}
         scrollPos={2 * window.innerHeight} // simulates scrolling to the bottom
         scrollHeight={2 * window.innerHeight}
