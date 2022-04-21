@@ -1,22 +1,24 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import JoditEditor from 'jodit-react';
-import { FlatDescription } from '../../../graphql/additionalFlatTypes';
+import { FlatDescription } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { Icon, IconButton } from '@mui/material';
-import { isEmpty } from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 
 const DescriptionsEditField = ({
   descriptions,
   onChange,
+  onTouch,
 }: {
   descriptions: FlatDescription[];
   onChange: (description: FlatDescription[]) => void;
+  onTouch: () => void;
 }) => {
   const { role } = useAuth();
   const [descriptionState, setDescriptionState] = useState<FlatDescription[]>(descriptions);
 
   useEffect(() => {
-    setDescriptionState(descriptions);
+    setDescriptionState(cloneDeep(descriptions));
   }, [setDescriptionState, descriptions]);
 
   const config = useMemo(
@@ -40,7 +42,11 @@ const DescriptionsEditField = ({
               }
               onChange={newText => {
                 setDescriptionState(allDescriptions => {
+                  const oldValue = allDescriptions[index].text;
                   allDescriptions[index].text = newText;
+                  if (oldValue !== newText) {
+                    onTouch();
+                  }
                   return allDescriptions;
                 });
               }}

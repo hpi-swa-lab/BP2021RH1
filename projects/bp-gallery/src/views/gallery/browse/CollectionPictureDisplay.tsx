@@ -6,7 +6,7 @@ import PictureScrollGrid from '../shared/PictureScrollGrid';
 import SubCollections from './SubCollections';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import CollectionDescription from './CollectionDescription';
-import { FlatCollection, FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { PictureUploadAreaProps } from '../shared/PictureUploadArea';
 

@@ -19,8 +19,14 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
     await waitFor(() => {
       const imageTags = container.getElementsByTagName('img');
       expect(imageTags).toHaveLength(4);
-      expect(imageTags.item(0)).toHaveAttribute('src', asApiPath('test-image.jpg'));
-      expect(imageTags.item(3)).toHaveAttribute('src', asApiPath('test-image4.jpg'));
+      expect(imageTags.item(0)).toHaveAttribute(
+        'src',
+        asApiPath('test-image.jpg?updatedAt=21042022')
+      );
+      expect(imageTags.item(3)).toHaveAttribute(
+        'src',
+        asApiPath('test-image4.jpg?updatedAt=21042022')
+      );
     });
   });
 

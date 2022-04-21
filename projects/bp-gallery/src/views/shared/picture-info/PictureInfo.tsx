@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import {
@@ -18,15 +18,32 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import { cloneDeep } from 'lodash';
+import { Button } from '@mui/material';
+import { Crop } from '@mui/icons-material';
+import PictureEditDialog from './PictureEditDialog';
 
 const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
 
+  const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
   const [pictureState, nativeSetPictureState] = useState<FlatPicture>(picture);
-  const [savePicture] = useUpdatePictureMutation({
+  const [savePicture, updateMutationResponse] = useUpdatePictureMutation({
     refetchQueries: ['getPictureInfo'],
   });
+
+  const saveStatus = useMemo(() => {
+    if (anyFieldTouched) {
+      return t('curator.saveStatus.pending');
+    }
+    if (updateMutationResponse.loading) {
+      return t('curator.saveStatus.saving');
+    }
+    if (updateMutationResponse.error) {
+      return t('curator.saveStatus.error');
+    }
+    return t('curator.saveStatus.saved');
+  }, [updateMutationResponse, anyFieldTouched, t]);
 
   const pictureId = pictureState.id;
 
@@ -46,6 +63,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       nativeSetPictureState(currentPicture => {
         return { ...currentPicture, ...field };
       });
+      setAnyFieldTouched(false);
       savePicture({
         variables: {
           pictureId,
@@ -82,8 +100,23 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople]);
 
+  const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
+
   return (
     <div className='picture-info'>
+      {role >= AuthRole.CURATOR && (
+        <div className='curator-ops'>
+          <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
+            {t('curator.editPicture')}
+          </Button>
+          <PictureEditDialog
+            picture={picture}
+            open={editDialogOpen}
+            onClose={() => setEditDialogOpen(false)}
+          />
+          <span className='save-state'>{saveStatus}</span>
+        </div>
+      )}
       <PictureInfoField
         title={t('pictureFields.time')}
         icon='event'
@@ -95,6 +128,8 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           onChange={range => {
             setPictureState({ time_range_tag: range });
           }}
+          onTouch={() => setAnyFieldTouched(true)}
+          onResetTouch={() => setAnyFieldTouched(false)}
         />
       </PictureInfoField>
       <PictureInfoField
@@ -108,6 +143,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           onChange={descriptions => {
             setPictureState({ descriptions });
           }}
+          onTouch={() => setAnyFieldTouched(true)}
         />
       </PictureInfoField>
       <PictureInfoField
@@ -127,7 +163,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       </PictureInfoField>
       <PictureInfoField
         title={t('pictureFields.locations')}
-        icon='map'
+        icon='place'
         type='location'
         empty={!picture.location_tags?.length}
       >

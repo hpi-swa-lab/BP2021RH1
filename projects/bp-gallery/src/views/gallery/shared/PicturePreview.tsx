@@ -2,7 +2,7 @@ import { Icon } from '@mui/material';
 import { isFunction } from 'lodash';
 import React, { MouseEventHandler, useMemo, useRef } from 'react';
 import { asApiPath } from '../../../App';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PicturePreview.scss';
 
 export interface PicturePreviewAdornment {
@@ -29,8 +29,8 @@ const PicturePreview = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const thumbnailUrl = useMemo(() => {
-    return `${String(picture.media?.formats?.small.url || '')}`;
+  const thumbnailUrl = useMemo((): string => {
+    return (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || '';
   }, [picture]);
 
   return (
@@ -43,8 +43,15 @@ const PicturePreview = ({
         flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
       }}
     >
+      {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
       <img
-        src={pictureOrigin === PictureOrigin.REMOTE ? asApiPath(`/${thumbnailUrl}`) : thumbnailUrl}
+        src={
+          pictureOrigin === PictureOrigin.REMOTE
+            ? asApiPath(
+                `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
+              )
+            : thumbnailUrl
+        }
       />
       <div className='adornments'>
         {adornments?.map((adornment, index) => (

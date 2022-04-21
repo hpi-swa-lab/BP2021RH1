@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
+import { FlatTimeRangeTag } from '../../../types/additionalFlatTypes';
 import i18n from '../../../i18n';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {

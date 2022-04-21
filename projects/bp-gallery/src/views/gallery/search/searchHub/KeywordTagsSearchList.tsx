@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetKeywordTagSuggestionsLazyQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
-import { FlatKeywordTagSuggestion } from '../../../../graphql/additionalFlatTypes';
+import { FlatKeywordTagSuggestion } from '../../../../types/additionalFlatTypes';
 import QueryErrorDisplay from '../../../shared/QueryErrorDisplay';
 import Loading from '../../../shared/Loading';
 import ItemList from '../../shared/ItemList';

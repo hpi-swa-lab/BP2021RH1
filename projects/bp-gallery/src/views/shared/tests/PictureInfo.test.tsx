@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import { PictureMocks } from '../../picture/tests/mocks';
 import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import PictureInfo from '../picture-info/PictureInfo';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { renderWithAPIMocks } from '../../../testUtils';
 
 describe('PictureInfo', () => {

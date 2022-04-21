@@ -1,15 +1,11 @@
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatPicture } from '../../../../graphql/additionalFlatTypes';
-import {
-  useDeletePictureMutation,
-  useDeleteUploadMutation,
-} from '../../../../graphql/APIConnector';
+import { FlatPicture } from '../../../../types/additionalFlatTypes';
+import { useUnpublishPictureMutation } from '../../../../graphql/APIConnector';
 import { DialogContext, DialogPreset } from '../../../shared/DialogWrapper';
 
 const useDeletePicture = () => {
-  const [deleteFile] = useDeleteUploadMutation();
-  const [deletePicture] = useDeletePictureMutation();
+  const [unpublishPicture] = useUnpublishPictureMutation();
   const prompt = useContext(DialogContext);
   const { t } = useTranslation();
 
@@ -30,14 +26,12 @@ const useDeletePicture = () => {
           resolve();
           return;
         }
-        deleteFile({ variables: { id: mediaId } }).then(() => {
-          deletePicture({ variables: { id: picture.id } }).then(() => {
-            resolve();
-          });
+        unpublishPicture({ variables: { id: picture.id } }).then(() => {
+          resolve();
         });
       });
     },
-    [deleteFile, deletePicture, t, prompt]
+    [unpublishPicture, t, prompt]
   );
 };
 

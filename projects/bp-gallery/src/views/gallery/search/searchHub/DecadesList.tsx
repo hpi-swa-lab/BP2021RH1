@@ -9,7 +9,7 @@ import { asApiPath } from '../../../../App';
 import { asSearchPath, SearchType } from '../SearchView';
 import { useGetDecadePreviewThumbnailsQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
-import { FlatDecadeThumbnails } from '../../../../graphql/additionalFlatTypes';
+import { FlatDecadeThumbnails } from '../../../../types/additionalFlatTypes';
 
 const DECADE_NAMES: string[] = ['40', '50', '60', '70', '80', '90'];
 
