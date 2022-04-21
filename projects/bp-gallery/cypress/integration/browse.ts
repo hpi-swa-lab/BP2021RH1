@@ -1,5 +1,5 @@
 describe('Browse view', () => {
-  before( () => {
+  before(() => {
     cy.visit('http://localhost:3000/');
   });
 
@@ -11,7 +11,7 @@ describe('Browse view', () => {
     cy.get('.nav-bar').should('be.visible');
   });
 
-  it("should contain child collections", () => {
+  it('should contain child collections', () => {
     cy.get('.collection-picture-display .item').should('be.visible');
   });
 
@@ -20,7 +20,7 @@ describe('Browse view', () => {
   });
 
   it('should direct the user to child collections when clicking on them', () => {
-    cy.contains('collection 1', {matchCase: false}).click();
+    cy.contains('collection 1', { matchCase: false }).click();
     cy.url().should('include', '/Collection_1');
   });
 

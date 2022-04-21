@@ -1,5 +1,5 @@
 describe('Picture View called via link', () => {
-  before( () => {
+  before(() => {
     cy.visit('http://localhost:3000/picture/1');
   });
 
@@ -29,8 +29,8 @@ describe('Picture View called via link as a curator', () => {
     cy.get('button[type="submit"]').should('be.visible').click();
     cy.get('.nav-bar').contains('Logout').should('exist');
     cy.visit('localhost:3000/picture/1');
-  })
-  after(()=> {
+  });
+  after(() => {
     cy.visit('http://localhost:3000/');
     cy.get('.nav-bar').contains('Logout').should('be.visible');
     cy.get('.nav-bar').contains('Logout').click();
@@ -40,5 +40,4 @@ describe('Picture View called via link as a curator', () => {
     cy.get('.picture-sidebar .quick-access-buttons').click();
     cy.get('.picture-info-field').should('have.length', 5);
   });
-
 });

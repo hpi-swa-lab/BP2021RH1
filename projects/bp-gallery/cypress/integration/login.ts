@@ -1,10 +1,10 @@
 describe('Login', () => {
-  before( () => {
+  before(() => {
     cy.visit('http://localhost:3000/');
   });
-  after(()=> {
+  after(() => {
     cy.get('.nav-bar').contains('Logout').click();
-  })
+  });
 
   it('should display a login button in the navigation bar which opens a dialog when clicked', () => {
     cy.get('.MuiDialog-container').should('not.exist');

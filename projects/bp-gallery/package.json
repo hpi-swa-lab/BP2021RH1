@@ -82,7 +82,7 @@
     "cy:ci": "start-server-and-test start:e2e http://localhost:3000 cy:run",
     "eject": "react-scripts eject",
     "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
-    "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx src",
+    "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx .",
     "format": "prettier --write src && yarn lint --fix",
     "generate-api": "graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx",
     "generate-api:e2e": "env-cmd -f ./environments/.env.test graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx"
