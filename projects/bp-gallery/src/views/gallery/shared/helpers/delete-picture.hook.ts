@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatPicture } from '../../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import { useUnpublishPictureMutation } from '../../../../graphql/APIConnector';
 import { DialogContext, DialogPreset } from '../../../shared/DialogWrapper';
 

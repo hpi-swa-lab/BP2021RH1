@@ -11,7 +11,7 @@ import './PictureView.scss';
 import { asApiPath } from '../../App';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
-import { FlatPicture } from '../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../types/additionalFlatTypes';
 import PictureViewUI from './PictureViewUI';
 import PictureSidebar from './PictureSidebar';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';

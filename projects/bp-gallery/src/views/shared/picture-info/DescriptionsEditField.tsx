@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import JoditEditor from 'jodit-react';
-import { FlatDescription } from '../../../graphql/additionalFlatTypes';
+import { FlatDescription } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { Icon, IconButton } from '@mui/material';
 import { isEmpty, cloneDeep } from 'lodash';

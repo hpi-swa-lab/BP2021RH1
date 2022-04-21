@@ -2,7 +2,7 @@ import { Icon } from '@mui/material';
 import { isFunction } from 'lodash';
 import React, { MouseEventHandler, useMemo, useRef } from 'react';
 import { asApiPath } from '../../../App';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PicturePreview.scss';
 
 export interface PicturePreviewAdornment {

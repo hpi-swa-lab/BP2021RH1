@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';

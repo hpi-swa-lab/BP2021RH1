@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../picture/PictureView';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import hashCode from './helpers/hash-code';
 import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animation.helpers';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';

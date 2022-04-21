@@ -1,7 +1,7 @@
 import { Popover } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
+import { FlatTimeRangeTag } from '../../../types/additionalFlatTypes';
 import { formatTimeStamp } from '../helpers/format-timestamp';
 import { DateRangePicker, InputRange, Range } from 'react-date-range';
 import dayjs from 'dayjs';

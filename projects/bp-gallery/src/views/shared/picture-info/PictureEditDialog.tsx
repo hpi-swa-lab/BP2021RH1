@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ImageEditor from '@toast-ui/react-image-editor';
 import 'tui-image-editor/dist/tui-image-editor.css';
 import { Close, Save } from '@mui/icons-material';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { asApiPath } from '../../../App';
 import './PictureEditDialog.scss';
 import replaceMediaFile from './replace-media-file';

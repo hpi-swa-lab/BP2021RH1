@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { flattenQueryResponseData } from '../../../graphql/queryUtils';
 import PictureSidebar from '../PictureSidebar';
 import { CommentMocks, PictureMocks } from './mocks';

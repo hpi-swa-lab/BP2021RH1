@@ -5,7 +5,7 @@ import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 
 export const enum SearchType {

@@ -10,7 +10,7 @@ import {
   useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatCollection } from '../../../graphql/additionalFlatTypes';
+import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
 import CollectionPictureDisplay from './CollectionPictureDisplay';
 
