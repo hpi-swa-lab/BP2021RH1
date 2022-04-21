@@ -42,6 +42,7 @@
     "search-for-type": "durchsuchen",
     "start-search": "Suche Starten",
     "choose-searchtypes": "Suchtyp auswählen",
+    "wrong-time-input-info": "Jahreszahlen müssen in der Form 1989 oder 89 angegeben werden.",
     "explanation-headline": "Was passiert, wenn ich Stichworte suche?",
     "explanation": "Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen."
   },
