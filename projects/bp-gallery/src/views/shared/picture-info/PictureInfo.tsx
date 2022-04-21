@@ -129,6 +129,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
             setPictureState({ time_range_tag: range });
           }}
           onTouch={() => setAnyFieldTouched(true)}
+          onResetTouch={() => setAnyFieldTouched(false)}
         />
       </PictureInfoField>
       <PictureInfoField

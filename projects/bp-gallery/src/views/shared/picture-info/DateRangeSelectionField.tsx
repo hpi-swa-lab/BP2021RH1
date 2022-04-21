@@ -16,10 +16,12 @@ const DateRangeSelectionField = ({
   timeRangeTag,
   onChange,
   onTouch,
+  onResetTouch,
 }: {
   timeRangeTag?: FlatTimeRangeTag;
   onChange: (timeRangeTag: FlatTimeRangeTag) => void;
   onTouch: () => void;
+  onResetTouch: () => void;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -70,6 +72,8 @@ const DateRangeSelectionField = ({
               (timeRange.start !== timeRangeTag?.start || timeRangeTag?.end !== timeRange.end)
             ) {
               onChange(timeRange);
+            } else {
+              onResetTouch();
             }
           }}
           anchorOrigin={{
