@@ -7,7 +7,9 @@
     width: 100%;
 
     .searchbutton {
-      display: 'flex';
+      display: 'inline-block';
+      text-align: center;
+      font-size: x-small;
       flex-direction: 'column';
       .searchbutton-label {
         font-size: 8;
