@@ -1,4 +1,5 @@
-import { Autocomplete, Chip, createFilterOptions, Icon, Stack, TextField } from '@mui/material';
+import { Autocomplete, Chip, Icon, Stack, TextField } from '@mui/material';
+import Fuse from 'fuse.js';
 import { GraphQLError } from 'graphql';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,16 +49,6 @@ const TagSelectionField = <T extends TagFields>({
     [onChange]
   );
 
-  const filter = createFilterOptions<T>({
-    ignoreCase: true,
-    matchFrom: 'any',
-    stringify: (option: T) => {
-      // This function is returning the value used when searching. In order to also be
-      // able to search for synonyms, we conccat it with the real name here
-      return option.name + '' + (option.synonyms?.map(s => s?.name ?? '').join() ?? '');
-    },
-  });
-
   if (role >= AuthRole.CURATOR) {
     return (
       <div className='tag-selection'>
@@ -65,10 +56,21 @@ const TagSelectionField = <T extends TagFields>({
           multiple
           isOptionEqualToValue={(option, value) => option.name === value.name}
           options={tagList}
-          filterOptions={(options, params) => {
-            const filtered = filter(options, params);
-
-            const { inputValue } = params;
+          filterOptions={(options, { inputValue }) => {
+            let filtered = options;
+            if (inputValue !== '') {
+              // Only fuzzy match "real" inputs.
+              const fuzzyMatcher = new Fuse(options, {
+                // Consider the name of the tag as well its synonyms
+                keys: ['name', 'synonyms.name'],
+                // Slightly decrease the threshold in order to higher rank exact matches
+                threshold: 0.5,
+              });
+              filtered = fuzzyMatcher
+                .search(inputValue)
+                // Ignore the fuzzy score or anything like that
+                .map(fuzzyResult => fuzzyResult.item);
+            }
 
             const isExisting = options.some(o => o.name === inputValue);
 
