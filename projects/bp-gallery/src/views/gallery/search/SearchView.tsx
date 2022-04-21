@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import SearchBar from './SearchBar';
@@ -18,7 +19,6 @@ import {
   Typography,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useTranslation } from 'react-i18next';
 
 export const enum SearchType {
   DESCRIPTION = 'description',

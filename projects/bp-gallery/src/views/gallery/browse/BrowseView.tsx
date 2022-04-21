@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './CollectionPictureDisplay.scss';
-import { FormControlLabel, Switch } from '@mui/material';
+// import { FormControlLabel, Switch } from '@mui/material';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import {
@@ -11,7 +11,8 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../graphql/additionalFlatTypes';
-import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
+import { decodeBrowsePathComponent } from './helpers/formatBrowsePath';
+// import { formatBrowsePath } from './helpers/formatBrowsePath';
 import CollectionPictureDisplay from './CollectionPictureDisplay';
 
 const BrowseView = ({
@@ -19,11 +20,13 @@ const BrowseView = ({
   scrollPos,
   scrollHeight,
   communityView = false,
+  hideDescription = false,
 }: {
   path?: string[];
   scrollPos: number;
   scrollHeight: number;
   communityView: boolean;
+  hideDescription?: boolean;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -75,7 +78,7 @@ const BrowseView = ({
   }
   return (
     <>
-      <FormControlLabel
+      {/*<FormControlLabel
         control={
           <Switch
             defaultChecked={!communityView}
@@ -85,15 +88,16 @@ const BrowseView = ({
           />
         }
         label={String(communityView ? t('common.community-view') : t('common.browse-view'))}
-      />
+      />*/}
       <CollectionPictureDisplay
-        picturePublishingDate={communityView ? picturePublishingDate : undefined}
-        collections={filteredCollections}
         loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
         error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}
+        collections={filteredCollections}
         path={path}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
+        picturePublishingDate={communityView ? picturePublishingDate : undefined}
+        hideDescription={hideDescription}
       />
     </>
   );

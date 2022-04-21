@@ -2,8 +2,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import KeywordTagsSearchList from './KeywordTagsSearchList';
 import DecadesList from './DecadesList';
+import LocationTagsList from './LocationTagsList';
 
-const SearchHub = ({ searchSnippet }: { searchSnippet: string }) => {
+const SearchHub = ({ searchSnippet }: { searchSnippet: string }, communityView: boolean) => {
   const { t } = useTranslation();
 
   return (
@@ -15,6 +16,10 @@ const SearchHub = ({ searchSnippet }: { searchSnippet: string }) => {
       <div className='search-section'>
         <h3>{t('common.decades').toUpperCase()}</h3>
         <DecadesList />
+        <div className='search-section'>
+          <h3>{t('common.locations').toUpperCase()}</h3>
+          <LocationTagsList />
+        </div>
       </div>
     </div>
   );

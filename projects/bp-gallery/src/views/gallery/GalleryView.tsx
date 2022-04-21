@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BrowseView from './browse/BrowseView';
 import SearchView from './search/SearchView';
+import MainView from '../main/MainView';
 import './GalleryView.scss';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
@@ -16,11 +17,17 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
 
     switch (target) {
       case 'browse':
-        return <BrowseView path={path} {...scrollParams} communityView={false} />;
+        return (
+          <BrowseView path={path} hideDescription={false} {...scrollParams} communityView={false} />
+        );
       case 'browse/latest':
-        return <BrowseView path={path} {...scrollParams} communityView={true} />;
+        return (
+          <BrowseView path={path} hideDescription={false} {...scrollParams} communityView={true} />
+        );
       case 'search':
         return <SearchView {...scrollParams} />;
+      case 'main':
+        return <MainView {...scrollParams} />;
       default:
         return '404 - Not found';
     }

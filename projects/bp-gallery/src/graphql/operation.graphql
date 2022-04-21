@@ -115,6 +115,7 @@ query getRootCollection {
           data {
             attributes {
               name
+              description
             }
           }
         }
@@ -140,6 +141,43 @@ query getKeywordTagSuggestions($name: String, $start: Int, $limit: Int) {
     filters: { name: { containsi: $name } }
     pagination: { start: $start, limit: $limit }
   ) {
+    data {
+      id
+      attributes {
+        name
+        thumbnail: pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query getLocationTags {
+  locationTags {
     data {
       id
       attributes {
