@@ -69,8 +69,10 @@ const SearchBar = ({
                 }}
                 className='searchbutton'
               >
-                <SearchIcon />
-                <div className='searchbutton-label'>{t('search.start-search')}</div>
+                <div>
+                  <SearchIcon />
+                  <div className='searchbutton-label'>{t('search.start-search')}</div>
+                </div>
               </IconButton>
             </InputAdornment>
           ),
