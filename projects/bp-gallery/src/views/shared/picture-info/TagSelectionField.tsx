@@ -54,6 +54,7 @@ const TagSelectionField = <T extends TagFields>({
       <div className='tag-selection'>
         <Autocomplete
           multiple
+          autoHighlight
           isOptionEqualToValue={(option, value) => option.name === value.name}
           options={tagList}
           filterOptions={(options, { inputValue }) => {
