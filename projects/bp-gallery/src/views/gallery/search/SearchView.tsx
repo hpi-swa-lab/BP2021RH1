@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import SearchBar from './SearchBar';
@@ -232,6 +233,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
   const [previewPicture, setPreviewPicture] = useState<FlatPicture>();
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
   const { search }: Location = useLocation();
+  const { t } = useTranslation();
 
   const searchParams = useMemo(() => {
     return new URLSearchParams(search);
@@ -278,11 +280,8 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             <SearchInfoTooltip
               title={
                 <React.Fragment>
-                  <Typography color='inherit'>Was passiert, wenn ich Stichworte suche?</Typography>
-                  <p>
-                    {'Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n' +
-                      '                  Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen.'}
-                  </p>{' '}
+                  <Typography color='inherit'>{t('search.question')}</Typography>
+                  <p>{t('search.help')}</p>
                 </React.Fragment>
               }
             >
