@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import SearchBar from './SearchBar';
@@ -17,7 +18,6 @@ import {
   Typography,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useTranslation } from 'react-i18next';
 
 export const enum SearchType {
   DESCRIPTION = 'description',
@@ -276,8 +276,8 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             <SearchInfoTooltip
               title={
                 <React.Fragment>
-                  <Typography color='inherit'>{t('search.explanation-headline')}</Typography>
-                  <p>{t('search.explanation')}</p>
+                  <Typography color='inherit'>{t('search.question')}</Typography>
+                  <p>{t('search.help')}</p>
                 </React.Fragment>
               }
             >
