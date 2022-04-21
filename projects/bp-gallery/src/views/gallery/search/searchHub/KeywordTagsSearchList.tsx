@@ -49,7 +49,8 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
             : '',
           onClick: () => {
             history.push(
-              addNewParamToSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name))),
+              addNewParamToSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name)))
+                .searchVal,
               {
                 showBack: true,
               }
