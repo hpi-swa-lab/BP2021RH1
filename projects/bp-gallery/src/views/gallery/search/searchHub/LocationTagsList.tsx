@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useGetAllLocationTagsQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
@@ -8,6 +9,7 @@ import QueryErrorDisplay from '../../../shared/QueryErrorDisplay';
 import Loading from '../../../shared/Loading';
 import ItemList from '../../shared/ItemList';
 import { FlatLocationTagPreview } from '../../../../types/additionalFlatTypes';
+import { addNewParamToSearchPath, SearchType } from '../SearchView';
 
 const LocationTagsList = () => {
   const history: History = useHistory();
@@ -29,6 +31,15 @@ const LocationTagsList = () => {
         items={locationTags.map(tag => ({
           name: tag.name,
           background: asApiPath(String(tag.thumbnail[0].media?.formats?.small?.url || '')),
+          onClick: () => {
+            history.push(
+              addNewParamToSearchPath(SearchType.ALL, encodeURIComponent(String(tag.name)))
+                .searchVal,
+              {
+                showBack: true,
+              }
+            );
+          },
         }))}
       />
     );
