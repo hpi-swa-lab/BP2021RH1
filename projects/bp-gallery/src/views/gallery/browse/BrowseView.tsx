@@ -15,11 +15,13 @@ const BrowseView = ({
   scrollPos,
   scrollHeight,
   communityView = false,
+  hideDescription = false,
 }: {
   path?: string[];
   scrollPos: number;
   scrollHeight: number;
   communityView: boolean;
+  hideDescription?: boolean;
 }) => {
   // Query the name of the root-collection if there is no path
   const rootCollectionResult = useGetRootCollectionQuery({
@@ -66,14 +68,19 @@ const BrowseView = ({
       }));
     }
   }
-  return <CollectionPictureDisplay
-        picturePublishingDate={communityView ? picturePublishingDate : undefined}
-        collections={filteredCollections}
+  return (
+    <>
+      <CollectionPictureDisplay
         loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
         error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}
+        collections={filteredCollections}
         path={path}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
-      />;
+        picturePublishingDate={communityView ? picturePublishingDate : undefined}
+        hideDescription={hideDescription}
+      />
+    </>
+  );
 };
 export default BrowseView;

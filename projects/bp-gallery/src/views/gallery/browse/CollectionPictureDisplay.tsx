@@ -42,6 +42,7 @@ const CollectionPictureDisplay = ({
   scrollPos,
   scrollHeight,
   picturePublishingDate,
+  hideDescription,
 }: {
   error?: any;
   loading?: boolean;
@@ -50,6 +51,7 @@ const CollectionPictureDisplay = ({
   scrollPos: number;
   scrollHeight: number;
   picturePublishingDate?: string;
+  hideDescription: boolean;
 }) => {
   const { t } = useTranslation();
   const { role } = useAuth();
@@ -97,14 +99,15 @@ const CollectionPictureDisplay = ({
   } else if (collections?.length && collections[0]) {
     const collection = collections[0];
     const childCount = collection.child_collections?.length ?? 0;
-
     return (
       <div className='collection-picture-display'>
-        <CollectionDescription
-          description={collection.description ?? ''}
-          name={collection.name}
-          id={collection.id}
-        />
+        {!hideDescription && (
+          <CollectionDescription
+            id={collection.id}
+            description={collection.description ?? ''}
+            name={collection.name}
+          />
+        )}
         {childCount > 0 && (
           <SubCollections
             childCollections={collection.child_collections as { thumbnail: string; name: string }[]}
