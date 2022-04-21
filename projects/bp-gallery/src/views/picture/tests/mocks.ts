@@ -84,6 +84,7 @@ export const PictureMocks: PictureEntity = {
   attributes: {
     media: {
       data: {
+        id: '1',
         attributes: {
           url: 'test-image.jpg',
           hash: '',
@@ -91,6 +92,7 @@ export const PictureMocks: PictureEntity = {
           name: 'Test Image',
           provider: '',
           size: -1,
+          updatedAt: '21042022',
         },
       },
     },

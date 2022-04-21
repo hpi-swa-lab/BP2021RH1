@@ -3,7 +3,7 @@ import './PictureSidebar.scss';
 import PictureViewNavigationBar from './PictureViewNavigationBar';
 import { ApolloError } from '@apollo/client';
 import CommentsContainer from './comments/CommentsContainer';
-import { FlatPicture } from '../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../types/additionalFlatTypes';
 import { PictureViewContext } from './PictureView';
 import Loading from '../shared/Loading';
 import QueryErrorDisplay from '../shared/QueryErrorDisplay';

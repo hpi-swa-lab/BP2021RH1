@@ -3,13 +3,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
 import { asFlatPicture } from './helpers/as-flat-picture';
 import uploadMediaFiles from './helpers/upload-media-files';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
+import { cloneDeep } from 'lodash';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
@@ -95,8 +96,9 @@ const PictureUploadArea = ({
                 icon: 'close',
                 onClick: () => {
                   setNewFiles(fileList => {
-                    fileList.splice(index, 1);
-                    return [...fileList];
+                    const clone = cloneDeep(fileList);
+                    clone.splice(index, 1);
+                    return clone;
                   });
                 },
               },

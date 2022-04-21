@@ -1,4 +1,4 @@
-import { FlatPicture } from '../../../../graphql/additionalFlatTypes';
+import { FlatPicture } from '../../../../types/additionalFlatTypes';
 
 export const asFlatPicture = (file: File): FlatPicture => {
   return {

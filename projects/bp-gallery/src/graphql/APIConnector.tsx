@@ -1620,7 +1620,10 @@ export type GetPictureInfoQuery = {
                       data?:
                         | {
                             id?: string | null | undefined;
-                            attributes?: { url: string } | null | undefined;
+                            attributes?:
+                              | { url: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
                           }
                         | null
                         | undefined;
@@ -1669,6 +1672,7 @@ export type GetPicturesQuery = {
                               width?: number | null | undefined;
                               height?: number | null | undefined;
                               formats?: any | null | undefined;
+                              updatedAt?: any | null | undefined;
                             }
                           | null
                           | undefined;
@@ -2151,23 +2155,51 @@ export type CreatePictureMutation = {
     | undefined;
 };
 
-export type DeleteUploadMutationVariables = Exact<{
+export type UnpublishPictureMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeleteUploadMutation = {
-  deleteUploadFile?:
+export type UnpublishPictureMutation = {
+  updatePicture?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
 };
 
-export type DeletePictureMutationVariables = Exact<{
-  id: Scalars['ID'];
+export type GetPicturesForCollectionQueryVariables = Exact<{
+  collectionId: Scalars['ID'];
 }>;
 
-export type DeletePictureMutation = {
-  deletePicture?:
+export type GetPicturesForCollectionQuery = {
+  collection?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    pictures?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
+export type SetPicturesForCollectionMutationVariables = Exact<{
+  pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
+  collectionId: Scalars['ID'];
+}>;
+
+export type SetPicturesForCollectionMutation = {
+  updateCollection?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -2271,6 +2303,7 @@ export const GetPictureInfoDocument = gql`
               id
               attributes {
                 url
+                updatedAt
               }
             }
           }
@@ -2348,6 +2381,7 @@ export const GetPicturesDocument = gql`
                 width
                 height
                 formats
+                updatedAt
               }
             }
           }
@@ -3825,9 +3859,9 @@ export type CreatePictureMutationOptions = Apollo.BaseMutationOptions<
   CreatePictureMutationVariables
 >;
 
-export const DeleteUploadDocument = gql`
-  mutation deleteUpload($id: ID!) {
-    deleteUploadFile(id: $id) {
+export const UnpublishPictureDocument = gql`
+  mutation unpublishPicture($id: ID!) {
+    updatePicture(id: $id, data: { publishedAt: null }) {
       data {
         id
       }
@@ -3835,50 +3869,125 @@ export const DeleteUploadDocument = gql`
   }
 `;
 
-export type DeleteUploadMutationFn = Apollo.MutationFunction<
-  DeleteUploadMutation,
-  DeleteUploadMutationVariables
+export type UnpublishPictureMutationFn = Apollo.MutationFunction<
+  UnpublishPictureMutation,
+  UnpublishPictureMutationVariables
 >;
 
 /**
- * __useDeleteUploadMutation__
+ * __useUnpublishPictureMutation__
  *
- * To run a mutation, you first call `useDeleteUploadMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteUploadMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUnpublishPictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnpublishPictureMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deleteUploadMutation, { data, loading, error }] = useDeleteUploadMutation({
+ * const [unpublishPictureMutation, { data, loading, error }] = useUnpublishPictureMutation({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useDeleteUploadMutation(
-  baseOptions?: Apollo.MutationHookOptions<DeleteUploadMutation, DeleteUploadMutationVariables>
+export function useUnpublishPictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UnpublishPictureMutation,
+    UnpublishPictureMutationVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<DeleteUploadMutation, DeleteUploadMutationVariables>(
-    DeleteUploadDocument,
+  return Apollo.useMutation<UnpublishPictureMutation, UnpublishPictureMutationVariables>(
+    UnpublishPictureDocument,
     options
   );
 }
 
-export type DeleteUploadMutationHookResult = ReturnType<typeof useDeleteUploadMutation>;
+export type UnpublishPictureMutationHookResult = ReturnType<typeof useUnpublishPictureMutation>;
 
-export type DeleteUploadMutationResult = Apollo.MutationResult<DeleteUploadMutation>;
+export type UnpublishPictureMutationResult = Apollo.MutationResult<UnpublishPictureMutation>;
 
-export type DeleteUploadMutationOptions = Apollo.BaseMutationOptions<
-  DeleteUploadMutation,
-  DeleteUploadMutationVariables
+export type UnpublishPictureMutationOptions = Apollo.BaseMutationOptions<
+  UnpublishPictureMutation,
+  UnpublishPictureMutationVariables
 >;
 
-export const DeletePictureDocument = gql`
-  mutation deletePicture($id: ID!) {
-    deletePicture(id: $id) {
+export const GetPicturesForCollectionDocument = gql`
+  query getPicturesForCollection($collectionId: ID!) {
+    collection(id: $collectionId) {
+      data {
+        id
+        attributes {
+          pictures {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesForCollectionQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesForCollectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesForCollectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesForCollectionQuery({
+ *   variables: {
+ *      collectionId: // value for 'collectionId'
+ *   },
+ * });
+ */
+export function useGetPicturesForCollectionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPicturesForCollectionQuery,
+    GetPicturesForCollectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesForCollectionQuery, GetPicturesForCollectionQueryVariables>(
+    GetPicturesForCollectionDocument,
+    options
+  );
+}
+
+export function useGetPicturesForCollectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPicturesForCollectionQuery,
+    GetPicturesForCollectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesForCollectionQuery, GetPicturesForCollectionQueryVariables>(
+    GetPicturesForCollectionDocument,
+    options
+  );
+}
+
+export type GetPicturesForCollectionQueryHookResult = ReturnType<
+  typeof useGetPicturesForCollectionQuery
+>;
+
+export type GetPicturesForCollectionLazyQueryHookResult = ReturnType<
+  typeof useGetPicturesForCollectionLazyQuery
+>;
+
+export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
+  GetPicturesForCollectionQuery,
+  GetPicturesForCollectionQueryVariables
+>;
+
+export const SetPicturesForCollectionDocument = gql`
+  mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
+    updateCollection(id: $collectionId, data: { pictures: $pictureIds }) {
       data {
         id
       }
@@ -3886,45 +3995,52 @@ export const DeletePictureDocument = gql`
   }
 `;
 
-export type DeletePictureMutationFn = Apollo.MutationFunction<
-  DeletePictureMutation,
-  DeletePictureMutationVariables
+export type SetPicturesForCollectionMutationFn = Apollo.MutationFunction<
+  SetPicturesForCollectionMutation,
+  SetPicturesForCollectionMutationVariables
 >;
 
 /**
- * __useDeletePictureMutation__
+ * __useSetPicturesForCollectionMutation__
  *
- * To run a mutation, you first call `useDeletePictureMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeletePictureMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSetPicturesForCollectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetPicturesForCollectionMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deletePictureMutation, { data, loading, error }] = useDeletePictureMutation({
+ * const [setPicturesForCollectionMutation, { data, loading, error }] = useSetPicturesForCollectionMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      pictureIds: // value for 'pictureIds'
+ *      collectionId: // value for 'collectionId'
  *   },
  * });
  */
-export function useDeletePictureMutation(
-  baseOptions?: Apollo.MutationHookOptions<DeletePictureMutation, DeletePictureMutationVariables>
+export function useSetPicturesForCollectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetPicturesForCollectionMutation,
+    SetPicturesForCollectionMutationVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<DeletePictureMutation, DeletePictureMutationVariables>(
-    DeletePictureDocument,
-    options
-  );
+  return Apollo.useMutation<
+    SetPicturesForCollectionMutation,
+    SetPicturesForCollectionMutationVariables
+  >(SetPicturesForCollectionDocument, options);
 }
 
-export type DeletePictureMutationHookResult = ReturnType<typeof useDeletePictureMutation>;
+export type SetPicturesForCollectionMutationHookResult = ReturnType<
+  typeof useSetPicturesForCollectionMutation
+>;
 
-export type DeletePictureMutationResult = Apollo.MutationResult<DeletePictureMutation>;
+export type SetPicturesForCollectionMutationResult =
+  Apollo.MutationResult<SetPicturesForCollectionMutation>;
 
-export type DeletePictureMutationOptions = Apollo.BaseMutationOptions<
-  DeletePictureMutation,
-  DeletePictureMutationVariables
+export type SetPicturesForCollectionMutationOptions = Apollo.BaseMutationOptions<
+  SetPicturesForCollectionMutation,
+  SetPicturesForCollectionMutationVariables
 >;
 
 export const MeDocument = gql`

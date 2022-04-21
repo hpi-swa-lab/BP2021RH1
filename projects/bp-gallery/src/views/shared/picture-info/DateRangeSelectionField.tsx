@@ -1,7 +1,7 @@
 import { Popover } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatTimeRangeTag } from '../../../graphql/additionalFlatTypes';
+import { FlatTimeRangeTag } from '../../../types/additionalFlatTypes';
 import { formatTimeStamp } from '../helpers/format-timestamp';
 import { DateRangePicker, InputRange, Range } from 'react-date-range';
 import dayjs from 'dayjs';
@@ -10,13 +10,18 @@ import 'react-date-range/dist/theme/default.css';
 import { de } from 'date-fns/locale';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import i18n from '../../../i18n';
+import { cloneDeep } from 'lodash';
 
 const DateRangeSelectionField = ({
   timeRangeTag,
   onChange,
+  onTouch,
+  onResetTouch,
 }: {
   timeRangeTag?: FlatTimeRangeTag;
   onChange: (timeRangeTag: FlatTimeRangeTag) => void;
+  onTouch: () => void;
+  onResetTouch: () => void;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -25,7 +30,7 @@ const DateRangeSelectionField = ({
   const [timeRange, setTimeRange] = useState<FlatTimeRangeTag | undefined>();
 
   useEffect(() => {
-    setTimeRange(timeRangeTag);
+    setTimeRange(cloneDeep(timeRangeTag));
   }, [setTimeRange, timeRangeTag]);
 
   const open = Boolean(anchorElement);
@@ -67,6 +72,8 @@ const DateRangeSelectionField = ({
               (timeRange.start !== timeRangeTag?.start || timeRangeTag?.end !== timeRange.end)
             ) {
               onChange(timeRange);
+            } else {
+              onResetTouch();
             }
           }}
           anchorOrigin={{
@@ -88,6 +95,7 @@ const DateRangeSelectionField = ({
               if (range.selection.startDate && range.selection.endDate) {
                 const s = range.selection.startDate.toISOString();
                 const e = range.selection.endDate.toISOString();
+                onTouch();
                 setTimeRange(oldTimeRange => {
                   const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
                   tRT.start = s;

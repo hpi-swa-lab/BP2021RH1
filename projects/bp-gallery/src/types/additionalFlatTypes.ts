@@ -9,7 +9,7 @@ import {
   Scalars,
   TimeRangeTag,
   UploadFile,
-} from './APIConnector';
+} from '../graphql/APIConnector';
 
 type ID = { id: Scalars['ID'] };
 
