@@ -20,11 +20,13 @@ const BrowseView = ({
   scrollPos,
   scrollHeight,
   communityView = false,
+  hideDescription = false,
 }: {
   path?: string[];
   scrollPos: number;
   scrollHeight: number;
   communityView: boolean;
+  hideDescription?: boolean;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -88,13 +90,14 @@ const BrowseView = ({
         label={String(communityView ? t('common.community-view') : t('common.browse-view'))}
       />*/}
       <CollectionPictureDisplay
-        picturePublishingDate={communityView ? picturePublishingDate : undefined}
-        collections={filteredCollections}
         loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
         error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}
+        collections={filteredCollections}
         path={path}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
+        picturePublishingDate={communityView ? picturePublishingDate : undefined}
+        hideDescription={hideDescription}
       />
     </>
   );

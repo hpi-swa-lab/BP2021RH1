@@ -1658,7 +1658,12 @@ export type GetRootCollectionQuery = {
                     current?:
                       | {
                           data?:
-                            | { attributes?: { name: string } | null | undefined }
+                            | {
+                                attributes?:
+                                  | { name: string; description?: string | null | undefined }
+                                  | null
+                                  | undefined;
+                              }
                             | null
                             | undefined;
                         }
@@ -2260,6 +2265,7 @@ export const GetRootCollectionDocument = gql`
             data {
               attributes {
                 name
+                description
               }
             }
           }

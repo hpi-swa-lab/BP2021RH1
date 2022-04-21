@@ -107,6 +107,7 @@ query getRootCollection {
           data {
             attributes {
               name
+              description
             }
           }
         }
