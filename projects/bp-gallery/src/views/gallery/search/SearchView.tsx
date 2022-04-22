@@ -260,7 +260,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     <div className='search-view'>
       <div className='search-content'>
         <div className='below-search-bar'>
-          <div>
+          <div className='search-bar-container'>
             {' '}
             {(isSearchBarVisible || !search) && (
               <SearchBar
