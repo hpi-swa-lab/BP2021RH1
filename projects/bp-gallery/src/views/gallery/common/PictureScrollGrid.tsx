@@ -90,7 +90,13 @@ const PictureScrollGrid = ({
   } else if (pictures?.length) {
     return (
       <>
-        <div>
+        <div
+          style={{
+            marginTop: '1rem',
+            opacity: 0.5,
+            textAlign: 'center',
+          }}
+        >
           {pictures.length === 100
             ? '100+'
             : new Intl.NumberFormat('de-DE').format(pictures.length)}{' '}
