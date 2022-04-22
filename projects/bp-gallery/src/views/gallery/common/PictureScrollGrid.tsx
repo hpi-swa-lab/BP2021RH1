@@ -95,7 +95,9 @@ const PictureScrollGrid = ({
     return (
       <>
         <div>
-          {new Intl.NumberFormat('de-DE').format(totalPicturesIds?.length ?? 0)}{' '}
+          {new Intl.NumberFormat('de-DE').format(
+            Array.from(new Set(totalPicturesIds?.map((item: any) => item.id))).length
+          )}{' '}
           {t('common.pictures')}
         </div>
         <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />
