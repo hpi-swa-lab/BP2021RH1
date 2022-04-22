@@ -4,10 +4,11 @@
   "info": {
     "singularName": "keyword-tag",
     "pluralName": "keyword-tags",
-    "displayName": "Keyword_Tag"
+    "displayName": "Keyword_Tag",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "attributes": {
     "name": {
@@ -26,6 +27,12 @@
       "relation": "manyToMany",
       "target": "api::picture.picture",
       "mappedBy": "verified_keyword_tags"
+    },
+    "synonyms": {
+      "displayName": "synonyms",
+      "type": "component",
+      "repeatable": true,
+      "component": "common.synonyms"
     }
   }
 }

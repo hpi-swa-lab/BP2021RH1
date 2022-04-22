@@ -12,15 +12,19 @@ const { buildClientSchema, getIntrospectionQuery } = require('graphql');
 module.exports = async remoteUrl => {
   const introspectionQuery = getIntrospectionQuery();
 
+  if (process.env.REACT_APP_API_BASE) {
+    remoteUrl = `${process.env.REACT_APP_API_BASE}/graphql`;
+  }
+
   const response = await fetch(remoteUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ query: introspectionQuery }),
-  });
+  }).catch(() => Promise.resolve(null));
 
-  if (!response.ok) {
+  if (!response || !response.ok) {
     // Custom logic for our use-case is here: just return without throwing errors.
     console.warn(
       `

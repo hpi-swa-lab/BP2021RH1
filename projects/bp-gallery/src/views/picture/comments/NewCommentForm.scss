@@ -1,0 +1,16 @@
+@import '../../../shared/style.scss';
+
+.new-comment-form {
+  margin-right: 1rem;
+  margin-left: 1rem;
+
+  .MuiFilledInput-root {
+    margin-bottom: 1rem;
+  }
+
+  .MuiButton-root {
+    margin-bottom: 2rem;
+    width: 100%;
+    background-color: $primaryColor;
+  }
+}

@@ -2,14 +2,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
-import QueryErrorDisplay from '../../../../components/QueryErrorDisplay';
-import Loading from '../../../../components/Loading';
-import ItemList from '../../common/ItemList';
+import QueryErrorDisplay from '../../../shared/QueryErrorDisplay';
+import Loading from '../../../shared/Loading';
+import ItemList from '../../shared/ItemList';
 import { asApiPath } from '../../../../App';
 import { asSearchPath, SearchType } from '../SearchView';
 import { useGetDecadePreviewThumbnailsQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
-import { FlatDecadeThumbnails } from '../../../../graphql/additionalFlatTypes';
+import { FlatDecadeThumbnails } from '../../../../types/additionalFlatTypes';
 
 const DECADE_NAMES: string[] = ['40', '50', '60', '70', '80', '90'];
 

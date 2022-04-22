@@ -3,6 +3,9 @@ import {
   CommentEntity,
   DescriptionEntity,
   GetPictureInfoDocument,
+  KeywordTagEntity,
+  LocationTagEntity,
+  PersonTagEntity,
   PictureEntity,
   TimeRangeTagEntity,
 } from '../../../graphql/APIConnector';
@@ -34,6 +37,33 @@ export const TimeRangeTagMocks: TimeRangeTagEntity = {
   },
 };
 
+export const KeywordTagsMock: KeywordTagEntity[] = [
+  {
+    id: '1',
+    attributes: {
+      name: 'keyword_tag',
+    },
+  },
+];
+
+export const PersonTagsMock: PersonTagEntity[] = [
+  {
+    id: '1',
+    attributes: {
+      name: 'Person test',
+    },
+  },
+];
+
+export const LocationTagsMock: LocationTagEntity[] = [
+  {
+    id: '1',
+    attributes: {
+      name: 'A place in Bad Harzburg',
+    },
+  },
+];
+
 export const DescriptionMocks: DescriptionEntity[] = [
   {
     id: '1',
@@ -54,6 +84,7 @@ export const PictureMocks: PictureEntity = {
   attributes: {
     media: {
       data: {
+        id: '1',
         attributes: {
           url: 'test-image.jpg',
           hash: '',
@@ -61,6 +92,7 @@ export const PictureMocks: PictureEntity = {
           name: 'Test Image',
           provider: '',
           size: -1,
+          updatedAt: '21042022',
         },
       },
     },
@@ -75,6 +107,24 @@ export const PictureMocks: PictureEntity = {
     },
     verified_time_range_tag: {
       data: null,
+    },
+    keyword_tags: {
+      data: KeywordTagsMock,
+    },
+    verified_keyword_tags: {
+      data: [],
+    },
+    person_tags: {
+      data: PersonTagsMock,
+    },
+    verified_person_tags: {
+      data: [],
+    },
+    location_tags: {
+      data: LocationTagsMock,
+    },
+    verified_location_tags: {
+      data: [],
     },
   },
 };

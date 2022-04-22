@@ -9,6 +9,10 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: any) => key }),
 }));
 
+jest.mock('./i18n', () => ({
+  t: (key: any) => key,
+}));
+
 // Mocks necessary for item list item tests
 document.createRange = () => {
   const range = new Range();

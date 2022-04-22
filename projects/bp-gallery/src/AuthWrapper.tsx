@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useLoginMutation, useMeLazyQuery } from './graphql/APIConnector';
 import { httpLink } from './App';
 import { useApolloClient } from '@apollo/client';
-import { AlertContext, AlertType } from './components/AlertWrapper';
+import { AlertContext, AlertType } from './views/shared/AlertWrapper';
 import { useTranslation } from 'react-i18next';
 
 export enum AuthRole {
