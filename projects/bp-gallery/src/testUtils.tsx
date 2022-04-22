@@ -43,7 +43,7 @@ export const renderWithAPIMocks = (
 
 // In order to supply the `MockedProvider` with the same config as the real client gets
 const cache = new InMemoryCache({
-  addTypename: false,
+  addTypename: true,
   typePolicies: {
     Query: {
       fields: {

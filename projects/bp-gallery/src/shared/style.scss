@@ -2,10 +2,12 @@
 
 :root {
   --primary-color: #7e241d;
-  --secondary-color: #404272;
-  --background-color: #1e1e1e;
+  --secondary-color: #404173;
+  --background-color: #ffffff;
+  --text-color: #0a0a0a;
 }
 
 $primaryColor: var(--primary-color);
 $secondaryColor: var(--secondary-color);
 $backgroundColor: var(--background-color);
+$textColor: var(--text-color);

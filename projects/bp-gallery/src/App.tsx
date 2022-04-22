@@ -29,7 +29,7 @@ export const httpLink = (token: string | null) =>
 const apolloClient = new ApolloClient({
   link: httpLink(sessionStorage.getItem('jwt')),
   cache: new InMemoryCache({
-    addTypename: false,
+    addTypename: true,
     typePolicies: {
       Query: {
         fields: {

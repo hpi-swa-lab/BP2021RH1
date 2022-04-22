@@ -9,6 +9,15 @@ import PictureGrid from './PictureGrid';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import './PictureOverview.scss';
 import useDeletePicture from './helpers/delete-picture.hook';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ViewList, ViewModule } from '@mui/icons-material';
+import PictureTable from './PictureTable';
+import { isNil } from 'lodash';
+
+enum OverviewMode {
+  TABLE,
+  GRID,
+}
 
 export type PictureOverviewProps = {
   pictures: FlatPicture[];
@@ -46,6 +55,7 @@ const PictureOverview = ({
   const addPicturesToCollection = useAddPicturesToCollection();
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
+  const [overviewMode, setOverviewMode] = useState<OverviewMode>(OverviewMode.GRID);
 
   const deletePicture = useDeletePicture();
 
@@ -104,8 +114,22 @@ const PictureOverview = ({
           ]}
         />
       )}
+      <ToggleButtonGroup
+        onChange={(_, value?: OverviewMode) => (!isNil(value) ? setOverviewMode(value) : null)}
+        exclusive
+        value={overviewMode}
+        className='toggle-view-mode'
+      >
+        <ToggleButton value={OverviewMode.TABLE}>
+          <ViewList />
+        </ToggleButton>
+        <ToggleButton value={OverviewMode.GRID}>
+          <ViewModule />
+        </ToggleButton>
+      </ToggleButtonGroup>
       <PictureOverviewContext.Provider value={pictureOverviewContextFields}>
-        <PictureGrid />
+        {overviewMode === OverviewMode.GRID && <PictureGrid />}
+        {overviewMode === OverviewMode.TABLE && <PictureTable />}
       </PictureOverviewContext.Provider>
       {focusedPicture && (
         <PictureView

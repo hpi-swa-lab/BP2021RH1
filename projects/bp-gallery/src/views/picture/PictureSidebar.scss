@@ -18,6 +18,28 @@
   .picture-info {
     padding: 10px;
     margin-bottom: 1.5rem;
+    padding-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+
+    .curator-ops {
+      display: flex;
+      flex-direction: row;
+      padding-right: 2rem;
+      margin-bottom: 1.5rem;
+      gap: 10px;
+
+      .MuiButton-root {
+        flex: 1 1 0;
+      }
+
+      .save-state {
+        color: #5a5a5a;
+        background: #e5e5e5;
+        border-radius: 0.25rem;
+        padding: 0.5rem 0.75rem;
+      }
+    }
   }
 
   .quick-access-buttons {

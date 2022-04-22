@@ -3,99 +3,7 @@ query getPictureInfo($pictureId: ID!) {
     data {
       id
       attributes {
-        descriptions(sort: "createdAt:desc") {
-          data {
-            id
-            attributes {
-              text
-            }
-          }
-        }
-        time_range_tag {
-          data {
-            id
-            attributes {
-              start
-              end
-            }
-          }
-        }
-        verified_time_range_tag {
-          data {
-            id
-            attributes {
-              start
-              end
-            }
-          }
-        }
-        keyword_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        verified_keyword_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        location_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        verified_location_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        person_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        verified_person_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        media {
-          data {
-            id
-            attributes {
-              url
-              updatedAt
-            }
-          }
-        }
-        comments {
-          data {
-            id
-            attributes {
-              text
-              author
-              date
-            }
-          }
-        }
+        ...PictureFields
       }
     }
   }
@@ -106,17 +14,106 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
     data {
       id
       attributes {
-        media {
-          data {
-            id
-            attributes {
-              width
-              height
-              formats
-              updatedAt
-            }
-          }
-        }
+        ...PictureFields
+      }
+    }
+  }
+}
+
+fragment PictureFields on Picture {
+  descriptions(sort: "createdAt:desc") {
+    data {
+      id
+      attributes {
+        text
+      }
+    }
+  }
+  time_range_tag {
+    data {
+      id
+      attributes {
+        start
+        end
+      }
+    }
+  }
+  verified_time_range_tag {
+    data {
+      id
+      attributes {
+        start
+        end
+      }
+    }
+  }
+  keyword_tags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+  verified_keyword_tags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+  location_tags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+  verified_location_tags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+  person_tags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+  verified_person_tags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+  media {
+    data {
+      id
+      attributes {
+        url
+        updatedAt
+        width
+        height
+        formats
+      }
+    }
+  }
+  comments {
+    data {
+      id
+      attributes {
+        text
+        author
+        date
       }
     }
   }

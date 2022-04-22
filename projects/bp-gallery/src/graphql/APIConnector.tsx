@@ -1621,7 +1621,13 @@ export type GetPictureInfoQuery = {
                         | {
                             id?: string | null | undefined;
                             attributes?:
-                              | { url: string; updatedAt?: any | null | undefined }
+                              | {
+                                  url: string;
+                                  updatedAt?: any | null | undefined;
+                                  width?: number | null | undefined;
+                                  height?: number | null | undefined;
+                                  formats?: any | null | undefined;
+                                }
                               | null
                               | undefined;
                           }
@@ -1663,16 +1669,104 @@ export type GetPicturesQuery = {
           id?: string | null | undefined;
           attributes?:
             | {
+                descriptions?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { text: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                time_range_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { start: any; end: any } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+                verified_time_range_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { start: any; end: any } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+                keyword_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_keyword_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                location_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_location_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                person_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_person_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
                 media: {
                   data?:
                     | {
                         id?: string | null | undefined;
                         attributes?:
                           | {
+                              url: string;
+                              updatedAt?: any | null | undefined;
                               width?: number | null | undefined;
                               height?: number | null | undefined;
                               formats?: any | null | undefined;
-                              updatedAt?: any | null | undefined;
                             }
                           | null
                           | undefined;
@@ -1680,7 +1774,139 @@ export type GetPicturesQuery = {
                     | null
                     | undefined;
                 };
+                comments?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { text: string; author?: string | null | undefined; date: any }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
               }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type PictureFieldsFragment = {
+  descriptions?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { text: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+  time_range_tag?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?: { start: any; end: any } | null | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+  verified_time_range_tag?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?: { start: any; end: any } | null | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+  keyword_tags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+  verified_keyword_tags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+  location_tags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+  verified_location_tags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+  person_tags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+  verified_person_tags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+  media: {
+    data?:
+      | {
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                url: string;
+                updatedAt?: any | null | undefined;
+                width?: number | null | undefined;
+                height?: number | null | undefined;
+                formats?: any | null | undefined;
+              }
+            | null
+            | undefined;
+        }
+      | null
+      | undefined;
+  };
+  comments?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | { text: string; author?: string | null | undefined; date: any }
             | null
             | undefined;
         }>;
@@ -2218,109 +2444,119 @@ export type MeQuery = {
     | undefined;
 };
 
+export const PictureFieldsFragmentDoc = gql`
+  fragment PictureFields on Picture {
+    descriptions(sort: "createdAt:desc") {
+      data {
+        id
+        attributes {
+          text
+        }
+      }
+    }
+    time_range_tag {
+      data {
+        id
+        attributes {
+          start
+          end
+        }
+      }
+    }
+    verified_time_range_tag {
+      data {
+        id
+        attributes {
+          start
+          end
+        }
+      }
+    }
+    keyword_tags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    verified_keyword_tags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    location_tags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    verified_location_tags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    person_tags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    verified_person_tags {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    media {
+      data {
+        id
+        attributes {
+          url
+          updatedAt
+          width
+          height
+          formats
+        }
+      }
+    }
+    comments {
+      data {
+        id
+        attributes {
+          text
+          author
+          date
+        }
+      }
+    }
+  }
+`;
+
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
       data {
         id
         attributes {
-          descriptions(sort: "createdAt:desc") {
-            data {
-              id
-              attributes {
-                text
-              }
-            }
-          }
-          time_range_tag {
-            data {
-              id
-              attributes {
-                start
-                end
-              }
-            }
-          }
-          verified_time_range_tag {
-            data {
-              id
-              attributes {
-                start
-                end
-              }
-            }
-          }
-          keyword_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          verified_keyword_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          location_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          verified_location_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          person_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          verified_person_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          media {
-            data {
-              id
-              attributes {
-                url
-                updatedAt
-              }
-            }
-          }
-          comments {
-            data {
-              id
-              attributes {
-                text
-                author
-                date
-              }
-            }
-          }
+          ...PictureFields
         }
       }
     }
   }
+  ${PictureFieldsFragmentDoc}
 `;
 
 /**
@@ -2374,21 +2610,12 @@ export const GetPicturesDocument = gql`
       data {
         id
         attributes {
-          media {
-            data {
-              id
-              attributes {
-                width
-                height
-                formats
-                updatedAt
-              }
-            }
-          }
+          ...PictureFields
         }
       }
     }
   }
+  ${PictureFieldsFragmentDoc}
 `;
 
 /**

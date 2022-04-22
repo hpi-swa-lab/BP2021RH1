@@ -1,3 +1,5 @@
+@import '../../../shared/style.scss';
+
 .transitioning {
   .picture-view-container {
     visibility: hidden;
@@ -5,5 +7,15 @@
 
   .adornments {
     display: none;
+  }
+}
+
+.toggle-view-mode {
+  background: white;
+  margin-top: 1rem;
+
+  .Mui-selected {
+    background-color: $primaryColor !important;
+    color: white !important;
   }
 }

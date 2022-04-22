@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
@@ -15,14 +15,17 @@ import {
 import TagSelectionField from './TagSelectionField';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import { cloneDeep } from 'lodash';
-import { Button } from '@mui/material';
-import { Crop } from '@mui/icons-material';
-import PictureEditDialog from './PictureEditDialog';
+import DescriptionsEditField from './DescriptionsEditField';
 
-const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
+const PictureInfo = ({
+  picture,
+  onSaveStatusChange,
+}: {
+  picture: FlatPicture;
+  onSaveStatusChange: (status: string) => void;
+}) => {
   const { role } = useAuth();
   const { t } = useTranslation();
 
@@ -32,18 +35,21 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
     refetchQueries: ['getPictureInfo'],
   });
 
-  const saveStatus = useMemo(() => {
+  useEffect(() => {
     if (anyFieldTouched) {
-      return t('curator.saveStatus.pending');
+      onSaveStatusChange(t('curator.saveStatus.pending'));
+      return;
     }
     if (updateMutationResponse.loading) {
-      return t('curator.saveStatus.saving');
+      onSaveStatusChange(t('curator.saveStatus.saving'));
+      return;
     }
     if (updateMutationResponse.error) {
-      return t('curator.saveStatus.error');
+      onSaveStatusChange(t('curator.saveStatus.error'));
+      return;
     }
-    return t('curator.saveStatus.saved');
-  }, [updateMutationResponse, anyFieldTouched, t]);
+    onSaveStatusChange(t('curator.saveStatus.saved'));
+  }, [updateMutationResponse, anyFieldTouched, t, onSaveStatusChange]);
 
   const pictureId = pictureState.id;
 
@@ -100,23 +106,8 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople]);
 
-  const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
-
   return (
-    <div className='picture-info'>
-      {role >= AuthRole.CURATOR && (
-        <div className='curator-ops'>
-          <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
-            {t('curator.editPicture')}
-          </Button>
-          <PictureEditDialog
-            picture={picture}
-            open={editDialogOpen}
-            onClose={() => setEditDialogOpen(false)}
-          />
-          <span className='save-state'>{saveStatus}</span>
-        </div>
-      )}
+    <>
       <PictureInfoField
         title={t('pictureFields.time')}
         icon='event'
@@ -191,7 +182,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           createMutation={newKeywordTagMutation}
         />
       </PictureInfoField>
-    </div>
+    </>
   );
 };
 
