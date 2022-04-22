@@ -26,7 +26,7 @@ const PictureSidebar = ({
       {loading && <Loading />}
       {error && <QueryErrorDisplay error={error} />}
       {!loading && !error && picture && (
-        <div className='scroll-container'>
+        <div className='scroll-container' onKeyUp={event => event.stopPropagation()}>
           <PictureInfo picture={picture} />
           <CommentsContainer comments={picture.comments} pictureId={picture.id} />
         </div>
