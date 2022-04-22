@@ -48,10 +48,22 @@ const MainView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight
   }));
 
   return (
-    <div>
+    <div
+      style={{
+        paddingTop: '4rem',
+      }}
+    >
       <CollectionDescription description={collection.description ?? ''} name={collection.name} />
       <SearchView scrollPos={0} scrollHeight={0} />
-      <h3> {t('common.browse')} </h3>
+      <h3
+        style={{
+          margin: '2rem auto',
+          maxWidth: '1200px',
+        }}
+      >
+        {' '}
+        {t('common.browse').toUpperCase()}{' '}
+      </h3>
       <BrowseView
         path={[]}
         scrollPos={0}

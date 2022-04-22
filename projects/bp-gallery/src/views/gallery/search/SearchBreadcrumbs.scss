@@ -1,19 +1,27 @@
+@import '../../../shared/style.scss';
+
 .search-breadcrumbs {
   .breadcrumb-chip {
-    margin-top: 1rem;
+    color: white;
+
+    .MuiChip-deleteIcon,
+    .MuiSvgIcon-root {
+      color: white;
+    }
+
     &[search-type='keyword'] {
-      background: rgb(5, 5, 248);
+      background: rgb(172, 113, 11);
     }
 
     &[search-type='ALL'] {
-      background: rgb(6, 247, 70);
+      background: #1c9e3f;
     }
 
     &[search-type='description'] {
-      background: rgb(243, 159, 3);
+      background: $primaryColor;
     }
     &[search-type='decade'] {
-      background: rgb(236, 8, 114);
+      background: #9f2b61;
     }
   }
 }
