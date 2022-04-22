@@ -3,7 +3,6 @@ import BrowseView from './browse/BrowseView';
 import SearchView from './search/SearchView';
 import MainView from '../main/MainView';
 import './GalleryView.scss';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => {
   const [scrollPos, setScrollPos] = useState<number>();
@@ -35,15 +34,15 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
 
   return (
     <div className='gallery-view'>
-      <PerfectScrollbar
-        options={{ suppressScrollX: true, useBothWheelAxes: false }}
-        onScrollY={container => {
-          setScrollPos(container.scrollTop);
-          setScrollHeight(container.scrollHeight);
+      <div
+        className={'scrollable-container'}
+        onScroll={event => {
+          setScrollPos((event.target as HTMLElement).scrollTop);
+          setScrollHeight((event.target as HTMLElement).scrollHeight);
         }}
       >
         {switchView()}
-      </PerfectScrollbar>
+      </div>
     </div>
   );
 };
