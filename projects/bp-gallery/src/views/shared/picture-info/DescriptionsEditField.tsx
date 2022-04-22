@@ -25,6 +25,7 @@ const DescriptionsEditField = ({
     () => ({
       readonly: role < AuthRole.CURATOR,
       preset: 'inline',
+      enter: 'BR', //Not 'P' to avoid addition of <p> to descriptions
     }),
     [role]
   );
