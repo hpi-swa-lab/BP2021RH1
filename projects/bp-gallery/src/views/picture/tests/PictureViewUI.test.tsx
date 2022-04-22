@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import PictureViewUI from '../components/PictureViewUI';
+import PictureViewUI from '../PictureViewUI';
 
 describe('Picture View UI', () => {
   it('should display bh-logo', async () => {
-    const { container } = render(<PictureViewUI maxHeight='500px' calledViaLink={true} />);
+    const { container } = render(<PictureViewUI calledViaLink={true} />);
 
     const logo = container.querySelector('.bh-logo');
     expect(logo).toBeInTheDocument();
@@ -13,7 +13,7 @@ describe('Picture View UI', () => {
 
   describe('Back button', () => {
     it('should render the back to home button on called via link', async () => {
-      const { container } = render(<PictureViewUI maxHeight='500px' calledViaLink={true} />);
+      const { container } = render(<PictureViewUI calledViaLink={true} />);
 
       const backButton: HTMLButtonElement | null = container.querySelector(
         '.picture-toolbar > button'
@@ -23,7 +23,7 @@ describe('Picture View UI', () => {
     });
 
     it('should render the back button on not called via link', async () => {
-      const { container } = render(<PictureViewUI maxHeight='500px' calledViaLink={false} />);
+      const { container } = render(<PictureViewUI calledViaLink={false} />);
 
       const backButton: HTMLButtonElement | null = container.querySelector(
         '.picture-toolbar > button'

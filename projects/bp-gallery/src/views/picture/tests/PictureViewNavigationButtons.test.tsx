@@ -1,9 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import PictureNavigationButtons, {
-  PictureNavigationTarget,
-} from '../components/PictureNavigationButtons';
 import { renderWithPictureContextMocks } from './pictureTestUtils';
+import PictureNavigationButtons, { PictureNavigationTarget } from '../PictureNavigationButtons';
 
 describe('PictureViewNavigationButtons', () => {
   it('should show next button if there is a next picture', async () => {

@@ -1,0 +1,24 @@
+import React from 'react';
+import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+import './FormattedComment.scss';
+import { FlatComment } from '../../../types/additionalFlatTypes';
+
+const FormattedComment = ({ comment }: { comment: FlatComment }) => {
+  const { t } = useTranslation();
+
+  const parseNewLine = (text: string) => text.replace(/\\n/gm, '\n');
+
+  return (
+    <div className='comment' key={comment.id}>
+      <div className='comment-details'>
+        <strong>{comment.author}</strong> {t('common.wrote-on')}{' '}
+        {dayjs(comment.date as string).format('DD.MM.YYYY')}
+        :<br />
+      </div>
+      <div className='comment-text'>{parseNewLine(comment.text)}</div>
+    </div>
+  );
+};
+
+export default FormattedComment;
