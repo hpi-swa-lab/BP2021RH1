@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './CollectionPictureDisplay.scss';
-import { FormControlLabel, Switch } from '@mui/material';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import {
@@ -11,7 +10,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
-import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/formatBrowsePath';
+import { decodeBrowsePathComponent } from './helpers/formatBrowsePath';
 import CollectionPictureDisplay from './CollectionPictureDisplay';
 
 const BrowseView = ({
@@ -75,17 +74,6 @@ const BrowseView = ({
   }
   return (
     <>
-      <FormControlLabel
-        control={
-          <Switch
-            defaultChecked={!communityView}
-            onChange={() =>
-              history.replace(formatBrowsePath(path, !communityView), { showBack: true })
-            }
-          />
-        }
-        label={String(communityView ? t('common.community-view') : t('common.browse-view'))}
-      />
       <CollectionPictureDisplay
         picturePublishingDate={communityView ? picturePublishingDate : undefined}
         collections={filteredCollections}
