@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  PictureFiltersInput,
-  useGetPicturesIdQuery,
-  useGetPicturesQuery,
-} from '../../../graphql/APIConnector';
+import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
@@ -41,17 +37,17 @@ const PictureScrollGrid = ({
     notifyOnNetworkStatusChange: true,
   });
 
-  const totalPictureData = useGetPicturesIdQuery({
-    variables: {
-      filters,
-      pagination: {},
-    },
-    notifyOnNetworkStatusChange: true,
-  });
+  // const totalPictureData = useGetPicturesIdQuery({
+  //   variables: {
+  //     filters,
+  //     pagination: {},
+  //   },
+  //   notifyOnNetworkStatusChange: true,
+  // });
 
-  const totalPicturesIds: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
-    totalPictureData.data
-  )?.pictures;
+  // const totalPicturesIds: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
+  //   totalPictureData.data
+  // )?.pictures;
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   useEffect(() => {
@@ -95,9 +91,9 @@ const PictureScrollGrid = ({
     return (
       <>
         <div>
-          {new Intl.NumberFormat('de-DE').format(
-            Array.from(new Set(totalPicturesIds?.map((item: any) => item.id))).length
-          )}{' '}
+          {pictures.length === 100
+            ? '100+'
+            : new Intl.NumberFormat('de-DE').format(pictures.length)}{' '}
           {t('common.pictures')}
         </div>
         <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />
