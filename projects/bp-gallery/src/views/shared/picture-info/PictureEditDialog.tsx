@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
 import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ImageEditor from '@toast-ui/react-image-editor';
@@ -10,6 +10,7 @@ import './PictureEditDialog.scss';
 import replaceMediaFile from './replace-media-file';
 import dayjs from 'dayjs';
 import { useApolloClient } from '@apollo/client';
+import { PictureViewContext } from '../../picture/PictureView';
 
 const PictureEditDialog = ({
   picture,
@@ -23,6 +24,7 @@ const PictureEditDialog = ({
   const { t } = useTranslation();
   const editorRef = useRef<any>();
   const apolloClient = useApolloClient();
+  const { calledViaLink } = useContext(PictureViewContext);
 
   const save = useCallback(async () => {
     if (!picture.media?.id) {
@@ -42,10 +44,14 @@ const PictureEditDialog = ({
     await replaceMediaFile(file, picture.media.id);
     // Close dialog
     onClose();
+    const queriesToRefetch = ['getPictureInfo'];
+    if (!calledViaLink) {
+      queriesToRefetch.push('getPictures');
+    }
     apolloClient.refetchQueries({
-      include: ['getPictureInfo', 'getPictures'],
+      include: queriesToRefetch,
     });
-  }, [picture.media?.id, onClose, apolloClient]);
+  }, [picture.media?.id, onClose, apolloClient, calledViaLink]);
 
   if (!picture.media?.url) {
     return null;

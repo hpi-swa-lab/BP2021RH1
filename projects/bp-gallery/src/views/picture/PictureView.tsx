@@ -28,6 +28,7 @@ export interface PictureViewContextFields {
   hasPrevious?: boolean;
   sideBarOpen?: boolean;
   setSideBarOpen?: Dispatch<SetStateAction<boolean>>;
+  calledViaLink?: boolean;
 }
 
 export const PictureViewContext = React.createContext<PictureViewContextFields>({});
@@ -116,6 +117,7 @@ const PictureView = ({
     hasPrevious,
     sideBarOpen,
     setSideBarOpen,
+    calledViaLink: !onBack,
   };
 
   // Block navigation and handle yourself, i.e. block browser navigation and
