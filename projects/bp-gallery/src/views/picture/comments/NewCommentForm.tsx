@@ -72,7 +72,12 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   }, [commentAuthor, commentText, pictureId, postCommentMutation]);
 
   return (
-    <div className='new-comment-form'>
+    <div
+      className='new-comment-form'
+      onKeyUp={event => {
+        event.stopPropagation();
+      }}
+    >
       <TextField
         className='input-field'
         id='name'
