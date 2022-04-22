@@ -134,7 +134,7 @@ const PictureGrid = ({
               action: () => {
                 // Hardcoded id! Just for test purposes!
                 addPicturesToCollection(
-                  '6',
+                  '232',
                   selectedPictures.map(p => p.id)
                 );
               },
