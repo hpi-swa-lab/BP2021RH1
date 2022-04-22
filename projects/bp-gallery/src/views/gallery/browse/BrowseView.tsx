@@ -24,9 +24,6 @@ const BrowseView = ({
   scrollHeight: number;
   communityView: boolean;
 }) => {
-  const { t } = useTranslation();
-  const history: History = useHistory();
-
   // Query the name of the root-collection if there is no path
   const rootCollectionResult = useGetRootCollectionQuery({
     skip: path && path.length > 0,
