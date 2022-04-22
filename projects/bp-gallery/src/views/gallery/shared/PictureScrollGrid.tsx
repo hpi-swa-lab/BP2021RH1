@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  PictureFiltersInput,
-  useGetPicturesIdQuery,
-  useGetPicturesQuery,
-} from '../../../graphql/APIConnector';
+import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
@@ -45,17 +41,17 @@ const PictureScrollGrid = ({
     notifyOnNetworkStatusChange: true,
   });
 
-  const totalPictureData = useGetPicturesIdQuery({
-    variables: {
-      filters,
-      pagination: {},
-    },
-    notifyOnNetworkStatusChange: true,
-  });
+  // const totalPictureData = useGetPicturesIdQuery({
+  //   variables: {
+  //     filters,
+  //     pagination: {},
+  //   },
+  //   notifyOnNetworkStatusChange: true,
+  // });
 
-  const totalPicturesIds: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
-    totalPictureData.data
-  )?.pictures;
+  // const totalPicturesIds: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
+  //   totalPictureData.data
+  // )?.pictures;
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   useEffect(() => {
