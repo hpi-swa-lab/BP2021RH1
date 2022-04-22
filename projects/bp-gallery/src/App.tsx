@@ -8,6 +8,8 @@ import NavigationBar from './components/NavigationBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
 import AlertWrapper from './components/AlertWrapper';
+import { Location } from 'history';
+import { useLocation } from 'react-router-dom';
 
 const apiBase = 'https://bp.bad-harzburg-stiftung.de/api';
 
@@ -61,6 +63,8 @@ const apolloClient = new ApolloClient({
 });
 
 const App = ({ route }: RouteConfigComponentProps) => {
+  const search: Location = useLocation();
+
   return (
     <ApolloProvider client={apolloClient}>
       <AlertWrapper>
@@ -68,7 +72,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
           <div className='App'>
             <TopBar />
             {renderRoutes(route?.routes)}
-            <NavigationBar />
+            {search.pathname !== '/main' && search.pathname !== '/search' && <NavigationBar />}
           </div>
         </AuthWrapper>
       </AlertWrapper>
