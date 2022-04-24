@@ -100,6 +100,10 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople]);
 
+  useEffect(() => {
+    nativeSetPictureState(picture);
+  }, [picture]);
+
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
   return (
@@ -121,10 +125,10 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         title={t('pictureFields.time')}
         icon='event'
         type='date'
-        empty={!picture.time_range_tag}
+        empty={!pictureState.time_range_tag}
       >
         <DateRangeSelectionField
-          timeRangeTag={picture.time_range_tag}
+          timeRangeTag={pictureState.time_range_tag}
           onChange={range => {
             setPictureState({ time_range_tag: range });
           }}
@@ -136,10 +140,10 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         title={t('pictureFields.descriptions')}
         icon='description'
         type='description'
-        empty={!picture.descriptions?.length}
+        empty={!pictureState.descriptions?.length}
       >
         <DescriptionsEditField
-          descriptions={picture.descriptions ?? []}
+          descriptions={pictureState.descriptions ?? []}
           onChange={descriptions => {
             setPictureState({ descriptions });
           }}
@@ -150,7 +154,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         title={t('pictureFields.people')}
         icon='person'
         type='person'
-        empty={!picture.person_tags?.length}
+        empty={!pictureState.person_tags?.length}
       >
         <TagSelectionField
           tags={pictureState.person_tags ?? []}
@@ -165,7 +169,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         title={t('pictureFields.locations')}
         icon='place'
         type='location'
-        empty={!picture.location_tags?.length}
+        empty={!pictureState.location_tags?.length}
       >
         <TagSelectionField
           tags={pictureState.location_tags ?? []}
@@ -180,7 +184,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         title={t('pictureFields.keywords')}
         icon='sell'
         type='keywords'
-        empty={!picture.keyword_tags?.length}
+        empty={!pictureState.keyword_tags?.length}
       >
         <TagSelectionField
           tags={pictureState.keyword_tags ?? []}
