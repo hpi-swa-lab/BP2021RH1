@@ -50,6 +50,13 @@ const routes: RouteConfig[] = [
         exact: true,
       },
       {
+        path: '/uploads',
+        render: () => {
+          return <GalleryView target='uploads' />;
+        },
+        exact: true,
+      },
+      {
         path: '/picture/:id',
         render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
           return <PictureView initialPictureId={match.params.id} />;

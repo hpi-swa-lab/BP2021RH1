@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BrowseView from './browse/BrowseView';
 import SearchView from './search/SearchView';
 import './GalleryView.scss';
+import UploadsView from './uploads/UploadsView';
 
 const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => {
   const [scrollPos, setScrollPos] = useState<number>();
@@ -20,6 +21,8 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
         return <BrowseView path={path} {...scrollParams} communityView={true} />;
       case 'search':
         return <SearchView {...scrollParams} />;
+      case 'uploads':
+        return <UploadsView {...scrollParams} />;
       default:
         return '404 - Not found';
     }

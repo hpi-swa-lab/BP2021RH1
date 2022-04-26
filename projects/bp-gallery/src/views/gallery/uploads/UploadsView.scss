@@ -1,0 +1,13 @@
+.uploads-overview {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 2rem;
+  background: white;
+  padding-top: 2rem;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+  min-height: calc(100vh - 12rem);
+
+  .picture-grid {
+    margin-top: 2rem;
+  }
+}

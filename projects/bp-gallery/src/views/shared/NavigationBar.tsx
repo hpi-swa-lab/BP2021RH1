@@ -38,6 +38,26 @@ const NavigationBar = () => {
             {role === AuthRole.PUBLIC ? t('login.title') : t('login.logout')}
           </span>
         </div>
+        {role >= AuthRole.CURATOR && (
+          <>
+            <NavLink to='/uploads' className='nav-element'>
+              <Icon>upload</Icon>
+              <span className='nav-element-title'>{t('curator.uploads')}</span>
+            </NavLink>
+            <NavLink to='/tags/keywords' className='nav-element'>
+              <Icon>sell</Icon>
+              <span className='nav-element-title'>{t('pictureFields.keywords')}</span>
+            </NavLink>
+            <NavLink to='/tags/locations' className='nav-element'>
+              <Icon>place</Icon>
+              <span className='nav-element-title'>{t('pictureFields.locations')}</span>
+            </NavLink>
+            <NavLink to='/tags/people' className='nav-element'>
+              <Icon>person</Icon>
+              <span className='nav-element-title'>{t('pictureFields.people')}</span>
+            </NavLink>
+          </>
+        )}
       </div>
       <LoginDialog open={openLogin} onClose={() => setOpenLogin(false)} />
     </>
