@@ -17,6 +17,8 @@ const DecadesList = () => {
   const { t } = useTranslation();
   const history: History = useHistory();
 
+  const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
+
   const { data, loading, error } = useGetDecadePreviewThumbnailsQuery();
   const decadeThumbnails: FlatDecadeThumbnails | undefined = useSimplifiedQueryResponseData(data);
 
@@ -30,11 +32,11 @@ const DecadesList = () => {
         compact={true}
         items={DECADE_NAMES.map((name: string) => {
           const thumbnailData = decadeThumbnails[`s${name}`];
-          const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url ?? '';
+          const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
           const displayedName = name === '40' ? t('common.past') : `${name}er`;
           return {
             name: displayedName,
-            background: asApiPath(thumbnail),
+            background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
             onClick: () => {
               history.push(asSearchPath(SearchType.DECADE, name), { showBack: true });
             },

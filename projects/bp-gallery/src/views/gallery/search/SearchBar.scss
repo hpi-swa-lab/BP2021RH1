@@ -12,9 +12,9 @@
     }
 
     .MuiInputBase-root {
-      color: white;
+      color: #5a5a5a;
       border-radius: 2rem;
-      background: #302e2e;
+      background: #dfdfdf;
       transition: margin-left 0.25s, margin-top 0.25s, width 0.25s, border-radius 0.25s;
 
       @media only screen and (max-width: 650px) {
@@ -31,7 +31,7 @@
       }
 
       .MuiSvgIcon-root {
-        color: white;
+        color: #5a5a5a;
       }
 
       fieldset {

@@ -5,26 +5,24 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background: $primaryColor;
-  color: white;
+  background: #e5e5e5;
+  color: #5a5a5a;
   height: 4rem;
   width: 100%;
   z-index: 99;
   min-height: 0;
-
   .nav-element {
     padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: white;
+    color: #5a5a5a;
     cursor: pointer;
     margin: 0px 2vmin;
     height: calc(100% - 1rem);
     width: 6rem;
     text-decoration: none;
     transition: background 0.3s;
-
     &:not(.active) {
       &:hover {
         background: rgba(255, 255, 255, 0.15);
@@ -33,7 +31,7 @@
 
     &.active {
       background: white;
-      color: $primaryColor;
+      color: #0a0a0a;
     }
   }
 }
