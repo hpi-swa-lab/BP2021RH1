@@ -12,14 +12,12 @@ const PictureScrollGrid = ({
   scrollPos,
   scrollHeight,
   hashbase,
-  previewPictureCallback,
   uploadAreaProps,
 }: {
   filters: PictureFiltersInput;
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
-  previewPictureCallback?: (picture: FlatPicture) => void;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
 }) => {
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -36,12 +34,6 @@ const PictureScrollGrid = ({
     notifyOnNetworkStatusChange: true,
   });
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
-
-  useEffect(() => {
-    if (previewPictureCallback && pictures && pictures.length) {
-      previewPictureCallback(pictures[0]);
-    }
-  }, [pictures, previewPictureCallback]);
 
   // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {
