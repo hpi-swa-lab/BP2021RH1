@@ -20,7 +20,7 @@ h2 {
 
     &::before {
       content: '';
-      background: linear-gradient(0deg, $backgroundColor, transparent);
+      background: linear-gradient(0deg, white, transparent);
       position: absolute;
       bottom: 0;
       left: 0;
@@ -43,7 +43,7 @@ h2 {
   width: 100%;
 
   .icon {
-    color: white;
+    color: $textColor;
     margin: auto;
     transform: scale(1.8);
   }

@@ -53,7 +53,8 @@
     "descriptions": "Beschreibungen",
     "people": "Personen",
     "keywords": "Stichworte",
-    "noTime": "Keine Zeit angegeben"
+    "noTime": "Keine Zeit angegeben",
+    "collections": "Collections"
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
@@ -66,6 +67,7 @@
     "synonyms": "Synonyme",
     "add": "Hinzufügen",
     "addToCollection": "Zum Bilderabend hinzufügen",
+    "addCollection": "Collection hinzufügen",
     "saveStatus": {
       "saving": "Speichern...",
       "saved": "Gespeichert.",
@@ -73,6 +75,7 @@
       "pending": "Speichern ausstehend"
     },
     "save": "Speichern",
-    "editPicture": "Bild zuschneiden"
+    "editPicture": "Bild zuschneiden",
+    "uploads": "Uploads"
   }
 }

@@ -25,14 +25,11 @@
     }
   }
 
-  &.grid {
-    // Todo
-  }
-
   &.large .ps .items {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 0.5rem;
+    padding-bottom: 6px;
   }
 
   .item {
@@ -42,6 +39,9 @@
     height: 150px;
     cursor: pointer;
     overflow: hidden;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.4);
+    border-radius: 0.4rem;
+    background: #1c1c1c;
 
     &:hover {
       .image-container img {

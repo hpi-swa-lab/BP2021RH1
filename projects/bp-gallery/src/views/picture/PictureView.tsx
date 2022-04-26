@@ -21,6 +21,7 @@ import usePrefetchPictureHook from './prefetch.hook';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
 import usePresentationChannel from './presentationChannel';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthRole, useAuth } from '../../AuthWrapper';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -45,9 +46,15 @@ const PictureView = ({
   const history: History = useHistory();
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const { role } = useAuth();
 
   const [pictureId, setPictureId] = useState<string>(initialPictureId);
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
+
+  // Open the sidebar per default if logged in as a curators
+  useEffect(() => {
+    setSideBarOpen(role >= AuthRole.CURATOR);
+  }, [role]);
 
   const search = window.location.search;
   const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {

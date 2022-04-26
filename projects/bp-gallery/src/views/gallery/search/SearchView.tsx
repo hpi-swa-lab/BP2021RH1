@@ -5,7 +5,6 @@ import SearchBar from './SearchBar';
 import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 
 export const enum SearchType {
@@ -96,7 +95,6 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
 
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
-  const [previewPicture, setPreviewPicture] = useState<FlatPicture>();
   const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
@@ -127,11 +125,6 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={search}
-              previewPictureCallback={(pic: FlatPicture) => {
-                if (pic !== previewPicture) {
-                  setPreviewPicture(pic);
-                }
-              }}
             />
           )}
         </div>

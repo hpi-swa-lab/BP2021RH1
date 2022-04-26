@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import CollectionPictureDisplay from '../CollectionPictureDisplay';
+import { renderWithAPIMocks } from '../../../../testUtils';
 
 const CollectionDescriptionMock = jest.fn();
 const CollectionDescriptionMockComponent = (props: any) => {
@@ -78,14 +79,15 @@ describe('CollectionPictureDisplay', () => {
       const picturePublishingDate = '05.05.2000';
 
       test('Renders CollectionDescription component', async () => {
-        render(
+        renderWithAPIMocks(
           <CollectionPictureDisplay
             path={path}
             scrollPos={0}
             scrollHeight={0}
             collections={collections}
             picturePublishingDate={picturePublishingDate}
-          />
+          />,
+          []
         );
 
         const collectionDescriptionDetails = screen.getByText('CollectionDescriptionMock');
@@ -99,14 +101,15 @@ describe('CollectionPictureDisplay', () => {
       });
 
       test('Renders SubCollections component', async () => {
-        render(
+        renderWithAPIMocks(
           <CollectionPictureDisplay
             path={path}
             scrollPos={0}
             scrollHeight={0}
             collections={collections}
             picturePublishingDate={picturePublishingDate}
-          />
+          />,
+          []
         );
 
         const subCollectionsDetails = screen.getByText('SubCollectionsMock');
@@ -124,14 +127,15 @@ describe('CollectionPictureDisplay', () => {
       });
 
       test('Renders PictureScrollGrid component', () => {
-        render(
+        renderWithAPIMocks(
           <CollectionPictureDisplay
             path={path}
             scrollPos={0}
             scrollHeight={0}
             collections={collections}
             picturePublishingDate={picturePublishingDate}
-          />
+          />,
+          []
         );
 
         const pictureScrollGridDetails = screen.getByText('PictureScrollGridMock');

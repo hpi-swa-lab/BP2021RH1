@@ -15,6 +15,8 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
   const history: History = useHistory();
   const { t } = useTranslation();
 
+  const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
+
   const [getKeywordTagSuggestions, { data, loading, error }] = useGetKeywordTagSuggestionsLazyQuery(
     {
       variables: {
@@ -45,8 +47,10 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
         items={keywordTags.map(tag => ({
           name: tag.name,
           background: tag.thumbnail.length
-            ? asApiPath(String(tag.thumbnail[0].media?.formats?.small?.url || ''))
-            : '',
+            ? asApiPath(
+                String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
+              )
+            : DEFAULT_THUMBNAIL_URL,
           onClick: () => {
             history.push(asSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name))), {
               showBack: true,
