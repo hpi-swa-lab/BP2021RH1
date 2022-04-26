@@ -88,7 +88,7 @@ const PictureEditDialog = ({
               name: 'SampleImage',
             },
             initMenu: 'crop',
-            menu: ['crop', 'rotate'],
+            menu: ['crop', 'rotate', 'filter'],
             menuBarPosition: 'right',
           }}
         />
