@@ -2,13 +2,15 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../shared/Loading';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
-import PictureScrollGrid from '../shared/PictureScrollGrid';
 import SubCollections from './SubCollections';
-import { PictureFiltersInput } from '../../../graphql/APIConnector';
+import { PictureFiltersInput, useCreateSubCollectionMutation } from '../../../graphql/APIConnector';
 import CollectionDescription from './CollectionDescription';
 import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { PictureUploadAreaProps } from '../shared/PictureUploadArea';
+import { Button } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import PictureScrollGrid from '../shared/PictureScrollGrid';
 
 const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -52,6 +54,23 @@ const CollectionPictureDisplay = ({
   const { t } = useTranslation();
   const { role } = useAuth();
 
+  const [addSubCollection] = useCreateSubCollectionMutation();
+
+  const addCollection = useCallback(() => {
+    // TODO: This needs to be changed, not a permanent solution!
+    const collectionName = prompt('Name der neuen Collection:', 'neue collection');
+    if (collectionName?.length && collections) {
+      addSubCollection({
+        variables: {
+          name: collectionName,
+          parentId: collections[0].id,
+          publishedAt: new Date().toISOString(),
+        },
+        refetchQueries: ['getCollectionInfo'],
+      });
+    }
+  }, [collections, addSubCollection]);
+
   const uploadAreaProps = useCallback(
     (collection: FlatCollection): Partial<PictureUploadAreaProps> | undefined => {
       return role >= AuthRole.CURATOR
@@ -87,6 +106,11 @@ const CollectionPictureDisplay = ({
             path={path}
             communityView={!!picturePublishingDate}
           />
+        )}
+        {role >= AuthRole.CURATOR && (
+          <Button startIcon={<Add />} onClick={addCollection}>
+            {t('curator.addCollection')}
+          </Button>
         )}
         <PictureScrollGrid
           filters={getPictureFilters(collection.id, picturePublishingDate)}

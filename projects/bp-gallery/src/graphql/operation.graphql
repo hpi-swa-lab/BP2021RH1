@@ -544,6 +544,16 @@ mutation createLocationTag($name: String!) {
   }
 }
 
+mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
+  createCollection(
+    data: { name: $name, parent_collections: [$parentId], publishedAt: $publishedAt }
+  ) {
+    data {
+      id
+    }
+  }
+}
+
 mutation updatePicture($pictureId: ID!, $data: PictureInput!) {
   updatePicture(id: $pictureId, data: $data) {
     data {

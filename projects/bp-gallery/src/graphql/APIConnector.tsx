@@ -2155,6 +2155,19 @@ export type CreateLocationTagMutation = {
     | undefined;
 };
 
+export type CreateSubCollectionMutationVariables = Exact<{
+  name: Scalars['String'];
+  parentId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
+}>;
+
+export type CreateSubCollectionMutation = {
+  createCollection?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type UpdatePictureMutationVariables = Exact<{
   pictureId: Scalars['ID'];
   data: PictureInput;
@@ -3842,6 +3855,66 @@ export type CreateLocationTagMutationResult = Apollo.MutationResult<CreateLocati
 export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationTagMutation,
   CreateLocationTagMutationVariables
+>;
+
+export const CreateSubCollectionDocument = gql`
+  mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
+    createCollection(
+      data: { name: $name, parent_collections: [$parentId], publishedAt: $publishedAt }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateSubCollectionMutationFn = Apollo.MutationFunction<
+  CreateSubCollectionMutation,
+  CreateSubCollectionMutationVariables
+>;
+
+/**
+ * __useCreateSubCollectionMutation__
+ *
+ * To run a mutation, you first call `useCreateSubCollectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubCollectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSubCollectionMutation, { data, loading, error }] = useCreateSubCollectionMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      parentId: // value for 'parentId'
+ *      publishedAt: // value for 'publishedAt'
+ *   },
+ * });
+ */
+export function useCreateSubCollectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSubCollectionMutation,
+    CreateSubCollectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateSubCollectionMutation, CreateSubCollectionMutationVariables>(
+    CreateSubCollectionDocument,
+    options
+  );
+}
+
+export type CreateSubCollectionMutationHookResult = ReturnType<
+  typeof useCreateSubCollectionMutation
+>;
+
+export type CreateSubCollectionMutationResult = Apollo.MutationResult<CreateSubCollectionMutation>;
+
+export type CreateSubCollectionMutationOptions = Apollo.BaseMutationOptions<
+  CreateSubCollectionMutation,
+  CreateSubCollectionMutationVariables
 >;
 
 export const UpdatePictureDocument = gql`
