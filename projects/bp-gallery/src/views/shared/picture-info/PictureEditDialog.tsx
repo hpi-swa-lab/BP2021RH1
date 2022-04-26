@@ -44,7 +44,9 @@ const PictureEditDialog = ({
         editorInstance.crop(editorInstance.getCropzoneRect());
       }
       // eslint-disable-next-line no-empty
-    } catch (err) {}
+    } catch (err) {
+      // If an error is catched here, the picture was saved when in rotate/filter mode
+    }
 
     // I don't know why we have to do this, but without it it doesn't work
     // Ask the ImageEditor library why this happens 🤷🏻‍♀️
