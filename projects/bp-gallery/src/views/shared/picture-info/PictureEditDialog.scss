@@ -1,6 +1,76 @@
 .picture-edit-dialog {
-  .tui-image-editor-header-buttons {
-    display: none;
+  .tui-image-editor-main-container {
+    background-color: white !important;
+    background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+      linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+      linear-gradient(-45deg, transparent 75%, #f0f0f0 75%) !important;
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+
+    .tui-image-editor-main {
+      top: 0;
+
+      canvas {
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .tui-image-editor-submenu-style {
+      background: white !important;
+      box-shadow: -2px 0px 3px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    .tui-image-editor-submenu-item {
+      label {
+        font-weight: 900;
+        color: black !important;
+
+        span {
+          color: black !important;
+        }
+      }
+    }
+
+    .tui-image-editor-checkbox label > span:before {
+      background-color: #d2d2d2;
+    }
+
+    .tui-image-editor-header {
+      display: none;
+    }
+  }
+
+  .tui-image-editor-controls {
+    background: #1976d2;
+
+    li:not(.active) use {
+      stroke: white !important;
+      fill: white;
+    }
+  }
+
+  .tui-image-editor-virtual-range-pointer {
+    background-color: #1976d2 !important;
+  }
+
+  .tui-image-editor-help-menu li {
+    left: 25px;
+
+    &.enabled {
+      border-radius: 2rem !important;
+      box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
+      background: #1976d2;
+
+      use {
+        stroke: white !important;
+        fill: white !important;
+      }
+
+      .tui-image-editor-icpartition {
+        background-color: white;
+      }
+    }
   }
 
   .MuiDialogContent-root {
