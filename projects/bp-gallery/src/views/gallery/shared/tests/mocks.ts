@@ -22,6 +22,7 @@ export const GetPicturesDocumentMocks = [
               attributes: {
                 media: {
                   data: {
+                    id: 1,
                     attributes: {
                       formats: {
                         small: {
@@ -41,6 +42,7 @@ export const GetPicturesDocumentMocks = [
               attributes: {
                 media: {
                   data: {
+                    id: 2,
                     attributes: {
                       formats: {
                         small: {
@@ -60,6 +62,7 @@ export const GetPicturesDocumentMocks = [
               attributes: {
                 media: {
                   data: {
+                    id: 3,
                     attributes: {
                       formats: {
                         small: {
@@ -79,6 +82,7 @@ export const GetPicturesDocumentMocks = [
               attributes: {
                 media: {
                   data: {
+                    id: 4,
                     attributes: {
                       formats: {
                         small: {
@@ -118,6 +122,7 @@ export const GetPicturesDocumentMocks = [
               attributes: {
                 media: {
                   data: {
+                    id: 5,
                     attributes: {
                       formats: {
                         small: {
@@ -137,6 +142,7 @@ export const GetPicturesDocumentMocks = [
               attributes: {
                 media: {
                   data: {
+                    id: 6,
                     attributes: {
                       formats: {
                         small: {
