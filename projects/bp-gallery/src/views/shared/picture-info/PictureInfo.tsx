@@ -55,6 +55,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       // since it only accepts string input, not JSON data
       Object.keys(fieldForAPI).forEach(key => {
         if (key === 'collections') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           fieldForAPI[key] = fieldForAPI[key].map((collection: FlatCollection) => collection.id);
         } else if (Array.isArray(fieldForAPI[key])) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
