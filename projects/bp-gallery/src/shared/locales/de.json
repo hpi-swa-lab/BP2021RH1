@@ -53,7 +53,8 @@
     "descriptions": "Beschreibungen",
     "people": "Personen",
     "keywords": "Stichworte",
-    "noTime": "Keine Zeit angegeben"
+    "noTime": "Keine Zeit angegeben",
+    "collections": "Collections"
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",

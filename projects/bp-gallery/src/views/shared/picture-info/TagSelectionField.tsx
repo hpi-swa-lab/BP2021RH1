@@ -22,11 +22,13 @@ const TagSelectionField = <T extends TagFields>({
   allTags,
   onChange,
   createMutation,
+  nonVerifyable = false,
 }: {
   tags: T[];
   allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
+  nonVerifyable?: boolean;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -75,7 +77,7 @@ const TagSelectionField = <T extends TagFields>({
 
             const isExisting = options.some(o => o.name === inputValue);
 
-            if (inputValue !== '' && !isExisting) {
+            if (createMutation && inputValue !== '' && !isExisting) {
               filtered.push({
                 name: inputValue,
                 icon: 'add',
@@ -130,10 +132,12 @@ const TagSelectionField = <T extends TagFields>({
               <Chip
                 {...props({ index })}
                 key={index}
-                icon={!option.verified ? <Icon>help</Icon> : undefined}
+                icon={nonVerifyable || option.verified ? undefined : <Icon>help</Icon>}
                 label={option.name}
                 onClick={() => {
-                  toggleVerified(value, index);
+                  if (!nonVerifyable) {
+                    toggleVerified(value, index);
+                  }
                 }}
               />
             ));
