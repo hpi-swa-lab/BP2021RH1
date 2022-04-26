@@ -58,6 +58,7 @@ const CollectionPictureDisplay = ({
 
   const addCollection = useCallback(() => {
     // TODO: This needs to be changed, not a permanent solution!
+    // eslint-disable-next-line no-alert
     const collectionName = prompt('Name der neuen Collection:', 'neue collection');
     if (collectionName?.length && collections) {
       addSubCollection({
