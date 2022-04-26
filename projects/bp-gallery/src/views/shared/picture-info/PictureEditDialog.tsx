@@ -12,6 +12,10 @@ import dayjs from 'dayjs';
 import { useApolloClient } from '@apollo/client';
 import { PictureViewContext } from '../../picture/PictureView';
 
+const isDefaultCropZone = (rect: any) => {
+  return rect.width < 1 || rect.height < 1;
+};
+
 const PictureEditDialog = ({
   picture,
   open,
@@ -32,6 +36,20 @@ const PictureEditDialog = ({
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const editorInstance = editorRef.current?.getInstance();
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      if (!isDefaultCropZone(editorInstance?.getCropzoneRect())) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        editorInstance.crop(editorInstance.getCropzoneRect());
+      }
+      // eslint-disable-next-line no-empty
+    } catch (err) {}
+
+    // I don't know why we have to do this, but without it it doesn't work
+    // Ask the ImageEditor library why this happens 🤷🏻‍♀️
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const dataUrl = editorInstance.toDataURL({
       format: 'jpeg',
