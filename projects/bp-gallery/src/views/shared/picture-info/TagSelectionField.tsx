@@ -65,7 +65,7 @@ const TagSelectionField = <T extends TagFields>({
                 // Consider the name of the tag as well its synonyms
                 keys: ['name', 'synonyms.name'],
                 // Slightly decrease the threshold in order to higher rank exact matches
-                threshold: 0.5,
+                threshold: 0.4,
               });
               filtered = fuzzyMatcher
                 .search(inputValue)
