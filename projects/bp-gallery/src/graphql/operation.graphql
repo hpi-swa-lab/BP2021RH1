@@ -77,6 +77,14 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        collections {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
         media {
           data {
             id
@@ -302,6 +310,17 @@ mutation updatePersonSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsIn
   updatePersonTag(id: $tagId, data: { synonyms: $synonyms }) {
     data {
       id
+    }
+  }
+}
+
+query getAllCollections {
+  collections {
+    data {
+      id
+      attributes {
+        name
+      }
     }
   }
 }

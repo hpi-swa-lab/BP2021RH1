@@ -1616,6 +1616,15 @@ export type GetPictureInfoQuery = {
                         }
                       | null
                       | undefined;
+                    collections?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
                     media: {
                       data?:
                         | {
@@ -1979,6 +1988,20 @@ export type UpdatePersonSynonymsMutation = {
     | undefined;
 };
 
+export type GetAllCollectionsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllCollectionsQuery = {
+  collections?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
@@ -2291,6 +2314,14 @@ export const GetPictureInfoDocument = gql`
             }
           }
           verified_person_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          collections {
             data {
               id
               attributes {
@@ -3303,6 +3334,63 @@ export type UpdatePersonSynonymsMutationResult =
 export type UpdatePersonSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdatePersonSynonymsMutation,
   UpdatePersonSynonymsMutationVariables
+>;
+
+export const GetAllCollectionsDocument = gql`
+  query getAllCollections {
+    collections {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllCollectionsQuery__
+ *
+ * To run a query within a React component, call `useGetAllCollectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCollectionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCollectionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>(
+    GetAllCollectionsDocument,
+    options
+  );
+}
+
+export function useGetAllCollectionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>(
+    GetAllCollectionsDocument,
+    options
+  );
+}
+
+export type GetAllCollectionsQueryHookResult = ReturnType<typeof useGetAllCollectionsQuery>;
+
+export type GetAllCollectionsLazyQueryHookResult = ReturnType<typeof useGetAllCollectionsLazyQuery>;
+
+export type GetAllCollectionsQueryResult = Apollo.QueryResult<
+  GetAllCollectionsQuery,
+  GetAllCollectionsQueryVariables
 >;
 
 export const GetDecadePreviewThumbnailsDocument = gql`

@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import {
+  useCreateKeywordTagMutation,
+  useCreateLocationTagMutation,
+  useCreatePersonTagMutation,
+  useGetAllCollectionsLazyQuery,
   useGetAllKeywordTagsLazyQuery,
   useGetAllLocationTagsLazyQuery,
   useGetAllPersonTagsLazyQuery,
-  useCreatePersonTagMutation,
-  useCreateLocationTagMutation,
-  useCreateKeywordTagMutation,
   useUpdatePictureMutation,
 } from '../../../graphql/APIConnector';
 import TagSelectionField from './TagSelectionField';
@@ -49,15 +50,17 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
 
   const setPictureState = useCallback(
     (field: any) => {
-      const fieldCopy: { [key: string]: any } = cloneDeep(field);
+      const fieldForAPI: { [key: string]: any } = cloneDeep(field);
       // We need to stringify the fields here so that the API can handle the data
       // since it only accepts string input, not JSON data
-      Object.keys(fieldCopy).forEach(key => {
-        if (Array.isArray(fieldCopy[key])) {
+      Object.keys(fieldForAPI).forEach(key => {
+        if (key === 'collections') {
+          fieldForAPI[key] = fieldForAPI[key].map((collection: FlatCollection) => collection.id);
+        } else if (Array.isArray(fieldForAPI[key])) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          fieldCopy[key] = fieldCopy[key].map((f: any) => JSON.stringify(f));
+          fieldForAPI[key] = fieldForAPI[key].map((f: any) => JSON.stringify(f));
         } else {
-          fieldCopy[key] = JSON.stringify(fieldCopy[key]);
+          fieldForAPI[key] = JSON.stringify(fieldForAPI[key]);
         }
       });
       nativeSetPictureState(currentPicture => {
@@ -67,7 +70,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       savePicture({
         variables: {
           pictureId,
-          data: fieldCopy,
+          data: fieldForAPI,
         },
       });
     },
@@ -77,10 +80,12 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   const [getAllKeywords, keywordsResponse] = useGetAllKeywordTagsLazyQuery();
   const [getAllLocations, locationsResponse] = useGetAllLocationTagsLazyQuery();
   const [getAllPeople, peopleResponse] = useGetAllPersonTagsLazyQuery();
+  const [getAllCollections, collectionsResponse] = useGetAllCollectionsLazyQuery();
 
-  const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
-  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.locationTags;
   const allKeywords = useSimplifiedQueryResponseData(keywordsResponse.data)?.keywordTags;
+  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.locationTags;
+  const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
+  const allCollections = useSimplifiedQueryResponseData(collectionsResponse.data)?.collections;
 
   const [newPersonTagMutation] = useCreatePersonTagMutation({
     refetchQueries: ['getAllPersonTags'],
@@ -97,8 +102,9 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       getAllKeywords();
       getAllLocations();
       getAllPeople();
+      getAllCollections();
     }
-  }, [role, getAllKeywords, getAllLocations, getAllPeople]);
+  }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
 
   useEffect(() => {
     nativeSetPictureState(picture);
@@ -195,6 +201,23 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           createMutation={newKeywordTagMutation}
         />
       </PictureInfoField>
+      {role >= AuthRole.CURATOR && (
+        <PictureInfoField
+          title={t('pictureFields.collections')}
+          icon='folder'
+          type='collections'
+          empty={!pictureState.collections?.length}
+        >
+          <TagSelectionField
+            tags={pictureState.collections ?? []}
+            allTags={allCollections ?? []}
+            onChange={collections => {
+              setPictureState({ collections });
+            }}
+            nonVerifyable={true}
+          />
+        </PictureInfoField>
+      )}
     </div>
   );
 };
