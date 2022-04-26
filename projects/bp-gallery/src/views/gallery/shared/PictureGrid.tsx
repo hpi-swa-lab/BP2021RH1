@@ -4,7 +4,6 @@ import PictureView from '../../picture/PictureView';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import hashCode from './helpers/hash-code';
 import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animation.helpers';
-import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import BulkOperationsPanel from './BulkOperationsPanel';
@@ -17,15 +16,9 @@ export type PictureGridProps = {
   hashBase: string;
   loading: boolean;
   refetch: () => void;
-} & Partial<PictureUploadAreaProps>;
+};
 
-const PictureGrid = ({
-  pictures,
-  hashBase,
-  loading,
-  refetch,
-  ...uploadAreaProps
-}: PictureGridProps) => {
+const PictureGrid = ({ pictures, hashBase, loading, refetch }: PictureGridProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
@@ -124,7 +117,6 @@ const PictureGrid = ({
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
-      <PictureUploadArea {...uploadAreaProps} />
       {Boolean(selectedPictures.length) && (
         <BulkOperationsPanel
           operations={[

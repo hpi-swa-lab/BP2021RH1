@@ -35,23 +35,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: white;
+    color: $textColor;
     padding: 20px;
     justify-content: center;
     cursor: pointer;
-
     &:hover {
       background: rgba(255, 255, 255, 0.1);
     }
-
     p {
       display: flex;
       align-items: center;
     }
 
     .scanner-select {
-      background: white;
-      color: $backgroundColor;
+      background: $textColor;
+      color: black;
       margin: -20px;
       margin-top: 1rem;
       width: calc(100% + 20px);
@@ -60,13 +58,11 @@
     }
   }
 }
-
 .uploaded-pictures {
   display: flex;
   flex-direction: row;
   gap: 10px;
   margin: 1rem 0;
-
   .picture-preview {
     flex: 1 1 0 !important;
     max-width: 160px;
@@ -76,11 +72,11 @@
 
 .MuiButton-root.add-to-collection {
   width: 100%;
-  background-color: white;
-  color: $primaryColor;
+  background-color: $primaryColor;
+  color: white;
 
   &:hover {
-    background-color: $primaryColor;
-    color: white;
+    background-color: white;
+    color: $primaryColor;
   }
 }

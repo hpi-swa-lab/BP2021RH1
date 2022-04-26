@@ -77,6 +77,14 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        collections {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
         media {
           data {
             id
@@ -306,6 +314,17 @@ mutation updatePersonSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsIn
   }
 }
 
+query getAllCollections {
+  collections {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+}
+
 query getDecadePreviewThumbnails {
   s40: pictures(
     filters: {
@@ -519,6 +538,16 @@ mutation createKeywordTag($name: String!) {
 
 mutation createLocationTag($name: String!) {
   createLocationTag(data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
+  createCollection(
+    data: { name: $name, parent_collections: [$parentId], publishedAt: $publishedAt }
+  ) {
     data {
       id
     }

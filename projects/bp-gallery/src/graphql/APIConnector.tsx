@@ -1616,6 +1616,15 @@ export type GetPictureInfoQuery = {
                         }
                       | null
                       | undefined;
+                    collections?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
                     media: {
                       data?:
                         | {
@@ -1979,6 +1988,20 @@ export type UpdatePersonSynonymsMutation = {
     | undefined;
 };
 
+export type GetAllCollectionsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllCollectionsQuery = {
+  collections?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { name: string } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
@@ -2127,6 +2150,19 @@ export type CreateLocationTagMutationVariables = Exact<{
 
 export type CreateLocationTagMutation = {
   createLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreateSubCollectionMutationVariables = Exact<{
+  name: Scalars['String'];
+  parentId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
+}>;
+
+export type CreateSubCollectionMutation = {
+  createCollection?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -2291,6 +2327,14 @@ export const GetPictureInfoDocument = gql`
             }
           }
           verified_person_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          collections {
             data {
               id
               attributes {
@@ -3305,6 +3349,63 @@ export type UpdatePersonSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdatePersonSynonymsMutationVariables
 >;
 
+export const GetAllCollectionsDocument = gql`
+  query getAllCollections {
+    collections {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllCollectionsQuery__
+ *
+ * To run a query within a React component, call `useGetAllCollectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCollectionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCollectionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>(
+    GetAllCollectionsDocument,
+    options
+  );
+}
+
+export function useGetAllCollectionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>(
+    GetAllCollectionsDocument,
+    options
+  );
+}
+
+export type GetAllCollectionsQueryHookResult = ReturnType<typeof useGetAllCollectionsQuery>;
+
+export type GetAllCollectionsLazyQueryHookResult = ReturnType<typeof useGetAllCollectionsLazyQuery>;
+
+export type GetAllCollectionsQueryResult = Apollo.QueryResult<
+  GetAllCollectionsQuery,
+  GetAllCollectionsQueryVariables
+>;
+
 export const GetDecadePreviewThumbnailsDocument = gql`
   query getDecadePreviewThumbnails {
     s40: pictures(
@@ -3754,6 +3855,66 @@ export type CreateLocationTagMutationResult = Apollo.MutationResult<CreateLocati
 export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationTagMutation,
   CreateLocationTagMutationVariables
+>;
+
+export const CreateSubCollectionDocument = gql`
+  mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
+    createCollection(
+      data: { name: $name, parent_collections: [$parentId], publishedAt: $publishedAt }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateSubCollectionMutationFn = Apollo.MutationFunction<
+  CreateSubCollectionMutation,
+  CreateSubCollectionMutationVariables
+>;
+
+/**
+ * __useCreateSubCollectionMutation__
+ *
+ * To run a mutation, you first call `useCreateSubCollectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubCollectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSubCollectionMutation, { data, loading, error }] = useCreateSubCollectionMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      parentId: // value for 'parentId'
+ *      publishedAt: // value for 'publishedAt'
+ *   },
+ * });
+ */
+export function useCreateSubCollectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSubCollectionMutation,
+    CreateSubCollectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateSubCollectionMutation, CreateSubCollectionMutationVariables>(
+    CreateSubCollectionDocument,
+    options
+  );
+}
+
+export type CreateSubCollectionMutationHookResult = ReturnType<
+  typeof useCreateSubCollectionMutation
+>;
+
+export type CreateSubCollectionMutationResult = Apollo.MutationResult<CreateSubCollectionMutation>;
+
+export type CreateSubCollectionMutationOptions = Apollo.BaseMutationOptions<
+  CreateSubCollectionMutation,
+  CreateSubCollectionMutationVariables
 >;
 
 export const UpdatePictureDocument = gql`

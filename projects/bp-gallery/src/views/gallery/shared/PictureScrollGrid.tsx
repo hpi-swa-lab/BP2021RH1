@@ -5,21 +5,19 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';
-import { PictureUploadAreaProps } from './PictureUploadArea';
+import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 
 const PictureScrollGrid = ({
   filters,
   scrollPos,
   scrollHeight,
   hashbase,
-  previewPictureCallback,
   uploadAreaProps,
 }: {
   filters: PictureFiltersInput;
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
-  previewPictureCallback?: (picture: FlatPicture) => void;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
 }) => {
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -36,12 +34,6 @@ const PictureScrollGrid = ({
     notifyOnNetworkStatusChange: true,
   });
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
-
-  useEffect(() => {
-    if (previewPictureCallback && pictures && pictures.length) {
-      previewPictureCallback(pictures[0]);
-    }
-  }, [pictures, previewPictureCallback]);
 
   // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {
@@ -69,21 +61,25 @@ const PictureScrollGrid = ({
     return <QueryErrorDisplay error={error} />;
   } else if (loading && !pictures) {
     return <Loading />;
-  } else if (pictures?.length) {
+  } else if (pictures) {
     return (
-      <PictureGrid
-        {...uploadAreaProps}
-        onUploaded={() => {
-          refetch();
-          if (uploadAreaProps?.onUploaded) {
-            uploadAreaProps.onUploaded();
-          }
-        }}
-        refetch={refetch}
-        pictures={pictures}
-        hashBase={hashbase}
-        loading={isFetching}
-      />
+      <>
+        <PictureUploadArea
+          {...uploadAreaProps}
+          onUploaded={() => {
+            refetch();
+            if (uploadAreaProps?.onUploaded) {
+              uploadAreaProps.onUploaded();
+            }
+          }}
+        />
+        <PictureGrid
+          refetch={refetch}
+          pictures={pictures}
+          hashBase={hashbase}
+          loading={isFetching}
+        />
+      </>
     );
   } else {
     return null;
