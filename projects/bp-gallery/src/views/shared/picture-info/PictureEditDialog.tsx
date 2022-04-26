@@ -87,6 +87,7 @@ const PictureEditDialog = ({
               path: asApiPath(picture.media.url),
               name: 'SampleImage',
             },
+            initMenu: 'crop',
             menu: ['crop', 'rotate'],
             menuBarPosition: 'right',
           }}
