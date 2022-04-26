@@ -5,7 +5,7 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';
-import { PictureUploadAreaProps } from './PictureUploadArea';
+import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 
 const PictureScrollGrid = ({
   filters,
@@ -69,21 +69,25 @@ const PictureScrollGrid = ({
     return <QueryErrorDisplay error={error} />;
   } else if (loading && !pictures) {
     return <Loading />;
-  } else if (pictures?.length) {
+  } else if (pictures) {
     return (
-      <PictureGrid
-        {...uploadAreaProps}
-        onUploaded={() => {
-          refetch();
-          if (uploadAreaProps?.onUploaded) {
-            uploadAreaProps.onUploaded();
-          }
-        }}
-        refetch={refetch}
-        pictures={pictures}
-        hashBase={hashbase}
-        loading={isFetching}
-      />
+      <>
+        <PictureUploadArea
+          {...uploadAreaProps}
+          onUploaded={() => {
+            refetch();
+            if (uploadAreaProps?.onUploaded) {
+              uploadAreaProps.onUploaded();
+            }
+          }}
+        />
+        <PictureGrid
+          refetch={refetch}
+          pictures={pictures}
+          hashBase={hashbase}
+          loading={isFetching}
+        />
+      </>
     );
   } else {
     return null;
