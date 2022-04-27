@@ -30,7 +30,7 @@ const LocationTagsList = () => {
         compact={true}
         items={locationTags.map(tag => ({
           name: tag.name,
-          background: asApiPath(String(tag.thumbnail[0].media?.formats?.small?.url || '')),
+          background: asApiPath(String(tag.thumbnail[0]?.media?.formats?.small?.url || '')),
           onClick: () => {
             history.push(
               addNewParamToSearchPath(SearchType.ALL, encodeURIComponent(String(tag.name)))
