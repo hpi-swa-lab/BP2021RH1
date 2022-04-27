@@ -50,7 +50,7 @@ const routes: RouteConfig[] = [
         exact: true,
       },
       {
-        path: '/uploads',
+        path: '/new-pictures',
         render: () => {
           return <GalleryView target='uploads' />;
         },
