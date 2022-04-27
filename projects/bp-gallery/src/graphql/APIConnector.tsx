@@ -2551,7 +2551,7 @@ export const GetCollectionInfoDocument = gql`
         attributes {
           name
           description
-          child_collections {
+          child_collections(sort: "name:asc") {
             data {
               id
               attributes {
