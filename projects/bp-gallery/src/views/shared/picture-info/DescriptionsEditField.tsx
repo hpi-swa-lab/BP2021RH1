@@ -44,14 +44,13 @@ const DescriptionsEditField = ({
                 onChange(descriptionState.filter(description => !isEmpty(description.text)))
               }
               onChange={newText => {
-                setDescriptionState(allDescriptions => {
-                  const oldValue = allDescriptions[index].text;
-                  allDescriptions[index].text = newText;
-                  if (oldValue !== newText) {
-                    onTouch();
-                  }
-                  return allDescriptions;
-                });
+                const allDescriptions = [...descriptionState];
+                const oldValue = allDescriptions[index].text;
+                allDescriptions[index].text = newText;
+                if (oldValue !== newText) {
+                  onTouch();
+                }
+                setDescriptionState(allDescriptions);
               }}
             />
             {role >= AuthRole.CURATOR && (
