@@ -40,7 +40,7 @@ const NavigationBar = () => {
         </div>
         {role >= AuthRole.CURATOR && (
           <>
-            <NavLink to='/new-pictures' className='nav-element'>
+            <NavLink to='/uploads-overview' className='nav-element'>
               <Icon>upload</Icon>
               <span className='nav-element-title'>{t('curator.uploads')}</span>
             </NavLink>
