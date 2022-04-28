@@ -47,7 +47,7 @@ const routes: RouteConfig[] = [
       {
         path: '/search',
         render: () => {
-          return <GalleryView target='main' />;
+          return <GalleryView target='search' />;
         },
         exact: true,
       },

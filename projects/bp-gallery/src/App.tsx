@@ -5,7 +5,6 @@ import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
-import NavigationBar from './views/shared/NavigationBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
 import AlertWrapper, { AlertOptions, AlertType } from './views/shared/AlertWrapper';
@@ -111,7 +110,6 @@ const App = ({ route }: RouteConfigComponentProps) => {
             <div className='App'>
               <TopBar />
               {renderRoutes(route?.routes)}
-              {search.pathname !== '/main' && search.pathname !== '/search' && <NavigationBar />}
             </div>
           </AuthWrapper>
         </DialogWrapper>
