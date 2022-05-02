@@ -4,6 +4,7 @@ import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';
 import { useTranslation } from 'react-i18next';
+import { Icon } from '@mui/material';
 
 const CommentsContainer = ({
   pictureId,
@@ -16,7 +17,10 @@ const CommentsContainer = ({
 
   return (
     <div className='picture-info-section pictureComments' id='comments'>
-      <h2>{t('common.comments')}</h2>
+      <h2>
+        <Icon>question_answer</Icon>
+        {t('common.comments')}
+      </h2>
       <div className='comment-container'>
         {comments &&
           comments.length > 0 &&

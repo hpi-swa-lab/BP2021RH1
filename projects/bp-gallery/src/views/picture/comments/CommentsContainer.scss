@@ -10,6 +10,13 @@
 
   h2 {
     padding-left: 1rem;
+    display: flex;
+    align-items: center;
     color: $primaryColor;
+    margin-top: 0.5rem;
+
+    .MuiIcon-root {
+      margin-right: 10px;
+    }
   }
 }
