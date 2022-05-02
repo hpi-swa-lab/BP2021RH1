@@ -1566,7 +1566,10 @@ export type GetPictureInfoQuery = {
                       | {
                           data: Array<{
                             id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
+                            attributes?:
+                              | { name: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
                           }>;
                         }
                       | null
@@ -1575,7 +1578,10 @@ export type GetPictureInfoQuery = {
                       | {
                           data: Array<{
                             id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
+                            attributes?:
+                              | { name: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
                           }>;
                         }
                       | null
@@ -1584,7 +1590,10 @@ export type GetPictureInfoQuery = {
                       | {
                           data: Array<{
                             id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
+                            attributes?:
+                              | { name: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
                           }>;
                         }
                       | null
@@ -1593,7 +1602,10 @@ export type GetPictureInfoQuery = {
                       | {
                           data: Array<{
                             id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
+                            attributes?:
+                              | { name: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
                           }>;
                         }
                       | null
@@ -1602,7 +1614,10 @@ export type GetPictureInfoQuery = {
                       | {
                           data: Array<{
                             id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
+                            attributes?:
+                              | { name: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
                           }>;
                         }
                       | null
@@ -1611,7 +1626,10 @@ export type GetPictureInfoQuery = {
                       | {
                           data: Array<{
                             id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
+                            attributes?:
+                              | { name: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
                           }>;
                         }
                       | null
@@ -2286,51 +2304,57 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          keyword_tags {
+          keyword_tags(sort: "updatedAt") {
             data {
               id
               attributes {
                 name
+                updatedAt
               }
             }
           }
-          verified_keyword_tags {
+          verified_keyword_tags(sort: "updatedAt") {
             data {
               id
               attributes {
                 name
+                updatedAt
               }
             }
           }
-          location_tags {
+          location_tags(sort: "updatedAt") {
             data {
               id
               attributes {
                 name
+                updatedAt
               }
             }
           }
-          verified_location_tags {
+          verified_location_tags(sort: "updatedAt") {
             data {
               id
               attributes {
                 name
+                updatedAt
               }
             }
           }
-          person_tags {
+          person_tags(sort: "updatedAt") {
             data {
               id
               attributes {
                 name
+                updatedAt
               }
             }
           }
-          verified_person_tags {
+          verified_person_tags(sort: "updatedAt") {
             data {
               id
               attributes {
                 name
+                updatedAt
               }
             }
           }
@@ -2351,7 +2375,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          comments {
+          comments(sort: "date") {
             data {
               id
               attributes {

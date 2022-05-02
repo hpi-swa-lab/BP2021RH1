@@ -382,6 +382,7 @@ const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
 
   const newTags = [];
   const newVerifiedTags = [];
+  const newlyAddedTags = [];
   for (const tag of data[tagKeyInPictureRelation]) {
     const parsedTag = JSON.parse(tag);
 
@@ -393,6 +394,10 @@ const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
       continue;
     }
 
+    if (parsedTag.new) {
+      newlyAddedTags.push(parsedTag.id);
+    }
+
     // Relate the tag in a verified relation to the current picture if not specified otherwise.
     const verified =
       parsedTag.verified === undefined ? true : parsedTag.verified;
@@ -401,6 +406,17 @@ const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
 
   data[tagKeyInPictureRelation] = newTags;
   data[withVerifiedPrefix(tagKeyInPictureRelation)] = newVerifiedTags;
+
+  const { tagQuery } = getQueryEngineAndServiceForTag(tagKeyInPictureRelation);
+  // Set updatedAt on newly added tags
+  for (const newTag of newlyAddedTags) {
+    tagQuery.update({
+      where: {
+        id: newTag,
+      },
+      data: {},
+    });
+  }
 
   strapi.log.debug(`New ${tagKeyInPictureRelation}: [${newTags}]`);
   strapi.log.debug(
