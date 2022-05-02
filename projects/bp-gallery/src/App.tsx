@@ -20,6 +20,8 @@ export const asApiPath = (pathEnding: string) => {
   return `${apiBase}${formattedPathEnding}`;
 };
 
+const OPERATIONS_WITH_OWN_ERROR_HANDLING = ['login'];
+
 /**
  * Creates the link-chain for the {@link ApolloClient} consisting of:
  * - an HTTP-Link for using authentication via JWT and
@@ -39,7 +41,9 @@ export const buildHttpLink = (
   });
 
   if (openAlert) {
-    const errorLink = createErrorLink(({ graphQLErrors, networkError, operation, response }) => {
+    const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
+      if (OPERATIONS_WITH_OWN_ERROR_HANDLING.includes(operation.operationName)) return;
+
       const errorMessages = [];
       if (networkError) errorMessages.push(networkError);
       if (graphQLErrors) graphQLErrors.forEach(({ message }) => errorMessages.push(message));
