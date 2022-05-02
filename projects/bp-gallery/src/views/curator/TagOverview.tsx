@@ -52,23 +52,11 @@ const TagOverview = ({ type }: { type: string }) => {
     onCompleted: _ => {
       refetch();
     },
-    onError: error => {
-      openAlert({
-        alertType: AlertType.ERROR,
-        message: error.message,
-      });
-    },
   });
 
   const [updateTagNameMutation] = updateTagNameMutationSource({
     onCompleted: _ => {
       refetch();
-    },
-    onError: error => {
-      openAlert({
-        alertType: AlertType.ERROR,
-        message: error.message,
-      });
     },
   });
 

@@ -49,12 +49,6 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         }
       });
     },
-    onError: error => {
-      openAlert({
-        alertType: AlertType.ERROR,
-        message: error.message,
-      });
-    },
   });
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
