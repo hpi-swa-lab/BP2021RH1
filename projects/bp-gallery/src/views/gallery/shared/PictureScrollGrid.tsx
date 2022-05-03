@@ -6,6 +6,8 @@ import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
+import { useTranslation } from 'react-i18next';
+import './PictureScrollGrid.scss';
 
 const PictureScrollGrid = ({
   filters,
@@ -22,6 +24,8 @@ const PictureScrollGrid = ({
 }) => {
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  const { t } = useTranslation();
 
   const { data, loading, error, fetchMore, refetch } = useGetPicturesQuery({
     variables: {
@@ -62,6 +66,8 @@ const PictureScrollGrid = ({
   } else if (loading && !pictures) {
     return <Loading />;
   } else if (pictures) {
+    const isMultipleOf100Pictures = pictures.length > 0 && pictures.length % 100 === 0;
+
     return (
       <>
         <PictureUploadArea
@@ -73,6 +79,18 @@ const PictureScrollGrid = ({
             }
           }}
         />
+        <span className='picture-count'>
+          {t(
+            pictures.length === 0
+              ? 'common.noPictures'
+              : isMultipleOf100Pictures
+              ? 'common.moreThanPictureCount'
+              : 'common.pictureCount',
+            {
+              count: pictures.length,
+            }
+          )}
+        </span>
         <PictureGrid
           refetch={refetch}
           pictures={pictures}

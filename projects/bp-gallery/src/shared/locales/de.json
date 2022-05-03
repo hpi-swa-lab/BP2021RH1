@@ -46,7 +46,10 @@
     "decline": "Ablehnen",
     "delete": "Löschen",
     "showMore": "Mehr anzeigen",
-    "showLess": "Weniger anzeigen"
+    "showLess": "Weniger anzeigen",
+    "noPictures": "Keine Bilder",
+    "pictureCount": "{{count}} Bilder",
+    "moreThanPictureCount": "Mehr als {{count}} Bilder"
   },
   "login": {
     "title": "Login",
