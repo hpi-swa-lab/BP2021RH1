@@ -2316,7 +2316,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          keyword_tags(sort: "updatedAt") {
+          keyword_tags(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -2325,7 +2325,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          verified_keyword_tags(sort: "updatedAt") {
+          verified_keyword_tags(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -2334,7 +2334,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          location_tags(sort: "updatedAt") {
+          location_tags(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -2343,7 +2343,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          verified_location_tags(sort: "updatedAt") {
+          verified_location_tags(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -2352,7 +2352,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          person_tags(sort: "updatedAt") {
+          person_tags(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -2361,7 +2361,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          verified_person_tags(sort: "updatedAt") {
+          verified_person_tags(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -2387,7 +2387,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          comments(sort: "date") {
+          comments(sort: "date:asc") {
             data {
               id
               attributes {
@@ -2450,7 +2450,7 @@ export type GetPictureInfoQueryResult = Apollo.QueryResult<
 
 export const GetPicturesDocument = gql`
   query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-    pictures(filters: $filters, pagination: $pagination, sort: "publishedAt") {
+    pictures(filters: $filters, pagination: $pagination, sort: "publishedAt:asc") {
       data {
         id
         attributes {
