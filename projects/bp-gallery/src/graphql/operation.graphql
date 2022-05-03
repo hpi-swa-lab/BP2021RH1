@@ -198,10 +198,10 @@ query getChildCollections($collectionId: ID!) {
 query getRootCollection {
   browseRootCollection {
     data {
-      id
       attributes {
         current {
           data {
+            id
             attributes {
               name
             }
