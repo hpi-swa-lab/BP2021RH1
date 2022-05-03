@@ -80,6 +80,7 @@
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
     "reallyDeleteDescription": "Beschreibung wirklich löschen?",
     "really-decline-comment": "Soll folgender Kommentar gelöscht werden?",
+    "reallyDeleteCollection": "Collection wirklich löschen?",
     "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
     "synonyms": "Synonyme",
@@ -101,6 +102,7 @@
     "insertDescriptionHere": "Beschreibung hinzufügen...",
     "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare",
     "unverified-comments": "Noch nicht verifizierte Kommentare",
-    "renameCollectionFailed": "Das Umbenennen ist fehlgeschlagen. Bitte überprüfe, ob der Name der Collection nicht schon existiert"
+    "renameCollectionFailed": "Das Umbenennen ist fehlgeschlagen. Bitte überprüfe, ob der Name der Collection nicht schon existiert",
+    "collectionNotEmpty": "Das Löschen ist fehlgeschlagen, da die Collection nicht leer ist. Eine Collection kann nur gelöscht werden, wenn sie weder Bilder noch andere Collections enthält"
   }
 }

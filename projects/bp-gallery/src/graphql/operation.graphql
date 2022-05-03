@@ -177,6 +177,16 @@ query getChildCollections($collectionId: ID!) {
             id
             attributes {
               name
+              pictures(pagination: { limit: 1 }) {
+                data {
+                  id
+                }
+              }
+              child_collections(pagination: { limit: 1 }) {
+                data {
+                  id
+                }
+              }
             }
           }
         }
@@ -676,6 +686,14 @@ mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
 
 mutation declineComment($commentId: ID!) {
   deleteComment(id: $commentId) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteCollection($collectionId: ID!) {
+  deleteCollection(id: $collectionId) {
     data {
       id
     }
