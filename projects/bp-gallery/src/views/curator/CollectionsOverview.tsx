@@ -1,12 +1,17 @@
 import { Delete, Edit } from '@mui/icons-material';
 import { Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { cloneDeep } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetChildCollectionsQuery, useGetRootCollectionQuery } from '../../graphql/APIConnector';
+import {
+  useGetChildCollectionsQuery,
+  useGetRootCollectionQuery,
+  useUpdateCollectionMutation,
+} from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { FlatCollection } from '../../types/additionalFlatTypes';
 import './CollectionsOverview.scss';
+import { DialogContext } from '../shared/DialogWrapper';
 
 const CollectionsOverview = () => {
   const [panels, setPanels] = useState<string[]>([]);
@@ -51,11 +56,16 @@ const CollectionsPanel = ({
   onSelectChild: (child: FlatCollection) => void;
 }) => {
   const { t } = useTranslation();
+  const dialog = useContext(DialogContext);
 
   const { data } = useGetChildCollectionsQuery({
     variables: {
       collectionId: parentId,
     },
+  });
+  const [updateCollection] = useUpdateCollectionMutation({
+    // errorPolicy: 'all',
+    refetchQueries: ['getChildCollections'],
   });
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -65,6 +75,26 @@ const CollectionsPanel = ({
     useSimplifiedQueryResponseData(data)?.collection;
 
   const children: FlatCollection[] | undefined = parentCollection?.child_collections;
+
+  const editCollectionName = useCallback(
+    (collection: FlatCollection) => {
+      // TODO: This needs to be changed, not a permanent solution!
+      // eslint-disable-next-line no-alert
+      const collectionName = prompt('Neuer Name der Collection:', collection.name);
+      if (collectionName?.length) {
+        updateCollection({
+          variables: { collectionId: collection.id, data: { name: collectionName } },
+        }).catch(error => {
+          dialog({
+            options: [{ name: t('common.close'), value: true }],
+            title: t('curator.saveStatus.error'),
+            content: t('curator.renameCollectionFailed'),
+          });
+        });
+      }
+    },
+    [updateCollection, t, dialog]
+  );
 
   return (
     <div className='panel'>
@@ -80,7 +110,7 @@ const CollectionsPanel = ({
                 <IconButton>
                   <Delete />
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => editCollectionName(child)}>
                   <Edit />
                 </IconButton>
               </span>
