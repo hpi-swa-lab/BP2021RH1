@@ -166,9 +166,29 @@ query getCollectionInfo($collectionName: String) {
   }
 }
 
+query getChildCollections($collectionId: ID!) {
+  collection(id: $collectionId) {
+    data {
+      id
+      attributes {
+        name
+        child_collections(sort: "name:asc") {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getRootCollection {
   browseRootCollection {
     data {
+      id
       attributes {
         current {
           data {

@@ -89,6 +89,9 @@
     "add": "Hinzufügen",
     "addToCollection": "Zum Bilderabend hinzufügen",
     "addCollection": "Collection hinzufügen",
+    "createCollection": "Neue Collection erstellen",
+    "linkCollection": "Bestehende Collection verlinken",
+    "moveCollection": "Bestehende Collection hierher verschieben",
     "saveStatus": {
       "saving": "Speichern...",
       "saved": "Gespeichert.",
