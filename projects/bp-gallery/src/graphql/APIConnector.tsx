@@ -1660,7 +1660,12 @@ export type GetPictureInfoQuery = {
                           data: Array<{
                             id?: string | null | undefined;
                             attributes?:
-                              | { text: string; author?: string | null | undefined; date: any }
+                              | {
+                                  text: string;
+                                  author?: string | null | undefined;
+                                  date: any;
+                                  publishedAt?: any | null | undefined;
+                                }
                               | null
                               | undefined;
                           }>;
@@ -2462,13 +2467,14 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          comments(sort: "date:asc") {
+          comments(publicationState: PREVIEW, sort: "date:asc") {
             data {
               id
               attributes {
                 text
                 author
                 date
+                publishedAt
               }
             }
           }

@@ -41,7 +41,9 @@
     "ok": "O.K.",
     "dontShowAgain": "Verstanden, nicht nochmal anzeigen.",
     "authentication-needed": "Diese Seite ist nur für angemeldete Nutzer mit ausreichenden Berechtigungen sichtbar",
-    "count": "Anzahl"
+    "count": "Anzahl",
+    "accept": "Freischalten",
+    "decline": "Löschen"
   },
   "login": {
     "title": "Login",
@@ -71,6 +73,7 @@
     "reallyDeletePicture": "Bild wirklich löschen?",
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
     "reallyDeleteDescription": "Beschreibung wirklich löschen?",
+    "really-decline-comment": "Soll folgender Kommentar gelöscht werden?",
     "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
     "synonyms": "Synonyme",
