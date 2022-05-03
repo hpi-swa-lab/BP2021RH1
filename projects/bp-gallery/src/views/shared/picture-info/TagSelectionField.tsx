@@ -14,6 +14,7 @@ interface TagFields {
   createValue?: string;
   synonyms?: Maybe<Maybe<ComponentCommonSynonyms>[]> | undefined;
   icon?: string;
+  isNew?: boolean;
   onClick?: () => void;
 }
 
@@ -23,12 +24,14 @@ const TagSelectionField = <T extends TagFields>({
   onChange,
   createMutation,
   nonVerifyable = false,
+  noContentText,
 }: {
   tags: T[];
   allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
   nonVerifyable?: boolean;
+  noContentText: string;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -113,6 +116,10 @@ const TagSelectionField = <T extends TagFields>({
                 }
               }
             }
+            const newlyAddedTags = newValue.filter(
+              newVal => !tags.some(tag => tag.id === newVal.id)
+            );
+            newlyAddedTags.forEach(tag => (tag.isNew = true));
             onChange(newValue);
           }}
           renderOption={(props, option) => {
@@ -151,7 +158,9 @@ const TagSelectionField = <T extends TagFields>({
       </div>
     );
   } else {
-    return (
+    return !tags.length ? (
+      <div className='none-found'>{noContentText}</div>
+    ) : (
       <Stack direction='row' spacing={1} className='chip-stack'>
         {tags.map(tag => {
           return <Chip key={tag.id} label={tag.name} />;

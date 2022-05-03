@@ -14,6 +14,7 @@ export interface DialogOption {
   name: string;
   icon?: string;
   value: any;
+  color?: string;
 }
 
 export enum DialogPreset {
@@ -86,10 +87,14 @@ const DialogWrapper = ({ children }: { children: any }) => {
         <DialogContent>
           <DialogContentText>{dialogState?.content}</DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{ justifyContent: 'space-between' }}>
           {dialogState?.options?.map((option, index) => (
-            <Button key={index} onClick={() => handleClose(option.value)}>
-              {option.icon && <Icon>{option.icon}</Icon>}
+            <Button
+              key={index}
+              onClick={() => handleClose(option.value)}
+              style={{ color: option.color ?? undefined }}
+              startIcon={option.icon ? <Icon>{option.icon}</Icon> : undefined}
+            >
               {option.name}
             </Button>
           ))}

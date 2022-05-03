@@ -29,51 +29,57 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        keyword_tags {
+        keyword_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
               name
+              updatedAt
             }
           }
         }
-        verified_keyword_tags {
+        verified_keyword_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
               name
+              updatedAt
             }
           }
         }
-        location_tags {
+        location_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
               name
+              updatedAt
             }
           }
         }
-        verified_location_tags {
+        verified_location_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
               name
+              updatedAt
             }
           }
         }
-        person_tags {
+        person_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
               name
+              updatedAt
             }
           }
         }
-        verified_person_tags {
+        verified_person_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
               name
+              updatedAt
             }
           }
         }
@@ -94,7 +100,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        comments {
+        comments(sort: "date:asc") {
           data {
             id
             attributes {
@@ -110,7 +116,7 @@ query getPictureInfo($pictureId: ID!) {
 }
 
 query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-  pictures(filters: $filters, pagination: $pagination) {
+  pictures(filters: $filters, pagination: $pagination, sort: "publishedAt:asc") {
     data {
       id
       attributes {
@@ -595,6 +601,14 @@ query getPicturesForCollection($collectionId: ID!) {
 
 mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
   updateCollection(id: $collectionId, data: { pictures: $pictureIds }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
+  updateCollection(id: $collectionId, data: $data) {
     data {
       id
     }

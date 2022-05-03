@@ -18,8 +18,8 @@ const useDeletePicture = () => {
           return;
         }
         const reallyDelete = await prompt({
-          title: t('curator.reallyDelete'),
-          content: t('curator.reallyDeleteText'),
+          title: t('curator.reallyDeletePicture'),
+          content: t('curator.reallyDeletePictureText'),
           preset: DialogPreset.CONFIRM,
         });
         if (!reallyDelete) {
