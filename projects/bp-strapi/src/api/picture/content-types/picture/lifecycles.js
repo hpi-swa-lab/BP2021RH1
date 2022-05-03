@@ -410,7 +410,7 @@ const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
   const { tagQuery } = getQueryEngineAndServiceForTag(tagKeyInPictureRelation);
   // Set updatedAt on newly added tags
   for (const newTag of newlyAddedTags) {
-    tagQuery.update({
+    await tagQuery.update({
       where: {
         id: newTag,
       },
