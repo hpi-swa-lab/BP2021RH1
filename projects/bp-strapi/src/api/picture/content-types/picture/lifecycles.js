@@ -376,7 +376,10 @@ const processUpdatesForTimeRangeTag = async (pictureQuery, data) => {
  * Thereby, it checks whether a tag should be in a verified or unverified relation.<br>
  * <i>Currently, it is suitable for keyword, location and person tags.</i>
  */
-const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
+const processSimpleTagRelationUpdates = async (
+  tagKeyInPictureRelation,
+  data
+) => {
   // Check whether we actually need to update stuff for that tag type.
   if (!data[tagKeyInPictureRelation]) return;
 
@@ -424,14 +427,14 @@ const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
   );
 };
 
-const processUpdatesForKeywordTags = (data) =>
-  processSimpleTagRelationUpdates(KEYWORD_TAGS_KEY, data);
+const processUpdatesForKeywordTags = async (data) =>
+  await processSimpleTagRelationUpdates(KEYWORD_TAGS_KEY, data);
 
-const processUpdatesForLocationTags = (data) =>
-  processSimpleTagRelationUpdates(LOCATION_TAGS_KEY, data);
+const processUpdatesForLocationTags = async (data) =>
+  await processSimpleTagRelationUpdates(LOCATION_TAGS_KEY, data);
 
-const processUpdatesForPersonTags = (data) =>
-  processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
+const processUpdatesForPersonTags = async (data) =>
+  await processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
 
 const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   // Process updates of tag relations with additional editing capabilities.
@@ -439,9 +442,9 @@ const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   await processUpdatesForTimeRangeTag(pictureQuery, data);
 
   // Process simple updates of tag relations without further editing capabilities.
-  processUpdatesForKeywordTags(data);
-  processUpdatesForLocationTags(data);
-  processUpdatesForPersonTags(data);
+  await processUpdatesForKeywordTags(data);
+  await processUpdatesForLocationTags(data);
+  await processUpdatesForPersonTags(data);
 };
 
 module.exports = {
