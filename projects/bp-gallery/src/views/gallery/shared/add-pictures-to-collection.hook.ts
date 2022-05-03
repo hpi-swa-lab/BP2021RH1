@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   useGetPicturesForCollectionLazyQuery,
   useSetPicturesForCollectionMutation,
 } from '../../../graphql/APIConnector';
+import { AlertContext, AlertType } from '../../shared/AlertWrapper';
 
 /**
  * This convoluted function does:
@@ -11,6 +13,9 @@ import {
  *  - set the pictures array on that collection
  */
 const useAddPicturesToCollection = () => {
+  const openAlert = useContext(AlertContext);
+  const { t } = useTranslation();
+
   const [picturesToAdd, setPicturesToAdd] = useState<string[]>([]);
   const [setPicturesForCollection] = useSetPicturesForCollectionMutation();
 
@@ -27,9 +32,15 @@ const useAddPicturesToCollection = () => {
           collectionId: id,
           pictureIds: pictures.concat(picturesToAdd),
         },
+      }).then(() => {
+        openAlert({
+          alertType: AlertType.SUCCESS,
+          message: t('curator.addedPicturesToCollection'),
+          duration: 5000,
+        });
       });
     },
-    [picturesToAdd, setPicturesForCollection]
+    [picturesToAdd, setPicturesForCollection, t, openAlert]
   );
 
   const [getPicturesForCollection] = useGetPicturesForCollectionLazyQuery({
