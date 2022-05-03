@@ -62,6 +62,8 @@ const CollectionsPanel = ({
   const { t } = useTranslation();
   const dialog = useContext(DialogContext);
 
+  const [selectedChild, setSelectedChild] = useState<string | undefined>(undefined);
+
   const [selectDialogCallback, setSelectDialogCallback] = useState<
     ((selectedCollection: FlatCollection | undefined) => void) | undefined
   >(undefined);
@@ -88,6 +90,14 @@ const CollectionsPanel = ({
     useSimplifiedQueryResponseData(data)?.collection;
 
   const children: FlatCollection[] | undefined = parentCollection?.child_collections;
+
+  const selectChild = useCallback(
+    (child: FlatCollection) => {
+      onSelectChild(child);
+      setSelectedChild(child.id);
+    },
+    [onSelectChild, setSelectedChild]
+  );
 
   const onEditName = useCallback(
     (collection: FlatCollection) => {
@@ -170,7 +180,11 @@ const CollectionsPanel = ({
       <div className='panel-content'>
         {children?.map(child => {
           return (
-            <div className='panel-entry' key={child.id} onClick={() => onSelectChild(child)}>
+            <div
+              className={`panel-entry${selectedChild === child.id ? ' selected' : ''}`}
+              key={child.id}
+              onClick={() => selectChild(child)}
+            >
               <span className='text'>{child.name}</span>
               <span className='actions'>
                 <IconButton onClick={() => onDelete(child)}>
