@@ -2085,7 +2085,16 @@ export type GetAllCollectionsQuery = {
     | {
         data: Array<{
           id?: string | null | undefined;
-          attributes?: { name: string } | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                parent_collections?:
+                  | { data: Array<{ id?: string | null | undefined }> }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
         }>;
       }
     | null
@@ -3688,6 +3697,11 @@ export const GetAllCollectionsDocument = gql`
         id
         attributes {
           name
+          parent_collections {
+            data {
+              id
+            }
+          }
         }
       }
     }
