@@ -49,12 +49,14 @@ const TagOverview = ({ type }: { type: string }) => {
   }, [flattenedTags]);
 
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
+    errorPolicy: 'all',
     onCompleted: _ => {
       refetch();
     },
   });
 
   const [updateTagNameMutation] = updateTagNameMutationSource({
+    errorPolicy: 'all',
     onCompleted: _ => {
       refetch();
     },
