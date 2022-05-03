@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  useCreateSubCollectionMutation,
   useDeleteCollectionMutation,
   useGetChildCollectionsQuery,
   useGetRootCollectionQuery,
@@ -20,7 +21,8 @@ const CollectionsOverview = () => {
   const { data: rootCollection } = useGetRootCollectionQuery();
 
   useEffect(() => {
-    const id = rootCollection?.browseRootCollection?.data?.id;
+    // No flattening since we only need the id here
+    const id = rootCollection?.browseRootCollection?.data?.attributes?.current?.data?.id;
     if (id) {
       setPanels([id]);
     }
@@ -70,6 +72,9 @@ const CollectionsPanel = ({
   const [deleteCollection] = useDeleteCollectionMutation({
     refetchQueries: ['getChildCollections'],
   });
+  const [createSubCollection] = useCreateSubCollectionMutation({
+    refetchQueries: ['getChildCollections'],
+  });
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -115,6 +120,21 @@ const CollectionsPanel = ({
     [deleteCollection, dialog, t]
   );
 
+  const onCreateSubCollection = useCallback(() => {
+    // TODO: This needs to be changed, not a permanent solution!
+    // eslint-disable-next-line no-alert
+    const collectionName = prompt('Name der neuen Collection:', 'neue collection');
+    if (collectionName?.length) {
+      createSubCollection({
+        variables: {
+          name: collectionName,
+          parentId: parentId,
+          publishedAt: new Date().toISOString(),
+        },
+      });
+    }
+  }, [createSubCollection, parentId]);
+
   return (
     <div className='panel'>
       <div className='panel-header'>
@@ -146,7 +166,7 @@ const CollectionsPanel = ({
           {t('curator.addCollection')}
         </div>
         <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
-          <MenuItem>
+          <MenuItem onClick={() => onCreateSubCollection()}>
             <ListItemIcon>
               <Icon>add</Icon>
             </ListItemIcon>

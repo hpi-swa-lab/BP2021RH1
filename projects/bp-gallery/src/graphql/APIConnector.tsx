@@ -1816,13 +1816,15 @@ export type GetRootCollectionQuery = {
     | {
         data?:
           | {
-              id?: string | null | undefined;
               attributes?:
                 | {
                     current?:
                       | {
                           data?:
-                            | { attributes?: { name: string } | null | undefined }
+                            | {
+                                id?: string | null | undefined;
+                                attributes?: { name: string } | null | undefined;
+                              }
                             | null
                             | undefined;
                         }
@@ -2872,10 +2874,10 @@ export const GetRootCollectionDocument = gql`
   query getRootCollection {
     browseRootCollection {
       data {
-        id
         attributes {
           current {
             data {
+              id
               attributes {
                 name
               }
