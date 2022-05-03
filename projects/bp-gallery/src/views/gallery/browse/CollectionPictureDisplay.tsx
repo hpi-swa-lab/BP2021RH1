@@ -100,7 +100,11 @@ const CollectionPictureDisplay = ({
 
     return (
       <div className='collection-picture-display'>
-        <CollectionDescription description={collection.description ?? ''} name={collection.name} />
+        <CollectionDescription
+          description={collection.description ?? ''}
+          name={collection.name}
+          id={collection.id}
+        />
         {childCount > 0 && (
           <SubCollections
             childCollections={collection.child_collections as { thumbnail: string; name: string }[]}

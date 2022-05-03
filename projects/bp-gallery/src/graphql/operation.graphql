@@ -607,6 +607,14 @@ mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
   }
 }
 
+mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
+  updateCollection(id: $collectionId, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
 query me {
   me {
     role {

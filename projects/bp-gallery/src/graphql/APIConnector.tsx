@@ -2259,6 +2259,18 @@ export type SetPicturesForCollectionMutation = {
     | undefined;
 };
 
+export type UpdateCollectionMutationVariables = Exact<{
+  collectionId: Scalars['ID'];
+  data: CollectionInput;
+}>;
+
+export type UpdateCollectionMutation = {
+  updateCollection?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -4226,6 +4238,61 @@ export type SetPicturesForCollectionMutationResult =
 export type SetPicturesForCollectionMutationOptions = Apollo.BaseMutationOptions<
   SetPicturesForCollectionMutation,
   SetPicturesForCollectionMutationVariables
+>;
+
+export const UpdateCollectionDocument = gql`
+  mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
+    updateCollection(id: $collectionId, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateCollectionMutationFn = Apollo.MutationFunction<
+  UpdateCollectionMutation,
+  UpdateCollectionMutationVariables
+>;
+
+/**
+ * __useUpdateCollectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateCollectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCollectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCollectionMutation, { data, loading, error }] = useUpdateCollectionMutation({
+ *   variables: {
+ *      collectionId: // value for 'collectionId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateCollectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCollectionMutation,
+    UpdateCollectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateCollectionMutation, UpdateCollectionMutationVariables>(
+    UpdateCollectionDocument,
+    options
+  );
+}
+
+export type UpdateCollectionMutationHookResult = ReturnType<typeof useUpdateCollectionMutation>;
+
+export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollectionMutation>;
+
+export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateCollectionMutation,
+  UpdateCollectionMutationVariables
 >;
 
 export const MeDocument = gql`

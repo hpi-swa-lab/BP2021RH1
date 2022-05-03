@@ -76,6 +76,7 @@
     },
     "save": "Speichern",
     "editPicture": "Bild zuschneiden",
-    "uploads": "Uploads"
+    "uploads": "Uploads",
+    "insertDescriptionHere": "Beschreibung hinzufügen..."
   }
 }

@@ -1,11 +1,25 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { sanitize } from 'dompurify';
 import './CollectionDescription.scss';
 import { Icon, IconButton } from '@mui/material';
 import getLineBreaks from '../helpers/get-linebreaks';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
+import JoditEditor from 'jodit-react';
+import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
+import { useTranslation } from 'react-i18next';
 
-const CollectionDescription = ({ description, name }: { description: string; name: string }) => {
+const CollectionDescription = ({
+  description,
+  name,
+  id,
+}: {
+  description: string;
+  name: string;
+  id: string;
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const { role } = useAuth();
 
   const isDescriptionLong = useMemo(() => {
     const buffer = document.createElement('div');
@@ -21,27 +35,89 @@ const CollectionDescription = ({ description, name }: { description: string; nam
   return (
     <div className='collection-container'>
       <h2>{name}</h2>
-      {description && (
-        <div
-          className={
-            isOpen || !isDescriptionLong
-              ? 'collection-description open'
-              : 'collection-description closed'
-          }
-          dangerouslySetInnerHTML={{ __html: sanitize(description) }}
-        />
-      )}
-      {isDescriptionLong && (
-        <IconButton
-          className='icon-button'
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        >
-          <Icon className='icon'>{isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}</Icon>
-        </IconButton>
+      {role >= AuthRole.CURATOR ? (
+        <EditableCollectionDescription initialDescription={description} collectionId={id} />
+      ) : (
+        <>
+          {description && (
+            <div
+              className={
+                isOpen || !isDescriptionLong
+                  ? 'collection-description open'
+                  : 'collection-description closed'
+              }
+              dangerouslySetInnerHTML={{ __html: sanitize(description) }}
+            />
+          )}
+          {isDescriptionLong && (
+            <IconButton
+              className='icon-button'
+              onClick={() => {
+                setIsOpen(!isOpen);
+              }}
+            >
+              <Icon className='icon'>{isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}</Icon>
+            </IconButton>
+          )}
+        </>
       )}
     </div>
   );
 };
+
+const EditableCollectionDescription = ({
+  initialDescription,
+  collectionId,
+}: {
+  initialDescription: string;
+  collectionId: string;
+}) => {
+  const description = useRef<string>(initialDescription);
+
+  const [updateCollection] = useUpdateCollectionMutation({
+    refetchQueries: ['getCollectionInfo'],
+  });
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    description.current = initialDescription;
+  }, [initialDescription]);
+
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      preset: 'inline',
+      enter: 'BR', //Not 'P' to avoid addition of <p> to descriptions
+      askBeforePasteHTML: false,
+      askBeforePasteFromWord: false,
+      showPlaceholder: true,
+      placeholder: t('curator.insertDescriptionHere'),
+    }),
+    [t]
+  );
+
+  const onBlur = useCallback(() => {
+    // Save description
+    updateCollection({
+      variables: {
+        collectionId,
+        data: {
+          description: description.current,
+        },
+      },
+    });
+  }, [description, collectionId, updateCollection]);
+
+  return (
+    <JoditEditor
+      value={description.current}
+      config={config}
+      onBlur={onBlur}
+      onChange={newText => {
+        description.current = newText;
+      }}
+    />
+  );
+};
+
 export default CollectionDescription;
