@@ -158,7 +158,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           onChange={people => {
             setPictureState({ person_tags: people });
           }}
-          nameKey='People'
+          noContentText={t('pictureFields.noPeople')}
           createMutation={newPersonTagMutation}
         />
       </PictureInfoField>
@@ -169,7 +169,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           onChange={locations => {
             setPictureState({ location_tags: locations });
           }}
-          nameKey='Locations'
+          noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
         />
       </PictureInfoField>
@@ -181,7 +181,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
             onChange={keywords => {
               setPictureState({ keyword_tags: keywords });
             }}
-            nameKey='Keywords'
+            noContentText={t('pictureFields.noKeywords')}
             createMutation={newKeywordTagMutation}
           />
         </PictureInfoField>
@@ -194,7 +194,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
             onChange={collections => {
               setPictureState({ collections });
             }}
-            nameKey='Collections'
+            noContentText={t('pictureFields.noCollections')}
             nonVerifyable={true}
           />
         </PictureInfoField>
