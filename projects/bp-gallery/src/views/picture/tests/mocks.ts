@@ -126,6 +126,9 @@ export const PictureMocks: PictureEntity = {
     verified_location_tags: {
       data: [],
     },
+    collections: {
+      data: [],
+    },
   },
 };
 
