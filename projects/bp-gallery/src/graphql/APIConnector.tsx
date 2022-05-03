@@ -1798,7 +1798,20 @@ export type GetChildCollectionsQuery = {
                       | {
                           data: Array<{
                             id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
+                            attributes?:
+                              | {
+                                  name: string;
+                                  pictures?:
+                                    | { data: Array<{ id?: string | null | undefined }> }
+                                    | null
+                                    | undefined;
+                                  child_collections?:
+                                    | { data: Array<{ id?: string | null | undefined }> }
+                                    | null
+                                    | undefined;
+                                }
+                              | null
+                              | undefined;
                           }>;
                         }
                       | null
@@ -2458,6 +2471,17 @@ export type DeclineCommentMutation = {
     | undefined;
 };
 
+export type DeleteCollectionMutationVariables = Exact<{
+  collectionId: Scalars['ID'];
+}>;
+
+export type DeleteCollectionMutation = {
+  deleteCollection?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -2847,6 +2871,16 @@ export const GetChildCollectionsDocument = gql`
               id
               attributes {
                 name
+                pictures(pagination: { limit: 1 }) {
+                  data {
+                    id
+                  }
+                }
+                child_collections(pagination: { limit: 1 }) {
+                  data {
+                    id
+                  }
+                }
               }
             }
           }
@@ -5055,6 +5089,60 @@ export type DeclineCommentMutationResult = Apollo.MutationResult<DeclineCommentM
 export type DeclineCommentMutationOptions = Apollo.BaseMutationOptions<
   DeclineCommentMutation,
   DeclineCommentMutationVariables
+>;
+
+export const DeleteCollectionDocument = gql`
+  mutation deleteCollection($collectionId: ID!) {
+    deleteCollection(id: $collectionId) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteCollectionMutationFn = Apollo.MutationFunction<
+  DeleteCollectionMutation,
+  DeleteCollectionMutationVariables
+>;
+
+/**
+ * __useDeleteCollectionMutation__
+ *
+ * To run a mutation, you first call `useDeleteCollectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCollectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCollectionMutation, { data, loading, error }] = useDeleteCollectionMutation({
+ *   variables: {
+ *      collectionId: // value for 'collectionId'
+ *   },
+ * });
+ */
+export function useDeleteCollectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCollectionMutation,
+    DeleteCollectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteCollectionMutation, DeleteCollectionMutationVariables>(
+    DeleteCollectionDocument,
+    options
+  );
+}
+
+export type DeleteCollectionMutationHookResult = ReturnType<typeof useDeleteCollectionMutation>;
+
+export type DeleteCollectionMutationResult = Apollo.MutationResult<DeleteCollectionMutation>;
+
+export type DeleteCollectionMutationOptions = Apollo.BaseMutationOptions<
+  DeleteCollectionMutation,
+  DeleteCollectionMutationVariables
 >;
 
 export const MeDocument = gql`

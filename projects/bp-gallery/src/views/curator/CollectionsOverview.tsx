@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  useDeleteCollectionMutation,
   useGetChildCollectionsQuery,
   useGetRootCollectionQuery,
   useUpdateCollectionMutation,
@@ -64,7 +65,9 @@ const CollectionsPanel = ({
     },
   });
   const [updateCollection] = useUpdateCollectionMutation({
-    // errorPolicy: 'all',
+    refetchQueries: ['getChildCollections'],
+  });
+  const [deleteCollection] = useDeleteCollectionMutation({
     refetchQueries: ['getChildCollections'],
   });
 
@@ -76,7 +79,7 @@ const CollectionsPanel = ({
 
   const children: FlatCollection[] | undefined = parentCollection?.child_collections;
 
-  const editCollectionName = useCallback(
+  const onEditName = useCallback(
     (collection: FlatCollection) => {
       // TODO: This needs to be changed, not a permanent solution!
       // eslint-disable-next-line no-alert
@@ -96,6 +99,22 @@ const CollectionsPanel = ({
     [updateCollection, t, dialog]
   );
 
+  const onDelete = useCallback(
+    (collection: FlatCollection) => {
+      console.log(collection);
+      if (collection.child_collections?.length || collection.pictures?.length) {
+        dialog({
+          options: [{ name: t('common.close'), value: true }],
+          title: t('curator.saveStatus.error'),
+          content: t('curator.collectionNotEmpty'),
+        });
+      } else {
+        deleteCollection({ variables: { collectionId: collection.id } });
+      }
+    },
+    [deleteCollection, dialog, t]
+  );
+
   return (
     <div className='panel'>
       <div className='panel-header'>
@@ -107,10 +126,10 @@ const CollectionsPanel = ({
             <div className='panel-entry' key={child.id} onClick={() => onSelectChild(child)}>
               <span className='text'>{child.name}</span>
               <span className='actions'>
-                <IconButton>
+                <IconButton onClick={() => onDelete(child)}>
                   <Delete />
                 </IconButton>
-                <IconButton onClick={() => editCollectionName(child)}>
+                <IconButton onClick={() => onEditName(child)}>
                   <Edit />
                 </IconButton>
               </span>
