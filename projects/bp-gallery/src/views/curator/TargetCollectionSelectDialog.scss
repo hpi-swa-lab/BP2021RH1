@@ -1,0 +1,9 @@
+.MuiDialog-paper {
+  overflow-y: visible !important;
+
+  .MuiAutocomplete-root {
+    margin: 1rem 0;
+    width: 450px;
+    max-width: 100%;
+  }
+}

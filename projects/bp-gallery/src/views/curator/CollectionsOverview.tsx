@@ -14,6 +14,7 @@ import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { FlatCollection } from '../../types/additionalFlatTypes';
 import './CollectionsOverview.scss';
 import { DialogContext } from '../shared/DialogWrapper';
+import TargetCollectionSelectDialog from './TargetCollectionSelectDialog';
 
 const CollectionsOverview = () => {
   const [panels, setPanels] = useState<string[]>([]);
@@ -61,6 +62,10 @@ const CollectionsPanel = ({
   const { t } = useTranslation();
   const dialog = useContext(DialogContext);
 
+  const [selectDialogCallback, setSelectDialogCallback] = useState<
+    ((selectedCollection: FlatCollection | undefined) => void) | undefined
+  >(undefined);
+
   const { data } = useGetChildCollectionsQuery({
     variables: {
       collectionId: parentId,
@@ -106,7 +111,6 @@ const CollectionsPanel = ({
 
   const onDelete = useCallback(
     (collection: FlatCollection) => {
-      console.log(collection);
       if (collection.child_collections?.length || collection.pictures?.length) {
         dialog({
           options: [{ name: t('common.close'), value: true }],
@@ -134,6 +138,29 @@ const CollectionsPanel = ({
       });
     }
   }, [createSubCollection, parentId]);
+
+  const onLinkOrMoveSubcollection = useCallback(
+    (moveCollection?: boolean) => {
+      setSelectDialogCallback(() => (selectedCollection: FlatCollection | undefined) => {
+        if (selectedCollection) {
+          const parents = moveCollection
+            ? []
+            : selectedCollection.parent_collections?.map(c => c.id) ?? [];
+          parents.push(parentId);
+          updateCollection({
+            variables: {
+              collectionId: selectedCollection.id,
+              data: {
+                parent_collections: parents,
+              },
+            },
+          });
+        }
+        setSelectDialogCallback(undefined);
+      });
+    },
+    [updateCollection, parentId]
+  );
 
   return (
     <div className='panel'>
@@ -172,19 +199,20 @@ const CollectionsPanel = ({
             </ListItemIcon>
             <ListItemText>{t('curator.createCollection')}</ListItemText>
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={() => onLinkOrMoveSubcollection(false)}>
             <ListItemIcon>
               <Icon>link</Icon>
             </ListItemIcon>
             <ListItemText>{t('curator.linkCollection')}</ListItemText>
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={() => onLinkOrMoveSubcollection(true)}>
             <ListItemIcon>
               <Icon>move_down</Icon>
             </ListItemIcon>
             <ListItemText>{t('curator.moveCollection')}</ListItemText>
           </MenuItem>
         </Menu>
+        <TargetCollectionSelectDialog selectCallback={selectDialogCallback} />
       </div>
     </div>
   );
