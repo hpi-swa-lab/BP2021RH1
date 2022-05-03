@@ -2286,6 +2286,7 @@ export type GetUnverifiedCommentsQuery = {
           attributes?:
             | {
                 text: string;
+                author?: string | null | undefined;
                 picture?:
                   | {
                       data?:
@@ -4401,6 +4402,7 @@ export const GetUnverifiedCommentsDocument = gql`
             }
           }
           text
+          author
         }
       }
     }

@@ -78,10 +78,19 @@ const CommentOverview = () => {
                       setOpenPictureId(pictureId);
                     }}
                   >
-                    <td>
+                    <td className='picture-content'>
                       <PicturePreview picture={allPictures[pictureId]} onClick={() => {}} />
                     </td>
-                    <td>{groupedComments[pictureId]?.map(comment => comment.text)}</td>
+                    <td>
+                      {groupedComments[pictureId]?.map(comment => (
+                        <div key={comment.id} className='comment-preview'>
+                          <span className='name'>{comment.author}:</span>
+                          <span className='text'></span>
+                          {comment.text.slice(0, 250)}
+                          {comment.text.length >= 251 && '...'}
+                        </div>
+                      ))}
+                    </td>
                     <td>{groupedComments[pictureId]?.length}</td>
                   </tr>
                 );

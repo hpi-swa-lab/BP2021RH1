@@ -640,6 +640,7 @@ query getUnverifiedComments {
           }
         }
         text
+        author
       }
     }
   }

@@ -5,6 +5,9 @@ import { useAcceptCommentMutation, useDeclineCommentMutation } from '../../../gr
 import { useApolloClient } from '@apollo/client';
 import { DialogContext, DialogPreset } from '../../shared/DialogWrapper';
 import { useTranslation } from 'react-i18next';
+import './CommentVerification.scss';
+import { Button } from '@mui/material';
+import { Close, Delete, Done } from '@mui/icons-material';
 
 const CommentVerification = ({ children, comment }: { children: any; comment: FlatComment }) => {
   const apolloClient = useApolloClient();
@@ -14,17 +17,15 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
 
   const [acceptComment] = useAcceptCommentMutation({
     variables: { commentId: comment.id, currentTime: new Date().toISOString() },
+    refetchQueries: ['getPictureInfo'],
   });
   const [declineComment] = useDeclineCommentMutation({
     variables: {
       commentId: comment.id,
     },
+    refetchQueries: ['getPictureInfo'],
   });
 
-  const onAccept = async () => {
-    await acceptComment();
-    apolloClient.refetchQueries({ include: ['getPictureInfo'] });
-  };
   const onDecline = async () => {
     const shouldRemove = await prompt({
       title: t('curator.really-decline-comment'),
@@ -39,17 +40,23 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
   if (role < AuthRole.CURATOR && !comment.publishedAt) return null;
   else {
     return (
-      <div>
+      <div className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}`}>
+        {children}
         {!comment.publishedAt && (
           <>
-            <span onClick={onDecline}>{t('common.decline')}</span>
-            <span onClick={onAccept}>{t('common.accept')}</span>
+            <Button startIcon={<Close />} onClick={onDecline}>
+              {t('common.decline')}
+            </Button>
+            <Button startIcon={<Done />} onClick={() => acceptComment()} variant='contained'>
+              {t('common.accept')}
+            </Button>
           </>
         )}
         {comment.publishedAt && role >= AuthRole.CURATOR && (
-          <span onClick={onDecline}>{t('common.delete')}</span>
+          <Button className='delete' startIcon={<Delete />} onClick={onDecline}>
+            {t('common.delete')}
+          </Button>
         )}
-        {children}
       </div>
     );
   }

@@ -44,7 +44,9 @@
     "count": "Anzahl",
     "accept": "Akzeptieren",
     "decline": "Ablehnen",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "showMore": "Mehr anzeigen",
+    "showLess": "Weniger anzeigen"
   },
   "login": {
     "title": "Login",
