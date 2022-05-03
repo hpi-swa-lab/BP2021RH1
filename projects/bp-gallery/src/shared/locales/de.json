@@ -105,6 +105,7 @@
     "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare",
     "unverified-comments": "Noch nicht verifizierte Kommentare",
     "mergeLimit": "Es können immer nur 2 Tags gleichzeitig zusammengeführt werden",
-    "mergeTag": "Zu einem Tag zusammenführen"
+    "mergeTag": "Zu einem Tag zusammenführen",
+    "renameCollectionFailed": "Das Umbenennen ist fehlgeschlagen. Bitte überprüfe, ob der Name der Collection nicht schon existiert"
   }
 }
