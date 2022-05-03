@@ -1763,6 +1763,39 @@ export type GetCollectionInfoQuery = {
     | undefined;
 };
 
+export type GetChildCollectionsQueryVariables = Exact<{
+  collectionId: Scalars['ID'];
+}>;
+
+export type GetChildCollectionsQuery = {
+  collection?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    name: string;
+                    child_collections?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type GetRootCollectionQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetRootCollectionQuery = {
@@ -1770,6 +1803,7 @@ export type GetRootCollectionQuery = {
     | {
         data?:
           | {
+              id?: string | null | undefined;
               attributes?:
                 | {
                     current?:
@@ -2729,10 +2763,82 @@ export type GetCollectionInfoQueryResult = Apollo.QueryResult<
   GetCollectionInfoQueryVariables
 >;
 
+export const GetChildCollectionsDocument = gql`
+  query getChildCollections($collectionId: ID!) {
+    collection(id: $collectionId) {
+      data {
+        id
+        attributes {
+          name
+          child_collections(sort: "name:asc") {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetChildCollectionsQuery__
+ *
+ * To run a query within a React component, call `useGetChildCollectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChildCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChildCollectionsQuery({
+ *   variables: {
+ *      collectionId: // value for 'collectionId'
+ *   },
+ * });
+ */
+export function useGetChildCollectionsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetChildCollectionsQuery, GetChildCollectionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetChildCollectionsQuery, GetChildCollectionsQueryVariables>(
+    GetChildCollectionsDocument,
+    options
+  );
+}
+
+export function useGetChildCollectionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetChildCollectionsQuery,
+    GetChildCollectionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetChildCollectionsQuery, GetChildCollectionsQueryVariables>(
+    GetChildCollectionsDocument,
+    options
+  );
+}
+
+export type GetChildCollectionsQueryHookResult = ReturnType<typeof useGetChildCollectionsQuery>;
+
+export type GetChildCollectionsLazyQueryHookResult = ReturnType<
+  typeof useGetChildCollectionsLazyQuery
+>;
+
+export type GetChildCollectionsQueryResult = Apollo.QueryResult<
+  GetChildCollectionsQuery,
+  GetChildCollectionsQueryVariables
+>;
+
 export const GetRootCollectionDocument = gql`
   query getRootCollection {
     browseRootCollection {
       data {
+        id
         attributes {
           current {
             data {
