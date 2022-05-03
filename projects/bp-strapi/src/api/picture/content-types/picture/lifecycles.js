@@ -394,7 +394,7 @@ const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
       continue;
     }
 
-    if (parsedTag.new) {
+    if (parsedTag.isNew) {
       newlyAddedTags.push(parsedTag.id);
     }
 

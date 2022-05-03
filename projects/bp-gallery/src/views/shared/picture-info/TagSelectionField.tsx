@@ -14,7 +14,7 @@ interface TagFields {
   createValue?: string;
   synonyms?: Maybe<Maybe<ComponentCommonSynonyms>[]> | undefined;
   icon?: string;
-  new?: boolean;
+  isNew?: boolean;
   onClick?: () => void;
 }
 
@@ -119,7 +119,7 @@ const TagSelectionField = <T extends TagFields>({
             const newlyAddedTags = newValue.filter(
               newVal => !tags.some(tag => tag.id === newVal.id)
             );
-            newlyAddedTags.forEach(tag => (tag.new = true));
+            newlyAddedTags.forEach(tag => (tag.isNew = true));
             onChange(newValue);
           }}
           renderOption={(props, option) => {
