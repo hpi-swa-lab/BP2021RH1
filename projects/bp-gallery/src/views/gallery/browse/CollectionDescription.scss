@@ -5,11 +5,29 @@ h2 {
   margin: auto;
   margin-bottom: 1rem;
 }
+
+.collection-container .jodit-react-container {
+  margin-bottom: 1rem;
+  text-align: center;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+
+  .jodit-placeholder {
+    padding: 0 !important;
+  }
+
+  a {
+    color: $primaryColor;
+  }
+}
+
 .collection-description {
   text-align: center;
   a {
     color: $primaryColor;
   }
+
   &.closed {
     max-height: 80px;
     overflow: hidden;
@@ -39,6 +57,7 @@ h2 {
     margin-bottom: 2rem;
   }
 }
+
 .icon-button {
   width: 100%;
 

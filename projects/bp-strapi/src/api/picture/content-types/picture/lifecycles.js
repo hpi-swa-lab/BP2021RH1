@@ -376,12 +376,16 @@ const processUpdatesForTimeRangeTag = async (pictureQuery, data) => {
  * Thereby, it checks whether a tag should be in a verified or unverified relation.<br>
  * <i>Currently, it is suitable for keyword, location and person tags.</i>
  */
-const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
+const processSimpleTagRelationUpdates = async (
+  tagKeyInPictureRelation,
+  data
+) => {
   // Check whether we actually need to update stuff for that tag type.
   if (!data[tagKeyInPictureRelation]) return;
 
   const newTags = [];
   const newVerifiedTags = [];
+  const newlyAddedTags = [];
   for (const tag of data[tagKeyInPictureRelation]) {
     const parsedTag = JSON.parse(tag);
 
@@ -393,6 +397,10 @@ const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
       continue;
     }
 
+    if (parsedTag.isNew) {
+      newlyAddedTags.push(parsedTag.id);
+    }
+
     // Relate the tag in a verified relation to the current picture if not specified otherwise.
     const verified =
       parsedTag.verified === undefined ? true : parsedTag.verified;
@@ -402,20 +410,31 @@ const processSimpleTagRelationUpdates = (tagKeyInPictureRelation, data) => {
   data[tagKeyInPictureRelation] = newTags;
   data[withVerifiedPrefix(tagKeyInPictureRelation)] = newVerifiedTags;
 
+  const { tagQuery } = getQueryEngineAndServiceForTag(tagKeyInPictureRelation);
+  // Set updatedAt on newly added tags
+  for (const newTag of newlyAddedTags) {
+    await tagQuery.update({
+      where: {
+        id: newTag,
+      },
+      data: {},
+    });
+  }
+
   strapi.log.debug(`New ${tagKeyInPictureRelation}: [${newTags}]`);
   strapi.log.debug(
     `New verified ${tagKeyInPictureRelation}: [${newVerifiedTags}]`
   );
 };
 
-const processUpdatesForKeywordTags = (data) =>
-  processSimpleTagRelationUpdates(KEYWORD_TAGS_KEY, data);
+const processUpdatesForKeywordTags = async (data) =>
+  await processSimpleTagRelationUpdates(KEYWORD_TAGS_KEY, data);
 
-const processUpdatesForLocationTags = (data) =>
-  processSimpleTagRelationUpdates(LOCATION_TAGS_KEY, data);
+const processUpdatesForLocationTags = async (data) =>
+  await processSimpleTagRelationUpdates(LOCATION_TAGS_KEY, data);
 
-const processUpdatesForPersonTags = (data) =>
-  processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
+const processUpdatesForPersonTags = async (data) =>
+  await processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
 
 const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   // Process updates of tag relations with additional editing capabilities.
@@ -423,9 +442,9 @@ const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   await processUpdatesForTimeRangeTag(pictureQuery, data);
 
   // Process simple updates of tag relations without further editing capabilities.
-  processUpdatesForKeywordTags(data);
-  processUpdatesForLocationTags(data);
-  processUpdatesForPersonTags(data);
+  await processUpdatesForKeywordTags(data);
+  await processUpdatesForLocationTags(data);
+  await processUpdatesForPersonTags(data);
 };
 
 module.exports = {

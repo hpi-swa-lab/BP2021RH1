@@ -5,10 +5,12 @@ import { usePostCommentMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../shared/AlertWrapper';
 import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
+import { DialogContext } from '../../shared/DialogWrapper';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
   const openAlert = useContext(AlertContext);
+  const prompt = useContext(DialogContext);
 
   const [commentAuthor, setCommentAuthor] = useState('');
   const [commentText, setCommentText] = useState('');
@@ -17,9 +19,34 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
     onCompleted: _ => {
       setCommentAuthor('');
       setCommentText('');
-      openAlert({
-        alertType: AlertType.INFO,
-        message: t('common.comment-alert'),
+      if (localStorage.getItem('dontShowCommentDialogAgain') === '1') {
+        openAlert({
+          alertType: AlertType.INFO,
+          message: t('common.comment-alert'),
+          duration: 5000,
+        });
+        return;
+      }
+      prompt({
+        title: t('common.comment-thanks'),
+        content: t('common.comment-alert'),
+        options: [
+          {
+            name: t('common.dontShowAgain'),
+            value: true,
+            icon: 'done_all',
+            color: '#5a5a5a',
+          },
+          {
+            name: t('common.ok'),
+            value: false,
+            icon: 'done',
+          },
+        ],
+      }).then(shouldNeverShowAgain => {
+        if (shouldNeverShowAgain) {
+          localStorage.setItem('dontShowCommentDialogAgain', '1');
+        }
       });
     },
     onError: error => {

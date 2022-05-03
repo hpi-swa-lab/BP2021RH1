@@ -20,6 +20,7 @@
     "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht",
     "name": "Name",
     "submit": "Absenden",
+    "comment-thanks": "Danke für Ihren Kommentar!",
     "comment-alert": "Ihr Kommentar wurde abgeschickt. Nachdem er von der Bad-Harzburg-Stiftung geprüft wurde, wird er hier veröffentlicht.",
     "titleFor": "Titelbild für {{query}}",
     "no-keywords": "Keine Schlagwörter für diese Suchanfrage gefunden...",
@@ -36,7 +37,9 @@
     "or": "oder",
     "confirm": "Bestätigen",
     "abort": "Abbrechen",
-    "0s": "0er Jahre"
+    "0s": "0er Jahre",
+    "ok": "O.K.",
+    "dontShowAgain": "Verstanden, nicht nochmal anzeigen."
   },
   "login": {
     "title": "Login",
@@ -53,15 +56,19 @@
     "descriptions": "Beschreibungen",
     "people": "Personen",
     "keywords": "Stichworte",
-    "noTime": "Keine Zeit angegeben",
+    "noTime": "Keine Zeit bekannt",
+    "noLocations": "Keine Orte bekannt",
+    "noPeople": "Keine Personen bekannt",
+    "noDescription": "Keine Beschreibung vorhanden",
     "collections": "Collections"
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "scan": "Direkt vom Scanner einlesen",
     "addPictures": "Bilder hinzufügen",
-    "reallyDelete": "Bild wirklich endgültig löschen?",
-    "reallyDeleteText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
+    "reallyDeletePicture": "Bild wirklich löschen?",
+    "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
+    "reallyDeleteDescription": "Beschreibung wirklich löschen?",
     "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
     "synonyms": "Synonyme",
@@ -76,6 +83,7 @@
     },
     "save": "Speichern",
     "editPicture": "Bild zuschneiden",
-    "uploads": "Uploads"
+    "uploads": "Uploads",
+    "insertDescriptionHere": "Beschreibung hinzufügen..."
   }
 }
