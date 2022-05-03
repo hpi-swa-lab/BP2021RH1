@@ -29,7 +29,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        keyword_tags(sort: "updatedAt") {
+        keyword_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
@@ -38,7 +38,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        verified_keyword_tags(sort: "updatedAt") {
+        verified_keyword_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
@@ -47,7 +47,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        location_tags(sort: "updatedAt") {
+        location_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
@@ -56,7 +56,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        verified_location_tags(sort: "updatedAt") {
+        verified_location_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
@@ -65,7 +65,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        person_tags(sort: "updatedAt") {
+        person_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
@@ -74,7 +74,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        verified_person_tags(sort: "updatedAt") {
+        verified_person_tags(sort: "updatedAt:asc") {
           data {
             id
             attributes {
@@ -100,7 +100,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        comments(sort: "date") {
+        comments(sort: "date:asc") {
           data {
             id
             attributes {
@@ -116,7 +116,7 @@ query getPictureInfo($pictureId: ID!) {
 }
 
 query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-  pictures(filters: $filters, pagination: $pagination, sort: "publishedAt") {
+  pictures(filters: $filters, pagination: $pagination, sort: "publishedAt:asc") {
     data {
       id
       attributes {
