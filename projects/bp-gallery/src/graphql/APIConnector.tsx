@@ -2438,7 +2438,7 @@ export type GetPictureInfoQueryResult = Apollo.QueryResult<
 
 export const GetPicturesDocument = gql`
   query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-    pictures(filters: $filters, pagination: $pagination) {
+    pictures(filters: $filters, pagination: $pagination, sort: "publishedAt") {
       data {
         id
         attributes {
