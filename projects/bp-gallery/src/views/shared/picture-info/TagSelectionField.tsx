@@ -24,12 +24,14 @@ const TagSelectionField = <T extends TagFields>({
   onChange,
   createMutation,
   nonVerifyable = false,
+  nameKey,
 }: {
   tags: T[];
   allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
   nonVerifyable?: boolean;
+  nameKey: string;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -156,7 +158,9 @@ const TagSelectionField = <T extends TagFields>({
       </div>
     );
   } else {
-    return (
+    return !tags.length ? (
+      <div className='none-found'>{t(`pictureFields.no${nameKey}`)}</div>
+    ) : (
       <Stack direction='row' spacing={1} className='chip-stack'>
         {tags.map(tag => {
           return <Chip key={tag.id} label={tag.name} />;

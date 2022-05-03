@@ -128,12 +128,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           <span className='save-state'>{saveStatus}</span>
         </div>
       )}
-      <PictureInfoField
-        title={t('pictureFields.time')}
-        icon='event'
-        type='date'
-        empty={!pictureState.time_range_tag}
-      >
+      <PictureInfoField title={t('pictureFields.time')} icon='event' type='date'>
         <DateRangeSelectionField
           timeRangeTag={pictureState.time_range_tag}
           onChange={range => {
@@ -147,7 +142,6 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         title={t('pictureFields.descriptions')}
         icon='description'
         type='description'
-        empty={!pictureState.descriptions?.length}
       >
         <DescriptionsEditField
           descriptions={pictureState.descriptions ?? []}
@@ -157,64 +151,50 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           onTouch={() => setAnyFieldTouched(true)}
         />
       </PictureInfoField>
-      <PictureInfoField
-        title={t('pictureFields.people')}
-        icon='person'
-        type='person'
-        empty={!pictureState.person_tags?.length}
-      >
+      <PictureInfoField title={t('pictureFields.people')} icon='person' type='person'>
         <TagSelectionField
           tags={pictureState.person_tags ?? []}
           allTags={allPeople ?? []}
           onChange={people => {
             setPictureState({ person_tags: people });
           }}
+          nameKey='People'
           createMutation={newPersonTagMutation}
         />
       </PictureInfoField>
-      <PictureInfoField
-        title={t('pictureFields.locations')}
-        icon='place'
-        type='location'
-        empty={!pictureState.location_tags?.length}
-      >
+      <PictureInfoField title={t('pictureFields.locations')} icon='place' type='location'>
         <TagSelectionField
           tags={pictureState.location_tags ?? []}
           allTags={allLocations ?? []}
           onChange={locations => {
             setPictureState({ location_tags: locations });
           }}
+          nameKey='Locations'
           createMutation={newLocationTagMutation}
         />
       </PictureInfoField>
-      <PictureInfoField
-        title={t('pictureFields.keywords')}
-        icon='sell'
-        type='keywords'
-        empty={!pictureState.keyword_tags?.length}
-      >
-        <TagSelectionField
-          tags={pictureState.keyword_tags ?? []}
-          allTags={allKeywords ?? []}
-          onChange={keywords => {
-            setPictureState({ keyword_tags: keywords });
-          }}
-          createMutation={newKeywordTagMutation}
-        />
-      </PictureInfoField>
+      {(role >= AuthRole.CURATOR || Boolean(pictureState.keyword_tags?.length)) && (
+        <PictureInfoField title={t('pictureFields.keywords')} icon='sell' type='keywords'>
+          <TagSelectionField
+            tags={pictureState.keyword_tags ?? []}
+            allTags={allKeywords ?? []}
+            onChange={keywords => {
+              setPictureState({ keyword_tags: keywords });
+            }}
+            nameKey='Keywords'
+            createMutation={newKeywordTagMutation}
+          />
+        </PictureInfoField>
+      )}
       {role >= AuthRole.CURATOR && (
-        <PictureInfoField
-          title={t('pictureFields.collections')}
-          icon='folder'
-          type='collections'
-          empty={!pictureState.collections?.length}
-        >
+        <PictureInfoField title={t('pictureFields.collections')} icon='folder' type='collections'>
           <TagSelectionField
             tags={pictureState.collections ?? []}
             allTags={allCollections ?? []}
             onChange={collections => {
               setPictureState({ collections });
             }}
+            nameKey='Collections'
             nonVerifyable={true}
           />
         </PictureInfoField>
