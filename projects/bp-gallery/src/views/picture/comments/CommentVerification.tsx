@@ -46,6 +46,9 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
             <span onClick={onAccept}>{t('common.accept')}</span>
           </>
         )}
+        {comment.publishedAt && role >= AuthRole.CURATOR && (
+          <span onClick={onDecline}>{t('common.delete')}</span>
+        )}
         {children}
       </div>
     );

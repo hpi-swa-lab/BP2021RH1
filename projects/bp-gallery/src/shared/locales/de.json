@@ -42,8 +42,9 @@
     "dontShowAgain": "Verstanden, nicht nochmal anzeigen.",
     "authentication-needed": "Diese Seite ist nur für angemeldete Nutzer mit ausreichenden Berechtigungen sichtbar",
     "count": "Anzahl",
-    "accept": "Freischalten",
-    "decline": "Löschen"
+    "accept": "Akzeptieren",
+    "decline": "Ablehnen",
+    "delete": "Löschen"
   },
   "login": {
     "title": "Login",
