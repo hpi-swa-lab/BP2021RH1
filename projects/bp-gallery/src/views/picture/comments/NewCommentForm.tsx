@@ -16,6 +16,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const [commentText, setCommentText] = useState('');
 
   const [postCommentMutation] = usePostCommentMutation({
+    errorPolicy: 'all',
     onCompleted: _ => {
       setCommentAuthor('');
       setCommentText('');
@@ -47,12 +48,6 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         if (shouldNeverShowAgain) {
           localStorage.setItem('dontShowCommentDialogAgain', '1');
         }
-      });
-    },
-    onError: error => {
-      openAlert({
-        alertType: AlertType.ERROR,
-        message: error.message,
       });
     },
   });
