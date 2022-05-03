@@ -623,6 +623,19 @@ query getUnverifiedComments {
         picture {
           data {
             id
+            attributes {
+              media {
+                data {
+                  id
+                  attributes {
+                    width
+                    height
+                    formats
+                    updatedAt
+                  }
+                }
+              }
+            }
           }
         }
         text

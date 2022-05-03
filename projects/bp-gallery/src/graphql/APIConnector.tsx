@@ -2282,7 +2282,36 @@ export type GetUnverifiedCommentsQuery = {
             | {
                 text: string;
                 picture?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  media: {
+                                    data?:
+                                      | {
+                                          id?: string | null | undefined;
+                                          attributes?:
+                                            | {
+                                                width?: number | null | undefined;
+                                                height?: number | null | undefined;
+                                                formats?: any | null | undefined;
+                                                updatedAt?: any | null | undefined;
+                                              }
+                                            | null
+                                            | undefined;
+                                        }
+                                      | null
+                                      | undefined;
+                                  };
+                                }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
                   | null
                   | undefined;
               }
@@ -4350,6 +4379,19 @@ export const GetUnverifiedCommentsDocument = gql`
           picture {
             data {
               id
+              attributes {
+                media {
+                  data {
+                    id
+                    attributes {
+                      width
+                      height
+                      formats
+                      updatedAt
+                    }
+                  }
+                }
+              }
             }
           }
           text
