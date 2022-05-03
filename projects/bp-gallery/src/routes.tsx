@@ -7,6 +7,7 @@ import TimeLineDemo from './prototypes/timeline-demo';
 import TagOverview from './views/curator/TagOverview';
 import GalleryView from './views/gallery/GalleryView';
 import PictureView from './views/picture/PictureView';
+import CommentOverview from './views/curator/CommentOverview';
 
 const routes: RouteConfig[] = [
   {
@@ -53,6 +54,13 @@ const routes: RouteConfig[] = [
         path: '/uploads-overview',
         render: () => {
           return <GalleryView target='uploads' />;
+        },
+        exact: true,
+      },
+      {
+        path: '/comment-overview',
+        render: () => {
+          return <CommentOverview />;
         },
         exact: true,
       },

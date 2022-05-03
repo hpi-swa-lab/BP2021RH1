@@ -39,7 +39,8 @@
     "abort": "Abbrechen",
     "0s": "0er Jahre",
     "ok": "O.K.",
-    "dontShowAgain": "Verstanden, nicht nochmal anzeigen."
+    "dontShowAgain": "Verstanden, nicht nochmal anzeigen.",
+    "authentication-needed": "Diese Seite ist nur für angemeldete Nutzer mit ausreichenden Berechtigungen sichtbar"
   },
   "login": {
     "title": "Login",
@@ -84,6 +85,7 @@
     "save": "Speichern",
     "editPicture": "Bild zuschneiden",
     "uploads": "Uploads",
-    "insertDescriptionHere": "Beschreibung hinzufügen..."
+    "insertDescriptionHere": "Beschreibung hinzufügen...",
+    "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare"
   }
 }
