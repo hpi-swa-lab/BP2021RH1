@@ -9,6 +9,10 @@
   grid-gap: 0.5rem;
   gap: 0.5rem;
 
+  &.unstyled {
+    background: none !important;
+  }
+
   &.unverified {
     background: linear-gradient(white, #f5dbd8);
 

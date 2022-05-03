@@ -40,7 +40,11 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
   if (role < AuthRole.CURATOR && !comment.publishedAt) return null;
   else {
     return (
-      <div className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}`}>
+      <div
+        className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}${
+          role < AuthRole.CURATOR ? ' unstyled' : ''
+        }`}
+      >
         {children}
         {!comment.publishedAt && (
           <>
