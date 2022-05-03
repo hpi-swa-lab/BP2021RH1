@@ -615,6 +615,38 @@ mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
   }
 }
 
+query getUnverifiedComments {
+  comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
+    data {
+      id
+      attributes {
+        picture {
+          data {
+            id
+          }
+        }
+        text
+      }
+    }
+  }
+}
+
+mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
+  updateComment(id: $commentId, data: { publishedAt: $currentTime }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation declineComment($commentId: ID!) {
+  deleteComment(id: $commentId) {
+    data {
+      id
+    }
+  }
+}
+
 query me {
   me {
     role {
