@@ -100,6 +100,7 @@
     "uploads": "Uploads",
     "insertDescriptionHere": "Beschreibung hinzufügen...",
     "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare",
-    "unverified-comments": "Noch nicht verifizierte Kommentare"
+    "unverified-comments": "Noch nicht verifizierte Kommentare",
+    "renameCollectionFailed": "Das Umbenennen ist fehlgeschlagen. Bitte überprüfe, ob der Name der Collection nicht schon existiert"
   }
 }
