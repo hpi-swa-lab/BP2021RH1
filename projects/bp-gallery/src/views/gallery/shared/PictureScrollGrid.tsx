@@ -6,12 +6,15 @@ import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
+import { useTranslation } from 'react-i18next';
 
 const PictureScrollGrid = ({
   filters,
   scrollPos,
   scrollHeight,
   hashbase,
+  previewPictureCallback,
+  resultPictureCallback,
   uploadAreaProps,
 }: {
   filters: PictureFiltersInput;
@@ -19,7 +22,10 @@ const PictureScrollGrid = ({
   scrollHeight: number;
   hashbase: string;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
+  previewPictureCallback?: (picture: FlatPicture) => void;
+  resultPictureCallback?: (pictures: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -35,6 +41,17 @@ const PictureScrollGrid = ({
   });
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
+  useEffect(() => {
+    if (previewPictureCallback && pictures && pictures.length) {
+      previewPictureCallback(pictures[0]);
+    }
+  }, [pictures, previewPictureCallback]);
+
+  useEffect(() => {
+    if (resultPictureCallback) {
+      resultPictureCallback(pictures?.length !== 0);
+    }
+  }, [pictures, resultPictureCallback]);
   // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {
     if (
@@ -81,6 +98,26 @@ const PictureScrollGrid = ({
         />
       </>
     );
+  } else if (pictures?.length) {
+    return (
+      <>
+        <div
+          style={{
+            marginTop: '1rem',
+            opacity: 0.5,
+            textAlign: 'center',
+          }}
+        >
+          {pictures.length === 100
+            ? '100+'
+            : new Intl.NumberFormat('de-DE').format(pictures.length)}{' '}
+          {t('common.pictures')}
+        </div>
+        <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />
+      </>
+    );
+  } else if (pictures?.length === 0 && resultPictureCallback) {
+    return <div> {t('common.no-picture')} </div>;
   } else {
     return null;
   }

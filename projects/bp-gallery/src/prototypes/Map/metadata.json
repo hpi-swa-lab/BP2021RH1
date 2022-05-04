@@ -1,0 +1,511 @@
+{
+  "0": {
+    "id": 5379,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1951 (1953?). Einweihung des Ehrenfriedhofs Bad Harzburg zusammen mit dem Volksbund deutsche Kriegsgräberfürsorge (VdK) unter Mitwirkung der Evangelischen Jugend. Weiherede durch den Ehrenpräsidenten, Staatsrat a.D. Wilhelm Ahlhorn. (Laut Ordner Ahrens und Fotostempel im Jahr 1951. Laut VdK war die Einweihung erst am 3. Juni 1953)."
+        }
+      }
+    ],
+    "time": { "start": "1953-06-03T00:00:00.000Z", "end": "1953-06-03T23:59:59.999Z" },
+    "position": { "latitude": 51.88881162578796, "longitude": 10.560587965155722 }
+  },
+  "1": {
+    "id": 2336,
+    "descriptions": [
+      { "attributes": { "text": "1958 Winter an der B4, Warnschild, Schneekettenpflicht" } }
+    ],
+    "time": { "start": "1958-01-01T00:00:00.000Z", "end": "1958-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.896940804809226, "longitude": 10.556336831505178 }
+  },
+  "2": {
+    "id": 3739,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1975. Weihnachtsbeleuchtung in der Innenstadt.  Weihnachtszeit am Platz Stadtmitte/Herzog-Wilhelm-Straße"
+        }
+      }
+    ],
+    "time": { "start": "1975-01-01T00:00:00.000Z", "end": "1975-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.88032710747002, "longitude": 10.560094992033557 }
+  },
+  "3": {
+    "id": 2154,
+    "descriptions": [{ "attributes": { "text": "1954. Gestüt. Pferde auf Koppeln" } }],
+    "time": { "start": "1954-01-01T00:00:00.000Z", "end": "1954-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.88753421485542, "longitude": 10.538652172253933 }
+  },
+  "4": {
+    "id": 5179,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Dem 555555. Besucher konnte Spielbankdirektor Jan David (links) am 20. Januar 1982 eine Jahreskarte für das Casino überreichen. Der Gewinn inklusive Jetons im Wert von 900 DM ging an Franz Cals aus Braunschweig, hier flankiert von den Besucherinnen vor und nach der Glückszahl, Vera Hintze aus Northeim und Ursula Rudel aus Bad Harzburg. Zu den Gratulanten zählte außerdem Jörg de Camp, Direktor des Hotels Harzburger Hof."
+        }
+      }
+    ],
+    "time": { "start": "1982-01-20T00:00:00.000Z", "end": "1982-01-20T23:59:59.999Z" },
+    "position": { "latitude": 51.87766479820847, "longitude": 10.562942543583633 }
+  },
+  "5": {
+    "id": 4181,
+    "descriptions": [],
+    "time": { "start": "1949-01-01T00:00:00.000Z", "end": "1949-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.8992554681472, "longitude": 10.603828952880578 }
+  },
+  "6": {
+    "id": 5125,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Eröffnung einer Kunstausstellung mit Werken Jürgen Wölkes im Hotel Harzburger Hof am 19. April 1981 zu Beginn der Osterzeit."
+        }
+      }
+    ],
+    "time": { "start": "1981-04-19T00:00:00.000Z", "end": "1981-04-19T23:59:59.999Z" },
+    "position": { "latitude": 51.87123416480461, "longitude": 10.556313511478951 }
+  },
+  "7": {
+    "id": 621,
+    "descriptions": [{ "attributes": { "text": "1973" } }],
+    "time": { "start": "1973-01-01T00:00:00.000Z", "end": "1973-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.879914535190025, "longitude": 10.55908437778271 }
+  },
+  "8": {
+    "id": 2115,
+    "descriptions": [
+      { "attributes": { "text": "1950. Gestüt, Gestütswiesen, Koppeln, Stallungen" } }
+    ],
+    "time": { "start": "1950-01-01T00:00:00.000Z", "end": "1950-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.889158999236244, "longitude": 10.53656954696635 }
+  },
+  "9": {
+    "id": 7420,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Wahlkundgebung mit Konrad Adenauer am 22. April 1955 auf dem Marktplatz in Goslar."
+        }
+      }
+    ],
+    "time": { "start": "1955-04-22T00:00:00.000Z", "end": "1955-04-22T23:59:59.999Z" },
+    "position": { "latitude": 51.9059397332051, "longitude": 10.429030252162194 }
+  },
+  "10": {
+    "id": 5060,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1973, Empfang für den Präsidenten des Nationalen Olympischen Komitees von Israel, Josef Inbar, im Hotel Harzburger Hof. Günter Rosenberg, Dr. Bernard Kramer, Kurt Vorlop, Hoteldirektor Helmut Kutscher, Stadtdirektor Hubert Heiduk, Ehepaar Josef Inbar, dahinter Stadtdirektor i.R. Günther Paslat (Salzgitter-Bad), Bürgermeister Siegfried Hoffmann und stellv. Stadtdirektor Horst Voigt."
+        }
+      }
+    ],
+    "time": { "start": "1973-01-01T00:00:00.000Z", "end": "1973-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.8712120005447, "longitude": 10.556851574656324 }
+  },
+  "11": {
+    "id": 4010,
+    "descriptions": [
+      { "attributes": { "text": "1983. Sauna-, Massage- und Ruhebereich in der Sole-Therme." } }
+    ],
+    "time": { "start": "1983-01-01T00:00:00.000Z", "end": "1983-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.87106357268208, "longitude": 10.559414132167149 }
+  },
+  "12": {
+    "id": 5170,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Eröffnung des Automatenspiels der Spielbank in der Stadtmitte am 14./15. Dezember 1981."
+        }
+      }
+    ],
+    "time": { "start": "1981-12-01T00:00:00.000Z", "end": "1981-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.87744191766932, "longitude": 10.56325852381633 }
+  },
+  "13": {
+    "id": 3042,
+    "descriptions": [{ "attributes": { "text": "Karl-Franke-Platz, 1959" } }],
+    "time": { "start": "1959-01-01T00:00:00.000Z", "end": "1959-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.87602087575554, "longitude": 10.561428384044122 }
+  },
+  "14": {
+    "id": 1773,
+    "descriptions": [{ "attributes": { "text": "1962. Modenschau im Casino" } }],
+    "time": { "start": "1962-01-01T00:00:00.000Z", "end": "1962-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.877434799678475, "longitude": 10.56287600265023 }
+  },
+  "15": {
+    "id": 3035,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Bahnhofs(vor)platz, alte Staatsbank, Löwendenkmal. Zeitangabe: 1953"
+        }
+      }
+    ],
+    "time": { "start": "1953-01-01T00:00:00.000Z", "end": "1953-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.88763151573104, "longitude": 10.555427844310545 }
+  },
+  "16": {
+    "id": 4564,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Benefiz-Bühnenschau des MTK Bad Harzburg am 11. November 1967 im Kurhaus Bad Harzburg."
+        }
+      }
+    ],
+    "time": { "start": "1967-11-11T00:00:00.000Z", "end": "1967-11-11T23:59:59.999Z" },
+    "position": { "latitude": 51.873306024727256, "longitude": 10.56007563131061 }
+  },
+  "17": {
+    "id": 4951,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Lustige Rodelschlange mit „Onkel Pelle aus Berlin“ am 8. Januar 1955, erst von der Bergbahn-Talstation hinauf zum Molkenhaus auf 560 Meter und dann zurück ins Tal gerodelt."
+        }
+      }
+    ],
+    "time": { "start": "1955-01-08T00:00:00.000Z", "end": "1955-01-08T23:59:59.999Z" },
+    "position": { "latitude": 51.871020514341126, "longitude": 10.562439542954966 }
+  },
+  "18": {
+    "id": 7169,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Thema „150 Jahre Eisenbahnstrecke Bad Harzburg – Braunschweig“. Die Aufnahmen entstanden am 1. Dezember 1988 im Bad Harzburger Bahnhof."
+        }
+      }
+    ],
+    "time": { "start": "1988-12-01T00:00:00.000Z", "end": "1988-12-01T23:59:59.999Z" },
+    "position": { "latitude": 51.88863353661458, "longitude": 10.553981684024622 }
+  },
+  "19": {
+    "id": 7142,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Am 22. August 1986 wird das neu geschaffene große Fenster über dem Eingang des Bad Harzburger Bahnhofs wieder eingeweiht. Das Originalfenster war am 10. April 1945 bei der Sprengung der Muna im Schimmerwald zerstört worden. Rund um den Bahnhof in Bad Harzburg wird groß gefeiert."
+        }
+      }
+    ],
+    "time": { "start": "1986-08-22T00:00:00.000Z", "end": "1986-08-22T23:59:59.999Z" },
+    "position": { "latitude": 51.887784540941944, "longitude": 10.555029357910827 }
+  },
+  "20": {
+    "id": 3514,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "05. Oktober 1955. Menschen genießen Goldenen Oktober im Stadtpark"
+        }
+      }
+    ],
+    "time": { "start": "1955-10-05T00:00:00.000Z", "end": "1955-10-05T23:59:59.999Z" },
+    "position": { "latitude": 51.876934423361206, "longitude": 10.559270897065291 }
+  },
+  "21": {
+    "id": 7387,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Prof. Dr. Otto Antrick war Politikwissenschaftler und SPD-Politiker. Aufnahmen aus dem Jahr 1979 bei der Verleihung des Bundesverdienstkreuzes im Bad Harzburger Rathaus durch Staatssekretär Dockhorn. Zu den Gratulanten zählte auch Bürgermeister Klaus Homann. Ebenfalls zugegen die SPD-Politiker Wilhelm Baumgarten sen. (Landtagspräsident) und Wilhelm Baumgarten."
+        }
+      },
+      { "attributes": { "text": "antrick, otto" } }
+    ],
+    "time": { "start": "1979-01-01T00:00:00.000Z", "end": "1979-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.8848022309465, "longitude": 10.559352699692683 }
+  },
+  "22": {
+    "id": 1702,
+    "descriptions": [],
+    "time": "",
+    "position": { "latitude": 51.89678634619731, "longitude": 10.603757672652138 }
+  },
+  "23": {
+    "id": 3624,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1951. Britische Armee lädt Bad Harzburger Kinder zu Weihnachtsfeier im Kurhaus ein."
+        }
+      },
+      { "attributes": { "text": "1945-1955" } }
+    ],
+    "time": { "start": "1945-04-10T00:00:00.000Z", "end": "1945-04-10T23:59:59.999Z" },
+    "position": { "latitude": 51.873049226410124, "longitude": 10.55992882456849 }
+  },
+  "24": {
+    "id": 3180,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "15. Januar 1965. „Lasterhöhle auf ehemaliger Abraumhalde bei Bündheim gesprengt. Schulpflichtig Kinder veranstalteten Höhlenparties mit Striptease für 10 Pfennig pro Nase. Sittliche Gefahrenstelle radikal beseitigt. In der Höhle wurden Hefte mit Nackten gefunden, die deutlich für Erwachsene gekennzeichnet waren“"
+        }
+      }
+    ],
+    "time": { "start": "1965-01-15T00:00:00.000Z", "end": "1965-01-15T23:59:59.999Z" },
+    "position": { "latitude": 51.75591314991411, "longitude": 10.812998757173775 }
+  },
+  "25": {
+    "id": 4817,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1969. Erste Damenrallye: „108 schnelle Frauen im Hotel Seela“. Ausgerichtet von der Hamburger Illustrierten Constanze und dem AvD."
+        }
+      }
+    ],
+    "time": { "start": "1969-01-01T00:00:00.000Z", "end": "1969-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.86742037378887, "longitude": 10.558122188340349 }
+  },
+  "26": {
+    "id": 491,
+    "descriptions": [],
+    "time": { "start": "1975-01-01T00:00:00.000Z", "end": "1995-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.90198606426725, "longitude": 10.60352824162692 }
+  },
+  "27": {
+    "id": 5224,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Ausstellung Braunschweiger Kunststudenten in der Spielbank, Aufnahme vom 15. Juli 1979"
+        }
+      }
+    ],
+    "time": { "start": "1979-07-15T00:00:00.000Z", "end": "1979-07-15T23:59:59.999Z" },
+    "position": { "latitude": 51.87774537754392, "longitude": 10.563447318490944 }
+  },
+  "28": {
+    "id": 1730,
+    "descriptions": [
+      { "attributes": { "text": "19. Juni 1958. Tagung „Rohrleitung????“  (unleserlich)" } }
+    ],
+    "time": { "start": "1958-06-19T00:00:00.000Z", "end": "1958-06-19T23:59:59.999Z" },
+    "position": { "latitude": 51.90408097730044, "longitude": 10.603551857639106 }
+  },
+  "29": {
+    "id": 6446,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Der Schlagerkomponist Michael Jary filmt bei einem Kuraufenthalt in Bad Harzburg am 13. April 1954 die Wildfütterung an der Marienteichbaude."
+        }
+      }
+    ],
+    "time": { "start": "1954-04-13T00:00:00.000Z", "end": "1954-04-13T23:59:59.999Z" },
+    "position": { "latitude": 51.836608340013484, "longitude": 10.528533958495247 }
+  },
+  "30": {
+    "id": 1069,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Schützenfest 1979, Fassanstich Bürgermeister Klaus Homann, Schützenvogt Kurt Petermann"
+        }
+      }
+    ],
+    "time": { "start": "1979-01-01T00:00:00.000Z", "end": "1979-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.88971430439737, "longitude": 10.553273334298867 }
+  },
+  "31": {
+    "id": 6521,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Die „Villa Märchen“ (Fremdenheim Marxmeier“) in der Straße Am Stadtpark richtet im Mai 1958 einen Kneipp-Badebetrieb ein. Geleitet wird er von Kneipp-Bademeisterin Hilde Klein."
+        }
+      }
+    ],
+    "time": { "start": "1958-05-01T00:00:00.000Z", "end": "1958-05-31T00:00:00.000Z" },
+    "position": { "latitude": 51.875163520627986, "longitude": 10.559884986314502 }
+  },
+  "32": {
+    "id": 6898,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Nachdem die Anlagenverwaltung Dr. Rüster KG, die das Panoramic-Hotel 1972/73 errichtete, unter Zwangsverwaltung steht, lädt die Württembergische Landesbank am 26. Oktober 1977 zu einem Spitzengespräch und zu Pressekonferenz nach Hohegeiß ein. Die Bank will das Haus am Markt halten."
+        }
+      }
+    ],
+    "time": { "start": "1977-10-26T00:00:00.000Z", "end": "1977-10-26T23:59:59.999Z" },
+    "position": { "latitude": 51.89387322009321, "longitude": 10.603756501805039 }
+  },
+  "33": {
+    "id": 695,
+    "descriptions": [
+      { "attributes": { "text": "Sportplatz Waldhöhe, Richtfest Jugendheim 1958" } }
+    ],
+    "time": { "start": "1958-01-01T00:00:00.000Z", "end": "1958-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.88200026003337, "longitude": 10.583099750656404 }
+  },
+  "34": {
+    "id": 1450,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Juli 1959. „Haus des Sports“ in der Straße Am Stadtpark. Geschenk von Wilhelm Schmidt, Rechtsanwalt Hannover und zweiter Vorsitzender des NFV, an den Niedersächsischen Fußballverband."
+        }
+      }
+    ],
+    "time": { "start": "1959-07-01T00:00:00.000Z", "end": "1959-07-31T00:00:00.000Z" },
+    "position": { "latitude": 51.878277275145116, "longitude": 10.55718132396578 }
+  },
+  "35": {
+    "id": 888,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Burgberg-Seilbahn 1956, siebenmillionste Fahrgast 23. August 1956, Irmgard Busch, Stenotypistin aus Hamburg, Begleiterinnen Waltraud und Ingrid Lohscheid aus Köln"
+        }
+      }
+    ],
+    "time": { "start": "1956-08-23T00:00:00.000Z", "end": "1956-08-23T23:59:59.999Z" },
+    "position": { "latitude": 51.87110757844179, "longitude": 10.560759018353567 }
+  },
+  "36": {
+    "id": 6946,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1953. Finkenmanöver in Hohegeiß im Jahr 1953. Auf einzelnen Fotos Vermerke „55“ und „54“, die auf die Jahre 1955 und 1954 hindeuten. Außer allgemeinen Hinweisen zur Tradition des Finkenschlagens keine weiteren Angaben zu den Fotos."
+        }
+      }
+    ],
+    "time": { "start": "1953-01-01T00:00:00.000Z", "end": "1953-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.66653192300831, "longitude": 10.663356609729819 }
+  },
+  "37": {
+    "id": 3509,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "April 1953. Stadtpark und Casino (Haus des Kurgastes) im April noch tief verschneit"
+        }
+      }
+    ],
+    "time": { "start": "1953-04-01T00:00:00.000Z", "end": "1953-04-30T00:00:00.000Z" },
+    "position": { "latitude": 51.877375499998266, "longitude": 10.561709650100967 }
+  },
+  "38": {
+    "id": 2102,
+    "descriptions": [{ "attributes": { "text": "09. August 1951. Bettingerode. Kinderfest" } }],
+    "time": { "start": "1951-08-09T00:00:00.000Z", "end": "1951-08-09T23:59:59.999Z" },
+    "position": { "latitude": 51.91350779763693, "longitude": 10.57233892126533 }
+  },
+  "39": {
+    "id": 2667,
+    "descriptions": [],
+    "time": { "start": "1973-01-01T00:00:00.000Z", "end": "1985-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.9100724441434, "longitude": 10.603140877210537 }
+  },
+  "40": {
+    "id": 1435,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "31. Mai 1970. Hannover 96 gegen Twente Enschede auf der Waldhöhe, Frau Huppasch überreicht Harzhexen"
+        }
+      }
+    ],
+    "time": { "start": "1970-05-31T00:00:00.000Z", "end": "1970-05-31T23:59:59.999Z" },
+    "position": { "latitude": 51.88114379942437, "longitude": 10.582178280892553 }
+  },
+  "41": {
+    "id": 1041,
+    "descriptions": [{ "attributes": { "text": "Schützenfest 1973," } }],
+    "time": { "start": "1973-01-01T00:00:00.000Z", "end": "1973-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.88972140454856, "longitude": 10.553994285364753 }
+  },
+  "42": {
+    "id": 1812,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1953. Bridge-Paar-Turnier des Deutschen Bridgeverbandes im Casino Bad Harzburg."
+        }
+      }
+    ],
+    "time": { "start": "1953-01-01T00:00:00.000Z", "end": "1953-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.877706993236735, "longitude": 10.56325297620788 }
+  },
+  "43": {
+    "id": 1127,
+    "descriptions": [
+      { "attributes": { "text": "Galopprennwoche 1949 Sprung über den Silberbornbach" } }
+    ],
+    "time": { "start": "1949-01-01T00:00:00.000Z", "end": "1949-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.883786080679336, "longitude": 10.527830221435579 }
+  },
+  "44": {
+    "id": 3631,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1951. Britische Armee lÃ¤dt Bad Harzburger Kinder zu Weihnachtsfeier im Kurhaus ein."
+        }
+      },
+      { "attributes": { "text": "1945-1955" } }
+    ],
+    "time": { "start": "1945-04-10T00:00:00.000Z", "end": "1945-04-10T23:59:59.999Z" },
+    "position": { "latitude": 51.87302949510898, "longitude": 10.560499935527336 }
+  },
+  "45": {
+    "id": 5924,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1958 Heimatfest in St. Andreasberg. Festumzug in historischen Kostümen am 30. August 1958."
+        }
+      }
+    ],
+    "time": { "start": "1958-08-30T00:00:00.000Z", "end": "1958-08-30T23:59:59.999Z" },
+    "position": { "latitude": 51.712837938199144, "longitude": 10.5193200676149 }
+  },
+  "46": {
+    "id": 7140,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "Am 22. August 1986 wird das neu geschaffene große Fenster über dem Eingang des Bad Harzburger Bahnhofs wieder eingeweiht. Das Originalfenster war am 10. April 1945 bei der Sprengung der Muna im Schimmerwald zerstört worden. Rund um den Bahnhof in Bad Harzburg wird groß gefeiert."
+        }
+      }
+    ],
+    "time": { "start": "1986-08-22T00:00:00.000Z", "end": "1986-08-22T23:59:59.999Z" },
+    "position": { "latitude": 51.88756294926451, "longitude": 10.555027026694006 }
+  },
+  "47": {
+    "id": 1489,
+    "descriptions": [
+      {
+        "attributes": {
+          "text": "1953. Trainingslager der Top-Teams in Bad Harzburg. Testspiel Hannover 96 gegen SPV Fürth. Endstand 2:2 vor 5000 Zuschauern."
+        }
+      }
+    ],
+    "time": { "start": "1953-01-01T00:00:00.000Z", "end": "1953-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.881155973876524, "longitude": 10.58353827087558 }
+  },
+  "48": {
+    "id": 5046,
+    "descriptions": [
+      { "attributes": { "text": "Fernsehen, Tanzshow im Harzburger Hof, 25. Mai 1970" } }
+    ],
+    "time": { "start": "1970-05-25T00:00:00.000Z", "end": "1970-05-25T23:59:59.999Z" },
+    "position": { "latitude": 51.87331501455611, "longitude": 10.54869703781151 }
+  },
+  "49": {
+    "id": 3522,
+    "descriptions": [{ "attributes": { "text": "Sommer 1952 im Stadtpark" } }],
+    "time": { "start": "1952-01-01T00:00:00.000Z", "end": "1952-12-31T00:00:00.000Z" },
+    "position": { "latitude": 51.87734880326033, "longitude": 10.558656384177995 }
+  }
+}

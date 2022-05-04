@@ -31,7 +31,7 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
   return (
     <div className='gallery-view'>
       <div
-        className='scrollable-container'
+        className={'scrollable-container'}
         onScroll={event => {
           setScrollPos((event.target as HTMLElement).scrollTop);
           setScrollHeight((event.target as HTMLElement).scrollHeight);

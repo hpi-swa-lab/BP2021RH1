@@ -136,6 +136,14 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
+query getPicturesId($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+  pictures(filters: $filters, pagination: $pagination) {
+    data {
+      id
+    }
+  }
+}
+
 query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
   collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
     data {
@@ -173,6 +181,7 @@ query getRootCollection {
           data {
             attributes {
               name
+              description
             }
           }
         }
@@ -193,8 +202,48 @@ mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime
   }
 }
 
-query getKeywordTagSuggestions($name: String) {
-  keywordTags(filters: { name: { containsi: $name } }) {
+query getKeywordTagSuggestions($name: String, $start: Int, $limit: Int) {
+  keywordTags(
+    filters: { name: { containsi: $name } }
+    pagination: { start: $start, limit: $limit }
+  ) {
+    data {
+      id
+      attributes {
+        name
+        thumbnail: pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query getLocationTags {
+  locationTags {
     data {
       id
       attributes {

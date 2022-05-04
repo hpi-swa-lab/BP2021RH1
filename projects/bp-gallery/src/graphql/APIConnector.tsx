@@ -1716,6 +1716,15 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
+export type GetPicturesIdQueryVariables = Exact<{
+  filters: PictureFiltersInput;
+  pagination: PaginationArg;
+}>;
+
+export type GetPicturesIdQuery = {
+  pictures?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
+};
+
 export type GetCollectionWithPicturesPublishedAfterQueryVariables = Exact<{
   date: Scalars['DateTime'];
 }>;
@@ -1770,7 +1779,12 @@ export type GetRootCollectionQuery = {
                     current?:
                       | {
                           data?:
-                            | { attributes?: { name: string } | null | undefined }
+                            | {
+                                attributes?:
+                                  | { name: string; description?: string | null | undefined }
+                                  | null
+                                  | undefined;
+                              }
                             | null
                             | undefined;
                         }
@@ -1803,10 +1817,77 @@ export type PostCommentMutation = {
 
 export type GetKeywordTagSuggestionsQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
+  start?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type GetKeywordTagSuggestionsQuery = {
   keywordTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetLocationTagsQuery = {
+  locationTags?:
     | {
         data: Array<{
           id?: string | null | undefined;
@@ -2514,6 +2595,62 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQueryVariables
 >;
 
+export const GetPicturesIdDocument = gql`
+  query getPicturesId($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+    pictures(filters: $filters, pagination: $pagination) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesIdQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesIdQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetPicturesIdQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPicturesIdQuery, GetPicturesIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesIdQuery, GetPicturesIdQueryVariables>(
+    GetPicturesIdDocument,
+    options
+  );
+}
+
+export function useGetPicturesIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPicturesIdQuery, GetPicturesIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesIdQuery, GetPicturesIdQueryVariables>(
+    GetPicturesIdDocument,
+    options
+  );
+}
+
+export type GetPicturesIdQueryHookResult = ReturnType<typeof useGetPicturesIdQuery>;
+
+export type GetPicturesIdLazyQueryHookResult = ReturnType<typeof useGetPicturesIdLazyQuery>;
+
+export type GetPicturesIdQueryResult = Apollo.QueryResult<
+  GetPicturesIdQuery,
+  GetPicturesIdQueryVariables
+>;
+
 export const GetCollectionWithPicturesPublishedAfterDocument = gql`
   query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
     collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
@@ -2656,6 +2793,7 @@ export const GetRootCollectionDocument = gql`
             data {
               attributes {
                 name
+                description
               }
             }
           }
@@ -2768,8 +2906,11 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetKeywordTagSuggestionsDocument = gql`
-  query getKeywordTagSuggestions($name: String) {
-    keywordTags(filters: { name: { containsi: $name } }) {
+  query getKeywordTagSuggestions($name: String, $start: Int, $limit: Int) {
+    keywordTags(
+      filters: { name: { containsi: $name } }
+      pagination: { start: $start, limit: $limit }
+    ) {
       data {
         id
         attributes {
@@ -2819,6 +2960,8 @@ export const GetKeywordTagSuggestionsDocument = gql`
  * const { data, loading, error } = useGetKeywordTagSuggestionsQuery({
  *   variables: {
  *      name: // value for 'name'
+ *      start: // value for 'start'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
@@ -3440,6 +3583,89 @@ export type GetAllCollectionsLazyQueryHookResult = ReturnType<typeof useGetAllCo
 export type GetAllCollectionsQueryResult = Apollo.QueryResult<
   GetAllCollectionsQuery,
   GetAllCollectionsQueryVariables
+>;
+
+export const GetLocationTagsDocument = gql`
+  query getLocationTags {
+    locationTags {
+      data {
+        id
+        attributes {
+          name
+          thumbnail: pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLocationTagsQuery__
+ *
+ * To run a query within a React component, call `useGetLocationTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLocationTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLocationTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLocationTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetLocationTagsQuery, GetLocationTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetLocationTagsQuery, GetLocationTagsQueryVariables>(
+    GetLocationTagsDocument,
+    options
+  );
+}
+
+export function useGetLocationTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetLocationTagsQuery, GetLocationTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetLocationTagsQuery, GetLocationTagsQueryVariables>(
+    GetLocationTagsDocument,
+    options
+  );
+}
+
+export type GetLocationTagsQueryHookResult = ReturnType<typeof useGetLocationTagsQuery>;
+
+export type GetLocationTagsLazyQueryHookResult = ReturnType<typeof useGetLocationTagsLazyQuery>;
+
+export type GetLocationTagsQueryResult = Apollo.QueryResult<
+  GetLocationTagsQuery,
+  GetLocationTagsQueryVariables
 >;
 
 export const GetDecadePreviewThumbnailsDocument = gql`
