@@ -222,7 +222,7 @@ const TagOverview = ({ type }: { type: string }) => {
   const getSelectedRows = useCallback(
     (selectedIds: string[]) => {
       const ids = new Set(selectedIds);
-      return rows.filter(row => ids.has(row.id));
+      return rows.filter(row => ids.has(row.id as string));
     },
     [rows]
   );
