@@ -1660,7 +1660,12 @@ export type GetPictureInfoQuery = {
                           data: Array<{
                             id?: string | null | undefined;
                             attributes?:
-                              | { text: string; author?: string | null | undefined; date: any }
+                              | {
+                                  text: string;
+                                  author?: string | null | undefined;
+                                  date: any;
+                                  publishedAt?: any | null | undefined;
+                                }
                               | null
                               | undefined;
                           }>;
@@ -2271,6 +2276,82 @@ export type UpdateCollectionMutation = {
     | undefined;
 };
 
+export type GetUnverifiedCommentsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetUnverifiedCommentsQuery = {
+  comments?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                text: string;
+                author?: string | null | undefined;
+                picture?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  media: {
+                                    data?:
+                                      | {
+                                          id?: string | null | undefined;
+                                          attributes?:
+                                            | {
+                                                width?: number | null | undefined;
+                                                height?: number | null | undefined;
+                                                formats?: any | null | undefined;
+                                                updatedAt?: any | null | undefined;
+                                              }
+                                            | null
+                                            | undefined;
+                                        }
+                                      | null
+                                      | undefined;
+                                  };
+                                }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type AcceptCommentMutationVariables = Exact<{
+  commentId: Scalars['ID'];
+  currentTime: Scalars['DateTime'];
+}>;
+
+export type AcceptCommentMutation = {
+  updateComment?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeclineCommentMutationVariables = Exact<{
+  commentId: Scalars['ID'];
+}>;
+
+export type DeclineCommentMutation = {
+  deleteComment?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -2387,13 +2468,14 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          comments(sort: "date:asc") {
+          comments(publicationState: PREVIEW, sort: "date:asc") {
             data {
               id
               attributes {
                 text
                 author
                 date
+                publishedAt
               }
             }
           }
@@ -4293,6 +4375,193 @@ export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollect
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
+>;
+
+export const GetUnverifiedCommentsDocument = gql`
+  query getUnverifiedComments {
+    comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
+      data {
+        id
+        attributes {
+          picture {
+            data {
+              id
+              attributes {
+                media {
+                  data {
+                    id
+                    attributes {
+                      width
+                      height
+                      formats
+                      updatedAt
+                    }
+                  }
+                }
+              }
+            }
+          }
+          text
+          author
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUnverifiedCommentsQuery__
+ *
+ * To run a query within a React component, call `useGetUnverifiedCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUnverifiedCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUnverifiedCommentsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUnverifiedCommentsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetUnverifiedCommentsQuery,
+    GetUnverifiedCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUnverifiedCommentsQuery, GetUnverifiedCommentsQueryVariables>(
+    GetUnverifiedCommentsDocument,
+    options
+  );
+}
+
+export function useGetUnverifiedCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUnverifiedCommentsQuery,
+    GetUnverifiedCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUnverifiedCommentsQuery, GetUnverifiedCommentsQueryVariables>(
+    GetUnverifiedCommentsDocument,
+    options
+  );
+}
+
+export type GetUnverifiedCommentsQueryHookResult = ReturnType<typeof useGetUnverifiedCommentsQuery>;
+
+export type GetUnverifiedCommentsLazyQueryHookResult = ReturnType<
+  typeof useGetUnverifiedCommentsLazyQuery
+>;
+
+export type GetUnverifiedCommentsQueryResult = Apollo.QueryResult<
+  GetUnverifiedCommentsQuery,
+  GetUnverifiedCommentsQueryVariables
+>;
+
+export const AcceptCommentDocument = gql`
+  mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
+    updateComment(id: $commentId, data: { publishedAt: $currentTime }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type AcceptCommentMutationFn = Apollo.MutationFunction<
+  AcceptCommentMutation,
+  AcceptCommentMutationVariables
+>;
+
+/**
+ * __useAcceptCommentMutation__
+ *
+ * To run a mutation, you first call `useAcceptCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptCommentMutation, { data, loading, error }] = useAcceptCommentMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *      currentTime: // value for 'currentTime'
+ *   },
+ * });
+ */
+export function useAcceptCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<AcceptCommentMutation, AcceptCommentMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AcceptCommentMutation, AcceptCommentMutationVariables>(
+    AcceptCommentDocument,
+    options
+  );
+}
+
+export type AcceptCommentMutationHookResult = ReturnType<typeof useAcceptCommentMutation>;
+
+export type AcceptCommentMutationResult = Apollo.MutationResult<AcceptCommentMutation>;
+
+export type AcceptCommentMutationOptions = Apollo.BaseMutationOptions<
+  AcceptCommentMutation,
+  AcceptCommentMutationVariables
+>;
+
+export const DeclineCommentDocument = gql`
+  mutation declineComment($commentId: ID!) {
+    deleteComment(id: $commentId) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeclineCommentMutationFn = Apollo.MutationFunction<
+  DeclineCommentMutation,
+  DeclineCommentMutationVariables
+>;
+
+/**
+ * __useDeclineCommentMutation__
+ *
+ * To run a mutation, you first call `useDeclineCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeclineCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [declineCommentMutation, { data, loading, error }] = useDeclineCommentMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useDeclineCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeclineCommentMutation, DeclineCommentMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeclineCommentMutation, DeclineCommentMutationVariables>(
+    DeclineCommentDocument,
+    options
+  );
+}
+
+export type DeclineCommentMutationHookResult = ReturnType<typeof useDeclineCommentMutation>;
+
+export type DeclineCommentMutationResult = Apollo.MutationResult<DeclineCommentMutation>;
+
+export type DeclineCommentMutationOptions = Apollo.BaseMutationOptions<
+  DeclineCommentMutation,
+  DeclineCommentMutationVariables
 >;
 
 export const MeDocument = gql`

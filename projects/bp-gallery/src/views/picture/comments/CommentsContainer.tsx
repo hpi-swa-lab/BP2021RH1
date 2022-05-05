@@ -4,6 +4,8 @@ import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';
 import { useTranslation } from 'react-i18next';
+import { Icon } from '@mui/material';
+import CommentVerification from './CommentVerification';
 
 const CommentsContainer = ({
   pictureId,
@@ -16,13 +18,16 @@ const CommentsContainer = ({
 
   return (
     <div className='picture-info-section pictureComments' id='comments'>
-      <h2>{t('common.comments')}</h2>
+      <h2>
+        <Icon>question_answer</Icon>
+        {t('common.comments')}
+      </h2>
       <div className='comment-container'>
-        {comments &&
-          comments.length > 0 &&
-          comments.map((comment: FlatComment) => (
-            <FormattedComment comment={comment} key={comment.id} />
-          ))}
+        {comments?.map((comment: FlatComment) => (
+          <CommentVerification comment={comment} key={comment.id}>
+            <FormattedComment comment={comment} />
+          </CommentVerification>
+        ))}
       </div>
       <NewCommentForm pictureId={pictureId} />
     </div>
