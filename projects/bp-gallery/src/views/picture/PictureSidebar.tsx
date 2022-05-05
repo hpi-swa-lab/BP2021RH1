@@ -22,14 +22,18 @@ const PictureSidebar = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className={`picture-sidebar${!sideBarOpen ? ' closed' : ''}`} ref={containerRef}>
+    <div
+      className={`picture-sidebar${!sideBarOpen ? ' closed' : ''}`}
+      ref={containerRef}
+      onKeyUp={event => event.stopPropagation()}
+    >
       {loading && <Loading />}
       {error && <QueryErrorDisplay error={error} />}
       {!loading && !error && picture && (
-        <div className='scroll-container' onKeyUp={event => event.stopPropagation()}>
+        <>
           <PictureInfo picture={picture} />
           <CommentsContainer comments={picture.comments} pictureId={picture.id} />
-        </div>
+        </>
       )}
       <PictureViewNavigationBar />
     </div>

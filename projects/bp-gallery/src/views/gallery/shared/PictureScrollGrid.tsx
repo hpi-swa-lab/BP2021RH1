@@ -6,6 +6,8 @@ import PictureGrid from './PictureGrid';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
 import Loading from '../../shared/Loading';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
+import { useTranslation } from 'react-i18next';
+import './PictureScrollGrid.scss';
 
 const PictureScrollGrid = ({
   filters,
@@ -23,12 +25,16 @@ const PictureScrollGrid = ({
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
+  const { t } = useTranslation();
+
+  const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
+
   const { data, loading, error, fetchMore, refetch } = useGetPicturesQuery({
     variables: {
       filters,
       pagination: {
         start: 0,
-        limit: 100,
+        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
       },
     },
     notifyOnNetworkStatusChange: true,
@@ -49,7 +55,7 @@ const PictureScrollGrid = ({
         variables: {
           pagination: {
             start: pictures?.length,
-            limit: 100,
+            limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
           },
         },
       }).then(() => setIsFetching(false));
@@ -62,6 +68,9 @@ const PictureScrollGrid = ({
   } else if (loading && !pictures) {
     return <Loading />;
   } else if (pictures) {
+    const possiblyMorePictures: boolean =
+      pictures.length > 0 && pictures.length % NUMBER_OF_PICTURES_LOADED_PER_FETCH === 0;
+
     return (
       <>
         <PictureUploadArea
@@ -73,6 +82,18 @@ const PictureScrollGrid = ({
             }
           }}
         />
+        <span className='picture-count'>
+          {t(
+            pictures.length === 0
+              ? 'common.noPictures'
+              : possiblyMorePictures
+              ? 'common.moreThanPictureCount'
+              : 'common.pictureCount',
+            {
+              count: pictures.length,
+            }
+          )}
+        </span>
         <PictureGrid
           refetch={refetch}
           pictures={pictures}

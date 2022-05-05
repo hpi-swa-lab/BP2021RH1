@@ -2,11 +2,12 @@
 @import './shared.scss';
 
 .picture-sidebar {
-  width: 430px;
-  background: white;
+  padding-left: 10px;
+  width: 450px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   z-index: 1002;
-  padding: 10px;
-  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
   margin-right: 0px;
   transition: margin-right 0.5s;
   position: relative;
@@ -15,15 +16,29 @@
     margin-right: -450px;
   }
 
-  .picture-info {
+  .picture-info,
+  .pictureComments {
     padding: 10px;
-    margin-bottom: 1.5rem;
+    background: white;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  .picture-info {
+    flex: 450 1 0;
+    padding-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .pictureComments {
+    flex: 350 1 0;
   }
 
   .quick-access-buttons {
     position: absolute;
     bottom: 2rem;
-    left: 0;
+    left: 10px;
     background: white;
     display: flex;
     flex-direction: row;
@@ -62,23 +77,20 @@
     }
   }
 
-  .scroll-container {
-    height: 100%;
-    max-height: 100%;
-    overflow: auto;
-  }
-
   @media only screen and (max-width: $mobile-breakpoint) {
     width: 100%;
     max-width: 100%;
-    max-height: 80vh;
+    max-height: calc(80vh - 4rem);
+    background: white;
     padding-left: 0;
     padding-top: 0;
     z-index: 1005;
     transition: max-height 0.5s;
+    padding-bottom: 4rem;
+    overflow-y: auto;
 
     &.closed {
-      max-height: 5rem;
+      max-height: 1rem;
     }
 
     .quick-access-buttons {
@@ -111,6 +123,13 @@
           transform: rotate(0deg);
         }
       }
+    }
+
+    .picture-info,
+    .pictureComments {
+      border-radius: 0;
+      box-shadow: none;
+      flex: none;
     }
   }
 }

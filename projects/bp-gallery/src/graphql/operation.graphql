@@ -100,13 +100,14 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        comments(sort: "date:asc") {
+        comments(publicationState: PREVIEW, sort: "date:asc") {
           data {
             id
             attributes {
               text
               author
               date
+              publishedAt
             }
           }
         }
@@ -609,6 +610,52 @@ mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
 
 mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
   updateCollection(id: $collectionId, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+query getUnverifiedComments {
+  comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
+    data {
+      id
+      attributes {
+        picture {
+          data {
+            id
+            attributes {
+              media {
+                data {
+                  id
+                  attributes {
+                    width
+                    height
+                    formats
+                    updatedAt
+                  }
+                }
+              }
+            }
+          }
+        }
+        text
+        author
+      }
+    }
+  }
+}
+
+mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
+  updateComment(id: $commentId, data: { publishedAt: $currentTime }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation declineComment($commentId: ID!) {
+  deleteComment(id: $commentId) {
     data {
       id
     }

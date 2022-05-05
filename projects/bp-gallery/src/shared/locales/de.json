@@ -39,7 +39,17 @@
     "abort": "Abbrechen",
     "0s": "0er Jahre",
     "ok": "O.K.",
-    "dontShowAgain": "Verstanden, nicht nochmal anzeigen."
+    "dontShowAgain": "Verstanden, nicht noch einmal anzeigen.",
+    "authentication-needed": "Diese Seite ist nur für angemeldete Nutzer mit ausreichenden Berechtigungen sichtbar",
+    "count": "Anzahl",
+    "accept": "Akzeptieren",
+    "decline": "Ablehnen",
+    "delete": "Löschen",
+    "showMore": "Mehr anzeigen",
+    "showLess": "Weniger anzeigen",
+    "noPictures": "Keine Bilder",
+    "pictureCount": "{{count}} Bild(er)",
+    "moreThanPictureCount": "Mehr als {{count}} Bilder"
   },
   "login": {
     "title": "Login",
@@ -69,6 +79,7 @@
     "reallyDeletePicture": "Bild wirklich löschen?",
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
     "reallyDeleteDescription": "Beschreibung wirklich löschen?",
+    "really-decline-comment": "Soll folgender Kommentar gelöscht werden?",
     "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
     "synonyms": "Synonyme",
@@ -84,6 +95,8 @@
     "save": "Speichern",
     "editPicture": "Bild zuschneiden",
     "uploads": "Uploads",
-    "insertDescriptionHere": "Beschreibung hinzufügen..."
+    "insertDescriptionHere": "Beschreibung hinzufügen...",
+    "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare",
+    "unverified-comments": "Noch nicht verifizierte Kommentare"
   }
 }
