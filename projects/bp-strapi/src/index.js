@@ -1,5 +1,7 @@
 'use strict';
 
+const { mergeSourceTagIntoTargetTag } = require('./api/custom-tag-resolver');
+
 const resolveThumbnail = async (strapi, collectionId, alreadySeenIds) => {
   alreadySeenIds.push(collectionId);
   const collectionQuery = strapi.db.query('api::collection.collection');
@@ -50,7 +52,64 @@ module.exports = {
     const extensionService = strapi.plugin('graphql').service('extension');
 
     const extension = (gqlExtensions) => ({
+      // TODO: there will be merge conflicts with the collection overview branch here,
+      // remember to re-generate the APIConnector + schema.json after rebasing
+      types: [
+        gqlExtensions.nexus.mutationField('mergeKeywordTags', {
+          type: 'ID',
+          args: {
+            sourceId: 'ID',
+            targetId: 'ID',
+          },
+          async resolve(_, { sourceId, targetId }) {
+            return mergeSourceTagIntoTargetTag(gqlExtensions.strapi, 'keyword-tag', sourceId, targetId);
+          },
+        }),
+        gqlExtensions.nexus.mutationField('mergeLocationTags', {
+          type: 'ID',
+          args: {
+            sourceId: 'ID',
+            targetId: 'ID',
+          },
+          async resolve(_, { sourceId, targetId }) {
+            return mergeSourceTagIntoTargetTag(gqlExtensions.strapi, 'location-tag', sourceId, targetId);
+          },
+        }),
+        gqlExtensions.nexus.mutationField('mergePersonTags', {
+          type: 'ID',
+          args: {
+            sourceId: 'ID',
+            targetId: 'ID',
+          },
+          async resolve(_, { sourceId, targetId }) {
+            return mergeSourceTagIntoTargetTag(gqlExtensions.strapi, 'person-tag', sourceId, targetId);
+          },
+        }),
+      ],
       resolversConfig: {
+        Mutation: {
+          mergeKeywordTags: {
+            auth: {
+              scope: [
+                'api::keyword-tag.keyword-tag.update',
+              ],
+            },
+          },
+          mergeLocationTags: {
+            auth: {
+              scope: [
+                'api::location-tag.location-tag.update',
+              ],
+            },
+          },
+          mergePersonTags: {
+            auth: {
+              scope: [
+                'api::person-tag.person-tag.update',
+              ],
+            },
+          },
+        },
         'Collection.thumbnail': {
           middlewares: [
             async (_, parent) => {
