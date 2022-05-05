@@ -1,22 +1,38 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Search } from '@mui/icons-material';
 import { InputAdornment, TextField } from '@mui/material';
 import { History } from 'history';
 import './SearchBar.scss';
-import { asSearchPath, SearchType } from './SearchView';
+import { addNewParamToSearchPath, SearchType } from './SearchView';
 
 const SearchBar = ({
   searchParams,
   onValueChange,
+  onInvalidEntry,
 }: {
   searchParams?: URLSearchParams;
   onValueChange?: (snippet?: string) => void;
+  onInvalidEntry: (value: boolean) => void;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
   const textFieldRef = useRef<any>();
+  const [searchType, setSearchType] = useState(SearchType.ALL);
+
+  const onSearchStart = (searchValue: string) => {
+    if (searchValue === '') return;
+
+    const searchRes = addNewParamToSearchPath(searchType, searchValue, searchParams);
+    onInvalidEntry(searchRes.isValid);
+
+    history.push(searchRes.searchVal, {
+      showBack: true,
+    });
+    textFieldRef.current.value = '';
+    if (onValueChange) onValueChange('');
+  };
 
   return (
     <div className='search-bar'>
@@ -36,14 +52,7 @@ const SearchBar = ({
         }}
         onKeyUp={event => {
           if (event.key === 'Enter') {
-            history.push(
-              asSearchPath(SearchType.DEFAULT, String((event.target as any).value), searchParams),
-              {
-                showBack: true,
-              }
-            );
-            textFieldRef.current.value = '';
-            if (onValueChange) onValueChange('');
+            onSearchStart(String(textFieldRef.current.value));
           }
         }}
         placeholder={t('common.search-keywords')}

@@ -11,16 +11,51 @@ export const enum SearchType {
   DEFAULT = 'q',
   DECADE = 'decade',
   KEYWORD = 'keyword',
+  ALL = 'ALL',
 }
 
-export const asSearchPath = (
-  newParamType: SearchType,
-  newParamValue: string,
-  prevParams?: URLSearchParams
-): string => {
-  const searchParams = prevParams ? prevParams : new URLSearchParams();
-  searchParams.append(newParamType, newParamValue);
+const isDuplicatedSearchParam = (
+  element: string,
+  type: string,
+  prevParams: URLSearchParams
+): boolean => {
+  let r = false;
+  const prevParamsIterator = prevParams.entries();
+  let nextParam = prevParamsIterator.next();
+  while (!nextParam.done) {
+    if (nextParam.value[1] === element && nextParam.value[0] === type) r = true;
+    nextParam = prevParamsIterator.next();
+  }
+
+  return r;
+};
+
+export const asSearchPath = (searchParams: URLSearchParams): string => {
   return `/search?${searchParams.toString()}`;
+};
+
+export const addNewParamToSearchPath = (
+  newParamType: SearchType,
+  searchRequest: string,
+  prevParams?: URLSearchParams
+): {
+  isValid: boolean;
+  searchVal: any;
+} => {
+  const searchParams = prevParams ? prevParams : new URLSearchParams();
+  const paramValues = searchRequest.split(' ');
+
+  if (newParamType === SearchType.DECADE) {
+    if (!(parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4)))
+      return { searchVal: asSearchPath(searchParams), isValid: false };
+  }
+
+  paramValues.forEach(element => {
+    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !element.includes(' ')) {
+      searchParams.append(newParamType, element);
+    }
+  });
+  return { searchVal: asSearchPath(searchParams), isValid: true };
 };
 
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
@@ -96,6 +131,7 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [searchSnippet, setSearchSnippet] = useState<string>('');
   const { search }: Location = useLocation();
+  const [isValidSearch, setIsValidSearch] = useState<boolean>(true);
 
   const searchParams = useMemo(() => {
     return new URLSearchParams(search);
@@ -116,6 +152,9 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
               setSearchSnippet(snippet ?? '');
             }}
             searchParams={searchParams}
+            onInvalidEntry={(value: boolean) => {
+              setIsValidSearch(value);
+            }}
           />
           {!search ? (
             <SearchHub searchSnippet={searchSnippet} />
