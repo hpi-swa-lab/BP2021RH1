@@ -583,6 +583,7 @@ export type Mutation = {
   /** Request a reset password token */
   forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
   login: UsersPermissionsLoginPayload;
+  mergeCollections?: Maybe<Scalars['ID']>;
   multipleUpload: Array<Maybe<UploadFileEntityResponse>>;
   /** Register a user */
   register: UsersPermissionsLoginPayload;
@@ -705,6 +706,11 @@ export type MutationForgotPasswordArgs = {
 
 export type MutationLoginArgs = {
   input: UsersPermissionsLoginInput;
+};
+
+export type MutationMergeCollectionsArgs = {
+  sourceId?: InputMaybe<Scalars['ID']>;
+  targetId?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationMultipleUploadArgs = {
