@@ -68,12 +68,12 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
             : DEFAULT_THUMBNAIL_URL,
           onClick: () => {
             history.push(
-              addNewParamToSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name)))
+                addNewParamToSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name)))
                 .searchVal,
-              {
-                showBack: true,
-              }
-            );
+                {
+                    showBack: true,
+                }
+            )
           },
         }))}
       />

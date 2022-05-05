@@ -63,7 +63,7 @@ export const addNewParamToSearchPath = (
   }
 
   paramValues.forEach(element => {
-    if (!isDuplicatedSearchParam(element, newParamType, searchParams)) {
+    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !element.includes(' ')) {
       searchParams.append(newParamType, element);
     }
   });
