@@ -25,7 +25,7 @@ const CommentsContainer = ({
       <div className='comment-container'>
         {comments?.map((comment: FlatComment) => (
           <CommentVerification comment={comment} key={comment.id}>
-            <FormattedComment comment={comment} key={comment.id} />
+            <FormattedComment comment={comment} />
           </CommentVerification>
         ))}
       </div>

@@ -16,7 +16,7 @@ const CommentOverview = () => {
 
   const [openPictureId, setOpenPictureId] = useState<string | undefined>(undefined);
 
-  const { data, loading, error } = useGetUnverifiedCommentsQuery();
+  const { data, loading, error, refetch } = useGetUnverifiedCommentsQuery();
   const unverifiedComments: FlatComment[] | undefined =
     useSimplifiedQueryResponseData(data)?.comments;
 
@@ -103,6 +103,7 @@ const CommentOverview = () => {
             initialPictureId={openPictureId}
             siblingIds={Object.keys(groupedComments)}
             onBack={() => {
+              refetch();
               setOpenPictureId(undefined);
             }}
           />

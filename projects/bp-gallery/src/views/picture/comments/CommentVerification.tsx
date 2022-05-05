@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { FlatComment } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { useAcceptCommentMutation, useDeclineCommentMutation } from '../../../graphql/APIConnector';
-import { useApolloClient } from '@apollo/client';
 import { DialogContext, DialogPreset } from '../../shared/DialogWrapper';
 import { useTranslation } from 'react-i18next';
 import './CommentVerification.scss';
@@ -10,7 +9,6 @@ import { Button } from '@mui/material';
 import { Close, Delete, Done } from '@mui/icons-material';
 
 const CommentVerification = ({ children, comment }: { children: any; comment: FlatComment }) => {
-  const apolloClient = useApolloClient();
   const prompt = useContext(DialogContext);
   const { t } = useTranslation();
   const { role } = useAuth();
@@ -34,11 +32,11 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
     });
     if (!shouldRemove) return;
     await declineComment();
-    apolloClient.refetchQueries({ include: ['getPictureInfo'] });
   };
 
-  if (role < AuthRole.CURATOR && !comment.publishedAt) return null;
-  else {
+  if (role < AuthRole.CURATOR && !comment.publishedAt) {
+    return null;
+  } else {
     return (
       <div
         className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}${

@@ -39,7 +39,7 @@
     "abort": "Abbrechen",
     "0s": "0er Jahre",
     "ok": "O.K.",
-    "dontShowAgain": "Verstanden, nicht nochmal anzeigen.",
+    "dontShowAgain": "Verstanden, nicht noch einmal anzeigen.",
     "authentication-needed": "Diese Seite ist nur für angemeldete Nutzer mit ausreichenden Berechtigungen sichtbar",
     "count": "Anzahl",
     "accept": "Akzeptieren",
@@ -48,7 +48,7 @@
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen",
     "noPictures": "Keine Bilder",
-    "pictureCount": "{{count}} Bilder",
+    "pictureCount": "{{count}} Bild(er)",
     "moreThanPictureCount": "Mehr als {{count}} Bilder"
   },
   "login": {

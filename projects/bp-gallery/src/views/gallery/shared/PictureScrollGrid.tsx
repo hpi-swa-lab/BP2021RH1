@@ -27,12 +27,14 @@ const PictureScrollGrid = ({
 
   const { t } = useTranslation();
 
+  const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
+
   const { data, loading, error, fetchMore, refetch } = useGetPicturesQuery({
     variables: {
       filters,
       pagination: {
         start: 0,
-        limit: 100,
+        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
       },
     },
     notifyOnNetworkStatusChange: true,
@@ -53,7 +55,7 @@ const PictureScrollGrid = ({
         variables: {
           pagination: {
             start: pictures?.length,
-            limit: 100,
+            limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
           },
         },
       }).then(() => setIsFetching(false));
@@ -66,7 +68,8 @@ const PictureScrollGrid = ({
   } else if (loading && !pictures) {
     return <Loading />;
   } else if (pictures) {
-    const isMultipleOf100Pictures = pictures.length > 0 && pictures.length % 100 === 0;
+    const possiblyMorePictures: boolean =
+      pictures.length > 0 && pictures.length % NUMBER_OF_PICTURES_LOADED_PER_FETCH === 0;
 
     return (
       <>
@@ -83,7 +86,7 @@ const PictureScrollGrid = ({
           {t(
             pictures.length === 0
               ? 'common.noPictures'
-              : isMultipleOf100Pictures
+              : possiblyMorePictures
               ? 'common.moreThanPictureCount'
               : 'common.pictureCount',
             {
