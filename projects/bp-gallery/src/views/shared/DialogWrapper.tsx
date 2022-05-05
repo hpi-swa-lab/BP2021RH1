@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth, AuthRole } from '../../AuthWrapper';
 import { FlatCollection } from '../../types/additionalFlatTypes';
 import TargetCollectionSelectDialog from './TargetCollectionSelectDialog';
 
@@ -48,6 +49,7 @@ const DialogWrapper = ({ children }: { children: any }) => {
   // been closed. The resolve function is set below where prompt is triggered
   const resolve = useRef<undefined | ((value: any) => void)>(undefined);
   const { t } = useTranslation();
+  const { role } = useAuth();
 
   const prompt = (dialogProps: DialogProps): Promise<any> => {
     if (dialogProps.preset === DialogPreset.SELECT_COLLECTION) {
@@ -116,7 +118,9 @@ const DialogWrapper = ({ children }: { children: any }) => {
           ))}
         </DialogActions>
       </Dialog>
-      <TargetCollectionSelectDialog selectCallback={selectDialogCallback} />
+      {role >= AuthRole.CURATOR && (
+        <TargetCollectionSelectDialog selectCallback={selectDialogCallback} />
+      )}
     </DialogContext.Provider>
   );
 };
