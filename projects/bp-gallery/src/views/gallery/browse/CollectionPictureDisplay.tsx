@@ -67,7 +67,7 @@ const CollectionPictureDisplay = ({
           parentId: collections[0].id,
           publishedAt: new Date().toISOString(),
         },
-        refetchQueries: ['getCollectionInfo'],
+        refetchQueries: ['getCollectionInfoByName'],
       });
     }
   }, [collections, addSubCollection]);
