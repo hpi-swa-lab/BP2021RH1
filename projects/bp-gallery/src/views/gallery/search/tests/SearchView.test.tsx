@@ -1,6 +1,6 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
-import { renderRoute, renderRouteWithAPIMocks } from '../../../../testUtils';
+import { renderRouteWithAPIMocks } from '../../../../testUtils';
 import { GetPicturesSearchMocks } from './mocks';
 import { convertSearchParamsToPictureFilters } from '../SearchView';
 
@@ -11,7 +11,7 @@ const SearchBarMock = () => <div>SearchBarMock</div>;
 jest.mock('../SearchBar', () => SearchBarMock);
 
 describe('SearchView called without any parameters', () => {
-  beforeEach(() => renderRoute('/search'));
+  beforeEach(() => renderRouteWithAPIMocks('/search', []));
 
   it('should render a SearchBar', () => {
     const searchBar = screen.getByText('SearchBarMock');
