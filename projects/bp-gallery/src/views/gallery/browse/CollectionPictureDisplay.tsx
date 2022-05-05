@@ -11,6 +11,7 @@ import { PictureUploadAreaProps } from '../shared/PictureUploadArea';
 import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
+import useBulkOperations from '../shared/bulk-operations';
 
 const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -55,6 +56,10 @@ const CollectionPictureDisplay = ({
   const { role } = useAuth();
 
   const [addSubCollection] = useCreateSubCollectionMutation();
+
+  const { linkToCollection, moveToCollection, removeFromCollection } = useBulkOperations(
+    collections?.[0]
+  );
 
   const addCollection = useCallback(() => {
     // TODO: This needs to be changed, not a permanent solution!
@@ -123,6 +128,7 @@ const CollectionPictureDisplay = ({
           scrollHeight={scrollHeight}
           hashbase={collection.name}
           uploadAreaProps={uploadAreaProps(collection)}
+          bulkOperations={[removeFromCollection, linkToCollection, moveToCollection]}
         />
       </div>
     );
