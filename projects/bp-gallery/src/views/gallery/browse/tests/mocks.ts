@@ -1,5 +1,5 @@
 import {
-  GetCollectionInfoDocument,
+  GetCollectionInfoByIdDocument,
   GetCollectionWithPicturesPublishedAfterDocument,
   GetRootCollectionDocument,
 } from '../../../../graphql/APIConnector';
@@ -236,7 +236,7 @@ export const GetRootCollectionMocks = [
 export const GetCollectionInfoDocumentMocks = [
   {
     request: {
-      query: GetCollectionInfoDocument,
+      query: GetCollectionInfoByIdDocument,
       variables: {
         collectionName: 'Das Herbert-Ahrens-Bilderarchiv',
       },
@@ -260,7 +260,7 @@ export const GetCollectionInfoDocumentMocks = [
   },
   {
     request: {
-      query: GetCollectionInfoDocument,
+      query: GetCollectionInfoByIdDocument,
       variables: {
         collectionName: 'Sole-Therme',
       },
