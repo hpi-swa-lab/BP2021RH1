@@ -1,19 +1,27 @@
 import { Delete, Edit } from '@mui/icons-material';
-import { Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import {
+  Icon,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useCreateSubCollectionMutation,
   useDeleteCollectionMutation,
-  useGetChildCollectionsQuery,
+  useGetCollectionInfoByIdQuery,
   useGetRootCollectionQuery,
   useUpdateCollectionMutation,
 } from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { FlatCollection } from '../../types/additionalFlatTypes';
 import './CollectionsOverview.scss';
-import { DialogContext } from '../shared/DialogWrapper';
+import { DialogContext, DialogPreset } from '../shared/DialogWrapper';
 import TargetCollectionSelectDialog from './TargetCollectionSelectDialog';
 
 const CollectionsOverview = () => {
@@ -33,7 +41,7 @@ const CollectionsOverview = () => {
     <div className='panel-container'>
       {Object.values(panels).map((collectionId, index) => (
         <CollectionsPanel
-          key={collectionId}
+          key={index}
           parentId={collectionId}
           onSelectChild={child => {
             setPanels(oldPanels => {
@@ -68,19 +76,20 @@ const CollectionsPanel = ({
     ((selectedCollection: FlatCollection | undefined) => void) | undefined
   >(undefined);
 
-  const { data } = useGetChildCollectionsQuery({
+  const { data } = useGetCollectionInfoByIdQuery({
     variables: {
       collectionId: parentId,
     },
+    fetchPolicy: 'cache-and-network',
   });
   const [updateCollection] = useUpdateCollectionMutation({
-    refetchQueries: ['getChildCollections'],
+    refetchQueries: ['getCollectionInfoById'],
   });
   const [deleteCollection] = useDeleteCollectionMutation({
-    refetchQueries: ['getChildCollections'],
+    refetchQueries: ['getCollectionInfoById'],
   });
   const [createSubCollection] = useCreateSubCollectionMutation({
-    refetchQueries: ['getChildCollections'],
+    refetchQueries: ['getCollectionInfoById'],
   });
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -172,6 +181,33 @@ const CollectionsPanel = ({
     [updateCollection, parentId]
   );
 
+  const onUnlinkSubCollection = useCallback(
+    (collection: FlatCollection) => {
+      dialog({
+        preset: DialogPreset.CONFIRM,
+        title: t('curator.reallyUnlink'),
+        content: t('curator.unlinkFromCollection', {
+          parent: parentCollection?.name,
+        }),
+      }).then(resp => {
+        if (!resp) {
+          return;
+        }
+        const newParents = collection.parent_collections?.map(p => p.id) ?? [];
+        newParents.splice(newParents.indexOf(parentId), 1);
+        updateCollection({
+          variables: {
+            collectionId: collection.id,
+            data: {
+              parent_collections: newParents,
+            },
+          },
+        });
+      });
+    },
+    [parentCollection, dialog, t, parentId, updateCollection]
+  );
+
   return (
     <div className='panel'>
       <div className='panel-header'>
@@ -185,6 +221,26 @@ const CollectionsPanel = ({
               key={child.id}
               onClick={() => selectChild(child)}
             >
+              {(child.parent_collections?.length ?? 0) > 1 && (
+                <Tooltip
+                  title={
+                    t('curator.collectionParents', {
+                      parents: child.parent_collections?.map(c => ` - ${c.name}`).join('\n') ?? '',
+                    }) ?? ''
+                  }
+                >
+                  <span
+                    className='link-indicator'
+                    onClick={event => {
+                      event.stopPropagation();
+                      onUnlinkSubCollection(child);
+                    }}
+                  >
+                    <Icon>link</Icon>
+                    <span>{child.parent_collections?.length}</span>
+                  </span>
+                </Tooltip>
+              )}
               <span className='text'>{child.name}</span>
               <span className='actions'>
                 <IconButton onClick={() => onDelete(child)}>
@@ -226,7 +282,10 @@ const CollectionsPanel = ({
             <ListItemText>{t('curator.moveCollection')}</ListItemText>
           </MenuItem>
         </Menu>
-        <TargetCollectionSelectDialog selectCallback={selectDialogCallback} />
+        <TargetCollectionSelectDialog
+          selectCallback={selectDialogCallback}
+          disableCollectionIds={[parentId]}
+        />
       </div>
     </div>
   );
