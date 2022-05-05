@@ -233,7 +233,10 @@ const CollectionsPanel = ({
                 <Tooltip
                   title={
                     t('curator.collectionParents', {
-                      parents: child.parent_collections?.map(c => ` - ${c.name}`).join('\n') ?? '',
+                      parents:
+                        (child.parent_collections as FlatCollection[] | undefined)
+                          ?.map(c => ` - ${c.name}`)
+                          .join('\n') ?? '',
                     }) ?? ''
                   }
                 >
