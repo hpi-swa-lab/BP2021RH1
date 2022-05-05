@@ -1747,11 +1747,11 @@ export type GetCollectionWithPicturesPublishedAfterQuery = {
   collections?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
 };
 
-export type GetCollectionInfoQueryVariables = Exact<{
+export type GetCollectionInfoByNameQueryVariables = Exact<{
   collectionName?: InputMaybe<Scalars['String']>;
 }>;
 
-export type GetCollectionInfoQuery = {
+export type GetCollectionInfoByNameQuery = {
   collections?:
     | {
         data: Array<{
@@ -1781,11 +1781,11 @@ export type GetCollectionInfoQuery = {
     | undefined;
 };
 
-export type GetChildCollectionsQueryVariables = Exact<{
+export type GetCollectionInfoByIdQueryVariables = Exact<{
   collectionId: Scalars['ID'];
 }>;
 
-export type GetChildCollectionsQuery = {
+export type GetCollectionInfoByIdQuery = {
   collection?:
     | {
         data?:
@@ -1794,6 +1794,7 @@ export type GetChildCollectionsQuery = {
               attributes?:
                 | {
                     name: string;
+                    description?: string | null | undefined;
                     child_collections?:
                       | {
                           data: Array<{
@@ -1807,6 +1808,15 @@ export type GetChildCollectionsQuery = {
                                     | undefined;
                                   child_collections?:
                                     | { data: Array<{ id?: string | null | undefined }> }
+                                    | null
+                                    | undefined;
+                                  parent_collections?:
+                                    | {
+                                        data: Array<{
+                                          id?: string | null | undefined;
+                                          attributes?: { name: string } | null | undefined;
+                                        }>;
+                                      }
                                     | null
                                     | undefined;
                                 }
@@ -2802,8 +2812,8 @@ export type GetCollectionWithPicturesPublishedAfterQueryResult = Apollo.QueryRes
   GetCollectionWithPicturesPublishedAfterQueryVariables
 >;
 
-export const GetCollectionInfoDocument = gql`
-  query getCollectionInfo($collectionName: String) {
+export const GetCollectionInfoByNameDocument = gql`
+  query getCollectionInfoByName($collectionName: String) {
     collections(filters: { name: { eq: $collectionName } }) {
       data {
         id
@@ -2826,57 +2836,68 @@ export const GetCollectionInfoDocument = gql`
 `;
 
 /**
- * __useGetCollectionInfoQuery__
+ * __useGetCollectionInfoByNameQuery__
  *
- * To run a query within a React component, call `useGetCollectionInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCollectionInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCollectionInfoByNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCollectionInfoByNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCollectionInfoQuery({
+ * const { data, loading, error } = useGetCollectionInfoByNameQuery({
  *   variables: {
  *      collectionName: // value for 'collectionName'
  *   },
  * });
  */
-export function useGetCollectionInfoQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>
+export function useGetCollectionInfoByNameQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetCollectionInfoByNameQuery,
+    GetCollectionInfoByNameQueryVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>(
-    GetCollectionInfoDocument,
+  return Apollo.useQuery<GetCollectionInfoByNameQuery, GetCollectionInfoByNameQueryVariables>(
+    GetCollectionInfoByNameDocument,
     options
   );
 }
 
-export function useGetCollectionInfoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>
+export function useGetCollectionInfoByNameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCollectionInfoByNameQuery,
+    GetCollectionInfoByNameQueryVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>(
-    GetCollectionInfoDocument,
+  return Apollo.useLazyQuery<GetCollectionInfoByNameQuery, GetCollectionInfoByNameQueryVariables>(
+    GetCollectionInfoByNameDocument,
     options
   );
 }
 
-export type GetCollectionInfoQueryHookResult = ReturnType<typeof useGetCollectionInfoQuery>;
-
-export type GetCollectionInfoLazyQueryHookResult = ReturnType<typeof useGetCollectionInfoLazyQuery>;
-
-export type GetCollectionInfoQueryResult = Apollo.QueryResult<
-  GetCollectionInfoQuery,
-  GetCollectionInfoQueryVariables
+export type GetCollectionInfoByNameQueryHookResult = ReturnType<
+  typeof useGetCollectionInfoByNameQuery
 >;
 
-export const GetChildCollectionsDocument = gql`
-  query getChildCollections($collectionId: ID!) {
+export type GetCollectionInfoByNameLazyQueryHookResult = ReturnType<
+  typeof useGetCollectionInfoByNameLazyQuery
+>;
+
+export type GetCollectionInfoByNameQueryResult = Apollo.QueryResult<
+  GetCollectionInfoByNameQuery,
+  GetCollectionInfoByNameQueryVariables
+>;
+
+export const GetCollectionInfoByIdDocument = gql`
+  query getCollectionInfoById($collectionId: ID!) {
     collection(id: $collectionId) {
       data {
         id
         attributes {
           name
+          description
           child_collections(sort: "name:asc") {
             data {
               id
@@ -2892,6 +2913,14 @@ export const GetChildCollectionsDocument = gql`
                     id
                   }
                 }
+                parent_collections {
+                  data {
+                    id
+                    attributes {
+                      name
+                    }
+                  }
+                }
               }
             }
           }
@@ -2902,53 +2931,56 @@ export const GetChildCollectionsDocument = gql`
 `;
 
 /**
- * __useGetChildCollectionsQuery__
+ * __useGetCollectionInfoByIdQuery__
  *
- * To run a query within a React component, call `useGetChildCollectionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChildCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCollectionInfoByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCollectionInfoByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetChildCollectionsQuery({
+ * const { data, loading, error } = useGetCollectionInfoByIdQuery({
  *   variables: {
  *      collectionId: // value for 'collectionId'
  *   },
  * });
  */
-export function useGetChildCollectionsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetChildCollectionsQuery, GetChildCollectionsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetChildCollectionsQuery, GetChildCollectionsQueryVariables>(
-    GetChildCollectionsDocument,
-    options
-  );
-}
-
-export function useGetChildCollectionsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetChildCollectionsQuery,
-    GetChildCollectionsQueryVariables
+export function useGetCollectionInfoByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCollectionInfoByIdQuery,
+    GetCollectionInfoByIdQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetChildCollectionsQuery, GetChildCollectionsQueryVariables>(
-    GetChildCollectionsDocument,
+  return Apollo.useQuery<GetCollectionInfoByIdQuery, GetCollectionInfoByIdQueryVariables>(
+    GetCollectionInfoByIdDocument,
     options
   );
 }
 
-export type GetChildCollectionsQueryHookResult = ReturnType<typeof useGetChildCollectionsQuery>;
+export function useGetCollectionInfoByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCollectionInfoByIdQuery,
+    GetCollectionInfoByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetCollectionInfoByIdQuery, GetCollectionInfoByIdQueryVariables>(
+    GetCollectionInfoByIdDocument,
+    options
+  );
+}
 
-export type GetChildCollectionsLazyQueryHookResult = ReturnType<
-  typeof useGetChildCollectionsLazyQuery
+export type GetCollectionInfoByIdQueryHookResult = ReturnType<typeof useGetCollectionInfoByIdQuery>;
+
+export type GetCollectionInfoByIdLazyQueryHookResult = ReturnType<
+  typeof useGetCollectionInfoByIdLazyQuery
 >;
 
-export type GetChildCollectionsQueryResult = Apollo.QueryResult<
-  GetChildCollectionsQuery,
-  GetChildCollectionsQueryVariables
+export type GetCollectionInfoByIdQueryResult = Apollo.QueryResult<
+  GetCollectionInfoByIdQuery,
+  GetCollectionInfoByIdQueryVariables
 >;
 
 export const GetRootCollectionDocument = gql`

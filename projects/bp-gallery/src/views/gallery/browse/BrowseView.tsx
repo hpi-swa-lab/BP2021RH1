@@ -1,7 +1,7 @@
 import React from 'react';
 import './CollectionPictureDisplay.scss';
 import {
-  useGetCollectionInfoQuery,
+  useGetCollectionInfoByNameQuery,
   useGetCollectionWithPicturesPublishedAfterQuery,
   useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
@@ -33,7 +33,7 @@ const BrowseView = ({
       ? decodeBrowsePathComponent(path[path.length - 1])
       : rootCollectionName,
   };
-  const { data, loading, error } = useGetCollectionInfoQuery({
+  const { data, loading, error } = useGetCollectionInfoByNameQuery({
     variables: collectionQueryVariables,
     skip: !!rootCollectionResult.loading,
   });
