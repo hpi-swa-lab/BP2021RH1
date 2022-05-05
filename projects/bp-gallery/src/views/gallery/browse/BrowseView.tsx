@@ -1,7 +1,5 @@
 import React from 'react';
 import './CollectionPictureDisplay.scss';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import {
   useGetCollectionInfoQuery,
   useGetCollectionWithPicturesPublishedAfterQuery,

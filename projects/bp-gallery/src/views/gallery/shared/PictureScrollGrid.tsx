@@ -90,17 +90,6 @@ const PictureScrollGrid = ({
             }
           }}
         />
-        <PictureGrid
-          refetch={refetch}
-          pictures={pictures}
-          hashBase={hashbase}
-          loading={isFetching}
-        />
-      </>
-    );
-  } else if (pictures?.length) {
-    return (
-      <>
         <div
           style={{
             marginTop: '1rem',
@@ -111,12 +100,17 @@ const PictureScrollGrid = ({
           {pictures.length === 100
             ? '100+'
             : new Intl.NumberFormat('de-DE').format(pictures.length)}{' '}
-          {t('common.pictures')}
+          {pictures.length === 1 ? t('search.picture-found') : t('search.pictures-found')}
         </div>
-        <PictureGrid pictures={pictures} hashBase={hashbase} loading={isFetching} />
+        <PictureGrid
+          refetch={refetch}
+          pictures={pictures}
+          hashBase={hashbase}
+          loading={isFetching}
+        />
       </>
     );
-  } else if (pictures?.length === 0 && resultPictureCallback) {
+  } else if (resultPictureCallback) {
     return <div> {t('common.no-picture')} </div>;
   } else {
     return null;

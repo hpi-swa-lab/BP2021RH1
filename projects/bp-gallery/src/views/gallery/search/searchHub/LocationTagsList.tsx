@@ -4,12 +4,12 @@ import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useGetLocationTagsQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
-import { FlatLocationTagPreview } from '../../../../graphql/additionalFlatTypes';
-import QueryErrorDisplay from '../../../../components/QueryErrorDisplay';
-import Loading from '../../../../components/Loading';
-import ItemList from '../../common/ItemList';
+import ItemList from '../../shared/ItemList';
 import { asApiPath } from '../../../../App';
 import { addNewParamToSearchPath, SearchType } from '../SearchView';
+import Loading from '../../../shared/Loading';
+import QueryErrorDisplay from '../../../shared/QueryErrorDisplay';
+import { FlatLocationTagPreview } from '../../../../types/additionalFlatTypes';
 
 const LocationTagsList = () => {
   const history: History = useHistory();

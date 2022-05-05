@@ -16,9 +16,9 @@ import {
   TooltipProps,
   Typography,
 } from '@mui/material';
-import { FlatPicture } from '../../../graphql/additionalFlatTypes';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useTranslation } from 'react-i18next';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 
 export const enum SearchType {
   DESCRIPTION = 'description',
