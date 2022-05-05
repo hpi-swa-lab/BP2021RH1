@@ -369,6 +369,9 @@ query getAllCollections {
         parent_collections {
           data {
             id
+            attributes {
+              name
+            }
           }
         }
       }
