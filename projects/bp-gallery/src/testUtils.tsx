@@ -8,7 +8,6 @@ import routes from './routes';
 import NavigationBar from './views/shared/NavigationBar';
 import TopBar from './views/shared/TopBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
-import AuthWrapper from './AuthWrapper';
 import AlertWrapper from './views/shared/AlertWrapper';
 import DialogWrapper from './views/shared/DialogWrapper';
 
@@ -74,7 +73,7 @@ const _wrapInMockedProvider = (
   const optionalCache = enableCache ? cache : undefined;
   return (
     <MockedProvider addTypename={false} mocks={apiMocks} cache={optionalCache}>
-      <AuthWrapper>{component}</AuthWrapper>
+      {component}
     </MockedProvider>
   );
 };

@@ -35,6 +35,7 @@ const useAddPicturesToCollection = () => {
   const [getPicturesForCollection] = useGetPicturesForCollectionLazyQuery({
     onCompleted: setNewPictures,
     fetchPolicy: 'network-only',
+    errorPolicy: 'all',
   });
 
   return useCallback(
