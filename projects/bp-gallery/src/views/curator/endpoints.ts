@@ -1,8 +1,14 @@
 import { useMemo } from 'react';
 import {
+  useDeleteKeywordTagMutation,
+  useDeleteLocationTagMutation,
+  useDeletePersonTagMutation,
   useGetAllKeywordTagsQuery,
   useGetAllLocationTagsQuery,
   useGetAllPersonTagsQuery,
+  useMergeKeywordTagsMutation,
+  useMergeLocationTagsMutation,
+  useMergePersonTagsMutation,
   useUpdateKeywordNameMutation,
   useUpdateKeywordSynonymsMutation,
   useUpdateLocationNameMutation,
@@ -16,22 +22,28 @@ const useGenericTagEndpoints = (type: string) => {
     switch (type) {
       case 'locations':
         return {
-          tagQuery: useGetAllLocationTagsQuery,
+          allTagsQuery: useGetAllLocationTagsQuery,
           updateTagNameMutationSource: useUpdateLocationNameMutation,
           updateSynonymsMutationSource: useUpdateLocationSynonymsMutation,
+          mergeTagsMutationSource: useMergeLocationTagsMutation,
+          deleteTagMutationSource: useDeleteLocationTagMutation,
         };
       case 'people':
         return {
-          tagQuery: useGetAllPersonTagsQuery,
+          allTagsQuery: useGetAllPersonTagsQuery,
           updateTagNameMutationSource: useUpdatePersonNameMutation,
           updateSynonymsMutationSource: useUpdatePersonSynonymsMutation,
+          mergeTagsMutationSource: useMergePersonTagsMutation,
+          deleteTagMutationSource: useDeletePersonTagMutation,
         };
       case 'keywords':
       default:
         return {
-          tagQuery: useGetAllKeywordTagsQuery,
+          allTagsQuery: useGetAllKeywordTagsQuery,
           updateTagNameMutationSource: useUpdateKeywordNameMutation,
           updateSynonymsMutationSource: useUpdateKeywordSynonymsMutation,
+          mergeTagsMutationSource: useMergeKeywordTagsMutation,
+          deleteTagMutationSource: useDeleteKeywordTagMutation,
         };
     }
   }, [type]);

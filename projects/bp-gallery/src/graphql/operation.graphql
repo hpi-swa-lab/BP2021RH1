@@ -551,6 +551,42 @@ mutation createLocationTag($name: String!) {
   }
 }
 
+mutation mergePersonTags($targetId: ID!, $sourceId: ID!) {
+  mergePersonTags(targetId: $targetId, sourceId: $sourceId)
+}
+
+mutation mergeKeywordTags($targetId: ID!, $sourceId: ID!) {
+  mergeKeywordTags(targetId: $targetId, sourceId: $sourceId)
+}
+
+mutation mergeLocationTags($targetId: ID!, $sourceId: ID!) {
+  mergeLocationTags(targetId: $targetId, sourceId: $sourceId)
+}
+
+mutation deletePersonTag($id: ID!) {
+  deletePersonTag(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteLocationTag($id: ID!) {
+  deleteLocationTag(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteKeywordTag($id: ID!) {
+  deleteKeywordTag(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
 mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
   createCollection(
     data: { name: $name, parent_collections: [$parentId], publishedAt: $publishedAt }

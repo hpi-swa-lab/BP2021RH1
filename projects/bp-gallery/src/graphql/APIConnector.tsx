@@ -2196,6 +2196,60 @@ export type CreateLocationTagMutation = {
     | undefined;
 };
 
+export type MergePersonTagsMutationVariables = Exact<{
+  targetId: Scalars['ID'];
+  sourceId: Scalars['ID'];
+}>;
+
+export type MergePersonTagsMutation = { mergePersonTags?: string | null | undefined };
+
+export type MergeKeywordTagsMutationVariables = Exact<{
+  targetId: Scalars['ID'];
+  sourceId: Scalars['ID'];
+}>;
+
+export type MergeKeywordTagsMutation = { mergeKeywordTags?: string | null | undefined };
+
+export type MergeLocationTagsMutationVariables = Exact<{
+  targetId: Scalars['ID'];
+  sourceId: Scalars['ID'];
+}>;
+
+export type MergeLocationTagsMutation = { mergeLocationTags?: string | null | undefined };
+
+export type DeletePersonTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeletePersonTagMutation = {
+  deletePersonTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeleteLocationTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteLocationTagMutation = {
+  deleteLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeleteKeywordTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteKeywordTagMutation = {
+  deleteKeywordTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type CreateSubCollectionMutationVariables = Exact<{
   name: Scalars['String'];
   parentId: Scalars['ID'];
@@ -3991,6 +4045,321 @@ export type CreateLocationTagMutationResult = Apollo.MutationResult<CreateLocati
 export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationTagMutation,
   CreateLocationTagMutationVariables
+>;
+
+export const MergePersonTagsDocument = gql`
+  mutation mergePersonTags($targetId: ID!, $sourceId: ID!) {
+    mergePersonTags(targetId: $targetId, sourceId: $sourceId)
+  }
+`;
+
+export type MergePersonTagsMutationFn = Apollo.MutationFunction<
+  MergePersonTagsMutation,
+  MergePersonTagsMutationVariables
+>;
+
+/**
+ * __useMergePersonTagsMutation__
+ *
+ * To run a mutation, you first call `useMergePersonTagsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergePersonTagsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergePersonTagsMutation, { data, loading, error }] = useMergePersonTagsMutation({
+ *   variables: {
+ *      targetId: // value for 'targetId'
+ *      sourceId: // value for 'sourceId'
+ *   },
+ * });
+ */
+export function useMergePersonTagsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    MergePersonTagsMutation,
+    MergePersonTagsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<MergePersonTagsMutation, MergePersonTagsMutationVariables>(
+    MergePersonTagsDocument,
+    options
+  );
+}
+
+export type MergePersonTagsMutationHookResult = ReturnType<typeof useMergePersonTagsMutation>;
+
+export type MergePersonTagsMutationResult = Apollo.MutationResult<MergePersonTagsMutation>;
+
+export type MergePersonTagsMutationOptions = Apollo.BaseMutationOptions<
+  MergePersonTagsMutation,
+  MergePersonTagsMutationVariables
+>;
+
+export const MergeKeywordTagsDocument = gql`
+  mutation mergeKeywordTags($targetId: ID!, $sourceId: ID!) {
+    mergeKeywordTags(targetId: $targetId, sourceId: $sourceId)
+  }
+`;
+
+export type MergeKeywordTagsMutationFn = Apollo.MutationFunction<
+  MergeKeywordTagsMutation,
+  MergeKeywordTagsMutationVariables
+>;
+
+/**
+ * __useMergeKeywordTagsMutation__
+ *
+ * To run a mutation, you first call `useMergeKeywordTagsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergeKeywordTagsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergeKeywordTagsMutation, { data, loading, error }] = useMergeKeywordTagsMutation({
+ *   variables: {
+ *      targetId: // value for 'targetId'
+ *      sourceId: // value for 'sourceId'
+ *   },
+ * });
+ */
+export function useMergeKeywordTagsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    MergeKeywordTagsMutation,
+    MergeKeywordTagsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<MergeKeywordTagsMutation, MergeKeywordTagsMutationVariables>(
+    MergeKeywordTagsDocument,
+    options
+  );
+}
+
+export type MergeKeywordTagsMutationHookResult = ReturnType<typeof useMergeKeywordTagsMutation>;
+
+export type MergeKeywordTagsMutationResult = Apollo.MutationResult<MergeKeywordTagsMutation>;
+
+export type MergeKeywordTagsMutationOptions = Apollo.BaseMutationOptions<
+  MergeKeywordTagsMutation,
+  MergeKeywordTagsMutationVariables
+>;
+
+export const MergeLocationTagsDocument = gql`
+  mutation mergeLocationTags($targetId: ID!, $sourceId: ID!) {
+    mergeLocationTags(targetId: $targetId, sourceId: $sourceId)
+  }
+`;
+
+export type MergeLocationTagsMutationFn = Apollo.MutationFunction<
+  MergeLocationTagsMutation,
+  MergeLocationTagsMutationVariables
+>;
+
+/**
+ * __useMergeLocationTagsMutation__
+ *
+ * To run a mutation, you first call `useMergeLocationTagsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergeLocationTagsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergeLocationTagsMutation, { data, loading, error }] = useMergeLocationTagsMutation({
+ *   variables: {
+ *      targetId: // value for 'targetId'
+ *      sourceId: // value for 'sourceId'
+ *   },
+ * });
+ */
+export function useMergeLocationTagsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    MergeLocationTagsMutation,
+    MergeLocationTagsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<MergeLocationTagsMutation, MergeLocationTagsMutationVariables>(
+    MergeLocationTagsDocument,
+    options
+  );
+}
+
+export type MergeLocationTagsMutationHookResult = ReturnType<typeof useMergeLocationTagsMutation>;
+
+export type MergeLocationTagsMutationResult = Apollo.MutationResult<MergeLocationTagsMutation>;
+
+export type MergeLocationTagsMutationOptions = Apollo.BaseMutationOptions<
+  MergeLocationTagsMutation,
+  MergeLocationTagsMutationVariables
+>;
+
+export const DeletePersonTagDocument = gql`
+  mutation deletePersonTag($id: ID!) {
+    deletePersonTag(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeletePersonTagMutationFn = Apollo.MutationFunction<
+  DeletePersonTagMutation,
+  DeletePersonTagMutationVariables
+>;
+
+/**
+ * __useDeletePersonTagMutation__
+ *
+ * To run a mutation, you first call `useDeletePersonTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePersonTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePersonTagMutation, { data, loading, error }] = useDeletePersonTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePersonTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeletePersonTagMutation,
+    DeletePersonTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeletePersonTagMutation, DeletePersonTagMutationVariables>(
+    DeletePersonTagDocument,
+    options
+  );
+}
+
+export type DeletePersonTagMutationHookResult = ReturnType<typeof useDeletePersonTagMutation>;
+
+export type DeletePersonTagMutationResult = Apollo.MutationResult<DeletePersonTagMutation>;
+
+export type DeletePersonTagMutationOptions = Apollo.BaseMutationOptions<
+  DeletePersonTagMutation,
+  DeletePersonTagMutationVariables
+>;
+
+export const DeleteLocationTagDocument = gql`
+  mutation deleteLocationTag($id: ID!) {
+    deleteLocationTag(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteLocationTagMutationFn = Apollo.MutationFunction<
+  DeleteLocationTagMutation,
+  DeleteLocationTagMutationVariables
+>;
+
+/**
+ * __useDeleteLocationTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteLocationTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLocationTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLocationTagMutation, { data, loading, error }] = useDeleteLocationTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteLocationTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteLocationTagMutation,
+    DeleteLocationTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteLocationTagMutation, DeleteLocationTagMutationVariables>(
+    DeleteLocationTagDocument,
+    options
+  );
+}
+
+export type DeleteLocationTagMutationHookResult = ReturnType<typeof useDeleteLocationTagMutation>;
+
+export type DeleteLocationTagMutationResult = Apollo.MutationResult<DeleteLocationTagMutation>;
+
+export type DeleteLocationTagMutationOptions = Apollo.BaseMutationOptions<
+  DeleteLocationTagMutation,
+  DeleteLocationTagMutationVariables
+>;
+
+export const DeleteKeywordTagDocument = gql`
+  mutation deleteKeywordTag($id: ID!) {
+    deleteKeywordTag(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteKeywordTagMutationFn = Apollo.MutationFunction<
+  DeleteKeywordTagMutation,
+  DeleteKeywordTagMutationVariables
+>;
+
+/**
+ * __useDeleteKeywordTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteKeywordTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteKeywordTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteKeywordTagMutation, { data, loading, error }] = useDeleteKeywordTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteKeywordTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteKeywordTagMutation,
+    DeleteKeywordTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteKeywordTagMutation, DeleteKeywordTagMutationVariables>(
+    DeleteKeywordTagDocument,
+    options
+  );
+}
+
+export type DeleteKeywordTagMutationHookResult = ReturnType<typeof useDeleteKeywordTagMutation>;
+
+export type DeleteKeywordTagMutationResult = Apollo.MutationResult<DeleteKeywordTagMutation>;
+
+export type DeleteKeywordTagMutationOptions = Apollo.BaseMutationOptions<
+  DeleteKeywordTagMutation,
+  DeleteKeywordTagMutationVariables
 >;
 
 export const CreateSubCollectionDocument = gql`
