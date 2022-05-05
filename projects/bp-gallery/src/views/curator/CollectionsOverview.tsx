@@ -22,7 +22,6 @@ import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { FlatCollection } from '../../types/additionalFlatTypes';
 import './CollectionsOverview.scss';
 import { DialogContext, DialogPreset } from '../shared/DialogWrapper';
-import TargetCollectionSelectDialog from './TargetCollectionSelectDialog';
 
 const CollectionsOverview = () => {
   const [panels, setPanels] = useState<string[]>([]);
@@ -71,10 +70,6 @@ const CollectionsPanel = ({
   const dialog = useContext(DialogContext);
 
   const [selectedChild, setSelectedChild] = useState<string | undefined>(undefined);
-
-  const [selectDialogCallback, setSelectDialogCallback] = useState<
-    ((selectedCollection: FlatCollection | undefined) => void) | undefined
-  >(undefined);
 
   const { data } = useGetCollectionInfoByIdQuery({
     variables: {
@@ -160,7 +155,10 @@ const CollectionsPanel = ({
 
   const onLinkOrMoveSubcollection = useCallback(
     (moveCollection?: boolean) => {
-      setSelectDialogCallback(() => async (selectedCollection: FlatCollection | undefined) => {
+      dialog({
+        preset: DialogPreset.SELECT_COLLECTION,
+        content: '',
+      }).then(async (selectedCollection: FlatCollection | undefined) => {
         if (selectedCollection) {
           const originalParents = selectedCollection.parent_collections ?? [];
           if (moveCollection && originalParents.length > 1) {
@@ -186,7 +184,6 @@ const CollectionsPanel = ({
             },
           });
         }
-        setSelectDialogCallback(undefined);
       });
     },
     [updateCollection, parentId, dialog, t]
@@ -293,10 +290,6 @@ const CollectionsPanel = ({
             <ListItemText>{t('curator.moveCollection')}</ListItemText>
           </MenuItem>
         </Menu>
-        <TargetCollectionSelectDialog
-          selectCallback={selectDialogCallback}
-          disableCollectionIds={[parentId]}
-        />
       </div>
     </div>
   );

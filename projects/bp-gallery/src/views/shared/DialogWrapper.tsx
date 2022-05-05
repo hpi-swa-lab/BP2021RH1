@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FlatCollection } from '../../types/additionalFlatTypes';
+import TargetCollectionSelectDialog from './TargetCollectionSelectDialog';
 
 export interface DialogOption {
   name: string;
@@ -19,6 +21,7 @@ export interface DialogOption {
 
 export enum DialogPreset {
   CONFIRM,
+  SELECT_COLLECTION,
 }
 
 export interface DialogProps {
@@ -36,12 +39,25 @@ const DialogWrapper = ({ children }: { children: any }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [dialogState, setDialogState] = useState<DialogProps>();
 
+  // This is for using the collection select dialog
+  const [selectDialogCallback, setSelectDialogCallback] = useState<
+    ((selectedCollection: FlatCollection | undefined) => void) | undefined
+  >(undefined);
+
   // We save a function callback here to call once the currently active dialog has
   // been closed. The resolve function is set below where prompt is triggered
   const resolve = useRef<undefined | ((value: any) => void)>(undefined);
   const { t } = useTranslation();
 
   const prompt = (dialogProps: DialogProps): Promise<any> => {
+    if (dialogProps.preset === DialogPreset.SELECT_COLLECTION) {
+      return new Promise<any>(r => {
+        setSelectDialogCallback(() => (selectedCollection: FlatCollection | undefined) => {
+          r(selectedCollection);
+          setSelectDialogCallback(undefined);
+        });
+      });
+    }
     if (dialogProps.preset === DialogPreset.CONFIRM && !dialogProps.options) {
       dialogProps.options = [
         {
@@ -100,6 +116,7 @@ const DialogWrapper = ({ children }: { children: any }) => {
           ))}
         </DialogActions>
       </Dialog>
+      <TargetCollectionSelectDialog selectCallback={selectDialogCallback} />
     </DialogContext.Provider>
   );
 };
