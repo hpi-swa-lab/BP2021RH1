@@ -4,10 +4,10 @@ import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useGetAllLocationTagsQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
+import ItemList from '../../shared/ItemList';
 import { asApiPath } from '../../../../App';
 import QueryErrorDisplay from '../../../shared/QueryErrorDisplay';
 import Loading from '../../../shared/Loading';
-import ItemList from '../../shared/ItemList';
 import { FlatLocationTagPreview } from '../../../../types/additionalFlatTypes';
 import { addNewParamToSearchPath, SearchType } from '../SearchView';
 

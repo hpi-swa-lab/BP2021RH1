@@ -2,7 +2,6 @@ import React from 'react';
 import { Chip } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
-import { useTranslation } from 'react-i18next';
 import { asSearchPath, SearchType } from './SearchView';
 import './SearchBreadcrumbs.scss';
 import EventIcon from '@mui/icons-material/Event';
@@ -14,7 +13,6 @@ type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];
 
 const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) => {
-  const { t } = useTranslation();
   const history: History = useHistory();
   const searchParamValues: SearchParams = [];
   const iconsToTypes = (searchType: SearchType) => {

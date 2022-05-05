@@ -61,6 +61,8 @@
     "search-all": "Gesamtes Bilderarchiv",
     "search-for-type": "durchsuchen",
     "start-search": "Suche Starten",
+    "picture-found": "Bild wurde gefunden",
+    "pictures-found": "Bilder wurden gefunden",
     "choose-searchtypes": "Suchtyp auswählen",
     "wrong-time-input-info": "Jahreszahlen müssen in der Form 1989 oder 89 angegeben werden.",
     "explanation-headline": "Was passiert, wenn ich Stichworte suche?",
