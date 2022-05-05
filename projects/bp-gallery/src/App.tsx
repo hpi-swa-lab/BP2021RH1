@@ -11,8 +11,6 @@ import AuthWrapper from './AuthWrapper';
 import AlertWrapper, { AlertOptions, AlertType } from './views/shared/AlertWrapper';
 import DialogWrapper from './views/shared/DialogWrapper';
 import { isEmpty } from 'lodash';
-import { Location } from 'history';
-import { useLocation } from 'react-router-dom';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -101,8 +99,6 @@ const apolloClient = new ApolloClient({
 });
 
 const App = ({ route }: RouteConfigComponentProps) => {
-  const search: Location = useLocation();
-
   return (
     <ApolloProvider client={apolloClient}>
       <AlertWrapper>
