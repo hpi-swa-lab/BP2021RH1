@@ -22,14 +22,14 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       if (localStorage.getItem('dontShowCommentDialogAgain') === '1') {
         openAlert({
           alertType: AlertType.INFO,
-          message: t('common.comment-alert'),
-          duration: 5000,
+          message: t('comment.alert'),
+          duration: 7000,
         });
         return;
       }
       prompt({
-        title: t('common.comment-thanks'),
-        content: t('common.comment-alert'),
+        title: t('comment.thanks'),
+        content: t('comment.alert'),
         options: [
           {
             name: t('common.dontShowAgain'),

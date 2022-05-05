@@ -41,13 +41,13 @@ const SearchBar = ({
   const displayText = (thisSearchType: SearchType) => {
     switch (thisSearchType) {
       case SearchType.DECADE:
-        return t('search.search-decade');
+        return t('search.decades');
       case SearchType.KEYWORD:
-        return t('search.search-keyword');
+        return t('search.keywords');
       case SearchType.DESCRIPTION:
-        return t('search.search-description');
+        return t('search.descriptions');
       default:
-        return t('search.search-all');
+        return t('search.all');
     }
   };
 
@@ -103,7 +103,7 @@ const SearchBar = ({
             onSearchStart(String(textFieldRef.current.value));
           }
         }}
-        placeholder={t('search.search-for-type')}
+        placeholder={t('search.for-type')}
         variant='outlined'
       />
     </div>
