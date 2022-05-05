@@ -83,13 +83,13 @@ const CollectionsPanel = ({
     fetchPolicy: 'cache-and-network',
   });
   const [updateCollection] = useUpdateCollectionMutation({
-    refetchQueries: ['getCollectionInfoById'],
+    refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
   const [deleteCollection] = useDeleteCollectionMutation({
-    refetchQueries: ['getCollectionInfoById'],
+    refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
   const [createSubCollection] = useCreateSubCollectionMutation({
-    refetchQueries: ['getCollectionInfoById'],
+    refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -160,11 +160,22 @@ const CollectionsPanel = ({
 
   const onLinkOrMoveSubcollection = useCallback(
     (moveCollection?: boolean) => {
-      setSelectDialogCallback(() => (selectedCollection: FlatCollection | undefined) => {
+      setSelectDialogCallback(() => async (selectedCollection: FlatCollection | undefined) => {
         if (selectedCollection) {
-          const parents = moveCollection
-            ? []
-            : selectedCollection.parent_collections?.map(c => c.id) ?? [];
+          const originalParents = selectedCollection.parent_collections ?? [];
+          if (moveCollection && originalParents.length > 1) {
+            const reallyMove = await dialog({
+              title: t('curator.moveFromAll'),
+              content: t('curator.moveFromHere', {
+                parents: originalParents.map(p => p.name).join(', '),
+              }),
+              preset: DialogPreset.CONFIRM,
+            });
+            if (!reallyMove) {
+              return;
+            }
+          }
+          const parents = moveCollection ? [] : originalParents.map(c => c.id);
           parents.push(parentId);
           updateCollection({
             variables: {
@@ -178,7 +189,7 @@ const CollectionsPanel = ({
         setSelectDialogCallback(undefined);
       });
     },
-    [updateCollection, parentId]
+    [updateCollection, parentId, dialog, t]
   );
 
   const onUnlinkSubCollection = useCallback(
