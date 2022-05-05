@@ -106,6 +106,9 @@
     "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare",
     "unverified-comments": "Noch nicht verifizierte Kommentare",
     "renameCollectionFailed": "Das Umbenennen ist fehlgeschlagen. Bitte überprüfe, ob der Name der Collection nicht schon existiert",
-    "collectionNotEmpty": "Das Löschen ist fehlgeschlagen, da die Collection nicht leer ist. Eine Collection kann nur gelöscht werden, wenn sie weder Bilder noch andere Collections enthält"
+    "collectionNotEmpty": "Das Löschen ist fehlgeschlagen, da die Collection nicht leer ist. Eine Collection kann nur gelöscht werden, wenn sie weder Bilder noch andere Collections enthält",
+    "collectionParents": "Diese Collection ist verlinkt in:\n\n{{parents}}",
+    "reallyUnlink": "Verlinkung wirklich aufheben?",
+    "unlinkFromCollection": "Dadurch wird diese Collection keine Untercollection von \"{{parent}}\" mehr sein."
   }
 }

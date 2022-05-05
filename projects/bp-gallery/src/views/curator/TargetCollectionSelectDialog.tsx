@@ -17,8 +17,10 @@ import './TargetCollectionSelectDialog.scss';
 
 const TargetCollectionSelectDialog = ({
   selectCallback,
+  disableCollectionIds,
 }: {
   selectCallback?: (selectedCollection: FlatCollection | undefined) => void;
+  disableCollectionIds?: string[];
 }) => {
   const { data } = useGetAllCollectionsQuery();
 
@@ -35,7 +37,11 @@ const TargetCollectionSelectDialog = ({
       <DialogContent>
         <Autocomplete
           disablePortal
-          options={allCollections ?? []}
+          options={
+            allCollections?.filter(
+              c => !disableCollectionIds || !disableCollectionIds.includes(c.id)
+            ) ?? []
+          }
           renderInput={params => <TextField {...params} label={t('common.collection')} />}
           getOptionLabel={(option: FlatCollection) => option.name}
           onChange={(_, value: FlatCollection | null) => {
