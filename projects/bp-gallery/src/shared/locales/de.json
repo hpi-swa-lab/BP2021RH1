@@ -114,6 +114,8 @@
     "collectionNotEmpty": "Das Löschen ist fehlgeschlagen, da die Collection nicht leer ist. Eine Collection kann nur gelöscht werden, wenn sie weder Bilder noch andere Collections enthält",
     "collectionParents": "Diese Collection ist verlinkt in:\n\n{{parents}}",
     "reallyUnlink": "Verlinkung wirklich aufheben?",
-    "unlinkFromCollection": "Dadurch wird diese Collection keine Untercollection von \"{{parent}}\" mehr sein."
+    "unlinkFromCollection": "Dadurch wird diese Collection keine Untercollection von \"{{parent}}\" mehr sein.",
+    "notMergeSameCollection": "Es ist nicht möglich eine Collection mit sich selbst zu mergen. Bitte wähle eine andere Collection aus",
+    "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen"
   }
 }
