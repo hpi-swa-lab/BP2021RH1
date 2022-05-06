@@ -2442,6 +2442,13 @@ export type DeleteCollectionMutation = {
     | undefined;
 };
 
+export type MergeCollectionsMutationVariables = Exact<{
+  targetId: Scalars['ID'];
+  sourceId: Scalars['ID'];
+}>;
+
+export type MergeCollectionsMutation = { mergeCollections?: string | null | undefined };
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -4818,6 +4825,57 @@ export type DeleteCollectionMutationResult = Apollo.MutationResult<DeleteCollect
 export type DeleteCollectionMutationOptions = Apollo.BaseMutationOptions<
   DeleteCollectionMutation,
   DeleteCollectionMutationVariables
+>;
+
+export const MergeCollectionsDocument = gql`
+  mutation mergeCollections($targetId: ID!, $sourceId: ID!) {
+    mergeCollections(targetId: $targetId, sourceId: $sourceId)
+  }
+`;
+
+export type MergeCollectionsMutationFn = Apollo.MutationFunction<
+  MergeCollectionsMutation,
+  MergeCollectionsMutationVariables
+>;
+
+/**
+ * __useMergeCollectionsMutation__
+ *
+ * To run a mutation, you first call `useMergeCollectionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergeCollectionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergeCollectionsMutation, { data, loading, error }] = useMergeCollectionsMutation({
+ *   variables: {
+ *      targetId: // value for 'targetId'
+ *      sourceId: // value for 'sourceId'
+ *   },
+ * });
+ */
+export function useMergeCollectionsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    MergeCollectionsMutation,
+    MergeCollectionsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<MergeCollectionsMutation, MergeCollectionsMutationVariables>(
+    MergeCollectionsDocument,
+    options
+  );
+}
+
+export type MergeCollectionsMutationHookResult = ReturnType<typeof useMergeCollectionsMutation>;
+
+export type MergeCollectionsMutationResult = Apollo.MutationResult<MergeCollectionsMutation>;
+
+export type MergeCollectionsMutationOptions = Apollo.BaseMutationOptions<
+  MergeCollectionsMutation,
+  MergeCollectionsMutationVariables
 >;
 
 export const MeDocument = gql`

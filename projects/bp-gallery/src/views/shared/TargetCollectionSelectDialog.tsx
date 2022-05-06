@@ -18,9 +18,11 @@ import './TargetCollectionSelectDialog.scss';
 const TargetCollectionSelectDialog = ({
   selectCallback,
   disableCollectionIds,
+  title,
 }: {
   selectCallback?: (selectedCollection: FlatCollection | undefined) => void;
   disableCollectionIds?: string[];
+  title?: string;
 }) => {
   const { data } = useGetAllCollectionsQuery();
 
@@ -33,7 +35,7 @@ const TargetCollectionSelectDialog = ({
 
   return (
     <Dialog open={Boolean(selectCallback)} onClose={() => selectCallback?.(undefined)}>
-      <DialogTitle>{t('curator.selectTargetCollection')}</DialogTitle>
+      <DialogTitle>{title ?? t('curator.selectTargetCollection')}</DialogTitle>
       <DialogContent>
         <Autocomplete
           disablePortal
@@ -42,6 +44,7 @@ const TargetCollectionSelectDialog = ({
               c => !disableCollectionIds || !disableCollectionIds.includes(c.id)
             ) ?? []
           }
+          isOptionEqualToValue={(option, value) => option.id === value.id}
           renderInput={params => <TextField {...params} label={t('common.collection')} />}
           getOptionLabel={(option: FlatCollection) => option.name}
           onChange={(_, value: FlatCollection | null) => {

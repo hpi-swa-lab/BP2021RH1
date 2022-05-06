@@ -53,6 +53,9 @@ const mergeSourceCollectionIntoTargetCollection = async (strapi, sourceId, targe
         child_collections: {
           select: ['id'],
         },
+        parent_collections: {
+          select: ['id']
+        }
       },
     });
   };
@@ -83,15 +86,22 @@ const mergeSourceCollectionIntoTargetCollection = async (strapi, sourceId, targe
       `${target.description || source.description}`;
   }
 
+
+  const data = {
+    pictures: newPicturesForTarget,
+      child_collections: newChildCollectionsForTarget,
+      description: newDescriptionForTarget,
+  }
+  // Handles edge case: source collection is the only parent of target collection
+  if (target.parent_collections.filter(collection => collection.id !== source.id).length === 0) {
+   data.parent_collections = source.parent_collections;
+  }
+
   const updatedTarget = await collectionQuery.update({
     where: {
       id: targetId,
     },
-    data: {
-      pictures: newPicturesForTarget,
-      child_collections: newChildCollectionsForTarget,
-      description: newDescriptionForTarget,
-    },
+    data,
   });
   strapi.log.debug(
     `Merged the collection with id ${sourceId} into the collection with id ${targetId}`
