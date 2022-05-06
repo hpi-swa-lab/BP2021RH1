@@ -2,10 +2,10 @@ import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { History } from 'history';
 import './SearchBar.scss';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
-import SearchIcon from '@mui/icons-material/Search';
 
 const SearchBar = ({
   searchParams,
@@ -41,13 +41,17 @@ const SearchBar = ({
   const displayText = (thisSearchType: SearchType) => {
     switch (thisSearchType) {
       case SearchType.DECADE:
-        return t('search.decades');
+        return t('search.search-decade');
       case SearchType.KEYWORD:
-        return t('search.keywords');
+        return t('search.search-keyword');
       case SearchType.DESCRIPTION:
-        return t('search.descriptions');
+        return t('search.search-description');
+      case SearchType.PERSON:
+        return t('search.search-person');
+      case SearchType.LOCATION:
+        return t('search.search-location');
       default:
-        return t('search.all');
+        return t('search.search-all');
     }
   };
 
@@ -94,6 +98,8 @@ const SearchBar = ({
                 <MenuItem value={SearchType.DESCRIPTION}>
                   {displayText(SearchType.DESCRIPTION)}
                 </MenuItem>
+                <MenuItem value={SearchType.PERSON}>{displayText(SearchType.PERSON)}</MenuItem>
+                <MenuItem value={SearchType.LOCATION}>{displayText(SearchType.LOCATION)}</MenuItem>
               </Select>
             </InputAdornment>
           ),
@@ -103,7 +109,7 @@ const SearchBar = ({
             onSearchStart(String(textFieldRef.current.value));
           }
         }}
-        placeholder={t('search.for-type')}
+        placeholder={t('search.search-for-type')}
         variant='outlined'
       />
     </div>

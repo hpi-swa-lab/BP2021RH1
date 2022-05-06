@@ -16,6 +16,11 @@
       }
     }
 
+    @media only screen and (min-width: 651px) {
+      max-width: 800px;
+      margin: auto;
+    }
+
     .MuiInputBase-root {
       color: white;
       border-radius: 0.2rem;
@@ -36,7 +41,7 @@
       }
 
       .MuiSvgIcon-root {
-        color: #5a5a5a;
+        color: white;
       }
 
       fieldset {
