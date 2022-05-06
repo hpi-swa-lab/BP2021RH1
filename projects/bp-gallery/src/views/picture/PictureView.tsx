@@ -145,7 +145,7 @@ const PictureView = ({
     <div className='picture-view-container'>
       <PictureViewContext.Provider value={contextValue}>
         <div className={`picture-view`} ref={containerRef}>
-          <ZoomWrapper blockScroll={true}>
+          <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
             <div className='picture-wrapper'>
               <div className='picture-container'>
                 <img src={pictureLink} alt={pictureLink} />
