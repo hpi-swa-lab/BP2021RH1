@@ -753,6 +753,10 @@ mutation deleteCollection($collectionId: ID!) {
   }
 }
 
+mutation mergeCollections($targetId: ID!, $sourceId: ID!) {
+  mergeCollections(targetId: $targetId, sourceId: $sourceId)
+}
+
 query me {
   me {
     role {

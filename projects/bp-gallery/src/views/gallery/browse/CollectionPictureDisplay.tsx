@@ -119,7 +119,7 @@ const CollectionPictureDisplay = ({
         )}
         {role >= AuthRole.CURATOR && (
           <Button startIcon={<Add />} onClick={addCollection}>
-            {t('curator.addCollection')}
+            {t('curator.createCollection')}
           </Button>
         )}
         <PictureScrollGrid

@@ -52,6 +52,7 @@ const DialogWrapper = ({ children }: { children: any }) => {
   const { role } = useAuth();
 
   const prompt = (dialogProps: DialogProps): Promise<any> => {
+    setDialogState(dialogProps);
     if (dialogProps.preset === DialogPreset.SELECT_COLLECTION) {
       return new Promise<any>(r => {
         setSelectDialogCallback(() => (selectedCollection: FlatCollection | undefined) => {
@@ -74,7 +75,6 @@ const DialogWrapper = ({ children }: { children: any }) => {
         },
       ];
     }
-    setDialogState(dialogProps);
     setOpen(true);
     return new Promise<any>(r => {
       // The callback function of this Promise is saved to the ref here
@@ -119,7 +119,10 @@ const DialogWrapper = ({ children }: { children: any }) => {
         </DialogActions>
       </Dialog>
       {role >= AuthRole.CURATOR && (
-        <TargetCollectionSelectDialog selectCallback={selectDialogCallback} />
+        <TargetCollectionSelectDialog
+          selectCallback={selectDialogCallback}
+          title={dialogState?.title}
+        />
       )}
     </DialogContext.Provider>
   );
