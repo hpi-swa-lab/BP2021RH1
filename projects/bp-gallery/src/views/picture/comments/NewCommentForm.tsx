@@ -82,7 +82,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       <TextField
         className='input-field'
         id='name'
-        label={t('common.name')}
+        label={t('comment.name')}
         variant='filled'
         fullWidth
         value={commentAuthor}
@@ -104,7 +104,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       />
       <div className='Submit'>
         <Button variant='contained' type='submit' onClick={postComment}>
-          {t('common.submit')}
+          {t('comment.submit')}
         </Button>
       </div>
     </div>

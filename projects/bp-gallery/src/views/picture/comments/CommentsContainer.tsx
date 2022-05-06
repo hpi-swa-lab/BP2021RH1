@@ -17,7 +17,7 @@ const CommentsContainer = ({
   return (
     <div className='picture-info-section pictureComments' id='comments'>
       <h2>{t('common.comments')}</h2>
-      <p>{t('comments.info')}</p>
+      <p>{t('comment.info')}</p>
       <div className='comment-container'>
         {comments &&
           comments.length > 0 &&
