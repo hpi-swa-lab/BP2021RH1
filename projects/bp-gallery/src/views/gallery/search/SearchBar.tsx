@@ -94,6 +94,8 @@ const SearchBar = ({
                 <MenuItem value={SearchType.DESCRIPTION}>
                   {displayText(SearchType.DESCRIPTION)}
                 </MenuItem>
+                <MenuItem value={SearchType.PERSON}>{displayText(SearchType.PERSON)}</MenuItem>
+                <MenuItem value={SearchType.LOCATION}>{displayText(SearchType.LOCATION)}</MenuItem>
               </Select>
             </InputAdornment>
           ),
@@ -103,7 +105,7 @@ const SearchBar = ({
             onSearchStart(String(textFieldRef.current.value));
           }
         }}
-        placeholder={t('search.for-type')}
+        placeholder={t('search.search-for-type')}
         variant='outlined'
       />
     </div>

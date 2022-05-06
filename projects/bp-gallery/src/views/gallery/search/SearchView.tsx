@@ -24,6 +24,8 @@ export const enum SearchType {
   DESCRIPTION = 'description',
   DECADE = 'decade',
   KEYWORD = 'keyword',
+  PERSON = 'person',
+  LOCATION = 'location',
   ALL = 'ALL',
 }
 
@@ -183,6 +185,48 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
             containsi: param,
           },
         },
+      });
+    });
+  }
+
+  if (searchParams.has(SearchType.PERSON)) {
+    const persons = searchParams.getAll(SearchType.PERSON).map(decodeURIComponent);
+    persons.forEach((person: string) => {
+      const person_tag_filter = {
+        name: {
+          containsi: person,
+        },
+      };
+      filters.and?.push({
+        or: [
+          {
+            person_tags: person_tag_filter,
+          },
+          {
+            verified_person_tags: person_tag_filter,
+          },
+        ],
+      });
+    });
+  }
+
+  if (searchParams.has(SearchType.LOCATION)) {
+    const locations = searchParams.getAll(SearchType.LOCATION).map(decodeURIComponent);
+    locations.forEach((location: string) => {
+      const location_tag_filter = {
+        name: {
+          containsi: location,
+        },
+      };
+      filters.and?.push({
+        or: [
+          {
+            location_tags: location_tag_filter,
+          },
+          {
+            verified_location_tags: location_tag_filter,
+          },
+        ],
       });
     });
   }
