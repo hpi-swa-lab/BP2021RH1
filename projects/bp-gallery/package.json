@@ -70,6 +70,7 @@
     "husky": "^7.0.4",
     "prettier": "^2.4.1",
     "pretty-quick": "^3.1.1",
+    "replace-in-file": "^6.3.2",
     "start-server-and-test": "^1.14.0"
   },
   "scripts": {
@@ -86,8 +87,9 @@
     "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
     "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx .",
     "format": "prettier --write src && yarn lint --fix",
-    "generate-api": "graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx",
-    "generate-api:e2e": "env-cmd -f ./environments/.env.test graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx"
+    "replace-error-policy": "replace-in-file \"import { gql } from '@apollo/client\" \"import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && replace-in-file \"errorPolicy: 'all'\" \"errorPolicy: 'all' as ErrorPolicy\" ./src/graphql/APIConnector.tsx",
+    "generate-api": "graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx && yarn replace-error-policy",
+    "generate-api:e2e": "env-cmd -f ./environments/.env.test graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx && yarn replace-error-policy"
   },
   "browserslist": {
     "production": [
