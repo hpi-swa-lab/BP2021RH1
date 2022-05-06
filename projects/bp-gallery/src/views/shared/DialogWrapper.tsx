@@ -52,8 +52,8 @@ const DialogWrapper = ({ children }: { children: any }) => {
   const { role } = useAuth();
 
   const prompt = (dialogProps: DialogProps): Promise<any> => {
-    setDialogState(dialogProps);
     if (dialogProps.preset === DialogPreset.SELECT_COLLECTION) {
+      setDialogState(dialogProps);
       return new Promise<any>(r => {
         setSelectDialogCallback(() => (selectedCollection: FlatCollection | undefined) => {
           r(selectedCollection);
@@ -75,6 +75,7 @@ const DialogWrapper = ({ children }: { children: any }) => {
         },
       ];
     }
+    setDialogState(dialogProps);
     setOpen(true);
     return new Promise<any>(r => {
       // The callback function of this Promise is saved to the ref here
