@@ -16,7 +16,6 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const [commentText, setCommentText] = useState('');
 
   const [postCommentMutation] = usePostCommentMutation({
-    errorPolicy: 'all',
     onCompleted: _ => {
       setCommentAuthor('');
       setCommentText('');

@@ -53,7 +53,7 @@ const AuthWrapper = ({ children }: { children: any }) => {
   const [getUserInfo, { data, loading, error, called }] = useMeLazyQuery({
     fetchPolicy: 'network-only',
   });
-  const [loginMutation] = useLoginMutation({ errorPolicy: 'all' });
+  const [loginMutation] = useLoginMutation();
 
   const apolloClient = useApolloClient();
   const openAlert = useContext(AlertContext);
