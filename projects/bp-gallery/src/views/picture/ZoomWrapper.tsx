@@ -108,6 +108,7 @@ const ZoomWrapper = ({
 
   useEffect(() => {
     setZoomLevel(1);
+    setViewport({ x: 0, y: 0 });
   }, [pictureId]);
 
   const onScroll = useCallback(
