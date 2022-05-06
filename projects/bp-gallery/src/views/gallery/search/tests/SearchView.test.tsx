@@ -33,7 +33,7 @@ describe('SearchView called without any parameters', () => {
 describe('SearchView called with parameters which do not match any pictures', () => {
   beforeEach(() =>
     renderRouteWithAPIMocks(
-      `/search?q=${encodeURIComponent('invalid params')}`,
+      `/search?ALL=${encodeURIComponent('invalid params')}`,
       GetPicturesSearchMocks
     )
   );
@@ -54,10 +54,7 @@ describe('SearchView called with parameters which do not match any pictures', ()
 
 describe('SearchView called with parameters which match at least one picture', () => {
   beforeEach(() =>
-    renderRouteWithAPIMocks(
-      `/search?q=${encodeURIComponent('Onkel Pelle')}`,
-      GetPicturesSearchMocks
-    )
+    renderRouteWithAPIMocks(`/search?ALL=${encodeURIComponent('Pelle')}`, GetPicturesSearchMocks)
   );
 
   it('should render a SearchBar', async () => {
@@ -88,7 +85,6 @@ describe('convertSearchParamsToPictureFilters', () => {
     const searchParams = new URLSearchParams({ decade: '70' });
 
     const result = convertSearchParamsToPictureFilters(searchParams);
-
     expect(result).toEqual({
       and: [
         {
@@ -185,7 +181,7 @@ describe('convertSearchParamsToPictureFilters', () => {
   });
 
   it('should append single keyword tag filter with URL encoded name', () => {
-    const keyword = 'Bad Harzburg';
+    const keyword = 'Harzburg';
     const searchParams = new URLSearchParams({
       keyword: encodeURIComponent(keyword),
     });
@@ -220,7 +216,7 @@ describe('convertSearchParamsToPictureFilters', () => {
     const keyword1 = 'Burgberg';
     const keyword2 = 'Winterberg';
     const searchParams = new URLSearchParams({ keyword: keyword1 });
-    searchParams.append('keyword', keyword2);
+    searchParams.append('keyword', encodeURIComponent(keyword2));
 
     const result = convertSearchParamsToPictureFilters(searchParams);
 
@@ -267,9 +263,9 @@ describe('convertSearchParamsToPictureFilters', () => {
   });
 
   it('should append single description filter', () => {
-    const description = 'Onkel Pelle';
+    const description = 'Pelle';
     const searchParams = new URLSearchParams({
-      q: encodeURIComponent(description),
+      description: encodeURIComponent(description),
     });
 
     const result = convertSearchParamsToPictureFilters(searchParams);
@@ -288,12 +284,12 @@ describe('convertSearchParamsToPictureFilters', () => {
   });
 
   it('should append multiple description filters', () => {
-    const description1 = 'Onkel Pelle';
+    const description1 = 'Pelle';
     const description2 = 'Winterberg';
     const searchParams = new URLSearchParams({
-      q: encodeURIComponent(description1),
+      description: encodeURIComponent(description1),
     });
-    searchParams.append('q', encodeURIComponent(description2));
+    searchParams.append('description', encodeURIComponent(description2));
 
     const result = convertSearchParamsToPictureFilters(searchParams);
 
