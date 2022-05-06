@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { ErrorPolicy, gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 
 export type Maybe<T> = T | null;
@@ -11,7 +11,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 
-const defaultOptions = {};
+const defaultOptions = { errorPolicy: 'all' as ErrorPolicy };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
