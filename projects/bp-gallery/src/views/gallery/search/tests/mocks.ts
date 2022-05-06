@@ -10,7 +10,7 @@ export const GetPicturesSearchMocks = [
             {
               descriptions: {
                 text: {
-                  containsi: 'Onkel Pelle',
+                  containsi: 'Pelle',
                 },
               },
             },
