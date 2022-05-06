@@ -70,6 +70,8 @@
     "noLocations": "Keine Orte bekannt",
     "noPeople": "Keine Personen bekannt",
     "noDescription": "Keine Beschreibung vorhanden",
+    "noKeywords": "Keine Stichworte",
+    "noCollections": "Keine Collections",
     "collections": "Collections"
   },
   "curator": {
