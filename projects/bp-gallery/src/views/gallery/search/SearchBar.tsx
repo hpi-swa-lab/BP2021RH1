@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Search } from '@mui/icons-material';
-import { InputAdornment, TextField } from '@mui/material';
+//import { Search } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
+import { IconButton, InputAdornment, InputLabel, MenuItem, TextField, Select } from '@mui/material';
 import { History } from 'history';
 import './SearchBar.scss';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
@@ -34,6 +35,27 @@ const SearchBar = ({
     if (onValueChange) onValueChange('');
   };
 
+  const changeSearchType = (e: { target: { value: string } }) => {
+    setSearchType(e.target.value as SearchType);
+  };
+
+  const displayText = (thisSearchType: SearchType) => {
+    switch (thisSearchType) {
+      case SearchType.DECADE:
+        return t('search.search-decade');
+      case SearchType.KEYWORD:
+        return t('search.search-keyword');
+      case SearchType.DESCRIPTION:
+        return t('search.search-description');
+      case SearchType.PERSON:
+        return t('search.search-person');
+      case SearchType.LOCATION:
+        return t('search.search-location');
+      default:
+        return t('search.search-all');
+    }
+  };
+
   return (
     <div className='search-bar'>
       <TextField
@@ -44,9 +66,42 @@ const SearchBar = ({
           }
         }}
         InputProps={{
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton
+                onClick={() => {
+                  onSearchStart(String(textFieldRef.current.value));
+                }}
+                className='searchbutton'
+              >
+                <div>
+                  <SearchIcon />
+                  <div className='searchbutton-label'>{t('search.start-search')}</div>
+                </div>
+              </IconButton>
+            </InputAdornment>
+          ),
           startAdornment: (
             <InputAdornment position='start'>
-              <Search />
+              <InputLabel id='demo-simple-select-label'>
+                {/* {t('search.choose-searchtypes')} */}
+              </InputLabel>
+              <Select
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
+                value={searchType}
+                label='Age'
+                onChange={changeSearchType}
+              >
+                <MenuItem value={SearchType.ALL}>{displayText(SearchType.ALL)}</MenuItem>
+                <MenuItem value={SearchType.DECADE}>{displayText(SearchType.DECADE)}</MenuItem>
+                <MenuItem value={SearchType.KEYWORD}>{displayText(SearchType.KEYWORD)}</MenuItem>
+                <MenuItem value={SearchType.DESCRIPTION}>
+                  {displayText(SearchType.DESCRIPTION)}
+                </MenuItem>
+                <MenuItem value={SearchType.PERSON}>{displayText(SearchType.PERSON)}</MenuItem>
+                <MenuItem value={SearchType.LOCATION}>{displayText(SearchType.LOCATION)}</MenuItem>
+              </Select>
             </InputAdornment>
           ),
         }}
@@ -55,7 +110,7 @@ const SearchBar = ({
             onSearchStart(String(textFieldRef.current.value));
           }
         }}
-        placeholder={t('common.search-keywords')}
+        placeholder={t('search.search-for-type')}
         variant='outlined'
       />
     </div>

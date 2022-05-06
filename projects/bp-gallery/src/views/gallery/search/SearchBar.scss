@@ -6,15 +6,26 @@
   .MuiFormControl-root {
     width: 100%;
 
+    .searchbutton {
+      display: 'inline-block';
+      text-align: center;
+
+      flex-direction: 'column';
+      .searchbutton-label {
+        font-size: 15px;
+        color: white;
+      }
+    }
+
     @media only screen and (min-width: 651px) {
       max-width: 800px;
       margin: auto;
     }
 
     .MuiInputBase-root {
-      color: #5a5a5a;
+      color: white;
       border-radius: 2rem;
-      background: #dfdfdf;
+      background: #302e2e;
       transition: margin-left 0.25s, margin-top 0.25s, width 0.25s, border-radius 0.25s;
 
       @media only screen and (max-width: 650px) {
@@ -31,7 +42,7 @@
       }
 
       .MuiSvgIcon-root {
-        color: #5a5a5a;
+        color: white;
       }
 
       fieldset {
