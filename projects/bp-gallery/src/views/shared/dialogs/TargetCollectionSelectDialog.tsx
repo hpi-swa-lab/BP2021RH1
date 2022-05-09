@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import {
   Autocomplete,
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -10,19 +9,18 @@ import {
 } from '@mui/material';
 import { Close, Done } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { useGetAllCollectionsQuery } from '../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
-import { FlatCollection } from '../../types/additionalFlatTypes';
+import { useGetAllCollectionsQuery } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { FlatCollection } from '../../../types/additionalFlatTypes';
 import './TargetCollectionSelectDialog.scss';
+import { DialogProps } from '../DialogWrapper';
 
 const TargetCollectionSelectDialog = ({
-  selectCallback,
-  disableCollectionIds,
-  title,
+  handleClose,
+  dialogProps,
 }: {
-  selectCallback?: (selectedCollection: FlatCollection | undefined) => void;
-  disableCollectionIds?: string[];
-  title?: string;
+  handleClose: (value: any) => void;
+  dialogProps: DialogProps;
 }) => {
   const { data } = useGetAllCollectionsQuery();
 
@@ -34,16 +32,13 @@ const TargetCollectionSelectDialog = ({
     useSimplifiedQueryResponseData(data)?.collections;
 
   return (
-    <Dialog open={Boolean(selectCallback)} onClose={() => selectCallback?.(undefined)}>
-      <DialogTitle>{title ?? t('curator.selectTargetCollection')}</DialogTitle>
+    <>
+      <DialogTitle>{dialogProps.title ?? t('curator.selectTargetCollection')}</DialogTitle>
       <DialogContent>
+        {dialogProps.content}
         <Autocomplete
           disablePortal
-          options={
-            allCollections?.filter(
-              c => !disableCollectionIds || !disableCollectionIds.includes(c.id)
-            ) ?? []
-          }
+          options={allCollections ?? []}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           renderInput={params => <TextField {...params} label={t('common.collection')} />}
           getOptionLabel={(option: FlatCollection) => option.name}
@@ -53,17 +48,17 @@ const TargetCollectionSelectDialog = ({
         />
       </DialogContent>
       <DialogActions style={{ justifyContent: 'space-between' }}>
-        <Button onClick={() => selectCallback?.(undefined)} startIcon={<Close />}>
+        <Button onClick={() => handleClose(undefined)} startIcon={<Close />}>
           {t('common.abort')}
         </Button>
         <Button
-          onClick={() => selectCallback?.(selectedCollection.current ?? undefined)}
+          onClick={() => handleClose(selectedCollection.current ?? undefined)}
           startIcon={<Done />}
         >
           {t('common.confirm')}
         </Button>
       </DialogActions>
-    </Dialog>
+    </>
   );
 };
 
