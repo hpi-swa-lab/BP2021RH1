@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../shared/Loading';
 import QueryErrorDisplay from '../../shared/QueryErrorDisplay';
@@ -11,6 +11,8 @@ import { PictureUploadAreaProps } from '../shared/PictureUploadArea';
 import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
+import useBulkOperations from '../shared/bulk-operations';
+import { DialogContext, DialogPreset } from '../../shared/DialogWrapper';
 
 const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -53,13 +55,19 @@ const CollectionPictureDisplay = ({
 }) => {
   const { t } = useTranslation();
   const { role } = useAuth();
+  const dialog = useContext(DialogContext);
 
   const [addSubCollection] = useCreateSubCollectionMutation();
 
-  const addCollection = useCallback(() => {
-    // TODO: This needs to be changed, not a permanent solution!
-    // eslint-disable-next-line no-alert
-    const collectionName = prompt('Name der neuen Collection:', 'neue collection');
+  const { linkToCollection, moveToCollection, removeFromCollection } = useBulkOperations(
+    collections?.[0]
+  );
+
+  const addCollection = useCallback(async () => {
+    const collectionName = await dialog({
+      preset: DialogPreset.INPUT_FIELD,
+      title: t('curator.nameOfNewCollection'),
+    });
     if (collectionName?.length && collections) {
       addSubCollection({
         variables: {
@@ -67,10 +75,10 @@ const CollectionPictureDisplay = ({
           parentId: collections[0].id,
           publishedAt: new Date().toISOString(),
         },
-        refetchQueries: ['getCollectionInfo'],
+        refetchQueries: ['getCollectionInfoByName'],
       });
     }
-  }, [collections, addSubCollection]);
+  }, [collections, addSubCollection, dialog, t]);
 
   const uploadAreaProps = useCallback(
     (collection: FlatCollection): Partial<PictureUploadAreaProps> | undefined => {
@@ -114,7 +122,7 @@ const CollectionPictureDisplay = ({
         )}
         {role >= AuthRole.CURATOR && (
           <Button startIcon={<Add />} onClick={addCollection}>
-            {t('curator.addCollection')}
+            {t('curator.createCollection')}
           </Button>
         )}
         <PictureScrollGrid
@@ -123,6 +131,7 @@ const CollectionPictureDisplay = ({
           scrollHeight={scrollHeight}
           hashbase={collection.name}
           uploadAreaProps={uploadAreaProps(collection)}
+          bulkOperations={[removeFromCollection, linkToCollection, moveToCollection]}
         />
       </div>
     );

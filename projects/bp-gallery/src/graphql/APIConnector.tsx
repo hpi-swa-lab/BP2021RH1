@@ -583,6 +583,7 @@ export type Mutation = {
   /** Request a reset password token */
   forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
   login: UsersPermissionsLoginPayload;
+  mergeCollections?: Maybe<Scalars['ID']>;
   mergeKeywordTags?: Maybe<Scalars['ID']>;
   mergeLocationTags?: Maybe<Scalars['ID']>;
   mergePersonTags?: Maybe<Scalars['ID']>;
@@ -708,6 +709,11 @@ export type MutationForgotPasswordArgs = {
 
 export type MutationLoginArgs = {
   input: UsersPermissionsLoginInput;
+};
+
+export type MutationMergeCollectionsArgs = {
+  sourceId?: InputMaybe<Scalars['ID']>;
+  targetId?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationMergeKeywordTagsArgs = {
@@ -1747,11 +1753,11 @@ export type GetCollectionWithPicturesPublishedAfterQuery = {
   collections?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
 };
 
-export type GetCollectionInfoQueryVariables = Exact<{
+export type GetCollectionInfoByNameQueryVariables = Exact<{
   collectionName?: InputMaybe<Scalars['String']>;
 }>;
 
-export type GetCollectionInfoQuery = {
+export type GetCollectionInfoByNameQuery = {
   collections?:
     | {
         data: Array<{
@@ -1781,6 +1787,62 @@ export type GetCollectionInfoQuery = {
     | undefined;
 };
 
+export type GetCollectionInfoByIdQueryVariables = Exact<{
+  collectionId: Scalars['ID'];
+}>;
+
+export type GetCollectionInfoByIdQuery = {
+  collection?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    name: string;
+                    description?: string | null | undefined;
+                    child_collections?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  name: string;
+                                  pictures?:
+                                    | { data: Array<{ id?: string | null | undefined }> }
+                                    | null
+                                    | undefined;
+                                  child_collections?:
+                                    | { data: Array<{ id?: string | null | undefined }> }
+                                    | null
+                                    | undefined;
+                                  parent_collections?:
+                                    | {
+                                        data: Array<{
+                                          id?: string | null | undefined;
+                                          attributes?: { name: string } | null | undefined;
+                                        }>;
+                                      }
+                                    | null
+                                    | undefined;
+                                }
+                              | null
+                              | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type GetRootCollectionQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetRootCollectionQuery = {
@@ -1793,7 +1855,10 @@ export type GetRootCollectionQuery = {
                     current?:
                       | {
                           data?:
-                            | { attributes?: { name: string } | null | undefined }
+                            | {
+                                id?: string | null | undefined;
+                                attributes?: { name: string } | null | undefined;
+                              }
                             | null
                             | undefined;
                         }
@@ -2036,7 +2101,21 @@ export type GetAllCollectionsQuery = {
     | {
         data: Array<{
           id?: string | null | undefined;
-          attributes?: { name: string } | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                parent_collections?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
         }>;
       }
     | null
@@ -2424,6 +2503,24 @@ export type DeclineCommentMutation = {
     | undefined;
 };
 
+export type DeleteCollectionMutationVariables = Exact<{
+  collectionId: Scalars['ID'];
+}>;
+
+export type DeleteCollectionMutation = {
+  deleteCollection?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type MergeCollectionsMutationVariables = Exact<{
+  targetId: Scalars['ID'];
+  sourceId: Scalars['ID'];
+}>;
+
+export type MergeCollectionsMutation = { mergeCollections?: string | null | undefined };
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -2733,8 +2830,8 @@ export type GetCollectionWithPicturesPublishedAfterQueryResult = Apollo.QueryRes
   GetCollectionWithPicturesPublishedAfterQueryVariables
 >;
 
-export const GetCollectionInfoDocument = gql`
-  query getCollectionInfo($collectionName: String) {
+export const GetCollectionInfoByNameDocument = gql`
+  query getCollectionInfoByName($collectionName: String) {
     collections(filters: { name: { eq: $collectionName } }) {
       data {
         id
@@ -2757,48 +2854,151 @@ export const GetCollectionInfoDocument = gql`
 `;
 
 /**
- * __useGetCollectionInfoQuery__
+ * __useGetCollectionInfoByNameQuery__
  *
- * To run a query within a React component, call `useGetCollectionInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCollectionInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCollectionInfoByNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCollectionInfoByNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCollectionInfoQuery({
+ * const { data, loading, error } = useGetCollectionInfoByNameQuery({
  *   variables: {
  *      collectionName: // value for 'collectionName'
  *   },
  * });
  */
-export function useGetCollectionInfoQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>
+export function useGetCollectionInfoByNameQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetCollectionInfoByNameQuery,
+    GetCollectionInfoByNameQueryVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>(
-    GetCollectionInfoDocument,
+  return Apollo.useQuery<GetCollectionInfoByNameQuery, GetCollectionInfoByNameQueryVariables>(
+    GetCollectionInfoByNameDocument,
     options
   );
 }
 
-export function useGetCollectionInfoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>
+export function useGetCollectionInfoByNameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCollectionInfoByNameQuery,
+    GetCollectionInfoByNameQueryVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetCollectionInfoQuery, GetCollectionInfoQueryVariables>(
-    GetCollectionInfoDocument,
+  return Apollo.useLazyQuery<GetCollectionInfoByNameQuery, GetCollectionInfoByNameQueryVariables>(
+    GetCollectionInfoByNameDocument,
     options
   );
 }
 
-export type GetCollectionInfoQueryHookResult = ReturnType<typeof useGetCollectionInfoQuery>;
+export type GetCollectionInfoByNameQueryHookResult = ReturnType<
+  typeof useGetCollectionInfoByNameQuery
+>;
 
-export type GetCollectionInfoLazyQueryHookResult = ReturnType<typeof useGetCollectionInfoLazyQuery>;
+export type GetCollectionInfoByNameLazyQueryHookResult = ReturnType<
+  typeof useGetCollectionInfoByNameLazyQuery
+>;
 
-export type GetCollectionInfoQueryResult = Apollo.QueryResult<
-  GetCollectionInfoQuery,
-  GetCollectionInfoQueryVariables
+export type GetCollectionInfoByNameQueryResult = Apollo.QueryResult<
+  GetCollectionInfoByNameQuery,
+  GetCollectionInfoByNameQueryVariables
+>;
+
+export const GetCollectionInfoByIdDocument = gql`
+  query getCollectionInfoById($collectionId: ID!) {
+    collection(id: $collectionId) {
+      data {
+        id
+        attributes {
+          name
+          description
+          child_collections(sort: "name:asc") {
+            data {
+              id
+              attributes {
+                name
+                pictures(pagination: { limit: 1 }) {
+                  data {
+                    id
+                  }
+                }
+                child_collections(pagination: { limit: 1 }) {
+                  data {
+                    id
+                  }
+                }
+                parent_collections {
+                  data {
+                    id
+                    attributes {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCollectionInfoByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCollectionInfoByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCollectionInfoByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCollectionInfoByIdQuery({
+ *   variables: {
+ *      collectionId: // value for 'collectionId'
+ *   },
+ * });
+ */
+export function useGetCollectionInfoByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCollectionInfoByIdQuery,
+    GetCollectionInfoByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetCollectionInfoByIdQuery, GetCollectionInfoByIdQueryVariables>(
+    GetCollectionInfoByIdDocument,
+    options
+  );
+}
+
+export function useGetCollectionInfoByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCollectionInfoByIdQuery,
+    GetCollectionInfoByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetCollectionInfoByIdQuery, GetCollectionInfoByIdQueryVariables>(
+    GetCollectionInfoByIdDocument,
+    options
+  );
+}
+
+export type GetCollectionInfoByIdQueryHookResult = ReturnType<typeof useGetCollectionInfoByIdQuery>;
+
+export type GetCollectionInfoByIdLazyQueryHookResult = ReturnType<
+  typeof useGetCollectionInfoByIdLazyQuery
+>;
+
+export type GetCollectionInfoByIdQueryResult = Apollo.QueryResult<
+  GetCollectionInfoByIdQuery,
+  GetCollectionInfoByIdQueryVariables
 >;
 
 export const GetRootCollectionDocument = gql`
@@ -2808,6 +3008,7 @@ export const GetRootCollectionDocument = gql`
         attributes {
           current {
             data {
+              id
               attributes {
                 name
               }
@@ -3546,6 +3747,14 @@ export const GetAllCollectionsDocument = gql`
         id
         attributes {
           name
+          parent_collections {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
         }
       }
     }
@@ -4949,6 +5158,111 @@ export type DeclineCommentMutationResult = Apollo.MutationResult<DeclineCommentM
 export type DeclineCommentMutationOptions = Apollo.BaseMutationOptions<
   DeclineCommentMutation,
   DeclineCommentMutationVariables
+>;
+
+export const DeleteCollectionDocument = gql`
+  mutation deleteCollection($collectionId: ID!) {
+    deleteCollection(id: $collectionId) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteCollectionMutationFn = Apollo.MutationFunction<
+  DeleteCollectionMutation,
+  DeleteCollectionMutationVariables
+>;
+
+/**
+ * __useDeleteCollectionMutation__
+ *
+ * To run a mutation, you first call `useDeleteCollectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCollectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCollectionMutation, { data, loading, error }] = useDeleteCollectionMutation({
+ *   variables: {
+ *      collectionId: // value for 'collectionId'
+ *   },
+ * });
+ */
+export function useDeleteCollectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCollectionMutation,
+    DeleteCollectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteCollectionMutation, DeleteCollectionMutationVariables>(
+    DeleteCollectionDocument,
+    options
+  );
+}
+
+export type DeleteCollectionMutationHookResult = ReturnType<typeof useDeleteCollectionMutation>;
+
+export type DeleteCollectionMutationResult = Apollo.MutationResult<DeleteCollectionMutation>;
+
+export type DeleteCollectionMutationOptions = Apollo.BaseMutationOptions<
+  DeleteCollectionMutation,
+  DeleteCollectionMutationVariables
+>;
+
+export const MergeCollectionsDocument = gql`
+  mutation mergeCollections($targetId: ID!, $sourceId: ID!) {
+    mergeCollections(targetId: $targetId, sourceId: $sourceId)
+  }
+`;
+
+export type MergeCollectionsMutationFn = Apollo.MutationFunction<
+  MergeCollectionsMutation,
+  MergeCollectionsMutationVariables
+>;
+
+/**
+ * __useMergeCollectionsMutation__
+ *
+ * To run a mutation, you first call `useMergeCollectionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergeCollectionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergeCollectionsMutation, { data, loading, error }] = useMergeCollectionsMutation({
+ *   variables: {
+ *      targetId: // value for 'targetId'
+ *      sourceId: // value for 'sourceId'
+ *   },
+ * });
+ */
+export function useMergeCollectionsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    MergeCollectionsMutation,
+    MergeCollectionsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<MergeCollectionsMutation, MergeCollectionsMutationVariables>(
+    MergeCollectionsDocument,
+    options
+  );
+}
+
+export type MergeCollectionsMutationHookResult = ReturnType<typeof useMergeCollectionsMutation>;
+
+export type MergeCollectionsMutationResult = Apollo.MutationResult<MergeCollectionsMutation>;
+
+export type MergeCollectionsMutationOptions = Apollo.BaseMutationOptions<
+  MergeCollectionsMutation,
+  MergeCollectionsMutationVariables
 >;
 
 export const MeDocument = gql`

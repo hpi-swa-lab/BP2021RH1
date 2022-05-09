@@ -91,15 +91,15 @@ const App = ({ route }: RouteConfigComponentProps) => {
   return (
     <ApolloProvider client={apolloClient}>
       <AlertWrapper>
-        <DialogWrapper>
-          <AuthWrapper>
+        <AuthWrapper>
+          <DialogWrapper>
             <div className='App'>
               <TopBar />
               {renderRoutes(route?.routes)}
               <NavigationBar />
             </div>
-          </AuthWrapper>
-        </DialogWrapper>
+          </DialogWrapper>
+        </AuthWrapper>
       </AlertWrapper>
     </ApolloProvider>
   );

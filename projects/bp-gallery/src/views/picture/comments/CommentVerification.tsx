@@ -9,7 +9,7 @@ import { Button } from '@mui/material';
 import { Close, Delete, Done } from '@mui/icons-material';
 
 const CommentVerification = ({ children, comment }: { children: any; comment: FlatComment }) => {
-  const prompt = useContext(DialogContext);
+  const dialog = useContext(DialogContext);
   const { t } = useTranslation();
   const { role } = useAuth();
 
@@ -25,7 +25,7 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
   });
 
   const onDecline = async () => {
-    const shouldRemove = await prompt({
+    const shouldRemove = await dialog({
       title: t('curator.really-decline-comment'),
       content: comment.text,
       preset: DialogPreset.CONFIRM,
