@@ -74,14 +74,13 @@ const TagOverview = ({ type }: { type: string }) => {
   });
 
   const [mergeTagsMutation] = mergeTagsMutationSource({
-    errorPolicy: 'all',
     onCompleted: _ => {
+      setSelectedRowIds([]);
       refetch();
     },
   });
 
   const [deleteTagMutation] = deleteTagMutationSource({
-    errorPolicy: 'all',
     onCompleted: _ => {
       refetch();
     },
