@@ -20,7 +20,7 @@ const DescriptionsEditField = ({
   const { role } = useAuth();
   const { t } = useTranslation();
   const [descriptionState, setDescriptionState] = useState<FlatDescription[]>(descriptions);
-  const prompt = useContext(DialogContext);
+  const dialog = useContext(DialogContext);
 
   useEffect(() => {
     setDescriptionState([...descriptions]);
@@ -92,7 +92,7 @@ const DescriptionsEditField = ({
             {role >= AuthRole.CURATOR && (
               <IconButton
                 onClick={async () => {
-                  const reallyDelete = await prompt({
+                  const reallyDelete = await dialog({
                     title: t('curator.reallyDeleteDescription'),
                     content: '',
                     preset: DialogPreset.CONFIRM,

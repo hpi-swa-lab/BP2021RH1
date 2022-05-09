@@ -63,10 +63,11 @@ const CollectionsPanel = ({
   );
 
   const onEditName = useCallback(
-    (collection: FlatCollection) => {
-      // TODO: This needs to be changed, not a permanent solution!
-      // eslint-disable-next-line no-alert
-      const collectionName = prompt('Neuer Name der Collection:', collection.name);
+    async (collection: FlatCollection) => {
+      const collectionName = await dialog({
+        preset: DialogPreset.INPUT_FIELD,
+        title: t('curator.renameCollection'),
+      });
       if (collectionName?.length) {
         updateCollection({
           variables: { collectionId: collection.id, data: { name: collectionName } },
