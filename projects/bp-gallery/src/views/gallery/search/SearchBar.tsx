@@ -46,6 +46,10 @@ const SearchBar = ({
         return t('search.keywords');
       case SearchType.DESCRIPTION:
         return t('search.descriptions');
+      case SearchType.PERSON:
+        return t('search.persons');
+      case SearchType.LOCATION:
+        return t('search.locations');
       default:
         return t('search.all');
     }
