@@ -75,13 +75,11 @@ const useManageCollectionPictures = () => {
   const [getPicturesForOriginCollection] = useGetPicturesForCollectionLazyQuery({
     onCompleted: removePictures,
     fetchPolicy: 'network-only',
-    errorPolicy: 'all',
   });
 
   const [getPicturesForTargetCollection] = useGetPicturesForCollectionLazyQuery({
     onCompleted: setNewPictures,
     fetchPolicy: 'network-only',
-    errorPolicy: 'all',
   });
 
   return {

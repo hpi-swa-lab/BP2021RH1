@@ -36,15 +36,12 @@ const CollectionsPanel = ({
   });
   const [updateCollection] = useUpdateCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
-    errorPolicy: 'all',
   });
   const [deleteCollection] = useDeleteCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
-    errorPolicy: 'all',
   });
   const [mergeCollections] = useMergeCollectionsMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
-    errorPolicy: 'all',
   });
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -141,13 +138,28 @@ const CollectionsPanel = ({
               )}
               <span className='text'>{child.name}</span>
               <span className='actions'>
-                <IconButton onClick={() => onDelete(child)}>
+                <IconButton
+                  onClick={event => {
+                    event.stopPropagation();
+                    onDelete(child);
+                  }}
+                >
                   <Delete />
                 </IconButton>
-                <IconButton onClick={() => onEditName(child)}>
+                <IconButton
+                  onClick={event => {
+                    event.stopPropagation();
+                    onEditName(child);
+                  }}
+                >
                   <Edit />
                 </IconButton>
-                <IconButton onClick={() => onMerge(child)}>
+                <IconButton
+                  onClick={event => {
+                    event.stopPropagation();
+                    onMerge(child);
+                  }}
+                >
                   <MergeType />
                 </IconButton>
               </span>

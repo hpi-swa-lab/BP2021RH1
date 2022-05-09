@@ -16,7 +16,6 @@ const UnlinkCollectionAction = ({
   const dialog = useContext(DialogContext);
   const [updateCollection] = useUpdateCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
-    errorPolicy: 'all',
   });
 
   const onUnlinkChildCollection = useCallback(
@@ -31,8 +30,9 @@ const UnlinkCollectionAction = ({
         if (!resp) {
           return;
         }
-        const newParents = collection.parent_collections?.map(p => p.id) ?? [];
-        newParents.splice(newParents.indexOf(parentCollection.id), 1);
+        const newParents = (collection.parent_collections?.map(p => p.id) ?? []).filter(
+          id => id === parentCollection.id
+        );
         updateCollection({
           variables: {
             collectionId: collection.id,
@@ -50,7 +50,10 @@ const UnlinkCollectionAction = ({
     <Tooltip
       title={
         t('curator.collectionParents', {
-          parents: childCollection.parent_collections?.map(c => ` - ${c.name}`).join('\n') ?? '',
+          parents:
+            (childCollection.parent_collections as FlatCollection[] | undefined)
+              ?.map(c => ` - ${c.name}`)
+              .join('\n') ?? '',
         }) ?? ''
       }
     >

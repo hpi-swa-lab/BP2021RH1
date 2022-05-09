@@ -24,11 +24,9 @@ const AddCollectionMenu = ({
 
   const [updateCollection] = useUpdateCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
-    errorPolicy: 'all',
   });
   const [createSubCollection] = useCreateSubCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
-    errorPolicy: 'all',
   });
 
   const onCreateSubCollection = useCallback(async () => {

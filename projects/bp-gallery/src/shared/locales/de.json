@@ -93,7 +93,7 @@
     "moveToCollection": "In eine Collection verschieben",
     "removeFromCollection": "Aus dieser Collection entfernen",
     "moveFromAll": "Aus allen Collections hierher verschieben?",
-    "moveFromHere": "Die ausgewählte Collection befindet sich noch in den folgenden anderen Collections: [{{parents}}]. Beim verschieben würde diese Collection aus all diesen anderen Collections hierher verschoben werden.",
+    "moveFromHere": "Die ausgewählte Collection befindet sich noch in den folgenden anderen Collections: [{{parents}}].\nBeim Verschieben würde diese Collection aus all diesen anderen Collections hierher verschoben werden.",
     "addedPicturesToCollection": "Bilder erfolgreich zur Collection hinzugefügt",
     "removedPicturesFromCollection": "Bilder erfolgreich aus der Collection entfernt",
     "addCollection": "Collection hinzufügen",
@@ -120,7 +120,7 @@
     "collectionParents": "Diese Collection ist verlinkt in:\n\n{{parents}}",
     "reallyUnlink": "Verlinkung wirklich aufheben?",
     "unlinkFromCollection": "Dadurch wird diese Collection keine Untercollection von \"{{parent}}\" mehr sein.",
-    "notMergeSameCollection": "Es ist nicht möglich eine Collection mit sich selbst zu mergen. Bitte wähle eine andere Collection aus",
+    "notMergeSameCollection": "Es ist nicht möglich, eine Collection in sich selbst zu verschieben. Bitte wähle eine andere Collection aus",
     "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
     "renameCollection": "Collection umbenennen",
     "nameOfNewCollection": "Name der neuen Collection:"
