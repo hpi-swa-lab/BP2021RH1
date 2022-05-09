@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import JoditEditor from 'jodit-react';
 import { FlatDescription } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { Icon, IconButton } from '@mui/material';
-import { isEmpty, cloneDeep } from 'lodash';
+import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { DialogContext, DialogPreset } from '../DialogWrapper';
+import { useRef } from 'react';
 
 const DescriptionsEditField = ({
   descriptions,
@@ -22,7 +23,7 @@ const DescriptionsEditField = ({
   const prompt = useContext(DialogContext);
 
   useEffect(() => {
-    setDescriptionState(cloneDeep(descriptions));
+    setDescriptionState([...descriptions]);
   }, [setDescriptionState, descriptions]);
 
   const config = useMemo(
@@ -36,6 +37,36 @@ const DescriptionsEditField = ({
     [role]
   );
 
+  // This solution is necessary because of this jodit issue:
+  // https://github.com/jodit/jodit-react/issues/101
+  // problem: jodit keeps stale references to events
+  const onBlurCallback = useCallback(
+    (newText: string, description: FlatDescription) => {
+      onChange(
+        descriptionState
+          .map(d => (d === description ? { ...d, text: newText } : d))
+          .filter(description => !isEmpty(description.text))
+      );
+    },
+    [descriptionState, onChange]
+  );
+
+  const onChangeCallback = useCallback(
+    (newText: string, description: FlatDescription) => {
+      if (description.text !== newText) {
+        onTouch();
+      }
+    },
+    [onTouch]
+  );
+
+  const onBlurRef = useRef<(newText: string, description: FlatDescription) => void>(onBlurCallback);
+  const onChangeRef =
+    useRef<(newText: string, description: FlatDescription) => void>(onChangeCallback);
+
+  onBlurRef.current = onBlurCallback;
+  onChangeRef.current = onChangeCallback;
+
   return (
     <>
       {descriptionState.length <= 0 && (
@@ -48,22 +79,15 @@ const DescriptionsEditField = ({
       )}
       {descriptionState.map((description, index) => {
         return (
-          <div className='description-content' key={description.id}>
+          <div
+            className='description-content'
+            key={isEmpty(description.id) ? `new-description-${index}` : description.id}
+          >
             <JoditEditor
               value={description.text}
               config={config}
-              onBlur={() =>
-                onChange(descriptionState.filter(description => !isEmpty(description.text)))
-              }
-              onChange={newText => {
-                const allDescriptions = [...descriptionState];
-                const oldValue = allDescriptions[index].text;
-                allDescriptions[index].text = newText;
-                if (oldValue !== newText) {
-                  onTouch();
-                }
-                setDescriptionState(allDescriptions);
-              }}
+              onBlur={newText => onBlurRef.current(newText, description)}
+              onChange={newText => onChangeRef.current(newText, description)}
             />
             {role >= AuthRole.CURATOR && (
               <IconButton
@@ -76,11 +100,9 @@ const DescriptionsEditField = ({
                   if (!reallyDelete) {
                     return;
                   }
-                  setDescriptionState(allDescriptions => {
-                    allDescriptions.splice(index, 1);
-                    onChange(allDescriptions.filter(description => !isEmpty(description.text)));
-                    return [...allDescriptions];
-                  });
+                  const allDescriptions = descriptionState.filter(d => d !== description);
+                  onChange(allDescriptions.filter(description => !isEmpty(description.text)));
+                  return [...allDescriptions];
                 }}
                 className='delete-button'
               >
@@ -90,18 +112,16 @@ const DescriptionsEditField = ({
           </div>
         );
       })}
-      {role >= AuthRole.CURATOR && (
+      {role >= AuthRole.CURATOR && !descriptionState.some(d => isEmpty(d.id)) && (
         <IconButton
           onClick={() => {
-            setDescriptionState(allDescriptions => {
-              return [
-                ...allDescriptions,
-                {
-                  text: '',
-                  id: `${allDescriptions.length + 1}`,
-                },
-              ];
-            });
+            setDescriptionState(allDescriptions => [
+              ...allDescriptions,
+              {
+                text: '',
+                id: ``,
+              },
+            ]);
           }}
           className='add-button'
         >
