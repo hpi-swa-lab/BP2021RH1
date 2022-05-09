@@ -123,6 +123,7 @@
     "notMergeSameCollection": "Es ist nicht möglich, eine Collection in sich selbst zu verschieben. Bitte wähle eine andere Collection aus",
     "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
     "renameCollection": "Collection umbenennen",
-    "nameOfNewCollection": "Name der neuen Collection:"
+    "nameOfNewCollection": "Name der neuen Collection:",
+    "autoCrop": "Automatisch Zuschneiden"
   }
 }
