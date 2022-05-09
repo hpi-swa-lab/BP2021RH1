@@ -116,6 +116,8 @@
     "reallyUnlink": "Verlinkung wirklich aufheben?",
     "unlinkFromCollection": "Dadurch wird diese Collection keine Untercollection von \"{{parent}}\" mehr sein.",
     "notMergeSameCollection": "Es ist nicht möglich eine Collection mit sich selbst zu mergen. Bitte wähle eine andere Collection aus",
-    "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen"
+    "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
+    "renameCollection": "Collection umbenennen",
+    "nameOfNewCollection": "Name der neuen Collection:"
   }
 }
