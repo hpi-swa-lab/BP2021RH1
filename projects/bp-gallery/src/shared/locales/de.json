@@ -76,6 +76,7 @@
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "scan": "Direkt vom Scanner einlesen",
     "addPictures": "Bilder hinzufügen",
+    "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
     "reallyDeletePicture": "Bild wirklich löschen?",
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
     "reallyDeleteDescription": "Beschreibung wirklich löschen?",
@@ -97,6 +98,8 @@
     "uploads": "Uploads",
     "insertDescriptionHere": "Beschreibung hinzufügen...",
     "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare",
-    "unverified-comments": "Noch nicht verifizierte Kommentare"
+    "unverified-comments": "Noch nicht verifizierte Kommentare",
+    "mergeLimit": "Es können immer nur 2 Tags gleichzeitig zusammengeführt werden",
+    "mergeTag": "Zu einem Tag zusammenführen"
   }
 }
