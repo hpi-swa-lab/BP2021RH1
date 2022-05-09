@@ -1,5 +1,6 @@
 "use strict";
 
+const { mergeSourceTagIntoTargetTag } = require("./api/custom-tag-resolver");
 const {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
