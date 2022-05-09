@@ -17,6 +17,7 @@ import useGenericTagEndpoints from './endpoints';
 import { useTranslation } from 'react-i18next';
 import { Delete } from '@mui/icons-material';
 import { DialogContext, DialogPreset } from '../shared/DialogWrapper';
+import { AuthRole, useAuth } from '../../AuthWrapper';
 
 interface TagRow {
   id: string;
@@ -36,6 +37,7 @@ const TagOverview = ({ type }: { type: string }) => {
   const openAlert = useContext(AlertContext);
   const prompt = useContext(DialogContext);
   const { t } = useTranslation();
+  const { role } = useAuth();
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
 
   const {
@@ -245,10 +247,10 @@ const TagOverview = ({ type }: { type: string }) => {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else if (Object.values(tags).length) {
+  } else if (Object.values(tags).length && role >= AuthRole.CURATOR) {
     return (
       <div className='grid'>
-        <Button onClick={mergeTags}>merge</Button>
+        <Button onClick={mergeTags}>{t('curator.mergeTag')}</Button>
         <DataGrid
           rows={rows}
           columns={columns}

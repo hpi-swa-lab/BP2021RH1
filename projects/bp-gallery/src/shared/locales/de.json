@@ -99,6 +99,7 @@
     "insertDescriptionHere": "Beschreibung hinzufügen...",
     "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare",
     "unverified-comments": "Noch nicht verifizierte Kommentare",
-    "mergeLimit": "Es können immer nur 2 Tags gleichzeitig gemerged werden"
+    "mergeLimit": "Es können immer nur 2 Tags gleichzeitig gemerged werden",
+    "mergeTag": "Zu einem Tag zusammenführen"
   }
 }
