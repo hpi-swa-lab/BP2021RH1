@@ -1,17 +1,9 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Icon,
-} from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth, AuthRole } from '../../AuthWrapper';
-import { FlatCollection } from '../../types/additionalFlatTypes';
-import TargetCollectionSelectDialog from './TargetCollectionSelectDialog';
+import TargetCollectionSelectDialog from './dialogs/TargetCollectionSelectDialog';
+import StatelessDialog from './dialogs/StatelessDialog';
+import { Dialog } from '@mui/material';
+import InputFieldDialog from './dialogs/InputFieldDialog';
 
 export interface DialogOption {
   name: string;
@@ -21,14 +13,16 @@ export interface DialogOption {
 }
 
 export enum DialogPreset {
+  NO_PRESET,
   CONFIRM,
   SELECT_COLLECTION,
+  INPUT_FIELD,
 }
 
 export interface DialogProps {
+  preset: DialogPreset;
+  content?: any;
   title?: string;
-  content: any;
-  preset?: DialogPreset;
   options?: DialogOption[];
 }
 
@@ -37,35 +31,41 @@ export const DialogContext = React.createContext<(dialogProps: DialogProps) => P
 );
 
 const DialogWrapper = ({ children }: { children: any }) => {
-  const [open, setOpen] = useState<boolean>(false);
   const [dialogState, setDialogState] = useState<DialogProps>();
-
-  // This is for using the collection select dialog
-  const [selectDialogCallback, setSelectDialogCallback] = useState<
-    ((selectedCollection: FlatCollection | undefined) => void) | undefined
-  >(undefined);
 
   // We save a function callback here to call once the currently active dialog has
   // been closed. The resolve function is set below where prompt is triggered
   const resolve = useRef<undefined | ((value: any) => void)>(undefined);
   const { t } = useTranslation();
-  const { role } = useAuth();
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleClose = (value: any) => {
+    setOpen(false);
+    if (resolve.current) {
+      resolve.current(value);
+      resolve.current = undefined;
+    }
+  };
 
   const prompt = (dialogProps: DialogProps): Promise<any> => {
-    if (dialogProps.preset === DialogPreset.SELECT_COLLECTION) {
-      setDialogState(dialogProps);
-      return new Promise<any>(r => {
-        setSelectDialogCallback(() => (selectedCollection: FlatCollection | undefined) => {
-          r(selectedCollection);
-          setSelectDialogCallback(undefined);
-        });
-      });
-    }
-    if (dialogProps.preset === DialogPreset.CONFIRM && !dialogProps.options) {
+    if (dialogProps.preset === DialogPreset.CONFIRM) {
       dialogProps.options = [
         {
           name: t('common.abort'),
           value: false,
+          icon: 'close',
+        },
+        {
+          name: t('common.confirm'),
+          value: true,
+          icon: 'done',
+        },
+      ];
+    } else if (dialogProps.preset === DialogPreset.INPUT_FIELD) {
+      dialogProps.options = [
+        {
+          name: t('common.abort'),
+          value: undefined,
           icon: 'close',
         },
         {
@@ -83,14 +83,6 @@ const DialogWrapper = ({ children }: { children: any }) => {
     });
   };
 
-  const handleClose = (value: any) => {
-    setOpen(false);
-    if (resolve.current) {
-      resolve.current(value);
-      resolve.current = undefined;
-    }
-  };
-
   return (
     <DialogContext.Provider value={prompt}>
       {children}
@@ -102,29 +94,17 @@ const DialogWrapper = ({ children }: { children: any }) => {
           handleClose(null);
         }}
       >
-        <DialogTitle>{dialogState?.title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{dialogState?.content}</DialogContentText>
-        </DialogContent>
-        <DialogActions style={{ justifyContent: 'space-between' }}>
-          {dialogState?.options?.map((option, index) => (
-            <Button
-              key={index}
-              onClick={() => handleClose(option.value)}
-              style={{ color: option.color ?? undefined }}
-              startIcon={option.icon ? <Icon>{option.icon}</Icon> : undefined}
-            >
-              {option.name}
-            </Button>
-          ))}
-        </DialogActions>
+        {(dialogState?.preset === DialogPreset.NO_PRESET ||
+          dialogState?.preset === DialogPreset.CONFIRM) && (
+          <StatelessDialog dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.SELECT_COLLECTION && (
+          <TargetCollectionSelectDialog dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.INPUT_FIELD && (
+          <InputFieldDialog dialogProps={dialogState} handleClose={handleClose} />
+        )}
       </Dialog>
-      {role >= AuthRole.CURATOR && (
-        <TargetCollectionSelectDialog
-          selectCallback={selectDialogCallback}
-          title={dialogState?.title}
-        />
-      )}
     </DialogContext.Provider>
   );
 };
