@@ -1,6 +1,18 @@
 @import '../../../shared/style.scss';
 
 .pictureComments {
+  transition: max-height 0.5s;
+  max-height: 100vh;
+
+  &:not(.open) {
+    max-height: 3.5rem;
+    overflow: hidden;
+
+    .expand-button .MuiSvgIcon-root {
+      transform: rotate(180deg);
+    }
+  }
+
   .comment-container {
     display: flex;
     flex-direction: column;
@@ -8,15 +20,23 @@
     gap: 1rem;
   }
 
-  h2 {
-    padding-left: 1rem;
+  .picture-comments-header {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    color: $primaryColor;
+    justify-content: space-between;
     margin-top: 0.5rem;
+    padding: 0 1rem;
 
-    .MuiIcon-root {
-      margin-right: 10px;
+    h2 {
+      display: flex;
+      align-items: center;
+      color: $primaryColor;
+      margin: 0;
+
+      .MuiIcon-root {
+        margin-right: 10px;
+      }
     }
   }
 }
