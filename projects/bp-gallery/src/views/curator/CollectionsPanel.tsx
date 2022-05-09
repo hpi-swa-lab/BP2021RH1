@@ -73,7 +73,6 @@ const CollectionsPanel = ({
           variables: { collectionId: collection.id, data: { name: collectionName } },
         }).catch(error => {
           dialog({
-            preset: DialogPreset.NO_PRESET,
             options: [{ name: t('common.close'), value: true }],
             title: t('curator.saveStatus.error'),
             content: t('curator.renameCollectionFailed'),
@@ -88,7 +87,6 @@ const CollectionsPanel = ({
     (collection: FlatCollection) => {
       if (collection.child_collections?.length || collection.pictures?.length) {
         dialog({
-          preset: DialogPreset.NO_PRESET,
           options: [{ name: t('common.close'), value: true }],
           title: t('curator.saveStatus.error'),
           content: t('curator.collectionNotEmpty'),

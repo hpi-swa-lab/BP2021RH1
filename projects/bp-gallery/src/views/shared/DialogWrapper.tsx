@@ -20,7 +20,7 @@ export enum DialogPreset {
 }
 
 export interface DialogProps {
-  preset: DialogPreset;
+  preset?: DialogPreset;
   content?: any;
   title?: string;
   options?: DialogOption[];
@@ -47,9 +47,14 @@ const DialogWrapper = ({ children }: { children: any }) => {
     }
   };
 
-  const prompt = (dialogProps: DialogProps): Promise<any> => {
-    if (dialogProps.preset === DialogPreset.CONFIRM) {
-      dialogProps.options = [
+  const prompt = ({
+    preset = DialogPreset.NO_PRESET,
+    content,
+    title,
+    options,
+  }: DialogProps): Promise<any> => {
+    if (preset === DialogPreset.CONFIRM) {
+      options = [
         {
           name: t('common.abort'),
           value: false,
@@ -61,8 +66,8 @@ const DialogWrapper = ({ children }: { children: any }) => {
           icon: 'done',
         },
       ];
-    } else if (dialogProps.preset === DialogPreset.INPUT_FIELD) {
-      dialogProps.options = [
+    } else if (preset === DialogPreset.INPUT_FIELD) {
+      options = [
         {
           name: t('common.abort'),
           value: undefined,
@@ -75,7 +80,7 @@ const DialogWrapper = ({ children }: { children: any }) => {
         },
       ];
     }
-    setDialogState(dialogProps);
+    setDialogState({ preset, content, title, options });
     setOpen(true);
     return new Promise<any>(r => {
       // The callback function of this Promise is saved to the ref here
