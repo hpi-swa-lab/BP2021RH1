@@ -44,6 +44,15 @@ const isDuplicatedSearchParam = (
   return r;
 };
 
+const isSpace = (element: string): boolean => {
+  let r = false;
+  console.log(element);
+  if (element === '') {
+    r = true;
+  }
+  return r;
+};
+
 export const asSearchPath = (searchParams: URLSearchParams): string => {
   return `/search?${searchParams.toString()}`;
 };
@@ -65,7 +74,7 @@ export const addNewParamToSearchPath = (
   }
 
   paramValues.forEach(element => {
-    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !element.includes(' ')) {
+    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !isSpace(element)) {
       searchParams.append(newParamType, element);
     }
   });

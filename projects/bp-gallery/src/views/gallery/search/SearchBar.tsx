@@ -45,11 +45,11 @@ const SearchBar = ({
       case SearchType.KEYWORD:
         return t('search.search-keyword');
       case SearchType.DESCRIPTION:
-        return t('search.search-description');
+        return t('search.descriptions');
       case SearchType.PERSON:
-        return t('search.search-person');
+        return t('search.persons');
       case SearchType.LOCATION:
-        return t('search.search-location');
+        return t('search.locations');
       default:
         return t('search.search-all');
     }

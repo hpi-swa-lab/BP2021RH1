@@ -70,8 +70,9 @@
     "decades": "Jahreszahlen",
     "keywords": "Schlagwörter",
     "descriptions": "Beschreibungen",
+    "persons": "Personen",
+    "locations": "Orte",
     "all": "Gesamtes Bilderarchiv",
-    "for-type": "durchsuchen",
     "start-search": "Suche starten",
     "picture-found": "Bild wurde gefunden",
     "pictures-found": "Bilder wurden gefunden",
@@ -102,20 +103,6 @@
     "noPeople": "Keine Personen bekannt",
     "noDescription": "Keine Beschreibung vorhanden",
     "collections": "Collections"
-  },
-  "search": {
-    "search-decade": "Jahreszahlen",
-    "search-keyword": "Schlagwörter",
-    "search-description": "Beschreibungen",
-    "search-all": "Gesamtes Bilderarchiv",
-    "search-person": "Personen",
-    "search-location": "Orte",
-    "search-for-type": "durchsuchen",
-    "start-search": "Suche starten",
-    "choose-searchtypes": "Suchtyp auswählen",
-    "wrong-time-input-info": "Jahreszahlen müssen in der Form 1989 oder 89 angegeben werden.",
-    "explanation-headline": "Was passiert, wenn ich Stichworte suche?",
-    "explanation": "Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen."
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
