@@ -5,7 +5,7 @@ import { usePostCommentMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../shared/AlertWrapper';
 import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
-import { DialogContext } from '../../shared/DialogWrapper';
+import { DialogContext, DialogPreset } from '../../shared/DialogWrapper';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
@@ -29,6 +29,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         return;
       }
       prompt({
+        preset: DialogPreset.NO_PRESET,
         title: t('common.comment-thanks'),
         content: t('common.comment-alert'),
         options: [

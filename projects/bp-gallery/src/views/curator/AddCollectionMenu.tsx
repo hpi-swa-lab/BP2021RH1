@@ -31,10 +31,11 @@ const AddCollectionMenu = ({
     errorPolicy: 'all',
   });
 
-  const onCreateSubCollection = useCallback(() => {
-    // TODO: This needs to be changed, not a permanent solution!
-    // eslint-disable-next-line no-alert
-    const collectionName = prompt('Name der neuen Collection:', 'neue collection');
+  const onCreateSubCollection = useCallback(async () => {
+    const collectionName = await dialog({
+      preset: DialogPreset.INPUT_FIELD,
+      title: t('curator.nameOfNewCollection'),
+    });
     if (collectionName?.length) {
       createSubCollection({
         variables: {
@@ -44,7 +45,7 @@ const AddCollectionMenu = ({
         },
       });
     }
-  }, [createSubCollection, parentCollectionId]);
+  }, [createSubCollection, parentCollectionId, dialog, t]);
 
   const onLinkOrMoveSubcollection = useCallback(
     (moveCollection?: boolean) => {
