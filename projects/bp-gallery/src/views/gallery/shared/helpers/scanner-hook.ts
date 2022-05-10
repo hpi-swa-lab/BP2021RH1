@@ -31,8 +31,9 @@ const useScanner = () => {
 
   const toggleAutoCrop = useCallback(() => {
     setShouldCrop(shouldCrop => {
-      socket.send(`${COMMANDS.SET_CROPPING} ${shouldCrop ? '0' : '1'}`);
-      return !shouldCrop;
+      const toggledShouldCrop = !shouldCrop;
+      socket.send(`${COMMANDS.SET_CROPPING} ${toggledShouldCrop ? '1' : '0'}`);
+      return toggledShouldCrop;
     });
   }, [socket]);
 
