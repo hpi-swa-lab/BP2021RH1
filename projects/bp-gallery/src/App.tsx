@@ -5,6 +5,7 @@ import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
+import NavigationBar from './views/shared/NavigationBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
 import AlertWrapper, { AlertOptions, AlertType } from './views/shared/AlertWrapper';
@@ -80,17 +81,6 @@ const apolloClient = new ApolloClient({
               };
             },
           },
-          keywordTags: {
-            // Treat picture queries as the same query, as long as the filters clause is equal.
-            // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
-            // get treated as one query and the results get merged.
-            keyArgs: ['filters'],
-            merge(existing = { data: [] }, incoming: PictureEntityResponseCollection) {
-              return {
-                data: [...existing.data, ...incoming.data],
-              };
-            },
-          },
         },
       },
     },
@@ -106,6 +96,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
             <div className='App'>
               <TopBar />
               {renderRoutes(route?.routes)}
+              <NavigationBar />
             </div>
           </AuthWrapper>
         </DialogWrapper>
