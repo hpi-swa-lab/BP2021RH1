@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import BrowseView from './browse/BrowseView';
 import SearchView from './search/SearchView';
-import MainView from '../main/MainView';
 import './GalleryView.scss';
 import UploadsView from './uploads/UploadsView';
 
@@ -28,8 +27,6 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
         return <SearchView {...scrollParams} />;
       case 'uploads':
         return <UploadsView {...scrollParams} />;
-      case 'main':
-        return <MainView {...scrollParams} />;
       default:
         return '404 - Not found';
     }
