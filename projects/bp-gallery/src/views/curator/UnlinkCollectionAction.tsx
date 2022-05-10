@@ -31,7 +31,7 @@ const UnlinkCollectionAction = ({
           return;
         }
         const newParents = (collection.parent_collections?.map(p => p.id) ?? []).filter(
-          id => id === parentCollection.id
+          id => id !== parentCollection.id
         );
         updateCollection({
           variables: {
