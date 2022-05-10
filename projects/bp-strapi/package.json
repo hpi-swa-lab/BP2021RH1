@@ -4,13 +4,18 @@
   "version": "0.1.0",
   "description": "The backend system to manage picture and tag data",
   "scripts": {
-    "develop": "cross-env ENV_PATH=./config/environments/development/.env strapi develop",
-    "start": "cross-env ENV_PATH=./config/environments/production/.env strapi start",
-    "build": "cross-env ENV_PATH=./config/environments/development/.env strapi build",
-    "build:prod": "cross-env ENV_PATH=./config/environments/production/.env strapi build",
-    "strapi": "strapi"
+    "develop": "cross-env ENV_PATH=./config/env/development/.env strapi develop",
+    "start": "cross-env ENV_PATH=./config/env/production/.env strapi start",
+    "build": "cross-env ENV_PATH=./config/env/development/.env strapi build",
+    "build:prod": "cross-env ENV_PATH=./config/env/production/.env strapi build",
+    "strapi": "strapi",
+    "test": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "sqlite3": "^5.0.8",
+    "supertest": "^6.2.3"
+  },
   "dependencies": {
     "@strapi/plugin-graphql": "4.1.9",
     "@strapi/plugin-i18n": "4.1.9",
@@ -29,6 +34,18 @@
   "engines": {
     "node": ">=14.x.x <=16.x.x",
     "npm": ">=6.0.0"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      ".tmp",
+      ".cache",
+      "/build/"
+    ],
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./unit-tests/setupTests.js"
+    ]
   },
   "license": "MIT"
 }
