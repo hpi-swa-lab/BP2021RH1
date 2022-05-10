@@ -157,11 +157,18 @@ def invert(img):
 
 def cropFile():
 
-    params = {
-      "thresh": 200,
-      "crop": 15,
-      "filename": 'tmp.bmp', 
-      "out_path": './cropped',
-      "black": True}
+  folder_name = './cropped'
 
-    autocrop(params)
+  import os
+  if not os.path.exists(folder_name):
+    os.makedirs(folder_name)
+
+  params = {
+    "thresh": 200,
+    "crop": 15,
+    "filename": 'tmp.bmp', 
+    "out_path": folder_name,
+    "black": True
+  }
+
+  autocrop(params)
