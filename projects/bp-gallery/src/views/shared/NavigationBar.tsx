@@ -56,6 +56,14 @@ const NavigationBar = () => {
               <Icon>person</Icon>
               <span className='nav-element-title'>{t('pictureFields.people')}</span>
             </NavLink>
+            <NavLink to='/comment-overview' className='nav-element'>
+              <Icon>chat</Icon>
+              <span className='nav-element-title'>{t('common.comments')}</span>
+            </NavLink>
+            <NavLink to='/collections-overview' className='nav-element'>
+              <Icon>folder</Icon>
+              <span className='nav-element-title'>{t('pictureFields.collections')}</span>
+            </NavLink>
           </>
         )}
       </div>

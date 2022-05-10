@@ -3,31 +3,68 @@ import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
 import TopBar from './views/shared/TopBar';
 import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
+import { onError as createErrorLink } from '@apollo/client/link/error';
 import NavigationBar from './views/shared/NavigationBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
-import AlertWrapper from './views/shared/AlertWrapper';
+import AlertWrapper, { AlertOptions, AlertType } from './views/shared/AlertWrapper';
 import DialogWrapper from './views/shared/DialogWrapper';
+import { isEmpty } from 'lodash';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
 export const asApiPath = (pathEnding: string) => {
-  //Removes any multiple occurences of a "/"
+  // Removes any multiple occurrences of a "/"
   const formattedPathEnding = `/${pathEnding}`.replace(/\/+/gm, '/');
   return `${apiBase}${formattedPathEnding}`;
 };
 
-export const httpLink = (token: string | null) =>
-  createHttpLink({
+const OPERATIONS_WITH_OWN_ERROR_HANDLING = ['login'];
+
+/**
+ * Creates the link-chain for the {@link ApolloClient} consisting of:
+ * - an HTTP-Link for using authentication via JWT and
+ * - an Error-Link for globally catching errors and showing these in an Alert.
+ * @param token JWT input, pass null to reset it.
+ * @param openAlert the callback to open our Alert, can be obtained from the AlertContext
+ */
+export const buildHttpLink = (
+  token: string | null,
+  openAlert?: (alertOptions: AlertOptions) => void
+) => {
+  let httpLink = createHttpLink({
     uri: `${apiBase}/graphql`,
     headers: {
       authorization: token ? `Bearer ${token}` : '',
     },
   });
 
+  if (openAlert) {
+    const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
+      if (OPERATIONS_WITH_OWN_ERROR_HANDLING.includes(operation.operationName)) return;
+
+      const errorMessages = [];
+      if (networkError) errorMessages.push(networkError);
+      if (graphQLErrors) graphQLErrors.forEach(({ message }) => errorMessages.push(message));
+
+      if (isEmpty(errorMessages)) return;
+
+      openAlert({
+        alertType: AlertType.ERROR,
+        message: errorMessages.join('\n'),
+        duration: 5000,
+      });
+    });
+
+    httpLink = from([errorLink, httpLink]);
+  }
+
+  return httpLink;
+};
+
 const apolloClient = new ApolloClient({
-  link: httpLink(sessionStorage.getItem('jwt')),
+  link: buildHttpLink(sessionStorage.getItem('jwt')),
   cache: new InMemoryCache({
     addTypename: false,
     typePolicies: {
@@ -54,15 +91,15 @@ const App = ({ route }: RouteConfigComponentProps) => {
   return (
     <ApolloProvider client={apolloClient}>
       <AlertWrapper>
-        <DialogWrapper>
-          <AuthWrapper>
+        <AuthWrapper>
+          <DialogWrapper>
             <div className='App'>
               <TopBar />
               {renderRoutes(route?.routes)}
               <NavigationBar />
             </div>
-          </AuthWrapper>
-        </DialogWrapper>
+          </DialogWrapper>
+        </AuthWrapper>
       </AlertWrapper>
     </ApolloProvider>
   );

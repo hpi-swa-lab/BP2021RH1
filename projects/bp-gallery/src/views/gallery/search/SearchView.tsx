@@ -6,6 +6,7 @@ import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
+import useBulkOperations from '../shared/bulk-operations';
 
 export const enum SearchType {
   DEFAULT = 'q',
@@ -107,6 +108,8 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     [searchParams]
   );
 
+  const { linkToCollection } = useBulkOperations();
+
   return (
     <div className='search-view'>
       <div className='search-content'>
@@ -125,6 +128,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={search}
+              bulkOperations={[linkToCollection]}
             />
           )}
         </div>

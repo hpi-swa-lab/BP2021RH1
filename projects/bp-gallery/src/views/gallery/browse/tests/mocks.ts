@@ -1,5 +1,5 @@
 import {
-  GetCollectionInfoDocument,
+  GetCollectionInfoByNameDocument,
   GetCollectionWithPicturesPublishedAfterDocument,
   GetRootCollectionDocument,
 } from '../../../../graphql/APIConnector';
@@ -220,6 +220,7 @@ export const GetRootCollectionMocks = [
             attributes: {
               current: {
                 data: {
+                  id: '1',
                   attributes: {
                     name: 'Das Herbert-Ahrens-Bilderarchiv',
                   },
@@ -236,7 +237,7 @@ export const GetRootCollectionMocks = [
 export const GetCollectionInfoDocumentMocks = [
   {
     request: {
-      query: GetCollectionInfoDocument,
+      query: GetCollectionInfoByNameDocument,
       variables: {
         collectionName: 'Das Herbert-Ahrens-Bilderarchiv',
       },
@@ -260,7 +261,7 @@ export const GetCollectionInfoDocumentMocks = [
   },
   {
     request: {
-      query: GetCollectionInfoDocument,
+      query: GetCollectionInfoByNameDocument,
       variables: {
         collectionName: 'Sole-Therme',
       },

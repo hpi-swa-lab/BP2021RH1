@@ -10,7 +10,7 @@ import { DialogContext } from '../../shared/DialogWrapper';
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
   const openAlert = useContext(AlertContext);
-  const prompt = useContext(DialogContext);
+  const dialog = useContext(DialogContext);
 
   const [commentAuthor, setCommentAuthor] = useState('');
   const [commentText, setCommentText] = useState('');
@@ -27,7 +27,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         });
         return;
       }
-      prompt({
+      dialog({
         title: t('common.comment-thanks'),
         content: t('common.comment-alert'),
         options: [
@@ -47,12 +47,6 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         if (shouldNeverShowAgain) {
           localStorage.setItem('dontShowCommentDialogAgain', '1');
         }
-      });
-    },
-    onError: error => {
-      openAlert({
-        alertType: AlertType.ERROR,
-        message: error.message,
       });
     },
   });

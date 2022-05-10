@@ -4,9 +4,11 @@ import { Redirect } from 'react-router-dom';
 import App from './App';
 import Demo from './prototypes/demo';
 import TimeLineDemo from './prototypes/timeline-demo';
+import CollectionsOverview from './views/curator/CollectionsOverview';
 import TagOverview from './views/curator/TagOverview';
 import GalleryView from './views/gallery/GalleryView';
 import PictureView from './views/picture/PictureView';
+import CommentOverview from './views/curator/CommentOverview';
 
 const routes: RouteConfig[] = [
   {
@@ -57,6 +59,13 @@ const routes: RouteConfig[] = [
         exact: true,
       },
       {
+        path: '/comment-overview',
+        render: () => {
+          return <CommentOverview />;
+        },
+        exact: true,
+      },
+      {
         path: '/picture/:id',
         render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
           return <PictureView initialPictureId={match.params.id} />;
@@ -78,6 +87,12 @@ const routes: RouteConfig[] = [
         path: '/tags/people',
         render: () => {
           return <TagOverview type='people' />;
+        },
+      },
+      {
+        path: '/collections-overview',
+        render: () => {
+          return <CollectionsOverview />;
         },
       },
       {

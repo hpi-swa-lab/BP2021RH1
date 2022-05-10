@@ -26,7 +26,7 @@
     align-items: center;
     z-index: 5;
     padding: 5px 10px;
-    background-color: $backgroundColor;
+    background-color: white;
   }
 
   .access-printer,
@@ -37,6 +37,7 @@
     align-items: center;
     color: $textColor;
     padding: 20px;
+    padding-bottom: 40px;
     justify-content: center;
     cursor: pointer;
     &:hover {
@@ -45,16 +46,31 @@
     p {
       display: flex;
       align-items: center;
+      margin-bottom: 50px;
     }
 
     .scanner-select {
-      background: $textColor;
+      background: #a5a5a5;
       color: black;
-      margin: -20px;
       margin-top: 1rem;
       width: calc(100% + 20px);
       padding: 10px;
       text-align: center;
+      margin: -20px;
+      margin-bottom: 0;
+    }
+
+    .scanner-autocrop {
+      margin-bottom: -40px;
+      width: calc(100% + 20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 0;
+
+      .MuiIcon-root {
+        margin-right: 0.5rem;
+      }
     }
   }
 }

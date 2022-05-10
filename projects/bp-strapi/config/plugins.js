@@ -6,7 +6,7 @@ module.exports = ({ env }) => ({
   graphql: {
     enabled: true,
     config: {
-      endpoint: '/graphql',
+      endpoint: "/graphql",
       shadowCRUD: true,
       playgroundAlways: false,
       defaultLimit: -1,
@@ -18,8 +18,13 @@ module.exports = ({ env }) => ({
       },
     },
   },
-  'bulk-import': {
+  "bulk-import": {
     enabled: true,
-    resolve: './src/plugins/bulk-import',
+    resolve: "./src/plugins/bulk-import",
+  },
+  "users-permissions": {
+    config: {
+      jwtSecret: env("JWT_SECRET"),
+    },
   },
 });
