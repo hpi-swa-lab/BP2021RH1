@@ -1,6 +1,7 @@
 .search-bar {
   display: flex;
   z-index: 25;
+  background: #e5e5e5;
 
   .MuiFormControl-root {
     width: 100%;
@@ -12,7 +13,7 @@
       flex-direction: 'column';
       .searchbutton-label {
         font-size: 15px;
-        color: white;
+        color: black;
       }
     }
 
@@ -22,9 +23,9 @@
     }
 
     .MuiInputBase-root {
-      color: white;
+      color: black;
       border-radius: 0.2rem;
-      background: #302e2e;
+      background: #e5e5e5;
       transition: margin-left 0.25s, margin-top 0.25s, width 0.25s, border-radius 0.25s;
 
       @media only screen and (max-width: 650px) {
@@ -41,7 +42,7 @@
       }
 
       .MuiSvgIcon-root {
-        color: white;
+        color: black;
       }
 
       fieldset {

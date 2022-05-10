@@ -8,6 +8,8 @@ import EventIcon from '@mui/icons-material/Event';
 import SellIcon from '@mui/icons-material/Sell';
 import DescriptionIcon from '@mui/icons-material/Description';
 import SearchIcon from '@mui/icons-material/Search';
+import PersonIcon from '@mui/icons-material/Person';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];
@@ -23,6 +25,10 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
         return <SellIcon />;
       case SearchType.DESCRIPTION:
         return <DescriptionIcon />;
+      case SearchType.LOCATION:
+        return <LocationOnIcon />;
+      case SearchType.PERSON:
+        return <PersonIcon />;
       case SearchType.ALL:
         return <SearchIcon />;
       default:

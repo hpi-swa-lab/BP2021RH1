@@ -10,18 +10,24 @@
     }
 
     &[search-type='keyword'] {
-      background: rgb(172, 113, 11);
+      background: $keywordColor;
     }
 
     &[search-type='ALL'] {
-      background: #1c9e3f;
+      background: #84b0c4;
     }
 
     &[search-type='description'] {
-      background: $primaryColor;
+      background: $descriptionColor;
     }
     &[search-type='decade'] {
-      background: #9f2b61;
+      background: $decadeColor;
+    }
+    &[search-type='person'] {
+      background: $personColor;
+    }
+    &[search-type='location'] {
+      background: $locationColor;
     }
   }
 }
