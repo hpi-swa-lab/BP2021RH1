@@ -6,6 +6,7 @@ const COMMANDS = {
   SELECT_SCANNER: 'set_scanner',
   LIST_SCANNERS: 'list',
   SCAN: 'scan',
+  SET_CROPPING: 'set_crop',
 };
 
 const useScanner = () => {
@@ -13,6 +14,8 @@ const useScanner = () => {
 
   const [scanners, setScanners] = useState<string[]>();
   const [selectedScannerId, setSelectedScannerId] = useState<number>(0);
+
+  const [shouldCrop, setShouldCrop] = useState<boolean>(false);
 
   const [scannedDocument, setScannedDocument] = useState<Blob | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,6 +28,14 @@ const useScanner = () => {
     },
     [socket]
   );
+
+  const toggleAutoCrop = useCallback(() => {
+    setShouldCrop(shouldCrop => {
+      const toggledShouldCrop = !shouldCrop;
+      socket.send(`${COMMANDS.SET_CROPPING} ${toggledShouldCrop ? '1' : '0'}`);
+      return toggledShouldCrop;
+    });
+  }, [socket]);
 
   useEffect(() => {
     socket.addEventListener('open', () => {
@@ -61,7 +72,16 @@ const useScanner = () => {
     socket.send(COMMANDS.SCAN);
   }, [socket]);
 
-  return { scanners, scannedDocument, loading, scan, selectedScannerId, selectScanner };
+  return {
+    scanners,
+    scannedDocument,
+    loading,
+    scan,
+    selectedScannerId,
+    selectScanner,
+    autoCrop: shouldCrop,
+    toggleAutoCrop,
+  };
 };
 
 export default useScanner;
