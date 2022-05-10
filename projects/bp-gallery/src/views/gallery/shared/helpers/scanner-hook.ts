@@ -15,7 +15,7 @@ const useScanner = () => {
   const [scanners, setScanners] = useState<string[]>();
   const [selectedScannerId, setSelectedScannerId] = useState<number>(0);
 
-  const [shouldCrop, setShouldCrop] = useState<boolean>(true);
+  const [shouldCrop, setShouldCrop] = useState<boolean>(false);
 
   const [scannedDocument, setScannedDocument] = useState<Blob | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
