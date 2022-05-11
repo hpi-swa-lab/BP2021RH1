@@ -6,26 +6,28 @@ import hashCode from './helpers/hash-code';
 import { zoomIntoPicture, zoomOutOfPicture } from '../../picture/picture-animation.helpers';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
-import BulkOperationsPanel from './BulkOperationsPanel';
-import { useTranslation } from 'react-i18next';
-import useAddPicturesToCollection from './add-pictures-to-collection.hook';
+import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import useDeletePicture from './helpers/delete-picture.hook';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
   hashBase: string;
   loading: boolean;
+  bulkOperations?: BulkOperation[];
   refetch: () => void;
 };
 
-const PictureGrid = ({ pictures, hashBase, loading, refetch }: PictureGridProps) => {
+const PictureGrid = ({
+  pictures,
+  hashBase,
+  loading,
+  bulkOperations,
+  refetch,
+}: PictureGridProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
   const { role } = useAuth();
-  const { t } = useTranslation();
-
-  const addPicturesToCollection = useAddPicturesToCollection();
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
@@ -117,22 +119,8 @@ const PictureGrid = ({ pictures, hashBase, loading, refetch }: PictureGridProps)
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
-      {Boolean(selectedPictures.length) && (
-        <BulkOperationsPanel
-          operations={[
-            {
-              name: t('curator.addToCollection'),
-              icon: 'add',
-              action: () => {
-                // Hardcoded id! Just for test purposes!
-                addPicturesToCollection(
-                  '232',
-                  selectedPictures.map(p => p.id)
-                );
-              },
-            },
-          ]}
-        />
+      {Boolean(selectedPictures.length) && bulkOperations && (
+        <BulkOperationsPanel operations={bulkOperations} selectedPictures={selectedPictures} />
       )}
       <div className='picture-grid'>
         {table.map((row, rowindex) => {

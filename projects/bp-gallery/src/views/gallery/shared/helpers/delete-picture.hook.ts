@@ -6,7 +6,7 @@ import { DialogContext, DialogPreset } from '../../../shared/DialogWrapper';
 
 const useDeletePicture = () => {
   const [unpublishPicture] = useUnpublishPictureMutation();
-  const prompt = useContext(DialogContext);
+  const dialog = useContext(DialogContext);
   const { t } = useTranslation();
 
   return useCallback(
@@ -17,7 +17,7 @@ const useDeletePicture = () => {
         if (!mediaId) {
           return;
         }
-        const reallyDelete = await prompt({
+        const reallyDelete = await dialog({
           title: t('curator.reallyDeletePicture'),
           content: t('curator.reallyDeletePictureText'),
           preset: DialogPreset.CONFIRM,
@@ -31,7 +31,7 @@ const useDeletePicture = () => {
         });
       });
     },
-    [unpublishPicture, t, prompt]
+    [unpublishPicture, t, dialog]
   );
 };
 

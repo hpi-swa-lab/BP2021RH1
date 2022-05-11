@@ -1,9 +1,16 @@
+@import '../../../shared/style.scss';
+
 .bulk-operations {
   margin-top: 1.5rem;
-  background: white;
+  background: #e5e5e5;
   border-radius: 0.3rem;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
+  gap: 10px;
+
+  .MuiButton-root {
+    background-color: $primaryColor;
+  }
 }

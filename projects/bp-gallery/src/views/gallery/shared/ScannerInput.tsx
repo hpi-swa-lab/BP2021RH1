@@ -26,6 +26,8 @@ const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
     selectedScannerId,
     selectScanner,
     loading: scannerLoading,
+    autoCrop,
+    toggleAutoCrop,
   } = useScanner();
 
   useEffect(() => {
@@ -70,6 +72,18 @@ const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
       >
         <span>{scanners[selectedScannerId]}</span>
       </div>
+      {!scannerLoading && (
+        <div
+          className='scanner-autocrop'
+          onClick={event => {
+            event.stopPropagation();
+            toggleAutoCrop();
+          }}
+        >
+          <Icon>{autoCrop ? 'check_box' : 'check_box_outline_blank'}</Icon>
+          {t('curator.autoCrop')}
+        </div>
+      )}
       <Menu
         anchorEl={anchorEl}
         open={open}

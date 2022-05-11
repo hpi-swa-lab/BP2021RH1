@@ -80,7 +80,15 @@ export const useMoveView = ({
   return moveView;
 };
 
-const ZoomWrapper = ({ blockScroll, children }: { blockScroll: boolean; children: any }) => {
+const ZoomWrapper = ({
+  blockScroll,
+  pictureId, // This is used to determine when a picture change has happened
+  children,
+}: {
+  blockScroll: boolean;
+  pictureId: string;
+  children: any;
+}) => {
   const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
   const [viewport, setViewport] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
@@ -97,6 +105,11 @@ const ZoomWrapper = ({ blockScroll, children }: { blockScroll: boolean; children
     setViewport,
     imageRef,
   });
+
+  useEffect(() => {
+    setZoomLevel(1);
+    setViewport({ x: 0, y: 0 });
+  }, [pictureId]);
 
   const onScroll = useCallback(
     (event: WheelEvent) => {

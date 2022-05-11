@@ -153,7 +153,7 @@ query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
   }
 }
 
-query getCollectionInfo($collectionName: String) {
+query getCollectionInfoByName($collectionName: String) {
   collections(filters: { name: { eq: $collectionName } }) {
     data {
       id
@@ -174,12 +174,51 @@ query getCollectionInfo($collectionName: String) {
   }
 }
 
+query getCollectionInfoById($collectionId: ID!) {
+  collection(id: $collectionId) {
+    data {
+      id
+      attributes {
+        name
+        description
+        child_collections(sort: "name:asc") {
+          data {
+            id
+            attributes {
+              name
+              pictures(pagination: { limit: 1 }) {
+                data {
+                  id
+                }
+              }
+              child_collections(pagination: { limit: 1 }) {
+                data {
+                  id
+                }
+              }
+              parent_collections {
+                data {
+                  id
+                  attributes {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getRootCollection {
   browseRootCollection {
     data {
       attributes {
         current {
           data {
+            id
             attributes {
               name
               description
@@ -365,6 +404,14 @@ query getAllCollections {
       id
       attributes {
         name
+        parent_collections {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
       }
     }
   }
@@ -589,6 +636,42 @@ mutation createLocationTag($name: String!) {
   }
 }
 
+mutation mergePersonTags($targetId: ID!, $sourceId: ID!) {
+  mergePersonTags(targetId: $targetId, sourceId: $sourceId)
+}
+
+mutation mergeKeywordTags($targetId: ID!, $sourceId: ID!) {
+  mergeKeywordTags(targetId: $targetId, sourceId: $sourceId)
+}
+
+mutation mergeLocationTags($targetId: ID!, $sourceId: ID!) {
+  mergeLocationTags(targetId: $targetId, sourceId: $sourceId)
+}
+
+mutation deletePersonTag($id: ID!) {
+  deletePersonTag(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteLocationTag($id: ID!) {
+  deleteLocationTag(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteKeywordTag($id: ID!) {
+  deleteKeywordTag(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
 mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
   createCollection(
     data: { name: $name, parent_collections: [$parentId], publishedAt: $publishedAt }
@@ -698,6 +781,18 @@ mutation declineComment($commentId: ID!) {
       id
     }
   }
+}
+
+mutation deleteCollection($collectionId: ID!) {
+  deleteCollection(id: $collectionId) {
+    data {
+      id
+    }
+  }
+}
+
+mutation mergeCollections($targetId: ID!, $sourceId: ID!) {
+  mergeCollections(targetId: $targetId, sourceId: $sourceId)
 }
 
 query me {

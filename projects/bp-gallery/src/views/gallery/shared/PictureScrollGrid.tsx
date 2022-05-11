@@ -8,6 +8,7 @@ import Loading from '../../shared/Loading';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import { useTranslation } from 'react-i18next';
 import './PictureScrollGrid.scss';
+import { BulkOperation } from './BulkOperationsPanel';
 
 const PictureScrollGrid = ({
   filters,
@@ -16,6 +17,7 @@ const PictureScrollGrid = ({
   hashbase,
   uploadAreaProps,
   resultPictureCallback,
+  bulkOperations,
 }: {
   filters: PictureFiltersInput;
   scrollPos: number;
@@ -23,10 +25,13 @@ const PictureScrollGrid = ({
   hashbase: string;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
   resultPictureCallback?: (pictures: boolean) => void;
+  bulkOperations?: BulkOperation[];
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  const { t } = useTranslation();
 
   const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
@@ -118,6 +123,7 @@ const PictureScrollGrid = ({
           pictures={pictures}
           hashBase={hashbase}
           loading={isFetching}
+          bulkOperations={bulkOperations}
         />
       </>
     );

@@ -1,5 +1,9 @@
+# http://twainmodule.sourceforge.net/docs/sm.html
+
 import twain
 import json
+import time
+from cropImages import cropFile 
 
 sm = twain.SourceManager(0)
 
@@ -9,25 +13,42 @@ import websockets
 import websockets.legacy
 import websockets.legacy.server
 
+import numpy.core.multiarray
+
 current_scanner_id = 0
+
+should_crop = False
 
 def get_images():
   buffer = []
   ss = sm.OpenSource(sm.GetSourceList()[current_scanner_id])
-  ss.RequestAcquire(0,0)
+  scan_start_time = time.time()
   while True:
     try:
-      print('scanning...')
+      ss.RequestAcquire(0,0)
       rv = ss.XferImageNatively()
       if rv:
           (handle, count) = rv
       twain.DIBToBMFile(handle, 'tmp.bmp')
-      with open('tmp.bmp', 'rb') as file:
+      file_name = 'tmp.bmp'
+      if should_crop:
+        cropFile()
+        file_name = './cropped/tmp.bmp'
+      with open(file_name, 'rb') as file:
+        scan_start_time = time.time()
         data = file.read()
         buffer.append(data)
-    except Exception as e:
-      print(e)
-      break
+    except (twain.excTWCC_SEQERROR, twain.excDSTransferCancelled):
+      ss.destroy()
+      ss = sm.OpenSource(sm.GetSourceList()[current_scanner_id])
+      if time.time() - scan_start_time < 5:
+        continue
+      else:
+        break
+    except Exception as ex:
+      template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+      message = template.format(type(ex).__name__, ex.args)
+      print(message)
   return buffer
 
 def list_scanners(params):
@@ -41,10 +62,18 @@ def set_scanner(params):
   current_scanner_id = int(params[0])
   return json.dumps({"noop": True})
 
+def set_crop(params):
+  global should_crop
+  should_crop = bool(int(params[0]))
+  print("Setting cropped to")
+  print(should_crop)
+  return json.dumps({"noop": True})
+
 messages = {
   "list": list_scanners,
   "scan": scan,
-  "set_scanner": set_scanner
+  "set_scanner": set_scanner,
+  "set_crop": set_crop
 }
 
 def handle(data):

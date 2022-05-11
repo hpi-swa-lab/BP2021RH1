@@ -13,7 +13,8 @@ import {
 
 type ID = { id: Scalars['ID'] };
 
-type FlatCollectionWithoutRelations = ID & Omit<Collection, 'pictures' | 'child_collections'>;
+type FlatCollectionWithoutRelations = ID &
+  Omit<Collection, 'pictures' | 'child_collections' | 'parent_collections'>;
 
 type FlatCommentWithoutRelations = ID & Omit<Comment, 'picture'>;
 
@@ -75,6 +76,7 @@ export type FlatTimeRangeTag = FlatTimeRangeTagWithoutRelations & {
 export type FlatCollection = FlatCollectionWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
   child_collections?: FlatCollectionWithoutRelations[];
+  parent_collections?: FlatCollectionWithoutRelations[];
 };
 
 export type FlatPicture = FlatPictureWithoutRelations & {

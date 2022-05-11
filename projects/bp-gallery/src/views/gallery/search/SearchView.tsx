@@ -7,7 +7,6 @@ import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
-//import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { convertSearchParamsToPictureFilters } from './helpers/search-filters';
 import {
   Button,
@@ -19,6 +18,7 @@ import {
   Typography,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import useBulkOperations from '../shared/bulk-operations';
 
 export const enum SearchType {
   DESCRIPTION = 'description',
@@ -114,6 +114,8 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     },
   }));
 
+  const { linkToCollection } = useBulkOperations();
+
   return (
     <div className='search-view'>
       <div className='search-content'>
@@ -158,6 +160,17 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             resultPictureCallback={(result: boolean) => {
               setIsSearchBarVisible(result);
             }}
+          />
+        )}
+        {!search ? (
+          <SearchHub searchSnippet={searchSnippet} />
+        ) : (
+          <PictureScrollGrid
+            filters={filtersClause}
+            scrollPos={scrollPos}
+            scrollHeight={scrollHeight}
+            hashbase={search}
+            bulkOperations={[linkToCollection]}
           />
         )}
       </div>
