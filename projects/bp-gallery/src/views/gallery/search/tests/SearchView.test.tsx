@@ -2,7 +2,7 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { renderRoute, renderRouteWithAPIMocks } from '../../../../testUtils';
 import { GetPicturesSearchMocks } from './mocks';
-import { convertSearchParamsToPictureFilters } from '../SearchView';
+import { convertSearchParamsToPictureFilters } from '../helpers/search-filters';
 
 const SearchHubMock = () => <div>SearchHubMock</div>;
 jest.mock('../searchHub/SearchHub', () => SearchHubMock);
@@ -95,7 +95,7 @@ describe('convertSearchParamsToPictureFilters', () => {
                   gte: '1970-01-01T00:00:00Z',
                 },
                 end: {
-                  lte: '1979-12-31T23:59:59Z',
+                  lte: '1970-12-31T23:59:59Z',
                 },
               },
             },
@@ -105,7 +105,7 @@ describe('convertSearchParamsToPictureFilters', () => {
                   gte: '1970-01-01T00:00:00Z',
                 },
                 end: {
-                  lte: '1979-12-31T23:59:59Z',
+                  lte: '1970-12-31T23:59:59Z',
                 },
               },
             },

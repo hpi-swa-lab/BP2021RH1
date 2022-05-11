@@ -8,7 +8,7 @@ import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
 //import { PictureFiltersInput } from '../../../graphql/APIConnector';
-import { convertSearchParamsToPictureFilters } from '../helpers/search-filters';
+import { convertSearchParamsToPictureFilters } from './helpers/search-filters';
 import {
   Button,
   IconButton,

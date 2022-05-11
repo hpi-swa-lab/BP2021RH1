@@ -8,11 +8,70 @@ export const GetPicturesSearchMocks = [
         filters: {
           and: [
             {
-              descriptions: {
-                text: {
-                  containsi: 'Pelle',
+              or: [
+                {
+                  keyword_tags: {
+                    name: {
+                      containsi: 'Pelle',
+                    },
+                  },
                 },
-              },
+                {
+                  verified_keyword_tags: {
+                    name: {
+                      containsi: 'Pelle',
+                    },
+                  },
+                },
+                {
+                  time_range_tag: {},
+                },
+                {
+                  verified_time_range_tag: {},
+                },
+                {
+                  person_tags: {
+                    name: {
+                      containsi: 'Pelle',
+                    },
+                  },
+                },
+                {
+                  verified_person_tags: {
+                    name: {
+                      containsi: 'Pelle',
+                    },
+                  },
+                },
+                {
+                  collections: {
+                    name: {
+                      containsi: 'Pelle',
+                    },
+                  },
+                },
+                {
+                  location_tags: {
+                    name: {
+                      containsi: 'Pelle',
+                    },
+                  },
+                },
+                {
+                  verified_location_tags: {
+                    name: {
+                      containsi: 'Pelle',
+                    },
+                  },
+                },
+                {
+                  descriptions: {
+                    text: {
+                      containsi: 'Pelle',
+                    },
+                  },
+                },
+              ],
             },
           ],
         },

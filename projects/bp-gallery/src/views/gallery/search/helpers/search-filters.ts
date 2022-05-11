@@ -1,16 +1,15 @@
-import { PictureFiltersInput } from '../../../graphql/APIConnector';
-import { SearchType } from '../search/SearchView';
+import { PictureFiltersInput } from '../../../../graphql/APIConnector';
+import { SearchType } from '../SearchView';
 
 const paramToTimefilter = (timeParam: string) => {
-  console.log(timeParam);
-  // if (searchParams.get(SearchType.DECADE) === 'pre50') searchParams.set(SearchType.DECADE, '40');
+  if (timeParam === 'pre50') timeParam = '49';
   const year = parseInt(timeParam);
 
   if (!isNaN(year)) {
     let startTime = `${year}-01-01T00:00:00Z`;
     let endTime = `${year}-12-31T23:59:59Z`;
     if (year < 100) {
-      startTime = year === 40 ? '1900-01-01T00:00:00Z' : `19${year}-01-01T00:00:00Z`;
+      startTime = year === 49 ? '1900-01-01T00:00:00Z' : `19${year}-01-01T00:00:00Z`;
       endTime = `19${year}-12-31T23:59:59Z`;
     }
 
@@ -222,7 +221,7 @@ const searchAll = (searchParams: URLSearchParams, filters: PictureFiltersInput) 
 };
 
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
-  const filters: PictureFiltersInput = { and: [], or: [] };
+  const filters: PictureFiltersInput = { and: [] };
 
   if (searchParams.has(SearchType.ALL)) searchAll(searchParams, filters);
   if (searchParams.has(SearchType.DECADE)) searchDecade(searchParams, filters);
