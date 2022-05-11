@@ -174,6 +174,12 @@ const searchAll = (searchParams: URLSearchParams, filters: PictureFiltersInput) 
       },
     };
 
+    const collection_filter = {
+      name: {
+        containsi: value,
+      },
+    };
+
     filters.and?.push({
       or: [
         {
@@ -193,6 +199,9 @@ const searchAll = (searchParams: URLSearchParams, filters: PictureFiltersInput) 
         },
         {
           verified_person_tags: person_tag_filter,
+        },
+        {
+          collections: collection_filter,
         },
         {
           location_tags: location_tag_filter,
