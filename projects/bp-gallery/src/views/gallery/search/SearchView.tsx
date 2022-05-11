@@ -26,7 +26,7 @@ export const enum SearchType {
   KEYWORD = 'keyword',
   PERSON = 'person',
   LOCATION = 'location',
-  ALL = 'ALL',
+  ALL = 'all',
 }
 
 const isDuplicatedSearchParam = (

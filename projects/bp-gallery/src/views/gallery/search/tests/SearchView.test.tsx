@@ -33,7 +33,7 @@ describe('SearchView called without any parameters', () => {
 describe('SearchView called with parameters which do not match any pictures', () => {
   beforeEach(() =>
     renderRouteWithAPIMocks(
-      `/search?ALL=${encodeURIComponent('invalid params')}`,
+      `/search?all=${encodeURIComponent('invalid params')}`,
       GetPicturesSearchMocks
     )
   );
@@ -54,7 +54,7 @@ describe('SearchView called with parameters which do not match any pictures', ()
 
 describe('SearchView called with parameters which match at least one picture', () => {
   beforeEach(() =>
-    renderRouteWithAPIMocks(`/search?ALL=${encodeURIComponent('Pelle')}`, GetPicturesSearchMocks)
+    renderRouteWithAPIMocks(`/search?all=${encodeURIComponent('Pelle')}`, GetPicturesSearchMocks)
   );
 
   it('should render a SearchBar', async () => {
