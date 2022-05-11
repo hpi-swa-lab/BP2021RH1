@@ -11,7 +11,7 @@ import ItemList from '../../shared/ItemList';
 import { asApiPath } from '../../../../App';
 import { addNewParamToSearchPath, SearchType } from '../SearchView';
 
-const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => {
+const KeywordTagsSearchList = () => {
   const history: History = useHistory();
   const { t } = useTranslation();
 
@@ -31,18 +31,16 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
   useEffect(() => {
     getKeywordTagSuggestions({
       variables: {
-        name: searchSnippet,
         start: 0,
         limit: 30,
       },
     });
-  }, [getKeywordTagSuggestions, searchSnippet]);
+  }, [getKeywordTagSuggestions]);
 
   const reloadOnScroll = (count: number) => {
     if (fetchMore) {
       fetchMore({
         variables: {
-          name: searchSnippet,
           start: keywordTags?.length,
           limit: count,
         },
@@ -68,19 +66,17 @@ const KeywordTagsSearchList = ({ searchSnippet }: { searchSnippet: string }) => 
             : DEFAULT_THUMBNAIL_URL,
           onClick: () => {
             history.push(
-                addNewParamToSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name)))
+              addNewParamToSearchPath(SearchType.KEYWORD, encodeURIComponent(String(tag.name)))
                 .searchVal,
-                {
-                    showBack: true,
-                }
-            )
+              {
+                showBack: true,
+              }
+            );
           },
         }))}
       />
     );
-  } else {
-    return <div>{t('common.no-keywords')}</div>;
-  }
+  } else return <div>{t('something-went-wrong')}</div>;
 };
 
 export default KeywordTagsSearchList;

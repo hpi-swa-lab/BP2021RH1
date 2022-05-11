@@ -11,7 +11,7 @@ const SearchHub = ({ searchSnippet }: { searchSnippet: string }, communityView: 
     <div className='search-hub'>
       <div className='search-section'>
         <h3>{t('common.keywords').toUpperCase()}</h3>
-        <KeywordTagsSearchList searchSnippet={searchSnippet} />
+        <KeywordTagsSearchList />
       </div>
       <div className='search-section'>
         <h3>{t('common.decades').toUpperCase()}</h3>
