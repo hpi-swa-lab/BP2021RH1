@@ -64,7 +64,7 @@ export const addNewParamToSearchPath = (
   prevParams?: URLSearchParams
 ): {
   isValid: boolean;
-  searchVal: any;
+  searchVal: string;
 } => {
   const searchParams = prevParams ? prevParams : new URLSearchParams();
   const paramValues = searchRequest.split(' ');
