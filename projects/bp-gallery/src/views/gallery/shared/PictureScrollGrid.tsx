@@ -24,14 +24,12 @@ const PictureScrollGrid = ({
   scrollHeight: number;
   hashbase: string;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
-  resultPictureCallback?: (pictures: boolean) => void;
+  resultPictureCallback?: (pictures: number) => void;
   bulkOperations?: BulkOperation[];
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
-
-  const { t } = useTranslation();
 
   const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
@@ -46,22 +44,11 @@ const PictureScrollGrid = ({
     notifyOnNetworkStatusChange: true,
   });
 
-  // const totalPictureData = useGetPicturesIdQuery({
-  //   variables: {
-  //     filters,
-  //     pagination: {},
-  //   },
-  //   notifyOnNetworkStatusChange: true,
-  // });
-
-  // const totalPicturesIds: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
-  //   totalPictureData.data
-  // )?.pictures;
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   useEffect(() => {
     if (resultPictureCallback) {
-      resultPictureCallback(pictures?.length !== 0);
+      resultPictureCallback(pictures?.length ?? 0);
     }
   }, [pictures, resultPictureCallback]);
 

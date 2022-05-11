@@ -24,7 +24,7 @@ type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verifi
 
 type FlatUploadFile = ID & UploadFile;
 
-export type FlatPictureWithoutRelations = ID &
+type FlatPictureWithoutRelations = ID &
   Omit<
     Picture,
     | 'collections'
@@ -98,7 +98,7 @@ export type FlatKeywordTagSuggestion = FlatKeywordTagWithoutRelations & {
   thumbnail: Thumbnail[];
 };
 
-export type FlatLocationTagPreview = FlatKeywordTagWithoutRelations & {
+export type FlatLocationTagPreview = FlatLocationTagWithoutRelations & {
   thumbnail: Thumbnail[];
 };
 

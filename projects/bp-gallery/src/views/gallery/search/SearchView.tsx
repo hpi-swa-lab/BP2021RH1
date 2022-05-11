@@ -157,8 +157,8 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             scrollPos={scrollPos}
             scrollHeight={scrollHeight}
             hashbase={search}
-            resultPictureCallback={(result: boolean) => {
-              setIsSearchBarVisible(result);
+            resultPictureCallback={(pictures: number) => {
+              setIsSearchBarVisible(pictures > 0);
             }}
           />
         )}

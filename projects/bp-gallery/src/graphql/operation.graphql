@@ -137,14 +137,6 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
-query getPicturesId($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-  pictures(filters: $filters, pagination: $pagination) {
-    data {
-      id
-    }
-  }
-}
-
 query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
   collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
     data {

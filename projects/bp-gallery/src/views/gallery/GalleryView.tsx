@@ -16,13 +16,9 @@ const GalleryView = ({ target, path }: { target?: string; path?: string[] }) => 
 
     switch (target) {
       case 'browse':
-        return (
-          <BrowseView path={path} hideDescription={false} {...scrollParams} communityView={false} />
-        );
+        return <BrowseView path={path} {...scrollParams} communityView={false} />;
       case 'browse/latest':
-        return (
-          <BrowseView path={path} hideDescription={false} {...scrollParams} communityView={true} />
-        );
+        return <BrowseView path={path} {...scrollParams} communityView={true} />;
       case 'search':
         return <SearchView {...scrollParams} />;
       case 'uploads':
