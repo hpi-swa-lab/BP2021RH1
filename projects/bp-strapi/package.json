@@ -44,9 +44,8 @@
       "/build/"
     ],
     "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./unit-tests/setupTests.js"
-    ]
+    "globalSetup": "./unit-tests/setupTests.js",
+    "globalTeardown": "./unit-tests/tearDownTests.js"
   },
   "license": "MIT"
 }

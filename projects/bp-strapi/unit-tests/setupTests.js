@@ -1,26 +1,15 @@
-const { setupStrapi } = require('./helpers/strapi');
-const fs = require('fs');
+const Strapi = require('@strapi/strapi');
 
-jest.setTimeout(15000)
+global.instance = null;
 
-beforeAll(async () => {
-  instance = await setupStrapi();
-});
-
-afterAll(async () => {
-  await cleanUp();
-});
-
-async function cleanUp() {
-  const dbSettings = instance.config.get('database.connection.connection');
-
-  await instance.destroy();
-
-  if (dbSettings && dbSettings.filename) {
-    const tmpDbFile = dbSettings.filename;
-    console.log(tmpDbFile);
-    if (fs.existsSync(tmpDbFile)) {
-      fs.unlinkSync(tmpDbFile);
-    }
+async function setupStrapi() {
+  if (!instance) {
+    await Strapi().start();
+    instance = strapi;
   }
+  return instance;
 }
+
+module.exports = async () => {
+  instance = await setupStrapi();
+};
