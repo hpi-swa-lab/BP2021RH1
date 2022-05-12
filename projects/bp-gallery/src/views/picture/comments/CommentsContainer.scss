@@ -8,7 +8,7 @@
     max-height: 3.5rem;
     overflow: hidden;
 
-    .expand-button .MuiSvgIcon-root {
+    .picture-comments-header .MuiSvgIcon-root {
       transform: rotate(180deg);
     }
   }
@@ -25,8 +25,22 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-top: 0.5rem;
-    padding: 0 1rem;
+    padding: 0.5rem 1rem;
+    padding-top: 1rem;
+    cursor: pointer;
+    position: relative;
+
+    &:hover::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(100% + 20px);
+      height: 100%;
+      opacity: 0.3;
+      transform: translate(-10px, -10px);
+      background: linear-gradient($primaryColor, transparent);
+    }
 
     h2 {
       display: flex;
