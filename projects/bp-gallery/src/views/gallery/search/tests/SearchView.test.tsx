@@ -33,15 +33,14 @@ describe('SearchView called without any parameters', () => {
 describe('SearchView called with parameters which do not match any pictures', () => {
   beforeEach(() =>
     renderRouteWithAPIMocks(
-      `/search?all=${encodeURIComponent('invalid params')}`,
+      `/search?all=${encodeURIComponent('not matching')}`,
       GetPicturesSearchMocks
     )
   );
 
-  it('should render a SearchBar', async () => {
+  it('should not render a SearchBar', async () => {
     await waitFor(() => {
-      const searchBar = screen.getByText('SearchBarMock');
-      expect(searchBar).toBeInTheDocument();
+      expect(() => screen.getAllByText('SearchBarMock')).toThrow();
     });
   });
 

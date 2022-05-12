@@ -117,11 +117,70 @@ export const GetPicturesSearchMocks = [
         filters: {
           and: [
             {
-              descriptions: {
-                text: {
-                  containsi: 'invalid params',
+              or: [
+                {
+                  keyword_tags: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
                 },
-              },
+                {
+                  verified_keyword_tags: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
+                },
+                {
+                  time_range_tag: {},
+                },
+                {
+                  verified_time_range_tag: {},
+                },
+                {
+                  person_tags: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
+                },
+                {
+                  verified_person_tags: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
+                },
+                {
+                  collections: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
+                },
+                {
+                  location_tags: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
+                },
+                {
+                  verified_location_tags: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
+                },
+                {
+                  descriptions: {
+                    text: {
+                      containsi: 'not matching',
+                    },
+                  },
+                },
+              ],
             },
           ],
         },
