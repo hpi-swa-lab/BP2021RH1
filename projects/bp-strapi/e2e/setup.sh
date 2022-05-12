@@ -2,20 +2,20 @@
 # This file has to be executed from the bp-strapi root directory
 
 # Create and import data into test database
-# The test data is located in the ./test/data.sql file
+# The test data is located in the ./e2e/data.sql file
 # and was exported via pg_dump
 createdb -h localhost -U postgres -T template0 strapi-e2e
-pg_restore -h localhost -c -U postgres --no-owner -d strapi-e2e ./test/data.sql
+pg_restore -h localhost -c -U postgres --no-owner -d strapi-e2e ./e2e/data.sql
 
 # Copy images to uploads folder
 # using ./test/uploads as a temp folder
-mkdir ./test/uploads
-tar -xf ./test/uploads.tar.gz -C ./test/uploads # tar contains 5 pictures
-cp -n -R ./test/uploads/ ./public # n means don't override existing files
-rm -R ./test/uploads # remove temp folder
+mkdir ./e2e/uploads
+tar -xf ./e2e/uploads.tar.gz -C ./e2e/uploads # tar contains 5 pictures
+cp -n -R ./e2e/uploads/ ./public # n means don't override existing files
+rm -R ./e2e/uploads # remove temp folder
 
 # Setup strapi using test environment
-yarn cross-env ENV_PATH=./test/test.env strapi develop &
+yarn cross-env ENV_PATH=./e2e/test.env strapi develop &
 
 # Wait for strapi to have started by "pinging" port 9000
 until $(curl --output /dev/null --silent --head --fail http://localhost:9000); do
