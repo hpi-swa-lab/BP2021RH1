@@ -46,12 +46,11 @@ const isDuplicatedSearchParam = (
 };
 
 const isSpace = (element: string): boolean => {
-  let r = false;
-  console.log(element);
+  let isSpace = false;
   if (element === '') {
-    r = true;
+    isSpace = true;
   }
-  return r;
+  return isSpace;
 };
 
 export const asSearchPath = (searchParams: URLSearchParams): string => {
