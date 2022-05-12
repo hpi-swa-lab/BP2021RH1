@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Icon, IconButton } from '@mui/material';
 import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
 
 const CommentsContainer = ({
   pictureId,
@@ -17,7 +18,9 @@ const CommentsContainer = ({
 }) => {
   const { t } = useTranslation();
 
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const { role } = useAuth();
+
+  const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
 
   return (
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
