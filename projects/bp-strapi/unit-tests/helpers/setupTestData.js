@@ -1,5 +1,5 @@
-const pictureQuery = instance.db.query('api::picture.picture');
-const pictureService = instance.service('api::picture.picture');
+const pictureQuery = strapi.db.query('api::picture.picture');
+const pictureService = strapi.service('api::picture.picture');
 
 const setupTestData = async () => {
   for (let i = 0; i < 10; i++) {
