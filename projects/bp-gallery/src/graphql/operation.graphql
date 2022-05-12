@@ -729,6 +729,14 @@ query getUnverifiedComments {
   }
 }
 
+mutation fixCommentText($commentId: ID!, $text: String!) {
+  updateComment(id: $commentId, data: { text: $text }) {
+    data {
+      id
+    }
+  }
+}
+
 mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
   updateComment(id: $commentId, data: { publishedAt: $currentTime }) {
     data {

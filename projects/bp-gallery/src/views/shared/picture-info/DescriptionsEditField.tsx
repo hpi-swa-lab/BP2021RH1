@@ -7,6 +7,7 @@ import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { DialogContext, DialogPreset } from '../DialogWrapper';
 import { useRef } from 'react';
+import defaultJoditConfig from '../jodit-config';
 
 const DescriptionsEditField = ({
   descriptions,
@@ -28,11 +29,8 @@ const DescriptionsEditField = ({
 
   const config = useMemo(
     () => ({
+      ...defaultJoditConfig,
       readonly: role < AuthRole.CURATOR,
-      preset: 'inline',
-      enter: 'BR', //Not 'P' to avoid addition of <p> to descriptions
-      askBeforePasteHTML: false,
-      askBeforePasteFromWord: false,
     }),
     [role]
   );
