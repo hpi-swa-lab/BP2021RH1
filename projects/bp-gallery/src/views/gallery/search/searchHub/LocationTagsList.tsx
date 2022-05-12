@@ -33,7 +33,7 @@ const LocationTagsList = () => {
           background: asApiPath(String(tag.thumbnail[0]?.media?.formats?.small?.url || '')),
           onClick: () => {
             history.push(
-              addNewParamToSearchPath(SearchType.ALL, encodeURIComponent(String(tag.name)))
+              addNewParamToSearchPath(SearchType.LOCATION, encodeURIComponent(String(tag.name)))
                 .searchVal,
               {
                 showBack: true,
