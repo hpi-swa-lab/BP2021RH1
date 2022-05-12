@@ -44,7 +44,7 @@ const LocationTagsList = () => {
       />
     );
   } else {
-    return <div>{t('common.no-keywords')}</div>;
+    return <div>{t('something-went-wrong')}</div>;
   }
 };
 
