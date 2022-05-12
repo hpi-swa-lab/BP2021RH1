@@ -92,7 +92,7 @@ const NavigationBar = () => {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              window.open('mailto:archiv@bad-harzburg-stiftung.de');
+              window.open(`mailto:${process.env.REACT_APP_CONTACT_MAIL ?? ''}`);
             }}
           >
             <Icon>mail</Icon>

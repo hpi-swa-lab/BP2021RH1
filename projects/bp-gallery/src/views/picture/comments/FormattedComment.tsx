@@ -64,7 +64,6 @@ const CommentEditField = ({ comment }: { comment: FlatComment }) => {
   };
 
   const onBlur = useCallback(() => {
-    // Save description
     updateComment({
       variables: {
         commentId: commentRef.current.id,
