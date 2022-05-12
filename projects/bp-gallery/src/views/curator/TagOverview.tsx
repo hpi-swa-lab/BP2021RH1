@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { Delete } from '@mui/icons-material';
 import { DialogContext, DialogPreset } from '../shared/DialogWrapper';
 import { AuthRole, useAuth } from '../../AuthWrapper';
+import { FlatTag, TagType } from '../../types/additionalFlatTypes';
 
 interface TagRow {
   id: string;
@@ -27,13 +28,7 @@ interface TagRow {
   delete: { tagId: string };
 }
 
-interface FlatTag {
-  id: string;
-  name: string;
-  synonyms?: (ComponentCommonSynonyms | undefined)[];
-}
-
-const TagOverview = ({ type }: { type: string }) => {
+const TagOverview = ({ type }: { type: TagType }) => {
   const openAlert = useContext(AlertContext);
   const prompt = useContext(DialogContext);
   const { t } = useTranslation();

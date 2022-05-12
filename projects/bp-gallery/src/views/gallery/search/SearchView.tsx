@@ -19,15 +19,14 @@ import {
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useBulkOperations from '../shared/bulk-operations';
+import { TagType } from '../../../types/additionalFlatTypes';
 
-export const enum SearchType {
-  DESCRIPTION = 'description',
-  DECADE = 'decade',
-  KEYWORD = 'keyword',
-  PERSON = 'person',
-  LOCATION = 'location',
-  ALL = 'all',
-}
+export const SearchType = {
+  ...TagType,
+  DESCRIPTION: 'description',
+  DECADE: 'decade',
+  ALL: 'all',
+};
 
 const isDuplicatedSearchParam = (
   element: string,
@@ -58,7 +57,7 @@ export const asSearchPath = (searchParams: URLSearchParams): string => {
 };
 
 export const addNewParamToSearchPath = (
-  newParamType: SearchType,
+  newParamType: string,
   searchRequest: string,
   prevParams?: URLSearchParams
 ): {
@@ -82,7 +81,6 @@ export const addNewParamToSearchPath = (
 };
 
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
-  const [searchSnippet, setSearchSnippet] = useState<string>('');
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
   const [isValidSearch, setIsValidSearch] = useState<boolean>(true);
   const { search }: Location = useLocation();
@@ -123,9 +121,6 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             {' '}
             {(isSearchBarVisible || !search) && (
               <SearchBar
-                onValueChange={(snippet?: string) => {
-                  setSearchSnippet(snippet ?? '');
-                }}
                 searchParams={searchParams}
                 onInvalidEntry={(value: boolean) => {
                   setIsValidSearch(value);
@@ -134,10 +129,10 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             )}
             <SearchInfoTooltip
               title={
-                <React.Fragment>
+                <>
                   <Typography color='inherit'>{t('search.question')}</Typography>
                   <p>{t('search.help')}</p>
-                </React.Fragment>
+                </>
               }
             >
               <Button />
@@ -149,20 +144,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
           </div>
         </div>
         {!search ? (
-          <SearchHub searchSnippet={searchSnippet} />
-        ) : (
-          <PictureScrollGrid
-            filters={filtersClause}
-            scrollPos={scrollPos}
-            scrollHeight={scrollHeight}
-            hashbase={search}
-            resultPictureCallback={(pictures: number) => {
-              setIsSearchBarVisible(pictures > 0);
-            }}
-          />
-        )}
-        {!search ? (
-          <SearchHub searchSnippet={searchSnippet} />
+          <SearchHub />
         ) : (
           <PictureScrollGrid
             filters={filtersClause}
@@ -170,6 +152,9 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             scrollHeight={scrollHeight}
             hashbase={search}
             bulkOperations={[linkToCollection]}
+            resultPictureCallback={(pictures: number) => {
+              setIsSearchBarVisible(pictures > 0);
+            }}
           />
         )}
       </div>

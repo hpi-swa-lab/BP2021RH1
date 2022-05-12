@@ -1857,10 +1857,7 @@ export type GetRootCollectionQuery = {
                           data?:
                             | {
                                 id?: string | null | undefined;
-                                attributes?:
-                                  | { name: string; description?: string | null | undefined }
-                                  | null
-                                  | undefined;
+                                attributes?: { name: string } | null | undefined;
                               }
                             | null
                             | undefined;
@@ -1892,13 +1889,12 @@ export type PostCommentMutation = {
     | undefined;
 };
 
-export type GetKeywordTagSuggestionsQueryVariables = Exact<{
-  name?: InputMaybe<Scalars['String']>;
+export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type GetKeywordTagSuggestionsQuery = {
+export type GetKeywordTagsWithThumbnailQuery = {
   keywordTags?:
     | {
         data: Array<{
@@ -2007,9 +2003,12 @@ export type UpdateKeywordSynonymsMutation = {
     | undefined;
 };
 
-export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
+  start?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
 
-export type GetAllLocationTagsQuery = {
+export type GetLocationTagsWithThumbnailQuery = {
   locationTags?:
     | {
         data: Array<{
@@ -2017,7 +2016,6 @@ export type GetAllLocationTagsQuery = {
           attributes?:
             | {
                 name: string;
-                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
                 thumbnail?:
                   | {
                       data: Array<{
@@ -2073,6 +2071,26 @@ export type GetAllLocationTagsQuery = {
     | undefined;
 };
 
+export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllLocationTagsQuery = {
+  locationTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type UpdateLocationNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
   name: Scalars['String'];
@@ -2095,6 +2113,74 @@ export type UpdateLocationSynonymsMutationVariables = Exact<{
 export type UpdateLocationSynonymsMutation = {
   updateLocationTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
+  start?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type GetPersonTagsWithThumbnailQuery = {
+  personTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
     | null
     | undefined;
 };
@@ -3062,7 +3148,6 @@ export const GetRootCollectionDocument = gql`
               id
               attributes {
                 name
-                description
               }
             }
           }
@@ -3174,12 +3259,9 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
   PostCommentMutationVariables
 >;
 
-export const GetKeywordTagSuggestionsDocument = gql`
-  query getKeywordTagSuggestions($name: String, $start: Int, $limit: Int) {
-    keywordTags(
-      filters: { name: { containsi: $name } }
-      pagination: { start: $start, limit: $limit }
-    ) {
+export const GetKeywordTagsWithThumbnailDocument = gql`
+  query getKeywordTagsWithThumbnail($start: Int, $limit: Int) {
+    keywordTags(pagination: { start: $start, limit: $limit }) {
       data {
         id
         attributes {
@@ -3217,60 +3299,59 @@ export const GetKeywordTagSuggestionsDocument = gql`
 `;
 
 /**
- * __useGetKeywordTagSuggestionsQuery__
+ * __useGetKeywordTagsWithThumbnailQuery__
  *
- * To run a query within a React component, call `useGetKeywordTagSuggestionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetKeywordTagSuggestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetKeywordTagsWithThumbnailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetKeywordTagsWithThumbnailQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetKeywordTagSuggestionsQuery({
+ * const { data, loading, error } = useGetKeywordTagsWithThumbnailQuery({
  *   variables: {
- *      name: // value for 'name'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useGetKeywordTagSuggestionsQuery(
+export function useGetKeywordTagsWithThumbnailQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    GetKeywordTagSuggestionsQuery,
-    GetKeywordTagSuggestionsQueryVariables
+    GetKeywordTagsWithThumbnailQuery,
+    GetKeywordTagsWithThumbnailQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetKeywordTagSuggestionsQuery, GetKeywordTagSuggestionsQueryVariables>(
-    GetKeywordTagSuggestionsDocument,
-    options
-  );
+  return Apollo.useQuery<
+    GetKeywordTagsWithThumbnailQuery,
+    GetKeywordTagsWithThumbnailQueryVariables
+  >(GetKeywordTagsWithThumbnailDocument, options);
 }
 
-export function useGetKeywordTagSuggestionsLazyQuery(
+export function useGetKeywordTagsWithThumbnailLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetKeywordTagSuggestionsQuery,
-    GetKeywordTagSuggestionsQueryVariables
+    GetKeywordTagsWithThumbnailQuery,
+    GetKeywordTagsWithThumbnailQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetKeywordTagSuggestionsQuery, GetKeywordTagSuggestionsQueryVariables>(
-    GetKeywordTagSuggestionsDocument,
-    options
-  );
+  return Apollo.useLazyQuery<
+    GetKeywordTagsWithThumbnailQuery,
+    GetKeywordTagsWithThumbnailQueryVariables
+  >(GetKeywordTagsWithThumbnailDocument, options);
 }
 
-export type GetKeywordTagSuggestionsQueryHookResult = ReturnType<
-  typeof useGetKeywordTagSuggestionsQuery
+export type GetKeywordTagsWithThumbnailQueryHookResult = ReturnType<
+  typeof useGetKeywordTagsWithThumbnailQuery
 >;
 
-export type GetKeywordTagSuggestionsLazyQueryHookResult = ReturnType<
-  typeof useGetKeywordTagSuggestionsLazyQuery
+export type GetKeywordTagsWithThumbnailLazyQueryHookResult = ReturnType<
+  typeof useGetKeywordTagsWithThumbnailLazyQuery
 >;
 
-export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
-  GetKeywordTagSuggestionsQuery,
-  GetKeywordTagSuggestionsQueryVariables
+export type GetKeywordTagsWithThumbnailQueryResult = Apollo.QueryResult<
+  GetKeywordTagsWithThumbnailQuery,
+  GetKeywordTagsWithThumbnailQueryVariables
 >;
 
 export const GetAllKeywordTagsDocument = gql`
@@ -3446,16 +3527,13 @@ export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordSynonymsMutationVariables
 >;
 
-export const GetAllLocationTagsDocument = gql`
-  query getAllLocationTags {
-    locationTags {
+export const GetLocationTagsWithThumbnailDocument = gql`
+  query getLocationTagsWithThumbnail($start: Int, $limit: Int) {
+    locationTags(pagination: { start: $start, limit: $limit }) {
       data {
         id
         attributes {
           name
-          synonyms {
-            name
-          }
           thumbnail: pictures(pagination: { limit: 1 }) {
             data {
               attributes {
@@ -3481,6 +3559,78 @@ export const GetAllLocationTagsDocument = gql`
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLocationTagsWithThumbnailQuery__
+ *
+ * To run a query within a React component, call `useGetLocationTagsWithThumbnailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLocationTagsWithThumbnailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLocationTagsWithThumbnailQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetLocationTagsWithThumbnailQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetLocationTagsWithThumbnailQuery,
+    GetLocationTagsWithThumbnailQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetLocationTagsWithThumbnailQuery,
+    GetLocationTagsWithThumbnailQueryVariables
+  >(GetLocationTagsWithThumbnailDocument, options);
+}
+
+export function useGetLocationTagsWithThumbnailLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetLocationTagsWithThumbnailQuery,
+    GetLocationTagsWithThumbnailQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetLocationTagsWithThumbnailQuery,
+    GetLocationTagsWithThumbnailQueryVariables
+  >(GetLocationTagsWithThumbnailDocument, options);
+}
+
+export type GetLocationTagsWithThumbnailQueryHookResult = ReturnType<
+  typeof useGetLocationTagsWithThumbnailQuery
+>;
+
+export type GetLocationTagsWithThumbnailLazyQueryHookResult = ReturnType<
+  typeof useGetLocationTagsWithThumbnailLazyQuery
+>;
+
+export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
+  GetLocationTagsWithThumbnailQuery,
+  GetLocationTagsWithThumbnailQueryVariables
+>;
+
+export const GetAllLocationTagsDocument = gql`
+  query getAllLocationTags {
+    locationTags {
+      data {
+        id
+        attributes {
+          name
+          synonyms {
+            name
           }
         }
       }
@@ -3648,6 +3798,101 @@ export type UpdateLocationSynonymsMutationResult =
 export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationSynonymsMutation,
   UpdateLocationSynonymsMutationVariables
+>;
+
+export const GetPersonTagsWithThumbnailDocument = gql`
+  query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
+    personTags(pagination: { start: $start, limit: $limit }) {
+      data {
+        id
+        attributes {
+          name
+          thumbnail: pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPersonTagsWithThumbnailQuery__
+ *
+ * To run a query within a React component, call `useGetPersonTagsWithThumbnailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPersonTagsWithThumbnailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPersonTagsWithThumbnailQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetPersonTagsWithThumbnailQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetPersonTagsWithThumbnailQuery,
+    GetPersonTagsWithThumbnailQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPersonTagsWithThumbnailQuery, GetPersonTagsWithThumbnailQueryVariables>(
+    GetPersonTagsWithThumbnailDocument,
+    options
+  );
+}
+
+export function useGetPersonTagsWithThumbnailLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPersonTagsWithThumbnailQuery,
+    GetPersonTagsWithThumbnailQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetPersonTagsWithThumbnailQuery,
+    GetPersonTagsWithThumbnailQueryVariables
+  >(GetPersonTagsWithThumbnailDocument, options);
+}
+
+export type GetPersonTagsWithThumbnailQueryHookResult = ReturnType<
+  typeof useGetPersonTagsWithThumbnailQuery
+>;
+
+export type GetPersonTagsWithThumbnailLazyQueryHookResult = ReturnType<
+  typeof useGetPersonTagsWithThumbnailLazyQuery
+>;
+
+export type GetPersonTagsWithThumbnailQueryResult = Apollo.QueryResult<
+  GetPersonTagsWithThumbnailQuery,
+  GetPersonTagsWithThumbnailQueryVariables
 >;
 
 export const GetAllPersonTagsDocument = gql`

@@ -17,7 +17,7 @@ type SearchParams = SearchParam[];
 const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) => {
   const history: History = useHistory();
   const searchParamValues: SearchParams = [];
-  const iconsToTypes = (searchType: SearchType) => {
+  const iconsToTypes = (searchType: string) => {
     switch (searchType) {
       case SearchType.DECADE:
         return <EventIcon />;
@@ -43,7 +43,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
     nextParam = searchParamsIterator.next();
   }
 
-  const deleteParam = (deleteType: SearchType, deleteValue: string) => {
+  const deleteParam = (deleteType: string, deleteValue: string) => {
     const newSearchParams = new URLSearchParams();
     const searchParamsIterator = searchParams.entries();
     let nextParam = searchParamsIterator.next();
@@ -65,10 +65,10 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
           <Chip
             className='breadcrumb-chip'
             key={idx}
-            icon={iconsToTypes(el.type as SearchType)}
+            icon={iconsToTypes(el.type)}
             label={el.value}
             search-type={el.type}
-            onDelete={() => deleteParam(el.type as SearchType, el.value)}
+            onDelete={() => deleteParam(el.type, el.value)}
           />
         );
       })}

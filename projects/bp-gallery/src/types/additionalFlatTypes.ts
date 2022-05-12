@@ -1,6 +1,7 @@
 import {
   Collection,
   Comment,
+  ComponentCommonSynonyms,
   Description,
   KeywordTag,
   LocationTag,
@@ -90,18 +91,24 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
 };
 
-type Thumbnail = {
+export type Thumbnail = {
   media?: FlatUploadFile;
-};
-
-export type FlatKeywordTagSuggestion = FlatKeywordTagWithoutRelations & {
-  thumbnail: Thumbnail[];
-};
-
-export type FlatLocationTagPreview = FlatLocationTagWithoutRelations & {
-  thumbnail: Thumbnail[];
 };
 
 export type FlatDecadeThumbnails = {
   [decadeKey: string]: Thumbnail[];
 };
+
+export interface FlatTag {
+  id: string;
+  name: string;
+  synonyms?: (ComponentCommonSynonyms | undefined)[];
+}
+
+export enum TagType {
+  KEYWORD = 'keyword',
+  PERSON = 'person',
+  LOCATION = 'location',
+  COLLECTION = 'collection',
+  TIME_RANGE = 'date',
+}

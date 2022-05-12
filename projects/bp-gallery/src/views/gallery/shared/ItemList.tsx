@@ -8,11 +8,12 @@ import { browserName } from 'react-device-detect';
 const ItemList = (props: {
   items: ItemListItemModel[];
   compact?: boolean;
-  reloadOnScroll?: (count: number) => void;
+  fetchMoreOnScroll?: (count: number) => void;
 }) => {
   const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
   const [showLeftButton, setShowLeftButton] = useState<boolean>(false);
   const [showRightButton, setShowRightButton] = useState<boolean>(true);
+  const [lastScrollPos, setLastScrollPos] = useState<number>(0);
 
   const isFirefox = browserName === 'Firefox';
   const isSafari = browserName === 'Safari';
@@ -27,8 +28,8 @@ const ItemList = (props: {
       left: scrollBarRef.scrollLeft + elementWidth * count,
       behavior: isFirefox || isSafari ? 'auto' : 'smooth',
     });
-    if (props.reloadOnScroll && count > 0) {
-      props.reloadOnScroll(count);
+    if (props.fetchMoreOnScroll && count > 0) {
+      props.fetchMoreOnScroll(count);
     }
   };
 
@@ -45,10 +46,11 @@ const ItemList = (props: {
         onXReachStart={() => {
           setShowLeftButton(false);
         }}
-        onXReachEnd={() => {
+        onXReachEnd={ref => {
           setShowRightButton(false);
-          if (props.reloadOnScroll) {
-            props.reloadOnScroll(5);
+          if (props.fetchMoreOnScroll && ref.scrollLeft !== lastScrollPos) {
+            props.fetchMoreOnScroll(5);
+            setLastScrollPos(ref.scrollLeft);
           }
         }}
       >

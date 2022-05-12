@@ -213,7 +213,6 @@ query getRootCollection {
             id
             attributes {
               name
-              description
             }
           }
         }
@@ -234,11 +233,8 @@ mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime
   }
 }
 
-query getKeywordTagSuggestions($name: String, $start: Int, $limit: Int) {
-  keywordTags(
-    filters: { name: { containsi: $name } }
-    pagination: { start: $start, limit: $limit }
-  ) {
+query getKeywordTagsWithThumbnail($start: Int, $limit: Int) {
+  keywordTags(pagination: { start: $start, limit: $limit }) {
     data {
       id
       attributes {
@@ -304,15 +300,12 @@ mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsI
   }
 }
 
-query getAllLocationTags {
-  locationTags {
+query getLocationTagsWithThumbnail($start: Int, $limit: Int) {
+  locationTags(pagination: { start: $start, limit: $limit }) {
     data {
       id
       attributes {
         name
-        synonyms {
-          name
-        }
         thumbnail: pictures(pagination: { limit: 1 }) {
           data {
             attributes {
@@ -344,6 +337,20 @@ query getAllLocationTags {
   }
 }
 
+query getAllLocationTags {
+  locationTags {
+    data {
+      id
+      attributes {
+        name
+        synonyms {
+          name
+        }
+      }
+    }
+  }
+}
+
 mutation updateLocationName($tagId: ID!, $name: String!) {
   updateLocationTag(id: $tagId, data: { name: $name }) {
     data {
@@ -356,6 +363,42 @@ mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonyms
   updateLocationTag(id: $tagId, data: { synonyms: $synonyms }) {
     data {
       id
+    }
+  }
+}
+query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
+  personTags(pagination: { start: $start, limit: $limit }) {
+    data {
+      id
+      attributes {
+        name
+        thumbnail: pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          data {
+            attributes {
+              media {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
