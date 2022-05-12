@@ -34,15 +34,15 @@ const isDuplicatedSearchParam = (
   type: string,
   prevParams: URLSearchParams
 ): boolean => {
-  let r = false;
+  let isDuplicate = false;
   const prevParamsIterator = prevParams.entries();
   let nextParam = prevParamsIterator.next();
   while (!nextParam.done) {
-    if (nextParam.value[1] === element && nextParam.value[0] === type) r = true;
+    if (nextParam.value[1] === element && nextParam.value[0] === type) isDuplicate = true;
     nextParam = prevParamsIterator.next();
   }
 
-  return r;
+  return isDuplicate;
 };
 
 const isSpace = (element: string): boolean => {
