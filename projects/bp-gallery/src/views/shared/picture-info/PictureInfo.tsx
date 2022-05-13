@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
+import { FlatCollection, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import {
@@ -153,6 +153,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       </PictureInfoField>
       <PictureInfoField title={t('pictureFields.people')} icon='person' type='person'>
         <TagSelectionField
+          type={TagType.PERSON}
           tags={pictureState.person_tags ?? []}
           allTags={allPeople ?? []}
           onChange={people => {
@@ -164,6 +165,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       </PictureInfoField>
       <PictureInfoField title={t('pictureFields.locations')} icon='place' type='location'>
         <TagSelectionField
+          type={TagType.LOCATION}
           tags={pictureState.location_tags ?? []}
           allTags={allLocations ?? []}
           onChange={locations => {
@@ -176,6 +178,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       {(role >= AuthRole.CURATOR || Boolean(pictureState.keyword_tags?.length)) && (
         <PictureInfoField title={t('pictureFields.keywords')} icon='sell' type='keywords'>
           <TagSelectionField
+            type={TagType.KEYWORD}
             tags={pictureState.keyword_tags ?? []}
             allTags={allKeywords ?? []}
             onChange={keywords => {
@@ -189,6 +192,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       {role >= AuthRole.CURATOR && (
         <PictureInfoField title={t('pictureFields.collections')} icon='folder' type='collections'>
           <TagSelectionField
+            type={TagType.COLLECTION}
             tags={pictureState.collections ?? []}
             allTags={allCollections ?? []}
             onChange={collections => {

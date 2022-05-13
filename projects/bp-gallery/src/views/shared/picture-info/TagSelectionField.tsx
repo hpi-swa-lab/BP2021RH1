@@ -5,7 +5,11 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { ComponentCommonSynonyms, Maybe } from '../../../graphql/APIConnector';
+import { addNewParamToSearchPath } from '../../gallery/search/SearchView';
 import { AlertContext, AlertType } from '../AlertWrapper';
+import { History } from 'history';
+import { useHistory } from 'react-router-dom';
+import { TagType } from '../../../types/additionalFlatTypes';
 
 interface TagFields {
   name: string;
@@ -25,6 +29,7 @@ const TagSelectionField = <T extends TagFields>({
   createMutation,
   nonVerifyable = false,
   noContentText,
+  type,
 }: {
   tags: T[];
   allTags: T[];
@@ -32,10 +37,12 @@ const TagSelectionField = <T extends TagFields>({
   createMutation?: (attr: any) => Promise<any>;
   nonVerifyable?: boolean;
   noContentText: string;
+  type: TagType;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
   const openAlert = useContext(AlertContext);
+  const history: History = useHistory();
 
   const [tagList, setTagList] = useState<T[]>(allTags);
 
@@ -163,7 +170,18 @@ const TagSelectionField = <T extends TagFields>({
     ) : (
       <Stack direction='row' spacing={1} className='chip-stack'>
         {tags.map(tag => {
-          return <Chip key={tag.id} label={tag.name} />;
+          return (
+            <Chip
+              key={tag.id}
+              label={tag.name}
+              onClick={() => {
+                window.open(
+                  addNewParamToSearchPath(type, encodeURIComponent(String(tag.name))).searchVal,
+                  '_blank'
+                );
+              }}
+            />
+          );
         })}
       </Stack>
     );
