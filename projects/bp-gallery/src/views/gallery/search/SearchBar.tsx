@@ -9,10 +9,10 @@ import { addNewParamToSearchPath, SearchType } from './SearchView';
 
 const SearchBar = ({
   searchParams,
-  onInvalidEntry,
+  onSetIsValidSearch,
 }: {
   searchParams?: URLSearchParams;
-  onInvalidEntry: (value: boolean) => void;
+  onSetIsValidSearch: (value: boolean) => void;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -23,7 +23,7 @@ const SearchBar = ({
     if (searchValue === '') return;
 
     const searchRes = addNewParamToSearchPath(searchType, searchValue, searchParams);
-    onInvalidEntry(searchRes.isValid);
+    onSetIsValidSearch(searchRes.isValid);
 
     history.push(searchRes.searchVal, {
       showBack: true,

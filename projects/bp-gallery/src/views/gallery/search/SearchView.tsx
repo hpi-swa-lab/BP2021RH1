@@ -122,7 +122,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             {(isSearchBarVisible || !search) && (
               <SearchBar
                 searchParams={searchParams}
-                onInvalidEntry={(value: boolean) => {
+                onSetIsValidSearch={(value: boolean) => {
                   setIsValidSearch(value);
                 }}
               />
