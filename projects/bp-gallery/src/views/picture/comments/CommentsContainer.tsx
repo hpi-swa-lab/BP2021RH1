@@ -4,9 +4,10 @@ import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';
 import { useTranslation } from 'react-i18next';
-import { Icon, IconButton } from '@mui/material';
+import { Icon } from '@mui/material';
 import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
+import { AuthRole, useAuth } from '../../../AuthWrapper';
 
 const CommentsContainer = ({
   pictureId,
@@ -17,18 +18,22 @@ const CommentsContainer = ({
 }) => {
   const { t } = useTranslation();
 
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const { role } = useAuth();
+
+  const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
 
   return (
-    <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
+    <div
+      className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`}
+      id='comments'
+      onClick={() => setIsOpen(o => !o)}
+    >
       <div className='picture-comments-header'>
         <h2>
           <Icon>question_answer</Icon>
           {t('common.comments')}
         </h2>
-        <IconButton onClick={() => setIsOpen(o => !o)} className='expand-button'>
-          <ExpandMore />
-        </IconButton>
+        <ExpandMore />
       </div>
       <div className='comment-container'>
         {comments?.map((comment: FlatComment) => (

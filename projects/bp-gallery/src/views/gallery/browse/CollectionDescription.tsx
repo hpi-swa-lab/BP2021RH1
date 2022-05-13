@@ -7,6 +7,7 @@ import { AuthRole, useAuth } from '../../../AuthWrapper';
 import JoditEditor from 'jodit-react';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
+import defaultJoditConfig from '../../shared/jodit-config';
 
 const CollectionDescription = ({
   description,
@@ -85,11 +86,8 @@ const EditableCollectionDescription = ({
 
   const config = useMemo(
     () => ({
+      ...defaultJoditConfig,
       readonly: false,
-      preset: 'inline',
-      enter: 'BR', //Not 'P' to avoid addition of <p> to descriptions
-      askBeforePasteHTML: false,
-      askBeforePasteFromWord: false,
       showPlaceholder: true,
       placeholder: t('curator.insertDescriptionHere'),
     }),
