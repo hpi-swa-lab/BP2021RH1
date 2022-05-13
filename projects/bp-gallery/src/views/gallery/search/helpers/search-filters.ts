@@ -121,7 +121,7 @@ const searchDescription = (searchParams: URLSearchParams, filters: PictureFilter
 
 const searchAll = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const params = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
-  params.forEach(function (value) {
+  params.forEach((value: string) => {
     if (value === 'pre50') {
       value = '40';
     }
