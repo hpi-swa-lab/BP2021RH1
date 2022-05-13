@@ -1,33 +1,40 @@
 import { PictureFiltersInput } from '../../../../graphql/APIConnector';
 import { SearchType } from '../SearchView';
 
-const paramToTimefilter = (timeParam: string) => {
-  if (timeParam === 'pre50') timeParam = '49';
-  const year = parseInt(timeParam);
+const buildFilter = (value: string) => {
+  return {
+    name: {
+      containsi: value,
+    },
+  };
+};
 
+const buildTimeRangeFilter = (startTime: string, endTime: string) => {
+  return {
+    start: {
+      gte: startTime,
+    },
+    end: {
+      lte: endTime,
+    },
+  };
+};
+
+const paramToTimefilter = (timeParam: string) => {
+  const year = parseInt(timeParam);
+  let startTime = `${year}-01-01T00:00:00Z`;
+  let endTime = `${year}-12-31T23:59:59Z`;
   if (!isNaN(year)) {
-    let startTime = `${year}-01-01T00:00:00Z`;
-    let endTime = `${year}-12-31T23:59:59Z`;
     if (year < 100) {
-      startTime = year === 49 ? '1900-01-01T00:00:00Z' : `19${year}-01-01T00:00:00Z`;
+      startTime = `19${year}-01-01T00:00:00Z`;
       endTime = `19${year}-12-31T23:59:59Z`;
     }
-
-    const time_range_tag_filter = {
-      start: {
-        gte: startTime,
-      },
-      end: {
-        lte: endTime,
-      },
-    };
-
-    return time_range_tag_filter;
+    return buildTimeRangeFilter(startTime, endTime);
   }
 };
 
-const searchDecade = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const timeParams = searchParams.getAll(SearchType.DECADE);
+const searchYear = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
+  const timeParams = searchParams.getAll(SearchType.TIME_RANGE);
   timeParams.forEach(timeParam => {
     const time_range_tag_filter = paramToTimefilter(timeParam);
     filters.and?.push({
@@ -43,14 +50,44 @@ const searchDecade = (searchParams: URLSearchParams, filters: PictureFiltersInpu
   });
 };
 
+export const buildDecadeFilter = (decade: string) => {
+  let startTime: string, endTime: string;
+  const year = parseInt(decade);
+  if (!isNaN(year)) {
+    if (year === 4) {
+      startTime = `1900-01-01T00:00:00Z`;
+    } else {
+      startTime = `19${year}0-01-01T00:00:00Z`;
+    }
+    endTime = `19${year}9-12-31T23:59:59Z`;
+
+    const time_range_tag_filter = buildTimeRangeFilter(startTime, endTime);
+
+    return {
+      or: [
+        {
+          time_range_tag: time_range_tag_filter,
+        },
+        {
+          verified_time_range_tag: time_range_tag_filter,
+        },
+      ],
+    } as PictureFiltersInput;
+  }
+};
+
+const searchDecade = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
+  const timeParams = searchParams.getAll(SearchType.DECADE);
+  let startTime: string, endTime: string;
+  timeParams.forEach(timeParam => {
+    filters.and?.push(buildDecadeFilter(timeParam) ?? null);
+  });
+};
+
 const searchKeyword = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const keywords = searchParams.getAll(SearchType.KEYWORD).map(decodeURIComponent);
   keywords.forEach((keyword: string) => {
-    const keyword_tag_filter = {
-      name: {
-        containsi: keyword,
-      },
-    };
+    const keyword_tag_filter = buildFilter(keyword);
     filters.and?.push({
       or: [
         {
@@ -67,11 +104,7 @@ const searchKeyword = (searchParams: URLSearchParams, filters: PictureFiltersInp
 const searchLocation = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const locations = searchParams.getAll(SearchType.LOCATION).map(decodeURIComponent);
   locations.forEach((location: string) => {
-    const location_tag_filter = {
-      name: {
-        containsi: location,
-      },
-    };
+    const location_tag_filter = buildFilter(location);
     filters.and?.push({
       or: [
         {
@@ -88,11 +121,7 @@ const searchLocation = (searchParams: URLSearchParams, filters: PictureFiltersIn
 const searchPerson = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const persons = searchParams.getAll(SearchType.PERSON).map(decodeURIComponent);
   persons.forEach((person: string) => {
-    const person_tag_filter = {
-      name: {
-        containsi: person,
-      },
-    };
+    const person_tag_filter = buildFilter(person);
     filters.and?.push({
       or: [
         {
@@ -121,11 +150,7 @@ const searchDescription = (searchParams: URLSearchParams, filters: PictureFilter
 
 const searchAll = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const params = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
-  params.forEach((value: string) => {
-    if (value === 'pre50') {
-      value = '40';
-    }
-
+  params.forEach(value => {
     const value_number = parseInt(value);
     let time_range_tag_filter = {};
     if (!isNaN(value_number)) {
@@ -146,46 +171,18 @@ const searchAll = (searchParams: URLSearchParams, filters: PictureFiltersInput) 
           value_number === 40 ? '1900-01-01T00:00:00Z' : `19${value_number}-01-01T00:00:00Z`;
         const endTime = `19${value_number}-12-31T23:59:59Z`;
 
-        time_range_tag_filter = {
-          start: {
-            gte: startTime,
-          },
-          end: {
-            lte: endTime,
-          },
-        };
+        time_range_tag_filter = buildTimeRangeFilter(startTime, endTime);
       }
     }
-
-    const keyword_tag_filter = {
-      name: {
-        containsi: value,
-      },
-    };
-    const location_tag_filter = {
-      name: {
-        containsi: value,
-      },
-    };
-    const person_tag_filter = {
-      name: {
-        containsi: value,
-      },
-    };
-
-    const collection_filter = {
-      name: {
-        containsi: value,
-      },
-    };
+    const filter = buildFilter(value);
 
     filters.and?.push({
       or: [
         {
-          keyword_tags: keyword_tag_filter,
+          keyword_tags: filter,
         },
         {
-          verified_keyword_tags: keyword_tag_filter,
+          verified_keyword_tags: filter,
         },
         {
           time_range_tag: time_range_tag_filter,
@@ -194,19 +191,19 @@ const searchAll = (searchParams: URLSearchParams, filters: PictureFiltersInput) 
           verified_time_range_tag: time_range_tag_filter,
         },
         {
-          person_tags: person_tag_filter,
+          person_tags: filter,
         },
         {
-          verified_person_tags: person_tag_filter,
+          verified_person_tags: filter,
         },
         {
-          collections: collection_filter,
+          collections: filter,
         },
         {
-          location_tags: location_tag_filter,
+          location_tags: filter,
         },
         {
-          verified_location_tags: location_tag_filter,
+          verified_location_tags: filter,
         },
         {
           descriptions: {
@@ -224,11 +221,12 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
   const filters: PictureFiltersInput = { and: [] };
 
   if (searchParams.has(SearchType.ALL)) searchAll(searchParams, filters);
-  if (searchParams.has(SearchType.DECADE)) searchDecade(searchParams, filters);
+  if (searchParams.has(SearchType.TIME_RANGE)) searchYear(searchParams, filters);
   if (searchParams.has(SearchType.KEYWORD)) searchKeyword(searchParams, filters);
   if (searchParams.has(SearchType.DESCRIPTION)) searchDescription(searchParams, filters);
   if (searchParams.has(SearchType.PERSON)) searchPerson(searchParams, filters);
   if (searchParams.has(SearchType.LOCATION)) searchLocation(searchParams, filters);
+  if (searchParams.has(SearchType.DECADE)) searchDecade(searchParams, filters);
 
   return filters;
 };

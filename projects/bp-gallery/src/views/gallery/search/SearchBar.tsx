@@ -66,7 +66,7 @@ const SearchBar = ({
                 onChange={changeSearchType}
               >
                 <MenuItem value={SearchType.ALL}>{t('search.search-all')}</MenuItem>
-                <MenuItem value={SearchType.DECADE}>{t('search.search-decade')}</MenuItem>
+                <MenuItem value={SearchType.TIME_RANGE}>{t('search.search-decade')}</MenuItem>
                 <MenuItem value={SearchType.KEYWORD}>{t('search.search-keyword')}</MenuItem>
                 <MenuItem value={SearchType.DESCRIPTION}>{t('search.descriptions')}</MenuItem>
                 <MenuItem value={SearchType.PERSON}>{t('search.persons')}</MenuItem>

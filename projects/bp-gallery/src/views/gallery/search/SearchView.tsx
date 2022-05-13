@@ -67,7 +67,7 @@ export const addNewParamToSearchPath = (
   const searchParams = prevParams ? prevParams : new URLSearchParams();
   const paramValues = searchRequest.split(' ');
 
-  if (newParamType === SearchType.DECADE) {
+  if (newParamType === SearchType.TIME_RANGE) {
     if (!(parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4)))
       return { searchVal: asSearchPath(searchParams), isValid: false };
   }

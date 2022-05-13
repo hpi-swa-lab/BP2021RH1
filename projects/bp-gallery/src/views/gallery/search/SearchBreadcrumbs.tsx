@@ -10,12 +10,14 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { useTranslation } from 'react-i18next';
 
 type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];
 
 const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) => {
   const history: History = useHistory();
+  const { t } = useTranslation();
   const searchParamValues: SearchParams = [];
   const iconForType = (searchType: string) => {
     switch (searchType) {
@@ -69,8 +71,13 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
             className='breadcrumb-chip'
             key={idx}
             icon={iconForType(el.type)}
-            label={el.value}
-            search-type={el.type}
+            label={
+              el.type === SearchType.DECADE
+                ? el.value === '4'
+                  ? t('common.past')
+                  : `${el.value}0er`
+                : el.value
+            }
             onDelete={() => deleteParam(el.type, el.value)}
           />
         );

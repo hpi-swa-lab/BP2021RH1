@@ -2259,10 +2259,17 @@ export type GetAllCollectionsQuery = {
     | undefined;
 };
 
-export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetDecadePreviewThumbnailsQueryVariables = Exact<{
+  filter40s: PictureFiltersInput;
+  filter50s: PictureFiltersInput;
+  filter60s: PictureFiltersInput;
+  filter70s: PictureFiltersInput;
+  filter80s: PictureFiltersInput;
+  filter90s: PictureFiltersInput;
+}>;
 
 export type GetDecadePreviewThumbnailsQuery = {
-  s40?:
+  decade40s?:
     | {
         data: Array<{
           attributes?:
@@ -2280,7 +2287,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s50?:
+  decade50s?:
     | {
         data: Array<{
           attributes?:
@@ -2298,7 +2305,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s60?:
+  decade60s?:
     | {
         data: Array<{
           attributes?:
@@ -2316,7 +2323,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s70?:
+  decade70s?:
     | {
         data: Array<{
           attributes?:
@@ -2334,7 +2341,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s80?:
+  decade80s?:
     | {
         data: Array<{
           attributes?:
@@ -2352,7 +2359,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s90?:
+  decade90s?:
     | {
         data: Array<{
           attributes?:
@@ -4134,26 +4141,15 @@ export type GetAllCollectionsQueryResult = Apollo.QueryResult<
 >;
 
 export const GetDecadePreviewThumbnailsDocument = gql`
-  query getDecadePreviewThumbnails {
-    s40: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1900-01-01T00:00:00Z" }
-              end: { lte: "1949-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1900-01-01T00:00:00Z" }
-              end: { lte: "1949-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+  query getDecadePreviewThumbnails(
+    $filter40s: PictureFiltersInput!
+    $filter50s: PictureFiltersInput!
+    $filter60s: PictureFiltersInput!
+    $filter70s: PictureFiltersInput!
+    $filter80s: PictureFiltersInput!
+    $filter90s: PictureFiltersInput!
+  ) {
+    decade40s: pictures(filters: $filter40s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -4166,25 +4162,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s50: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1950-01-01T00:00:00Z" }
-              end: { lte: "1959-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1950-01-01T00:00:00Z" }
-              end: { lte: "1959-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade50s: pictures(filters: $filter50s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -4197,25 +4175,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s60: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1960-01-01T00:00:00Z" }
-              end: { lte: "1969-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1960-01-01T00:00:00Z" }
-              end: { lte: "1969-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade60s: pictures(filters: $filter60s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -4228,25 +4188,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s70: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1970-01-01T00:00:00Z" }
-              end: { lte: "1979-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1970-01-01T00:00:00Z" }
-              end: { lte: "1979-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade70s: pictures(filters: $filter70s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -4259,25 +4201,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s80: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1980-01-01T00:00:00Z" }
-              end: { lte: "1989-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1980-01-01T00:00:00Z" }
-              end: { lte: "1989-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade80s: pictures(filters: $filter80s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -4290,25 +4214,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s90: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1990-01-01T00:00:00Z" }
-              end: { lte: "1999-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1990-01-01T00:00:00Z" }
-              end: { lte: "1999-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade90s: pictures(filters: $filter90s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -4336,11 +4242,17 @@ export const GetDecadePreviewThumbnailsDocument = gql`
  * @example
  * const { data, loading, error } = useGetDecadePreviewThumbnailsQuery({
  *   variables: {
+ *      filter40s: // value for 'filter40s'
+ *      filter50s: // value for 'filter50s'
+ *      filter60s: // value for 'filter60s'
+ *      filter70s: // value for 'filter70s'
+ *      filter80s: // value for 'filter80s'
+ *      filter90s: // value for 'filter90s'
  *   },
  * });
  */
 export function useGetDecadePreviewThumbnailsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetDecadePreviewThumbnailsQuery,
     GetDecadePreviewThumbnailsQueryVariables
   >
