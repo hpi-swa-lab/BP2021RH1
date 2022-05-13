@@ -1,53 +1,83 @@
-.search-bar {
+.search-bar-wrapper {
   display: flex;
   z-index: 25;
+  margin: auto;
+  width: 100%;
+  min-width: 0;
+
+  @media only screen and (min-width: 651px) {
+    max-width: 800px;
+    margin: auto;
+  }
+}
+
+.search-bar {
   background: #e5e5e5;
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
+  width: 100%;
 
-  .MuiFormControl-root {
-    width: 100%;
-
-    .searchbutton {
-      display: 'inline-block';
-      text-align: center;
-
-      flex-direction: 'column';
-      .searchbutton-label {
-        font-size: 15px;
-        color: black;
-      }
-    }
-
-    @media only screen and (min-width: 651px) {
-      max-width: 800px;
-      margin: auto;
-    }
-
+  @media only screen and (max-width: 650px) {
+    box-shadow: none;
     .MuiInputBase-root {
-      color: black;
-      border-radius: 0.2rem;
-      background: #e5e5e5;
-      transition: margin-left 0.25s, margin-top 0.25s, width 0.25s, border-radius 0.25s;
+      flex-wrap: wrap;
 
-      @media only screen and (max-width: 650px) {
-        &.Mui-focused {
-          border-radius: 0;
-          margin-left: -0.5rem;
-          margin-top: -1rem;
-          width: calc(100% + 1rem);
+      .MuiInputAdornment-positionStart {
+        width: calc(100% + 28px);
+        margin-left: -14px;
+        margin-right: -14px;
+        margin-bottom: 2rem;
+      }
+
+      .MuiInputAdornment-positionEnd {
+        position: absolute;
+        right: 0;
+        top: 70%;
+        opacity: 0.3;
+        z-index: 100;
+
+        .searchbutton-label {
+          display: none;
         }
       }
 
-      input {
-        z-index: 99;
+      .MuiOutlinedInput-root {
+        width: 100%;
       }
+    }
 
-      .MuiSvgIcon-root {
-        color: black;
-      }
+    .searchbutton > div {
+      display: flex;
+      flex-direction: row;
+    }
+  }
 
-      fieldset {
-        border-color: transparent !important;
-      }
+  .searchbutton {
+    display: 'inline-block';
+    text-align: center;
+
+    flex-direction: 'column';
+    .searchbutton-label {
+      font-size: 15px;
+      color: black;
+    }
+  }
+
+  .MuiInputBase-root {
+    color: black;
+    border-radius: 0.2rem;
+    background: #e5e5e5;
+    transition: margin-left 0.25s, margin-top 0.25s, width 0.25s, border-radius 0.25s;
+
+    input {
+      z-index: 99;
+    }
+
+    .MuiSvgIcon-root {
+      color: black;
+    }
+
+    fieldset {
+      border-color: transparent !important;
     }
   }
 }

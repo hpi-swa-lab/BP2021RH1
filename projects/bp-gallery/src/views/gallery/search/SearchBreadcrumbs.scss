@@ -13,8 +13,8 @@
       background: $keywordColor;
     }
 
-    &[search-type='ALL'] {
-      background: #84b0c4;
+    &[search-type='all'] {
+      background: $allSearchColor;
     }
 
     &[search-type='description'] {

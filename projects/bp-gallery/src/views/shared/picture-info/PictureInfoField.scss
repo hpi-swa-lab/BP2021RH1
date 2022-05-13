@@ -12,6 +12,10 @@
     margin-bottom: 0.5rem;
   }
 
+  .field-title {
+    color: $titleColor;
+  }
+
   &[data-type='person'] {
     .icon-container,
     .MuiChip-filled,
@@ -20,9 +24,6 @@
       color: white;
     }
 
-    .field-title {
-      color: $titleColor;
-    }
     background: rgb(223, 223, 241);
   }
 
@@ -34,9 +35,6 @@
       color: white;
     }
 
-    .field-title {
-      color: $titleColor;
-    }
     background: #7e231d45;
   }
 
@@ -48,10 +46,7 @@
       color: white;
     }
 
-    .field-title {
-      color: $titleColor;
-    }
-    background: #a1e88766;
+    background: #83578566;
   }
 
   &[data-type='location'] {
@@ -62,9 +57,6 @@
       color: white;
     }
 
-    .field-title {
-      color: $titleColor;
-    }
     background: #2c6e4947;
   }
 
@@ -76,9 +68,6 @@
       color: white;
     }
 
-    .field-title {
-      color: $titleColor;
-    }
     background: #ffa01c44;
   }
 
@@ -160,7 +149,6 @@
   }
 
   .field-title {
-    color: $primaryColor;
     opacity: 0.8;
     font-weight: 200;
     font-size: 0.9rem;

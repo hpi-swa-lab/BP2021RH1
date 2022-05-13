@@ -5,12 +5,13 @@
   --secondary-color: #404173;
   --background-color: #f5f5f5;
   --text-color: #0a0a0a;
-  --decade-color: #a1e887;
+  --decade-color: #690e6e;
   --description-color: #7e241d;
   --person-color: #404173;
   --location-color: #2c6e49;
-  --keyword-color: #ff9f1c;
+  --keyword-color: #d18c2d;
   --title-color: rgb(95, 94, 94);
+  --all-search-color: #84b0c4;
 }
 
 $primaryColor: var(--primary-color);
@@ -23,3 +24,4 @@ $personColor: var(--person-color);
 $locationColor: var(--location-color);
 $keywordColor: var(--keyword-color);
 $titleColor: var(--title-color);
+$allSearchColor: var(--all-search-color);

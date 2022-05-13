@@ -36,9 +36,10 @@ const SearchBar = ({
   };
 
   return (
-    <div className='search-bar'>
+    <div className='search-bar-wrapper'>
       <TextField
         inputRef={textFieldRef}
+        className='search-bar'
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>

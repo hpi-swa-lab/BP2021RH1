@@ -9,11 +9,9 @@
     display: grid;
     grid-template-columns: 1fr 50px;
 
-    .search-bar {
+    .search-bar-wrapper {
       grid-row: 1;
       grid-column: 1;
-      box-shadow: 0px 4px 3px 0px rgba(0, 0, 0, 0.3);
-      z-index: 3;
     }
 
     .breadcrumb {
@@ -25,6 +23,7 @@
         display: flex;
         flex-direction: row;
         gap: 10px;
+        flex-wrap: wrap;
 
         &:not(:empty) {
           padding: 1rem;
