@@ -12,11 +12,11 @@ module.exports = {
     production: {
       key: 'deploy.key',
       user: 'github',
-      ref: 'origin/main',
+      ref: 'origin/strapi-development',
       host: 'bp.bad-harzburg-stiftung.de',
       path: '/home/dev/production',
       repo: 'https://github.com/hpi-swa-lab/BP2021RH1',
-      'post-deploy': 'yarn install && yarn build:prod && pm2 reload ecosystem.config.js --env production && pm2 save && git checkout yarn.lock'
+      'post-deploy': 'cd projects/bp-strapi && yarn install && yarn build:prod && pm2 reload ecosystem.config.js --env production && pm2 save && git checkout yarn.lock'
     }
   }
 }
