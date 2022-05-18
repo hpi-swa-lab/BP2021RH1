@@ -12,7 +12,7 @@ module.exports = {
     production: {
       key: 'deploy.key',
       user: 'github',
-      ref: 'origin/strapi-development',
+      ref: 'origin/strapi-deployment',
       host: 'bp.bad-harzburg-stiftung.de',
       path: '/home/github/BP2021RH1',
       repo: 'https://github.com/hpi-swa-lab/BP2021RH1',
