@@ -1755,6 +1755,9 @@ export type GetPicturesQuery = {
 export type GetPicturesByAllSearchQueryVariables = Exact<{
   pagination: PaginationArg;
   searchTerms: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+  searchTimes:
+    | Array<InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>>
+    | InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetPicturesByAllSearchQuery = {
@@ -2957,8 +2960,16 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
 >;
 
 export const GetPicturesByAllSearchDocument = gql`
-  query getPicturesByAllSearch($pagination: PaginationArg!, $searchTerms: [String]!) {
-    findPicturesByAllSearch(pagination: $pagination, searchTerms: $searchTerms, searchTimes: []) {
+  query getPicturesByAllSearch(
+    $pagination: PaginationArg!
+    $searchTerms: [String]!
+    $searchTimes: [[String]]!
+  ) {
+    findPicturesByAllSearch(
+      pagination: $pagination
+      searchTerms: $searchTerms
+      searchTimes: $searchTimes
+    ) {
       id
       attributes {
         media {
@@ -2991,6 +3002,7 @@ export const GetPicturesByAllSearchDocument = gql`
  *   variables: {
  *      pagination: // value for 'pagination'
  *      searchTerms: // value for 'searchTerms'
+ *      searchTimes: // value for 'searchTimes'
  *   },
  * });
  */

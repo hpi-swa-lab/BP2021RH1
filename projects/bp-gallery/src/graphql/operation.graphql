@@ -137,8 +137,16 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
-query getPicturesByAllSearch($pagination: PaginationArg!, $searchTerms: [String]!) {
-  findPicturesByAllSearch(pagination: $pagination, searchTerms: $searchTerms, searchTimes: []) {
+query getPicturesByAllSearch(
+  $pagination: PaginationArg!
+  $searchTerms: [String]!
+  $searchTimes: [[String]]!
+) {
+  findPicturesByAllSearch(
+    pagination: $pagination
+    searchTerms: $searchTerms
+    searchTimes: $searchTimes
+  ) {
     id
     attributes {
       media {
