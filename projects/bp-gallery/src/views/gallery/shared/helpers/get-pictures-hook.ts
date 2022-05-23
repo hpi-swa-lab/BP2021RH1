@@ -1,0 +1,39 @@
+import {
+  PictureFiltersInput,
+  useGetPicturesByAllSearchQuery,
+  useGetPicturesQuery,
+} from '../../../../graphql/APIConnector';
+import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../PictureScrollGrid';
+
+const useGetPictures = (queryParams: PictureFiltersInput | string[], customSearch: boolean) => {
+  const queryResult = useGetPicturesQuery({
+    variables: {
+      filters: queryParams as PictureFiltersInput,
+      pagination: {
+        start: 0,
+        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+    skip: customSearch,
+  });
+  const customQueryResult = useGetPicturesByAllSearchQuery({
+    variables: {
+      searchTerms: queryParams as string[],
+      pagination: {
+        start: 0,
+        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+    skip: !customSearch,
+  });
+  if (customSearch) {
+    const reformattedResultData = { pictures: customQueryResult.data?.findPicturesByAllSearch };
+    return { ...customQueryResult, data: reformattedResultData };
+  } else {
+    return queryResult;
+  }
+};
+
+export default useGetPictures;

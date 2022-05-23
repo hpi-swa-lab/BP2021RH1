@@ -28,7 +28,7 @@ const UploadsView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHei
   return (
     <div className='uploads-overview'>
       <PictureScrollGrid
-        filters={{ collections: { id: { null: true } } }}
+        queryParams={{ collections: { id: { null: true } } }}
         scrollPos={scrollPos}
         scrollHeight={scrollHeight}
         hashbase={'uploads'}

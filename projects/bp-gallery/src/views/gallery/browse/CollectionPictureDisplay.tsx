@@ -125,7 +125,7 @@ const CollectionPictureDisplay = ({
           </Button>
         )}
         <PictureScrollGrid
-          filters={getPictureFilters(collection.id, picturePublishingDate)}
+          queryParams={getPictureFilters(collection.id, picturePublishingDate)}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={collection.name}
