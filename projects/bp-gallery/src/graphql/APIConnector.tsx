@@ -2674,6 +2674,18 @@ export type GetUnverifiedCommentsQuery = {
     | undefined;
 };
 
+export type FixCommentTextMutationVariables = Exact<{
+  commentId: Scalars['ID'];
+  text: Scalars['String'];
+}>;
+
+export type FixCommentTextMutation = {
+  updateComment?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type AcceptCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
   currentTime: Scalars['DateTime'];
@@ -5431,6 +5443,58 @@ export type GetUnverifiedCommentsLazyQueryHookResult = ReturnType<
 export type GetUnverifiedCommentsQueryResult = Apollo.QueryResult<
   GetUnverifiedCommentsQuery,
   GetUnverifiedCommentsQueryVariables
+>;
+
+export const FixCommentTextDocument = gql`
+  mutation fixCommentText($commentId: ID!, $text: String!) {
+    updateComment(id: $commentId, data: { text: $text }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type FixCommentTextMutationFn = Apollo.MutationFunction<
+  FixCommentTextMutation,
+  FixCommentTextMutationVariables
+>;
+
+/**
+ * __useFixCommentTextMutation__
+ *
+ * To run a mutation, you first call `useFixCommentTextMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFixCommentTextMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [fixCommentTextMutation, { data, loading, error }] = useFixCommentTextMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *      text: // value for 'text'
+ *   },
+ * });
+ */
+export function useFixCommentTextMutation(
+  baseOptions?: Apollo.MutationHookOptions<FixCommentTextMutation, FixCommentTextMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<FixCommentTextMutation, FixCommentTextMutationVariables>(
+    FixCommentTextDocument,
+    options
+  );
+}
+
+export type FixCommentTextMutationHookResult = ReturnType<typeof useFixCommentTextMutation>;
+
+export type FixCommentTextMutationResult = Apollo.MutationResult<FixCommentTextMutation>;
+
+export type FixCommentTextMutationOptions = Apollo.BaseMutationOptions<
+  FixCommentTextMutation,
+  FixCommentTextMutationVariables
 >;
 
 export const AcceptCommentDocument = gql`

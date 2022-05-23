@@ -34,6 +34,9 @@ export interface PictureViewContextFields {
 
 export const PictureViewContext = React.createContext<PictureViewContextFields>({});
 
+// Used for the sidebar (in px) --> same as in shared.scss
+const MOBILE_BREAKPOINT = 750;
+
 const PictureView = ({
   initialPictureId,
   siblingIds,
@@ -53,7 +56,7 @@ const PictureView = ({
 
   // Open the sidebar per default if logged in as a curators
   useEffect(() => {
-    setSideBarOpen(role >= AuthRole.CURATOR);
+    setSideBarOpen(role >= AuthRole.CURATOR || window.innerWidth > MOBILE_BREAKPOINT);
   }, [role]);
 
   const search = window.location.search;

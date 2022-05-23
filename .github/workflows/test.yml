@@ -52,3 +52,26 @@ jobs:
         run: yarn generate-api
       - name: Test bp-gallery
         run: yarn test:ci
+
+  test_bp_strapi:
+    name: Test bp-strapi
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./projects/bp-strapi
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test bp-strapi
+        run: yarn test:ci

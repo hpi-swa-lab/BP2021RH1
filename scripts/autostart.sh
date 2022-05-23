@@ -7,4 +7,5 @@ echo "Creating Session"
 tmux new-session -A -s $SESSION_NAME -n $STRAPI_WINDOW_NAME -d
 echo "Session created"
 tmux send-keys -t $STRAPI_WINDOW_NAME "cd /home/dev/BP2021RH1/projects/bp-strapi" C-m
+tmux send-keys -t $STRAPI_WINDOW_NAME "nvm use 16.15.0" C-m
 tmux send-keys -t $STRAPI_WINDOW_NAME "yarn develop" C-m
