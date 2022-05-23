@@ -1053,6 +1053,7 @@ export type Query = {
   comments?: Maybe<CommentEntityResponseCollection>;
   description?: Maybe<DescriptionEntityResponse>;
   descriptions?: Maybe<DescriptionEntityResponseCollection>;
+  findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   locationTag?: Maybe<LocationTagEntityResponse>;
@@ -1107,6 +1108,12 @@ export type QueryDescriptionsArgs = {
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryFindPicturesByAllSearchArgs = {
+  pagination?: InputMaybe<PaginationArg>;
+  searchTerms?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  searchTimes?: InputMaybe<Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>>;
 };
 
 export type QueryKeywordTagArgs = {

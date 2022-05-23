@@ -3,7 +3,6 @@
 const neededTablesWithVerifiedHandling = [
   "keyword_tag",
   "location_tag",
-  // "time_range_tag",
   "person_tag",
 ];
 
@@ -12,20 +11,29 @@ const neededTablesWithoutVerifiedHandling = [
   "collection"
 ];
 
+const buildJoinsForTableWithVerifiedHandling = (knexEngine, singularTableName, verifiedLinkTable, unverifiedLinkTable) => {
+  knexEngine = knexEngine.leftJoin(unverifiedLinkTable, "pictures.id", `${unverifiedLinkTable}.picture_id`);
+  knexEngine = knexEngine.leftJoin(verifiedLinkTable, "pictures.id", `${verifiedLinkTable}.picture_id`);
+
+  knexEngine = knexEngine.leftJoin(`${singularTableName}s`, function() {
+    this.on(`${verifiedLinkTable}.${singularTableName}_id`, "=", `${singularTableName}s.id`)
+      .orOn(`${unverifiedLinkTable}.${singularTableName}_id`, "=", `${singularTableName}s.id`)
+  });
+
+  return knexEngine;
+};
+
 const buildJoins = (knexEngine) => {
   for (const singularTableName of neededTablesWithVerifiedHandling) {
-
-    const verifiedLinkTable = singularTableName === "time_range_tag" ? `pictures_verified_${singularTableName}_links` : `pictures_verified_${singularTableName}s_links`;
-    const unverifiedLinkTable = singularTableName === "time_range_tag" ? `pictures_${singularTableName}_links` : `pictures_${singularTableName}s_links`;
-
-    knexEngine = knexEngine.leftJoin(unverifiedLinkTable, "pictures.id", `${unverifiedLinkTable}.picture_id`);
-    knexEngine = knexEngine.leftJoin(verifiedLinkTable, "pictures.id", `${verifiedLinkTable}.picture_id`);
-
-    knexEngine = knexEngine.leftJoin(`${singularTableName}s`, function() {
-      this.on(`${verifiedLinkTable}.${singularTableName}_id`, "=", `${singularTableName}s.id`)
-        .orOn(`${unverifiedLinkTable}.${singularTableName}_id`, "=", `${singularTableName}s.id`)
-    });
+    const verifiedLinkTable = `pictures_verified_${singularTableName}s_links`;
+    const unverifiedLinkTable = `pictures_${singularTableName}s_links`;
+    knexEngine = buildJoinsForTableWithVerifiedHandling(knexEngine, singularTableName, verifiedLinkTable, unverifiedLinkTable);
   }
+
+  // Special handling for time-range-tags as these are in 1:n relation to the picture type
+  const verifiedTimeRangeLinkTable = "pictures_verified_time_range_tag_links";
+  const unverifiedTimeRangeLinkTable = "pictures_time_range_tag_links";
+  knexEngine = buildJoinsForTableWithVerifiedHandling(knexEngine, "time_range_tag", verifiedTimeRangeLinkTable, unverifiedTimeRangeLinkTable);
 
   for (const singularTableName of neededTablesWithoutVerifiedHandling) {
     const linkTable = `pictures_${singularTableName}s_links`;
@@ -37,30 +45,50 @@ const buildJoins = (knexEngine) => {
   return knexEngine;
 };
 
-const buildWhere = (knexEngine, searchTerms) => {
-  for (const searchTerm of searchTerms) {
+const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
+  const searchTermForLikeQuery = `%${searchTerm}%`;
+  for (const singularTableName of neededTablesWithVerifiedHandling) {
+    knexEngine = knexEngine.orWhereILike(`${singularTableName}s.name`, searchTermForLikeQuery);
+  }
+
+  knexEngine = knexEngine.orWhereILike("collections.name", searchTermForLikeQuery);
+  knexEngine = knexEngine.orWhereILike("descriptions.text", searchTermForLikeQuery);
+
+  return knexEngine;
+}
+
+const buildWhere = (knexEngine, searchTerms, searchTimes) => {
+  for (const searchObject of [...searchTerms, ...searchTimes]) {
     // Function syntax for where in order to use correct bracing in the query
     knexEngine = knexEngine.where(qb => {
-      for (const singularTableName of neededTablesWithVerifiedHandling) {
-        qb = qb.orWhereILike(`${singularTableName}s.name`, `%${searchTerm}%`);
+      if (typeof searchObject === "string") {
+        qb = buildLikeWhereForSearchTerm(qb, searchObject);
+      } else if (Array.isArray(searchObject)) {
+        // If the search object is an array, it must be our custom format for search times
+        // e.g. ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
+        qb = buildLikeWhereForSearchTerm(qb, searchObject[0]);
+        qb = qb.orWhere(timeRangeQb => {
+          timeRangeQb = timeRangeQb.where("time_range_tags.start", ">=", searchObject[1]);
+          timeRangeQb = timeRangeQb.andWhere("time_range_tags.end", "<=", searchObject[2]);
+          return timeRangeQb;
+        });
       }
-
-      qb = qb.orWhereILike("collections.name", `%${searchTerm}%`);
-      qb = qb.orWhereILike("descriptions.text", `%${searchTerm}%`);
-
       return qb;
     })
   }
 
+  // Only retrieve published pictures
+  knexEngine = knexEngine.whereNotNull("pictures.published_at");
+
   return knexEngine;
 };
 
-const buildQueryForAllSearch = (knexEngine, searchTerms, pagination = { start: 0, limit: 100 }) => {
+const buildQueryForAllSearch = (knexEngine, searchTerms, searchTimes, pagination = { start: 0, limit: 100 }) => {
   const withSelect = knexEngine.distinct("pictures.*").from("pictures");
 
   const withJoins = buildJoins(withSelect);
 
-  const withWhere = buildWhere(withJoins, searchTerms);
+  const withWhere = buildWhere(withJoins, searchTerms, searchTimes);
 
   const withOrder = withWhere.orderBy("pictures.published_at", "asc");
 

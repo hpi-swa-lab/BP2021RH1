@@ -86,11 +86,13 @@ module.exports = {
           type: gqlExtensions.nexus.list("PictureEntity"),
           args: {
             searchTerms: gqlExtensions.nexus.list("String"),
+            // Additional search-time tuples (plain search term, parsed start, parsed end)
+            searchTimes: gqlExtensions.nexus.list(gqlExtensions.nexus.list("String")),
             pagination: "PaginationArg",
           },
-          async resolve(_, { searchTerms, pagination }) {
+          async resolve(_, { searchTerms, searchTimes, pagination }) {
             const knexEngine = gqlExtensions.strapi.db.connection;
-            const matchingPictures = await buildQueryForAllSearch(knexEngine, searchTerms, pagination);
+            const matchingPictures = await buildQueryForAllSearch(knexEngine, searchTerms, searchTimes, pagination);
             const mediaFilesForPictures = await buildQueryForMediaFiles(knexEngine, matchingPictures.map(pic => pic.id));
             return preparePictureDataForFrontend(matchingPictures, mediaFilesForPictures);
           },
