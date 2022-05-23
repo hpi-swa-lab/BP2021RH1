@@ -147,79 +147,9 @@ const searchDescription = (searchParams: URLSearchParams, filters: PictureFilter
   });
 };
 
-const searchAll = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const params = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
-  params.forEach(value => {
-    const value_number = parseInt(value);
-    let time_range_tag_filter = {};
-    if (!isNaN(value_number)) {
-      if (value_number.toString().startsWith('19') && value_number.toString().length === 4) {
-        const startTime = `19${parseInt(value_number.toString().substring(2))}-01-01T00:00:00Z`;
-        const endTime = `19${parseInt(value_number.toString().substring(2))}-12-31T23:59:59Z`;
-
-        time_range_tag_filter = {
-          start: {
-            gte: startTime,
-          },
-          end: {
-            lte: endTime,
-          },
-        };
-      } else if (value_number.toString().length === 2) {
-        const startTime =
-          value_number === 40 ? '1900-01-01T00:00:00Z' : `19${value_number}-01-01T00:00:00Z`;
-        const endTime = `19${value_number}-12-31T23:59:59Z`;
-
-        time_range_tag_filter = buildTimeRangeFilter(startTime, endTime);
-      }
-    }
-    const filter = buildFilter(value);
-
-    filters.and?.push({
-      or: [
-        {
-          keyword_tags: filter,
-        },
-        {
-          verified_keyword_tags: filter,
-        },
-        {
-          time_range_tag: time_range_tag_filter,
-        },
-        {
-          verified_time_range_tag: time_range_tag_filter,
-        },
-        {
-          person_tags: filter,
-        },
-        {
-          verified_person_tags: filter,
-        },
-        {
-          collections: filter,
-        },
-        {
-          location_tags: filter,
-        },
-        {
-          verified_location_tags: filter,
-        },
-        {
-          descriptions: {
-            text: {
-              containsi: value,
-            },
-          },
-        },
-      ],
-    });
-  });
-};
-
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
   const filters: PictureFiltersInput = { and: [] };
 
-  if (searchParams.has(SearchType.ALL)) searchAll(searchParams, filters);
   if (searchParams.has(SearchType.TIME_RANGE)) searchYear(searchParams, filters);
   if (searchParams.has(SearchType.KEYWORD)) searchKeyword(searchParams, filters);
   if (searchParams.has(SearchType.DESCRIPTION)) searchDescription(searchParams, filters);
