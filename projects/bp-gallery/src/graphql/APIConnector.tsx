@@ -1752,6 +1752,46 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
+export type GetPicturesByAllSearchQueryVariables = Exact<{
+  pagination: PaginationArg;
+  searchTerms: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+}>;
+
+export type GetPicturesByAllSearchQuery = {
+  findPicturesByAllSearch?:
+    | Array<
+        | {
+            id?: string | null | undefined;
+            attributes?:
+              | {
+                  media: {
+                    data?:
+                      | {
+                          id?: string | null | undefined;
+                          attributes?:
+                            | {
+                                width?: number | null | undefined;
+                                height?: number | null | undefined;
+                                formats?: any | null | undefined;
+                                updatedAt?: any | null | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                  };
+                }
+              | null
+              | undefined;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+};
+
 export type GetCollectionWithPicturesPublishedAfterQueryVariables = Exact<{
   date: Scalars['DateTime'];
 }>;
@@ -2914,6 +2954,83 @@ export type GetPicturesLazyQueryHookResult = ReturnType<typeof useGetPicturesLaz
 export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQuery,
   GetPicturesQueryVariables
+>;
+
+export const GetPicturesByAllSearchDocument = gql`
+  query getPicturesByAllSearch($pagination: PaginationArg!, $searchTerms: [String]!) {
+    findPicturesByAllSearch(pagination: $pagination, searchTerms: $searchTerms, searchTimes: []) {
+      id
+      attributes {
+        media {
+          data {
+            id
+            attributes {
+              width
+              height
+              formats
+              updatedAt
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesByAllSearchQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesByAllSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesByAllSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesByAllSearchQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *      searchTerms: // value for 'searchTerms'
+ *   },
+ * });
+ */
+export function useGetPicturesByAllSearchQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPicturesByAllSearchQuery,
+    GetPicturesByAllSearchQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesByAllSearchQuery, GetPicturesByAllSearchQueryVariables>(
+    GetPicturesByAllSearchDocument,
+    options
+  );
+}
+
+export function useGetPicturesByAllSearchLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPicturesByAllSearchQuery,
+    GetPicturesByAllSearchQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesByAllSearchQuery, GetPicturesByAllSearchQueryVariables>(
+    GetPicturesByAllSearchDocument,
+    options
+  );
+}
+
+export type GetPicturesByAllSearchQueryHookResult = ReturnType<
+  typeof useGetPicturesByAllSearchQuery
+>;
+
+export type GetPicturesByAllSearchLazyQueryHookResult = ReturnType<
+  typeof useGetPicturesByAllSearchLazyQuery
+>;
+
+export type GetPicturesByAllSearchQueryResult = Apollo.QueryResult<
+  GetPicturesByAllSearchQuery,
+  GetPicturesByAllSearchQueryVariables
 >;
 
 export const GetCollectionWithPicturesPublishedAfterDocument = gql`

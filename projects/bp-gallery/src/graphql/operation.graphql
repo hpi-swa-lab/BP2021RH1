@@ -137,6 +137,25 @@ query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
   }
 }
 
+query getPicturesByAllSearch($pagination: PaginationArg!, $searchTerms: [String]!) {
+  findPicturesByAllSearch(pagination: $pagination, searchTerms: $searchTerms, searchTimes: []) {
+    id
+    attributes {
+      media {
+        data {
+          id
+          attributes {
+            width
+            height
+            formats
+            updatedAt
+          }
+        }
+      }
+    }
+  }
+}
+
 query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
   collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
     data {
