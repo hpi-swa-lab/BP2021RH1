@@ -98,7 +98,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
       return searchParams.getAll(SearchType.ALL);
     }
     return convertSearchParamsToPictureFilters(searchParams);
-  }, [searchParams]);
+  }, [customSearch, searchParams]);
 
   const SearchInfoTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }}>
