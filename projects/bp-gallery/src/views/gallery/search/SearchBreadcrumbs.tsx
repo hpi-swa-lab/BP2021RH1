@@ -53,7 +53,12 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
     const searchParamsIterator = searchParams.entries();
     let nextParam = searchParamsIterator.next();
     while (!nextParam.done) {
-      if (!(nextParam.value[1] === deleteValue && nextParam.value[0] === deleteType)) {
+      if (
+        !(
+          decodeURIComponent(nextParam.value[1]) === deleteValue &&
+          nextParam.value[0] === deleteType
+        )
+      ) {
         newSearchParams.append(nextParam.value[0], nextParam.value[1]);
       }
       nextParam = searchParamsIterator.next();
