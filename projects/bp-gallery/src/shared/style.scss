@@ -5,9 +5,23 @@
   --secondary-color: #404173;
   --background-color: #f5f5f5;
   --text-color: #0a0a0a;
+  --decade-color: #690e6e;
+  --description-color: #7e241d;
+  --person-color: #404173;
+  --location-color: #2c6e49;
+  --keyword-color: #d18c2d;
+  --title-color: rgb(95, 94, 94);
+  --all-search-color: #84b0c4;
 }
 
 $primaryColor: var(--primary-color);
 $secondaryColor: var(--secondary-color);
 $backgroundColor: var(--background-color);
 $textColor: var(--text-color);
+$decadeColor: var(--decade-color);
+$descriptionColor: var(--description-color);
+$personColor: var(--person-color);
+$locationColor: var(--location-color);
+$keywordColor: var(--keyword-color);
+$titleColor: var(--title-color);
+$allSearchColor: var(--all-search-color);

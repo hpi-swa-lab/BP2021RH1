@@ -1053,6 +1053,7 @@ export type Query = {
   comments?: Maybe<CommentEntityResponseCollection>;
   description?: Maybe<DescriptionEntityResponse>;
   descriptions?: Maybe<DescriptionEntityResponseCollection>;
+  findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   locationTag?: Maybe<LocationTagEntityResponse>;
@@ -1107,6 +1108,12 @@ export type QueryDescriptionsArgs = {
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryFindPicturesByAllSearchArgs = {
+  pagination?: InputMaybe<PaginationArg>;
+  searchTerms?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  searchTimes?: InputMaybe<Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>>;
 };
 
 export type QueryKeywordTagArgs = {
@@ -1745,6 +1752,49 @@ export type GetPicturesQuery = {
     | undefined;
 };
 
+export type GetPicturesByAllSearchQueryVariables = Exact<{
+  pagination: PaginationArg;
+  searchTerms: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+  searchTimes:
+    | Array<InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>>
+    | InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+}>;
+
+export type GetPicturesByAllSearchQuery = {
+  findPicturesByAllSearch?:
+    | Array<
+        | {
+            id?: string | null | undefined;
+            attributes?:
+              | {
+                  media: {
+                    data?:
+                      | {
+                          id?: string | null | undefined;
+                          attributes?:
+                            | {
+                                width?: number | null | undefined;
+                                height?: number | null | undefined;
+                                formats?: any | null | undefined;
+                                updatedAt?: any | null | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                  };
+                }
+              | null
+              | undefined;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+};
+
 export type GetCollectionWithPicturesPublishedAfterQueryVariables = Exact<{
   date: Scalars['DateTime'];
 }>;
@@ -1889,11 +1939,12 @@ export type PostCommentMutation = {
     | undefined;
 };
 
-export type GetKeywordTagSuggestionsQueryVariables = Exact<{
-  name?: InputMaybe<Scalars['String']>;
+export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
+  start?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type GetKeywordTagSuggestionsQuery = {
+export type GetKeywordTagsWithThumbnailQuery = {
   keywordTags?:
     | {
         data: Array<{
@@ -2002,6 +2053,74 @@ export type UpdateKeywordSynonymsMutation = {
     | undefined;
 };
 
+export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
+  start?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type GetLocationTagsWithThumbnailQuery = {
+  locationTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllLocationTagsQuery = {
@@ -2044,6 +2163,74 @@ export type UpdateLocationSynonymsMutationVariables = Exact<{
 export type UpdateLocationSynonymsMutation = {
   updateLocationTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
+  start?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type GetPersonTagsWithThumbnailQuery = {
+  personTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
+                                      attributes?:
+                                        | { formats?: any | null | undefined }
+                                        | null
+                                        | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
     | null
     | undefined;
 };
@@ -2122,10 +2309,17 @@ export type GetAllCollectionsQuery = {
     | undefined;
 };
 
-export type GetDecadePreviewThumbnailsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetDecadePreviewThumbnailsQueryVariables = Exact<{
+  filter40s: PictureFiltersInput;
+  filter50s: PictureFiltersInput;
+  filter60s: PictureFiltersInput;
+  filter70s: PictureFiltersInput;
+  filter80s: PictureFiltersInput;
+  filter90s: PictureFiltersInput;
+}>;
 
 export type GetDecadePreviewThumbnailsQuery = {
-  s40?:
+  decade40s?:
     | {
         data: Array<{
           attributes?:
@@ -2143,7 +2337,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s50?:
+  decade50s?:
     | {
         data: Array<{
           attributes?:
@@ -2161,7 +2355,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s60?:
+  decade60s?:
     | {
         data: Array<{
           attributes?:
@@ -2179,7 +2373,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s70?:
+  decade70s?:
     | {
         data: Array<{
           attributes?:
@@ -2197,7 +2391,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s80?:
+  decade80s?:
     | {
         data: Array<{
           attributes?:
@@ -2215,7 +2409,7 @@ export type GetDecadePreviewThumbnailsQuery = {
       }
     | null
     | undefined;
-  s90?:
+  decade90s?:
     | {
         data: Array<{
           attributes?:
@@ -2777,6 +2971,92 @@ export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQueryVariables
 >;
 
+export const GetPicturesByAllSearchDocument = gql`
+  query getPicturesByAllSearch(
+    $pagination: PaginationArg!
+    $searchTerms: [String]!
+    $searchTimes: [[String]]!
+  ) {
+    findPicturesByAllSearch(
+      pagination: $pagination
+      searchTerms: $searchTerms
+      searchTimes: $searchTimes
+    ) {
+      id
+      attributes {
+        media {
+          data {
+            id
+            attributes {
+              width
+              height
+              formats
+              updatedAt
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesByAllSearchQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesByAllSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesByAllSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesByAllSearchQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *      searchTerms: // value for 'searchTerms'
+ *      searchTimes: // value for 'searchTimes'
+ *   },
+ * });
+ */
+export function useGetPicturesByAllSearchQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPicturesByAllSearchQuery,
+    GetPicturesByAllSearchQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesByAllSearchQuery, GetPicturesByAllSearchQueryVariables>(
+    GetPicturesByAllSearchDocument,
+    options
+  );
+}
+
+export function useGetPicturesByAllSearchLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPicturesByAllSearchQuery,
+    GetPicturesByAllSearchQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesByAllSearchQuery, GetPicturesByAllSearchQueryVariables>(
+    GetPicturesByAllSearchDocument,
+    options
+  );
+}
+
+export type GetPicturesByAllSearchQueryHookResult = ReturnType<
+  typeof useGetPicturesByAllSearchQuery
+>;
+
+export type GetPicturesByAllSearchLazyQueryHookResult = ReturnType<
+  typeof useGetPicturesByAllSearchLazyQuery
+>;
+
+export type GetPicturesByAllSearchQueryResult = Apollo.QueryResult<
+  GetPicturesByAllSearchQuery,
+  GetPicturesByAllSearchQueryVariables
+>;
+
 export const GetCollectionWithPicturesPublishedAfterDocument = gql`
   query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
     collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
@@ -3134,9 +3414,9 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
   PostCommentMutationVariables
 >;
 
-export const GetKeywordTagSuggestionsDocument = gql`
-  query getKeywordTagSuggestions($name: String) {
-    keywordTags(filters: { name: { containsi: $name } }) {
+export const GetKeywordTagsWithThumbnailDocument = gql`
+  query getKeywordTagsWithThumbnail($start: Int, $limit: Int) {
+    keywordTags(pagination: { start: $start, limit: $limit }) {
       data {
         id
         attributes {
@@ -3174,58 +3454,59 @@ export const GetKeywordTagSuggestionsDocument = gql`
 `;
 
 /**
- * __useGetKeywordTagSuggestionsQuery__
+ * __useGetKeywordTagsWithThumbnailQuery__
  *
- * To run a query within a React component, call `useGetKeywordTagSuggestionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetKeywordTagSuggestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetKeywordTagsWithThumbnailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetKeywordTagsWithThumbnailQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetKeywordTagSuggestionsQuery({
+ * const { data, loading, error } = useGetKeywordTagsWithThumbnailQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      start: // value for 'start'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useGetKeywordTagSuggestionsQuery(
+export function useGetKeywordTagsWithThumbnailQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    GetKeywordTagSuggestionsQuery,
-    GetKeywordTagSuggestionsQueryVariables
+    GetKeywordTagsWithThumbnailQuery,
+    GetKeywordTagsWithThumbnailQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetKeywordTagSuggestionsQuery, GetKeywordTagSuggestionsQueryVariables>(
-    GetKeywordTagSuggestionsDocument,
-    options
-  );
+  return Apollo.useQuery<
+    GetKeywordTagsWithThumbnailQuery,
+    GetKeywordTagsWithThumbnailQueryVariables
+  >(GetKeywordTagsWithThumbnailDocument, options);
 }
 
-export function useGetKeywordTagSuggestionsLazyQuery(
+export function useGetKeywordTagsWithThumbnailLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetKeywordTagSuggestionsQuery,
-    GetKeywordTagSuggestionsQueryVariables
+    GetKeywordTagsWithThumbnailQuery,
+    GetKeywordTagsWithThumbnailQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetKeywordTagSuggestionsQuery, GetKeywordTagSuggestionsQueryVariables>(
-    GetKeywordTagSuggestionsDocument,
-    options
-  );
+  return Apollo.useLazyQuery<
+    GetKeywordTagsWithThumbnailQuery,
+    GetKeywordTagsWithThumbnailQueryVariables
+  >(GetKeywordTagsWithThumbnailDocument, options);
 }
 
-export type GetKeywordTagSuggestionsQueryHookResult = ReturnType<
-  typeof useGetKeywordTagSuggestionsQuery
+export type GetKeywordTagsWithThumbnailQueryHookResult = ReturnType<
+  typeof useGetKeywordTagsWithThumbnailQuery
 >;
 
-export type GetKeywordTagSuggestionsLazyQueryHookResult = ReturnType<
-  typeof useGetKeywordTagSuggestionsLazyQuery
+export type GetKeywordTagsWithThumbnailLazyQueryHookResult = ReturnType<
+  typeof useGetKeywordTagsWithThumbnailLazyQuery
 >;
 
-export type GetKeywordTagSuggestionsQueryResult = Apollo.QueryResult<
-  GetKeywordTagSuggestionsQuery,
-  GetKeywordTagSuggestionsQueryVariables
+export type GetKeywordTagsWithThumbnailQueryResult = Apollo.QueryResult<
+  GetKeywordTagsWithThumbnailQuery,
+  GetKeywordTagsWithThumbnailQueryVariables
 >;
 
 export const GetAllKeywordTagsDocument = gql`
@@ -3399,6 +3680,101 @@ export type UpdateKeywordSynonymsMutationResult =
 export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordSynonymsMutation,
   UpdateKeywordSynonymsMutationVariables
+>;
+
+export const GetLocationTagsWithThumbnailDocument = gql`
+  query getLocationTagsWithThumbnail($start: Int, $limit: Int) {
+    locationTags(pagination: { start: $start, limit: $limit }) {
+      data {
+        id
+        attributes {
+          name
+          thumbnail: pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLocationTagsWithThumbnailQuery__
+ *
+ * To run a query within a React component, call `useGetLocationTagsWithThumbnailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLocationTagsWithThumbnailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLocationTagsWithThumbnailQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetLocationTagsWithThumbnailQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetLocationTagsWithThumbnailQuery,
+    GetLocationTagsWithThumbnailQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetLocationTagsWithThumbnailQuery,
+    GetLocationTagsWithThumbnailQueryVariables
+  >(GetLocationTagsWithThumbnailDocument, options);
+}
+
+export function useGetLocationTagsWithThumbnailLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetLocationTagsWithThumbnailQuery,
+    GetLocationTagsWithThumbnailQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetLocationTagsWithThumbnailQuery,
+    GetLocationTagsWithThumbnailQueryVariables
+  >(GetLocationTagsWithThumbnailDocument, options);
+}
+
+export type GetLocationTagsWithThumbnailQueryHookResult = ReturnType<
+  typeof useGetLocationTagsWithThumbnailQuery
+>;
+
+export type GetLocationTagsWithThumbnailLazyQueryHookResult = ReturnType<
+  typeof useGetLocationTagsWithThumbnailLazyQuery
+>;
+
+export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
+  GetLocationTagsWithThumbnailQuery,
+  GetLocationTagsWithThumbnailQueryVariables
 >;
 
 export const GetAllLocationTagsDocument = gql`
@@ -3577,6 +3953,101 @@ export type UpdateLocationSynonymsMutationResult =
 export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationSynonymsMutation,
   UpdateLocationSynonymsMutationVariables
+>;
+
+export const GetPersonTagsWithThumbnailDocument = gql`
+  query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
+    personTags(pagination: { start: $start, limit: $limit }) {
+      data {
+        id
+        attributes {
+          name
+          thumbnail: pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+            data {
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPersonTagsWithThumbnailQuery__
+ *
+ * To run a query within a React component, call `useGetPersonTagsWithThumbnailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPersonTagsWithThumbnailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPersonTagsWithThumbnailQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetPersonTagsWithThumbnailQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetPersonTagsWithThumbnailQuery,
+    GetPersonTagsWithThumbnailQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPersonTagsWithThumbnailQuery, GetPersonTagsWithThumbnailQueryVariables>(
+    GetPersonTagsWithThumbnailDocument,
+    options
+  );
+}
+
+export function useGetPersonTagsWithThumbnailLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPersonTagsWithThumbnailQuery,
+    GetPersonTagsWithThumbnailQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetPersonTagsWithThumbnailQuery,
+    GetPersonTagsWithThumbnailQueryVariables
+  >(GetPersonTagsWithThumbnailDocument, options);
+}
+
+export type GetPersonTagsWithThumbnailQueryHookResult = ReturnType<
+  typeof useGetPersonTagsWithThumbnailQuery
+>;
+
+export type GetPersonTagsWithThumbnailLazyQueryHookResult = ReturnType<
+  typeof useGetPersonTagsWithThumbnailLazyQuery
+>;
+
+export type GetPersonTagsWithThumbnailQueryResult = Apollo.QueryResult<
+  GetPersonTagsWithThumbnailQuery,
+  GetPersonTagsWithThumbnailQueryVariables
 >;
 
 export const GetAllPersonTagsDocument = gql`
@@ -3818,26 +4289,15 @@ export type GetAllCollectionsQueryResult = Apollo.QueryResult<
 >;
 
 export const GetDecadePreviewThumbnailsDocument = gql`
-  query getDecadePreviewThumbnails {
-    s40: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1900-01-01T00:00:00Z" }
-              end: { lte: "1949-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1900-01-01T00:00:00Z" }
-              end: { lte: "1949-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+  query getDecadePreviewThumbnails(
+    $filter40s: PictureFiltersInput!
+    $filter50s: PictureFiltersInput!
+    $filter60s: PictureFiltersInput!
+    $filter70s: PictureFiltersInput!
+    $filter80s: PictureFiltersInput!
+    $filter90s: PictureFiltersInput!
+  ) {
+    decade40s: pictures(filters: $filter40s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -3850,25 +4310,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s50: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1950-01-01T00:00:00Z" }
-              end: { lte: "1959-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1950-01-01T00:00:00Z" }
-              end: { lte: "1959-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade50s: pictures(filters: $filter50s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -3881,25 +4323,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s60: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1960-01-01T00:00:00Z" }
-              end: { lte: "1969-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1960-01-01T00:00:00Z" }
-              end: { lte: "1969-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade60s: pictures(filters: $filter60s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -3912,25 +4336,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s70: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1970-01-01T00:00:00Z" }
-              end: { lte: "1979-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1970-01-01T00:00:00Z" }
-              end: { lte: "1979-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade70s: pictures(filters: $filter70s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -3943,25 +4349,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s80: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1980-01-01T00:00:00Z" }
-              end: { lte: "1989-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1980-01-01T00:00:00Z" }
-              end: { lte: "1989-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade80s: pictures(filters: $filter80s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -3974,25 +4362,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    s90: pictures(
-      filters: {
-        or: [
-          {
-            time_range_tag: {
-              start: { gte: "1990-01-01T00:00:00Z" }
-              end: { lte: "1999-12-31T23:59:59Z" }
-            }
-          }
-          {
-            verified_time_range_tag: {
-              start: { gte: "1990-01-01T00:00:00Z" }
-              end: { lte: "1999-12-31T23:59:59Z" }
-            }
-          }
-        ]
-      }
-      pagination: { limit: 1 }
-    ) {
+    decade90s: pictures(filters: $filter90s, pagination: { limit: 1 }) {
       data {
         attributes {
           media {
@@ -4020,11 +4390,17 @@ export const GetDecadePreviewThumbnailsDocument = gql`
  * @example
  * const { data, loading, error } = useGetDecadePreviewThumbnailsQuery({
  *   variables: {
+ *      filter40s: // value for 'filter40s'
+ *      filter50s: // value for 'filter50s'
+ *      filter60s: // value for 'filter60s'
+ *      filter70s: // value for 'filter70s'
+ *      filter80s: // value for 'filter80s'
+ *      filter90s: // value for 'filter90s'
  *   },
  * });
  */
 export function useGetDecadePreviewThumbnailsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetDecadePreviewThumbnailsQuery,
     GetDecadePreviewThumbnailsQueryVariables
   >

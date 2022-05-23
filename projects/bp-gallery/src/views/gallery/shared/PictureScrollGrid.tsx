@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PictureFiltersInput, useGetPicturesQuery } from '../../../graphql/APIConnector';
+import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureGrid from './PictureGrid';
@@ -9,40 +9,42 @@ import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import { useTranslation } from 'react-i18next';
 import './PictureScrollGrid.scss';
 import { BulkOperation } from './BulkOperationsPanel';
+import useGetPictures from './helpers/get-pictures-hook';
+
+export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
 const PictureScrollGrid = ({
-  filters,
+  queryParams,
   scrollPos,
   scrollHeight,
   hashbase,
+  customSearch = false,
   uploadAreaProps,
+  resultPictureCallback,
   bulkOperations,
 }: {
-  filters: PictureFiltersInput;
+  queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
+  customSearch?: boolean;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
+  resultPictureCallback?: (pictures: number) => void;
   bulkOperations?: BulkOperation[];
 }) => {
+  const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  const { t } = useTranslation();
+  const { data, loading, error, fetchMore, refetch } = useGetPictures(queryParams, customSearch);
 
-  const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
-
-  const { data, loading, error, fetchMore, refetch } = useGetPicturesQuery({
-    variables: {
-      filters,
-      pagination: {
-        start: 0,
-        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
-      },
-    },
-    notifyOnNetworkStatusChange: true,
-  });
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+
+  useEffect(() => {
+    if (resultPictureCallback) {
+      resultPictureCallback(pictures?.length ?? 0);
+    }
+  }, [pictures, resultPictureCallback]);
 
   // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {
@@ -54,6 +56,8 @@ const PictureScrollGrid = ({
       scrollPos > scrollHeight - 1.5 * window.innerHeight
     ) {
       setIsFetching(true);
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       fetchMore({
         variables: {
           pagination: {
@@ -107,7 +111,7 @@ const PictureScrollGrid = ({
       </>
     );
   } else {
-    return null;
+    return <div> {t('common.no-picture')} </div>;
   }
 };
 

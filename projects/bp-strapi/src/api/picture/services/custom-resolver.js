@@ -1,0 +1,144 @@
+"use strict";
+
+const neededTablesWithVerifiedHandling = [
+  "keyword_tag",
+  "location_tag",
+  "person_tag",
+];
+
+const neededTablesWithoutVerifiedHandling = [
+  "description",
+  "collection"
+];
+
+const buildJoinsForTableWithVerifiedHandling = (knexEngine, singularTableName, verifiedLinkTable, unverifiedLinkTable) => {
+  knexEngine = knexEngine.leftJoin(unverifiedLinkTable, "pictures.id", `${unverifiedLinkTable}.picture_id`);
+  knexEngine = knexEngine.leftJoin(verifiedLinkTable, "pictures.id", `${verifiedLinkTable}.picture_id`);
+
+  knexEngine = knexEngine.leftJoin(`${singularTableName}s`, function() {
+    this.on(`${verifiedLinkTable}.${singularTableName}_id`, "=", `${singularTableName}s.id`)
+      .orOn(`${unverifiedLinkTable}.${singularTableName}_id`, "=", `${singularTableName}s.id`)
+  });
+
+  return knexEngine;
+};
+
+const buildJoins = (knexEngine) => {
+  for (const singularTableName of neededTablesWithVerifiedHandling) {
+    const verifiedLinkTable = `pictures_verified_${singularTableName}s_links`;
+    const unverifiedLinkTable = `pictures_${singularTableName}s_links`;
+    knexEngine = buildJoinsForTableWithVerifiedHandling(knexEngine, singularTableName, verifiedLinkTable, unverifiedLinkTable);
+  }
+
+  // Special handling for time-range-tags as these are in 1:n relation to the picture type
+  const verifiedTimeRangeLinkTable = "pictures_verified_time_range_tag_links";
+  const unverifiedTimeRangeLinkTable = "pictures_time_range_tag_links";
+  knexEngine = buildJoinsForTableWithVerifiedHandling(knexEngine, "time_range_tag", verifiedTimeRangeLinkTable, unverifiedTimeRangeLinkTable);
+
+  for (const singularTableName of neededTablesWithoutVerifiedHandling) {
+    const linkTable = `pictures_${singularTableName}s_links`;
+
+    knexEngine = knexEngine.leftJoin(linkTable, "pictures.id", `${linkTable}.picture_id`);
+    knexEngine = knexEngine.leftJoin(`${singularTableName}s`, `${linkTable}.${singularTableName}_id`, `${singularTableName}s.id`);
+  }
+
+  return knexEngine;
+};
+
+const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
+  const searchTermForLikeQuery = `%${searchTerm}%`;
+  for (const singularTableName of neededTablesWithVerifiedHandling) {
+    knexEngine = knexEngine.orWhereILike(`${singularTableName}s.name`, searchTermForLikeQuery);
+  }
+
+  knexEngine = knexEngine.orWhereILike("collections.name", searchTermForLikeQuery);
+  knexEngine = knexEngine.orWhereILike("descriptions.text", searchTermForLikeQuery);
+
+  return knexEngine;
+}
+
+const buildWhere = (knexEngine, searchTerms, searchTimes) => {
+  for (const searchObject of [...searchTerms, ...searchTimes]) {
+    // Function syntax for where in order to use correct bracing in the query
+    knexEngine = knexEngine.where(qb => {
+      if (typeof searchObject === "string") {
+        qb = buildLikeWhereForSearchTerm(qb, searchObject);
+      } else if (Array.isArray(searchObject)) {
+        // If the search object is an array, it must be our custom format for search times
+        // e.g. ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
+        qb = buildLikeWhereForSearchTerm(qb, searchObject[0]);
+        qb = qb.orWhere(timeRangeQb => {
+          timeRangeQb = timeRangeQb.where("time_range_tags.start", ">=", searchObject[1]);
+          timeRangeQb = timeRangeQb.andWhere("time_range_tags.end", "<=", searchObject[2]);
+          return timeRangeQb;
+        });
+      }
+      return qb;
+    })
+  }
+
+  // Only retrieve published pictures
+  knexEngine = knexEngine.whereNotNull("pictures.published_at");
+
+  return knexEngine;
+};
+
+const buildQueryForAllSearch = (knexEngine, searchTerms, searchTimes, pagination = { start: 0, limit: 100 }) => {
+  const withSelect = knexEngine.distinct("pictures.*").from("pictures");
+
+  const withJoins = buildJoins(withSelect);
+
+  const withWhere = buildWhere(withJoins, searchTerms, searchTimes);
+
+  const withOrder = withWhere.orderBy("pictures.published_at", "asc");
+
+  return withOrder.limit(pagination.limit).offset(pagination.start);
+};
+
+const buildQueryForMediaFiles = (knexEngine, pictureIds) => {
+  const withSelect = knexEngine.distinct(
+    "files_related_morphs.order",
+    "files.*",
+    "files_related_morphs.related_id",
+    "files_related_morphs.related_type"
+  ).from("files");
+
+  const withJoin = withSelect.leftJoin("files_related_morphs", "files.id", "files_related_morphs.file_id");
+
+  // Function syntax for where in order to use correct bracing in the query
+  const withWhere = withJoin.where(qb =>
+    qb.whereIn("files_related_morphs.related_id", pictureIds)
+      // Only use media files related to the picture content type
+      .andWhere("files_related_morphs.related_type", "api::picture.picture")
+      // The field on the file relation on the picture content type is called 'media'
+      .andWhere("files_related_morphs.field", "media")
+  );
+
+  return withWhere.orderBy("files_related_morphs.order", "asc");
+};
+
+const preparePictureDataForFrontend = (pictures, mediaFiles) => {
+  return pictures.map(picture => {
+    const mediaFileForPicture = mediaFiles.find(file => file.related_id === picture.id);
+
+    return {
+      id: picture.id,
+      attributes: {
+        media: {
+          data: {
+            id: mediaFileForPicture.id,
+            attributes: {
+              ...mediaFileForPicture,
+            },
+          },
+        },
+      },
+    };
+  });
+};
+
+module.exports = {
+  buildQueryForAllSearch,
+  buildQueryForMediaFiles,
+  preparePictureDataForFrontend,
+};

@@ -26,7 +26,7 @@ jest.mock('../../shared/PictureScrollGrid', () => PictureScrollGridMockComponent
 describe('CollectionPictureDisplay', () => {
   describe('CommunityViewMode', () => {
     describe('Unit', () => {
-      //potentially not necessary to specify child collections
+      // Potentially not necessary to specify child collections
       const childCollections = [
         {
           name: 'Hohegeiß',
@@ -143,7 +143,7 @@ describe('CollectionPictureDisplay', () => {
 
         expect(PictureScrollGridMock).toHaveBeenCalledWith(
           expect.objectContaining({
-            filters: {
+            queryParams: {
               and: [
                 { collections: { id: { eq: collections[0].id } } },
                 { publishedAt: { gt: picturePublishingDate } },

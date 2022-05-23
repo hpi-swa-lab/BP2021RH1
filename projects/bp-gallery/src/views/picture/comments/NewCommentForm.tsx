@@ -22,14 +22,14 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       if (localStorage.getItem('dontShowCommentDialogAgain') === '1') {
         openAlert({
           alertType: AlertType.INFO,
-          message: t('common.comment-alert'),
-          duration: 5000,
+          message: t('comment.alert'),
+          duration: 7000,
         });
         return;
       }
       dialog({
-        title: t('common.comment-thanks'),
-        content: t('common.comment-alert'),
+        title: t('comment.thanks'),
+        content: t('comment.alert'),
         options: [
           {
             name: t('common.dontShowAgain'),
@@ -72,11 +72,16 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   }, [commentAuthor, commentText, pictureId, postCommentMutation]);
 
   return (
-    <div className='new-comment-form'>
+    <div
+      className='new-comment-form'
+      onKeyUp={event => {
+        event.stopPropagation();
+      }}
+    >
       <TextField
         className='input-field'
         id='name'
-        label={t('common.name')}
+        label={t('comment.name')}
         variant='filled'
         fullWidth
         value={commentAuthor}
@@ -98,7 +103,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
       />
       <div className='Submit'>
         <Button variant='contained' type='submit' onClick={postComment}>
-          {t('common.submit')}
+          {t('comment.submit')}
         </Button>
       </div>
     </div>

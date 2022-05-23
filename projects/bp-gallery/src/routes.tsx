@@ -9,6 +9,7 @@ import TagOverview from './views/curator/TagOverview';
 import GalleryView from './views/gallery/GalleryView';
 import PictureView from './views/picture/PictureView';
 import CommentOverview from './views/curator/CommentOverview';
+import { TagType } from './types/additionalFlatTypes';
 
 const routes: RouteConfig[] = [
   {
@@ -74,19 +75,19 @@ const routes: RouteConfig[] = [
       {
         path: '/tags/keywords',
         render: () => {
-          return <TagOverview type='keywords' />;
+          return <TagOverview type={TagType.KEYWORD} />;
         },
       },
       {
         path: '/tags/locations',
         render: () => {
-          return <TagOverview type='locations' />;
+          return <TagOverview type={TagType.LOCATION} />;
         },
       },
       {
         path: '/tags/people',
         render: () => {
-          return <TagOverview type='people' />;
+          return <TagOverview type={TagType.PERSON} />;
         },
       },
       {

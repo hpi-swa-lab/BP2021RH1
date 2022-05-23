@@ -6,7 +6,13 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import NavigationBar from './views/shared/NavigationBar';
-import { PictureEntityResponseCollection } from './graphql/APIConnector';
+import {
+  KeywordTagEntityResponseCollection,
+  LocationTagEntityResponseCollection,
+  PersonTagEntityResponseCollection,
+  PictureEntity,
+  PictureEntityResponseCollection,
+} from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
 import AlertWrapper, { AlertOptions, AlertType } from './views/shared/AlertWrapper';
 import DialogWrapper from './views/shared/DialogWrapper';
@@ -76,6 +82,36 @@ const apolloClient = new ApolloClient({
             // get treated as one query and the results get merged.
             keyArgs: ['filters'],
             merge(existing = { data: [] }, incoming: PictureEntityResponseCollection) {
+              return {
+                data: [...existing.data, ...incoming.data],
+              };
+            },
+          },
+          findPicturesByAllSearch: {
+            keyArgs: ['searchTerms', 'searchTimes'],
+            merge(existing = [], incoming: PictureEntity[]) {
+              return [...existing, ...incoming];
+            },
+          },
+          keywordTags: {
+            keyArgs: ['filters'],
+            merge(existing = { data: [] }, incoming: KeywordTagEntityResponseCollection) {
+              return {
+                data: [...existing.data, ...incoming.data],
+              };
+            },
+          },
+          personTags: {
+            keyArgs: ['filters'],
+            merge(existing = { data: [] }, incoming: PersonTagEntityResponseCollection) {
+              return {
+                data: [...existing.data, ...incoming.data],
+              };
+            },
+          },
+          locationTags: {
+            keyArgs: ['filters'],
+            merge(existing = { data: [] }, incoming: LocationTagEntityResponseCollection) {
               return {
                 data: [...existing.data, ...incoming.data],
               };

@@ -105,13 +105,12 @@ const CollectionPictureDisplay = ({
   } else if (collections?.length && collections[0]) {
     const collection = collections[0];
     const childCount = collection.child_collections?.length ?? 0;
-
     return (
       <div className='collection-picture-display'>
         <CollectionDescription
+          id={collection.id}
           description={collection.description ?? ''}
           name={collection.name}
-          id={collection.id}
         />
         {childCount > 0 && (
           <SubCollections
@@ -126,7 +125,7 @@ const CollectionPictureDisplay = ({
           </Button>
         )}
         <PictureScrollGrid
-          filters={getPictureFilters(collection.id, picturePublishingDate)}
+          queryParams={getPictureFilters(collection.id, picturePublishingDate)}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={collection.name}

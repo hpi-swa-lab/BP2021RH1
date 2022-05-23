@@ -13,4 +13,8 @@
     width: 100%;
     background-color: $primaryColor;
   }
+  .MuiButton-root:hover {
+    background-color: $primaryColor;
+    opacity: 0.8;
+  }
 }

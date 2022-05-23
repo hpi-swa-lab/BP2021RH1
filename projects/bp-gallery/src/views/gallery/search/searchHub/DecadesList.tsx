@@ -6,20 +6,31 @@ import QueryErrorDisplay from '../../../shared/QueryErrorDisplay';
 import Loading from '../../../shared/Loading';
 import ItemList from '../../shared/ItemList';
 import { asApiPath } from '../../../../App';
-import { asSearchPath, SearchType } from '../SearchView';
-import { useGetDecadePreviewThumbnailsQuery } from '../../../../graphql/APIConnector';
+import { addNewParamToSearchPath, SearchType } from '../SearchView';
+import {
+  useGetDecadePreviewThumbnailsQuery,
+  PictureFiltersInput,
+} from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { FlatDecadeThumbnails } from '../../../../types/additionalFlatTypes';
+import { buildDecadeFilter } from '../helpers/search-filters';
 
-const DECADE_NAMES: string[] = ['40', '50', '60', '70', '80', '90'];
+const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 
 const DecadesList = () => {
   const { t } = useTranslation();
   const history: History = useHistory();
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
-
-  const { data, loading, error } = useGetDecadePreviewThumbnailsQuery();
+  const decadeToFilter: { [key: string]: PictureFiltersInput | undefined } = {};
+  DECADES.forEach(decade => {
+    const decadeName = `filter${decade}0s`;
+    decadeToFilter[decadeName] = buildDecadeFilter(decade);
+  });
+  const { data, loading, error } = useGetDecadePreviewThumbnailsQuery({
+    // @ts-ignore
+    variables: decadeToFilter,
+  });
   const decadeThumbnails: FlatDecadeThumbnails | undefined = useSimplifiedQueryResponseData(data);
 
   if (error) {
@@ -30,15 +41,17 @@ const DecadesList = () => {
     return (
       <ItemList
         compact={true}
-        items={DECADE_NAMES.map((name: string) => {
-          const thumbnailData = decadeThumbnails[`s${name}`];
+        items={DECADES.map((name: string) => {
+          const thumbnailData = decadeThumbnails[`decade${name}0s`];
           const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-          const displayedName = name === '40' ? t('common.past') : `${name}er`;
+          const displayedName = name === '4' ? t('common.past') : `${name}0er`;
           return {
             name: displayedName,
             background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
             onClick: () => {
-              history.push(asSearchPath(SearchType.DECADE, name), { showBack: true });
+              history.push(addNewParamToSearchPath(SearchType.DECADE, name).searchVal, {
+                showBack: true,
+              });
             },
           };
         })}

@@ -5,7 +5,9 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { ComponentCommonSynonyms, Maybe } from '../../../graphql/APIConnector';
+import { addNewParamToSearchPath } from '../../gallery/search/SearchView';
 import { AlertContext, AlertType } from '../AlertWrapper';
+import { TagType } from '../../../types/additionalFlatTypes';
 
 interface TagFields {
   name: string;
@@ -25,6 +27,7 @@ const TagSelectionField = <T extends TagFields>({
   createMutation,
   nonVerifyable = false,
   noContentText,
+  type,
 }: {
   tags: T[];
   allTags: T[];
@@ -32,6 +35,7 @@ const TagSelectionField = <T extends TagFields>({
   createMutation?: (attr: any) => Promise<any>;
   nonVerifyable?: boolean;
   noContentText: string;
+  type: TagType;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -163,7 +167,18 @@ const TagSelectionField = <T extends TagFields>({
     ) : (
       <Stack direction='row' spacing={1} className='chip-stack'>
         {tags.map(tag => {
-          return <Chip key={tag.id} label={tag.name} />;
+          return (
+            <Chip
+              key={tag.id}
+              label={tag.name}
+              onClick={() => {
+                window.open(
+                  addNewParamToSearchPath(type, encodeURIComponent(String(tag.name))).searchVal,
+                  '_blank'
+                );
+              }}
+            />
+          );
         })}
       </Stack>
     );

@@ -6,6 +6,9 @@ import {
   useGetAllKeywordTagsQuery,
   useGetAllLocationTagsQuery,
   useGetAllPersonTagsQuery,
+  useGetKeywordTagsWithThumbnailQuery,
+  useGetLocationTagsWithThumbnailQuery,
+  useGetPersonTagsWithThumbnailQuery,
   useMergeKeywordTagsMutation,
   useMergeLocationTagsMutation,
   useMergePersonTagsMutation,
@@ -16,30 +19,34 @@ import {
   useUpdatePersonNameMutation,
   useUpdatePersonSynonymsMutation,
 } from '../../graphql/APIConnector';
+import { TagType } from '../../types/additionalFlatTypes';
 
-const useGenericTagEndpoints = (type: string) => {
+const useGenericTagEndpoints = (type: TagType) => {
   return useMemo(() => {
     switch (type) {
-      case 'locations':
+      case TagType.LOCATION:
         return {
           allTagsQuery: useGetAllLocationTagsQuery,
+          tagsWithThumbnailQuery: useGetLocationTagsWithThumbnailQuery,
           updateTagNameMutationSource: useUpdateLocationNameMutation,
           updateSynonymsMutationSource: useUpdateLocationSynonymsMutation,
           mergeTagsMutationSource: useMergeLocationTagsMutation,
           deleteTagMutationSource: useDeleteLocationTagMutation,
         };
-      case 'people':
+      case TagType.PERSON:
         return {
           allTagsQuery: useGetAllPersonTagsQuery,
+          tagsWithThumbnailQuery: useGetPersonTagsWithThumbnailQuery,
           updateTagNameMutationSource: useUpdatePersonNameMutation,
           updateSynonymsMutationSource: useUpdatePersonSynonymsMutation,
           mergeTagsMutationSource: useMergePersonTagsMutation,
           deleteTagMutationSource: useDeletePersonTagMutation,
         };
-      case 'keywords':
+      case TagType.KEYWORD:
       default:
         return {
           allTagsQuery: useGetAllKeywordTagsQuery,
+          tagsWithThumbnailQuery: useGetKeywordTagsWithThumbnailQuery,
           updateTagNameMutationSource: useUpdateKeywordNameMutation,
           updateSynonymsMutationSource: useUpdateKeywordSynonymsMutation,
           mergeTagsMutationSource: useMergeKeywordTagsMutation,

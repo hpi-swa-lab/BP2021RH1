@@ -9,7 +9,7 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
   it('should render all queried pictures in thumbnail-mode', async () => {
     const { container } = renderWithAPIMocks(
       <PictureScrollGrid
-        filters={{}}
+        queryParams={{}}
         scrollPos={0}
         scrollHeight={2 * window.innerHeight}
         hashbase='A'
@@ -33,7 +33,7 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
   it('should render the error message related to a network error', async () => {
     renderWithAPIMocks(
       <PictureScrollGrid
-        filters={{ id: { eq: '0' } }}
+        queryParams={{ id: { eq: '0' } }}
         scrollPos={0}
         scrollHeight={0}
         hashbase='A'
@@ -50,7 +50,7 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
   it('should render the error message related to an api error', async () => {
     renderWithAPIMocks(
       <PictureScrollGrid
-        filters={{ id: { eq: '-1' } }}
+        queryParams={{ id: { eq: '-1' } }}
         scrollPos={0}
         scrollHeight={0}
         hashbase='A'
@@ -69,7 +69,7 @@ describe('Refetch functionality in PictureScrollGrid', () => {
   it('should render more pictures after refetching', async () => {
     const { container } = renderWithAPIMocks(
       <PictureScrollGrid
-        filters={{}}
+        queryParams={{}}
         scrollPos={0}
         scrollHeight={2 * window.innerHeight}
         hashbase='A'
@@ -84,7 +84,7 @@ describe('Refetch functionality in PictureScrollGrid', () => {
 
     renderWithAPIMocks(
       <PictureScrollGrid
-        filters={{}}
+        queryParams={{}}
         scrollPos={2 * window.innerHeight} // simulates scrolling to the bottom
         scrollHeight={2 * window.innerHeight}
         hashbase='A'

@@ -8,11 +8,22 @@ export const GetPicturesSearchMocks = [
         filters: {
           and: [
             {
-              descriptions: {
-                text: {
-                  containsi: 'Onkel Pelle',
+              or: [
+                {
+                  keyword_tags: {
+                    name: {
+                      containsi: 'Onkel Pelle',
+                    },
+                  },
                 },
-              },
+                {
+                  verified_keyword_tags: {
+                    name: {
+                      containsi: 'Onkel Pelle',
+                    },
+                  },
+                },
+              ],
             },
           ],
         },
@@ -58,11 +69,22 @@ export const GetPicturesSearchMocks = [
         filters: {
           and: [
             {
-              descriptions: {
-                text: {
-                  containsi: 'invalid params',
+              or: [
+                {
+                  keyword_tags: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
                 },
-              },
+                {
+                  verified_keyword_tags: {
+                    name: {
+                      containsi: 'not matching',
+                    },
+                  },
+                },
+              ],
             },
           ],
         },
