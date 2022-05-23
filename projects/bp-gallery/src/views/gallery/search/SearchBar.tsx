@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/material';
@@ -6,18 +6,18 @@ import SearchIcon from '@mui/icons-material/Search';
 import { History } from 'history';
 import './SearchBar.scss';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
+import { AlertContext, AlertType } from '../../shared/AlertWrapper';
 
 const SearchBar = ({
   searchParams,
   customSearch,
-  onSetIsValidSearch,
 }: {
   searchParams: URLSearchParams;
   customSearch: boolean;
-  onSetIsValidSearch: (value: boolean) => void;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
+  const openAlert = useContext(AlertContext);
   const textFieldRef = useRef<any>();
   const [searchType, setSearchType] = useState<string>(SearchType.ALL);
 
@@ -46,12 +46,18 @@ const SearchBar = ({
     if (searchValue === '') return;
 
     const searchRes = addNewParamToSearchPath(searchType, searchValue, searchParams);
-    onSetIsValidSearch(searchRes.isValid);
-
-    history.push(searchRes.searchVal, {
-      showBack: true,
-    });
-    textFieldRef.current.value = '';
+    if (!searchRes.isValid) {
+      openAlert({
+        alertType: AlertType.INFO,
+        message: t('search.wrong-time-input-info'),
+        duration: 7000,
+      });
+    } else {
+      history.push(searchRes.searchVal, {
+        showBack: true,
+      });
+      textFieldRef.current.value = '';
+    }
   };
 
   const changeSearchType = (e: { target: { value: string } }) => {
