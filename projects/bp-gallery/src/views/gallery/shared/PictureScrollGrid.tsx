@@ -23,7 +23,7 @@ const PictureScrollGrid = ({
   resultPictureCallback,
   bulkOperations,
 }: {
-  queryParams: PictureFiltersInput | string[];
+  queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;

@@ -20,7 +20,7 @@ const buildTimeRangeFilter = (startTime: string, endTime: string) => {
   };
 };
 
-const paramToTimefilter = (timeParam: string) => {
+export const paramToTime = (timeParam: string) => {
   const year = parseInt(timeParam);
   let startTime = `${year}-01-01T00:00:00Z`;
   let endTime = `${year}-12-31T23:59:59Z`;
@@ -29,24 +29,28 @@ const paramToTimefilter = (timeParam: string) => {
       startTime = `19${year}-01-01T00:00:00Z`;
       endTime = `19${year}-12-31T23:59:59Z`;
     }
-    return buildTimeRangeFilter(startTime, endTime);
+    return { startTime, endTime, valid: true };
   }
+  return { startTime: '', endTime: '', valid: false };
 };
 
 const searchYear = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const timeParams = searchParams.getAll(SearchType.TIME_RANGE);
   timeParams.forEach(timeParam => {
-    const time_range_tag_filter = paramToTimefilter(timeParam);
-    filters.and?.push({
-      or: [
-        {
-          time_range_tag: time_range_tag_filter,
-        },
-        {
-          verified_time_range_tag: time_range_tag_filter,
-        },
-      ],
-    });
+    const { startTime, endTime, valid } = paramToTime(timeParam);
+    if (valid) {
+      const time_range_tag_filter = buildTimeRangeFilter(startTime, endTime);
+      filters.and?.push({
+        or: [
+          {
+            time_range_tag: time_range_tag_filter,
+          },
+          {
+            verified_time_range_tag: time_range_tag_filter,
+          },
+        ],
+      });
+    }
   });
 };
 

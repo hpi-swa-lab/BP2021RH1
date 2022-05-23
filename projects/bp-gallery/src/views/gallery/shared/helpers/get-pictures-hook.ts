@@ -1,11 +1,15 @@
 import {
+  GetPicturesByAllSearchQueryVariables,
   PictureFiltersInput,
   useGetPicturesByAllSearchQuery,
   useGetPicturesQuery,
 } from '../../../../graphql/APIConnector';
 import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../PictureScrollGrid';
 
-const useGetPictures = (queryParams: PictureFiltersInput | string[], customSearch: boolean) => {
+const useGetPictures = (
+  queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
+  customSearch: boolean
+) => {
   const queryResult = useGetPicturesQuery({
     variables: {
       filters: queryParams as PictureFiltersInput,
@@ -19,7 +23,7 @@ const useGetPictures = (queryParams: PictureFiltersInput | string[], customSearc
   });
   const customQueryResult = useGetPicturesByAllSearchQuery({
     variables: {
-      searchTerms: queryParams as string[],
+      ...(queryParams as GetPicturesByAllSearchQueryVariables),
       pagination: {
         start: 0,
         limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,

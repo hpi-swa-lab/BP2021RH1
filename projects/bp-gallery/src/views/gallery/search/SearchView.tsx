@@ -7,7 +7,7 @@ import './SearchView.scss';
 import SearchHub from './searchHub/SearchHub';
 import PictureScrollGrid from '../shared/PictureScrollGrid';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
-import { convertSearchParamsToPictureFilters } from './helpers/search-filters';
+import { convertSearchParamsToPictureFilters, paramToTime } from './helpers/search-filters';
 import {
   Button,
   IconButton,
@@ -56,6 +56,10 @@ export const asSearchPath = (searchParams: URLSearchParams): string => {
   return `/search?${searchParams.toString()}`;
 };
 
+const isValidYear = (searchRequest: string) => {
+  return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
+};
+
 export const addNewParamToSearchPath = (
   newParamType: string,
   searchRequest: string,
@@ -68,7 +72,7 @@ export const addNewParamToSearchPath = (
   const paramValues = searchRequest.split(' ');
 
   if (newParamType === SearchType.TIME_RANGE) {
-    if (!(parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4)))
+    if (!isValidYear(searchRequest))
       return { searchVal: asSearchPath(searchParams), isValid: false };
   }
 
@@ -82,7 +86,6 @@ export const addNewParamToSearchPath = (
 
 const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
-  const [isValidSearch, setIsValidSearch] = useState<boolean>(true);
   const { search }: Location = useLocation();
   const { t } = useTranslation();
 
@@ -95,7 +98,18 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
     if (customSearch) {
-      return searchParams.getAll(SearchType.ALL);
+      const allSearchTerms = searchParams.getAll(SearchType.ALL);
+      const searchTimes: string[][] = [];
+      allSearchTerms.forEach(searchTerm => {
+        if (isValidYear(searchTerm)) {
+          const { startTime, endTime } = paramToTime(searchTerm);
+          searchTimes.push([searchTerm, startTime, endTime]);
+        }
+      });
+      return {
+        searchTerms: allSearchTerms.filter(searchTerm => !isValidYear(searchTerm)),
+        searchTimes,
+      };
     }
     return convertSearchParamsToPictureFilters(searchParams);
   }, [customSearch, searchParams]);
@@ -124,13 +138,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
           <div className='search-bar-container'>
             {' '}
             {(isSearchBarVisible || !search) && (
-              <SearchBar
-                searchParams={searchParams}
-                onSetIsValidSearch={(value: boolean) => {
-                  setIsValidSearch(value);
-                }}
-                customSearch={customSearch}
-              />
+              <SearchBar searchParams={searchParams} customSearch={customSearch} />
             )}
             <SearchInfoTooltip
               title={
@@ -142,7 +150,6 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
             >
               <Button />
             </SearchInfoTooltip>
-            {!isValidSearch && <div>{t('search.wrong-time-input-info')}</div>}
             <div className='breadcrumb'>
               <SearchBreadcrumbs searchParams={searchParams} />
             </div>
