@@ -78,7 +78,6 @@ export const buildDecadeFilter = (decade: string) => {
 
 const searchDecade = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const timeParams = searchParams.getAll(SearchType.DECADE);
-  let startTime: string, endTime: string;
   timeParams.forEach(timeParam => {
     filters.and?.push(buildDecadeFilter(timeParam) ?? null);
   });

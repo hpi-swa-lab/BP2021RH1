@@ -7,8 +7,6 @@ import { AuthRole, useAuth } from '../../../AuthWrapper';
 import { ComponentCommonSynonyms, Maybe } from '../../../graphql/APIConnector';
 import { addNewParamToSearchPath } from '../../gallery/search/SearchView';
 import { AlertContext, AlertType } from '../AlertWrapper';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import { TagType } from '../../../types/additionalFlatTypes';
 
 interface TagFields {
@@ -42,7 +40,6 @@ const TagSelectionField = <T extends TagFields>({
   const { role } = useAuth();
   const { t } = useTranslation();
   const openAlert = useContext(AlertContext);
-  const history: History = useHistory();
 
   const [tagList, setTagList] = useState<T[]>(allTags);
 

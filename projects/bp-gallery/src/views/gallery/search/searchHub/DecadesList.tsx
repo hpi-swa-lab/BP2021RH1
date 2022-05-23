@@ -27,9 +27,8 @@ const DecadesList = () => {
     const decadeName = `filter${decade}0s`;
     decadeToFilter[decadeName] = buildDecadeFilter(decade);
   });
-  console.log(decadeToFilter);
-  // @ts-ignore
   const { data, loading, error } = useGetDecadePreviewThumbnailsQuery({
+    // @ts-ignore
     variables: decadeToFilter,
   });
   const decadeThumbnails: FlatDecadeThumbnails | undefined = useSimplifiedQueryResponseData(data);
