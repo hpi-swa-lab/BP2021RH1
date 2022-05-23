@@ -10,6 +10,7 @@ import {
   KeywordTagEntityResponseCollection,
   LocationTagEntityResponseCollection,
   PersonTagEntityResponseCollection,
+  PictureEntity,
   PictureEntityResponseCollection,
 } from './graphql/APIConnector';
 import AuthWrapper from './AuthWrapper';
