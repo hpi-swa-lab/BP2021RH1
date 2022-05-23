@@ -5,6 +5,11 @@ const {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } = require("./api/collection/services/custom-resolver");
+const {
+  buildQueryForAllSearch,
+  buildQueryForMediaFiles,
+  preparePictureDataForFrontend,
+} = require("./api/picture/services/custom-resolver")
 
 module.exports = {
   /**
@@ -77,8 +82,28 @@ module.exports = {
             );
           },
         }),
+        gqlExtensions.nexus.queryField("findPicturesByAllSearch", {
+          type: gqlExtensions.nexus.list("PictureEntity"),
+          args: {
+            searchTerms: gqlExtensions.nexus.list("String"),
+            pagination: "PaginationArg",
+          },
+          async resolve(_, { searchTerms, pagination }) {
+            const knexEngine = gqlExtensions.strapi.db.connection;
+            const matchingPictures = await buildQueryForAllSearch(knexEngine, searchTerms, pagination);
+            const mediaFilesForPictures = await buildQueryForMediaFiles(knexEngine, matchingPictures.map(pic => pic.id));
+            return preparePictureDataForFrontend(matchingPictures, mediaFilesForPictures);
+          },
+        }),
       ],
       resolversConfig: {
+        Query: {
+          findPicturesByAllSearch: {
+            auth: {
+              scope: ["api::picture.picture.find"],
+            },
+          },
+        },
         Mutation: {
           mergeKeywordTags: {
             auth: {
