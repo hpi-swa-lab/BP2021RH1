@@ -90,11 +90,15 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
     return new URLSearchParams(search);
   }, [search]);
 
+  const customSearch = useMemo(() => searchParams.has(SearchType.ALL), [searchParams]);
+
   // Builds query from search params in the path
-  const filtersClause = useMemo(
-    () => convertSearchParamsToPictureFilters(searchParams),
-    [searchParams]
-  );
+  const queryParams = useMemo(() => {
+    if (customSearch) {
+      return searchParams.getAll(SearchType.ALL);
+    }
+    return convertSearchParamsToPictureFilters(searchParams);
+  }, [searchParams]);
 
   const SearchInfoTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }}>
@@ -125,6 +129,7 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
                 onSetIsValidSearch={(value: boolean) => {
                   setIsValidSearch(value);
                 }}
+                customSearch={customSearch}
               />
             )}
             <SearchInfoTooltip
@@ -147,7 +152,8 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
           <SearchHub />
         ) : (
           <PictureScrollGrid
-            filters={filtersClause}
+            queryParams={queryParams}
+            customSearch={customSearch}
             scrollPos={scrollPos}
             scrollHeight={scrollHeight}
             hashbase={search}
