@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/material';
@@ -9,15 +9,38 @@ import { addNewParamToSearchPath, SearchType } from './SearchView';
 
 const SearchBar = ({
   searchParams,
+  customSearch,
   onSetIsValidSearch,
 }: {
-  searchParams?: URLSearchParams;
+  searchParams: URLSearchParams;
+  customSearch: boolean;
   onSetIsValidSearch: (value: boolean) => void;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
   const textFieldRef = useRef<any>();
-  const [searchType, setSearchType] = useState(SearchType.ALL);
+  const [searchType, setSearchType] = useState<string>(SearchType.ALL);
+
+  const typeOfLatestSearch = useMemo(() => {
+    const searchParamsIterator = searchParams.entries();
+    let nextParam = searchParamsIterator.next();
+    let latestType;
+    while (!nextParam.done) {
+      latestType = nextParam.value[0];
+      nextParam = searchParamsIterator.next();
+    }
+    return latestType;
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (typeOfLatestSearch) {
+      setSearchType(typeOfLatestSearch);
+    } else {
+      setSearchType(SearchType.ALL);
+    }
+  }, [typeOfLatestSearch]);
+
+  const dontShowAllSearch: boolean = !customSearch && !searchParams.values().next().done;
 
   const onSearchStart = (searchValue: string) => {
     if (searchValue === '') return;
@@ -58,20 +81,26 @@ const SearchBar = ({
           ),
           startAdornment: (
             <InputAdornment position='start'>
-              <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
-                value={searchType}
-                label='Age'
-                onChange={changeSearchType}
-              >
-                <MenuItem value={SearchType.ALL}>{t('search.search-all')}</MenuItem>
-                <MenuItem value={SearchType.TIME_RANGE}>{t('search.search-decade')}</MenuItem>
-                <MenuItem value={SearchType.KEYWORD}>{t('search.search-keyword')}</MenuItem>
-                <MenuItem value={SearchType.DESCRIPTION}>{t('search.descriptions')}</MenuItem>
-                <MenuItem value={SearchType.PERSON}>{t('search.persons')}</MenuItem>
-                <MenuItem value={SearchType.LOCATION}>{t('search.locations')}</MenuItem>
-              </Select>
+              {customSearch ? (
+                <span className='MuiInputBase-root'>{t('search.search-all')}</span>
+              ) : (
+                <Select
+                  labelId='demo-simple-select-label'
+                  id='demo-simple-select'
+                  value={searchType}
+                  label='Age'
+                  onChange={changeSearchType}
+                >
+                  {!dontShowAllSearch && (
+                    <MenuItem value={SearchType.ALL}>{t('search.search-all')}</MenuItem>
+                  )}
+                  <MenuItem value={SearchType.KEYWORD}>{t('search.search-keyword')}</MenuItem>
+                  <MenuItem value={SearchType.TIME_RANGE}>{t('search.search-decade')}</MenuItem>
+                  <MenuItem value={SearchType.DESCRIPTION}>{t('search.descriptions')}</MenuItem>
+                  <MenuItem value={SearchType.PERSON}>{t('search.persons')}</MenuItem>
+                  <MenuItem value={SearchType.LOCATION}>{t('search.locations')}</MenuItem>
+                </Select>
+              )}
             </InputAdornment>
           ),
         }}
