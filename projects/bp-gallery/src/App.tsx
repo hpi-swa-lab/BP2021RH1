@@ -86,6 +86,12 @@ const apolloClient = new ApolloClient({
               };
             },
           },
+          findPicturesByAllSearch: {
+            keyArgs: ['searchTerms', 'searchTimes'],
+            merge(existing = [], incoming: PictureEntity[]) {
+              return [...existing, ...incoming];
+            },
+          },
           keywordTags: {
             keyArgs: ['filters'],
             merge(existing = { data: [] }, incoming: KeywordTagEntityResponseCollection) {
