@@ -30,10 +30,10 @@ describe('SearchView called without any parameters', () => {
   });
 });
 
-describe('SearchView called with parameters which do not match any pictures', () => {
+describe('SearchView called with keyword which does not match any pictures', () => {
   beforeEach(() =>
     renderRouteWithAPIMocks(
-      `/search?all=${encodeURIComponent('not matching')}`,
+      `/search?keyword=${encodeURIComponent('not matching')}`,
       GetPicturesSearchMocks
     )
   );
@@ -51,9 +51,12 @@ describe('SearchView called with parameters which do not match any pictures', ()
   });
 });
 
-describe('SearchView called with parameters which match at least one picture', () => {
+describe('SearchView called with keyword which matches at least one picture', () => {
   beforeEach(() =>
-    renderRouteWithAPIMocks(`/search?all=${encodeURIComponent('Pelle')}`, GetPicturesSearchMocks)
+    renderRouteWithAPIMocks(
+      `/search?keyword=${encodeURIComponent('Onkel Pelle')}`,
+      GetPicturesSearchMocks
+    )
   );
 
   it('should render a SearchBar', async () => {
@@ -80,10 +83,79 @@ describe('SearchView called with parameters which match at least one picture', (
 });
 
 describe('convertSearchParamsToPictureFilters', () => {
-  it('should append time range tag filter', () => {
-    const searchParams = new URLSearchParams({ decade: '70' });
+  it('should append year filter specified by 2 digits', () => {
+    const searchParams = new URLSearchParams({ date: '74' });
 
     const result = convertSearchParamsToPictureFilters(searchParams);
+    expect(result).toEqual({
+      and: [
+        {
+          or: [
+            {
+              time_range_tag: {
+                start: {
+                  gte: '1974-01-01T00:00:00Z',
+                },
+                end: {
+                  lte: '1974-12-31T23:59:59Z',
+                },
+              },
+            },
+            {
+              verified_time_range_tag: {
+                start: {
+                  gte: '1974-01-01T00:00:00Z',
+                },
+                end: {
+                  lte: '1974-12-31T23:59:59Z',
+                },
+              },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('should append year filter specified by 4 digits', () => {
+    const searchParams = new URLSearchParams({ date: '1974' });
+
+    const result = convertSearchParamsToPictureFilters(searchParams);
+    expect(result).toEqual({
+      and: [
+        {
+          or: [
+            {
+              time_range_tag: {
+                start: {
+                  gte: '1974-01-01T00:00:00Z',
+                },
+                end: {
+                  lte: '1974-12-31T23:59:59Z',
+                },
+              },
+            },
+            {
+              verified_time_range_tag: {
+                start: {
+                  gte: '1974-01-01T00:00:00Z',
+                },
+                end: {
+                  lte: '1974-12-31T23:59:59Z',
+                },
+              },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('should append decade filter', () => {
+    const searchParams = new URLSearchParams({ decade: '7' });
+
+    const result = convertSearchParamsToPictureFilters(searchParams);
+
     expect(result).toEqual({
       and: [
         {
@@ -94,7 +166,7 @@ describe('convertSearchParamsToPictureFilters', () => {
                   gte: '1970-01-01T00:00:00Z',
                 },
                 end: {
-                  lte: '1970-12-31T23:59:59Z',
+                  lte: '1979-12-31T23:59:59Z',
                 },
               },
             },
@@ -104,7 +176,7 @@ describe('convertSearchParamsToPictureFilters', () => {
                   gte: '1970-01-01T00:00:00Z',
                 },
                 end: {
-                  lte: '1970-12-31T23:59:59Z',
+                  lte: '1979-12-31T23:59:59Z',
                 },
               },
             },
@@ -114,8 +186,8 @@ describe('convertSearchParamsToPictureFilters', () => {
     });
   });
 
-  it('should append time range tag filter for pre50 decade', () => {
-    const searchParams = new URLSearchParams({ decade: 'pre50' });
+  it('should append decade filter for "pre50" decade', () => {
+    const searchParams = new URLSearchParams({ decade: '4' });
 
     const result = convertSearchParamsToPictureFilters(searchParams);
 

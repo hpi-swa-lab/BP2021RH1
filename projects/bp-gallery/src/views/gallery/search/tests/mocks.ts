@@ -12,62 +12,14 @@ export const GetPicturesSearchMocks = [
                 {
                   keyword_tags: {
                     name: {
-                      containsi: 'Pelle',
+                      containsi: 'Onkel Pelle',
                     },
                   },
                 },
                 {
                   verified_keyword_tags: {
                     name: {
-                      containsi: 'Pelle',
-                    },
-                  },
-                },
-                {
-                  time_range_tag: {},
-                },
-                {
-                  verified_time_range_tag: {},
-                },
-                {
-                  person_tags: {
-                    name: {
-                      containsi: 'Pelle',
-                    },
-                  },
-                },
-                {
-                  verified_person_tags: {
-                    name: {
-                      containsi: 'Pelle',
-                    },
-                  },
-                },
-                {
-                  collections: {
-                    name: {
-                      containsi: 'Pelle',
-                    },
-                  },
-                },
-                {
-                  location_tags: {
-                    name: {
-                      containsi: 'Pelle',
-                    },
-                  },
-                },
-                {
-                  verified_location_tags: {
-                    name: {
-                      containsi: 'Pelle',
-                    },
-                  },
-                },
-                {
-                  descriptions: {
-                    text: {
-                      containsi: 'Pelle',
+                      containsi: 'Onkel Pelle',
                     },
                   },
                 },
@@ -128,54 +80,6 @@ export const GetPicturesSearchMocks = [
                 {
                   verified_keyword_tags: {
                     name: {
-                      containsi: 'not matching',
-                    },
-                  },
-                },
-                {
-                  time_range_tag: {},
-                },
-                {
-                  verified_time_range_tag: {},
-                },
-                {
-                  person_tags: {
-                    name: {
-                      containsi: 'not matching',
-                    },
-                  },
-                },
-                {
-                  verified_person_tags: {
-                    name: {
-                      containsi: 'not matching',
-                    },
-                  },
-                },
-                {
-                  collections: {
-                    name: {
-                      containsi: 'not matching',
-                    },
-                  },
-                },
-                {
-                  location_tags: {
-                    name: {
-                      containsi: 'not matching',
-                    },
-                  },
-                },
-                {
-                  verified_location_tags: {
-                    name: {
-                      containsi: 'not matching',
-                    },
-                  },
-                },
-                {
-                  descriptions: {
-                    text: {
                       containsi: 'not matching',
                     },
                   },
