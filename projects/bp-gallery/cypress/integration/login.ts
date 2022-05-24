@@ -6,7 +6,7 @@ describe('Login', () => {
     cy.get('.MuiPaper-root').contains('Logout').click();
   });
 
-  it('should display a \'More\' button in the navigation bar which opens a menu when clicked', () => {
+  it("should display a 'More' button in the navigation bar which opens a menu when clicked", () => {
     cy.get('.MuiPaper-root').should('not.exist');
     cy.get('.nav-bar').contains('Mehr...');
     cy.get('.nav-bar').contains('Mehr...').click();
