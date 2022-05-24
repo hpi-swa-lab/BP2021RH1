@@ -30,8 +30,13 @@ cd ../bp-gallery
 mv ./src/graphql/schema/schema.json ./src/graphql/schema/_buffer.schema.json
 yarn generate-api:e2e # generate api from local schema
 yarn cy:ci # run cypress tests
+
+status_code=$?
+
 mv ./src/graphql/schema/_buffer.schema.json ./src/graphql/schema/schema.json #restore (non-test) schema
 
 # Clean up
 echo "Killing strapi service..."
 pkill -f 'strapi develop'
+
+exit $status_code
