@@ -8,10 +8,10 @@ describe('Picture View called via link', () => {
   });
 
   it('should show picture information after opening the sidebar', () => {
-    cy.get('.picture-sidebar').should('not.be.visible');
-    cy.get('.picture-sidebar .quick-access-buttons').click();
     cy.get('.picture-sidebar').should('be.visible');
     cy.contains('Bad Harzburg');
+    cy.get('.picture-sidebar .quick-access-buttons').click();
+    cy.get('.picture-sidebar').should('not.be.visible');
   });
 
   it('should return to the homepage when pressing the back button', () => {
@@ -23,21 +23,22 @@ describe('Picture View called via link', () => {
 describe('Picture View called via link as a curator', () => {
   before(() => {
     cy.visit('http://localhost:3000/');
-    cy.get('.nav-bar').contains('Login').click();
+    cy.get('.nav-bar').contains('Mehr...').click();
+    cy.get('.MuiPaper-root').contains('Login').click();
     cy.get('#username').should('be.visible').type('testCurator');
     cy.get('#password').should('be.visible').type('1234abc');
     cy.get('button[type="submit"]').should('be.visible').click();
-    cy.get('.nav-bar').contains('Logout').should('exist');
+    cy.get('.MuiSnackbar-root').contains('Erfolgreich eingeloggt').should('exist');
     cy.visit('localhost:3000/picture/1');
   });
   after(() => {
     cy.visit('http://localhost:3000/');
-    cy.get('.nav-bar').contains('Logout').should('be.visible');
-    cy.get('.nav-bar').contains('Logout').click();
+    cy.get('.nav-bar').contains('Mehr...').click();
+    cy.get('.MuiPaper-root').contains('Logout').click();
   });
 
   it('should show a picture-info-field for each type in the picture sidebar', () => {
     cy.get('.picture-sidebar .quick-access-buttons').click();
-    cy.get('.picture-info-field').should('have.length', 5);
+    cy.get('.picture-info-field').should('have.length', 6);
   });
 });
