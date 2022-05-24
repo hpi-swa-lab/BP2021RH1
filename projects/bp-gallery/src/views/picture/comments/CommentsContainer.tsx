@@ -23,12 +23,8 @@ const CommentsContainer = ({
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
 
   return (
-    <div
-      className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`}
-      id='comments'
-      onClick={() => setIsOpen(o => !o)}
-    >
-      <div className='picture-comments-header'>
+    <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
+      <div className='picture-comments-header' onClick={() => setIsOpen(o => !o)}>
         <h2>
           <Icon>question_answer</Icon>
           {t('common.comments')}

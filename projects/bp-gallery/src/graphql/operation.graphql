@@ -3,7 +3,7 @@ query getPictureInfo($pictureId: ID!) {
     data {
       id
       attributes {
-        descriptions(sort: "createdAt:desc") {
+        descriptions(sort: "createdAt:asc") {
           data {
             id
             attributes {

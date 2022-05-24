@@ -2746,7 +2746,7 @@ export const GetPictureInfoDocument = gql`
       data {
         id
         attributes {
-          descriptions(sort: "createdAt:desc") {
+          descriptions(sort: "createdAt:asc") {
             data {
               id
               attributes {
