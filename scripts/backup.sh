@@ -25,6 +25,6 @@ pg_dump -U $DB_USER -Fc $DB_NAME > "$BACKUP_TARGET/db_backup.sql"
 # Sync picture files using incremental backup system to backup folder
 rsync -a -v --delete --link-dest=$LAST_BACKUP_FOLDER $MEDIA_DIR $BACKUP_TARGET
 
-# Delte stale (> 14 days old) backups
+# Delete stale (> 14 days old) backups
 find "$BACKUP_DIR"* -mtime +14 -type d -exec rm -r {} +
 ##############################################
