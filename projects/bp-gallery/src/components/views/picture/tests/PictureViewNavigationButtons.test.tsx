@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import { renderWithPictureContextMocks } from './pictureTestUtils';
 import PictureNavigationButtons, {
   PictureNavigationTarget,
-} from '../picture-overlay/PictureNavigationButtons';
+} from '../overlay/PictureNavigationButtons';
 
 describe('PictureViewNavigationButtons', () => {
   it('should show next button if there is a next picture', async () => {

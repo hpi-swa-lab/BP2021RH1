@@ -1,5 +1,5 @@
-import { PictureFiltersInput } from '../graphql/APIConnector';
-import { SearchType } from '../components/views/search/SearchView';
+import { PictureFiltersInput } from '../../../../graphql/APIConnector';
+import { SearchType } from '../SearchView';
 
 const buildFilter = (value: string) => {
   return {

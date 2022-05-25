@@ -1,4 +1,4 @@
-import { useMoveView } from '../picture-overlay/ZoomWrapper';
+import { useMoveView } from '../overlay/ZoomWrapper';
 import React, { useState } from 'react';
 import { render } from '@testing-library/react';
 

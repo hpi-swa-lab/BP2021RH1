@@ -7,7 +7,7 @@ import Loading from '../../common/Loading';
 import ItemList from '../../common/ItemList';
 import { asApiPath } from '../../App';
 import { addNewParamToSearchPath } from './SearchView';
-import useGenericTagEndpoints from '../collection-curating/endpoints';
+import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 

@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
-import { asFlatPicture } from '../../../helpers/as-flat-picture';
-import uploadMediaFiles from '../../../helpers/upload-media-files';
+import uploadMediaFiles from './helpers/upload-media-files';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
@@ -34,6 +33,19 @@ const PictureUploadArea = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const [createPicture] = useCreatePictureMutation();
+
+  const asFlatPicture = (file: File): FlatPicture => {
+    return {
+      id: file.name,
+      media: {
+        formats: {
+          small: {
+            url: URL.createObjectURL(file),
+          },
+        },
+      } as any,
+    };
+  };
 
   useEffect(() => {
     const filesWithPreviews = acceptedFiles.map(file => ({ preview: asFlatPicture(file), file }));

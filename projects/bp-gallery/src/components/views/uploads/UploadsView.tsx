@@ -4,7 +4,7 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
 import './UploadsView.scss';
 import { useTranslation } from 'react-i18next';
-import useBulkOperations from '../../../hooks/bulk-operations';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import ScrollContainer from '../../common/ScrollContainer';
 
 const UploadsView = () => {

@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import TargetCollectionSelectDialog from './dialog-presets/TargetCollectionSelectDialog';
-import StatelessDialog from './dialog-presets/StatelessDialog';
+import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
+import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
 import { Dialog } from '@mui/material';
-import InputFieldDialog from './dialog-presets/InputFieldDialog';
+import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
 
 export interface DialogOption {
   name: string;
@@ -101,13 +101,13 @@ const DialogWrapper = ({ children }: { children: any }) => {
       >
         {(dialogState?.preset === DialogPreset.NO_PRESET ||
           dialogState?.preset === DialogPreset.CONFIRM) && (
-          <StatelessDialog dialogProps={dialogState} handleClose={handleClose} />
+          <StatelessDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
         {dialogState?.preset === DialogPreset.SELECT_COLLECTION && (
-          <TargetCollectionSelectDialog dialogProps={dialogState} handleClose={handleClose} />
+          <CollectionSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
         {dialogState?.preset === DialogPreset.INPUT_FIELD && (
-          <InputFieldDialog dialogProps={dialogState} handleClose={handleClose} />
+          <InputFieldDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
       </Dialog>
     </DialogContext.Provider>

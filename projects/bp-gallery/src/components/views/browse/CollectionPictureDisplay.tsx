@@ -11,7 +11,7 @@ import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUplo
 import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import useBulkOperations from '../../../hooks/bulk-operations';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { DialogContext, DialogPreset } from '../../wrapper/DialogWrapper';
 
 const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
@@ -116,7 +116,7 @@ const CollectionPictureDisplay = ({
           <SubCollections
             childCollections={collection.child_collections as { thumbnail: string; name: string }[]}
             path={path}
-            communityView={!!picturePublishingDate}
+            onlyLatest={!!picturePublishingDate}
           />
         )}
         {role >= AuthRole.CURATOR && (

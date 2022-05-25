@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import './PictureSidebar.scss';
-import PictureViewNavigationBar from '../picture-overlay/PictureViewNavigationBar';
+import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import { ApolloError } from '@apollo/client';
 import CommentsContainer from './comments/CommentsContainer';
 import { FlatPicture } from '../../../../types/additionalFlatTypes';

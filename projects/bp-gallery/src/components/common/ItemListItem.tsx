@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import getColorSchema from '../../helpers/color-schema';
 import getLineBreaks from '../../helpers/get-linebreaks';
 
 export interface ItemListItemModel {
@@ -42,6 +41,15 @@ export const ItemListItem = ({ item, compact }: { item: ItemListItemModel; compa
   };
 
   useEffect(checkLineBreaks, [item.name, compact]);
+
+  const getColorSchema = (from: string, dark = false) => {
+    let hash = 0;
+    for (let i = 0; i < from.length; i++) {
+      hash = from.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const color = `hsl(${(hash % 90) - 45}deg, 40%, 50%)`;
+    return color;
+  };
 
   return (
     <div className='item' ref={containerRef} onClick={item.onClick ? item.onClick : undefined}>

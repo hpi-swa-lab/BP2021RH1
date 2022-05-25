@@ -3,7 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useScanner from '../../../hooks/scanner-hook';
+import useScanner from '../../../hooks/scanner.hook';
 
 const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
   const { t } = useTranslation();

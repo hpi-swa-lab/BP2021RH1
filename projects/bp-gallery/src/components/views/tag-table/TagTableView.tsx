@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-import './TagOverview.scss';
+import './TagTableView.scss';
 import {
   ComponentCommonSynonyms,
   ComponentCommonSynonymsInput,
@@ -16,7 +16,7 @@ import {
 } from '@mui/x-data-grid';
 import { AlertContext, AlertType } from '../../wrapper/AlertWrapper';
 import { Button, Chip, IconButton } from '@mui/material';
-import useGenericTagEndpoints from './endpoints';
+import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useTranslation } from 'react-i18next';
 import { Delete } from '@mui/icons-material';
 import { DialogContext, DialogPreset } from '../../wrapper/DialogWrapper';
@@ -31,7 +31,7 @@ interface TagRow {
   delete: { tagId: string };
 }
 
-const TagOverview = ({ type }: { type: TagType }) => {
+const TagTableView = ({ type }: { type: TagType }) => {
   const openAlert = useContext(AlertContext);
   const prompt = useContext(DialogContext);
   const { t } = useTranslation();
@@ -274,4 +274,4 @@ const TagOverview = ({ type }: { type: TagType }) => {
   }
 };
 
-export default TagOverview;
+export default TagTableView;

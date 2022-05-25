@@ -8,44 +8,39 @@ test('Route mechanism renders the App component', () => {
   expect(container.firstChild).toHaveClass('App');
 });
 
-const GalleryViewMock = jest.fn();
-const GalleryViewMockComponent = (props: any) => {
-  GalleryViewMock(props);
-  return <div>GalleryViewMock</div>;
+const BrowseViewMock = jest.fn();
+const BrowseViewMockComponent = (props: any) => {
+  BrowseViewMock(props);
+  return <div>BrowseViewMock</div>;
 };
-jest.mock('../views/gallery/GalleryView', () => GalleryViewMockComponent);
+jest.mock('../views/browse/BrowseView', () => BrowseViewMockComponent);
 
-test('Route mechanism renders the GalleryView component with browse target', () => {
+test('Accessing the browse route renders BrowseView', () => {
   renderRoute('/browse');
 
-  const galleryView = screen.getByText('GalleryViewMock');
-  expect(galleryView).toBeInTheDocument();
-
-  expect(GalleryViewMock).toHaveBeenCalledWith(
-    expect.objectContaining({
-      target: 'browse',
-    })
-  );
+  const browseView = screen.getByText('BrowseViewMock');
+  expect(browseView).toBeInTheDocument();
 });
 
-test('Route mechanism renders the GalleryView component with search target', () => {
+const SearchViewMock = jest.fn();
+const SearchViewMockComponent = (props: any) => {
+  SearchViewMock(props);
+  return <div>SearchViewMock</div>;
+};
+jest.mock('../views/search/SearchView', () => SearchViewMockComponent);
+
+test('Accessing the search route renders SearchView', () => {
   renderRoute('/search');
 
-  const galleryView = screen.getByText('GalleryViewMock');
-  expect(galleryView).toBeInTheDocument();
-
-  expect(GalleryViewMock).toHaveBeenCalledWith(
-    expect.objectContaining({
-      target: 'search',
-    })
-  );
+  const searchView = screen.getByText('SearchViewMock');
+  expect(searchView).toBeInTheDocument();
 });
 
-test('Route mechanism redirects empty route to the GalleryView component', () => {
+test('Route mechanism redirects empty route to the BrowseView component', () => {
   renderRoute('/');
 
-  const galleryView = screen.getByText('GalleryViewMock');
-  expect(galleryView).toBeInTheDocument();
+  const browseView = screen.getByText('BrowseViewMock');
+  expect(browseView).toBeInTheDocument();
 });
 
 const PictureViewMock = jest.fn();
@@ -69,7 +64,7 @@ test('Route mechanism renders the PictureView to a picture', () => {
 });
 
 const DemoMock = () => <div>DemoMock</div>;
-jest.mock('../prototypes/demo', () => DemoMock);
+jest.mock('../../prototypes/demo', () => DemoMock);
 
 test('Route mechanism renders the Demo component', () => {
   renderRoute('/prototypes/demo');
@@ -79,7 +74,7 @@ test('Route mechanism renders the Demo component', () => {
 });
 
 const TimeLineDemo = () => <div>TimelineDemoMock</div>;
-jest.mock('../prototypes/timeline-demo', () => TimeLineDemo);
+jest.mock('../../prototypes/timeline-demo', () => TimeLineDemo);
 
 test('Route mechanism renders the TimeLineDemo component', () => {
   renderRoute('/prototypes/timeline-demo');

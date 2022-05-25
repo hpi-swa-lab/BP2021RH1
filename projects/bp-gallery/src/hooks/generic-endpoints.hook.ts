@@ -18,8 +18,8 @@ import {
   useUpdateLocationSynonymsMutation,
   useUpdatePersonNameMutation,
   useUpdatePersonSynonymsMutation,
-} from '../../../graphql/APIConnector';
-import { TagType } from '../../../types/additionalFlatTypes';
+} from '../graphql/APIConnector';
+import { TagType } from '../types/additionalFlatTypes';
 
 const useGenericTagEndpoints = (type: TagType) => {
   return useMemo(() => {

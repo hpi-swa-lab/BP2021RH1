@@ -22,7 +22,10 @@ const PictureScrollGridMockComponent = (props: any) => {
   PictureScrollGridMock(props);
   return <div>PictureScrollGridMock</div>;
 };
-jest.mock('../../shared/PictureScrollGrid', () => PictureScrollGridMockComponent);
+jest.mock(
+  '../../../common/picture-gallery/PictureScrollGrid',
+  () => PictureScrollGridMockComponent
+);
 describe('CollectionPictureDisplay', () => {
   describe('CommunityViewMode', () => {
     describe('Unit', () => {
@@ -121,7 +124,7 @@ describe('CollectionPictureDisplay', () => {
               name: string;
             }[],
             path: path,
-            communityView: !!picturePublishingDate,
+            onlyLatest: !!picturePublishingDate,
           })
         );
       });

@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import PictureView from '../picture/PictureView';
 import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
-import './CommentOverview.scss';
+import './UnverifiedCommentsView.scss';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 
-const CommentOverview = () => {
+const UnverifiedCommentsView = () => {
   const { t } = useTranslation();
   const { role } = useAuth();
 
@@ -115,4 +115,4 @@ const CommentOverview = () => {
   }
 };
 
-export default CommentOverview;
+export default UnverifiedCommentsView;

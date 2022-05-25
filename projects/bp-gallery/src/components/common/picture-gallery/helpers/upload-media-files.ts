@@ -1,4 +1,4 @@
-import { asApiPath } from '../components/App';
+import { asApiPath } from '../../../App';
 
 // Using fetch (REST) because upload with GraphQL is a lot more difficult
 const uploadMediaFiles = (files: File[]): Promise<string[]> => {

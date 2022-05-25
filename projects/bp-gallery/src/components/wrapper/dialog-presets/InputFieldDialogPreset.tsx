@@ -11,7 +11,7 @@ import React, { useState } from 'react';
 import { Close, Done } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
-const InputFieldDialog = ({
+const InputFieldDialogPreset = ({
   dialogProps,
   handleClose,
 }: {
@@ -40,4 +40,4 @@ const InputFieldDialog = ({
   );
 };
 
-export default InputFieldDialog;
+export default InputFieldDialogPreset;

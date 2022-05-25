@@ -3,7 +3,7 @@ import './PictureGrid.scss';
 import PictureView from '../../views/picture/PictureView';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import hashCode from '../../../helpers/hash-code';
-import { zoomIntoPicture, zoomOutOfPicture } from '../../../helpers/picture-animation.helpers';
+import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
-import TopBar from './frame/TopBar';
+import TopBar from './top-and-bottom-bar/TopBar';
 import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
-import NavigationBar from './frame/NavigationBar';
+import NavigationBar from './top-and-bottom-bar/NavigationBar';
 import {
   KeywordTagEntityResponseCollection,
   LocationTagEntityResponseCollection,

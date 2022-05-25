@@ -13,7 +13,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatDecadeThumbnails } from '../../../types/additionalFlatTypes';
-import { buildDecadeFilter } from '../../../helpers/search-filters';
+import { buildDecadeFilter } from './helpers/search-filters';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 

@@ -7,7 +7,7 @@ import './SearchView.scss';
 import SearchHub from './SearchHub';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
-import { convertSearchParamsToPictureFilters, paramToTime } from '../../../helpers/search-filters';
+import { convertSearchParamsToPictureFilters, paramToTime } from './helpers/search-filters';
 import {
   Button,
   IconButton,
@@ -18,7 +18,7 @@ import {
   Typography,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import useBulkOperations from '../../../hooks/bulk-operations';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { TagType } from '../../../types/additionalFlatTypes';
 import ScrollContainer from '../../common/ScrollContainer';
 

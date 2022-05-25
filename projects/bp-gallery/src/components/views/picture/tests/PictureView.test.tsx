@@ -10,7 +10,7 @@ const PictureViewUIMockComponent = (props: any) => {
   PictureViewUIMock(props);
   return <div>PictureViewUIMock</div>;
 };
-jest.mock('../PictureViewUI', () => PictureViewUIMockComponent);
+jest.mock('../overlay/PictureViewUI', () => PictureViewUIMockComponent);
 
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({

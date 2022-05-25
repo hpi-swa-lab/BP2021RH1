@@ -7,17 +7,11 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
-import { decodeBrowsePathComponent } from '../../../helpers/formatBrowsePath';
+import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 import CollectionPictureDisplay from './CollectionPictureDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
 
-const BrowseView = ({
-  path,
-  communityView = false,
-}: {
-  path?: string[];
-  communityView: boolean;
-}) => {
+const BrowseView = ({ path, onlyLatest = false }: { path?: string[]; onlyLatest: boolean }) => {
   // Query the name of the root-collection if there is no path
   const rootCollectionResult = useGetRootCollectionQuery({
     skip: path && path.length > 0,
@@ -45,13 +39,13 @@ const BrowseView = ({
     variables: {
       date: picturePublishingDate,
     },
-    skip: !communityView,
+    skip: !onlyLatest,
   });
   const latestCollections: { id: string }[] | undefined = useSimplifiedQueryResponseData(
     latestCollectionsResult.data
   )?.collections;
 
-  if (communityView) {
+  if (onlyLatest) {
     const latestCollectionIds = latestCollections?.map(collection => collection.id);
     if (latestCollectionIds && collections) {
       // Filter child_collections to only accept those which got new pictures
@@ -67,7 +61,7 @@ const BrowseView = ({
     <ScrollContainer>
       {(scrollPos: number, scrollHeight: number) => (
         <CollectionPictureDisplay
-          picturePublishingDate={communityView ? picturePublishingDate : undefined}
+          picturePublishingDate={onlyLatest ? picturePublishingDate : undefined}
           collections={filteredCollections}
           loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
           error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}

@@ -12,10 +12,10 @@ import { useTranslation } from 'react-i18next';
 import { useGetAllCollectionsQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
-import './TargetCollectionSelectDialog.scss';
+import './CollectionSelectDialogPreset.scss';
 import { DialogProps } from '../DialogWrapper';
 
-const TargetCollectionSelectDialog = ({
+const CollectionSelectDialogPreset = ({
   handleClose,
   dialogProps,
 }: {
@@ -62,4 +62,4 @@ const TargetCollectionSelectDialog = ({
   );
 };
 
-export default TargetCollectionSelectDialog;
+export default CollectionSelectDialogPreset;

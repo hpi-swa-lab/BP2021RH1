@@ -3,16 +3,16 @@ import { useHistory } from 'react-router-dom';
 import { asApiPath } from '../../App';
 import ItemList from '../../common/ItemList';
 import React from 'react';
-import { decodeBrowsePathComponent, formatBrowsePath } from '../../../helpers/formatBrowsePath';
+import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-browse-path';
 
 const SubCollections = ({
   childCollections,
   path,
-  communityView,
+  onlyLatest,
 }: {
   childCollections: { thumbnail: string; name: string }[];
   path?: string[];
-  communityView?: boolean;
+  onlyLatest?: boolean;
 }) => {
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
   const history: History = useHistory();
@@ -22,7 +22,7 @@ const SubCollections = ({
       background: collection.thumbnail ? asApiPath(collection.thumbnail) : DEFAULT_THUMBNAIL_URL,
       color: index % 2 === 0 ? '#7E241D' : '#404272',
       onClick: () => {
-        history.push(formatBrowsePath(path, communityView, collection.name), { showBack: true });
+        history.push(formatBrowsePath(path, onlyLatest, collection.name), { showBack: true });
       },
     };
   };

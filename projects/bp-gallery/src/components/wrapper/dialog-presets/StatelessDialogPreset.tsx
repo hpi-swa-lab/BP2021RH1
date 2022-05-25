@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import { DialogProps } from '../DialogWrapper';
 
-const StatelessDialog = ({
+const StatelessDialogPreset = ({
   dialogProps,
   handleClose,
 }: {
@@ -38,4 +38,4 @@ const StatelessDialog = ({
   );
 };
 
-export default StatelessDialog;
+export default StatelessDialogPreset;

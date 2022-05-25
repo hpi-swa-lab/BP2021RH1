@@ -11,14 +11,14 @@ const CommentsContainerMockComponent = (props: any) => {
   CommentsContainerMock(props);
   return <div>CommentsContainerMock</div>;
 };
-jest.mock('../comments/CommentsContainer', () => CommentsContainerMockComponent);
+jest.mock('../sidebar/comments/CommentsContainer', () => CommentsContainerMockComponent);
 
 const PictureInfoMock = jest.fn();
 const PictureInfoMockComponent = (props: any) => {
   PictureInfoMock(props);
   return <div>PictureInfoMock</div>;
 };
-jest.mock('../../shared/picture-info/PictureInfo.tsx', () => PictureInfoMockComponent);
+jest.mock('../sidebar/picture-info/PictureInfo', () => PictureInfoMockComponent);
 
 describe('PictureSidebar', () => {
   it('should be able to open and close', async () => {

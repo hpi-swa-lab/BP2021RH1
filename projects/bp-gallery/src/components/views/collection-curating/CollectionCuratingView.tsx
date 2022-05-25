@@ -1,10 +1,10 @@
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useGetRootCollectionQuery } from '../../../graphql/APIConnector';
-import './CollectionsOverview.scss';
+import './CollectionCuratingView.scss';
 import CollectionsPanel from './CollectionsPanel';
 
-const CollectionsOverview = () => {
+const CollectionCuratingView = () => {
   const [panels, setPanels] = useState<string[]>([]);
 
   const { data: rootCollection } = useGetRootCollectionQuery();
@@ -40,4 +40,4 @@ const CollectionsOverview = () => {
   );
 };
 
-export default CollectionsOverview;
+export default CollectionCuratingView;

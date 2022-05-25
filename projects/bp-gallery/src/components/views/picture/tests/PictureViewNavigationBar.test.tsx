@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
-import PictureViewNavigationBar from '../picture-overlay/PictureViewNavigationBar';
+import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import { renderWithPictureContextMocks } from './pictureTestUtils';
 
 const setSideBarOpenMock = jest.fn();

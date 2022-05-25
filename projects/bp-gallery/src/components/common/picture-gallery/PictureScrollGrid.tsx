@@ -9,7 +9,7 @@ import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import { useTranslation } from 'react-i18next';
 import './PictureScrollGrid.scss';
 import { BulkOperation } from './BulkOperationsPanel';
-import useGetPictures from '../../../hooks/get-pictures-hook';
+import useGetPictures from '../../../hooks/get-pictures.hook';
 
 export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 

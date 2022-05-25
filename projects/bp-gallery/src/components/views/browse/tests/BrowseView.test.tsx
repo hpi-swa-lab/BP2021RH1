@@ -19,7 +19,7 @@ describe('BrowseView', () => {
     describe('Integration', () => {
       describe('With PictureScrollGrid Mock', () => {
         const PictureScrollGridMock = () => <div>PictureScrollGridMock</div>;
-        jest.mock('../../shared/PictureScrollGrid', () => PictureScrollGridMock);
+        jest.mock('../../../common/picture-gallery/PictureScrollGrid', () => PictureScrollGridMock);
 
         test('CommunityView does not render/contain Das Herbert-Ahrens-Bilderarchiv as a collection', () => {
           renderRouteWithAPIMocks('/browse/latest', CommunityViewMocks);

@@ -4,10 +4,10 @@ import { Redirect } from 'react-router-dom';
 import App from './App';
 import Demo from '../prototypes/demo';
 import TimeLineDemo from '../prototypes/timeline-demo';
-import CollectionsOverview from './views/collection-curating/CollectionsOverview';
-import TagOverview from './views/collection-curating/TagOverview';
+import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
+import TagTableView from './views/tag-table/TagTableView';
 import PictureView from './views/picture/PictureView';
-import CommentOverview from './views/unverified-comments/CommentOverview';
+import UnverifiedCommentsView from './views/unverified-comments/UnverifiedCommentsView';
 import { TagType } from '../types/additionalFlatTypes';
 import BrowseView from './views/browse/BrowseView';
 import SearchView from './views/search/SearchView';
@@ -20,14 +20,14 @@ const routes: RouteConfig[] = [
       {
         path: '/browse',
         render: () => {
-          return <BrowseView communityView={false} />;
+          return <BrowseView onlyLatest={false} />;
         },
         exact: true,
       },
       {
         path: '/browse/latest',
         render: () => {
-          return <BrowseView communityView={true} />;
+          return <BrowseView onlyLatest={true} />;
         },
         exact: true,
       },
@@ -35,7 +35,7 @@ const routes: RouteConfig[] = [
         path: '/browse/latest/:path+',
         render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
           const browseParams = match.params.path.split('/');
-          return <BrowseView communityView={true} path={browseParams} />;
+          return <BrowseView onlyLatest={true} path={browseParams} />;
         },
         exact: true,
       },
@@ -44,7 +44,7 @@ const routes: RouteConfig[] = [
         // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
         render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
           const browseParams = match.params.path.split('/');
-          return <BrowseView communityView={false} path={browseParams} />;
+          return <BrowseView onlyLatest={false} path={browseParams} />;
         },
       },
       {
@@ -64,7 +64,7 @@ const routes: RouteConfig[] = [
       {
         path: '/comment-overview',
         render: () => {
-          return <CommentOverview />;
+          return <UnverifiedCommentsView />;
         },
         exact: true,
       },
@@ -77,25 +77,25 @@ const routes: RouteConfig[] = [
       {
         path: '/tags/keywords',
         render: () => {
-          return <TagOverview type={TagType.KEYWORD} />;
+          return <TagTableView type={TagType.KEYWORD} />;
         },
       },
       {
         path: '/tags/locations',
         render: () => {
-          return <TagOverview type={TagType.LOCATION} />;
+          return <TagTableView type={TagType.LOCATION} />;
         },
       },
       {
         path: '/tags/people',
         render: () => {
-          return <TagOverview type={TagType.PERSON} />;
+          return <TagTableView type={TagType.PERSON} />;
         },
       },
       {
         path: '/collections-overview',
         render: () => {
-          return <CollectionsOverview />;
+          return <CollectionCuratingView />;
         },
       },
       {
