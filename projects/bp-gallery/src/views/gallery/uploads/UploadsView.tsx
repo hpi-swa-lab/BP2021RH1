@@ -5,8 +5,9 @@ import { AuthRole, useAuth } from '../../../AuthWrapper';
 import './UploadsView.scss';
 import { useTranslation } from 'react-i18next';
 import useBulkOperations from '../shared/bulk-operations';
+import ScrollContainer from '../../../ScrollContainer';
 
-const UploadsView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
+const UploadsView = () => {
   const { role } = useAuth();
   const { t } = useTranslation();
 
@@ -26,16 +27,20 @@ const UploadsView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHei
       : undefined;
   }, [role, t]);
   return (
-    <div className='uploads-overview'>
-      <PictureScrollGrid
-        queryParams={{ collections: { id: { null: true } } }}
-        scrollPos={scrollPos}
-        scrollHeight={scrollHeight}
-        hashbase={'uploads'}
-        uploadAreaProps={uploadAreaProps}
-        bulkOperations={[moveToCollection]}
-      />
-    </div>
+    <ScrollContainer>
+      {(scrollPos: number, scrollHeight: number) => (
+        <div className='uploads-overview'>
+          <PictureScrollGrid
+            queryParams={{ collections: { id: { null: true } } }}
+            scrollPos={scrollPos}
+            scrollHeight={scrollHeight}
+            hashbase={'uploads'}
+            uploadAreaProps={uploadAreaProps}
+            bulkOperations={[moveToCollection]}
+          />
+        </div>
+      )}
+    </ScrollContainer>
   );
 };
 export default UploadsView;

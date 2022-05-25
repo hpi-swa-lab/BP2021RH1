@@ -20,6 +20,7 @@ import {
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useBulkOperations from '../shared/bulk-operations';
 import { TagType } from '../../../types/additionalFlatTypes';
+import ScrollContainer from '../../../ScrollContainer';
 
 export const SearchType = {
   ...TagType,
@@ -84,7 +85,7 @@ export const addNewParamToSearchPath = (
   return { searchVal: asSearchPath(searchParams), isValid: true };
 };
 
-const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeight: number }) => {
+const SearchView = () => {
   const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
   const { search }: Location = useLocation();
   const { t } = useTranslation();
@@ -132,9 +133,9 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
   const { linkToCollection } = useBulkOperations();
 
   return (
-    <div className='search-view'>
-      <div className='search-content'>
-        <div className='below-search-bar'>
+    <ScrollContainer>
+      {(scrollPos: number, scrollHeight: number) => (
+        <div className='search-content'>
           <div className='search-bar-container'>
             {' '}
             {(isSearchBarVisible || !search) && (
@@ -154,24 +155,24 @@ const SearchView = ({ scrollPos, scrollHeight }: { scrollPos: number; scrollHeig
               <SearchBreadcrumbs searchParams={searchParams} />
             </div>
           </div>
+          {!search ? (
+            <SearchHub />
+          ) : (
+            <PictureScrollGrid
+              queryParams={queryParams}
+              customSearch={customSearch}
+              scrollPos={scrollPos}
+              scrollHeight={scrollHeight}
+              hashbase={search}
+              bulkOperations={[linkToCollection]}
+              resultPictureCallback={(pictures: number) => {
+                setIsSearchBarVisible(pictures > 0);
+              }}
+            />
+          )}
         </div>
-        {!search ? (
-          <SearchHub />
-        ) : (
-          <PictureScrollGrid
-            queryParams={queryParams}
-            customSearch={customSearch}
-            scrollPos={scrollPos}
-            scrollHeight={scrollHeight}
-            hashbase={search}
-            bulkOperations={[linkToCollection]}
-            resultPictureCallback={(pictures: number) => {
-              setIsSearchBarVisible(pictures > 0);
-            }}
-          />
-        )}
-      </div>
-    </div>
+      )}
+    </ScrollContainer>
   );
 };
 

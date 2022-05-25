@@ -6,10 +6,12 @@ import Demo from './prototypes/demo';
 import TimeLineDemo from './prototypes/timeline-demo';
 import CollectionsOverview from './views/curator/CollectionsOverview';
 import TagOverview from './views/curator/TagOverview';
-import GalleryView from './views/gallery/GalleryView';
 import PictureView from './views/picture/PictureView';
 import CommentOverview from './views/curator/CommentOverview';
 import { TagType } from './types/additionalFlatTypes';
+import BrowseView from './views/gallery/browse/BrowseView';
+import SearchView from './views/gallery/search/SearchView';
+import UploadsView from './views/gallery/uploads/UploadsView';
 
 const routes: RouteConfig[] = [
   {
@@ -18,14 +20,14 @@ const routes: RouteConfig[] = [
       {
         path: '/browse',
         render: () => {
-          return <GalleryView target='browse' />;
+          return <BrowseView communityView={false} />;
         },
         exact: true,
       },
       {
         path: '/browse/latest',
         render: () => {
-          return <GalleryView target='browse/latest' />;
+          return <BrowseView communityView={true} />;
         },
         exact: true,
       },
@@ -33,7 +35,7 @@ const routes: RouteConfig[] = [
         path: '/browse/latest/:path+',
         render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
           const browseParams = match.params.path.split('/');
-          return <GalleryView target='browse/latest' path={browseParams} />;
+          return <BrowseView communityView={true} path={browseParams} />;
         },
         exact: true,
       },
@@ -42,20 +44,20 @@ const routes: RouteConfig[] = [
         // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
         render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
           const browseParams = match.params.path.split('/');
-          return <GalleryView target='browse' path={browseParams} />;
+          return <BrowseView communityView={false} path={browseParams} />;
         },
       },
       {
         path: '/search',
         render: () => {
-          return <GalleryView target='search' />;
+          return <SearchView />;
         },
         exact: true,
       },
       {
         path: '/uploads-overview',
         render: () => {
-          return <GalleryView target='uploads' />;
+          return <UploadsView />;
         },
         exact: true,
       },

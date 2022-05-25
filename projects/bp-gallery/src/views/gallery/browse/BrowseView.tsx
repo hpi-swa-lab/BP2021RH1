@@ -9,16 +9,13 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { decodeBrowsePathComponent } from './helpers/formatBrowsePath';
 import CollectionPictureDisplay from './CollectionPictureDisplay';
+import ScrollContainer from '../../../ScrollContainer';
 
 const BrowseView = ({
   path,
-  scrollPos,
-  scrollHeight,
   communityView = false,
 }: {
   path?: string[];
-  scrollPos: number;
-  scrollHeight: number;
   communityView: boolean;
 }) => {
   // Query the name of the root-collection if there is no path
@@ -67,17 +64,19 @@ const BrowseView = ({
     }
   }
   return (
-    <>
-      <CollectionPictureDisplay
-        picturePublishingDate={communityView ? picturePublishingDate : undefined}
-        collections={filteredCollections}
-        loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
-        error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}
-        path={path}
-        scrollPos={scrollPos}
-        scrollHeight={scrollHeight}
-      />
-    </>
+    <ScrollContainer>
+      {(scrollPos: number, scrollHeight: number) => (
+        <CollectionPictureDisplay
+          picturePublishingDate={communityView ? picturePublishingDate : undefined}
+          collections={filteredCollections}
+          loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
+          error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}
+          path={path}
+          scrollPos={scrollPos}
+          scrollHeight={scrollHeight}
+        />
+      )}
+    </ScrollContainer>
   );
 };
 export default BrowseView;
