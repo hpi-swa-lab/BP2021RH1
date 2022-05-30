@@ -799,5 +799,52 @@ module.exports = ({ strapi }) => ({
     }
 
     return responsebuffer;
-  }
+  },
+
+  async addDefaultArchiveTag() {
+    const pictureQuery = strapi.db.query('api::picture.picture');
+    const archiveTagQuery = strapi.db.query('api::archive-tag.archive-tag');
+    const defaultArchiveTagName = 'Herbert-Ahrens-Bilderarchiv';
+
+    const defaultArchiveTag = await archiveTagQuery.findOne({
+      where: {
+        name: defaultArchiveTagName,
+      },
+    });
+
+    if (!defaultArchiveTag) {
+      const errorMessage = `There is no archive tag called "${defaultArchiveTagName}"`;
+      strapi.log.error(errorMessage);
+      return errorMessage;
+    }
+
+    const allPictures = await pictureQuery.findMany({
+      populate: {
+        archive_tag: {
+          select: ['id'],
+        },
+      },
+    });
+
+    const updatedPictures = [];
+    for (const picture of allPictures) {
+      if (picture.archive_tag) continue;
+
+      await pictureQuery.update({
+        where: {
+          id: picture.id,
+        },
+        data: {
+          archive_tag: defaultArchiveTag.id,
+        },
+      });
+      updatedPictures.push(picture.id);
+    }
+
+    const responseMessage = updatedPictures.length ?
+      `Successfully related ${updatedPictures.length} pictures to default archive tag "${defaultArchiveTag}"`
+      : `Related no new pictures to the default archive tag "${defaultArchiveTagName}"`;
+    strapi.log.debug(responseMessage);
+    return updatedPictures;
+  },
 });
