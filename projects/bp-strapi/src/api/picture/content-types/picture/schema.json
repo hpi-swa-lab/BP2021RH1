@@ -93,6 +93,12 @@
     },
     "archive_identifier": {
       "type": "string"
+    },
+    "archive_tag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::archive-tag.archive-tag",
+      "inversedBy": "pictures"
     }
   }
 }
