@@ -10,6 +10,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import FolderIcon from '@mui/icons-material/Folder';
 import { useTranslation } from 'react-i18next';
 
 type SearchParam = { type: string; value: string };
@@ -33,6 +34,8 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
         return <PersonIcon />;
       case SearchType.ALL:
         return <SearchIcon />;
+      case SearchType.COLLECTION:
+        return <FolderIcon />;
       default:
         return <></>;
     }

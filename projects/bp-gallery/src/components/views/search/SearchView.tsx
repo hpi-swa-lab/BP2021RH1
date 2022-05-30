@@ -27,6 +27,7 @@ export const SearchType = {
   ...TagType,
   DESCRIPTION: 'description',
   DECADE: 'decade',
+  COLLECTION: 'collection',
   ALL: 'all',
 };
 

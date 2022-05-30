@@ -118,6 +118,9 @@ const SearchBar = ({
                   <MenuItem value={SearchType.LOCATION}>
                     {t(getSearchTypeTranslation(SearchType.LOCATION))}
                   </MenuItem>
+                  <MenuItem value={SearchType.COLLECTION}>
+                    {t(getSearchTypeTranslation(SearchType.COLLECTION))}
+                  </MenuItem>
                 </Select>
               )}
             </InputAdornment>

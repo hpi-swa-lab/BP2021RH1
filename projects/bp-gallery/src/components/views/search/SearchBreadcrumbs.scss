@@ -29,5 +29,8 @@
     &[search-type='location'] {
       background: $locationColor;
     }
+    &[search-type='collection'] {
+      background: $primaryColor;
+    }
   }
 }
