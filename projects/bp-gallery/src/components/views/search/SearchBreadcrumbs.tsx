@@ -22,6 +22,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
   const searchParamValues: SearchParams = [];
   const iconForType = (searchType: string) => {
     switch (searchType) {
+      case SearchType.DECADE:
       case SearchType.TIME_RANGE:
         return <EventIcon />;
       case SearchType.KEYWORD:

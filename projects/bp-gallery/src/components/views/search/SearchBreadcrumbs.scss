@@ -12,13 +12,14 @@
     &[search-type='keyword'] {
       background: $keywordColor;
     }
-
     &[search-type='all'] {
       background: $allSearchColor;
     }
-
     &[search-type='description'] {
       background: $descriptionColor;
+    }
+    &[search-type='decade'] {
+      background: $decadeColor;
     }
     &[search-type='date'] {
       background: $decadeColor;
