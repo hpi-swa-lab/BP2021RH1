@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import ItemList from '../ItemList';
+import ScrollableItemList from '../ScrollableItemList';
 import { ItemListItemModel } from '../ItemListItem';
 
 const items: ItemListItemModel[] = [
@@ -22,7 +22,7 @@ const items: ItemListItemModel[] = [
 ];
 
 test('Item List should show elements', () => {
-  const { container } = render(<ItemList items={items} />);
+  const { container } = render(<ScrollableItemList items={items} />);
   const links = container.querySelectorAll('.item');
   expect(links).toHaveLength(items.length);
   links.forEach((link: Element, key: number) => {
@@ -35,11 +35,11 @@ test('Item List should show elements', () => {
 });
 
 test('Item list should be able to go compact', () => {
-  let { container } = render(<ItemList items={items} />);
-  expect(container.querySelector('.item-list')?.classList).toContain('large');
-  expect(container.querySelector('.item-list')?.classList).not.toContain('compact');
+  let { container } = render(<ScrollableItemList items={items} />);
+  expect(container.querySelector('.items')?.classList).toContain('large');
+  expect(container.querySelector('.items')?.classList).not.toContain('compact');
 
-  container = render(<ItemList items={items} compact={true} />).container;
-  expect(container.querySelector('.item-list')?.classList).not.toContain('large');
-  expect(container.querySelector('.item-list')?.classList).toContain('compact');
+  container = render(<ScrollableItemList items={items} compact={true} />).container;
+  expect(container.querySelector('.items')?.classList).not.toContain('large');
+  expect(container.querySelector('.items')?.classList).toContain('compact');
 });

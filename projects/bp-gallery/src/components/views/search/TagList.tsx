@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
-import ItemList from '../../common/ItemList';
+import ScrollableItemList from '../../common/ScrollableItemList';
 import { asApiPath } from '../../App';
 import { addNewParamToSearchPath } from './SearchView';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
@@ -51,7 +51,7 @@ const TagList = ({ type }: { type: TagType }) => {
     return <Loading />;
   } else if (flattenedTags?.length) {
     return (
-      <ItemList
+      <ScrollableItemList
         compact={true}
         fetchMoreOnScroll={fetchMoreOnScroll}
         items={flattenedTags.map(tag => ({

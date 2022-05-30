@@ -4,7 +4,7 @@ import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
-import ItemList from '../../common/ItemList';
+import ScrollableItemList from '../../common/ScrollableItemList';
 import { asApiPath } from '../../App';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
 import {
@@ -39,7 +39,7 @@ const DecadesList = () => {
     return <Loading />;
   } else if (decadeThumbnails) {
     return (
-      <ItemList
+      <ScrollableItemList
         compact={true}
         items={DECADES.map((name: string) => {
           const thumbnailData = decadeThumbnails[`decade${name}0s`];

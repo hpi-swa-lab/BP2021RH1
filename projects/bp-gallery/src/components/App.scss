@@ -23,7 +23,9 @@ body {
 .App {
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 5rem 1fr;
-  height: 100%;
+  grid-template-rows: 100%;
+  height: calc(100% - 9rem);
   overflow: hidden;
+  padding-top: 5rem;
+  padding-bottom: 4rem;
 }

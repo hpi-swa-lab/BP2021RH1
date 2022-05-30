@@ -1,9 +1,9 @@
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import { asApiPath } from '../../App';
-import ItemList from '../../common/ItemList';
 import React from 'react';
 import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-browse-path';
+import ItemList from '../../common/ItemList';
 
 const SubCollections = ({
   childCollections,
