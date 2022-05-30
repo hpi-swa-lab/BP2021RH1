@@ -14,7 +14,6 @@
     "comment": "Kommentar",
     "loading": "Lädt...",
     "wrote-on": "schrieb am",
-    "search-keywords": "Im Archiv suchen...",
     "decades": "Jahrzehnte",
     "suggestions": "Vorschläge",
     "keywords": "Schlagworte",
@@ -40,7 +39,7 @@
     "or": "oder",
     "confirm": "Bestätigen",
     "abort": "Abbrechen",
-    "0s": "0er Jahre",
+    "0s": "0er",
     "ok": "O.K.",
     "dontShowAgain": "Verstanden, nicht noch einmal anzeigen.",
     "authentication-needed": "Diese Seite ist nur für angemeldete Nutzer mit ausreichenden Berechtigungen sichtbar",
@@ -52,7 +51,9 @@
     "showLess": "Weniger anzeigen",
     "noPictures": "Keine Bilder",
     "pictureCount": "{{count}} Bild(er)",
-    "moreThanPictureCount": "Mehr als {{count}} Bilder"
+    "moreThanPictureCount": "Mehr als {{count}} Bilder",
+    "and": "und",
+    "and-alternative": "sowie"
   },
   "comment": {
     "name": "Name",
@@ -62,16 +63,14 @@
     "thanks": "Danke für Ihren Kommentar!"
   },
   "search": {
-    "search-decade": "Jahreszahlen",
-    "search-keyword": "Schlagwörter",
-    "search-description": "Beschreibungen",
-    "search-all": "Gesamtes Bilderarchiv",
     "search-for-type": "durchsuchen",
-    "decades": "Jahreszahlen",
-    "keywords": "Schlagwörter",
-    "descriptions": "Beschreibungen",
-    "persons": "Personen",
-    "locations": "Orte",
+    "date": "Jahreszahlen",
+    "decade": "Jahrzehnte",
+    "keyword": "Schlagworte",
+    "description": "Beschreibungen",
+    "person": "Personen",
+    "location": "Orte",
+    "collection": "Sammlungen",
     "all": "Gesamtes Bilderarchiv",
     "start-search": "Suche starten",
     "picture-found": "Bild wurde gefunden",
@@ -81,7 +80,11 @@
     "explanation": "Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen.",
     "question": "Was passiert, wenn ich Stichworte suche?",
     "help": "Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurück zu gehen weitere Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen.",
-    "explanation-headline": "Was passiert, wenn ich Schlagworte suche?"
+    "explanation-headline": "Was passiert, wenn ich Schlagworte suche?",
+    "for": "nach",
+    "no-results-info": "Im Archiv gibt es leider keine Bilder, die {{searchQueryText}} {{paramEnumeration}} erfüllen.",
+    "searchQueryPlural": "gleichzeitig die Suchanfragen ",
+    "searchQuerySingular": "die Suchanfrage "
   },
   "login": {
     "title": "Login",

@@ -104,6 +104,20 @@ const searchKeyword = (searchParams: URLSearchParams, filters: PictureFiltersInp
   });
 };
 
+const searchCollection = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
+  const collections = searchParams.getAll(SearchType.COLLECTION).map(decodeURIComponent);
+  collections.forEach((collection: string) => {
+    const collection_filter = buildFilter(collection);
+    filters.and?.push({
+      or: [
+        {
+          collections: collection_filter,
+        },
+      ],
+    });
+  });
+};
+
 const searchLocation = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const locations = searchParams.getAll(SearchType.LOCATION).map(decodeURIComponent);
   locations.forEach((location: string) => {
@@ -160,6 +174,7 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
   if (searchParams.has(SearchType.PERSON)) searchPerson(searchParams, filters);
   if (searchParams.has(SearchType.LOCATION)) searchLocation(searchParams, filters);
   if (searchParams.has(SearchType.DECADE)) searchDecade(searchParams, filters);
+  if (searchParams.has(SearchType.COLLECTION)) searchCollection(searchParams, filters);
 
   return filters;
 };

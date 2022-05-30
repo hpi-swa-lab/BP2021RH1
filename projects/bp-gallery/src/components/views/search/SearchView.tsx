@@ -21,6 +21,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { TagType } from '../../../types/additionalFlatTypes';
 import ScrollContainer from '../../common/ScrollContainer';
+import NoSearchResultsText from './NoSearchResultsText';
 
 export const SearchType = {
   ...TagType,
@@ -86,7 +87,7 @@ export const addNewParamToSearchPath = (
 };
 
 const SearchView = () => {
-  const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(true);
+  const [areResultsEmpty, setAreResultsEmpty] = useState<boolean>(false);
   const { search }: Location = useLocation();
   const { t } = useTranslation();
 
@@ -138,7 +139,7 @@ const SearchView = () => {
         <div className='search-content'>
           <div className='search-bar-container'>
             {' '}
-            {(isSearchBarVisible || !search) && (
+            {(!areResultsEmpty || !search) && (
               <SearchBar searchParams={searchParams} customSearch={customSearch} />
             )}
             <SearchInfoTooltip
@@ -155,6 +156,7 @@ const SearchView = () => {
               <SearchBreadcrumbs searchParams={searchParams} />
             </div>
           </div>
+          {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
           {!search ? (
             <SearchHub />
           ) : (
@@ -166,7 +168,7 @@ const SearchView = () => {
               hashbase={search}
               bulkOperations={[linkToCollection]}
               resultPictureCallback={(pictures: number) => {
-                setIsSearchBarVisible(pictures > 0);
+                setAreResultsEmpty(pictures <= 0);
               }}
             />
           )}

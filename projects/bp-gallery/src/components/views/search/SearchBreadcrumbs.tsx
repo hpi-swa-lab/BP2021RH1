@@ -10,7 +10,9 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import FolderIcon from '@mui/icons-material/Folder';
 import { useTranslation } from 'react-i18next';
+import { getDecadeTranslation } from './helpers/search-translation';
 
 type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];
@@ -22,6 +24,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
   const iconForType = (searchType: string) => {
     switch (searchType) {
       case SearchType.DECADE:
+      case SearchType.TIME_RANGE:
         return <EventIcon />;
       case SearchType.KEYWORD:
         return <SellIcon />;
@@ -33,6 +36,8 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
         return <PersonIcon />;
       case SearchType.ALL:
         return <SearchIcon />;
+      case SearchType.COLLECTION:
+        return <FolderIcon />;
       default:
         return <></>;
     }
@@ -76,13 +81,8 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
             className='breadcrumb-chip'
             key={idx}
             icon={iconForType(el.type)}
-            label={
-              el.type === SearchType.DECADE
-                ? el.value === '4'
-                  ? t('common.past')
-                  : `${el.value}0er`
-                : el.value
-            }
+            label={el.type === SearchType.DECADE ? getDecadeTranslation(t, el.value) : el.value}
+            search-type={el.type}
             onDelete={() => deleteParam(el.type, el.value)}
           />
         );
