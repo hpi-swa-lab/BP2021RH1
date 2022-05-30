@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import getSearchTypeTranslation from './helpers/search-translation';
+import { getDecadeTranslation, getSearchTypeTranslation } from './helpers/search-translation';
 import { SearchType } from './SearchView';
 
 const quoteAll = (s: string[]) => {
@@ -37,11 +37,15 @@ const NoSearchResultsText = ({ searchParams }: { searchParams: URLSearchParams }
     params = searchParams.getAll(searchType);
     if (params.length === 0) continue;
 
-    infoTextParts.push(
-      `${t('search.for')} ${enumerate(quoteAll(params))} ${
-        searchType === 'all' ? '' : ' in ' + t(getSearchTypeTranslation(searchType))
-      }`
-    );
+    if (searchType === SearchType.DECADE) {
+      params = params.map(decadeParam => getDecadeTranslation(t, decadeParam));
+    }
+
+    const enumeratedParams = enumerate(quoteAll(params));
+    const searchTypeTranslation =
+      searchType === 'all' ? '' : ' in ' + t(getSearchTypeTranslation(searchType));
+
+    infoTextParts.push(`${t('search.for')} ${enumeratedParams} ${searchTypeTranslation}`);
   }
 
   const infoText = t('search.no-results-info', {

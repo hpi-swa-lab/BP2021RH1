@@ -14,6 +14,7 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatDecadeThumbnails } from '../../../types/additionalFlatTypes';
 import { buildDecadeFilter } from './helpers/search-filters';
+import { getDecadeTranslation } from './helpers/search-translation';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 
@@ -44,7 +45,7 @@ const DecadesList = () => {
         items={DECADES.map((name: string) => {
           const thumbnailData = decadeThumbnails[`decade${name}0s`];
           const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-          const displayedName = name === '4' ? t('common.past') : `${name}0er`;
+          const displayedName = getDecadeTranslation(t, name);
           return {
             name: displayedName,
             background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
