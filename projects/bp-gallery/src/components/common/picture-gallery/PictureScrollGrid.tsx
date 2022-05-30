@@ -41,10 +41,10 @@ const PictureScrollGrid = ({
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   useEffect(() => {
-    if (resultPictureCallback) {
+    if (resultPictureCallback && !loading) {
       resultPictureCallback(pictures?.length ?? 0);
     }
-  }, [pictures, resultPictureCallback]);
+  }, [pictures, resultPictureCallback, loading]);
 
   // Loads the next 100 Pictures when the user scrolled to the bottom
   useEffect(() => {

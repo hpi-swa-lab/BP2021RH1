@@ -7,6 +7,7 @@ import { History } from 'history';
 import './SearchBar.scss';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
 import { AlertContext, AlertType } from '../../wrapper/AlertWrapper';
+import getSearchTypeTranslation from './helpers/search-translation';
 
 const SearchBar = ({
   searchParams,
@@ -88,7 +89,7 @@ const SearchBar = ({
           startAdornment: (
             <InputAdornment position='start'>
               {customSearch ? (
-                <span className='MuiInputBase-root'>{t('search.search-all')}</span>
+                <span className='MuiInputBase-root'>{t('search.all')}</span>
               ) : (
                 <Select
                   labelId='demo-simple-select-label'
@@ -98,13 +99,25 @@ const SearchBar = ({
                   onChange={changeSearchType}
                 >
                   {!dontShowAllSearch && (
-                    <MenuItem value={SearchType.ALL}>{t('search.search-all')}</MenuItem>
+                    <MenuItem value={SearchType.ALL}>
+                      {t(getSearchTypeTranslation(SearchType.ALL))}
+                    </MenuItem>
                   )}
-                  <MenuItem value={SearchType.KEYWORD}>{t('search.search-keyword')}</MenuItem>
-                  <MenuItem value={SearchType.TIME_RANGE}>{t('search.search-decade')}</MenuItem>
-                  <MenuItem value={SearchType.DESCRIPTION}>{t('search.descriptions')}</MenuItem>
-                  <MenuItem value={SearchType.PERSON}>{t('search.persons')}</MenuItem>
-                  <MenuItem value={SearchType.LOCATION}>{t('search.locations')}</MenuItem>
+                  <MenuItem value={SearchType.KEYWORD}>
+                    {t(getSearchTypeTranslation(SearchType.KEYWORD))}
+                  </MenuItem>
+                  <MenuItem value={SearchType.TIME_RANGE}>
+                    {t(getSearchTypeTranslation(SearchType.TIME_RANGE))}
+                  </MenuItem>
+                  <MenuItem value={SearchType.DESCRIPTION}>
+                    {t(getSearchTypeTranslation(SearchType.DESCRIPTION))}
+                  </MenuItem>
+                  <MenuItem value={SearchType.PERSON}>
+                    {t(getSearchTypeTranslation(SearchType.PERSON))}
+                  </MenuItem>
+                  <MenuItem value={SearchType.LOCATION}>
+                    {t(getSearchTypeTranslation(SearchType.LOCATION))}
+                  </MenuItem>
                 </Select>
               )}
             </InputAdornment>
