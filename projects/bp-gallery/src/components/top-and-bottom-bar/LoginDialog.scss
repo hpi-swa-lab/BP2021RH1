@@ -1,0 +1,23 @@
+@import 'src/shared/style';
+
+.login-screen {
+  .MuiDialogContent-root {
+    display: flex;
+    flex-direction: column;
+  }
+  .MuiFormControl-root {
+    width: 350px;
+    max-width: 80vw;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    }
+  }
+
+  .MuiDialogActions-root {
+    justify-content: space-between;
+    padding: 24px;
+    padding-top: 0;
+  }
+}

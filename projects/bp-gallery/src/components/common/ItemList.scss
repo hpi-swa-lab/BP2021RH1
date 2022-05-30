@@ -1,0 +1,124 @@
+@import 'src/shared/style';
+
+.item-list {
+  position: relative;
+
+  &.compact {
+    .ps .items {
+      display: flex;
+      flex-direction: row;
+      margin: 0 1rem;
+
+      .item {
+        margin: 0 1vmin;
+        min-width: 20vmin;
+        max-height: 20vmin;
+
+        &:first-child {
+          margin-left: 0;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  &.large .ps .items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 0.5rem;
+    padding-bottom: 6px;
+  }
+
+  .item {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 100%;
+    height: 150px;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.4);
+    border-radius: 0.4rem;
+    background: #1c1c1c;
+
+    &:hover {
+      .image-container img {
+        @supports not (scale: 1.02) {
+          transform: scale(1.02);
+        }
+        @supports (scale: 1.02) {
+          scale: 1.02;
+        }
+      }
+    }
+
+    .image-container {
+      grid-row: 1;
+      grid-column: 1;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        transition: transform 0.2s;
+        filter: grayscale(1) brightness(0.56);
+      }
+    }
+
+    .color-overlay {
+      grid-row: 1;
+      grid-column: 1;
+      mix-blend-mode: color;
+    }
+
+    .text-container {
+      grid-row: 1;
+      grid-column: 1;
+      display: flex;
+      padding: 1vmin;
+      z-index: 5;
+      align-items: flex-end;
+
+      svg {
+        height: 100%;
+        width: 100%;
+
+        text {
+          fill: white;
+          font-weight: 900;
+          font-size: 50px;
+        }
+      }
+    }
+  }
+
+  .button-container {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+    .MuiIconButton-root {
+      background: $primaryColor;
+      color: white;
+      box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 76%);
+      z-index: 99;
+    }
+  }
+}
+
+// These values are simply heuristics as well
+._buffer_for_line_breaks_ {
+  width: 220px;
+
+  &.compact {
+    width: 60px;
+  }
+}

@@ -1,0 +1,134 @@
+@import 'src/shared/style';
+
+.picture-sidebar {
+  padding-left: 10px;
+  width: 450px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1002;
+  margin-right: 0px;
+  transition: margin-right 0.5s;
+  position: relative;
+
+  &.closed {
+    margin-right: -450px;
+  }
+
+  .picture-info,
+  .pictureComments {
+    padding: 10px;
+    background: white;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  .picture-info {
+    flex: 450 1 0;
+    padding-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .pictureComments {
+    flex: 350 1 0;
+  }
+
+  .quick-access-buttons {
+    position: absolute;
+    bottom: 2rem;
+    left: 10px;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    z-index: 1005;
+    transform: translateX(-100%);
+    border-radius: 0.3rem 0 0 0.3rem;
+
+    .MuiButton-root {
+      display: flex;
+      border-radius: 0;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      color: $primaryColor;
+      flex: 1 1 0;
+      font-size: 1.1rem;
+
+      & > span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        & > .material-icons {
+          margin-right: 0.5rem;
+        }
+      }
+
+      &.selected .exp-icon {
+        transform: rotate(90deg);
+      }
+
+      .exp-icon {
+        transform: rotate(-90deg);
+        transition: transform 0.5s;
+      }
+    }
+  }
+
+  @media only screen and (max-width: $mobile-breakpoint) {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(80vh - 4rem);
+    background: white;
+    padding-left: 0;
+    padding-top: 0;
+    z-index: 1005;
+    transition: max-height 0.5s;
+    padding-bottom: 4rem;
+    overflow-y: auto;
+
+    &.closed {
+      max-height: 1rem;
+    }
+
+    .quick-access-buttons {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding-top: 20px;
+      transform: translateY(0);
+      transition: transform 0.5s;
+      height: 4rem;
+      border-radius: 0;
+
+      &::before {
+        content: '';
+        background: #efefef;
+        width: 80%;
+        left: 10%;
+        top: 10px;
+        height: 2px;
+        position: absolute;
+      }
+
+      .MuiButton-root {
+        &.selected .exp-icon {
+          transform: rotate(180deg);
+        }
+
+        .exp-icon {
+          transform: rotate(0deg);
+        }
+      }
+    }
+
+    .picture-info,
+    .pictureComments {
+      border-radius: 0;
+      box-shadow: none;
+      flex: none;
+    }
+  }
+}
