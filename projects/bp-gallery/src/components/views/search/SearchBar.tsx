@@ -35,7 +35,10 @@ const SearchBar = ({
 
   useEffect(() => {
     if (typeOfLatestSearch) {
-      setSearchType(typeOfLatestSearch);
+      // If a decade was searched, it does not make sense to further intersect with another decade.
+      const nextSearchType =
+        typeOfLatestSearch === SearchType.DECADE ? SearchType.TIME_RANGE : typeOfLatestSearch;
+      setSearchType(nextSearchType);
     } else {
       setSearchType(SearchType.ALL);
     }
