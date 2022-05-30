@@ -21,7 +21,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
   const searchParamValues: SearchParams = [];
   const iconForType = (searchType: string) => {
     switch (searchType) {
-      case SearchType.DECADE:
+      case SearchType.TIME_RANGE:
         return <EventIcon />;
       case SearchType.KEYWORD:
         return <SellIcon />;
@@ -83,6 +83,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
                   : `${el.value}0er`
                 : el.value
             }
+            search-type={el.type}
             onDelete={() => deleteParam(el.type, el.value)}
           />
         );
