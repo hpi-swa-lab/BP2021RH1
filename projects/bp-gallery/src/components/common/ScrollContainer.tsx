@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { ReactComponentElement, useState } from 'react';
 import './ScrollContainer.scss';
 
-const ScrollContainer = ({ children }: { children: any }) => {
-  const [scrollPos, setScrollPos] = useState<number>();
-  const [scrollHeight, setScrollHeight] = useState<number>();
+const ScrollContainer = ({
+  children,
+}: {
+  children: (scrollPos: number, scrollHeight: number) => ReactComponentElement<any>;
+}) => {
+  const [scrollPos, setScrollPos] = useState<number>(0);
+  const [scrollHeight, setScrollHeight] = useState<number>(0);
 
   return (
     <div className='scroll-context'>
