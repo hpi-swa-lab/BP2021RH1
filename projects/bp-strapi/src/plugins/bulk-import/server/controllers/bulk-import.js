@@ -44,5 +44,10 @@ module.exports = ({ strapi }) => ({
   async reducePictureCollectionRelations(ctx) {
     const response = await this._getService().reducePictureCollectionRelations();
     ctx.send(response);
-  }
+  },
+
+  async addDefaultArchiveTag(ctx) {
+    const response = await this._getService().addDefaultArchiveTag();
+    ctx.send(response);
+  },
 });
