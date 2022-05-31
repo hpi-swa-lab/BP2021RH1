@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGetPictureInfoLazyQuery } from '../graphql/APIConnector';
+import { useGetPictureInfoLazyQuery, useGetPictureInfoQuery } from '../graphql/APIConnector';
 import {
   getNextPictureId,
   getPreviousPictureId,
@@ -7,7 +7,7 @@ import {
 
 const usePrefetchPictureHook = (id: string, siblings?: string[]) => {
   const [siblingQuery] = useGetPictureInfoLazyQuery();
-  const current = useGetPictureInfoLazyQuery();
+  const current = useGetPictureInfoQuery({ variables: { pictureId: id } });
 
   return useMemo(() => {
     if (siblings?.includes(id)) {
