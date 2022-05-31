@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useGetPictureInfoLazyQuery, useGetPictureInfoQuery } from '../graphql/APIConnector';
+import { useEffect } from 'react';
+import { useGetPictureInfoLazyQuery } from '../graphql/APIConnector';
 import {
   getNextPictureId,
   getPreviousPictureId,
@@ -7,9 +7,8 @@ import {
 
 const usePrefetchPictureHook = (id: string, siblings?: string[]) => {
   const [siblingQuery] = useGetPictureInfoLazyQuery();
-  const current = useGetPictureInfoQuery({ variables: { pictureId: id } });
 
-  return useMemo(() => {
+  useEffect(() => {
     if (siblings?.includes(id)) {
       const previousId = getPreviousPictureId(id, siblings);
       if (previousId) {
@@ -28,8 +27,7 @@ const usePrefetchPictureHook = (id: string, siblings?: string[]) => {
         });
       }
     }
-    return current;
-  }, [id, siblings, current, siblingQuery]);
+  }, [id, siblings, siblingQuery]);
 };
 
 export default usePrefetchPictureHook;

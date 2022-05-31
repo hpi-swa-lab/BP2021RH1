@@ -22,6 +22,7 @@ import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-pict
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
+import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -77,8 +78,9 @@ const PictureView = ({
   }, [pictureId, siblingIds]);
 
   // Api connection
-  const { data, loading, error } = usePrefetchPictureHook(pictureId, siblingIds);
+  usePrefetchPictureHook(pictureId, siblingIds);
 
+  const { data, loading, error } = useGetPictureInfoQuery({ variables: { pictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
