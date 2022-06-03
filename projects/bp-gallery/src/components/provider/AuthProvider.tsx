@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
 import { buildHttpLink } from '../App';
 import { useApolloClient } from '@apollo/client';
-import { AlertContext, AlertType } from './AlertWrapper';
+import { AlertContext, AlertType } from './AlertProvider';
 import { useTranslation } from 'react-i18next';
 
 export enum AuthRole {
@@ -43,7 +43,7 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const AuthWrapper = ({ children }: { children: any }) => {
+const AuthProvider = ({ children }: { children: any }) => {
   const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);
@@ -126,4 +126,4 @@ const AuthWrapper = ({ children }: { children: any }) => {
   );
 };
 
-export default AuthWrapper;
+export default AuthProvider;

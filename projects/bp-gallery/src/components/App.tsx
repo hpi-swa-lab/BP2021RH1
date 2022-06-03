@@ -13,9 +13,9 @@ import {
   PictureEntity,
   PictureEntityResponseCollection,
 } from '../graphql/APIConnector';
-import AuthWrapper from './wrapper/AuthWrapper';
-import AlertWrapper, { AlertOptions, AlertType } from './wrapper/AlertWrapper';
-import DialogWrapper from './wrapper/DialogWrapper';
+import AuthProvider from './provider/AuthProvider';
+import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider';
+import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
@@ -126,17 +126,17 @@ const apolloClient = new ApolloClient({
 const App = ({ route }: RouteConfigComponentProps) => {
   return (
     <ApolloProvider client={apolloClient}>
-      <AlertWrapper>
-        <AuthWrapper>
-          <DialogWrapper>
+      <AlertProvider>
+        <AuthProvider>
+          <DialogProvider>
             <div className='App'>
               <TopBar />
               {renderRoutes(route?.routes)}
               <NavigationBar />
             </div>
-          </DialogWrapper>
-        </AuthWrapper>
-      </AlertWrapper>
+          </DialogProvider>
+        </AuthProvider>
+      </AlertProvider>
     </ApolloProvider>
   );
 };

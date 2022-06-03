@@ -2,7 +2,7 @@ import { Button, Icon, CircularProgress } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
 import uploadMediaFiles from './helpers/upload-media-files';

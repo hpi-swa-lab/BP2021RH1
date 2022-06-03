@@ -21,7 +21,7 @@ import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { v4 as uuidv4 } from 'uuid';
-import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 
 export interface PictureViewContextFields {

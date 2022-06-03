@@ -3,7 +3,7 @@ import { sanitize } from 'dompurify';
 import './CollectionDescription.scss';
 import { Icon, IconButton } from '@mui/material';
 import getLineBreaks from '../../../helpers/get-linebreaks';
-import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import JoditEditor from 'jodit-react';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';

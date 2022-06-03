@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import './UploadsView.scss';
 import { useTranslation } from 'react-i18next';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';

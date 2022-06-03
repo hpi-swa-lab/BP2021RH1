@@ -1,4 +1,4 @@
-import { DialogProps } from '../DialogWrapper';
+import { DialogProps } from '../DialogProvider';
 import {
   Button,
   DialogActions,

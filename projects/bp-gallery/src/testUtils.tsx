@@ -8,8 +8,8 @@ import routes from './components/routes';
 import NavigationBar from './components/top-and-bottom-bar/NavigationBar';
 import TopBar from './components/top-and-bottom-bar/TopBar';
 import { PictureEntityResponseCollection } from './graphql/APIConnector';
-import AlertWrapper from './components/wrapper/AlertWrapper';
-import DialogWrapper from './components/wrapper/DialogWrapper';
+import AlertProvider from './components/provider/AlertProvider';
+import DialogProvider from './components/provider/DialogProvider';
 
 /**
  * Enables using Navigation-Context in tests
@@ -34,9 +34,9 @@ export const renderWithAPIMocks = (
   enableCache: boolean = false
 ) => {
   return render(
-    <DialogWrapper>
-      <AlertWrapper>{_wrapInMockedProvider(component, apiMocks, enableCache)}</AlertWrapper>
-    </DialogWrapper>
+    <DialogProvider>
+      <AlertProvider>{_wrapInMockedProvider(component, apiMocks, enableCache)}</AlertProvider>
+    </DialogProvider>
   );
 };
 
@@ -92,9 +92,9 @@ const _renderRoute = (route: string, apiMocks?: MockedResponse[], enableCache: b
     : routesContent;
   return render(
     <BrowserRouter>
-      <DialogWrapper>
-        <AlertWrapper>{contentToWrapInRouter}</AlertWrapper>
-      </DialogWrapper>
+      <DialogProvider>
+        <AlertProvider>{contentToWrapInRouter}</AlertProvider>
+      </DialogProvider>
     </BrowserRouter>
   );
 };

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Icon } from '@mui/material';
 import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
-import { AuthRole, useAuth } from '../../../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 
 const CommentsContainer = ({
   pictureId,

@@ -2,7 +2,7 @@ import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPicture } from '../types/additionalFlatTypes';
 import { useUnpublishPictureMutation } from '../graphql/APIConnector';
-import { DialogContext, DialogPreset } from '../components/wrapper/DialogWrapper';
+import { DialogContext, DialogPreset } from '../components/provider/DialogProvider';
 
 const useDeletePicture = () => {
   const [unpublishPicture] = useUnpublishPictureMutation();

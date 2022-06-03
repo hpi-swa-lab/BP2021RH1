@@ -14,7 +14,7 @@ import {
   useUpdatePictureMutation,
 } from '../../../../../graphql/APIConnector';
 import TagSelectionField from './TagSelectionField';
-import { AuthRole, useAuth } from '../../../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';

@@ -3,9 +3,9 @@ import './NewCommentForm.scss';
 import { Button, TextField } from '@mui/material';
 import { usePostCommentMutation } from '../../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
-import { AlertContext, AlertType } from '../../../../wrapper/AlertWrapper';
+import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
-import { DialogContext } from '../../../../wrapper/DialogWrapper';
+import { DialogContext } from '../../../../provider/DialogProvider';
 
 const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();

@@ -3,10 +3,10 @@ import Fuse from 'fuse.js';
 import { GraphQLError } from 'graphql';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AuthRole, useAuth } from '../../../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { addNewParamToSearchPath } from '../../../search/SearchView';
-import { AlertContext, AlertType } from '../../../../wrapper/AlertWrapper';
+import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 import { TagType } from '../../../../../types/additionalFlatTypes';
 
 interface TagFields {

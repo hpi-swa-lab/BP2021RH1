@@ -1,7 +1,7 @@
 import { Icon, Tooltip } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
-import { DialogContext, DialogPreset } from '../../wrapper/DialogWrapper';
+import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 

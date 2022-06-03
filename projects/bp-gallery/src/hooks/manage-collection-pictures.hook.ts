@@ -4,7 +4,7 @@ import {
   useGetPicturesForCollectionLazyQuery,
   useSetPicturesForCollectionMutation,
 } from '../graphql/APIConnector';
-import { AlertContext, AlertType } from '../components/wrapper/AlertWrapper';
+import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 
 /**
  * This convoluted function does:
