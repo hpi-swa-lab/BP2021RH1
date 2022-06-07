@@ -6,10 +6,11 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
 import ScrollableItemList from '../../common/ScrollableItemList';
 import { asApiPath } from '../../App';
-import { addNewParamToSearchPath } from './SearchView';
+import { addNewParamToSearchPath, SearchType } from './SearchView';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
+import useAdvancedSearch from '../../../helpers/useAdvancedSearch';
 
 const TagList = ({ type }: { type: TagType }) => {
   const history: History = useHistory();
@@ -62,12 +63,15 @@ const TagList = ({ type }: { type: TagType }) => {
               )
             : DEFAULT_THUMBNAIL_URL,
           onClick: () => {
-            history.push(
-              addNewParamToSearchPath(type, encodeURIComponent(String(tag.name))).searchVal,
-              {
+            if (useAdvancedSearch) {
+              history.push(addNewParamToSearchPath(type, tag.name).searchVal, {
                 showBack: true,
-              }
-            );
+              });
+            } else {
+              history.push(addNewParamToSearchPath(SearchType.ALL, tag.name).searchVal, {
+                showBack: true,
+              });
+            }
           },
         }))}
       />

@@ -8,6 +8,7 @@ import './SearchBar.scss';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { getSearchTypeTranslation } from './helpers/search-translation';
+import useAdvancedSearch from '../../../helpers/useAdvancedSearch';
 
 const SearchBar = ({
   searchParams,
@@ -21,7 +22,6 @@ const SearchBar = ({
   const openAlert = useContext(AlertContext);
   const textFieldRef = useRef<any>();
   const [searchType, setSearchType] = useState<string>(SearchType.ALL);
-
   const typeOfLatestSearch = useMemo(() => {
     const searchParamsIterator = searchParams.entries();
     let nextParam = searchParamsIterator.next();
@@ -89,7 +89,8 @@ const SearchBar = ({
               </IconButton>
             </InputAdornment>
           ),
-          startAdornment: (
+
+          startAdornment: useAdvancedSearch && (
             <InputAdornment position='start'>
               {customSearch ? (
                 <span className='MuiInputBase-root'>{t('search.all')}</span>
@@ -134,7 +135,9 @@ const SearchBar = ({
             onSearchStart(String(textFieldRef.current.value));
           }
         }}
-        placeholder={t('search.search-for-type')}
+        placeholder={
+          useAdvancedSearch ? t('search.search-for-type-advance') : t('search.search-for-type')
+        }
         variant='outlined'
       />
     </div>

@@ -4,8 +4,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
-import { addNewParamToSearchPath } from '../../../search/SearchView';
+import { addNewParamToSearchPath, SearchType } from '../../../search/SearchView';
 import { TagType } from '../../../../../types/additionalFlatTypes';
+import useAdvancedSearch from '../../../../../helpers/useAdvancedSearch';
 
 interface TagFields {
   name: string;
@@ -162,10 +163,14 @@ const TagSelectionField = <T extends TagFields>({
               key={tag.id}
               label={tag.name}
               onClick={() => {
-                window.open(
-                  addNewParamToSearchPath(type, encodeURIComponent(String(tag.name))).searchVal,
-                  '_blank'
-                );
+                if (useAdvancedSearch) {
+                  window.open(addNewParamToSearchPath(type, tag.name).searchVal, '_blank');
+                } else {
+                  window.open(
+                    addNewParamToSearchPath(SearchType.ALL, tag.name).searchVal,
+                    '_blank'
+                  );
+                }
               }}
             />
           );
