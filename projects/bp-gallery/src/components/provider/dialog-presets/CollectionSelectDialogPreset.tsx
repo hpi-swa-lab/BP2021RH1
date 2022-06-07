@@ -22,7 +22,7 @@ const CollectionSelectDialogPreset = ({
   return (
     <SelectDialogPreset
       handleClose={handleClose}
-      dialogProps={{ title: t('curator.selectCollection'), ...dialogProps }}
+      dialogProps={{ ...dialogProps, title: t('curator.selectCollection') }}
       allOptions={allCollections ?? []}
       inputLabel={t('common.collection')}
     />
