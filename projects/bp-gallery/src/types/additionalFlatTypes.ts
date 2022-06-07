@@ -41,6 +41,7 @@ type FlatPictureWithoutRelations = ID &
     | 'verified_person_tags'
     | 'location_tags'
     | 'person_tags'
+    | 'archive_tag'
   >;
 
 export type FlatLocationTagWithoutRelations = ID &
