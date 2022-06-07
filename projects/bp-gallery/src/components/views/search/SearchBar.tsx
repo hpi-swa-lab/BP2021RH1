@@ -8,7 +8,7 @@ import './SearchBar.scss';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { getSearchTypeTranslation } from './helpers/search-translation';
-import useAdvancedSearch from '../../../helpers/useAdvancedSearch';
+import useAdvancedSearch from './helpers/useAdvancedSearch';
 
 const SearchBar = ({
   searchParams,

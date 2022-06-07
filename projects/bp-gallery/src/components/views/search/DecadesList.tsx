@@ -15,6 +15,7 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatDecadeThumbnails } from '../../../types/additionalFlatTypes';
 import { buildDecadeFilter } from './helpers/search-filters';
 import { getDecadeTranslation } from './helpers/search-translation';
+import useAdvancedSearch from './helpers/useAdvancedSearch';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 
@@ -50,9 +51,15 @@ const DecadesList = () => {
             name: displayedName,
             background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
             onClick: () => {
-              history.push(addNewParamToSearchPath(SearchType.ALL, name).searchVal, {
-                showBack: true,
-              });
+              history.push(
+                addNewParamToSearchPath(
+                  useAdvancedSearch ? SearchType.DECADE : SearchType.ALL,
+                  name
+                ).searchVal,
+                {
+                  showBack: true,
+                }
+              );
             },
           };
         })}

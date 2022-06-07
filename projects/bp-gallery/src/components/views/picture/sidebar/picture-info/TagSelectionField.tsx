@@ -6,7 +6,7 @@ import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { addNewParamToSearchPath, SearchType } from '../../../search/SearchView';
 import { TagType } from '../../../../../types/additionalFlatTypes';
-import useAdvancedSearch from '../../../../../helpers/useAdvancedSearch';
+import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 
 interface TagFields {
   name: string;
@@ -163,14 +163,11 @@ const TagSelectionField = <T extends TagFields>({
               key={tag.id}
               label={tag.name}
               onClick={() => {
-                if (useAdvancedSearch) {
-                  window.open(addNewParamToSearchPath(type, tag.name).searchVal, '_blank');
-                } else {
-                  window.open(
-                    addNewParamToSearchPath(SearchType.ALL, tag.name).searchVal,
-                    '_blank'
-                  );
-                }
+                window.open(
+                  addNewParamToSearchPath(useAdvancedSearch ? type : SearchType.ALL, tag.name)
+                    .searchVal,
+                  '_blank'
+                );
               }}
             />
           );

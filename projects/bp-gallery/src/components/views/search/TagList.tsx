@@ -10,7 +10,7 @@ import { addNewParamToSearchPath, SearchType } from './SearchView';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
-import useAdvancedSearch from '../../../helpers/useAdvancedSearch';
+import useAdvancedSearch from './helpers/useAdvancedSearch';
 
 const TagList = ({ type }: { type: TagType }) => {
   const history: History = useHistory();
@@ -63,15 +63,13 @@ const TagList = ({ type }: { type: TagType }) => {
               )
             : DEFAULT_THUMBNAIL_URL,
           onClick: () => {
-            if (useAdvancedSearch) {
-              history.push(addNewParamToSearchPath(type, tag.name).searchVal, {
+            history.push(
+              addNewParamToSearchPath(useAdvancedSearch ? type : SearchType.ALL, tag.name)
+                .searchVal,
+              {
                 showBack: true,
-              });
-            } else {
-              history.push(addNewParamToSearchPath(SearchType.ALL, tag.name).searchVal, {
-                showBack: true,
-              });
-            }
+              }
+            );
           },
         }))}
       />
