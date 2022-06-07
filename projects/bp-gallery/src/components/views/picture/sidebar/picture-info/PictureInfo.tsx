@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
@@ -22,12 +22,11 @@ import { cloneDeep } from 'lodash';
 import { Button } from '@mui/material';
 import { Crop } from '@mui/icons-material';
 import PictureEditDialog from './PictureEditDialog';
-import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
+import ArchiveTagField from './ArchiveTagField';
 
 const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
-  const dialog = useContext(DialogContext);
 
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
   const [pictureState, nativeSetPictureState] = useState<FlatPicture>(picture);
@@ -110,11 +109,8 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
 
   useEffect(() => {
-    console.log(picture);
     nativeSetPictureState(picture);
   }, [picture]);
-
-  console.log(pictureState.archive_tag);
 
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
@@ -208,20 +204,18 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           />
         </PictureInfoField>
       )}
-      <PictureInfoField title={t('pictureFields.archiveTag')} icon='' type='archive'>
-        <div
-          onClick={async () => {
-            const selectedTag = await dialog({
-              preset: DialogPreset.SELECT_ARCHIVE_TAG,
-            });
-            if (selectedTag) {
-              setPictureState({ archive_tag: selectedTag.id });
-            }
-          }}
+      {(role >= AuthRole.CURATOR || Boolean(pictureState.archive_tag)) && (
+        <PictureInfoField
+          title={t('pictureFields.archiveTag')}
+          icon='folder_special'
+          type='archive'
         >
-          {pictureState.archive_tag?.name}
-        </div>
-      </PictureInfoField>
+          <ArchiveTagField
+            archiveTag={pictureState.archive_tag}
+            onChange={archiveTag => setPictureState({ archive_tag: archiveTag.id })}
+          />
+        </PictureInfoField>
+      )}
     </div>
   );
 };

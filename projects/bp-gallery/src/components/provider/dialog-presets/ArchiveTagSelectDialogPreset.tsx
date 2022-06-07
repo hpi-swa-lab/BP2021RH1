@@ -20,7 +20,7 @@ const ArchiveTagSelectDialogPreset = ({
   return (
     <SelectDialogPreset
       handleClose={handleClose}
-      dialogProps={{ title: t('curator.selectArchiveTag'), ...dialogProps }}
+      dialogProps={{ ...dialogProps, title: t('curator.selectArchiveTag') }}
       allOptions={allArchiveTags ?? []}
       inputLabel={t('common.archiveTag')}
     />
