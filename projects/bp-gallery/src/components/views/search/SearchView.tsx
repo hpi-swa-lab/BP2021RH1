@@ -63,12 +63,14 @@ const isValidYear = (searchRequest: string) => {
 };
 
 const isValidTimeSpecification = (searchRequest: string) => {
+  // Specification of year range e.g. '1970-1979'
   if (searchRequest.includes('-')) {
     // Trimming each year part makes it tolerant to multiple spaces between the '-'
     const yearParts = searchRequest.split('-').map(yearPart => yearPart.trim());
     return isValidYear(yearParts[0]) && isValidYear(yearParts[1]);
   }
 
+  // Simple year specification e.g. '1972'
   return isValidYear(searchRequest);
 };
 
@@ -119,7 +121,7 @@ const SearchView = () => {
         }
       });
       return {
-        searchTerms: allSearchTerms.filter(searchTerm => !isValidYear(searchTerm)),
+        searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
         searchTimes,
       };
     }

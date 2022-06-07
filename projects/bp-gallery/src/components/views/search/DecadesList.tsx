@@ -13,7 +13,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatDecadeThumbnails } from '../../../types/additionalFlatTypes';
-import { buildDecadeFilter } from './helpers/search-filters';
+import { buildDecadeFilter, getDecadeSearchTermForAllSearch } from './helpers/search-filters';
 import { getDecadeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
 
@@ -43,23 +43,29 @@ const DecadesList = () => {
     return (
       <ScrollableItemList
         compact={true}
-        items={DECADES.map((name: string) => {
-          const thumbnailData = decadeThumbnails[`decade${name}0s`];
+        items={DECADES.map((decadeKey: string) => {
+          const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
           const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-          const displayedName = getDecadeTranslation(t, name);
+          const displayedName = getDecadeTranslation(t, decadeKey);
           return {
             name: displayedName,
             background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
             onClick: () => {
-              history.push(
-                addNewParamToSearchPath(
-                  useAdvancedSearch ? SearchType.DECADE : SearchType.ALL,
-                  name
-                ).searchVal,
-                {
+              if (useAdvancedSearch) {
+                history.push(addNewParamToSearchPath(SearchType.DECADE, decadeKey).searchVal, {
                   showBack: true,
-                }
-              );
+                });
+              } else {
+                history.push(
+                  addNewParamToSearchPath(
+                    SearchType.ALL,
+                    getDecadeSearchTermForAllSearch(decadeKey)
+                  ).searchVal,
+                  {
+                    showBack: true,
+                  }
+                );
+              }
             },
           };
         })}
