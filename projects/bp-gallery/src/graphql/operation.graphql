@@ -111,6 +111,14 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        archive_tag {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
       }
     }
   }
@@ -479,6 +487,17 @@ query getAllCollections {
   }
 }
 
+query getAllArchiveTags {
+  archiveTags {
+    data {
+      id
+      attributes {
+        name
+      }
+    }
+  }
+}
+
 query getDecadePreviewThumbnails(
   $filter40s: PictureFiltersInput!
   $filter50s: PictureFiltersInput!
@@ -591,6 +610,14 @@ mutation createKeywordTag($name: String!) {
 
 mutation createLocationTag($name: String!) {
   createLocationTag(data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createArchiveTag($name: String!) {
+  createArchiveTag(data: { name: $name }) {
     data {
       id
     }

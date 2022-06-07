@@ -87,7 +87,6 @@ const CollectionPictureDisplay = ({
             preprocessPictures: (pictures: FlatPicture[]) => {
               return pictures.map(picture => ({
                 ...picture,
-                publishedAt: new Date().toISOString(),
                 collections: [collection.id as any],
               }));
             },

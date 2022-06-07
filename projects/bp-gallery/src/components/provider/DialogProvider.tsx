@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
 import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
 import { Dialog } from '@mui/material';
@@ -16,6 +17,7 @@ export enum DialogPreset {
   NO_PRESET,
   CONFIRM,
   SELECT_COLLECTION,
+  SELECT_ARCHIVE_TAG,
   INPUT_FIELD,
 }
 
@@ -105,6 +107,9 @@ const DialogProvider = ({ children }: { children: any }) => {
         )}
         {dialogState?.preset === DialogPreset.SELECT_COLLECTION && (
           <CollectionSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.SELECT_ARCHIVE_TAG && (
+          <ArchiveTagSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
         {dialogState?.preset === DialogPreset.INPUT_FIELD && (
           <InputFieldDialogPreset dialogProps={dialogState} handleClose={handleClose} />

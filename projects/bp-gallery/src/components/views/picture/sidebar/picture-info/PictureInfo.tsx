@@ -203,6 +203,9 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           />
         </PictureInfoField>
       )}
+      <PictureInfoField title={t('pictureFields.archiveTag')} icon='' type='archive'>
+        <span>{pictureState.archive_tag?.name}</span>
+      </PictureInfoField>
     </div>
   );
 };
