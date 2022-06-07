@@ -85,6 +85,9 @@ const PictureView = ({
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
+  useEffect(() => {
+    console.log(data);
+  }, [data, loading, error]);
 
   const onNavigateMessage = useCallback((pictureId: string) => {
     window.history.replaceState({}, '', `/picture/${pictureId}${window.location.search}`);
