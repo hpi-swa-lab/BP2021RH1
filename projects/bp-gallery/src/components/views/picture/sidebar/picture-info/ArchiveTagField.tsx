@@ -18,7 +18,7 @@ const ArchiveTagField = ({
       preset: DialogPreset.SELECT_ARCHIVE_TAG,
     });
     if (selectedTag && selectedTag.id !== archiveTag?.id) {
-      onChange(selectedTag);
+      onChange(selectedTag as FlatArchiveTag);
     }
   }, [dialog, onChange, archiveTag]);
 
