@@ -2,6 +2,7 @@ import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider
 import React, { useCallback, useContext } from 'react';
 import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { useTranslation } from 'react-i18next';
 
 const ArchiveTagField = ({
   archiveTag,
@@ -12,6 +13,7 @@ const ArchiveTagField = ({
 }) => {
   const dialog = useContext(DialogContext);
   const { role } = useAuth();
+  const { t } = useTranslation();
 
   const selectTag = useCallback(async () => {
     const selectedTag = await dialog({
@@ -22,7 +24,11 @@ const ArchiveTagField = ({
     }
   }, [dialog, onChange, archiveTag]);
 
-  return <div onClick={role >= AuthRole.CURATOR ? selectTag : undefined}>{archiveTag?.name}</div>;
+  return (
+    <div onClick={role >= AuthRole.CURATOR ? selectTag : undefined}>
+      {archiveTag?.name ?? t('curator.noArchive')}
+    </div>
+  );
 };
 
 export default ArchiveTagField;

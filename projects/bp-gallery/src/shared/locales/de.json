@@ -163,6 +163,7 @@
     "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
     "renameCollection": "Collection umbenennen",
     "nameOfNewCollection": "Name der neuen Collection:",
-    "autoCrop": "Automatisch Zuschneiden"
+    "autoCrop": "Automatisch Zuschneiden",
+    "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
   }
 }
