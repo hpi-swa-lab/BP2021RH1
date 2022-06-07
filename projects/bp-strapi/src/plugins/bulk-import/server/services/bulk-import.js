@@ -842,7 +842,7 @@ module.exports = ({ strapi }) => ({
     }
 
     const responseMessage = updatedPictures.length ?
-      `Successfully related ${updatedPictures.length} pictures to default archive tag "${defaultArchiveTag}"`
+      `Successfully related ${updatedPictures.length} pictures to default archive tag "${defaultArchiveTagName}"`
       : `Related no new pictures to the default archive tag "${defaultArchiveTagName}"`;
     strapi.log.debug(responseMessage);
     return updatedPictures;
