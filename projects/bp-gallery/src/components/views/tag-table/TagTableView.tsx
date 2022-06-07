@@ -248,8 +248,11 @@ const TagTableView = ({ type }: { type: TagType }) => {
   } else if (Object.values(tags).length && role >= AuthRole.CURATOR) {
     return (
       <div className='grid'>
-        <Button onClick={mergeTags}>{t('curator.mergeTag')}</Button>
+        <Button onClick={mergeTags} className='merge-button'>
+          {t('curator.mergeTag')}
+        </Button>
         <DataGrid
+          className='table'
           rows={rows}
           columns={columns}
           experimentalFeatures={{ newEditingApi: true }}
