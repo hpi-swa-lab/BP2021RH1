@@ -19,7 +19,7 @@ export const AlertContext = React.createContext<(alertOptions: AlertOptions) => 
   (alertOptions: AlertOptions) => {}
 );
 
-const AlertWrapper = ({ children }: { children: any }) => {
+const AlertProvider = ({ children }: { children: any }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [hideAfter, setHideAfter] = useState<number>(8000);
   const [alertType, setAlertType] = useState<AlertType>(AlertType.INFO);
@@ -60,4 +60,4 @@ const AlertWrapper = ({ children }: { children: any }) => {
   );
 };
 
-export default AlertWrapper;
+export default AlertProvider;

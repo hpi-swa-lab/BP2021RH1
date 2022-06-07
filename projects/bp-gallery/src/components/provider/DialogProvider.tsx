@@ -30,7 +30,7 @@ export const DialogContext = React.createContext<(dialogProps: DialogProps) => P
   async (dialogProps: DialogProps) => null
 );
 
-const DialogWrapper = ({ children }: { children: any }) => {
+const DialogProvider = ({ children }: { children: any }) => {
   const [dialogState, setDialogState] = useState<DialogProps>();
 
   // We save a function callback here to call once the currently active dialog has
@@ -114,4 +114,4 @@ const DialogWrapper = ({ children }: { children: any }) => {
   );
 };
 
-export default DialogWrapper;
+export default DialogProvider;

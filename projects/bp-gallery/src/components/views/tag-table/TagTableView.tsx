@@ -14,13 +14,13 @@ import {
   GridRowModel,
   GridRowsProp,
 } from '@mui/x-data-grid';
-import { AlertContext, AlertType } from '../../wrapper/AlertWrapper';
+import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { Button, Chip, IconButton } from '@mui/material';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useTranslation } from 'react-i18next';
 import { Delete } from '@mui/icons-material';
-import { DialogContext, DialogPreset } from '../../wrapper/DialogWrapper';
-import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
+import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 
 interface TagRow {

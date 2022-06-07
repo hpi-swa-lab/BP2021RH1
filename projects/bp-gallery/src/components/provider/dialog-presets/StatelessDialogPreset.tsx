@@ -7,7 +7,7 @@ import {
   Icon,
 } from '@mui/material';
 import React from 'react';
-import { DialogProps } from '../DialogWrapper';
+import { DialogProps } from '../DialogProvider';
 
 const StatelessDialogPreset = ({
   dialogProps,

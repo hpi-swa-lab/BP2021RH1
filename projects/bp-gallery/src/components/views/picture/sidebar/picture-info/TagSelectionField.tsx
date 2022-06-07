@@ -1,12 +1,10 @@
 import { Autocomplete, Chip, Icon, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
-import { GraphQLError } from 'graphql';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AuthRole, useAuth } from '../../../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { addNewParamToSearchPath } from '../../../search/SearchView';
-import { AlertContext, AlertType } from '../../../../wrapper/AlertWrapper';
 import { TagType } from '../../../../../types/additionalFlatTypes';
 
 interface TagFields {
@@ -39,7 +37,6 @@ const TagSelectionField = <T extends TagFields>({
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
-  const openAlert = useContext(AlertContext);
 
   const [tagList, setTagList] = useState<T[]>(allTags);
 
@@ -102,15 +99,8 @@ const TagSelectionField = <T extends TagFields>({
             if (createMutation) {
               const addTag = newValue.find(val => val.createValue);
               if (addTag) {
-                const { data, errors }: { data: any; errors?: GraphQLError[] } =
-                  await createMutation({ variables: { name: addTag.createValue } });
-                if (errors) {
-                  // Open alert error
-                  openAlert({
-                    alertType: AlertType.ERROR,
-                    message: errors.map(error => error.message).join(','),
-                  });
-                } else if (data) {
+                const { data } = await createMutation({ variables: { name: addTag.createValue } });
+                if (data) {
                   const nameOfField = Object.keys(data as { [key: string]: any })[0];
                   const newId = data[nameOfField].data.id;
                   addTag.id = newId;

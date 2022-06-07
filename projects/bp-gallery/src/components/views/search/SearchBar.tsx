@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { History } from 'history';
 import './SearchBar.scss';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
-import { AlertContext, AlertType } from '../../wrapper/AlertWrapper';
+import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { getSearchTypeTranslation } from './helpers/search-translation';
 
 const SearchBar = ({

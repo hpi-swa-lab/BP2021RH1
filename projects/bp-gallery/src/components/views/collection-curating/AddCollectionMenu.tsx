@@ -1,6 +1,6 @@
 import { Icon, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
-import { DialogContext, DialogPreset } from '../../wrapper/DialogWrapper';
+import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import {
   useCreateSubCollectionMutation,

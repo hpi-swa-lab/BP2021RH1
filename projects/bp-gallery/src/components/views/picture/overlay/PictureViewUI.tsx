@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Icon } from '@mui/material';
 import PictureNavigationButtons from './PictureNavigationButtons';
 import { useTranslation } from 'react-i18next';
-import { AuthRole, useAuth } from '../../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 
 export const PictureViewUI = ({
   calledViaLink,

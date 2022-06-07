@@ -1,8 +1,8 @@
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useContext, useState } from 'react';
-import { DialogContext, DialogPreset } from '../../wrapper/DialogWrapper';
-import { AlertContext, AlertType } from '../../wrapper/AlertWrapper';
+import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import {
   useDeleteCollectionMutation,
   useGetCollectionInfoByIdQuery,

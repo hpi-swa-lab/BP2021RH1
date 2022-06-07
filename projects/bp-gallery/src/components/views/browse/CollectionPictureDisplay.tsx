@@ -6,13 +6,13 @@ import SubCollections from './SubCollections';
 import { PictureFiltersInput, useCreateSubCollectionMutation } from '../../../graphql/APIConnector';
 import CollectionDescription from './CollectionDescription';
 import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
 import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { DialogContext, DialogPreset } from '../../wrapper/DialogWrapper';
+import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 
 const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
   const filters: PictureFiltersInput = { and: [] };

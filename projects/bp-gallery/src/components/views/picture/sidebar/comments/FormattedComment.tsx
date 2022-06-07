@@ -5,7 +5,7 @@ import './FormattedComment.scss';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import { Button } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
-import { AuthRole, useAuth } from '../../../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useFixCommentTextMutation } from '../../../../../graphql/APIConnector';
 import JoditEditor from 'jodit-react';
 import defaultJoditConfig from '../../../../../helpers/jodit-config';

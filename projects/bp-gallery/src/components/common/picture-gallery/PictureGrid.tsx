@@ -5,7 +5,7 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import hashCode from '../../../helpers/hash-code';
 import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
-import { AuthRole, useAuth } from '../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
 

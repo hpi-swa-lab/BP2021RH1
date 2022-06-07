@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { de } from 'date-fns/locale';
-import { AuthRole, useAuth } from '../../../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import i18n from '../../../../../i18n';
 import { cloneDeep } from 'lodash';
 

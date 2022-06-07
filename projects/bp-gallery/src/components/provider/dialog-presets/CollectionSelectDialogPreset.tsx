@@ -13,7 +13,7 @@ import { useGetAllCollectionsQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import './CollectionSelectDialogPreset.scss';
-import { DialogProps } from '../DialogWrapper';
+import { DialogProps } from '../DialogProvider';
 
 const CollectionSelectDialogPreset = ({
   handleClose,

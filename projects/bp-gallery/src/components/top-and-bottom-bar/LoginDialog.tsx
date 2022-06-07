@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../wrapper/AuthWrapper';
+import { useAuth } from '../provider/AuthProvider';
 
 const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
   const { t } = useTranslation();

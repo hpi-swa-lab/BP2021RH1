@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../wrapper/AuthWrapper';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import {
   useAcceptCommentMutation,
   useDeclineCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import { DialogContext, DialogPreset } from '../../../../wrapper/DialogWrapper';
+import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
 import './CommentVerification.scss';
 import { Button } from '@mui/material';
