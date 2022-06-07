@@ -30,7 +30,6 @@ const UploadsView = () => {
   }, [role, t]);
 
   const createArchive = useCallback(async () => {
-    console.log('Test');
     const archiveName = await dialog({
       title: t('curator.createArchive'),
       preset: DialogPreset.INPUT_FIELD,
