@@ -1,5 +1,5 @@
-import { Button, Icon, CircularProgress } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Button, CircularProgress, Icon } from '@mui/material';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -10,6 +10,7 @@ import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
 import { cloneDeep } from 'lodash';
+import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
@@ -27,6 +28,7 @@ const PictureUploadArea = ({
   });
   const { t } = useTranslation();
   const { role } = useAuth();
+  const dialog = useContext(DialogContext);
 
   const [newFiles, setNewFiles] = useState<{ file: File; preview: FlatPicture }[]>([]);
 
@@ -52,15 +54,29 @@ const PictureUploadArea = ({
     setNewFiles(fileList => [...fileList, ...filesWithPreviews]);
   }, [acceptedFiles]);
 
-  const uploadPictures = useCallback(() => {
+  const uploadPictures = useCallback(async () => {
     if (!preprocessPictures) {
       return;
     }
+
+    const targetArchiveTag = await dialog({
+      preset: DialogPreset.SELECT_ARCHIVE_TAG,
+    });
+    if (!targetArchiveTag) {
+      return;
+    }
+
+    const initializePictureFromFile = (fileId: any) =>
+      ({
+        media: fileId,
+        publishedAt: new Date().toISOString(),
+        archive_tag: targetArchiveTag.id,
+      } as unknown as FlatPicture);
+
     setLoading(true);
     uploadMediaFiles(newFiles.map(f => f.file)).then(async fileIds => {
-      const pictures = preprocessPictures(
-        fileIds.map(f => ({ media: f } as unknown as FlatPicture))
-      );
+      const initialPictures = fileIds.map(initializePictureFromFile);
+      const pictures = preprocessPictures(initialPictures);
       for (const picture of pictures) {
         await createPicture({
           variables: {
@@ -74,7 +90,7 @@ const PictureUploadArea = ({
       }
       setLoading(false);
     });
-  }, [newFiles, createPicture, preprocessPictures, onUploaded, setLoading]);
+  }, [newFiles, createPicture, preprocessPictures, onUploaded, setLoading, dialog]);
 
   const onScan = useCallback((file: File) => {
     setNewFiles(fileList => [...fileList, { file, preview: asFlatPicture(file) }]);

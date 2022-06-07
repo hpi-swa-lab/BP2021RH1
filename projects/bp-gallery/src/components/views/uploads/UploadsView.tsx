@@ -16,12 +16,8 @@ const UploadsView = () => {
   const uploadAreaProps = useMemo(() => {
     return role >= AuthRole.CURATOR
       ? {
-          preprocessPictures: (pictures: FlatPicture[]) => {
-            return pictures.map(picture => ({
-              ...picture,
-              publishedAt: new Date().toISOString(),
-            }));
-          },
+          // No additional information added to the pictures in this view here.
+          preprocessPictures: (pictures: FlatPicture[]) => pictures,
           folderName: t('curator.uploads'),
         }
       : undefined;
