@@ -1,3 +1,11 @@
 .grid {
   width: 100%;
+
+  .merge-button {
+    height: 2rem;
+  }
+
+  .table {
+    height: calc(100% - 2rem);
+  }
 }
