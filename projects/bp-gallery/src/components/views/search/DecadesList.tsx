@@ -50,7 +50,7 @@ const DecadesList = () => {
             name: displayedName,
             background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
             onClick: () => {
-              history.push(addNewParamToSearchPath(SearchType.DECADE, name).searchVal, {
+              history.push(addNewParamToSearchPath(SearchType.ALL, name).searchVal, {
                 showBack: true,
               });
             },

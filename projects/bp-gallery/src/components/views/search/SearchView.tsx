@@ -62,6 +62,20 @@ const isValidYear = (searchRequest: string) => {
   return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
 };
 
+const isValidTimerangeSearch = (searchRequest: string) => {
+  if (searchRequest.includes('-')) {
+    const v = searchRequest.split(' ');
+    if (v.length === 3) {
+      return isValidYear(v[0]) && isValidYear(v[2]);
+    } else {
+      const v = searchRequest.split('-');
+      return isValidYear(v[0]) && isValidYear(v[1]);
+    }
+  }
+
+  return isValidYear(searchRequest);
+};
+
 export const addNewParamToSearchPath = (
   newParamType: string,
   searchRequest: string,
@@ -103,7 +117,7 @@ const SearchView = () => {
       const allSearchTerms = searchParams.getAll(SearchType.ALL);
       const searchTimes: string[][] = [];
       allSearchTerms.forEach(searchTerm => {
-        if (isValidYear(searchTerm)) {
+        if (isValidTimerangeSearch(searchTerm)) {
           const { startTime, endTime } = paramToTime(searchTerm);
           searchTimes.push([searchTerm, startTime, endTime]);
         }
