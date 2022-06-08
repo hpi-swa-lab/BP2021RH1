@@ -163,11 +163,11 @@ const TagSelectionField = <T extends TagFields>({
               key={tag.id}
               label={tag.name}
               onClick={() => {
-                window.open(
-                  addNewParamToSearchPath(useAdvancedSearch ? type : SearchType.ALL, tag.name)
-                    .searchVal,
-                  '_blank'
+                const { searchPath } = addNewParamToSearchPath(
+                  useAdvancedSearch ? type : SearchType.ALL,
+                  tag.name
                 );
+                window.open(searchPath, '_blank');
               }}
             />
           );

@@ -63,13 +63,13 @@ const TagList = ({ type }: { type: TagType }) => {
               )
             : DEFAULT_THUMBNAIL_URL,
           onClick: () => {
-            history.push(
-              addNewParamToSearchPath(useAdvancedSearch ? type : SearchType.ALL, tag.name)
-                .searchVal,
-              {
-                showBack: true,
-              }
+            const { searchPath } = addNewParamToSearchPath(
+              useAdvancedSearch ? type : SearchType.ALL,
+              tag.name
             );
+            history.push(searchPath, {
+              showBack: true,
+            });
           },
         }))}
       />

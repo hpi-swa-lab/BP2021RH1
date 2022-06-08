@@ -49,15 +49,15 @@ const SearchBar = ({
   const onSearchStart = (searchValue: string) => {
     if (searchValue === '') return;
 
-    const searchRes = addNewParamToSearchPath(searchType, searchValue, searchParams);
-    if (!searchRes.isValid) {
+    const { isValid, searchPath } = addNewParamToSearchPath(searchType, searchValue, searchParams);
+    if (!isValid) {
       openAlert({
         alertType: AlertType.INFO,
         message: t('search.wrong-time-input-info'),
         duration: 7000,
       });
     } else {
-      history.push(searchRes.searchVal, {
+      history.push(searchPath, {
         showBack: true,
       });
       textFieldRef.current.value = '';

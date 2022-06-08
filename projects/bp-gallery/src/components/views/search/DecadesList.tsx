@@ -51,21 +51,16 @@ const DecadesList = () => {
             name: displayedName,
             background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
             onClick: () => {
-              if (useAdvancedSearch) {
-                history.push(addNewParamToSearchPath(SearchType.DECADE, decadeKey).searchVal, {
-                  showBack: true,
-                });
-              } else {
-                history.push(
-                  addNewParamToSearchPath(
+              const { searchPath } = useAdvancedSearch
+                ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
+                : addNewParamToSearchPath(
                     SearchType.ALL,
                     getDecadeSearchTermForAllSearch(decadeKey)
-                  ).searchVal,
-                  {
-                    showBack: true,
-                  }
-                );
-              }
+                  );
+
+              history.push(searchPath, {
+                showBack: true,
+              });
             },
           };
         })}

@@ -80,14 +80,14 @@ export const addNewParamToSearchPath = (
   prevParams?: URLSearchParams
 ): {
   isValid: boolean;
-  searchVal: string;
+  searchPath: string;
 } => {
   const searchParams = prevParams ? prevParams : new URLSearchParams();
   const paramValues = searchRequest.split(' ');
 
   if (newParamType === SearchType.TIME_RANGE) {
     if (!isValidYear(searchRequest))
-      return { searchVal: asSearchPath(searchParams), isValid: false };
+      return { searchPath: asSearchPath(searchParams), isValid: false };
   }
 
   paramValues.forEach(element => {
@@ -95,7 +95,7 @@ export const addNewParamToSearchPath = (
       searchParams.append(newParamType, element);
     }
   });
-  return { searchVal: asSearchPath(searchParams), isValid: true };
+  return { searchPath: asSearchPath(searchParams), isValid: true };
 };
 
 const SearchView = () => {
