@@ -165,7 +165,7 @@ const TagSelectionField = <T extends TagFields>({
               onClick={() => {
                 const { searchPath } = addNewParamToSearchPath(
                   useAdvancedSearch ? type : SearchType.ALL,
-                  tag.name
+                  encodeURIComponent(tag.name)
                 );
                 window.open(searchPath, '_blank');
               }}

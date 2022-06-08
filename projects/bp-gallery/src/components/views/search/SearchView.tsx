@@ -112,7 +112,7 @@ const SearchView = () => {
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
     if (customSearch) {
-      const allSearchTerms = searchParams.getAll(SearchType.ALL);
+      const allSearchTerms = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
       const searchTimes: string[][] = [];
       allSearchTerms.forEach(searchTerm => {
         if (isValidTimeSpecification(searchTerm)) {

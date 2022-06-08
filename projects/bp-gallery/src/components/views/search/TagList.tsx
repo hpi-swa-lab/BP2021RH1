@@ -65,7 +65,7 @@ const TagList = ({ type }: { type: TagType }) => {
           onClick: () => {
             const { searchPath } = addNewParamToSearchPath(
               useAdvancedSearch ? type : SearchType.ALL,
-              tag.name
+              encodeURIComponent(tag.name)
             );
             history.push(searchPath, {
               showBack: true,
