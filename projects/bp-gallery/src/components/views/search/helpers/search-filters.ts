@@ -20,7 +20,35 @@ const buildTimeRangeFilter = (startTime: string, endTime: string) => {
   };
 };
 
+/**
+ * Convert a decade key to a time-range-related search term in form of '1950-1959',
+ * which is compatible with our parsing before the ALL-Search.
+ */
+export const getDecadeSearchTermForAllSearch = (decadeKey: string) => {
+  const numberedDecadeKey = parseInt(decadeKey);
+  const startYear = numberedDecadeKey === 4 ? '1900' : `19${numberedDecadeKey}0`;
+  const endYear = `19${numberedDecadeKey}9`;
+  return `${startYear}-${endYear}`;
+};
+
 export const paramToTime = (timeParam: string) => {
+  // Specification of year range e.g. '1970-1979'
+  if (timeParam.includes('-')) {
+    const yearParts = timeParam.split('-').map(yearPart => parseInt(yearPart.trim()));
+    if (!isNaN(yearParts[0]) && !isNaN(yearParts[1])) {
+      let startYear = yearParts[0];
+      startYear = startYear >= 100 ? startYear : 1900 + startYear;
+      const startTime = `${startYear}-01-01T00:00:00Z`;
+
+      let endYear = yearParts[1];
+      endYear = endYear >= 100 ? endYear : 1900 + endYear;
+      const endTime = `${endYear}-12-31T23:59:59Z`;
+
+      return { startTime, endTime, valid: true };
+    }
+  }
+
+  // Simple year specification e.g. '1972'
   const year = parseInt(timeParam);
   let startTime = `${year}-01-01T00:00:00Z`;
   let endTime = `${year}-12-31T23:59:59Z`;
@@ -31,6 +59,8 @@ export const paramToTime = (timeParam: string) => {
     }
     return { startTime, endTime, valid: true };
   }
+
+  // Fallthrough if invalid time or time-range
   return { startTime: '', endTime: '', valid: false };
 };
 
