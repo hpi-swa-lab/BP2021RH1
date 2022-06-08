@@ -13,8 +13,9 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatDecadeThumbnails } from '../../../types/additionalFlatTypes';
-import { buildDecadeFilter } from './helpers/search-filters';
+import { buildDecadeFilter, getDecadeSearchTermForAllSearch } from './helpers/search-filters';
 import { getDecadeTranslation } from './helpers/search-translation';
+import useAdvancedSearch from './helpers/useAdvancedSearch';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 
@@ -42,15 +43,22 @@ const DecadesList = () => {
     return (
       <ScrollableItemList
         compact={true}
-        items={DECADES.map((name: string) => {
-          const thumbnailData = decadeThumbnails[`decade${name}0s`];
+        items={DECADES.map((decadeKey: string) => {
+          const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
           const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-          const displayedName = getDecadeTranslation(t, name);
+          const displayedName = getDecadeTranslation(t, decadeKey);
           return {
             name: displayedName,
             background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
             onClick: () => {
-              history.push(addNewParamToSearchPath(SearchType.DECADE, name).searchVal, {
+              const { searchPath } = useAdvancedSearch
+                ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
+                : addNewParamToSearchPath(
+                    SearchType.ALL,
+                    getDecadeSearchTermForAllSearch(decadeKey)
+                  );
+
+              history.push(searchPath, {
                 showBack: true,
               });
             },

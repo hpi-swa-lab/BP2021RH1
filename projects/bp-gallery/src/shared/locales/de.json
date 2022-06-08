@@ -64,7 +64,8 @@
     "thanks": "Danke für Ihren Kommentar!"
   },
   "search": {
-    "search-for-type": "durchsuchen",
+    "search-for-type": "In allen Bildinformationen suchen",
+    "search-for-type-advance": "durchsuchen",
     "date": "Jahreszahlen",
     "decade": "Jahrzehnte",
     "keyword": "Schlagworte",
@@ -72,7 +73,7 @@
     "person": "Personen",
     "location": "Orte",
     "collection": "Sammlungen",
-    "all": "Gesamtes Bilderarchiv",
+    "all": "Alle Bildinformationen",
     "start-search": "Suche starten",
     "picture-found": "Bild wurde gefunden",
     "pictures-found": "Bilder wurden gefunden",

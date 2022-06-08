@@ -62,20 +62,32 @@ const isValidYear = (searchRequest: string) => {
   return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
 };
 
+const isValidTimeSpecification = (searchRequest: string) => {
+  // Specification of year range e.g. '1970-1979'
+  if (searchRequest.includes('-')) {
+    // Trimming each year part makes it tolerant to multiple spaces between the '-'
+    const yearParts = searchRequest.split('-').map(yearPart => yearPart.trim());
+    return isValidYear(yearParts[0]) && isValidYear(yearParts[1]);
+  }
+
+  // Simple year specification e.g. '1972'
+  return isValidYear(searchRequest);
+};
+
 export const addNewParamToSearchPath = (
   newParamType: string,
   searchRequest: string,
   prevParams?: URLSearchParams
 ): {
   isValid: boolean;
-  searchVal: string;
+  searchPath: string;
 } => {
   const searchParams = prevParams ? prevParams : new URLSearchParams();
   const paramValues = searchRequest.split(' ');
 
   if (newParamType === SearchType.TIME_RANGE) {
     if (!isValidYear(searchRequest))
-      return { searchVal: asSearchPath(searchParams), isValid: false };
+      return { searchPath: asSearchPath(searchParams), isValid: false };
   }
 
   paramValues.forEach(element => {
@@ -83,7 +95,7 @@ export const addNewParamToSearchPath = (
       searchParams.append(newParamType, element);
     }
   });
-  return { searchVal: asSearchPath(searchParams), isValid: true };
+  return { searchPath: asSearchPath(searchParams), isValid: true };
 };
 
 const SearchView = () => {
@@ -100,16 +112,16 @@ const SearchView = () => {
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
     if (customSearch) {
-      const allSearchTerms = searchParams.getAll(SearchType.ALL);
+      const allSearchTerms = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
       const searchTimes: string[][] = [];
       allSearchTerms.forEach(searchTerm => {
-        if (isValidYear(searchTerm)) {
+        if (isValidTimeSpecification(searchTerm)) {
           const { startTime, endTime } = paramToTime(searchTerm);
           searchTimes.push([searchTerm, startTime, endTime]);
         }
       });
       return {
-        searchTerms: allSearchTerms.filter(searchTerm => !isValidYear(searchTerm)),
+        searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
         searchTimes,
       };
     }

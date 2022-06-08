@@ -8,6 +8,7 @@ import './SearchBar.scss';
 import { addNewParamToSearchPath, SearchType } from './SearchView';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { getSearchTypeTranslation } from './helpers/search-translation';
+import useAdvancedSearch from './helpers/useAdvancedSearch';
 
 const SearchBar = ({
   searchParams,
@@ -21,7 +22,6 @@ const SearchBar = ({
   const openAlert = useContext(AlertContext);
   const textFieldRef = useRef<any>();
   const [searchType, setSearchType] = useState<string>(SearchType.ALL);
-
   const typeOfLatestSearch = useMemo(() => {
     const searchParamsIterator = searchParams.entries();
     let nextParam = searchParamsIterator.next();
@@ -49,15 +49,15 @@ const SearchBar = ({
   const onSearchStart = (searchValue: string) => {
     if (searchValue === '') return;
 
-    const searchRes = addNewParamToSearchPath(searchType, searchValue, searchParams);
-    if (!searchRes.isValid) {
+    const { isValid, searchPath } = addNewParamToSearchPath(searchType, searchValue, searchParams);
+    if (!isValid) {
       openAlert({
         alertType: AlertType.INFO,
         message: t('search.wrong-time-input-info'),
         duration: 7000,
       });
     } else {
-      history.push(searchRes.searchVal, {
+      history.push(searchPath, {
         showBack: true,
       });
       textFieldRef.current.value = '';
@@ -89,7 +89,8 @@ const SearchBar = ({
               </IconButton>
             </InputAdornment>
           ),
-          startAdornment: (
+
+          startAdornment: useAdvancedSearch && (
             <InputAdornment position='start'>
               {customSearch ? (
                 <span className='MuiInputBase-root'>{t('search.all')}</span>
@@ -134,7 +135,9 @@ const SearchBar = ({
             onSearchStart(String(textFieldRef.current.value));
           }
         }}
-        placeholder={t('search.search-for-type')}
+        placeholder={
+          useAdvancedSearch ? t('search.search-for-type-advance') : t('search.search-for-type')
+        }
         variant='outlined'
       />
     </div>
