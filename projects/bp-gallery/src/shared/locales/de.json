@@ -22,6 +22,7 @@
     "no-collection": "Es gibt keine Collection, die der Anfrage entspricht.",
     "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht.",
     "collection": "Collection",
+    "archiveTag": "Archiv",
     "name": "Name",
     "submit": "Absenden",
     "titleFor": "Titelbild für {{query}}",
@@ -102,6 +103,7 @@
     "descriptions": "Beschreibungen",
     "people": "Personen",
     "keywords": "Schlagworte",
+    "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",
     "noLocations": "Keine Orte bekannt",
     "noPeople": "Keine Personen bekannt",
@@ -132,10 +134,13 @@
     "addedPicturesToCollection": "Bilder erfolgreich zur Collection hinzugefügt",
     "removedPicturesFromCollection": "Bilder erfolgreich aus der Collection entfernt",
     "addCollection": "Collection hinzufügen",
+    "createArchive": "Neues Archiv erstellen",
     "createCollection": "Neue Collection erstellen",
     "linkCollection": "Bestehende Collection verlinken",
     "moveCollection": "Bestehende Collection hierher verschieben",
-    "selectTargetCollection": "Collection auswählen",
+    "selectOption": "Option auswählen",
+    "selectCollection": "Collection auswählen",
+    "selectArchiveTag": "Archiv auswählen",
     "saveStatus": {
       "saving": "Speichern...",
       "saved": "Gespeichert.",
@@ -159,6 +164,7 @@
     "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
     "renameCollection": "Collection umbenennen",
     "nameOfNewCollection": "Name der neuen Collection:",
-    "autoCrop": "Automatisch Zuschneiden"
+    "autoCrop": "Automatisch Zuschneiden",
+    "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
   }
 }

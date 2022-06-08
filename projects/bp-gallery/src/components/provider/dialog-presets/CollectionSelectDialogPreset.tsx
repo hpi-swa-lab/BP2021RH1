@@ -1,19 +1,10 @@
-import React, { useRef } from 'react';
-import {
-  Autocomplete,
-  Button,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from '@mui/material';
-import { Close, Done } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
+import SelectDialogPreset from './SelectDialogPreset';
+import { DialogProps } from '../DialogProvider';
 import { useGetAllCollectionsQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
-import './CollectionSelectDialogPreset.scss';
-import { DialogProps } from '../DialogProvider';
+import { useTranslation } from 'react-i18next';
 
 const CollectionSelectDialogPreset = ({
   handleClose,
@@ -22,43 +13,19 @@ const CollectionSelectDialogPreset = ({
   handleClose: (value: any) => void;
   dialogProps: DialogProps;
 }) => {
-  const { data } = useGetAllCollectionsQuery();
-
   const { t } = useTranslation();
 
-  const selectedCollection = useRef<FlatCollection | undefined>(undefined);
-
+  const { data } = useGetAllCollectionsQuery();
   const allCollections: FlatCollection[] | undefined =
     useSimplifiedQueryResponseData(data)?.collections;
 
   return (
-    <>
-      <DialogTitle>{dialogProps.title ?? t('curator.selectTargetCollection')}</DialogTitle>
-      <DialogContent>
-        {dialogProps.content}
-        <Autocomplete
-          disablePortal
-          options={allCollections ?? []}
-          isOptionEqualToValue={(option, value) => option.id === value.id}
-          renderInput={params => <TextField {...params} label={t('common.collection')} />}
-          getOptionLabel={(option: FlatCollection) => option.name}
-          onChange={(_, value: FlatCollection | null) => {
-            selectedCollection.current = value ?? undefined;
-          }}
-        />
-      </DialogContent>
-      <DialogActions style={{ justifyContent: 'space-between' }}>
-        <Button onClick={() => handleClose(undefined)} startIcon={<Close />}>
-          {t('common.abort')}
-        </Button>
-        <Button
-          onClick={() => handleClose(selectedCollection.current ?? undefined)}
-          startIcon={<Done />}
-        >
-          {t('common.confirm')}
-        </Button>
-      </DialogActions>
-    </>
+    <SelectDialogPreset
+      handleClose={handleClose}
+      dialogProps={{ ...dialogProps, title: t('curator.selectCollection') }}
+      allOptions={allCollections ?? []}
+      inputLabel={t('common.collection')}
+    />
   );
 };
 

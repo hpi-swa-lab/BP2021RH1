@@ -22,6 +22,7 @@ import { cloneDeep } from 'lodash';
 import { Button } from '@mui/material';
 import { Crop } from '@mui/icons-material';
 import PictureEditDialog from './PictureEditDialog';
+import ArchiveTagField from './ArchiveTagField';
 
 const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   const { role } = useAuth();
@@ -60,7 +61,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         } else if (Array.isArray(fieldForAPI[key])) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           fieldForAPI[key] = fieldForAPI[key].map((f: any) => JSON.stringify(f));
-        } else {
+        } else if (key !== 'archive_tag') {
           fieldForAPI[key] = JSON.stringify(fieldForAPI[key]);
         }
       });
@@ -200,6 +201,18 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
             }}
             noContentText={t('pictureFields.noCollections')}
             nonVerifyable={true}
+          />
+        </PictureInfoField>
+      )}
+      {(role >= AuthRole.CURATOR || Boolean(pictureState.archive_tag)) && (
+        <PictureInfoField
+          title={t('pictureFields.archiveTag')}
+          icon='folder_special'
+          type='archive'
+        >
+          <ArchiveTagField
+            archiveTag={pictureState.archive_tag}
+            onChange={archiveTag => setPictureState({ archive_tag: archiveTag.id })}
           />
         </PictureInfoField>
       )}

@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "archive_tags",
+  "info": {
+    "singularName": "archive-tag",
+    "pluralName": "archive-tags",
+    "displayName": "Archive_Tag"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "archive_tag"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import {
+  ArchiveTag,
   Collection,
   Comment,
   ComponentCommonSynonyms,
@@ -40,6 +41,7 @@ type FlatPictureWithoutRelations = ID &
     | 'verified_person_tags'
     | 'location_tags'
     | 'person_tags'
+    | 'archive_tag'
   >;
 
 export type FlatLocationTagWithoutRelations = ID &
@@ -49,6 +51,8 @@ export type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'v
 
 export type FlatTimeRangeTagWithoutRelations = ID &
   Omit<TimeRangeTag, 'pictures' | 'verified_pictures'>;
+
+export type FlatArchiveTagWithoutRelations = ID & Omit<ArchiveTag, 'pictures'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -80,6 +84,10 @@ export type FlatCollection = FlatCollectionWithoutRelations & {
   parent_collections?: FlatCollectionWithoutRelations[];
 };
 
+export type FlatArchiveTag = FlatArchiveTagWithoutRelations & {
+  pictures?: FlatPictureWithoutRelations[];
+};
+
 export type FlatPicture = FlatPictureWithoutRelations & {
   collections?: FlatCollectionWithoutRelations[];
   comments?: FlatCommentWithoutRelations[];
@@ -89,6 +97,7 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   location_tags?: FlatLocationTagWithoutRelations[];
   media?: FlatUploadFile;
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
+  archive_tag?: FlatArchiveTagWithoutRelations;
 };
 
 export type Thumbnail = {
@@ -111,4 +120,5 @@ export enum TagType {
   LOCATION = 'location',
   COLLECTION = 'collection',
   TIME_RANGE = 'date',
+  ARCHIVE = 'archive',
 }

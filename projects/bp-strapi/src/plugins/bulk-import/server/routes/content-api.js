@@ -54,6 +54,11 @@ module.exports = {
       method: 'POST',
       path: '/reduce-picture-collection-relations',
       handler: 'bulkImport.reducePictureCollectionRelations'
+    },
+    {
+      method: 'POST',
+      path: '/add-default-archive-tag',
+      handler: 'bulkImport.addDefaultArchiveTag'
     }
   ]
 };
