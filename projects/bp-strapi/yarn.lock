@@ -2265,7 +2265,7 @@
     "@strapi/utils" "4.1.9"
     lodash "4.17.21"
 
-"@strapi/plugin-sentry@^4.1.12":
+"@strapi/plugin-sentry@^4.1.9":
   version "4.1.12"
   resolved "https://registry.yarnpkg.com/@strapi/plugin-sentry/-/plugin-sentry-4.1.12.tgz#c36994d6f9cd27e2d2a7c6cecb0ff94e31c8292f"
   integrity sha512-o/3mZ6DJxYB6Ed6vpvDZP5RQR9PkvCO88Nuo1SK+9+xxawfVZM/C+QUglYqzWDUJEUglY9sm/6hbwfpvP1XDDQ==
