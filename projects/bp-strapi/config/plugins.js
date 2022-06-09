@@ -27,4 +27,10 @@ module.exports = ({ env }) => ({
       jwtSecret: env("JWT_SECRET"),
     },
   },
+  sentry: {
+    enabled: !!env('SENTRY_DSN'),
+    config: {
+      dsn: env('SENTRY_DSN'),
+    },
+  }
 });

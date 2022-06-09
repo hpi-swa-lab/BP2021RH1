@@ -1824,6 +1824,17 @@
   resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
   integrity sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==
 
+"@sentry/core@6.19.6":
+  version "6.19.6"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-6.19.6.tgz#7d4649d0148b5d0be1358ab02e2f869bf7363e9a"
+  integrity sha512-biEotGRr44/vBCOegkTfC9rwqaqRKIpFljKGyYU6/NtzMRooktqOhjmjmItNCMRknArdeaQwA8lk2jcZDXX3Og==
+  dependencies:
+    "@sentry/hub" "6.19.6"
+    "@sentry/minimal" "6.19.6"
+    "@sentry/types" "6.19.6"
+    "@sentry/utils" "6.19.6"
+    tslib "^1.9.3"
+
 "@sentry/core@6.3.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-6.3.0.tgz#3b8db24918a00c0b77f1663fc6d9be925f66bb3e"
@@ -1835,6 +1846,15 @@
     "@sentry/utils" "6.3.0"
     tslib "^1.9.3"
 
+"@sentry/hub@6.19.6":
+  version "6.19.6"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-6.19.6.tgz#ada83ceca0827c49534edfaba018221bc1eb75e1"
+  integrity sha512-PuEOBZxvx3bjxcXmWWZfWXG+orojQiWzv9LQXjIgroVMKM/GG4QtZbnWl1hOckUj7WtKNl4hEGO2g/6PyCV/vA==
+  dependencies:
+    "@sentry/types" "6.19.6"
+    "@sentry/utils" "6.19.6"
+    tslib "^1.9.3"
+
 "@sentry/hub@6.3.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-6.3.0.tgz#4225b3b0f31fe47f24d80753b257a4b57de5d651"
@@ -1844,6 +1864,15 @@
     "@sentry/utils" "6.3.0"
     tslib "^1.9.3"
 
+"@sentry/minimal@6.19.6":
+  version "6.19.6"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.19.6.tgz#b6cced3708e25d322039e68ebdf8fadfa445bf7d"
+  integrity sha512-T1NKcv+HTlmd8EbzUgnGPl4ySQGHWMCyZ8a8kXVMZOPDzphN3fVIzkYzWmSftCWp0rpabXPt9aRF2mfBKU+mAQ==
+  dependencies:
+    "@sentry/hub" "6.19.6"
+    "@sentry/types" "6.19.6"
+    tslib "^1.9.3"
+
 "@sentry/minimal@6.3.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.3.0.tgz#e64d87c92a4676a11168672a96589f46985f2b22"
@@ -1851,6 +1880,20 @@
   dependencies:
     "@sentry/hub" "6.3.0"
     "@sentry/types" "6.3.0"
+    tslib "^1.9.3"
+
+"@sentry/node@6.19.6":
+  version "6.19.6"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-6.19.6.tgz#d63c4ffcf0150b4175a2e4e5021b53af46e5946f"
+  integrity sha512-kHQMfsy40ZxxdS9zMPmXCOOLWOJbQj6/aVSHt/L1QthYcgkAi7NJQNXnQIPWQDe8eP3DfNIWM7dc446coqjXrQ==
+  dependencies:
+    "@sentry/core" "6.19.6"
+    "@sentry/hub" "6.19.6"
+    "@sentry/types" "6.19.6"
+    "@sentry/utils" "6.19.6"
+    cookie "^0.4.1"
+    https-proxy-agent "^5.0.0"
+    lru_map "^0.3.3"
     tslib "^1.9.3"
 
 "@sentry/node@6.3.0":
@@ -1879,10 +1922,23 @@
     "@sentry/utils" "6.3.0"
     tslib "^1.9.3"
 
+"@sentry/types@6.19.6":
+  version "6.19.6"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.19.6.tgz#70513f9dca05d23d7ab9c2a6cb08d4db6763ca67"
+  integrity sha512-QH34LMJidEUPZK78l+Frt3AaVFJhEmIi05Zf8WHd9/iTt+OqvCHBgq49DDr1FWFqyYWm/QgW/3bIoikFpfsXyQ==
+
 "@sentry/types@6.3.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.3.0.tgz#919cc1870f34b7126546c77e3c695052795d3add"
   integrity sha512-xWyCYDmFPjS5ex60kxOOHbHEs4vs00qHbm0iShQfjl4OSg9S2azkcWofDmX8Xbn0FSOUXgdPCjNJW1B0bPVhCA==
+
+"@sentry/utils@6.19.6":
+  version "6.19.6"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.19.6.tgz#2ddc9ef036c3847084c43d0e5a55e4646bdf9021"
+  integrity sha512-fAMWcsguL0632eWrROp/vhPgI7sBj/JROWVPzpabwVkm9z3m1rQm6iLFn4qfkZL8Ozy6NVZPXOQ7EXmeU24byg==
+  dependencies:
+    "@sentry/types" "6.19.6"
+    tslib "^1.9.3"
 
 "@sentry/utils@6.3.0":
   version "6.3.0"
@@ -2208,6 +2264,13 @@
   dependencies:
     "@strapi/utils" "4.1.9"
     lodash "4.17.21"
+
+"@strapi/plugin-sentry@^4.1.9":
+  version "4.1.12"
+  resolved "https://registry.yarnpkg.com/@strapi/plugin-sentry/-/plugin-sentry-4.1.12.tgz#c36994d6f9cd27e2d2a7c6cecb0ff94e31c8292f"
+  integrity sha512-o/3mZ6DJxYB6Ed6vpvDZP5RQR9PkvCO88Nuo1SK+9+xxawfVZM/C+QUglYqzWDUJEUglY9sm/6hbwfpvP1XDDQ==
+  dependencies:
+    "@sentry/node" "6.19.6"
 
 "@strapi/plugin-upload@4.1.9":
   version "4.1.9"

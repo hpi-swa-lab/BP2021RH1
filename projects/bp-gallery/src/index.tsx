@@ -5,6 +5,18 @@ import './i18n';
 import { renderRoutes } from 'react-router-config';
 import reportWebVitals from './reportWebVitals';
 import routes from './components/routes';
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
+
+const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
+
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    integrations: [new BrowserTracing()],
+    tracesSampleRate: 1.0,
+  });
+}
 
 ReactDOM.render(
   <React.StrictMode>

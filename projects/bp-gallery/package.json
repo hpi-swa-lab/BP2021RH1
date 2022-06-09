@@ -9,6 +9,8 @@
     "@mui/icons-material": "^5.0.3",
     "@mui/material": "^5.0.2",
     "@mui/x-data-grid": "^5.8.0",
+    "@sentry/react": "^7.0.0",
+    "@sentry/tracing": "^7.0.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -75,7 +77,8 @@
   },
   "scripts": {
     "start": "env-cmd -f ./environments/.env.development react-scripts start",
-    "build": "env-cmd -f ./environments/.env.development react-scripts build",
+    "build": "env-cmd -f ./environments/.env.production react-scripts build",
+    "build:dev": "env-cmd -f ./environments/.env.development react-scripts build",
     "test": "env-cmd -f ./environments/.env.development react-scripts test --watchAll",
     "test:ci": "env-cmd -f ./environments/.env.development react-scripts test --verbose",
     "cy:run": "cypress run",
