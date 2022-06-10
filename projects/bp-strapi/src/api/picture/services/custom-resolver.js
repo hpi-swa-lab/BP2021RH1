@@ -137,8 +137,12 @@ const preparePictureDataForFrontend = (pictures, mediaFiles) => {
   });
 };
 
+const findPicturesByAllSearch = async (knexEngine, searchTerms, searchTimes, pagination) => {
+  const matchingPictures = await buildQueryForAllSearch(knexEngine, searchTerms, searchTimes, pagination);
+  const mediaFilesForPictures = await buildQueryForMediaFiles(knexEngine, matchingPictures.map(pic => pic.id));
+  return preparePictureDataForFrontend(matchingPictures, mediaFilesForPictures);
+};
+
 module.exports = {
-  buildQueryForAllSearch,
-  buildQueryForMediaFiles,
-  preparePictureDataForFrontend,
+  findPicturesByAllSearch,
 };

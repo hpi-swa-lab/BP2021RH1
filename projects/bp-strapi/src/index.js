@@ -5,11 +5,7 @@ const {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } = require("./api/collection/services/custom-resolver");
-const {
-  buildQueryForAllSearch,
-  buildQueryForMediaFiles,
-  preparePictureDataForFrontend,
-} = require("./api/picture/services/custom-resolver")
+const { findPicturesByAllSearch } = require("./api/picture/services/custom-resolver")
 
 module.exports = {
   /**
@@ -95,9 +91,7 @@ module.exports = {
             },
             async resolve(_, { searchTerms, searchTimes, pagination }) {
               const knexEngine = extensionArgs.strapi.db.connection;
-              const matchingPictures = await buildQueryForAllSearch(knexEngine, searchTerms, searchTimes, pagination);
-              const mediaFilesForPictures = await buildQueryForMediaFiles(knexEngine, matchingPictures.map(pic => pic.id));
-              return preparePictureDataForFrontend(matchingPictures, mediaFilesForPictures);
+              return findPicturesByAllSearch(knexEngine, searchTerms, searchTimes, pagination);
             },
           }),
         ],
