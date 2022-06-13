@@ -7,8 +7,10 @@ import reportWebVitals from './reportWebVitals';
 import routes from './components/routes';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
+import setupMatomo from './matomo';
 
 const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
+const matomoUrl = process.env.REACT_APP_MATOMO_URL;
 
 if (sentryDsn) {
   Sentry.init({
@@ -16,6 +18,10 @@ if (sentryDsn) {
     integrations: [new BrowserTracing()],
     tracesSampleRate: 1.0,
   });
+}
+
+if (matomoUrl) {
+  setupMatomo(matomoUrl);
 }
 
 ReactDOM.render(
