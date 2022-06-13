@@ -15,7 +15,7 @@ import {
 
 type ID = { id: Scalars['ID'] };
 
-type FlatCollectionWithoutRelations = ID &
+export type FlatCollectionWithoutRelations = ID &
   Omit<Collection, 'pictures' | 'child_collections' | 'parent_collections'>;
 
 type FlatCommentWithoutRelations = ID & Omit<Comment, 'picture'>;

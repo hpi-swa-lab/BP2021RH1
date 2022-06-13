@@ -113,7 +113,7 @@ const CollectionPictureDisplay = ({
         />
         {childCount > 0 && (
           <SubCollections
-            childCollections={collection.child_collections as { thumbnail: string; name: string }[]}
+            childCollections={collection.child_collections ?? []}
             path={path}
             onlyLatest={!!picturePublishingDate}
           />

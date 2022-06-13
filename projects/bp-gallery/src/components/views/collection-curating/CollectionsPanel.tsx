@@ -11,7 +11,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { Icon, IconButton } from '@mui/material';
-import { Delete, Edit, MergeType } from '@mui/icons-material';
+import { Delete, Edit, MergeType, Visibility, VisibilityOff } from '@mui/icons-material';
 import AddCollectionMenu from './AddCollectionMenu';
 import UnlinkCollectionAction from './UnlinkCollectionAction';
 
@@ -57,6 +57,16 @@ const CollectionsPanel = ({
       setSelectedChild(child.id);
     },
     [onSelectChild, setSelectedChild]
+  );
+
+  const toggleVisibility = useCallback(
+    (collection: FlatCollection) => {
+      const newPublicationState = collection.publishedAt ? null : new Date().toISOString();
+      updateCollection({
+        variables: { collectionId: collection.id, data: { publishedAt: newPublicationState } },
+      });
+    },
+    [updateCollection]
   );
 
   const onEditName = useCallback(
@@ -138,6 +148,14 @@ const CollectionsPanel = ({
               )}
               <span className='text'>{child.name}</span>
               <span className='actions'>
+                <IconButton
+                  onClick={event => {
+                    event.stopPropagation();
+                    toggleVisibility(child);
+                  }}
+                >
+                  {child.publishedAt ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
                 <IconButton
                   onClick={event => {
                     event.stopPropagation();

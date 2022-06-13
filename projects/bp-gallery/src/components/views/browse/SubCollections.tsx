@@ -4,23 +4,28 @@ import { asApiPath } from '../../App';
 import React from 'react';
 import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-browse-path';
 import ItemList from '../../common/ItemList';
+import { FlatCollectionWithoutRelations } from '../../../types/additionalFlatTypes';
 
 const SubCollections = ({
   childCollections,
   path,
   onlyLatest,
 }: {
-  childCollections: { thumbnail: string; name: string }[];
+  childCollections: FlatCollectionWithoutRelations[];
   path?: string[];
   onlyLatest?: boolean;
 }) => {
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
   const history: History = useHistory();
-  const buildItem = (collection: { thumbnail: string; name: string }, index: number) => {
+  const buildItem = (collection: FlatCollectionWithoutRelations, index: number) => {
+    let color = index % 2 === 0 ? '#7E241D' : '#404272';
+    if (!collection.publishedAt) {
+      color = '#EEEEEE';
+    }
     return {
       name: decodeBrowsePathComponent(collection.name),
       background: collection.thumbnail ? asApiPath(collection.thumbnail) : DEFAULT_THUMBNAIL_URL,
-      color: index % 2 === 0 ? '#7E241D' : '#404272',
+      color,
       onClick: () => {
         history.push(formatBrowsePath(path, onlyLatest, collection.name), { showBack: true });
       },

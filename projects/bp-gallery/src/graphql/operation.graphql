@@ -83,7 +83,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        collections {
+        collections(publicationState: PREVIEW) {
           data {
             id
             attributes {
@@ -172,27 +172,34 @@ query getPicturesByAllSearch(
   }
 }
 
-query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
-  collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
+query getCollectionWithPicturesPublishedAfter(
+  $date: DateTime!
+  $publicationState: PublicationState = LIVE
+) {
+  collections(
+    filters: { pictures: { publishedAt: { gt: $date } } }
+    publicationState: $publicationState
+  ) {
     data {
       id
     }
   }
 }
 
-query getCollectionInfoByName($collectionName: String) {
-  collections(filters: { name: { eq: $collectionName } }) {
+query getCollectionInfoByName($collectionName: String, $publicationState: PublicationState = LIVE) {
+  collections(filters: { name: { eq: $collectionName } }, publicationState: $publicationState) {
     data {
       id
       attributes {
         name
         description
-        child_collections(sort: "name:asc") {
+        child_collections(sort: "name:asc", publicationState: $publicationState) {
           data {
             id
             attributes {
               name
               thumbnail
+              publishedAt
             }
           }
         }
@@ -208,22 +215,23 @@ query getCollectionInfoById($collectionId: ID!) {
       attributes {
         name
         description
-        child_collections(sort: "name:asc") {
+        child_collections(sort: "name:asc", publicationState: PREVIEW) {
           data {
             id
             attributes {
               name
+              publishedAt
               pictures(pagination: { limit: 1 }) {
                 data {
                   id
                 }
               }
-              child_collections(pagination: { limit: 1 }) {
+              child_collections(pagination: { limit: 1 }, publicationState: PREVIEW) {
                 data {
                   id
                 }
               }
-              parent_collections {
+              parent_collections(publicationState: PREVIEW) {
                 data {
                   id
                   attributes {
@@ -469,12 +477,12 @@ mutation updatePersonSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsIn
 }
 
 query getAllCollections {
-  collections {
+  collections(publicationState: PREVIEW) {
     data {
       id
       attributes {
         name
-        parent_collections {
+        parent_collections(publicationState: PREVIEW) {
           data {
             id
             attributes {
