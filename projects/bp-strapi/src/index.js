@@ -5,11 +5,7 @@ const {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } = require("./api/collection/services/custom-resolver");
-const {
-  buildQueryForAllSearch,
-  buildQueryForMediaFiles,
-  preparePictureDataForFrontend,
-} = require("./api/picture/services/custom-resolver")
+const { findPicturesByAllSearch } = require("./api/picture/services/custom-resolver")
 
 module.exports = {
   /**
@@ -19,138 +15,142 @@ module.exports = {
    * This gives you an opportunity to extend code.
    */
   register({ strapi }) {
-    const extensionService = strapi.plugin("graphql").service("extension");
+    const gqlExtensionService = strapi.plugin("graphql").service("extension");
 
-    const extension = (gqlExtensions) => ({
-      types: [
-        gqlExtensions.nexus.mutationField("mergeKeywordTags", {
-          type: "ID",
-          args: {
-            sourceId: "ID",
-            targetId: "ID",
-          },
-          async resolve(_, { sourceId, targetId }) {
-            return mergeSourceTagIntoTargetTag(
-              gqlExtensions.strapi,
-              "keyword-tag",
-              sourceId,
-              targetId
-            );
-          },
-        }),
-        gqlExtensions.nexus.mutationField("mergeLocationTags", {
-          type: "ID",
-          args: {
-            sourceId: "ID",
-            targetId: "ID",
-          },
-          async resolve(_, { sourceId, targetId }) {
-            return mergeSourceTagIntoTargetTag(
-              gqlExtensions.strapi,
-              "location-tag",
-              sourceId,
-              targetId
-            );
-          },
-        }),
-        gqlExtensions.nexus.mutationField("mergePersonTags", {
-          type: "ID",
-          args: {
-            sourceId: "ID",
-            targetId: "ID",
-          },
-          async resolve(_, { sourceId, targetId }) {
-            return mergeSourceTagIntoTargetTag(
-              gqlExtensions.strapi,
-              "person-tag",
-              sourceId,
-              targetId
-            );
-          },
-        }),
-        gqlExtensions.nexus.mutationField("mergeCollections", {
-          type: "ID",
-          args: {
-            sourceId: "ID",
-            targetId: "ID",
-          },
-          async resolve(_, { sourceId, targetId }) {
-            return mergeSourceCollectionIntoTargetCollection(
-              gqlExtensions.strapi,
-              sourceId,
-              targetId
-            );
-          },
-        }),
-        gqlExtensions.nexus.queryField("findPicturesByAllSearch", {
-          type: gqlExtensions.nexus.list("PictureEntity"),
-          args: {
-            searchTerms: gqlExtensions.nexus.list("String"),
-            // Additional search-time tuples (plain search term, parsed start, parsed end)
-            searchTimes: gqlExtensions.nexus.list(gqlExtensions.nexus.list("String")),
-            pagination: "PaginationArg",
-          },
-          async resolve(_, { searchTerms, searchTimes, pagination }) {
-            const knexEngine = gqlExtensions.strapi.db.connection;
-            const matchingPictures = await buildQueryForAllSearch(knexEngine, searchTerms, searchTimes, pagination);
-            const mediaFilesForPictures = await buildQueryForMediaFiles(knexEngine, matchingPictures.map(pic => pic.id));
-            return preparePictureDataForFrontend(matchingPictures, mediaFilesForPictures);
-          },
-        }),
-      ],
-      resolversConfig: {
-        Query: {
-          findPicturesByAllSearch: {
-            auth: {
-              scope: ["api::picture.picture.find"],
+    const gqlExtension = (extensionArgs) => {
+      const { list, mutationField, queryField } = extensionArgs.nexus;
+
+      return {
+        types: [
+          mutationField("mergeKeywordTags", {
+            type: "ID",
+            args: {
+              sourceId: "ID",
+              targetId: "ID",
             },
-          },
-        },
-        Mutation: {
-          mergeKeywordTags: {
-            auth: {
-              scope: ["api::keyword-tag.keyword-tag.update"],
-            },
-          },
-          mergeLocationTags: {
-            auth: {
-              scope: ["api::location-tag.location-tag.update"],
-            },
-          },
-          mergePersonTags: {
-            auth: {
-              scope: ["api::person-tag.person-tag.update"],
-            },
-          },
-          mergeCollections: {
-            auth: {
-              scope: ["api::collection.collection.update"],
-            },
-          },
-        },
-        "Collection.thumbnail": {
-          middlewares: [
-            async (_, parent) => {
-              return resolveCollectionThumbnail(
-                gqlExtensions.strapi,
-                parent.id,
-                []
+            async resolve(_, { sourceId, targetId }) {
+              return mergeSourceTagIntoTargetTag(
+                extensionArgs.strapi,
+                "keyword-tag",
+                sourceId,
+                targetId
               );
             },
-          ],
-          auth: {
-            scope: [
-              "api::collection.collection.find",
-              "api::collection.collection.findOne",
-              "api::picture.picture.find",
-              "api::picture.picture.findOne",
-            ],
+          }),
+          mutationField("mergeLocationTags", {
+            type: "ID",
+            args: {
+              sourceId: "ID",
+              targetId: "ID",
+            },
+            async resolve(_, { sourceId, targetId }) {
+              return mergeSourceTagIntoTargetTag(
+                extensionArgs.strapi,
+                "location-tag",
+                sourceId,
+                targetId
+              );
+            },
+          }),
+          mutationField("mergePersonTags", {
+            type: "ID",
+            args: {
+              sourceId: "ID",
+              targetId: "ID",
+            },
+            async resolve(_, { sourceId, targetId }) {
+              return mergeSourceTagIntoTargetTag(
+                extensionArgs.strapi,
+                "person-tag",
+                sourceId,
+                targetId
+              );
+            },
+          }),
+          mutationField("mergeCollections", {
+            type: "ID",
+            args: {
+              sourceId: "ID",
+              targetId: "ID",
+            },
+            async resolve(_, { sourceId, targetId }) {
+              return mergeSourceCollectionIntoTargetCollection(
+                extensionArgs.strapi,
+                sourceId,
+                targetId
+              );
+            },
+          }),
+          queryField("findPicturesByAllSearch", {
+            type: list("PictureEntity"),
+            args: {
+              searchTerms: list("String"),
+              // Additional search-time tuples (plain search term, parsed start, parsed end)
+              searchTimes: list(list("String")),
+              pagination: "PaginationArg",
+            },
+            async resolve(_, { searchTerms, searchTimes, pagination }) {
+              const knexEngine = extensionArgs.strapi.db.connection;
+              return findPicturesByAllSearch(knexEngine, searchTerms, searchTimes, pagination);
+            },
+          }),
+        ],
+        resolversConfig: {
+          Query: {
+            findPicturesByAllSearch: {
+              auth: {
+                scope: ["api::picture.picture.find"],
+              },
+            },
+          },
+          Mutation: {
+            mergeKeywordTags: {
+              auth: {
+                scope: ["api::keyword-tag.keyword-tag.update"],
+              },
+            },
+            mergeLocationTags: {
+              auth: {
+                scope: ["api::location-tag.location-tag.update"],
+              },
+            },
+            mergePersonTags: {
+              auth: {
+                scope: ["api::person-tag.person-tag.update"],
+              },
+            },
+            mergeCollections: {
+              auth: {
+                scope: ["api::collection.collection.update"],
+              },
+            },
+          },
+          Collection: {
+            thumbnail: {
+              middlewares: [
+                async (_, parent) => {
+                  return resolveCollectionThumbnail(
+                    extensionArgs.strapi,
+                    parent.id,
+                    []
+                  );
+                },
+              ],
+              auth: {
+                scope: [
+                  "api::collection.collection.find",
+                  "api::collection.collection.findOne",
+                  "api::picture.picture.find",
+                  "api::picture.picture.findOne",
+                ],
+              },
+            },
           },
         },
-      },
-    });
+      };
+    };
 
-    extensionService.use(extension);
+    gqlExtensionService.use(gqlExtension);
   },
 
   /**
