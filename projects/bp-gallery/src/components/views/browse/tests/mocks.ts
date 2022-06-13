@@ -2,6 +2,7 @@ import {
   GetCollectionInfoByNameDocument,
   GetCollectionWithPicturesPublishedAfterDocument,
   GetRootCollectionDocument,
+  PublicationState,
 } from '../../../../graphql/APIConnector';
 
 export const ChildCollectionsMocks = [
@@ -240,6 +241,7 @@ export const GetCollectionInfoDocumentMocks = [
       query: GetCollectionInfoByNameDocument,
       variables: {
         collectionName: 'Das Herbert-Ahrens-Bilderarchiv',
+        publicationState: PublicationState.Live,
       },
     },
     result: {
@@ -264,6 +266,7 @@ export const GetCollectionInfoDocumentMocks = [
       query: GetCollectionInfoByNameDocument,
       variables: {
         collectionName: 'Sole-Therme',
+        publicationState: PublicationState.Live,
       },
     },
     result: {
