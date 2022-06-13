@@ -38,7 +38,17 @@ describe('Picture View called via link as a curator', () => {
   });
 
   it('should show a picture-info-field for each type in the picture sidebar', () => {
+    const pictureInfoFields = [
+      'date',
+      'description',
+      'person',
+      'location',
+      'keywords',
+      'collections',
+      'archive',
+    ];
+
     cy.get('.picture-sidebar .quick-access-buttons').click();
-    cy.get('.picture-info-field').should('have.length', 6);
+    cy.get('.picture-info-field').should('have.length', pictureInfoFields.length);
   });
 });
