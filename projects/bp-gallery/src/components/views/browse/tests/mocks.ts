@@ -295,6 +295,7 @@ export const GetCollectionsPublishedAfterDateMocks = [
       query: GetCollectionWithPicturesPublishedAfterDocument,
       variables: {
         date: communityDate,
+        publicationState: PublicationState.Live,
       },
     },
     result: {

@@ -43,6 +43,7 @@ const BrowseView = ({ path, onlyLatest = false }: { path?: string[]; onlyLatest:
   const latestCollectionsResult = useGetCollectionWithPicturesPublishedAfterQuery({
     variables: {
       date: picturePublishingDate,
+      publicationState: role >= AuthRole.CURATOR ? PublicationState.Preview : PublicationState.Live,
     },
     skip: !onlyLatest,
   });
