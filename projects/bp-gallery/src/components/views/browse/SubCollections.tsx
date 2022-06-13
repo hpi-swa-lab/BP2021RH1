@@ -5,6 +5,7 @@ import React from 'react';
 import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-browse-path';
 import ItemList from '../../common/ItemList';
 import { FlatCollectionWithoutRelations } from '../../../types/additionalFlatTypes';
+import { ItemListItemModel } from '../../common/ItemListItem';
 
 const SubCollections = ({
   childCollections,
@@ -31,7 +32,29 @@ const SubCollections = ({
       },
     };
   };
-  const items = childCollections.map((collection, i) => buildItem(collection, i));
+  const items: ItemListItemModel[] = [];
+
+  if (!path && !onlyLatest) {
+    items.push({
+      name: 'Neue Bilder der Woche A',
+      background: DEFAULT_THUMBNAIL_URL,
+      color: '#7E241D',
+      onClick: () => {
+        history.push(formatBrowsePath([], true), { showBack: true });
+      },
+    });
+    items.push({
+      name: 'Neue Bilder der Woche B',
+      background: DEFAULT_THUMBNAIL_URL,
+      color: '#404272',
+      onClick: () => {
+        history.push('/latest', { showBack: true });
+      },
+    });
+  }
+
+  childCollections.forEach((collection, i) => items.push(buildItem(collection, i)));
+
   return <ItemList items={items} />;
 };
 

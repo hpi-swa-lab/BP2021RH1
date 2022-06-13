@@ -12,6 +12,7 @@ import { TagType } from '../types/additionalFlatTypes';
 import BrowseView from './views/browse/BrowseView';
 import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
+import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 
 const routes: RouteConfig[] = [
   {
@@ -21,6 +22,13 @@ const routes: RouteConfig[] = [
         path: '/browse',
         render: () => {
           return <BrowseView onlyLatest={false} />;
+        },
+        exact: true,
+      },
+      {
+        path: '/latest',
+        render: () => {
+          return <LatestPicturesView />;
         },
         exact: true,
       },

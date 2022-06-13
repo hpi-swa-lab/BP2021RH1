@@ -37,7 +37,12 @@ const BrowseView = ({ path, onlyLatest = false }: { path?: string[]; onlyLatest:
     useSimplifiedQueryResponseData(data)?.collections;
   let filteredCollections = collections;
 
-  const picturePublishingDate = '2022-01-03T17:25:00Z'; // highly debatable
+  const currentDate = new Date();
+  const picturePublishingDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate() - 7
+  ).toISOString();
 
   // Query the IDs of all Collections that got new pictures inside them
   const latestCollectionsResult = useGetCollectionWithPicturesPublishedAfterQuery({

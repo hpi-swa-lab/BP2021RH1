@@ -22,6 +22,7 @@ const PictureScrollGrid = ({
   uploadAreaProps,
   resultPictureCallback,
   bulkOperations,
+  sortBy,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   scrollPos: number;
@@ -31,12 +32,17 @@ const PictureScrollGrid = ({
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
   resultPictureCallback?: (pictures: number) => void;
   bulkOperations?: BulkOperation[];
+  sortBy?: string[];
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  const { data, loading, error, fetchMore, refetch } = useGetPictures(queryParams, customSearch);
+  const { data, loading, error, fetchMore, refetch } = useGetPictures(
+    queryParams,
+    customSearch,
+    sortBy
+  );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 

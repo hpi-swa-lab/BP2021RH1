@@ -106,11 +106,15 @@ const CollectionPictureDisplay = ({
     const childCount = collection.child_collections?.length ?? 0;
     return (
       <div className='collection-picture-display'>
-        <CollectionDescription
-          id={collection.id}
-          description={collection.description ?? ''}
-          name={collection.name}
-        />
+        {picturePublishingDate && !path ? (
+          <h2>Neuste Bilder</h2>
+        ) : (
+          <CollectionDescription
+            id={collection.id}
+            description={collection.description ?? ''}
+            name={collection.name}
+          />
+        )}
         {childCount > 0 && (
           <SubCollections
             childCollections={collection.child_collections ?? []}

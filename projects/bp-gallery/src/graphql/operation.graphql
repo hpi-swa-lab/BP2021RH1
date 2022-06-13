@@ -124,8 +124,12 @@ query getPictureInfo($pictureId: ID!) {
   }
 }
 
-query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-  pictures(filters: $filters, pagination: $pagination, sort: "publishedAt:asc") {
+query getPictures(
+  $filters: PictureFiltersInput!
+  $pagination: PaginationArg!
+  $sortBy: [String] = ["publishedAt:asc"]
+) {
+  pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
     data {
       id
       attributes {

@@ -623,7 +623,7 @@ export type Mutation = {
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
-  /** Update an existing user */
+  /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
@@ -1805,6 +1805,7 @@ export type GetPictureInfoQuery = {
 export type GetPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
   pagination: PaginationArg;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetPicturesQuery = {
@@ -3034,8 +3035,12 @@ export type GetPictureInfoQueryResult = Apollo.QueryResult<
 >;
 
 export const GetPicturesDocument = gql`
-  query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-    pictures(filters: $filters, pagination: $pagination, sort: "publishedAt:asc") {
+  query getPictures(
+    $filters: PictureFiltersInput!
+    $pagination: PaginationArg!
+    $sortBy: [String] = ["publishedAt:asc"]
+  ) {
+    pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -3070,6 +3075,7 @@ export const GetPicturesDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      pagination: // value for 'pagination'
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
