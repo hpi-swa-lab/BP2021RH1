@@ -1909,7 +1909,11 @@ export type GetCollectionInfoByNameQuery = {
                       data: Array<{
                         id?: string | null | undefined;
                         attributes?:
-                          | { name: string; thumbnail?: string | null | undefined }
+                          | {
+                              name: string;
+                              thumbnail?: string | null | undefined;
+                              publishedAt?: any | null | undefined;
+                            }
                           | null
                           | undefined;
                       }>;
@@ -3251,12 +3255,13 @@ export const GetCollectionInfoByNameDocument = gql`
         attributes {
           name
           description
-          child_collections(sort: "name:asc") {
+          child_collections(sort: "name:asc", publicationState: PREVIEW) {
             data {
               id
               attributes {
                 name
                 thumbnail
+                publishedAt
               }
             }
           }

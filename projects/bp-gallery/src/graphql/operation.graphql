@@ -187,12 +187,13 @@ query getCollectionInfoByName($collectionName: String) {
       attributes {
         name
         description
-        child_collections(sort: "name:asc") {
+        child_collections(sort: "name:asc", publicationState: PREVIEW) {
           data {
             id
             attributes {
               name
               thumbnail
+              publishedAt
             }
           }
         }
