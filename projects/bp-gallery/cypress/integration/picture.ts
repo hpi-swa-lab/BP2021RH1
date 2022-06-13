@@ -45,7 +45,7 @@ describe('Picture View called via link as a curator', () => {
       'location',
       'keywords',
       'collections',
-      'archive'
+      'archive',
     ];
 
     cy.get('.picture-sidebar .quick-access-buttons').click();
