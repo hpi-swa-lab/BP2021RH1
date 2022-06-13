@@ -5,6 +5,7 @@ const setupMatomo = (url: string) => {
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   _paq.push(['requireCookieConsent']);
+  _paq.push(['disableCookies']);
   (function () {
     _paq.push(['setTrackerUrl', url + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
