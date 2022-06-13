@@ -4,7 +4,6 @@ import { asApiPath } from '../../App';
 import React from 'react';
 import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-browse-path';
 import ItemList from '../../common/ItemList';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FlatCollectionWithoutRelations } from '../../../types/additionalFlatTypes';
 
 const SubCollections = ({
@@ -16,8 +15,6 @@ const SubCollections = ({
   path?: string[];
   onlyLatest?: boolean;
 }) => {
-  const { role } = useAuth();
-
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
   const history: History = useHistory();
   const buildItem = (collection: FlatCollectionWithoutRelations, index: number) => {
@@ -30,9 +27,7 @@ const SubCollections = ({
       },
     };
   };
-  const items = childCollections
-    .filter(collection => collection.publishedAt || role >= AuthRole.CURATOR)
-    .map((collection, i) => buildItem(collection, i));
+  const items = childCollections.map((collection, i) => buildItem(collection, i));
   return <ItemList items={items} />;
 };
 

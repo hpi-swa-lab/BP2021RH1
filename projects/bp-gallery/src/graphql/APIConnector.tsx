@@ -1885,6 +1885,7 @@ export type GetPicturesByAllSearchQuery = {
 
 export type GetCollectionWithPicturesPublishedAfterQueryVariables = Exact<{
   date: Scalars['DateTime'];
+  publicationState?: InputMaybe<PublicationState>;
 }>;
 
 export type GetCollectionWithPicturesPublishedAfterQuery = {
@@ -1893,6 +1894,7 @@ export type GetCollectionWithPicturesPublishedAfterQuery = {
 
 export type GetCollectionInfoByNameQueryVariables = Exact<{
   collectionName?: InputMaybe<Scalars['String']>;
+  publicationState?: InputMaybe<PublicationState>;
 }>;
 
 export type GetCollectionInfoByNameQuery = {
@@ -1950,6 +1952,7 @@ export type GetCollectionInfoByIdQuery = {
                             attributes?:
                               | {
                                   name: string;
+                                  publishedAt?: any | null | undefined;
                                   pictures?:
                                     | { data: Array<{ id?: string | null | undefined }> }
                                     | null
@@ -2943,7 +2946,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          collections {
+          collections(publicationState: PREVIEW) {
             data {
               id
               attributes {
@@ -3183,8 +3186,14 @@ export type GetPicturesByAllSearchQueryResult = Apollo.QueryResult<
 >;
 
 export const GetCollectionWithPicturesPublishedAfterDocument = gql`
-  query getCollectionWithPicturesPublishedAfter($date: DateTime!) {
-    collections(filters: { pictures: { publishedAt: { gt: $date } } }) {
+  query getCollectionWithPicturesPublishedAfter(
+    $date: DateTime!
+    $publicationState: PublicationState = LIVE
+  ) {
+    collections(
+      filters: { pictures: { publishedAt: { gt: $date } } }
+      publicationState: $publicationState
+    ) {
       data {
         id
       }
@@ -3205,6 +3214,7 @@ export const GetCollectionWithPicturesPublishedAfterDocument = gql`
  * const { data, loading, error } = useGetCollectionWithPicturesPublishedAfterQuery({
  *   variables: {
  *      date: // value for 'date'
+ *      publicationState: // value for 'publicationState'
  *   },
  * });
  */
@@ -3248,14 +3258,17 @@ export type GetCollectionWithPicturesPublishedAfterQueryResult = Apollo.QueryRes
 >;
 
 export const GetCollectionInfoByNameDocument = gql`
-  query getCollectionInfoByName($collectionName: String) {
-    collections(filters: { name: { eq: $collectionName } }) {
+  query getCollectionInfoByName(
+    $collectionName: String
+    $publicationState: PublicationState = LIVE
+  ) {
+    collections(filters: { name: { eq: $collectionName } }, publicationState: $publicationState) {
       data {
         id
         attributes {
           name
           description
-          child_collections(sort: "name:asc", publicationState: PREVIEW) {
+          child_collections(sort: "name:asc", publicationState: $publicationState) {
             data {
               id
               attributes {
@@ -3284,6 +3297,7 @@ export const GetCollectionInfoByNameDocument = gql`
  * const { data, loading, error } = useGetCollectionInfoByNameQuery({
  *   variables: {
  *      collectionName: // value for 'collectionName'
+ *      publicationState: // value for 'publicationState'
  *   },
  * });
  */
@@ -3334,22 +3348,23 @@ export const GetCollectionInfoByIdDocument = gql`
         attributes {
           name
           description
-          child_collections(sort: "name:asc") {
+          child_collections(sort: "name:asc", publicationState: PREVIEW) {
             data {
               id
               attributes {
                 name
+                publishedAt
                 pictures(pagination: { limit: 1 }) {
                   data {
                     id
                   }
                 }
-                child_collections(pagination: { limit: 1 }) {
+                child_collections(pagination: { limit: 1 }, publicationState: PREVIEW) {
                   data {
                     id
                   }
                 }
-                parent_collections {
+                parent_collections(publicationState: PREVIEW) {
                   data {
                     id
                     attributes {
@@ -4351,12 +4366,12 @@ export type UpdatePersonSynonymsMutationOptions = Apollo.BaseMutationOptions<
 
 export const GetAllCollectionsDocument = gql`
   query getAllCollections {
-    collections {
+    collections(publicationState: PREVIEW) {
       data {
         id
         attributes {
           name
-          parent_collections {
+          parent_collections(publicationState: PREVIEW) {
             data {
               id
               attributes {

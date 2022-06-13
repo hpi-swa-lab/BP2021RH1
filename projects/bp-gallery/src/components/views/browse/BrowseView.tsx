@@ -1,6 +1,7 @@
 import React from 'react';
 import './CollectionPictureDisplay.scss';
 import {
+  PublicationState,
   useGetCollectionInfoByNameQuery,
   useGetCollectionWithPicturesPublishedAfterQuery,
   useGetRootCollectionQuery,
@@ -10,8 +11,11 @@ import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 import CollectionPictureDisplay from './CollectionPictureDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 
 const BrowseView = ({ path, onlyLatest = false }: { path?: string[]; onlyLatest: boolean }) => {
+  const { role } = useAuth();
+
   // Query the name of the root-collection if there is no path
   const rootCollectionResult = useGetRootCollectionQuery({
     skip: path && path.length > 0,
@@ -23,6 +27,7 @@ const BrowseView = ({ path, onlyLatest = false }: { path?: string[]; onlyLatest:
     collectionName: path?.length
       ? decodeBrowsePathComponent(path[path.length - 1])
       : rootCollectionName,
+    publicationState: role >= AuthRole.CURATOR ? PublicationState.Preview : PublicationState.Live,
   };
   const { data, loading, error } = useGetCollectionInfoByNameQuery({
     variables: collectionQueryVariables,
