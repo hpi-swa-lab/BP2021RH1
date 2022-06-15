@@ -1,0 +1,39 @@
+name: Build & Deploy CI
+
+on:
+  push:
+    branches: [strapi-deployment]
+
+jobs:
+  build_bp_strapi:
+    name: Build & Deploy bp-strapi
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./projects/bp-strapi
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ./deploy.key
+          sudo chmod 600 ./deploy.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SSH_KEY: ${{secrets.SSH_KEY}}
+          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+      - name: Install PM2 for deployment
+        run: yarn add pm2
+      - name: Deploy strapi on the server
+        run: yarn pm2 deploy ecosystem.config.js production
