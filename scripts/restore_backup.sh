@@ -2,7 +2,7 @@
 
 
 ############ VARIABLE DEFINITIONS ############
-MEDIA_DIR=/home/dev/BP2021RH1/projects/bp-strapi/public/uploads
+MEDIA_DIR=/home/github/BP2021RH1/source/projects/bp-strapi/public/uploads
 DB_NAME=bp-strapi
 ##############################################
 
