@@ -71,3 +71,6 @@ jobs:
         run: yarn add pm2
       - name: Deploy strapi on the server
         run: yarn pm2 deploy ecosystem.config.js production
+        env:
+          REMOTE_HOST: ${{secrets.REMOTE_HOST}}
+          REMOTE_USER: ${{secrets.REMOTE_USER}}
