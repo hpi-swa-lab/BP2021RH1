@@ -28,7 +28,7 @@ jobs:
       - name: Generate APIConnector
         run: yarn generate-api
       - name: Build bp-gallery
-        run: yarn build
+        run: yarn build:dev
       - name: Deploy build files on the server
         uses: appleboy/scp-action@master
         with:
