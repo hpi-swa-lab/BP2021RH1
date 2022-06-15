@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'BP-Gallery Strapi',
+      name: 'Bad-Harzburg Archive Strapi Instance',
       script: 'yarn start',
       instances: 1,
       autorestart: true,
