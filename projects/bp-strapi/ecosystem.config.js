@@ -16,7 +16,7 @@ module.exports = {
       host: 'bp.bad-harzburg-stiftung.de',
       path: '/home/github/BP2021RH1',
       repo: 'https://github.com/hpi-swa-lab/BP2021RH1',
-      'post-deploy': 'cd projects/bp-strapi && yarn install && yarn build:prod && pm2 reload ecosystem.config.js --env production && pm2 save && git checkout yarn.lock'
+      'post-deploy': 'cd projects/bp-strapi && yarn install && yarn build:prod && yarn pm2 reload ecosystem.config.js --env production && yarn pm2 save && git checkout yarn.lock'
     }
   }
 }
