@@ -68,9 +68,9 @@ jobs:
           SSH_KEY: ${{secrets.SSH_KEY}}
           SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
       - name: Install PM2 for deployment
-        run: yarn add pm2
+        run: yarn global add pm2
       - name: Deploy strapi on the server
-        run: yarn pm2 deploy ecosystem.config.js staging
+        run: pm2 deploy ecosystem.config.js staging
         env:
           REMOTE_HOST: ${{secrets.REMOTE_HOST}}
           REMOTE_USER: ${{secrets.REMOTE_USER}}
