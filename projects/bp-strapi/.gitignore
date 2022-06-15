@@ -119,3 +119,5 @@ build
 ############################
 config/env/*/.env
 !config/env/test/.env
+
+deploy.key
