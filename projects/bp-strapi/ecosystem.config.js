@@ -3,6 +3,7 @@ module.exports = {
     {
       name: 'Bad-Harzburg Archive Strapi Instance',
       script: 'yarn start',
+      append_env_to_name: true,
       instances: 1,
       autorestart: true,
       max_restarts: 50,
