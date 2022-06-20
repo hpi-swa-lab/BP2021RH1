@@ -22,6 +22,7 @@ const SearchBar = ({
   const openAlert = useContext(AlertContext);
   const textFieldRef = useRef<any>();
   const [searchType, setSearchType] = useState<string>(SearchType.ALL);
+
   const typeOfLatestSearch = useMemo(() => {
     const searchParamsIterator = searchParams.entries();
     let nextParam = searchParamsIterator.next();
@@ -35,9 +36,20 @@ const SearchBar = ({
 
   useEffect(() => {
     if (typeOfLatestSearch) {
-      // If a decade was searched, it does not make sense to further intersect with another decade.
-      const nextSearchType =
-        typeOfLatestSearch === SearchType.DECADE ? SearchType.TIME_RANGE : typeOfLatestSearch;
+      let nextSearchType;
+      switch (typeOfLatestSearch) {
+        case SearchType.DECADE:
+          // If a decade was searched, it does not make sense to further intersect with another decade.
+          nextSearchType = SearchType.TIME_RANGE;
+          break;
+        case SearchType.ARCHIVE:
+          // A picture can only have one archive tag, is does make sense to further intersect with another archive.
+          nextSearchType = SearchType.DESCRIPTION;
+          break;
+        default:
+          nextSearchType = typeOfLatestSearch;
+          break;
+      }
       setSearchType(nextSearchType);
     } else {
       setSearchType(SearchType.ALL);
@@ -124,6 +136,9 @@ const SearchBar = ({
                   </MenuItem>
                   <MenuItem value={SearchType.COLLECTION}>
                     {t(getSearchTypeTranslation(SearchType.COLLECTION))}
+                  </MenuItem>
+                  <MenuItem value={SearchType.ARCHIVE}>
+                    {t(getSearchTypeTranslation(SearchType.ARCHIVE))}
                   </MenuItem>
                 </Select>
               )}
