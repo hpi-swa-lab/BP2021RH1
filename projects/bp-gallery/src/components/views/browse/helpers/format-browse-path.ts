@@ -6,15 +6,8 @@ export const decodeBrowsePathComponent = (folder: string): string => {
   return decodeURIComponent(folder).replace(/_/gm, ' ');
 };
 
-export const formatBrowsePath = (
-  previousPath?: string[],
-  toCommunityView: boolean = false,
-  newPathSegment: string = ''
-) => {
-  let browsePathBase = '/browse/';
-  if (toCommunityView) {
-    browsePathBase = '/browse/latest/';
-  }
+export const formatBrowsePath = (previousPath?: string[], newPathSegment: string = '') => {
+  const browsePathBase = '/browse/';
 
   let newPath = `${
     previousPath
