@@ -56,8 +56,14 @@ const PictureScrollGrid = ({
     }
   }, [pictures, resultPictureCallback, loading]);
 
-  // Loads the next 100 Pictures when the user scrolled to the bottom
+  // Loads the next NUMBER_OF_PICTURES_LOADED_PER_FETCH Pictures when the user scrolled to the bottom
   useEffect(() => {
+    if (maxNumPictures && maxNumPictures < NUMBER_OF_PICTURES_LOADED_PER_FETCH) {
+      // In that case, the initial fetch would be NUMBER_OF_PICTURES_LOADED_PER_FETCH
+      // even if sth. else is defined.
+      throw new Error(`maxNumPictures must be at least ${NUMBER_OF_PICTURES_LOADED_PER_FETCH}`);
+    }
+
     if (
       !loading &&
       scrollPos &&
