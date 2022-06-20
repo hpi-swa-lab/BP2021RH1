@@ -3,6 +3,8 @@ import React, { useCallback, useContext } from 'react';
 import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useTranslation } from 'react-i18next';
+import { addNewParamToSearchPath, SearchType } from '../../../search/SearchView';
+import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 
 const ArchiveTagField = ({
   archiveTag,
@@ -24,8 +26,19 @@ const ArchiveTagField = ({
     }
   }, [dialog, onChange, archiveTag]);
 
+  const searchForCurrentTag = useCallback(() => {
+    if (!archiveTag) {
+      return;
+    }
+    const { searchPath } = addNewParamToSearchPath(
+      useAdvancedSearch ? SearchType.ARCHIVE : SearchType.ALL,
+      encodeURIComponent(archiveTag.name)
+    );
+    window.open(searchPath, '_blank');
+  }, [archiveTag]);
+
   return (
-    <div onClick={role >= AuthRole.CURATOR ? selectTag : undefined}>
+    <div onClick={role >= AuthRole.CURATOR ? selectTag : searchForCurrentTag}>
       {archiveTag?.name ?? t('curator.noArchive')}
     </div>
   );
