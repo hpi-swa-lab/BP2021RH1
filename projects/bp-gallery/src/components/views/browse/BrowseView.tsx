@@ -3,7 +3,6 @@ import './CollectionPictureDisplay.scss';
 import {
   PublicationState,
   useGetCollectionInfoByNameQuery,
-  useGetCollectionWithPicturesPublishedAfterQuery,
   useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -13,7 +12,7 @@ import CollectionPictureDisplay from './CollectionPictureDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 
-const BrowseView = ({ path, onlyLatest = false }: { path?: string[]; onlyLatest: boolean }) => {
+const BrowseView = ({ path }: { path?: string[] }) => {
   const { role } = useAuth();
 
   // Query the name of the root-collection if there is no path
@@ -35,47 +34,14 @@ const BrowseView = ({ path, onlyLatest = false }: { path?: string[]; onlyLatest:
   });
   const collections: FlatCollection[] | undefined =
     useSimplifiedQueryResponseData(data)?.collections;
-  let filteredCollections = collections;
 
-  const currentDate = new Date();
-  const picturePublishingDate = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    currentDate.getDate() - 7
-  ).toISOString();
-
-  // Query the IDs of all Collections that got new pictures inside them
-  const latestCollectionsResult = useGetCollectionWithPicturesPublishedAfterQuery({
-    variables: {
-      date: picturePublishingDate,
-      publicationState: role >= AuthRole.CURATOR ? PublicationState.Preview : PublicationState.Live,
-    },
-    skip: !onlyLatest,
-  });
-  const latestCollections: { id: string }[] | undefined = useSimplifiedQueryResponseData(
-    latestCollectionsResult.data
-  )?.collections;
-
-  if (onlyLatest) {
-    const latestCollectionIds = latestCollections?.map(collection => collection.id);
-    if (latestCollectionIds && collections) {
-      // Filter child_collections to only accept those which got new pictures
-      filteredCollections = collections.map(collection => ({
-        ...collection,
-        child_collections: collection.child_collections?.filter(child =>
-          latestCollectionIds.includes(child.id)
-        ),
-      }));
-    }
-  }
   return (
     <ScrollContainer>
       {(scrollPos: number, scrollHeight: number) => (
         <CollectionPictureDisplay
-          picturePublishingDate={onlyLatest ? picturePublishingDate : undefined}
-          collections={filteredCollections}
-          loading={loading || latestCollectionsResult.loading || rootCollectionResult.loading}
-          error={error ?? latestCollectionsResult.error ?? rootCollectionResult.error}
+          collections={collections}
+          loading={loading || rootCollectionResult.loading}
+          error={error ?? rootCollectionResult.error}
           path={path}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}

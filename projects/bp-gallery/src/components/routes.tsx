@@ -33,29 +33,6 @@ const routes: RouteConfig[] = [
         exact: true,
       },
       {
-        path: '/browse/latest',
-        render: () => {
-          return <BrowseView onlyLatest={true} />;
-        },
-        exact: true,
-      },
-      {
-        path: '/browse/latest/:path+',
-        render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
-          const browseParams = match.params.path.split('/');
-          return <BrowseView onlyLatest={true} path={browseParams} />;
-        },
-        exact: true,
-      },
-      {
-        path: '/browse/:path+',
-        // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
-        render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
-          const browseParams = match.params.path.split('/');
-          return <BrowseView onlyLatest={false} path={browseParams} />;
-        },
-      },
-      {
         path: '/search',
         render: () => {
           return <SearchView />;

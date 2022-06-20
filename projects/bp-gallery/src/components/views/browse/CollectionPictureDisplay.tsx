@@ -14,7 +14,7 @@ import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 
-const getPictureFilters = (collectionId: string, picturePublishingDate?: string) => {
+const getPictureFilters = (collectionId: string) => {
   const filters: PictureFiltersInput = { and: [] };
 
   filters.and?.push({
@@ -24,14 +24,6 @@ const getPictureFilters = (collectionId: string, picturePublishingDate?: string)
       },
     },
   });
-
-  if (picturePublishingDate) {
-    filters.and?.push({
-      publishedAt: {
-        gt: picturePublishingDate,
-      },
-    });
-  }
 
   return filters;
 };
@@ -43,7 +35,6 @@ const CollectionPictureDisplay = ({
   path,
   scrollPos,
   scrollHeight,
-  picturePublishingDate,
 }: {
   error?: any;
   loading?: boolean;
@@ -51,7 +42,6 @@ const CollectionPictureDisplay = ({
   path: string[] | undefined;
   scrollPos: number;
   scrollHeight: number;
-  picturePublishingDate?: string;
 }) => {
   const { t } = useTranslation();
   const { role } = useAuth();
@@ -106,21 +96,15 @@ const CollectionPictureDisplay = ({
     const childCount = collection.child_collections?.length ?? 0;
     return (
       <div className='collection-picture-display'>
-        {picturePublishingDate && !path ? (
-          <h2>Neuste Bilder</h2>
-        ) : (
+        {
           <CollectionDescription
             id={collection.id}
             description={collection.description ?? ''}
             name={collection.name}
           />
-        )}
+        }
         {childCount > 0 && (
-          <SubCollections
-            childCollections={collection.child_collections ?? []}
-            path={path}
-            onlyLatest={!!picturePublishingDate}
-          />
+          <SubCollections childCollections={collection.child_collections ?? []} path={path} />
         )}
         {role >= AuthRole.CURATOR && (
           <Button startIcon={<Add />} onClick={addCollection}>
@@ -128,7 +112,7 @@ const CollectionPictureDisplay = ({
           </Button>
         )}
         <PictureScrollGrid
-          queryParams={getPictureFilters(collection.id, picturePublishingDate)}
+          queryParams={getPictureFilters(collection.id)}
           scrollPos={scrollPos}
           scrollHeight={scrollHeight}
           hashbase={collection.name}

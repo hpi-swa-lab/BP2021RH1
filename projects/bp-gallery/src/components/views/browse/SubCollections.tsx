@@ -10,11 +10,9 @@ import { ItemListItemModel } from '../../common/ItemListItem';
 const SubCollections = ({
   childCollections,
   path,
-  onlyLatest,
 }: {
   childCollections: FlatCollectionWithoutRelations[];
   path?: string[];
-  onlyLatest?: boolean;
 }) => {
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
   const history: History = useHistory();
@@ -28,23 +26,15 @@ const SubCollections = ({
       background: collection.thumbnail ? asApiPath(collection.thumbnail) : DEFAULT_THUMBNAIL_URL,
       color,
       onClick: () => {
-        history.push(formatBrowsePath(path, onlyLatest, collection.name), { showBack: true });
+        history.push(formatBrowsePath(path, collection.name), { showBack: true });
       },
     };
   };
   const items: ItemListItemModel[] = [];
 
-  if (!path && !onlyLatest) {
+  if (!path) {
     items.push({
-      name: 'Neue Bilder der Woche A',
-      background: DEFAULT_THUMBNAIL_URL,
-      color: '#7E241D',
-      onClick: () => {
-        history.push(formatBrowsePath([], true), { showBack: true });
-      },
-    });
-    items.push({
-      name: 'Neue Bilder der Woche B',
+      name: 'Neue Bilder der Woche',
       background: DEFAULT_THUMBNAIL_URL,
       color: '#404272',
       onClick: () => {

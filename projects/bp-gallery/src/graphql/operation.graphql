@@ -176,20 +176,6 @@ query getPicturesByAllSearch(
   }
 }
 
-query getCollectionWithPicturesPublishedAfter(
-  $date: DateTime!
-  $publicationState: PublicationState = LIVE
-) {
-  collections(
-    filters: { pictures: { publishedAt: { gt: $date } } }
-    publicationState: $publicationState
-  ) {
-    data {
-      id
-    }
-  }
-}
-
 query getCollectionInfoByName($collectionName: String, $publicationState: PublicationState = LIVE) {
   collections(filters: { name: { eq: $collectionName } }, publicationState: $publicationState) {
     data {
