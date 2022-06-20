@@ -12,6 +12,7 @@ import { TagType } from '../types/additionalFlatTypes';
 import BrowseView from './views/browse/BrowseView';
 import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
+import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 
 const routes: RouteConfig[] = [
   {
@@ -20,22 +21,14 @@ const routes: RouteConfig[] = [
       {
         path: '/browse',
         render: () => {
-          return <BrowseView onlyLatest={false} />;
+          return <BrowseView />;
         },
         exact: true,
       },
       {
-        path: '/browse/latest',
+        path: '/latest',
         render: () => {
-          return <BrowseView onlyLatest={true} />;
-        },
-        exact: true,
-      },
-      {
-        path: '/browse/latest/:path+',
-        render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
-          const browseParams = match.params.path.split('/');
-          return <BrowseView onlyLatest={true} path={browseParams} />;
+          return <LatestPicturesView />;
         },
         exact: true,
       },
@@ -44,7 +37,7 @@ const routes: RouteConfig[] = [
         // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
         render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
           const browseParams = match.params.path.split('/');
-          return <BrowseView onlyLatest={false} path={browseParams} />;
+          return <BrowseView path={browseParams} />;
         },
       },
       {

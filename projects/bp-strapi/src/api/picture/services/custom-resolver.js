@@ -1,14 +1,14 @@
 "use strict";
 
-const neededTablesWithVerifiedHandling = [
+const manyToManyWithVerified = [
   "keyword_tag",
   "location_tag",
   "person_tag",
 ];
 
-const neededTablesWithoutVerifiedHandling = [
+const manyToManyWithoutVerified = [
   "description",
-  "collection"
+  "collection",
 ];
 
 const buildJoinsForTableWithVerifiedHandling = (knexEngine, singularTableName, verifiedLinkTable, unverifiedLinkTable) => {
@@ -23,8 +23,14 @@ const buildJoinsForTableWithVerifiedHandling = (knexEngine, singularTableName, v
   return knexEngine;
 };
 
+const buildJoinsForTableWithoutVerifiedHandling = (knexEngine, singularTableName, linkTable) => {
+  knexEngine = knexEngine.leftJoin(linkTable, "pictures.id", `${linkTable}.picture_id`);
+  knexEngine = knexEngine.leftJoin(`${singularTableName}s`, `${linkTable}.${singularTableName}_id`, `${singularTableName}s.id`);
+  return knexEngine;
+};
+
 const buildJoins = (knexEngine) => {
-  for (const singularTableName of neededTablesWithVerifiedHandling) {
+  for (const singularTableName of manyToManyWithVerified) {
     const verifiedLinkTable = `pictures_verified_${singularTableName}s_links`;
     const unverifiedLinkTable = `pictures_${singularTableName}s_links`;
     knexEngine = buildJoinsForTableWithVerifiedHandling(knexEngine, singularTableName, verifiedLinkTable, unverifiedLinkTable);
@@ -35,23 +41,27 @@ const buildJoins = (knexEngine) => {
   const unverifiedTimeRangeLinkTable = "pictures_time_range_tag_links";
   knexEngine = buildJoinsForTableWithVerifiedHandling(knexEngine, "time_range_tag", verifiedTimeRangeLinkTable, unverifiedTimeRangeLinkTable);
 
-  for (const singularTableName of neededTablesWithoutVerifiedHandling) {
+  for (const singularTableName of manyToManyWithoutVerified) {
     const linkTable = `pictures_${singularTableName}s_links`;
-
-    knexEngine = knexEngine.leftJoin(linkTable, "pictures.id", `${linkTable}.picture_id`);
-    knexEngine = knexEngine.leftJoin(`${singularTableName}s`, `${linkTable}.${singularTableName}_id`, `${singularTableName}s.id`);
+    knexEngine = buildJoinsForTableWithoutVerifiedHandling(knexEngine, singularTableName, linkTable);
   }
+
+  // Special handling for our archive-tags as these are in 1:n relation to the picture type
+  // and don't have a special verified relation.
+  const archiveTagLinkTable = "pictures_archive_tag_links";
+  knexEngine = buildJoinsForTableWithoutVerifiedHandling(knexEngine, "archive_tag", archiveTagLinkTable);
 
   return knexEngine;
 };
 
 const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
   const searchTermForLikeQuery = `%${searchTerm}%`;
-  for (const singularTableName of neededTablesWithVerifiedHandling) {
+  for (const singularTableName of manyToManyWithVerified) {
     knexEngine = knexEngine.orWhereILike(`${singularTableName}s.name`, searchTermForLikeQuery);
   }
 
   knexEngine = knexEngine.orWhereILike("collections.name", searchTermForLikeQuery);
+  knexEngine = knexEngine.orWhereILike("archive_tags.name", searchTermForLikeQuery);
   knexEngine = knexEngine.orWhereILike("descriptions.text", searchTermForLikeQuery);
 
   return knexEngine;

@@ -18,17 +18,18 @@
     "supertest": "^6.2.3"
   },
   "dependencies": {
-    "@strapi/plugin-graphql": "4.1.12",
-    "@strapi/plugin-i18n": "4.1.12",
-    "@strapi/plugin-sentry": "4.1.12",
-    "@strapi/plugin-users-permissions": "4.1.12",
-    "@strapi/strapi": "4.1.12",
+    "@strapi/plugin-graphql": "4.2.0",
+    "@strapi/plugin-i18n": "4.2.0",
+    "@strapi/plugin-sentry": "4.2.0",
+    "@strapi/plugin-users-permissions": "4.2.0",
+    "@strapi/strapi": "4.2.0",
     "cross-env": "^7.0.3",
     "pg": "8.6.0",
+    "pm2": "^5.2.0",
     "xlsx": "^0.18.5"
   },
   "author": {
-    "name": "BP2021RRH1"
+    "name": "BP2021RH1"
   },
   "strapi": {
     "uuid": "b2b5bab5-6b6e-4feb-ae28-403e43047dd9"

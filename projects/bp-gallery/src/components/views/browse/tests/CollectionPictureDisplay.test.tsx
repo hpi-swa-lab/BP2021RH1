@@ -124,7 +124,6 @@ describe('CollectionPictureDisplay', () => {
               name: string;
             }[],
             path: path,
-            onlyLatest: !!picturePublishingDate,
           })
         );
       });
@@ -147,10 +146,7 @@ describe('CollectionPictureDisplay', () => {
         expect(PictureScrollGridMock).toHaveBeenCalledWith(
           expect.objectContaining({
             queryParams: {
-              and: [
-                { collections: { id: { eq: collections[0].id } } },
-                { publishedAt: { gt: picturePublishingDate } },
-              ],
+              and: [{ collections: { id: { eq: collections[0].id } } }],
             },
             scrollPos: 0,
             scrollHeight: 0,

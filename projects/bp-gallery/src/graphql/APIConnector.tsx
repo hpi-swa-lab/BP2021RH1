@@ -1805,6 +1805,7 @@ export type GetPictureInfoQuery = {
 export type GetPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
   pagination: PaginationArg;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetPicturesQuery = {
@@ -1881,15 +1882,6 @@ export type GetPicturesByAllSearchQuery = {
       >
     | null
     | undefined;
-};
-
-export type GetCollectionWithPicturesPublishedAfterQueryVariables = Exact<{
-  date: Scalars['DateTime'];
-  publicationState?: InputMaybe<PublicationState>;
-}>;
-
-export type GetCollectionWithPicturesPublishedAfterQuery = {
-  collections?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
 };
 
 export type GetCollectionInfoByNameQueryVariables = Exact<{
@@ -3034,8 +3026,12 @@ export type GetPictureInfoQueryResult = Apollo.QueryResult<
 >;
 
 export const GetPicturesDocument = gql`
-  query getPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-    pictures(filters: $filters, pagination: $pagination, sort: "publishedAt:asc") {
+  query getPictures(
+    $filters: PictureFiltersInput!
+    $pagination: PaginationArg!
+    $sortBy: [String] = ["publishedAt:asc"]
+  ) {
+    pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -3070,6 +3066,7 @@ export const GetPicturesDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      pagination: // value for 'pagination'
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
@@ -3183,78 +3180,6 @@ export type GetPicturesByAllSearchLazyQueryHookResult = ReturnType<
 export type GetPicturesByAllSearchQueryResult = Apollo.QueryResult<
   GetPicturesByAllSearchQuery,
   GetPicturesByAllSearchQueryVariables
->;
-
-export const GetCollectionWithPicturesPublishedAfterDocument = gql`
-  query getCollectionWithPicturesPublishedAfter(
-    $date: DateTime!
-    $publicationState: PublicationState = LIVE
-  ) {
-    collections(
-      filters: { pictures: { publishedAt: { gt: $date } } }
-      publicationState: $publicationState
-    ) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-/**
- * __useGetCollectionWithPicturesPublishedAfterQuery__
- *
- * To run a query within a React component, call `useGetCollectionWithPicturesPublishedAfterQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCollectionWithPicturesPublishedAfterQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCollectionWithPicturesPublishedAfterQuery({
- *   variables: {
- *      date: // value for 'date'
- *      publicationState: // value for 'publicationState'
- *   },
- * });
- */
-export function useGetCollectionWithPicturesPublishedAfterQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCollectionWithPicturesPublishedAfterQuery,
-    GetCollectionWithPicturesPublishedAfterQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCollectionWithPicturesPublishedAfterQuery,
-    GetCollectionWithPicturesPublishedAfterQueryVariables
-  >(GetCollectionWithPicturesPublishedAfterDocument, options);
-}
-
-export function useGetCollectionWithPicturesPublishedAfterLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCollectionWithPicturesPublishedAfterQuery,
-    GetCollectionWithPicturesPublishedAfterQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCollectionWithPicturesPublishedAfterQuery,
-    GetCollectionWithPicturesPublishedAfterQueryVariables
-  >(GetCollectionWithPicturesPublishedAfterDocument, options);
-}
-
-export type GetCollectionWithPicturesPublishedAfterQueryHookResult = ReturnType<
-  typeof useGetCollectionWithPicturesPublishedAfterQuery
->;
-
-export type GetCollectionWithPicturesPublishedAfterLazyQueryHookResult = ReturnType<
-  typeof useGetCollectionWithPicturesPublishedAfterLazyQuery
->;
-
-export type GetCollectionWithPicturesPublishedAfterQueryResult = Apollo.QueryResult<
-  GetCollectionWithPicturesPublishedAfterQuery,
-  GetCollectionWithPicturesPublishedAfterQueryVariables
 >;
 
 export const GetCollectionInfoByNameDocument = gql`

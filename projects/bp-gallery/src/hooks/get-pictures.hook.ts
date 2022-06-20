@@ -8,7 +8,8 @@ import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../components/common/pictur
 
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
-  customSearch: boolean
+  customSearch: boolean,
+  sortBy?: string[]
 ) => {
   const queryResult = useGetPicturesQuery({
     variables: {
@@ -17,6 +18,7 @@ const useGetPictures = (
         start: 0,
         limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
       },
+      sortBy,
     },
     notifyOnNetworkStatusChange: true,
     skip: customSearch,
