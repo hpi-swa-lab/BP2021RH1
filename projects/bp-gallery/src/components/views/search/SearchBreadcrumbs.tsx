@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import FolderIcon from '@mui/icons-material/Folder';
+import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
 import { useTranslation } from 'react-i18next';
 import { getDecadeTranslation } from './helpers/search-translation';
 
@@ -21,6 +22,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
   const history: History = useHistory();
   const { t } = useTranslation();
   const searchParamValues: SearchParams = [];
+
   const iconForType = (searchType: string) => {
     switch (searchType) {
       case SearchType.DECADE:
@@ -38,6 +40,8 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
         return <SearchIcon />;
       case SearchType.COLLECTION:
         return <FolderIcon />;
+      case SearchType.ARCHIVE:
+        return <FolderSpecialIcon />;
       default:
         return <></>;
     }

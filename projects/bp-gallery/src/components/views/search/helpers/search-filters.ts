@@ -148,6 +148,20 @@ const searchCollection = (searchParams: URLSearchParams, filters: PictureFilters
   });
 };
 
+const searchArchiveTag = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
+  const archiveTags = searchParams.getAll(SearchType.ARCHIVE).map(decodeURIComponent);
+  archiveTags.forEach((archiveTag: string) => {
+    const archiveTagFilter = buildFilter(archiveTag);
+    filters.and?.push({
+      or: [
+        {
+          archive_tag: archiveTagFilter,
+        },
+      ],
+    });
+  });
+};
+
 const searchLocation = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
   const locations = searchParams.getAll(SearchType.LOCATION).map(decodeURIComponent);
   locations.forEach((location: string) => {
@@ -205,6 +219,7 @@ export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParam
   if (searchParams.has(SearchType.LOCATION)) searchLocation(searchParams, filters);
   if (searchParams.has(SearchType.DECADE)) searchDecade(searchParams, filters);
   if (searchParams.has(SearchType.COLLECTION)) searchCollection(searchParams, filters);
+  if (searchParams.has(SearchType.ARCHIVE)) searchArchiveTag(searchParams, filters);
 
   return filters;
 };
