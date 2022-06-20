@@ -23,6 +23,8 @@ const PictureScrollGrid = ({
   resultPictureCallback,
   bulkOperations,
   sortBy,
+  maxNumPictures,
+  showCount = true,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   scrollPos: number;
@@ -33,6 +35,8 @@ const PictureScrollGrid = ({
   resultPictureCallback?: (pictures: number) => void;
   bulkOperations?: BulkOperation[];
   sortBy?: string[];
+  maxNumPictures?: number;
+  showCount?: boolean;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -61,20 +65,29 @@ const PictureScrollGrid = ({
       scrollHeight !== lastScrollHeight &&
       scrollPos > scrollHeight - 1.5 * window.innerHeight
     ) {
-      setIsFetching(true);
-      // @ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      fetchMore({
-        variables: {
-          pagination: {
-            start: pictures?.length,
-            limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+      let fetchCount = NUMBER_OF_PICTURES_LOADED_PER_FETCH;
+      if (maxNumPictures && pictures) {
+        fetchCount = Math.min(
+          maxNumPictures - pictures.length,
+          NUMBER_OF_PICTURES_LOADED_PER_FETCH
+        );
+      }
+      if (fetchCount > 0) {
+        setIsFetching(true);
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        fetchMore({
+          variables: {
+            pagination: {
+              start: pictures?.length,
+              limit: fetchCount,
+            },
           },
-        },
-      }).then(() => setIsFetching(false));
+        }).then(() => setIsFetching(false));
+      }
       setLastScrollHeight(scrollHeight);
     }
-  }, [scrollPos, scrollHeight, lastScrollHeight, pictures, loading, fetchMore]);
+  }, [scrollPos, scrollHeight, lastScrollHeight, pictures, loading, fetchMore, maxNumPictures]);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -95,18 +108,20 @@ const PictureScrollGrid = ({
             }
           }}
         />
-        <span className='picture-count'>
-          {t(
-            pictures.length === 0
-              ? 'common.noPictures'
-              : possiblyMorePictures
-              ? 'common.moreThanPictureCount'
-              : 'common.pictureCount',
-            {
-              count: pictures.length,
-            }
-          )}
-        </span>
+        {showCount && (
+          <span className='picture-count'>
+            {t(
+              pictures.length === 0
+                ? 'common.noPictures'
+                : possiblyMorePictures
+                ? 'common.moreThanPictureCount'
+                : 'common.pictureCount',
+              {
+                count: pictures.length,
+              }
+            )}
+          </span>
+        )}
         <PictureGrid
           refetch={refetch}
           pictures={pictures}

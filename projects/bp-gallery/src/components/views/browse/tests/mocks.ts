@@ -1,6 +1,5 @@
 import {
   GetCollectionInfoByNameDocument,
-  GetCollectionWithPicturesPublishedAfterDocument,
   GetRootCollectionDocument,
   PublicationState,
 } from '../../../../graphql/APIConnector';
@@ -282,26 +281,6 @@ export const GetCollectionInfoDocumentMocks = [
               },
             },
           ],
-        },
-      },
-    },
-  },
-];
-
-const communityDate = '2022-01-03T17:25:00Z';
-export const GetCollectionsPublishedAfterDateMocks = [
-  {
-    request: {
-      query: GetCollectionWithPicturesPublishedAfterDocument,
-      variables: {
-        date: communityDate,
-        publicationState: PublicationState.Live,
-      },
-    },
-    result: {
-      data: {
-        collections: {
-          data: [{ id: 51 }, { id: 49 }, { id: 50 }, { id: 42 }],
         },
       },
     },

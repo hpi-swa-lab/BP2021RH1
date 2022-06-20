@@ -6,6 +6,7 @@ import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-br
 import ItemList from '../../common/ItemList';
 import { FlatCollectionWithoutRelations } from '../../../types/additionalFlatTypes';
 import { ItemListItemModel } from '../../common/ItemListItem';
+import { useTranslation } from 'react-i18next';
 
 const SubCollections = ({
   childCollections,
@@ -16,6 +17,8 @@ const SubCollections = ({
 }) => {
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
   const history: History = useHistory();
+  const { t } = useTranslation();
+
   const buildItem = (collection: FlatCollectionWithoutRelations, index: number) => {
     let color = index % 2 === 0 ? '#7E241D' : '#404272';
     if (!collection.publishedAt) {
@@ -34,7 +37,7 @@ const SubCollections = ({
 
   if (!path) {
     items.push({
-      name: 'Neue Bilder der Woche',
+      name: t('common.latest-pictures'),
       background: DEFAULT_THUMBNAIL_URL,
       color: '#404272',
       onClick: () => {

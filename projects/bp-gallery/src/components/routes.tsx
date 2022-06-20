@@ -21,7 +21,7 @@ const routes: RouteConfig[] = [
       {
         path: '/browse',
         render: () => {
-          return <BrowseView onlyLatest={false} />;
+          return <BrowseView />;
         },
         exact: true,
       },
@@ -31,6 +31,14 @@ const routes: RouteConfig[] = [
           return <LatestPicturesView />;
         },
         exact: true,
+      },
+      {
+        path: '/browse/:path+',
+        // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
+        render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
+          const browseParams = match.params.path.split('/');
+          return <BrowseView path={browseParams} />;
+        },
       },
       {
         path: '/search',
