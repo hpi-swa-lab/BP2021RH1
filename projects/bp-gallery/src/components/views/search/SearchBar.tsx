@@ -58,10 +58,17 @@ const SearchBar = ({
 
   const dontShowAllSearch: boolean = !customSearch && !searchParams.values().next().done;
 
-  const onSearchStart = (searchValue: string) => {
-    if (searchValue === '') return;
+  const onSearchStart = (searchInput: string) => {
+    if (searchInput === '') return;
 
-    const { isValid, searchPath } = addNewParamToSearchPath(searchType, searchValue, searchParams);
+    // Spaces are our delimiter for different search terms
+    const newSearchRequest = searchInput.split(' ').map(encodeURIComponent).join(' ');
+
+    const { isValid, searchPath } = addNewParamToSearchPath(
+      searchType,
+      newSearchRequest,
+      searchParams
+    );
     if (!isValid) {
       openAlert({
         alertType: AlertType.INFO,
