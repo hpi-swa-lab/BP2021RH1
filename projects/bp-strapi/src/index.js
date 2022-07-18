@@ -7,7 +7,7 @@ const {
 } = require("./api/collection/services/custom-resolver");
 const {
   findPicturesByAllSearch,
-  updatePictureWithCustomHandling,
+  updatePictureWithTagCleanup,
 } = require("./api/picture/services/custom-resolver")
 
 module.exports = {
@@ -91,7 +91,7 @@ module.exports = {
               data: "JSON",
             },
             async resolve(_, { id, data }) {
-              return updatePictureWithCustomHandling(id, data);
+              return updatePictureWithTagCleanup(id, data);
             },
           }),
           queryField("findPicturesByAllSearch", {

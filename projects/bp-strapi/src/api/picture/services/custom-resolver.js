@@ -153,9 +153,9 @@ const findPicturesByAllSearch = async (knexEngine, searchTerms, searchTimes, pag
   return preparePictureDataForFrontend(matchingPictures, mediaFilesForPictures);
 };
 
-const { updatePictureWithCustomHandling } = require("./custom-update");
+const { updatePictureWithTagCleanup } = require("./custom-update");
 
 module.exports = {
   findPicturesByAllSearch,
-  updatePictureWithCustomHandling,
+  updatePictureWithTagCleanup,
 };

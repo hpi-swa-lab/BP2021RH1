@@ -443,7 +443,7 @@ const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   await processUpdatesForPersonTags(data);
 };
 
-const updatePictureWithCustomHandling = async (id, data) =>  {
+const updatePictureWithTagCleanup = async (id, data) =>  {
   // No special handling needed if no data is passed.
   if (!data) return;
 
@@ -463,5 +463,5 @@ const updatePictureWithCustomHandling = async (id, data) =>  {
 };
 
 module.exports = {
-  updatePictureWithCustomHandling,
+  updatePictureWithTagCleanup,
 };
