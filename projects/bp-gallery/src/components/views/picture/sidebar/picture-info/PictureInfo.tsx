@@ -29,7 +29,6 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   const { t } = useTranslation();
 
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
-  const [pictureState, nativeSetPictureState] = useState<FlatPicture>(picture);
   const [savePicture, updateMutationResponse] = useUpdatePictureMutation({
     refetchQueries: ['getPictureInfo'],
   });
@@ -47,7 +46,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
     return t('curator.saveStatus.saved');
   }, [updateMutationResponse, anyFieldTouched, t]);
 
-  const pictureId = pictureState.id;
+  const pictureId = picture.id;
 
   const setPictureState = useCallback(
     (field: any) => {
@@ -65,9 +64,6 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           fieldForAPI[key] = JSON.stringify(fieldForAPI[key]);
         }
       });
-      nativeSetPictureState(currentPicture => {
-        return { ...currentPicture, ...field };
-      });
       setAnyFieldTouched(false);
       savePicture({
         variables: {
@@ -76,7 +72,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         },
       });
     },
-    [nativeSetPictureState, savePicture, pictureId]
+    [savePicture, pictureId]
   );
 
   const [getAllKeywords, keywordsResponse] = useGetAllKeywordTagsLazyQuery();
@@ -108,10 +104,6 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
 
-  useEffect(() => {
-    nativeSetPictureState(picture);
-  }, [picture]);
-
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
   return (
@@ -131,7 +123,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       )}
       <PictureInfoField title={t('pictureFields.time')} icon='event' type='date'>
         <DateRangeSelectionField
-          timeRangeTag={pictureState.time_range_tag}
+          timeRangeTag={picture.time_range_tag}
           onChange={range => {
             setPictureState({ time_range_tag: range });
           }}
@@ -145,7 +137,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         type='description'
       >
         <DescriptionsEditField
-          descriptions={pictureState.descriptions ?? []}
+          descriptions={picture.descriptions ?? []}
           onChange={descriptions => {
             setPictureState({ descriptions });
           }}
@@ -155,7 +147,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       <PictureInfoField title={t('pictureFields.people')} icon='person' type='person'>
         <TagSelectionField
           type={TagType.PERSON}
-          tags={pictureState.person_tags ?? []}
+          tags={picture.person_tags ?? []}
           allTags={allPeople ?? []}
           onChange={people => {
             setPictureState({ person_tags: people });
@@ -167,7 +159,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
       <PictureInfoField title={t('pictureFields.locations')} icon='place' type='location'>
         <TagSelectionField
           type={TagType.LOCATION}
-          tags={pictureState.location_tags ?? []}
+          tags={picture.location_tags ?? []}
           allTags={allLocations ?? []}
           onChange={locations => {
             setPictureState({ location_tags: locations });
@@ -176,11 +168,11 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           createMutation={newLocationTagMutation}
         />
       </PictureInfoField>
-      {(role >= AuthRole.CURATOR || Boolean(pictureState.keyword_tags?.length)) && (
+      {(role >= AuthRole.CURATOR || Boolean(picture.keyword_tags?.length)) && (
         <PictureInfoField title={t('pictureFields.keywords')} icon='sell' type='keywords'>
           <TagSelectionField
             type={TagType.KEYWORD}
-            tags={pictureState.keyword_tags ?? []}
+            tags={picture.keyword_tags ?? []}
             allTags={allKeywords ?? []}
             onChange={keywords => {
               setPictureState({ keyword_tags: keywords });
@@ -194,7 +186,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         <PictureInfoField title={t('pictureFields.collections')} icon='folder' type='collections'>
           <TagSelectionField
             type={TagType.COLLECTION}
-            tags={pictureState.collections ?? []}
+            tags={picture.collections ?? []}
             allTags={allCollections ?? []}
             onChange={collections => {
               setPictureState({ collections });
@@ -204,14 +196,14 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           />
         </PictureInfoField>
       )}
-      {(role >= AuthRole.CURATOR || Boolean(pictureState.archive_tag)) && (
+      {(role >= AuthRole.CURATOR || Boolean(picture.archive_tag)) && (
         <PictureInfoField
           title={t('pictureFields.archiveTag')}
           icon='folder_special'
           type='archive'
         >
           <ArchiveTagField
-            archiveTag={pictureState.archive_tag}
+            archiveTag={picture.archive_tag}
             onChange={archiveTag => setPictureState({ archive_tag: archiveTag.id })}
           />
         </PictureInfoField>

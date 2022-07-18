@@ -40,10 +40,15 @@ const TagSelectionField = <T extends TagFields>({
   const { t } = useTranslation();
 
   const [tagList, setTagList] = useState<T[]>(allTags);
+  const [selectedTags, setSelectedTags] = useState<T[]>(tags);
 
   useEffect(() => {
     setTagList(allTags);
   }, [allTags, setTagList]);
+
+  useEffect(() => {
+    setSelectedTags(tags);
+  }, [tags, setSelectedTags]);
 
   const toggleVerified = useCallback(
     (list: T[], index: number) => {
@@ -112,9 +117,13 @@ const TagSelectionField = <T extends TagFields>({
               }
             }
             const newlyAddedTags = newValue.filter(
-              newVal => !tags.some(tag => tag.id === newVal.id)
+              newVal => !selectedTags.some(tag => tag.id === newVal.id)
             );
-            newlyAddedTags.forEach(tag => (tag.isNew = true));
+            newlyAddedTags.forEach(tag => {
+              tag.isNew = true;
+              tag.verified = true;
+            });
+            setSelectedTags(newValue);
             onChange(newValue);
           }}
           renderOption={(props, option) => {
@@ -147,17 +156,17 @@ const TagSelectionField = <T extends TagFields>({
           getOptionLabel={(option: T) => {
             return option.name;
           }}
-          value={tags}
+          value={selectedTags}
           renderInput={params => <TextField variant='standard' {...params} />}
         />
       </div>
     );
   } else {
-    return !tags.length ? (
+    return !selectedTags.length ? (
       <div className='none-found'>{noContentText}</div>
     ) : (
       <Stack direction='row' spacing={1} className='chip-stack'>
-        {tags.map(tag => {
+        {selectedTags.map(tag => {
           return (
             <Chip
               key={tag.id}
