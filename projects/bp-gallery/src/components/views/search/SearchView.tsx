@@ -22,6 +22,7 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { TagType } from '../../../types/additionalFlatTypes';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
+import { isEmpty } from 'lodash';
 
 export const SearchType = {
   ...TagType,
@@ -44,14 +45,6 @@ const isDuplicatedSearchParam = (
   }
 
   return isDuplicate;
-};
-
-const isSpace = (element: string): boolean => {
-  let isSpace = false;
-  if (element === '') {
-    isSpace = true;
-  }
-  return isSpace;
 };
 
 export const asSearchPath = (searchParams: URLSearchParams): string => {
@@ -91,7 +84,7 @@ export const addNewParamToSearchPath = (
   }
 
   paramValues.forEach(element => {
-    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !isSpace(element)) {
+    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !isEmpty(element)) {
       searchParams.append(newParamType, element);
     }
   });
