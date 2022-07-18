@@ -199,8 +199,8 @@ const deletePreviousTagIfNeeded = async (
   );
 
   // No cleanup needed when there are still pictures related to the previous tag.
-  // We need to use 2 here, because we are still in the beforeUpdate hook,
-  // so after the hook the regular update will un-relate one picture if we get here.
+  // We need to use 2 here, because we are still in the beforeUpdate phase,
+  // so after this phase the regular update will un-relate one picture if we get here.
   if (picturesWithPreviousTag.length >= 2) return;
 
   // Otherwise, clean up the previous tag.
@@ -249,26 +249,24 @@ const processUpdatesForDescriptions = async (
 
   const newDescriptions = [];
   for (const description of data[DESCRIPTIONS_KEY]) {
-    const parsedDescription = JSON.parse(description);
-
     // Check if custom data is present.
-    if (!parsedDescription.text) {
+    if (!description.text) {
       // If not, then it is already a valid ID here that needs to be kept.
-      newDescriptions.push(parsedDescription);
+      newDescriptions.push(description);
       continue;
     }
 
     const newDescriptionData = {
-      text: parsedDescription.text,
+      text: description.text,
     };
 
     let newDescriptionId;
-    if (parsedDescription.updatePrevious) {
+    if (description.updatePrevious) {
       newDescriptionId = await updatePreviousOrMergeWithExistingDescription(
         pictureQuery,
         currentPictureId,
         tagQuery,
-        parsedDescription.id,
+        description.id,
         newDescriptionData
       );
     } else {
@@ -283,12 +281,12 @@ const processUpdatesForDescriptions = async (
     newDescriptions.push(newDescriptionId);
 
     // Delete previous description if it will be unrelated after the current picture update
-    if (Number(newDescriptionId) !== Number(parsedDescription.id)) {
+    if (Number(newDescriptionId) !== Number(description.id)) {
       await deletePreviousTagIfNeeded(
         pictureQuery,
         tagQuery,
         DESCRIPTIONS_KEY,
-        parsedDescription.id,
+        description.id,
         false
       );
     }
@@ -328,14 +326,14 @@ const processUpdatesForTimeRangeTag = async (pictureQuery, data) => {
   const { tagQuery, tagService } =
     getQueryEngineAndServiceForTag(TIME_RANGE_TAG_KEY);
 
-  const parsedTimeRangeTag = JSON.parse(data[TIME_RANGE_TAG_KEY]);
+  const timeRangeTag = data[TIME_RANGE_TAG_KEY];
 
   // Check if custom data is present.
-  if (!parsedTimeRangeTag.start || !parsedTimeRangeTag.end) return;
+  if (!timeRangeTag.start || !timeRangeTag.end) return;
 
   const newTimeRangeTagData = {
-    start: parsedTimeRangeTag.start,
-    end: parsedTimeRangeTag.end,
+    start: timeRangeTag.start,
+    end: timeRangeTag.end,
   };
 
   const newTimeRangeTagId = await findExistingOrCreateNewTag(
@@ -346,26 +344,26 @@ const processUpdatesForTimeRangeTag = async (pictureQuery, data) => {
   );
 
   // Assert the picture only gets one time-range-tag assigned (independent of the verified status).
-  data[TIME_RANGE_TAG_KEY] = parsedTimeRangeTag.verified
+  data[TIME_RANGE_TAG_KEY] = timeRangeTag.verified
     ? null
     : newTimeRangeTagId;
-  data[withVerifiedPrefix(TIME_RANGE_TAG_KEY)] = parsedTimeRangeTag.verified
+  data[withVerifiedPrefix(TIME_RANGE_TAG_KEY)] = timeRangeTag.verified
     ? newTimeRangeTagId
     : null;
 
   strapi.log.debug(
     `New ${
-      parsedTimeRangeTag.verified ? "verified " : ""
+      timeRangeTag.verified ? "verified " : ""
     }${TIME_RANGE_TAG_KEY}: ${newTimeRangeTagId}`
   );
 
   // Delete previous tag if it will be unrelated after the current picture update.
-  if (Number(parsedTimeRangeTag.id) !== Number(newTimeRangeTagId)) {
+  if (Number(timeRangeTag.id) !== Number(newTimeRangeTagId)) {
     await deletePreviousTagIfNeeded(
       pictureQuery,
       tagQuery,
       TIME_RANGE_TAG_KEY,
-      parsedTimeRangeTag.id,
+      timeRangeTag.id,
       true
     );
   }
@@ -387,24 +385,22 @@ const processSimpleTagRelationUpdates = async (
   const newVerifiedTags = [];
   const newlyAddedTags = [];
   for (const tag of data[tagKeyInPictureRelation]) {
-    const parsedTag = JSON.parse(tag);
-
     // Check if custom data is present.
-    if (!parsedTag.id) {
+    if (!tag.id) {
       // If not, then it is already a valid tag id here that needs to be kept.
       // Per default these will be in a verified relation to the current picture.
-      newVerifiedTags.push(parsedTag);
+      newVerifiedTags.push(tag);
       continue;
     }
 
-    if (parsedTag.isNew) {
-      newlyAddedTags.push(parsedTag.id);
+    if (tag.isNew) {
+      newlyAddedTags.push(tag.id);
     }
 
     // Relate the tag in a verified relation to the current picture if not specified otherwise.
     const verified =
-      parsedTag.verified === undefined ? true : parsedTag.verified;
-    (verified ? newVerifiedTags : newTags).push(parsedTag.id);
+      tag.verified === undefined ? true : tag.verified;
+    (verified ? newVerifiedTags : newTags).push(tag.id);
   }
 
   data[tagKeyInPictureRelation] = newTags;
@@ -428,13 +424,13 @@ const processSimpleTagRelationUpdates = async (
 };
 
 const processUpdatesForKeywordTags = async (data) =>
-  await processSimpleTagRelationUpdates(KEYWORD_TAGS_KEY, data);
+  processSimpleTagRelationUpdates(KEYWORD_TAGS_KEY, data);
 
 const processUpdatesForLocationTags = async (data) =>
-  await processSimpleTagRelationUpdates(LOCATION_TAGS_KEY, data);
+  processSimpleTagRelationUpdates(LOCATION_TAGS_KEY, data);
 
 const processUpdatesForPersonTags = async (data) =>
-  await processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
+   processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
 
 const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   // Process updates of tag relations with additional editing capabilities.
@@ -447,18 +443,23 @@ const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   await processUpdatesForPersonTags(data);
 };
 
+const updatePictureWithCustomHandling = async (id, data) =>  {
+  // No special handling needed if no data is passed.
+  if (!data) return;
+
+  strapi.log.debug(`Custom tag updates for the picture with id ${id}`);
+  const pictureQuery = strapi.db.query("api::picture.picture");
+
+  // Process tag updates for the picture before actually updating the picture itself.
+  await processTagUpdates(pictureQuery, id, data);
+
+  // Actually update the picture.
+  await pictureQuery.update({
+    where: { id },
+    data,
+  });
+};
+
 module.exports = {
-  async beforeUpdate(event) {
-    const { data, where } = event.params;
-
-    // No special handling needed if no data is passed.
-    if (!data) return;
-
-    // TODO: does this correctly detect that it was the Admin-Panel that triggered the update?
-    if (data.updatedBy) return;
-
-    strapi.log.debug(`Custom tag updates for the picture with id ${where.id}`);
-    const pictureQuery = strapi.db.query("api::picture.picture");
-    await processTagUpdates(pictureQuery, where.id, data);
-  },
+  updatePictureWithCustomHandling,
 };
