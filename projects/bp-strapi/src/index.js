@@ -5,7 +5,10 @@ const {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } = require("./api/collection/services/custom-resolver");
-const { findPicturesByAllSearch } = require("./api/picture/services/custom-resolver")
+const {
+  findPicturesByAllSearch,
+  updatePictureWithTagCleanup,
+} = require("./api/picture/services/custom-resolver")
 
 module.exports = {
   /**
@@ -81,6 +84,16 @@ module.exports = {
               );
             },
           }),
+          mutationField("updatePictureWithTagCleanup", {
+            type: "ID",
+            args: {
+              id: "ID",
+              data: "JSON",
+            },
+            async resolve(_, { id, data }) {
+              return updatePictureWithTagCleanup(id, data);
+            },
+          }),
           queryField("findPicturesByAllSearch", {
             type: list("PictureEntity"),
             args: {
@@ -122,6 +135,11 @@ module.exports = {
             mergeCollections: {
               auth: {
                 scope: ["api::collection.collection.update"],
+              },
+            },
+            updatePictureWithTagCleanup: {
+              auth: {
+                scope: ["api::picture.picture.update"],
               },
             },
           },
