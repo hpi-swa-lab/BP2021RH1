@@ -100,7 +100,6 @@ const TagSelectionField = <T extends TagFields>({
             return filtered;
           }}
           onChange={async (_, newValue) => {
-            console.log(newValue);
             if (!onChange) return;
             // newValue is an array, but we are sure that only one element can be created at a time
             if (createMutation) {
