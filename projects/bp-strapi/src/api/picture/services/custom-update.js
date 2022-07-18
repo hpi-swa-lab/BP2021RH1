@@ -458,6 +458,8 @@ const updatePictureWithCustomHandling = async (id, data) =>  {
     where: { id },
     data,
   });
+
+  return id;
 };
 
 module.exports = {
