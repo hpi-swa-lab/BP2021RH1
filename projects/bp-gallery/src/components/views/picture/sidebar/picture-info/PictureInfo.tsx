@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatCollection, FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
+import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import {
@@ -18,7 +18,6 @@ import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';
-import { cloneDeep } from 'lodash';
 import { Button } from '@mui/material';
 import { Crop } from '@mui/icons-material';
 import PictureEditDialog from './PictureEditDialog';
@@ -29,7 +28,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   const { t } = useTranslation();
 
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
-  const [savePicture, updateMutationResponse] = useUpdatePictureMutation({
+  const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
     refetchQueries: ['getPictureInfo'],
   });
 
@@ -46,33 +45,17 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
     return t('curator.saveStatus.saved');
   }, [updateMutationResponse, anyFieldTouched, t]);
 
-  const pictureId = picture.id;
-
-  const setPictureState = useCallback(
+  const savePictureInfo = useCallback(
     (field: any) => {
-      const fieldForAPI: { [key: string]: any } = cloneDeep(field);
-      // We need to stringify the fields here so that the API can handle the data
-      // since it only accepts string input, not JSON data
-      Object.keys(fieldForAPI).forEach(key => {
-        if (key === 'collections') {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          fieldForAPI[key] = fieldForAPI[key].map((collection: FlatCollection) => collection.id);
-        } else if (Array.isArray(fieldForAPI[key])) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          fieldForAPI[key] = fieldForAPI[key].map((f: any) => JSON.stringify(f));
-        } else if (key !== 'archive_tag') {
-          fieldForAPI[key] = JSON.stringify(fieldForAPI[key]);
-        }
-      });
       setAnyFieldTouched(false);
-      savePicture({
+      updatePicture({
         variables: {
-          pictureId,
-          data: fieldForAPI,
+          pictureId: picture.id,
+          data: field,
         },
       });
     },
-    [savePicture, pictureId]
+    [updatePicture, picture.id]
   );
 
   const [getAllKeywords, keywordsResponse] = useGetAllKeywordTagsLazyQuery();
@@ -125,7 +108,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         <DateRangeSelectionField
           timeRangeTag={picture.time_range_tag}
           onChange={range => {
-            setPictureState({ time_range_tag: range });
+            savePictureInfo({ time_range_tag: range });
           }}
           onTouch={() => setAnyFieldTouched(true)}
           onResetTouch={() => setAnyFieldTouched(false)}
@@ -139,7 +122,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         <DescriptionsEditField
           descriptions={picture.descriptions ?? []}
           onChange={descriptions => {
-            setPictureState({ descriptions });
+            savePictureInfo({ descriptions });
           }}
           onTouch={() => setAnyFieldTouched(true)}
         />
@@ -150,7 +133,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           tags={picture.person_tags ?? []}
           allTags={allPeople ?? []}
           onChange={people => {
-            setPictureState({ person_tags: people });
+            savePictureInfo({ person_tags: people });
           }}
           noContentText={t('pictureFields.noPeople')}
           createMutation={newPersonTagMutation}
@@ -162,7 +145,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
           tags={picture.location_tags ?? []}
           allTags={allLocations ?? []}
           onChange={locations => {
-            setPictureState({ location_tags: locations });
+            savePictureInfo({ location_tags: locations });
           }}
           noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
@@ -175,7 +158,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
             tags={picture.keyword_tags ?? []}
             allTags={allKeywords ?? []}
             onChange={keywords => {
-              setPictureState({ keyword_tags: keywords });
+              savePictureInfo({ keyword_tags: keywords });
             }}
             noContentText={t('pictureFields.noKeywords')}
             createMutation={newKeywordTagMutation}
@@ -189,7 +172,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
             tags={picture.collections ?? []}
             allTags={allCollections ?? []}
             onChange={collections => {
-              setPictureState({ collections });
+              savePictureInfo({ collections });
             }}
             noContentText={t('pictureFields.noCollections')}
             nonVerifyable={true}
@@ -204,7 +187,7 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
         >
           <ArchiveTagField
             archiveTag={picture.archive_tag}
-            onChange={archiveTag => setPictureState({ archive_tag: archiveTag.id })}
+            onChange={archiveTag => savePictureInfo({ archive_tag: archiveTag.id })}
           />
         </PictureInfoField>
       )}

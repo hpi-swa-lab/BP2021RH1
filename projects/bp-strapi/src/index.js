@@ -84,7 +84,7 @@ module.exports = {
               );
             },
           }),
-          mutationField("updatePictureWithCustomHandling", {
+          mutationField("updatePictureWithTagCleanup", {
             type: "ID",
             args: {
               id: "ID",
@@ -137,7 +137,7 @@ module.exports = {
                 scope: ["api::collection.collection.update"],
               },
             },
-            updatePictureWithCustomHandling: {
+            updatePictureWithTagCleanup: {
               auth: {
                 scope: ["api::picture.picture.update"],
               },

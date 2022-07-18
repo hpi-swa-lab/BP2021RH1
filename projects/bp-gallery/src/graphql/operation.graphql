@@ -668,12 +668,8 @@ mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateT
   }
 }
 
-mutation updatePicture($pictureId: ID!, $data: PictureInput!) {
-  updatePicture(id: $pictureId, data: $data) {
-    data {
-      id
-    }
-  }
+mutation updatePicture($pictureId: ID!, $data: JSON!) {
+  updatePictureWithTagCleanup(id: $pictureId, data: $data)
 }
 
 mutation createPicture($data: PictureInput!) {
