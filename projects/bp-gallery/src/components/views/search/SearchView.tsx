@@ -22,7 +22,6 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { TagType } from '../../../types/additionalFlatTypes';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
-import { isEmpty } from 'lodash';
 
 export const SearchType = {
   ...TagType,
@@ -31,27 +30,7 @@ export const SearchType = {
   ALL: 'all',
 };
 
-const isDuplicatedSearchParam = (
-  element: string,
-  type: string,
-  prevParams: URLSearchParams
-): boolean => {
-  let isDuplicate = false;
-  const prevParamsIterator = prevParams.entries();
-  let nextParam = prevParamsIterator.next();
-  while (!nextParam.done) {
-    if (nextParam.value[1] === element && nextParam.value[0] === type) isDuplicate = true;
-    nextParam = prevParamsIterator.next();
-  }
-
-  return isDuplicate;
-};
-
-export const asSearchPath = (searchParams: URLSearchParams): string => {
-  return `/search?${searchParams.toString()}`;
-};
-
-const isValidYear = (searchRequest: string) => {
+export const isValidYear = (searchRequest: string) => {
   return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
 };
 
@@ -67,28 +46,8 @@ const isValidTimeSpecification = (searchRequest: string) => {
   return isValidYear(searchRequest);
 };
 
-export const addNewParamToSearchPath = (
-  newParamType: string,
-  searchRequest: string,
-  prevParams?: URLSearchParams
-): {
-  isValid: boolean;
-  searchPath: string;
-} => {
-  const searchParams = prevParams ? prevParams : new URLSearchParams();
-  const paramValues = searchRequest.split(' ');
-
-  if (newParamType === SearchType.TIME_RANGE) {
-    if (!isValidYear(searchRequest))
-      return { searchPath: asSearchPath(searchParams), isValid: false };
-  }
-
-  paramValues.forEach(element => {
-    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !isEmpty(element)) {
-      searchParams.append(newParamType, element);
-    }
-  });
-  return { searchPath: asSearchPath(searchParams), isValid: true };
+export const asSearchPath = (searchParams: URLSearchParams): string => {
+  return `/search?${searchParams.toString()}`;
 };
 
 const SearchView = () => {

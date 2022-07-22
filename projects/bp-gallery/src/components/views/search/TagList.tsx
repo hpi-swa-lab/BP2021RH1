@@ -6,11 +6,12 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
 import ScrollableItemList from '../../common/ScrollableItemList';
 import { asApiPath } from '../../App';
-import { addNewParamToSearchPath, SearchType } from './SearchView';
+import { SearchType } from './SearchView';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
+import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 
 const TagList = ({ type }: { type: TagType }) => {
   const history: History = useHistory();

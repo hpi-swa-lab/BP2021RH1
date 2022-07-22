@@ -6,7 +6,7 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
 import ScrollableItemList from '../../common/ScrollableItemList';
 import { asApiPath } from '../../App';
-import { addNewParamToSearchPath, SearchType } from './SearchView';
+import { SearchType } from './SearchView';
 import {
   useGetDecadePreviewThumbnailsQuery,
   PictureFiltersInput,
@@ -16,6 +16,7 @@ import { FlatDecadeThumbnails } from '../../../types/additionalFlatTypes';
 import { buildDecadeFilter, getDecadeSearchTermForAllSearch } from './helpers/search-filters';
 import { getDecadeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
+import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 
