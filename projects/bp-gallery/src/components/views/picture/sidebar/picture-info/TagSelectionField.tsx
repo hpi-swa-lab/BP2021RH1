@@ -4,9 +4,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
-import { addNewParamToSearchPath, SearchType } from '../../../search/SearchView';
+import { SearchType } from '../../../search/SearchView';
 import { TagType } from '../../../../../types/additionalFlatTypes';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 
 interface TagFields {
   name: string;

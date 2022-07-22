@@ -8,21 +8,12 @@ import SearchHub from './SearchHub';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
 import { convertSearchParamsToPictureFilters, paramToTime } from './helpers/search-filters';
-import {
-  Button,
-  IconButton,
-  styled,
-  Tooltip,
-  tooltipClasses,
-  TooltipProps,
-  Typography,
-} from '@mui/material';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Button, Typography } from '@mui/material';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { TagType } from '../../../types/additionalFlatTypes';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
-import { isEmpty } from 'lodash';
+import { SearchInfoTooltip } from './SearchInfoTooltip';
 
 export const SearchType = {
   ...TagType,
@@ -31,27 +22,7 @@ export const SearchType = {
   ALL: 'all',
 };
 
-const isDuplicatedSearchParam = (
-  element: string,
-  type: string,
-  prevParams: URLSearchParams
-): boolean => {
-  let isDuplicate = false;
-  const prevParamsIterator = prevParams.entries();
-  let nextParam = prevParamsIterator.next();
-  while (!nextParam.done) {
-    if (nextParam.value[1] === element && nextParam.value[0] === type) isDuplicate = true;
-    nextParam = prevParamsIterator.next();
-  }
-
-  return isDuplicate;
-};
-
-export const asSearchPath = (searchParams: URLSearchParams): string => {
-  return `/search?${searchParams.toString()}`;
-};
-
-const isValidYear = (searchRequest: string) => {
+export const isValidYear = (searchRequest: string) => {
   return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
 };
 
@@ -67,28 +38,8 @@ const isValidTimeSpecification = (searchRequest: string) => {
   return isValidYear(searchRequest);
 };
 
-export const addNewParamToSearchPath = (
-  newParamType: string,
-  searchRequest: string,
-  prevParams?: URLSearchParams
-): {
-  isValid: boolean;
-  searchPath: string;
-} => {
-  const searchParams = prevParams ? prevParams : new URLSearchParams();
-  const paramValues = searchRequest.split(' ');
-
-  if (newParamType === SearchType.TIME_RANGE) {
-    if (!isValidYear(searchRequest))
-      return { searchPath: asSearchPath(searchParams), isValid: false };
-  }
-
-  paramValues.forEach(element => {
-    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !isEmpty(element)) {
-      searchParams.append(newParamType, element);
-    }
-  });
-  return { searchPath: asSearchPath(searchParams), isValid: true };
+export const asSearchPath = (searchParams: URLSearchParams): string => {
+  return `/search?${searchParams.toString()}`;
 };
 
 const SearchView = () => {
@@ -100,11 +51,11 @@ const SearchView = () => {
     return new URLSearchParams(search);
   }, [search]);
 
-  const customSearch = useMemo(() => searchParams.has(SearchType.ALL), [searchParams]);
+  const isAllSearchActive = useMemo(() => searchParams.has(SearchType.ALL), [searchParams]);
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
-    if (customSearch) {
+    if (isAllSearchActive) {
       const allSearchTerms = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
       const searchTimes: string[][] = [];
       allSearchTerms.forEach(searchTerm => {
@@ -119,22 +70,7 @@ const SearchView = () => {
       };
     }
     return convertSearchParamsToPictureFilters(searchParams);
-  }, [customSearch, searchParams]);
-
-  const SearchInfoTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }}>
-      <IconButton className={'info-icon'}>
-        <HelpOutlineIcon />
-      </IconButton>
-    </Tooltip>
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      maxWidth: 220,
-
-      fontSize: theme.typography.pxToRem(12),
-      border: '1px solid #dadde9',
-    },
-  }));
+  }, [isAllSearchActive, searchParams]);
 
   const { linkToCollection } = useBulkOperations();
 
@@ -145,7 +81,7 @@ const SearchView = () => {
           <div className='search-bar-container'>
             {' '}
             {(!areResultsEmpty || !search) && (
-              <SearchBar searchParams={searchParams} customSearch={customSearch} />
+              <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
             )}
             <SearchInfoTooltip
               title={
@@ -167,7 +103,7 @@ const SearchView = () => {
           ) : (
             <PictureScrollGrid
               queryParams={queryParams}
-              customSearch={customSearch}
+              isAllSearchActive={isAllSearchActive}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={search}
