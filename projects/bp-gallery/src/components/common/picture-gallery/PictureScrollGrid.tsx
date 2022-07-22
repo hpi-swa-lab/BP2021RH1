@@ -18,7 +18,7 @@ const PictureScrollGrid = ({
   scrollPos,
   scrollHeight,
   hashbase,
-  isAllSearchAchtive = false,
+  isAllSearchActive = false,
   uploadAreaProps,
   resultPictureCallback,
   bulkOperations,
@@ -30,7 +30,7 @@ const PictureScrollGrid = ({
   scrollPos: number;
   scrollHeight: number;
   hashbase: string;
-  isAllSearchAchtive?: boolean;
+  isAllSearchActive?: boolean;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
   resultPictureCallback?: (pictures: number) => void;
   bulkOperations?: BulkOperation[];
@@ -44,7 +44,7 @@ const PictureScrollGrid = ({
 
   const { data, loading, error, fetchMore, refetch } = useGetPictures(
     queryParams,
-    isAllSearchAchtive,
+    isAllSearchActive,
     sortBy
   );
 

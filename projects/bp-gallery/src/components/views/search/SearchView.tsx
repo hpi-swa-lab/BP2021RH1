@@ -51,11 +51,11 @@ const SearchView = () => {
     return new URLSearchParams(search);
   }, [search]);
 
-  const isAllSearchAchtive = useMemo(() => searchParams.has(SearchType.ALL), [searchParams]);
+  const isAllSearchActive = useMemo(() => searchParams.has(SearchType.ALL), [searchParams]);
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
-    if (isAllSearchAchtive) {
+    if (isAllSearchActive) {
       const allSearchTerms = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
       const searchTimes: string[][] = [];
       allSearchTerms.forEach(searchTerm => {
@@ -70,7 +70,7 @@ const SearchView = () => {
       };
     }
     return convertSearchParamsToPictureFilters(searchParams);
-  }, [isAllSearchAchtive, searchParams]);
+  }, [isAllSearchActive, searchParams]);
 
   const { linkToCollection } = useBulkOperations();
 
@@ -81,7 +81,7 @@ const SearchView = () => {
           <div className='search-bar-container'>
             {' '}
             {(!areResultsEmpty || !search) && (
-              <SearchBar searchParams={searchParams} isAllSearchAchtive={isAllSearchAchtive} />
+              <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
             )}
             <SearchInfoTooltip
               title={
@@ -103,7 +103,7 @@ const SearchView = () => {
           ) : (
             <PictureScrollGrid
               queryParams={queryParams}
-              isAllSearchAchtive={isAllSearchAchtive}
+              isAllSearchActive={isAllSearchActive}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={search}
