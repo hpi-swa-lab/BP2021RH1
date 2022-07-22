@@ -16,11 +16,11 @@ const LatestPicturesView = () => {
           <h2>{t('common.latest-pictures')}</h2>
           {t('common.latest-pictures-info')}
           <PictureScrollGrid
-            queryParams={{}}
             scrollPos={scrollPos}
             scrollHeight={scrollHeight}
             hashbase={'latest'}
             bulkOperations={[linkToCollection]}
+            queryParams={{}}
             sortBy={['publishedAt:desc']}
             maxNumPictures={500}
             showCount={false}
