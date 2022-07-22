@@ -13,10 +13,10 @@ import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 
 const SearchBar = ({
   searchParams,
-  customSearch,
+  isAllSearchAchtive,
 }: {
   searchParams: URLSearchParams;
-  customSearch: boolean;
+  isAllSearchAchtive: boolean;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -57,7 +57,7 @@ const SearchBar = ({
     }
   }, [typeOfLatestSearch]);
 
-  const dontShowAllSearch: boolean = !customSearch && !searchParams.values().next().done;
+  const dontShowAllSearch: boolean = !isAllSearchAchtive && !searchParams.values().next().done;
 
   const onSearchStart = (searchInput: string) => {
     if (searchInput === '') return;
@@ -112,7 +112,7 @@ const SearchBar = ({
 
           startAdornment: useAdvancedSearch && (
             <InputAdornment position='start'>
-              {customSearch ? (
+              {isAllSearchAchtive ? (
                 <span className='MuiInputBase-root'>{t('search.all')}</span>
               ) : (
                 <Select

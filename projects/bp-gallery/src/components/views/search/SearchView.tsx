@@ -8,20 +8,12 @@ import SearchHub from './SearchHub';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
 import { convertSearchParamsToPictureFilters, paramToTime } from './helpers/search-filters';
-import {
-  Button,
-  IconButton,
-  styled,
-  Tooltip,
-  tooltipClasses,
-  TooltipProps,
-  Typography,
-} from '@mui/material';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Button, Typography } from '@mui/material';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { TagType } from '../../../types/additionalFlatTypes';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
+import { SearchInfoTooltip } from './SearchInfoTooltip';
 
 export const SearchType = {
   ...TagType,
@@ -59,11 +51,11 @@ const SearchView = () => {
     return new URLSearchParams(search);
   }, [search]);
 
-  const customSearch = useMemo(() => searchParams.has(SearchType.ALL), [searchParams]);
+  const isAllSearchAchtive = useMemo(() => searchParams.has(SearchType.ALL), [searchParams]);
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
-    if (customSearch) {
+    if (isAllSearchAchtive) {
       const allSearchTerms = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
       const searchTimes: string[][] = [];
       allSearchTerms.forEach(searchTerm => {
@@ -78,22 +70,7 @@ const SearchView = () => {
       };
     }
     return convertSearchParamsToPictureFilters(searchParams);
-  }, [customSearch, searchParams]);
-
-  const SearchInfoTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }}>
-      <IconButton className={'info-icon'}>
-        <HelpOutlineIcon />
-      </IconButton>
-    </Tooltip>
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      maxWidth: 220,
-
-      fontSize: theme.typography.pxToRem(12),
-      border: '1px solid #dadde9',
-    },
-  }));
+  }, [isAllSearchAchtive, searchParams]);
 
   const { linkToCollection } = useBulkOperations();
 
@@ -104,7 +81,7 @@ const SearchView = () => {
           <div className='search-bar-container'>
             {' '}
             {(!areResultsEmpty || !search) && (
-              <SearchBar searchParams={searchParams} customSearch={customSearch} />
+              <SearchBar searchParams={searchParams} isAllSearchAchtive={isAllSearchAchtive} />
             )}
             <SearchInfoTooltip
               title={
@@ -126,7 +103,7 @@ const SearchView = () => {
           ) : (
             <PictureScrollGrid
               queryParams={queryParams}
-              customSearch={customSearch}
+              isAllSearchAchtive={isAllSearchAchtive}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={search}
