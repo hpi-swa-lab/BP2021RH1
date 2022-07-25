@@ -1,11 +1,19 @@
 "use strict";
 
+/**
+ * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
+ * in both a verified and an unverified relation.
+ */
 const manyToManyWithVerified = [
   "keyword_tag",
   "location_tag",
   "person_tag",
 ];
 
+/**
+ * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
+ * in just a regular relation.
+ */
 const manyToManyWithoutVerified = [
   "description",
   "collection",
@@ -15,6 +23,7 @@ const buildJoinsForTableWithVerifiedHandling = (knexEngine, singularTableName, v
   knexEngine = knexEngine.leftJoin(unverifiedLinkTable, "pictures.id", `${unverifiedLinkTable}.picture_id`);
   knexEngine = knexEngine.leftJoin(verifiedLinkTable, "pictures.id", `${verifiedLinkTable}.picture_id`);
 
+  // This special join syntax is needed in order to only join the tag table once to the aggregate
   knexEngine = knexEngine.leftJoin(`${singularTableName}s`, function() {
     this.on(`${verifiedLinkTable}.${singularTableName}_id`, "=", `${singularTableName}s.id`)
       .orOn(`${unverifiedLinkTable}.${singularTableName}_id`, "=", `${singularTableName}s.id`)
@@ -93,6 +102,10 @@ const buildWhere = (knexEngine, searchTerms, searchTimes) => {
   return knexEngine;
 };
 
+/**
+ * Uses the passed knexEngine instance to build the complete query for retrieving the matched picture entities
+ * for the given search terms, time-related search input and the given pagination arguments.
+ */
 const buildQueryForAllSearch = (knexEngine, searchTerms, searchTimes, pagination = { start: 0, limit: 100 }) => {
   const withSelect = knexEngine.distinct("pictures.*").from("pictures");
 
@@ -105,6 +118,10 @@ const buildQueryForAllSearch = (knexEngine, searchTerms, searchTimes, pagination
   return withOrder.limit(pagination.limit).offset(pagination.start);
 };
 
+/**
+ * Uses the passed knexEngine instance to build the complete query for retrieving the actual media files
+ * associated to the prior retrieved picture entities.
+ */
 const buildQueryForMediaFiles = (knexEngine, pictureIds) => {
   const withSelect = knexEngine.distinct(
     "files_related_morphs.order",
@@ -127,6 +144,13 @@ const buildQueryForMediaFiles = (knexEngine, pictureIds) => {
   return withWhere.orderBy("files_related_morphs.order", "asc");
 };
 
+/**
+ * Encapsulates the result data in the "Unified Response Format" of Strapi v4 and thereby combines
+ * the retrieved picture entities with their associated media files.
+ *
+ * This was implemented in order to simplify the registration of the custom GraphQL query, as in that way,
+ * its return type can be just a list of PictureEntity's (which is a type that already exists in the schema).
+ */
 const preparePictureDataForFrontend = (pictures, mediaFiles) => {
   return pictures.map(picture => {
     const mediaFileForPicture = mediaFiles.find(file => file.related_id === picture.id);
@@ -147,6 +171,12 @@ const preparePictureDataForFrontend = (pictures, mediaFiles) => {
   });
 };
 
+/**
+ * Encapsulates all logic that is necessary for the custom GraphQL query for the All-Search.
+ *
+ * Note that the Knex Query Builder is so designed, that built queries just need to be awaited
+ * in order to execute the associated SQL queries on the underlying database.
+ */
 const findPicturesByAllSearch = async (knexEngine, searchTerms, searchTimes, pagination) => {
   const matchingPictures = await buildQueryForAllSearch(knexEngine, searchTerms, searchTimes, pagination);
   const mediaFilesForPictures = await buildQueryForMediaFiles(knexEngine, matchingPictures.map(pic => pic.id));

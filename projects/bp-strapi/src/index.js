@@ -147,6 +147,9 @@ module.exports = {
             thumbnail: {
               middlewares: [
                 async (_, parent) => {
+                  // The parent here is the actual collection, of which the thumbnail was requested.
+                  // More on the arguments of a resolver can be found for example on:
+                  // https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-arguments
                   return resolveCollectionThumbnail(
                     extensionArgs.strapi,
                     parent.id,
