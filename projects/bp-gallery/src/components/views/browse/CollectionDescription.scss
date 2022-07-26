@@ -24,6 +24,7 @@ h2 {
 }
 
 .collection-description {
+  max-width: 900px;
   text-align: center;
   a {
     color: $primaryColor;
@@ -33,7 +34,6 @@ h2 {
     max-height: 80px;
     overflow: hidden;
     position: relative;
-    max-width: 80vw;
     margin: auto;
     transition: max-height 0.5s;
 
@@ -52,7 +52,6 @@ h2 {
   &.open {
     transition: max-height 0.5s;
     max-height: 100vh;
-    max-width: 80vw;
     position: relative;
     margin: auto;
     margin-bottom: 2rem;
