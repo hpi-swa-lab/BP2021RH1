@@ -1,8 +1,8 @@
 #!/bin/sh
 
-############ VARIABLE DEFINITIONS ############
+############ VARIABLE DEFINITIONS - ADJUST THEM TO YOUR NEEDS ############
 BACKUP_DIR=/home/dev/backups/
-MEDIA_DIR=/home/dev/BP2021RH1/projects/bp-strapi/public/uploads
+MEDIA_DIR=# Insert path to uploads-directory of the Strapi instance you want to backup
 DB_NAME=bp-strapi
 DB_USER=postgres
 ##############################################

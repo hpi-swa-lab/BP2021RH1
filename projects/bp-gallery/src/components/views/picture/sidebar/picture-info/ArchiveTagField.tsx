@@ -1,10 +1,11 @@
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useTranslation } from 'react-i18next';
-import { addNewParamToSearchPath, SearchType } from '../../../search/SearchView';
+import { SearchType } from '../../../search/SearchView';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 
 const ArchiveTagField = ({
   archiveTag,
@@ -17,29 +18,36 @@ const ArchiveTagField = ({
   const { role } = useAuth();
   const { t } = useTranslation();
 
-  const selectTag = useCallback(async () => {
-    const selectedTag = await dialog({
+  const [selectedTag, setSelectedTag] = useState<FlatArchiveTag | undefined>(archiveTag);
+
+  useEffect(() => {
+    setSelectedTag(archiveTag);
+  }, [archiveTag, setSelectedTag]);
+
+  const selectNewTag = useCallback(async () => {
+    const newTag: FlatArchiveTag | undefined = await dialog({
       preset: DialogPreset.SELECT_ARCHIVE_TAG,
     });
-    if (selectedTag && selectedTag.id !== archiveTag?.id) {
-      onChange(selectedTag as FlatArchiveTag);
+    if (newTag && newTag.id !== selectedTag?.id) {
+      setSelectedTag(newTag);
+      onChange(newTag);
     }
-  }, [dialog, onChange, archiveTag]);
+  }, [dialog, onChange, selectedTag, setSelectedTag]);
 
   const searchForCurrentTag = useCallback(() => {
-    if (!archiveTag) {
+    if (!selectedTag) {
       return;
     }
     const { searchPath } = addNewParamToSearchPath(
       useAdvancedSearch ? SearchType.ARCHIVE : SearchType.ALL,
-      encodeURIComponent(archiveTag.name)
+      encodeURIComponent(selectedTag.name)
     );
     window.open(searchPath, '_blank');
-  }, [archiveTag]);
+  }, [selectedTag]);
 
   return (
-    <div onClick={role >= AuthRole.CURATOR ? selectTag : searchForCurrentTag}>
-      {archiveTag?.name ?? t('curator.noArchive')}
+    <div onClick={role >= AuthRole.CURATOR ? selectNewTag : searchForCurrentTag}>
+      {selectedTag?.name ?? t('curator.noArchive')}
     </div>
   );
 };
