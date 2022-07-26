@@ -10,6 +10,7 @@ export const ChildCollectionsMocks = [
       id: 51,
       attributes: {
         name: 'Sole-Therme 1956-1970',
+        publishedAt: '2022',
         thumbnail: [
           {
             data: {
@@ -43,6 +44,7 @@ export const ChildCollectionsMocks = [
       id: 50,
       attributes: {
         name: 'Sole-Therme 1980-1990',
+        publishedAt: '2022',
         thumbnail: [
           {
             data: {
@@ -76,6 +78,7 @@ export const ChildCollectionsMocks = [
       id: 52,
       attributes: {
         name: 'Sole-Therme not latest',
+        publishedAt: '2022',
         thumbnail: [
           {
             data: {
@@ -112,6 +115,7 @@ export const ChildCollectionsFirstLevelMocks = [
       id: 49,
       attributes: {
         name: 'Sole-Therme',
+        publishedAt: '2022',
         thumbnail: [
           {
             data: {
@@ -145,6 +149,7 @@ export const ChildCollectionsFirstLevelMocks = [
       id: 42,
       attributes: {
         name: 'Onkel-Pelle',
+        publishedAt: '2022',
         thumbnail: [
           {
             data: {
@@ -178,6 +183,7 @@ export const ChildCollectionsFirstLevelMocks = [
       id: 2,
       attributes: {
         name: 'Not latest',
+        publishedAt: '2022',
         thumbnail: [
           {
             data: {
@@ -250,7 +256,7 @@ export const GetCollectionInfoDocumentMocks = [
             {
               id: '1',
               attributes: {
-                name: 'Herbert-Ahrens-Bilder-Archiv',
+                name: 'Das Herbert-Ahrens-Bilderarchiv',
                 description: '',
                 child_collections: ChildCollectionsFirstLevelMocks,
               },

@@ -650,6 +650,7 @@ export type Mutation = {
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
+  updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Update an existing role */
@@ -855,6 +856,11 @@ export type MutationUpdatePersonTagArgs = {
 export type MutationUpdatePictureArgs = {
   data: PictureInput;
   id: Scalars['ID'];
+};
+
+export type MutationUpdatePictureWithTagCleanupArgs = {
+  data?: InputMaybe<Scalars['JSON']>;
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationUpdateTimeRangeTagArgs = {
@@ -2650,15 +2656,10 @@ export type CreateSubCollectionMutation = {
 
 export type UpdatePictureMutationVariables = Exact<{
   pictureId: Scalars['ID'];
-  data: PictureInput;
+  data: Scalars['JSON'];
 }>;
 
-export type UpdatePictureMutation = {
-  updatePicture?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
-};
+export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null | undefined };
 
 export type CreatePictureMutationVariables = Exact<{
   data: PictureInput;
@@ -5197,12 +5198,8 @@ export type CreateSubCollectionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const UpdatePictureDocument = gql`
-  mutation updatePicture($pictureId: ID!, $data: PictureInput!) {
-    updatePicture(id: $pictureId, data: $data) {
-      data {
-        id
-      }
-    }
+  mutation updatePicture($pictureId: ID!, $data: JSON!) {
+    updatePictureWithTagCleanup(id: $pictureId, data: $data)
   }
 `;
 

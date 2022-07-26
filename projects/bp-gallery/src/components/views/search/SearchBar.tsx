@@ -5,17 +5,18 @@ import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/ma
 import SearchIcon from '@mui/icons-material/Search';
 import { History } from 'history';
 import './SearchBar.scss';
-import { addNewParamToSearchPath, SearchType } from './SearchView';
+import { SearchType } from './SearchView';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { getSearchTypeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
+import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 
 const SearchBar = ({
   searchParams,
-  customSearch,
+  isAllSearchActive,
 }: {
   searchParams: URLSearchParams;
-  customSearch: boolean;
+  isAllSearchActive: boolean;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -56,7 +57,7 @@ const SearchBar = ({
     }
   }, [typeOfLatestSearch]);
 
-  const dontShowAllSearch: boolean = !customSearch && !searchParams.values().next().done;
+  const dontShowAllSearch: boolean = !isAllSearchActive && !searchParams.values().next().done;
 
   const onSearchStart = (searchInput: string) => {
     if (searchInput === '') return;
@@ -111,7 +112,7 @@ const SearchBar = ({
 
           startAdornment: useAdvancedSearch && (
             <InputAdornment position='start'>
-              {customSearch ? (
+              {isAllSearchActive ? (
                 <span className='MuiInputBase-root'>{t('search.all')}</span>
               ) : (
                 <Select

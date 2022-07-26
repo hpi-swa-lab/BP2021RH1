@@ -1,8 +1,7 @@
 #!/bin/sh
 
-
-############ VARIABLE DEFINITIONS ############
-MEDIA_DIR=/home/github/BP2021RH1/source/projects/bp-strapi/public/uploads
+############ VARIABLE DEFINITIONS - ADJUST THEM TO YOUR NEEDS ############
+MEDIA_DIR=# Insert path to uploads-directory of the Strapi instance you want to apply the backup to
 DB_NAME=bp-strapi
 ##############################################
 

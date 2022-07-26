@@ -8,7 +8,7 @@ import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../components/common/pictur
 
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
-  customSearch: boolean,
+  isAllSearchActive: boolean,
   sortBy?: string[]
 ) => {
   const queryResult = useGetPicturesQuery({
@@ -21,7 +21,7 @@ const useGetPictures = (
       sortBy,
     },
     notifyOnNetworkStatusChange: true,
-    skip: customSearch,
+    skip: isAllSearchActive,
   });
   const customQueryResult = useGetPicturesByAllSearchQuery({
     variables: {
@@ -32,9 +32,9 @@ const useGetPictures = (
       },
     },
     notifyOnNetworkStatusChange: true,
-    skip: !customSearch,
+    skip: !isAllSearchActive,
   });
-  if (customSearch) {
+  if (isAllSearchActive) {
     const reformattedResultData = { pictures: customQueryResult.data?.findPicturesByAllSearch };
     return { ...customQueryResult, data: reformattedResultData };
   } else {

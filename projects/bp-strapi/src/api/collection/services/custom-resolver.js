@@ -2,8 +2,9 @@
 
 const resolveCollectionThumbnail = async (strapi, collectionId, alreadySeenIds) => {
   alreadySeenIds.push(collectionId);
+
   const collectionQuery = strapi.db.query('api::collection.collection');
-  const response = await collectionQuery.findOne({
+  const currentCollection = await collectionQuery.findOne({
     where: {
       id: collectionId,
     },
@@ -24,19 +25,25 @@ const resolveCollectionThumbnail = async (strapi, collectionId, alreadySeenIds) 
     },
   });
 
-  if (response.pictures[0] && response.pictures[0].media.formats) {
-    const formats = response.pictures[0].media.formats;
+  if (currentCollection.pictures[0] && currentCollection.pictures[0].media.formats) {
+    // End of recursion: we found a matching picture that can be used as a thumbnail
+    const formats = currentCollection.pictures[0].media.formats;
     const targetFormat = formats.medium || formats.small || formats.thumbnail;
     return targetFormat ? targetFormat.url : null;
   } else {
-    for (const child of response.child_collections) {
-      if (alreadySeenIds.includes(child.id)) {continue; }
+    for (const child of currentCollection.child_collections) {
+      if (alreadySeenIds.includes(child.id)) {
+        continue;
+      }
+      // Initiate further recursive resolving on the child collections
       const thumb = await resolveCollectionThumbnail(strapi, child.id, alreadySeenIds);
       if (thumb) {
+        // Pass found thumbnail picture back up the recursion stack
         return thumb;
       }
     }
   }
+
   return null;
 };
 
@@ -89,12 +96,13 @@ const mergeSourceCollectionIntoTargetCollection = async (strapi, sourceId, targe
 
   const data = {
     pictures: newPicturesForTarget,
-      child_collections: newChildCollectionsForTarget,
-      description: newDescriptionForTarget,
-  }
+    child_collections: newChildCollectionsForTarget,
+    description: newDescriptionForTarget,
+  };
+
   // Handles edge case: source collection is the only parent of target collection
   if (target.parent_collections.filter(collection => collection.id !== source.id).length === 0) {
-   data.parent_collections = source.parent_collections;
+    data.parent_collections = source.parent_collections;
   }
 
   const updatedTarget = await collectionQuery.update({
