@@ -60,8 +60,9 @@
       color: $primaryColor;
       margin: 0;
 
+      .MuiBadge-root,
       .MuiIcon-root {
-        margin-right: 10px;
+        margin-right: 12px;
       }
     }
   }
