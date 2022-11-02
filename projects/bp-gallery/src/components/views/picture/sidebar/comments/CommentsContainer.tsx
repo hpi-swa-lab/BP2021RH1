@@ -26,11 +26,22 @@ const CommentsContainer = ({
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
       <div className='picture-comments-header' onClick={() => setIsOpen(o => !o)}>
         <h2>
-          {isOpen ? (
-            <Icon>question_answer</Icon>
-          ) : (
-            <Badge badgeContent={comments?.length} color='info'></Badge>
-          )}
+          <div className='picture-comments-icon'>
+            {isOpen || comments?.length === 0 ? (
+              <Icon>question_answer</Icon>
+            ) : (
+              <Badge
+                badgeContent={comments?.length}
+                color='info'
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <Icon>question_answer</Icon>
+              </Badge>
+            )}
+          </div>
           {t('common.comments')}
         </h2>
         <ExpandMore />
