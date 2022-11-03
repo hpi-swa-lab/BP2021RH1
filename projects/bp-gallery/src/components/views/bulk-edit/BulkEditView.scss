@@ -1,0 +1,9 @@
+.bulk-edit {
+  display: flex;
+  flex-direction: row;
+
+  &-picture-grid {
+    background-color: black;
+    flex: 1;
+  }
+}

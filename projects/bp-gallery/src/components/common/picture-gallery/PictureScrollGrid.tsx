@@ -25,6 +25,7 @@ const PictureScrollGrid = ({
   sortBy,
   maxNumPictures,
   showCount = true,
+  hideAdornments,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   scrollPos: number;
@@ -37,6 +38,7 @@ const PictureScrollGrid = ({
   sortBy?: string[];
   maxNumPictures?: number;
   showCount?: boolean;
+  hideAdornments?: boolean;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -134,6 +136,7 @@ const PictureScrollGrid = ({
           hashBase={hashbase}
           loading={isFetching}
           bulkOperations={bulkOperations}
+          showOnly={hideAdornments}
         />
       </>
     );

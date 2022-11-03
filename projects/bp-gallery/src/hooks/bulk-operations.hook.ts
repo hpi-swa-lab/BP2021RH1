@@ -1,12 +1,15 @@
+import { History } from 'history';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import { DialogContext, DialogPreset } from '../components/provider/DialogProvider';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
+import { useHistory } from 'react-router-dom';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
   const dialog = useContext(DialogContext);
+  const history: History = useHistory();
 
   const { addPicturesToCollection, removePicturesFromCollection } = useManageCollectionPictures();
 
@@ -65,6 +68,13 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
             );
           }
         });
+      },
+    },
+    bulkEdit: {
+      name: t('curator.bulkEdit'),
+      icon: 'edit',
+      action: (selectedPictures: FlatPicture[]) => {
+        history.push(`/bulk-edit/${selectedPictures.map(p => p.id).join(',')}`);
       },
     },
   };

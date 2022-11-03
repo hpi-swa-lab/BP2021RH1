@@ -13,6 +13,7 @@ import BrowseView from './views/browse/BrowseView';
 import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
+import BulkEditView from './views/bulk-edit/BulkEditView';
 
 const routes: RouteConfig[] = [
   {
@@ -65,6 +66,13 @@ const routes: RouteConfig[] = [
         path: '/picture/:id',
         render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
           return <PictureView initialPictureId={match.params.id} />;
+        },
+      },
+      {
+        path: '/bulk-edit/:ids',
+        render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
+          const pictures = match.params.ids.split(',');
+          return <BulkEditView pictureIds={pictures} />;
         },
       },
       {

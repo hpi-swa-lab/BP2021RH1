@@ -12216,7 +12216,7 @@
           },
           {
             "name": "deleteUsersPermissionsUser",
-            "description": "Update an existing user",
+            "description": "Delete an existing user",
             "args": [
               {
                 "name": "id",

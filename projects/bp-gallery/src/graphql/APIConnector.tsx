@@ -623,7 +623,7 @@ export type Mutation = {
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
-  /** Update an existing user */
+  /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
@@ -1803,6 +1803,181 @@ export type GetPictureInfoQuery = {
             }
           | null
           | undefined;
+      }
+    | null
+    | undefined;
+};
+
+export type GetPicturesInfoQueryVariables = Exact<{
+  pictureIds: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+export type GetPicturesInfoQuery = {
+  pictures?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                descriptions?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { text: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                time_range_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { start: any; end: any } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+                verified_time_range_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { start: any; end: any } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+                keyword_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_keyword_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                location_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_location_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                person_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_person_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                collections?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                media: {
+                  data?:
+                    | {
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { url: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }
+                    | null
+                    | undefined;
+                };
+                comments?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | {
+                              text: string;
+                              author?: string | null | undefined;
+                              date: any;
+                              publishedAt?: any | null | undefined;
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                archive_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
       }
     | null
     | undefined;
@@ -3024,6 +3199,179 @@ export type GetPictureInfoLazyQueryHookResult = ReturnType<typeof useGetPictureI
 export type GetPictureInfoQueryResult = Apollo.QueryResult<
   GetPictureInfoQuery,
   GetPictureInfoQueryVariables
+>;
+
+export const GetPicturesInfoDocument = gql`
+  query getPicturesInfo($pictureIds: [ID!]!) {
+    pictures(filters: { id: { in: $pictureIds } }) {
+      data {
+        id
+        attributes {
+          descriptions(sort: "createdAt:asc") {
+            data {
+              id
+              attributes {
+                text
+              }
+            }
+          }
+          time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+              }
+            }
+          }
+          verified_time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+              }
+            }
+          }
+          keyword_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          verified_keyword_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          location_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          verified_location_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          person_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          verified_person_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          collections(publicationState: PREVIEW) {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          media {
+            data {
+              id
+              attributes {
+                url
+                updatedAt
+              }
+            }
+          }
+          comments(publicationState: PREVIEW, sort: "date:asc") {
+            data {
+              id
+              attributes {
+                text
+                author
+                date
+                publishedAt
+              }
+            }
+          }
+          archive_tag {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesInfoQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesInfoQuery({
+ *   variables: {
+ *      pictureIds: // value for 'pictureIds'
+ *   },
+ * });
+ */
+export function useGetPicturesInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPicturesInfoQuery, GetPicturesInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesInfoQuery, GetPicturesInfoQueryVariables>(
+    GetPicturesInfoDocument,
+    options
+  );
+}
+
+export function useGetPicturesInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPicturesInfoQuery, GetPicturesInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesInfoQuery, GetPicturesInfoQueryVariables>(
+    GetPicturesInfoDocument,
+    options
+  );
+}
+
+export type GetPicturesInfoQueryHookResult = ReturnType<typeof useGetPicturesInfoQuery>;
+
+export type GetPicturesInfoLazyQueryHookResult = ReturnType<typeof useGetPicturesInfoLazyQuery>;
+
+export type GetPicturesInfoQueryResult = Apollo.QueryResult<
+  GetPicturesInfoQuery,
+  GetPicturesInfoQueryVariables
 >;
 
 export const GetPicturesDocument = gql`
