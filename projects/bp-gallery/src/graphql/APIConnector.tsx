@@ -1808,6 +1808,181 @@ export type GetPictureInfoQuery = {
     | undefined;
 };
 
+export type GetMultiplePictureInfoQueryVariables = Exact<{
+  pictureIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+export type GetMultiplePictureInfoQuery = {
+  pictures?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                descriptions?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { text: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                time_range_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { start: any; end: any } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+                verified_time_range_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { start: any; end: any } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+                keyword_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_keyword_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                location_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_location_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                person_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_person_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { name: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                collections?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                media: {
+                  data?:
+                    | {
+                        id?: string | null | undefined;
+                        attributes?:
+                          | { url: string; updatedAt?: any | null | undefined }
+                          | null
+                          | undefined;
+                      }
+                    | null
+                    | undefined;
+                };
+                comments?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | {
+                              text: string;
+                              author?: string | null | undefined;
+                              date: any;
+                              publishedAt?: any | null | undefined;
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                archive_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
   pagination: PaginationArg;
@@ -3024,6 +3199,189 @@ export type GetPictureInfoLazyQueryHookResult = ReturnType<typeof useGetPictureI
 export type GetPictureInfoQueryResult = Apollo.QueryResult<
   GetPictureInfoQuery,
   GetPictureInfoQueryVariables
+>;
+
+export const GetMultiplePictureInfoDocument = gql`
+  query getMultiplePictureInfo($pictureIds: [ID!]) {
+    pictures(filters: { id: { in: $pictureIds } }) {
+      data {
+        id
+        attributes {
+          descriptions(sort: "createdAt:asc") {
+            data {
+              id
+              attributes {
+                text
+              }
+            }
+          }
+          time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+              }
+            }
+          }
+          verified_time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+              }
+            }
+          }
+          keyword_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          verified_keyword_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          location_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          verified_location_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          person_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          verified_person_tags(sort: "updatedAt:asc") {
+            data {
+              id
+              attributes {
+                name
+                updatedAt
+              }
+            }
+          }
+          collections(publicationState: PREVIEW) {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          media {
+            data {
+              id
+              attributes {
+                url
+                updatedAt
+              }
+            }
+          }
+          comments(publicationState: PREVIEW, sort: "date:asc") {
+            data {
+              id
+              attributes {
+                text
+                author
+                date
+                publishedAt
+              }
+            }
+          }
+          archive_tag {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetMultiplePictureInfoQuery__
+ *
+ * To run a query within a React component, call `useGetMultiplePictureInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMultiplePictureInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMultiplePictureInfoQuery({
+ *   variables: {
+ *      pictureIds: // value for 'pictureIds'
+ *   },
+ * });
+ */
+export function useGetMultiplePictureInfoQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetMultiplePictureInfoQuery,
+    GetMultiplePictureInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetMultiplePictureInfoQuery, GetMultiplePictureInfoQueryVariables>(
+    GetMultiplePictureInfoDocument,
+    options
+  );
+}
+
+export function useGetMultiplePictureInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMultiplePictureInfoQuery,
+    GetMultiplePictureInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetMultiplePictureInfoQuery, GetMultiplePictureInfoQueryVariables>(
+    GetMultiplePictureInfoDocument,
+    options
+  );
+}
+
+export type GetMultiplePictureInfoQueryHookResult = ReturnType<
+  typeof useGetMultiplePictureInfoQuery
+>;
+
+export type GetMultiplePictureInfoLazyQueryHookResult = ReturnType<
+  typeof useGetMultiplePictureInfoLazyQuery
+>;
+
+export type GetMultiplePictureInfoQueryResult = Apollo.QueryResult<
+  GetMultiplePictureInfoQuery,
+  GetMultiplePictureInfoQueryVariables
 >;
 
 export const GetPicturesDocument = gql`

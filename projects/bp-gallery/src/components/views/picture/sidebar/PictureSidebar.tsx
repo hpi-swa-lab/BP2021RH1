@@ -13,10 +13,12 @@ const PictureSidebar = ({
   picture,
   loading,
   error,
+  isMulti,
 }: {
   picture?: FlatPicture;
   loading?: boolean;
   error?: ApolloError;
+  isMulti?: boolean;
 }) => {
   const { sideBarOpen } = useContext(PictureViewContext);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,7 +33,7 @@ const PictureSidebar = ({
       {error && <QueryErrorDisplay error={error} />}
       {!loading && !error && picture && (
         <>
-          <PictureInfo picture={picture} />
+          <PictureInfo picture={picture} isMulti={isMulti} />
           <CommentsContainer comments={picture.comments} pictureId={picture.id} />
         </>
       )}

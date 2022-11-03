@@ -23,7 +23,7 @@ import { Crop } from '@mui/icons-material';
 import PictureEditDialog from './PictureEditDialog';
 import ArchiveTagField from './ArchiveTagField';
 
-const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
+const PictureInfo = ({ picture, isMulti }: { picture: FlatPicture; isMulti?: boolean }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
 
@@ -48,14 +48,25 @@ const PictureInfo = ({ picture }: { picture: FlatPicture }) => {
   const savePictureInfo = useCallback(
     (field: any) => {
       setAnyFieldTouched(false);
-      updatePicture({
-        variables: {
-          pictureId: picture.id,
-          data: field,
-        },
-      });
+      if (isMulti) {
+        picture.id.split(',').map(id => {
+          updatePicture({
+            variables: {
+              pictureId: id,
+              data: field,
+            },
+          });
+        });
+      } else {
+        updatePicture({
+          variables: {
+            pictureId: picture.id,
+            data: field,
+          },
+        });
+      }
     },
-    [updatePicture, picture.id]
+    [updatePicture, picture.id, isMulti]
   );
 
   const [getAllKeywords, keywordsResponse] = useGetAllKeywordTagsLazyQuery();

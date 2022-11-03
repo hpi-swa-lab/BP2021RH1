@@ -131,6 +131,7 @@
     "addToCollection": "In eine Collection kopieren",
     "moveToCollection": "In eine Collection verschieben",
     "removeFromCollection": "Aus dieser Collection entfernen",
+    "multiEdit": "Mehrere Bilder auf einmal editieren",
     "moveFromAll": "Aus allen Collections hierher verschieben?",
     "moveFromHere": "Die ausgewählte Collection befindet sich noch in den folgenden anderen Collections: [{{parents}}].\nBeim Verschieben würde diese Collection aus all diesen anderen Collections hierher verschoben werden.",
     "addedPicturesToCollection": "Bilder erfolgreich zur Collection hinzugefügt",
