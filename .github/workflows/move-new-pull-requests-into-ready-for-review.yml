@@ -1,5 +1,8 @@
 name: Move assigned pull requests into Project Ready for Review
 
+permissions:
+  repository-projects: write
+
 on:
   pull_request:
     types: [assigned]

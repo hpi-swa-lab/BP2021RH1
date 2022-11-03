@@ -1,5 +1,8 @@
 name: Move new issues into Project Backlog
 
+permissions:
+  repository-projects: write
+
 on:
   issues:
     types: [opened]
