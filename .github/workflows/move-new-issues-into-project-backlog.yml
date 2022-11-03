@@ -1,8 +1,5 @@
 name: Move new issues into Project Backlog
 
-permissions:
-  repository-projects: write
-
 on:
   issues:
     types: [opened]
@@ -15,4 +12,4 @@ jobs:
         with:
           project: BP 22/23 RH1
           column: Backlog
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.GHPROJECT_TOKEN }}
