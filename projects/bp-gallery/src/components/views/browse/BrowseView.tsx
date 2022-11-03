@@ -65,7 +65,7 @@ const BrowseView = ({ path }: { path?: string[] }) => {
     useSimplifiedQueryResponseData(data)?.collections;
 
   //Curator functionality
-  const { linkToCollection, moveToCollection, removeFromCollection, multiEdit } = useBulkOperations(
+  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } = useBulkOperations(
     collections?.[0]
   );
 
@@ -135,7 +135,7 @@ const BrowseView = ({ path }: { path?: string[] }) => {
               scrollHeight={scrollHeight}
               hashbase={collection.name}
               uploadAreaProps={uploadAreaProps(collection)}
-              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, multiEdit]}
+              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
             />
           </div>
         )}

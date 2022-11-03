@@ -70,11 +70,11 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
         });
       },
     },
-    multiEdit: {
-      name: t('curator.multiEdit'),
-      icon: 'drive_file_move',
+    bulkEdit: {
+      name: t('curator.bulkEdit'),
+      icon: 'edit',
       action: (selectedPictures: FlatPicture[]) => {
-        history.push(`/pictures/${selectedPictures.map(picture => picture.id).join(',')}`);
+        history.push(`/bulk-edit/${selectedPictures.map(picture => picture.id).join(',')}`);
       },
     },
   };

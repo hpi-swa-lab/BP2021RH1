@@ -20,7 +20,6 @@ export interface BulkOperation {
   icon: string;
   name: string;
   action: (selectedPictures: FlatPicture[]) => void;
-  custom: (selectedPictures: FlatPicture[]) => ReactComponentElement<any>;
 }
 
 const BulkOperationsPanel = ({
