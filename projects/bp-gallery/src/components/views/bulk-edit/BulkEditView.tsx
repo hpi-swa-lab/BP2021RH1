@@ -1,7 +1,7 @@
 import { intersectionWith, isEqual } from 'lodash';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { PictureFiltersInput, useGetPicturesInfoQuery } from '../../../graphql/APIConnector';
+import { PictureFiltersInput, useGetMultiplePictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
@@ -48,7 +48,7 @@ const combineToIntersection = <T,>(
 
 const combinePictures = (pictures: FlatPicture[]): FlatPicture => {
   return {
-    id: 'fake combined picture',
+    id: pictures.map(picture => picture.id).join(','),
     archive_tag: combineToSingle(pictures, picture => picture.archive_tag),
     collections: combineToIntersection(pictures, picture => picture.collections),
     comments: combineToIntersection(pictures, picture => picture.comments),
@@ -63,7 +63,7 @@ const combinePictures = (pictures: FlatPicture[]): FlatPicture => {
 const BulkEditView = ({ pictureIds }: { pictureIds: string[] }) => {
   const { t } = useTranslation();
 
-  const { data, loading, error } = useGetPicturesInfoQuery({
+  const { data, loading, error } = useGetMultiplePictureInfoQuery({
     variables: {
       pictureIds,
     },
@@ -87,13 +87,13 @@ const BulkEditView = ({ pictureIds }: { pictureIds: string[] }) => {
                 scrollPos={scrollPos}
                 scrollHeight={scrollHeight}
                 hashbase={'yippie'}
-                hideAdornments
+                viewOnly
               />
             )}
           </ScrollContainer>
         </div>
 
-        <PictureSidebar loading={loading} error={error} picture={combinedPicture} />
+        <PictureSidebar loading={loading} error={error} picture={combinedPicture} isMulti />
       </div>
     );
   } else {
