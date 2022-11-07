@@ -1,5 +1,5 @@
 import { Button, Icon } from '@mui/material';
-import React, { ReactComponentElement, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllLocationTagsLazyQuery,

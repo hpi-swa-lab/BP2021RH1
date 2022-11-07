@@ -8,7 +8,7 @@ import Loading from '../../common/Loading';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
-import PictureSidebar from '../picture/sidebar/PictureSidebar';
+import PictureInfo from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
 
 const getPictureFilters = (pictures: string[]) => {
@@ -93,7 +93,9 @@ const BulkEditView = ({ pictureIds }: { pictureIds: string[] }) => {
           </ScrollContainer>
         </div>
 
-        <PictureSidebar loading={loading} error={error} picture={combinedPicture} isMulti />
+        <div className='bulk-edit-picture-info'>
+          <PictureInfo picture={combinedPicture} isMulti />
+        </div>
       </div>
     );
   } else {
