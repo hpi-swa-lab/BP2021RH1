@@ -13,7 +13,6 @@ import BrowseView from './views/browse/BrowseView';
 import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
-import { PictureFiltersInput } from '../graphql/APIConnector';
 import BulkEditView from './views/picture/BulkEditView';
 
 const routes: RouteConfig[] = [
@@ -70,19 +69,9 @@ const routes: RouteConfig[] = [
         },
       },
       {
-        path: '/pictures/:ids',
+        path: '/bulk-edit/:ids',
         render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
-          const filters: PictureFiltersInput = { and: [] };
-          console.log('ids:');
-          console.log(match.params.ids.split(','));
-
-          filters.and?.push({
-            id: {
-              in: match.params.ids.split(','),
-            },
-          });
-
-          return <BulkEditView queryParams={filters} pictureIds={match.params.ids.split(',')} />;
+          return <BulkEditView pictureIds={match.params.ids.split(',')} />;
         },
       },
       {

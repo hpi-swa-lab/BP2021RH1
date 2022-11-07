@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PictureFiltersInput, useGetMultiplePictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import {
@@ -12,15 +12,36 @@ import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import PictureSidebar from './sidebar/PictureSidebar';
 import './BulkEditView.scss';
+import { History } from 'history';
+import { useHistory } from 'react-router-dom';
 
 export type BulkEditProps = {
-  queryParams: PictureFiltersInput;
-  pictureIds?: string[];
+  pictureIds: string[];
+  onBack?: (pictureIds: string[]) => void;
 };
 
-const BulkEditView = ({ queryParams, pictureIds }: BulkEditProps) => {
+const BulkEditView = ({ pictureIds, onBack }: BulkEditProps) => {
   const { data, loading, error } = useGetMultiplePictureInfoQuery({ variables: { pictureIds } });
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+  const filters: PictureFiltersInput = { and: [] };
+  filters.and?.push({
+    id: {
+      in: pictureIds,
+    },
+  });
+
+  const history: History = useHistory();
+
+  useEffect(() => {
+    const unblock = history.block(() => {
+      if (onBack) {
+        onBack(pictureIds);
+      }
+    });
+    return () => {
+      unblock();
+    };
+  }, [history, pictureIds, onBack]);
 
   console.log(pictures);
   const fakePicture: FlatPicture = {
@@ -59,7 +80,7 @@ const BulkEditView = ({ queryParams, pictureIds }: BulkEditProps) => {
         {(scrollPos: number, scrollHeight: number) => (
           <div className='collection-picture-display'>
             <PictureScrollGrid
-              queryParams={queryParams}
+              queryParams={filters}
               hashbase='lol'
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}

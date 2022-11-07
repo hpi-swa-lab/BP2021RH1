@@ -3,13 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import { DialogContext, DialogPreset } from '../components/provider/DialogProvider';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
-import { useHistory } from 'react-router';
-import { History } from 'history';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
   const dialog = useContext(DialogContext);
-  const history: History = useHistory();
 
   const { addPicturesToCollection, removePicturesFromCollection } = useManageCollectionPictures();
 
@@ -73,8 +70,8 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     multiEdit: {
       name: t('curator.multiEdit'),
       icon: 'drive_file_move',
-      action: (selectedPictures: FlatPicture[]) => {
-        history.push(`/pictures/${selectedPictures.map(picture => picture.id).join(',')}`);
+      action: (selectedPictures: FlatPicture[], onBulkEdit: (pictureIds: string) => void) => {
+        onBulkEdit(selectedPictures.map(picture => picture.id).join(','));
       },
     },
   };
