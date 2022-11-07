@@ -1,3 +1,5 @@
+@import 'src/shared/style';
+
 .bulk-edit {
   display: flex;
   flex-direction: row;
@@ -13,11 +15,32 @@
   &-picture-grid {
     background-color: black;
     flex: 1;
+    height: 100%;
   }
 
   &-picture-info {
     padding-left: 10px;
     width: 450px;
     background-color: white;
+  }
+
+  &-grid-wrapper {
+    flex: 1 1 0;
+    height: 100%;
+    position: relative;
+
+    @media only screen and (max-width: $mobile-breakpoint) {
+      flex-direction: column;
+    }
+  }
+}
+
+.picture-ui {
+  position: relative;
+  pointer-events: all;
+  height: 100%;
+
+  @media only screen and (min-width: $mobile-breakpoint) {
+    max-height: 100% !important;
   }
 }

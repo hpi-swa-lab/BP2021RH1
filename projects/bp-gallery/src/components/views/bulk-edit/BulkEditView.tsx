@@ -1,5 +1,5 @@
 import { intersectionWith, isEqual } from 'lodash';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { PictureFiltersInput, useGetMultiplePictureInfoQuery } from '../../../graphql/APIConnector';
@@ -12,6 +12,7 @@ import ScrollContainer from '../../common/ScrollContainer';
 import PictureInfo from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
 import { History } from 'history';
+import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -73,24 +74,23 @@ const BulkEditView = ({
 
   const history: History = useHistory();
 
+  const { data, loading, error, refetch } = useGetMultiplePictureInfoQuery({
+    variables: {
+      pictureIds,
+    },
+  });
+
   useEffect(() => {
     const unblock = history.block(() => {
       if (onBack) {
+        refetch();
         onBack(pictureIds);
       }
     });
     return () => {
       unblock();
     };
-  }, [history, pictureIds, onBack]);
-
-  const useQuery = useCallback;
-
-  const { data, loading, error } = useGetMultiplePictureInfoQuery({
-    variables: {
-      pictureIds,
-    },
-  });
+  }, [history, pictureIds, onBack, refetch]);
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
@@ -102,20 +102,24 @@ const BulkEditView = ({
     const combinedPicture = combinePictures(pictures);
     return (
       <div className='bulk-edit'>
-        <div className='bulk-edit-picture-grid'>
-          <ScrollContainer>
-            {(scrollPos: number, scrollHeight: number) => (
-              <PictureScrollGrid
-                queryParams={getPictureFilters(pictureIds)}
-                scrollPos={scrollPos}
-                scrollHeight={scrollHeight}
-                hashbase={'yippie'}
-                viewOnly
-              />
-            )}
-          </ScrollContainer>
+        <div className='bulk-edit-grid-wrapper'>
+          <div className='grid-ui'>
+            <PictureToolbar calledViaLink={!onBack} />
+          </div>
+          <div className='bulk-edit-picture-grid'>
+            <ScrollContainer>
+              {(scrollPos: number, scrollHeight: number) => (
+                <PictureScrollGrid
+                  queryParams={getPictureFilters(pictureIds)}
+                  scrollPos={scrollPos}
+                  scrollHeight={scrollHeight}
+                  hashbase={'yippie'}
+                  viewOnly
+                />
+              )}
+            </ScrollContainer>
+          </div>
         </div>
-
         <div className='bulk-edit-picture-info'>
           <PictureInfo picture={combinedPicture} isMulti />
         </div>
