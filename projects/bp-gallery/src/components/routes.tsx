@@ -13,7 +13,7 @@ import BrowseView from './views/browse/BrowseView';
 import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
-import BulkEditView from './views/picture/BulkEditView';
+import BulkEditView from './views/bulk-edit/BulkEditView';
 
 const routes: RouteConfig[] = [
   {

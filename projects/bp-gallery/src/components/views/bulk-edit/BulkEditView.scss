@@ -1,0 +1,23 @@
+.bulk-edit {
+  display: flex;
+  flex-direction: row;
+
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+
+  &-picture-grid {
+    background-color: black;
+    flex: 1;
+  }
+
+  &-picture-info {
+    padding-left: 10px;
+    width: 450px;
+    background-color: white;
+  }
+}
