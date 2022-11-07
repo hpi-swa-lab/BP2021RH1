@@ -22,16 +22,22 @@ const CommentsContainer = ({
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
 
+  const badgeNumber = (() => {
+    return role < AuthRole.CURATOR
+      ? comments?.filter(elem => elem.publishedAt).length
+      : comments?.length;
+  })();
+
   return (
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
       <div className='picture-comments-header' onClick={() => setIsOpen(o => !o)}>
         <h2>
           <div className='picture-comments-icon'>
-            {isOpen || comments?.length === 0 ? (
+            {isOpen || badgeNumber === 0 ? (
               <Icon>question_answer</Icon>
             ) : (
               <Badge
-                badgeContent={comments?.length}
+                badgeContent={badgeNumber}
                 color='info'
                 anchorOrigin={{
                   vertical: 'top',
