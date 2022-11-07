@@ -2,6 +2,7 @@ import React from 'react';
 import CommentsContainer from '../CommentsContainer';
 import { FlatComment } from '../../../../../../types/additionalFlatTypes';
 import { renderWithAPIMocks } from '../../../../../../testUtils';
+import userEvent from '@testing-library/user-event';
 import { AuthContext, AuthRole } from '../../../../../provider/AuthProvider';
 
 const comments = [
@@ -36,33 +37,64 @@ const renderWithAuth = (role: AuthRole, component: JSX.Element) => {
   );
 };
 
+const collapseComments = (container: HTMLElement) => {
+  const commentsHeader = container.querySelector('.picture-comments-header');
+  if (commentsHeader === null) throw "comments-header doesn't exist anymore";
+  userEvent.click(commentsHeader);
+};
+
 describe('Comments Container behavior as a public user', () => {
-  it("shows no badge if there aren't any comments", async () => {
+  it('shows comments when first rendered', () => {
+    // if changed, the following tests need to be adjusted
     const { container } = renderWithAuth(
       AuthRole.PUBLIC,
       <CommentsContainer pictureId='test' comments={[]} />
     );
-    const badge = await container.querySelector('.MuiBadge-badge');
+    expect(container.querySelector('.open.pictureComments')).toBeInTheDocument();
+  });
+
+  it("shows no badge if there aren't any comments", () => {
+    const { container } = renderWithAuth(
+      AuthRole.PUBLIC,
+      <CommentsContainer pictureId='test' comments={[]} />
+    );
+
+    collapseComments(container);
+    const badge = container.querySelector('.MuiBadge-badge');
     expect(badge).toBeNull();
   });
 
-  it('shows badge and counts only verified comments', async () => {
+  it('shows badge and counts only verified comments', () => {
     const { container } = renderWithAuth(
       AuthRole.PUBLIC,
       <CommentsContainer pictureId='test' comments={comments} />
     );
-    const badge = await container.querySelector('.MuiBadge-badge');
+
+    const commentsHeader = container.querySelector('.picture-comments-header');
+    if (!commentsHeader) throw "CommentsContainer's behavior changed";
+    userEvent.click(commentsHeader);
+
+    const badge = container.querySelector('.MuiBadge-badge');
     expect(badge?.textContent).toEqual('1');
   });
 });
 
 describe('Comments behavior as Curator user', () => {
-  it('shows badge counting all comments (verified and unverified)', async () => {
+  it('hides comments when first rendered', () => {
+    // if changed, the following tests need to be adjusted
+    const { container } = renderWithAuth(
+      AuthRole.CURATOR,
+      <CommentsContainer pictureId='test' comments={[]} />
+    );
+    expect(container.querySelector('.open.pictureComments')).not.toBeInTheDocument();
+  });
+
+  it('shows badge counting all comments (verified and unverified)', () => {
     const { container } = renderWithAuth(
       AuthRole.CURATOR,
       <CommentsContainer pictureId='test' comments={comments} />
     );
-    const badge = await container.querySelector('.MuiBadge-badge');
+    const badge = container.querySelector('.MuiBadge-badge');
     expect(badge?.textContent).toEqual('2');
   });
 });
