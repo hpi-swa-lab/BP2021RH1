@@ -8,7 +8,7 @@ import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
-import BulkEditView from '../../views/picture/BulkEditView';
+import BulkEditView from '../../views/bulk-edit/BulkEditView';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];

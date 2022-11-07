@@ -6,7 +6,7 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { useTranslation } from 'react-i18next';
 
 const LatestPicturesView = () => {
-  const { linkToCollection, multiEdit } = useBulkOperations();
+  const { linkToCollection, bulkEdit } = useBulkOperations();
   const { t } = useTranslation();
 
   return (
@@ -19,7 +19,7 @@ const LatestPicturesView = () => {
             scrollPos={scrollPos}
             scrollHeight={scrollHeight}
             hashbase={'latest'}
-            bulkOperations={[linkToCollection, multiEdit]}
+            bulkOperations={[linkToCollection, bulkEdit]}
             queryParams={{}}
             sortBy={['publishedAt:desc']}
             maxNumPictures={500}

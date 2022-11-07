@@ -1,6 +1,7 @@
 import { intersectionWith, isEqual } from 'lodash';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { PictureFiltersInput, useGetMultiplePictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -10,6 +11,7 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
 import PictureInfo from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
+import { History } from 'history';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -60,8 +62,29 @@ const combinePictures = (pictures: FlatPicture[]): FlatPicture => {
   };
 };
 
-const BulkEditView = ({ pictureIds }: { pictureIds: string[] }) => {
+const BulkEditView = ({
+  pictureIds,
+  onBack,
+}: {
+  pictureIds: string[];
+  onBack?: (pictureIds: string[]) => void;
+}) => {
   const { t } = useTranslation();
+
+  const history: History = useHistory();
+
+  useEffect(() => {
+    const unblock = history.block(() => {
+      if (onBack) {
+        onBack(pictureIds);
+      }
+    });
+    return () => {
+      unblock();
+    };
+  }, [history, pictureIds, onBack]);
+
+  const useQuery = useCallback;
 
   const { data, loading, error } = useGetMultiplePictureInfoQuery({
     variables: {
