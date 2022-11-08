@@ -22,6 +22,12 @@ const CommentsContainer = ({
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
 
+  const sortedComments = () => {
+    return comments?.sort(
+      (comment1, comment2) => (comment1.pinned ? -1 : 1) - (comment2.pinned ? -1 : 1)
+    );
+  };
+
   return (
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
       <div className='picture-comments-header' onClick={() => setIsOpen(o => !o)}>
@@ -32,7 +38,7 @@ const CommentsContainer = ({
         <ExpandMore />
       </div>
       <div className='comment-container'>
-        {comments?.map((comment: FlatComment) => (
+        {sortedComments()?.map((comment: FlatComment) => (
           <CommentVerification comment={comment} key={comment.id}>
             <FormattedComment comment={comment} />
           </CommentVerification>
