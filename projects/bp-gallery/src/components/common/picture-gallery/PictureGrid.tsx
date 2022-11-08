@@ -9,6 +9,9 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
 import BulkEditView from '../../views/bulk-edit/BulkEditView';
+import { union } from 'lodash';
+import { Button, Icon } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -31,6 +34,7 @@ const PictureGrid = ({
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
   const { role } = useAuth();
+  const { t } = useTranslation();
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
@@ -107,6 +111,14 @@ const PictureGrid = ({
   );
 
   const [selectedPictures, setSelectedPictures] = useState<FlatPicture[]>([]);
+  const [lastSelectedPicture, setLastSelectedPicture] = useState<FlatPicture | null>(null);
+
+  const selectAll = useCallback(() => {
+    setSelectedPictures(pictures);
+  }, [pictures]);
+  const selectNone = useCallback(() => {
+    setSelectedPictures([]);
+  }, []);
 
   const pictureAdornments =
     role >= AuthRole.CURATOR && !viewOnly
@@ -121,12 +133,22 @@ const PictureGrid = ({
           {
             icon: picture =>
               selectedPictures.includes(picture) ? 'check_box' : 'check_box_outline_blank',
-            onClick: clickedPicture => {
-              setSelectedPictures(currentSelected =>
-                currentSelected.includes(clickedPicture)
-                  ? currentSelected.filter(p => p !== clickedPicture)
-                  : [...currentSelected, clickedPicture]
-              );
+            onClick: (clickedPicture, event) => {
+              if (lastSelectedPicture !== null && event.shiftKey) {
+                const lastIndex = pictures.indexOf(lastSelectedPicture);
+                const clickedIndex = pictures.indexOf(clickedPicture);
+                const [fromIndex, toIndex] = [lastIndex, clickedIndex].sort();
+                setSelectedPictures(currentSelected =>
+                  union(currentSelected, pictures.slice(fromIndex, toIndex + 1))
+                );
+              } else {
+                setSelectedPictures(currentSelected =>
+                  currentSelected.includes(clickedPicture)
+                    ? currentSelected.filter(p => p !== clickedPicture)
+                    : [...currentSelected, clickedPicture]
+                );
+              }
+              setLastSelectedPicture(clickedPicture);
             },
             position: 'bottom-left',
           } as PicturePreviewAdornment,
@@ -141,6 +163,16 @@ const PictureGrid = ({
           selectedPictures={selectedPictures}
           onBulkEdit={navigateToBulkEdit}
         />
+      )}
+      {pictureAdornments && (
+        <div className='selection-buttons'>
+          <Button onClick={selectAll} startIcon={<Icon>done_all</Icon>} variant='contained'>
+            {t('curator.selectAll')}
+          </Button>
+          <Button onClick={selectNone} startIcon={<Icon>remove_done</Icon>} variant='contained'>
+            {t('curator.selectNone')}
+          </Button>
+        </div>
       )}
       <div className='picture-grid'>
         {table.map((row, rowindex) => {

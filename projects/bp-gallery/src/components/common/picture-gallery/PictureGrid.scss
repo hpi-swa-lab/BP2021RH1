@@ -1,3 +1,5 @@
+@import 'src/shared/style';
+
 .transitioning {
   .picture-view-container {
     visibility: hidden;
@@ -7,6 +9,7 @@
     display: none;
   }
 }
+
 .picture-grid {
   display: flex;
   flex-direction: column;
@@ -27,13 +30,30 @@
         0% {
           opacity: 0.7;
         }
+
         50% {
           opacity: 0.2;
         }
+
         100% {
           opacity: 0.7;
         }
       }
     }
+  }
+}
+
+.selection-buttons {
+  margin-top: 1.5rem;
+  background: #e5e5e5;
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem;
+  gap: 10px;
+
+  .MuiButton-root {
+    background-color: $primaryColor;
   }
 }

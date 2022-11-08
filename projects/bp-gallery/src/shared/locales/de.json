@@ -141,6 +141,8 @@
     "createCollection": "Neue Collection erstellen",
     "linkCollection": "Bestehende Collection verlinken",
     "moveCollection": "Bestehende Collection hierher verschieben",
+    "selectAll": "Alle auswählen",
+    "selectNone": "Keine auswählen",
     "selectOption": "Option auswählen",
     "selectCollection": "Collection auswählen",
     "selectArchiveTag": "Archiv auswählen",
