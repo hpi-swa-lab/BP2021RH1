@@ -76,7 +76,7 @@ describe('Comments Container behavior as a public user', () => {
   });
 
   it("doesn't show badge count over 99", () => {
-    let manyComments = [];
+    const manyComments = [];
     for (let i = 0; i < 120; i++) {
       manyComments.push({
         id: i.toString(),
