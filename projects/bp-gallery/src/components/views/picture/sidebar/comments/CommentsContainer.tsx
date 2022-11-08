@@ -43,6 +43,7 @@ const CommentsContainer = ({
                   vertical: 'top',
                   horizontal: 'right',
                 }}
+                max={99}
               >
                 <Icon>question_answer</Icon>
               </Badge>

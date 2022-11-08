@@ -70,12 +70,29 @@ describe('Comments Container behavior as a public user', () => {
       <CommentsContainer pictureId='test' comments={comments} />
     );
 
-    const commentsHeader = container.querySelector('.picture-comments-header');
-    if (!commentsHeader) throw "CommentsContainer's behavior changed";
-    userEvent.click(commentsHeader);
-
+    collapseComments(container);
     const badge = container.querySelector('.MuiBadge-badge');
     expect(badge?.textContent).toEqual('1');
+  });
+
+  it("doesn't show badge count over 99", () => {
+    let manyComments = [];
+    for (let i = 0; i < 120; i++) {
+      manyComments.push({
+        id: i.toString(),
+        text: 'comment',
+        author: 'Simon',
+        date: new Date('21-04-2021'),
+        publishedAt: new Date('22-04-2022'),
+      } as FlatComment);
+    }
+    const { container } = renderWithAuth(
+      AuthRole.PUBLIC,
+      <CommentsContainer pictureId='test' comments={manyComments} />
+    );
+    collapseComments(container);
+    const badge = container.querySelector('.MuiBadge-badge');
+    expect(badge?.textContent).toEqual('99+');
   });
 });
 
