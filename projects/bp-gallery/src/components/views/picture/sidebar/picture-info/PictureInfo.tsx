@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
@@ -11,63 +11,24 @@ import {
   useGetAllKeywordTagsLazyQuery,
   useGetAllLocationTagsLazyQuery,
   useGetAllPersonTagsLazyQuery,
-  useUpdatePictureMutation,
 } from '../../../../../graphql/APIConnector';
 import TagSelectionField from './TagSelectionField';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';
-import { Button } from '@mui/material';
-import { Crop } from '@mui/icons-material';
-import PictureEditDialog from './PictureEditDialog';
 import ArchiveTagField from './ArchiveTagField';
 
-const PictureInfo = ({ picture, isMulti }: { picture: FlatPicture; isMulti?: boolean }) => {
+const PictureInfo = ({ picture, onSave, topInfo }: { picture: FlatPicture; onSave: (field: Partial<FlatPicture>) => void, topInfo?: (anyFieldTouched: boolean) => ReactNode }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
 
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
-  const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
-    refetchQueries: ['getPictureInfo'],
-  });
 
-  const saveStatus = useMemo(() => {
-    if (anyFieldTouched) {
-      return t('curator.saveStatus.pending');
-    }
-    if (updateMutationResponse.loading) {
-      return t('curator.saveStatus.saving');
-    }
-    if (updateMutationResponse.error) {
-      return t('curator.saveStatus.error');
-    }
-    return t('curator.saveStatus.saved');
-  }, [updateMutationResponse, anyFieldTouched, t]);
-
-  const savePictureInfo = useCallback(
-    (field: any) => {
-      setAnyFieldTouched(false);
-      if (isMulti) {
-        picture.id.split(',').map(id => {
-          updatePicture({
-            variables: {
-              pictureId: id,
-              data: field,
-            },
-          });
-        });
-      } else {
-        updatePicture({
-          variables: {
-            pictureId: picture.id,
-            data: field,
-          },
-        });
-      }
-    },
-    [updatePicture, picture.id, isMulti]
-  );
+  const savePictureInfo = useCallback((field: Partial<FlatPicture>) => {
+    setAnyFieldTouched(false);
+    onSave(field);
+  }, [onSave]);
 
   const [getAllKeywords, keywordsResponse] = useGetAllKeywordTagsLazyQuery();
   const [getAllLocations, locationsResponse] = useGetAllLocationTagsLazyQuery();
@@ -98,23 +59,9 @@ const PictureInfo = ({ picture, isMulti }: { picture: FlatPicture; isMulti?: boo
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
 
-  const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
-
   return (
     <div className='picture-info'>
-      {role >= AuthRole.CURATOR && (
-        <div className='curator-ops'>
-          <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
-            {t('curator.editPicture')}
-          </Button>
-          <PictureEditDialog
-            picture={picture}
-            open={editDialogOpen}
-            onClose={() => setEditDialogOpen(false)}
-          />
-          <span className='save-state'>{saveStatus}</span>
-        </div>
-      )}
+      {topInfo?.(anyFieldTouched)}
       <PictureInfoField title={t('pictureFields.time')} icon='event' type='date'>
         <DateRangeSelectionField
           timeRangeTag={picture.time_range_tag}

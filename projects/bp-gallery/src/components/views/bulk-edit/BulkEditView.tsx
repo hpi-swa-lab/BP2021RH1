@@ -94,7 +94,7 @@ const BulkEditView = ({ pictureIds }: { pictureIds: string[] }) => {
         </div>
 
         <div className='bulk-edit-picture-info'>
-          <PictureInfo picture={combinedPicture} isMulti />
+          <PictureInfo picture={combinedPicture} onSave={() => {}} />
         </div>
       </div>
     );
