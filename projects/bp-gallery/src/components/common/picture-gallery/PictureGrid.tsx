@@ -8,6 +8,7 @@ import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
+import BulkEditView from '../../views/bulk-edit/BulkEditView';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -35,6 +36,7 @@ const PictureGrid = ({
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
+  const [focusedBulkEdit, setFocusedBulkEdit] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
   const deletePicture = useDeletePicture();
@@ -92,6 +94,18 @@ const PictureGrid = ({
     [setFocusedPicture]
   );
 
+  const navigateToBulkEdit = useCallback(
+    (pictureIds: string) => {
+      setTransitioning(true);
+      setFocusedBulkEdit(pictureIds);
+      window.history.pushState({}, '', `/bulk-edit/${pictureIds}`);
+      zoomIntoPicture('multi-view-container').then(() => {
+        setTransitioning(false);
+      });
+    },
+    [setFocusedBulkEdit]
+  );
+
   const [selectedPictures, setSelectedPictures] = useState<FlatPicture[]>([]);
 
   const pictureAdornments =
@@ -122,7 +136,11 @@ const PictureGrid = ({
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
       {Boolean(selectedPictures.length) && bulkOperations && (
-        <BulkOperationsPanel operations={bulkOperations} selectedPictures={selectedPictures} />
+        <BulkOperationsPanel
+          operations={bulkOperations}
+          selectedPictures={selectedPictures}
+          onBulkEdit={navigateToBulkEdit}
+        />
       )}
       <div className='picture-grid'>
         {table.map((row, rowindex) => {
@@ -164,6 +182,18 @@ const PictureGrid = ({
             zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
               setTransitioning(false);
               setFocusedPicture(undefined);
+            });
+          }}
+        />
+      )}
+      {focusedBulkEdit && (
+        <BulkEditView
+          pictureIds={selectedPictures.map(picture => picture.id)}
+          onBack={() => {
+            setTransitioning(true);
+            zoomOutOfPicture(`multi-view-container`).then(() => {
+              setTransitioning(false);
+              setFocusedBulkEdit(undefined);
             });
           }}
         />

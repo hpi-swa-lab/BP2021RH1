@@ -71,8 +71,7 @@ const routes: RouteConfig[] = [
       {
         path: '/bulk-edit/:ids',
         render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
-          const pictures = match.params.ids.split(',');
-          return <BulkEditView pictureIds={pictures} />;
+          return <BulkEditView pictureIds={match.params.ids.split(',')} />;
         },
       },
       {
