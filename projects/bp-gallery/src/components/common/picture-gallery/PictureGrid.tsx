@@ -137,7 +137,8 @@ const PictureGrid = ({
               if (lastSelectedPicture !== null && event.shiftKey) {
                 const lastIndex = pictures.indexOf(lastSelectedPicture);
                 const clickedIndex = pictures.indexOf(clickedPicture);
-                const [fromIndex, toIndex] = [lastIndex, clickedIndex].sort();
+                const [fromIndex, toIndex] =
+                  lastIndex < clickedIndex ? [lastIndex, clickedIndex] : [clickedIndex, lastIndex];
                 setSelectedPictures(currentSelected =>
                   union(currentSelected, pictures.slice(fromIndex, toIndex + 1))
                 );
