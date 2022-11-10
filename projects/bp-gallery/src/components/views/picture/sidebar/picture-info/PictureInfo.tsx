@@ -19,16 +19,27 @@ import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import ArchiveTagField from './ArchiveTagField';
 
-const PictureInfo = ({ picture, onSave, topInfo }: { picture: FlatPicture; onSave: (field: Partial<FlatPicture>) => void, topInfo?: (anyFieldTouched: boolean) => ReactNode }) => {
+const PictureInfo = ({
+  picture,
+  onSave,
+  topInfo,
+}: {
+  picture: FlatPicture;
+  onSave: (field: Partial<FlatPicture>) => void;
+  topInfo?: (anyFieldTouched: boolean) => ReactNode;
+}) => {
   const { role } = useAuth();
   const { t } = useTranslation();
 
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
 
-  const savePictureInfo = useCallback((field: Partial<FlatPicture>) => {
-    setAnyFieldTouched(false);
-    onSave(field);
-  }, [onSave]);
+  const savePictureInfo = useCallback(
+    (field: Partial<FlatPicture>) => {
+      setAnyFieldTouched(false);
+      onSave(field);
+    },
+    [onSave]
+  );
 
   const [getAllKeywords, keywordsResponse] = useGetAllKeywordTagsLazyQuery();
   const [getAllLocations, locationsResponse] = useGetAllLocationTagsLazyQuery();
@@ -145,7 +156,7 @@ const PictureInfo = ({ picture, onSave, topInfo }: { picture: FlatPicture; onSav
         >
           <ArchiveTagField
             archiveTag={picture.archive_tag}
-            onChange={archiveTag => savePictureInfo({ archive_tag: archiveTag.id })}
+            onChange={archiveTag => savePictureInfo({ archive_tag: archiveTag })}
           />
         </PictureInfoField>
       )}
