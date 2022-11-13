@@ -4,7 +4,7 @@ import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '@mui/material';
+import { Badge, Icon } from '@mui/material';
 import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
@@ -22,11 +22,33 @@ const CommentsContainer = ({
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
 
+  const badgeNumber = (() => {
+    return role < AuthRole.CURATOR
+      ? comments?.filter(elem => elem.publishedAt).length
+      : comments?.length;
+  })();
+
   return (
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
       <div className='picture-comments-header' onClick={() => setIsOpen(o => !o)}>
         <h2>
-          <Icon>question_answer</Icon>
+          <div className='picture-comments-icon'>
+            {isOpen || badgeNumber === 0 ? (
+              <Icon>question_answer</Icon>
+            ) : (
+              <Badge
+                badgeContent={badgeNumber}
+                color='info'
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                max={99}
+              >
+                <Icon>question_answer</Icon>
+              </Badge>
+            )}
+          </div>
           {t('common.comments')}
         </h2>
         <ExpandMore />
