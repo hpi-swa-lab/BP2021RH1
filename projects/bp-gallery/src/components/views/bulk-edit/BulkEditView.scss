@@ -16,6 +16,12 @@
     background-color: black;
     flex: 1;
     height: 100%;
+    overflow-y: scroll;
+    padding: 2rem;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
   }
 
   &-picture-info {
