@@ -19,11 +19,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -1802,6 +1799,46 @@ export type GetPictureInfoQuery = {
     | undefined;
 };
 
+export type GetCommentsByPictureQueryVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type GetCommentsByPictureQuery = {
+  picture?:
+    | {
+        data?:
+          | {
+              attributes?:
+                | {
+                    comments?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  text: string;
+                                  author?: string | null | undefined;
+                                  date: any;
+                                  publishedAt?: any | null | undefined;
+                                  pinned?: boolean | null | undefined;
+                                }
+                              | null
+                              | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type GetPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
   pagination: PaginationArg;
@@ -3041,6 +3078,82 @@ export type GetPictureInfoLazyQueryHookResult = ReturnType<typeof useGetPictureI
 export type GetPictureInfoQueryResult = Apollo.QueryResult<
   GetPictureInfoQuery,
   GetPictureInfoQueryVariables
+>;
+
+export const GetCommentsByPictureDocument = gql`
+  query getCommentsByPicture($pictureId: ID!) {
+    picture(id: $pictureId) {
+      data {
+        attributes {
+          comments(publicationState: PREVIEW, sort: "date:desc") {
+            data {
+              id
+              attributes {
+                text
+                author
+                date
+                publishedAt
+                pinned
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCommentsByPictureQuery__
+ *
+ * To run a query within a React component, call `useGetCommentsByPictureQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsByPictureQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentsByPictureQuery({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useGetCommentsByPictureQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCommentsByPictureQuery,
+    GetCommentsByPictureQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetCommentsByPictureQuery, GetCommentsByPictureQueryVariables>(
+    GetCommentsByPictureDocument,
+    options
+  );
+}
+
+export function useGetCommentsByPictureLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCommentsByPictureQuery,
+    GetCommentsByPictureQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetCommentsByPictureQuery, GetCommentsByPictureQueryVariables>(
+    GetCommentsByPictureDocument,
+    options
+  );
+}
+
+export type GetCommentsByPictureQueryHookResult = ReturnType<typeof useGetCommentsByPictureQuery>;
+
+export type GetCommentsByPictureLazyQueryHookResult = ReturnType<
+  typeof useGetCommentsByPictureLazyQuery
+>;
+
+export type GetCommentsByPictureQueryResult = Apollo.QueryResult<
+  GetCommentsByPictureQuery,
+  GetCommentsByPictureQueryVariables
 >;
 
 export const GetPicturesDocument = gql`

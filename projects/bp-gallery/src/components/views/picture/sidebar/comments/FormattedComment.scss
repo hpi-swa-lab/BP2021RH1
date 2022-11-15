@@ -14,8 +14,6 @@
   width: calc(100% - 3rem);
 
   &.pinned {
-    background-color: #dfcaca;
-
     &::after {
       content: '';
       width: 0;
@@ -46,12 +44,32 @@
   .comment-details {
     font-size: large;
     font-style: italic;
-    opacity: 0.5;
+    opacity: 1;
     font-size: 0.85rem;
-    padding-bottom: 0.5rem;
+    // padding-bottom: 0.5rem;
+
+    .comment-details-container {
+      opacity: 0.5;
+      height: 0.5rem;
+    }
   }
 
   .pin-icon {
+    opacity: 1;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    color: darkred;
+  }
+
+  .pin-button {
+    opacity: 1;
     position: absolute;
     right: 5px;
     top: 5px;
@@ -69,11 +87,13 @@
     z-index: 2;
 
     &.pinned {
-      background: #6f5b5b;
+      color: darkred;
     }
 
-    &:hover {
-      opacity: 0.7;
+    &.pin-button {
+      &:hover {
+        opacity: 0.7;
+      }
     }
   }
 

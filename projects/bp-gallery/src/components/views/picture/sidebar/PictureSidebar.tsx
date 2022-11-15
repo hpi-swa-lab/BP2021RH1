@@ -32,7 +32,7 @@ const PictureSidebar = ({
       {!loading && !error && picture && (
         <>
           <PictureInfo picture={picture} />
-          <CommentsContainer comments={picture.comments} pictureId={picture.id} />
+          <CommentsContainer pictureId={picture.id} />
         </>
       )}
       <PictureViewNavigationBar />

@@ -23,46 +23,58 @@ const FormattedComment = ({ comment }: { comment: FlatComment }) => {
   const parseNewLine = (text: string) => text.replace(/\\n/gm, '\n');
 
   const isLong = comment.text.length > 500;
+  const isCurator = role >= AuthRole.CURATOR;
 
   const [isOpen, setIsOpen] = useState<boolean>(!isLong);
+  const [pinned, setPinned] = useState(comment.pinned);
 
   const [pinComment] = usePinCommentMutation({
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getCommentsByPicture'],
+    onCompleted: () => setPinned(true),
   });
 
   const [unpinComment] = useUnpinCommentMutation({
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getCommentsByPicture'],
+    onCompleted: () => setPinned(false),
   });
 
   return (
     <div
       className={`comment${isOpen ? ' open' : ''}${isLong ? ' long' : ''}${
-        comment.pinned ? ' pinned' : ''
+        pinned ? ' pinned' : ''
       }`}
       key={comment.id}
     >
       <div className='comment-details'>
-        <strong>{comment.author}</strong> {t('common.wrote-on')}{' '}
-        {dayjs(comment.date as string).format('DD.MM.YYYY')}:
-        {role >= AuthRole.CURATOR && comment.publishedAt && (
+        <div className='comment-details-container'>
+          <strong>{comment.author}</strong> {t('common.wrote-on')}{' '}
+          {dayjs(comment.date as string).format('DD.MM.YYYY')}:
+        </div>
+        {comment.publishedAt && isCurator ? (
           <div
-            className={`pin-icon ${comment.pinned ? 'pinned' : ''}`}
+            className={`pin-button ${pinned ? 'pinned' : ''}`}
             onClick={() => {
-              comment.pinned ? unpinComment() : pinComment();
+              pinned ? unpinComment() : pinComment();
             }}
           >
             <PushPinIcon />
           </div>
+        ) : (
+          comment.pinned && (
+            <div className={`pinned pin-icon`}>
+              <PushPinIcon />
+            </div>
+          )
         )}
         <br />
       </div>
-      {role >= AuthRole.CURATOR ? (
+      {isCurator ? (
         <CommentEditField comment={comment} />
       ) : (
         <div className='comment-text'>{parseNewLine(comment.text)}</div>
