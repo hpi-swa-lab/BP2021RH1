@@ -13,11 +13,22 @@
   z-index: 999;
   background-color: black;
 
+  .scroll-context {
+    height: 100%;
+  }
+
   &-picture-grid {
     flex: 1;
     height: 100%;
-    overflow-y: scroll;
-    padding: 2rem;
+
+    .picture-count {
+      padding-top: 2rem;
+    }
+
+    .picture-grid {
+      padding: 2rem;
+      padding-top: 0;
+    }
   }
 
   ::-webkit-scrollbar {
