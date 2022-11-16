@@ -462,6 +462,17 @@ const updatePictureWithTagCleanup = async (id, data) =>  {
   return id;
 };
 
+const bulkEditTimeRangeTag = async (knexEngine, ids, data, tag) => {
+  await processUpdatesForTimeRangeTag()
+}
+
+const bulkEdit = async (knexEngine, ids, data) => {
+  strapi.log.debug(`bulkEdit called with ${ids.toString()} and data ${JSON.stringify(data)}`);
+  await bulkEditSingle(knexEngine, ids, data, TIME_RANGE_TAG_KEY);
+  return 42;
+};
+
 module.exports = {
   updatePictureWithTagCleanup,
+  bulkEdit,
 };

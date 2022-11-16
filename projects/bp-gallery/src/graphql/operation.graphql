@@ -798,6 +798,10 @@ mutation updatePicture($pictureId: ID!, $data: JSON!) {
   updatePictureWithTagCleanup(id: $pictureId, data: $data)
 }
 
+mutation bulkEdit($pictureIds: [ID!]!, $data: JSON!) {
+  doBulkEdit(ids: $pictureIds, data: $data)
+}
+
 mutation createPicture($data: PictureInput!) {
   createPicture(data: $data) {
     data {

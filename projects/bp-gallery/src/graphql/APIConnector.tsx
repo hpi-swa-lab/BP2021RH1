@@ -625,6 +625,7 @@ export type Mutation = {
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
   /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
+  doBulkEdit?: Maybe<Scalars['ID']>;
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
   /** Request a reset password token */
@@ -754,6 +755,11 @@ export type MutationDeleteUsersPermissionsRoleArgs = {
 
 export type MutationDeleteUsersPermissionsUserArgs = {
   id: Scalars['ID'];
+};
+
+export type MutationDoBulkEditArgs = {
+  data?: InputMaybe<Scalars['JSON']>;
+  ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
 export type MutationEmailConfirmationArgs = {
@@ -2835,6 +2841,13 @@ export type UpdatePictureMutationVariables = Exact<{
 }>;
 
 export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null | undefined };
+
+export type BulkEditMutationVariables = Exact<{
+  pictureIds: Array<Scalars['ID']> | Scalars['ID'];
+  data: Scalars['JSON'];
+}>;
+
+export type BulkEditMutation = { doBulkEdit?: string | null | undefined };
 
 export type CreatePictureMutationVariables = Exact<{
   data: PictureInput;
@@ -5601,6 +5614,51 @@ export type UpdatePictureMutationResult = Apollo.MutationResult<UpdatePictureMut
 export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
   UpdatePictureMutation,
   UpdatePictureMutationVariables
+>;
+
+export const BulkEditDocument = gql`
+  mutation bulkEdit($pictureIds: [ID!]!, $data: JSON!) {
+    doBulkEdit(ids: $pictureIds, data: $data)
+  }
+`;
+
+export type BulkEditMutationFn = Apollo.MutationFunction<
+  BulkEditMutation,
+  BulkEditMutationVariables
+>;
+
+/**
+ * __useBulkEditMutation__
+ *
+ * To run a mutation, you first call `useBulkEditMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkEditMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkEditMutation, { data, loading, error }] = useBulkEditMutation({
+ *   variables: {
+ *      pictureIds: // value for 'pictureIds'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useBulkEditMutation(
+  baseOptions?: Apollo.MutationHookOptions<BulkEditMutation, BulkEditMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<BulkEditMutation, BulkEditMutationVariables>(BulkEditDocument, options);
+}
+
+export type BulkEditMutationHookResult = ReturnType<typeof useBulkEditMutation>;
+
+export type BulkEditMutationResult = Apollo.MutationResult<BulkEditMutation>;
+
+export type BulkEditMutationOptions = Apollo.BaseMutationOptions<
+  BulkEditMutation,
+  BulkEditMutationVariables
 >;
 
 export const CreatePictureDocument = gql`

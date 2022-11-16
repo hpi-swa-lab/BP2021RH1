@@ -8,6 +8,7 @@ const {
 const {
   findPicturesByAllSearch,
   updatePictureWithTagCleanup,
+  bulkEdit,
 } = require("./api/picture/services/custom-resolver")
 
 module.exports = {
@@ -107,6 +108,17 @@ module.exports = {
               return findPicturesByAllSearch(knexEngine, searchTerms, searchTimes, pagination);
             },
           }),
+          mutationField("doBulkEdit", {
+            type: "ID",
+            args: {
+              ids: list("ID"),
+              data: "JSON",
+            },
+            async resolve(_, { ids, data }) {
+              const knexEngine = extensionArgs.strapi.db.connection;
+              return bulkEdit(knexEngine, ids, data);
+            },
+          })
         ],
         resolversConfig: {
           Query: {
@@ -138,6 +150,11 @@ module.exports = {
               },
             },
             updatePictureWithTagCleanup: {
+              auth: {
+                scope: ["api::picture.picture.update"],
+              },
+            },
+            doBulkEdit: {
               auth: {
                 scope: ["api::picture.picture.update"],
               },

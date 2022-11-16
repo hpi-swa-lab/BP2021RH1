@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   PictureFiltersInput,
+  useBulkEditMutation,
   useGetMultiplePictureInfoQuery,
   useUpdatePictureMutation,
 } from '../../../graphql/APIConnector';
@@ -185,6 +186,17 @@ const BulkEditView = ({
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
+  const [bulkEdit, bulkEditResponse] = useBulkEditMutation();
+  const save = useCallback((diff: PictureDiff) => {
+    console.log("bulkEdit", diff);
+    bulkEdit({
+      variables: {
+        pictureIds,
+        data: diff,
+      },
+    });
+  }, [bulkEdit, pictureIds]);
+
   // setting this state triggers a an updatePicture call inside the UpdatePicture components rendered below
   const [updatedPictures, setUpdatedPictures] = useState<{ pictureId: string; data: any }[] | null>(
     null
@@ -236,6 +248,7 @@ const BulkEditView = ({
     const combinedPicture = combinePictures(pictures);
     const onSave = (field: Partial<FlatPicture>) => {
       const diff = computePictureDiff(combinedPicture, field);
+      save(diff);
       setUpdatedPictures(
         pictures.map(picture => {
           const applied = applyPictureDiff(picture, diff);
