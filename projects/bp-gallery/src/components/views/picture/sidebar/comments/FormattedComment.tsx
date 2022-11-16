@@ -32,7 +32,7 @@ const FormattedComment = ({ comment }: { comment: FlatComment }) => {
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getCommentsByPicture'],
+    refetchQueries: ['getPictureInfo'],
     onCompleted: () => setPinned(true),
   });
 
@@ -40,7 +40,7 @@ const FormattedComment = ({ comment }: { comment: FlatComment }) => {
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getCommentsByPicture'],
+    refetchQueries: ['getPictureInfo'],
     onCompleted: () => setPinned(false),
   });
 
@@ -57,14 +57,14 @@ const FormattedComment = ({ comment }: { comment: FlatComment }) => {
           {dayjs(comment.date as string).format('DD.MM.YYYY')}:
         </div>
         {comment.publishedAt && isCurator ? (
-          <div
+          <button
             className={`pin-button ${pinned ? 'pinned' : ''}`}
             onClick={() => {
               pinned ? unpinComment() : pinComment();
             }}
           >
             <PushPinIcon />
-          </div>
+          </button>
         ) : (
           comment.pinned && (
             <div className={`pinned pin-icon`}>

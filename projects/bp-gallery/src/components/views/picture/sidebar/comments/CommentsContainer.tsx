@@ -8,18 +8,19 @@ import { Badge, Icon } from '@mui/material';
 import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { useGetCommentsByPictureQuery } from '../../../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 
-const CommentsContainer = ({ pictureId }: { pictureId: string }) => {
+const CommentsContainer = ({
+  pictureId,
+  comments,
+}: {
+  comments?: FlatComment[];
+  pictureId: string;
+}) => {
   const { t } = useTranslation();
 
   const { role } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
-  const { data, loading, error } = useGetCommentsByPictureQuery({ variables: { pictureId } });
-  const comments: FlatComment[] | undefined =
-    useSimplifiedQueryResponseData(data)?.picture.comments;
 
   const sortedComments = () => {
     return comments?.sort(

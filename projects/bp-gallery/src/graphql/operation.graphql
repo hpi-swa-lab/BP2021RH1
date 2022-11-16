@@ -125,27 +125,6 @@ query getPictureInfo($pictureId: ID!) {
   }
 }
 
-query getCommentsByPicture($pictureId: ID!) {
-  picture(id: $pictureId) {
-    data {
-      attributes {
-        comments(publicationState: PREVIEW, sort: "date:desc") {
-          data {
-            id
-            attributes {
-              text
-              author
-              date
-              publishedAt
-              pinned
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 query getPictures(
   $filters: PictureFiltersInput!
   $pagination: PaginationArg!

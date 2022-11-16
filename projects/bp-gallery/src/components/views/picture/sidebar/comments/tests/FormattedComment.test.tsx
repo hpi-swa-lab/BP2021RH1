@@ -1,55 +1,34 @@
-import { waitFor } from '@testing-library/react';
+import { RenderResult, waitFor } from '@testing-library/react';
 import userEvent, { TargetElement } from '@testing-library/user-event';
 import { PinCommentDocument, UnpinCommentDocument } from '../../../../../../graphql/APIConnector';
 import { renderWithAPIMocks } from '../../../../../../testUtils';
 import { FlatComment } from '../../../../../../types/additionalFlatTypes';
 import { AuthRole, AuthContext } from '../../../../../provider/AuthProvider';
 import FormattedComment from '../FormattedComment';
-import { PostCommentDocumentMocks } from './mocks';
-
-const comments = [
-  {
-    id: '1',
-    text: 'My fancy comment',
-    author: 'Onkel Pelle',
-    date: new Date('2021-04-21'),
-    publishedAt: new Date('2021-04-21'),
-    pinned: true,
-  },
-  {
-    id: '2',
-    text: 'My fancy comment yeah',
-    author: 'Onkel Pelle',
-    date: new Date('2021-04-22'),
-    publishedAt: new Date('2021-04-21'),
-    pinned: false,
-  },
-  {
-    id: '1',
-    text: 'My fancy comment',
-    author: 'Onkel Pelle',
-    date: new Date('2021-04-21'),
-    publishedAt: new Date('2021-04-21'),
-    pinned: false,
-  },
-] as FlatComment[];
+import { comments, PostCommentDocumentMocks } from './mocks';
 
 const mocks = [
   {
     request: {
       query: PinCommentDocument,
-      variables: { id: '1' },
+      variables: { commentId: '1' },
     },
-    result: { data: comments[0] },
+    result: { data: comments.publishedAndUnpinned },
   },
   {
     request: {
       query: UnpinCommentDocument,
-      variables: { id: '1' },
+      variables: { commentId: '1' },
     },
-    result: { data: comments[2] },
+    result: { data: comments.publishedAndPinned },
   },
 ];
+
+const waitForReRender = async (component: RenderResult) => {
+  await waitFor(() => {
+    component.container.querySelector('.comment-details');
+  });
+};
 
 const renderWithAuth = (role: AuthRole, component: JSX.Element) => {
   return renderWithAPIMocks(
@@ -72,31 +51,39 @@ describe('FormattedComment', () => {
   it('shows a comment pin button as a curator', () => {
     const { container } = renderWithAuth(
       AuthRole.CURATOR,
-      <FormattedComment comment={comments[0]} />
+      <FormattedComment comment={comments.publishedAndPinned} />
     );
     expect(container.querySelector('.pin-button')).toBeInTheDocument();
+    expect(container.querySelector('.pin-icon')).toBeNull();
   });
 
-  it('doesnt show a pin button as an user', () => {
+  it('doesnt show a pin button as an userand shows a pin icon instead', () => {
     const { container } = renderWithAuth(
       AuthRole.PUBLIC,
-      <FormattedComment comment={comments[0]} />
+      <FormattedComment comment={comments.publishedAndPinned} />
+    );
+    expect(container.querySelector('.pin-button')).toBeNull();
+    expect(container.querySelector('.pin-icon')).toBeInTheDocument();
+  });
+  it('shouldnt show a button if the comment is unpublished', () => {
+    let { container } = renderWithAuth(
+      AuthRole.CURATOR,
+      <FormattedComment comment={comments.unpublishedAndPinned} />
     );
     expect(container.querySelector('.pin-button')).toBeNull();
   });
   it('pressing on the pin button pins and unpins a comment', async () => {
-    const { container } = renderWithAuth(
+    const component = renderWithAuth(
       AuthRole.CURATOR,
-      <FormattedComment comment={comments[2]} />
+      <FormattedComment comment={comments.publishedAndUnpinned} />
     );
-    const button = container.querySelector('.pin-button') as TargetElement;
-    expect(container.querySelector('.pinned')).toBeNull();
+    expect(component.container.querySelector('.pinned')).toBeNull();
+    const button = await component.findByRole('button');
     userEvent.click(button);
-
-    await waitFor(() => {
-      container.querySelector('.comment-details');
-    });
-
-    expect(container.querySelector('.pinned')).toBeInTheDocument();
+    await waitForReRender(component);
+    expect(component.container.querySelector('.pinned')).toBeInTheDocument();
+    userEvent.click(button);
+    await waitForReRender(component);
+    expect(component.container.querySelector('.pinned')).toBeNull();
   });
 });
