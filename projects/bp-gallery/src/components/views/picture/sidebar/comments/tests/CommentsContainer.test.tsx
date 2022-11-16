@@ -105,7 +105,6 @@ describe('Comments behavior as Curator user', () => {
   it('sorts all pinned comments to the top', () => {
     const manyComments = [];
     for (let i = 0; i < 10; i = i + 2) {
-      console.log({ ...comments.publishedAndPinned, ...{ id: i.toString() } });
       manyComments.push({ ...comments.publishedAndPinned, ...{ id: i.toString() } });
       manyComments.push({ ...comments.publishedAndUnpinned, ...{ id: (i + 1).toString() } });
     }
