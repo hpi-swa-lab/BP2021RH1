@@ -11,13 +11,24 @@
   width: 100%;
   height: 100%;
   z-index: 999;
+  background-color: black;
+
+  .scroll-context {
+    height: 100%;
+  }
 
   &-picture-grid {
-    background-color: black;
     flex: 1;
     height: 100%;
-    overflow-y: scroll;
-    padding: 2rem;
+
+    .picture-count {
+      padding-top: 2rem;
+    }
+
+    .picture-grid {
+      padding: 2rem;
+      padding-top: 0;
+    }
   }
 
   ::-webkit-scrollbar {
@@ -27,7 +38,19 @@
   &-picture-info {
     padding-left: 10px;
     width: 450px;
-    background-color: white;
+
+    .picture-info {
+      overflow-y: auto;
+      height: 100%;
+      background-color: white;
+      padding: 10px;
+      padding-top: 20px;
+      box-sizing: border-box;
+    }
+
+    .save-state {
+      margin-left: auto;
+    }
   }
 
   &-grid-wrapper {
