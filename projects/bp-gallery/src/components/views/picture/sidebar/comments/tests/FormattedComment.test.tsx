@@ -1,11 +1,11 @@
+import React from 'react';
 import { RenderResult, waitFor } from '@testing-library/react';
-import userEvent, { TargetElement } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { PinCommentDocument, UnpinCommentDocument } from '../../../../../../graphql/APIConnector';
 import { renderWithAPIMocks } from '../../../../../../testUtils';
-import { FlatComment } from '../../../../../../types/additionalFlatTypes';
 import { AuthRole, AuthContext } from '../../../../../provider/AuthProvider';
 import FormattedComment from '../FormattedComment';
-import { comments, PostCommentDocumentMocks } from './mocks';
+import { comments } from './mocks';
 
 const mocks = [
   {
@@ -66,7 +66,7 @@ describe('FormattedComment', () => {
     expect(container.querySelector('.pin-icon')).toBeInTheDocument();
   });
   it('shouldnt show a button if the comment is unpublished', () => {
-    let { container } = renderWithAuth(
+    const { container } = renderWithAuth(
       AuthRole.CURATOR,
       <FormattedComment comment={comments.unpublishedAndPinned} />
     );
