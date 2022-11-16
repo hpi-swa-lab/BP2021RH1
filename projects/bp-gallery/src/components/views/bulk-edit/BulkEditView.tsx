@@ -128,7 +128,7 @@ const UpdatePicture = ({
   index: number;
   onResponseChange: (
     index: number,
-    result: Pick<MutationResult<unknown>, 'loading' | 'error'>
+    result: Pick<MutationResult<unknown>, 'loading' | 'error' | 'data'>
   ) => void;
 }) => {
   const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
@@ -148,8 +148,15 @@ const UpdatePicture = ({
     onResponseChange(index, {
       loading: updateMutationResponse.loading,
       error: updateMutationResponse.error,
+      data: updateMutationResponse.data,
     });
-  }, [onResponseChange, index, updateMutationResponse.loading, updateMutationResponse.error]);
+  }, [
+    onResponseChange,
+    index,
+    updateMutationResponse.loading,
+    updateMutationResponse.error,
+    updateMutationResponse.data,
+  ]);
 
   return null;
 };
@@ -193,7 +200,7 @@ const BulkEditView = ({
 
   // keep track of the responses from the updatePicture calls here to show a saveStatus
   const [updateMutationResponses, setUpdateMutationResponses] = useState<
-    (Pick<MutationResult<unknown>, 'loading' | 'error'> | null)[] | null
+    (Pick<MutationResult<unknown>, 'loading' | 'error' | 'data'> | null)[] | null
   >(null);
 
   const onResponseChange = useCallback((index, newResult) => {
@@ -228,8 +235,6 @@ const BulkEditView = ({
     },
     [t, updateMutationResponses, pictures]
   );
-
-  console.log(combinedPicture);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -279,7 +284,8 @@ const BulkEditView = ({
             onSave={onSave}
             loading={
               updateMutationResponses
-                ? updateMutationResponses.some(result => result?.loading)
+                ? updateMutationResponses.some(result => result?.loading) ||
+                  !updateMutationResponses.some(result => result?.data)
                 : false
             }
             topInfo={anyFieldTouched => (

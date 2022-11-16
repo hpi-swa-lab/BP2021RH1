@@ -63,8 +63,6 @@ const PictureInfo = ({
     refetchQueries: ['getAllKeywordTags'],
   });
 
-  console.log(`Tag Field ${loading ? 'roo' : 'ree'}`);
-
   useEffect(() => {
     if (role >= AuthRole.CURATOR) {
       getAllKeywords();

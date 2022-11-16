@@ -8,6 +8,7 @@ import { SearchType } from '../../../search/SearchView';
 import { TagType } from '../../../../../types/additionalFlatTypes';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
+import './TagSelectionField.scss';
 
 interface TagFields {
   name: string;
@@ -17,7 +18,6 @@ interface TagFields {
   synonyms?: Maybe<Maybe<ComponentCommonSynonyms>[]> | undefined;
   icon?: string;
   isNew?: boolean;
-  loading?: boolean;
   onClick?: () => void;
 }
 
@@ -106,36 +106,29 @@ const TagSelectionField = <T extends TagFields>({
           onChange={async (_, newValue) => {
             if (!onChange) return;
             // newValue is an array, but we are sure that only one element can be created at a time
-            console.log(1);
-            console.log(newValue);
             if (createMutation) {
               const addTag = newValue.find(val => val.createValue);
-              console.log(2);
               if (addTag) {
-                console.log(3);
                 const { data } = await createMutation({ variables: { name: addTag.createValue } });
                 if (data) {
-                  console.log(4);
                   const nameOfField = Object.keys(data as { [key: string]: any })[0];
                   const newId = data[nameOfField].data.id;
                   addTag.id = newId;
-                  addTag.loading = true;
                   delete addTag.createValue;
                   delete addTag.icon;
-                  console.log(addTag);
-                  console.log(tagList);
                   setTagList([...allTags, addTag]);
-                  console.log(tagList);
                 }
               }
             }
             const newlyAddedTags = newValue.filter(
               newVal => !selectedTags.some(tag => tag.id === newVal.id)
             );
+            selectedTags.forEach(tag => {
+              tag.isNew = false;
+            });
             newlyAddedTags.forEach(tag => {
               tag.isNew = true;
               tag.verified = true;
-              tag.loading = true;
             });
             setSelectedTags(newValue);
             onChange(newValue);
@@ -154,18 +147,18 @@ const TagSelectionField = <T extends TagFields>({
           }}
           renderTags={(value, props) => {
             return value.map((option, index) => (
-              <Chip
-                {...props({ index })}
-                key={index}
-                icon={nonVerifyable || option.verified ? undefined : <Icon>help</Icon>}
-                label={option.name}
-                variant={loading && option.loading ? 'outlined' : 'filled'}
-                onClick={() => {
-                  if (!nonVerifyable) {
-                    toggleVerified(value, index);
-                  }
-                }}
-              />
+              <div key={index} className={loading && option.isNew ? 'loading' : ''}>
+                <Chip
+                  {...props({ index })}
+                  icon={nonVerifyable || option.verified ? undefined : <Icon>help</Icon>}
+                  label={option.name}
+                  onClick={() => {
+                    if (!nonVerifyable) {
+                      toggleVerified(value, index);
+                    }
+                  }}
+                />
+              </div>
             ));
           }}
           getOptionLabel={(option: T) => {
