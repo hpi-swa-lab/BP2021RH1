@@ -23,10 +23,12 @@ const PictureInfo = ({
   picture,
   onSave,
   topInfo,
+  loading,
 }: {
   picture: FlatPicture;
   onSave: (field: Partial<FlatPicture>) => void;
   topInfo?: (anyFieldTouched: boolean) => ReactNode;
+  loading?: boolean;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -60,6 +62,8 @@ const PictureInfo = ({
   const [newKeywordTagMutation] = useCreateKeywordTagMutation({
     refetchQueries: ['getAllKeywordTags'],
   });
+
+  console.log(`Tag Field ${loading ? 'roo' : 'ree'}`);
 
   useEffect(() => {
     if (role >= AuthRole.CURATOR) {
@@ -99,6 +103,7 @@ const PictureInfo = ({
       <PictureInfoField title={t('pictureFields.people')} icon='person' type='person'>
         <TagSelectionField
           type={TagType.PERSON}
+          loading={loading}
           tags={picture.person_tags ?? []}
           allTags={allPeople ?? []}
           onChange={people => {
@@ -116,6 +121,7 @@ const PictureInfo = ({
           onChange={locations => {
             savePictureInfo({ location_tags: locations });
           }}
+          loading={loading}
           noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
         />
@@ -126,6 +132,7 @@ const PictureInfo = ({
             type={TagType.KEYWORD}
             tags={picture.keyword_tags ?? []}
             allTags={allKeywords ?? []}
+            loading={loading}
             onChange={keywords => {
               savePictureInfo({ keyword_tags: keywords });
             }}
@@ -140,6 +147,7 @@ const PictureInfo = ({
             type={TagType.COLLECTION}
             tags={picture.collections ?? []}
             allTags={allCollections ?? []}
+            loading={loading}
             onChange={collections => {
               savePictureInfo({ collections });
             }}

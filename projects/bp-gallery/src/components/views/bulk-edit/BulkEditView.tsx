@@ -132,7 +132,7 @@ const UpdatePicture = ({
   ) => void;
 }) => {
   const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
-    refetchQueries: ['getPictureInfo', 'getMultiplePictureInfo'],
+    refetchQueries: ['getMultiplePictureInfo'],
   });
 
   useEffect(() => {
@@ -189,6 +189,7 @@ const BulkEditView = ({
   const [updatedPictures, setUpdatedPictures] = useState<{ pictureId: string; data: any }[] | null>(
     null
   );
+  const [combinedPicture, setCombinedPicture] = useState<FlatPicture | undefined>(undefined);
 
   // keep track of the responses from the updatePicture calls here to show a saveStatus
   const [updateMutationResponses, setUpdateMutationResponses] = useState<
@@ -228,14 +229,18 @@ const BulkEditView = ({
     [t, updateMutationResponses, pictures]
   );
 
+  console.log(combinedPicture);
+
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
   } else if (pictures) {
-    const combinedPicture = combinePictures(pictures);
+    if (!combinedPicture) setCombinedPicture(combinePictures(pictures));
+    if (!combinedPicture) return <></>;
     const onSave = (field: Partial<FlatPicture>) => {
       const diff = computePictureDiff(combinedPicture, field);
+      setCombinedPicture({ ...combinedPicture, ...field });
       setUpdatedPictures(
         pictures.map(picture => {
           const applied = applyPictureDiff(picture, diff);
@@ -272,6 +277,11 @@ const BulkEditView = ({
           <PictureInfo
             picture={combinedPicture}
             onSave={onSave}
+            loading={
+              updateMutationResponses
+                ? updateMutationResponses.some(result => result?.loading)
+                : false
+            }
             topInfo={anyFieldTouched => (
               <div className='curator-ops'>
                 <span className='save-state'>{saveStatus(anyFieldTouched)}</span>
