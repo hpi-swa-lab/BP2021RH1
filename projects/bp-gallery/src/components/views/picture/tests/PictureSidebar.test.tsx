@@ -5,6 +5,9 @@ import { flattenQueryResponseData } from '../../../../graphql/queryUtils';
 import PictureSidebar from '../sidebar/PictureSidebar';
 import { CommentMocks, PictureMocks } from './mocks';
 import { renderWithPictureContextMocks } from './pictureTestUtils';
+import { MockedResponse } from '@apollo/client/testing';
+
+const mocks: MockedResponse<Record<string, any>>[] | undefined = [];
 
 const CommentsContainerMock = jest.fn();
 const CommentsContainerMockComponent = (props: any) => {
@@ -22,10 +25,13 @@ jest.mock('../sidebar/picture-info/PictureInfo', () => PictureInfoMockComponent)
 
 describe('PictureSidebar', () => {
   it('should be able to open and close', async () => {
-    const { container } = renderWithPictureContextMocks(
-      <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+    const component = renderWithPictureContextMocks(
+      <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />,
+      undefined,
+      mocks
     );
-    const openCloseButton = container.querySelector('.quick-access-buttons button');
+    const container = component.container;
+    const openCloseButton = await component.findByRole('button');
     expect(openCloseButton).toBeInTheDocument();
     expect(container.querySelector('.picture-sidebar')?.className).toContain('closed');
     fireEvent(
@@ -42,7 +48,9 @@ describe('PictureSidebar', () => {
 
   it('should render the comments container', async () => {
     renderWithPictureContextMocks(
-      <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+      <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />,
+      undefined,
+      mocks
     );
 
     const commentsContainer = screen.getByText('CommentsContainerMock');
