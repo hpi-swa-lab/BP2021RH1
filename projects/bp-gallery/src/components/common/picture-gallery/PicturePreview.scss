@@ -1,10 +1,7 @@
 @import 'src/shared/style';
 
 .picture-preview {
-  &:not(.view-only) {
-    cursor: pointer;
-  }
-
+  cursor: pointer;
   position: relative;
   border-radius: 0.5rem;
   overflow: hidden;

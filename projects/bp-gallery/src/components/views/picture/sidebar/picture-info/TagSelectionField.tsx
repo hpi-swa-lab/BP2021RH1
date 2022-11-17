@@ -8,7 +8,6 @@ import { SearchType } from '../../../search/SearchView';
 import { TagType } from '../../../../../types/additionalFlatTypes';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
-import './TagSelectionField.scss';
 
 interface TagFields {
   name: string;
@@ -29,14 +28,12 @@ const TagSelectionField = <T extends TagFields>({
   nonVerifyable = false,
   noContentText,
   type,
-  loading,
 }: {
   tags: T[];
   allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
   nonVerifyable?: boolean;
-  loading?: boolean;
   noContentText: string;
   type: TagType;
 }) => {
@@ -123,9 +120,6 @@ const TagSelectionField = <T extends TagFields>({
             const newlyAddedTags = newValue.filter(
               newVal => !selectedTags.some(tag => tag.id === newVal.id)
             );
-            selectedTags.forEach(tag => {
-              tag.isNew = false;
-            });
             newlyAddedTags.forEach(tag => {
               tag.isNew = true;
               tag.verified = true;
@@ -147,18 +141,17 @@ const TagSelectionField = <T extends TagFields>({
           }}
           renderTags={(value, props) => {
             return value.map((option, index) => (
-              <div key={index} className={loading && option.isNew ? 'loading' : ''}>
-                <Chip
-                  {...props({ index })}
-                  icon={nonVerifyable || option.verified ? undefined : <Icon>help</Icon>}
-                  label={option.name}
-                  onClick={() => {
-                    if (!nonVerifyable) {
-                      toggleVerified(value, index);
-                    }
-                  }}
-                />
-              </div>
+              <Chip
+                {...props({ index })}
+                key={index}
+                icon={nonVerifyable || option.verified ? undefined : <Icon>help</Icon>}
+                label={option.name}
+                onClick={() => {
+                  if (!nonVerifyable) {
+                    toggleVerified(value, index);
+                  }
+                }}
+              />
             ));
           }}
           getOptionLabel={(option: T) => {

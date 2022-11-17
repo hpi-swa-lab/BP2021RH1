@@ -21,13 +21,11 @@ const PicturePreview = ({
   onClick,
   pictureOrigin = PictureOrigin.REMOTE,
   adornments,
-  viewOnly
 }: {
   picture: FlatPicture;
   onClick: MouseEventHandler<HTMLDivElement>;
   pictureOrigin?: PictureOrigin;
   adornments?: PicturePreviewAdornment[];
-  viewOnly?: boolean;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +37,7 @@ const PicturePreview = ({
     <div
       onClick={onClick}
       id={`picture-preview-for-${picture.id}`}
-      className={`picture-preview ${viewOnly ? "view-only" : ""}`}
+      className='picture-preview'
       ref={containerRef}
       style={{
         flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,

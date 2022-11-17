@@ -198,7 +198,6 @@ const PictureGrid = ({
                         navigateToPicture(picture.id);
                       }}
                       adornments={pictureAdornments}
-                      viewOnly={viewOnly}
                     />
                   );
                 }
