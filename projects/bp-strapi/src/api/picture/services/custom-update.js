@@ -487,20 +487,6 @@ const pick = (original, keys) => {
   return picked;
 };
 
-const bulkEditSingleTags = async (pictureQuery, pictureIds, data) => {
-  strapi.log.debug("single tags");
-  const singleData = pick(data, [TIME_RANGE_TAG_KEY, ARCHIVE_TAG]);
-  await processUpdatesForTimeRangeTag(pictureQuery, singleData);
-  strapi.log.debug(JSON.stringify([pictureIds, singleData]));
-  await pictureQuery.updateMany({
-    where: {
-      id: {
-        $in: pictureIds,
-      },
-    },
-    data: singleData,
-  });
-};
 
 const knexIdArray = (knexEngine, ids, name) => {
   return knexEngine.raw(`(VALUES ${ids.map(_ => "(?::integer)").join(", ")}) ${name}`, [...ids]);
@@ -517,6 +503,33 @@ const insertCrossProductIgnoreDuplicates = async (knexEngine, linksTable, leftId
         .crossJoin(knexIdArray(knexEngine, rightIds, `b(${rightIdKey})`))
         .whereNotIn([leftIdKey, rightIdKey], knexEngine(linksTable).select("*"))
     );
+};
+
+const bulkEditSingleTags = async (knexEngine, pictureQuery, pictureIds, data, updatedAt) => {
+  const singleData = pick(data, [TIME_RANGE_TAG_KEY, ARCHIVE_TAG]);
+  await processUpdatesForTimeRangeTag(pictureQuery, singleData);
+  const unverifiedLinksTable = table(`${PICTURES_KEY}_${TIME_RANGE_TAG_KEY}_links`);
+  const verifiedLinksTable = table(`${PICTURES_KEY}_${withVerifiedPrefix(TIME_RANGE_TAG_KEY)}_links`);
+  for (const [linksTable, dataKey] of [
+    [unverifiedLinksTable, TIME_RANGE_TAG_KEY],
+    [verifiedLinksTable, withVerifiedPrefix(TIME_RANGE_TAG_KEY)]
+  ]) {
+    await knexEngine(linksTable)
+      .whereIn("picture_id", pictureIds)
+      .del();
+    if (singleData[dataKey] !== null) {
+      await knexEngine(linksTable)
+        .insert(
+          knexEngine.select("picture_id", knexEngine.raw("?", [singleData[dataKey]]))
+            .from(knexIdArray(knexEngine, pictureIds, "a(picture_id)"))
+        );
+    }
+  }
+
+  await knexEngine(table(PICTURES_KEY))
+    .whereIn("id", pictureIds)
+    .update("updated_at", knexEngine.raw("?::date", [updatedAt]));
+  // TODO: Archive Tag
 };
 
 const bulkEditDescriptions = async (knexEngine, pictureIds, data) => {
@@ -603,9 +616,9 @@ const bulkEdit = async (knexEngine, ids, data) => {
   strapi.log.debug(`bulkEdit called with ${ids.toString()} and data ${JSON.stringify(data)} `);
   const pictureQuery = strapi.db.query("api::picture.picture");
 
-  const updatedAt = Date.now();
+  const updatedAt = new Date();
 
-  await bulkEditSingleTags(pictureQuery, ids, data);
+  await bulkEditSingleTags(knexEngine, pictureQuery, ids, data, updatedAt);
 
   // knex expects integers
   ids = ids.map(id => parseInt(id));
