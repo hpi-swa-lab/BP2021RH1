@@ -1,12 +1,11 @@
 import { differenceWith, intersectionWith, isEqual, unionWith } from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   PictureFiltersInput,
   useBulkEditMutation,
   useGetMultiplePictureInfoQuery,
-  useUpdatePictureMutation,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -18,7 +17,6 @@ import PictureInfo from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
 import { History } from 'history';
 import { PictureToolbar } from '../picture/overlay/PictureToolbar';
-import { MutationResult } from '@apollo/client';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -115,46 +113,6 @@ const applyPictureDiff = (picture: FlatPicture, diff: PictureDiff): Partial<Flat
   );
 };
 
-// Component to keep track of multiple updateMutationResponses in parallel
-// (useUpdatePictureMutation doesn't support that by itself and we can't call it
-// in a loop, because it's a hook)
-const UpdatePicture = ({
-  pictureId,
-  data,
-  index,
-  onResponseChange,
-}: {
-  pictureId: string;
-  data: any;
-  index: number;
-  onResponseChange: (
-    index: number,
-    result: Pick<MutationResult<unknown>, 'loading' | 'error'>
-  ) => void;
-}) => {
-  const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
-    refetchQueries: ['getPictureInfo', 'getMultiplePictureInfo'],
-  });
-
-  useEffect(() => {
-    updatePicture({
-      variables: {
-        pictureId,
-        data,
-      },
-    });
-  }, [updatePicture, pictureId, data]);
-
-  useEffect(() => {
-    onResponseChange(index, {
-      loading: updateMutationResponse.loading,
-      error: updateMutationResponse.error,
-    });
-  }, [onResponseChange, index, updateMutationResponse.loading, updateMutationResponse.error]);
-
-  return null;
-};
-
 const BulkEditView = ({
   pictureIds,
   onBack,
@@ -186,58 +144,35 @@ const BulkEditView = ({
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
-  const [bulkEdit, bulkEditResponse] = useBulkEditMutation();
-  const save = useCallback((diff: PictureDiff) => {
-    console.log("bulkEdit", diff);
-    bulkEdit({
-      variables: {
-        pictureIds,
-        data: diff,
-      },
-    });
-  }, [bulkEdit, pictureIds]);
-
-  // setting this state triggers a an updatePicture call inside the UpdatePicture components rendered below
-  const [updatedPictures, setUpdatedPictures] = useState<{ pictureId: string; data: any }[] | null>(
-    null
+  const [bulkEdit, bulkEditResponse] = useBulkEditMutation({
+    refetchQueries: ['getPictureInfo', 'getMultiplePictureInfo'],
+  });
+  const save = useCallback(
+    (diff: PictureDiff) => {
+      bulkEdit({
+        variables: {
+          pictureIds,
+          data: diff,
+        },
+      });
+    },
+    [bulkEdit, pictureIds]
   );
 
-  // keep track of the responses from the updatePicture calls here to show a saveStatus
-  const [updateMutationResponses, setUpdateMutationResponses] = useState<
-    (Pick<MutationResult<unknown>, 'loading' | 'error'> | null)[] | null
-  >(null);
-
-  const onResponseChange = useCallback((index, newResult) => {
-    setUpdateMutationResponses(
-      updateMutationResponses =>
-        updateMutationResponses?.map((oldResult, responseIndex) =>
-          index === responseIndex ? newResult : oldResult
-        ) ?? null
-    );
-  }, []);
-
   const saveStatus = useCallback(
-    (anyFieldTouched: boolean) => {
+    anyFieldTouched => {
       if (anyFieldTouched) {
         return t('curator.saveStatus.pending');
       }
-      if (updateMutationResponses) {
-        if (updateMutationResponses.some(result => result?.error)) {
-          return t('curator.saveStatus.error');
-        }
-        const readyCount = updateMutationResponses.reduce(
-          (count, result) => (result?.loading ? count : count + 1),
-          0
-        );
-        if (readyCount < pictures!.length) {
-          return (
-            t('curator.saveStatus.saving') + ` (${readyCount}/${updateMutationResponses.length})`
-          );
-        }
+      if (bulkEditResponse.loading) {
+        return t('curator.saveStatus.saving');
       }
-      return t('curator.saveStatus.saved') + (pictures ? ` (${pictures.length})` : '');
+      if (bulkEditResponse.error) {
+        return t('curator.saveStatus.error');
+      }
+      return t('curator.saveStatus.saved');
     },
-    [t, updateMutationResponses, pictures]
+    [bulkEditResponse, t]
   );
 
   if (error) {
@@ -249,17 +184,6 @@ const BulkEditView = ({
     const onSave = (field: Partial<FlatPicture>) => {
       const diff = computePictureDiff(combinedPicture, field);
       save(diff);
-      setUpdatedPictures(
-        pictures.map(picture => {
-          const applied = applyPictureDiff(picture, diff);
-          return {
-            pictureId: picture.id,
-            data: applied,
-          };
-        })
-      );
-      // there are no responses at first, they will be populated by the onResponseChange callbacks below
-      setUpdateMutationResponses(pictures.map(_ => null));
     };
     return (
       <div className='bulk-edit'>
@@ -292,14 +216,6 @@ const BulkEditView = ({
             )}
           />
         </div>
-        {updatedPictures?.map((updatedPicture, index) => (
-          <UpdatePicture
-            key={updatedPicture.pictureId}
-            {...updatedPicture}
-            index={index}
-            onResponseChange={onResponseChange}
-          />
-        ))}
       </div>
     );
   } else {
