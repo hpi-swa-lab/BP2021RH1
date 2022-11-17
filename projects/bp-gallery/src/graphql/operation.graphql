@@ -100,7 +100,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        comments(publicationState: PREVIEW, sort: "date:asc") {
+        comments(publicationState: PREVIEW, sort: "date:desc") {
           data {
             id
             attributes {

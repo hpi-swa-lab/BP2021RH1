@@ -2972,7 +2972,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          comments(publicationState: PREVIEW, sort: "date:asc") {
+          comments(publicationState: PREVIEW, sort: "date:desc") {
             data {
               id
               attributes {
