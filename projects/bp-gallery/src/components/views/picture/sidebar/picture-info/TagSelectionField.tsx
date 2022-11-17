@@ -56,8 +56,15 @@ const TagSelectionField = <T extends TagFields>({
       if (!onChange) {
         return;
       }
-      list[index].verified = !list[index].verified;
-      onChange(list);
+      const newList = list.map((tag, newIndex) =>
+        newIndex === index
+          ? {
+              ...tag,
+              verified: !tag.verified,
+            }
+          : tag
+      );
+      onChange(newList);
     },
     [onChange]
   );
