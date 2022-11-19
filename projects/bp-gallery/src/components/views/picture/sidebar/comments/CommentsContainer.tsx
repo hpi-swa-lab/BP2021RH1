@@ -22,6 +22,12 @@ const CommentsContainer = ({
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
 
+  const sortedComments = () => {
+    return comments?.sort(
+      (comment1, comment2) => Number(comment2.pinned) - Number(comment1.pinned)
+    );
+  };
+
   const badgeNumber = (() => {
     return role < AuthRole.CURATOR
       ? comments?.filter(elem => elem.publishedAt).length
@@ -54,7 +60,7 @@ const CommentsContainer = ({
         <ExpandMore />
       </div>
       <div className='comment-container'>
-        {comments?.map((comment: FlatComment) => (
+        {sortedComments()?.map((comment: FlatComment) => (
           <CommentVerification comment={comment} key={comment.id}>
             <FormattedComment comment={comment} />
           </CommentVerification>

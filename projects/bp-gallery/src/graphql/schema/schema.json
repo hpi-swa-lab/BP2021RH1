@@ -5222,6 +5222,16 @@
             "defaultValue": null
           },
           {
+            "name": "pinned",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "BooleanFilterInput",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -5341,6 +5351,16 @@
             "defaultValue": null
           },
           {
+            "name": "pinned",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "publishedAt",
             "description": null,
             "type": {
@@ -5411,6 +5431,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "PictureEntityResponse",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "pinned",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -12216,7 +12248,7 @@
           },
           {
             "name": "deleteUsersPermissionsUser",
-            "description": "Update an existing user",
+            "description": "Delete an existing user",
             "args": [
               {
                 "name": "id",
