@@ -13,7 +13,7 @@ import Loading from '../../common/Loading';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
-import PictureInfo from '../picture/sidebar/picture-info/PictureInfo';
+import PictureInfo, { Field } from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
 import { History } from 'history';
 import { PictureToolbar } from '../picture/overlay/PictureToolbar';
@@ -78,10 +78,7 @@ type PictureDiff = {
     : FlatPicture[K];
 };
 
-const computePictureDiff = (
-  oldPicture: FlatPicture,
-  newPicture: Partial<FlatPicture>
-): PictureDiff => {
+const computePictureDiff = (oldPicture: Field, newPicture: Field): PictureDiff => {
   // entries => fromEntries instead of literal object notation like in combinePictures
   // to only keep keys that are on newPicture
   return Object.fromEntries(
@@ -90,10 +87,11 @@ const computePictureDiff = (
         // just plainly overwrite values which aren't arrays
         return [key, newValues];
       }
-      const oldValues = oldPicture[key as keyof FlatPicture];
+      type Element = typeof newValues[number];
+      const oldValues = oldPicture[key as keyof Field] as Field[keyof Field] & Array<any>;
       const diff = {
-        added: differenceWith(newValues, oldValues, isEqual),
-        removed: differenceWith(oldValues, newValues, isEqual),
+        added: differenceWith<Element, Element>(newValues, oldValues, isEqual),
+        removed: differenceWith<Element, Element>(oldValues, newValues, isEqual),
       };
       return [key, diff];
     })
@@ -196,8 +194,12 @@ const BulkEditView = ({
     return <Loading />;
   } else if (pictures) {
     const combinedPicture = combinePictures(pictures);
-    const onSave = (field: Partial<FlatPicture>) => {
-      const diff = computePictureDiff(combinedPicture, field);
+    const onSave = (field: Field) => {
+      const combinedPictureAsField = {
+        ...combinedPicture,
+        archive_tag: combinedPicture.archive_tag?.id,
+      };
+      const diff = computePictureDiff(combinedPictureAsField, field);
       save(diff);
     };
     return (

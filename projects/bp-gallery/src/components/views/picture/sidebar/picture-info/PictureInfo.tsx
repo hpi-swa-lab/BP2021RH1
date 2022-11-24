@@ -4,6 +4,7 @@ import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import {
+  Scalars,
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
@@ -19,13 +20,18 @@ import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import ArchiveTagField from './ArchiveTagField';
 
+export type Field = Pick<
+  FlatPicture,
+  "time_range_tag" | "descriptions" | "keyword_tags" | "location_tags" | "person_tags" | "collections"
+> & { archive_tag?: Scalars["ID"] };
+
 const PictureInfo = ({
   picture,
   onSave,
   topInfo,
 }: {
   picture: FlatPicture;
-  onSave: (field: Partial<FlatPicture>) => void;
+  onSave: (field: Field) => void;
   topInfo?: (anyFieldTouched: boolean) => ReactNode;
 }) => {
   const { role } = useAuth();
@@ -34,7 +40,7 @@ const PictureInfo = ({
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
 
   const savePictureInfo = useCallback(
-    (field: Partial<FlatPicture>) => {
+    (field: Field) => {
       setAnyFieldTouched(false);
       onSave(field);
     },
@@ -156,7 +162,7 @@ const PictureInfo = ({
         >
           <ArchiveTagField
             archiveTag={picture.archive_tag}
-            onChange={archiveTag => savePictureInfo({ archive_tag: archiveTag })}
+            onChange={archiveTag => savePictureInfo({ archive_tag: archiveTag.id })}
           />
         </PictureInfoField>
       )}

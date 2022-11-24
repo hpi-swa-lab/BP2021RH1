@@ -7,7 +7,7 @@ import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import { PictureViewContext } from '../PictureView';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
-import PictureInfo from './picture-info/PictureInfo';
+import PictureInfo, { Field } from './picture-info/PictureInfo';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
@@ -34,7 +34,7 @@ const PictureSidebar = ({
   });
 
   const onSave = useCallback(
-    (field: Partial<FlatPicture>) => {
+    (field: Field) => {
       updatePicture({
         variables: {
           pictureId: picture!.id,
