@@ -1,4 +1,4 @@
-import { differenceWith, intersectionWith, isEqual, unionWith } from 'lodash';
+import { differenceWith, intersectionWith, isEqual } from 'lodash';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory } from 'react-router-dom';
@@ -94,21 +94,6 @@ const computePictureDiff = (oldPicture: Field, newPicture: Field): PictureDiff =
         removed: differenceWith<Element, Element>(oldValues, newValues, isEqual),
       };
       return [key, diff];
-    })
-  );
-};
-
-const applyPictureDiff = (picture: FlatPicture, diff: PictureDiff): Partial<FlatPicture> => {
-  return Object.fromEntries(
-    Object.entries(diff).map(([key, diff]) => {
-      const value = picture[key as keyof FlatPicture];
-      if (!(value instanceof Array)) {
-        // this is not a diff, just the new value (see computePictureDiff)
-        return [key, diff];
-      }
-      const { added, removed } = diff;
-      const applied = unionWith(differenceWith(value, removed, isEqual), added, isEqual);
-      return [key, applied];
     })
   );
 };
