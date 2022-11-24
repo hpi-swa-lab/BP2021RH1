@@ -1,7 +1,7 @@
 import { differenceWith, intersectionWith, isEqual, unionWith } from 'lodash';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import {
   PictureFiltersInput,
   useBulkEditMutation,
@@ -17,6 +17,8 @@ import PictureInfo from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
 import { History } from 'history';
 import { PictureToolbar } from '../picture/overlay/PictureToolbar';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { FALLBACK_PATH } from '../../routes';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -121,6 +123,7 @@ const BulkEditView = ({
   onBack?: (pictureIds: string[]) => void;
 }) => {
   const { t } = useTranslation();
+  const { role, loading: authLoading } = useAuth();
 
   const history: History = useHistory();
 
@@ -174,6 +177,18 @@ const BulkEditView = ({
     },
     [bulkEditResponse, t]
   );
+
+  if (role < AuthRole.CURATOR) {
+    // protect from unauthorized access (e. g. people manually entering the bulk edit url)
+    console.log('authLoading', authLoading);
+    if (authLoading) {
+      console.log('checking thing');
+      return <>Checking authorization...</>;
+    } else {
+      console.log('redirecting');
+      return <Redirect to={FALLBACK_PATH} />;
+    }
+  }
 
   if (error) {
     return <QueryErrorDisplay error={error} />;

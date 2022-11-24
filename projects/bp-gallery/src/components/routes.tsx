@@ -15,6 +15,8 @@ import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 import BulkEditView from './views/bulk-edit/BulkEditView';
 
+export const FALLBACK_PATH = '/browse';
+
 const routes: RouteConfig[] = [
   {
     component: App,
@@ -109,7 +111,7 @@ const routes: RouteConfig[] = [
       {
         // fallback component for unmatched routes
         render: () => {
-          return <Redirect to='/browse' />;
+          return <Redirect to={FALLBACK_PATH} />;
         },
       },
     ],
