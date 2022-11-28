@@ -22,8 +22,13 @@ import ArchiveTagField from './ArchiveTagField';
 
 export type Field = Pick<
   FlatPicture,
-  "time_range_tag" | "descriptions" | "keyword_tags" | "location_tags" | "person_tags" | "collections"
-> & { archive_tag?: Scalars["ID"] };
+  | 'time_range_tag'
+  | 'descriptions'
+  | 'keyword_tags'
+  | 'location_tags'
+  | 'person_tags'
+  | 'collections'
+> & { archive_tag?: Scalars['ID'] };
 
 const PictureInfo = ({
   picture,
