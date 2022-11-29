@@ -1,13 +1,13 @@
 import { Icon } from '@mui/material';
 import { isFunction } from 'lodash';
-import React, { MouseEventHandler, useMemo, useRef } from 'react';
+import React, { MouseEvent, MouseEventHandler, useMemo, useRef } from 'react';
 import { asApiPath } from '../../App';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PicturePreview.scss';
 
 export interface PicturePreviewAdornment {
   position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-  onClick: (picture: FlatPicture) => void;
+  onClick: (picture: FlatPicture, event: MouseEvent<HTMLElement>) => void;
   icon: string | ((picture: FlatPicture) => string);
 }
 
@@ -21,11 +21,13 @@ const PicturePreview = ({
   onClick,
   pictureOrigin = PictureOrigin.REMOTE,
   adornments,
+  viewOnly,
 }: {
   picture: FlatPicture;
   onClick: MouseEventHandler<HTMLDivElement>;
   pictureOrigin?: PictureOrigin;
   adornments?: PicturePreviewAdornment[];
+  viewOnly?: boolean;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +39,7 @@ const PicturePreview = ({
     <div
       onClick={onClick}
       id={`picture-preview-for-${picture.id}`}
-      className='picture-preview'
+      className={`picture-preview ${viewOnly ? 'view-only' : ''}`}
       ref={containerRef}
       style={{
         flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
@@ -61,7 +63,7 @@ const PicturePreview = ({
             onClick={event => {
               event.preventDefault();
               event.stopPropagation();
-              adornment.onClick(picture);
+              adornment.onClick(picture, event);
             }}
           >
             <Icon>{isFunction(adornment.icon) ? adornment.icon(picture) : adornment.icon}</Icon>

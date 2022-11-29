@@ -1,5 +1,5 @@
 import { Popover } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatTimeRangeTag } from '../../../../../types/additionalFlatTypes';
 import { formatTimeStamp } from '../../../../../helpers/format-timestamp';
@@ -50,19 +50,34 @@ const DateRangeSelectionField = ({
     };
   }, [timeRange]);
 
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  const openPopover = (anchor: HTMLDivElement) => {
+    if (role < AuthRole.CURATOR) return;
+    setAnchorElement(anchor);
+  };
+
   return (
     <>
       <div
         className='date-indicator'
         onClick={event => {
-          if (role < AuthRole.CURATOR) return;
-          setAnchorElement(event.currentTarget);
+          openPopover(event.currentTarget);
         }}
+        onFocus={event => {
+          // don't open again when we just closed the popover (and thus the div was refocused)
+          if (popoverRef.current?.contains(event.relatedTarget)) {
+            return;
+          }
+          openPopover(event.currentTarget);
+        }}
+        tabIndex={0}
       >
         {timeRange ? formatTimeStamp(timeRange) : `${t('pictureFields.noTime')}`}
       </div>
       {role >= AuthRole.CURATOR && (
         <Popover
+          ref={popoverRef}
           open={open}
           anchorEl={anchorElement}
           onClose={() => {

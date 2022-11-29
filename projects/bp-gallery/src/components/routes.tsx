@@ -13,6 +13,9 @@ import BrowseView from './views/browse/BrowseView';
 import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
+import BulkEditView from './views/bulk-edit/BulkEditView';
+
+export const FALLBACK_PATH = '/browse';
 
 const routes: RouteConfig[] = [
   {
@@ -68,6 +71,12 @@ const routes: RouteConfig[] = [
         },
       },
       {
+        path: '/bulk-edit/:ids',
+        render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
+          return <BulkEditView pictureIds={match.params.ids.split(',')} />;
+        },
+      },
+      {
         path: '/tags/keywords',
         render: () => {
           return <TagTableView type={TagType.KEYWORD} />;
@@ -102,7 +111,7 @@ const routes: RouteConfig[] = [
       {
         // fallback component for unmatched routes
         render: () => {
-          return <Redirect to='/browse' />;
+          return <Redirect to={FALLBACK_PATH} />;
         },
       },
     ],

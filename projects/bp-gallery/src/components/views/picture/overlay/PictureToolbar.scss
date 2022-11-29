@@ -1,0 +1,44 @@
+.picture-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem 1rem;
+  width: calc(100% - 2rem);
+  background: rgba(0, 0, 0, 0.4);
+  transition: background 0.3s;
+  justify-content: space-between;
+
+  .bh-logo {
+    height: 2rem;
+
+    img {
+      height: 2rem;
+      width: 2rem;
+    }
+  }
+
+  button {
+    color: white !important;
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  animation: toolbar-float-in 0.5s;
+  animation-fill-mode: forwards;
+
+  transform: translateY(-150%);
+
+  @keyframes toolbar-float-in {
+    from {
+      transform: translateY(-150%);
+    }
+    to {
+      transform: translateY(0%);
+    }
+  }
+}
