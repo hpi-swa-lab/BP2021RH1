@@ -90,6 +90,7 @@ const DateRangeSelectionField = ({
             } else {
               onResetTouch();
             }
+            resetInputFields();
           }}
           anchorOrigin={{
             vertical: 'bottom',
@@ -104,7 +105,7 @@ const DateRangeSelectionField = ({
             staticRanges={[]}
             inputRanges={INPUT_RANGES}
             dateDisplayFormat={'dd.MM.yyyy'}
-            minDate={dayjs(`100-01-01`).toDate()}
+            minDate={dayjs(`1000-01-01`).toDate()}
             maxDate={dayjs().add(1, 'year').toDate()}
             onChange={range => {
               if (range.selection.startDate && range.selection.endDate) {
@@ -117,6 +118,7 @@ const DateRangeSelectionField = ({
                   tRT.end = e;
                   return { ...tRT };
                 });
+                resetInputFields();
               }
             }}
           />
@@ -131,11 +133,26 @@ export default DateRangeSelectionField;
 let yearValue = '';
 let decadeValue = '';
 
+let resetDecade = false;
+let resetYear = false;
+
+const resetInputFields = () => {
+  if (resetDecade) {
+    decadeValue = '';
+  }
+  if (resetYear) {
+    yearValue = '';
+  }
+  resetDecade = true;
+  resetYear = true;
+};
+
 const INPUT_RANGES: InputRange[] = [
   {
     label: 'Jahr',
     range(value: number, props) {
       yearValue = `${value}`;
+      resetYear = false;
       if (yearValue.length < 4) {
         return props?.ranges?.[0] as unknown as Range;
       }
@@ -155,13 +172,14 @@ const INPUT_RANGES: InputRange[] = [
   {
     label: i18n.t('common.0s'),
     range(value: number, props) {
-      decadeValue = `${value}`.slice(-1);
-      if (decadeValue.length !== 1) {
+      decadeValue = `${value}`;
+      resetDecade = false;
+      if (decadeValue.length !== 3) {
         return props?.ranges?.[0] as unknown as Range;
       }
       const returnRange = {
-        startDate: dayjs(`19${decadeValue}0-01-01`).toDate(),
-        endDate: dayjs(`19${decadeValue}9-12-31`).toDate(),
+        startDate: dayjs(`${decadeValue}0-01-01`).toDate(),
+        endDate: dayjs(`${decadeValue}9-12-31`).toDate(),
       } as unknown as Range;
       return returnRange;
     },
