@@ -27,10 +27,10 @@ const renderWithAPIMocksAndPictureContextMocks = (component: ReactComponentEleme
 
 describe('PictureSidebar', () => {
   it('should be able to open and close', async () => {
-    const { container } = renderWithAPIMocksAndPictureContextMocks(
+    const component = renderWithAPIMocksAndPictureContextMocks(
       <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
-    const container = component.container;
+    const { container } = component;
     const openCloseButton = await component.findByRole('button');
     expect(openCloseButton).toBeInTheDocument();
     expect(container.querySelector('.picture-sidebar')?.className).toContain('closed');
