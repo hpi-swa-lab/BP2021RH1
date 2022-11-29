@@ -17,7 +17,7 @@ const UploadsView = () => {
 
   const [createArchiveTagMutation] = useCreateArchiveTagMutation();
 
-  const { moveToCollection } = useBulkOperations();
+  const { moveToCollection, bulkEdit } = useBulkOperations();
 
   const uploadAreaProps = useMemo(() => {
     return role >= AuthRole.CURATOR
@@ -58,7 +58,7 @@ const UploadsView = () => {
             scrollHeight={scrollHeight}
             hashbase={'uploads'}
             uploadAreaProps={uploadAreaProps}
-            bulkOperations={[moveToCollection]}
+            bulkOperations={[moveToCollection, bulkEdit]}
           />
         </div>
       )}
