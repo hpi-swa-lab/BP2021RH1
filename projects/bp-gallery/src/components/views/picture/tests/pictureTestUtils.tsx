@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { render } from '@testing-library/react';
 import { ReactComponentElement } from 'react';
 import { PictureViewContext, PictureViewContextFields } from '../PictureView';
+import { renderWithAPIMocks } from '../../../../testUtils';
+import { MockedResponse } from '@apollo/client/testing';
 
 const MockedPictureView = ({
   state,

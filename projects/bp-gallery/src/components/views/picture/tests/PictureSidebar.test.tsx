@@ -30,7 +30,8 @@ describe('PictureSidebar', () => {
     const { container } = renderWithAPIMocksAndPictureContextMocks(
       <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
-    const openCloseButton = container.querySelector('.quick-access-buttons button');
+    const container = component.container;
+    const openCloseButton = await component.findByRole('button');
     expect(openCloseButton).toBeInTheDocument();
     expect(container.querySelector('.picture-sidebar')?.className).toContain('closed');
     fireEvent(
