@@ -72,7 +72,7 @@ const SearchView = () => {
     return convertSearchParamsToPictureFilters(searchParams);
   }, [isAllSearchActive, searchParams]);
 
-  const { linkToCollection } = useBulkOperations();
+  const { linkToCollection, bulkEdit } = useBulkOperations();
 
   return (
     <ScrollContainer>
@@ -107,7 +107,7 @@ const SearchView = () => {
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={search}
-              bulkOperations={[linkToCollection]}
+              bulkOperations={[linkToCollection, bulkEdit]}
               resultPictureCallback={(pictures: number) => {
                 setAreResultsEmpty(pictures <= 0);
               }}

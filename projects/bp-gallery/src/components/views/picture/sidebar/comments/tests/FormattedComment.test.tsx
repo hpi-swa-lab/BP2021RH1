@@ -39,6 +39,7 @@ const renderWithAuth = (role: AuthRole, component: JSX.Element) => {
           return new Promise(() => {});
         },
         logout: () => {},
+        loading: false,
       }}
     >
       {component}
