@@ -97,12 +97,9 @@ const BulkEditView = ({
 
   if (role < AuthRole.CURATOR) {
     // protect from unauthorized access (e. g. people manually entering the bulk edit url)
-    console.log('authLoading', authLoading);
     if (authLoading) {
-      console.log('checking thing');
       return <>Checking authorization...</>;
     } else {
-      console.log('redirecting');
       return <Redirect to={FALLBACK_PATH} />;
     }
   }
@@ -134,7 +131,7 @@ const BulkEditView = ({
                   queryParams={getPictureFilters(pictureIds)}
                   scrollPos={scrollPos}
                   scrollHeight={scrollHeight}
-                  hashbase={'yippie'}
+                  hashbase={'A'}
                   viewOnly
                 />
               )}
