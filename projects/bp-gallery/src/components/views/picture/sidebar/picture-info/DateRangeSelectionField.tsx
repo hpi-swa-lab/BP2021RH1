@@ -75,6 +75,7 @@ const DateRangeSelectionField = ({
             } else {
               onResetTouch();
             }
+            resetInputFields();
           }}
           anchorOrigin={{
             vertical: 'bottom',
@@ -102,6 +103,7 @@ const DateRangeSelectionField = ({
                   tRT.end = e;
                   return { ...tRT };
                 });
+                resetInputFields();
               }
             }}
           />
@@ -116,11 +118,26 @@ export default DateRangeSelectionField;
 let yearValue = '';
 let decadeValue = '';
 
+let resetDecade = false;
+let resetYear = false;
+
+const resetInputFields = () => {
+  if (resetDecade) {
+    decadeValue = '';
+  }
+  if (resetYear) {
+    yearValue = '';
+  }
+  resetDecade = true;
+  resetYear = true;
+};
+
 const INPUT_RANGES: InputRange[] = [
   {
     label: 'Jahr',
     range(value: number, props) {
       yearValue = `${value}`;
+      resetYear = false;
       if (yearValue.length < 4) {
         return props?.ranges?.[0] as unknown as Range;
       }
@@ -141,6 +158,7 @@ const INPUT_RANGES: InputRange[] = [
     label: i18n.t('common.0s'),
     range(value: number, props) {
       decadeValue = `${value}`;
+      resetDecade = false;
       if (decadeValue.length !== 3) {
         return props?.ranges?.[0] as unknown as Range;
       }
