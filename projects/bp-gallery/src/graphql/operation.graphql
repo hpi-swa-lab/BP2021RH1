@@ -100,7 +100,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        comments(publicationState: PREVIEW, sort: "date:asc") {
+        comments(publicationState: PREVIEW, sort: "date:desc") {
           data {
             id
             attributes {
@@ -108,6 +108,7 @@ query getPictureInfo($pictureId: ID!) {
               author
               date
               publishedAt
+              pinned
             }
           }
         }
@@ -897,6 +898,22 @@ mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
 
 mutation declineComment($commentId: ID!) {
   deleteComment(id: $commentId) {
+    data {
+      id
+    }
+  }
+}
+
+mutation pinComment($commentId: ID!) {
+  updateComment(id: $commentId, data: { pinned: true }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation unpinComment($commentId: ID!) {
+  updateComment(id: $commentId, data: { pinned: false }) {
     data {
       id
     }

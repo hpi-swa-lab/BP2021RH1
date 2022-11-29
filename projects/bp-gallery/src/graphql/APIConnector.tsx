@@ -197,6 +197,7 @@ export type Comment = {
   createdAt?: Maybe<Scalars['DateTime']>;
   date: Scalars['DateTime'];
   picture?: Maybe<PictureEntityResponse>;
+  pinned?: Maybe<Scalars['Boolean']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -225,6 +226,7 @@ export type CommentFiltersInput = {
   not?: InputMaybe<CommentFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<CommentFiltersInput>>>;
   picture?: InputMaybe<PictureFiltersInput>;
+  pinned?: InputMaybe<BooleanFilterInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   text?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -234,6 +236,7 @@ export type CommentInput = {
   author?: InputMaybe<Scalars['String']>;
   date?: InputMaybe<Scalars['DateTime']>;
   picture?: InputMaybe<Scalars['ID']>;
+  pinned?: InputMaybe<Scalars['Boolean']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
 };
@@ -606,9 +609,7 @@ export type Mutation = {
   createPicture?: Maybe<PictureEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
-  /** Create a new role */
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
-  /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   deleteArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   deleteBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -621,14 +622,12 @@ export type Mutation = {
   deletePicture?: Maybe<PictureEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
-  /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
   /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   doBulkEdit?: Maybe<Scalars['Int']>;
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
-  /** Request a reset password token */
   forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
   login: UsersPermissionsLoginPayload;
   mergeCollections?: Maybe<Scalars['ID']>;
@@ -636,10 +635,8 @@ export type Mutation = {
   mergeLocationTags?: Maybe<Scalars['ID']>;
   mergePersonTags?: Maybe<Scalars['ID']>;
   multipleUpload: Array<Maybe<UploadFileEntityResponse>>;
-  /** Register a user */
   register: UsersPermissionsLoginPayload;
   removeFile?: Maybe<UploadFileEntityResponse>;
-  /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   updateBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -654,9 +651,7 @@ export type Mutation = {
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
-  /** Update an existing role */
   updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>;
-  /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
 };
@@ -1784,6 +1779,7 @@ export type GetPictureInfoQuery = {
                                   author?: string | null | undefined;
                                   date: any;
                                   publishedAt?: any | null | undefined;
+                                  pinned?: boolean | null | undefined;
                                 }
                               | null
                               | undefined;
@@ -3010,6 +3006,28 @@ export type DeclineCommentMutation = {
     | undefined;
 };
 
+export type PinCommentMutationVariables = Exact<{
+  commentId: Scalars['ID'];
+}>;
+
+export type PinCommentMutation = {
+  updateComment?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UnpinCommentMutationVariables = Exact<{
+  commentId: Scalars['ID'];
+}>;
+
+export type UnpinCommentMutation = {
+  updateComment?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type DeleteCollectionMutationVariables = Exact<{
   collectionId: Scalars['ID'];
 }>;
@@ -3144,7 +3162,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          comments(publicationState: PREVIEW, sort: "date:asc") {
+          comments(publicationState: PREVIEW, sort: "date:desc") {
             data {
               id
               attributes {
@@ -3152,6 +3170,7 @@ export const GetPictureInfoDocument = gql`
                 author
                 date
                 publishedAt
+                pinned
               }
             }
           }
@@ -6188,6 +6207,108 @@ export type DeclineCommentMutationResult = Apollo.MutationResult<DeclineCommentM
 export type DeclineCommentMutationOptions = Apollo.BaseMutationOptions<
   DeclineCommentMutation,
   DeclineCommentMutationVariables
+>;
+
+export const PinCommentDocument = gql`
+  mutation pinComment($commentId: ID!) {
+    updateComment(id: $commentId, data: { pinned: true }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type PinCommentMutationFn = Apollo.MutationFunction<
+  PinCommentMutation,
+  PinCommentMutationVariables
+>;
+
+/**
+ * __usePinCommentMutation__
+ *
+ * To run a mutation, you first call `usePinCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePinCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pinCommentMutation, { data, loading, error }] = usePinCommentMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function usePinCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<PinCommentMutation, PinCommentMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<PinCommentMutation, PinCommentMutationVariables>(
+    PinCommentDocument,
+    options
+  );
+}
+
+export type PinCommentMutationHookResult = ReturnType<typeof usePinCommentMutation>;
+
+export type PinCommentMutationResult = Apollo.MutationResult<PinCommentMutation>;
+
+export type PinCommentMutationOptions = Apollo.BaseMutationOptions<
+  PinCommentMutation,
+  PinCommentMutationVariables
+>;
+
+export const UnpinCommentDocument = gql`
+  mutation unpinComment($commentId: ID!) {
+    updateComment(id: $commentId, data: { pinned: false }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UnpinCommentMutationFn = Apollo.MutationFunction<
+  UnpinCommentMutation,
+  UnpinCommentMutationVariables
+>;
+
+/**
+ * __useUnpinCommentMutation__
+ *
+ * To run a mutation, you first call `useUnpinCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnpinCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unpinCommentMutation, { data, loading, error }] = useUnpinCommentMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useUnpinCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<UnpinCommentMutation, UnpinCommentMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UnpinCommentMutation, UnpinCommentMutationVariables>(
+    UnpinCommentDocument,
+    options
+  );
+}
+
+export type UnpinCommentMutationHookResult = ReturnType<typeof useUnpinCommentMutation>;
+
+export type UnpinCommentMutationResult = Apollo.MutationResult<UnpinCommentMutation>;
+
+export type UnpinCommentMutationOptions = Apollo.BaseMutationOptions<
+  UnpinCommentMutation,
+  UnpinCommentMutationVariables
 >;
 
 export const DeleteCollectionDocument = gql`

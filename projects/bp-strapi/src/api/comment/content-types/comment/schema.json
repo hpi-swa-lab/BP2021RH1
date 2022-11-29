@@ -27,6 +27,11 @@
       "relation": "manyToOne",
       "target": "api::picture.picture",
       "inversedBy": "comments"
+    },
+    "pinned": {
+      "type": "boolean",
+      "default": false,
+      "required": false
     }
   }
 }
