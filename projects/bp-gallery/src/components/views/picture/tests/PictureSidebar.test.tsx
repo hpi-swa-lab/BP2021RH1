@@ -35,7 +35,7 @@ describe('PictureSidebar', () => {
     expect(openCloseButton).toBeInTheDocument();
     expect(container.querySelector('.picture-sidebar')?.className).toContain('closed');
     fireEvent(
-      openCloseButton!,
+      openCloseButton,
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,

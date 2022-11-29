@@ -9,7 +9,7 @@ test('collection page shows the coresponding collection info', () => {
   const id = '1';
   const descr = 'collection description';
   const name = 'collection name';
-  const { container } = render(<CollectionDescription id={'1'} description={descr} name={name} />);
+  const { container } = render(<CollectionDescription id={id} description={descr} name={name} />);
 
   const collectionNameElements = container.getElementsByTagName('h2');
   const collectionDescriptionElements = container.getElementsByClassName('collection-description');
