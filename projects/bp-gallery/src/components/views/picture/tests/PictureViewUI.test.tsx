@@ -4,7 +4,9 @@ import PictureViewUI from '../overlay/PictureViewUI';
 
 describe('Picture View UI', () => {
   it('should display bh-logo', async () => {
-    const { container } = render(<PictureViewUI calledViaLink={true} />);
+    const { container } = render(
+      <PictureViewUI calledViaLink={true} pictureId={'1'} sessionId={''} />
+    );
 
     const logo = container.querySelector('.bh-logo');
     expect(logo).toBeInTheDocument();
@@ -13,7 +15,9 @@ describe('Picture View UI', () => {
 
   describe('Back button', () => {
     it('should render the back to home button on called via link', async () => {
-      const { container } = render(<PictureViewUI calledViaLink={true} />);
+      const { container } = render(
+        <PictureViewUI calledViaLink={true} pictureId={'1'} sessionId={''} />
+      );
 
       const backButton: HTMLButtonElement | null = container.querySelector(
         '.picture-toolbar > button'
@@ -23,7 +27,9 @@ describe('Picture View UI', () => {
     });
 
     it('should render the back button on not called via link', async () => {
-      const { container } = render(<PictureViewUI calledViaLink={false} />);
+      const { container } = render(
+        <PictureViewUI calledViaLink={false} pictureId={'1'} sessionId={''} />
+      );
 
       const backButton: HTMLButtonElement | null = container.querySelector(
         '.picture-toolbar > button'

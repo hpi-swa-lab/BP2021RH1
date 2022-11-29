@@ -26,9 +26,16 @@ const MockedPictureView = ({
   );
 };
 
+export const wrapInPictureContextMocks = (
+  component: ReactComponentElement<any>,
+  state?: PictureViewContextFields
+) => {
+  return <MockedPictureView state={state}>{component}</MockedPictureView>;
+};
+
 export const renderWithPictureContextMocks = (
   component: ReactComponentElement<any>,
   state?: PictureViewContextFields
 ) => {
-  return render(<MockedPictureView state={state}>{component}</MockedPictureView>);
+  return render(wrapInPictureContextMocks(component, state));
 };

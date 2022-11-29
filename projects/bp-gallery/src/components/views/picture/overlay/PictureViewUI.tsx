@@ -3,6 +3,7 @@ import { Button, Icon } from '@mui/material';
 import PictureNavigationButtons from './PictureNavigationButtons';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
+import { PictureToolbar } from './PictureToolbar';
 
 export const PictureViewUI = ({
   calledViaLink,
@@ -16,22 +17,10 @@ export const PictureViewUI = ({
   const { t } = useTranslation();
   const { role } = useAuth();
 
-  const onBack = () => {
-    window.history.back();
-  };
-
   return (
     <div className='picture-ui'>
       <PictureNavigationButtons />
-      <div className='picture-toolbar'>
-        <Button onClick={calledViaLink ? () => (location.href = '/browse') : onBack}>
-          <Icon>arrow_back</Icon>
-          {calledViaLink ? t('common.back-to-home') : t('common.back')}
-        </Button>
-        <div className='bh-logo'>
-          <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
-        </div>
-      </div>
+      <PictureToolbar calledViaLink={calledViaLink} />
       {role >= AuthRole.CURATOR && (
         <Button
           className='presentation-mode-button'
