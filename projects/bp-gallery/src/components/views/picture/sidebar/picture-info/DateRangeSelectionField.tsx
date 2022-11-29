@@ -104,7 +104,7 @@ const DateRangeSelectionField = ({
             staticRanges={[]}
             inputRanges={INPUT_RANGES}
             dateDisplayFormat={'dd.MM.yyyy'}
-            minDate={dayjs(`1850-01-01`).toDate()}
+            minDate={dayjs(`100-01-01`).toDate()}
             maxDate={dayjs().add(1, 'year').toDate()}
             onChange={range => {
               if (range.selection.startDate && range.selection.endDate) {
