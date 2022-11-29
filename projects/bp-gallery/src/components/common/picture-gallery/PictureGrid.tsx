@@ -100,12 +100,8 @@ const PictureGrid = ({
 
   const navigateToBulkEdit = useCallback(
     (pictureIds: string) => {
-      setTransitioning(true);
       setFocusedBulkEdit(pictureIds);
       window.history.pushState({}, '', `/bulk-edit/${pictureIds}`);
-      zoomIntoPicture('multi-view-container').then(() => {
-        setTransitioning(false);
-      });
     },
     [setFocusedBulkEdit]
   );
@@ -224,11 +220,7 @@ const PictureGrid = ({
         <BulkEditView
           pictureIds={selectedPictures.map(picture => picture.id)}
           onBack={() => {
-            setTransitioning(true);
-            zoomOutOfPicture(`multi-view-container`).then(() => {
-              setTransitioning(false);
-              setFocusedBulkEdit(undefined);
-            });
+            setFocusedBulkEdit(undefined);
           }}
         />
       )}
