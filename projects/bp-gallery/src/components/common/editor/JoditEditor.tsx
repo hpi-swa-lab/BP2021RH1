@@ -26,7 +26,7 @@ const JoditReact = ({ config, value, onChange, onBlur }: JoditReactProps) => {
 
       // adding event handlers
       joditInst.events.on('blur', () => onBlur(joditInst.value));
-      joditInst.events.on('change', value => onChange(value));
+      joditInst.events.on('change', (value: string) => onChange(value));
       joditInst.events.unmute();
       setJodit(joditInst);
     }

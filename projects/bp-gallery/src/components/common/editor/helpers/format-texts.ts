@@ -22,7 +22,7 @@ const removeForbiddenStartTags = (html: string, tags: string[]) => {
   tags.forEach(tag => {
     const startTag = `<${tag}>`;
     const endTag = `</${tag}>`;
-    if (str.indexOf(startTag) === 0 && str.lastIndexOf(endTag) === str.length - endTag.length) {
+    if (str.startsWith(startTag) && str.endsWith(endTag)) {
       str = str.substring(startTag.length, str.length - endTag.length);
       return;
     }
