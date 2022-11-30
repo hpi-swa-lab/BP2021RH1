@@ -41,23 +41,25 @@ const TagSelectionField = <T extends TagFields>({
   const { t } = useTranslation();
 
   const [tagList, setTagList] = useState<T[]>(allTags);
-  const [selectedTags, setSelectedTags] = useState<T[]>(tags);
 
   useEffect(() => {
     setTagList(allTags);
   }, [allTags, setTagList]);
-
-  useEffect(() => {
-    setSelectedTags(tags);
-  }, [tags, setSelectedTags]);
 
   const toggleVerified = useCallback(
     (list: T[], index: number) => {
       if (!onChange) {
         return;
       }
-      list[index].verified = !list[index].verified;
-      onChange(list);
+      const newList = list.map((tag, newIndex) =>
+        newIndex === index
+          ? {
+              ...tag,
+              verified: !tag.verified,
+            }
+          : tag
+      );
+      onChange(newList);
     },
     [onChange]
   );
@@ -65,7 +67,7 @@ const TagSelectionField = <T extends TagFields>({
   if (role >= AuthRole.CURATOR) {
     return (
       <div className='tag-selection'>
-        <Autocomplete
+        <Autocomplete<T, true>
           multiple
           autoHighlight
           isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -118,13 +120,12 @@ const TagSelectionField = <T extends TagFields>({
               }
             }
             const newlyAddedTags = newValue.filter(
-              newVal => !selectedTags.some(tag => tag.id === newVal.id)
+              newVal => !tags.some(tag => tag.id === newVal.id)
             );
             newlyAddedTags.forEach(tag => {
               tag.isNew = true;
               tag.verified = true;
             });
-            setSelectedTags(newValue);
             onChange(newValue);
           }}
           renderOption={(props, option) => {
@@ -157,17 +158,17 @@ const TagSelectionField = <T extends TagFields>({
           getOptionLabel={(option: T) => {
             return option.name;
           }}
-          value={selectedTags}
+          value={tags}
           renderInput={params => <TextField variant='standard' {...params} />}
         />
       </div>
     );
   } else {
-    return !selectedTags.length ? (
+    return !tags.length ? (
       <div className='none-found'>{noContentText}</div>
     ) : (
       <Stack direction='row' spacing={1} className='chip-stack'>
-        {selectedTags.map(tag => {
+        {tags.map(tag => {
           return (
             <Chip
               key={tag.id}

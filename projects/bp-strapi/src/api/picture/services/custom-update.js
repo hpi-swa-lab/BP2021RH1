@@ -4,11 +4,33 @@ const VERIFIED_PREFIX = "verified_";
 const withVerifiedPrefix = (tagKeyInPictureRelation) =>
   `${VERIFIED_PREFIX}${tagKeyInPictureRelation}`;
 
+const DATABASE_SCHEMA = process.env.DATABASE_SCHEMA;
+
+const PICTURES_KEY = "pictures";
 const DESCRIPTIONS_KEY = "descriptions";
 const KEYWORD_TAGS_KEY = "keyword_tags";
 const LOCATION_TAGS_KEY = "location_tags";
 const PERSON_TAGS_KEY = "person_tags";
 const TIME_RANGE_TAG_KEY = "time_range_tag";
+const ARCHIVE_TAG_KEY = "archive_tag";
+
+const singular = key => {
+  if (key[key.length - 1] !== "s") {
+    return key;
+  }
+  return key.slice(0, -1);
+};
+
+const plural = key => {
+  if (key[key.length - 1] === "s") {
+    return key;
+  }
+  return key + "s";
+};
+
+const table = name => {
+  return DATABASE_SCHEMA + "." + name;
+};
 
 /**
  * Returns the key of the tag type that is used for the API (so e.g. "person-tag")
@@ -352,8 +374,7 @@ const processUpdatesForTimeRangeTag = async (pictureQuery, data) => {
     : null;
 
   strapi.log.debug(
-    `New ${
-      timeRangeTag.verified ? "verified " : ""
+    `New ${timeRangeTag.verified ? "verified " : ""
     }${TIME_RANGE_TAG_KEY}: ${newTimeRangeTagId}`
   );
 
@@ -430,7 +451,7 @@ const processUpdatesForLocationTags = async (data) =>
   processSimpleTagRelationUpdates(LOCATION_TAGS_KEY, data);
 
 const processUpdatesForPersonTags = async (data) =>
-   processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
+  processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
 
 const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   // Process updates of tag relations with additional editing capabilities.
@@ -443,7 +464,7 @@ const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   await processUpdatesForPersonTags(data);
 };
 
-const updatePictureWithTagCleanup = async (id, data) =>  {
+const updatePictureWithTagCleanup = async (id, data) => {
   // No special handling needed if no data is passed.
   if (!data) return;
 
@@ -462,6 +483,224 @@ const updatePictureWithTagCleanup = async (id, data) =>  {
   return id;
 };
 
+// return a new object, only keeping the specified keys from the original object
+const pick = (original, keys) => {
+  const picked = {};
+  for (const key of keys) {
+    if (key in original) {
+      picked[key] = original[key];
+    }
+  }
+  return picked;
+};
+
+
+const knexIdArray = (knexEngine, ids, name) => {
+  return knexEngine.raw(`(VALUES ${ids.map(_ => "(?::integer)").join(", ")}) ${name}`, [...ids]);
+};
+
+const insertCrossProductIgnoreDuplicates = async (knexEngine, linksTable, leftIdKey, rightIdKey, leftIds, rightIds) => {
+  if (leftIds.length === 0 || rightIds.length === 0) {
+    return;
+  }
+  await knexEngine(linksTable)
+    .insert(
+      knexEngine.select(leftIdKey, rightIdKey)
+        .from(knexIdArray(knexEngine, leftIds, `a(${leftIdKey})`))
+        .crossJoin(knexIdArray(knexEngine, rightIds, `b(${rightIdKey})`))
+        .whereNotIn([leftIdKey, rightIdKey], knexEngine(linksTable).select("*"))
+    );
+};
+
+const bulkEditTimeRangeTag = async (knexEngine, pictureQuery, pictureIds, data) => {
+  // Check whether we actually need to update stuff for that tag type.
+  if (!data[TIME_RANGE_TAG_KEY]) return false;
+
+  const timeRangeTagData = pick(data, [TIME_RANGE_TAG_KEY]);
+  await processUpdatesForTimeRangeTag(pictureQuery, timeRangeTagData);
+  const unverifiedLinksTable = table(`${PICTURES_KEY}_${TIME_RANGE_TAG_KEY}_links`);
+  const verifiedLinksTable = table(`${PICTURES_KEY}_${withVerifiedPrefix(TIME_RANGE_TAG_KEY)}_links`);
+
+  const removedIds = [];
+
+  for (const [linksTable, dataKey] of [
+    [unverifiedLinksTable, TIME_RANGE_TAG_KEY],
+    [verifiedLinksTable, withVerifiedPrefix(TIME_RANGE_TAG_KEY)]
+  ]) {
+
+    removedIds.push(...(await knexEngine(linksTable)
+      .select("time_range_tag_id")
+      .distinct()
+      .whereIn("picture_id", pictureIds))
+      .map(removed => removed.time_range_tag_id));
+
+    await knexEngine(linksTable)
+      .whereIn("picture_id", pictureIds)
+      .del();
+    const newTimeRangeTagId = timeRangeTagData[dataKey];
+    if (newTimeRangeTagId !== null) {
+      await knexEngine(linksTable)
+        .insert(
+          knexEngine.select("picture_id", knexEngine.raw("?", [newTimeRangeTagId]))
+            .from(knexIdArray(knexEngine, pictureIds, "a(picture_id)"))
+        );
+    }
+  }
+
+  // clean up unused descriptions
+  let deleteQuery = knexEngine(table(plural(TIME_RANGE_TAG_KEY)))
+    .whereIn("id", removedIds);
+  for (const linksTable of [unverifiedLinksTable, verifiedLinksTable]) {
+    deleteQuery = deleteQuery
+      .whereNotExists(knexEngine(linksTable).select("*").whereRaw("time_range_tag_id = id"));
+  }
+  const count = await deleteQuery.del();
+  if (count > 0) {
+    strapi.log.debug(`Removed ${count} unused time_range_tags`);
+  }
+
+  return true;
+};
+
+const bulkEditArchiveTag = async (knexEngine, pictureIds, data) => {
+  // Check whether we actually need to update stuff for that tag type.
+  if (!(ARCHIVE_TAG_KEY in data)) return false;
+
+  const linksTable = table(`${PICTURES_KEY}_${ARCHIVE_TAG_KEY}_links`);
+  await knexEngine(linksTable)
+    .whereIn("picture_id", pictureIds)
+    .del();
+  const newArchiveId = data[ARCHIVE_TAG_KEY];
+  if (newArchiveId !== null) {
+    await knexEngine(linksTable)
+      .insert(
+        knexEngine.select("picture_id", knexEngine.raw("?", [newArchiveId]))
+          .from(knexIdArray(knexEngine, pictureIds, "a(picture_id)"))
+      );
+  }
+
+  return true;
+};
+
+const bulkEditDescriptions = async (knexEngine, pictureIds, data) => {
+  // Check whether we actually need to update stuff for that type.
+  if (!data[DESCRIPTIONS_KEY]) return false;
+
+  const diff = data[DESCRIPTIONS_KEY];
+
+  if (diff.added.length === 0 && diff.removed.length === 0) return false;
+
+  const linksTable = table(`${PICTURES_KEY}_${DESCRIPTIONS_KEY}_links`);
+
+  // delete relations to be removed (don't remove the actual descriptions yet)
+  const removedIds = diff.removed.map(removed => removed.id);
+  await knexEngine(linksTable)
+    .whereIn("picture_id", pictureIds)
+    .whereIn("description_id", removedIds)
+    .del();
+
+  const { tagQuery, tagService } =
+    getQueryEngineAndServiceForTag(DESCRIPTIONS_KEY);
+
+  // create new descriptions
+  const addedIds = [];
+  for (const added of diff.added) {
+    const newData = pick(added, ["text"]);
+    const newId = await findExistingOrCreateNewTag(
+      tagQuery,
+      tagService,
+      DESCRIPTIONS_KEY,
+      newData
+    );
+    addedIds.push(newId);
+  }
+
+  await insertCrossProductIgnoreDuplicates(knexEngine, linksTable, "picture_id", "description_id", pictureIds, addedIds);
+
+  // clean up unused descriptions
+  const count = await knexEngine(table(DESCRIPTIONS_KEY))
+    .whereIn("id", removedIds)
+    .whereNotExists(knexEngine(linksTable).select("*").whereRaw("description_id = id"))
+    .del();
+  if (count > 0) {
+    strapi.log.debug(`Removed ${count} unused descriptions`);
+  }
+
+  return true;
+};
+
+const bulkEditTags = async (knexEngine, pictureIds, data, tagsKey) => {
+  // Check whether we actually need to update stuff for that type.
+  if (!data[tagsKey]) return false;
+
+  const diff = data[tagsKey];
+
+  if (diff.added.length === 0 && diff.removed.length === 0) return false;
+
+  const singularIdKey = `${singular(tagsKey)}_id`;
+
+  const unverifiedLinksTable = table(`${PICTURES_KEY}_${tagsKey}_links`);
+  const verifiedLinksTable = table(`${PICTURES_KEY}_${withVerifiedPrefix(tagsKey)}_links`);
+
+  const removedUnverified = diff.removed.filter(removed => !removed.verified);
+  const removedVerified = diff.removed.filter(removed => removed.verified);
+
+  for (const [removed, linksTable] of [
+    [removedUnverified, unverifiedLinksTable],
+    [removedVerified, verifiedLinksTable]
+  ]) {
+    const removedIds = removed.map(removed => removed.id);
+    await knexEngine(linksTable)
+      .whereIn("picture_id", pictureIds)
+      .whereIn(singularIdKey, removedIds)
+      .del();
+  }
+
+  const addedUnverified = diff.added.filter(added => !added.verified);
+  const addedVerified = diff.added.filter(added => added.verified);
+
+  for (const [added, linksTable] of [
+    [addedUnverified, unverifiedLinksTable],
+    [addedVerified, verifiedLinksTable]
+  ]) {
+    const addedIds = added.map(added => added.id);
+    await insertCrossProductIgnoreDuplicates(knexEngine, linksTable, "picture_id", singularIdKey, pictureIds, addedIds);
+  }
+
+  return true;
+};
+
+const bulkEdit = async (knexEngine, pictureIds, data) => {
+  strapi.log.debug(`BulkEdit called on pictures [${pictureIds.toString()}] with data ${JSON.stringify(data)} `);
+  const pictureQuery = strapi.db.query("api::picture.picture");
+
+  // should be a boolean (false), but we use | (bitwise or),
+  // so it's a number representing a boolean instead (0 -> false, 1 -> true)
+  let shouldWriteUpdatedAt = 0;
+
+  // each function returns a boolean indicating whether anything was changed
+  shouldWriteUpdatedAt |= await bulkEditTimeRangeTag(knexEngine, pictureQuery, pictureIds, data);
+  shouldWriteUpdatedAt |= await bulkEditArchiveTag(knexEngine, pictureIds, data);
+  shouldWriteUpdatedAt |= await bulkEditDescriptions(knexEngine, pictureIds, data);
+  shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, PERSON_TAGS_KEY);
+  shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, LOCATION_TAGS_KEY);
+  shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, KEYWORD_TAGS_KEY);
+
+  if (shouldWriteUpdatedAt) {
+    const updatedAt = new Date();
+
+    await knexEngine(table(PICTURES_KEY))
+      .whereIn("id", pictureIds)
+      .update("updated_at", knexEngine.raw("?::date", [updatedAt]));
+
+    strapi.log.debug(`Updated updated_at to ${updatedAt.toISOString()}`);
+  } else {
+    strapi.log.debug(`No changes`);
+  }
+  return 0;
+};
+
 module.exports = {
   updatePictureWithTagCleanup,
+  bulkEdit,
 };

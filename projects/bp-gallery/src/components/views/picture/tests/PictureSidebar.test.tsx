@@ -1,10 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import React from 'react';
+import React, { ReactComponentElement } from 'react';
 import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import { flattenQueryResponseData } from '../../../../graphql/queryUtils';
 import PictureSidebar from '../sidebar/PictureSidebar';
 import { CommentMocks, PictureMocks } from './mocks';
-import { renderWithPictureContextMocks } from './pictureTestUtils';
+import { wrapInPictureContextMocks } from './pictureTestUtils';
+import { renderWithAPIMocks } from '../../../../testUtils';
 
 const CommentsContainerMock = jest.fn();
 const CommentsContainerMockComponent = (props: any) => {
@@ -20,16 +21,21 @@ const PictureInfoMockComponent = (props: any) => {
 };
 jest.mock('../sidebar/picture-info/PictureInfo', () => PictureInfoMockComponent);
 
+const renderWithAPIMocksAndPictureContextMocks = (component: ReactComponentElement<any>) => {
+  return renderWithAPIMocks(wrapInPictureContextMocks(component));
+};
+
 describe('PictureSidebar', () => {
   it('should be able to open and close', async () => {
-    const { container } = renderWithPictureContextMocks(
+    const component = renderWithAPIMocksAndPictureContextMocks(
       <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
-    const openCloseButton = container.querySelector('.quick-access-buttons button');
+    const { container } = component;
+    const openCloseButton = await component.findByRole('button');
     expect(openCloseButton).toBeInTheDocument();
     expect(container.querySelector('.picture-sidebar')?.className).toContain('closed');
     fireEvent(
-      openCloseButton!,
+      openCloseButton,
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
@@ -41,7 +47,7 @@ describe('PictureSidebar', () => {
   });
 
   it('should render the comments container', async () => {
-    renderWithPictureContextMocks(
+    renderWithAPIMocksAndPictureContextMocks(
       <PictureSidebar picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
     );
 
