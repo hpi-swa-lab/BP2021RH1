@@ -7,7 +7,7 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import JoditEditor from 'jodit-react';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
-import defaultJoditConfig from '../../../helpers/jodit-config';
+import defaultJoditConfig from '../../common/editor/helpers/jodit-config';
 
 const CollectionDescription = ({
   description,

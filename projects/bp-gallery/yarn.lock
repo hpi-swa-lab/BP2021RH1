@@ -5166,6 +5166,11 @@ core-js@^3.21.1:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.21.1.tgz#f2e0ddc1fc43da6f904706e8e955bc19d06a0d94"
   integrity sha512-FRq5b/VMrWlrmCzwRrpDYNxyHP9BcAZC+xHJaqTgIE5091ZV1NTmyh0sGOg5XqpnHvR0svdy0sv1gWA1zmhxig==
 
+core-js@^3.26.0:
+  version "3.26.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.26.1.tgz#7a9816dabd9ee846c1c0fe0e8fcad68f3709134e"
+  integrity sha512-21491RRQVzUn0GGM9Z1Jrpr6PNPxPi+Za8OM9q4tksTSnlbXXGKK1nXNg/QvwFYettXvSX6zWKCtHHfjN4puyA==
+
 core-js@^3.6.5:
   version "3.19.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.1.tgz#f6f173cae23e73a7d88fa23b6e9da329276c6641"
@@ -9296,6 +9301,14 @@ jodit-react@^1.2.24:
   integrity sha512-zDiXQuIrDr9QsH5MkMgktL0o2QNF5TfARJxS4OVGduDXDGPocK+L8P1jhec2BfZP/LwgeD/nEpO40cVVmTEBRA==
   dependencies:
     jodit "^3.9.4"
+
+jodit@^3.23.3:
+  version "3.23.3"
+  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.23.3.tgz#36666707b41b12f6d5e448ceb0cbb6f5b7a35f33"
+  integrity sha512-lzKh4spzJy5pxRV8a/sy1ZWIvtoDHYrWkRq7b+aXNHH+5YXM/zwmtIaZOOY+n7LEsl4mrVlLXpd1iAT766rR0w==
+  dependencies:
+    autobind-decorator "^2.4.0"
+    core-js "^3.26.0"
 
 jodit@^3.9.4:
   version "3.16.6"

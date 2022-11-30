@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import JoditEditor from 'jodit-react';
+import JoditEditor from '../../../../common/editor/JoditEditor';
 import { FlatDescription } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { Icon, IconButton } from '@mui/material';
@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
 import { useRef } from 'react';
-import defaultJoditConfig from '../../../../../helpers/jodit-config';
+import defaultJoditConfig from '../../../../common/editor/helpers/jodit-config';
 
 const DescriptionsEditField = ({
   descriptions,

@@ -12,7 +12,7 @@ import {
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
 import JoditEditor from 'jodit-react';
-import defaultJoditConfig from '../../../../../helpers/jodit-config';
+import defaultJoditConfig from '../../../../common/editor/helpers/jodit-config';
 import PushPinIcon from '@mui/icons-material/PushPin';
 
 const FormattedComment = ({ comment }: { comment: FlatComment }) => {
