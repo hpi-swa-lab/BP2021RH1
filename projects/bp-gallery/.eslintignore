@@ -2,3 +2,4 @@ node-modules
 src/reportWebVitals.js
 src/react-app-env.d.ts
 src/graphql/schema/loadRemoteSchema.js
+src/components/common/editor/JoditEditor.js

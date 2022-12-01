@@ -4,9 +4,13 @@ const forbiddenStartTags = ['b'];
 
 const { cleanFromWord } = Jodit.modules.Helpers;
 
-const removeLastBr = (html: string) => {
-  const end = html.substring(html.length - 4, html.length + 1);
-  return end === '<br>' ? html.substring(0, html.length - 4) : html;
+const removeLastBrs = (html: string) => {
+  let end = html.substring(html.length - 4, html.length + 1);
+  while (end === '<br>') {
+    html = html.substring(0, html.length - 4);
+    end = html.substring(html.length - 4, html.length + 1);
+  }
+  return html;
 };
 
 const replaceParagraphs = (html: string) => {
@@ -31,10 +35,9 @@ const removeForbiddenStartTags = (html: string, tags: string[]) => {
 };
 
 const cleanupText = (html: string): string => {
-  return removeForbiddenStartTags(
-    removeLastBr(replaceParagraphs(cleanFromWord(html))),
-    forbiddenStartTags
+  return removeLastBrs(
+    removeForbiddenStartTags(replaceParagraphs(cleanFromWord(html)), forbiddenStartTags)
   );
 };
 
-export { cleanFromWord, removeLastBr, removeForbiddenStartTags, cleanupText, replaceParagraphs };
+export { cleanFromWord, removeLastBrs, removeForbiddenStartTags, cleanupText, replaceParagraphs };
