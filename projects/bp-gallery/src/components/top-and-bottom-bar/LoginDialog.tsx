@@ -8,6 +8,8 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  IconButton,
+  Icon,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../provider/AuthProvider';
@@ -18,6 +20,11 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const [passwordShown, setPasswordShown] = useState(false);
+
+  const togglePassword = () => {
+    setPasswordShown(!passwordShown);
+  };
 
   const { login } = useAuth();
 
@@ -56,16 +63,21 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
             value={username}
             onChange={event => setUsername(event.target.value)}
           />
-          <TextField
-            error={errorMessage !== undefined}
-            className='input-field'
-            type='password'
-            id='password'
-            label={t('login.password')}
-            variant='outlined'
-            value={password}
-            onChange={event => setPassword(event.target.value)}
-          />
+          <div className='input-with-icon'>
+            <TextField
+              error={errorMessage !== undefined}
+              className='input-field'
+              type={passwordShown ? 'text' : 'password'}
+              id='password'
+              label={t('login.password')}
+              variant='outlined'
+              value={password}
+              onChange={event => setPassword(event.target.value)}
+            />
+            <IconButton onClick={togglePassword}>
+              <Icon>{passwordShown ? 'visibility' : 'visibility_off'}</Icon>
+            </IconButton>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={close} color='primary'>
