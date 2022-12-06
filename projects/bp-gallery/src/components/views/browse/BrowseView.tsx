@@ -38,7 +38,7 @@ const getPictureFilters = (collectionId: string) => {
   return filters;
 };
 
-const BrowseView = ({ path }: { path?: string[] }) => {
+const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean }) => {
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useContext(DialogContext);
@@ -114,13 +114,13 @@ const BrowseView = ({ path }: { path?: string[] }) => {
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='collection-picture-display'>
-            {
+            {!startpage && (
               <CollectionDescription
                 id={collection.id}
                 description={collection.description ?? ''}
                 name={collection.name}
               />
-            }
+            )}
             {childCount > 0 && (
               <SubCollections childCollections={collection.child_collections ?? []} path={path} />
             )}

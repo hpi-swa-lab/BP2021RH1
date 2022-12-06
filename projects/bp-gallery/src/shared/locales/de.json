@@ -171,5 +171,9 @@
     "nameOfNewCollection": "Name der neuen Collection:",
     "autoCrop": "Automatisch Zuschneiden",
     "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
+  },
+  "startpage": {
+    "welcome-title": "Harz History",
+    "welcome-text": "In privaten Sammlungen, in Archiven und Museen im Harz lagern Schätze – die bisweilen selten das Publikum finden, das sie verdienen. Mit Unterstützung von Student*innen des Hasso-Plattner-Instituts Potsdam wird experimentell daran gearbeitet, eine lebendiges Schaufenster in die Harzer Historie zu öffnen und Lust auf Besuche in den Harzer Museen zu machen. Das Projekt wird im Erfolgsfall allen interessierten Sammlungen offenstehen. Das Projekt wird ideell vom Landkreis Goslar, von der Stadt Bad Harzburg und der Stadt Braunlage unterstützt. Medienpartner sind die Goslarsche Zeitung und der Harzkurier."
   }
 }

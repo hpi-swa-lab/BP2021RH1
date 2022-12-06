@@ -14,8 +14,9 @@ import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 import BulkEditView from './views/bulk-edit/BulkEditView';
+import StartView from './views/start/StartView';
 
-export const FALLBACK_PATH = '/browse';
+export const FALLBACK_PATH = '/start';
 
 const routes: RouteConfig[] = [
   {
@@ -25,6 +26,13 @@ const routes: RouteConfig[] = [
         path: '/browse',
         render: () => {
           return <BrowseView />;
+        },
+        exact: true,
+      },
+      {
+        path: '/start',
+        render: () => {
+          return <StartView />;
         },
         exact: true,
       },

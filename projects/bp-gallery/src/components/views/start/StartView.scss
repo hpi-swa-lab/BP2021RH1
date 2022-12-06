@@ -1,0 +1,38 @@
+.main-start-view {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 2rem;
+  background: white;
+  padding-top: 4rem;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+  min-height: calc(100vh - 14rem);
+
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      text-align: center;
+    }
+  }
+
+  .logos {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    .logo {
+      height: 4rem;
+    }
+    .square {
+      width: 8rem;
+      height: auto;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+}
