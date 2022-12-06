@@ -71,6 +71,7 @@ const NavigationBar = () => {
           <span className='nav-element-title'>{t('common.more')}</span>
         </div>
         <Menu
+          onClick={() => setAnchorEl(null)}
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={() => setAnchorEl(null)}
