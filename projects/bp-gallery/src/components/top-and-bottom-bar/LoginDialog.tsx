@@ -74,7 +74,7 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
               value={password}
               onChange={event => setPassword(event.target.value)}
             />
-            <IconButton onClick={togglePassword}>
+            <IconButton id='toggleButton' onClick={togglePassword}>
               <Icon>{passwordShown ? 'visibility' : 'visibility_off'}</Icon>
             </IconButton>
           </div>
