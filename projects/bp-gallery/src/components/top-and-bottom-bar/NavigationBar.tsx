@@ -59,53 +59,48 @@ const NavigationBar = () => {
     <>
       <div className='nav-bar'>
         <NavLink to='/browse' className='nav-element'>
-          <Icon>book</Icon>
           <span className='nav-element-title'>{t('common.browse')}</span>
         </NavLink>
         <NavLink to='/search' className='nav-element'>
-          <Icon>search</Icon>
           <span className='nav-element-title'>{t('common.search')}</span>
         </NavLink>
-        <div className='nav-element' onClick={event => setAnchorEl(event.currentTarget)}>
-          <Icon>menu</Icon>
-          <span className='nav-element-title'>{t('common.more')}</span>
-        </div>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          className='nav-more-menu'
+        <div
+          className='nav-element'
+          onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}
         >
-          <MenuItem onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}>
-            <Icon>login</Icon>
-            <span className='nav-element-title'>
-              {role === AuthRole.PUBLIC ? t('login.title') : t('login.logout')}
-            </span>
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              window.open(`mailto:${process.env.REACT_APP_CONTACT_MAIL ?? ''}`);
+          <span className='nav-element-title'>
+            {role === AuthRole.PUBLIC ? t('login.title') : t('login.logout')}
+          </span>
+        </div>
+        {role === AuthRole.CURATOR && (
+          <div className='nav-element' onClick={event => setAnchorEl(event.currentTarget)}>
+            <Icon>menu</Icon>
+            <span className='nav-element-title'>{t('common.more')}</span>
+          </div>
+        )}
+        {role === AuthRole.CURATOR && (
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
             }}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            className='nav-more-menu'
           >
-            <Icon>mail</Icon>
-            <span className='nav-element-title'>{t('common.contact')}</span>
-          </MenuItem>
-          {role >= AuthRole.CURATOR &&
-            curatorItems.map(item => (
+            {curatorItems.map(item => (
               <MenuItem component={NavLink} key={item.to} to={item.to}>
                 <Icon>{item.icon}</Icon>
                 <span className='nav-element-title'>{item.title}</span>
               </MenuItem>
             ))}
-        </Menu>
+          </Menu>
+        )}
       </div>
       <LoginDialog open={openLogin} onClose={() => setOpenLogin(false)} />
     </>

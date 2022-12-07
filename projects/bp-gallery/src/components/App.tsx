@@ -5,7 +5,6 @@ import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
-import NavigationBar from './top-and-bottom-bar/NavigationBar';
 import {
   KeywordTagEntityResponseCollection,
   LocationTagEntityResponseCollection,
@@ -143,7 +142,6 @@ const App = ({ route }: RouteConfigComponentProps) => {
             <div className='App'>
               <TopBar />
               {renderRoutes(route?.routes)}
-              <NavigationBar />
             </div>
           </DialogProvider>
         </AuthProvider>

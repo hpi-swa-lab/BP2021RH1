@@ -55,7 +55,9 @@
     "pictureCount": "{{count}} Bild(er)",
     "moreThanPictureCount": "Mehr als {{count}} Bilder",
     "and": "und",
-    "and-alternative": "sowie"
+    "and-alternative": "sowie",
+    "login": "Login",
+    "logout": "Logout"
   },
   "comment": {
     "name": "Name",
@@ -67,6 +69,7 @@
   "search": {
     "search-for-type": "In allen Bildinformationen suchen",
     "search-for-type-advance": "durchsuchen",
+    "search-top-bar": "Suchen",
     "date": "Jahreszahlen",
     "decade": "Jahrzehnte",
     "keyword": "Schlagworte",
