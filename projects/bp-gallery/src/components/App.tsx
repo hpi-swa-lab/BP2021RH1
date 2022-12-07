@@ -16,6 +16,7 @@ import AuthProvider from './provider/AuthProvider';
 import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider';
 import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
+import Footer from './common/footer/Footer';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -142,6 +143,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
             <div className='App'>
               <TopBar />
               {renderRoutes(route?.routes)}
+              <Footer />
             </div>
           </DialogProvider>
         </AuthProvider>
