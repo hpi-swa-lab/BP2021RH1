@@ -2,4 +2,3 @@ node-modules
 src/reportWebVitals.js
 src/react-app-env.d.ts
 src/graphql/schema/loadRemoteSchema.js
-cypress.config.ts
