@@ -5,7 +5,7 @@ import { addPlugins } from './helpers/jodit-plugins';
 import './JoditEditor.css';
 const { isFunction } = Jodit.modules.Helpers;
 
-//file shamelessy copied from https://github.com/jodit/jodit-react since importing doesn't provide a way to access the used Jodit instance to add custom plugins
+//file shamelessly copied from https://github.com/jodit/jodit-react since importing doesn't provide a way to access the used Jodit instance to add custom plugins
 
 addPlugins();
 
