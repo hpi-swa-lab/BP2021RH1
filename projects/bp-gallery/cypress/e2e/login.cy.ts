@@ -29,6 +29,10 @@ describe('Login', () => {
     cy.get('.MuiDialog-container').should('not.exist');
   });
 
+  it('should close the Mehr... Pop Up Menu', () => {
+    cy.get('nav-element-title').should('not.exist');
+  });
+
   it('should show the upload-area after logging in', () => {
     cy.get('.upload-area').should('exist');
   });

@@ -8,15 +8,14 @@ describe('picture uploading and tagging', () => {
     cy.get('#username').should('be.visible').clear().type('testCurator');
     cy.get('#password').should('be.visible').clear().type('1234abc');
     cy.get('button[type="submit"]').should('be.visible').click();
+    cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Collections').click();
-    cy.get('.MuiPaper-root:last').trigger('keydown',{keyCode:27});
     cy.get('span').contains('add').click();
-    cy.get('span').contains('Neue Collection erstellen')/*.parent()*/.click();
+    cy.get('span').contains('Neue Collection erstellen').click();
     cy.get('input').type('TestCollection');
     cy.get('.MuiButton-root').contains('Bestätigen').click();
     cy.get('.nav-bar').contains('Mehr...').click({force:true});
     cy.get('.MuiPaper-root').contains('Uploads').click();
-    cy.get('.MuiPaper-root:last').trigger('keydown',{keyCode:27});
     
 })
   after(() => {
@@ -26,28 +25,25 @@ describe('picture uploading and tagging', () => {
       cy.visit('http://localhost:3000/browse');
       cy.get('.nav-bar').contains('Mehr...').click();
       cy.get('.MuiPaper-root').contains('Schlagworte').click();
-      cy.get('div').contains('TestSchlagwort').parent().parent().find('button').click({force:true})
+      cy.get('div').contains('TestSchlagwort').parent().parent().find('button').click()
       cy.get('.MuiButton-root').contains('Bestätigen').click()
 
-      //cy.get('.nav-bar').contains('Mehr...').click();
+      cy.get('.nav-bar').contains('Mehr...').click();
       cy.get('.MuiPaper-root').contains('Orte').click();
-      cy.get('div').contains('TestOrt').parent().parent().find('button').click({force:true})
+      cy.get('div').contains('TestOrt').parent().parent().find('button').click()
       cy.get('.MuiButton-root').contains('Bestätigen').click()
 
-      //cy.get('.nav-bar').contains('Mehr...').click();
+      cy.get('.nav-bar').contains('Mehr...').click();
       cy.get('.MuiPaper-root').contains('Personen').click();
-      cy.get('div').contains('TestPerson').parent().parent().find('button').click({force:true})
+      cy.get('div').contains('TestPerson').parent().parent().find('button').click()
       cy.get('.MuiButton-root').contains('Bestätigen').click()
 
-      //cy.get('.nav-bar').contains('Mehr...').click();
+      cy.get('.nav-bar').contains('Mehr...').click();
       cy.get('.MuiPaper-root').contains('Collections').click().wait(1000);
-      cy.contains('TestCollection').parent().find('svg[data-testid="DeleteIcon"]').click({force:true})
-      //cy.get('div').contains('TestCollection').siblings().children().get('button').eq(1).click({force:true})
-      //cy.get('.MuiButton-root').contains('Bestätigen').click()
-    
-
-
-      cy.get('.MuiPaper-root').contains('Logout').click({force:true});
+      cy.contains('TestCollection').parent().find('svg[data-testid="DeleteIcon"]').click()
+      
+      cy.get('.nav-bar').contains('Mehr...').click();
+      cy.get('.MuiPaper-root').contains('Logout').click();
       
     });
 
@@ -66,22 +62,23 @@ it('tagging picture', () => {
   cy.get('.picture-preview:last').click()
   cy.get('.date-indicator').click()
   cy.get('span').contains('Jahr').siblings().type('1000{esc}')
+  cy.wait(500);
 
   cy.get('.add-button').click()
   cy.get('div').contains('Beschreibungen').siblings().within(() => {
-    cy.get('div[spellcheck="false"]').type('TestBeschreibung');
+    cy.get('div.jodit-wysiwyg').type('TestBeschreibung');
   })
   
-  cy.get('div').contains('Personen').parent().find('input').click().wait(500).type('TestPerson')
+  cy.get('div').contains('Personen').parent().find('input').click().wait(1000).type('TestPerson')
   cy.contains('TestPerson hinzufügen').click()
 
-  cy.get('div').contains('Orte').parent().find('input').click().wait(500).type('TestOrt')
+  cy.get('div').contains('Orte').parent().find('input').click().wait(1000).type('TestOrt')
   cy.contains('TestOrt hinzufügen').click()
 
-  cy.get('div').contains('Schlagworte').parent().find('input').click().wait(500).type('TestSchlagwort')
+  cy.get('div').contains('Schlagworte').parent().find('input').click().wait(1000).type('TestSchlagwort')
   cy.contains('TestSchlagwort hinzufügen').click()
 
-  cy.get('div').contains('Collections').parent().find('input').click().wait(500).type('TestCollection{enter}')
+  cy.get('div').contains('Collections').parent().find('input').click().wait(1000).type('TestCollection{enter}')
 })
 
 it('checking tags and deleting picture', ()=>{
@@ -102,9 +99,5 @@ it('checking tags and deleting picture', ()=>{
   cy.get('button').contains('arrow_back').click();
   cy.get('span').contains('delete').click();
   cy.get('.MuiButton-root').contains('Bestätigen').click();
- 
-
-
 })
-
 })

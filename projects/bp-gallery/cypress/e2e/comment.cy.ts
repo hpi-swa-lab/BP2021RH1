@@ -29,14 +29,12 @@ describe('Comment', () => {
     it('log in as curator and curate the new comments', ()=>{
         cy.get('.MuiButton-root').contains('arrow_back').should('be.visible').click();
         cy.get('.nav-bar').contains('Mehr...').click();
-        cy.get('.MuiPaper-root').contains('Login');
         cy.get('.MuiPaper-root').contains('Login').click();
         cy.get('#username').should('be.visible').clear().type('testCurator');
         cy.get('#password').should('be.visible').clear().type('1234abc');
         cy.get('button[type="submit"]').should('be.visible').click();
+        cy.get('.nav-bar').contains('Mehr...').click();
         cy.get('.MuiPaper-root').contains('Kommentare').click();
-
-        cy.get('.MuiPaper-root:last').trigger('keydown',{keyCode:27});
 
         cy.get('.comment-preview').contains('Testkommentar1').should('be.visible')
         cy.get('.comment-preview').contains('Testkommentar2').should('be.visible').click()
@@ -56,7 +54,7 @@ describe('Comment', () => {
             
             
         })
-        
+        cy.wait(1000);
         cy.get('button').contains('Löschen').click();
         cy.get('button').contains('Bestätigen').click();
     })
