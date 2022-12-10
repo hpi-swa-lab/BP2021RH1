@@ -44,6 +44,7 @@
     }
 
     @media only screen and (max-width: 650px) {
+      flex-direction: column;
       color: #5a5a5a !important;
       &.active {
         background: white;

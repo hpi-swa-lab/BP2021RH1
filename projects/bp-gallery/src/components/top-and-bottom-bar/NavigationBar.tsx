@@ -58,16 +58,19 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   return (
     <>
       <div className='nav-bar'>
-        <NavLink to='/browse' className='nav-element'>
-          <span className='nav-element-title'>{t('common.browse')}</span>
+        <NavLink to='/start' className='nav-element'>
+          {isMobile && <Icon>book</Icon>}
+          <span className='nav-element-title'>{t('common.start')}</span>
         </NavLink>
         <NavLink to='/search' className='nav-element'>
+          {isMobile && <Icon>search</Icon>}
           <span className='nav-element-title'>{t('common.search')}</span>
         </NavLink>
         <div
           className='nav-element'
           onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}
         >
+          {isMobile && (role === AuthRole.PUBLIC ? <Icon>login</Icon> : <Icon>logout</Icon>)}
           <span className='nav-element-title'>
             {role === AuthRole.PUBLIC ? t('login.title') : t('login.logout')}
           </span>

@@ -32,8 +32,8 @@ const StartView = () => {
                 <img src='/partner-logos/HarzKurier-gross.jpg' />
               </div>
             </div>
-            <BrowseView startpage={true} />
           </div>
+          <BrowseView startpage={true} />
         </div>
       )}
     </ScrollContainer>
