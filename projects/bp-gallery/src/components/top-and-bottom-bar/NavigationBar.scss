@@ -2,19 +2,22 @@
 
 .nav-bar {
   display: flex;
-  //flex-direction: row;
   align-items: center;
   justify-content: center;
-  //background: #e5e5e5;
-  //color: #5a5a5a;
   height: 100%;
-  //width: 100%;
-  //z-index: 99;
-  //min-height: 0;
   overflow-x: auto;
-  //position: fixed;
-  //bottom: 0;
-  //left: 0;
+
+  @media only screen and (max-width: 650px) {
+    height: 4rem;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99;
+    min-height: 0;
+    background: #e5e5e5;
+  }
 
   .nav-element {
     padding: 0.5rem 1rem;
@@ -28,6 +31,7 @@
     width: 3rem;
     text-decoration: none;
     transition: background 0.3s;
+
     &:not(.active) {
       &:hover {
         background: rgba(255, 255, 255, 0.15);
@@ -37,6 +41,14 @@
     &.active {
       background: rgba(255, 255, 255, 0.3);
       color: white;
+    }
+
+    @media only screen and (max-width: 650px) {
+      color: #5a5a5a !important;
+      &.active {
+        background: white;
+        color: #0a0a0a;
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
 import TopBar from './top-and-bottom-bar/TopBar';
 import './App.scss';
@@ -16,7 +16,7 @@ import AuthProvider from './provider/AuthProvider';
 import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider';
 import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
-import Footer from './common/footer/Footer';
+import NavigationBar from './top-and-bottom-bar/NavigationBar';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -135,15 +135,29 @@ document.body.addEventListener('keyup', event => {
 });
 
 const App = ({ route }: RouteConfigComponentProps) => {
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 650;
+
   return (
     <ApolloProvider client={apolloClient}>
       <AlertProvider>
         <AuthProvider>
           <DialogProvider>
             <div className='App'>
-              <TopBar />
+              {!isMobile && <TopBar />}
               {renderRoutes(route?.routes)}
-              <Footer />
+              <NavigationBar isMobile={true} />
             </div>
           </DialogProvider>
         </AuthProvider>

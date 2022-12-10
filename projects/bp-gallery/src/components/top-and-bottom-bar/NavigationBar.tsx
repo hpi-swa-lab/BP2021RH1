@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import LoginDialog from './LoginDialog';
 import { AuthRole, useAuth } from '../provider/AuthProvider';
 
-const NavigationBar = () => {
+const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
 
   const [openLogin, setOpenLogin] = useState<boolean>(false);
@@ -83,14 +83,28 @@ const NavigationBar = () => {
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'center',
-            }}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
-            }}
+            transformOrigin={
+              isMobile
+                ? {
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }
+                : {
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }
+            }
+            anchorOrigin={
+              isMobile
+                ? {
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }
+                : {
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }
+            }
             className='nav-more-menu'
           >
             {curatorItems.map(item => (
