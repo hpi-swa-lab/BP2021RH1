@@ -1,7 +1,7 @@
 import { IJodit } from 'jodit/types/types';
 import i18n from '../../../../i18n';
 
-type EnterMode = 'br';
+type EnterMode = 'br' | 'div' | 'p';
 
 const defaultJoditConfig = {
   preset: 'inline',
@@ -10,8 +10,7 @@ const defaultJoditConfig = {
   askBeforePasteFromWord: false,
   useNativeTooltip: true,
   language: i18n.resolvedLanguage,
-  width: 'auto',
-  disablePlugins: ['about', 'fullsize', 'classSpan'],
+  disablePlugins: ['about', 'fullsize', 'classSpan', 'addNewLine'],
 } as Partial<IJodit['options']>;
 
 export default defaultJoditConfig;

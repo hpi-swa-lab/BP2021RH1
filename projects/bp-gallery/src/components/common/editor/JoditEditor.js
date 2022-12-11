@@ -2,7 +2,7 @@ import React, { useEffect, useRef, forwardRef, useLayoutEffect } from 'react';
 import { func, number, object, string } from 'prop-types';
 import { Jodit } from 'jodit';
 import { addPlugins } from './helpers/jodit-plugins';
-import './JoditEditor.css';
+import 'jodit/build/jodit.min.css';
 const { isFunction } = Jodit.modules.Helpers;
 
 //file shamelessly copied from https://github.com/jodit/jodit-react since importing doesn't provide a way to access the used Jodit instance to add custom plugins

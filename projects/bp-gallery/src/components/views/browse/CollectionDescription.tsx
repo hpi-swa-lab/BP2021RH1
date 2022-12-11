@@ -4,10 +4,10 @@ import './CollectionDescription.scss';
 import { Icon, IconButton } from '@mui/material';
 import getLineBreaks from '../../../helpers/get-linebreaks';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import JoditEditor from 'jodit-react';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import defaultJoditConfig from '../../common/editor/helpers/jodit-config';
+import JoditEditor from '../../common/editor/JoditEditor';
 
 const CollectionDescription = ({
   description,

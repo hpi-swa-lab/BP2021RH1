@@ -11,9 +11,9 @@ import {
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import JoditEditor from 'jodit-react';
 import defaultJoditConfig from '../../../../common/editor/helpers/jodit-config';
 import PushPinIcon from '@mui/icons-material/PushPin';
+import JoditEditor from '../../../../common/editor/JoditEditor';
 
 const FormattedComment = ({ comment }: { comment: FlatComment }) => {
   const { t } = useTranslation();
