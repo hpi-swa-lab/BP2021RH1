@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './i18n';
 import { renderRoutes } from 'react-router-config';
@@ -9,8 +9,8 @@ import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
 import setupMatomo from './matomo';
 
-const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
-const matomoUrl = process.env.REACT_APP_MATOMO_URL;
+const sentryDsn = import.meta.env.VITE_REACT_APP_SENTRY_DSN;
+const matomoUrl = import.meta.env.VITE_REACT_APP_MATOMO_URL;
 
 if (sentryDsn) {
   Sentry.init({
@@ -24,11 +24,10 @@ if (matomoUrl) {
   setupMatomo(matomoUrl);
 }
 
-ReactDOM.render(
+createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

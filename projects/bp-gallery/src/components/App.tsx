@@ -18,7 +18,7 @@ import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider
 import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
 
-const apiBase = process.env.REACT_APP_API_BASE ?? '';
+const apiBase = import.meta.env.VITE_REACT_APP_API_BASE ?? '';
 
 export const asApiPath = (pathEnding: string) => {
   // Removes any multiple occurrences of a "/"

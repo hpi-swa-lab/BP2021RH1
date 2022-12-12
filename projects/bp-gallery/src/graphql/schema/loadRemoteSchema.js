@@ -13,8 +13,8 @@ const fetch = require('node-fetch');
 module.exports = async remoteUrl => {
   const introspectionQuery = getIntrospectionQuery();
 
-  if (process.env.REACT_APP_API_BASE) {
-    remoteUrl = `${process.env.REACT_APP_API_BASE}/graphql`;
+  if (import.meta.env.VITE_REACT_APP_API_BASE) {
+    remoteUrl = `${import.meta.env.VITE_REACT_APP_API_BASE}/graphql`;
   }
 
   const response = await fetch(remoteUrl, {

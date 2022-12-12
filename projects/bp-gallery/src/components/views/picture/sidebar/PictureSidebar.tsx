@@ -46,7 +46,7 @@ const PictureSidebar = ({
   );
 
   const saveStatus = useCallback(
-    anyFieldTouched => {
+    (anyFieldTouched: boolean) => {
       if (anyFieldTouched) {
         return t('curator.saveStatus.pending');
       }

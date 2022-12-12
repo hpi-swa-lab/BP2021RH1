@@ -5,6 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { History } from 'history';
 import './TopBar.scss';
 
+type LocationProps = {
+  state: {
+    showBack: boolean;
+  };
+};
+
 const TopBar = () => {
   const { t } = useTranslation();
 
@@ -14,7 +20,7 @@ const TopBar = () => {
   return (
     <div className='top-bar'>
       <div className='actions'>
-        {history.location.state?.showBack && (
+        {(history.location as LocationProps).state?.showBack && (
           <Button
             onClick={() => {
               history.go(-1);

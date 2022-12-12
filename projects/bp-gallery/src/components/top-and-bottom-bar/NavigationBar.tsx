@@ -93,7 +93,7 @@ const NavigationBar = () => {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              window.open(`mailto:${process.env.REACT_APP_CONTACT_MAIL ?? ''}`);
+              window.open(`mailto:${import.meta.env.VITE_REACT_APP_CONTACT_MAIL ?? ''}`);
             }}
           >
             <Icon>mail</Icon>

@@ -23,7 +23,7 @@ const useManageCollectionPictures = () => {
   });
 
   const setNewPictures = useCallback(
-    data => {
+    (data: any) => {
       const id = data.collection?.data?.id;
       if (!id) {
         return;
@@ -47,7 +47,7 @@ const useManageCollectionPictures = () => {
   );
 
   const removePictures = useCallback(
-    data => {
+    (data: any) => {
       const id = data.collection?.data?.id;
       if (!id) {
         return;

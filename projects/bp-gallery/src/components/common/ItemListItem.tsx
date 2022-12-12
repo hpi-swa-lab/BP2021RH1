@@ -18,7 +18,7 @@ export const ItemListItem = ({ item, compact }: { item: ItemListItemModel; compa
   const MAXIMUM_TEXT_WIDTH = 200;
 
   // Abridged from: https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
-  const measuredRef = useCallback(node => {
+  const measuredRef = useCallback((node: any) => {
     if (node !== null) {
       const bbox = (node as SVGSVGElement).getBBox();
       bbox.height = Math.max(bbox.height, MAXIMUM_TEXT_WIDTH);

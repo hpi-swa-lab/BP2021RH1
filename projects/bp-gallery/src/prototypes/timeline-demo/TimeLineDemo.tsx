@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { stringify } from 'qs';
-import { sanitize } from 'dompurify';
+import { sanitize } from 'isomorphic-dompurify';
 import './TimeLineDemo.scss';
 import dayjs from 'dayjs';
 import Timeline from './Timeline';
