@@ -1,4 +1,4 @@
-import { Jodit } from 'jodit';
+import { Jodit } from 'jodit-react';
 import { cleanupText } from './format-texts';
 
 const preparePaste = (jodit: Jodit) => {

@@ -1,4 +1,4 @@
-import { IJodit } from 'jodit/types/types';
+import { Jodit } from 'jodit-react';
 import i18n from '../../../../i18n';
 
 type EnterMode = 'br' | 'div' | 'p';
@@ -11,6 +11,6 @@ const defaultJoditConfig = {
   useNativeTooltip: true,
   language: i18n.resolvedLanguage,
   disablePlugins: ['about', 'fullsize', 'classSpan', 'addNewLine'],
-} as Partial<IJodit['options']>;
+} as Partial<Jodit['options']>;
 
 export default defaultJoditConfig;

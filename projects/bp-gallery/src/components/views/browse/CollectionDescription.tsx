@@ -7,7 +7,7 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import defaultJoditConfig from '../../common/editor/helpers/jodit-config';
-import JoditEditor from '../../common/editor/JoditEditor';
+import Editor from '../../common/editor/Editor';
 
 const CollectionDescription = ({
   description,
@@ -107,7 +107,7 @@ const EditableCollectionDescription = ({
   }, [description, collectionId, updateCollection]);
 
   return (
-    <JoditEditor
+    <Editor
       value={description.current}
       config={config}
       onBlur={onBlur}

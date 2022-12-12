@@ -13,7 +13,7 @@ import {
 } from '../../../../../graphql/APIConnector';
 import defaultJoditConfig from '../../../../common/editor/helpers/jodit-config';
 import PushPinIcon from '@mui/icons-material/PushPin';
-import JoditEditor from '../../../../common/editor/JoditEditor';
+import Editor from '../../../../common/editor/Editor';
 
 const FormattedComment = ({ comment }: { comment: FlatComment }) => {
   const { t } = useTranslation();
@@ -119,7 +119,7 @@ const CommentEditField = ({ comment }: { comment: FlatComment }) => {
   }, [commentRef, updateComment]);
 
   return (
-    <JoditEditor
+    <Editor
       value={commentRef.current.text}
       config={config}
       onBlur={onBlur}

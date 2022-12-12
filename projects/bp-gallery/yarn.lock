@@ -9290,7 +9290,14 @@ jest@26.6.0:
     import-local "^3.0.2"
     jest-cli "^26.6.0"
 
-jodit@^3.23.3:
+jodit-react@^1.3.31:
+  version "1.3.31"
+  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-1.3.31.tgz#938f22796a616a29912f95d701409e8bcf2cf42a"
+  integrity sha512-Y+chtAeyDBuj/chbSNtuvcvRHL+XgySzsuYew2fIOm/W/rRSpeL4stSiZaB5Vnorgk70Ivmrb787WwhQ4RMUUQ==
+  dependencies:
+    jodit "^3.20.2"
+
+jodit@^3.20.2:
   version "3.23.3"
   resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.23.3.tgz#36666707b41b12f6d5e448ceb0cbb6f5b7a35f33"
   integrity sha512-lzKh4spzJy5pxRV8a/sy1ZWIvtoDHYrWkRq7b+aXNHH+5YXM/zwmtIaZOOY+n7LEsl4mrVlLXpd1iAT766rR0w==

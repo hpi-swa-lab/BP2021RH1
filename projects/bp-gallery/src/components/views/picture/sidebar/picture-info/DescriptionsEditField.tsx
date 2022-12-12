@@ -1,5 +1,4 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import JoditEditor from '../../../../common/editor/JoditEditor';
 import { FlatDescription } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { Icon, IconButton } from '@mui/material';
@@ -8,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
 import { useRef } from 'react';
 import defaultJoditConfig from '../../../../common/editor/helpers/jodit-config';
+import Editor from '../../../../common/editor/Editor';
 
 const DescriptionsEditField = ({
   descriptions,
@@ -81,7 +81,7 @@ const DescriptionsEditField = ({
             className='description-content'
             key={isEmpty(description.id) ? `new-description-${index}` : description.id}
           >
-            <JoditEditor
+            <Editor
               value={description.text}
               config={config}
               onBlur={newText => onBlurRef.current(newText, description)}
