@@ -11,9 +11,8 @@ import {
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import JoditEditor from 'jodit-react';
-import defaultJoditConfig from '../../../../../helpers/jodit-config';
 import PushPinIcon from '@mui/icons-material/PushPin';
+import Editor from '../../../../common/editor/Editor';
 
 const FormattedComment = ({ comment }: { comment: FlatComment }) => {
   const { t } = useTranslation();
@@ -104,11 +103,6 @@ const CommentEditField = ({ comment }: { comment: FlatComment }) => {
     commentRef.current = comment;
   }, [comment]);
 
-  const config = {
-    ...defaultJoditConfig,
-    readonly: false,
-  };
-
   const onBlur = useCallback(() => {
     updateComment({
       variables: {
@@ -119,9 +113,9 @@ const CommentEditField = ({ comment }: { comment: FlatComment }) => {
   }, [commentRef, updateComment]);
 
   return (
-    <JoditEditor
+    <Editor
       value={commentRef.current.text}
-      config={config}
+      extraOptions={{ readonly: false }}
       onBlur={onBlur}
       onChange={newText => {
         commentRef.current.text = newText;
