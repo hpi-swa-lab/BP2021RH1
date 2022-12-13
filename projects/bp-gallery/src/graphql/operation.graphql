@@ -881,6 +881,14 @@ mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
   }
 }
 
+mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
+  updateArchiveTag(id: $archiveId, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
 query getUnverifiedComments {
   comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
     data {

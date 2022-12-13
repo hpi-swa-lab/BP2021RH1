@@ -3059,6 +3059,18 @@ export type UpdateCollectionMutation = {
     | undefined;
 };
 
+export type UpdateArchiveMutationVariables = Exact<{
+  archiveId: Scalars['ID'];
+  data: ArchiveTagInput;
+}>;
+
+export type UpdateArchiveMutation = {
+  updateArchiveTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type GetUnverifiedCommentsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUnverifiedCommentsQuery = {
@@ -6181,6 +6193,58 @@ export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollect
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
+>;
+
+export const UpdateArchiveDocument = gql`
+  mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
+    updateArchiveTag(id: $archiveId, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateArchiveMutationFn = Apollo.MutationFunction<
+  UpdateArchiveMutation,
+  UpdateArchiveMutationVariables
+>;
+
+/**
+ * __useUpdateArchiveMutation__
+ *
+ * To run a mutation, you first call `useUpdateArchiveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateArchiveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateArchiveMutation, { data, loading, error }] = useUpdateArchiveMutation({
+ *   variables: {
+ *      archiveId: // value for 'archiveId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateArchiveMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateArchiveMutation, UpdateArchiveMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateArchiveMutation, UpdateArchiveMutationVariables>(
+    UpdateArchiveDocument,
+    options
+  );
+}
+
+export type UpdateArchiveMutationHookResult = ReturnType<typeof useUpdateArchiveMutation>;
+
+export type UpdateArchiveMutationResult = Apollo.MutationResult<UpdateArchiveMutation>;
+
+export type UpdateArchiveMutationOptions = Apollo.BaseMutationOptions<
+  UpdateArchiveMutation,
+  UpdateArchiveMutationVariables
 >;
 
 export const GetUnverifiedCommentsDocument = gql`
