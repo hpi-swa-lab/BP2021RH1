@@ -4,7 +4,8 @@
   "info": {
     "singularName": "archive-tag",
     "pluralName": "archive-tags",
-    "displayName": "Archive_Tag"
+    "displayName": "Archive_Tag",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -19,6 +20,20 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::picture.picture",
+      "mappedBy": "archive_tag"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "showcasePicture": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::picture.picture"
+    },
+    "links": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::link.link",
       "mappedBy": "archive_tag"
     }
   }

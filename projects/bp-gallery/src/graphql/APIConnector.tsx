@@ -29,9 +29,18 @@ export type Scalars = {
 
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  links?: Maybe<LinkRelationResponseCollection>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
+  showcasePicture?: Maybe<PictureEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ArchiveTagLinksArgs = {
+  filters?: InputMaybe<LinkFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ArchiveTagPicturesArgs = {
@@ -58,17 +67,23 @@ export type ArchiveTagEntityResponseCollection = {
 export type ArchiveTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  description?: InputMaybe<StringFilterInput>;
   id?: InputMaybe<IdFilterInput>;
+  links?: InputMaybe<LinkFiltersInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ArchiveTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  showcasePicture?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type ArchiveTagInput = {
+  description?: InputMaybe<Scalars['String']>;
+  links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  showcasePicture?: InputMaybe<Scalars['ID']>;
 };
 
 export type BooleanFilterInput = {
@@ -386,6 +401,7 @@ export type GenericMorph =
   | ComponentLocationCoordinates
   | Description
   | KeywordTag
+  | Link
   | LocationTag
   | PersonTag
   | Picture
@@ -530,6 +546,50 @@ export type KeywordTagRelationResponseCollection = {
   data: Array<KeywordTagEntity>;
 };
 
+export type Link = {
+  archive_tag?: Maybe<ArchiveTagEntityResponse>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  url: Scalars['String'];
+};
+
+export type LinkEntity = {
+  attributes?: Maybe<Link>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type LinkEntityResponse = {
+  data?: Maybe<LinkEntity>;
+};
+
+export type LinkEntityResponseCollection = {
+  data: Array<LinkEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type LinkFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<LinkFiltersInput>>>;
+  archive_tag?: InputMaybe<ArchiveTagFiltersInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<LinkFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<LinkFiltersInput>>>;
+  title?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  url?: InputMaybe<StringFilterInput>;
+};
+
+export type LinkInput = {
+  archive_tag?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
+};
+
+export type LinkRelationResponseCollection = {
+  data: Array<LinkEntity>;
+};
+
 export type LocationTag = {
   coordinates?: Maybe<ComponentLocationCoordinates>;
   createdAt?: Maybe<Scalars['DateTime']>;
@@ -604,12 +664,15 @@ export type Mutation = {
   createComment?: Maybe<CommentEntityResponse>;
   createDescription?: Maybe<DescriptionEntityResponse>;
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  createLink?: Maybe<LinkEntityResponse>;
   createLocationTag?: Maybe<LocationTagEntityResponse>;
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Create a new role */
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
+  /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   deleteArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   deleteBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -617,17 +680,20 @@ export type Mutation = {
   deleteComment?: Maybe<CommentEntityResponse>;
   deleteDescription?: Maybe<DescriptionEntityResponse>;
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  deleteLink?: Maybe<LinkEntityResponse>;
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
   /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   doBulkEdit?: Maybe<Scalars['Int']>;
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
+  /** Request a reset password token */
   forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
   login: UsersPermissionsLoginPayload;
   mergeCollections?: Maybe<Scalars['ID']>;
@@ -635,8 +701,10 @@ export type Mutation = {
   mergeLocationTags?: Maybe<Scalars['ID']>;
   mergePersonTags?: Maybe<Scalars['ID']>;
   multipleUpload: Array<Maybe<UploadFileEntityResponse>>;
+  /** Register a user */
   register: UsersPermissionsLoginPayload;
   removeFile?: Maybe<UploadFileEntityResponse>;
+  /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   updateBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -645,13 +713,16 @@ export type Mutation = {
   updateDescription?: Maybe<DescriptionEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  updateLink?: Maybe<LinkEntityResponse>;
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Update an existing role */
   updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>;
+  /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
 };
@@ -674,6 +745,10 @@ export type MutationCreateDescriptionArgs = {
 
 export type MutationCreateKeywordTagArgs = {
   data: KeywordTagInput;
+};
+
+export type MutationCreateLinkArgs = {
+  data: LinkInput;
 };
 
 export type MutationCreateLocationTagArgs = {
@@ -721,6 +796,10 @@ export type MutationDeleteDescriptionArgs = {
 };
 
 export type MutationDeleteKeywordTagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteLinkArgs = {
   id: Scalars['ID'];
 };
 
@@ -841,6 +920,11 @@ export type MutationUpdateFileInfoArgs = {
 
 export type MutationUpdateKeywordTagArgs = {
   data: KeywordTagInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateLinkArgs = {
+  data: LinkInput;
   id: Scalars['ID'];
 };
 
@@ -1129,6 +1213,8 @@ export type Query = {
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
+  link?: Maybe<LinkEntityResponse>;
+  links?: Maybe<LinkEntityResponseCollection>;
   locationTag?: Maybe<LocationTagEntityResponse>;
   locationTags?: Maybe<LocationTagEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
@@ -1205,6 +1291,16 @@ export type QueryKeywordTagArgs = {
 
 export type QueryKeywordTagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryLinkArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryLinksArgs = {
+  filters?: InputMaybe<LinkFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
@@ -1629,6 +1725,51 @@ export type UsersPermissionsUserInput = {
 
 export type UsersPermissionsUserRelationResponseCollection = {
   data: Array<UsersPermissionsUserEntity>;
+};
+
+export type GetArchiveQueryVariables = Exact<{
+  archiveId: Scalars['ID'];
+}>;
+
+export type GetArchiveQuery = {
+  archiveTag?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    name: string;
+                    description?: string | null | undefined;
+                    showcasePicture?:
+                      | { data?: { id?: string | null | undefined } | null | undefined }
+                      | null
+                      | undefined;
+                    pictures?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                    links?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?:
+                              | { title?: string | null | undefined; url: string }
+                              | null
+                              | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export type GetPictureInfoQueryVariables = Exact<{
@@ -2843,7 +2984,7 @@ export type BulkEditMutationVariables = Exact<{
   data: Scalars['JSON'];
 }>;
 
-export type BulkEditMutation = { doBulkEdit?: string | null | undefined };
+export type BulkEditMutation = { doBulkEdit?: number | null | undefined };
 
 export type CreatePictureMutationVariables = Exact<{
   data: PictureInput;
@@ -3058,6 +3199,78 @@ export type MeQuery = {
     | null
     | undefined;
 };
+
+export const GetArchiveDocument = gql`
+  query getArchive($archiveId: ID!) {
+    archiveTag(id: $archiveId) {
+      data {
+        id
+        attributes {
+          name
+          description
+          showcasePicture {
+            data {
+              id
+            }
+          }
+          pictures {
+            data {
+              id
+            }
+          }
+          links {
+            data {
+              id
+              attributes {
+                title
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetArchiveQuery__
+ *
+ * To run a query within a React component, call `useGetArchiveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchiveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchiveQuery({
+ *   variables: {
+ *      archiveId: // value for 'archiveId'
+ *   },
+ * });
+ */
+export function useGetArchiveQuery(
+  baseOptions: Apollo.QueryHookOptions<GetArchiveQuery, GetArchiveQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetArchiveQuery, GetArchiveQueryVariables>(GetArchiveDocument, options);
+}
+
+export function useGetArchiveLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetArchiveQuery, GetArchiveQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetArchiveQuery, GetArchiveQueryVariables>(
+    GetArchiveDocument,
+    options
+  );
+}
+
+export type GetArchiveQueryHookResult = ReturnType<typeof useGetArchiveQuery>;
+
+export type GetArchiveLazyQueryHookResult = ReturnType<typeof useGetArchiveLazyQuery>;
+
+export type GetArchiveQueryResult = Apollo.QueryResult<GetArchiveQuery, GetArchiveQueryVariables>;
 
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
