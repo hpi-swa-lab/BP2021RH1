@@ -72,8 +72,21 @@ export const buildHttpLink = (
 const apolloClient = new ApolloClient({
   link: buildHttpLink(sessionStorage.getItem('jwt')),
   cache: new InMemoryCache({
-    addTypename: false,
     typePolicies: {
+      ...Object.fromEntries(
+        [
+          'ArchiveTag',
+          'Collection',
+          'Comment',
+          'Description',
+          'KeywordTag',
+          'LocationTag',
+          'PersonTag',
+          'Picture',
+          'TimeRangeTag',
+          'UploadFile',
+        ].map(entity => [entity, { merge: true }])
+      ),
       Query: {
         fields: {
           pictures: {
@@ -83,6 +96,7 @@ const apolloClient = new ApolloClient({
             keyArgs: ['filters'],
             merge(existing = { data: [] }, incoming: PictureEntityResponseCollection) {
               return {
+                ...incoming,
                 data: [...existing.data, ...incoming.data],
               };
             },
@@ -97,6 +111,7 @@ const apolloClient = new ApolloClient({
             keyArgs: ['filters'],
             merge(existing = { data: [] }, incoming: KeywordTagEntityResponseCollection) {
               return {
+                ...incoming,
                 data: [...existing.data, ...incoming.data],
               };
             },
@@ -105,6 +120,7 @@ const apolloClient = new ApolloClient({
             keyArgs: ['filters'],
             merge(existing = { data: [] }, incoming: PersonTagEntityResponseCollection) {
               return {
+                ...incoming,
                 data: [...existing.data, ...incoming.data],
               };
             },
@@ -113,6 +129,7 @@ const apolloClient = new ApolloClient({
             keyArgs: ['filters'],
             merge(existing = { data: [] }, incoming: LocationTagEntityResponseCollection) {
               return {
+                ...incoming,
                 data: [...existing.data, ...incoming.data],
               };
             },
