@@ -19,6 +19,9 @@ export const flattenQueryResponseData = (queryResponseData?: {
 
   let result: any = {};
   for (const [key, value] of Object.entries<unknown>(queryResponseData)) {
+    if (key === '__typename') {
+      continue;
+    }
     if (key !== 'data' && key !== 'attributes' && value instanceof Object) {
       // Keep the semantically relevant key and initiate recursion within its value object.
       result[key] = flattenQueryResponseData(value);
