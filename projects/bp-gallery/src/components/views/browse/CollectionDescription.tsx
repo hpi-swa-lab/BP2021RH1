@@ -6,7 +6,6 @@ import getLineBreaks from '../../../helpers/get-linebreaks';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
-import defaultJoditConfig from '../../common/editor/helpers/jodit-config';
 import Editor from '../../common/editor/Editor';
 
 const CollectionDescription = ({
@@ -84,9 +83,8 @@ const EditableCollectionDescription = ({
     description.current = initialDescription;
   }, [initialDescription]);
 
-  const config = useMemo(
+  const extraOptions = useMemo(
     () => ({
-      ...defaultJoditConfig,
       readonly: false,
       showPlaceholder: true,
       placeholder: t('curator.insertDescriptionHere'),
@@ -109,7 +107,7 @@ const EditableCollectionDescription = ({
   return (
     <Editor
       value={description.current}
-      config={config}
+      extraOptions={extraOptions}
       onBlur={onBlur}
       onChange={newText => {
         description.current = newText;

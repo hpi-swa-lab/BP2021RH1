@@ -6,7 +6,6 @@ import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
 import { useRef } from 'react';
-import defaultJoditConfig from '../../../../common/editor/helpers/jodit-config';
 import Editor from '../../../../common/editor/Editor';
 
 const DescriptionsEditField = ({
@@ -27,9 +26,8 @@ const DescriptionsEditField = ({
     setDescriptionState([...descriptions]);
   }, [setDescriptionState, descriptions]);
 
-  const config = useMemo(
+  const extraOptions = useMemo(
     () => ({
-      ...defaultJoditConfig,
       readonly: role < AuthRole.CURATOR,
     }),
     [role]
@@ -83,7 +81,7 @@ const DescriptionsEditField = ({
           >
             <Editor
               value={description.text}
-              config={config}
+              extraOptions={extraOptions}
               onBlur={newText => onBlurRef.current(newText, description)}
               onChange={newText => onChangeRef.current(newText, description)}
             />

@@ -11,7 +11,6 @@ import {
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import defaultJoditConfig from '../../../../common/editor/helpers/jodit-config';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import Editor from '../../../../common/editor/Editor';
 
@@ -104,11 +103,6 @@ const CommentEditField = ({ comment }: { comment: FlatComment }) => {
     commentRef.current = comment;
   }, [comment]);
 
-  const config = {
-    ...defaultJoditConfig,
-    readonly: false,
-  };
-
   const onBlur = useCallback(() => {
     updateComment({
       variables: {
@@ -121,7 +115,7 @@ const CommentEditField = ({ comment }: { comment: FlatComment }) => {
   return (
     <Editor
       value={commentRef.current.text}
-      config={config}
+      extraOptions={{ readonly: false }}
       onBlur={onBlur}
       onChange={newText => {
         commentRef.current.text = newText;
