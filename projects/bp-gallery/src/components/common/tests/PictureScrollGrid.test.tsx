@@ -64,38 +64,3 @@ describe('PictureScrollGrid in basic functionality without refetching', () => {
     });
   });
 });
-
-describe('Refetch functionality in PictureScrollGrid', () => {
-  it('should render more pictures after refetching', async () => {
-    const { container } = renderWithAPIMocks(
-      <PictureScrollGrid
-        queryParams={{}}
-        scrollPos={0}
-        scrollHeight={2 * window.innerHeight}
-        hashbase='A'
-      />,
-      GetPicturesDocumentMocks,
-      true
-    );
-    await waitFor(() => {
-      const imageTags = container.getElementsByTagName('img');
-      expect(imageTags.length).toBeLessThanOrEqual(4);
-    });
-
-    renderWithAPIMocks(
-      <PictureScrollGrid
-        queryParams={{}}
-        scrollPos={2 * window.innerHeight} // simulates scrolling to the bottom
-        scrollHeight={2 * window.innerHeight}
-        hashbase='A'
-      />,
-      GetPicturesDocumentMocks,
-      true
-    );
-
-    await waitFor(() => {
-      const imageTags = container.getElementsByTagName('img');
-      expect(imageTags.length).toBeGreaterThan(4);
-    });
-  });
-});
