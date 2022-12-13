@@ -5,8 +5,6 @@
   .welcome-container {
     padding: 1rem 2rem;
     background: white;
-    padding-top: 4rem;
-    //box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
 
     .welcome {
       display: flex;
@@ -14,38 +12,13 @@
       justify-content: center;
       align-items: center;
 
+      h1 {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+
       p {
         text-align: center;
-      }
-    }
-
-    .logos {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      .logo {
-        height: 4rem;
-      }
-      .square {
-        width: 8rem;
-        height: auto;
-      }
-      .logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-
-      @media only screen and (max-width: 650px) {
-        flex-wrap: wrap;
-        justify-content: center;
-        .logo {
-          height: 1.5rem;
-        }
-        .square {
-          width: auto;
-          height: 4rem;
-        }
       }
     }
   }

@@ -11,23 +11,45 @@ const Footer = () => {
   return (
     <div className='footer'>
       <div className='footer-content'>
-        <h3>{t('footer.title')}</h3>
+        <div className='footer-info'>
+          <h3>{t('footer.title')}</h3>
+          <p
+            onClick={() => {
+              window.open(`mailto:${process.env.REACT_APP_CONTACT_MAIL ?? ''}`);
+            }}
+          >
+            {t('footer.contact')}
+          </p>
+          {/*  
+          <p>
+          {t('footer.privacy')}
+          </p>
+          */}
+          <p onClick={() => history.push('/terms-of-service', { showBack: false })}>
+            {t('footer.tos')}
+          </p>
+        </div>
 
-        <p
-          onClick={() => {
-            window.open(`mailto:${process.env.REACT_APP_CONTACT_MAIL ?? ''}`);
-          }}
-        >
-          {t('footer.contact')}
-        </p>
-        {/*  
-        <p>
-        {t('footer.privacy')}
-        </p>
-        */}
-        <p onClick={() => history.push('/terms-of-service', { showBack: false })}>
-          {t('footer.tos')}
-        </p>
+        <div className='footer-associates'>
+          <h3>{t('footer.associates-title')}</h3>
+          <div className='associates-logos'>
+            <div className='logo'>
+              <img src='/partner-logos/lkrs_goslar-transparent.png' />
+            </div>
+            <div className='logo square'>
+              <img src='/partner-logos/Bad-Harzburger-Wappen-transparent.png' />
+            </div>
+            <div className='logo'>
+              <img src='/partner-logos/Logo%20GZ-transparent.png' />
+            </div>
+            <div className='logo'>
+              <img src='/partner-logos/logo-Stadt-Braunlage-farbe-transparent.png' />
+            </div>
+            <div className='logo'>
+              <img src='/partner-logos/HarzKurier-gross-transparent.png' />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
