@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import JoditEditor, { Jodit } from 'jodit-react';
 import { addPlugins } from './helpers/jodit-plugins';
-import defaultJoditConfig from './helpers/jodit-config';
+import defaultConfig from './helpers/jodit-config';
 
 export interface EditorProps {
   value: string;
@@ -17,14 +17,9 @@ addPlugins();
  * Wrapper for JoditEditor with additional plugins and default configuration
  */
 const Editor = ({ value, extraOptions, onChange, onBlur }: EditorProps) => {
-  return (
-    <JoditEditor
-      value={value}
-      config={Object.assign(defaultJoditConfig, extraOptions)}
-      onChange={onChange}
-      onBlur={onBlur}
-    />
-  );
+  const config = useMemo(() => ({ ...defaultConfig, ...extraOptions }), [extraOptions]);
+
+  return <JoditEditor value={value} config={config} onChange={onChange} onBlur={onBlur} />;
 };
 
 export default Editor;
