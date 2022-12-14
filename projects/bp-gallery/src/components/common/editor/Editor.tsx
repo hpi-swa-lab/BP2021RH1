@@ -20,7 +20,7 @@ const Editor = ({ value, extraOptions, onChange, onBlur }: EditorProps) => {
   return (
     <JoditEditor
       value={value}
-      config={{ ...defaultJoditConfig, ...extraOptions }}
+      config={Object.assign(defaultJoditConfig, extraOptions)}
       onChange={onChange}
       onBlur={onBlur}
     />
