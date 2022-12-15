@@ -31,8 +31,10 @@ export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
   links?: Maybe<LinkRelationResponseCollection>;
+  longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
+  shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
@@ -70,10 +72,12 @@ export type ArchiveTagFiltersInput = {
   description?: InputMaybe<StringFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   links?: InputMaybe<LinkFiltersInput>;
+  longDescription?: InputMaybe<StringFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ArchiveTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
@@ -81,8 +85,10 @@ export type ArchiveTagFiltersInput = {
 export type ArchiveTagInput = {
   description?: InputMaybe<Scalars['String']>;
   links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
 };
 
@@ -1740,7 +1746,8 @@ export type GetArchiveQuery = {
               attributes?:
                 | {
                     name: string;
-                    description?: string | null | undefined;
+                    shortDescription?: string | null | undefined;
+                    longDescription?: string | null | undefined;
                     showcasePicture?:
                       | { data?: { id?: string | null | undefined } | null | undefined }
                       | null
@@ -3220,7 +3227,8 @@ export const GetArchiveDocument = gql`
         id
         attributes {
           name
-          description
+          shortDescription
+          longDescription
           showcasePicture {
             data {
               id
