@@ -30,6 +30,7 @@ export type Scalars = {
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   links?: Maybe<LinkRelationResponseCollection>;
+  logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
@@ -82,6 +83,7 @@ export type ArchiveTagFiltersInput = {
 
 export type ArchiveTagInput = {
   links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1745,6 +1747,38 @@ export type GetArchiveQuery = {
                     name: string;
                     shortDescription?: string | null | undefined;
                     longDescription?: string | null | undefined;
+                    logo?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?:
+                                  | {
+                                      alternativeText?: string | null | undefined;
+                                      caption?: string | null | undefined;
+                                      createdAt?: any | null | undefined;
+                                      ext?: string | null | undefined;
+                                      formats?: any | null | undefined;
+                                      hash: string;
+                                      height?: number | null | undefined;
+                                      mime: string;
+                                      name: string;
+                                      previewUrl?: string | null | undefined;
+                                      provider: string;
+                                      provider_metadata?: any | null | undefined;
+                                      size: number;
+                                      updatedAt?: any | null | undefined;
+                                      url: string;
+                                      width?: number | null | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
                     showcasePicture?:
                       | { data?: { id?: string | null | undefined } | null | undefined }
                       | null
@@ -3235,6 +3269,29 @@ export const GetArchiveDocument = gql`
           name
           shortDescription
           longDescription
+          logo {
+            data {
+              id
+              attributes {
+                alternativeText
+                caption
+                createdAt
+                ext
+                formats
+                hash
+                height
+                mime
+                name
+                previewUrl
+                provider
+                provider_metadata
+                size
+                updatedAt
+                url
+                width
+              }
+            }
+          }
           showcasePicture {
             data {
               id

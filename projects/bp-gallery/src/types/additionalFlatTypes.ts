@@ -52,7 +52,8 @@ export type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'v
 export type FlatTimeRangeTagWithoutRelations = ID &
   Omit<TimeRangeTag, 'pictures' | 'verified_pictures'>;
 
-export type FlatArchiveTagWithoutRelations = ID & Omit<ArchiveTag, 'pictures'>;
+export type FlatArchiveTagWithoutRelations = ID &
+  Omit<ArchiveTag, 'pictures' | 'logo' | 'showcasePicture'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -86,6 +87,8 @@ export type FlatCollection = FlatCollectionWithoutRelations & {
 
 export type FlatArchiveTag = FlatArchiveTagWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
+  showcasePicture?: FlatPictureWithoutRelations;
+  logo?: UploadFile;
 };
 
 export type FlatPicture = FlatPictureWithoutRelations & {
