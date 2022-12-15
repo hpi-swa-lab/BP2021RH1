@@ -4,7 +4,8 @@ query getArchive($archiveId: ID!) {
       id
       attributes {
         name
-        description
+        shortDescription
+        longDescription
         showcasePicture {
           data {
             id

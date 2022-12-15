@@ -4059,7 +4059,7 @@
             "defaultValue": null
           },
           {
-            "name": "description",
+            "name": "longDescription",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -4084,6 +4084,16 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "LinkFiltersInput",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "shortDescription",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilterInput",
               "ofType": null
             },
             "defaultValue": null
@@ -4182,7 +4192,7 @@
             "defaultValue": null
           },
           {
-            "name": "description",
+            "name": "longDescription",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -4212,6 +4222,16 @@
                 "name": "ID",
                 "ofType": null
               }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "shortDescription",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "defaultValue": null
           }
@@ -4299,7 +4319,7 @@
             "deprecationReason": null
           },
           {
-            "name": "description",
+            "name": "longDescription",
             "description": null,
             "args": [],
             "type": {
@@ -4364,6 +4384,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "LinkRelationResponseCollection",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "shortDescription",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,

@@ -17,7 +17,7 @@ const ArchiveInfo = ({ archive }: ArchiveInfoProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { role } = useAuth();
-  const description = archive.description as string;
+  const description = archive.longDescription as string;
   const id = archive.id;
   const name = archive.name;
 
@@ -98,7 +98,7 @@ const EditableArchiveInfo = ({
       variables: {
         archiveId,
         data: {
-          description: description.current,
+          longDescription: description.current,
         },
       },
     });

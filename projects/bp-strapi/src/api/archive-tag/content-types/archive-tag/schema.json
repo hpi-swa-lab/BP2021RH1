@@ -22,7 +22,7 @@
       "target": "api::picture.picture",
       "mappedBy": "archive_tag"
     },
-    "description": {
+    "longDescription": {
       "type": "richtext"
     },
     "showcasePicture": {
@@ -35,6 +35,9 @@
       "relation": "oneToMany",
       "target": "api::link.link",
       "mappedBy": "archive_tag"
+    },
+    "shortDescription": {
+      "type": "text"
     }
   }
 }
