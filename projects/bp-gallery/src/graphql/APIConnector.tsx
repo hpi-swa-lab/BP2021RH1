@@ -29,7 +29,6 @@ export type Scalars = {
 
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
   links?: Maybe<LinkRelationResponseCollection>;
   longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
@@ -69,7 +68,6 @@ export type ArchiveTagEntityResponseCollection = {
 export type ArchiveTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
-  description?: InputMaybe<StringFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   links?: InputMaybe<LinkFiltersInput>;
   longDescription?: InputMaybe<StringFilterInput>;
@@ -83,7 +81,6 @@ export type ArchiveTagFiltersInput = {
 };
 
 export type ArchiveTagInput = {
-  description?: InputMaybe<Scalars['String']>;
   links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -2734,7 +2731,17 @@ export type GetAllArchiveTagsQuery = {
     | {
         data: Array<{
           id?: string | null | undefined;
-          attributes?: { name: string } | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                shortDescription?: string | null | undefined;
+                showcasePicture?:
+                  | { data?: { id?: string | null | undefined } | null | undefined }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
         }>;
       }
     | null
@@ -4985,6 +4992,12 @@ export const GetAllArchiveTagsDocument = gql`
         id
         attributes {
           name
+          shortDescription
+          showcasePicture {
+            data {
+              id
+            }
+          }
         }
       }
     }

@@ -650,6 +650,12 @@ query getAllArchiveTags {
       id
       attributes {
         name
+        shortDescription
+        showcasePicture {
+          data {
+            id
+          }
+        }
       }
     }
   }
