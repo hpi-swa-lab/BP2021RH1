@@ -19,6 +19,7 @@ export type PictureGridProps = {
   loading: boolean;
   bulkOperations?: BulkOperation[];
   refetch: () => void;
+  extraAdornments?: PicturePreviewAdornment[];
   viewOnly?: boolean;
 };
 
@@ -28,6 +29,7 @@ const PictureGrid = ({
   loading,
   bulkOperations,
   refetch,
+  extraAdornments,
   viewOnly,
 }: PictureGridProps) => {
   const calculateMaxRowCount = () =>
@@ -116,7 +118,7 @@ const PictureGrid = ({
     setSelectedPictures([]);
   }, []);
 
-  const pictureAdornments =
+  const defaultAdornments =
     role >= AuthRole.CURATOR && !viewOnly
       ? [
           {
@@ -125,6 +127,7 @@ const PictureGrid = ({
               deletePicture(clickedPicture).then(() => refetch());
             },
             position: 'top-right',
+            title: t('pictureAdornments.delete'),
           } as PicturePreviewAdornment,
           {
             icon: picture =>
@@ -148,9 +151,14 @@ const PictureGrid = ({
               setLastSelectedPicture(clickedPicture);
             },
             position: 'bottom-left',
+            title: t('pictureAdornments.select'),
           } as PicturePreviewAdornment,
         ]
       : undefined;
+
+  const pictureAdornments = extraAdornments
+    ? defaultAdornments?.concat(extraAdornments)
+    : defaultAdornments;
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
