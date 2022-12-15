@@ -7,6 +7,41 @@ h2 {
   text-align: center;
 }
 
+.archive-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  .archive-logo-container {
+    overflow: hidden;
+    height: 130px;
+    .archive-logo {
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      vertical-align: middle;
+    }
+  }
+}
+
+.archive-showcase {
+  width: 300px;
+  margin-top: 3rem;
+  flex-shrink: 0;
+}
+
+.collection-container {
+  flex-grow: 1;
+  margin-right: 20px;
+}
+
+.archive-info {
+  display: flex;
+  width: 100%;
+
+  .picture-preview {
+    flex: 0 1 100px;
+  }
+}
+
 .collection-container .jodit-react-container {
   margin-bottom: 1rem;
   text-align: center;
