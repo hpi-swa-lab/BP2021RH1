@@ -1,10 +1,10 @@
 overwrite: true
 schema:
   # Mainly get the schema from the remote
-  # - http://localhost:9000:
-  #     loader: ./src/graphql/schema/loadRemoteSchema.js
+  - https://bilder.bad-harzburg-stiftung.de/api/graphql:
+      loader: ./src/graphql/schema/loadRemoteSchema.js
   # Fallback file if remote server is unavailable
-  - 'src/graphql/schema/schema.graphql'
+  - 'src/graphql/schema/schema.json'
 documents: 'src/graphql/*.graphql'
 generates:
   src/graphql/APIConnector.tsx:
