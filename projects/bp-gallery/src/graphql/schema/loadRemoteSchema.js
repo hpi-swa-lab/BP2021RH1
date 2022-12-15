@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { buildClientSchema, getIntrospectionQuery } = require('graphql');
+const fetch = require('node-fetch');
 
 /**
  * Custom implementation of running an introspection query on the given remote endpoint.

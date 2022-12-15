@@ -8,6 +8,10 @@ import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
+import BulkEditView from '../../views/bulk-edit/BulkEditView';
+import { union } from 'lodash';
+import { Button, Icon } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -15,6 +19,7 @@ export type PictureGridProps = {
   loading: boolean;
   bulkOperations?: BulkOperation[];
   refetch: () => void;
+  viewOnly?: boolean;
 };
 
 const PictureGrid = ({
@@ -23,16 +28,19 @@ const PictureGrid = ({
   loading,
   bulkOperations,
   refetch,
+  viewOnly,
 }: PictureGridProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
   const { role } = useAuth();
+  const { t } = useTranslation();
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
+  const [focusedBulkEdit, setFocusedBulkEdit] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
   const deletePicture = useDeletePicture();
@@ -90,10 +98,26 @@ const PictureGrid = ({
     [setFocusedPicture]
   );
 
+  const navigateToBulkEdit = useCallback(
+    (pictureIds: string) => {
+      setFocusedBulkEdit(pictureIds);
+      window.history.pushState({}, '', `/bulk-edit/${pictureIds}`);
+    },
+    [setFocusedBulkEdit]
+  );
+
   const [selectedPictures, setSelectedPictures] = useState<FlatPicture[]>([]);
+  const [lastSelectedPicture, setLastSelectedPicture] = useState<FlatPicture | null>(null);
+
+  const selectAll = useCallback(() => {
+    setSelectedPictures(pictures);
+  }, [pictures]);
+  const selectNone = useCallback(() => {
+    setSelectedPictures([]);
+  }, []);
 
   const pictureAdornments =
-    role >= AuthRole.CURATOR
+    role >= AuthRole.CURATOR && !viewOnly
       ? [
           {
             icon: 'delete',
@@ -105,12 +129,23 @@ const PictureGrid = ({
           {
             icon: picture =>
               selectedPictures.includes(picture) ? 'check_box' : 'check_box_outline_blank',
-            onClick: clickedPicture => {
-              setSelectedPictures(currentSelected =>
-                currentSelected.includes(clickedPicture)
-                  ? currentSelected.filter(p => p !== clickedPicture)
-                  : [...currentSelected, clickedPicture]
-              );
+            onClick: (clickedPicture, event) => {
+              if (lastSelectedPicture !== null && event.shiftKey) {
+                const lastIndex = pictures.indexOf(lastSelectedPicture);
+                const clickedIndex = pictures.indexOf(clickedPicture);
+                const [fromIndex, toIndex] =
+                  lastIndex < clickedIndex ? [lastIndex, clickedIndex] : [clickedIndex, lastIndex];
+                setSelectedPictures(currentSelected =>
+                  union(currentSelected, pictures.slice(fromIndex, toIndex + 1))
+                );
+              } else {
+                setSelectedPictures(currentSelected =>
+                  currentSelected.includes(clickedPicture)
+                    ? currentSelected.filter(p => p !== clickedPicture)
+                    : [...currentSelected, clickedPicture]
+                );
+              }
+              setLastSelectedPicture(clickedPicture);
             },
             position: 'bottom-left',
           } as PicturePreviewAdornment,
@@ -120,7 +155,21 @@ const PictureGrid = ({
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
       {Boolean(selectedPictures.length) && bulkOperations && (
-        <BulkOperationsPanel operations={bulkOperations} selectedPictures={selectedPictures} />
+        <BulkOperationsPanel
+          operations={bulkOperations}
+          selectedPictures={selectedPictures}
+          onBulkEdit={navigateToBulkEdit}
+        />
+      )}
+      {pictureAdornments && (
+        <div className='selection-buttons'>
+          <Button onClick={selectAll} startIcon={<Icon>done_all</Icon>} variant='contained'>
+            {t('curator.selectAll')}
+          </Button>
+          <Button onClick={selectNone} startIcon={<Icon>remove_done</Icon>} variant='contained'>
+            {t('curator.selectNone')}
+          </Button>
+        </div>
       )}
       <div className='picture-grid'>
         {table.map((row, rowindex) => {
@@ -140,8 +189,12 @@ const PictureGrid = ({
                     <PicturePreview
                       key={`${rowindex}${colindex}`}
                       picture={picture}
-                      onClick={() => navigateToPicture(picture.id)}
+                      onClick={() => {
+                        if (viewOnly) return;
+                        navigateToPicture(picture.id);
+                      }}
                       adornments={pictureAdornments}
+                      viewOnly={viewOnly}
                     />
                   );
                 }
@@ -160,6 +213,14 @@ const PictureGrid = ({
               setTransitioning(false);
               setFocusedPicture(undefined);
             });
+          }}
+        />
+      )}
+      {focusedBulkEdit && (
+        <BulkEditView
+          pictureIds={selectedPictures.map(picture => picture.id)}
+          onBack={() => {
+            setFocusedBulkEdit(undefined);
           }}
         />
       )}

@@ -31,12 +31,14 @@ export interface AuthFields {
   email?: string;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  loading: boolean;
 }
 
 export const AuthContext = React.createContext<AuthFields>({
   role: AuthRole.PUBLIC,
   login: async () => {},
   logout: () => {},
+  loading: false,
 });
 
 export const useAuth = () => {
@@ -47,6 +49,8 @@ const AuthProvider = ({ children }: { children: any }) => {
   const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);
+
+  const [authLoading, setAuthLoading] = useState(true);
 
   const { t } = useTranslation();
 
@@ -67,17 +71,21 @@ const AuthProvider = ({ children }: { children: any }) => {
 
     if (token) {
       getUserInfo();
+    } else {
+      // we won't call getUserInfo, because token won't change
+      setAuthLoading(false);
     }
   }, [apolloClient, called, getUserInfo, openAlert]);
 
   // Save fetched userInfo in state
   useEffect(() => {
-    if (loading || error) return;
+    if (!called || loading || error) return;
 
     setRole(asAuthRole(data?.me?.role?.name ?? ''));
     setUsername(data?.me?.username);
     setEmail(data?.me?.email ?? undefined);
-  }, [data, loading, error]);
+    setAuthLoading(false);
+  }, [data, loading, error, called]);
 
   const displaySuccess = useCallback(
     (message: string) => {
@@ -120,7 +128,7 @@ const AuthProvider = ({ children }: { children: any }) => {
   }, [apolloClient, displaySuccess, t, openAlert]);
 
   return (
-    <AuthContext.Provider value={{ role, username, email, login, logout }}>
+    <AuthContext.Provider value={{ role, username, email, login, logout, loading: authLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -9,7 +9,10 @@ import { renderWithAPIMocks } from '../../../../../../testUtils';
 describe('PictureInfo', () => {
   it('should render the pictures time range tag', async () => {
     renderWithAPIMocks(
-      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+      <PictureInfo
+        picture={flattenQueryResponseData(PictureMocks) as FlatPicture}
+        onSave={() => {}}
+      />
     );
 
     const timeRangeTags = screen.getByText('10.10.1955 - 12.10.1955');
@@ -18,7 +21,10 @@ describe('PictureInfo', () => {
 
   it('should render the pictures descriptions', async () => {
     renderWithAPIMocks(
-      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+      <PictureInfo
+        picture={flattenQueryResponseData(PictureMocks) as FlatPicture}
+        onSave={() => {}}
+      />
     );
 
     const description1 = screen.getByText('My fancy description');
@@ -29,7 +35,10 @@ describe('PictureInfo', () => {
 
   it('should render the pictures keyword tags', async () => {
     renderWithAPIMocks(
-      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+      <PictureInfo
+        picture={flattenQueryResponseData(PictureMocks) as FlatPicture}
+        onSave={() => {}}
+      />
     );
 
     const tag = screen.getByText('keyword_tag');
@@ -38,7 +47,10 @@ describe('PictureInfo', () => {
 
   it('should render the pictures person tags', async () => {
     renderWithAPIMocks(
-      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+      <PictureInfo
+        picture={flattenQueryResponseData(PictureMocks) as FlatPicture}
+        onSave={() => {}}
+      />
     );
 
     const tag = screen.getByText('Person test');
@@ -47,7 +59,10 @@ describe('PictureInfo', () => {
 
   it('should render the pictures location tags', async () => {
     renderWithAPIMocks(
-      <PictureInfo picture={flattenQueryResponseData(PictureMocks) as FlatPicture} />
+      <PictureInfo
+        picture={flattenQueryResponseData(PictureMocks) as FlatPicture}
+        onSave={() => {}}
+      />
     );
 
     const tag = screen.getByText('A place in Bad Harzburg');

@@ -125,6 +125,133 @@ query getPictureInfo($pictureId: ID!) {
   }
 }
 
+query getMultiplePictureInfo($pictureIds: [ID!]) {
+  pictures(filters: { id: { in: $pictureIds } }) {
+    data {
+      id
+      attributes {
+        descriptions(sort: "createdAt:asc") {
+          data {
+            id
+            attributes {
+              text
+            }
+          }
+        }
+        time_range_tag {
+          data {
+            id
+            attributes {
+              start
+              end
+            }
+          }
+        }
+        verified_time_range_tag {
+          data {
+            id
+            attributes {
+              start
+              end
+            }
+          }
+        }
+        keyword_tags(sort: "updatedAt:asc") {
+          data {
+            id
+            attributes {
+              name
+              updatedAt
+            }
+          }
+        }
+        verified_keyword_tags(sort: "updatedAt:asc") {
+          data {
+            id
+            attributes {
+              name
+              updatedAt
+            }
+          }
+        }
+        location_tags(sort: "updatedAt:asc") {
+          data {
+            id
+            attributes {
+              name
+              updatedAt
+            }
+          }
+        }
+        verified_location_tags(sort: "updatedAt:asc") {
+          data {
+            id
+            attributes {
+              name
+              updatedAt
+            }
+          }
+        }
+        person_tags(sort: "updatedAt:asc") {
+          data {
+            id
+            attributes {
+              name
+              updatedAt
+            }
+          }
+        }
+        verified_person_tags(sort: "updatedAt:asc") {
+          data {
+            id
+            attributes {
+              name
+              updatedAt
+            }
+          }
+        }
+        collections(publicationState: PREVIEW) {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        media {
+          data {
+            id
+            attributes {
+              url
+              updatedAt
+            }
+          }
+        }
+        comments(publicationState: PREVIEW, sort: "date:asc") {
+          data {
+            id
+            attributes {
+              text
+              author
+              date
+              publishedAt
+              pinned
+            }
+          }
+        }
+        archive_tag {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getPictures(
   $filters: PictureFiltersInput!
   $pagination: PaginationArg!
@@ -671,6 +798,10 @@ mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateT
 
 mutation updatePicture($pictureId: ID!, $data: JSON!) {
   updatePictureWithTagCleanup(id: $pictureId, data: $data)
+}
+
+mutation bulkEdit($pictureIds: [ID!]!, $data: JSON!) {
+  doBulkEdit(ids: $pictureIds, data: $data)
 }
 
 mutation createPicture($data: PictureInput!) {
