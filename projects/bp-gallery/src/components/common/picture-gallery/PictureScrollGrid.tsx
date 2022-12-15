@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import './PictureScrollGrid.scss';
 import { BulkOperation } from './BulkOperationsPanel';
 import useGetPictures from '../../../hooks/get-pictures.hook';
+import { PicturePreviewAdornment } from './PicturePreview';
 
 export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
@@ -25,6 +26,7 @@ const PictureScrollGrid = ({
   sortBy,
   maxNumPictures,
   showCount = true,
+  extraAdornments,
   viewOnly,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
@@ -38,6 +40,7 @@ const PictureScrollGrid = ({
   sortBy?: string[];
   maxNumPictures?: number;
   showCount?: boolean;
+  extraAdornments?: PicturePreviewAdornment[];
   viewOnly?: boolean;
 }) => {
   const { t } = useTranslation();
@@ -136,6 +139,7 @@ const PictureScrollGrid = ({
           hashBase={hashbase}
           loading={isFetching}
           bulkOperations={bulkOperations}
+          extraAdornments={extraAdornments}
           viewOnly={viewOnly}
         />
       </>

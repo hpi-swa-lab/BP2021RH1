@@ -171,5 +171,10 @@
     "nameOfNewCollection": "Name der neuen Collection:",
     "autoCrop": "Automatisch Zuschneiden",
     "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
+  },
+  "pictureAdornments": {
+    "showcase": "Als Schaubild auswählen",
+    "select": "Bild auswählen",
+    "delete": "Bild entfernen"
   }
 }

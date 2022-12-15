@@ -10,28 +10,29 @@ query getArchive($archiveId: ID!) {
           data {
             id
             attributes {
-              alternativeText
-              caption
-              createdAt
-              ext
-              formats
-              hash
-              height
-              mime
-              name
-              previewUrl
-              provider
-              provider_metadata
-              size
-              updatedAt
-              url
               width
+              height
+              formats
+              updatedAt
             }
           }
         }
         showcasePicture {
           data {
             id
+            attributes {
+              media {
+                data {
+                  id
+                  attributes {
+                    width
+                    height
+                    formats
+                    updatedAt
+                  }
+                }
+              }
+            }
           }
         }
         pictures {

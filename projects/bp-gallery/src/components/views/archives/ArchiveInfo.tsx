@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { sanitize } from 'dompurify';
-import './ArchiveInfo.scss';
 import { Icon, IconButton } from '@mui/material';
 import getLineBreaks from '../../../helpers/get-linebreaks';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -18,8 +17,6 @@ const ArchiveInfo = ({ archive }: ArchiveInfoProps) => {
 
   const { role } = useAuth();
   const description = archive.longDescription as string;
-  const id = archive.id;
-  const name = archive.name;
 
   const isDescriptionLong = useMemo(() => {
     const buffer = document.createElement('div');
@@ -34,9 +31,8 @@ const ArchiveInfo = ({ archive }: ArchiveInfoProps) => {
 
   return (
     <div className='collection-container'>
-      <h2>{name}</h2>
       {role >= AuthRole.CURATOR ? (
-        <EditableArchiveInfo initialDescription={description} archiveId={id} />
+        <EditableArchiveInfo initialDescription={description} archiveId={archive.id} />
       ) : (
         <>
           {description && (

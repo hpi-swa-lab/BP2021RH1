@@ -1,13 +1,20 @@
 import React from 'react';
-import { PictureFiltersInput, useGetArchiveQuery } from '../../../graphql/APIConnector';
+import { useTranslation } from 'react-i18next';
+import {
+  PictureFiltersInput,
+  useGetArchiveQuery,
+  useUpdateArchiveMutation,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import useGetPictures from '../../../hooks/get-pictures.hook';
 import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
 import { asApiPath } from '../../App';
-import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import PicturePreview, {
+  PicturePreviewAdornment,
+} from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import ArchiveInfo from './ArchiveInfo';
+import './ArchiveView.scss';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -26,20 +33,35 @@ interface ArchiveViewProps {
 }
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
-  const { data, loading, error } = useGetArchiveQuery({ variables: { archiveId } });
+  const { t } = useTranslation();
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  const { data, loading, error } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
-  const { data: picData } = useGetPictures(
-    getPictureFilters([archive?.showcasePicture?.id ?? '-1']),
-    false
-  );
-  console.log(picData);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const showcasePicture: FlatPicture | undefined =
-    useSimplifiedQueryResponseData(picData)?.pictures[0];
+
+  const [updateArchive] = useUpdateArchiveMutation({
+    refetchQueries: ['getArchive'],
+  });
+
+  const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
   const src = archive?.logo?.formats?.thumbnail.url ?? '';
-  // const { role } = useAuth();
+
+  const showcaseAdornment: PicturePreviewAdornment = {
+    position: 'top-left',
+    icon: 'star',
+    title: t('pictureAdornments.showcase'),
+    onClick: picture => {
+      if (showcasePicture?.id === picture.id) return;
+      updateArchive({
+        variables: {
+          archiveId,
+          data: {
+            showcasePicture: picture.id,
+          },
+        },
+      });
+    },
+  };
+
   console.log(archive);
   console.log(showcasePicture);
 
@@ -52,18 +74,12 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='collection-picture-display'>
+            <h2>{archive?.name}</h2>
             <div className='archive-info'>
               {archive && <ArchiveInfo archive={archive} />}
               {showcasePicture && (
                 <div className='archive-showcase'>
-                  <PicturePreview
-                    picture={showcasePicture}
-                    onClick={() => {
-                      // navigateToPicture(picture.id);
-                    }}
-                    // adornments={pictureAdornments}
-                    // viewOnly={viewOnly}
-                  />
+                  <PicturePreview picture={showcasePicture} onClick={() => {}} viewOnly={true} />
                 </div>
               )}
             </div>
@@ -93,6 +109,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 scrollPos={scrollPos}
                 scrollHeight={scrollHeight}
                 hashbase={'archive'}
+                extraAdornments={[showcaseAdornment]}
                 // uploadAreaProps={uploadAreaProps(collection)}
                 // bulkOperations={[
                 //   removeFromCollection,

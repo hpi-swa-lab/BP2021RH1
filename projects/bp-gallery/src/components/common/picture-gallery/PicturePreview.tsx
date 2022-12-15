@@ -9,6 +9,7 @@ export interface PicturePreviewAdornment {
   position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
   onClick: (picture: FlatPicture, event: MouseEvent<HTMLElement>) => void;
   icon: string | ((picture: FlatPicture) => string);
+  title?: string;
 }
 
 export enum PictureOrigin {
@@ -60,6 +61,7 @@ const PicturePreview = ({
           <div
             className={`adornment ${adornment.position}`}
             key={index}
+            title={adornment.title}
             onClick={event => {
               event.preventDefault();
               event.stopPropagation();

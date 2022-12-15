@@ -1754,22 +1754,10 @@ export type GetArchiveQuery = {
                                 id?: string | null | undefined;
                                 attributes?:
                                   | {
-                                      alternativeText?: string | null | undefined;
-                                      caption?: string | null | undefined;
-                                      createdAt?: any | null | undefined;
-                                      ext?: string | null | undefined;
-                                      formats?: any | null | undefined;
-                                      hash: string;
-                                      height?: number | null | undefined;
-                                      mime: string;
-                                      name: string;
-                                      previewUrl?: string | null | undefined;
-                                      provider: string;
-                                      provider_metadata?: any | null | undefined;
-                                      size: number;
-                                      updatedAt?: any | null | undefined;
-                                      url: string;
                                       width?: number | null | undefined;
+                                      height?: number | null | undefined;
+                                      formats?: any | null | undefined;
+                                      updatedAt?: any | null | undefined;
                                     }
                                   | null
                                   | undefined;
@@ -1780,7 +1768,36 @@ export type GetArchiveQuery = {
                       | null
                       | undefined;
                     showcasePicture?:
-                      | { data?: { id?: string | null | undefined } | null | undefined }
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?:
+                                  | {
+                                      media: {
+                                        data?:
+                                          | {
+                                              id?: string | null | undefined;
+                                              attributes?:
+                                                | {
+                                                    width?: number | null | undefined;
+                                                    height?: number | null | undefined;
+                                                    formats?: any | null | undefined;
+                                                    updatedAt?: any | null | undefined;
+                                                  }
+                                                | null
+                                                | undefined;
+                                            }
+                                          | null
+                                          | undefined;
+                                      };
+                                    }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
                       | null
                       | undefined;
                     pictures?:
@@ -3274,28 +3291,29 @@ export const GetArchiveDocument = gql`
             data {
               id
               attributes {
-                alternativeText
-                caption
-                createdAt
-                ext
-                formats
-                hash
-                height
-                mime
-                name
-                previewUrl
-                provider
-                provider_metadata
-                size
-                updatedAt
-                url
                 width
+                height
+                formats
+                updatedAt
               }
             }
           }
           showcasePicture {
             data {
               id
+              attributes {
+                media {
+                  data {
+                    id
+                    attributes {
+                      width
+                      height
+                      formats
+                      updatedAt
+                    }
+                  }
+                }
+              }
             }
           }
           pictures {
