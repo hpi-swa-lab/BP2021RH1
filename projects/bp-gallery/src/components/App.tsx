@@ -174,7 +174,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
             <div className='App'>
               {!isMobile && <TopBar />}
               {renderRoutes(route?.routes)}
-              <NavigationBar isMobile={true} />
+              {isMobile && <NavigationBar isMobile={true} />}
             </div>
           </DialogProvider>
         </AuthProvider>
