@@ -1,3 +1,5 @@
+import EditIcon from '@mui/icons-material/Edit';
+// import { Button } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,6 +17,10 @@ import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import ArchiveInfo from './ArchiveInfo';
 import './ArchiveView.scss';
+import { useHistory } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { History } from 'history';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -34,6 +40,8 @@ interface ArchiveViewProps {
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { t } = useTranslation();
+  const history: History = useHistory();
+  const { role } = useAuth();
 
   const { data, loading, error } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -69,21 +77,38 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   //   collections?.[0]
   // );
 
-  return (
+  return archive ? (
     <div className='archive-container'>
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='collection-picture-display'>
-            <h2>{archive?.name}</h2>
+            {role >= AuthRole.CURATOR && (
+              <Button
+                className='archive-edit-button'
+                endIcon={<EditIcon />}
+                onClick={() => {
+                  console.log(history.location);
+                  history.push(
+                    `${history.location.pathname}${
+                      history.location.pathname.endsWith('/') ? '' : '/'
+                    }edit`
+                  );
+                  console.log(history.location);
+                }}
+              >
+                Archiv editieren
+              </Button>
+            )}
+            <h2>{archive.name}</h2>
             <div className='archive-info'>
-              {archive && <ArchiveInfo archive={archive} />}
+              {<ArchiveInfo archive={archive} />}
               {showcasePicture && (
                 <div className='archive-showcase'>
                   <PicturePreview picture={showcasePicture} onClick={() => {}} viewOnly={true} />
                 </div>
               )}
             </div>
-            {archive?.logo && (
+            {archive.logo && (
               <div className='archive-logo-container'>
                 <img
                   className='archive-logo'
@@ -94,6 +119,11 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 />
               </div>
             )}
+            {archive.links?.map(link => (
+              <a key={link.id} href={`http://${link.url}/`}>
+                {link.title}
+              </a>
+            ))}
 
             {/* {childCount > 0 && (
               <SubCollections childCollections={collection.child_collections ?? []} path={path} />
@@ -103,7 +133,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 {t('curator.createCollection')}
               </Button>
             )} */}
-            {archive?.pictures && (
+            {archive.pictures && (
               <PictureScrollGrid
                 queryParams={getPictureFilters(archive.pictures.map(picture => picture.id))}
                 scrollPos={scrollPos}
@@ -123,6 +153,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </ScrollContainer>
     </div>
+  ) : (
+    <></>
   );
 };
 

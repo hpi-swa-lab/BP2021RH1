@@ -15,6 +15,7 @@ import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 import BulkEditView from './views/bulk-edit/BulkEditView';
 import ArchiveView from './views/archives/ArchiveView';
+import ArchiveEditView from './views/archives/ArchiveEditView';
 
 export const FALLBACK_PATH = '/browse';
 
@@ -110,11 +111,18 @@ const routes: RouteConfig[] = [
         component: TimeLineDemo,
       },
       {
+        path: '/archives/:id/edit',
+        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+          return <ArchiveEditView archiveId={match.params.id} />;
+        },
+      },
+      {
         path: '/archives/:id',
         render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
           return <ArchiveView archiveId={match.params.id} />;
         },
       },
+
       {
         // fallback component for unmatched routes
         render: () => {

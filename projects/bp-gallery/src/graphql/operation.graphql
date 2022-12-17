@@ -811,6 +811,30 @@ mutation createArchiveTag($name: String!) {
   }
 }
 
+mutation createLink($title: String!, $url: String!, $archive_tag: ID!) {
+  createLink(data: { title: $title, url: $url, archive_tag: $archive_tag }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateLink($id: ID!, $data: LinkInput!) {
+  updateLink(id: $id, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteLink($id: ID!) {
+  deleteLink(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
 mutation mergePersonTags($targetId: ID!, $sourceId: ID!) {
   mergePersonTags(targetId: $targetId, sourceId: $sourceId)
 }
