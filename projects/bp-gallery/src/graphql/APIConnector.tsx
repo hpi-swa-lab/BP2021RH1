@@ -2971,6 +2971,33 @@ export type CreateArchiveTagMutation = {
     | undefined;
 };
 
+export type CreateLinkMutationVariables = Exact<{
+  title: Scalars['String'];
+  url: Scalars['String'];
+  archive_tag: Scalars['ID'];
+}>;
+
+export type CreateLinkMutation = {
+  createLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
+};
+
+export type UpdateLinkMutationVariables = Exact<{
+  id: Scalars['ID'];
+  data: LinkInput;
+}>;
+
+export type UpdateLinkMutation = {
+  updateLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
+};
+
+export type DeleteLinkMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteLinkMutation = {
+  deleteLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
+};
+
 export type MergePersonTagsMutationVariables = Exact<{
   targetId: Scalars['ID'];
   sourceId: Scalars['ID'];
@@ -5533,6 +5560,162 @@ export type CreateArchiveTagMutationResult = Apollo.MutationResult<CreateArchive
 export type CreateArchiveTagMutationOptions = Apollo.BaseMutationOptions<
   CreateArchiveTagMutation,
   CreateArchiveTagMutationVariables
+>;
+
+export const CreateLinkDocument = gql`
+  mutation createLink($title: String!, $url: String!, $archive_tag: ID!) {
+    createLink(data: { title: $title, url: $url, archive_tag: $archive_tag }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateLinkMutationFn = Apollo.MutationFunction<
+  CreateLinkMutation,
+  CreateLinkMutationVariables
+>;
+
+/**
+ * __useCreateLinkMutation__
+ *
+ * To run a mutation, you first call `useCreateLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLinkMutation, { data, loading, error }] = useCreateLinkMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      url: // value for 'url'
+ *      archive_tag: // value for 'archive_tag'
+ *   },
+ * });
+ */
+export function useCreateLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateLinkMutation, CreateLinkMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateLinkMutation, CreateLinkMutationVariables>(
+    CreateLinkDocument,
+    options
+  );
+}
+
+export type CreateLinkMutationHookResult = ReturnType<typeof useCreateLinkMutation>;
+
+export type CreateLinkMutationResult = Apollo.MutationResult<CreateLinkMutation>;
+
+export type CreateLinkMutationOptions = Apollo.BaseMutationOptions<
+  CreateLinkMutation,
+  CreateLinkMutationVariables
+>;
+
+export const UpdateLinkDocument = gql`
+  mutation updateLink($id: ID!, $data: LinkInput!) {
+    updateLink(id: $id, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLinkMutationFn = Apollo.MutationFunction<
+  UpdateLinkMutation,
+  UpdateLinkMutationVariables
+>;
+
+/**
+ * __useUpdateLinkMutation__
+ *
+ * To run a mutation, you first call `useUpdateLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLinkMutation, { data, loading, error }] = useUpdateLinkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateLinkMutation, UpdateLinkMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLinkMutation, UpdateLinkMutationVariables>(
+    UpdateLinkDocument,
+    options
+  );
+}
+
+export type UpdateLinkMutationHookResult = ReturnType<typeof useUpdateLinkMutation>;
+
+export type UpdateLinkMutationResult = Apollo.MutationResult<UpdateLinkMutation>;
+
+export type UpdateLinkMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLinkMutation,
+  UpdateLinkMutationVariables
+>;
+
+export const DeleteLinkDocument = gql`
+  mutation deleteLink($id: ID!) {
+    deleteLink(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteLinkMutationFn = Apollo.MutationFunction<
+  DeleteLinkMutation,
+  DeleteLinkMutationVariables
+>;
+
+/**
+ * __useDeleteLinkMutation__
+ *
+ * To run a mutation, you first call `useDeleteLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLinkMutation, { data, loading, error }] = useDeleteLinkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteLinkMutation, DeleteLinkMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteLinkMutation, DeleteLinkMutationVariables>(
+    DeleteLinkDocument,
+    options
+  );
+}
+
+export type DeleteLinkMutationHookResult = ReturnType<typeof useDeleteLinkMutation>;
+
+export type DeleteLinkMutationResult = Apollo.MutationResult<DeleteLinkMutation>;
+
+export type DeleteLinkMutationOptions = Apollo.BaseMutationOptions<
+  DeleteLinkMutation,
+  DeleteLinkMutationVariables
 >;
 
 export const MergePersonTagsDocument = gql`

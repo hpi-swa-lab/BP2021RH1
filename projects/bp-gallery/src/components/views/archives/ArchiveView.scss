@@ -3,7 +3,7 @@
 h2 {
   width: fit-content;
   margin: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
@@ -23,13 +23,45 @@ h2 {
 }
 
 .archive-showcase {
-  width: 300px;
+  width: 500px;
   flex-shrink: 0;
 }
 
-.collection-container {
+.archive-edit-button {
+  background: $primaryColor !important;
+  color: white !important;
+  z-index: 99;
+  float: right;
+  box-shadow: 0px 2px black;
+}
+
+.archive-info-container {
   flex-grow: 1;
   margin-right: 20px;
+
+  .jodit-react-container {
+    margin-bottom: 1rem;
+    min-height: 500px;
+    background: #fafafa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+    .jodit-placeholder {
+      padding: 0 !important;
+    }
+
+    a {
+      color: $primaryColor;
+    }
+  }
+}
+
+.archive-link-entry {
+  display: flex;
+  align-items: center;
+  a {
+    font-size: larger;
+  }
 }
 
 .archive-info {
@@ -41,23 +73,7 @@ h2 {
   }
 }
 
-.collection-container .jodit-react-container {
-  margin-bottom: 1rem;
-  text-align: center;
-  background: #fafafa;
-  padding: 1rem;
-  border-radius: 0.5rem;
-
-  .jodit-placeholder {
-    padding: 0 !important;
-  }
-
-  a {
-    color: $primaryColor;
-  }
-}
-
-.collection-description {
+.archive-info-container .collection-description {
   max-width: 900px;
   text-align: center;
   a {

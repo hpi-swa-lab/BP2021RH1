@@ -30,7 +30,7 @@ const ArchiveInfo = ({ archive }: ArchiveInfoProps) => {
   }, [description]);
 
   return (
-    <div className='collection-container'>
+    <div className='archive-info-container'>
       {role >= AuthRole.CURATOR ? (
         <EditableArchiveInfo initialDescription={description} archiveId={archive.id} />
       ) : (
@@ -81,7 +81,7 @@ const EditableArchiveInfo = ({
 
   const extraOptions = useMemo(
     () => ({
-      readonly: false,
+      readonly: true,
       showPlaceholder: true,
       placeholder: t('curator.insertDescriptionHere'),
     }),
