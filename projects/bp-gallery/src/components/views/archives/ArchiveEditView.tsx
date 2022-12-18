@@ -1,8 +1,14 @@
 import { Button, OutlinedInput } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
+import {
+  useCreateLinkMutation,
+  useDeleteLinkMutation,
+  useGetArchiveQuery,
+  useUpdateArchiveMutation,
+  useUpdateLinkMutation,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import './ArchiveEditView.scss';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
@@ -16,6 +22,14 @@ interface ArchiveEditViewProps {
   archiveId: string;
 }
 
+export enum LinkStatus {
+  Created,
+  Updated,
+  Deleted,
+}
+
+export type LinkInfo = FlatLinkWithoutRelations & { status?: LinkStatus };
+
 const extraOptions: Partial<Jodit['options']> = {
   preset: undefined,
   statusbar: false,
@@ -24,21 +38,68 @@ const extraOptions: Partial<Jodit['options']> = {
 const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   const history: History = useHistory();
 
-  const { data, loading, error } = useGetArchiveQuery({ variables: { archiveId } });
+  const { data, refetch } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const [updateArchive] = useUpdateArchiveMutation({
     refetchQueries: ['getArchive'],
   });
+  const [createLink] = useCreateLinkMutation();
+  const [updateLink] = useUpdateLinkMutation();
+  const [deleteLink] = useDeleteLinkMutation();
 
   const [name, setName] = useState(archive?.name ?? '');
   const [shortDescription, setShortDescription] = useState(archive?.shortDescription ?? '');
   const [longDescription, setLongDescription] = useState(archive?.longDescription ?? '');
+  const [links, setLinks] = useState<LinkInfo[]>(archive?.links ?? []);
+
+  const handleLinks = () => {
+    links.forEach(link => {
+      switch (link.status) {
+        case LinkStatus.Created: {
+          if (link.url === '') return;
+          createLink({
+            variables: {
+              title: link.title ?? '',
+              url: link.url,
+              archive_tag: archiveId,
+            },
+          });
+          break;
+        }
+        case LinkStatus.Updated: {
+          updateLink({
+            variables: {
+              id: link.id,
+              data: {
+                title: link.title,
+                url: link.url,
+              },
+            },
+          });
+          break;
+        }
+        case LinkStatus.Deleted: {
+          deleteLink({
+            variables: {
+              id: link.id,
+            },
+          });
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    });
+    refetch();
+  };
 
   useEffect(() => {
     setName(archive?.name ?? '');
     setShortDescription(archive?.shortDescription ?? '');
     setLongDescription(archive?.longDescription ?? '');
+    setLinks(archive?.links ?? []);
   }, [archive]);
 
   return (
@@ -67,6 +128,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               },
             },
           });
+          handleLinks();
           history.push(history.location.pathname.replace('edit', ''));
         }}
         style={{ float: 'right' }}
@@ -126,7 +188,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
             name='logo'
           />
         </div>
-        <LinkForm links={archive?.links} archiveId={archiveId} />
+        <LinkForm links={links} archiveId={archiveId} />
       </form>
     </div>
   );
