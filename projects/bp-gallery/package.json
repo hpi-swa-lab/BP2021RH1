@@ -63,7 +63,7 @@
     "@graphql-codegen/typescript-react-apollo": "3.2.2",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
-    "cypress": "^9.5.3",
+    "cypress": "^11.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
