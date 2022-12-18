@@ -1,93 +1,87 @@
 import { Add, Delete, Edit, Save } from '@mui/icons-material';
 import { Button, IconButton } from '@mui/material';
 import React, { useState } from 'react';
-import {
-  useCreateLinkMutation,
-  useDeleteLinkMutation,
-  useUpdateLinkMutation,
-} from '../../../graphql/APIConnector';
-import { FlatLink } from '../../../types/additionalFlatTypes';
+import { LinkInfo, LinkStatus } from './ArchiveEditView';
 import LinkField from './LinkField';
 
 interface LinkFormProps {
-  links: FlatLink[] | undefined;
+  links: LinkInfo[] | undefined;
   archiveId: string;
 }
 
 const LinkForm = ({ links, archiveId }: LinkFormProps) => {
-  const [createLink] = useCreateLinkMutation({ refetchQueries: ['getArchive'] });
-  const [updateLink] = useUpdateLinkMutation({ refetchQueries: ['getArchive'] });
-  const [deleteLink] = useDeleteLinkMutation({ refetchQueries: ['getArchive'] });
-  const [selectEdit, setSelectEdit] = useState<string | undefined>();
+  const [selectEdit, setSelectEdit] = useState<LinkInfo | undefined>();
+  const [removedLinks, setRemovedLinks] = useState<LinkInfo[]>([]);
 
   return (
     <div className='archive-link-form'>
       <label className='archive-form-label'>Links:</label>
-      {links?.map(link => (
-        <div className='archive-link-entry' key={link.id}>
-          {selectEdit === link.id ? (
-            <>
-              <LinkField
-                link={link}
-                onBlur={(title, url) =>
-                  updateLink({
-                    variables: {
-                      id: link.id,
-                      data: {
-                        title: title,
-                        url: url,
-                      },
-                    },
-                  })
-                }
-              />
-              <IconButton
-                onClick={() => {
-                  setSelectEdit(undefined);
-                }}
-              >
-                <Save />
-              </IconButton>
-            </>
-          ) : (
-            <>
-              <a href={`http://${link.url}/`}>{link.title}</a>
-              <IconButton
-                onClick={() => {
-                  setSelectEdit(link.id);
-                }}
-              >
-                <Edit />
-              </IconButton>
-            </>
-          )}
+      {links?.map(
+        link =>
+          !removedLinks.find(removedLink => removedLink === link) && (
+            <div className='archive-link-entry' key={link.id}>
+              {selectEdit === link ? (
+                <>
+                  <LinkField
+                    link={link}
+                    onBlur={(title, url) => {
+                      link.title = title;
+                      link.url = url;
+                      link.status =
+                        link.status === LinkStatus.Created
+                          ? LinkStatus.Created
+                          : LinkStatus.Updated;
+                    }}
+                  />
+                  <IconButton
+                    onClick={() => {
+                      setSelectEdit(undefined);
+                    }}
+                  >
+                    <Save />
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  <a href={`http://${link.url}/`}>{link.title}</a>
+                  <IconButton
+                    onClick={() => {
+                      setSelectEdit(link);
+                    }}
+                  >
+                    <Edit />
+                  </IconButton>
+                </>
+              )}
 
-          <IconButton
-            onClick={() =>
-              deleteLink({
-                variables: {
-                  id: link.id,
-                },
-              })
-            }
-          >
-            <Delete />
-          </IconButton>
-        </div>
-      ))}
+              <IconButton
+                onClick={() => {
+                  link.status = LinkStatus.Deleted;
+                  setRemovedLinks([
+                    links.filter(linkInfo => linkInfo === link)[0],
+                    ...removedLinks,
+                  ]);
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </div>
+          )
+      )}
 
       <Button
         className='button-filled'
         endIcon={<Add />}
-        onClick={() =>
-          createLink({
-            variables: {
-              title: '',
-              url: '',
-              archive_tag: archiveId,
-            },
-          }).then(value => setSelectEdit(value.data?.createLink?.data?.id ?? ''))
-        }
+        onClick={() => {
+          const newLink = {
+            id: `${links?.length ?? '0'}`,
+            title: '',
+            url: '',
+            status: LinkStatus.Created,
+          };
+          links?.push(newLink);
+          setSelectEdit(newLink);
+        }}
       >
         Link hinzufügen
       </Button>

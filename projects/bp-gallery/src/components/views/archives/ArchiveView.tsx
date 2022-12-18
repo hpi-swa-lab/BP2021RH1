@@ -43,7 +43,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const history: History = useHistory();
   const { role } = useAuth();
 
-  const { data, loading, error } = useGetArchiveQuery({ variables: { archiveId } });
+  const { data } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const [updateArchive] = useUpdateArchiveMutation({

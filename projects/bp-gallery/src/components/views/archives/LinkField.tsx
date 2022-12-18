@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { FormControl, FormHelperText, OutlinedInput } from '@mui/material';
-import { FlatLink } from '../../../types/additionalFlatTypes';
+import { LinkInfo } from './ArchiveEditView';
 
 interface LinkFieldProps {
-  link: FlatLink;
+  link: LinkInfo;
   onBlur: (title: string, url: string) => void;
 }
 
