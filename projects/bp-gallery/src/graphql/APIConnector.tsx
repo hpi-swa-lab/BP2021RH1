@@ -609,7 +609,9 @@ export type Mutation = {
   createPicture?: Maybe<PictureEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Create a new role */
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
+  /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   deleteArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   deleteBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -622,12 +624,14 @@ export type Mutation = {
   deletePicture?: Maybe<PictureEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
   /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   doBulkEdit?: Maybe<Scalars['Int']>;
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
+  /** Request a reset password token */
   forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
   login: UsersPermissionsLoginPayload;
   mergeCollections?: Maybe<Scalars['ID']>;
@@ -635,8 +639,10 @@ export type Mutation = {
   mergeLocationTags?: Maybe<Scalars['ID']>;
   mergePersonTags?: Maybe<Scalars['ID']>;
   multipleUpload: Array<Maybe<UploadFileEntityResponse>>;
+  /** Register a user */
   register: UsersPermissionsLoginPayload;
   removeFile?: Maybe<UploadFileEntityResponse>;
+  /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   updateBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -651,7 +657,9 @@ export type Mutation = {
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Update an existing role */
   updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>;
+  /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
 };
@@ -1957,6 +1965,7 @@ export type GetMultiplePictureInfoQuery = {
                               author?: string | null | undefined;
                               date: any;
                               publishedAt?: any | null | undefined;
+                              pinned?: boolean | null | undefined;
                             }
                           | null
                           | undefined;
@@ -2843,7 +2852,7 @@ export type BulkEditMutationVariables = Exact<{
   data: Scalars['JSON'];
 }>;
 
-export type BulkEditMutation = { doBulkEdit?: string | null | undefined };
+export type BulkEditMutation = { doBulkEdit?: number | null | undefined };
 
 export type CreatePictureMutationVariables = Exact<{
   data: PictureInput;
@@ -3344,6 +3353,7 @@ export const GetMultiplePictureInfoDocument = gql`
                 author
                 date
                 publishedAt
+                pinned
               }
             }
           }
