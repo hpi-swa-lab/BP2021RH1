@@ -20,13 +20,26 @@ h2 {
 
   .jodit-react-container {
     width: 100%;
+    font-size: 20px;
+  }
+}
+
+.archive-logo-container {
+  overflow: hidden;
+  height: 130px;
+  .archive-logo {
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    vertical-align: middle;
   }
 }
 
 .archive-form-label {
+  margin-top: 1rem;
   min-width: 30%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   font-size: larger;
   font-weight: bold;
 }
@@ -40,4 +53,10 @@ h2 {
   color: white !important;
   z-index: 99;
   box-shadow: 0px 2px black;
+}
+
+.button-save {
+  &:disabled {
+    opacity: 0.5;
+  }
 }

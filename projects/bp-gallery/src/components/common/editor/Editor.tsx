@@ -7,8 +7,8 @@ export interface EditorProps {
   value: string;
   /** Additional configuration options for the editor. See {@link https://xdsoft.net/jodit/docs/classes/config.Config.html} */
   extraOptions?: Partial<Jodit['options']>;
-  onChange: (newValue: string) => void;
-  onBlur: (newValue: string) => void;
+  onChange?: (newValue: string) => void;
+  onBlur?: (newValue: string) => void;
 }
 
 addPlugins();

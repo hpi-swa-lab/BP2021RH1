@@ -1,12 +1,6 @@
-import { Button, OutlinedInput } from '@mui/material';
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import {
-  useCreateLinkMutation,
-  useDeleteLinkMutation,
-  useGetArchiveQuery,
-  useUpdateArchiveMutation,
-  useUpdateLinkMutation,
-} from '../../../graphql/APIConnector';
+import { Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import './ArchiveEditView.scss';
@@ -18,10 +12,22 @@ import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import LinkForm from './LinkForm';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
-import { asApiPath } from '../../App';
+import ArchiveInputField from './ArchiveInputField';
+import ArchiveLogoInput from './ArchiveLogoInput';
+import { Check } from '@mui/icons-material';
+import useLinks from './helpers/link-helpers';
 
 interface ArchiveEditViewProps {
   archiveId: string;
+}
+
+interface ArchiveForm {
+  name: string;
+  shortDescription: string;
+  longDescription: string;
+  logo?: File;
+  links: LinkInfo[];
+  dirty: boolean;
 }
 
 export enum LinkStatus {
@@ -35,61 +41,54 @@ export type LinkInfo = FlatLinkWithoutRelations & { status?: LinkStatus };
 const extraOptions: Partial<Jodit['options']> = {
   preset: undefined,
   statusbar: false,
+  tabIndex: 0,
 };
 
 const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   const history: History = useHistory();
 
-  const { data, refetch } = useGetArchiveQuery({ variables: { archiveId } });
+  const { data } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const [updateArchive] = useUpdateArchiveMutation({
     refetchQueries: ['getArchive'],
   });
-  const [createLink] = useCreateLinkMutation();
-  const [updateLink] = useUpdateLinkMutation();
-  const [deleteLink] = useDeleteLinkMutation();
+  const { createLink, updateLink, deleteLink } = useLinks(archiveId);
 
-  const [name, setName] = useState(archive?.name ?? '');
-  const [shortDescription, setShortDescription] = useState(archive?.shortDescription ?? '');
-  const [longDescription, setLongDescription] = useState(archive?.longDescription ?? '');
-  const [links, setLinks] = useState<LinkInfo[]>(archive?.links ?? []);
-  const [logo, setLogo] = useState<File>();
+  const [form, setForm] = useState<ArchiveForm>({
+    name: '',
+    shortDescription: '',
+    longDescription: '',
+    links: [],
+    dirty: true,
+  });
+
+  useEffect(() => {
+    setForm(form => ({
+      dirty: form.dirty,
+      name: archive?.name ?? '',
+      shortDescription: archive?.shortDescription ?? '',
+      longDescription: archive?.longDescription ?? '',
+      links: archive?.links ?? [],
+    }));
+  }, [archive]);
 
   const src = archive?.logo?.formats?.thumbnail.url ?? '';
 
   const handleLinks = () => {
-    links.forEach(link => {
+    form.links.forEach(link => {
       switch (link.status) {
         case LinkStatus.Created: {
           if (link.url === '') return;
-          createLink({
-            variables: {
-              title: link.title ?? '',
-              url: link.url,
-              archive_tag: archiveId,
-            },
-          });
+          createLink(link);
           break;
         }
         case LinkStatus.Updated: {
-          updateLink({
-            variables: {
-              id: link.id,
-              data: {
-                title: link.title,
-                url: link.url,
-              },
-            },
-          });
+          updateLink(link);
           break;
         }
         case LinkStatus.Deleted: {
-          deleteLink({
-            variables: {
-              id: link.id,
-            },
-          });
+          deleteLink(link);
           break;
         }
         default: {
@@ -97,17 +96,41 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         }
       }
     });
-    refetch();
   };
 
-  useEffect(() => {
-    setName(archive?.name ?? '');
-    setShortDescription(archive?.shortDescription ?? '');
-    setLongDescription(archive?.longDescription ?? '');
-    setLinks(archive?.links ?? []);
-  }, [archive]);
+  const handleSubmit = () => {
+    console.log(form.logo);
+    handleLinks();
+    if (form.logo) {
+      uploadMediaFiles([form.logo]).then(ids => {
+        updateArchive({
+          variables: {
+            archiveId,
+            data: {
+              name: form.name,
+              shortDescription: form.shortDescription,
+              longDescription: form.longDescription,
+              logo: ids[0],
+            },
+          },
+        });
+      });
+    } else {
+      updateArchive({
+        variables: {
+          archiveId,
+          data: {
+            name: form.name,
+            shortDescription: form.shortDescription,
+            longDescription: form.longDescription,
+          },
+        },
+      });
+    }
+    setForm({ ...form, dirty: false });
+  };
 
-  return (
+  return archive ? (
     <div className='collection-picture-display'>
       <Button
         className='button-filled'
@@ -120,123 +143,50 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         Änderungen verwerfen
       </Button>
       <Button
-        className='button-filled'
-        endIcon={<SaveIcon />}
-        onClick={() => {
-          console.log(logo);
-          if (logo) {
-            uploadMediaFiles([logo]).then(ids => {
-              updateArchive({
-                variables: {
-                  archiveId,
-                  data: {
-                    name: name,
-                    shortDescription: shortDescription,
-                    longDescription: longDescription,
-                    logo: ids[0],
-                  },
-                },
-              });
-            });
-          } else {
-            updateArchive({
-              variables: {
-                archiveId,
-                data: {
-                  name: name,
-                  shortDescription: shortDescription,
-                  longDescription: longDescription,
-                },
-              },
-            });
-          }
-          handleLinks();
-          history.push(history.location.pathname.replace('edit', ''));
-        }}
+        className='button-filled button-save'
+        endIcon={form.dirty ? <SaveIcon /> : <Check />}
+        onClick={handleSubmit}
+        disabled={!form.dirty}
         style={{ float: 'right' }}
       >
-        Änderungen speichern
+        {form.dirty ? 'Änderungen speichern' : 'Änderungen gespeichert'}
       </Button>
-      <h2>{archive?.name}</h2>
+      <h2>{archive.name}</h2>
 
       <form className='archive-form'>
-        <div className='archive-form-div'>
-          <label className='archive-form-label' htmlFor='archive-form-name'>
-            Archiv-Name:
-          </label>
-          <OutlinedInput
-            className='archive-form-input'
-            id='archive-form-name'
-            name='name'
-            type='text'
-            onChange={event => setName(event.target.value)}
-            value={name}
-          />
-        </div>
-        <div className='archive-form-div'>
-          <label className='archive-form-label' htmlFor='archive-form-short-description'>
-            Kurzbeschreibung:
-          </label>
-          <OutlinedInput
-            className='archive-form-input'
-            id='archive-form-short-description'
-            type='text'
-            name='shortDescription'
-            onChange={event => setShortDescription(event.target.value)}
-            value={shortDescription}
-          />
-        </div>
+        <ArchiveInputField
+          label='Archiv-Name:'
+          id='name'
+          defaultValue={form.name}
+          onBlur={value => setForm({ ...form, name: value, dirty: true })}
+        />
+        <ArchiveInputField
+          label='Kurzbeschreibung:'
+          id='shortdescription'
+          defaultValue={form.shortDescription}
+          onBlur={value => setForm({ ...form, shortDescription: value, dirty: true })}
+        />
 
         <div className='archive-form-div'>
           <label className='archive-form-label' htmlFor='archive-form-long-description'>
             Vorstellung:
           </label>
           <Editor
-            value={longDescription}
+            value={form.longDescription}
             onChange={() => {}}
-            onBlur={newValue => setLongDescription(newValue)}
+            onBlur={value => setForm({ ...form, longDescription: value, dirty: true })}
             extraOptions={extraOptions}
           />
         </div>
-
-        <div className='archive-form-div'>
-          <label className='archive-form-label' htmlFor='archive-form-logo'>
-            Logo:
-          </label>
-          <OutlinedInput
-            className='archive-form-input'
-            id='archive-form-logo'
-            type='file'
-            name='logo'
-            inputProps={{
-              accept: 'image/*',
-            }}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setLogo(e.target.files ? e.target.files[0] : undefined)
-            }
-          />
-        </div>
-        {archive?.logo && (
-          <div>
-            Preview:
-            <img
-              className='archive-logo'
-              src={
-                logo
-                  ? URL.createObjectURL(logo)
-                  : asApiPath(
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                      `/${src as string}?updatedAt=${
-                        (archive.logo.updatedAt ?? 'unknown') as string
-                      }`
-                    )
-              }
-            />
-          </div>
-        )}
-        <LinkForm links={links} archiveId={archiveId} />
+        <ArchiveLogoInput
+          defaultUrl={src}
+          onChange={file => setForm({ ...form, logo: file, dirty: true })}
+        />
+        <LinkForm links={form.links} archiveId={archiveId} />
       </form>
     </div>
+  ) : (
+    <></>
   );
 };
 
