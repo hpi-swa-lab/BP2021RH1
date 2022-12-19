@@ -21,6 +21,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { History } from 'history';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -70,12 +71,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
     },
   };
 
-  console.log(archive);
-  console.log(showcasePicture);
-
-  // const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } = useBulkOperations(
-  //   collections?.[0]
-  // );
+  const { bulkEdit } = useBulkOperations();
 
   return archive ? (
     <div className='archive-container'>
@@ -87,52 +83,50 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 className='archive-edit-button'
                 endIcon={<EditIcon />}
                 onClick={() => {
-                  console.log(history.location);
                   history.push(
                     `${history.location.pathname}${
                       history.location.pathname.endsWith('/') ? '' : '/'
                     }edit`
                   );
-                  console.log(history.location);
                 }}
               >
                 Archiv editieren
               </Button>
             )}
             <h2>{archive.name}</h2>
-            <div className='archive-info'>
-              {<ArchiveInfo archive={archive} />}
+            <div className='archive-data'>
+              <div className='archive-info'>
+                <ArchiveInfo description={archive.longDescription ?? ''} />
+                <div className='archive-socials'>
+                  {archive.logo && (
+                    <div className='archive-logo-container'>
+                      <img
+                        className='archive-logo'
+                        src={asApiPath(
+                          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                          `/${src as string}?updatedAt=${
+                            (archive.logo.updatedAt ?? 'unknown') as string
+                          }`
+                        )}
+                      />
+                    </div>
+                  )}
+                  <div className='archive-links'>
+                    {archive.links?.map(link => (
+                      <a key={link.id} href={`http://${link.url}/`}>
+                        {link.title ? link.title : link.url}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
               {showcasePicture && (
                 <div className='archive-showcase'>
                   <PicturePreview picture={showcasePicture} onClick={() => {}} viewOnly={true} />
                 </div>
               )}
             </div>
-            {archive.logo && (
-              <div className='archive-logo-container'>
-                <img
-                  className='archive-logo'
-                  src={asApiPath(
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    `/${src as string}?updatedAt=${(archive.logo.updatedAt ?? 'unknown') as string}`
-                  )}
-                />
-              </div>
-            )}
-            {archive.links?.map(link => (
-              <a key={link.id} href={`http://${link.url}/`}>
-                {link.title}
-              </a>
-            ))}
 
-            {/* {childCount > 0 && (
-              <SubCollections childCollections={collection.child_collections ?? []} path={path} />
-            )}
-            {role >= AuthRole.CURATOR && (
-              <Button startIcon={<Add />} onClick={addCollection}>
-                {t('curator.createCollection')}
-              </Button>
-            )} */}
             {archive.pictures && (
               <PictureScrollGrid
                 queryParams={getPictureFilters(archive.pictures.map(picture => picture.id))}
@@ -141,12 +135,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 hashbase={'archive'}
                 extraAdornments={[showcaseAdornment]}
                 // uploadAreaProps={uploadAreaProps(collection)}
-                // bulkOperations={[
-                //   removeFromCollection,
-                //   linkToCollection,
-                //   moveToCollection,
-                //   bulkEdit,
-                // ]}
+                bulkOperations={[bulkEdit]}
               />
             )}
           </div>

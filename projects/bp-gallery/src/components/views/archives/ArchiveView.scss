@@ -23,7 +23,7 @@ h2 {
 }
 
 .archive-showcase {
-  width: 500px;
+  width: 400px;
   flex-shrink: 0;
 }
 
@@ -36,15 +36,15 @@ h2 {
 }
 
 .archive-info-container {
-  flex-grow: 1;
   margin-right: 20px;
 
   .jodit-react-container {
     margin-bottom: 1rem;
-    min-height: 500px;
+    min-height: 200px;
     background: #fafafa;
     padding: 1rem;
     border-radius: 0.5rem;
+    font-size: 20px;
 
     .jodit-placeholder {
       padding: 0 !important;
@@ -64,7 +64,7 @@ h2 {
   }
 }
 
-.archive-info {
+.archive-data {
   display: flex;
   width: 100%;
 
@@ -73,38 +73,25 @@ h2 {
   }
 }
 
-.archive-info-container .collection-description {
-  max-width: 900px;
-  text-align: center;
+.archive-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.archive-socials {
+  display: flex;
+}
+
+.archive-links {
+  display: flex;
+  align-self: center;
+  flex-grow: 1;
+  padding: 1rem;
+  margin-left: 2rem;
+  flex-direction: column;
   a {
-    color: $primaryColor;
-  }
-
-  &.closed {
-    max-height: 80px;
-    overflow: hidden;
-    position: relative;
-    margin: auto;
-    transition: max-height 0.5s;
-
-    &::before {
-      content: '';
-      background: linear-gradient(0deg, white, transparent);
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 60px;
-      z-index: 99;
-    }
-  }
-
-  &.open {
-    transition: max-height 0.5s;
-    max-height: 100vh;
-    position: relative;
-    margin: auto;
-    margin-bottom: 2rem;
+    margin-top: 0.5rem;
   }
 }
 

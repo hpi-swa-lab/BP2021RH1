@@ -14,77 +14,78 @@ const LinkForm = ({ links, archiveId }: LinkFormProps) => {
   const [removedLinks, setRemovedLinks] = useState<LinkInfo[]>([]);
 
   return (
-    <div className='archive-link-form'>
+    <div className='archive-form-div'>
       <label className='archive-form-label'>Links:</label>
-      {links?.map(
-        link =>
-          !removedLinks.find(removedLink => removedLink === link) && (
-            <div className='archive-link-entry' key={link.id}>
-              {selectEdit === link ? (
-                <>
-                  <LinkField
-                    link={link}
-                    onBlur={(title, url) => {
-                      link.title = title;
-                      link.url = url;
-                      link.status =
-                        link.status === LinkStatus.Created
-                          ? LinkStatus.Created
-                          : LinkStatus.Updated;
-                    }}
-                  />
-                  <IconButton
-                    onClick={() => {
-                      setSelectEdit(undefined);
-                    }}
-                  >
-                    <Save />
-                  </IconButton>
-                </>
-              ) : (
-                <>
-                  <a href={`http://${link.url}/`}>{link.title}</a>
-                  <IconButton
-                    onClick={() => {
-                      setSelectEdit(link);
-                    }}
-                  >
-                    <Edit />
-                  </IconButton>
-                </>
-              )}
+      <div className='archive-form-input'>
+        {links?.map(
+          link =>
+            !removedLinks.find(removedLink => removedLink === link) && (
+              <div className='archive-link-entry' key={link.id}>
+                {selectEdit === link ? (
+                  <>
+                    <LinkField
+                      link={link}
+                      onBlur={(title, url) => {
+                        link.title = title;
+                        link.url = url;
+                        link.status =
+                          link.status === LinkStatus.Created
+                            ? LinkStatus.Created
+                            : LinkStatus.Updated;
+                      }}
+                    />
+                    <IconButton
+                      onClick={() => {
+                        setSelectEdit(undefined);
+                      }}
+                    >
+                      <Save />
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
+                    <IconButton
+                      onClick={() => {
+                        setSelectEdit(link);
+                      }}
+                    >
+                      <Edit />
+                    </IconButton>
+                  </>
+                )}
 
-              <IconButton
-                onClick={() => {
-                  link.status = LinkStatus.Deleted;
-                  setRemovedLinks([
-                    links.filter(linkInfo => linkInfo === link)[0],
-                    ...removedLinks,
-                  ]);
-                }}
-              >
-                <Delete />
-              </IconButton>
-            </div>
-          )
-      )}
-
-      <Button
-        className='button-filled'
-        endIcon={<Add />}
-        onClick={() => {
-          const newLink = {
-            id: `${links?.length ?? '0'}`,
-            title: '',
-            url: '',
-            status: LinkStatus.Created,
-          };
-          links?.push(newLink);
-          setSelectEdit(newLink);
-        }}
-      >
-        Link hinzufügen
-      </Button>
+                <IconButton
+                  onClick={() => {
+                    link.status = LinkStatus.Deleted;
+                    setRemovedLinks([
+                      links.filter(linkInfo => linkInfo === link)[0],
+                      ...removedLinks,
+                    ]);
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              </div>
+            )
+        )}
+        <Button
+          className='button-filled'
+          endIcon={<Add />}
+          onClick={() => {
+            const newLink = {
+              id: `${links?.length ?? '0'}`,
+              url: '',
+              status: LinkStatus.Created,
+            };
+            console.log(newLink);
+            links?.push(newLink);
+            setSelectEdit(newLink);
+          }}
+        >
+          Link hinzufügen
+        </Button>
+      </div>
     </div>
   );
 };

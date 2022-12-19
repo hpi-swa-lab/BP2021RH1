@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FormControl, FormHelperText, OutlinedInput } from '@mui/material';
 import { LinkInfo } from './ArchiveEditView';
+import { sanitizeLink } from './helpers/link-helpers';
 
 interface LinkFieldProps {
   link: LinkInfo;
@@ -28,7 +29,7 @@ const LinkField = ({ link, onBlur }: LinkFieldProps) => {
           value={title}
           onChange={event => setTitle(event.target.value)}
         />
-        <FormHelperText>Titel</FormHelperText>
+        <FormHelperText>Titel (optional)</FormHelperText>
       </FormControl>
       <FormControl>
         <OutlinedInput
@@ -39,6 +40,7 @@ const LinkField = ({ link, onBlur }: LinkFieldProps) => {
           placeholder='meine-homepage.de'
           inputProps={{
             onBlur: () => {
+              setUrl(sanitizeLink(url));
               onBlur(title ?? '', url);
             },
           }}
