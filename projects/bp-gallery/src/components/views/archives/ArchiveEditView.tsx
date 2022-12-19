@@ -1,5 +1,5 @@
 import { Button, OutlinedInput } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
   useCreateLinkMutation,
   useDeleteLinkMutation,
@@ -17,6 +17,8 @@ import { Jodit } from 'jodit-react';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import LinkForm from './LinkForm';
+import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
+import { asApiPath } from '../../App';
 
 interface ArchiveEditViewProps {
   archiveId: string;
@@ -52,6 +54,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   const [shortDescription, setShortDescription] = useState(archive?.shortDescription ?? '');
   const [longDescription, setLongDescription] = useState(archive?.longDescription ?? '');
   const [links, setLinks] = useState<LinkInfo[]>(archive?.links ?? []);
+  const [logo, setLogo] = useState<File>();
+
+  const src = archive?.logo?.formats?.thumbnail.url ?? '';
 
   const handleLinks = () => {
     links.forEach(link => {
@@ -118,16 +123,33 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         className='button-filled'
         endIcon={<SaveIcon />}
         onClick={() => {
-          updateArchive({
-            variables: {
-              archiveId,
-              data: {
-                name: name,
-                shortDescription: shortDescription,
-                longDescription: longDescription,
+          console.log(logo);
+          if (logo) {
+            uploadMediaFiles([logo]).then(ids => {
+              updateArchive({
+                variables: {
+                  archiveId,
+                  data: {
+                    name: name,
+                    shortDescription: shortDescription,
+                    longDescription: longDescription,
+                    logo: ids[0],
+                  },
+                },
+              });
+            });
+          } else {
+            updateArchive({
+              variables: {
+                archiveId,
+                data: {
+                  name: name,
+                  shortDescription: shortDescription,
+                  longDescription: longDescription,
+                },
               },
-            },
-          });
+            });
+          }
           handleLinks();
           history.push(history.location.pathname.replace('edit', ''));
         }}
@@ -186,8 +208,32 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
             id='archive-form-logo'
             type='file'
             name='logo'
+            inputProps={{
+              accept: 'image/*',
+            }}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setLogo(e.target.files ? e.target.files[0] : undefined)
+            }
           />
         </div>
+        {archive?.logo && (
+          <div>
+            Preview:
+            <img
+              className='archive-logo'
+              src={
+                logo
+                  ? URL.createObjectURL(logo)
+                  : asApiPath(
+                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                      `/${src as string}?updatedAt=${
+                        (archive.logo.updatedAt ?? 'unknown') as string
+                      }`
+                    )
+              }
+            />
+          </div>
+        )}
         <LinkForm links={links} archiveId={archiveId} />
       </form>
     </div>
