@@ -99,7 +99,6 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   };
 
   const handleSubmit = () => {
-    console.log(form.logo);
     handleLinks();
     if (form.logo) {
       uploadMediaFiles([form.logo]).then(ids => {
