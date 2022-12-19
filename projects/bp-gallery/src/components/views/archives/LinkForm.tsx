@@ -78,7 +78,6 @@ const LinkForm = ({ links, archiveId }: LinkFormProps) => {
               url: '',
               status: LinkStatus.Created,
             };
-            console.log(newLink);
             links?.push(newLink);
             setSelectEdit(newLink);
           }}
