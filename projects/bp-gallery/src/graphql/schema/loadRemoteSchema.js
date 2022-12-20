@@ -17,7 +17,7 @@ module.exports = async remoteUrl => {
     remoteUrl = `${process.env.REACT_APP_API_BASE}/graphql`;
   }
 
-  const response = await fetch(remoteUrl, {
+  const response = await fetch('http://localhost:9000/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

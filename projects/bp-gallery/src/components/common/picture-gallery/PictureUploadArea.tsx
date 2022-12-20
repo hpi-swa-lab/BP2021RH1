@@ -11,6 +11,7 @@ import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
 import { cloneDeep } from 'lodash';
 import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { Close } from '@mui/icons-material';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
@@ -121,7 +122,7 @@ const PictureUploadArea = ({
             adornments={[
               {
                 position: 'top-right',
-                icon: 'close',
+                icon: <Close />,
                 onClick: () => {
                   setNewFiles(fileList => {
                     const clone = cloneDeep(fileList);
