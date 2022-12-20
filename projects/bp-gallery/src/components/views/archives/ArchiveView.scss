@@ -27,10 +27,13 @@ h2 {
   flex-shrink: 0;
 }
 
+.star-selected {
+  color: $primaryColor;
+}
+
 .archive-edit-button {
   background: $primaryColor !important;
   color: white !important;
-  z-index: 99;
   float: right;
   box-shadow: 0px 2px black;
 }

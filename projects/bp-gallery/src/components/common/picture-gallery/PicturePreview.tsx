@@ -1,4 +1,3 @@
-import { Icon } from '@mui/material';
 import { isFunction } from 'lodash';
 import React, { MouseEvent, MouseEventHandler, useMemo, useRef } from 'react';
 import { asApiPath } from '../../App';
@@ -8,7 +7,7 @@ import './PicturePreview.scss';
 export interface PicturePreviewAdornment {
   position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
   onClick: (picture: FlatPicture, event: MouseEvent<HTMLElement>) => void;
-  icon: string | ((picture: FlatPicture) => string);
+  icon: ((picture: FlatPicture) => JSX.Element) | JSX.Element;
   title?: string;
 }
 
@@ -68,7 +67,7 @@ const PicturePreview = ({
               adornment.onClick(picture, event);
             }}
           >
-            <Icon>{isFunction(adornment.icon) ? adornment.icon(picture) : adornment.icon}</Icon>
+            {isFunction(adornment.icon) ? <>{adornment.icon(picture)}</> : <>{adornment.icon}</>}
           </div>
         ))}
       </div>
