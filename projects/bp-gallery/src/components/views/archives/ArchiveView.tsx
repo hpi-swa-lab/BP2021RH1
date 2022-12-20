@@ -1,4 +1,5 @@
 import EditIcon from '@mui/icons-material/Edit';
+import LinkIcon from '@mui/icons-material/Link';
 // import { Button } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -78,6 +79,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='collection-picture-display'>
+            <h1>{archive.name}</h1>
             {role >= AuthRole.CURATOR && (
               <Button
                 className='archive-edit-button'
@@ -93,7 +95,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 Archiv editieren
               </Button>
             )}
-            <h2>{archive.name}</h2>
             <div className='archive-data'>
               <div className='archive-info'>
                 <ArchiveInfo description={archive.longDescription ?? ''} />
@@ -113,9 +114,10 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                   )}
                   <div className='archive-links'>
                     {archive.links?.map(link => (
-                      <a key={link.id} href={`http://${link.url}/`}>
-                        {link.title ? link.title : link.url}
-                      </a>
+                      <div className='archive-link' key={link.id}>
+                        <LinkIcon className='link-icon' />
+                        <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
+                      </div>
                     ))}
                   </div>
                 </div>
