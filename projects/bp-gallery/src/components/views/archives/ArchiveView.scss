@@ -1,6 +1,6 @@
 @import 'src/shared/style';
 
-h2 {
+h1 {
   width: fit-content;
   margin: auto;
   margin-bottom: 2rem;
@@ -10,6 +10,16 @@ h2 {
 .archive-container {
   overflow-y: auto;
   overflow-x: hidden;
+  .collection-picture-display {
+    .archive-edit-button {
+      background: $primaryColor !important;
+      color: white !important;
+      z-index: 99;
+      float: right;
+      box-shadow: 0px 2px black;
+      margin-bottom: 1rem;
+    }
+  }
   .archive-logo-container {
     overflow: hidden;
     height: 130px;
@@ -25,14 +35,6 @@ h2 {
 .archive-showcase {
   width: 400px;
   flex-shrink: 0;
-}
-
-.archive-edit-button {
-  background: $primaryColor !important;
-  color: white !important;
-  z-index: 99;
-  float: right;
-  box-shadow: 0px 2px black;
 }
 
 .archive-info-container {
@@ -90,8 +92,14 @@ h2 {
   padding: 1rem;
   margin-left: 2rem;
   flex-direction: column;
-  a {
-    margin-top: 0.5rem;
+  .archive-link {
+    display: flex;
+    align-items: center;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
+    a {
+      margin-left: 0.5rem;
+    }
   }
 }
 
