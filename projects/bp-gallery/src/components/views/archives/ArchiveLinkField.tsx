@@ -11,9 +11,7 @@ interface LinkFieldProps {
 const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
   const [title, setTitle] = useState(link.title ?? '');
   const [url, setUrl] = useState(link.url);
-
-  console.log(title);
-  console.log(url);
+  const [invalid, setInvalid] = useState(false);
 
   const regex =
     // eslint-disable-next-line no-useless-escape
@@ -26,7 +24,11 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
         placeholder='Meine Homepage'
         value={title}
         onChange={event => setTitle(event.target.value)}
-        onBlur={() => onBlur(title, url, regex.test(url))}
+        onBlur={() => {
+          const match = regex.test(url);
+          setInvalid(!match);
+          onBlur(title, url, match);
+        }}
         helperText='Titel (optional)'
       />
       <ArchiveInput
@@ -34,12 +36,15 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
         placeholder='meine-homepage.de'
         type='url'
         value={url}
+        error={invalid}
         onChange={event => setUrl(event.target.value)}
         onBlur={() => {
           setUrl(sanitizeLink(url));
-          onBlur(title, url, regex.test(url));
+          const match = regex.test(url);
+          setInvalid(!match);
+          onBlur(title, url, match);
         }}
-        helperText='URL'
+        helperText={invalid ? 'Bitte geben sie eine gültige URL an.' : 'URL'}
       />
     </div>
   );

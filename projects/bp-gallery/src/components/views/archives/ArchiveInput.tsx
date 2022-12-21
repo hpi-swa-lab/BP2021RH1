@@ -9,6 +9,7 @@ interface ArchiveInputProps {
   placeholder?: string;
   helperText?: string;
   type?: string;
+  error?: boolean;
 }
 
 const ArchiveInput = ({
@@ -19,6 +20,7 @@ const ArchiveInput = ({
   placeholder,
   helperText,
   type = 'text',
+  error,
 }: ArchiveInputProps) => {
   return (
     <FormControl className='archive-form-control'>
@@ -28,13 +30,14 @@ const ArchiveInput = ({
         placeholder={placeholder}
         name={id}
         type={type}
+        error={error}
         onChange={event => (onChange ? onChange(event) : {})}
         inputProps={{
           onBlur: event => (onBlur ? onBlur(event) : {}),
         }}
         value={value}
       />
-      {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      {helperText && <FormHelperText error={error}>{helperText}</FormHelperText>}
     </FormControl>
   );
 };

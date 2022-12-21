@@ -6,7 +6,7 @@ import ArchiveLinkField from './ArchiveLinkField';
 
 interface LinkFormProps {
   links: LinkInfo[] | undefined;
-  onChange: (links: LinkInfo[]) => void;
+  onChange: (links: LinkInfo[], invalid: boolean) => void;
 }
 
 const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
@@ -22,7 +22,8 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
   }, [defaultLinks]);
 
   useEffect(() => {
-    links !== defaultLinks && onChange(links);
+    const invalid = links.find(link => link.invalid) ? true : false;
+    links !== defaultLinks && onChange(links, invalid);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [links]);
 
@@ -38,11 +39,12 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
                   <>
                     <ArchiveLinkField
                       link={link}
-                      onBlur={(title, url) => {
+                      onBlur={(title, url, match) => {
                         const updatedLink = {
                           id: link.id,
                           title: title,
                           url: url,
+                          invalid: !match,
                           status:
                             link.status === LinkStatus.Created
                               ? LinkStatus.Created
@@ -53,7 +55,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
                     />
                     <IconButton
                       onClick={() => {
-                        setselectedLink(undefined);
+                        if (!link.invalid) setselectedLink(undefined);
                       }}
                     >
                       <Save />
@@ -64,7 +66,8 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
                     <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
                     <IconButton
                       onClick={() => {
-                        setselectedLink(link.id);
+                        if (!links.find(value => value.id === selectedLink)?.invalid)
+                          setselectedLink(link.id);
                       }}
                     >
                       <Edit />
@@ -74,7 +77,9 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
 
                 <IconButton
                   onClick={() => {
-                    updateLink({ ...link, status: LinkStatus.Deleted });
+                    link.status === LinkStatus.Created
+                      ? setLinks(links.filter(createdLink => createdLink.id !== link.id))
+                      : updateLink({ ...link, status: LinkStatus.Deleted, invalid: false });
                   }}
                 >
                   <Delete />
@@ -86,14 +91,17 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
           className='button-filled'
           endIcon={<Add />}
           onClick={() => {
-            const newLink = {
-              id: `new${links.length}`,
-              url: '5',
-              status: LinkStatus.Created,
-            };
-            const newLinks = [...links, newLink];
-            setLinks(newLinks);
-            setselectedLink(newLink.id);
+            if (!links.find(value => value.id === selectedLink)?.invalid) {
+              const newLink = {
+                // ID doesn't actually get used when creating a new link, but is necessary so that react doesn't see two links with the same key
+                id: `new${Date.now()}`,
+                url: '',
+                status: LinkStatus.Created,
+              };
+              const newLinks = [...links, newLink];
+              setLinks(newLinks);
+              setselectedLink(newLink.id);
+            }
           }}
         >
           Link hinzufügen

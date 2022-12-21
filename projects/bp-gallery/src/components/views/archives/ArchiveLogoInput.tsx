@@ -9,7 +9,6 @@ interface ArchiveLogoInputProps {
 
 const ArchiveLogoInput = ({ defaultUrl, onChange }: ArchiveLogoInputProps) => {
   const [logo, setLogo] = useState<File | undefined>();
-  console.log(logo);
   return (
     <div className='archive-form-div'>
       <label className='archive-form-label' htmlFor='archive-form-logo'>
