@@ -79,22 +79,24 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='collection-picture-display'>
-            <h1>{archive.name}</h1>
             {role >= AuthRole.CURATOR && (
-              <Button
-                className='archive-edit-button'
-                endIcon={<EditIcon />}
-                onClick={() => {
-                  history.push(
-                    `${history.location.pathname}${
-                      history.location.pathname.endsWith('/') ? '' : '/'
-                    }edit`
-                  );
-                }}
-              >
-                Archiv editieren
-              </Button>
+              <p className='edit-button-wrapper'>
+                <Button
+                  className='archive-edit-button'
+                  endIcon={<EditIcon />}
+                  onClick={() => {
+                    history.push(
+                      `${history.location.pathname}${
+                        history.location.pathname.endsWith('/') ? '' : '/'
+                      }edit`
+                    );
+                  }}
+                >
+                  Archiv editieren
+                </Button>
+              </p>
             )}
+            <h1>{archive.name}</h1>
             <div className='archive-data'>
               <div className='archive-info'>
                 <ArchiveInfo description={archive.longDescription ?? ''} />
