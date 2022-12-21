@@ -30,6 +30,7 @@ interface ArchiveForm {
   logo?: File;
   links: LinkInfo[];
   dirty: boolean;
+  invalid?: boolean;
 }
 
 export enum LinkStatus {
@@ -38,7 +39,7 @@ export enum LinkStatus {
   Deleted,
 }
 
-export type LinkInfo = FlatLinkWithoutRelations & { status?: LinkStatus };
+export type LinkInfo = FlatLinkWithoutRelations & { status?: LinkStatus; invalid?: boolean };
 
 const extraOptions: Partial<Jodit['options']> = {
   preset: undefined,
@@ -119,6 +120,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   };
 
   const handleSubmit = () => {
+    if (form.invalid) return;
     handleLinks();
     if (form.logo) {
       uploadMediaFiles([form.logo]).then(ids => {
@@ -211,10 +213,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         />
         <ArchiveLinkForm
           links={archive.links}
-          onChange={links => {
-            setForm({ ...form, links: links, dirty: true });
-            console.log(form.links);
-          }}
+          onChange={(links, invalid) =>
+            setForm({ ...form, links: links, dirty: true, invalid: invalid })
+          }
         />
       </form>
     </div>
