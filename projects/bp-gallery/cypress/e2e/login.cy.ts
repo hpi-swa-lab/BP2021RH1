@@ -3,6 +3,7 @@ describe('Login', () => {
     cy.visit('http://localhost:3000/');
   });
   after(() => {
+    cy.get('.nav-element-title').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Logout').click();
   });
 

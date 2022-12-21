@@ -2153,6 +2153,7 @@ export type GetMultiplePictureInfoQuery = {
                               author?: string | null | undefined;
                               date: any;
                               publishedAt?: any | null | undefined;
+                              pinned?: boolean | null | undefined;
                             }
                           | null
                           | undefined;
@@ -3686,6 +3687,7 @@ export const GetMultiplePictureInfoDocument = gql`
                 author
                 date
                 publishedAt
+                pinned
               }
             }
           }

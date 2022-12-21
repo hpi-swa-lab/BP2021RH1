@@ -291,6 +291,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
               author
               date
               publishedAt
+              pinned
             }
           }
         }
