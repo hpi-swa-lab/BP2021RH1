@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { LinkInfo } from './ArchiveEditView';
 import { sanitizeLink } from './helpers/link-helpers';
 import ArchiveInput from './ArchiveInput';
+import { useTranslation } from 'react-i18next';
 
 interface LinkFieldProps {
   link: LinkInfo;
@@ -9,6 +10,7 @@ interface LinkFieldProps {
 }
 
 const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
+  const { t } = useTranslation();
   const [title, setTitle] = useState(link.title ?? '');
   const [url, setUrl] = useState(link.url);
   const [invalid, setInvalid] = useState(false);
@@ -21,7 +23,7 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
     <div>
       <ArchiveInput
         id='title'
-        placeholder='Meine Homepage'
+        placeholder={t('archives.edit.links.title.placeholder')}
         value={title}
         onChange={event => setTitle(event.target.value)}
         onBlur={() => {
@@ -29,11 +31,11 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
           setInvalid(!match);
           onBlur(title, url, match);
         }}
-        helperText='Titel (optional)'
+        helperText={t('archives.edit.links.title.helperText')}
       />
       <ArchiveInput
         id='url'
-        placeholder='meine-homepage.de'
+        placeholder={t('archives.edit.links.url.placeholder')}
         type='url'
         value={url}
         error={invalid}
@@ -44,7 +46,7 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
           setInvalid(!match);
           onBlur(title, url, match);
         }}
-        helperText={invalid ? 'Bitte geben sie eine gültige URL an.' : 'URL'}
+        helperText={t(`archives.edit.links.url.helperText${invalid ? 'Invalid' : 'Valid'}`)}
       />
     </div>
   );

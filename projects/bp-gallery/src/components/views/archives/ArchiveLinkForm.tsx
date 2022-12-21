@@ -3,6 +3,7 @@ import { Button, IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { LinkInfo, LinkStatus } from './ArchiveEditView';
 import ArchiveLinkField from './ArchiveLinkField';
+import { useTranslation } from 'react-i18next';
 
 interface LinkFormProps {
   links: LinkInfo[] | undefined;
@@ -12,6 +13,8 @@ interface LinkFormProps {
 const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
   const [selectedLink, setselectedLink] = useState<string>();
   const [links, setLinks] = useState<LinkInfo[]>(defaultLinks ?? []);
+
+  const { t } = useTranslation();
 
   const updateLink = (link: LinkInfo) => {
     setLinks(links.map(oldLink => (oldLink.id === link.id ? link : oldLink)));
@@ -29,7 +32,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
 
   return (
     <div className='archive-form-div'>
-      <label className='archive-form-label'>Links:</label>
+      <label className='archive-form-label'>{t('archives.edit.links.label')}</label>
       <div className='archive-form-input'>
         {links.map(
           link =>
@@ -104,7 +107,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
             }
           }}
         >
-          Link hinzufügen
+          {t('archives.edit.links.addLink')}
         </Button>
       </div>
     </div>

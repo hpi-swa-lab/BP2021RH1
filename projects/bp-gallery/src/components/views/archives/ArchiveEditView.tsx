@@ -160,8 +160,8 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           onClick={async () => {
             if (form.dirty) {
               const confirm = await dialog({
-                title: 'Möchtest du die Seite wirklich verlassen?',
-                content: 'Du hast noch ungespeicherte Änderungen.',
+                title: t('archives.edit.confirm.title'),
+                content: t('archives.edit.confirm.content'),
                 preset: DialogPreset.CONFIRM,
               });
               if (!confirm) return;
@@ -169,7 +169,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
             history.push(`/archives/${archiveId}`);
           }}
         >
-          Zurück zum Archiv
+          {t('archives.edit.back')}
         </Button>
         <h2>{archive.name}</h2>
         <Button
@@ -178,27 +178,27 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           onClick={handleSubmit}
           disabled={!form.dirty}
         >
-          {form.dirty ? 'Änderungen speichern' : 'Änderungen gespeichert'}
+          {form.dirty ? t('archives.edit.save') : t('archives.edit.saved')}
         </Button>
       </div>
 
       <form className='archive-form'>
         <ArchiveInputField
-          label='Archiv-Name:'
+          label={t('archives.edit.nameLabel')}
           id='name'
           defaultValue={archive.name}
           onBlur={value => setForm({ ...form, name: value, dirty: true })}
         />
         <ArchiveInputField
-          label='Kurzbeschreibung:'
+          label={t('archives.edit.shortDescription.label')}
           id='shortdescription'
           defaultValue={archive.shortDescription ?? ''}
           onBlur={value => setForm({ ...form, shortDescription: value, dirty: true })}
-          helperText={'Diese Beschreibung ist nur in der Archivübersicht sichtbar'}
+          helperText={t('archives.edit.shortDescription.helperText')}
         />
         <div className='archive-form-div'>
           <label className='archive-form-label' htmlFor='archive-form-long-description'>
-            Archiv-Beschreibung
+            {t('archives.edit.longDescriptionLabel')}
           </label>
           <Editor
             value={archive.longDescription ?? ''}
