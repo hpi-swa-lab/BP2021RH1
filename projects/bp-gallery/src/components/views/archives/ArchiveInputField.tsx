@@ -1,5 +1,5 @@
-import { OutlinedInput } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import ArchiveInput from './ArchiveInput';
 
 interface ArchiveInputFieldProps {
   defaultValue: string;
@@ -8,6 +8,7 @@ interface ArchiveInputFieldProps {
   onChange?: (value: string, status?: string) => void;
   placeholder?: string;
   label?: string;
+  helperText?: string;
   regEx?: string;
   type?: string;
 }
@@ -19,6 +20,7 @@ const ArchiveInputField = ({
   onChange,
   placeholder,
   label,
+  helperText,
   regEx,
   type = 'text',
 }: ArchiveInputFieldProps) => {
@@ -30,20 +32,19 @@ const ArchiveInputField = ({
 
   return (
     <div className='archive-form-div'>
-      <label className='archive-form-label' htmlFor={`archive-form-${id}`}>
-        {label}
-      </label>
-      <OutlinedInput
-        className='archive-form-input'
-        id={`archive-form-${id}`}
+      {label && (
+        <label className='archive-form-label' htmlFor={`archive-form-${id}`}>
+          {label}
+        </label>
+      )}
+      <ArchiveInput
+        id={id}
         placeholder={placeholder}
-        name={id}
         type={type}
         onChange={event => setValue(event.target.value)}
-        inputProps={{
-          onBlur: () => onBlur(value),
-        }}
+        onBlur={() => onBlur(value)}
         value={value}
+        helperText={helperText}
       />
     </div>
   );

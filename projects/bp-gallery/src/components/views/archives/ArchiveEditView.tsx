@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
@@ -10,12 +10,14 @@ import Editor from '../../common/editor/Editor';
 import { Jodit } from 'jodit-react';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
-import LinkForm from './LinkForm';
+import ArchiveLinkForm from './ArchiveLinkForm';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import ArchiveInputField from './ArchiveInputField';
 import ArchiveLogoInput from './ArchiveLogoInput';
 import { Check } from '@mui/icons-material';
 import useLinks from './helpers/link-helpers';
+import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useTranslation } from 'react-i18next';
 
 interface ArchiveEditViewProps {
   archiveId: string;
@@ -46,6 +48,8 @@ const extraOptions: Partial<Jodit['options']> = {
 
 const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   const history: History = useHistory();
+  const dialog = useContext(DialogContext);
+  const { t } = useTranslation();
 
   const { data } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -60,7 +64,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     shortDescription: '',
     longDescription: '',
     links: [],
-    dirty: true,
+    dirty: false,
   });
 
   useEffect(() => {
@@ -73,6 +77,21 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     }));
   }, [archive]);
 
+  useEffect(() => {
+    // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+    const handler = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    if (form.dirty) {
+      window.addEventListener('beforeunload', handler);
+      return () => {
+        window.removeEventListener('beforeunload', handler);
+      };
+    }
+    return () => {};
+  }, [form.dirty]);
+
   const src = archive?.logo?.formats?.thumbnail.url ?? '';
 
   const handleLinks = () => {
@@ -84,6 +103,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           break;
         }
         case LinkStatus.Updated: {
+          if (link.url === '') deleteLink(link);
           updateLink(link);
           break;
         }
@@ -130,48 +150,56 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   };
 
   return archive ? (
-    <div className='collection-picture-display'>
-      <Button
-        className='button-filled'
-        endIcon={<CloseIcon />}
-        onClick={() => {
-          history.push(history.location.pathname.replace('edit', ''));
-        }}
-        style={{ float: 'left' }}
-      >
-        Änderungen verwerfen
-      </Button>
-      <Button
-        className='button-filled button-save'
-        endIcon={form.dirty ? <SaveIcon /> : <Check />}
-        onClick={handleSubmit}
-        disabled={!form.dirty}
-        style={{ float: 'right' }}
-      >
-        {form.dirty ? 'Änderungen speichern' : 'Änderungen gespeichert'}
-      </Button>
-      <h2>{archive.name}</h2>
+    <div className='archive-edit-container'>
+      <div className='archive-navigation'>
+        <Button
+          className='button-filled button-close'
+          endIcon={<CloseIcon />}
+          onClick={async () => {
+            if (form.dirty) {
+              const confirm = await dialog({
+                title: 'Möchtest du die Seite wirklich verlassen?',
+                content: 'Du hast noch ungespeicherte Änderungen.',
+                preset: DialogPreset.CONFIRM,
+              });
+              if (!confirm) return;
+            }
+            history.push(`/archives/${archiveId}`);
+          }}
+        >
+          Zurück zum Archiv
+        </Button>
+        <h2>{archive.name}</h2>
+        <Button
+          className='button-filled button-save'
+          endIcon={form.dirty ? <SaveIcon /> : <Check />}
+          onClick={handleSubmit}
+          disabled={!form.dirty}
+        >
+          {form.dirty ? 'Änderungen speichern' : 'Änderungen gespeichert'}
+        </Button>
+      </div>
 
       <form className='archive-form'>
         <ArchiveInputField
           label='Archiv-Name:'
           id='name'
-          defaultValue={form.name}
+          defaultValue={archive.name}
           onBlur={value => setForm({ ...form, name: value, dirty: true })}
         />
         <ArchiveInputField
           label='Kurzbeschreibung:'
           id='shortdescription'
-          defaultValue={form.shortDescription}
+          defaultValue={archive.shortDescription ?? ''}
           onBlur={value => setForm({ ...form, shortDescription: value, dirty: true })}
+          helperText={'Diese Beschreibung ist nur in der Archivübersicht sichtbar'}
         />
-
         <div className='archive-form-div'>
           <label className='archive-form-label' htmlFor='archive-form-long-description'>
-            Vorstellung:
+            Archiv-Beschreibung
           </label>
           <Editor
-            value={form.longDescription}
+            value={archive.longDescription ?? ''}
             onChange={() => {}}
             onBlur={value => setForm({ ...form, longDescription: value, dirty: true })}
             extraOptions={extraOptions}
@@ -181,7 +209,13 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           defaultUrl={src}
           onChange={file => setForm({ ...form, logo: file, dirty: true })}
         />
-        <LinkForm links={form.links} archiveId={archiveId} />
+        <ArchiveLinkForm
+          links={archive.links}
+          onChange={links => {
+            setForm({ ...form, links: links, dirty: true });
+            console.log(form.links);
+          }}
+        />
       </form>
     </div>
   ) : (

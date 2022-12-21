@@ -30,21 +30,13 @@ const ArchiveLogoInput = ({ defaultUrl, onChange }: ArchiveLogoInputProps) => {
             onChange(logoFile);
           }}
         />
-        {defaultUrl && (
+        {(defaultUrl || logo) && (
           <div>
             Preview:
             <div className='archive-logo-container'>
               <img
                 className='archive-logo'
-                src={
-                  logo
-                    ? URL.createObjectURL(logo)
-                    : asApiPath(
-                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                        //   `/${defaultUrl}?updatedAt=${(archive.logo.updatedAt ?? 'unknown') as string}`
-                        `/${defaultUrl}`
-                      )
-                }
+                src={logo ? URL.createObjectURL(logo) : asApiPath(`/${defaultUrl}`)}
               />
             </div>
           </div>

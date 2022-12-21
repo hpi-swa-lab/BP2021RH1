@@ -18,11 +18,13 @@ import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import ArchiveInfo from './ArchiveInfo';
 import './ArchiveView.scss';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { History } from 'history';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { Star } from '@mui/icons-material';
+import { FALLBACK_PATH } from './../../routes';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -45,7 +47,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const history: History = useHistory();
   const { role } = useAuth();
 
-  const { data } = useGetArchiveQuery({ variables: { archiveId } });
+  const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const [updateArchive] = useUpdateArchiveMutation({
@@ -57,7 +59,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
 
   const showcaseAdornment: PicturePreviewAdornment = {
     position: 'top-left',
-    icon: 'star',
+    icon: picture =>
+      picture.id === archive?.showcasePicture?.id ? <Star className='star-selected' /> : <Star />,
     title: t('pictureAdornments.showcase'),
     onClick: picture => {
       if (showcasePicture?.id === picture.id) return;
@@ -74,7 +77,11 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
 
   const { bulkEdit } = useBulkOperations();
 
-  return archive ? (
+  if (!archive) {
+    return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
+  }
+
+  return (
     <div className='archive-container'>
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
@@ -146,8 +153,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </ScrollContainer>
     </div>
-  ) : (
-    <></>
   );
 };
 

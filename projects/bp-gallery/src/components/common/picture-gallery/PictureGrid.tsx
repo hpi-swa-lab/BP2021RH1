@@ -12,6 +12,7 @@ import BulkEditView from '../../views/bulk-edit/BulkEditView';
 import { union } from 'lodash';
 import { Button, Icon } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { CheckBox, CheckBoxOutlineBlank, Delete } from '@mui/icons-material';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -122,7 +123,7 @@ const PictureGrid = ({
     role >= AuthRole.CURATOR && !viewOnly
       ? [
           {
-            icon: 'delete',
+            icon: <Delete />,
             onClick: (clickedPicture: FlatPicture) => {
               deletePicture(clickedPicture).then(() => refetch());
             },
@@ -131,7 +132,7 @@ const PictureGrid = ({
           } as PicturePreviewAdornment,
           {
             icon: picture =>
-              selectedPictures.includes(picture) ? 'check_box' : 'check_box_outline_blank',
+              selectedPictures.includes(picture) ? <CheckBox /> : <CheckBoxOutlineBlank />,
             onClick: (clickedPicture, event) => {
               if (lastSelectedPicture !== null && event.shiftKey) {
                 const lastIndex = pictures.indexOf(lastSelectedPicture);

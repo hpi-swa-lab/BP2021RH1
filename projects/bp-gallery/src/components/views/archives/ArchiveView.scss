@@ -111,7 +111,7 @@ h1 {
 }
 
 //.picture-preview {
-//  flex: 0 1 500px;
+//  flex: 0 1 100px;
 //}
 
 .icon-button {
@@ -122,4 +122,8 @@ h1 {
     margin: auto;
     transform: scale(1.8);
   }
+}
+
+.star-selected {
+  color: $primaryColor;
 }
