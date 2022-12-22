@@ -1,3 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { aliasQuery, aliasMutation } from '../utils/graphql-test-utils';
+
+beforeEach(() => {
+  cy.intercept('POST', 'http://localhost:9000/graphql', req => {
+    // Queries
+    aliasQuery(req, 'getArchive');
+
+    // Mutations
+    aliasMutation(req, 'updateArchive');
+  });
+});
+
 describe('Archives View', () => {
   before(() => {
     cy.visit('http://localhost:3000/archives/1');
@@ -69,7 +82,7 @@ describe('Archives View', () => {
   it('successfully posts the form data', () => {
     cy.contains('Änderungen speichern').click();
     cy.contains('Änderungen gespeichert');
-    cy.wait(500);
+    cy.wait('@gqlgetArchiveQuery');
     cy.contains('Zum Archiv').click();
     cy.contains('Herbert-Ahrens-Bilderarchiv').should('not.exist');
     cy.contains('Herbert-Ahrens-Testarchiv');
