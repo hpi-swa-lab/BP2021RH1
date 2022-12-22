@@ -90,7 +90,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               <p className='edit-button-wrapper'>
                 <Button
                   className='archive-edit-button'
-                  endIcon={<EditIcon />}
+                  startIcon={<EditIcon />}
                   onClick={() => {
                     history.push(
                       `${history.location.pathname}${

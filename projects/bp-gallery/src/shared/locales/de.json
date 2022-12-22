@@ -179,7 +179,7 @@
   },
   "archives": {
     "edit": {
-      "back": "Zurück zum Archiv",
+      "back": "Zum Archiv",
       "confirm": {
         "title": "Möchtest du die Seite wirklich verlassen?",
         "content": "Du hast noch ungespeicherte Änderungen."

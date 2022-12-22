@@ -18,21 +18,21 @@ h1 {
         color: white !important;
         z-index: 99;
         margin-left: auto;
-        box-shadow: 0px 2px black;
+        padding-inline: 1rem;
         margin-bottom: 1rem;
       }
     }
     .archive-data {
       display: flex;
       width: 100%;
-      @media (max-width: 768px) {
+      @media (max-width: $mobile-breakpoint) {
         flex-direction: column-reverse;
       }
       .archive-info {
         display: flex;
         flex-direction: column;
         width: 57.5%;
-        @media (max-width: 768px) {
+        @media (max-width: $mobile-breakpoint) {
           width: 100%;
         }
         .archive-socials {
@@ -93,7 +93,7 @@ h1 {
       .archive-showcase {
         width: 42.5%;
         margin-left: 30px;
-        @media (max-width: 768px) {
+        @media (max-width: $mobile-breakpoint) {
           margin-left: 0px;
           width: 100%;
         }
@@ -125,5 +125,5 @@ h1 {
 }
 
 .star-selected {
-  color: $primaryColor;
+  color: $keywordColor;
 }

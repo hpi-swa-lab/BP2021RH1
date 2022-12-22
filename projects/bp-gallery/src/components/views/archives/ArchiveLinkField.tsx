@@ -20,7 +20,7 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
     /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 
   return (
-    <div>
+    <div className='archive-link-entry-form'>
       <ArchiveInput
         id='title'
         placeholder={t('archives.edit.links.title.placeholder')}
