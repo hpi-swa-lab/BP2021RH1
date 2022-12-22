@@ -82,7 +82,7 @@ describe('Archives View', () => {
   it('successfully posts the form data', () => {
     cy.contains('Änderungen speichern').click();
     cy.contains('Änderungen gespeichert');
-    cy.wait('@gqlgetArchiveQuery');
+    cy.wait('@gqlupdateArchiveMutation');
     cy.contains('Zum Archiv').click();
     cy.contains('Herbert-Ahrens-Bilderarchiv').should('not.exist');
     cy.contains('Herbert-Ahrens-Testarchiv');
