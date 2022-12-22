@@ -156,7 +156,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       <div className='archive-navigation'>
         <Button
           className='button-filled button-close'
-          endIcon={<CloseIcon />}
+          startIcon={<CloseIcon />}
           onClick={async () => {
             if (form.dirty) {
               const confirm = await dialog({
@@ -171,16 +171,17 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         >
           {t('archives.edit.back')}
         </Button>
-        <h2>{archive.name}</h2>
         <Button
           className='button-filled button-save'
-          endIcon={form.dirty ? <SaveIcon /> : <Check />}
+          startIcon={form.dirty ? <SaveIcon /> : <Check />}
           onClick={handleSubmit}
           disabled={!form.dirty}
         >
           {form.dirty ? t('archives.edit.save') : t('archives.edit.saved')}
         </Button>
       </div>
+
+      <h1>{archive.name}</h1>
 
       <form className='archive-form'>
         <ArchiveInputField

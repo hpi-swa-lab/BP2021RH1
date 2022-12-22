@@ -33,7 +33,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
   return (
     <div className='archive-form-div'>
       <label className='archive-form-label'>{t('archives.edit.links.label')}</label>
-      <div className='archive-form-input'>
+      <div className='archive-form-input archive-form-link-input'>
         {links.map(
           link =>
             !(link.status === LinkStatus.Deleted) && (
@@ -92,7 +92,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
         )}
         <Button
           className='button-filled'
-          endIcon={<Add />}
+          startIcon={<Add />}
           onClick={() => {
             if (!links.find(value => value.id === selectedLink)?.invalid) {
               const newLink = {
