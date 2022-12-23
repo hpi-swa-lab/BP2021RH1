@@ -1,0 +1,39 @@
+@import 'src/shared/style';
+
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  .carousel-title {
+    margin: 2rem 0 0 0;
+  }
+
+  .carousel-seperator {
+    width: 60%;
+    height: 1px;
+    margin-left: 0;
+    background-color: black;
+  }
+
+  .carousel-picture-grid-container {
+    margin-top: 0rem;
+    height: fit-content;
+    //background-color: #f7f7f7;
+
+    .picture-grid {
+      margin-top: 0rem;
+    }
+  }
+
+  .carousel-show-more-button {
+    background-color: $primaryColor;
+    color: #ffffff;
+    margin-top: 0.5rem;
+    width: fit-content;
+    padding-inline: 1rem;
+    align-self: center;
+  }
+
+  .carousel-show-more-button:hover {
+    background-color: #1565c0;
+  }
+}

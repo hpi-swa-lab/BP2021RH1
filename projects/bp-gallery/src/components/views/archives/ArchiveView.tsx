@@ -25,6 +25,7 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { Star } from '@mui/icons-material';
 import { FALLBACK_PATH } from './../../routes';
+import Carousel from '../../common/Carousel';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -137,6 +138,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 </div>
               )}
             </div>
+
+            {archive.pictures && <Carousel title='Test Title' queryParams={{}} />}
 
             {archive.pictures && (
               <PictureScrollGrid
