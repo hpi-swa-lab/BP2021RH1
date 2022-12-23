@@ -1145,6 +1145,7 @@ export type PictureEntity = {
 };
 
 export type PictureEntityResponse = {
+  id?: Maybe<string>;
   data?: Maybe<PictureEntity>;
 };
 

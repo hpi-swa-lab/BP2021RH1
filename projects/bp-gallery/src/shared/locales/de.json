@@ -1,5 +1,6 @@
 {
   "common": {
+    "start": "Start",
     "search": "Suchen",
     "browse": "Stöbern",
     "menu": "Menü",
@@ -55,7 +56,9 @@
     "pictureCount": "{{count}} Bild(er)",
     "moreThanPictureCount": "Mehr als {{count}} Bilder",
     "and": "und",
-    "and-alternative": "sowie"
+    "and-alternative": "sowie",
+    "login": "Login",
+    "logout": "Logout"
   },
   "comment": {
     "name": "Name",
@@ -67,6 +70,7 @@
   "search": {
     "search-for-type": "In allen Bildinformationen suchen",
     "search-for-type-advance": "durchsuchen",
+    "search-top-bar": "Suchen",
     "date": "Jahreszahlen",
     "decade": "Jahrzehnte",
     "keyword": "Schlagworte",
@@ -171,6 +175,83 @@
     "nameOfNewCollection": "Name der neuen Collection:",
     "autoCrop": "Automatisch Zuschneiden",
     "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
+  },
+  "pictureAdornments": {
+    "showcase": "Als Schaubild auswählen",
+    "select": "Bild auswählen",
+    "delete": "Bild entfernen"
+  },
+  "archives": {
+    "edit": {
+      "back": "Zum Archiv",
+      "confirm": {
+        "title": "Möchtest du die Seite wirklich verlassen?",
+        "content": "Du hast noch ungespeicherte Änderungen."
+      },
+      "save": "Änderungen speichern",
+      "saved": "Änderungen gespeichert",
+      "nameLabel": "Archiv-Name:",
+      "shortDescription": {
+        "label": "Kurzbeschreibung:",
+        "helperText": "Diese Beschreibung ist nur in der Archivübersicht sichtbar"
+      },
+      "longDescriptionLabel": "Archiv-Beschreibung",
+      "logo": {
+        "label": "Logo:",
+        "preview": "Vorschau:"
+      },
+      "links": {
+        "label": "Links:",
+        "title": {
+          "placeholder": "Meine Homepage",
+          "helperText": "Titel (optional)"
+        },
+        "url": {
+          "placeholder": "meine-homepage.de",
+          "helperTextValid": "URL",
+          "helperTextInvalid": "Bitte geben sie eine gültige URL an."
+        },
+        "addLink": "Link hinzufügen"
+      }
+    }
+  },
+  "startpage": {
+    "welcome-title": "Harz History",
+    "welcome-text": "In privaten Sammlungen, in Archiven und Museen im Harz lagern Schätze – die bisweilen selten das Publikum finden, das sie verdienen. Mit Unterstützung von Student*innen des Hasso-Plattner-Instituts Potsdam wird experimentell daran gearbeitet, eine lebendiges Schaufenster in die Harzer Historie zu öffnen und Lust auf Besuche in den Harzer Museen zu machen. Das Projekt wird im Erfolgsfall allen interessierten Sammlungen offenstehen. Das Projekt wird ideell vom Landkreis Goslar, von der Stadt Bad Harzburg und der Stadt Braunlage unterstützt. Medienpartner sind die Goslarsche Zeitung und der Harzkurier."
+  },
+  "footer": {
+    "title": "Das Mitmacharchiv",
+    "impressum": "Impressum",
+    "contact": "Kontakt",
+    "tos": "AGB",
+    "privacy": "Datenschutzbestimmungen",
+    "associates-title": "Unsere Partner"
+  },
+  "terms-of-service": {
+    "title": "Nutzungsbedingungen/AGB",
+    "introduction-p1": "Diese Allgemeinen Geschäftsbedingungen (\"AGB\") gelten für die Website harz-history.de (die \"Website\"). Die AGB regeln das Verhältnis zwischen den Betreibern der Website (\"Harz-History\") und dem Nutzer (\"Nutzer\").",
+    "introduction-p2": "Der Begriff \"Inhalt(e)\" beschreibt hierin Bilder, Dokumente, Videos und Audio-Dateien, die auf der Website zur Verfügung stehen. Harz-History kann diese Bedingungen jederzeit und ohne Ankündigung anpassen. Durch den weiteren Einsatz geben Nutzer ihr Einverständnis zu den Änderungen.",
+    "permitted-usage-title": "Nutzung des Service/der Inhalte",
+    "permitted-usage-p1": "Data Mining, Scraping und anderweitiger Einsatz von Programmen zur automatischen Datenerfassung und/oder Extraktion digitaler Daten ist ebenso wie das Massenkopieren von Inhalten strikt untersagt. Dies betrifft alle Inhalte auf Harz-History.",
+    "permitted-usage-p2-1": "Alle Inhalte können für ",
+    "permitted-usage-p2-2-bold": "private Zwecke",
+    "permitted-usage-p2-3": " heruntergeladen und (mit Quellenangabe) frei verwendet werden.  Eine kommerzielle Nutzung / Weiterverkauf (auch in bearbeiteter Form) ist untersagt.",
+    "permitted-usage-p3-1": "Wer Fotos/Dokumente aus dem Pool für ",
+    "permitted-usage-p3-2-bold": "kommerzielle Zwecke",
+    "permitted-usage-p3-3": " verwenden möchte, richtet bitte eine Anfrage an ",
+    "permitted-usage-p3-4-link": "anfragen@harz-history.de",
+    "permitted-usage-p3-4-link-href": "mailto:anfragen@harz-history.de?",
+    "permitted-usage-p3-5": ". Viele Fotos sind in höherer Auflösung vorhanden.",
+    "permitted-usage-p4": "Zu beachten ist, dass alle Inhalte auf Harz-History zwar für nicht-kommerzielle Zwecke frei verwendbar sind, Elemente in den Fotos (identifizierbare Personen, Logos, etc.) jedoch Urheberrechten, Eigentumsrechten, Personenrechten, Markenrechten etc. unterliegen können. Die Zustimmung der Nutzung ist in solchen Fällen einzuholen.  Harz-History garantiert nicht, dass entsprechende Zustimmungen oder Lizenzen eingeholt wurden, und lehnt daher ausdrücklich jegliche daraus resultierende Haftung ab.",
+    "media-upload-title": "Hochladen von Medien",
+    "media-upload-p1": "Durch das Hochladen von Medien auf die Website wird Harz-History ein unwiderrufliches, weltweites, nicht-exklusives und gebührenfreies Recht gewährt, die Inhalte zu verwenden, herunterzuladen, zu kopieren oder zu verändern. Jeder, der Medien hochlädt, ist für die Inhalte selbst verantwortlich und garantiert, dass er/sie Rechte an den Inhalten besitzt und dass die Inhalte nicht gegen Urheberrecht, Eigentumsrecht, Markenrecht oder andere Rechte Dritter verstoßen.",
+    "media-upload-p2": "Harz-History behält sich das das Recht vor, jeden Inhalt jederzeit zu löschen. Dies betrifft insbesondere defekte Dateien, Inhalte minderer Qualität sowie rechtlich Fragwürdiges.",
+    "media-upload-p3-1": "Sollten dennoch Inhalte auf die Website gelangt sein, an denen Dritte Rechte halten, bitten wir um eine Meldung per Mail unter ",
+    "media-upload-p3-2-link": "kuratoren@harz-history.de",
+    "media-upload-p3-2-link-href": "kuratoren@harz-history.de?",
+    "media-upload-p3-3": ". Bei begründeten Hinweisen werden die Medien umgehend entfernt.",
+    "liability-transfer-title": "Haftungsfreistellung",
+    "liability-transfer-p1": "Nutzer stellen Harz-History von sämtlichen Ansprüchen frei, die Dritte gegenüber Harz-History geltend machen aufgrund einer Verletzung ihrer Rechte durch vom Teilnehmern/private Nutzer eingestellte Inhalte.  Die Teilnehmer/private Nutzer tragen im Fall der Fälle die Kosten einschließlich sämtlicher Gerichts- und Anwaltskosten in gesetzlicher Höhe. "
   },
   "pictureAdornments": {
     "showcase": "Als Schaubild auswählen",

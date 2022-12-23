@@ -14,9 +14,11 @@ import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 const SearchBar = ({
   searchParams,
   isAllSearchActive,
+  isTopBarSearch,
 }: {
   searchParams: URLSearchParams;
   isAllSearchActive: boolean;
+  isTopBarSearch?: boolean;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -89,7 +91,7 @@ const SearchBar = ({
   };
 
   return (
-    <div className='search-bar-wrapper'>
+    <div className={isTopBarSearch ? 'search-bar-wrapper top-bar-search' : 'search-bar-wrapper'}>
       <TextField
         inputRef={textFieldRef}
         className='search-bar'
@@ -104,7 +106,9 @@ const SearchBar = ({
               >
                 <div>
                   <SearchIcon />
-                  <div className='searchbutton-label'>{t('search.start-search')}</div>
+                  {!isTopBarSearch && (
+                    <div className='searchbutton-label'>{t('search.start-search')}</div>
+                  )}
                 </div>
               </IconButton>
             </InputAdornment>
@@ -159,7 +163,11 @@ const SearchBar = ({
           }
         }}
         placeholder={
-          useAdvancedSearch ? t('search.search-for-type-advance') : t('search.search-for-type')
+          isTopBarSearch
+            ? t('search.search-top-bar')
+            : useAdvancedSearch
+            ? t('search.search-for-type-advance')
+            : t('search.search-for-type')
         }
         variant='outlined'
       />
