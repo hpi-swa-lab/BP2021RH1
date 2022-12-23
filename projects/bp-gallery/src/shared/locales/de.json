@@ -171,5 +171,44 @@
     "nameOfNewCollection": "Name der neuen Collection:",
     "autoCrop": "Automatisch Zuschneiden",
     "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
+  },
+  "pictureAdornments": {
+    "showcase": "Als Schaubild auswählen",
+    "select": "Bild auswählen",
+    "delete": "Bild entfernen"
+  },
+  "archives": {
+    "edit": {
+      "back": "Zum Archiv",
+      "confirm": {
+        "title": "Möchtest du die Seite wirklich verlassen?",
+        "content": "Du hast noch ungespeicherte Änderungen."
+      },
+      "save": "Änderungen speichern",
+      "saved": "Änderungen gespeichert",
+      "nameLabel": "Archiv-Name:",
+      "shortDescription": {
+        "label": "Kurzbeschreibung:",
+        "helperText": "Diese Beschreibung ist nur in der Archivübersicht sichtbar"
+      },
+      "longDescriptionLabel": "Archiv-Beschreibung",
+      "logo": {
+        "label": "Logo:",
+        "preview": "Vorschau:"
+      },
+      "links": {
+        "label": "Links:",
+        "title": {
+          "placeholder": "Meine Homepage",
+          "helperText": "Titel (optional)"
+        },
+        "url": {
+          "placeholder": "meine-homepage.de",
+          "helperTextValid": "URL",
+          "helperTextInvalid": "Bitte geben sie eine gültige URL an."
+        },
+        "addLink": "Link hinzufügen"
+      }
+    }
   }
 }

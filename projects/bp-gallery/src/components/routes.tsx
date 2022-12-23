@@ -14,6 +14,9 @@ import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 import BulkEditView from './views/bulk-edit/BulkEditView';
+import ArchiveView from './views/archives/ArchiveView';
+import ArchiveEditView from './views/archives/ArchiveEditView';
+import ProtectedRoute from './common/ProtectedRoute';
 
 export const FALLBACK_PATH = '/browse';
 
@@ -73,7 +76,11 @@ const routes: RouteConfig[] = [
       {
         path: '/bulk-edit/:ids',
         render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
-          return <BulkEditView pictureIds={match.params.ids.split(',')} />;
+          return (
+            <ProtectedRoute>
+              <BulkEditView pictureIds={match.params.ids.split(',')} />
+            </ProtectedRoute>
+          );
         },
       },
       {
@@ -108,6 +115,23 @@ const routes: RouteConfig[] = [
         path: '/prototypes/timeline-demo',
         component: TimeLineDemo,
       },
+      {
+        path: '/archives/:id/edit',
+        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+          return (
+            <ProtectedRoute redirectPath={`/archives/${match.params.id}`}>
+              <ArchiveEditView archiveId={match.params.id} />
+            </ProtectedRoute>
+          );
+        },
+      },
+      {
+        path: '/archives/:id',
+        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+          return <ArchiveView archiveId={match.params.id} />;
+        },
+      },
+
       {
         // fallback component for unmatched routes
         render: () => {

@@ -4,3 +4,4 @@ src/react-app-env.d.ts
 src/graphql/schema/loadRemoteSchema.js
 src/graphql/APIConnector.tsx
 src/prototypes/demo/Demo.tsx
+cypress/utils/graphql-test-utils.js
