@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash';
-import { asSearchPath, isValidYear, SearchType } from '../SearchView';
+import { asSearchPath, isValidYear } from '../SearchView';
+import { SearchType } from './search-filters';
 
 const isDuplicatedSearchParam = (element: string, type: string, prevParams: URLSearchParams) => {
   let isDuplicate = false;

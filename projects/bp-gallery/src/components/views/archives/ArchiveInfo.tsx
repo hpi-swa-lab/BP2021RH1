@@ -20,7 +20,10 @@ const ArchiveInfo = ({ description }: ArchiveInfoProps) => {
 
   return (
     <div className='archive-info-container'>
-      <Editor value={description} extraOptions={extraOptions} />
+      <Editor
+        value={description || t('archives.defaultLongDescription')}
+        extraOptions={extraOptions}
+      />
     </div>
   );
 };

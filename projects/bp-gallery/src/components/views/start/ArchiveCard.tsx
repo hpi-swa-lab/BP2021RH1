@@ -19,7 +19,6 @@ const ArchiveCard = ({
   archiveDescription: string;
   archiveId: string;
 }) => {
-  const history: History = useHistory();
   const { data } = useGetPictureInfoQuery({ variables: { pictureId: pictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url

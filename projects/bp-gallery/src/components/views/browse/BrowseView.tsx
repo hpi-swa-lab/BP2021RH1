@@ -39,7 +39,17 @@ const getPictureFilters = (collectionId: string) => {
   return filters;
 };
 
-const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean }) => {
+const BrowseView = ({
+  path,
+  startpage,
+  parentScrollPos,
+  parentScrollHeight,
+}: {
+  path?: string[];
+  startpage?: boolean;
+  parentScrollPos?: number;
+  parentScrollHeight?: number;
+}) => {
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useContext(DialogContext);
@@ -112,9 +122,9 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
     const collection = collections[0];
     const childCount = collection.child_collections?.length ?? 0;
     return (
-      <div className='browse-container'>
-        <ScrollContainer>
-          {(scrollPos: number, scrollHeight: number) => (
+      <ScrollContainer>
+        {(scrollPos: number, scrollHeight: number) => (
+          <div className='browse-container'>
             <div className='collection-picture-display'>
               {!startpage && (
                 <CollectionDescription
@@ -133,8 +143,8 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
               )}
               <PictureScrollGrid
                 queryParams={getPictureFilters(collection.id)}
-                scrollPos={scrollPos}
-                scrollHeight={scrollHeight}
+                scrollPos={parentScrollPos ?? scrollPos}
+                scrollHeight={parentScrollHeight ?? scrollHeight}
                 hashbase={collection.name}
                 uploadAreaProps={uploadAreaProps(collection)}
                 bulkOperations={[
@@ -145,10 +155,11 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
                 ]}
               />
             </div>
-          )}
-        </ScrollContainer>
-        <Footer />
-      </div>
+
+            <Footer />
+          </div>
+        )}
+      </ScrollContainer>
     );
   } else {
     return <div>{t('common.no-collection')}</div>;

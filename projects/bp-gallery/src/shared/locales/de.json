@@ -182,6 +182,7 @@
     "delete": "Bild entfernen"
   },
   "archives": {
+    "defaultLongDescription": "Dieses Archiv hat noch keine Beschreibung. Als Kurator kannst du jedoch über den roten \"Archiv editieren\" Knopf eine Beschreibung hinzufügen.",
     "edit": {
       "back": "Zum Archiv",
       "confirm": {
@@ -252,44 +253,5 @@
     "media-upload-p3-3": ". Bei begründeten Hinweisen werden die Medien umgehend entfernt.",
     "liability-transfer-title": "Haftungsfreistellung",
     "liability-transfer-p1": "Nutzer stellen Harz-History von sämtlichen Ansprüchen frei, die Dritte gegenüber Harz-History geltend machen aufgrund einer Verletzung ihrer Rechte durch vom Teilnehmern/private Nutzer eingestellte Inhalte.  Die Teilnehmer/private Nutzer tragen im Fall der Fälle die Kosten einschließlich sämtlicher Gerichts- und Anwaltskosten in gesetzlicher Höhe. "
-  },
-  "pictureAdornments": {
-    "showcase": "Als Schaubild auswählen",
-    "select": "Bild auswählen",
-    "delete": "Bild entfernen"
-  },
-  "archives": {
-    "edit": {
-      "back": "Zum Archiv",
-      "confirm": {
-        "title": "Möchtest du die Seite wirklich verlassen?",
-        "content": "Du hast noch ungespeicherte Änderungen."
-      },
-      "save": "Änderungen speichern",
-      "saved": "Änderungen gespeichert",
-      "nameLabel": "Archiv-Name:",
-      "shortDescription": {
-        "label": "Kurzbeschreibung:",
-        "helperText": "Diese Beschreibung ist nur in der Archivübersicht sichtbar"
-      },
-      "longDescriptionLabel": "Archiv-Beschreibung",
-      "logo": {
-        "label": "Logo:",
-        "preview": "Vorschau:"
-      },
-      "links": {
-        "label": "Links:",
-        "title": {
-          "placeholder": "Meine Homepage",
-          "helperText": "Titel (optional)"
-        },
-        "url": {
-          "placeholder": "meine-homepage.de",
-          "helperTextValid": "URL",
-          "helperTextInvalid": "Bitte geben sie eine gültige URL an."
-        },
-        "addLink": "Link hinzufügen"
-      }
-    }
   }
 }

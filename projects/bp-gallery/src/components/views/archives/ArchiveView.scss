@@ -8,95 +8,103 @@ h1 {
 }
 
 .archive-container {
-  overflow-y: auto;
-  overflow-x: hidden;
-  .collection-picture-display {
-    .edit-button-wrapper {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 2rem;
+  background: white;
+  padding-top: 4rem;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+  min-height: calc(100vh - 14rem);
+
+  .picture-grid {
+    margin-top: 2rem;
+  }
+
+  .edit-button-wrapper {
+    display: flex;
+    .archive-edit-button {
+      background: $primaryColor !important;
+      color: white !important;
+      z-index: 99;
+      margin-left: auto;
+      padding-inline: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+  .archive-data {
+    display: flex;
+    width: 100%;
+    @media (max-width: $mobile-breakpoint) {
+      flex-direction: column-reverse;
+    }
+    .archive-info {
       display: flex;
-      .archive-edit-button {
-        background: $primaryColor !important;
-        color: white !important;
-        z-index: 99;
-        margin-left: auto;
-        padding-inline: 1rem;
-        margin-bottom: 1rem;
+      flex-direction: column;
+      width: 57.5%;
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
+      .archive-socials {
+        display: flex;
+        .archive-logo-container {
+          overflow: hidden;
+          display: flex;
+          padding-top: 0.45rem;
+          padding-left: 1rem;
+          min-height: 130px;
+          max-height: 150px;
+          min-width: 130px;
+          max-width: 150px;
+          .archive-logo {
+            margin-bottom: auto;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+        .archive-links {
+          overflow: hidden;
+          display: flex;
+          padding: 1rem;
+          padding-right: 0rem;
+          padding-top: 0rem;
+          margin-left: 1rem;
+          flex-direction: column;
+          .archive-link {
+            display: flex;
+            align-items: center;
+            margin-top: 0.1rem;
+            margin-bottom: 0.1rem;
+            a {
+              margin-left: 0.5rem;
+            }
+          }
+        }
+      }
+      .archive-info-container {
+        .jodit-react-container {
+          margin-bottom: 1rem;
+          min-height: 200px;
+          background: #ffffff;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          font-size: 20px;
+
+          .jodit-placeholder {
+            padding: 0 !important;
+          }
+
+          a {
+            color: $primaryColor;
+          }
+        }
       }
     }
-    .archive-data {
-      display: flex;
-      width: 100%;
+    .archive-showcase {
+      width: 42.5%;
+      margin-left: 30px;
       @media (max-width: $mobile-breakpoint) {
-        flex-direction: column-reverse;
-      }
-      .archive-info {
-        display: flex;
-        flex-direction: column;
-        width: 57.5%;
-        @media (max-width: $mobile-breakpoint) {
-          width: 100%;
-        }
-        .archive-socials {
-          display: flex;
-          .archive-logo-container {
-            overflow: hidden;
-            display: flex;
-            padding-top: 0.45rem;
-            padding-left: 1rem;
-            min-height: 130px;
-            max-height: 150px;
-            min-width: 130px;
-            max-width: 150px;
-            .archive-logo {
-              margin-bottom: auto;
-              margin-left: auto;
-              margin-right: auto;
-            }
-          }
-          .archive-links {
-            overflow: hidden;
-            display: flex;
-            padding: 1rem;
-            padding-right: 0rem;
-            padding-top: 0rem;
-            margin-left: 1rem;
-            flex-direction: column;
-            .archive-link {
-              display: flex;
-              align-items: center;
-              margin-top: 0.1rem;
-              margin-bottom: 0.1rem;
-              a {
-                margin-left: 0.5rem;
-              }
-            }
-          }
-        }
-        .archive-info-container {
-          .jodit-react-container {
-            margin-bottom: 1rem;
-            min-height: 200px;
-            background: #ffffff;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            font-size: 20px;
-
-            .jodit-placeholder {
-              padding: 0 !important;
-            }
-
-            a {
-              color: $primaryColor;
-            }
-          }
-        }
-      }
-      .archive-showcase {
-        width: 42.5%;
-        margin-left: 30px;
-        @media (max-width: $mobile-breakpoint) {
-          margin-left: 0px;
-          width: 100%;
-        }
+        margin-left: 0px;
+        width: 100%;
       }
     }
   }

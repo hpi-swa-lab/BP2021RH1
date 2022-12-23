@@ -5,11 +5,11 @@ import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/ma
 import SearchIcon from '@mui/icons-material/Search';
 import { History } from 'history';
 import './SearchBar.scss';
-import { SearchType } from './SearchView';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { getSearchTypeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
+import { SearchType } from './helpers/search-filters';
 
 const SearchBar = ({
   searchParams,
