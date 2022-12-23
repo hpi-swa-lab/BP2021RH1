@@ -3,7 +3,7 @@ import './StartView.scss';
 import { useTranslation } from 'react-i18next';
 import BrowseView from '../browse/BrowseView';
 import ScrollContainer from '../../common/ScrollContainer';
-import ArchiveCard from './ArchiveCard';
+import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
@@ -15,15 +15,23 @@ const StartView = () => {
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
   let archiveCards: JSX.Element[];
   if (archives) {
-    console.log(archives[0].showcasePicture?.id);
+    console.log(archives[0].showcasePicture); //.formats?.thumbnail.url.formats?.thumbnail.url
     archiveCards = archives.map(archive => (
       <div className='archive' key={archive.id}>
-        <ArchiveCard
-          pictureId={archive.showcasePicture?.id ?? ''}
-          archiveName={archive.name}
-          archiveDescription={archive.shortDescription ?? ''}
-          archiveId={archive.id}
-        />
+        {archive.showcasePicture ? (
+          <ArchiveCard
+            pictureId={archive.showcasePicture.id}
+            archiveName={archive.name}
+            archiveDescription={archive.shortDescription ?? ''}
+            archiveId={archive.id}
+          />
+        ) : (
+          <ArchiveCardWithoutPicture
+            archiveName={archive.name}
+            archiveDescription={archive.shortDescription ?? ''}
+            archiveId={archive.id}
+          />
+        )}
       </div>
     ));
   }
