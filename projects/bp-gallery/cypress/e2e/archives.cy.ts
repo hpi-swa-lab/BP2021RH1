@@ -22,11 +22,11 @@ describe('Archives View', () => {
 
   it('shows the first archive name and no edit button', () => {
     cy.contains('Herbert-Ahrens-Bilderarchiv');
-    cy.contains('Archiv editieren').should('not.exist');
+    cy.get('.archive-edit-button').should('not.exist');
   });
   it('shows an edit button upon login', () => {
     login();
-    cy.contains('Archiv editieren');
+    cy.get('.archive-edit-button').contains('Archiv editieren');
   });
   it('redirects to the archive edit page after pressing on the edit button', () => {
     cy.contains('Archiv editieren').click();
