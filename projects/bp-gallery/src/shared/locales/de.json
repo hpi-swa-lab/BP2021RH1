@@ -1,5 +1,6 @@
 {
   "common": {
+    "start": "Start",
     "search": "Suchen",
     "browse": "Stöbern",
     "menu": "Menü",
@@ -55,7 +56,9 @@
     "pictureCount": "{{count}} Bild(er)",
     "moreThanPictureCount": "Mehr als {{count}} Bilder",
     "and": "und",
-    "and-alternative": "sowie"
+    "and-alternative": "sowie",
+    "login": "Login",
+    "logout": "Logout"
   },
   "comment": {
     "name": "Name",
@@ -67,6 +70,7 @@
   "search": {
     "search-for-type": "In allen Bildinformationen suchen",
     "search-for-type-advance": "durchsuchen",
+    "search-top-bar": "Suchen",
     "date": "Jahreszahlen",
     "decade": "Jahrzehnte",
     "keyword": "Schlagworte",
@@ -210,5 +214,14 @@
         "addLink": "Link hinzufügen"
       }
     }
+  },
+  "startpage": {
+    "welcome-title": "Harz History",
+    "welcome-text": "In privaten Sammlungen, in Archiven und Museen im Harz lagern Schätze – die bisweilen selten das Publikum finden, das sie verdienen. Mit Unterstützung von Student*innen des Hasso-Plattner-Instituts Potsdam wird experimentell daran gearbeitet, eine lebendiges Schaufenster in die Harzer Historie zu öffnen und Lust auf Besuche in den Harzer Museen zu machen. Das Projekt wird im Erfolgsfall allen interessierten Sammlungen offenstehen. Das Projekt wird ideell vom Landkreis Goslar, von der Stadt Bad Harzburg und der Stadt Braunlage unterstützt. Medienpartner sind die Goslarsche Zeitung und der Harzkurier."
+  },
+  "footer": {
+    "title": "Das Mitmacharchiv",
+    "impressum": "Impressum",
+    "contact": "Kontakt"
   }
 }

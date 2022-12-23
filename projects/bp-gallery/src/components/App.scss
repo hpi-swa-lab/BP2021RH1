@@ -25,9 +25,13 @@ body {
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 100%;
-  height: calc(100% - 9rem);
   overflow-x: hidden;
   overflow-y: auto;
+  height: calc(100% - 5rem);
   padding-top: 5rem;
-  padding-bottom: 4rem;
+  @media only screen and (max-width: 650px) {
+    height: calc(100% - 4rem);
+    padding-top: 0rem;
+    padding-bottom: 4rem;
+  }
 }

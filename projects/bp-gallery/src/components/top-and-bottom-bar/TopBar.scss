@@ -5,7 +5,7 @@
   color: white;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 5rem;
   padding: 0rem 2rem;
   align-items: center;
@@ -15,6 +15,15 @@
   top: 0;
   left: 0;
 
+  .search-div {
+    width: 30vw;
+  }
+  .divider {
+    flex: 1 0 0;
+  }
+  .action-wrapper {
+    width: 7rem;
+  }
   .bh-logo {
     img {
       width: 75px;
