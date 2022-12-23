@@ -1,0 +1,21 @@
+.footer {
+  background-color: #c0bcbc;
+  padding: 1rem 2rem;
+}
+
+.footer-content {
+  h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+  }
+
+  p {
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

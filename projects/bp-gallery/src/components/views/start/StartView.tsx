@@ -9,8 +9,8 @@ const StartView = () => {
   return (
     <ScrollContainer>
       {(scrollPos: number, scrollHeight: number) => (
-        <div>
-          <div className='main-start-view'>
+        <div className='main-start-view'>
+          <div className='welcome-container'>
             <div className='welcome'>
               <h1>{t('startpage.welcome-title')}</h1>
               <p>{t('startpage.welcome-text')}</p>
