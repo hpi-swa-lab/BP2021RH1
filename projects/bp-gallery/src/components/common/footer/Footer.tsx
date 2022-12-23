@@ -34,19 +34,19 @@ const Footer = () => {
           <h3>{t('footer.associates-title')}</h3>
           <div className='associates-logos'>
             <div className='logo'>
-              <img src='/partner-logos/lkrs_goslar-transparent.png' />
+              <img src='/partner-logos/landkreis.png' />
             </div>
             <div className='logo square'>
-              <img src='/partner-logos/Bad-Harzburger-Wappen-transparent.png' />
+              <img src='/partner-logos/Bad-Harzburg-Wappen.png' />
             </div>
             <div className='logo'>
-              <img src='/partner-logos/Logo%20GZ-transparent.png' />
+              <img src='/partner-logos/goslar-zeitung.png' />
             </div>
             <div className='logo'>
-              <img src='/partner-logos/logo-Stadt-Braunlage-farbe-transparent.png' />
+              <img src='/partner-logos/braunlage.png' />
             </div>
             <div className='logo'>
-              <img src='/partner-logos/HarzKurier-gross-transparent.png' />
+              <img src='/partner-logos/harzkurier.png' />
             </div>
           </div>
         </div>
