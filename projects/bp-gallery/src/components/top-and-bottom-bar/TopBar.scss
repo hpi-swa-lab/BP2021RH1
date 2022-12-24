@@ -7,22 +7,20 @@
   flex-direction: row;
   justify-content: flex-start;
   height: 5rem;
-  padding: 0rem 2rem;
   align-items: center;
-  width: calc(100% - 4rem);
+  width: 100%;
   z-index: 99;
   position: fixed;
   top: 0;
   left: 0;
 
   .search-div {
-    width: 30vw;
-  }
-  .divider {
-    flex: 1 0 0;
+    flex-grow: 1;
+    max-width: 800px;
+    margin-right: 2vw;
   }
   .action-wrapper {
-    width: 7rem;
+    margin: 0 2rem;
   }
   .bh-logo {
     img {
@@ -43,10 +41,10 @@
     height: 3.5rem;
 
     .search-div {
-      width: 60vw;
+      margin-right: 4rem;
     }
     .action-wrapper {
-      width: 5rem;
+      margin: 0 2rem;
     }
 
     .bh-logo {

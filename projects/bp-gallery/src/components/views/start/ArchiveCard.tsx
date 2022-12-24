@@ -44,7 +44,13 @@ const CardLayout = ({
 }) => {
   const history: History = useHistory();
   return (
-    <Card onClick={() => history.push(`/archives/${archiveId}`)}>
+    <Card
+      onClick={() =>
+        history.push(`/archives/${archiveId}`, {
+          showBack: true,
+        })
+      }
+    >
       <CardActionArea>
         <CardMedia component='img' height='140' image={pictureLink} alt='archive picture' />
         <CardContent>
