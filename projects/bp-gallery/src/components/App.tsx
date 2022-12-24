@@ -172,7 +172,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
         <AuthProvider>
           <DialogProvider>
             <div className='App'>
-              {!isMobile && <TopBar />}
+              <TopBar isMobile={isMobile} />
               {renderRoutes(route?.routes)}
               {isMobile && <NavigationBar isMobile={true} />}
             </div>

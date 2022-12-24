@@ -7,7 +7,7 @@ import './TopBar.scss';
 import SearchBar from '../views/search/SearchBar';
 import NavigationBar from './NavigationBar';
 
-const TopBar = () => {
+const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
 
   const history: History = useHistory();
@@ -48,7 +48,7 @@ const TopBar = () => {
         />
       </div>
       <div className='divider' />
-      <NavigationBar />
+      {!isMobile && <NavigationBar />}
     </div>
   );
 };

@@ -38,4 +38,22 @@
   button {
     color: white;
   }
+
+  @media only screen and (max-width: 650px) {
+    height: 3.5rem;
+
+    .search-div {
+      width: 60vw;
+    }
+    .action-wrapper {
+      width: 5rem;
+    }
+
+    .bh-logo {
+      img {
+        max-height: 3.5rem;
+        width: auto;
+      }
+    }
+  }
 }

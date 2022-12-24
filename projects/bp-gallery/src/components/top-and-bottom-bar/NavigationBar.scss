@@ -16,7 +16,7 @@
     width: 100%;
     z-index: 99;
     min-height: 0;
-    background: #e5e5e5;
+    background: $primaryColor;
   }
 
   .nav-element {
@@ -45,7 +45,7 @@
 
     @media only screen and (max-width: 650px) {
       flex-direction: column;
-      color: #5a5a5a !important;
+      // color: #5a5a5a !important;
       &.active {
         background: white;
         color: #0a0a0a;
