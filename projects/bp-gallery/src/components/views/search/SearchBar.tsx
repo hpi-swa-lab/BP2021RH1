@@ -104,7 +104,7 @@ const SearchBar = ({
                 }}
                 className='searchbutton'
               >
-                <div>
+                <div className='search-icon-container'>
                   <SearchIcon />
                   {!isTopBarSearch && (
                     <div className='searchbutton-label'>{t('search.start-search')}</div>

@@ -16,10 +16,23 @@
   border-radius: 1rem !important;
 }
 
-.top-bar-search .MuiInputBase-root {
-  background-color: white !important;
-  input {
-    padding: 0.5rem !important;
+.top-bar-search {
+  .MuiInputBase-root {
+    background-color: white !important;
+    input {
+      padding: 0.5rem !important;
+    }
+  }
+  .searchbutton {
+    .search-icon-container {
+      display: flex;
+      .MuiSvgIcon-root {
+        align-self: center;
+      }
+    }
+  }
+  .MuiOutlinedInput-root {
+    padding-right: 0rem;
   }
 }
 
