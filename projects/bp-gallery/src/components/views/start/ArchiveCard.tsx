@@ -3,25 +3,21 @@ import { Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import './ArchiveCard.scss';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { asApiPath } from '../../App';
-import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 
 const ArchiveCard = ({
-  pictureId,
+  picture,
   archiveName,
   archiveDescription,
   archiveId,
 }: {
-  pictureId: string;
+  picture: FlatPicture;
   archiveName: string;
   archiveDescription: string;
   archiveId: string;
 }) => {
-  const { data } = useGetPictureInfoQuery({ variables: { pictureId: pictureId } });
-  const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-  const pictureLink = picture?.media?.url
+  const pictureLink = picture.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '/bad-harzburg-stiftung-logo.png';
 

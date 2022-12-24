@@ -18,7 +18,7 @@ const StartView = () => {
     <div className='archive' key={archive.id}>
       {archive.showcasePicture ? (
         <ArchiveCard
-          pictureId={archive.showcasePicture.id}
+          picture={archive.showcasePicture}
           archiveName={archive.name}
           archiveDescription={archive.shortDescription ?? ''}
           archiveId={archive.id}

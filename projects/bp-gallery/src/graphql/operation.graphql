@@ -679,6 +679,16 @@ query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
         showcasePicture {
           data {
             id
+            attributes {
+              media {
+                data {
+                  attributes {
+                    url
+                    updatedAt
+                  }
+                }
+              }
+            }
           }
         }
       }

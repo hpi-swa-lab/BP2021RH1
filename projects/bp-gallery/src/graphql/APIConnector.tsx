@@ -2790,7 +2790,30 @@ export type GetAllArchiveTagsQuery = {
                 name: string;
                 shortDescription?: string | null | undefined;
                 showcasePicture?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  media: {
+                                    data?:
+                                      | {
+                                          attributes?:
+                                            | { url: string; updatedAt?: any | null | undefined }
+                                            | null
+                                            | undefined;
+                                        }
+                                      | null
+                                      | undefined;
+                                  };
+                                }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
                   | null
                   | undefined;
               }
@@ -5102,6 +5125,16 @@ export const GetAllArchiveTagsDocument = gql`
           showcasePicture {
             data {
               id
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      url
+                      updatedAt
+                    }
+                  }
+                }
+              }
             }
           }
         }
