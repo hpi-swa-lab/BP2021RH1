@@ -6,6 +6,7 @@
   justify-content: center;
   height: 100%;
   margin-left: auto;
+  margin-right: 2rem;
 
   @media only screen and (max-width: 650px) {
     height: 4rem;
@@ -31,11 +32,6 @@
     width: 3rem;
     text-decoration: none;
     transition: background 0.3s;
-
-    &:last-child {
-      margin-right: 0;
-      padding-right: 2rem;
-    }
 
     &:not(.active) {
       &:hover {
