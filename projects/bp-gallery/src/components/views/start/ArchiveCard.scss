@@ -1,5 +1,9 @@
 .MuiCard-root {
-  height: 16rem;
+  height: 14.5rem;
+  h3 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
   #description {
     text-overflow: ellipsis;
     overflow: hidden;
