@@ -8,7 +8,7 @@
   margin-left: auto;
   margin-right: 2rem;
 
-  @media only screen and (max-width: 650px) {
+  @media only screen and (max-width: $mobile-breakpoint) {
     height: 4rem;
     flex-direction: row;
     position: fixed;
@@ -44,7 +44,7 @@
       color: white;
     }
 
-    @media only screen and (max-width: 650px) {
+    @media only screen and (max-width: $mobile-breakpoint) {
       flex-direction: column;
       // color: #5a5a5a !important;
       &.active {

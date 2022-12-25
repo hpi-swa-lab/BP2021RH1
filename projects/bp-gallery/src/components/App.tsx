@@ -164,7 +164,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
     };
   }, []);
 
-  const isMobile = width <= 650;
+  const isMobile = width <= 750;
 
   return (
     <ApolloProvider client={apolloClient}>

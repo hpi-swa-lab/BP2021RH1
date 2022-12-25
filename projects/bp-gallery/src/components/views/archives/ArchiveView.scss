@@ -88,6 +88,7 @@ h1 {
           padding: 0rem 1rem 1rem 1rem;
           border-radius: 0.5rem;
           font-size: 20px;
+          text-align: justify;
 
           .jodit-placeholder {
             padding: 0 !important;
@@ -104,6 +105,7 @@ h1 {
       margin-left: 30px;
       @media (max-width: $mobile-breakpoint) {
         margin-left: 0px;
+        margin-bottom: 2rem;
         width: 100%;
       }
     }

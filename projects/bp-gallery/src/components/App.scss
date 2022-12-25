@@ -29,7 +29,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   padding-top: 5rem;
-  @media only screen and (max-width: 650px) {
+  @media only screen and (max-width: $mobile-breakpoint) {
     height: calc(100% - 7.5rem);
     padding-top: 3.5rem;
     padding-bottom: 4rem;

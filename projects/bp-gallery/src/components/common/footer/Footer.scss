@@ -1,3 +1,5 @@
+@import 'src/shared/style';
+
 .footer {
   background-color: #c0bcbc;
   padding: 1rem 2rem;
@@ -41,7 +43,7 @@
           object-fit: contain;
         }
 
-        @media only screen and (max-width: 650px) {
+        @media only screen and (max-width: $mobile-breakpoint) {
           flex-wrap: wrap;
           justify-content: center;
           .logo {
