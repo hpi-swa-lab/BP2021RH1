@@ -3789,7 +3789,7 @@ export const GetPicturesDocument = gql`
   query getPictures(
     $filters: PictureFiltersInput!
     $pagination: PaginationArg!
-    $sortBy: [String] = ["publishedAt:desc"]
+    $sortBy: [String] = ["createdAt:desc"]
   ) {
     pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
