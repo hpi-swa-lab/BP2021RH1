@@ -4,11 +4,11 @@ import React from 'react';
 const TopBarMock = () => <div>TopBarMock</div>;
 jest.mock('../TopBar', () => TopBarMock);
 
-const BrowseViewMock = () => <div>BrowseViewMock</div>;
-jest.mock('../../views/browse/BrowseView', () => BrowseViewMock);
+const StartViewMock = () => <div>StartViewMock</div>;
+jest.mock('../../views/start/StartView', () => StartViewMock);
 
 test('Nav bar in browse-context contains search, browse and menu nav link', () => {
-  const { container } = renderRoute('/browse');
+  const { container } = renderRoute('/start');
 
   const navBarLinks = container.getElementsByClassName('nav-element-title');
   expect(navBarLinks).toHaveLength(3);

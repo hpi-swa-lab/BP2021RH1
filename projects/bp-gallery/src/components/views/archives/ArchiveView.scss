@@ -10,9 +10,8 @@ h1 {
 .archive-container {
   max-width: 1200px;
   margin: auto;
-  padding: 1rem 2rem;
+  padding: 2rem 2rem;
   background: white;
-  padding-top: 4rem;
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
   min-height: calc(100vh - 14rem);
 
@@ -89,6 +88,11 @@ h1 {
           border-radius: 0.5rem;
           font-size: 20px;
           text-align: justify;
+          hyphens: auto;
+
+          @media (max-width: $mobile-breakpoint) {
+            font-size: 18px;
+          }
 
           .jodit-placeholder {
             padding: 0 !important;
