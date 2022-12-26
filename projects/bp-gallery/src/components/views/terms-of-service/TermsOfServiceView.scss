@@ -1,0 +1,25 @@
+.tos-content-container {
+  height: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 2rem;
+
+  .scroll-context {
+    height: 100%;
+
+    .tos-content {
+      margin-bottom: 2rem;
+
+      h2 {
+        text-align: left !important;
+        margin-bottom: 2rem;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+    }
+  }
+}

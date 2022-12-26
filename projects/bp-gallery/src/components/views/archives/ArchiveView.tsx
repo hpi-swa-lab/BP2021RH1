@@ -82,77 +82,75 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   }
 
   return (
-    <div className='archive-container'>
-      <ScrollContainer>
-        {(scrollPos: number, scrollHeight: number) => (
-          <div className='collection-picture-display'>
-            {role >= AuthRole.CURATOR && (
-              <p className='edit-button-wrapper'>
-                <Button
-                  className='archive-edit-button'
-                  startIcon={<EditIcon />}
-                  onClick={() => {
-                    history.push(
-                      `${history.location.pathname}${
-                        history.location.pathname.endsWith('/') ? '' : '/'
-                      }edit`
-                    );
-                  }}
-                >
-                  Archiv editieren
-                </Button>
-              </p>
-            )}
-            <h1>{archive.name}</h1>
-            <div className='archive-data'>
-              <div className='archive-info'>
-                <ArchiveInfo description={archive.longDescription ?? ''} />
-                <div className='archive-socials'>
-                  {archive.logo && (
-                    <div className='archive-logo-container'>
-                      <img
-                        className='archive-logo'
-                        src={asApiPath(
-                          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                          `/${src as string}?updatedAt=${
-                            (archive.logo.updatedAt ?? 'unknown') as string
-                          }`
-                        )}
-                      />
-                    </div>
-                  )}
-                  <div className='archive-links'>
-                    {archive.links?.map(link => (
-                      <div className='archive-link' key={link.id}>
-                        <LinkIcon className='link-icon' />
-                        <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
-                      </div>
-                    ))}
+    <ScrollContainer>
+      {(scrollPos: number, scrollHeight: number) => (
+        <div className='archive-container'>
+          {role >= AuthRole.CURATOR && (
+            <p className='edit-button-wrapper'>
+              <Button
+                className='archive-edit-button'
+                startIcon={<EditIcon />}
+                onClick={() => {
+                  history.push(
+                    `${history.location.pathname}${
+                      history.location.pathname.endsWith('/') ? '' : '/'
+                    }edit`
+                  );
+                }}
+              >
+                Archiv editieren
+              </Button>
+            </p>
+          )}
+          <h1>{archive.name}</h1>
+          <div className='archive-data'>
+            <div className='archive-info'>
+              <ArchiveInfo description={archive.longDescription ?? ''} />
+              <div className='archive-socials'>
+                {archive.logo && (
+                  <div className='archive-logo-container'>
+                    <img
+                      className='archive-logo'
+                      src={asApiPath(
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                        `/${src as string}?updatedAt=${
+                          (archive.logo.updatedAt ?? 'unknown') as string
+                        }`
+                      )}
+                    />
                   </div>
+                )}
+                <div className='archive-links'>
+                  {archive.links?.map(link => (
+                    <div className='archive-link' key={link.id}>
+                      <LinkIcon className='link-icon' />
+                      <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
+                    </div>
+                  ))}
                 </div>
               </div>
-              {showcasePicture && (
-                <div className='archive-showcase'>
-                  <PicturePreview picture={showcasePicture} onClick={() => {}} viewOnly={true} />
-                </div>
-              )}
             </div>
-
-            {archive.pictures && (
-              <PictureScrollGrid
-                queryParams={getPictureFilters(archive.pictures.map(picture => picture.id))}
-                scrollPos={scrollPos}
-                scrollHeight={scrollHeight}
-                hashbase={'archive'}
-                extraAdornments={[showcaseAdornment]}
-                // uploadAreaProps={uploadAreaProps(collection)}
-                bulkOperations={[bulkEdit]}
-              />
+            {showcasePicture && (
+              <div className='archive-showcase'>
+                <PicturePreview picture={showcasePicture} onClick={() => {}} viewOnly={true} />
+              </div>
             )}
           </div>
-        )}
-      </ScrollContainer>
-    </div>
+
+          {archive.pictures && (
+            <PictureScrollGrid
+              queryParams={getPictureFilters(archive.pictures.map(picture => picture.id))}
+              scrollPos={scrollPos}
+              scrollHeight={scrollHeight}
+              hashbase={'archive'}
+              extraAdornments={[showcaseAdornment]}
+              // uploadAreaProps={uploadAreaProps(collection)}
+              bulkOperations={[bulkEdit]}
+            />
+          )}
+        </div>
+      )}
+    </ScrollContainer>
   );
 };
 

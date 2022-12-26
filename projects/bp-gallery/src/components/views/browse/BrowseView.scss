@@ -1,13 +1,18 @@
-.collection-picture-display {
+.browse-container {
   max-width: 1200px;
   margin: auto;
-  padding: 1rem 2rem;
-  background: white;
-  padding-top: 4rem;
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
-  min-height: calc(100vh - 14rem);
 
-  .picture-grid {
-    margin-top: 2rem;
+  .collection-picture-display {
+    max-width: 1200px;
+    margin: auto;
+    padding: 1rem 2rem;
+    background: white;
+    padding-top: 4rem;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+    min-height: calc(100vh - 14rem);
+
+    .picture-grid {
+      margin-top: 2rem;
+    }
   }
 }

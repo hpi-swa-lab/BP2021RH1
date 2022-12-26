@@ -1,9 +1,9 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { renderRoute } from '../../testUtils';
+import { renderRoute, renderRouteWithAPIMocks } from '../../testUtils';
 
 test('Route mechanism renders the App component', () => {
-  const { container } = renderRoute('/');
+  const { container } = renderRouteWithAPIMocks('/');
 
   expect(container.firstChild).toHaveClass('App');
 });
@@ -37,7 +37,7 @@ test('Accessing the search route renders SearchView', () => {
 });
 
 test('Route mechanism redirects empty route to the BrowseView component', () => {
-  renderRoute('/');
+  renderRouteWithAPIMocks('/');
 
   const browseView = screen.getByText('BrowseViewMock');
   expect(browseView).toBeInTheDocument();

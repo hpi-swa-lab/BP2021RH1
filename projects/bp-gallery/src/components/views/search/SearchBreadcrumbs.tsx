@@ -2,7 +2,7 @@ import React from 'react';
 import { Chip } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
-import { asSearchPath, SearchType } from './SearchView';
+import { asSearchPath } from './SearchView';
 import './SearchBreadcrumbs.scss';
 import EventIcon from '@mui/icons-material/Event';
 import SellIcon from '@mui/icons-material/Sell';
@@ -14,6 +14,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
 import { useTranslation } from 'react-i18next';
 import { getDecadeTranslation } from './helpers/search-translation';
+import { SearchType } from './helpers/search-filters';
 
 type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];

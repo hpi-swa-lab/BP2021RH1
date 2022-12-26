@@ -21,7 +21,6 @@ const LatestPicturesView = () => {
             hashbase={'latest'}
             bulkOperations={[linkToCollection, bulkEdit]}
             queryParams={{}}
-            sortBy={['publishedAt:desc']}
             maxNumPictures={500}
             showCount={false}
           />

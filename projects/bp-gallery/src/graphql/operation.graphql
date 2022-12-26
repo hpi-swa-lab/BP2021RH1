@@ -311,7 +311,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
 query getPictures(
   $filters: PictureFiltersInput!
   $pagination: PaginationArg!
-  $sortBy: [String] = ["publishedAt:desc"]
+  $sortBy: [String] = ["createdAt:desc"]
 ) {
   pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
     data {
@@ -669,8 +669,8 @@ query getAllCollections {
   }
 }
 
-query getAllArchiveTags {
-  archiveTags {
+query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
+  archiveTags(sort: $sortBy) {
     data {
       id
       attributes {
@@ -679,6 +679,16 @@ query getAllArchiveTags {
         showcasePicture {
           data {
             id
+            attributes {
+              media {
+                data {
+                  attributes {
+                    url
+                    updatedAt
+                  }
+                }
+              }
+            }
           }
         }
       }

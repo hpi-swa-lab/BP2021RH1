@@ -3,9 +3,9 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useTranslation } from 'react-i18next';
-import { SearchType } from '../../../search/SearchView';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
+import { SearchType } from '../../../search/helpers/search-filters';
 
 const ArchiveTagField = ({
   archiveTag,

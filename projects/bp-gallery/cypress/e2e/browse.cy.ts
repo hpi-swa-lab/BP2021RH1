@@ -1,6 +1,6 @@
 describe('Browse view', () => {
   before(() => {
-    cy.visit('http://localhost:3000/');
+    cy.visit('http://localhost:3000/browse');
   });
 
   it('shows the browse view', () => {
