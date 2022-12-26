@@ -28,6 +28,7 @@ query getArchive($archiveId: ID!) {
                     width
                     height
                     formats
+                    url
                     updatedAt
                   }
                 }

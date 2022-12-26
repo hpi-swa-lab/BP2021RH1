@@ -1783,6 +1783,7 @@ export type GetArchiveQuery = {
                                                     width?: number | null | undefined;
                                                     height?: number | null | undefined;
                                                     formats?: any | null | undefined;
+                                                    url: string;
                                                     updatedAt?: any | null | undefined;
                                                   }
                                                 | null
@@ -3357,6 +3358,7 @@ export const GetArchiveDocument = gql`
                       width
                       height
                       formats
+                      url
                       updatedAt
                     }
                   }

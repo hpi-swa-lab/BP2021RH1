@@ -115,7 +115,12 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             </div>
             {showcasePicture && (
               <div className='archive-showcase'>
-                <PicturePreview picture={showcasePicture} onClick={() => {}} viewOnly={true} />
+                <PicturePreview
+                  picture={showcasePicture}
+                  onClick={() => {}}
+                  viewOnly={true}
+                  highQuality={true}
+                />
               </div>
             )}
           </div>
@@ -126,7 +131,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             scrollHeight={scrollHeight}
             hashbase={'archive'}
             extraAdornments={[showcaseAdornment]}
-            // uploadAreaProps={uploadAreaProps(collection)}
             bulkOperations={[bulkEdit]}
           />
         </div>
