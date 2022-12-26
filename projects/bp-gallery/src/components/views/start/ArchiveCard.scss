@@ -1,5 +1,14 @@
 .MuiCard-root {
   height: 14.5rem;
+
+  .MuiButtonBase-root {
+    height: 100%;
+  }
+
+  .MuiCardContent-root {
+    padding-top: 8px;
+    padding-bottom: 12px;
+  }
   h3 {
     margin-bottom: 0px;
     margin-top: 0px;
@@ -11,5 +20,6 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     white-space: normal;
+    margin-top: 8px;
   }
 }

@@ -18,7 +18,7 @@ describe('Picture View called via link', () => {
 
   it('should return to the homepage when pressing the back button', () => {
     cy.get('.picture-toolbar').find('button').first().click();
-    cy.url().should('equal', 'http://localhost:3000/browse');
+    cy.url().should('equal', 'http://localhost:3000/start');
   });
 });
 
