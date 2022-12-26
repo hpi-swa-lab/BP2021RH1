@@ -1,17 +1,13 @@
 .MuiCard-root {
-  height: 14.5rem;
+  min-height: 14.5rem;
 
-  .MuiButtonBase-root {
-    height: 100%;
-  }
-
-  .MuiCardContent-root {
-    padding-top: 8px;
-    padding-bottom: 12px;
-  }
   h3 {
     margin-bottom: 0px;
     margin-top: 0px;
+  }
+
+  .MuiCardContent-root {
+    height: 4rem;
   }
   #description {
     text-overflow: ellipsis;
