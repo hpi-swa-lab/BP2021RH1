@@ -35,11 +35,6 @@ query getArchive($archiveId: ID!) {
             }
           }
         }
-        pictures {
-          data {
-            id
-          }
-        }
         links {
           data {
             id

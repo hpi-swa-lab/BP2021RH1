@@ -1800,10 +1800,6 @@ export type GetArchiveQuery = {
                         }
                       | null
                       | undefined;
-                    pictures?:
-                      | { data: Array<{ id?: string | null | undefined }> }
-                      | null
-                      | undefined;
                     links?:
                       | {
                           data: Array<{
@@ -3366,11 +3362,6 @@ export const GetArchiveDocument = gql`
                   }
                 }
               }
-            }
-          }
-          pictures {
-            data {
-              id
             }
           }
           links {

@@ -1,13 +1,8 @@
 import EditIcon from '@mui/icons-material/Edit';
 import LinkIcon from '@mui/icons-material/Link';
-// import { Button } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  PictureFiltersInput,
-  useGetArchiveQuery,
-  useUpdateArchiveMutation,
-} from '../../../graphql/APIConnector';
+import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
 import { asApiPath } from '../../App';
@@ -25,18 +20,6 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { Star } from '@mui/icons-material';
 import { FALLBACK_PATH } from './../../routes';
-
-const getPictureFilters = (pictures: string[]) => {
-  const filters: PictureFiltersInput = { and: [] };
-
-  filters.and?.push({
-    id: {
-      in: pictures,
-    },
-  });
-
-  return filters;
-};
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -137,17 +120,15 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             )}
           </div>
 
-          {archive.pictures && (
-            <PictureScrollGrid
-              queryParams={getPictureFilters(archive.pictures.map(picture => picture.id))}
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              hashbase={'archive'}
-              extraAdornments={[showcaseAdornment]}
-              // uploadAreaProps={uploadAreaProps(collection)}
-              bulkOperations={[bulkEdit]}
-            />
-          )}
+          <PictureScrollGrid
+            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            scrollPos={scrollPos}
+            scrollHeight={scrollHeight}
+            hashbase={'archive'}
+            extraAdornments={[showcaseAdornment]}
+            // uploadAreaProps={uploadAreaProps(collection)}
+            bulkOperations={[bulkEdit]}
+          />
         </div>
       )}
     </ScrollContainer>
