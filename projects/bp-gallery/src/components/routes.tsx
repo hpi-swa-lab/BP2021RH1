@@ -27,13 +27,6 @@ const routes: RouteConfig[] = [
     component: App,
     routes: [
       {
-        path: '/browse',
-        render: () => {
-          return <BrowseView />;
-        },
-        exact: true,
-      },
-      {
         path: '/start',
         render: () => {
           return <StartView />;
