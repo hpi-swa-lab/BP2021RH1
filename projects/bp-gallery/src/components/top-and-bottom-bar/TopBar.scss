@@ -5,16 +5,23 @@
   color: white;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 5rem;
-  padding: 0rem 2rem;
   align-items: center;
-  width: calc(100% - 4rem);
+  width: 100%;
   z-index: 99;
   position: fixed;
   top: 0;
   left: 0;
 
+  .search-div {
+    flex-grow: 1;
+    max-width: 800px;
+    margin-right: 2vw;
+  }
+  .action-wrapper {
+    margin: 0 2rem;
+  }
   .bh-logo {
     img {
       width: 75px;
@@ -28,5 +35,23 @@
 
   button {
     color: white;
+  }
+
+  @media only screen and (max-width: $mobile-breakpoint) {
+    height: 3.5rem;
+
+    .search-div {
+      margin-right: 4rem;
+    }
+    .action-wrapper {
+      margin: 0 2rem;
+    }
+
+    .bh-logo {
+      img {
+        max-height: 3.5rem;
+        width: auto;
+      }
+    }
   }
 }

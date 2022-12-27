@@ -1783,6 +1783,7 @@ export type GetArchiveQuery = {
                                                     width?: number | null | undefined;
                                                     height?: number | null | undefined;
                                                     formats?: any | null | undefined;
+                                                    url: string;
                                                     updatedAt?: any | null | undefined;
                                                   }
                                                 | null
@@ -1798,10 +1799,6 @@ export type GetArchiveQuery = {
                             | null
                             | undefined;
                         }
-                      | null
-                      | undefined;
-                    pictures?:
-                      | { data: Array<{ id?: string | null | undefined }> }
                       | null
                       | undefined;
                     links?:
@@ -2776,7 +2773,9 @@ export type GetAllCollectionsQuery = {
     | undefined;
 };
 
-export type GetAllArchiveTagsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetAllArchiveTagsQueryVariables = Exact<{
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+}>;
 
 export type GetAllArchiveTagsQuery = {
   archiveTags?:
@@ -2788,7 +2787,30 @@ export type GetAllArchiveTagsQuery = {
                 name: string;
                 shortDescription?: string | null | undefined;
                 showcasePicture?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  media: {
+                                    data?:
+                                      | {
+                                          attributes?:
+                                            | { url: string; updatedAt?: any | null | undefined }
+                                            | null
+                                            | undefined;
+                                        }
+                                      | null
+                                      | undefined;
+                                  };
+                                }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
                   | null
                   | undefined;
               }
@@ -3336,16 +3358,12 @@ export const GetArchiveDocument = gql`
                       width
                       height
                       formats
+                      url
                       updatedAt
                     }
                   }
                 }
               }
-            }
-          }
-          pictures {
-            data {
-              id
             }
           }
           links {
@@ -3764,7 +3782,7 @@ export const GetPicturesDocument = gql`
   query getPictures(
     $filters: PictureFiltersInput!
     $pagination: PaginationArg!
-    $sortBy: [String] = ["publishedAt:desc"]
+    $sortBy: [String] = ["createdAt:desc"]
   ) {
     pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
@@ -5090,8 +5108,8 @@ export type GetAllCollectionsQueryResult = Apollo.QueryResult<
 >;
 
 export const GetAllArchiveTagsDocument = gql`
-  query getAllArchiveTags {
-    archiveTags {
+  query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
+    archiveTags(sort: $sortBy) {
       data {
         id
         attributes {
@@ -5100,6 +5118,16 @@ export const GetAllArchiveTagsDocument = gql`
           showcasePicture {
             data {
               id
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      url
+                      updatedAt
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -5120,6 +5148,7 @@ export const GetAllArchiveTagsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllArchiveTagsQuery({
  *   variables: {
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */

@@ -1,25 +1,25 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { renderRoute } from '../../testUtils';
+import { renderRoute, renderRouteWithAPIMocks } from '../../testUtils';
 
 test('Route mechanism renders the App component', () => {
-  const { container } = renderRoute('/');
+  const { container } = renderRouteWithAPIMocks('/');
 
   expect(container.firstChild).toHaveClass('App');
 });
 
-const BrowseViewMock = jest.fn();
-const BrowseViewMockComponent = (props: any) => {
-  BrowseViewMock(props);
-  return <div>BrowseViewMock</div>;
+const StartViewMock = jest.fn();
+const StartViewMockComponent = (props: any) => {
+  StartViewMock(props);
+  return <div>StartViewMock</div>;
 };
-jest.mock('../views/browse/BrowseView', () => BrowseViewMockComponent);
+jest.mock('../views/start/StartView', () => StartViewMockComponent);
 
-test('Accessing the browse route renders BrowseView', () => {
-  renderRoute('/browse');
+test('Accessing the start route renders StartView', () => {
+  renderRoute('/start');
 
-  const browseView = screen.getByText('BrowseViewMock');
-  expect(browseView).toBeInTheDocument();
+  const startView = screen.getByText('StartViewMock');
+  expect(startView).toBeInTheDocument();
 });
 
 const SearchViewMock = jest.fn();
@@ -36,11 +36,11 @@ test('Accessing the search route renders SearchView', () => {
   expect(searchView).toBeInTheDocument();
 });
 
-test('Route mechanism redirects empty route to the BrowseView component', () => {
-  renderRoute('/');
+test('Route mechanism redirects empty route to the StartView component', () => {
+  renderRouteWithAPIMocks('/');
 
-  const browseView = screen.getByText('BrowseViewMock');
-  expect(browseView).toBeInTheDocument();
+  const startView = screen.getByText('StartViewMock');
+  expect(startView).toBeInTheDocument();
 });
 
 const PictureViewMock = jest.fn();

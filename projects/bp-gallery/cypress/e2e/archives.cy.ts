@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { aliasQuery, aliasMutation } from '../utils/graphql-test-utils';
+import { login, logout } from '../utils/login-utils';
 
 beforeEach(() => {
   cy.intercept('POST', 'http://localhost:9000/graphql', req => {
@@ -16,21 +17,16 @@ describe('Archives View', () => {
     cy.visit('http://localhost:3000/archives/1');
   });
   after(() => {
-    cy.get('.nav-element-title').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Logout').click();
+    logout();
   });
 
   it('shows the first archive name and no edit button', () => {
     cy.contains('Herbert-Ahrens-Bilderarchiv');
-    cy.contains('Archiv editieren').should('not.exist');
+    cy.get('.archive-edit-button').should('not.exist');
   });
   it('shows an edit button upon login', () => {
-    cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Login').click();
-    cy.get('#username').should('be.visible').clear().type('testCurator');
-    cy.get('#password').should('be.visible').clear().type('1234abc');
-    cy.get('button[type="submit"]').should('be.visible').click();
-    cy.contains('Archiv editieren');
+    login();
+    cy.get('.archive-edit-button').contains('Archiv editieren');
   });
   it('redirects to the archive edit page after pressing on the edit button', () => {
     cy.contains('Archiv editieren').click();

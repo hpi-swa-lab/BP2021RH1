@@ -22,18 +22,22 @@ const PicturePreview = ({
   pictureOrigin = PictureOrigin.REMOTE,
   adornments,
   viewOnly,
+  highQuality,
 }: {
   picture: FlatPicture;
   onClick: MouseEventHandler<HTMLDivElement>;
   pictureOrigin?: PictureOrigin;
   adornments?: PicturePreviewAdornment[];
   viewOnly?: boolean;
+  highQuality?: boolean;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const thumbnailUrl = useMemo((): string => {
-    return (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || '';
-  }, [picture]);
+    const defaultUrl =
+      (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || '';
+    return highQuality ? picture.media?.url ?? defaultUrl : defaultUrl;
+  }, [picture, highQuality]);
 
   return (
     <div

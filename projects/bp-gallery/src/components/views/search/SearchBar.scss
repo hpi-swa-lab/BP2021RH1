@@ -1,3 +1,5 @@
+@import 'src/shared/style';
+
 .search-bar-wrapper {
   display: flex;
   z-index: 25;
@@ -5,9 +7,34 @@
   width: 100%;
   min-width: 0;
 
-  @media only screen and (min-width: 651px) {
+  @media only screen and (min-width: $mobile-breakpoint) {
     max-width: 800px;
     margin: auto;
+  }
+}
+
+.top-bar-search .search-bar,
+.MuiInputBase-root {
+  border-radius: 1rem !important;
+}
+
+.top-bar-search {
+  .MuiInputBase-root {
+    background-color: white !important;
+    input {
+      padding: 0.5rem !important;
+    }
+  }
+  .searchbutton {
+    .search-icon-container {
+      display: flex;
+      .MuiSvgIcon-root {
+        align-self: center;
+      }
+    }
+  }
+  .MuiOutlinedInput-root {
+    padding-right: 0rem;
   }
 }
 
@@ -16,7 +43,7 @@
   box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
   width: 100%;
 
-  @media only screen and (max-width: 650px) {
+  @media only screen and (max-width: $mobile-breakpoint) {
     box-shadow: none;
     .MuiInputBase-root {
       flex-wrap: wrap;
@@ -31,7 +58,7 @@
       .MuiInputAdornment-positionEnd {
         position: absolute;
         right: 0;
-        top: 70%;
+        top: 50%;
         opacity: 0.3;
         z-index: 100;
 

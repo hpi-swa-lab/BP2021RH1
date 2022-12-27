@@ -1,3 +1,5 @@
+import { login, logout } from '../utils/login-utils';
+
 describe('Picture View called via link', () => {
   before(() => {
     cy.visit('http://localhost:3000/picture/1');
@@ -16,25 +18,20 @@ describe('Picture View called via link', () => {
 
   it('should return to the homepage when pressing the back button', () => {
     cy.get('.picture-toolbar').find('button').first().click();
-    cy.url().should('equal', 'http://localhost:3000/browse');
+    cy.url().should('equal', 'http://localhost:3000/start');
   });
 });
 
 describe('Picture View called via link as a curator', () => {
   before(() => {
     cy.visit('http://localhost:3000/');
-    cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Login').click();
-    cy.get('#username').should('be.visible').type('testCurator');
-    cy.get('#password').should('be.visible').type('1234abc');
-    cy.get('button[type="submit"]').should('be.visible').click();
+    login();
     cy.get('.MuiSnackbar-root').contains('Erfolgreich eingeloggt').should('exist');
     cy.visit('localhost:3000/picture/1');
   });
   after(() => {
     cy.visit('http://localhost:3000/');
-    cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Logout').click();
+    logout();
   });
 
   it('should show a picture-info-field for each type in the picture sidebar', () => {
