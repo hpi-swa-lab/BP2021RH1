@@ -9,7 +9,6 @@ import { asApiPath } from '../../App';
 import PicturePreview, {
   PicturePreviewAdornment,
 } from '../../common/picture-gallery/PicturePreview';
-import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import ArchiveInfo from './ArchiveInfo';
 import './ArchiveView.scss';
@@ -126,15 +125,10 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             )}
           </div>
 
-          {archive.pictures && <Carousel title='Test Title' queryParams={{}} />}
-
-          <PictureScrollGrid
+          <Carousel
+            title='Unsere Bilder'
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            scrollPos={scrollPos}
-            scrollHeight={scrollHeight}
-            hashbase={'archive'}
-            extraAdornments={[showcaseAdornment]}
-            bulkOperations={[bulkEdit]}
+            onClick={() => {}}
           />
         </div>
       )}
