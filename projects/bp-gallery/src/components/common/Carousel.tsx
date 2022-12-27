@@ -14,39 +14,47 @@ interface CarouselProps {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   onClick: MouseEventHandler<HTMLButtonElement>;
   sortBy?: string[];
+  rows?: number;
 }
 
-const Carousel = ({ title, queryParams, onClick, sortBy }: CarouselProps) => {
+const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
   const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
 
   const calculatePictureNumber = useCallback(
-    (hashBase: string) => {
+    (hashBase: string, rows: number) => {
       const newMaxRowCount = calculateMaxRowCount();
       if (newMaxRowCount !== maxRowCount) {
         setMaxRowCount(newMaxRowCount);
       }
       const minRowCount = Math.max(2, maxRowCount - 2);
-      const firstRowLenght = Math.round(
+      let currentPictureNumber = 0;
+      let currentRowLenght = Math.round(
         hashCode(hashBase) * (maxRowCount - minRowCount) + minRowCount
       );
-      const secondRowLenght = Math.round(
-        hashCode(hashBase + String((firstRowLenght - 1) * 124.22417246)) *
-          (maxRowCount - minRowCount) +
-          minRowCount
-      );
-      return firstRowLenght + secondRowLenght;
+      currentPictureNumber += currentRowLenght;
+      for (let i = 1; i < rows; i++) {
+        currentRowLenght = Math.round(
+          hashCode(hashBase + String((currentPictureNumber - 1) * 124.22417246)) *
+            (maxRowCount - minRowCount) +
+            minRowCount
+        );
+        currentPictureNumber += currentRowLenght;
+      }
+      return currentPictureNumber;
     },
     [maxRowCount]
   );
 
-  const [pictureNumber, setPictureNumber] = useState<number>(calculatePictureNumber('carousel'));
+  const [pictureNumber, setPictureNumber] = useState<number>(
+    calculatePictureNumber('carousel', rows)
+  );
 
   const onResize = useCallback(() => {
-    setPictureNumber(calculatePictureNumber('carousel'));
-  }, [calculatePictureNumber]);
+    setPictureNumber(calculatePictureNumber('carousel', rows));
+  }, [calculatePictureNumber, rows]);
 
   // Set up eventListener on mount and cleanup on unmount
   useEffect(() => {
@@ -61,7 +69,7 @@ const Carousel = ({ title, queryParams, onClick, sortBy }: CarouselProps) => {
       filters: queryParams as PictureFiltersInput,
       pagination: {
         start: 0,
-        limit: 12,
+        limit: 6 * rows,
       },
       sortBy,
     },

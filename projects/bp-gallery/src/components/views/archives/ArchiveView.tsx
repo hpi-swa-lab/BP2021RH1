@@ -130,6 +130,13 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
             onClick={() => {}}
           />
+
+          <Carousel
+            title='Wissen sie mehr über diese Bilder?'
+            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            onClick={() => {}}
+            rows={1}
+          />
         </div>
       )}
     </ScrollContainer>
