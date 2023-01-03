@@ -7,20 +7,16 @@ import './SearchView.scss';
 import SearchHub from './SearchHub';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
-import { convertSearchParamsToPictureFilters, paramToTime } from './helpers/search-filters';
+import {
+  convertSearchParamsToPictureFilters,
+  paramToTime,
+  SearchType,
+} from './helpers/search-filters';
 import { Button, Typography } from '@mui/material';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { TagType } from '../../../types/additionalFlatTypes';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
 import { SearchInfoTooltip } from './SearchInfoTooltip';
-
-export const SearchType = {
-  ...TagType,
-  DESCRIPTION: 'description',
-  DECADE: 'decade',
-  ALL: 'all',
-};
 
 export const isValidYear = (searchRequest: string) => {
   return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);

@@ -1,3 +1,55 @@
+query getArchive($archiveId: ID!) {
+  archiveTag(id: $archiveId) {
+    data {
+      id
+      attributes {
+        name
+        shortDescription
+        longDescription
+        logo {
+          data {
+            id
+            attributes {
+              width
+              height
+              formats
+              updatedAt
+            }
+          }
+        }
+        showcasePicture {
+          data {
+            id
+            attributes {
+              media {
+                data {
+                  id
+                  attributes {
+                    width
+                    height
+                    formats
+                    url
+                    updatedAt
+                  }
+                }
+              }
+            }
+          }
+        }
+        links {
+          data {
+            id
+            attributes {
+              title
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getPictureInfo($pictureId: ID!) {
   picture(id: $pictureId) {
     data {
@@ -235,6 +287,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
               author
               date
               publishedAt
+              pinned
             }
           }
         }
@@ -254,7 +307,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
 query getPictures(
   $filters: PictureFiltersInput!
   $pagination: PaginationArg!
-  $sortBy: [String] = ["publishedAt:asc"]
+  $sortBy: [String] = ["createdAt:desc"]
 ) {
   pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
     data {
@@ -612,12 +665,28 @@ query getAllCollections {
   }
 }
 
-query getAllArchiveTags {
-  archiveTags {
+query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
+  archiveTags(sort: $sortBy) {
     data {
       id
       attributes {
         name
+        shortDescription
+        showcasePicture {
+          data {
+            id
+            attributes {
+              media {
+                data {
+                  attributes {
+                    url
+                    updatedAt
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -749,6 +818,30 @@ mutation createArchiveTag($name: String!) {
   }
 }
 
+mutation createLink($title: String!, $url: String!, $archive_tag: ID!) {
+  createLink(data: { title: $title, url: $url, archive_tag: $archive_tag }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateLink($id: ID!, $data: LinkInput!) {
+  updateLink(id: $id, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+mutation deleteLink($id: ID!) {
+  deleteLink(id: $id) {
+    data {
+      id
+    }
+  }
+}
+
 mutation mergePersonTags($targetId: ID!, $sourceId: ID!) {
   mergePersonTags(targetId: $targetId, sourceId: $sourceId)
 }
@@ -844,6 +937,14 @@ mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
 
 mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
   updateCollection(id: $collectionId, data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
+  updateArchiveTag(id: $archiveId, data: $data) {
     data {
       id
     }

@@ -23,6 +23,7 @@ import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 import ScrollContainer from '../../common/ScrollContainer';
+import Footer from '../../common/footer/Footer';
 
 const getPictureFilters = (collectionId: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -38,7 +39,17 @@ const getPictureFilters = (collectionId: string) => {
   return filters;
 };
 
-const BrowseView = ({ path }: { path?: string[] }) => {
+const BrowseView = ({
+  path,
+  startpage,
+  parentScrollPos,
+  parentScrollHeight,
+}: {
+  path?: string[];
+  startpage?: boolean;
+  parentScrollPos?: number;
+  parentScrollHeight?: number;
+}) => {
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useContext(DialogContext);
@@ -113,30 +124,39 @@ const BrowseView = ({ path }: { path?: string[] }) => {
     return (
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
-          <div className='collection-picture-display'>
-            {
-              <CollectionDescription
-                id={collection.id}
-                description={collection.description ?? ''}
-                name={collection.name}
+          <div className='browse-container'>
+            <div className='collection-picture-display'>
+              {!startpage && (
+                <CollectionDescription
+                  id={collection.id}
+                  description={collection.description ?? ''}
+                  name={collection.name}
+                />
+              )}
+              {childCount > 0 && (
+                <SubCollections childCollections={collection.child_collections ?? []} path={path} />
+              )}
+              {role >= AuthRole.CURATOR && (
+                <Button startIcon={<Add />} onClick={addCollection}>
+                  {t('curator.createCollection')}
+                </Button>
+              )}
+              <PictureScrollGrid
+                queryParams={getPictureFilters(collection.id)}
+                scrollPos={parentScrollPos ?? scrollPos}
+                scrollHeight={parentScrollHeight ?? scrollHeight}
+                hashbase={collection.name}
+                uploadAreaProps={uploadAreaProps(collection)}
+                bulkOperations={[
+                  removeFromCollection,
+                  linkToCollection,
+                  moveToCollection,
+                  bulkEdit,
+                ]}
               />
-            }
-            {childCount > 0 && (
-              <SubCollections childCollections={collection.child_collections ?? []} path={path} />
-            )}
-            {role >= AuthRole.CURATOR && (
-              <Button startIcon={<Add />} onClick={addCollection}>
-                {t('curator.createCollection')}
-              </Button>
-            )}
-            <PictureScrollGrid
-              queryParams={getPictureFilters(collection.id)}
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              hashbase={collection.name}
-              uploadAreaProps={uploadAreaProps(collection)}
-              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
-            />
+            </div>
+
+            <Footer />
           </div>
         )}
       </ScrollContainer>

@@ -1,0 +1,21 @@
+.MuiCard-root {
+  min-height: 14.5rem;
+
+  h3 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
+
+  .MuiCardContent-root {
+    height: 4rem;
+  }
+  #description {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    margin-top: 8px;
+  }
+}

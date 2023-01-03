@@ -12,6 +12,7 @@ import BulkEditView from '../../views/bulk-edit/BulkEditView';
 import { union } from 'lodash';
 import { Button, Icon } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { CheckBox, CheckBoxOutlineBlank, Delete } from '@mui/icons-material';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -19,6 +20,7 @@ export type PictureGridProps = {
   loading: boolean;
   bulkOperations?: BulkOperation[];
   refetch: () => void;
+  extraAdornments?: PicturePreviewAdornment[];
   viewOnly?: boolean;
 };
 
@@ -28,6 +30,7 @@ const PictureGrid = ({
   loading,
   bulkOperations,
   refetch,
+  extraAdornments,
   viewOnly,
 }: PictureGridProps) => {
   const calculateMaxRowCount = () =>
@@ -116,19 +119,20 @@ const PictureGrid = ({
     setSelectedPictures([]);
   }, []);
 
-  const pictureAdornments =
+  const defaultAdornments =
     role >= AuthRole.CURATOR && !viewOnly
       ? [
           {
-            icon: 'delete',
+            icon: <Delete />,
             onClick: (clickedPicture: FlatPicture) => {
               deletePicture(clickedPicture).then(() => refetch());
             },
             position: 'top-right',
+            title: t('pictureAdornments.delete'),
           } as PicturePreviewAdornment,
           {
             icon: picture =>
-              selectedPictures.includes(picture) ? 'check_box' : 'check_box_outline_blank',
+              selectedPictures.includes(picture) ? <CheckBox /> : <CheckBoxOutlineBlank />,
             onClick: (clickedPicture, event) => {
               if (lastSelectedPicture !== null && event.shiftKey) {
                 const lastIndex = pictures.indexOf(lastSelectedPicture);
@@ -148,9 +152,14 @@ const PictureGrid = ({
               setLastSelectedPicture(clickedPicture);
             },
             position: 'bottom-left',
+            title: t('pictureAdornments.select'),
           } as PicturePreviewAdornment,
         ]
       : undefined;
+
+  const pictureAdornments = extraAdornments
+    ? defaultAdornments?.concat(extraAdornments)
+    : defaultAdornments;
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>

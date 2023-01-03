@@ -1,5 +1,12 @@
 import { PictureFiltersInput } from '../../../../graphql/APIConnector';
-import { SearchType } from '../SearchView';
+import { TagType } from '../../../../types/additionalFlatTypes';
+
+export const SearchType = {
+  ...TagType,
+  DESCRIPTION: 'description',
+  DECADE: 'decade',
+  ALL: 'all',
+};
 
 const buildFilter = (value: string) => {
   return {

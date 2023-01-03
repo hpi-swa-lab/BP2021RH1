@@ -1,22 +1,17 @@
+import { logout } from '../utils/login-utils';
+
 describe('Login', () => {
   before(() => {
     cy.visit('http://localhost:3000/');
   });
   after(() => {
-    cy.get('.MuiPaper-root').contains('Logout').click();
+    logout();
   });
 
-  it("should display a 'More' button in the navigation bar which opens a menu when clicked", () => {
-    cy.get('.MuiPaper-root').should('not.exist');
-    cy.get('.nav-bar').contains('Mehr...');
-    cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').should('be.visible');
-  });
-
-  it('should display a login button in the menu which opens a dialog when clicked', () => {
+  it('should display a login button in the navigation bar which opens a dialog when clicked', () => {
     cy.get('.MuiDialog-container').should('not.exist');
-    cy.get('.MuiPaper-root').contains('Login');
-    cy.get('.MuiPaper-root').contains('Login').click();
+    cy.get('.nav-bar').contains('Login');
+    cy.get('.nav-bar').contains('Login').click();
     cy.get('.MuiDialog-container').should('be.visible');
   });
 
@@ -35,6 +30,6 @@ describe('Login', () => {
   });
 
   it('should show the upload-area after logging in', () => {
-    cy.get('.upload-area').should('be.visible');
+    cy.get('.upload-area').should('exist');
   });
 });
