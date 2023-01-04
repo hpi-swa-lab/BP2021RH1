@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
+import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
 import { asApiPath } from '../../App';
 import PicturePreview, {
   PicturePreviewAdornment,
@@ -20,6 +20,7 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { Star } from '@mui/icons-material';
 import { FALLBACK_PATH } from './../../routes';
 import Carousel from '../../common/Carousel';
+import CategoryCarousel from '../../common/CategoryCarousel';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -137,6 +138,10 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             onClick={() => {}}
             rows={1}
           />
+
+          <CategoryCarousel title='Orte' type={TagType.LOCATION} onClick={() => {}} rows={2} />
+
+          <CategoryCarousel title='Kategorien' type={TagType.KEYWORD} onClick={() => {}} rows={1} />
         </div>
       )}
     </ScrollContainer>

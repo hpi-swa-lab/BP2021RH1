@@ -3,11 +3,11 @@ import React, { MouseEventHandler, useCallback, useEffect, useState } from 'reac
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './Carousel.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
-import { FlatPicture } from '../../types/additionalFlatTypes';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import ScrollContainer from './ScrollContainer';
 import { PictureFiltersInput, useGetPicturesQuery } from '../../graphql/APIConnector';
 import hashCode from '../../helpers/hash-code';
+import { FlatPicture } from '../../types/additionalFlatTypes';
 
 interface CarouselProps {
   title: string;
@@ -84,8 +84,8 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
         <div className='carousel-container'>
           <h1 className='carousel-title'>{title}</h1>
           <hr className='carousel-seperator' />
-          <div className='carousel-picture-grid-container'>
-            {pictures && (
+          {pictures && (
+            <div className='carousel-picture-grid-container'>
               <PictureGrid
                 pictures={pictures.slice(0, pictureNumber)}
                 hashBase={'carousel'}
@@ -93,8 +93,8 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
                 refetch={refetch}
                 //viewOnly={true}
               />
-            )}
-          </div>
+            </div>
+          )}
           <Button
             onClick={onClick}
             className='carousel-show-more-button'
