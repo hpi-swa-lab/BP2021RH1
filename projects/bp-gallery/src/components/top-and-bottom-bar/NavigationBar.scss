@@ -2,32 +2,37 @@
 
 .nav-bar {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
-  background: #e5e5e5;
-  color: #5a5a5a;
-  height: 4rem;
-  width: 100%;
-  z-index: 99;
-  min-height: 0;
-  overflow-x: auto;
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  height: 100%;
+  margin-left: auto;
+  margin-right: 2rem;
+
+  @media only screen and (max-width: $mobile-breakpoint) {
+    height: 4rem;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99;
+    min-height: 0;
+    background: $primaryColor;
+  }
 
   .nav-element {
-    padding: 0.5rem 1rem;
+    padding: 0 1rem;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    color: #5a5a5a;
+    justify-content: center;
     cursor: pointer;
-    margin: 0px 2vmin;
-    height: calc(100% - 1rem);
-    width: 6rem;
+    color: #ffffff;
+    margin: 0px 1vmin;
+    height: 100%;
+    width: 3rem;
     text-decoration: none;
     transition: background 0.3s;
+
     &:not(.active) {
       &:hover {
         background: rgba(255, 255, 255, 0.15);
@@ -35,8 +40,17 @@
     }
 
     &.active {
-      background: white;
-      color: #0a0a0a;
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+    }
+
+    @media only screen and (max-width: $mobile-breakpoint) {
+      flex-direction: column;
+      // color: #5a5a5a !important;
+      &.active {
+        background: white;
+        color: #343434;
+      }
     }
   }
 }

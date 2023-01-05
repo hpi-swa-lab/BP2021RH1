@@ -4,10 +4,9 @@ import './CollectionDescription.scss';
 import { Icon, IconButton } from '@mui/material';
 import getLineBreaks from '../../../helpers/get-linebreaks';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import JoditEditor from 'jodit-react';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
-import defaultJoditConfig from '../../../helpers/jodit-config';
+import Editor from '../../common/editor/Editor';
 
 const CollectionDescription = ({
   description,
@@ -84,9 +83,8 @@ const EditableCollectionDescription = ({
     description.current = initialDescription;
   }, [initialDescription]);
 
-  const config = useMemo(
+  const extraOptions = useMemo(
     () => ({
-      ...defaultJoditConfig,
       readonly: false,
       showPlaceholder: true,
       placeholder: t('curator.insertDescriptionHere'),
@@ -107,9 +105,9 @@ const EditableCollectionDescription = ({
   }, [description, collectionId, updateCollection]);
 
   return (
-    <JoditEditor
+    <Editor
       value={description.current}
-      config={config}
+      extraOptions={extraOptions}
       onBlur={onBlur}
       onChange={newText => {
         description.current = newText;

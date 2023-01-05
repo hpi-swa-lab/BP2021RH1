@@ -3,25 +3,6 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "scripts": {
-    "start": "vite",
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "cy:run": "cypress run",
-    "cy:open": "cypress open",
-    "cy": "start-server-and-test start:e2e http://localhost:3000 cy:open",
-    "cy:ci": "start-server-and-test start:e2e http://localhost:3000 cy:run",
-    "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
-    "lint": "eslint --quiet --cache --ext .ts,.tsx,.js,.jsx .",
-    "format": "prettier --write src && yarn lint --fix",
-    "replace-error-policy": "replace-in-file \"import { gql } from '@apollo/client\" \"import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && replace-in-file \"errorPolicy: 'all'\" \"errorPolicy: 'all' as ErrorPolicy\" ./src/graphql/APIConnector.tsx",
-    "generate-api": "graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx && yarn replace-error-policy",
-    "generate-api:e2e": "env-cmd -f ./environments/.env.test graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix ./src/graphql/APIConnector.tsx && yarn replace-error-policy",
-    "test": "vitest watch",
-    "test:no-watch": "vitest run",
-    "test:coverage": "vitest run --coverage"
-  },
   "dependencies": {
     "@apollo/client": "^3.7.2",
     "@emotion/react": "^11.10.5",
@@ -102,5 +83,33 @@
     "typescript": "^4.9.3",
     "vite": "4.0.0",
     "vitest": "0.26.1"
+  },
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "start:e2e": "env-cmd -f ./environments/.env.test react-scripts start",
+    "cy": "start-server-and-test start:e2e http://localhost:3000 cy:open",
+    "cy:ci": "start-server-and-test start:e2e http://localhost:3000 cy:run",
+    "test": "vitest watch",
+    "test:no-watch": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
+    "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx .",
+    "format": "prettier --write src && yarn lint --fix",
+    "replace-error-policy": "replace-in-file \"import { gql } from '@apollo/client\" \"import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && replace-in-file \"errorPolicy: 'all'\" \"errorPolicy: 'all' as ErrorPolicy\" ./src/graphql/APIConnector.tsx",
+    "generate-api": "graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && yarn replace-error-policy",
+    "generate-api:e2e": "env-cmd -f ./environments/.env.test graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && yarn replace-error-policy"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": []
   }
 }

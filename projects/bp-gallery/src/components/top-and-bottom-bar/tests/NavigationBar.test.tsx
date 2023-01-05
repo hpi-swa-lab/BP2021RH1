@@ -2,17 +2,20 @@ import { renderRoute } from '../../../testUtils';
 import React from 'react';
 import { vi } from 'vitest';
 
-const BrowseViewMock = () => <div>BrowseViewMock</div>;
-vi.doMock('../../views/browse/BrowseView', () => ({ default: BrowseViewMock }));
+const TopBarMock = () => <div>TopBarMock</div>;
+vi.doMock('../TopBar', () => ({ default: TopBarMock }));
+
+const StartViewMock = () => <div>StartViewMock</div>;
+vi.doMock('../../views/start/StartView', () => ({ default: StartViewMock }));
 
 test('Nav bar in browse-context contains search, browse and menu nav link', () => {
-  const { container } = renderRoute('/browse');
+  const { container } = renderRoute('/start');
 
   const navBarLinks = container.getElementsByClassName('nav-element-title');
   expect(navBarLinks).toHaveLength(3);
 
   const actualLinkTitles = Array.from(navBarLinks).map(linkNode => linkNode.innerHTML);
-  ['common.search', 'common.browse', 'common.more'].forEach(expectedLinkTitle =>
+  ['common.search', 'common.start', 'login.title'].forEach(expectedLinkTitle =>
     expect(actualLinkTitles).toContain(expectedLinkTitle)
   );
 });

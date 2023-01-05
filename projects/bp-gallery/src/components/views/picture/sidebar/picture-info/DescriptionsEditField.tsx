@@ -1,5 +1,4 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import JoditEditor from 'jodit-react';
 import { FlatDescription } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { Icon, IconButton } from '@mui/material';
@@ -7,7 +6,7 @@ import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
 import { useRef } from 'react';
-import defaultJoditConfig from '../../../../../helpers/jodit-config';
+import Editor from '../../../../common/editor/Editor';
 
 const DescriptionsEditField = ({
   descriptions,
@@ -27,9 +26,8 @@ const DescriptionsEditField = ({
     setDescriptionState([...descriptions]);
   }, [setDescriptionState, descriptions]);
 
-  const config = useMemo(
+  const extraOptions = useMemo(
     () => ({
-      ...defaultJoditConfig,
       readonly: role < AuthRole.CURATOR,
     }),
     [role]
@@ -78,35 +76,39 @@ const DescriptionsEditField = ({
       {descriptionState.map((description, index) => {
         return (
           <div
-            className='description-content'
+            className='description-wrapper'
             key={isEmpty(description.id) ? `new-description-${index}` : description.id}
           >
-            <JoditEditor
-              value={description.text}
-              config={config}
-              onBlur={newText => onBlurRef.current(newText, description)}
-              onChange={newText => onChangeRef.current(newText, description)}
-            />
-            {role >= AuthRole.CURATOR && (
-              <IconButton
-                onClick={async () => {
-                  const reallyDelete = await dialog({
-                    title: t('curator.reallyDeleteDescription'),
-                    content: '',
-                    preset: DialogPreset.CONFIRM,
-                  });
-                  if (!reallyDelete) {
-                    return;
-                  }
-                  const allDescriptions = descriptionState.filter(d => d !== description);
-                  onChange(allDescriptions.filter(description => !isEmpty(description.text)));
-                  return [...allDescriptions];
-                }}
-                className='delete-button'
-              >
-                <Icon>delete</Icon>
-              </IconButton>
-            )}
+            <div className='description-content'>
+              <Editor
+                value={description.text}
+                extraOptions={extraOptions}
+                onBlur={newText => onBlurRef.current(newText, description)}
+                onChange={newText => onChangeRef.current(newText, description)}
+              />
+            </div>
+            <div>
+              {role >= AuthRole.CURATOR && (
+                <IconButton
+                  onClick={async () => {
+                    const reallyDelete = await dialog({
+                      title: t('curator.reallyDeleteDescription'),
+                      content: '',
+                      preset: DialogPreset.CONFIRM,
+                    });
+                    if (!reallyDelete) {
+                      return;
+                    }
+                    const allDescriptions = descriptionState.filter(d => d !== description);
+                    onChange(allDescriptions.filter(description => !isEmpty(description.text)));
+                    return [...allDescriptions];
+                  }}
+                  className='delete-button'
+                >
+                  <Icon>delete</Icon>
+                </IconButton>
+              )}
+            </div>
           </div>
         );
       })}

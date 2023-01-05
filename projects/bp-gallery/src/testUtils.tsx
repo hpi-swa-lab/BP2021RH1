@@ -42,8 +42,21 @@ export const renderWithAPIMocks = (
 
 // In order to supply the `MockedProvider` with the same config as the real client gets
 const cache = new InMemoryCache({
-  addTypename: false,
   typePolicies: {
+    ...Object.fromEntries(
+      [
+        'ArchiveTag',
+        'Collection',
+        'Comment',
+        'Description',
+        'KeywordTag',
+        'LocationTag',
+        'PersonTag',
+        'Picture',
+        'TimeRangeTag',
+        'UploadFile',
+      ].map(entity => [entity, { merge: true }])
+    ),
     Query: {
       fields: {
         pictures: {

@@ -5,6 +5,7 @@ import {
   ComponentCommonSynonyms,
   Description,
   KeywordTag,
+  Link,
   LocationTag,
   PersonTag,
   Picture,
@@ -52,7 +53,10 @@ export type FlatPersonTagWithoutRelations = ID & Omit<PersonTag, 'pictures' | 'v
 export type FlatTimeRangeTagWithoutRelations = ID &
   Omit<TimeRangeTag, 'pictures' | 'verified_pictures'>;
 
-export type FlatArchiveTagWithoutRelations = ID & Omit<ArchiveTag, 'pictures'>;
+export type FlatArchiveTagWithoutRelations = ID &
+  Omit<ArchiveTag, 'pictures' | 'links' | 'showcasePicture' | 'logo'>;
+
+export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -84,8 +88,15 @@ export type FlatCollection = FlatCollectionWithoutRelations & {
   parent_collections?: FlatCollectionWithoutRelations[];
 };
 
+export type FlatLink = FlatLinkWithoutRelations & {
+  archive_tag?: FlatArchiveTagWithoutRelations;
+};
+
 export type FlatArchiveTag = FlatArchiveTagWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
+  links?: FlatLinkWithoutRelations[];
+  showcasePicture?: FlatPictureWithoutRelations;
+  logo?: UploadFile;
 };
 
 export type FlatPicture = FlatPictureWithoutRelations & {

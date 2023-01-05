@@ -6,13 +6,14 @@ import {
 } from '../components/views/picture/helpers/next-prev-picture';
 
 const usePrefetchPictureHook = (id: string, siblings?: string[]) => {
-  const [siblingQuery] = useGetPictureInfoLazyQuery();
+  const [previousQuery] = useGetPictureInfoLazyQuery();
+  const [nextQuery] = useGetPictureInfoLazyQuery();
 
   useEffect(() => {
     if (siblings?.includes(id)) {
       const previousId = getPreviousPictureId(id, siblings);
       if (previousId) {
-        siblingQuery({
+        previousQuery({
           variables: {
             pictureId: previousId,
           },
@@ -20,14 +21,14 @@ const usePrefetchPictureHook = (id: string, siblings?: string[]) => {
       }
       const nextId = getNextPictureId(id, siblings);
       if (nextId) {
-        siblingQuery({
+        nextQuery({
           variables: {
             pictureId: nextId,
           },
         });
       }
     }
-  }, [id, siblings, siblingQuery]);
+  }, [id, siblings, previousQuery, nextQuery]);
 };
 
 export default usePrefetchPictureHook;

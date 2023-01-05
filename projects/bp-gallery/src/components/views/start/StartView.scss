@@ -1,0 +1,31 @@
+.main-start-view {
+  max-width: 1200px;
+  margin: auto;
+
+  .welcome-container {
+    padding: 1rem 2rem;
+    background: white;
+
+    .welcome {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      h1 {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        text-align: center;
+      }
+    }
+  }
+  .archives {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 1rem;
+  }
+}

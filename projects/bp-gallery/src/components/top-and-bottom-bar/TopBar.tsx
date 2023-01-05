@@ -1,9 +1,11 @@
 import { Button, Icon } from '@mui/material';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { History } from 'history';
+import { History, Location } from 'history';
 import './TopBar.scss';
+import SearchBar from '../views/search/SearchBar';
+import NavigationBar from './NavigationBar';
 
 type LocationProps = {
   state: {
@@ -11,35 +13,48 @@ type LocationProps = {
   };
 };
 
-const TopBar = () => {
+const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
 
   const history: History = useHistory();
-  const onDefaultBrowseView = history.location.pathname.endsWith('browse');
+  const onDefaultBrowseView = history.location.pathname.endsWith('start');
+  const { search }: Location = useLocation();
 
   return (
     <div className='top-bar'>
-      <div className='actions'>
-        {(history.location as LocationProps).state?.showBack && (
-          <Button
-            onClick={() => {
-              history.go(-1);
-            }}
+      <div className='action-wrapper'>
+        {(history.location as LocationProps).state?.showBack ? (
+          <div className='actions'>
+            <Button
+              onClick={() => {
+                history.go(-1);
+              }}
+            >
+              <Icon>arrow_back</Icon>
+              {t('common.back')}
+            </Button>
+          </div>
+        ) : (
+          <div
+            className={`bh-logo ${!onDefaultBrowseView ? 'clickable' : ''}`}
+            title={!onDefaultBrowseView ? t('common.back-to-home') : undefined}
+            onClick={
+              !onDefaultBrowseView ? () => history.push('/start', { showBack: false }) : undefined
+            }
           >
-            <Icon>arrow_back</Icon>
-            {t('common.back')}
-          </Button>
+            <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
+          </div>
         )}
       </div>
-      <div
-        className={`bh-logo ${!onDefaultBrowseView ? 'clickable' : ''}`}
-        title={!onDefaultBrowseView ? t('common.back-to-home') : undefined}
-        onClick={
-          !onDefaultBrowseView ? () => history.push('/browse', { showBack: true }) : undefined
-        }
-      >
-        <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
+      <div className='search-div'>
+        <SearchBar
+          searchParams={new URLSearchParams(search)}
+          isAllSearchActive={true}
+          isTopBarSearch={true}
+        />
       </div>
+      <div className='divider' />
+      {!isMobile && <NavigationBar />}
     </div>
   );
 };

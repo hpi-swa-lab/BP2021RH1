@@ -5,6 +5,9 @@ import { GetPicturesSearchMocks } from './mocks';
 import { convertSearchParamsToPictureFilters } from '../helpers/search-filters';
 import { vi } from 'vitest';
 
+const TopBarMock = () => <div>TopBarMock</div>;
+jest.mock('../../../top-and-bottom-bar/TopBar', () => TopBarMock);
+
 const SearchHubMock = () => <div>SearchHubMock</div>;
 vi.doMock('../SearchHub', () => ({ default: SearchHubMock }));
 
@@ -41,13 +44,13 @@ describe('SearchView called with keyword which does not match any pictures', () 
 
   it('should not render a SearchBar', async () => {
     await waitFor(() => {
-      expect(() => screen.getAllByText('SearchBarMock')).toThrow();
+      expect(() => screen.getByText('SearchBarMock')).toThrow();
     });
   });
 
   it('should not render the SearchHub', async () => {
     await waitFor(() => {
-      expect(() => screen.getAllByText('SearchHubMock')).toThrow();
+      expect(() => screen.getByText('SearchHubMock')).toThrow();
     });
   });
 });
@@ -78,7 +81,7 @@ describe('SearchView called with keyword which matches at least one picture', ()
 
   it('should not render the SearchHub', async () => {
     await waitFor(() => {
-      expect(() => screen.getAllByText('SearchHubMock')).toThrow();
+      expect(() => screen.getByText('SearchHubMock')).toThrow();
     });
   });
 });
