@@ -32,7 +32,7 @@ const CategoryCarousel = ({
   title,
   type,
   onClick,
-  rows = 2,
+  rows,
   queryParams,
   seperator,
 }: CategoryCarouselProps) => {
@@ -68,7 +68,7 @@ const CategoryCarousel = ({
     variables: {
       filters: queryParams,
       start: 0,
-      limit: rows * 3,
+      limit: rows ? rows * 3 : rows,
     },
   });
 
@@ -86,7 +86,7 @@ const CategoryCarousel = ({
           <div className='carousel-collection-grid-container'>
             {flattenedTags && (
               <ItemList
-                items={flattenedTags.slice(0, rowCount * rows).map(tag => ({
+                items={flattenedTags.slice(0, rows ? rowCount * rows : -1).map(tag => ({
                   name: tag.name,
                   background: tag.thumbnail.length
                     ? asApiPath(
