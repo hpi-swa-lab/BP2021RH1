@@ -6,20 +6,23 @@ import PictureSidebar from '../sidebar/PictureSidebar';
 import { CommentMocks, PictureMocks } from './mocks';
 import { wrapInPictureContextMocks } from './pictureTestUtils';
 import { renderWithAPIMocks } from '../../../../testUtils';
+import { vi } from 'vitest';
 
-const CommentsContainerMock = jest.fn();
+const CommentsContainerMock = vi.fn();
 const CommentsContainerMockComponent = (props: any) => {
   CommentsContainerMock(props);
   return <div>CommentsContainerMock</div>;
 };
-jest.mock('../sidebar/comments/CommentsContainer', () => CommentsContainerMockComponent);
+vi.doMock('../sidebar/comments/CommentsContainer', () => ({
+  default: CommentsContainerMockComponent,
+}));
 
-const PictureInfoMock = jest.fn();
+const PictureInfoMock = vi.fn();
 const PictureInfoMockComponent = (props: any) => {
   PictureInfoMock(props);
   return <div>PictureInfoMock</div>;
 };
-jest.mock('../sidebar/picture-info/PictureInfo', () => PictureInfoMockComponent);
+vi.doMock('../sidebar/picture-info/PictureInfo', () => ({ default: PictureInfoMockComponent }));
 
 const renderWithAPIMocksAndPictureContextMocks = (component: ReactComponentElement<any>) => {
   return renderWithAPIMocks(wrapInPictureContextMocks(component));

@@ -2,8 +2,9 @@ import { screen } from '@testing-library/react';
 import React from 'react';
 import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import { renderWithPictureContextMocks } from './pictureTestUtils';
+import { vi } from 'vitest';
 
-const setSideBarOpenMock = jest.fn();
+const setSideBarOpenMock = vi.fn();
 
 describe('PictureViewNavigationBar', () => {
   it('should display the open/close button', async () => {

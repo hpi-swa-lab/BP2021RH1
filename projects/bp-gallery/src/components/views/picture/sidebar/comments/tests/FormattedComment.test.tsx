@@ -6,6 +6,14 @@ import { renderWithAPIMocks } from '../../../../../../testUtils';
 import { AuthRole, AuthContext } from '../../../../../provider/AuthProvider';
 import FormattedComment from '../FormattedComment';
 import { comments } from './mocks';
+import { vi } from 'vitest';
+
+const PictureViewMock = vi.fn();
+const PictureViewMockComponent = (props: any) => {
+  PictureViewMock(props);
+  return <div>PictureViewMock</div>;
+};
+vi.doMock('../views/picture/PictureView', () => ({ default: PictureViewMockComponent }));
 
 const mocks = [
   {

@@ -1,8 +1,9 @@
 import { renderRoute } from '../../../testUtils';
 import React from 'react';
+import { vi } from 'vitest';
 
 const BrowseViewMock = () => <div>BrowseViewMock</div>;
-jest.mock('../../views/browse/BrowseView', () => BrowseViewMock);
+vi.doMock('../../views/browse/BrowseView', () => ({ default: BrowseViewMock }));
 
 test('Nav bar in browse-context contains search, browse and menu nav link', () => {
   const { container } = renderRoute('/browse');

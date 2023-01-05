@@ -1,6 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { renderRoute } from '../../testUtils';
+import { vi } from 'vitest';
 
 test('Route mechanism renders the App component', () => {
   const { container } = renderRoute('/');
@@ -8,12 +9,12 @@ test('Route mechanism renders the App component', () => {
   expect(container.firstChild).toHaveClass('App');
 });
 
-const BrowseViewMock = jest.fn();
+const BrowseViewMock = vi.fn();
 const BrowseViewMockComponent = (props: any) => {
   BrowseViewMock(props);
   return <div>BrowseViewMock</div>;
 };
-jest.mock('../views/browse/BrowseView', () => BrowseViewMockComponent);
+vi.doMock('../views/browse/BrowseView', () => ({ default: BrowseViewMockComponent }));
 
 test('Accessing the browse route renders BrowseView', () => {
   renderRoute('/browse');
@@ -22,12 +23,12 @@ test('Accessing the browse route renders BrowseView', () => {
   expect(browseView).toBeInTheDocument();
 });
 
-const SearchViewMock = jest.fn();
+const SearchViewMock = vi.fn();
 const SearchViewMockComponent = (props: any) => {
   SearchViewMock(props);
   return <div>SearchViewMock</div>;
 };
-jest.mock('../views/search/SearchView', () => SearchViewMockComponent);
+vi.doMock('../views/search/SearchView', () => ({ default: SearchViewMockComponent }));
 
 test('Accessing the search route renders SearchView', () => {
   renderRoute('/search');
@@ -43,12 +44,12 @@ test('Route mechanism redirects empty route to the BrowseView component', () => 
   expect(browseView).toBeInTheDocument();
 });
 
-const PictureViewMock = jest.fn();
+const PictureViewMock = vi.fn();
 const PictureViewMockComponent = (props: any) => {
   PictureViewMock(props);
   return <div>PictureViewMock</div>;
 };
-jest.mock('../views/picture/PictureView', () => PictureViewMockComponent);
+vi.doMock('../views/picture/PictureView', () => ({ default: PictureViewMockComponent }));
 
 test('Route mechanism renders the PictureView to a picture', () => {
   renderRoute('/picture/1');
@@ -64,7 +65,7 @@ test('Route mechanism renders the PictureView to a picture', () => {
 });
 
 const DemoMock = () => <div>DemoMock</div>;
-jest.mock('../../prototypes/demo', () => DemoMock);
+vi.doMock('../../prototypes/demo', () => ({ default: DemoMock }));
 
 test('Route mechanism renders the Demo component', () => {
   renderRoute('/prototypes/demo');
@@ -74,7 +75,7 @@ test('Route mechanism renders the Demo component', () => {
 });
 
 const TimeLineDemo = () => <div>TimelineDemoMock</div>;
-jest.mock('../../prototypes/timeline-demo', () => TimeLineDemo);
+vi.doMock('../../prototypes/timeline-demo', () => ({ default: TimeLineDemo }));
 
 test('Route mechanism renders the TimeLineDemo component', () => {
   renderRoute('/prototypes/timeline-demo');

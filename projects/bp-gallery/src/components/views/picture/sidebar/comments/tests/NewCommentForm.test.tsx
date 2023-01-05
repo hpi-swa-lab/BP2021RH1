@@ -3,8 +3,9 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import { renderWithAPIMocks } from '../../../../../../testUtils';
 import NewCommentForm from '../NewCommentForm';
 import { MOCKED_COMMENT_POST_DATE, PostCommentDocumentMocks } from './mocks';
+import { vi } from 'vitest';
 
-jest.mock('../helpers/getCurrentDateTimeString', () => () => MOCKED_COMMENT_POST_DATE);
+vi.doMock('../helpers/getCurrentDateTimeString', () => MOCKED_COMMENT_POST_DATE);
 
 describe('NewCommentForm', () => {
   it('contains two input fields and a submit button', () => {

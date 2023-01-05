@@ -4,17 +4,18 @@ import { renderWithAPIMocks } from '../../../../testUtils';
 import { asApiPath } from '../../../App';
 import { GetPictureInfoDocumentMocks } from './mocks';
 import PictureView from '../PictureView';
+import { vi } from 'vitest';
 
-const PictureViewUIMock = jest.fn();
+const PictureViewUIMock = vi.fn();
 const PictureViewUIMockComponent = (props: any) => {
   PictureViewUIMock(props);
   return <div>PictureViewUIMock</div>;
 };
-jest.mock('../overlay/PictureViewUI', () => PictureViewUIMockComponent);
+vi.doMock('../overlay/PictureViewUI', () => ({ default: PictureViewUIMockComponent }));
 
-jest.mock('react-router-dom', () => ({
+vi.doMock('react-router-dom', () => ({
   useHistory: () => ({
-    block: jest.fn(() => jest.fn()),
+    block: vi.fn(() => vi.fn()),
   }),
 }));
 

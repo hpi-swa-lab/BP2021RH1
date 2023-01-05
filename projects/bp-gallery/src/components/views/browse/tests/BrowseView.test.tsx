@@ -3,30 +3,30 @@ import { screen, waitFor } from '@testing-library/react';
 import BrowseView from '../BrowseView';
 import { renderWithAPIMocks } from '../../../../testUtils';
 import { GetCollectionInfoDocumentMocks, GetRootCollectionMocks } from './mocks';
+import { vi } from 'vitest';
 
-const CollectionDescriptionMock = jest.fn();
+const CollectionDescriptionMock = vi.fn();
 const CollectionDescriptionMockComponent = (props: any) => {
   CollectionDescriptionMock(props);
   return <div>CollectionDescriptionMock</div>;
 };
-jest.mock('../CollectionDescription', () => CollectionDescriptionMockComponent);
+vi.doMock('../CollectionDescription', () => ({ default: CollectionDescriptionMockComponent }));
 
-const SubCollectionsMock = jest.fn();
+const SubCollectionsMock = vi.fn();
 const SubCollectionsMockComponent = (props: any) => {
   SubCollectionsMock(props);
   return <div>SubCollectionsMock</div>;
 };
-jest.mock('../SubCollections', () => SubCollectionsMockComponent);
+vi.doMock('../SubCollections', () => ({ default: SubCollectionsMockComponent }));
 
-const PictureScrollGridMock = jest.fn();
+const PictureScrollGridMock = vi.fn();
 const PictureScrollGridMockComponent = (props: any) => {
   PictureScrollGridMock(props);
   return <div>PictureScrollGridMock</div>;
 };
-jest.mock(
-  '../../../common/picture-gallery/PictureScrollGrid',
-  () => PictureScrollGridMockComponent
-);
+vi.doMock('../../../common/picture-gallery/PictureScrollGrid', () => ({
+  default: PictureScrollGridMockComponent,
+}));
 
 const BrowseViewMocks = [...GetCollectionInfoDocumentMocks, ...GetRootCollectionMocks];
 

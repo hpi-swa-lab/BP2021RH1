@@ -4,6 +4,7 @@ import { renderWithPictureContextMocks } from './pictureTestUtils';
 import PictureNavigationButtons, {
   PictureNavigationTarget,
 } from '../overlay/PictureNavigationButtons';
+import { vi } from 'vitest';
 
 describe('PictureViewNavigationButtons', () => {
   it('should show next button if there is a next picture', async () => {
@@ -47,7 +48,7 @@ describe('PictureViewNavigationButtons', () => {
   });
 
   it('should call navigatePicture when buttons are clicked', async () => {
-    const navigatePictureMock = jest.fn();
+    const navigatePictureMock = vi.fn();
     renderWithPictureContextMocks(<PictureNavigationButtons />, {
       hasPrevious: true,
       hasNext: true,

@@ -3,13 +3,18 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
+import { Window } from 'happy-dom';
+
+const window = new Window();
+const document = window.document;
 
 // we need this to test components that are using i18nex
-jest.mock('react-i18next', () => ({
+vi.doMock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: any) => key }),
 }));
 
-jest.mock('./i18n', () => ({
+vi.doMock('./i18n', () => ({
   t: (key: any) => key,
 }));
 
@@ -17,7 +22,7 @@ jest.mock('./i18n', () => ({
 document.createRange = () => {
   const range = new Range();
 
-  range.getBoundingClientRect = jest.fn(() => {
+  range.getBoundingClientRect = vi.fn(() => {
     return {
       x: 0,
       y: 0,
@@ -35,7 +40,7 @@ document.createRange = () => {
     return {
       item: () => null,
       length: 0,
-      [Symbol.iterator]: jest.fn(),
+      [Symbol.iterator]: vi.fn(),
     };
   };
 
@@ -49,4 +54,4 @@ document.createRange = () => {
   y: 0,
 });
 
-(window.HTMLDivElement.prototype as any).scroll = () => {};
+(window.HTMLElement.prototype as any).scroll = () => {};

@@ -3,12 +3,13 @@ import { screen, waitFor } from '@testing-library/react';
 import { renderRouteWithAPIMocks } from '../../../../testUtils';
 import { GetPicturesSearchMocks } from './mocks';
 import { convertSearchParamsToPictureFilters } from '../helpers/search-filters';
+import { vi } from 'vitest';
 
 const SearchHubMock = () => <div>SearchHubMock</div>;
-jest.mock('../SearchHub', () => SearchHubMock);
+vi.doMock('../SearchHub', () => ({ default: SearchHubMock }));
 
 const SearchBarMock = () => <div>SearchBarMock</div>;
-jest.mock('../SearchBar', () => SearchBarMock);
+vi.doMock('../SearchBar', () => ({ default: SearchBarMock }));
 
 describe('SearchView called without any parameters', () => {
   beforeEach(() => renderRouteWithAPIMocks('/search', []));
