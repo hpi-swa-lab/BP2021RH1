@@ -13,16 +13,27 @@ import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import { asApiPath } from '../App';
 import { SearchType } from '../views/search/helpers/search-filters';
+import {
+  KeywordTagFiltersInput,
+  LocationTagFiltersInput,
+  PersonTagFiltersInput,
+} from '../../graphql/APIConnector';
 
 interface CategoryCarouselProps {
   title: string;
   type: TagType;
   onClick: MouseEventHandler<HTMLButtonElement>;
-  sortBy?: string[];
   rows?: number;
+  queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
 }
 
-const CategoryCarousel = ({ title, type, onClick, sortBy, rows = 2 }: CategoryCarouselProps) => {
+const CategoryCarousel = ({
+  title,
+  type,
+  onClick,
+  rows = 2,
+  queryParams,
+}: CategoryCarouselProps) => {
   const history: History = useHistory();
 
   const calculateMaxRowCount = () => {
@@ -53,6 +64,7 @@ const CategoryCarousel = ({ title, type, onClick, sortBy, rows = 2 }: CategoryCa
 
   const { data, loading, error, fetchMore } = tagsWithThumbnailQuery({
     variables: {
+      filters: queryParams,
       start: 0,
       limit: rows * 3,
     },

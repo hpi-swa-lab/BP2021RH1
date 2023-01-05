@@ -134,14 +134,26 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
 
           <Carousel
             title='Wissen sie mehr über diese Bilder?'
-            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            queryParams={{ archive_tag: { id: { not: { eq: archiveId } } } }}
             onClick={() => {}}
             rows={1}
           />
 
-          <CategoryCarousel title='Orte' type={TagType.LOCATION} onClick={() => {}} rows={2} />
+          <CategoryCarousel
+            title='Orte'
+            type={TagType.LOCATION}
+            onClick={() => {}}
+            rows={2}
+            queryParams={{ verified_pictures: { archive_tag: { id: { eq: archiveId } } } }}
+          />
 
-          <CategoryCarousel title='Kategorien' type={TagType.KEYWORD} onClick={() => {}} rows={1} />
+          <CategoryCarousel
+            title='Unsere Kategorien'
+            type={TagType.KEYWORD}
+            onClick={() => {}}
+            rows={3}
+            queryParams={{ verified_pictures: { archive_tag: { id: { eq: archiveId } } } }}
+          />
         </div>
       )}
     </ScrollContainer>

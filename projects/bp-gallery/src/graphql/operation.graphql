@@ -446,8 +446,8 @@ mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime
   }
 }
 
-query getKeywordTagsWithThumbnail($start: Int, $limit: Int) {
-  keywordTags(pagination: { start: $start, limit: $limit }) {
+query getKeywordTagsWithThumbnail($filters: KeywordTagFiltersInput = {}, $start: Int, $limit: Int) {
+  keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
     data {
       id
       attributes {
@@ -513,8 +513,12 @@ mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsI
   }
 }
 
-query getLocationTagsWithThumbnail($start: Int, $limit: Int) {
-  locationTags(pagination: { start: $start, limit: $limit }) {
+query getLocationTagsWithThumbnail(
+  $filters: LocationTagFiltersInput = {}
+  $start: Int
+  $limit: Int
+) {
+  locationTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
     data {
       id
       attributes {
@@ -579,8 +583,8 @@ mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonyms
     }
   }
 }
-query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
-  personTags(pagination: { start: $start, limit: $limit }) {
+query getPersonTagsWithThumbnail($filters: PersonTagFiltersInput = {}, $start: Int, $limit: Int) {
+  personTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
     data {
       id
       attributes {

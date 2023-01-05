@@ -2404,6 +2404,7 @@ export type PostCommentMutation = {
 };
 
 export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
+  filters?: InputMaybe<KeywordTagFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
@@ -2518,6 +2519,7 @@ export type UpdateKeywordSynonymsMutation = {
 };
 
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
+  filters?: InputMaybe<LocationTagFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
@@ -2632,6 +2634,7 @@ export type UpdateLocationSynonymsMutation = {
 };
 
 export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
+  filters?: InputMaybe<PersonTagFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
@@ -4234,8 +4237,12 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetKeywordTagsWithThumbnailDocument = gql`
-  query getKeywordTagsWithThumbnail($start: Int, $limit: Int) {
-    keywordTags(pagination: { start: $start, limit: $limit }) {
+  query getKeywordTagsWithThumbnail(
+    $filters: KeywordTagFiltersInput = {}
+    $start: Int
+    $limit: Int
+  ) {
+    keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
       data {
         id
         attributes {
@@ -4284,6 +4291,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
  * @example
  * const { data, loading, error } = useGetKeywordTagsWithThumbnailQuery({
  *   variables: {
+ *      filters: // value for 'filters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
  *   },
@@ -4502,8 +4510,12 @@ export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetLocationTagsWithThumbnailDocument = gql`
-  query getLocationTagsWithThumbnail($start: Int, $limit: Int) {
-    locationTags(pagination: { start: $start, limit: $limit }) {
+  query getLocationTagsWithThumbnail(
+    $filters: LocationTagFiltersInput = {}
+    $start: Int
+    $limit: Int
+  ) {
+    locationTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
       data {
         id
         attributes {
@@ -4552,6 +4564,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
  * @example
  * const { data, loading, error } = useGetLocationTagsWithThumbnailQuery({
  *   variables: {
+ *      filters: // value for 'filters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
  *   },
@@ -4775,8 +4788,8 @@ export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetPersonTagsWithThumbnailDocument = gql`
-  query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
-    personTags(pagination: { start: $start, limit: $limit }) {
+  query getPersonTagsWithThumbnail($filters: PersonTagFiltersInput = {}, $start: Int, $limit: Int) {
+    personTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
       data {
         id
         attributes {
@@ -4825,6 +4838,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
  * @example
  * const { data, loading, error } = useGetPersonTagsWithThumbnailQuery({
  *   variables: {
+ *      filters: // value for 'filters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
  *   },
