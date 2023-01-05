@@ -141,6 +141,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
 
           <CategoryCarousel
             title='Orte'
+            seperator={true}
             type={TagType.LOCATION}
             onClick={() => {}}
             rows={2}
@@ -149,6 +150,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
 
           <CategoryCarousel
             title='Unsere Kategorien'
+            seperator={true}
             type={TagType.KEYWORD}
             onClick={() => {}}
             rows={3}

@@ -20,11 +20,12 @@ import {
 } from '../../graphql/APIConnector';
 
 interface CategoryCarouselProps {
-  title: string;
+  title?: string;
   type: TagType;
   onClick: MouseEventHandler<HTMLButtonElement>;
   rows?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
+  seperator?: boolean;
 }
 
 const CategoryCarousel = ({
@@ -33,6 +34,7 @@ const CategoryCarousel = ({
   onClick,
   rows = 2,
   queryParams,
+  seperator,
 }: CategoryCarouselProps) => {
   const history: History = useHistory();
 
@@ -79,8 +81,8 @@ const CategoryCarousel = ({
     <ScrollContainer>
       {(scrollPos: number, scrollHeight: number) => (
         <div className='carousel-container'>
-          <h1 className='carousel-title'>{title}</h1>
-          <hr className='carousel-seperator' />
+          {title && <h1 className='carousel-title'>{title}</h1>}
+          {seperator && <hr className='carousel-seperator' />}
           <div className='carousel-collection-grid-container'>
             {flattenedTags && (
               <ItemList
