@@ -9,6 +9,7 @@ import Loading from '../../common/Loading';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import {
   DataGrid,
+  GridCheckIcon,
   GridColDef,
   GridRenderCellParams,
   GridRowModel,
@@ -44,6 +45,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
     updateSynonymsMutationSource,
     mergeTagsMutationSource,
     deleteTagMutationSource,
+    updateRootMutationSource,
   } = useGenericTagEndpoints(type);
 
   const { data, loading, error, refetch } = allTagsQuery();
@@ -56,6 +58,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
     flattenedTags?.forEach(tag => {
       tags[tag.id] = tag;
     });
+    console.log(tags);
     return tags;
   }, [flattenedTags]);
 
@@ -80,6 +83,13 @@ const TagTableView = ({ type }: { type: TagType }) => {
 
   const [deleteTagMutation] = deleteTagMutationSource({
     onCompleted: _ => {
+      refetch();
+    },
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const [updateRootMutation] = updateRootMutationSource({
+    onCompleted: (_: any) => {
       refetch();
     },
   });
@@ -149,6 +159,26 @@ const TagTableView = ({ type }: { type: TagType }) => {
     [addSynonym, tags, openAlert, updateTagNameMutation, t]
   );
 
+  const additionalColumns = useMemo(() => {
+    return type === TagType.LOCATION || type === TagType.KEYWORD
+      ? [
+          {
+            field: 'root',
+            headerName:
+              type === TagType.LOCATION ? t('curator.rootLocation') : t('curator.rootKeyword'),
+            flex: 1,
+            renderCell: (
+              params: GridRenderCellParams<{
+                root: boolean;
+              }>
+            ) => {
+              return params.value?.root ? <GridCheckIcon /> : <></>;
+            },
+          },
+        ]
+      : [];
+  }, [t, type]);
+
   const columns: GridColDef[] = useMemo(
     () => [
       { field: 'name', headerName: 'Name', flex: 2, editable: true },
@@ -177,6 +207,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
         flex: 2,
         editable: true,
       },
+      ...additionalColumns,
       {
         field: 'delete',
         headerName: t('common.delete'),
@@ -199,7 +230,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
         },
       },
     ],
-    [deleteTag, t, deleteSynonym]
+    [deleteTag, t, deleteSynonym, additionalColumns]
   );
 
   const rows: GridRowsProp = useMemo(
@@ -210,6 +241,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
           name: tag.name,
           synonyms: { synonyms: tag.synonyms, tagId: tag.id },
           add: '',
+          root: { root: tag.root },
           delete: { tagId: tag.id, tagName: tag.name },
         } as TagRow;
       }),
@@ -241,6 +273,33 @@ const TagTableView = ({ type }: { type: TagType }) => {
     }
   }, [openAlert, mergeTagsMutation, selectedRowIds, getSelectedRows, t]);
 
+  const selectRoot = useCallback(() => {
+    const selectedRows: GridRowsProp = getSelectedRows(selectedRowIds);
+    selectedRows.forEach(selectedRow => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      updateRootMutation({
+        variables: {
+          tagId: selectedRow.id as string,
+          root: true,
+          parentTag: null,
+        },
+      });
+    });
+  }, [selectedRowIds, getSelectedRows, updateRootMutation]);
+
+  const unselectRoot = useCallback(() => {
+    const selectedRows: GridRowsProp = getSelectedRows(selectedRowIds);
+    selectedRows.forEach(selectedRow => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      updateRootMutation({
+        variables: {
+          tagId: selectedRow.id as string,
+          root: false,
+        },
+      });
+    });
+  }, [selectedRowIds, getSelectedRows, updateRootMutation]);
+
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
@@ -251,6 +310,18 @@ const TagTableView = ({ type }: { type: TagType }) => {
         <Button onClick={mergeTags} className='merge-button'>
           {t('curator.mergeTag')}
         </Button>
+        {type === TagType.LOCATION ||
+          (type === TagType.KEYWORD && (
+            <>
+              <Button onClick={selectRoot} className='merge-button'>
+                {t('curator.selectRoot')}
+              </Button>
+              <Button onClick={unselectRoot} className='merge-button'>
+                {t('curator.unselectRoot')}
+              </Button>
+            </>
+          ))}
+
         <DataGrid
           className='table'
           rows={rows}

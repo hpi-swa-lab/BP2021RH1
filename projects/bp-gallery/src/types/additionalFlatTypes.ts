@@ -123,6 +123,7 @@ export interface FlatTag {
   id: string;
   name: string;
   synonyms?: (ComponentCommonSynonyms | undefined)[];
+  root?: boolean;
 }
 
 export enum TagType {

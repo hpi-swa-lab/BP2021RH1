@@ -150,6 +150,10 @@
     "selectOption": "Option auswählen",
     "selectCollection": "Collection auswählen",
     "selectArchiveTag": "Archiv auswählen",
+    "selectRoot": "Als Wurzel markieren",
+    "unselectRoot": "Als Nicht-Wurzel markieren",
+    "rootLocation": "Wurzel-Ort?",
+    "rootKeyword": "Wurzel-Schlagwort?",
     "saveStatus": {
       "saving": "Speichern...",
       "saved": "Gespeichert.",

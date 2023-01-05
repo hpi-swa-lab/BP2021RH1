@@ -486,12 +486,21 @@ export type JsonFilterInput = {
 };
 
 export type KeywordTag = {
+  childTags?: Maybe<KeywordTagRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
+  parentTag?: Maybe<KeywordTagEntityResponse>;
   pictures?: Maybe<PictureRelationResponseCollection>;
+  root?: Maybe<Scalars['Boolean']>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
+};
+
+export type KeywordTagChildTagsArgs = {
+  filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type KeywordTagPicturesArgs = {
@@ -530,19 +539,25 @@ export type KeywordTagEntityResponseCollection = {
 
 export type KeywordTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
+  childTags?: InputMaybe<KeywordTagFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<KeywordTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
+  parentTag?: InputMaybe<KeywordTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  root?: InputMaybe<BooleanFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
 
 export type KeywordTagInput = {
+  childTags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   name?: InputMaybe<Scalars['String']>;
+  parentTag?: InputMaybe<Scalars['ID']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  root?: InputMaybe<Scalars['Boolean']>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
@@ -596,13 +611,22 @@ export type LinkRelationResponseCollection = {
 };
 
 export type LocationTag = {
+  childTags?: Maybe<LocationTagRelationResponseCollection>;
   coordinates?: Maybe<ComponentLocationCoordinates>;
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
+  parentTag?: Maybe<LocationTagEntityResponse>;
   pictures?: Maybe<PictureRelationResponseCollection>;
+  root?: Maybe<Scalars['Boolean']>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
+};
+
+export type LocationTagChildTagsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type LocationTagPicturesArgs = {
@@ -641,20 +665,26 @@ export type LocationTagEntityResponseCollection = {
 
 export type LocationTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  childTags?: InputMaybe<LocationTagFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<LocationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  parentTag?: InputMaybe<LocationTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  root?: InputMaybe<BooleanFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
 
 export type LocationTagInput = {
+  childTags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
   name?: InputMaybe<Scalars['String']>;
+  parentTag?: InputMaybe<Scalars['ID']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  root?: InputMaybe<Scalars['Boolean']>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
@@ -2481,6 +2511,7 @@ export type GetAllKeywordTagsQuery = {
           attributes?:
             | {
                 name: string;
+                root?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
               }
             | null
@@ -2595,6 +2626,7 @@ export type GetAllLocationTagsQuery = {
           attributes?:
             | {
                 name: string;
+                root?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
               }
             | null
@@ -2626,6 +2658,32 @@ export type UpdateLocationSynonymsMutationVariables = Exact<{
 
 export type UpdateLocationSynonymsMutation = {
   updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateRootLocationMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  root: Scalars['Boolean'];
+  parentTag?: InputMaybe<Scalars['ID']>;
+}>;
+
+export type UpdateRootLocationMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateRootKeywordMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  root: Scalars['Boolean'];
+  parentTag?: InputMaybe<Scalars['ID']>;
+}>;
+
+export type UpdateRootKeywordMutation = {
+  updateKeywordTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -4338,6 +4396,7 @@ export const GetAllKeywordTagsDocument = gql`
           synonyms {
             name
           }
+          root
         }
       }
     }
@@ -4603,6 +4662,7 @@ export const GetAllLocationTagsDocument = gql`
         id
         attributes {
           name
+          root
           synonyms {
             name
           }
@@ -4772,6 +4832,118 @@ export type UpdateLocationSynonymsMutationResult =
 export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationSynonymsMutation,
   UpdateLocationSynonymsMutationVariables
+>;
+
+export const UpdateRootLocationDocument = gql`
+  mutation updateRootLocation($tagId: ID!, $root: Boolean!, $parentTag: ID) {
+    updateLocationTag(id: $tagId, data: { root: $root, parentTag: $parentTag }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateRootLocationMutationFn = Apollo.MutationFunction<
+  UpdateRootLocationMutation,
+  UpdateRootLocationMutationVariables
+>;
+
+/**
+ * __useUpdateRootLocationMutation__
+ *
+ * To run a mutation, you first call `useUpdateRootLocationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRootLocationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRootLocationMutation, { data, loading, error }] = useUpdateRootLocationMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      root: // value for 'root'
+ *      parentTag: // value for 'parentTag'
+ *   },
+ * });
+ */
+export function useUpdateRootLocationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateRootLocationMutation,
+    UpdateRootLocationMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateRootLocationMutation, UpdateRootLocationMutationVariables>(
+    UpdateRootLocationDocument,
+    options
+  );
+}
+
+export type UpdateRootLocationMutationHookResult = ReturnType<typeof useUpdateRootLocationMutation>;
+
+export type UpdateRootLocationMutationResult = Apollo.MutationResult<UpdateRootLocationMutation>;
+
+export type UpdateRootLocationMutationOptions = Apollo.BaseMutationOptions<
+  UpdateRootLocationMutation,
+  UpdateRootLocationMutationVariables
+>;
+
+export const UpdateRootKeywordDocument = gql`
+  mutation updateRootKeyword($tagId: ID!, $root: Boolean!, $parentTag: ID) {
+    updateKeywordTag(id: $tagId, data: { root: $root, parentTag: $parentTag }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateRootKeywordMutationFn = Apollo.MutationFunction<
+  UpdateRootKeywordMutation,
+  UpdateRootKeywordMutationVariables
+>;
+
+/**
+ * __useUpdateRootKeywordMutation__
+ *
+ * To run a mutation, you first call `useUpdateRootKeywordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRootKeywordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRootKeywordMutation, { data, loading, error }] = useUpdateRootKeywordMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      root: // value for 'root'
+ *      parentTag: // value for 'parentTag'
+ *   },
+ * });
+ */
+export function useUpdateRootKeywordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateRootKeywordMutation,
+    UpdateRootKeywordMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateRootKeywordMutation, UpdateRootKeywordMutationVariables>(
+    UpdateRootKeywordDocument,
+    options
+  );
+}
+
+export type UpdateRootKeywordMutationHookResult = ReturnType<typeof useUpdateRootKeywordMutation>;
+
+export type UpdateRootKeywordMutationResult = Apollo.MutationResult<UpdateRootKeywordMutation>;
+
+export type UpdateRootKeywordMutationOptions = Apollo.BaseMutationOptions<
+  UpdateRootKeywordMutation,
+  UpdateRootKeywordMutationVariables
 >;
 
 export const GetPersonTagsWithThumbnailDocument = gql`
