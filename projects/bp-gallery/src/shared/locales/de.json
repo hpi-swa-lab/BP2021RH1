@@ -19,6 +19,10 @@
     "suggestions": "Vorschläge",
     "keywords": "Schlagworte",
     "persons": "Personen",
+    "clipboard": {
+      "name": "Zwischenablage",
+      "clear": "Zwischenablage leeren"
+    },
     "locations": "Orte",
     "no-collection": "Es gibt keine Collection, die der Anfrage entspricht.",
     "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht.",

@@ -17,6 +17,8 @@ import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider
 import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
 import NavigationBar from './top-and-bottom-bar/NavigationBar';
+import ClipboardProvider from './provider/ClipboardProvider';
+import { ClipboardEditor } from './common/clipboard/ClipboardEditor';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -171,11 +173,14 @@ const App = ({ route }: RouteConfigComponentProps) => {
       <AlertProvider>
         <AuthProvider>
           <DialogProvider>
-            <div className='App'>
-              <TopBar isMobile={isMobile} />
-              {renderRoutes(route?.routes)}
-              {isMobile && <NavigationBar isMobile={true} />}
-            </div>
+            <ClipboardProvider>
+              <div className='App'>
+                <TopBar isMobile={isMobile} />
+                {renderRoutes(route?.routes)}
+                {isMobile && <NavigationBar isMobile={true} />}
+                <ClipboardEditor />
+              </div>
+            </ClipboardProvider>
           </DialogProvider>
         </AuthProvider>
       </AlertProvider>
