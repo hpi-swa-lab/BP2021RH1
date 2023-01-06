@@ -7,12 +7,9 @@ import ItemList from './ItemList';
 import useGenericTagEndpoints from '../../hooks/generic-endpoints.hook';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
-import { addNewParamToSearchPath } from '../views/search/helpers/addNewParamToSearchPath';
-import useAdvancedSearch from '../views/search/helpers/useAdvancedSearch';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import { asApiPath } from '../App';
-import { SearchType } from '../views/search/helpers/search-filters';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
@@ -22,10 +19,11 @@ import {
 interface CategoryCarouselProps {
   title?: string;
   type: TagType;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   rows?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   seperator?: boolean;
+  archiveId?: string;
 }
 
 const CategoryCarousel = ({
@@ -35,6 +33,7 @@ const CategoryCarousel = ({
   rows,
   queryParams,
   seperator,
+  archiveId = '0',
 }: CategoryCarouselProps) => {
   const history: History = useHistory();
 
@@ -86,33 +85,35 @@ const CategoryCarousel = ({
           <div className='carousel-collection-grid-container'>
             {flattenedTags && (
               <ItemList
-                items={flattenedTags.slice(0, rows ? rowCount * rows : -1).map(tag => ({
-                  name: tag.name,
-                  background: tag.thumbnail.length
-                    ? asApiPath(
-                        String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-                      )
-                    : DEFAULT_THUMBNAIL_URL,
-                  onClick: () => {
-                    const { searchPath } = addNewParamToSearchPath(
-                      useAdvancedSearch ? type : SearchType.ALL,
-                      encodeURIComponent(tag.name)
-                    );
-                    history.push(searchPath, {
-                      showBack: true,
-                    });
-                  },
-                }))}
+                items={(rows ? flattenedTags.slice(0, rowCount * rows) : flattenedTags).map(
+                  tag => ({
+                    name: tag.name,
+                    background: tag.thumbnail.length
+                      ? asApiPath(
+                          String(
+                            tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL
+                          )
+                        )
+                      : DEFAULT_THUMBNAIL_URL,
+                    onClick: () => {
+                      history.push('/show-more/' + archiveId + '/' + type + '/' + tag.id, {
+                        showBack: true,
+                      });
+                    },
+                  })
+                )}
               />
             )}
           </div>
-          <Button
-            onClick={onClick}
-            className='carousel-show-more-button'
-            endIcon={<ArrowForwardIosIcon />}
-          >
-            Mehr Anzeigen
-          </Button>
+          {onClick && (
+            <Button
+              onClick={onClick}
+              className='carousel-show-more-button'
+              endIcon={<ArrowForwardIosIcon />}
+            >
+              Mehr Anzeigen
+            </Button>
+          )}
         </div>
       )}
     </ScrollContainer>

@@ -129,13 +129,24 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           <Carousel
             title='Unsere Bilder'
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {}}
+            onClick={() => {
+              history.push('/show-more/' + archiveId + '/pictures', {
+                showBack: true,
+              });
+            }}
           />
 
           <Carousel
             title='Wissen sie mehr über diese Bilder?'
-            queryParams={{ archive_tag: { id: { not: { eq: archiveId } } } }}
-            onClick={() => {}}
+            queryParams={{
+              archive_tag: { id: { eq: archiveId } },
+              collections: { id: { eq: '5' } },
+            }}
+            onClick={() => {
+              history.push('/show-more/' + archiveId + '/pictures/5', {
+                showBack: true,
+              });
+            }}
             rows={1}
           />
 
@@ -143,18 +154,28 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             title='Orte'
             seperator={true}
             type={TagType.LOCATION}
-            onClick={() => {}}
+            onClick={() => {
+              history.push('/show-more/' + archiveId + '/location', {
+                showBack: true,
+              });
+            }}
             rows={2}
             queryParams={{ verified_pictures: { archive_tag: { id: { eq: archiveId } } } }}
+            archiveId={archiveId}
           />
 
           <CategoryCarousel
             title='Unsere Kategorien'
             seperator={true}
             type={TagType.KEYWORD}
-            onClick={() => {}}
+            onClick={() => {
+              history.push('/show-more/' + archiveId + '/keyword', {
+                showBack: true,
+              });
+            }}
             rows={3}
             queryParams={{ verified_pictures: { archive_tag: { id: { eq: archiveId } } } }}
+            archiveId={archiveId}
           />
         </div>
       )}

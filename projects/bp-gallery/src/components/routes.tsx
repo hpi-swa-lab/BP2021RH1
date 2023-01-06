@@ -19,6 +19,7 @@ import ArchiveView from './views/archives/ArchiveView';
 import ArchiveEditView from './views/archives/ArchiveEditView';
 import ProtectedRoute from './common/ProtectedRoute';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
+import ShowMoreView from './views/show-more/ShowMoreView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -82,6 +83,20 @@ const routes: RouteConfig[] = [
             <ProtectedRoute>
               <BulkEditView pictureIds={match.params.ids.split(',')} />
             </ProtectedRoute>
+          );
+        },
+      },
+      {
+        path: '/show-more/:archiveId/:type/:categoryId?',
+        render: ({
+          match,
+        }: RouteConfigComponentProps<{ archiveId: ''; type: ''; categoryId: '' }>) => {
+          return (
+            <ShowMoreView
+              archiveId={match.params.archiveId}
+              categoryType={match.params.type}
+              categoryId={match.params.categoryId}
+            />
           );
         },
       },
