@@ -118,7 +118,10 @@
     "descriptions": "Beschreibungen",
     "people": "Personen",
     "keywords": "Schlagworte",
-    "links": "Links",
+    "links": {
+      "pictures": "Verlinkte Bilder",
+      "texts": "Verlinkte Texte"
+    },
     "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",
     "noLocations": "Keine Orte bekannt",

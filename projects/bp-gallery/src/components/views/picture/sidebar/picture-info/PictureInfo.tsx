@@ -193,7 +193,7 @@ const PictureInfo = ({
         </div>
       )}
       {(role >= AuthRole.CURATOR || Boolean(picture /* TODO */)) && (
-        <PictureInfoField title={t('pictureFields.links')} icon='link' type='links'>
+        <PictureInfoField title={t('pictureFields.links.texts')} icon='link' type='links'>
           <ScrollContainer>
             {(scrollPos: number, scrollHeight: number) => (
               <PictureScrollGrid
