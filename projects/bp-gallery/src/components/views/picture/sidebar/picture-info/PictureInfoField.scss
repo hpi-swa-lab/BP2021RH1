@@ -34,8 +34,16 @@
   @include data-type-colors('date', $decadeColor);
   @include data-type-colors('location', $locationColor);
   @include data-type-colors('keywords', $keywordColor);
+  @include data-type-colors('links', $linkColor);
 
+  &[data-type='links'] {
+    .field-content {
+      overflow: hidden;
+      max-height: 500px;
 
+      .picture-grid {
+        margin-top: 0;
+      }
     }
   }
 
@@ -61,6 +69,7 @@
 
     .tag-selection {
       width: 100%;
+
       .MuiIcon-root {
         color: white;
       }

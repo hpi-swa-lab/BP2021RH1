@@ -19,6 +19,8 @@ import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtil
 import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import ArchiveTagField from './ArchiveTagField';
+import ScrollContainer from '../../../../common/ScrollContainer';
+import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 
 export type Field = Pick<
   FlatPicture,
@@ -143,6 +145,23 @@ const PictureInfo = ({
             noContentText={t('pictureFields.noKeywords')}
             createMutation={newKeywordTagMutation}
           />
+        </PictureInfoField>
+      )}
+      {(role >= AuthRole.CURATOR || Boolean(picture /* TODO */)) && (
+        <PictureInfoField title={t('pictureFields.links')} icon='link' type='links'>
+          <ScrollContainer>
+            {(scrollPos: number, scrollHeight: number) => (
+              <PictureScrollGrid
+                // temporary workaround to simulate a few linked pictures
+                queryParams={{ id: { in: new Array(1000).fill(0).map((_, i) => i.toString()) } }}
+                scrollPos={scrollPos}
+                scrollHeight={scrollHeight}
+                hashbase={'links'}
+                showCount={false}
+                showDefaultAdornments={false}
+              />
+            )}
+          </ScrollContainer>
         </PictureInfoField>
       )}
       {role >= AuthRole.CURATOR && (
