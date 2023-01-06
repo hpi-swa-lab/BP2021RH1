@@ -12,7 +12,18 @@
     padding: 10px;
     display: flex;
     flex-direction: row;
-    align-items: center;
+  }
+
+  .links-operations {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 1.5rem;
+    margin-bottom: 0.5rem;
+
+    .MuiButton-root {
+      background-color: $primaryColor;
+    }
   }
 
   .curator-ops {

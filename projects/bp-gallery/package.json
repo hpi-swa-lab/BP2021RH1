@@ -6,7 +6,7 @@
     "@apollo/client": "^3.4.17",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
-    "@mui/icons-material": "^5.0.3",
+    "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.0.2",
     "@mui/x-data-grid": "^5.8.0",
     "@sentry/react": "^7.0.0",

@@ -21,6 +21,11 @@ import DateRangeSelectionField from './DateRangeSelectionField';
 import ArchiveTagField from './ArchiveTagField';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
+import { useClipboard } from '../../../../provider/ClipboardProvider';
+import { Button } from '@mui/material';
+import { ContentCopy, ContentPasteGo } from '@mui/icons-material';
+import { union } from 'lodash';
+import CheckboxButton from '../../../../common/CheckboxButton';
 
 export type Field = Pick<
   FlatPicture,
@@ -82,6 +87,18 @@ const PictureInfo = ({
       getAllCollections();
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
+
+  // TODO: replace with database accesses
+  const [isText, setIsText] = useState(false);
+
+  const [_, setClipboardData] = useClipboard();
+
+  const copyToClipboard = useCallback(() => {
+    setClipboardData(data => ({
+      ...data,
+      pictureIds: union(data.pictureIds, [picture.id]),
+    }));
+  }, [setClipboardData, picture.id]);
 
   return (
     <div className='picture-info'>
@@ -146,6 +163,34 @@ const PictureInfo = ({
             createMutation={newKeywordTagMutation}
           />
         </PictureInfoField>
+      )}
+      {role >= AuthRole.CURATOR && (
+        <div className='links-operations'>
+          <CheckboxButton checked={isText} onChange={setIsText}>
+            {t('common.mark-as-text')}
+          </CheckboxButton>
+          {isText ? (
+            <Button
+              className='clipboard-button'
+              startIcon={<ContentPasteGo />}
+              variant='contained'
+              onClick={() => {}}
+              title={t('common.clipboard.paste-explanation')}
+            >
+              {t('common.clipboard.paste')}
+            </Button>
+          ) : (
+            <Button
+              className='clipboard-button'
+              startIcon={<ContentCopy />}
+              variant='contained'
+              onClick={copyToClipboard}
+              title={t('common.clipboard.copy-explanation')}
+            >
+              {t('common.clipboard.copy')}
+            </Button>
+          )}
+        </div>
       )}
       {(role >= AuthRole.CURATOR || Boolean(picture /* TODO */)) && (
         <PictureInfoField title={t('pictureFields.links')} icon='link' type='links'>
