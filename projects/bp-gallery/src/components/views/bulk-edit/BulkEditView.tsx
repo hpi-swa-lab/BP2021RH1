@@ -120,7 +120,8 @@ const BulkEditView = ({
                   scrollPos={scrollPos}
                   scrollHeight={scrollHeight}
                   hashbase={'A'}
-                  viewOnly
+                  showDefaultAdornments={false}
+                  allowClicks={false}
                 />
               )}
             </ScrollContainer>

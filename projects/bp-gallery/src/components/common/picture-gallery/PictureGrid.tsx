@@ -21,7 +21,8 @@ export type PictureGridProps = {
   bulkOperations?: BulkOperation[];
   refetch: () => void;
   extraAdornments?: PicturePreviewAdornment[];
-  viewOnly?: boolean;
+  showDefaultAdornments?: boolean;
+  allowClicks?: boolean;
 };
 
 const PictureGrid = ({
@@ -31,7 +32,8 @@ const PictureGrid = ({
   bulkOperations,
   refetch,
   extraAdornments,
-  viewOnly,
+  showDefaultAdornments = true,
+  allowClicks = true,
 }: PictureGridProps) => {
   const calculateMaxRowCount = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
@@ -120,7 +122,7 @@ const PictureGrid = ({
   }, []);
 
   const defaultAdornments =
-    role >= AuthRole.CURATOR && !viewOnly
+    role >= AuthRole.CURATOR && showDefaultAdornments
       ? [
           {
             icon: <Delete />,
@@ -199,11 +201,11 @@ const PictureGrid = ({
                       key={`${rowindex}${colindex}`}
                       picture={picture}
                       onClick={() => {
-                        if (viewOnly) return;
+                        if (!allowClicks) return;
                         navigateToPicture(picture.id);
                       }}
                       adornments={pictureAdornments}
-                      viewOnly={viewOnly}
+                      allowClicks={allowClicks}
                     />
                   );
                 }
