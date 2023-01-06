@@ -16,59 +16,27 @@
     color: $titleColor;
   }
 
-  &[data-type='person'] {
-    .icon-container,
-    .MuiChip-filled,
-    .MuiChip-deleteIcon {
-      background: $personColor;
-      color: white;
-    }
+  @mixin data-type-colors($name, $color) {
+    &[data-type='#{$name}'] {
+      .icon-container,
+      .MuiChip-filled,
+      .MuiChip-deleteIcon {
+        background: $color;
+        color: white;
+      }
 
-    background: rgb(223, 223, 241);
+      background: adjust-color(mix($color, white, 20%), $saturation: +10%);
+    }
   }
 
-  &[data-type='description'] {
-    .icon-container,
-    .MuiChip-filled,
-    .MuiChip-deleteIcon {
-      background: $descriptionColor;
-      color: white;
+  @include data-type-colors('person', $personColor);
+  @include data-type-colors('description', $descriptionColor);
+  @include data-type-colors('date', $decadeColor);
+  @include data-type-colors('location', $locationColor);
+  @include data-type-colors('keywords', $keywordColor);
+
+
     }
-
-    background: #7e231d45;
-  }
-
-  &[data-type='date'] {
-    .icon-container,
-    .MuiChip-filled,
-    .MuiChip-deleteIcon {
-      background: $decadeColor;
-      color: white;
-    }
-
-    background: #83578566;
-  }
-
-  &[data-type='location'] {
-    .icon-container,
-    .MuiChip-filled,
-    .MuiChip-deleteIcon {
-      background: $locationColor;
-      color: white;
-    }
-
-    background: #2c6e4947;
-  }
-
-  &[data-type='keywords'] {
-    .icon-container,
-    .MuiChip-filled,
-    .MuiChip-deleteIcon {
-      background: $keywordColor;
-      color: white;
-    }
-
-    background: #ffa01c44;
   }
 
   .icon-container {
