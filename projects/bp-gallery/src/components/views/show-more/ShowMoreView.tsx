@@ -58,10 +58,13 @@ const ShowMoreView = ({
 
   const tagInfo = tagsWithThumbnailQuery({
     variables: {
-      filters: {
-        verified_pictures: { archive_tag: { id: { eq: archiveId } } },
-        id: { eq: categoryId },
-      },
+      filters:
+        archiveId === '0'
+          ? { id: { eq: categoryId } }
+          : {
+              verified_pictures: { archive_tag: { id: { eq: archiveId } } },
+              id: { eq: categoryId },
+            },
       limit: 1,
     },
   });
@@ -89,10 +92,14 @@ const ShowMoreView = ({
                 />
               )}
               <PictureScrollGrid
-                queryParams={{
-                  archive_tag: { id: { eq: archiveId } },
-                  collections: { id: { eq: categoryId } },
-                }}
+                queryParams={
+                  archiveId === '0'
+                    ? { collections: { id: { eq: categoryId } } }
+                    : {
+                        archive_tag: { id: { eq: archiveId } },
+                        collections: { id: { eq: categoryId } },
+                      }
+                }
                 scrollPos={scrollPos}
                 scrollHeight={scrollHeight}
                 hashbase={'show-more'}
@@ -118,9 +125,11 @@ const ShowMoreView = ({
                 Hier finden sie alle Bilder unseres Archivs.
               </div>
               <PictureScrollGrid
-                queryParams={{
-                  archive_tag: { id: { eq: archiveId } },
-                }}
+                queryParams={
+                  archiveId === '0'
+                    ? { id: { not: { eq: '-1' } } }
+                    : { archive_tag: { id: { eq: archiveId } } }
+                }
                 scrollPos={scrollPos}
                 scrollHeight={scrollHeight}
                 hashbase={'show-more'}
@@ -144,10 +153,14 @@ const ShowMoreView = ({
           <div className='show-more-container'>
             {flattenedTags && <h2>{flattenedTags[0].name}</h2>}
             <PictureScrollGrid
-              queryParams={{
-                archive_tag: { id: { eq: archiveId } },
-                verified_location_tags: { id: { eq: categoryId } },
-              }}
+              queryParams={
+                archiveId === '0'
+                  ? { verified_location_tags: { id: { eq: categoryId } } }
+                  : {
+                      archive_tag: { id: { eq: archiveId } },
+                      verified_location_tags: { id: { eq: categoryId } },
+                    }
+              }
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={'show-more'}
@@ -172,16 +185,24 @@ const ShowMoreView = ({
             <div className='show-more-description'>{description}</div>
             <CategoryCarousel
               type={categoryType2}
-              queryParams={{
-                or: [
-                  { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
-                  { pictures: { archive_tag: { id: { eq: archiveId } } } },
-                ],
-              }}
+              queryParams={
+                archiveId === '0'
+                  ? { id: { not: { eq: '-1' } } }
+                  : {
+                      or: [
+                        { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+                        { pictures: { archive_tag: { id: { eq: archiveId } } } },
+                      ],
+                    }
+              }
               archiveId={archiveId}
             />
             <PictureScrollGrid
-              queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+              queryParams={
+                archiveId === '0'
+                  ? { id: { not: { eq: '-1' } } }
+                  : { archive_tag: { id: { eq: archiveId } } }
+              }
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={'show-more'}
