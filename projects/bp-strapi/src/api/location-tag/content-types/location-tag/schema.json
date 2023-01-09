@@ -40,18 +40,6 @@
     "root": {
       "type": "boolean",
       "default": false
-    },
-    "childTags": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::location-tag.location-tag",
-      "mappedBy": "parentTag"
-    },
-    "parentTag": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::location-tag.location-tag",
-      "inversedBy": "childTags"
     }
   }
 }

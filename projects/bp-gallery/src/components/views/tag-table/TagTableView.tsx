@@ -164,8 +164,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
       ? [
           {
             field: 'root',
-            headerName:
-              type === TagType.LOCATION ? t('curator.rootLocation') : t('curator.rootKeyword'),
+            headerName: t('curator.visibility'),
             flex: 1,
             renderCell: (
               params: GridRenderCellParams<{
@@ -273,32 +272,22 @@ const TagTableView = ({ type }: { type: TagType }) => {
     }
   }, [openAlert, mergeTagsMutation, selectedRowIds, getSelectedRows, t]);
 
-  const selectRoot = useCallback(() => {
-    const selectedRows: GridRowsProp = getSelectedRows(selectedRowIds);
-    selectedRows.forEach(selectedRow => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      updateRootMutation({
-        variables: {
-          tagId: selectedRow.id as string,
-          root: true,
-          parentTag: null,
-        },
+  const selectRoot = useCallback(
+    (root: boolean) => {
+      const selectedRows: GridRowsProp = getSelectedRows(selectedRowIds);
+      selectedRows.forEach(selectedRow => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        updateRootMutation({
+          variables: {
+            tagId: selectedRow.id as string,
+            root: root,
+            parentTag: null,
+          },
+        });
       });
-    });
-  }, [selectedRowIds, getSelectedRows, updateRootMutation]);
-
-  const unselectRoot = useCallback(() => {
-    const selectedRows: GridRowsProp = getSelectedRows(selectedRowIds);
-    selectedRows.forEach(selectedRow => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      updateRootMutation({
-        variables: {
-          tagId: selectedRow.id as string,
-          root: false,
-        },
-      });
-    });
-  }, [selectedRowIds, getSelectedRows, updateRootMutation]);
+    },
+    [selectedRowIds, getSelectedRows, updateRootMutation]
+  );
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -310,17 +299,16 @@ const TagTableView = ({ type }: { type: TagType }) => {
         <Button onClick={mergeTags} className='merge-button'>
           {t('curator.mergeTag')}
         </Button>
-        {type === TagType.LOCATION ||
-          (type === TagType.KEYWORD && (
-            <>
-              <Button onClick={selectRoot} className='merge-button'>
-                {t('curator.selectRoot')}
-              </Button>
-              <Button onClick={unselectRoot} className='merge-button'>
-                {t('curator.unselectRoot')}
-              </Button>
-            </>
-          ))}
+        {(type === TagType.LOCATION || type === TagType.KEYWORD) && (
+          <>
+            <Button onClick={() => selectRoot(true)} className='merge-button'>
+              {t(`curator.show${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
+            </Button>
+            <Button onClick={() => selectRoot(false)} className='merge-button'>
+              {t(`curator.hide${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
+            </Button>
+          </>
+        )}
 
         <DataGrid
           className='table'

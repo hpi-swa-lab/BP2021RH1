@@ -582,16 +582,16 @@ mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonyms
   }
 }
 
-mutation updateRootLocation($tagId: ID!, $root: Boolean!, $parentTag: ID) {
-  updateLocationTag(id: $tagId, data: { root: $root, parentTag: $parentTag }) {
+mutation updateRootLocation($tagId: ID!, $root: Boolean!) {
+  updateLocationTag(id: $tagId, data: { root: $root }) {
     data {
       id
     }
   }
 }
 
-mutation updateRootKeyword($tagId: ID!, $root: Boolean!, $parentTag: ID) {
-  updateKeywordTag(id: $tagId, data: { root: $root, parentTag: $parentTag }) {
+mutation updateRootKeyword($tagId: ID!, $root: Boolean!) {
+  updateKeywordTag(id: $tagId, data: { root: $root }) {
     data {
       id
     }

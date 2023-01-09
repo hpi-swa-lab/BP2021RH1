@@ -2666,7 +2666,6 @@ export type UpdateLocationSynonymsMutation = {
 export type UpdateRootLocationMutationVariables = Exact<{
   tagId: Scalars['ID'];
   root: Scalars['Boolean'];
-  parentTag?: InputMaybe<Scalars['ID']>;
 }>;
 
 export type UpdateRootLocationMutation = {
@@ -2679,7 +2678,6 @@ export type UpdateRootLocationMutation = {
 export type UpdateRootKeywordMutationVariables = Exact<{
   tagId: Scalars['ID'];
   root: Scalars['Boolean'];
-  parentTag?: InputMaybe<Scalars['ID']>;
 }>;
 
 export type UpdateRootKeywordMutation = {
@@ -4835,8 +4833,8 @@ export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const UpdateRootLocationDocument = gql`
-  mutation updateRootLocation($tagId: ID!, $root: Boolean!, $parentTag: ID) {
-    updateLocationTag(id: $tagId, data: { root: $root, parentTag: $parentTag }) {
+  mutation updateRootLocation($tagId: ID!, $root: Boolean!) {
+    updateLocationTag(id: $tagId, data: { root: $root }) {
       data {
         id
       }
@@ -4864,7 +4862,6 @@ export type UpdateRootLocationMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      tagId: // value for 'tagId'
  *      root: // value for 'root'
- *      parentTag: // value for 'parentTag'
  *   },
  * });
  */
@@ -4891,8 +4888,8 @@ export type UpdateRootLocationMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const UpdateRootKeywordDocument = gql`
-  mutation updateRootKeyword($tagId: ID!, $root: Boolean!, $parentTag: ID) {
-    updateKeywordTag(id: $tagId, data: { root: $root, parentTag: $parentTag }) {
+  mutation updateRootKeyword($tagId: ID!, $root: Boolean!) {
+    updateKeywordTag(id: $tagId, data: { root: $root }) {
       data {
         id
       }
@@ -4920,7 +4917,6 @@ export type UpdateRootKeywordMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      tagId: // value for 'tagId'
  *      root: // value for 'root'
- *      parentTag: // value for 'parentTag'
  *   },
  * });
  */
