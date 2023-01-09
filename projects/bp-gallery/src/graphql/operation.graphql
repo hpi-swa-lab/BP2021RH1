@@ -492,7 +492,7 @@ query getAllKeywordTags {
         synonyms {
           name
         }
-        root
+        visible
       }
     }
   }
@@ -557,7 +557,7 @@ query getAllLocationTags {
       id
       attributes {
         name
-        root
+        visible
         synonyms {
           name
         }
@@ -582,16 +582,16 @@ mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonyms
   }
 }
 
-mutation updateRootLocation($tagId: ID!, $root: Boolean!) {
-  updateLocationTag(id: $tagId, data: { root: $root }) {
+mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
+  updateLocationTag(id: $tagId, data: { visible: $visible }) {
     data {
       id
     }
   }
 }
 
-mutation updateRootKeyword($tagId: ID!, $root: Boolean!) {
-  updateKeywordTag(id: $tagId, data: { root: $root }) {
+mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
+  updateKeywordTag(id: $tagId, data: { visible: $visible }) {
     data {
       id
     }

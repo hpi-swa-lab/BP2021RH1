@@ -45,7 +45,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
     updateSynonymsMutationSource,
     mergeTagsMutationSource,
     deleteTagMutationSource,
-    updateRootMutationSource,
+    updateVisibilityMutationSource,
   } = useGenericTagEndpoints(type);
 
   const { data, loading, error, refetch } = allTagsQuery();
@@ -88,7 +88,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const [updateRootMutation] = updateRootMutationSource({
+  const [updateVisibilityMutation] = updateVisibilityMutationSource({
     onCompleted: (_: any) => {
       refetch();
     },
@@ -163,15 +163,15 @@ const TagTableView = ({ type }: { type: TagType }) => {
     return type === TagType.LOCATION || type === TagType.KEYWORD
       ? [
           {
-            field: 'root',
+            field: 'visible',
             headerName: t('curator.visibility'),
             flex: 1,
             renderCell: (
               params: GridRenderCellParams<{
-                root: boolean;
+                visible: boolean;
               }>
             ) => {
-              return params.value?.root ? <GridCheckIcon /> : <></>;
+              return params.value?.visible ? <GridCheckIcon /> : <></>;
             },
           },
         ]
@@ -240,7 +240,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
           name: tag.name,
           synonyms: { synonyms: tag.synonyms, tagId: tag.id },
           add: '',
-          root: { root: tag.root },
+          visible: { visible: tag.visible },
           delete: { tagId: tag.id, tagName: tag.name },
         } as TagRow;
       }),
@@ -272,21 +272,20 @@ const TagTableView = ({ type }: { type: TagType }) => {
     }
   }, [openAlert, mergeTagsMutation, selectedRowIds, getSelectedRows, t]);
 
-  const selectRoot = useCallback(
-    (root: boolean) => {
+  const setVisible = useCallback(
+    (visible: boolean) => {
       const selectedRows: GridRowsProp = getSelectedRows(selectedRowIds);
       selectedRows.forEach(selectedRow => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        updateRootMutation({
+        updateVisibilityMutation({
           variables: {
             tagId: selectedRow.id as string,
-            root: root,
-            parentTag: null,
+            visible: visible,
           },
         });
       });
     },
-    [selectedRowIds, getSelectedRows, updateRootMutation]
+    [selectedRowIds, getSelectedRows, updateVisibilityMutation]
   );
 
   if (error) {
@@ -301,10 +300,10 @@ const TagTableView = ({ type }: { type: TagType }) => {
         </Button>
         {(type === TagType.LOCATION || type === TagType.KEYWORD) && (
           <>
-            <Button onClick={() => selectRoot(true)} className='merge-button'>
+            <Button onClick={() => setVisible(true)} className='merge-button'>
               {t(`curator.show${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
             </Button>
-            <Button onClick={() => selectRoot(false)} className='merge-button'>
+            <Button onClick={() => setVisible(false)} className='merge-button'>
               {t(`curator.hide${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
             </Button>
           </>

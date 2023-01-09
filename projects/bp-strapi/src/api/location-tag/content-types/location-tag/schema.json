@@ -37,7 +37,7 @@
       "repeatable": true,
       "component": "common.synonyms"
     },
-    "root": {
+    "visible": {
       "type": "boolean",
       "default": false
     }
