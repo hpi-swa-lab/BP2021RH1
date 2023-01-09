@@ -13,6 +13,7 @@ const LOCATION_TAGS_KEY = "location_tags";
 const PERSON_TAGS_KEY = "person_tags";
 const TIME_RANGE_TAG_KEY = "time_range_tag";
 const ARCHIVE_TAG_KEY = "archive_tag";
+const IS_TEXT_KEY = "is_text";
 
 const singular = key => {
   if (key[key.length - 1] !== "s") {
@@ -629,6 +630,18 @@ const bulkEditDescriptions = async (knexEngine, pictureIds, data) => {
   return true;
 };
 
+const bulkEditIsText = async (knexEngine, pictureIds, data) => {
+  // Check whether we actually need to update stuff for that type.
+  // By using == instead of === we check both null and undefined
+  if (data[IS_TEXT_KEY] == null) return false;
+
+  await knexEngine(table(PICTURES_KEY))
+      .whereIn("id", pictureIds)
+      .update(IS_TEXT_KEY, knexEngine.raw("?::boolean", [data[IS_TEXT_KEY]]));
+
+  return true;
+}
+
 const bulkEditTags = async (knexEngine, pictureIds, data, tagsKey) => {
   // Check whether we actually need to update stuff for that type.
   if (!data[tagsKey]) return false;
@@ -682,6 +695,7 @@ const bulkEdit = async (knexEngine, pictureIds, data) => {
   shouldWriteUpdatedAt |= await bulkEditTimeRangeTag(knexEngine, pictureQuery, pictureIds, data);
   shouldWriteUpdatedAt |= await bulkEditArchiveTag(knexEngine, pictureIds, data);
   shouldWriteUpdatedAt |= await bulkEditDescriptions(knexEngine, pictureIds, data);
+  shouldWriteUpdatedAt |= await bulkEditIsText(knexEngine, pictureIds, data);
   shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, PERSON_TAGS_KEY);
   shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, LOCATION_TAGS_KEY);
   shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, KEYWORD_TAGS_KEY);

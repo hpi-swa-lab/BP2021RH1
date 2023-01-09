@@ -24,7 +24,7 @@ import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollG
 import { useClipboard } from '../../../../provider/ClipboardProvider';
 import { Button } from '@mui/material';
 import { ContentCopy, ContentPasteGo } from '@mui/icons-material';
-import { union } from 'lodash';
+import { isNil, union } from 'lodash';
 import CheckboxButton from '../../../../common/CheckboxButton';
 
 export type Field = Pick<
@@ -35,6 +35,7 @@ export type Field = Pick<
   | 'location_tags'
   | 'person_tags'
   | 'collections'
+  | 'is_text'
 > & { archive_tag?: Scalars['ID'] };
 
 const PictureInfo = ({
@@ -87,9 +88,6 @@ const PictureInfo = ({
       getAllCollections();
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
-
-  // TODO: replace with database accesses
-  const [isText, setIsText] = useState(false);
 
   const [_, setClipboardData] = useClipboard();
 
@@ -164,12 +162,17 @@ const PictureInfo = ({
           />
         </PictureInfoField>
       )}
-      {role >= AuthRole.CURATOR && (
+      {role >= AuthRole.CURATOR && !isNil(picture.is_text) && (
         <div className='links-operations'>
-          <CheckboxButton checked={isText} onChange={setIsText}>
+          <CheckboxButton
+            checked={picture.is_text}
+            onChange={isText => {
+              savePictureInfo({ is_text: isText });
+            }}
+          >
             {t('common.mark-as-text')}
           </CheckboxButton>
-          {isText ? (
+          {picture.is_text ? (
             <Button
               className='clipboard-button'
               startIcon={<ContentPasteGo />}
@@ -192,7 +195,7 @@ const PictureInfo = ({
           )}
         </div>
       )}
-      {(role >= AuthRole.CURATOR || Boolean(picture /* TODO */)) && (
+      {(role >= AuthRole.CURATOR || Boolean(picture /* TODO */)) && !isNil(picture.is_text) && (
         <PictureInfoField title={t('pictureFields.links.texts')} icon='link' type='links'>
           <ScrollContainer>
             {(scrollPos: number, scrollHeight: number) => (

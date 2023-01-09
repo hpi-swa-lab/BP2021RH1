@@ -91,6 +91,10 @@
       "target": "api::time-range-tag.time-range-tag",
       "inversedBy": "verified_pictures"
     },
+    "is_text": {
+      "type": "boolean",
+      "default": false
+    },
     "archive_identifier": {
       "type": "string"
     },

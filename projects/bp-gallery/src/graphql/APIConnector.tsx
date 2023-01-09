@@ -1068,6 +1068,7 @@ export type Picture = {
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
+  is_text?: Maybe<Scalars['Boolean']>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
   location_tags?: Maybe<LocationTagRelationResponseCollection>;
   media: UploadFileEntityResponse;
@@ -1162,6 +1163,7 @@ export type PictureFiltersInput = {
   createdAt?: InputMaybe<DateTimeFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
+  is_text?: InputMaybe<BooleanFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
   location_tags?: InputMaybe<LocationTagFiltersInput>;
   not?: InputMaybe<PictureFiltersInput>;
@@ -1183,6 +1185,7 @@ export type PictureInput = {
   collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  is_text?: InputMaybe<Scalars['Boolean']>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
@@ -1836,6 +1839,7 @@ export type GetPictureInfoQuery = {
               id?: string | null | undefined;
               attributes?:
                 | {
+                    is_text?: boolean | null | undefined;
                     descriptions?:
                       | {
                           data: Array<{
@@ -3535,6 +3539,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
+          is_text
           archive_tag {
             data {
               id

@@ -36,6 +36,7 @@ export const combinePictures = (pictures: FlatPicture[]): FlatPicture => {
     location_tags: combineToIntersection(pictures, picture => picture.location_tags),
     person_tags: combineToIntersection(pictures, picture => picture.person_tags),
     time_range_tag: combineToSingle(pictures, picture => picture.time_range_tag),
+    is_text: combineToSingle(pictures, picture => picture.is_text),
   };
 };
 

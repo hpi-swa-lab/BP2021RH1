@@ -164,6 +164,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        is_text
         archive_tag {
           data {
             id
