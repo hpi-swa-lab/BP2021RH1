@@ -21,7 +21,8 @@ const ScrollContainer = ({
       scrollDiv.current?.scrollTo(0, 0);
       history.replace('', { showBack: false, scrollTop: false });
     }
-  }, [scrollTop, history.location.state, history]);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  }, [scrollTop, history, history?.location?.state]);
 
   return (
     <div className='scroll-context'>
