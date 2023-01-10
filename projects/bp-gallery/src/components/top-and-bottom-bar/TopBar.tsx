@@ -11,7 +11,6 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
 
   const history: History = useHistory();
-  const onDefaultBrowseView = history.location.pathname.endsWith('start');
   const { search }: Location = useLocation();
 
   return (
@@ -30,11 +29,9 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
           </div>
         ) : (
           <div
-            className={`bh-logo ${!onDefaultBrowseView ? 'clickable' : ''}`}
-            title={!onDefaultBrowseView ? t('common.back-to-home') : undefined}
-            onClick={
-              !onDefaultBrowseView ? () => history.push('/start', { showBack: false }) : undefined
-            }
+            className={'bh-logo clickable'}
+            title={t('common.back-to-home')}
+            onClick={() => history.push('/start', { showBack: false, scrollTop: true })}
           >
             <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
           </div>
