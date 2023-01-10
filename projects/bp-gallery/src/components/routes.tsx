@@ -19,6 +19,7 @@ import ArchiveView from './views/archives/ArchiveView';
 import ArchiveEditView from './views/archives/ArchiveEditView';
 import ProtectedRoute from './common/ProtectedRoute';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
+import ContactFormView from './views/contact/ContactFormView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -113,6 +114,12 @@ const routes: RouteConfig[] = [
         path: '/terms-of-service',
         render: () => {
           return <TermsOfServiceView />;
+        },
+      },
+      {
+        path: '/contact',
+        render: () => {
+          return <ContactFormView />;
         },
       },
       {

@@ -23,7 +23,6 @@ import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 import ScrollContainer from '../../common/ScrollContainer';
-import Footer from '../../common/footer/Footer';
 
 const getPictureFilters = (collectionId: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -155,8 +154,6 @@ const BrowseView = ({
                 ]}
               />
             </div>
-
-            <Footer />
           </div>
         )}
       </ScrollContainer>

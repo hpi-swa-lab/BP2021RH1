@@ -17,6 +17,8 @@ import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider
 import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
 import NavigationBar from './top-and-bottom-bar/NavigationBar';
+import Footer from './common/footer/Footer'
+import { useLocation } from 'react-router-dom';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -164,6 +166,19 @@ const App = ({ route }: RouteConfigComponentProps) => {
     };
   }, []);
 
+  const pathsWithFooter =  [
+    'start',
+    'browse',
+    'search',
+    'latest',
+    //'terms-of-service',
+    'contact'
+  ]
+  const pathName = useLocation().pathname;
+
+  const showFooter = pathsWithFooter.filter(path => pathName.match(path)).length > 0
+
+
   const isMobile = width <= 750;
 
   return (
@@ -172,9 +187,12 @@ const App = ({ route }: RouteConfigComponentProps) => {
         <AuthProvider>
           <DialogProvider>
             <div className='App'>
-              <TopBar isMobile={isMobile} />
+              {!isMobile && <TopBar />}
+              <div className='App-contents-wrapper'>
               {renderRoutes(route?.routes)}
-              {isMobile && <NavigationBar isMobile={true} />}
+              {showFooter && <Footer/>}
+              </div>
+              <NavigationBar isMobile={true} />
             </div>
           </DialogProvider>
         </AuthProvider>
