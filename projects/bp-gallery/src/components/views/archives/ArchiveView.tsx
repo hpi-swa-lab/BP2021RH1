@@ -177,6 +177,13 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             queryParams={{ verified_pictures: { archive_tag: { id: { eq: archiveId } } } }}
             archiveId={archiveId}
           />
+
+          <CategoryCarousel
+            title='Jahrzehnte'
+            seperator={true}
+            type={TagType.TIME_RANGE}
+            archiveId={archiveId}
+          />
         </div>
       )}
     </ScrollContainer>

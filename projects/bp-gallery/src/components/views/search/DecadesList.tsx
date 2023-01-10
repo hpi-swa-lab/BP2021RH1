@@ -20,10 +20,17 @@ import {
 import { getDecadeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
+import ItemList from '../../common/ItemList';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 
-const DecadesList = () => {
+const DecadesList = ({
+  scroll = true,
+  onClickBasePath,
+}: {
+  scroll?: boolean;
+  onClickBasePath?: string;
+}) => {
   const { t } = useTranslation();
   const history: History = useHistory();
 
@@ -45,30 +52,54 @@ const DecadesList = () => {
     return <Loading />;
   } else if (decadeThumbnails) {
     return (
-      <ScrollableItemList
-        compact={true}
-        items={DECADES.map((decadeKey: string) => {
-          const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-          const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-          const displayedName = getDecadeTranslation(t, decadeKey);
-          return {
-            name: displayedName,
-            background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
-            onClick: () => {
-              const { searchPath } = useAdvancedSearch
-                ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
-                : addNewParamToSearchPath(
-                    SearchType.ALL,
-                    getDecadeSearchTermForAllSearch(decadeKey)
-                  );
+      <div>
+        {scroll && (
+          <ScrollableItemList
+            compact={true}
+            items={DECADES.map((decadeKey: string) => {
+              const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
+              const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
+              const displayedName = getDecadeTranslation(t, decadeKey);
+              return {
+                name: displayedName,
+                background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+                onClick: () => {
+                  const { searchPath } = useAdvancedSearch
+                    ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
+                    : addNewParamToSearchPath(
+                        SearchType.ALL,
+                        getDecadeSearchTermForAllSearch(decadeKey)
+                      );
 
-              history.push(searchPath, {
-                showBack: true,
-              });
-            },
-          };
-        })}
-      />
+                  history.push(searchPath, {
+                    showBack: true,
+                  });
+                },
+              };
+            })}
+          />
+        )}
+        {!scroll && onClickBasePath && (
+          <ItemList
+            items={DECADES.map((decadeKey: string) => {
+              const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
+              const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
+              const displayedName = getDecadeTranslation(t, decadeKey);
+              return {
+                name: displayedName,
+                background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+                onClick: () => {
+                  if (onClickBasePath) {
+                    history.push(onClickBasePath + decadeKey, {
+                      showBack: true,
+                    });
+                  }
+                },
+              };
+            })}
+          />
+        )}
+      </div>
     );
   } else return <div>{t('something-went-wrong')}</div>;
 };

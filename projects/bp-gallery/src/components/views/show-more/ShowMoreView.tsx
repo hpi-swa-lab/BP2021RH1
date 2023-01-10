@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGetCollectionInfoByIdQuery } from '../../../graphql/APIConnector';
+import { PictureFiltersInput, useGetCollectionInfoByIdQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
@@ -8,6 +8,7 @@ import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import { useAuth } from '../../provider/AuthProvider';
 import CollectionDescription from '../browse/CollectionDescription';
+import { buildDecadeFilter } from '../search/helpers/search-filters';
 import './ShowMoreView.scss';
 
 const ShowMoreView = ({
@@ -34,6 +35,12 @@ const ShowMoreView = ({
   const collectionInfo = useSimplifiedQueryResponseData(data);
 
   switch (categoryType) {
+    case 'date': {
+      categoryType2 = TagType.TIME_RANGE;
+      headerName = 'Jahrzehnte';
+      description = 'Hier finden sie alle Bilder unseres Archivs aus bestimmten Jahrzehnten.';
+      break;
+    }
     case 'keyword': {
       categoryType2 = TagType.KEYWORD;
       headerName = 'Unsere Kategorien';
@@ -74,9 +81,47 @@ const ShowMoreView = ({
   const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened
     ? Object.values(flattened)[0]
     : undefined;
-  if (flattenedTags) {
-    console.log(flattenedTags[0].name);
-  }
+
+  const decadeFilter: PictureFiltersInput =
+    categoryType === 'date' && categoryId ? buildDecadeFilter(categoryId) ?? {} : {};
+
+  const categoryQueryParams = () => {
+    switch (categoryType) {
+      case 'date': {
+        return archiveId === '0'
+          ? decadeFilter
+          : ({
+              archive_tag: { id: { eq: archiveId } },
+              and: decadeFilter,
+            } as PictureFiltersInput);
+      }
+      case 'keyword': {
+        return archiveId === '0'
+          ? { verified_keyword_tags: { id: { eq: categoryId } } }
+          : {
+              archive_tag: { id: { eq: archiveId } },
+              verified_keyword_tags: { id: { eq: categoryId } },
+            };
+      }
+      case 'person': {
+        return archiveId === '0'
+          ? { verified_person_tags: { id: { eq: categoryId } } }
+          : {
+              archive_tag: { id: { eq: archiveId } },
+              verified_person_tags: { id: { eq: categoryId } },
+            };
+      }
+      case 'location':
+      default: {
+        return archiveId === '0'
+          ? { verified_location_tags: { id: { eq: categoryId } } }
+          : {
+              archive_tag: { id: { eq: archiveId } },
+              verified_location_tags: { id: { eq: categoryId } },
+            };
+      }
+    }
+  };
 
   if (categoryType === 'pictures') {
     if (categoryId) {
@@ -151,16 +196,17 @@ const ShowMoreView = ({
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='show-more-container'>
-            {flattenedTags && <h2>{flattenedTags[0].name}</h2>}
+            {flattenedTags && (
+              <h2>
+                {categoryType === 'date'
+                  ? categoryId === '4'
+                    ? 'Früher'
+                    : `19${categoryId}0er`
+                  : flattenedTags[0].name}
+              </h2>
+            )}
             <PictureScrollGrid
-              queryParams={
-                archiveId === '0'
-                  ? { verified_location_tags: { id: { eq: categoryId } } }
-                  : {
-                      archive_tag: { id: { eq: archiveId } },
-                      verified_location_tags: { id: { eq: categoryId } },
-                    }
-              }
+              queryParams={categoryQueryParams()}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={'show-more'}

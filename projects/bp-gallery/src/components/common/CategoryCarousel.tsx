@@ -15,6 +15,7 @@ import {
   LocationTagFiltersInput,
   PersonTagFiltersInput,
 } from '../../graphql/APIConnector';
+import DecadesList from '../views/search/DecadesList';
 
 interface CategoryCarouselProps {
   title?: string;
@@ -83,7 +84,7 @@ const CategoryCarousel = ({
           {title && <h1 className='carousel-title'>{title}</h1>}
           {seperator && <hr className='carousel-seperator' />}
           <div className='carousel-collection-grid-container'>
-            {flattenedTags && (
+            {flattenedTags && type !== TagType.TIME_RANGE && (
               <ItemList
                 items={(rows ? flattenedTags.slice(0, rowCount * rows) : flattenedTags).map(
                   tag => ({
@@ -103,6 +104,9 @@ const CategoryCarousel = ({
                   })
                 )}
               />
+            )}
+            {type === TagType.TIME_RANGE && (
+              <DecadesList scroll={false} onClickBasePath={'/show-more/' + archiveId + '/date/'} />
             )}
           </div>
           {onClick && (
