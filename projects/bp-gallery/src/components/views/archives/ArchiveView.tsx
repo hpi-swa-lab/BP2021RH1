@@ -136,34 +136,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             }}
           />
 
-          <Carousel
-            title='Wissen sie mehr über diese Bilder?'
-            queryParams={{
-              archive_tag: { id: { eq: archiveId } },
-              collections: { id: { eq: '5' } },
-            }}
-            onClick={() => {
-              history.push('/show-more/' + archiveId + '/pictures/5', {
-                showBack: true,
-              });
-            }}
-            rows={1}
-          />
-
-          <CategoryCarousel
-            title='Orte'
-            seperator={true}
-            type={TagType.LOCATION}
-            onClick={() => {
-              history.push('/show-more/' + archiveId + '/location', {
-                showBack: true,
-              });
-            }}
-            rows={2}
-            queryParams={{ verified_pictures: { archive_tag: { id: { eq: archiveId } } } }}
-            archiveId={archiveId}
-          />
-
           <CategoryCarousel
             title='Unsere Kategorien'
             seperator={true}
@@ -175,13 +147,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             }}
             rows={3}
             queryParams={{ verified_pictures: { archive_tag: { id: { eq: archiveId } } } }}
-            archiveId={archiveId}
-          />
-
-          <CategoryCarousel
-            title='Jahrzehnte'
-            seperator={true}
-            type={TagType.TIME_RANGE}
             archiveId={archiveId}
           />
         </div>
