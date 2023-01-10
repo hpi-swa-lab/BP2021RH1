@@ -73,53 +73,52 @@ const TagList = ({
   } else if (loading) {
     return <Loading />;
   } else if (flattenedTags?.length) {
-    return (
-      <div>
-        {scroll && (
-          <ScrollableItemList
-            compact={true}
-            fetchMoreOnScroll={fetchMoreOnScroll}
-            items={flattenedTags.map(tag => ({
-              name: tag.name,
-              background: tag.thumbnail.length
-                ? asApiPath(
-                    String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-                  )
-                : DEFAULT_THUMBNAIL_URL,
-              onClick: () => {
-                const { searchPath } = addNewParamToSearchPath(
-                  useAdvancedSearch ? type : SearchType.ALL,
-                  encodeURIComponent(tag.name)
-                );
-                history.push(searchPath, {
-                  showBack: true,
-                });
-              },
-            }))}
-          />
-        )}
-        {!scroll && onClickBasePath && (
-          <ItemList
-            items={(currentItemAmount
-              ? flattenedTags.slice(0, currentItemAmount)
-              : flattenedTags
-            ).map(tag => ({
-              name: tag.name,
-              background: tag.thumbnail.length
-                ? asApiPath(
-                    String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-                  )
-                : DEFAULT_THUMBNAIL_URL,
-              onClick: () => {
-                history.push(onClickBasePath + tag.id, {
-                  showBack: true,
-                });
-              },
-            }))}
-          />
-        )}
-      </div>
-    );
+    if (scroll) {
+      return (
+        <ScrollableItemList
+          compact={true}
+          fetchMoreOnScroll={fetchMoreOnScroll}
+          items={flattenedTags.map(tag => ({
+            name: tag.name,
+            background: tag.thumbnail.length
+              ? asApiPath(
+                  String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
+                )
+              : DEFAULT_THUMBNAIL_URL,
+            onClick: () => {
+              const { searchPath } = addNewParamToSearchPath(
+                useAdvancedSearch ? type : SearchType.ALL,
+                encodeURIComponent(tag.name)
+              );
+              history.push(searchPath, {
+                showBack: true,
+              });
+            },
+          }))}
+        />
+      );
+    } else if (onClickBasePath) {
+      return (
+        <ItemList
+          items={(currentItemAmount
+            ? flattenedTags.slice(0, currentItemAmount)
+            : flattenedTags
+          ).map(tag => ({
+            name: tag.name,
+            background: tag.thumbnail.length
+              ? asApiPath(
+                  String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
+                )
+              : DEFAULT_THUMBNAIL_URL,
+            onClick: () => {
+              history.push(onClickBasePath + tag.id, {
+                showBack: true,
+              });
+            },
+          }))}
+        />
+      );
+    } else return <div>{t('something-went-wrong')}</div>;
   } else return <div>{t('something-went-wrong')}</div>;
 };
 

@@ -51,56 +51,55 @@ const DecadesList = ({
   } else if (loading) {
     return <Loading />;
   } else if (decadeThumbnails) {
-    return (
-      <div>
-        {scroll && (
-          <ScrollableItemList
-            compact={true}
-            items={DECADES.map((decadeKey: string) => {
-              const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-              const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-              const displayedName = getDecadeTranslation(t, decadeKey);
-              return {
-                name: displayedName,
-                background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
-                onClick: () => {
-                  const { searchPath } = useAdvancedSearch
-                    ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
-                    : addNewParamToSearchPath(
-                        SearchType.ALL,
-                        getDecadeSearchTermForAllSearch(decadeKey)
-                      );
+    if (scroll) {
+      return (
+        <ScrollableItemList
+          compact={true}
+          items={DECADES.map((decadeKey: string) => {
+            const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
+            const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
+            const displayedName = getDecadeTranslation(t, decadeKey);
+            return {
+              name: displayedName,
+              background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+              onClick: () => {
+                const { searchPath } = useAdvancedSearch
+                  ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
+                  : addNewParamToSearchPath(
+                      SearchType.ALL,
+                      getDecadeSearchTermForAllSearch(decadeKey)
+                    );
 
-                  history.push(searchPath, {
+                history.push(searchPath, {
+                  showBack: true,
+                });
+              },
+            };
+          })}
+        />
+      );
+    } else if (onClickBasePath) {
+      return (
+        <ItemList
+          items={DECADES.map((decadeKey: string) => {
+            const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
+            const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
+            const displayedName = getDecadeTranslation(t, decadeKey);
+            return {
+              name: displayedName,
+              background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+              onClick: () => {
+                if (onClickBasePath) {
+                  history.push(onClickBasePath + decadeKey, {
                     showBack: true,
                   });
-                },
-              };
-            })}
-          />
-        )}
-        {!scroll && onClickBasePath && (
-          <ItemList
-            items={DECADES.map((decadeKey: string) => {
-              const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-              const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-              const displayedName = getDecadeTranslation(t, decadeKey);
-              return {
-                name: displayedName,
-                background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
-                onClick: () => {
-                  if (onClickBasePath) {
-                    history.push(onClickBasePath + decadeKey, {
-                      showBack: true,
-                    });
-                  }
-                },
-              };
-            })}
-          />
-        )}
-      </div>
-    );
+                }
+              },
+            };
+          })}
+        />
+      );
+    } else return <div>{t('something-went-wrong')}</div>;
   } else return <div>{t('something-went-wrong')}</div>;
 };
 
