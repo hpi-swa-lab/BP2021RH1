@@ -3,19 +3,14 @@ import React, { MouseEventHandler, useCallback, useEffect, useState } from 'reac
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './Carousel.scss';
 import ScrollContainer from './ScrollContainer';
-import ItemList from './ItemList';
-import useGenericTagEndpoints from '../../hooks/generic-endpoints.hook';
-import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
-import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
-import { useHistory } from 'react-router-dom';
-import { History } from 'history';
-import { asApiPath } from '../App';
+import { TagType } from '../../types/additionalFlatTypes';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
   PersonTagFiltersInput,
 } from '../../graphql/APIConnector';
 import DecadesList from '../views/search/DecadesList';
+import TagList from '../views/search/TagList';
 
 interface CategoryCarouselProps {
   title?: string;
@@ -36,8 +31,6 @@ const CategoryCarousel = ({
   seperator,
   archiveId = '0',
 }: CategoryCarouselProps) => {
-  const history: History = useHistory();
-
   const calculateMaxRowCount = () => {
     const tempRowCount = Math.max(1, Math.floor(Math.min(window.innerWidth - 64, 1200) / 300));
     if (Math.min(window.innerWidth - 64, 1200) >= tempRowCount * 300 + (tempRowCount - 1) * 8) {
@@ -60,23 +53,6 @@ const CategoryCarousel = ({
     };
   }, [onResize]);
 
-  const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
-
-  const { tagsWithThumbnailQuery } = useGenericTagEndpoints(type);
-
-  const { data, loading, error, fetchMore } = tagsWithThumbnailQuery({
-    variables: {
-      filters: queryParams,
-      start: 0,
-      limit: rows ? rows * 3 : rows,
-    },
-  });
-
-  const flattened = useSimplifiedQueryResponseData(data);
-  const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened
-    ? Object.values(flattened)[0]
-    : undefined;
-
   return (
     <ScrollContainer>
       {(scrollPos: number, scrollHeight: number) => (
@@ -84,25 +60,14 @@ const CategoryCarousel = ({
           {title && <h1 className='carousel-title'>{title}</h1>}
           {seperator && <hr className='carousel-seperator' />}
           <div className='carousel-collection-grid-container'>
-            {flattenedTags && type !== TagType.TIME_RANGE && (
-              <ItemList
-                items={(rows ? flattenedTags.slice(0, rowCount * rows) : flattenedTags).map(
-                  tag => ({
-                    name: tag.name,
-                    background: tag.thumbnail.length
-                      ? asApiPath(
-                          String(
-                            tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL
-                          )
-                        )
-                      : DEFAULT_THUMBNAIL_URL,
-                    onClick: () => {
-                      history.push('/show-more/' + archiveId + '/' + type + '/' + tag.id, {
-                        showBack: true,
-                      });
-                    },
-                  })
-                )}
+            {type !== TagType.TIME_RANGE && (
+              <TagList
+                type={type}
+                scroll={false}
+                onClickBasePath={'/show-more/' + archiveId + '/' + type + '/'}
+                maxItemAmount={rows ? rows * 3 : undefined}
+                currentItemAmount={rows ? rowCount * rows : undefined}
+                queryParams={queryParams}
               />
             )}
             {type === TagType.TIME_RANGE && (
