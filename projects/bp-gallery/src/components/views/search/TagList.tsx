@@ -17,6 +17,7 @@ import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
   PersonTagFiltersInput,
+  PictureFiltersInput,
 } from '../../../graphql/APIConnector';
 
 const TagList = ({
@@ -26,6 +27,7 @@ const TagList = ({
   maxItemAmount,
   currentItemAmount,
   queryParams,
+  thumbnailQueryParams,
 }: {
   type: TagType;
   scroll?: boolean;
@@ -33,6 +35,7 @@ const TagList = ({
   maxItemAmount?: number;
   currentItemAmount?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
+  thumbnailQueryParams?: PictureFiltersInput;
 }) => {
   const history: History = useHistory();
   const { t } = useTranslation();
@@ -44,6 +47,7 @@ const TagList = ({
   const { data, loading, error, fetchMore } = tagsWithThumbnailQuery({
     variables: {
       filters: queryParams,
+      thumbnailFilters: thumbnailQueryParams,
       start: 0,
       limit: maxItemAmount ? maxItemAmount : 30,
     },

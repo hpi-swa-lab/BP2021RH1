@@ -2405,6 +2405,7 @@ export type PostCommentMutation = {
 
 export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<KeywordTagFiltersInput>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
@@ -2520,6 +2521,7 @@ export type UpdateKeywordSynonymsMutation = {
 
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<LocationTagFiltersInput>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
@@ -2635,6 +2637,7 @@ export type UpdateLocationSynonymsMutation = {
 
 export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<PersonTagFiltersInput>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
@@ -4239,6 +4242,7 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
 export const GetKeywordTagsWithThumbnailDocument = gql`
   query getKeywordTagsWithThumbnail(
     $filters: KeywordTagFiltersInput = {}
+    $thumbnailFilters: PictureFiltersInput = {}
     $start: Int
     $limit: Int
   ) {
@@ -4247,7 +4251,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
         id
         attributes {
           name
-          thumbnail: pictures(pagination: { limit: 1 }) {
+          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
               attributes {
                 media {
@@ -4260,7 +4264,10 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
               }
             }
           }
-          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          verified_thumbnail: verified_pictures(
+            filters: $thumbnailFilters
+            pagination: { limit: 1 }
+          ) {
             data {
               attributes {
                 media {
@@ -4292,6 +4299,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
  * const { data, loading, error } = useGetKeywordTagsWithThumbnailQuery({
  *   variables: {
  *      filters: // value for 'filters'
+ *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
  *   },
@@ -4512,6 +4520,7 @@ export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
 export const GetLocationTagsWithThumbnailDocument = gql`
   query getLocationTagsWithThumbnail(
     $filters: LocationTagFiltersInput = {}
+    $thumbnailFilters: PictureFiltersInput = {}
     $start: Int
     $limit: Int
   ) {
@@ -4520,7 +4529,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
         id
         attributes {
           name
-          thumbnail: pictures(pagination: { limit: 1 }) {
+          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
               attributes {
                 media {
@@ -4533,7 +4542,10 @@ export const GetLocationTagsWithThumbnailDocument = gql`
               }
             }
           }
-          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          verified_thumbnail: verified_pictures(
+            filters: $thumbnailFilters
+            pagination: { limit: 1 }
+          ) {
             data {
               attributes {
                 media {
@@ -4565,6 +4577,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
  * const { data, loading, error } = useGetLocationTagsWithThumbnailQuery({
  *   variables: {
  *      filters: // value for 'filters'
+ *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
  *   },
@@ -4788,13 +4801,18 @@ export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetPersonTagsWithThumbnailDocument = gql`
-  query getPersonTagsWithThumbnail($filters: PersonTagFiltersInput = {}, $start: Int, $limit: Int) {
+  query getPersonTagsWithThumbnail(
+    $filters: PersonTagFiltersInput = {}
+    $thumbnailFilters: PictureFiltersInput = {}
+    $start: Int
+    $limit: Int
+  ) {
     personTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
       data {
         id
         attributes {
           name
-          thumbnail: pictures(pagination: { limit: 1 }) {
+          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
               attributes {
                 media {
@@ -4807,7 +4825,10 @@ export const GetPersonTagsWithThumbnailDocument = gql`
               }
             }
           }
-          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          verified_thumbnail: verified_pictures(
+            filters: $thumbnailFilters
+            pagination: { limit: 1 }
+          ) {
             data {
               attributes {
                 media {
@@ -4839,6 +4860,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
  * const { data, loading, error } = useGetPersonTagsWithThumbnailQuery({
  *   variables: {
  *      filters: // value for 'filters'
+ *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
  *   },

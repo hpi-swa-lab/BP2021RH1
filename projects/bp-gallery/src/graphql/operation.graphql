@@ -446,13 +446,18 @@ mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime
   }
 }
 
-query getKeywordTagsWithThumbnail($filters: KeywordTagFiltersInput = {}, $start: Int, $limit: Int) {
+query getKeywordTagsWithThumbnail(
+  $filters: KeywordTagFiltersInput = {}
+  $thumbnailFilters: PictureFiltersInput = {}
+  $start: Int
+  $limit: Int
+) {
   keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
     data {
       id
       attributes {
         name
-        thumbnail: pictures(pagination: { limit: 1 }) {
+        thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
           data {
             attributes {
               media {
@@ -465,7 +470,10 @@ query getKeywordTagsWithThumbnail($filters: KeywordTagFiltersInput = {}, $start:
             }
           }
         }
-        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+        verified_thumbnail: verified_pictures(
+          filters: $thumbnailFilters
+          pagination: { limit: 1 }
+        ) {
           data {
             attributes {
               media {
@@ -515,6 +523,7 @@ mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsI
 
 query getLocationTagsWithThumbnail(
   $filters: LocationTagFiltersInput = {}
+  $thumbnailFilters: PictureFiltersInput = {}
   $start: Int
   $limit: Int
 ) {
@@ -523,7 +532,7 @@ query getLocationTagsWithThumbnail(
       id
       attributes {
         name
-        thumbnail: pictures(pagination: { limit: 1 }) {
+        thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
           data {
             attributes {
               media {
@@ -536,7 +545,10 @@ query getLocationTagsWithThumbnail(
             }
           }
         }
-        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+        verified_thumbnail: verified_pictures(
+          filters: $thumbnailFilters
+          pagination: { limit: 1 }
+        ) {
           data {
             attributes {
               media {
@@ -583,13 +595,18 @@ mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonyms
     }
   }
 }
-query getPersonTagsWithThumbnail($filters: PersonTagFiltersInput = {}, $start: Int, $limit: Int) {
+query getPersonTagsWithThumbnail(
+  $filters: PersonTagFiltersInput = {}
+  $thumbnailFilters: PictureFiltersInput = {}
+  $start: Int
+  $limit: Int
+) {
   personTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
     data {
       id
       attributes {
         name
-        thumbnail: pictures(pagination: { limit: 1 }) {
+        thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
           data {
             attributes {
               media {
@@ -602,7 +619,10 @@ query getPersonTagsWithThumbnail($filters: PersonTagFiltersInput = {}, $start: I
             }
           }
         }
-        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+        verified_thumbnail: verified_pictures(
+          filters: $thumbnailFilters
+          pagination: { limit: 1 }
+        ) {
           data {
             attributes {
               media {

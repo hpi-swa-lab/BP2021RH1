@@ -27,9 +27,11 @@ const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 const DecadesList = ({
   scroll = true,
   onClickBasePath,
+  thumbnailQueryParams,
 }: {
   scroll?: boolean;
   onClickBasePath?: string;
+  thumbnailQueryParams?: PictureFiltersInput;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -38,7 +40,7 @@ const DecadesList = ({
   const decadeToFilter: { [key: string]: PictureFiltersInput | undefined } = {};
   DECADES.forEach(decade => {
     const decadeName = `filter${decade}0s`;
-    decadeToFilter[decadeName] = buildDecadeFilter(decade);
+    decadeToFilter[decadeName] = buildDecadeFilter(decade, thumbnailQueryParams);
   });
   const { data, loading, error } = useGetDecadePreviewThumbnailsQuery({
     // @ts-ignore

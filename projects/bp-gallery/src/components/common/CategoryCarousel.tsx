@@ -8,6 +8,7 @@ import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
   PersonTagFiltersInput,
+  PictureFiltersInput,
 } from '../../graphql/APIConnector';
 import DecadesList from '../views/search/DecadesList';
 import TagList from '../views/search/TagList';
@@ -18,6 +19,7 @@ interface CategoryCarouselProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   rows?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
+  thumbnailQueryParams?: PictureFiltersInput;
   seperator?: boolean;
   archiveId?: string;
 }
@@ -28,6 +30,7 @@ const CategoryCarousel = ({
   onClick,
   rows,
   queryParams,
+  thumbnailQueryParams,
   seperator,
   archiveId = '0',
 }: CategoryCarouselProps) => {
@@ -68,10 +71,15 @@ const CategoryCarousel = ({
                 maxItemAmount={rows ? rows * 3 : undefined}
                 currentItemAmount={rows ? rowCount * rows : undefined}
                 queryParams={queryParams}
+                thumbnailQueryParams={thumbnailQueryParams}
               />
             )}
             {type === TagType.TIME_RANGE && (
-              <DecadesList scroll={false} onClickBasePath={'/show-more/' + archiveId + '/date/'} />
+              <DecadesList
+                scroll={false}
+                onClickBasePath={'/show-more/' + archiveId + '/date/'}
+                thumbnailQueryParams={thumbnailQueryParams}
+              />
             )}
           </div>
           {onClick && (
