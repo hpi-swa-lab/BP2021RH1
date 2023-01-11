@@ -159,9 +159,7 @@ const PictureGrid = ({
         ]
       : undefined;
 
-  const pictureAdornments = extraAdornments
-    ? defaultAdornments?.concat(extraAdornments)
-    : defaultAdornments;
+  const pictureAdornments = (defaultAdornments ?? []).concat(extraAdornments ?? []);
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
@@ -172,7 +170,7 @@ const PictureGrid = ({
           onBulkEdit={navigateToBulkEdit}
         />
       )}
-      {pictureAdornments && (
+      {defaultAdornments && (
         <div className='selection-buttons'>
           <Button onClick={selectAll} startIcon={<Icon>done_all</Icon>} variant='contained'>
             {t('curator.selectAll')}

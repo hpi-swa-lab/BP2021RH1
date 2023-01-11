@@ -130,7 +130,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             scrollPos={scrollPos}
             scrollHeight={scrollHeight}
             hashbase={'archive'}
-            extraAdornments={[showcaseAdornment]}
+            extraAdornments={role >= AuthRole.CURATOR ? [showcaseAdornment] : []}
             bulkOperations={[bulkEdit]}
           />
         </div>
