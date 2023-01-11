@@ -14,6 +14,8 @@ const PERSON_TAGS_KEY = "person_tags";
 const TIME_RANGE_TAG_KEY = "time_range_tag";
 const ARCHIVE_TAG_KEY = "archive_tag";
 const IS_TEXT_KEY = "is_text";
+const LINKED_PICTURES_KEY = "linked_pictures";
+const LINKED_TEXTS_KEY = "linked_texts";
 
 const singular = key => {
   if (key[key.length - 1] !== "s") {
@@ -683,6 +685,33 @@ const bulkEditTags = async (knexEngine, pictureIds, data, tagsKey) => {
   return true;
 };
 
+const bulkEditLinks = async (knexEngine, pictureIds, data, linksKey, isInverse) => {
+  // Check whether we actually need to update stuff for that type.
+  if (!data[linksKey]) return false;
+
+  const diff = data[linksKey];
+
+  if (diff.added.length === 0 && diff.removed.length === 0) return false;
+
+  const columnNames = ["picture_id", "inv_picture_id"];
+  const [left, right] = isInverse ? columnNames.reverse() : columnNames;
+
+  const linksTable = table("pictures_linked_pictures_links");
+
+  const removedIds = diff.removed.map(picture => picture.id);
+
+  await knexEngine(linksTable)
+    .whereIn(left, pictureIds)
+    .whereIn(right, removedIds)
+    .del();
+
+  const addedIds = diff.added.map(picture => picture.id);
+
+  insertCrossProductIgnoreDuplicates(knexEngine, linksTable, left, right, pictureIds, addedIds);
+
+  return true;
+}
+
 const bulkEdit = async (knexEngine, pictureIds, data) => {
   strapi.log.debug(`BulkEdit called on pictures [${pictureIds.toString()}] with data ${JSON.stringify(data)} `);
   const pictureQuery = strapi.db.query("api::picture.picture");
@@ -699,6 +728,8 @@ const bulkEdit = async (knexEngine, pictureIds, data) => {
   shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, PERSON_TAGS_KEY);
   shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, LOCATION_TAGS_KEY);
   shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, KEYWORD_TAGS_KEY);
+  shouldWriteUpdatedAt |= await bulkEditLinks(knexEngine, pictureIds, data, LINKED_PICTURES_KEY, false);
+  shouldWriteUpdatedAt |= await bulkEditLinks(knexEngine, pictureIds, data, LINKED_TEXTS_KEY, true);
 
   if (shouldWriteUpdatedAt) {
     const updatedAt = new Date();
