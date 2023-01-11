@@ -32,6 +32,18 @@
       "type": "boolean",
       "default": false,
       "required": false
+    },
+    "childComments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "parentComment"
+    },
+    "parentComment": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::comment.comment",
+      "inversedBy": "childComments"
     }
   }
 }

@@ -152,13 +152,76 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        comments(publicationState: PREVIEW, sort: "date:desc") {
+        comments(
+          publicationState: PREVIEW
+          sort: "date:desc"
+          filters: { parentComment: { id: { eq: null } } }
+        ) {
           data {
             id
             attributes {
               text
               author
               date
+              picture {
+                data {
+                  id
+                }
+              }
+              parentComment {
+                data {
+                  id
+                  attributes {
+                    text
+                    author
+                    date
+                    picture {
+                      data {
+                        id
+                      }
+                    }
+                    parentComment {
+                      data {
+                        id
+                      }
+                    }
+                    childComments {
+                      data {
+                        id
+                      }
+                    }
+                    publishedAt
+                    pinned
+                  }
+                }
+              }
+              childComments {
+                data {
+                  id
+                  attributes {
+                    text
+                    author
+                    date
+                    picture {
+                      data {
+                        id
+                      }
+                    }
+                    parentComment {
+                      data {
+                        id
+                      }
+                    }
+                    childComments {
+                      data {
+                        id
+                      }
+                    }
+                    publishedAt
+                    pinned
+                  }
+                }
+              }
               publishedAt
               pinned
             }
@@ -434,9 +497,22 @@ query getRootCollection {
   }
 }
 
-mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
+mutation postComment(
+  $id: ID!
+  $author: String!
+  $text: String!
+  $date: DateTime!
+  $parentCommentId: ID
+) {
   createComment(
-    data: { author: $author, text: $text, date: $date, picture: $id, publishedAt: null }
+    data: {
+      author: $author
+      text: $text
+      date: $date
+      picture: $id
+      publishedAt: null
+      parentComment: $parentCommentId
+    }
   ) {
     data {
       attributes {
@@ -947,6 +1023,36 @@ mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
   updateArchiveTag(id: $archiveId, data: $data) {
     data {
       id
+    }
+  }
+}
+
+query getComments($commentIds: [ID!]!) {
+  comments(publicationState: PREVIEW, filters: { id: { in: $commentIds } }) {
+    data {
+      id
+      attributes {
+        text
+        author
+        picture {
+          data {
+            id
+          }
+        }
+        date
+        parentComment {
+          data {
+            id
+          }
+        }
+        childComments(publicationState: PREVIEW) {
+          data {
+            id
+          }
+        }
+        publishedAt
+        pinned
+      }
     }
   }
 }

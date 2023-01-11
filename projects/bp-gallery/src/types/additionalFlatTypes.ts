@@ -19,7 +19,8 @@ type ID = { id: Scalars['ID'] };
 export type FlatCollectionWithoutRelations = ID &
   Omit<Collection, 'pictures' | 'child_collections' | 'parent_collections'>;
 
-type FlatCommentWithoutRelations = ID & Omit<Comment, 'picture'>;
+type FlatCommentWithoutRelations = ID &
+  Omit<Comment, 'picture' | 'parentComment' | 'childComments'>;
 
 type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
@@ -60,6 +61,8 @@ export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
+  parentComment?: FlatComment;
+  childComments?: FlatComment[];
 };
 
 export type FlatDescription = FlatDescriptionWithoutRelations & {

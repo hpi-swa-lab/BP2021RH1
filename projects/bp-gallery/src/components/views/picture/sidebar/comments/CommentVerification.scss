@@ -5,9 +5,10 @@
   padding: 0.5rem;
   border-radius: 0.5rem;
   display: grid;
-  grid-template-columns: 50% 50%;
   grid-gap: 0.5rem;
   gap: 0.5rem;
+  box-sizing: border-box;
+  width: 100%;
 
   &.unstyled {
     background: none !important;

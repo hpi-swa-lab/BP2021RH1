@@ -7,7 +7,13 @@ import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
 import { DialogContext } from '../../../../provider/DialogProvider';
 
-const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
+const NewCommentForm = ({
+  pictureId,
+  parentCommentId,
+}: {
+  pictureId: string;
+  parentCommentId?: string;
+}) => {
   const { t } = useTranslation();
   const openAlert = useContext(AlertContext);
   const dialog = useContext(DialogContext);
@@ -66,10 +72,11 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
           author: commentAuthor,
           text: commentText,
           date: getCurrentDateTimeString(),
+          parentCommentId: parentCommentId,
         },
       });
     }
-  }, [commentAuthor, commentText, pictureId, postCommentMutation]);
+  }, [commentAuthor, commentText, pictureId, parentCommentId, postCommentMutation]);
 
   return (
     <div
