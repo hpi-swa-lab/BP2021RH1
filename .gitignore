@@ -1,3 +1,5 @@
+.env
+.env.development
 .DS_Store
 .idea
 .vscode
