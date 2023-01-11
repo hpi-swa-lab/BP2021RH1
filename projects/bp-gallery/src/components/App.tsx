@@ -171,7 +171,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
     'browse',
     'search',
     'latest',
-    //'terms-of-service',
+    'terms-of-service',
     'contact'
   ]
   const pathName = useLocation().pathname;
@@ -192,7 +192,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
               {renderRoutes(route?.routes)}
               {showFooter && <Footer/>}
               </div>
-              <NavigationBar isMobile={true} />
+              {isMobile && <NavigationBar isMobile={true} />}
             </div>
           </DialogProvider>
         </AuthProvider>

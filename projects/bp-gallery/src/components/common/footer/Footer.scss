@@ -62,11 +62,13 @@
 */
 
 .footer{
-    
+   
+  height: auto;
   max-width: 1200px;
   margin: auto;
+  margin-bottom: 0;
   background-color: #c0bcbc;
-  padding: 1rem 1rem 0rem 1rem;
+  padding: 1rem;
 
   h3 {
     font-size: 1.5rem;
