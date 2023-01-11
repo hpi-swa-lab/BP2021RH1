@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { ChevronLeft, ContentPaste } from '@mui/icons-material';
+import React, { useCallback, useMemo } from 'react';
+import { ChevronLeft, ContentPaste, ContentPasteOff } from '@mui/icons-material';
 import { Badge, Button } from '@mui/material';
 import { useState } from 'react';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -8,6 +8,8 @@ import ScrollContainer from '../ScrollContainer';
 import { useTranslation } from 'react-i18next';
 import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
 import './ClipboardEditor.scss';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { difference } from 'lodash';
 
 export const ClipboardEditor = () => {
   const [data, setData] = useClipboard();
@@ -20,6 +22,18 @@ export const ClipboardEditor = () => {
   const clear = useCallback(() => {
     setData(data => ({ ...data, pictureIds: [] }));
   }, [setData]);
+
+  const remove = useMemo(
+    () => ({
+      position: 'top-right' as const,
+      onClick: (picture: FlatPicture) => {
+        setData(data => ({ ...data, pictureIds: difference(data.pictureIds, [picture.id]) }));
+      },
+      icon: <ContentPasteOff />,
+      title: t('common.clipboard.remove'),
+    }),
+    [setData, t]
+  );
 
   if (role < AuthRole.CURATOR) {
     return null;
@@ -45,6 +59,7 @@ export const ClipboardEditor = () => {
                   hashbase={'clipboard'}
                   showCount={false}
                   showDefaultAdornments={false}
+                  extraAdornments={[remove]}
                 />
               )}
             </ScrollContainer>

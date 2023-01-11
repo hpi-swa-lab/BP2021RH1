@@ -25,7 +25,8 @@
       "copy": "Link kopieren",
       "copy-explanation": "Den Link zu diesem Bild in die Zwischenablage kopieren",
       "paste": "Links einfügen",
-      "paste-explanation": "Die Links zu den Bildern aus der Zwischenablage einfügen"
+      "paste-explanation": "Die Links zu den Bildern aus der Zwischenablage einfügen",
+      "remove": "Aus der Zwischenablage entfernen"
     },
     "mark-as-text": "Als Text markieren",
     "locations": "Orte",
