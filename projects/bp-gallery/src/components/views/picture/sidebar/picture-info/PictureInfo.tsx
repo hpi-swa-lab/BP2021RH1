@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
 import './PictureInfo.scss';
@@ -89,7 +89,26 @@ const PictureInfo = ({
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
 
-  const [_, setClipboardData] = useClipboard();
+  // null means there is nothing in the database
+  // while undefined means the caller (e. g. BulkEdit)
+  // doesn't want to show anything related to texts
+  const isText = picture.is_text === null ? false : picture.is_text;
+
+  const linked = useMemo(
+    () =>
+      isText
+        ? {
+            name: 'pictures',
+            collection: picture.linked_pictures,
+            collectionName: 'linked_pictures',
+          }
+        : {
+            name: 'texts',
+            collection: picture.linked_texts,
+            collectionName: 'linked_texts',
+          },
+    [isText, picture.linked_pictures, picture.linked_texts]
+  );
 
   const copyToClipboard = useCallback(() => {
     setClipboardData(data => ({
@@ -162,10 +181,10 @@ const PictureInfo = ({
           />
         </PictureInfoField>
       )}
-      {role >= AuthRole.CURATOR && !isNil(picture.is_text) && (
+      {role >= AuthRole.CURATOR && isText !== undefined && (
         <div className='links-operations'>
           <CheckboxButton
-            checked={picture.is_text}
+            checked={isText}
             onChange={isText => {
               savePictureInfo({ is_text: isText });
             }}
@@ -195,13 +214,12 @@ const PictureInfo = ({
           )}
         </div>
       )}
-      {(role >= AuthRole.CURATOR || Boolean(picture /* TODO */)) && !isNil(picture.is_text) && (
-        <PictureInfoField title={t('pictureFields.links.texts')} icon='link' type='links'>
+      {(role >= AuthRole.CURATOR || Boolean(linked.collection?.length)) && isText !== undefined && (
+        <PictureInfoField title={t(`pictureFields.links.${linked.name}`)} icon='link' type='links'>
           <ScrollContainer>
             {(scrollPos: number, scrollHeight: number) => (
               <PictureScrollGrid
-                // temporary workaround to simulate a few linked pictures
-                queryParams={{ id: { in: new Array(1000).fill(0).map((_, i) => i.toString()) } }}
+                queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
                 scrollPos={scrollPos}
                 scrollHeight={scrollHeight}
                 hashbase={'links'}

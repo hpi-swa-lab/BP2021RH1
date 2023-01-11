@@ -103,6 +103,18 @@
       "relation": "manyToOne",
       "target": "api::archive-tag.archive-tag",
       "inversedBy": "pictures"
+    },
+    "linked_texts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "linked_pictures"
+    },
+    "linked_pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "linked_texts"
     }
   }
 }
