@@ -26,6 +26,8 @@
       "copy-explanation": "Den Link zu diesem Bild in die Zwischenablage kopieren",
       "paste": "Links einfügen",
       "paste-explanation": "Die Links zu den Bildern aus der Zwischenablage einfügen",
+      "mixed": "Fehler",
+      "mixed.explanation": "Die Zwischenablage enthält sowohl Bilder als auch Texte.",
       "remove": "Aus der Zwischenablage entfernen"
     },
     "mark-as-text": "Als Text markieren",
@@ -44,6 +46,7 @@
     "showPicture": "Vollbild",
     "showInfo": "Infos & Kommentare anzeigen",
     "close": "Schließen",
+    "error": "Fehler",
     "browse-view": "Alle Bilder",
     "latest-pictures": "Neuzugänge im Archiv",
     "latest-pictures-info": "In diese Kollektion fließen die jeweils jüngsten 500 „Neuzugänge“ des Fotoarchivs ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",

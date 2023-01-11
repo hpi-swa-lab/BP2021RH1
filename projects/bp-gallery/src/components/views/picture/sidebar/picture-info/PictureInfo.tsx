@@ -12,6 +12,7 @@ import {
   useGetAllKeywordTagsLazyQuery,
   useGetAllLocationTagsLazyQuery,
   useGetAllPersonTagsLazyQuery,
+  useGetMultiplePictureInfoQuery,
 } from '../../../../../graphql/APIConnector';
 import TagSelectionField from './TagSelectionField';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
@@ -23,9 +24,10 @@ import ScrollContainer from '../../../../common/ScrollContainer';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import { useClipboard } from '../../../../provider/ClipboardProvider';
 import { Button } from '@mui/material';
-import { ContentCopy, ContentPasteGo } from '@mui/icons-material';
-import { isNil, union } from 'lodash';
+import { ContentCopy, ContentPasteGo, LinkOff } from '@mui/icons-material';
+import { union, isEqual, unionWith, differenceWith } from 'lodash';
 import CheckboxButton from '../../../../common/CheckboxButton';
+import Loading from '../../../../common/Loading';
 
 export type Field = Pick<
   FlatPicture,
@@ -110,12 +112,47 @@ const PictureInfo = ({
     [isText, picture.linked_pictures, picture.linked_texts]
   );
 
+  const [clipboardData, setClipboardData] = useClipboard();
+
+  const {
+    data: clipboardPicturesData,
+    loading: clipboardPicturesLoading,
+    error: clipboardPicturesError,
+  } = useGetMultiplePictureInfoQuery({
+    variables: {
+      pictureIds: clipboardData.pictureIds,
+    },
+  });
+  const clipboardPictures: FlatPicture[] | undefined =
+    useSimplifiedQueryResponseData(clipboardPicturesData)?.pictures;
+
+  const shouldCopy =
+    !clipboardPicturesLoading &&
+    !clipboardPicturesError &&
+    clipboardPictures?.every(picture => (picture.is_text ?? false) === isText);
+
+  const shouldPaste =
+    !clipboardPicturesLoading &&
+    !clipboardPicturesError &&
+    Boolean(clipboardPictures?.length) &&
+    clipboardPictures?.every(picture => !(picture.is_text ?? false) === isText);
+
   const copyToClipboard = useCallback(() => {
     setClipboardData(data => ({
       ...data,
       pictureIds: union(data.pictureIds, [picture.id]),
     }));
   }, [setClipboardData, picture.id]);
+
+  const pasteFromClipboard = useCallback(() => {
+    savePictureInfo({
+      [linked.collectionName]: unionWith(
+        linked.collection ?? [],
+        clipboardData.pictureIds.map(id => ({ id })),
+        isEqual
+      ),
+    });
+  }, [savePictureInfo, linked, clipboardData.pictureIds]);
 
   return (
     <div className='picture-info'>
@@ -191,17 +228,17 @@ const PictureInfo = ({
           >
             {t('common.mark-as-text')}
           </CheckboxButton>
-          {picture.is_text ? (
+          {shouldPaste ? (
             <Button
               className='clipboard-button'
               startIcon={<ContentPasteGo />}
               variant='contained'
-              onClick={() => {}}
+              onClick={pasteFromClipboard}
               title={t('common.clipboard.paste-explanation')}
             >
               {t('common.clipboard.paste')}
             </Button>
-          ) : (
+          ) : shouldCopy ? (
             <Button
               className='clipboard-button'
               startIcon={<ContentCopy />}
@@ -210,6 +247,19 @@ const PictureInfo = ({
               title={t('common.clipboard.copy-explanation')}
             >
               {t('common.clipboard.copy')}
+            </Button>
+          ) : clipboardPicturesLoading ? (
+            <Loading />
+          ) : clipboardPicturesError ? (
+            t('common.error')
+          ) : (
+            <Button
+              className='clipboard-button'
+              variant='contained'
+              disabled
+              title={t('common.clipboard.mixed-explanation')}
+            >
+              {t('common.clipboard.mixed')}
             </Button>
           )}
         </div>
