@@ -124,7 +124,8 @@
     "keywords": "Schlagworte",
     "links": {
       "pictures": "Verlinkte Bilder",
-      "texts": "Verlinkte Texte"
+      "texts": "Verlinkte Texte",
+      "remove": "Link entfernen"
     },
     "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",

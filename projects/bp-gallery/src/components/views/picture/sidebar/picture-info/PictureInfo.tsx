@@ -154,6 +154,24 @@ const PictureInfo = ({
     });
   }, [savePictureInfo, linked, clipboardData.pictureIds]);
 
+  const removeLinkAdornment = useMemo(
+    () => ({
+      position: 'top-right' as const,
+      onClick: (link: FlatPicture) => {
+        savePictureInfo({
+          [linked.collectionName]: differenceWith(
+            linked.collection ?? [],
+            [{ id: link.id }],
+            isEqual
+          ),
+        });
+      },
+      icon: <LinkOff />,
+      title: t('pictureFields.links.remove'),
+    }),
+    [savePictureInfo, linked, t]
+  );
+
   return (
     <div className='picture-info'>
       {topInfo?.(anyFieldTouched)}
@@ -275,6 +293,7 @@ const PictureInfo = ({
                 hashbase={'links'}
                 showCount={false}
                 showDefaultAdornments={false}
+                extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
               />
             )}
           </ScrollContainer>
