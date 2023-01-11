@@ -18,9 +18,8 @@
 
   @mixin data-type-colors($name, $color) {
     &[data-type='#{$name}'] {
-      .icon-container,
-      .MuiChip-filled,
-      .MuiChip-deleteIcon {
+      & > .icon-container,
+      & > .field-content > :not(.scroll-context) .MuiChip-root {
         background: $color;
         color: white;
       }
