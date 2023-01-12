@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { PluginOption } from 'vite';
 
@@ -12,13 +12,13 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
-  test: {
-    globals: true,
-    environment: 'happy-dom',
-    setupFiles: './src/setupTests.ts',
-    coverage: {
-      reporter: ['text', 'html'],
-      exclude: ['node_modules/', 'src/setupTests.ts'],
-    },
-  },
+  // test: {
+  //   globals: true,
+  //   environment: 'happy-dom',
+  //   setupFiles: './src/setupTests.ts',
+  //   coverage: {
+  //     reporter: ['text', 'html'],
+  //     exclude: ['node_modules/', 'src/setupTests.ts'],
+  //   },
+  // },
 });

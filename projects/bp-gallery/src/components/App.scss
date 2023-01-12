@@ -2,6 +2,9 @@
 @import 'src/shared/fonts/creteround/creteround.scss';
 @import 'src/shared/style';
 @import 'src/shared/mui/mui.scss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
   font-family: 'Lato', Arial, sans-serif;
