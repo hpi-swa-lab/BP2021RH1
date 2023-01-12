@@ -9,7 +9,7 @@ import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider
 import { useTranslation } from 'react-i18next';
 import './CommentVerification.scss';
 import { Button } from '@mui/material';
-import { Close, Delete, Done } from '@mui/icons-material';
+import { Close, Done } from '@mui/icons-material';
 
 const CommentVerification = ({ children, comment }: { children: any; comment: FlatComment }) => {
   const dialog = useContext(DialogContext);
@@ -18,13 +18,13 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
 
   const [acceptComment] = useAcceptCommentMutation({
     variables: { commentId: comment.id, currentTime: new Date().toISOString() },
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getPictureInfo, getComments'],
   });
   const [declineComment] = useDeclineCommentMutation({
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getPictureInfo, getComments'],
   });
 
   const onDecline = async () => {
@@ -42,9 +42,9 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
   } else {
     return (
       <div
-        className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}${
-          role < AuthRole.CURATOR ? ' unstyled' : ''
-        }`}
+        className={`comment-verification-container unstyled${
+          !comment.publishedAt ? ' unverified' : ''
+        }${role < AuthRole.CURATOR ? ' unstyled' : ''}`}
       >
         {children}
         {!comment.publishedAt && (
@@ -56,11 +56,6 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
               {t('common.accept')}
             </Button>
           </>
-        )}
-        {comment.publishedAt && role >= AuthRole.CURATOR && (
-          <Button className='delete' startIcon={<Delete />} onClick={onDecline}>
-            {t('common.delete')}
-          </Button>
         )}
       </div>
     );
