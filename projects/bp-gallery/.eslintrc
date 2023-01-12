@@ -82,15 +82,7 @@
     "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
     "@typescript-eslint/prefer-optional-chain": "warn",
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
-    "no-underscore-dangle": 0,
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "always",
-        "jsx": "always"
-      }
-    ]
+    "no-underscore-dangle": 0
   },
   "overrides": [
     {

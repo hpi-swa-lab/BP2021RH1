@@ -18,7 +18,7 @@ import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
 import NavigationBar from './top-and-bottom-bar/NavigationBar';
 
-const apiBase = import.meta.env.VITE_REACT_APP_API_BASE ?? '';
+const apiBase = import.meta.env.VITE_REACT_APP_API_BASE;
 
 export const asApiPath = (pathEnding: string) => {
   // Removes any multiple occurrences of a "/"
