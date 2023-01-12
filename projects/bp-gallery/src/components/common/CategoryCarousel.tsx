@@ -79,6 +79,7 @@ const CategoryCarousel = ({
                 scroll={false}
                 onClickBasePath={'/show-more/' + archiveId + '/date/'}
                 thumbnailQueryParams={thumbnailQueryParams}
+                currentItemAmount={rows ? rowCount * rows : undefined}
               />
             )}
           </div>

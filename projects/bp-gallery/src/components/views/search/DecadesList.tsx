@@ -28,10 +28,12 @@ const DecadesList = ({
   scroll = true,
   onClickBasePath,
   thumbnailQueryParams,
+  currentItemAmount,
 }: {
   scroll?: boolean;
   onClickBasePath?: string;
   thumbnailQueryParams?: PictureFiltersInput;
+  currentItemAmount?: number;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -83,22 +85,24 @@ const DecadesList = ({
     } else if (onClickBasePath) {
       return (
         <ItemList
-          items={DECADES.map((decadeKey: string) => {
-            const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-            const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-            const displayedName = getDecadeTranslation(t, decadeKey);
-            return {
-              name: displayedName,
-              background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
-              onClick: () => {
-                if (onClickBasePath) {
-                  history.push(onClickBasePath + decadeKey, {
-                    showBack: true,
-                  });
-                }
-              },
-            };
-          })}
+          items={(currentItemAmount ? DECADES.slice(0, currentItemAmount) : DECADES).map(
+            (decadeKey: string) => {
+              const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
+              const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
+              const displayedName = getDecadeTranslation(t, decadeKey);
+              return {
+                name: displayedName,
+                background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+                onClick: () => {
+                  if (onClickBasePath) {
+                    history.push(onClickBasePath + decadeKey, {
+                      showBack: true,
+                    });
+                  }
+                },
+              };
+            }
+          )}
         />
       );
     } else return <div>{t('something-went-wrong')}</div>;
