@@ -5,8 +5,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:react/recommended",
-    "plugin:prettier/recommended",
-    "plugin:jest/recommended"
+    "plugin:prettier/recommended"
   ],
   "settings": {
     "react": {
@@ -23,7 +22,7 @@
   "parserOptions": {
     "project": ["./tsconfig.json", "./cypress/tsconfig.json", "./vite.config.ts"]
   },
-  "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier", "unused-imports", "jest"],
+  "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier", "unused-imports"],
   "rules": {
     "no-alert": "warn",
     "prettier/prettier": ["warn", { "endOfLine": "auto" }],
