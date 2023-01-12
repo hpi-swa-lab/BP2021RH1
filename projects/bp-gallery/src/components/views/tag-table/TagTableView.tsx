@@ -294,7 +294,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
     return <Loading />;
   } else if (Object.values(tags).length && role >= AuthRole.CURATOR) {
     return (
-      <div className='grid'>
+      <div className='tag-grid'>
         <Button onClick={mergeTags} className='merge-button'>
           {t('curator.mergeTag')}
         </Button>
