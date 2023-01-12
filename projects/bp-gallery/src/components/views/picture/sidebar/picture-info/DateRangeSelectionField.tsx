@@ -170,7 +170,7 @@ const INPUT_RANGES: InputRange[] = [
     },
   },
   {
-    label: i18n.t('common.0s') as string,
+    label: i18n.t('common.0s') ?? '',
     range(value: number, props) {
       decadeValue = `${value}`;
       resetDecade = false;

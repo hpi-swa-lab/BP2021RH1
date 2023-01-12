@@ -8,7 +8,7 @@ import SearchBar from '../views/search/SearchBar';
 import NavigationBar from './NavigationBar';
 
 type LocationProps = {
-  state: {
+  state?: {
     showBack: boolean;
   };
 };
