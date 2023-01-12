@@ -99,16 +99,30 @@ const ShowMoreView = ({
         return archiveId === '0'
           ? { verified_keyword_tags: { id: { eq: categoryId } } }
           : {
-              archive_tag: { id: { eq: archiveId } },
-              verified_keyword_tags: { id: { eq: categoryId } },
+              and: [
+                { archive_tag: { id: { eq: archiveId } } },
+                {
+                  or: [
+                    { verified_keyword_tags: { id: { eq: categoryId } } },
+                    { keyword_tags: { id: { eq: categoryId } } },
+                  ],
+                },
+              ],
             };
       }
       case 'person': {
         return archiveId === '0'
           ? { verified_person_tags: { id: { eq: categoryId } } }
           : {
-              archive_tag: { id: { eq: archiveId } },
-              verified_person_tags: { id: { eq: categoryId } },
+              and: [
+                { archive_tag: { id: { eq: archiveId } } },
+                {
+                  or: [
+                    { verified_person_tags: { id: { eq: categoryId } } },
+                    { person_tags: { id: { eq: categoryId } } },
+                  ],
+                },
+              ],
             };
       }
       case 'location':
@@ -116,8 +130,15 @@ const ShowMoreView = ({
         return archiveId === '0'
           ? { verified_location_tags: { id: { eq: categoryId } } }
           : {
-              archive_tag: { id: { eq: archiveId } },
-              verified_location_tags: { id: { eq: categoryId } },
+              and: [
+                { archive_tag: { id: { eq: archiveId } } },
+                {
+                  or: [
+                    { verified_location_tags: { id: { eq: categoryId } } },
+                    { location_tags: { id: { eq: categoryId } } },
+                  ],
+                },
+              ],
             };
       }
     }
