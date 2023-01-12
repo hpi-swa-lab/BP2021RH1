@@ -8,6 +8,7 @@ import routes from './components/routes';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
 import setupMatomo from './matomo';
+import './index.css';
 
 const sentryDsn = import.meta.env.VITE_REACT_APP_SENTRY_DSN;
 const matomoUrl = import.meta.env.VITE_REACT_APP_MATOMO_URL;

@@ -42,7 +42,8 @@
     "react-router-dom": "^5.3.0",
     "react-scroll-parallax": "^3.3.2",
     "uuid": "^9.0.0",
-    "web-vitals": "^3.1.0"
+    "web-vitals": "^3.1.0",
+    "tailwindcss": "^3.2.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.3.0",
@@ -103,13 +104,5 @@
     "replace-error-policy": "replace-in-file \"import { gql } from '@apollo/client\" \"import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && replace-in-file \"errorPolicy: 'all'\" \"errorPolicy: 'all' as ErrorPolicy\" ./src/graphql/APIConnector.tsx",
     "generate-api": "graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && yarn replace-error-policy",
     "generate-api:e2e": "env-cmd -f ./environments/.env.test graphql-codegen --config src/graphql/codegen.yml && yarn eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && yarn replace-error-policy"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": []
   }
 }

@@ -1,6 +1,7 @@
 node-modules
 src/reportWebVitals.js
 src/react-app-env.d.ts
+tailwind.config.js
 src/graphql/schema/loadRemoteSchema.js
 babel.config.js
 jest.config.js
