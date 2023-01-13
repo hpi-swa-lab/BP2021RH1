@@ -28,6 +28,7 @@ import { ContentCopy, ContentPasteGo, LinkOff } from '@mui/icons-material';
 import { union, isEqual, unionWith, differenceWith } from 'lodash';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { ClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
+import { HelpTooltip } from '../../../../common/HelpTooltip';
 
 export type Field = Pick<
   FlatPicture,
@@ -96,6 +97,8 @@ const PictureInfo = ({
   // doesn't want to show anything related to texts
   const isText = picture.is_text === null ? false : picture.is_text;
 
+  const pictureType = isText ? 'texts' : 'pictures';
+
   const linked = useMemo(
     () =>
       isText
@@ -136,6 +139,13 @@ const PictureInfo = ({
     !clipboardPicturesError &&
     Boolean(clipboardPictures?.length) &&
     clipboardPictures?.every(picture => !(picture.is_text ?? false) === isText);
+
+  const isClipboardMixed = !(
+    (shouldCopy ?? false) ||
+    (shouldPaste ?? false) ||
+    clipboardPicturesLoading ||
+    clipboardPicturesError
+  );
 
   const copyToClipboard = useCallback(() => {
     setClipboardData(data => ({
@@ -253,16 +263,19 @@ const PictureInfo = ({
                 startIcon={<ContentCopy />}
                 variant='contained'
                 onClick={copyToClipboard}
-                title={t('common.clipboard.copy-explanation')}
               >
-                {t('common.clipboard.copy')}
+                {t(`pictureFields.links.${pictureType}.copy`)}
               </Button>
             </ClipboardEditorButtons>
           )}
         </div>
       )}
       {(role >= AuthRole.CURATOR || Boolean(linked.collection?.length)) && isText !== undefined && (
-        <PictureInfoField title={t(`pictureFields.links.${linked.name}`)} icon='link' type='links'>
+        <PictureInfoField
+          title={t(`pictureFields.links.${linked.name}.label`)}
+          icon='link'
+          type='links'
+        >
           <ScrollContainer>
             {(scrollPos: number, scrollHeight: number) => (
               <PictureScrollGrid
@@ -276,31 +289,30 @@ const PictureInfo = ({
               />
             )}
           </ScrollContainer>
-          {shouldPaste ? (
-            <Button
-              className='clipboard-button'
-              startIcon={<ContentPasteGo />}
-              variant='contained'
-              onClick={pasteFromClipboard}
-              title={t('common.clipboard.paste-explanation')}
-            >
-              {t('common.clipboard.paste', {
-                count: clipboardData.pictureIds.length,
-              })}
-            </Button>
+          {shouldPaste || isClipboardMixed ? (
+            <div className='clipboard-buttons'>
+              <Button
+                className='clipboard-button'
+                startIcon={<ContentPasteGo />}
+                variant='contained'
+                onClick={shouldPaste ? pasteFromClipboard : undefined}
+                disabled={isClipboardMixed}
+              >
+                {clipboardData.pictureIds.length > 1
+                  ? t(`pictureFields.links.${linked.name}.paste.multiple`, {
+                      count: clipboardData.pictureIds.length,
+                    })
+                  : t(`pictureFields.links.${linked.name}.paste.single`)}
+              </Button>
+              {isClipboardMixed && (
+                <HelpTooltip
+                  title={t('common.clipboard.mixed.title')}
+                  content={t('common.clipboard.mixed.content')}
+                />
+              )}
+            </div>
           ) : clipboardPicturesError ? (
             t('common.error')
-          ) : !shouldCopy && !clipboardPicturesLoading ? (
-            <Button
-              className='clipboard-button'
-              variant='contained'
-              disabled
-              title={t('common.clipboard.mixed-explanation')}
-            >
-              {t('common.clipboard.paste', {
-                count: clipboardData.pictureIds.length,
-              })}
-            </Button>
           ) : (
             []
           )}

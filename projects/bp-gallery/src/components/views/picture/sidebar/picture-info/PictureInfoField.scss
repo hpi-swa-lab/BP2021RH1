@@ -44,6 +44,16 @@
       .picture-grid {
         margin-top: 0;
       }
+
+      .clipboard-buttons {
+        display: flex;
+        flex-direction: row;
+        margin-top: 10px;
+
+        .MuiButton-root:not(:disabled) {
+          background: $primaryColor;
+        }
+      }
     }
   }
 

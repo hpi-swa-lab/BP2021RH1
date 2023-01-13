@@ -20,14 +20,13 @@
     "keywords": "Schlagworte",
     "persons": "Personen",
     "clipboard": {
-      "name": "Zwischenablage",
-      "clear": "Zwischenablage leeren",
-      "copy": "Link kopieren",
-      "copy-explanation": "Den Link zu diesem Bild in die Zwischenablage kopieren",
-      "paste": "{{count}} Links aus der Zwischenablage einfügen",
-      "paste-explanation": "Die Links zu den Bildern aus der Zwischenablage einfügen",
-      "mixed.explanation": "Die Zwischenablage enthält sowohl Bilder als auch Texte.",
-      "remove": "Aus der Zwischenablage entfernen"
+      "name": "Kopierte Links",
+      "clear": "Ablage leeren",
+      "remove": "Aus der Ablage entfernen",
+      "mixed": {
+        "title": "Gemischte kopierte Links:",
+        "content": "Es sind sowohl Bilder als auch Texte kopiert worden. Bitte überprüfen Sie die kopierten Links."
+      }
     },
     "mark-as-text": "Als Text markieren",
     "locations": "Orte",
@@ -122,8 +121,22 @@
     "people": "Personen",
     "keywords": "Schlagworte",
     "links": {
-      "pictures": "Verlinkte Bilder",
-      "texts": "Verlinkte Texte",
+      "pictures": {
+        "label": "Verlinkte Bilder",
+        "copy": "Aktuelles Bild kopieren",
+        "paste": {
+          "single": "Ein kopiertes Bild einfügen",
+          "multiple": "{{count}} kopierte Bilder einfügen"
+        }
+      },
+      "texts": {
+        "label": "Verlinkte Texte",
+        "copy": "Aktuellen Text kopieren",
+        "paste": {
+          "single": "Einen kopierten Text einfügen",
+          "multiple": "{{count}} kopierte Texte einfügen"
+        }
+      },
       "remove": "Link entfernen"
     },
     "archiveTag": "Archiv",
