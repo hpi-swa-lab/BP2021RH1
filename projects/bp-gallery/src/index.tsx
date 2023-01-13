@@ -24,11 +24,13 @@ if (matomoUrl) {
   setupMatomo(matomoUrl);
 }
 
+export const root = document.getElementById('root');
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root')
+  root
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -10,9 +10,10 @@ import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
 import BulkEditView from '../../views/bulk-edit/BulkEditView';
 import { union } from 'lodash';
-import { Button, Icon } from '@mui/material';
+import { Button, Icon, Portal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { CheckBox, CheckBoxOutlineBlank, Delete } from '@mui/icons-material';
+import { root } from '../../..';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -213,25 +214,29 @@ const PictureGrid = ({
         })}
       </div>
       {focusedPicture && (
-        <PictureView
-          initialPictureId={focusedPicture}
-          siblingIds={pictures.map(p => p.id)}
-          onBack={(picid: string) => {
-            setTransitioning(true);
-            zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
-              setTransitioning(false);
-              setFocusedPicture(undefined);
-            });
-          }}
-        />
+        <Portal container={root}>
+          <PictureView
+            initialPictureId={focusedPicture}
+            siblingIds={pictures.map(p => p.id)}
+            onBack={(picid: string) => {
+              setTransitioning(true);
+              zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
+                setTransitioning(false);
+                setFocusedPicture(undefined);
+              });
+            }}
+          />
+        </Portal>
       )}
       {focusedBulkEdit && (
-        <BulkEditView
-          pictureIds={selectedPictures.map(picture => picture.id)}
-          onBack={() => {
-            setFocusedBulkEdit(undefined);
-          }}
-        />
+        <Portal container={root}>
+          <BulkEditView
+            pictureIds={selectedPictures.map(picture => picture.id)}
+            onBack={() => {
+              setFocusedBulkEdit(undefined);
+            }}
+          />
+        </Portal>
       )}
     </div>
   );
