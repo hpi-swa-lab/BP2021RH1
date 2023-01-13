@@ -23,11 +23,11 @@ import ArchiveTagField from './ArchiveTagField';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import { useClipboard } from '../../../../provider/ClipboardProvider';
-import { Button, Portal } from '@mui/material';
+import { Button } from '@mui/material';
 import { ContentCopy, ContentPasteGo, LinkOff } from '@mui/icons-material';
 import { union, isEqual, unionWith, differenceWith } from 'lodash';
 import CheckboxButton from '../../../../common/CheckboxButton';
-import { useClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
+import { ClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
 
 export type Field = Pick<
   FlatPicture,
@@ -172,8 +172,6 @@ const PictureInfo = ({
     [savePictureInfo, linked, t]
   );
 
-  const clipboardButtons = useClipboardEditorButtons();
-
   return (
     <div className='picture-info'>
       {topInfo?.(anyFieldTouched)}
@@ -249,7 +247,7 @@ const PictureInfo = ({
             {t('common.mark-as-text')}
           </CheckboxButton>
           {shouldCopy && (
-            <Portal container={clipboardButtons}>
+            <ClipboardEditorButtons>
               <Button
                 className='clipboard-button'
                 startIcon={<ContentCopy />}
@@ -259,7 +257,7 @@ const PictureInfo = ({
               >
                 {t('common.clipboard.copy')}
               </Button>
-            </Portal>
+            </ClipboardEditorButtons>
           )}
         </div>
       )}

@@ -10,12 +10,9 @@ import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
 import './ClipboardEditor.scss';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { difference } from 'lodash';
+import { useClipboardEditorButtons } from './ClipboardEditorContext';
 
-export const ClipboardEditor = ({
-  buttonsRef,
-}: {
-  buttonsRef?: React.LegacyRef<HTMLDivElement>;
-}) => {
+export const ClipboardEditor = () => {
   const [data, setData] = useClipboard();
 
   const [open, setOpen] = useState(false);
@@ -39,6 +36,8 @@ export const ClipboardEditor = ({
     [setData, t]
   );
 
+  const clipboardButtons = useClipboardEditorButtons();
+
   if (role < AuthRole.CURATOR) {
     return null;
   }
@@ -49,7 +48,7 @@ export const ClipboardEditor = ({
         <h3>{t('common.clipboard.name')}</h3>
         {data.pictureIds.length === 0 ? (
           <>
-            <div className='clipboard-editor-buttons' ref={buttonsRef}></div>
+            <div className='clipboard-editor-buttons'>{clipboardButtons}</div>
             <div className='no-pictures'>{t('common.noPictures')}</div>
           </>
         ) : (
@@ -57,7 +56,9 @@ export const ClipboardEditor = ({
             <Button variant='contained' onClick={clear}>
               {t('common.clipboard.clear')}
             </Button>
-            <div className='clipboard-editor-buttons' ref={buttonsRef}></div>
+            <div key='buttons' className='clipboard-editor-buttons'>
+              {clipboardButtons}
+            </div>
             <ScrollContainer>
               {(scrollPos: number, scrollHeight: number) => (
                 <PictureScrollGrid

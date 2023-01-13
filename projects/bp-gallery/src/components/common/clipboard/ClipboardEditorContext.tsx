@@ -1,18 +1,30 @@
-import React, { MutableRefObject, useContext, useRef } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
+import { useEffect } from 'react';
 import { ClipboardEditor } from './ClipboardEditor';
 
-const Context = React.createContext<MutableRefObject<HTMLDivElement | null> | null>(null);
+const Context = React.createContext<[ReactNode, Dispatch<SetStateAction<ReactNode>>] | null>(null);
 
 export const ClipboardEditorProvider: React.FC = ({ children }) => {
-  const ref = useRef<HTMLDivElement | null>(null);
+  const buttonsState = useState<ReactNode>(null);
   return (
-    <Context.Provider value={ref}>
+    <Context.Provider value={buttonsState}>
       {children}
-      <ClipboardEditor buttonsRef={ref} />
+      <ClipboardEditor />
     </Context.Provider>
   );
 };
 
 export const useClipboardEditorButtons = () => {
-  return useContext(Context)?.current ?? null;
+  return useContext(Context)?.[0];
+};
+
+export const ClipboardEditorButtons: React.FC = ({ children }) => {
+  const setButtons = useContext(Context)?.[1];
+  useEffect(() => {
+    setButtons?.(children);
+    return () => {
+      setButtons?.(null);
+    };
+  }, [setButtons, children]);
+  return null;
 };
