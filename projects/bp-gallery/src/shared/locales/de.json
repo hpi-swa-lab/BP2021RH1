@@ -24,9 +24,8 @@
       "clear": "Zwischenablage leeren",
       "copy": "Link kopieren",
       "copy-explanation": "Den Link zu diesem Bild in die Zwischenablage kopieren",
-      "paste": "Links einfügen",
+      "paste": "{{count}} Links aus der Zwischenablage einfügen",
       "paste-explanation": "Die Links zu den Bildern aus der Zwischenablage einfügen",
-      "mixed": "Fehler",
       "mixed.explanation": "Die Zwischenablage enthält sowohl Bilder als auch Texte.",
       "remove": "Aus der Zwischenablage entfernen"
     },

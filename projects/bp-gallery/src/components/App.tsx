@@ -11,7 +11,7 @@ import DialogProvider from './provider/DialogProvider';
 import { isEmpty, unionWith } from 'lodash';
 import NavigationBar from './top-and-bottom-bar/NavigationBar';
 import ClipboardProvider from './provider/ClipboardProvider';
-import { ClipboardEditor } from './common/clipboard/ClipboardEditor';
+import { ClipboardEditorProvider } from './common/clipboard/ClipboardEditorContext';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -160,10 +160,11 @@ const App = ({ route }: RouteConfigComponentProps) => {
           <DialogProvider>
             <ClipboardProvider>
               <div className='App'>
-                <TopBar isMobile={isMobile} />
-                {renderRoutes(route?.routes)}
-                {isMobile && <NavigationBar isMobile={true} />}
-                <ClipboardEditor />
+                <ClipboardEditorProvider>
+                  <TopBar isMobile={isMobile} />
+                  {renderRoutes(route?.routes)}
+                  {isMobile && <NavigationBar isMobile={true} />}
+                </ClipboardEditorProvider>
               </div>
             </ClipboardProvider>
           </DialogProvider>

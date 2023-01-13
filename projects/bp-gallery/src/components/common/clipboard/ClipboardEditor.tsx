@@ -11,7 +11,11 @@ import './ClipboardEditor.scss';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { difference } from 'lodash';
 
-export const ClipboardEditor = () => {
+export const ClipboardEditor = ({
+  buttonsRef,
+}: {
+  buttonsRef?: React.LegacyRef<HTMLDivElement>;
+}) => {
   const [data, setData] = useClipboard();
 
   const [open, setOpen] = useState(false);
@@ -44,12 +48,16 @@ export const ClipboardEditor = () => {
       <div className='clipboard-editor-panel'>
         <h3>{t('common.clipboard.name')}</h3>
         {data.pictureIds.length === 0 ? (
-          <div className='no-pictures'>{t('common.noPictures')}</div>
+          <>
+            <div className='clipboard-editor-buttons' ref={buttonsRef}></div>
+            <div className='no-pictures'>{t('common.noPictures')}</div>
+          </>
         ) : (
           <>
             <Button variant='contained' onClick={clear}>
               {t('common.clipboard.clear')}
             </Button>
+            <div className='clipboard-editor-buttons' ref={buttonsRef}></div>
             <ScrollContainer>
               {(scrollPos: number, scrollHeight: number) => (
                 <PictureScrollGrid

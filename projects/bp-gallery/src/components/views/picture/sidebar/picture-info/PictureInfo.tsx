@@ -23,11 +23,11 @@ import ArchiveTagField from './ArchiveTagField';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import { useClipboard } from '../../../../provider/ClipboardProvider';
-import { Button } from '@mui/material';
+import { Button, Portal } from '@mui/material';
 import { ContentCopy, ContentPasteGo, LinkOff } from '@mui/icons-material';
 import { union, isEqual, unionWith, differenceWith } from 'lodash';
 import CheckboxButton from '../../../../common/CheckboxButton';
-import Loading from '../../../../common/Loading';
+import { useClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
 
 export type Field = Pick<
   FlatPicture,
@@ -172,6 +172,8 @@ const PictureInfo = ({
     [savePictureInfo, linked, t]
   );
 
+  const clipboardButtons = useClipboardEditorButtons();
+
   return (
     <div className='picture-info'>
       {topInfo?.(anyFieldTouched)}
@@ -246,39 +248,18 @@ const PictureInfo = ({
           >
             {t('common.mark-as-text')}
           </CheckboxButton>
-          {shouldPaste ? (
-            <Button
-              className='clipboard-button'
-              startIcon={<ContentPasteGo />}
-              variant='contained'
-              onClick={pasteFromClipboard}
-              title={t('common.clipboard.paste-explanation')}
-            >
-              {t('common.clipboard.paste')}
-            </Button>
-          ) : shouldCopy ? (
-            <Button
-              className='clipboard-button'
-              startIcon={<ContentCopy />}
-              variant='contained'
-              onClick={copyToClipboard}
-              title={t('common.clipboard.copy-explanation')}
-            >
-              {t('common.clipboard.copy')}
-            </Button>
-          ) : clipboardPicturesLoading ? (
-            <Loading />
-          ) : clipboardPicturesError ? (
-            t('common.error')
-          ) : (
-            <Button
-              className='clipboard-button'
-              variant='contained'
-              disabled
-              title={t('common.clipboard.mixed-explanation')}
-            >
-              {t('common.clipboard.mixed')}
-            </Button>
+          {shouldCopy && (
+            <Portal container={clipboardButtons}>
+              <Button
+                className='clipboard-button'
+                startIcon={<ContentCopy />}
+                variant='contained'
+                onClick={copyToClipboard}
+                title={t('common.clipboard.copy-explanation')}
+              >
+                {t('common.clipboard.copy')}
+              </Button>
+            </Portal>
           )}
         </div>
       )}
@@ -297,6 +278,34 @@ const PictureInfo = ({
               />
             )}
           </ScrollContainer>
+          {shouldPaste ? (
+            <Button
+              className='clipboard-button'
+              startIcon={<ContentPasteGo />}
+              variant='contained'
+              onClick={pasteFromClipboard}
+              title={t('common.clipboard.paste-explanation')}
+            >
+              {t('common.clipboard.paste', {
+                count: clipboardData.pictureIds.length,
+              })}
+            </Button>
+          ) : clipboardPicturesError ? (
+            t('common.error')
+          ) : !shouldCopy && !clipboardPicturesLoading ? (
+            <Button
+              className='clipboard-button'
+              variant='contained'
+              disabled
+              title={t('common.clipboard.mixed-explanation')}
+            >
+              {t('common.clipboard.paste', {
+                count: clipboardData.pictureIds.length,
+              })}
+            </Button>
+          ) : (
+            []
+          )}
         </PictureInfoField>
       )}
       {role >= AuthRole.CURATOR && (
