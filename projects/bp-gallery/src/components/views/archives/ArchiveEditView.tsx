@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
@@ -16,7 +16,7 @@ import ArchiveInputField from './ArchiveInputField';
 import ArchiveLogoInput from './ArchiveLogoInput';
 import { Check } from '@mui/icons-material';
 import useLinks from './helpers/link-helpers';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
 
 interface ArchiveEditViewProps {
@@ -49,7 +49,7 @@ const extraOptions: Partial<Jodit['options']> = {
 
 const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   const history: History = useHistory();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
   const { t } = useTranslation();
 
   const { data } = useGetArchiveQuery({ variables: { archiveId } });

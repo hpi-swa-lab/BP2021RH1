@@ -19,7 +19,7 @@ import { Button, Chip, IconButton } from '@mui/material';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useTranslation } from 'react-i18next';
 import { Delete } from '@mui/icons-material';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 
@@ -33,7 +33,7 @@ interface TagRow {
 
 const TagTableView = ({ type }: { type: TagType }) => {
   const openAlert = useContext(AlertContext);
-  const prompt = useContext(DialogContext);
+  const prompt = useDialog();
   const { t } = useTranslation();
   const { role } = useAuth();
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
