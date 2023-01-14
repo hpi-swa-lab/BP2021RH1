@@ -29,7 +29,7 @@ import { union, isEqual, unionWith, differenceWith } from 'lodash';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { ClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
-import { useDialog } from '../../../../provider/DialogProvider';
+import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 
 export type Field = Pick<
   FlatPicture,
@@ -184,6 +184,24 @@ const PictureInfo = ({
     [savePictureInfo, linked, t]
   );
 
+  const removeAllLinks = useCallback(() => {
+    savePictureInfo({
+      [linked.collectionName]: [],
+    });
+  }, [savePictureInfo, linked.collectionName]);
+
+  const removeAllLinksWithPrompt = useCallback(() => {
+    dialog({
+      preset: DialogPreset.CONFIRM,
+      title: t('pictureFields.links.removeAll.really-prompt'),
+      content: '',
+    }).then(really => {
+      if (really) {
+        removeAllLinks();
+      }
+    });
+  }, [dialog, t, removeAllLinks]);
+
   return (
     <div className='picture-info'>
       {topInfo?.(anyFieldTouched)}
@@ -332,6 +350,16 @@ const PictureInfo = ({
             ) : (
               []
             ))}
+          {role >= AuthRole.CURATOR && Boolean(linked.collection?.length) && (
+            <Button
+              className='clipboard-button'
+              startIcon={<LinkOff />}
+              variant='contained'
+              onClick={removeAllLinksWithPrompt}
+            >
+              {t('pictureFields.links.removeAll.label')}
+            </Button>
+          )}
         </PictureInfoField>
       )}
       {role >= AuthRole.CURATOR && (

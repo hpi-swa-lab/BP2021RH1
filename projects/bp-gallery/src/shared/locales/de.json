@@ -149,7 +149,11 @@
           "multiple": "{{count}} kopierte Texte einfügen"
         }
       },
-      "remove": "Link entfernen"
+      "remove": "Link entfernen",
+      "removeAll": {
+        "label": "Alle Links entfernen",
+        "really-prompt": "Wollen Sie wirklich alle Links entfernen?"
+      }
     },
     "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",
