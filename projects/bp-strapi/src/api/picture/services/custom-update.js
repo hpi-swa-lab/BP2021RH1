@@ -448,6 +448,35 @@ const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   await processUpdatesForPersonTags(data);
 };
 
+const protectIsTextKey = async (pictureQuery, pictureIds, data) => {
+  // By using == instead of === we check both null and undefined
+  if (data[IS_TEXT_KEY] == null) return;
+
+  if (await anyPictureHasLinks(pictureQuery, pictureIds)) {
+    delete data[IS_TEXT_KEY];
+  }
+};
+
+const anyPictureHasLinks = async (pictureQuery, pictureIds) => {
+  const linkKeys = [LINKED_PICTURES_KEY, LINKED_TEXTS_KEY];
+  const pictures = await pictureQuery.findMany({
+    where: {
+      id: {
+        $in: pictureIds,
+      }
+    },
+    populate: linkKeys,
+  });
+  for (const picture of pictures) {
+    for (const linkKey of linkKeys) {
+      if (picture[linkKey].length > 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 const updatePictureWithTagCleanup = async (id, data) => {
   // No special handling needed if no data is passed.
   if (!data) return;
@@ -457,6 +486,8 @@ const updatePictureWithTagCleanup = async (id, data) => {
 
   // Process tag updates for the picture before actually updating the picture itself.
   await processTagUpdates(pictureQuery, id, data);
+
+  await protectIsTextKey(pictureQuery, [id], data);
 
   // Actually update the picture.
   await pictureQuery.update({
@@ -696,6 +727,8 @@ const bulkEditLinks = async (knexEngine, pictureIds, data, linksKey, isInverse) 
 const bulkEdit = async (knexEngine, pictureIds, data) => {
   strapi.log.debug(`BulkEdit called on pictures [${pictureIds.toString()}] with data ${JSON.stringify(data)} `);
   const pictureQuery = strapi.db.query("api::picture.picture");
+
+  await protectIsTextKey(pictureQuery, pictureIds, data);
 
   // should be a boolean (false), but we use | (bitwise or),
   // so it's a number representing a boolean instead (0 -> false, 1 -> true)
