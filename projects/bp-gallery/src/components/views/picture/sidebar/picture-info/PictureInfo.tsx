@@ -29,6 +29,7 @@ import { union, isEqual, unionWith, differenceWith } from 'lodash';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { ClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
+import { useDialog } from '../../../../provider/DialogProvider';
 
 export type Field = Pick<
   FlatPicture,
@@ -52,6 +53,7 @@ const PictureInfo = ({
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
+  const dialog = useDialog();
 
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
 
@@ -251,10 +253,23 @@ const PictureInfo = ({
           <CheckboxButton
             checked={isText}
             onChange={isText => {
-              savePictureInfo({ is_text: isText });
+              if ((linked.collection?.length ?? 0) > 0) {
+                dialog({
+                  title: t(`common.mark-as-text.still-linked.${linked.name}.title`),
+                  content: t(`common.mark-as-text.still-linked.${linked.name}.content`),
+                  options: [
+                    {
+                      name: t('common.ok'),
+                      value: null,
+                    },
+                  ],
+                });
+              } else {
+                savePictureInfo({ is_text: isText });
+              }
             }}
           >
-            {t('common.mark-as-text')}
+            {t('common.mark-as-text.label')}
           </CheckboxButton>
           {shouldCopy && (
             <ClipboardEditorButtons>

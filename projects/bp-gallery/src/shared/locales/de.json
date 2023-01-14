@@ -28,7 +28,19 @@
         "content": "Es sind sowohl Bilder als auch Texte kopiert worden. Bitte überprüfen Sie die kopierten Links."
       }
     },
-    "mark-as-text": "Als Text markieren",
+    "mark-as-text": {
+      "label": "Als Text markieren",
+      "still-linked": {
+        "pictures": {
+          "title": "Es sind noch Bilder verlinkt",
+          "content": "Bitte entfernen Sie alle Links zu Bildern bevor Sie diesen Text als Bild markieren."
+        },
+        "texts": {
+          "title": "Es sind noch Texte verlinkt",
+          "content": "Bitte entfernen Sie alle Links zu Texten bevor Sie dieses Bild als Text markieren."
+        }
+      }
+    },
     "locations": "Orte",
     "no-collection": "Es gibt keine Collection, die der Anfrage entspricht.",
     "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht.",
