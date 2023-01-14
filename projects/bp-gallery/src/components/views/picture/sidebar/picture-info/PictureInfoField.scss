@@ -40,19 +40,20 @@
     .field-content {
       overflow: hidden;
       max-height: 500px;
+      display: flex;
+      gap: 10px;
+      align-items: start;
+
+      .field-title {
+        align-self: end;
+      }
 
       .picture-grid {
         margin-top: 0;
       }
 
-      .clipboard-buttons {
-        display: flex;
-        flex-direction: row;
-        margin-top: 10px;
-
-        .MuiButton-root:not(:disabled) {
-          background: $primaryColor;
-        }
+      .MuiButton-root:not(:disabled) {
+        background: $linkColor;
       }
     }
   }
