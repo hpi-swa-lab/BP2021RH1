@@ -1,10 +1,9 @@
+const { plural, singular, table } = require("../../helper");
 const { ApplicationError } = require("@strapi/utils").errors;
 
 const VERIFIED_PREFIX = "verified_";
 const withVerifiedPrefix = (tagKeyInPictureRelation) =>
   `${VERIFIED_PREFIX}${tagKeyInPictureRelation}`;
-
-const DATABASE_SCHEMA = process.env.DATABASE_SCHEMA;
 
 const PICTURES_KEY = "pictures";
 const DESCRIPTIONS_KEY = "descriptions";
@@ -16,24 +15,6 @@ const ARCHIVE_TAG_KEY = "archive_tag";
 const IS_TEXT_KEY = "is_text";
 const LINKED_PICTURES_KEY = "linked_pictures";
 const LINKED_TEXTS_KEY = "linked_texts";
-
-const singular = key => {
-  if (key[key.length - 1] !== "s") {
-    return key;
-  }
-  return key.slice(0, -1);
-};
-
-const plural = key => {
-  if (key[key.length - 1] === "s") {
-    return key;
-  }
-  return key + "s";
-};
-
-const table = name => {
-  return DATABASE_SCHEMA + "." + name;
-};
 
 /**
  * Returns the key of the tag type that is used for the API (so e.g. "person-tag")
