@@ -35,6 +35,8 @@
   @include data-type-colors('location', $locationColor);
   @include data-type-colors('keywords', $keywordColor);
   @include data-type-colors('links', $linkColor);
+  @include data-type-colors('collections', $collectionColor);
+  @include data-type-colors('archive', $archiveColor);
 
   &[data-type='links'] {
     .field-content {
