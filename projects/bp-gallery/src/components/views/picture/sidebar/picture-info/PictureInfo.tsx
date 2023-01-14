@@ -304,33 +304,34 @@ const PictureInfo = ({
               />
             )}
           </ScrollContainer>
-          {shouldPaste || isClipboardMixed ? (
-            <div className='clipboard-buttons'>
-              <Button
-                className='clipboard-button'
-                startIcon={<ContentPasteGo />}
-                variant='contained'
-                onClick={shouldPaste ? pasteFromClipboard : undefined}
-                disabled={isClipboardMixed}
-              >
-                {clipboardData.pictureIds.length > 1
-                  ? t(`pictureFields.links.${linked.name}.paste.multiple`, {
-                      count: clipboardData.pictureIds.length,
-                    })
-                  : t(`pictureFields.links.${linked.name}.paste.single`)}
-              </Button>
-              {isClipboardMixed && (
-                <HelpTooltip
-                  title={t('common.clipboard.mixed.title')}
-                  content={t('common.clipboard.mixed.content')}
-                />
-              )}
-            </div>
-          ) : clipboardPicturesError ? (
-            t('common.error')
-          ) : (
-            []
-          )}
+          {role >= AuthRole.CURATOR &&
+            (shouldPaste || isClipboardMixed ? (
+              <div className='clipboard-buttons'>
+                <Button
+                  className='clipboard-button'
+                  startIcon={<ContentPasteGo />}
+                  variant='contained'
+                  onClick={shouldPaste ? pasteFromClipboard : undefined}
+                  disabled={isClipboardMixed}
+                >
+                  {clipboardData.pictureIds.length > 1
+                    ? t(`pictureFields.links.${linked.name}.paste.multiple`, {
+                        count: clipboardData.pictureIds.length,
+                      })
+                    : t(`pictureFields.links.${linked.name}.paste.single`)}
+                </Button>
+                {isClipboardMixed && (
+                  <HelpTooltip
+                    title={t('common.clipboard.mixed.title')}
+                    content={t('common.clipboard.mixed.content')}
+                  />
+                )}
+              </div>
+            ) : clipboardPicturesError ? (
+              t('common.error')
+            ) : (
+              []
+            ))}
         </PictureInfoField>
       )}
       {role >= AuthRole.CURATOR && (
