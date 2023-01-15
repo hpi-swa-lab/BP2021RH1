@@ -4,10 +4,13 @@ import i18n from '../i18n';
 
 export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   const t = i18n.t;
+
   if (!timeStamp?.start || !timeStamp.end) {
     return '---';
   }
   const duration = dayjs(timeStamp.end as string).diff(dayjs(timeStamp.start as string), 'days');
+  // if (timeStamp.etwa) return "etwa " + dayjs(timeStamp.start as string).format('YYYY');
+
   if (duration === 0) {
     return dayjs(timeStamp.start as string).format('DD.MM.YYYY');
   } else if (duration > 27 && duration < 40) {

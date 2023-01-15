@@ -28,6 +28,7 @@ const DateRangeSelectionField = ({
 
   const [anchorElement, setAnchorElement] = useState<HTMLDivElement | null>(null);
   const [timeRange, setTimeRange] = useState<FlatTimeRangeTag | undefined>();
+  const [checked, setChecked] = React.useState(false);
 
   useEffect(() => {
     setTimeRange(cloneDeep(timeRangeTag));
@@ -55,6 +56,10 @@ const DateRangeSelectionField = ({
   const openPopover = (anchor: HTMLDivElement) => {
     if (role < AuthRole.CURATOR) return;
     setAnchorElement(anchor);
+  };
+
+  const handleChange = () => {
+    setChecked(!checked);
   };
 
   return (
@@ -97,6 +102,10 @@ const DateRangeSelectionField = ({
             horizontal: 'center',
           }}
         >
+          <label>
+            <input type='checkbox' checked={checked} onChange={handleChange} />
+            {`${t('pictureFields.around')}`}
+          </label>
           <DateRangePicker
             ranges={[selectionRange]}
             locale={de}
