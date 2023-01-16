@@ -34,6 +34,7 @@ export const TimeRangeTagMocks: TimeRangeTagEntity = {
   attributes: {
     start: '1955-10-10T00:00:00Z',
     end: '1955-10-12T00:00:00Z',
+    isEstimate: false,
   },
 };
 

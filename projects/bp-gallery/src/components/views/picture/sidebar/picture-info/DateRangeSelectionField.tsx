@@ -28,7 +28,7 @@ const DateRangeSelectionField = ({
 
   const [anchorElement, setAnchorElement] = useState<HTMLDivElement | null>(null);
   const [timeRange, setTimeRange] = useState<FlatTimeRangeTag | undefined>();
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(timeRange?.isEstimate ?? false);
 
   useEffect(() => {
     setTimeRange(cloneDeep(timeRangeTag));
@@ -60,6 +60,12 @@ const DateRangeSelectionField = ({
 
   const handleChange = () => {
     setChecked(!checked);
+    setTimeRange(oldTimeRange => {
+      const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
+      tRT.isEstimate = !checked;
+      return { ...tRT };
+    });
+    console.log(timeRange);
   };
 
   return (
@@ -78,7 +84,11 @@ const DateRangeSelectionField = ({
         }}
         tabIndex={0}
       >
-        {timeRange ? formatTimeStamp(timeRange) : `${t('pictureFields.noTime')}`}
+        {timeRange
+          ? timeRange.isEstimate
+            ? 'etwa ' + formatTimeStamp(timeRange)
+            : formatTimeStamp(timeRange)
+          : `${t('pictureFields.noTime')}`}
       </div>
       {role >= AuthRole.CURATOR && (
         <Popover
@@ -89,7 +99,9 @@ const DateRangeSelectionField = ({
             setAnchorElement(null);
             if (
               timeRange &&
-              (timeRange.start !== timeRangeTag?.start || timeRangeTag?.end !== timeRange.end)
+              (timeRange.start !== timeRangeTag?.start ||
+                timeRangeTag?.end !== timeRange.end ||
+                timeRange.isEstimate !== timeRangeTag?.isEstimate)
             ) {
               onChange(timeRange);
             } else {
@@ -125,6 +137,7 @@ const DateRangeSelectionField = ({
                   const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
                   tRT.start = s;
                   tRT.end = e;
+
                   return { ...tRT };
                 });
                 resetInputFields();
