@@ -19,23 +19,23 @@ describe('picture uploading and tagging', () => {
     cy.wait(1000);
     cy.visit('http://localhost:3000/browse');
     cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Schlagworte').click();
-    cy.get('div').contains('TestSchlagwort').parent().parent().find('button').click();
+    cy.get('.MuiPaper-root').contains('Schlagworte').click().wait(1000);
+    cy.contains('.MuiDataGrid-row', 'TestSchlagwort').find('[data-testid="DeleteIcon"]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
 
     cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Orte').click();
-    cy.get('div').contains('TestOrt').parent().parent().find('button').click();
+    cy.get('.MuiPaper-root').contains('Orte').click().wait(1000);
+    cy.contains('.MuiDataGrid-row', 'TestOrt').find('[data-testid="DeleteIcon"]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
 
     cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Personen').click();
-    cy.get('div').contains('TestPerson').parent().parent().find('button').click();
+    cy.get('.MuiPaper-root').contains('Personen').click().wait(1000);
+    cy.contains('.MuiDataGrid-row', 'TestPerson').find('[data-testid="DeleteIcon"]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
 
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Collections').click().wait(1000);
-    cy.contains('TestCollection').parent().find('svg[data-testid="DeleteIcon"]').click();
+    cy.contains('.panel-entry', 'TestCollection').find('[data-testid="DeleteIcon"]').click();
 
     logout();
   });
@@ -120,8 +120,9 @@ describe('picture uploading and tagging', () => {
     cy.get('.picture-info-field').contains('TestCollection').should('exist');
     cy.get('.picture-info-field').contains('Herbert-Ahrens-Bilderarchiv').should('exist');
 
-    cy.get('button').contains('arrow_back').click();
-    cy.get('span').contains('delete').click();
+    cy.get('button').contains('arrow_back').click().wait(2000);
+    cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
+    cy.get('.picture-preview:last').find('[data-testid=DeleteIcon]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
   });
 });
