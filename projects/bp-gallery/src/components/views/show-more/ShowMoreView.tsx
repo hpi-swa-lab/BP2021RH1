@@ -1,9 +1,24 @@
+import { Star } from '@mui/icons-material';
 import React from 'react';
-import { PictureFiltersInput, useGetCollectionInfoByIdQuery } from '../../../graphql/APIConnector';
+import { useTranslation } from 'react-i18next';
+import {
+  PictureFiltersInput,
+  useGetArchiveQuery,
+  useGetCollectionInfoByIdQuery,
+  useUpdateArchiveMutation,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
-import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
+import {
+  FlatArchiveTag,
+  FlatPicture,
+  FlatTag,
+  TagType,
+  Thumbnail,
+} from '../../../types/additionalFlatTypes';
 import CategoryCarousel from '../../common/CategoryCarousel';
+import { PicturePreviewAdornment } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import { useAuth } from '../../provider/AuthProvider';
@@ -21,6 +36,36 @@ const ShowMoreView = ({
   categoryId?: string;
 }) => {
   const { role } = useAuth();
+  const { t } = useTranslation();
+
+  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } =
+    useBulkOperations();
+
+  const archiveQueryResult = useGetArchiveQuery({ variables: { archiveId } });
+  const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(
+    archiveQueryResult.data
+  )?.archiveTag;
+  const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
+  const [updateArchive] = useUpdateArchiveMutation({
+    refetchQueries: ['getArchive'],
+  });
+  const showcaseAdornment: PicturePreviewAdornment = {
+    position: 'top-left',
+    icon: picture =>
+      picture.id === archive?.showcasePicture?.id ? <Star className='star-selected' /> : <Star />,
+    title: t('pictureAdornments.showcase'),
+    onClick: picture => {
+      if (showcasePicture?.id === picture.id) return;
+      updateArchive({
+        variables: {
+          archiveId,
+          data: {
+            showcasePicture: picture.id,
+          },
+        },
+      });
+    },
+  };
 
   let categoryType2 = TagType.LOCATION;
   let headerName = '';
@@ -170,12 +215,13 @@ const ShowMoreView = ({
                 scrollHeight={scrollHeight}
                 hashbase={'show-more'}
                 //uploadAreaProps={uploadAreaProps(collection)}
-                /*bulkOperations={[
-                    removeFromCollection,
-                    linkToCollection,
-                    moveToCollection,
-                    bulkEdit,
-                  ]}*/
+                extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
+                bulkOperations={[
+                  removeFromCollection,
+                  linkToCollection,
+                  moveToCollection,
+                  bulkEdit,
+                ]}
               />
             </div>
           )}
@@ -199,13 +245,14 @@ const ShowMoreView = ({
                 scrollPos={scrollPos}
                 scrollHeight={scrollHeight}
                 hashbase={'show-more'}
+                extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
                 //uploadAreaProps={uploadAreaProps(collection)}
-                /*bulkOperations={[
-                    removeFromCollection,
-                    linkToCollection,
-                    moveToCollection,
-                    bulkEdit,
-                  ]}*/
+                bulkOperations={[
+                  removeFromCollection,
+                  linkToCollection,
+                  moveToCollection,
+                  bulkEdit,
+                ]}
               />
             </div>
           )}
@@ -231,13 +278,9 @@ const ShowMoreView = ({
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={'show-more'}
+              extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
               //uploadAreaProps={uploadAreaProps(collection)}
-              /*bulkOperations={[
-                  removeFromCollection,
-                  linkToCollection,
-                  moveToCollection,
-                  bulkEdit,
-                ]}*/
+              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
             />
           </div>
         )}
@@ -273,13 +316,9 @@ const ShowMoreView = ({
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={'show-more'}
+              extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
               //uploadAreaProps={uploadAreaProps(collection)}
-              /*bulkOperations={[
-                  removeFromCollection,
-                  linkToCollection,
-                  moveToCollection,
-                  bulkEdit,
-                ]}*/
+              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
             />
           </div>
         )}
