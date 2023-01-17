@@ -1853,7 +1853,14 @@ export type GetPictureInfoQuery = {
                           data?:
                             | {
                                 id?: string | null | undefined;
-                                attributes?: { start: any; end: any } | null | undefined;
+                                attributes?:
+                                  | {
+                                      start: any;
+                                      end: any;
+                                      isEstimate?: boolean | null | undefined;
+                                    }
+                                  | null
+                                  | undefined;
                               }
                             | null
                             | undefined;
@@ -1865,7 +1872,14 @@ export type GetPictureInfoQuery = {
                           data?:
                             | {
                                 id?: string | null | undefined;
-                                attributes?: { start: any; end: any } | null | undefined;
+                                attributes?:
+                                  | {
+                                      start: any;
+                                      end: any;
+                                      isEstimate?: boolean | null | undefined;
+                                    }
+                                  | null
+                                  | undefined;
                               }
                             | null
                             | undefined;
@@ -2031,7 +2045,10 @@ export type GetMultiplePictureInfoQuery = {
                       data?:
                         | {
                             id?: string | null | undefined;
-                            attributes?: { start: any; end: any } | null | undefined;
+                            attributes?:
+                              | { start: any; end: any; isEstimate?: boolean | null | undefined }
+                              | null
+                              | undefined;
                           }
                         | null
                         | undefined;
@@ -2043,7 +2060,10 @@ export type GetMultiplePictureInfoQuery = {
                       data?:
                         | {
                             id?: string | null | undefined;
-                            attributes?: { start: any; end: any } | null | undefined;
+                            attributes?:
+                              | { start: any; end: any; isEstimate?: boolean | null | undefined }
+                              | null
+                              | undefined;
                           }
                         | null
                         | undefined;
@@ -3443,6 +3463,7 @@ export const GetPictureInfoDocument = gql`
               attributes {
                 start
                 end
+                isEstimate
               }
             }
           }
@@ -3452,6 +3473,7 @@ export const GetPictureInfoDocument = gql`
               attributes {
                 start
                 end
+                isEstimate
               }
             }
           }
@@ -3617,6 +3639,7 @@ export const GetMultiplePictureInfoDocument = gql`
               attributes {
                 start
                 end
+                isEstimate
               }
             }
           }
@@ -3626,6 +3649,7 @@ export const GetMultiplePictureInfoDocument = gql`
               attributes {
                 start
                 end
+                isEstimate
               }
             }
           }
