@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
 import TopBar from './top-and-bottom-bar/TopBar';
 import './App.scss';
@@ -17,6 +17,7 @@ import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider
 import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
 import NavigationBar from './top-and-bottom-bar/NavigationBar';
+import Loading from './common/Loading';
 
 const apiBase = import.meta.env.VITE_REACT_APP_API_BASE;
 
@@ -173,7 +174,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
           <DialogProvider>
             <div className='App'>
               <TopBar isMobile={isMobile} />
-              {renderRoutes(route?.routes)}
+              <Suspense fallback={<Loading />}>{renderRoutes(route?.routes)}</Suspense>
               {isMobile && <NavigationBar isMobile={true} />}
             </div>
           </DialogProvider>
