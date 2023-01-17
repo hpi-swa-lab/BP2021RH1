@@ -1,63 +1,62 @@
+import { login, logout } from '../utils/login-utils';
+
 describe('Comment', () => {
-    before(() => {
-        cy.visit('http://localhost:3000/picture/1')
-        
-    })
-    after(() => {
-        cy.visit('http://localhost:3000');
-        cy.get('.nav-bar').contains('Mehr...').click({force: true});
-        cy.get('.MuiPaper-root').contains('Logout').click({force:true});
-        
+  before(() => {
+    cy.visit('http://localhost:3000/picture/1');
+  });
+  after(() => {
+    cy.visit('http://localhost:3000');
+    logout();
+  });
+
+  it('adds a comment to picture 1', () => {
+    cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
+    cy.get('textarea#text').should('be.visible').clear().type('Testkommentar1');
+    cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
+    cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
+    cy.get('.MuiButton-root').contains('O.K.').should('be.visible').click();
+
+    cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
+    cy.get('textarea#text').should('be.visible').clear().type('Testkommentar2');
+    cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
+    cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
+    cy.get('.MuiButton-root').contains('O.K.').should('be.visible').click();
+  });
+
+  it('log in as curator and curate the new comments', () => {
+    cy.get('.MuiButton-root').contains('arrow_back').should('be.visible').click();
+    login();
+    cy.get('.nav-bar').contains('Mehr...').click();
+    cy.get('.MuiPaper-root').contains('Kommentare').click();
+
+    cy.get('.comment-preview').contains('Testkommentar1').should('be.visible');
+    cy.get('.comment-preview').contains('Testkommentar2').should('be.visible').click();
+    cy.get('#comments').click();
+
+    cy.get('.comment-verification-container')
+      .contains('Testkommentar1')
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .within(() => {
+        cy.get('button').contains('Ablehnen').click();
       });
-        
-    
-    it('adds a comment to picture 1',()=>{
-        cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
-        cy.get('textarea#text').should('be.visible').clear().type('Testkommentar1');
-        cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
-        cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
-        cy.get('.MuiButton-root').contains("O.K.").should('be.visible').click();
+    cy.get('button').contains('Bestätigen').click();
 
-        cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
-        cy.get('textarea#text').should('be.visible').clear().type('Testkommentar2');
-        cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
-        cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
-        cy.get('.MuiButton-root').contains("O.K.").should('be.visible').click();
-
-    })
-
-    it('log in as curator and curate the new comments', ()=>{
-        cy.get('.MuiButton-root').contains('arrow_back').should('be.visible').click();
-        cy.get('.nav-bar').contains('Mehr...').click();
-        cy.get('.MuiPaper-root').contains('Login').click();
-        cy.get('#username').should('be.visible').clear().type('testCurator');
-        cy.get('#password').should('be.visible').clear().type('1234abc');
-        cy.get('button[type="submit"]').should('be.visible').click();
-        cy.get('.nav-bar').contains('Mehr...').click();
-        cy.get('.MuiPaper-root').contains('Kommentare').click();
-
-        cy.get('.comment-preview').contains('Testkommentar1').should('be.visible')
-        cy.get('.comment-preview').contains('Testkommentar2').should('be.visible').click()
-        cy.get('#comments').click();
-
-       
-        cy.get('.comment-verification-container').contains('Testkommentar1').parent().parent().parent().parent().parent()
-        .within(() => {
-            cy.get('button').contains('Ablehnen').click();
-        })
-        cy.get('button').contains('Bestätigen').click();
-        
-        
-        cy.get('.comment-verification-container').contains('Testkommentar2').parent().parent().parent().parent().parent()
-        .within(() => {
-            cy.get('button').contains('Akzeptieren').click();
-            
-            
-        })
-        cy.wait(1000);
-        cy.get('button').contains('Löschen').click();
-        cy.get('button').contains('Bestätigen').click();
-    })
-
-  })
-
+    cy.get('.comment-verification-container')
+      .contains('Testkommentar2')
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .within(() => {
+        cy.get('button').contains('Akzeptieren').click();
+      });
+    cy.wait(1000);
+    cy.get('button').contains('Löschen').click();
+    cy.get('button').contains('Bestätigen').click();
+  });
+});
