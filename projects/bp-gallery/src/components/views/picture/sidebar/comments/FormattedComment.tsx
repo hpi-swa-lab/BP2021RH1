@@ -4,14 +4,13 @@ import { useTranslation } from 'react-i18next';
 import './FormattedComment.scss';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import { Button } from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
+import { ExpandMore, PushPin } from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import {
   useFixCommentTextMutation,
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import PushPinIcon from '@mui/icons-material/PushPin';
 import Editor from '../../../../common/editor/Editor';
 
 const FormattedComment = ({ comment }: { comment: FlatComment }) => {
@@ -62,12 +61,12 @@ const FormattedComment = ({ comment }: { comment: FlatComment }) => {
               pinned ? unpinComment() : pinComment();
             }}
           >
-            <PushPinIcon />
+            <PushPin />
           </button>
         ) : (
           comment.pinned && (
             <div className={`pinned pin-icon`}>
-              <PushPinIcon />
+              <PushPin />
             </div>
           )
         )}

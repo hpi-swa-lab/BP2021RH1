@@ -4,14 +4,16 @@ import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import { asSearchPath } from './SearchView';
 import './SearchBreadcrumbs.scss';
-import EventIcon from '@mui/icons-material/Event';
-import SellIcon from '@mui/icons-material/Sell';
-import DescriptionIcon from '@mui/icons-material/Description';
-import SearchIcon from '@mui/icons-material/Search';
-import PersonIcon from '@mui/icons-material/Person';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import FolderIcon from '@mui/icons-material/Folder';
-import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
+import {
+  Sell,
+  Event,
+  Description,
+  Search,
+  Person,
+  LocationOn,
+  Folder,
+  FolderSpecial,
+} from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { getDecadeTranslation } from './helpers/search-translation';
 import { SearchType } from './helpers/search-filters';
@@ -28,21 +30,21 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
     switch (searchType) {
       case SearchType.DECADE:
       case SearchType.TIME_RANGE:
-        return <EventIcon />;
+        return <Event />;
       case SearchType.KEYWORD:
-        return <SellIcon />;
+        return <Sell />;
       case SearchType.DESCRIPTION:
-        return <DescriptionIcon />;
+        return <Description />;
       case SearchType.LOCATION:
-        return <LocationOnIcon />;
+        return <LocationOn />;
       case SearchType.PERSON:
-        return <PersonIcon />;
+        return <Person />;
       case SearchType.ALL:
-        return <SearchIcon />;
+        return <Search />;
       case SearchType.COLLECTION:
-        return <FolderIcon />;
+        return <Folder />;
       case SearchType.ARCHIVE:
-        return <FolderSpecialIcon />;
+        return <FolderSpecial />;
       default:
         return <></>;
     }

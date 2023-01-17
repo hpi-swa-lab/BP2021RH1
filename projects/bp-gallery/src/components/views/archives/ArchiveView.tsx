@@ -1,5 +1,3 @@
-import EditIcon from '@mui/icons-material/Edit';
-import LinkIcon from '@mui/icons-material/Link';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
@@ -18,7 +16,7 @@ import { Button } from '@mui/material';
 import { History } from 'history';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { Star } from '@mui/icons-material';
+import { Star, Edit, Link } from '@mui/icons-material';
 import { FALLBACK_PATH } from './../../routes';
 
 interface ArchiveViewProps {
@@ -72,7 +70,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             <p className='edit-button-wrapper'>
               <Button
                 className='archive-edit-button'
-                startIcon={<EditIcon />}
+                startIcon={<Edit />}
                 onClick={() => {
                   history.push(
                     `${history.location.pathname}${
@@ -106,7 +104,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 <div className='archive-links'>
                   {archive.links?.map(link => (
                     <div className='archive-link' key={link.id}>
-                      <LinkIcon className='link-icon' />
+                      <Link className='link-icon' />
                       <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
                     </div>
                   ))}

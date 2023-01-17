@@ -4,8 +4,6 @@ import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/A
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import './ArchiveEditView.scss';
-import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
 import Editor from '../../common/editor/Editor';
 import { Jodit } from 'jodit-react';
 import { useHistory } from 'react-router-dom';
@@ -14,7 +12,7 @@ import ArchiveLinkForm from './ArchiveLinkForm';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import ArchiveInputField from './ArchiveInputField';
 import ArchiveLogoInput from './ArchiveLogoInput';
-import { Check } from '@mui/icons-material';
+import { Check, Save, Close } from '@mui/icons-material';
 import useLinks from './helpers/link-helpers';
 import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
@@ -156,7 +154,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       <div className='archive-navigation'>
         <Button
           className='button-filled button-close'
-          startIcon={<CloseIcon />}
+          startIcon={<Close />}
           onClick={async () => {
             if (form.dirty) {
               const confirm = await dialog({
@@ -173,7 +171,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         </Button>
         <Button
           className='button-filled button-save'
-          startIcon={form.dirty ? <SaveIcon /> : <Check />}
+          startIcon={form.dirty ? <Save /> : <Check />}
           onClick={handleSubmit}
           disabled={!form.dirty}
         >
