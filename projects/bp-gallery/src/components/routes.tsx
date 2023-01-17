@@ -20,6 +20,7 @@ import ArchiveEditView from './views/archives/ArchiveEditView';
 import ProtectedRoute from './common/ProtectedRoute';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import ShowMoreView from './views/show-more/ShowMoreView';
+import DiscoverView from './views/discover/DiscoverView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -53,6 +54,13 @@ const routes: RouteConfig[] = [
         path: '/search',
         render: () => {
           return <SearchView />;
+        },
+        exact: true,
+      },
+      {
+        path: '/discover',
+        render: () => {
+          return <DiscoverView />;
         },
         exact: true,
       },
