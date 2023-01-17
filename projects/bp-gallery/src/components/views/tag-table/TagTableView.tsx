@@ -58,7 +58,6 @@ const TagTableView = ({ type }: { type: TagType }) => {
     flattenedTags?.forEach(tag => {
       tags[tag.id] = tag;
     });
-    console.log(tags);
     return tags;
   }, [flattenedTags]);
 
