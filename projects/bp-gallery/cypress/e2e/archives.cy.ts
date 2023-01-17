@@ -17,6 +17,12 @@ describe('Archives View', () => {
     cy.visit('http://localhost:3000/archives/1');
   });
   after(() => {
+    cy.contains('Archiv editieren').click();
+    cy.get('#archive-form-name').clear().type('Herbert-Ahrens-Bilderarchiv');
+    cy.get('.jodit-react-container').clear();
+    cy.get('[data-testid="DeleteIcon"]').first().click();
+    cy.get('[data-testid="DeleteIcon"]').first().click();
+    cy.contains('Änderungen speichern').click();
     logout();
   });
 
