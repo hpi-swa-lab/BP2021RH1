@@ -9,6 +9,11 @@ import {
 } from '../../common/picture-gallery/helpers/picture-animations';
 import PictureView from '../picture/PictureView';
 import { Card } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import EventIcon from '@mui/icons-material/Event';
+import { formatTimeStamp } from '../../../helpers/format-timestamp';
+import Editor from '../../common/editor/Editor';
+import { FolderSpecial } from '@mui/icons-material';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -21,7 +26,8 @@ const choosePictureId = (pictureIds: string[]) => {
 
 const WeeklyPicture = () => {
   //These are hard-coded until we implemented votes
-  const pictureIds = ['4'];
+  const pictureIds = ['7'];
+  const { t } = useTranslation();
   const [isFocussed, setIsFocussed] = useState<boolean>(false);
   const navigateToPicture = useCallback(
     async (id: string) => {
@@ -34,18 +40,35 @@ const WeeklyPicture = () => {
   const weeklyPictureId = choosePictureId(pictureIds);
   const { data } = useGetPictureInfoQuery({ variables: { pictureId: weeklyPictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-
+  const description = picture?.descriptions?.[0]?.text || '';
+  const pictureDate = formatTimeStamp(picture?.time_range_tag);
+  const pictureArchive = picture?.archive_tag?.name;
   return (
     <div>
       {picture && (
         <Card
-          className={'flex flex-row'}
+          className={'flex flex-col md:flex-row rounded-md justify-between'}
           onClick={async () => {
             await navigateToPicture(picture.id);
           }}
         >
-          <p className={'text-blue-600'}>hello</p>
-          <PicturePreview picture={picture} onClick={() => {}} />
+          <div className={'p-4 flex flex-col'}>
+            <h3 className={'text-2xl'}>{t('common.weekly-picture')}</h3>
+            <p className={'line-clamp-5'}>
+              <h4 className={'text-lg my-1'}>{t('pictureFields.descriptions')}:</h4>
+              <Editor value={description} />
+            </p>
+            <div className={'flex-1'} />
+            <div className={'flex items-center gap-2 my-2'}>
+              <EventIcon /> {pictureDate}
+            </div>
+            <div className={'flex item-center gap-2'}>
+              <FolderSpecial /> {pictureArchive}
+            </div>
+          </div>
+          <div>
+            <PicturePreview picture={picture} onClick={() => {}} />
+          </div>
         </Card>
       )}
       {isFocussed && picture && (
