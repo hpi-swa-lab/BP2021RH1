@@ -61,7 +61,7 @@ export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
-  parentComment?: FlatComment;
+  parentComment?: FlatComment | null;
   childComments?: FlatComment[];
 };
 

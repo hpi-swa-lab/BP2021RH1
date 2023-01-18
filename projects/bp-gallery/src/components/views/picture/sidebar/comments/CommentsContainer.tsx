@@ -8,24 +8,28 @@ import { Badge, Icon } from '@mui/material';
 import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { useGetCommentsByPictureIdQuery } from '../../../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 
-const CommentsContainer = ({
-  pictureId,
-  comments,
-}: {
-  comments?: FlatComment[];
-  pictureId: string;
-}) => {
+const CommentsContainer = ({ pictureId }: { pictureId: string }) => {
   const { t } = useTranslation();
-
   const { role } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
 
+  const { data } = useGetCommentsByPictureIdQuery({
+    variables: {
+      pictureId: pictureId,
+    },
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  const comments: FlatComment[] | undefined = useSimplifiedQueryResponseData(data)?.comments;
+
   const sortedComments = () => {
-    return comments?.sort(
-      (comment1, comment2) => Number(comment2.pinned) - Number(comment1.pinned)
-    );
+    return comments
+      ?.filter(comment => comment.parentComment === null)
+      ?.sort((comment1, comment2) => Number(comment2.pinned) - Number(comment1.pinned));
   };
 
   const badgeNumber = (() => {
@@ -62,7 +66,7 @@ const CommentsContainer = ({
       <div className='comment-container'>
         {sortedComments()?.map((comment: FlatComment) => (
           <CommentVerification comment={comment} key={comment.id}>
-            <FormattedComment comment={comment} />
+            <FormattedComment comment={comment} comments={comments} />
           </CommentVerification>
         ))}
       </div>

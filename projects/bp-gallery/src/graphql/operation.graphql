@@ -1057,6 +1057,40 @@ query getComments($commentIds: [ID!]!) {
   }
 }
 
+query getCommentsByPictureId($pictureId: ID!) {
+  comments(
+    publicationState: PREVIEW
+    sort: "date:desc"
+    filters: { picture: { id: { eq: $pictureId } } }
+  ) {
+    data {
+      id
+      attributes {
+        text
+        author
+        picture {
+          data {
+            id
+          }
+        }
+        date
+        parentComment {
+          data {
+            id
+          }
+        }
+        childComments(publicationState: PREVIEW) {
+          data {
+            id
+          }
+        }
+        publishedAt
+        pinned
+      }
+    }
+  }
+}
+
 query getUnverifiedComments {
   comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
     data {

@@ -72,33 +72,32 @@
 
     max-height: 250px;
     overflow: hidden;
-  }
 
-  &:not(.open) {
-    padding-bottom: 1rem;
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: calc(100% - 1rem);
-      height: 100%;
-      background: linear-gradient(transparent, #e5e5e5);
-      z-index: 2;
+    &:not(.open) {
+      padding-bottom: 1rem;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(100% - 1rem);
+        height: 100%;
+        background: linear-gradient(transparent, #e5e5e5);
+        z-index: 2;
+      }
     }
-  }
+    &.open {
+      &.long {
+        padding-bottom: 3rem;
+      }
 
-  &.open {
-    &.long {
-      padding-bottom: 3rem;
-    }
+      .comment-text {
+        max-height: unset;
+      }
 
-    .comment-text {
-      max-height: unset;
-    }
-
-    .expand-button .MuiSvgIcon-root {
-      transform: rotate(180deg);
+      .expand-button .MuiSvgIcon-root {
+        transform: rotate(180deg);
+      }
     }
   }
 

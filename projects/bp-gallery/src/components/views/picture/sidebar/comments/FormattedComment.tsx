@@ -9,7 +9,7 @@ import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import {
   useDeclineCommentMutation,
   useFixCommentTextMutation,
-  useGetCommentsQuery,
+  // useGetCommentsQuery,
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
@@ -18,7 +18,7 @@ import Editor from '../../../../common/editor/Editor';
 import EditIcon from '@mui/icons-material/Edit';
 import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
-import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
+// import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
 
 interface CommentActions {
@@ -28,7 +28,15 @@ interface CommentActions {
   hoverText?: string;
 }
 
-const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?: number }) => {
+const FormattedComment = ({
+  comment,
+  comments,
+  depth = 0,
+}: {
+  comment: FlatComment;
+  comments: FlatComment[] | undefined;
+  depth?: number;
+}) => {
   const { t } = useTranslation();
 
   const { role } = useAuth();
@@ -43,24 +51,32 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
   const [edit, setEdit] = useState(false);
   const [reply, setReply] = useState(false);
 
-  const { data } = useGetCommentsQuery({
-    variables: {
-      commentIds: comment.childComments
-        ? comment.childComments.map(chilComment => chilComment.id)
-        : ['0'],
-    },
-  });
+  // const { data } = useGetCommentsQuery({
+  //   variables: {
+  //     commentIds: comment.childComments
+  //       ? comment.childComments.map(chilComment => chilComment.id)
+  //       : ['0'],
+  //   },
+  // });
 
-  console.log(data);
+  // console.log(data);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const childComments: FlatComment[] | undefined = useSimplifiedQueryResponseData(data)?.comments;
+  // // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  // const childComments: FlatComment[] | undefined = useSimplifiedQueryResponseData(data)?.comments;
+
+  const childComments = useMemo(
+    () =>
+      comments?.filter(comment2 =>
+        comment.childComments?.map(childComment => childComment.id).includes(comment2.id)
+      ),
+    [comment.childComments, comments]
+  );
 
   const [pinComment] = usePinCommentMutation({
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getCommentsByPictureId'],
     onCompleted: () => setPinned(true),
   });
 
@@ -68,7 +84,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getCommentsByPictureId'],
     onCompleted: () => setPinned(false),
   });
 
@@ -76,7 +92,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getPictureInfo, getComments'],
+    refetchQueries: ['getCommentsByPictureId'],
   });
 
   const onDelete = useCallback(async () => {
@@ -118,9 +134,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
 
   return (
     <div
-      className={`bg-neutral-200 comment${isOpen ? ' open' : ''}${isLong ? ' long' : ''}${
-        pinned ? ' pinned' : ''
-      }`}
+      className={`bg-neutral-200 comment${isLong ? ' long' : ''}${pinned ? ' pinned' : ''}`}
       key={comment.id}
     >
       <div className='comment-details'>
@@ -157,7 +171,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
       {expanded && (
         <div className='ml-2'>
           {isCurator && edit ? (
-            <div className='comment-text bg-neutral-100'>
+            <div className={`comment-text bg-neutral-100 ${isOpen ? 'open' : ''}`}>
               <CommentEditField comment={comment} />
             </div>
           ) : (
@@ -171,7 +185,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
                 <button
                   key={commentAction.text}
                   title={commentAction.hoverText}
-                  className='text-neutral-700 btn bg-neutral-200 hover:bg-neutral-300 flex items-center mt-2 gap-0.5 pl-1'
+                  className='text-neutral-700 btn bg-neutral-200 hover:bg-neutral-300 flex items-center mt-2 gap-0.5 pl-1 text-xs'
                   onClick={() => commentAction.action()}
                 >
                   {commentAction.icon}
@@ -179,22 +193,6 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
                 </button>
               ))}
           </div>
-          {comment.picture && reply && (
-            <div className='mt-2'>
-              <NewCommentForm pictureId={comment.picture.id} parentCommentId={comment.id} />
-            </div>
-          )}
-          {comment.childComments?.length !== 0 && (
-            <div className='child-container flex mt-3'>
-              <div className='w-1 bg-neutral-300'></div>
-              {childComments?.map(childComment => (
-                <CommentVerification comment={childComment} key={childComment.id}>
-                  <FormattedComment comment={childComment} depth={depth + 1} />
-                </CommentVerification>
-              ))}
-            </div>
-          )}
-
           {isLong && (
             <Button
               className='expand-button'
@@ -203,6 +201,27 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
             >
               {isOpen ? t('common.showLess') : t('common.showMore')}
             </Button>
+          )}
+          {comment.picture && reply && (
+            <div className='mt-2'>
+              <NewCommentForm pictureId={comment.picture.id} parentCommentId={comment.id} />
+            </div>
+          )}
+          {comment.childComments?.length !== 0 && (
+            <div className='child-container flex mt-3'>
+              <div className='w-1 bg-neutral-300 flex-shrink-0'></div>
+              <div className='flex flex-col'>
+                {childComments?.map(childComment => (
+                  <CommentVerification comment={childComment} key={childComment.id}>
+                    <FormattedComment
+                      comment={childComment}
+                      comments={comments}
+                      depth={depth + 1}
+                    />
+                  </CommentVerification>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       )}

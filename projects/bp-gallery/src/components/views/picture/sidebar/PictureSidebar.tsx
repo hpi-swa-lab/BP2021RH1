@@ -92,7 +92,7 @@ const PictureSidebar = ({
               )
             }
           />
-          <CommentsContainer comments={picture.comments} pictureId={picture.id} />
+          <CommentsContainer pictureId={picture.id} />
         </>
       )}
       <PictureViewNavigationBar />

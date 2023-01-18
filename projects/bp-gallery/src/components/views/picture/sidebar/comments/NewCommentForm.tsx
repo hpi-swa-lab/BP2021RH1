@@ -55,6 +55,7 @@ const NewCommentForm = ({
         }
       });
     },
+    refetchQueries: ['getCommentsByPictureId'],
   });
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
