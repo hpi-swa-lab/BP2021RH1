@@ -90,6 +90,7 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
+            onClick={() => setAnchorEl(null)}
             transformOrigin={
               isMobile
                 ? {

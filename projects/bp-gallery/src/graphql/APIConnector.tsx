@@ -492,6 +492,7 @@ export type KeywordTag = {
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
+  visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type KeywordTagPicturesArgs = {
@@ -538,6 +539,7 @@ export type KeywordTagFiltersInput = {
   pictures?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
+  visible?: InputMaybe<BooleanFilterInput>;
 };
 
 export type KeywordTagInput = {
@@ -545,6 +547,7 @@ export type KeywordTagInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type KeywordTagRelationResponseCollection = {
@@ -603,6 +606,7 @@ export type LocationTag = {
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
+  visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type LocationTagPicturesArgs = {
@@ -649,6 +653,7 @@ export type LocationTagFiltersInput = {
   pictures?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
+  visible?: InputMaybe<BooleanFilterInput>;
 };
 
 export type LocationTagInput = {
@@ -657,6 +662,7 @@ export type LocationTagInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type LocationTagRelationResponseCollection = {
@@ -2483,6 +2489,7 @@ export type GetAllKeywordTagsQuery = {
           attributes?:
             | {
                 name: string;
+                visible?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
               }
             | null
@@ -2599,6 +2606,7 @@ export type GetAllLocationTagsQuery = {
           attributes?:
             | {
                 name: string;
+                visible?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
               }
             | null
@@ -2630,6 +2638,30 @@ export type UpdateLocationSynonymsMutationVariables = Exact<{
 
 export type UpdateLocationSynonymsMutation = {
   updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateLocationVisibilityMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  visible: Scalars['Boolean'];
+}>;
+
+export type UpdateLocationVisibilityMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateKeywordVisibilityMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  visible: Scalars['Boolean'];
+}>;
+
+export type UpdateKeywordVisibilityMutation = {
+  updateKeywordTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -4354,6 +4386,7 @@ export const GetAllKeywordTagsDocument = gql`
           synonyms {
             name
           }
+          visible
         }
       }
     }
@@ -4629,6 +4662,7 @@ export const GetAllLocationTagsDocument = gql`
         id
         attributes {
           name
+          visible
           synonyms {
             name
           }
@@ -4798,6 +4832,122 @@ export type UpdateLocationSynonymsMutationResult =
 export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationSynonymsMutation,
   UpdateLocationSynonymsMutationVariables
+>;
+
+export const UpdateLocationVisibilityDocument = gql`
+  mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
+    updateLocationTag(id: $tagId, data: { visible: $visible }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationVisibilityMutationFn = Apollo.MutationFunction<
+  UpdateLocationVisibilityMutation,
+  UpdateLocationVisibilityMutationVariables
+>;
+
+/**
+ * __useUpdateLocationVisibilityMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationVisibilityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationVisibilityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationVisibilityMutation, { data, loading, error }] = useUpdateLocationVisibilityMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      visible: // value for 'visible'
+ *   },
+ * });
+ */
+export function useUpdateLocationVisibilityMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationVisibilityMutation,
+    UpdateLocationVisibilityMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateLocationVisibilityMutation,
+    UpdateLocationVisibilityMutationVariables
+  >(UpdateLocationVisibilityDocument, options);
+}
+
+export type UpdateLocationVisibilityMutationHookResult = ReturnType<
+  typeof useUpdateLocationVisibilityMutation
+>;
+
+export type UpdateLocationVisibilityMutationResult =
+  Apollo.MutationResult<UpdateLocationVisibilityMutation>;
+
+export type UpdateLocationVisibilityMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationVisibilityMutation,
+  UpdateLocationVisibilityMutationVariables
+>;
+
+export const UpdateKeywordVisibilityDocument = gql`
+  mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
+    updateKeywordTag(id: $tagId, data: { visible: $visible }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateKeywordVisibilityMutationFn = Apollo.MutationFunction<
+  UpdateKeywordVisibilityMutation,
+  UpdateKeywordVisibilityMutationVariables
+>;
+
+/**
+ * __useUpdateKeywordVisibilityMutation__
+ *
+ * To run a mutation, you first call `useUpdateKeywordVisibilityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateKeywordVisibilityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateKeywordVisibilityMutation, { data, loading, error }] = useUpdateKeywordVisibilityMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      visible: // value for 'visible'
+ *   },
+ * });
+ */
+export function useUpdateKeywordVisibilityMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateKeywordVisibilityMutation,
+    UpdateKeywordVisibilityMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateKeywordVisibilityMutation,
+    UpdateKeywordVisibilityMutationVariables
+  >(UpdateKeywordVisibilityDocument, options);
+}
+
+export type UpdateKeywordVisibilityMutationHookResult = ReturnType<
+  typeof useUpdateKeywordVisibilityMutation
+>;
+
+export type UpdateKeywordVisibilityMutationResult =
+  Apollo.MutationResult<UpdateKeywordVisibilityMutation>;
+
+export type UpdateKeywordVisibilityMutationOptions = Apollo.BaseMutationOptions<
+  UpdateKeywordVisibilityMutation,
+  UpdateKeywordVisibilityMutationVariables
 >;
 
 export const GetPersonTagsWithThumbnailDocument = gql`
