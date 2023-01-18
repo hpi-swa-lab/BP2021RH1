@@ -356,6 +356,7 @@ const processUpdatesForTimeRangeTag = async (pictureQuery, data) => {
   const newTimeRangeTagData = {
     start: timeRangeTag.start,
     end: timeRangeTag.end,
+    isEstimate: timeRangeTag.isEstimate,
   };
 
   const newTimeRangeTagId = await findExistingOrCreateNewTag(
