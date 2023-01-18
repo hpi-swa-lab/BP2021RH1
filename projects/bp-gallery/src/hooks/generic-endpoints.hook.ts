@@ -14,8 +14,10 @@ import {
   useMergePersonTagsMutation,
   useUpdateKeywordNameMutation,
   useUpdateKeywordSynonymsMutation,
+  useUpdateKeywordVisibilityMutation,
   useUpdateLocationNameMutation,
   useUpdateLocationSynonymsMutation,
+  useUpdateLocationVisibilityMutation,
   useUpdatePersonNameMutation,
   useUpdatePersonSynonymsMutation,
 } from '../graphql/APIConnector';
@@ -32,6 +34,7 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateSynonymsMutationSource: useUpdateLocationSynonymsMutation,
           mergeTagsMutationSource: useMergeLocationTagsMutation,
           deleteTagMutationSource: useDeleteLocationTagMutation,
+          updateVisibilityMutationSource: useUpdateLocationVisibilityMutation,
         };
       case TagType.PERSON:
         return {
@@ -41,6 +44,9 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateSynonymsMutationSource: useUpdatePersonSynonymsMutation,
           mergeTagsMutationSource: useMergePersonTagsMutation,
           deleteTagMutationSource: useDeletePersonTagMutation,
+          updateVisibilityMutationSource: (dummy: any) => {
+            return [dummy];
+          },
         };
       case TagType.KEYWORD:
       default:
@@ -51,6 +57,7 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateSynonymsMutationSource: useUpdateKeywordSynonymsMutation,
           mergeTagsMutationSource: useMergeKeywordTagsMutation,
           deleteTagMutationSource: useDeleteKeywordTagMutation,
+          updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
         };
     }
   }, [type]);
