@@ -146,7 +146,12 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               });
             }}
             rows={3}
-            queryParams={{ verified_pictures: { archive_tag: { id: { eq: archiveId } } } }}
+            queryParams={{
+              and: [
+                { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+                { visible: { eq: true } },
+              ],
+            }}
             thumbnailQueryParams={{ archive_tag: { id: { eq: archiveId } } }}
             archiveId={archiveId}
           />

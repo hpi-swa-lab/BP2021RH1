@@ -297,11 +297,16 @@ const ShowMoreView = ({
               type={categoryType2}
               queryParams={
                 archiveId === '0'
-                  ? { id: { not: { eq: '-1' } } }
+                  ? { visible: { eq: true } }
                   : {
-                      or: [
-                        { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
-                        { pictures: { archive_tag: { id: { eq: archiveId } } } },
+                      and: [
+                        { visible: { eq: true } },
+                        {
+                          or: [
+                            { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+                            { pictures: { archive_tag: { id: { eq: archiveId } } } },
+                          ],
+                        },
                       ],
                     }
               }

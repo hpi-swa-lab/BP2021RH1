@@ -49,6 +49,7 @@ const DiscoverView = () => {
             title='Orte'
             seperator={true}
             type={TagType.LOCATION}
+            queryParams={{ visible: { eq: true } }}
             onClick={() => {
               history.push('/show-more/0/location', {
                 showBack: true,
@@ -61,6 +62,7 @@ const DiscoverView = () => {
             title='Weitere Kategorien'
             seperator={true}
             type={TagType.KEYWORD}
+            queryParams={{ visible: { eq: true } }}
             onClick={() => {
               history.push('/show-more/0/keyword', {
                 showBack: true,
