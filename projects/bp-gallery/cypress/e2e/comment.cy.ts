@@ -40,9 +40,9 @@ describe('Comment', () => {
       .parent()
       .parent()
       .parent()
-      .within(() => {
-        cy.get('button').contains('Ablehnen').click();
-      });
+      .find('button')
+      .contains('Ablehnen')
+      .click();
     cy.get('button').contains('Bestätigen').click();
 
     cy.get('.comment-verification-container')
@@ -52,9 +52,9 @@ describe('Comment', () => {
       .parent()
       .parent()
       .parent()
-      .within(() => {
-        cy.get('button').contains('Akzeptieren').click();
-      });
+      .find('button')
+      .contains('Akzeptieren')
+      .click();
     cy.wait(1000);
     cy.get('button').contains('Löschen').click();
     cy.get('button').contains('Bestätigen').click();

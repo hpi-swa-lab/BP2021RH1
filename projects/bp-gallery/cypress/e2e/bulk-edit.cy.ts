@@ -12,35 +12,11 @@ describe('bulk edit', () => {
 
   it('select multiple photos manually', () => {
     cy.wait(500);
-    cy.get('.picture-preview')
-      .eq(0)
-      .within(() => {
-        cy.get('.adornment.bottom-left').click();
-      });
-    cy.get('.picture-preview')
-      .eq(1)
-      .within(() => {
-        cy.get('.adornment.bottom-left').click();
-      });
-    cy.get('.picture-preview')
-      .eq(2)
-      .within(() => {
-        cy.get('.adornment.bottom-left').click();
-      });
-    cy.get('.picture-preview')
-      .eq(0)
-      .within(() => {
-        cy.get('[data-testid="CheckBoxIcon"]').should('exist');
-      });
-    cy.get('.picture-preview')
-      .eq(1)
-      .within(() => {
-        cy.get('[data-testid="CheckBoxIcon"]').should('exist');
-      });
-    cy.get('.picture-preview')
-      .eq(2)
-      .within(() => {
-        cy.get('[data-testid="CheckBoxIcon"]').should('exist');
-      });
+    cy.get('.picture-preview').eq(0).find('.adornment.bottom-left').click();
+    cy.get('.picture-preview').eq(1).find('.adornment.bottom-left').click();
+    cy.get('.picture-preview').eq(2).find('.adornment.bottom-left').click();
+    cy.get('.picture-preview').eq(0).find('[data-testid="CheckBoxIcon"]').should('exist');
+    cy.get('.picture-preview').eq(1).find('[data-testid="CheckBoxIcon"]').should('exist');
+    cy.get('.picture-preview').eq(2).find('[data-testid="CheckBoxIcon"]').should('exist');
   });
 });

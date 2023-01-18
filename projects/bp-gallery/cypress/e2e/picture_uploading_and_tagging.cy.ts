@@ -8,9 +8,7 @@ describe('picture uploading and tagging', () => {
     cy.get('.MuiPaper-root').contains('Collections').click();
     cy.get('span').contains('add').click();
     cy.get('span').contains('Neue Collection erstellen').click();
-    cy.get('.MuiDialogContent-root').within(() => {
-      cy.get('input').type('TestCollection');
-    });
+    cy.get('.MuiDialogContent-root').find('input').type('TestCollection');
     cy.get('.MuiButton-root').contains('Bestätigen').click();
     cy.get('.nav-bar').contains('Mehr...').click({ force: true });
     cy.get('.MuiPaper-root').contains('Uploads').click();
@@ -43,9 +41,10 @@ describe('picture uploading and tagging', () => {
   it('uploading picture', () => {
     cy.get('div.dropzone').selectFile('./cypress/testFiles/testbild.jpg', { action: 'drag-drop' });
     cy.get('.add-to-collection').click();
-    cy.get('.MuiDialogContent-root').within(() => {
-      cy.get('.MuiOutlinedInput-input').clear().type('Herbert-Ahrens-Bilderarchiv');
-    });
+    cy.get('.MuiDialogContent-root')
+      .find('.MuiOutlinedInput-input')
+      .clear()
+      .type('Herbert-Ahrens-Bilderarchiv');
     cy.get('.MuiAutocomplete-option').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
     cy.wait(3000);
@@ -62,9 +61,9 @@ describe('picture uploading and tagging', () => {
     cy.get('div')
       .contains('Beschreibungen')
       .siblings()
-      .within(() => {
-        cy.get('div.jodit-wysiwyg').clear().type('TestBeschreibung');
-      });
+      .find('div.jodit-wysiwyg')
+      .clear()
+      .type('TestBeschreibung');
 
     cy.get('div')
       .contains('Personen')
