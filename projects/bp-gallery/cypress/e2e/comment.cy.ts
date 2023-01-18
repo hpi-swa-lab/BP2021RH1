@@ -41,8 +41,29 @@ describe('Comment', () => {
     cy.contains('.comment-verification-container', 'Testkommentar2')
       .contains('button', 'Akzeptieren')
       .click();
-    cy.wait(1000);
-    cy.get('button').contains('Löschen').click();
-    cy.get('button').contains('Bestätigen').click();
+
+    // navigate again to close the CommentsVerificationView in the background
+    cy.visit('http://localhost:3000/picture/1');
+
+    cy.contains('Testkommentar1').should('not.exist');
+    cy.contains('Testkommentar2').should('be.visible');
+    cy.contains('button', 'Akzeptieren').should('not.exist');
+    cy.contains('button', 'Bestätigen').should('not.exist');
+  });
+
+  it('log out and check comments visibility', () => {
+    cy.visit('http://localhost:3000');
+    logout();
+
+    cy.visit('http://localhost:3000/picture/1');
+
+    cy.contains('Testkommentar1').should('not.exist');
+    cy.contains('Testkommentar2').should('be.visible');
+
+    cy.visit('http://localhost:3000');
+    login();
+    cy.visit('http://localhost:3000/picture/1');
+    cy.contains('.comment-container', 'Testkommentar2').contains('button', 'Löschen').click();
+    cy.contains('button', 'Bestätigen').click();
   });
 });
