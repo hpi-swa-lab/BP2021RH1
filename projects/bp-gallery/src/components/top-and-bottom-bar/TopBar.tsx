@@ -31,7 +31,7 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
           <div
             className={'bh-logo clickable'}
             title={t('common.back-to-home')}
-            onClick={() => history.push('/start', { showBack: false, scrollTop: true })}
+            onClick={() => history.push('/start', { showBack: false })}
           >
             <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
           </div>

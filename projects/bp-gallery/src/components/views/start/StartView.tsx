@@ -34,7 +34,7 @@ const StartView = () => {
   ));
 
   return (
-    <ScrollContainer scrollTop>
+    <ScrollContainer>
       {(scrollPos, scrollHeight) => (
         <div className='main-start-view'>
           <div className='welcome-container'>
