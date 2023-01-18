@@ -55,16 +55,16 @@ describe('Archives View', () => {
     });
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 2');
-    cy.get('#archive-form-url').should('be.visible').type('test2.de').focus().blur();
+    cy.get('#archive-form-url').should('be.visible').type('test2.de').blur();
     cy.get('.archive-link-entry')
       .first()
       .within(() => {
         return cy.get('[data-testid="EditIcon"]').click();
       });
-    cy.get('#archive-form-title').should('be.visible').type(' Edit').focus().blur();
+    cy.get('#archive-form-title').should('be.visible').type(' Edit').blur();
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 3');
-    cy.get('#archive-form-url').should('be.visible').type('test3.de').focus().blur();
+    cy.get('#archive-form-url').should('be.visible').type('test3.de').blur();
     cy.get('.archive-link-entry')
       .eq(1)
       .within(() => {
