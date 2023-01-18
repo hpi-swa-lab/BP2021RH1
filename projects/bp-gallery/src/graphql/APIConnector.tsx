@@ -29,9 +29,20 @@ export type Scalars = {
 
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
+  links?: Maybe<LinkRelationResponseCollection>;
+  logo?: Maybe<UploadFileEntityResponse>;
+  longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   pictures?: Maybe<PictureRelationResponseCollection>;
+  shortDescription?: Maybe<Scalars['String']>;
+  showcasePicture?: Maybe<PictureEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ArchiveTagLinksArgs = {
+  filters?: InputMaybe<LinkFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ArchiveTagPicturesArgs = {
@@ -59,16 +70,25 @@ export type ArchiveTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
+  links?: InputMaybe<LinkFiltersInput>;
+  longDescription?: InputMaybe<StringFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ArchiveTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  shortDescription?: InputMaybe<StringFilterInput>;
+  showcasePicture?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type ArchiveTagInput = {
+  links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  logo?: InputMaybe<Scalars['ID']>;
+  longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  showcasePicture?: InputMaybe<Scalars['ID']>;
 };
 
 export type BooleanFilterInput = {
@@ -386,6 +406,7 @@ export type GenericMorph =
   | ComponentLocationCoordinates
   | Description
   | KeywordTag
+  | Link
   | LocationTag
   | PersonTag
   | Picture
@@ -471,6 +492,7 @@ export type KeywordTag = {
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
+  visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type KeywordTagPicturesArgs = {
@@ -517,6 +539,7 @@ export type KeywordTagFiltersInput = {
   pictures?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
+  visible?: InputMaybe<BooleanFilterInput>;
 };
 
 export type KeywordTagInput = {
@@ -524,10 +547,55 @@ export type KeywordTagInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type KeywordTagRelationResponseCollection = {
   data: Array<KeywordTagEntity>;
+};
+
+export type Link = {
+  archive_tag?: Maybe<ArchiveTagEntityResponse>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  url: Scalars['String'];
+};
+
+export type LinkEntity = {
+  attributes?: Maybe<Link>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type LinkEntityResponse = {
+  data?: Maybe<LinkEntity>;
+};
+
+export type LinkEntityResponseCollection = {
+  data: Array<LinkEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type LinkFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<LinkFiltersInput>>>;
+  archive_tag?: InputMaybe<ArchiveTagFiltersInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<LinkFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<LinkFiltersInput>>>;
+  title?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  url?: InputMaybe<StringFilterInput>;
+};
+
+export type LinkInput = {
+  archive_tag?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
+};
+
+export type LinkRelationResponseCollection = {
+  data: Array<LinkEntity>;
 };
 
 export type LocationTag = {
@@ -538,6 +606,7 @@ export type LocationTag = {
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
+  visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type LocationTagPicturesArgs = {
@@ -584,6 +653,7 @@ export type LocationTagFiltersInput = {
   pictures?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
+  visible?: InputMaybe<BooleanFilterInput>;
 };
 
 export type LocationTagInput = {
@@ -592,6 +662,7 @@ export type LocationTagInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type LocationTagRelationResponseCollection = {
@@ -604,12 +675,15 @@ export type Mutation = {
   createComment?: Maybe<CommentEntityResponse>;
   createDescription?: Maybe<DescriptionEntityResponse>;
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  createLink?: Maybe<LinkEntityResponse>;
   createLocationTag?: Maybe<LocationTagEntityResponse>;
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Create a new role */
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
+  /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   deleteArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   deleteBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -617,17 +691,20 @@ export type Mutation = {
   deleteComment?: Maybe<CommentEntityResponse>;
   deleteDescription?: Maybe<DescriptionEntityResponse>;
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  deleteLink?: Maybe<LinkEntityResponse>;
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
   /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   doBulkEdit?: Maybe<Scalars['Int']>;
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
+  /** Request a reset password token */
   forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
   login: UsersPermissionsLoginPayload;
   mergeCollections?: Maybe<Scalars['ID']>;
@@ -635,8 +712,10 @@ export type Mutation = {
   mergeLocationTags?: Maybe<Scalars['ID']>;
   mergePersonTags?: Maybe<Scalars['ID']>;
   multipleUpload: Array<Maybe<UploadFileEntityResponse>>;
+  /** Register a user */
   register: UsersPermissionsLoginPayload;
   removeFile?: Maybe<UploadFileEntityResponse>;
+  /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   updateBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -645,13 +724,16 @@ export type Mutation = {
   updateDescription?: Maybe<DescriptionEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
+  updateLink?: Maybe<LinkEntityResponse>;
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
+  /** Update an existing role */
   updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>;
+  /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
 };
@@ -674,6 +756,10 @@ export type MutationCreateDescriptionArgs = {
 
 export type MutationCreateKeywordTagArgs = {
   data: KeywordTagInput;
+};
+
+export type MutationCreateLinkArgs = {
+  data: LinkInput;
 };
 
 export type MutationCreateLocationTagArgs = {
@@ -721,6 +807,10 @@ export type MutationDeleteDescriptionArgs = {
 };
 
 export type MutationDeleteKeywordTagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteLinkArgs = {
   id: Scalars['ID'];
 };
 
@@ -841,6 +931,11 @@ export type MutationUpdateFileInfoArgs = {
 
 export type MutationUpdateKeywordTagArgs = {
   data: KeywordTagInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateLinkArgs = {
+  data: LinkInput;
   id: Scalars['ID'];
 };
 
@@ -1129,6 +1224,8 @@ export type Query = {
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
+  link?: Maybe<LinkEntityResponse>;
+  links?: Maybe<LinkEntityResponseCollection>;
   locationTag?: Maybe<LocationTagEntityResponse>;
   locationTags?: Maybe<LocationTagEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
@@ -1205,6 +1302,16 @@ export type QueryKeywordTagArgs = {
 
 export type QueryKeywordTagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryLinkArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryLinksArgs = {
+  filters?: InputMaybe<LinkFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
@@ -1631,6 +1738,98 @@ export type UsersPermissionsUserRelationResponseCollection = {
   data: Array<UsersPermissionsUserEntity>;
 };
 
+export type GetArchiveQueryVariables = Exact<{
+  archiveId: Scalars['ID'];
+}>;
+
+export type GetArchiveQuery = {
+  archiveTag?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    name: string;
+                    shortDescription?: string | null | undefined;
+                    longDescription?: string | null | undefined;
+                    logo?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?:
+                                  | {
+                                      width?: number | null | undefined;
+                                      height?: number | null | undefined;
+                                      formats?: any | null | undefined;
+                                      updatedAt?: any | null | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                    showcasePicture?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?:
+                                  | {
+                                      media: {
+                                        data?:
+                                          | {
+                                              id?: string | null | undefined;
+                                              attributes?:
+                                                | {
+                                                    width?: number | null | undefined;
+                                                    height?: number | null | undefined;
+                                                    formats?: any | null | undefined;
+                                                    url: string;
+                                                    updatedAt?: any | null | undefined;
+                                                  }
+                                                | null
+                                                | undefined;
+                                            }
+                                          | null
+                                          | undefined;
+                                      };
+                                    }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                    links?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?:
+                              | { title?: string | null | undefined; url: string }
+                              | null
+                              | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type GetPictureInfoQueryVariables = Exact<{
   pictureId: Scalars['ID'];
 }>;
@@ -1957,6 +2156,7 @@ export type GetMultiplePictureInfoQuery = {
                               author?: string | null | undefined;
                               date: any;
                               publishedAt?: any | null | undefined;
+                              pinned?: boolean | null | undefined;
                             }
                           | null
                           | undefined;
@@ -2287,6 +2487,7 @@ export type GetAllKeywordTagsQuery = {
           attributes?:
             | {
                 name: string;
+                visible?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
               }
             | null
@@ -2401,6 +2602,7 @@ export type GetAllLocationTagsQuery = {
           attributes?:
             | {
                 name: string;
+                visible?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
               }
             | null
@@ -2432,6 +2634,30 @@ export type UpdateLocationSynonymsMutationVariables = Exact<{
 
 export type UpdateLocationSynonymsMutation = {
   updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateLocationVisibilityMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  visible: Scalars['Boolean'];
+}>;
+
+export type UpdateLocationVisibilityMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateKeywordVisibilityMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  visible: Scalars['Boolean'];
+}>;
+
+export type UpdateKeywordVisibilityMutation = {
+  updateKeywordTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -2579,14 +2805,49 @@ export type GetAllCollectionsQuery = {
     | undefined;
 };
 
-export type GetAllArchiveTagsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetAllArchiveTagsQueryVariables = Exact<{
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+}>;
 
 export type GetAllArchiveTagsQuery = {
   archiveTags?:
     | {
         data: Array<{
           id?: string | null | undefined;
-          attributes?: { name: string } | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                shortDescription?: string | null | undefined;
+                showcasePicture?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  media: {
+                                    data?:
+                                      | {
+                                          attributes?:
+                                            | { url: string; updatedAt?: any | null | undefined }
+                                            | null
+                                            | undefined;
+                                        }
+                                      | null
+                                      | undefined;
+                                  };
+                                }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
         }>;
       }
     | null
@@ -2764,6 +3025,33 @@ export type CreateArchiveTagMutation = {
     | undefined;
 };
 
+export type CreateLinkMutationVariables = Exact<{
+  title: Scalars['String'];
+  url: Scalars['String'];
+  archive_tag: Scalars['ID'];
+}>;
+
+export type CreateLinkMutation = {
+  createLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
+};
+
+export type UpdateLinkMutationVariables = Exact<{
+  id: Scalars['ID'];
+  data: LinkInput;
+}>;
+
+export type UpdateLinkMutation = {
+  updateLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
+};
+
+export type DeleteLinkMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteLinkMutation = {
+  deleteLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
+};
+
 export type MergePersonTagsMutationVariables = Exact<{
   targetId: Scalars['ID'];
   sourceId: Scalars['ID'];
@@ -2843,7 +3131,7 @@ export type BulkEditMutationVariables = Exact<{
   data: Scalars['JSON'];
 }>;
 
-export type BulkEditMutation = { doBulkEdit?: string | null | undefined };
+export type BulkEditMutation = { doBulkEdit?: number | null | undefined };
 
 export type CreatePictureMutationVariables = Exact<{
   data: PictureInput;
@@ -2913,6 +3201,18 @@ export type UpdateCollectionMutationVariables = Exact<{
 
 export type UpdateCollectionMutation = {
   updateCollection?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateArchiveMutationVariables = Exact<{
+  archiveId: Scalars['ID'];
+  data: ArchiveTagInput;
+}>;
+
+export type UpdateArchiveMutation = {
+  updateArchiveTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -3058,6 +3358,99 @@ export type MeQuery = {
     | null
     | undefined;
 };
+
+export const GetArchiveDocument = gql`
+  query getArchive($archiveId: ID!) {
+    archiveTag(id: $archiveId) {
+      data {
+        id
+        attributes {
+          name
+          shortDescription
+          longDescription
+          logo {
+            data {
+              id
+              attributes {
+                width
+                height
+                formats
+                updatedAt
+              }
+            }
+          }
+          showcasePicture {
+            data {
+              id
+              attributes {
+                media {
+                  data {
+                    id
+                    attributes {
+                      width
+                      height
+                      formats
+                      url
+                      updatedAt
+                    }
+                  }
+                }
+              }
+            }
+          }
+          links {
+            data {
+              id
+              attributes {
+                title
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetArchiveQuery__
+ *
+ * To run a query within a React component, call `useGetArchiveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchiveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchiveQuery({
+ *   variables: {
+ *      archiveId: // value for 'archiveId'
+ *   },
+ * });
+ */
+export function useGetArchiveQuery(
+  baseOptions: Apollo.QueryHookOptions<GetArchiveQuery, GetArchiveQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetArchiveQuery, GetArchiveQueryVariables>(GetArchiveDocument, options);
+}
+
+export function useGetArchiveLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetArchiveQuery, GetArchiveQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetArchiveQuery, GetArchiveQueryVariables>(
+    GetArchiveDocument,
+    options
+  );
+}
+
+export type GetArchiveQueryHookResult = ReturnType<typeof useGetArchiveQuery>;
+
+export type GetArchiveLazyQueryHookResult = ReturnType<typeof useGetArchiveLazyQuery>;
+
+export type GetArchiveQueryResult = Apollo.QueryResult<GetArchiveQuery, GetArchiveQueryVariables>;
 
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
@@ -3344,6 +3737,7 @@ export const GetMultiplePictureInfoDocument = gql`
                 author
                 date
                 publishedAt
+                pinned
               }
             }
           }
@@ -3420,7 +3814,7 @@ export const GetPicturesDocument = gql`
   query getPictures(
     $filters: PictureFiltersInput!
     $pagination: PaginationArg!
-    $sortBy: [String] = ["publishedAt:desc"]
+    $sortBy: [String] = ["createdAt:desc"]
   ) {
     pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
@@ -3976,6 +4370,7 @@ export const GetAllKeywordTagsDocument = gql`
           synonyms {
             name
           }
+          visible
         }
       }
     }
@@ -4241,6 +4636,7 @@ export const GetAllLocationTagsDocument = gql`
         id
         attributes {
           name
+          visible
           synonyms {
             name
           }
@@ -4410,6 +4806,122 @@ export type UpdateLocationSynonymsMutationResult =
 export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationSynonymsMutation,
   UpdateLocationSynonymsMutationVariables
+>;
+
+export const UpdateLocationVisibilityDocument = gql`
+  mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
+    updateLocationTag(id: $tagId, data: { visible: $visible }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationVisibilityMutationFn = Apollo.MutationFunction<
+  UpdateLocationVisibilityMutation,
+  UpdateLocationVisibilityMutationVariables
+>;
+
+/**
+ * __useUpdateLocationVisibilityMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationVisibilityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationVisibilityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationVisibilityMutation, { data, loading, error }] = useUpdateLocationVisibilityMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      visible: // value for 'visible'
+ *   },
+ * });
+ */
+export function useUpdateLocationVisibilityMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationVisibilityMutation,
+    UpdateLocationVisibilityMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateLocationVisibilityMutation,
+    UpdateLocationVisibilityMutationVariables
+  >(UpdateLocationVisibilityDocument, options);
+}
+
+export type UpdateLocationVisibilityMutationHookResult = ReturnType<
+  typeof useUpdateLocationVisibilityMutation
+>;
+
+export type UpdateLocationVisibilityMutationResult =
+  Apollo.MutationResult<UpdateLocationVisibilityMutation>;
+
+export type UpdateLocationVisibilityMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationVisibilityMutation,
+  UpdateLocationVisibilityMutationVariables
+>;
+
+export const UpdateKeywordVisibilityDocument = gql`
+  mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
+    updateKeywordTag(id: $tagId, data: { visible: $visible }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateKeywordVisibilityMutationFn = Apollo.MutationFunction<
+  UpdateKeywordVisibilityMutation,
+  UpdateKeywordVisibilityMutationVariables
+>;
+
+/**
+ * __useUpdateKeywordVisibilityMutation__
+ *
+ * To run a mutation, you first call `useUpdateKeywordVisibilityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateKeywordVisibilityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateKeywordVisibilityMutation, { data, loading, error }] = useUpdateKeywordVisibilityMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      visible: // value for 'visible'
+ *   },
+ * });
+ */
+export function useUpdateKeywordVisibilityMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateKeywordVisibilityMutation,
+    UpdateKeywordVisibilityMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateKeywordVisibilityMutation,
+    UpdateKeywordVisibilityMutationVariables
+  >(UpdateKeywordVisibilityDocument, options);
+}
+
+export type UpdateKeywordVisibilityMutationHookResult = ReturnType<
+  typeof useUpdateKeywordVisibilityMutation
+>;
+
+export type UpdateKeywordVisibilityMutationResult =
+  Apollo.MutationResult<UpdateKeywordVisibilityMutation>;
+
+export type UpdateKeywordVisibilityMutationOptions = Apollo.BaseMutationOptions<
+  UpdateKeywordVisibilityMutation,
+  UpdateKeywordVisibilityMutationVariables
 >;
 
 export const GetPersonTagsWithThumbnailDocument = gql`
@@ -4746,12 +5258,28 @@ export type GetAllCollectionsQueryResult = Apollo.QueryResult<
 >;
 
 export const GetAllArchiveTagsDocument = gql`
-  query getAllArchiveTags {
-    archiveTags {
+  query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
+    archiveTags(sort: $sortBy) {
       data {
         id
         attributes {
           name
+          shortDescription
+          showcasePicture {
+            data {
+              id
+              attributes {
+                media {
+                  data {
+                    attributes {
+                      url
+                      updatedAt
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -4770,6 +5298,7 @@ export const GetAllArchiveTagsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllArchiveTagsQuery({
  *   variables: {
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
@@ -5210,6 +5739,162 @@ export type CreateArchiveTagMutationResult = Apollo.MutationResult<CreateArchive
 export type CreateArchiveTagMutationOptions = Apollo.BaseMutationOptions<
   CreateArchiveTagMutation,
   CreateArchiveTagMutationVariables
+>;
+
+export const CreateLinkDocument = gql`
+  mutation createLink($title: String!, $url: String!, $archive_tag: ID!) {
+    createLink(data: { title: $title, url: $url, archive_tag: $archive_tag }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateLinkMutationFn = Apollo.MutationFunction<
+  CreateLinkMutation,
+  CreateLinkMutationVariables
+>;
+
+/**
+ * __useCreateLinkMutation__
+ *
+ * To run a mutation, you first call `useCreateLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLinkMutation, { data, loading, error }] = useCreateLinkMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      url: // value for 'url'
+ *      archive_tag: // value for 'archive_tag'
+ *   },
+ * });
+ */
+export function useCreateLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateLinkMutation, CreateLinkMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateLinkMutation, CreateLinkMutationVariables>(
+    CreateLinkDocument,
+    options
+  );
+}
+
+export type CreateLinkMutationHookResult = ReturnType<typeof useCreateLinkMutation>;
+
+export type CreateLinkMutationResult = Apollo.MutationResult<CreateLinkMutation>;
+
+export type CreateLinkMutationOptions = Apollo.BaseMutationOptions<
+  CreateLinkMutation,
+  CreateLinkMutationVariables
+>;
+
+export const UpdateLinkDocument = gql`
+  mutation updateLink($id: ID!, $data: LinkInput!) {
+    updateLink(id: $id, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLinkMutationFn = Apollo.MutationFunction<
+  UpdateLinkMutation,
+  UpdateLinkMutationVariables
+>;
+
+/**
+ * __useUpdateLinkMutation__
+ *
+ * To run a mutation, you first call `useUpdateLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLinkMutation, { data, loading, error }] = useUpdateLinkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateLinkMutation, UpdateLinkMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLinkMutation, UpdateLinkMutationVariables>(
+    UpdateLinkDocument,
+    options
+  );
+}
+
+export type UpdateLinkMutationHookResult = ReturnType<typeof useUpdateLinkMutation>;
+
+export type UpdateLinkMutationResult = Apollo.MutationResult<UpdateLinkMutation>;
+
+export type UpdateLinkMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLinkMutation,
+  UpdateLinkMutationVariables
+>;
+
+export const DeleteLinkDocument = gql`
+  mutation deleteLink($id: ID!) {
+    deleteLink(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteLinkMutationFn = Apollo.MutationFunction<
+  DeleteLinkMutation,
+  DeleteLinkMutationVariables
+>;
+
+/**
+ * __useDeleteLinkMutation__
+ *
+ * To run a mutation, you first call `useDeleteLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLinkMutation, { data, loading, error }] = useDeleteLinkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteLinkMutation, DeleteLinkMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteLinkMutation, DeleteLinkMutationVariables>(
+    DeleteLinkDocument,
+    options
+  );
+}
+
+export type DeleteLinkMutationHookResult = ReturnType<typeof useDeleteLinkMutation>;
+
+export type DeleteLinkMutationResult = Apollo.MutationResult<DeleteLinkMutation>;
+
+export type DeleteLinkMutationOptions = Apollo.BaseMutationOptions<
+  DeleteLinkMutation,
+  DeleteLinkMutationVariables
 >;
 
 export const MergePersonTagsDocument = gql`
@@ -5968,6 +6653,58 @@ export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollect
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
+>;
+
+export const UpdateArchiveDocument = gql`
+  mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
+    updateArchiveTag(id: $archiveId, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateArchiveMutationFn = Apollo.MutationFunction<
+  UpdateArchiveMutation,
+  UpdateArchiveMutationVariables
+>;
+
+/**
+ * __useUpdateArchiveMutation__
+ *
+ * To run a mutation, you first call `useUpdateArchiveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateArchiveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateArchiveMutation, { data, loading, error }] = useUpdateArchiveMutation({
+ *   variables: {
+ *      archiveId: // value for 'archiveId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateArchiveMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateArchiveMutation, UpdateArchiveMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateArchiveMutation, UpdateArchiveMutationVariables>(
+    UpdateArchiveDocument,
+    options
+  );
+}
+
+export type UpdateArchiveMutationHookResult = ReturnType<typeof useUpdateArchiveMutation>;
+
+export type UpdateArchiveMutationResult = Apollo.MutationResult<UpdateArchiveMutation>;
+
+export type UpdateArchiveMutationOptions = Apollo.BaseMutationOptions<
+  UpdateArchiveMutation,
+  UpdateArchiveMutationVariables
 >;
 
 export const GetUnverifiedCommentsDocument = gql`

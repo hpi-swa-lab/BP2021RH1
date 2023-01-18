@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
 import TopBar from './top-and-bottom-bar/TopBar';
 import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
-import NavigationBar from './top-and-bottom-bar/NavigationBar';
 import {
   KeywordTagEntityResponseCollection,
   LocationTagEntityResponseCollection,
@@ -17,6 +16,7 @@ import AuthProvider from './provider/AuthProvider';
 import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider';
 import DialogProvider from './provider/DialogProvider';
 import { isEmpty } from 'lodash';
+import NavigationBar from './top-and-bottom-bar/NavigationBar';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -141,15 +141,29 @@ const apolloClient = new ApolloClient({
 });
 
 const App = ({ route }: RouteConfigComponentProps) => {
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 750;
+
   return (
     <ApolloProvider client={apolloClient}>
       <AlertProvider>
         <AuthProvider>
           <DialogProvider>
             <div className='App'>
-              <TopBar />
+              <TopBar isMobile={isMobile} />
               {renderRoutes(route?.routes)}
-              <NavigationBar />
+              {isMobile && <NavigationBar isMobile={true} />}
             </div>
           </DialogProvider>
         </AuthProvider>

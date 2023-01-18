@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { SearchType } from './helpers/search-filters';
 import { getDecadeTranslation, getSearchTypeTranslation } from './helpers/search-translation';
-import { SearchType } from './SearchView';
 
 const quoteAll = (s: string[]) => {
   return s.map(str => `"${decodeURIComponent(str)}"`);

@@ -5,18 +5,20 @@ import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/ma
 import SearchIcon from '@mui/icons-material/Search';
 import { History } from 'history';
 import './SearchBar.scss';
-import { SearchType } from './SearchView';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { getSearchTypeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
+import { SearchType } from './helpers/search-filters';
 
 const SearchBar = ({
   searchParams,
   isAllSearchActive,
+  isTopBarSearch,
 }: {
   searchParams: URLSearchParams;
   isAllSearchActive: boolean;
+  isTopBarSearch?: boolean;
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
@@ -89,7 +91,7 @@ const SearchBar = ({
   };
 
   return (
-    <div className='search-bar-wrapper'>
+    <div className={isTopBarSearch ? 'search-bar-wrapper top-bar-search' : 'search-bar-wrapper'}>
       <TextField
         inputRef={textFieldRef}
         className='search-bar'
@@ -102,9 +104,11 @@ const SearchBar = ({
                 }}
                 className='searchbutton'
               >
-                <div>
+                <div className='search-icon-container'>
                   <SearchIcon />
-                  <div className='searchbutton-label'>{t('search.start-search')}</div>
+                  {!isTopBarSearch && (
+                    <div className='searchbutton-label'>{t('search.start-search')}</div>
+                  )}
                 </div>
               </IconButton>
             </InputAdornment>
@@ -159,7 +163,11 @@ const SearchBar = ({
           }
         }}
         placeholder={
-          useAdvancedSearch ? t('search.search-for-type-advance') : t('search.search-for-type')
+          isTopBarSearch
+            ? t('search.search-top-bar')
+            : useAdvancedSearch
+            ? t('search.search-for-type-advance')
+            : t('search.search-for-type')
         }
         variant='outlined'
       />

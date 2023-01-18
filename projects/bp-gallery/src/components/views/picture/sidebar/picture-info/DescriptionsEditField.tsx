@@ -76,35 +76,39 @@ const DescriptionsEditField = ({
       {descriptionState.map((description, index) => {
         return (
           <div
-            className='description-content'
+            className='description-wrapper'
             key={isEmpty(description.id) ? `new-description-${index}` : description.id}
           >
-            <Editor
-              value={description.text}
-              extraOptions={extraOptions}
-              onBlur={newText => onBlurRef.current(newText, description)}
-              onChange={newText => onChangeRef.current(newText, description)}
-            />
-            {role >= AuthRole.CURATOR && (
-              <IconButton
-                onClick={async () => {
-                  const reallyDelete = await dialog({
-                    title: t('curator.reallyDeleteDescription'),
-                    content: '',
-                    preset: DialogPreset.CONFIRM,
-                  });
-                  if (!reallyDelete) {
-                    return;
-                  }
-                  const allDescriptions = descriptionState.filter(d => d !== description);
-                  onChange(allDescriptions.filter(description => !isEmpty(description.text)));
-                  return [...allDescriptions];
-                }}
-                className='delete-button'
-              >
-                <Icon>delete</Icon>
-              </IconButton>
-            )}
+            <div className='description-content'>
+              <Editor
+                value={description.text}
+                extraOptions={extraOptions}
+                onBlur={newText => onBlurRef.current(newText, description)}
+                onChange={newText => onChangeRef.current(newText, description)}
+              />
+            </div>
+            <div>
+              {role >= AuthRole.CURATOR && (
+                <IconButton
+                  onClick={async () => {
+                    const reallyDelete = await dialog({
+                      title: t('curator.reallyDeleteDescription'),
+                      content: '',
+                      preset: DialogPreset.CONFIRM,
+                    });
+                    if (!reallyDelete) {
+                      return;
+                    }
+                    const allDescriptions = descriptionState.filter(d => d !== description);
+                    onChange(allDescriptions.filter(description => !isEmpty(description.text)));
+                    return [...allDescriptions];
+                  }}
+                  className='delete-button'
+                >
+                  <Icon>delete</Icon>
+                </IconButton>
+              )}
+            </div>
           </div>
         );
       })}

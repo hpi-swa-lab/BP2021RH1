@@ -14,17 +14,22 @@ import SearchView from './views/search/SearchView';
 import UploadsView from './views/uploads/UploadsView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 import BulkEditView from './views/bulk-edit/BulkEditView';
+import StartView from './views/start/StartView';
+import ArchiveView from './views/archives/ArchiveView';
+import ArchiveEditView from './views/archives/ArchiveEditView';
+import ProtectedRoute from './common/ProtectedRoute';
+import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 
-export const FALLBACK_PATH = '/browse';
+export const FALLBACK_PATH = '/start';
 
 const routes: RouteConfig[] = [
   {
     component: App,
     routes: [
       {
-        path: '/browse',
+        path: '/start',
         render: () => {
-          return <BrowseView />;
+          return <StartView />;
         },
         exact: true,
       },
@@ -73,7 +78,11 @@ const routes: RouteConfig[] = [
       {
         path: '/bulk-edit/:ids',
         render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
-          return <BulkEditView pictureIds={match.params.ids.split(',')} />;
+          return (
+            <ProtectedRoute>
+              <BulkEditView pictureIds={match.params.ids.split(',')} />
+            </ProtectedRoute>
+          );
         },
       },
       {
@@ -101,6 +110,12 @@ const routes: RouteConfig[] = [
         },
       },
       {
+        path: '/terms-of-service',
+        render: () => {
+          return <TermsOfServiceView />;
+        },
+      },
+      {
         path: '/prototypes/demo',
         component: Demo,
       },
@@ -108,6 +123,23 @@ const routes: RouteConfig[] = [
         path: '/prototypes/timeline-demo',
         component: TimeLineDemo,
       },
+      {
+        path: '/archives/:id/edit',
+        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+          return (
+            <ProtectedRoute redirectPath={`/archives/${match.params.id}`}>
+              <ArchiveEditView archiveId={match.params.id} />
+            </ProtectedRoute>
+          );
+        },
+      },
+      {
+        path: '/archives/:id',
+        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+          return <ArchiveView archiveId={match.params.id} />;
+        },
+      },
+
       {
         // fallback component for unmatched routes
         render: () => {
