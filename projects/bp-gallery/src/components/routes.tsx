@@ -1,29 +1,24 @@
-import React, { lazy } from 'react';
+import React from 'react';
 import { RouteConfig, RouteConfigComponentProps } from 'react-router-config';
 import { Redirect } from 'react-router-dom';
+import App from './App';
+import Demo from '../prototypes/demo';
+import TimeLineDemo from '../prototypes/timeline-demo';
+import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
+import TagTableView from './views/tag-table/TagTableView';
+import PictureView from './views/picture/PictureView';
+import UnverifiedCommentsView from './views/unverified-comments/UnverifiedCommentsView';
 import { TagType } from '../types/additionalFlatTypes';
-
-const App = lazy(() => import('./App'));
-const Demo = lazy(() => import('../prototypes/demo'));
-const TimeLineDemo = lazy(() => import('../prototypes/timeline-demo'));
-const CollectionCuratingView = lazy(
-  () => import('./views/collection-curating/CollectionCuratingView')
-);
-const TagTableView = lazy(() => import('./views/tag-table/TagTableView'));
-const PictureView = lazy(() => import('./views/picture/PictureView'));
-const UnverifiedCommentsView = lazy(
-  () => import('./views/unverified-comments/UnverifiedCommentsView')
-);
-const BrowseView = lazy(() => import('./views/browse/BrowseView'));
-const SearchView = lazy(() => import('./views/search/SearchView'));
-const UploadsView = lazy(() => import('./views/uploads/UploadsView'));
-const LatestPicturesView = lazy(() => import('./views/latest-pictures/LatestPicturesView'));
-const BulkEditView = lazy(() => import('./views/bulk-edit/BulkEditView'));
-const StartView = lazy(() => import('./views/start/StartView'));
-const ArchiveView = lazy(() => import('./views/archives/ArchiveView'));
-const ArchiveEditView = lazy(() => import('./views/archives/ArchiveEditView'));
-const ProtectedRoute = lazy(() => import('./common/ProtectedRoute'));
-const TermsOfServiceView = lazy(() => import('./views/terms-of-service/TermsOfServiceView'));
+import BrowseView from './views/browse/BrowseView';
+import SearchView from './views/search/SearchView';
+import UploadsView from './views/uploads/UploadsView';
+import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
+import BulkEditView from './views/bulk-edit/BulkEditView';
+import StartView from './views/start/StartView';
+import ArchiveView from './views/archives/ArchiveView';
+import ArchiveEditView from './views/archives/ArchiveEditView';
+import ProtectedRoute from './common/ProtectedRoute';
+import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -122,15 +117,11 @@ const routes: RouteConfig[] = [
       },
       {
         path: '/prototypes/demo',
-        render: () => {
-          return <Demo />;
-        },
+        component: Demo,
       },
       {
         path: '/prototypes/timeline-demo',
-        render: () => {
-          return <TimeLineDemo />;
-        },
+        component: TimeLineDemo,
       },
       {
         path: '/archives/:id/edit',
