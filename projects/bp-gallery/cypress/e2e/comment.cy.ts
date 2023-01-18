@@ -33,27 +33,13 @@ describe('Comment', () => {
     cy.get('.comment-preview').contains('Testkommentar2').should('be.visible').click();
     cy.get('#comments').click();
 
-    cy.get('.comment-verification-container')
-      .contains('Testkommentar1')
-      .parent()
-      .parent()
-      .parent()
-      .parent()
-      .parent()
-      .find('button')
-      .contains('Ablehnen')
+    cy.contains('.comment-verification-container', 'Testkommentar1')
+      .contains('button', 'Ablehnen')
       .click();
     cy.get('button').contains('Bestätigen').click();
 
-    cy.get('.comment-verification-container')
-      .contains('Testkommentar2')
-      .parent()
-      .parent()
-      .parent()
-      .parent()
-      .parent()
-      .find('button')
-      .contains('Akzeptieren')
+    cy.contains('.comment-verification-container', 'Testkommentar2')
+      .contains('button', 'Akzeptieren')
       .click();
     cy.wait(1000);
     cy.get('button').contains('Löschen').click();

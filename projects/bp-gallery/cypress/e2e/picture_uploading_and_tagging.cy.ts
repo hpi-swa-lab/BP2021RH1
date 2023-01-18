@@ -6,8 +6,8 @@ describe('picture uploading and tagging', () => {
     login();
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Collections').click();
-    cy.get('span').contains('add').click();
-    cy.get('span').contains('Neue Collection erstellen').click();
+    cy.contains('add').click();
+    cy.contains('Neue Collection erstellen').click();
     cy.get('.MuiDialogContent-root').find('input').type('TestCollection');
     cy.get('.MuiButton-root').contains('Bestätigen').click();
     cy.get('.nav-bar').contains('Mehr...').click({ force: true });
@@ -39,7 +39,7 @@ describe('picture uploading and tagging', () => {
   });
 
   it('uploading picture', () => {
-    cy.get('div.dropzone').selectFile('./cypress/testFiles/testbild.jpg', { action: 'drag-drop' });
+    cy.get('.dropzone').selectFile('./cypress/testFiles/testbild.jpg', { action: 'drag-drop' });
     cy.get('.add-to-collection').click();
     cy.get('.MuiDialogContent-root')
       .find('.MuiOutlinedInput-input')
@@ -54,20 +54,16 @@ describe('picture uploading and tagging', () => {
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-preview:last').click();
     cy.get('.date-indicator').click();
-    cy.get('span').contains('Jahr').siblings().clear().type('1000{esc}');
+    cy.contains('.rdrInputRange', 'Jahr').find('input').clear().type('1000{esc}');
     cy.wait(500);
 
     cy.get('.add-button').click();
-    cy.get('div')
-      .contains('Beschreibungen')
-      .siblings()
-      .find('div.jodit-wysiwyg')
+    cy.contains('.field-content', 'Beschreibungen')
+      .find('.jodit-wysiwyg')
       .clear()
       .type('TestBeschreibung');
 
-    cy.get('div')
-      .contains('Personen')
-      .parent()
+    cy.contains('.field-content', 'Personen')
       .find('input')
       .click()
       .wait(1000)
@@ -75,19 +71,10 @@ describe('picture uploading and tagging', () => {
       .type('TestPerson');
     cy.contains('TestPerson hinzufügen').click();
 
-    cy.get('div')
-      .contains('Orte')
-      .parent()
-      .find('input')
-      .click()
-      .wait(1000)
-      .clear()
-      .type('TestOrt');
+    cy.contains('.field-content', 'Orte').find('input').click().wait(1000).clear().type('TestOrt');
     cy.contains('TestOrt hinzufügen').click();
 
-    cy.get('div')
-      .contains('Schlagworte')
-      .parent()
+    cy.contains('.field-content', 'Schlagworte')
       .find('input')
       .click()
       .wait(1000)
@@ -95,9 +82,7 @@ describe('picture uploading and tagging', () => {
       .type('TestSchlagwort');
     cy.contains('TestSchlagwort hinzufügen').click();
 
-    cy.get('div')
-      .contains('Collections')
-      .parent()
+    cy.contains('.field-content', 'Collections')
       .find('input')
       .click()
       .wait(1000)
