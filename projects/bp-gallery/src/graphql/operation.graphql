@@ -514,6 +514,7 @@ query getAllKeywordTags {
         synonyms {
           name
         }
+        visible
       }
     }
   }
@@ -578,6 +579,7 @@ query getAllLocationTags {
       id
       attributes {
         name
+        visible
         synonyms {
           name
         }
@@ -601,6 +603,23 @@ mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonyms
     }
   }
 }
+
+mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
+  updateLocationTag(id: $tagId, data: { visible: $visible }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
+  updateKeywordTag(id: $tagId, data: { visible: $visible }) {
+    data {
+      id
+    }
+  }
+}
+
 query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
   personTags(pagination: { start: $start, limit: $limit }) {
     data {

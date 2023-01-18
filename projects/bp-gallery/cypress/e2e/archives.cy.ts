@@ -17,6 +17,12 @@ describe('Archives View', () => {
     cy.visit('http://localhost:3000/archives/1');
   });
   after(() => {
+    cy.contains('Archiv editieren').click();
+    cy.get('#archive-form-name').clear().type('Herbert-Ahrens-Bilderarchiv');
+    cy.get('.jodit-react-container').clear();
+    cy.get('[data-testid="DeleteIcon"]').first().click();
+    cy.get('[data-testid="DeleteIcon"]').first().click();
+    cy.contains('Änderungen speichern').click();
     logout();
   });
 
@@ -50,26 +56,16 @@ describe('Archives View', () => {
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 1');
     cy.get('#archive-form-url').should('be.visible').type('test1.de');
-    cy.get('.archive-link-entry').within(() => {
-      return cy.get('[data-testid="SaveIcon"]').click();
-    });
+    cy.get('.archive-link-entry').find('[data-testid="SaveIcon"]').click();
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 2');
     cy.get('#archive-form-url').should('be.visible').type('test2.de');
-    cy.get('.archive-link-entry')
-      .first()
-      .within(() => {
-        return cy.get('[data-testid="EditIcon"]').click();
-      });
+    cy.get('.archive-link-entry').first().find('[data-testid="EditIcon"]').click();
     cy.get('#archive-form-title').should('be.visible').type(' Edit');
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 3');
     cy.get('#archive-form-url').should('be.visible').type('test3.de');
-    cy.get('.archive-link-entry')
-      .eq(1)
-      .within(() => {
-        return cy.get(`[data-testid="DeleteIcon"]`).click();
-      });
+    cy.get('.archive-link-entry').eq(1).find(`[data-testid="DeleteIcon"]`).click();
     cy.contains('Test-Link 1 Edit');
     cy.contains('Test-Link 2').should('not.exist');
     cy.get('[data-testid="SaveIcon"]').eq(1).click();
