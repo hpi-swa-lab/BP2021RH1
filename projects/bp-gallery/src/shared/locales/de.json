@@ -151,6 +151,11 @@
     "selectOption": "Option auswählen",
     "selectCollection": "Collection auswählen",
     "selectArchiveTag": "Archiv auswählen",
+    "showLocation": "Ort/e anzeigen",
+    "hideLocation": "Ort/e verstecken",
+    "showKeyword": "Schlagwort/e anzeigen",
+    "hideKeyword": "Schlagwort/e verstecken",
+    "visibility": "Sichtbarkeit",
     "saveStatus": {
       "saving": "Speichern...",
       "saved": "Gespeichert.",
