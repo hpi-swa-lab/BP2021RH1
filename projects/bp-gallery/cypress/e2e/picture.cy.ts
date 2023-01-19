@@ -41,6 +41,7 @@ describe('Picture View called via link as a curator', () => {
       'person',
       'location',
       'keywords',
+      'links',
       'collections',
       'archive',
     ];
