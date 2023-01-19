@@ -518,7 +518,8 @@ const insertCrossProductIgnoreDuplicates = async (knexEngine, linksTable, leftId
   if (leftIds.length === 0 || rightIds.length === 0) {
     return;
   }
-  await knexEngine(linksTable)
+  // use ?? (??, ??) to map the column indices of the subquery to the correct columns in the target table
+  await knexEngine.from(knexEngine.raw('?? (??, ??)', [linksTable, leftIdKey, rightIdKey]))
     .insert(
       knexEngine.select(leftIdKey, rightIdKey)
         .from(knexIdArray(knexEngine, leftIds, `a(${leftIdKey})`))
@@ -719,6 +720,7 @@ const bulkEditLinks = async (knexEngine, pictureIds, data, linksKey, isInverse) 
 
   const addedIds = diff.added.map(picture => picture.id);
 
+  console.log("inserting", linksKey, linksTable, left, right, pictureIds, addedIds);
   insertCrossProductIgnoreDuplicates(knexEngine, linksTable, left, right, pictureIds, addedIds);
 
   return true;
