@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
