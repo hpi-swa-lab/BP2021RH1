@@ -28,7 +28,6 @@ const DateRangeSelectionField = ({
 
   const [anchorElement, setAnchorElement] = useState<HTMLDivElement | null>(null);
   const [timeRange, setTimeRange] = useState<FlatTimeRangeTag | undefined>();
-  const [checked, setChecked] = React.useState(timeRangeTag?.isEstimate ?? false);
 
   useEffect(() => {
     setTimeRange(cloneDeep(timeRangeTag));
@@ -59,14 +58,12 @@ const DateRangeSelectionField = ({
   };
 
   const handleChange = () => {
-    setChecked(!checked);
     onTouch();
     setTimeRange(oldTimeRange => {
       const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
-      tRT.isEstimate = !checked;
+      tRT.isEstimate = !tRT.isEstimate;
       return { ...tRT };
     });
-    resetInputFields;
   };
 
   return (
@@ -116,7 +113,11 @@ const DateRangeSelectionField = ({
           }}
         >
           <label>
-            <input type='checkbox' checked={checked} onChange={handleChange} />
+            <input
+              type='checkbox'
+              checked={timeRange?.isEstimate ?? false}
+              onChange={handleChange}
+            />
             {`${t('pictureFields.around')}`}
           </label>
           <DateRangePicker
@@ -155,7 +156,6 @@ export default DateRangeSelectionField;
 
 let yearValue = '';
 let decadeValue = '';
-
 let resetDecade = false;
 let resetYear = false;
 
