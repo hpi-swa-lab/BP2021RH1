@@ -26,7 +26,29 @@ const choosePictureId = (pictureIds: string[]) => {
 
 const WeeklyPicture = () => {
   //These are hard-coded until we implemented votes
-  const pictureIds = ['7'];
+  const pictureIds = [
+    '2254',
+    '2265',
+    '11715',
+    '13258',
+    '14440',
+    '13282',
+    '14998',
+    '13124',
+    '13125',
+    '13034',
+    '12689',
+    '12939',
+    '6837',
+    '7943',
+    '6863',
+    '6773',
+    '7886',
+    '7954',
+    '9350',
+    '8255',
+    '10838',
+  ];
   const { t } = useTranslation();
   const [isFocussed, setIsFocussed] = useState<boolean>(false);
   const navigateToPicture = useCallback(
@@ -43,15 +65,12 @@ const WeeklyPicture = () => {
   const description = picture?.descriptions?.[0]?.text || '';
   const pictureDate = formatTimeStamp(picture?.time_range_tag);
   const pictureArchive = picture?.archive_tag?.name;
+  const pictureArchiveId = picture?.archive_tag?.id;
+  const pictureArchiveLink = pictureArchiveId ? `/archives/${pictureArchiveId}` : '';
   return (
-    <div>
+    <div className={'flex justify-center my-4'}>
       {picture && (
-        <Card
-          className={'flex flex-col md:flex-row rounded-md justify-between'}
-          onClick={async () => {
-            await navigateToPicture(picture.id);
-          }}
-        >
+        <Card className={'flex flex-col-reverse md:flex-row rounded-md justify-between max-w-4xl '}>
           <div className={'p-4 flex flex-col'}>
             <h3 className={'text-2xl'}>{t('common.weekly-picture')}</h3>
             <p className={'line-clamp-5'}>
@@ -63,11 +82,16 @@ const WeeklyPicture = () => {
               <EventIcon /> {pictureDate}
             </div>
             <div className={'flex item-center gap-2'}>
-              <FolderSpecial /> {pictureArchive}
+              <FolderSpecial /> <a href={pictureArchiveLink}>{pictureArchive} </a>
             </div>
           </div>
           <div>
-            <PicturePreview picture={picture} onClick={() => {}} />
+            <PicturePreview
+              picture={picture}
+              onClick={async () => {
+                await navigateToPicture(picture.id);
+              }}
+            />
           </div>
         </Card>
       )}
