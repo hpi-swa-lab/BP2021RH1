@@ -1,4 +1,3 @@
-import React from 'react';
 import { choosePictureId } from '../WeeklyPicture';
 
 const pictureIds = ['1', '2', '3'];
