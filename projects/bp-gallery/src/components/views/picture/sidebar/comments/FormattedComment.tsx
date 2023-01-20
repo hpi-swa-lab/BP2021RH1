@@ -113,14 +113,14 @@ const FormattedComment = ({
         icon: <QuestionAnswer />,
         hoverText: 'Antworten',
       },
-      {
-        text: 'Editieren',
-        action: () => setEdit(!edit),
-        icon: <EditIcon />,
-        hoverText: 'Editieren',
-      },
       ...(role >= AuthRole.CURATOR
         ? [
+            {
+              text: 'Editieren',
+              action: () => setEdit(!edit),
+              icon: <EditIcon />,
+              hoverText: 'Editieren',
+            },
             {
               text: t('common.delete'),
               action: () => onDelete(),
@@ -168,32 +168,18 @@ const FormattedComment = ({
           )
         )}
       </div>
-      {expanded && (
-        <div className='ml-2'>
-          {isCurator && edit ? (
-            <div className={`comment-text bg-neutral-100 ${isOpen ? 'open' : ''}`}>
-              <CommentEditField comment={comment} />
-            </div>
-          ) : (
-            <div className='comment-text'>
-              <CommentEditField comment={comment} readOnly />
-            </div>
-          )}
-          <div className='flex gap-0.5 flex-wrap'>
-            {comment.publishedAt &&
-              commentActions.map(commentAction => (
-                <button
-                  key={commentAction.text}
-                  title={commentAction.hoverText}
-                  className='text-neutral-700 btn bg-neutral-200 hover:bg-neutral-300 flex items-center mt-2 gap-0.5 pl-1 text-xs'
-                  onClick={() => commentAction.action()}
-                >
-                  {commentAction.icon}
-                  {commentAction.text}
-                </button>
-              ))}
+      <div className={`ml-2 ${!expanded ? 'hidden' : ''}`}>
+        {isCurator && edit ? (
+          <div className={`comment-text bg-neutral-100 open mt-1`}>
+            <CommentEditField comment={comment} />
           </div>
-          {isLong && (
+        ) : (
+          <div className={`comment-text ${isOpen ? 'open' : ''} ${isLong ? 'long' : ''} mt-1`}>
+            <CommentEditField comment={comment} readOnly />
+          </div>
+        )}
+        {isLong && !edit && (
+          <div className='flex items-center justify-center mt-1'>
             <Button
               className='expand-button'
               onClick={() => setIsOpen(!isOpen)}
@@ -201,30 +187,40 @@ const FormattedComment = ({
             >
               {isOpen ? t('common.showLess') : t('common.showMore')}
             </Button>
-          )}
-          {comment.picture && reply && (
-            <div className='mt-2'>
-              <NewCommentForm pictureId={comment.picture.id} parentCommentId={comment.id} />
-            </div>
-          )}
-          {comment.childComments?.length !== 0 && (
-            <div className='child-container flex mt-3'>
-              <div className='w-1 bg-neutral-300 flex-shrink-0'></div>
-              <div className='flex flex-col'>
-                {childComments?.map(childComment => (
-                  <CommentVerification comment={childComment} key={childComment.id}>
-                    <FormattedComment
-                      comment={childComment}
-                      comments={comments}
-                      depth={depth + 1}
-                    />
-                  </CommentVerification>
-                ))}
-              </div>
-            </div>
-          )}
+          </div>
+        )}
+        <div className='flex gap-0.5 flex-wrap'>
+          {comment.publishedAt &&
+            commentActions.map(commentAction => (
+              <button
+                key={commentAction.text}
+                title={commentAction.hoverText}
+                className='text-neutral-700 btn bg-neutral-200 hover:bg-neutral-300 flex items-center mt-2 gap-0.5 pl-1 text-xs'
+                onClick={() => commentAction.action()}
+              >
+                {commentAction.icon}
+                {commentAction.text}
+              </button>
+            ))}
         </div>
-      )}
+        {comment.picture && reply && (
+          <div className='mt-2'>
+            <NewCommentForm pictureId={comment.picture.id} parentCommentId={comment.id} />
+          </div>
+        )}
+        {comment.childComments?.length !== 0 && (
+          <div className='child-container flex mt-3'>
+            <div className='w-1 bg-neutral-300 flex-shrink-0'></div>
+            <div className='flex flex-col'>
+              {childComments?.map(childComment => (
+                <CommentVerification comment={childComment} key={childComment.id}>
+                  <FormattedComment comment={childComment} comments={comments} depth={depth + 1} />
+                </CommentVerification>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
