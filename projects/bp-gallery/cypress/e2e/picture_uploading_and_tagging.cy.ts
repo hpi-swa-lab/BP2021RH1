@@ -2,7 +2,7 @@ import { login, logout } from '../utils/login-utils';
 
 describe('picture uploading and tagging', () => {
   before(() => {
-    cy.visit('http://localhost:3000/browse');
+    cy.visit('/browse');
     login();
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Collections').click();
@@ -15,7 +15,7 @@ describe('picture uploading and tagging', () => {
   });
   after(() => {
     cy.wait(1000);
-    cy.visit('http://localhost:3000/browse');
+    cy.visit('/browse');
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Schlagworte').click().wait(1000);
     cy.contains('.MuiDataGrid-row', 'TestSchlagwort').find('[data-testid="DeleteIcon"]').click();
@@ -91,7 +91,7 @@ describe('picture uploading and tagging', () => {
   });
 
   it('checking tags and deleting picture', () => {
-    cy.visit('http://localhost:3000/browse/TestCollection').wait(2000);
+    cy.visit('/browse/TestCollection').wait(2000);
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
 
     cy.get('.picture-preview:last').click();

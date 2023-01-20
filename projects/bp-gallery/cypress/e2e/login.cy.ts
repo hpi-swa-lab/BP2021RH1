@@ -2,7 +2,7 @@ import { logout } from '../utils/login-utils';
 
 describe('Login', () => {
   before(() => {
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
   after(() => {
     logout();

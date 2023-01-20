@@ -2,7 +2,7 @@ import { login, logout } from '../utils/login-utils';
 
 describe('bulk edit', () => {
   before(() => {
-    cy.visit('http://localhost:3000/latest/');
+    cy.visit('/latest/');
     login();
   });
   after(() => {

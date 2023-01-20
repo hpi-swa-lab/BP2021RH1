@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { aliasQuery, aliasMutation } from '../utils/graphql-test-utils';
 import { login, logout } from '../utils/login-utils';
+import { urlIs } from '../utils/url-utils';
 
 beforeEach(() => {
   cy.intercept('POST', 'http://localhost:9000/graphql', req => {
@@ -14,7 +15,7 @@ beforeEach(() => {
 
 describe('Archives View', () => {
   before(() => {
-    cy.visit('http://localhost:3000/archives/1');
+    cy.visit('/archives/1');
   });
   after(() => {
     cy.contains('Archiv editieren').click();
@@ -36,7 +37,7 @@ describe('Archives View', () => {
   });
   it('redirects to the archive edit page after pressing on the edit button', () => {
     cy.contains('Archiv editieren').click();
-    cy.url().should('eq', 'http://localhost:3000/archives/1/edit');
+    urlIs('/archives/1/edit');
   });
   it('successfully edits the archive name and long description', () => {
     cy.get('#archive-form-name').should('be.visible').clear();
