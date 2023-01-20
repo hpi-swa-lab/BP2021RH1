@@ -9,7 +9,6 @@ import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import {
   useDeclineCommentMutation,
   useFixCommentTextMutation,
-  // useGetCommentsQuery,
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
@@ -18,7 +17,6 @@ import Editor from '../../../../common/editor/Editor';
 import EditIcon from '@mui/icons-material/Edit';
 import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
-// import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
 
 interface CommentActions {
@@ -50,19 +48,6 @@ const FormattedComment = ({
   const [expanded, setExpanded] = useState(true);
   const [edit, setEdit] = useState(false);
   const [reply, setReply] = useState(false);
-
-  // const { data } = useGetCommentsQuery({
-  //   variables: {
-  //     commentIds: comment.childComments
-  //       ? comment.childComments.map(chilComment => chilComment.id)
-  //       : ['0'],
-  //   },
-  // });
-
-  // console.log(data);
-
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  // const childComments: FlatComment[] | undefined = useSimplifiedQueryResponseData(data)?.comments;
 
   const childComments = useMemo(
     () =>

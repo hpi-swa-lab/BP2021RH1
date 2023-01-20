@@ -42,9 +42,10 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
   } else {
     return (
       <div
-        className={`comment-verification-container unstyled${
-          !comment.publishedAt ? ' unverified' : ''
-        }${role < AuthRole.CURATOR ? ' unstyled' : ''}`}
+        className={`comment-verification-container ${!comment.publishedAt ? ' unverified' : ''}${
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          role < AuthRole.CURATOR && !comment.parentComment !== null ? ' unstyled' : ''
+        }`}
       >
         {children}
         {!comment.publishedAt && (
