@@ -19,11 +19,12 @@ import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
 
-interface CommentActions {
+interface CommentAction {
   text: string;
   action: () => void;
   icon: JSX.Element;
   hoverText?: string;
+  state?: boolean;
 }
 
 const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?: number }) => {
@@ -74,14 +75,15 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     await deleteComment();
   }, [comment.text, deleteComment, dialog, t]);
 
-  const commentActions: CommentActions[] = useMemo(
+  const commentActions: CommentAction[] = useMemo(
     () => [
       {
         text: 'Antworten',
         action: () => setReply(!reply),
         icon: <QuestionAnswer />,
         hoverText: 'Antworten',
-      },
+        state: reply,
+      } as CommentAction,
       ...(role >= AuthRole.CURATOR
         ? [
             {
@@ -89,6 +91,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
               action: () => setEdit(!edit),
               icon: <EditIcon />,
               hoverText: 'Editieren',
+              state: edit,
             },
             {
               text: t('common.delete'),
@@ -103,7 +106,9 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
 
   return (
     <div
-      className={`bg-neutral-200 comment${isLong ? ' long' : ''}${pinned ? ' pinned' : ''}`}
+      className={`bg-neutral-200 comment${isLong ? ' long' : ''}${pinned ? ' pinned' : ''}${
+        comment.parentComment === null ? ' rounded-lg' : ''
+      }`}
       key={comment.id}
     >
       <div className='comment-details'>
@@ -164,7 +169,9 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
               <button
                 key={commentAction.text}
                 title={commentAction.hoverText}
-                className='text-neutral-700 btn bg-neutral-200 hover:bg-neutral-300 flex items-center mt-2 gap-0.5 pl-1 text-xs'
+                className={`text-neutral-700 btn bg-neutral-200 hover:bg-neutral-300 flex items-center mt-2 gap-0.5 pl-1 text-xs ${
+                  commentAction.state ? 'bg-neutral-300 ring-1' : ''
+                }`}
                 onClick={() => commentAction.action()}
               >
                 {commentAction.icon}
@@ -182,9 +189,9 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
           </div>
         )}
         {comment.childComments?.length !== 0 && (
-          <div className='child-container flex mt-3'>
+          <div className='flex mt-3'>
             <div className='w-1 bg-neutral-300 flex-shrink-0'></div>
-            <div className='flex flex-col'>
+            <div className='flex flex-col w-full'>
               {comment.childComments?.map(childComment => (
                 <CommentVerification comment={childComment} key={childComment.id}>
                   <FormattedComment comment={childComment} depth={depth + 1} />

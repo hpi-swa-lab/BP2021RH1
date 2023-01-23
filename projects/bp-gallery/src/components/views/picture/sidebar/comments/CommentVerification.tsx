@@ -43,8 +43,7 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
     return (
       <div
         className={`comment-verification-container ${!comment.publishedAt ? ' unverified' : ''}${
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          role < AuthRole.CURATOR && !comment.parentComment !== null ? ' unstyled' : ''
+          role < AuthRole.CURATOR ? ' unstyled' : ''
         }`}
       >
         {children}
