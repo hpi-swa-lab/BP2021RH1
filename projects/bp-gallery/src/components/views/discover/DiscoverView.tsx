@@ -24,9 +24,9 @@ const DiscoverView = () => {
           />
           <Carousel
             title='Wissen Sie mehr über diese Bilder?'
-            queryParams={{ collections: { id: { eq: '6' } } }}
+            queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
             onClick={() => {
-              history.push('/show-more/0/pictures/6', {
+              history.push('/show-more/0/pictures/Fragezeichen', {
                 showBack: true,
               });
             }}

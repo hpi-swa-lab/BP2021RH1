@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
   PictureFiltersInput,
   useGetArchiveQuery,
-  useGetCollectionInfoByIdQuery,
+  useGetCollectionInfoByNameQuery,
   useUpdateArchiveMutation,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -71,13 +71,13 @@ const ShowMoreView = ({
   let headerName = '';
   let description = '';
 
-  const { data, loading, error, fetchMore } = useGetCollectionInfoByIdQuery({
+  const { data, loading, error, fetchMore } = useGetCollectionInfoByNameQuery({
     variables: {
-      collectionId: categoryId ? categoryId : '1',
+      collectionName: categoryId ? categoryId : '',
     },
   });
 
-  const collectionInfo = useSimplifiedQueryResponseData(data);
+  const collectionsInfo = useSimplifiedQueryResponseData(data);
 
   switch (categoryType) {
     case 'date': {
@@ -111,12 +111,14 @@ const ShowMoreView = ({
   const tagInfo = tagsWithThumbnailQuery({
     variables: {
       filters:
-        archiveId === '0'
-          ? { id: { eq: categoryId } }
-          : {
-              verified_pictures: { archive_tag: { id: { eq: archiveId } } },
-              id: { eq: categoryId },
-            },
+        categoryType !== 'pictures'
+          ? archiveId === '0'
+            ? { id: { eq: categoryId } }
+            : {
+                verified_pictures: { archive_tag: { id: { eq: archiveId } } },
+                id: { eq: categoryId },
+              }
+          : { id: { eq: '-1' } },
       limit: 1,
     },
   });
@@ -171,7 +173,7 @@ const ShowMoreView = ({
             };
       }
       case 'location':
-      default: {
+      default:
         return archiveId === '0'
           ? { verified_location_tags: { id: { eq: categoryId } } }
           : {
@@ -185,7 +187,6 @@ const ShowMoreView = ({
                 },
               ],
             };
-      }
     }
   };
 
@@ -195,20 +196,20 @@ const ShowMoreView = ({
         <ScrollContainer>
           {(scrollPos: number, scrollHeight: number) => (
             <div className='show-more-container'>
-              {collectionInfo && (
+              {collectionsInfo && (
                 <CollectionDescription
-                  id={collectionInfo.collection.id}
-                  description={collectionInfo.collection.description ?? ''}
-                  name={collectionInfo.collection.name}
+                  id={collectionsInfo.collections[0].id}
+                  description={collectionsInfo.collections[0].description ?? ''}
+                  name={collectionsInfo.collections[0].name}
                 />
               )}
               <PictureScrollGrid
                 queryParams={
                   archiveId === '0'
-                    ? { collections: { id: { eq: categoryId } } }
+                    ? { collections: { name: { eq: categoryId } } }
                     : {
                         archive_tag: { id: { eq: archiveId } },
-                        collections: { id: { eq: categoryId } },
+                        collections: { name: { eq: categoryId } },
                       }
                 }
                 scrollPos={scrollPos}
