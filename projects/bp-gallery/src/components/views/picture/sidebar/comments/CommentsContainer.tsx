@@ -4,9 +4,8 @@ import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';
 import { useTranslation } from 'react-i18next';
-import { Badge, Icon } from '@mui/material';
 import CommentVerification from './CommentVerification';
-import { ExpandMore } from '@mui/icons-material';
+import { Badge, Icon, ExpandMore } from 'mui';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 
 const CommentsContainer = ({

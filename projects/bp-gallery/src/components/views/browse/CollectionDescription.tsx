@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { sanitize } from 'isomorphic-dompurify';
 import './CollectionDescription.scss';
-import { Icon, IconButton } from '@mui/material';
+import { Icon, IconButton } from 'mui';
 import getLineBreaks from '../../../helpers/get-linebreaks';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';

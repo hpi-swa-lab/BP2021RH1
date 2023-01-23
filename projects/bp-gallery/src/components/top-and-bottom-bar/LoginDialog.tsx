@@ -10,7 +10,7 @@ import {
   TextField,
   IconButton,
   Icon,
-} from '@mui/material';
+} from 'mui';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../provider/AuthProvider';
 

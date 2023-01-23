@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -12,7 +11,7 @@ import ArchiveLinkForm from './ArchiveLinkForm';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import ArchiveInputField from './ArchiveInputField';
 import ArchiveLogoInput from './ArchiveLogoInput';
-import { Check, Save, Close } from '@mui/icons-material';
+import { Button, Check, Save, Close } from 'mui';
 import useLinks from './helpers/link-helpers';
 import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';

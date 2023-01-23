@@ -1,4 +1,4 @@
-import { OutlinedInput } from '@mui/material';
+import { OutlinedInput } from 'mui';
 import React, { ChangeEvent, useState } from 'react';
 import { asApiPath } from '../../App';
 import { useTranslation } from 'react-i18next';

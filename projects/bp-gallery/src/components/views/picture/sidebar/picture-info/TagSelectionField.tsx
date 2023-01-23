@@ -1,4 +1,4 @@
-import { Autocomplete, Chip, Icon, Stack, TextField } from '@mui/material';
+import { Autocomplete, Chip, Icon, Stack, TextField } from 'mui';
 import Fuse from 'fuse.js';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

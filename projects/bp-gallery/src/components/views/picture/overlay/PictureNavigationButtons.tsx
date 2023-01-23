@@ -1,4 +1,4 @@
-import { Icon, IconButton } from '@mui/material';
+import { Icon, IconButton } from 'mui';
 import React, { useContext, useEffect } from 'react';
 import { PictureViewContext } from '../PictureView';
 

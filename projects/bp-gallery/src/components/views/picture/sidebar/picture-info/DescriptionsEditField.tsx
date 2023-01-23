@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FlatDescription } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { Icon, IconButton } from '@mui/material';
+import { Icon, IconButton } from 'mui';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';

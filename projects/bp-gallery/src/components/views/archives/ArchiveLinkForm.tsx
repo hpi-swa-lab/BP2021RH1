@@ -1,5 +1,4 @@
-import { Add, Delete, Edit, Save } from '@mui/icons-material';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Add, Delete, Edit, Save } from 'mui';
 import React, { useEffect, useState } from 'react';
 import { LinkInfo, LinkStatus } from './ArchiveEditView';
 import ArchiveLinkField from './ArchiveLinkField';

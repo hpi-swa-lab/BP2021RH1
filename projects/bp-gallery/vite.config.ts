@@ -8,6 +8,14 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  optimizeDeps: {
+    include: ['mui'],
+  },
+  resolve: {
+    alias: {
+      mui: './src/shared/mui/index.ts',
+    },
+  },
   build: {
     outDir: 'build',
     rollupOptions: {
@@ -15,7 +23,8 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-router-dom', 'react-dom'],
           apollo: ['@apollo/client'],
-          mui: ['@mui/icons-material', '@mui/material', '@mui/x-data-grid'],
+          mui: ['@mui/icons-material', '@mui/material'],
+          'mui-x-data-grid': ['@mui/x-data-grid'],
           'react-date-range': ['react-date-range'],
           'react-image-editor': ['@toast-ui/react-image-editor'],
           'jodit-react': ['jodit-react'],

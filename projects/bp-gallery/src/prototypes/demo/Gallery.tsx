@@ -1,6 +1,5 @@
 import React from 'react';
-import { IconButton, Stack, Pagination } from '@mui/material';
-import { OpenInNew } from '@mui/icons-material';
+import { IconButton, Stack, Pagination, OpenInNew } from 'mui';
 
 interface GalleryProps {
   pictures: any[];

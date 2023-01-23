@@ -14,7 +14,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "mui": ["./src/shared/mui/index.ts"]
+    }
   },
   "include": ["src", "cypress.config.ts", "tailwind.config.cjs", "postcss.config.cjs"]
 }

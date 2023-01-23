@@ -10,9 +10,8 @@ import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
 import BulkEditView from '../../views/bulk-edit/BulkEditView';
 import { union } from 'lodash';
-import { Button, Icon } from '@mui/material';
+import { Button, Icon, CheckBox, CheckBoxOutlineBlank, Delete } from 'mui';
 import { useTranslation } from 'react-i18next';
-import { CheckBox, CheckBoxOutlineBlank, Delete } from '@mui/icons-material';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];

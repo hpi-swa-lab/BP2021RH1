@@ -1,6 +1,5 @@
 import React from 'react';
-import { HelpOutline } from '@mui/icons-material';
-import { IconButton, styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import { IconButton, styled, Tooltip, tooltipClasses, TooltipProps, HelpOutline } from 'mui';
 
 export const SearchInfoTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }}>

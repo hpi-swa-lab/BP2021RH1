@@ -3,8 +3,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import './FormattedComment.scss';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { Button } from '@mui/material';
-import { ExpandMore, PushPin } from '@mui/icons-material';
+import { Button, ExpandMore, PushPin } from 'mui';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import {
   useFixCommentTextMutation,

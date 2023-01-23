@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import { IconButton, InputAdornment, MenuItem, Select, TextField, Search } from 'mui';
 import { History } from 'history';
 import './SearchBar.scss';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';

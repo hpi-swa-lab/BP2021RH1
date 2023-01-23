@@ -10,8 +10,7 @@ import {
   useUpdateCollectionMutation,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { Icon, IconButton } from '@mui/material';
-import { Delete, Edit, MergeType, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Icon, IconButton, Delete, Edit, MergeType, Visibility, VisibilityOff } from 'mui';
 import AddCollectionMenu from './AddCollectionMenu';
 import UnlinkCollectionAction from './UnlinkCollectionAction';
 

@@ -6,7 +6,7 @@ import './UploadsView.scss';
 import { useTranslation } from 'react-i18next';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import ScrollContainer from '../../common/ScrollContainer';
-import { Button, Icon } from '@mui/material';
+import { Button, Icon } from 'mui';
 import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 

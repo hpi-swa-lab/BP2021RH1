@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, IconButton, Snackbar } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, Alert, IconButton, Snackbar } from 'mui';
 
 export enum AlertType {
   SUCCESS = 'success',

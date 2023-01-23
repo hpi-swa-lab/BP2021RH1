@@ -1,4 +1,4 @@
-import { Button, Icon } from '@mui/material';
+import { Button, Icon } from 'mui';
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

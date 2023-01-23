@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, OutlinedInput } from '@mui/material';
+import { FormControl, FormHelperText, OutlinedInput } from 'mui';
 import React from 'react';
 
 interface ArchiveInputProps {

@@ -12,7 +12,7 @@ import {
   paramToTime,
   SearchType,
 } from './helpers/search-filters';
-import { Button, Typography } from '@mui/material';
+import { Button, Typography } from 'mui';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';

@@ -80,7 +80,7 @@
   },
   "scripts": {
     "start": "vite",
-    "dev": "vite",
+    "dev": "vite -d",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "cy:run": "cypress run",

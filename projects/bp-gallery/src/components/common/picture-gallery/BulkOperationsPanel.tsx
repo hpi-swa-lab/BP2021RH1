@@ -1,4 +1,4 @@
-import { Button, Icon } from '@mui/material';
+import { Button, Icon } from 'mui';
 import React from 'react';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './BulkOperationsPanel.scss';
