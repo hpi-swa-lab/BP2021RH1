@@ -152,81 +152,6 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        comments(
-          publicationState: PREVIEW
-          sort: "date:desc"
-          filters: { parentComment: { id: { eq: null } } }
-        ) {
-          data {
-            id
-            attributes {
-              text
-              author
-              date
-              picture {
-                data {
-                  id
-                }
-              }
-              parentComment {
-                data {
-                  id
-                  attributes {
-                    text
-                    author
-                    date
-                    picture {
-                      data {
-                        id
-                      }
-                    }
-                    parentComment {
-                      data {
-                        id
-                      }
-                    }
-                    childComments {
-                      data {
-                        id
-                      }
-                    }
-                    publishedAt
-                    pinned
-                  }
-                }
-              }
-              childComments {
-                data {
-                  id
-                  attributes {
-                    text
-                    author
-                    date
-                    picture {
-                      data {
-                        id
-                      }
-                    }
-                    parentComment {
-                      data {
-                        id
-                      }
-                    }
-                    childComments {
-                      data {
-                        id
-                      }
-                    }
-                    publishedAt
-                    pinned
-                  }
-                }
-              }
-              publishedAt
-              pinned
-            }
-          }
-        }
         archive_tag {
           data {
             id
@@ -1046,36 +971,6 @@ mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
   }
 }
 
-query getComments($commentIds: [ID!]!) {
-  comments(publicationState: PREVIEW, filters: { id: { in: $commentIds } }) {
-    data {
-      id
-      attributes {
-        text
-        author
-        picture {
-          data {
-            id
-          }
-        }
-        date
-        parentComment {
-          data {
-            id
-          }
-        }
-        childComments(publicationState: PREVIEW) {
-          data {
-            id
-          }
-        }
-        publishedAt
-        pinned
-      }
-    }
-  }
-}
-
 query getCommentsByPictureId($pictureId: ID!) {
   comments(
     publicationState: PREVIEW
@@ -1098,7 +993,7 @@ query getCommentsByPictureId($pictureId: ID!) {
             id
           }
         }
-        childComments(publicationState: PREVIEW) {
+        childComments(publicationState: PREVIEW, sort: "date:asc") {
           data {
             id
           }

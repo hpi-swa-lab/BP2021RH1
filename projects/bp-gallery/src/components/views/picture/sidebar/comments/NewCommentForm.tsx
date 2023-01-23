@@ -10,9 +10,11 @@ import { DialogContext } from '../../../../provider/DialogProvider';
 const NewCommentForm = ({
   pictureId,
   parentCommentId,
+  onSubmit,
 }: {
   pictureId: string;
   parentCommentId?: string;
+  onSubmit?: () => void;
 }) => {
   const { t } = useTranslation();
   const openAlert = useContext(AlertContext);
@@ -75,9 +77,9 @@ const NewCommentForm = ({
           date: getCurrentDateTimeString(),
           parentCommentId: parentCommentId,
         },
-      });
+      }).then(() => onSubmit?.());
     }
-  }, [commentAuthor, commentText, pictureId, parentCommentId, postCommentMutation]);
+  }, [commentText, postCommentMutation, pictureId, commentAuthor, parentCommentId, onSubmit]);
 
   return (
     <div

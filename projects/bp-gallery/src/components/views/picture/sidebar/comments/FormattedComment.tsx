@@ -26,15 +26,7 @@ interface CommentActions {
   hoverText?: string;
 }
 
-const FormattedComment = ({
-  comment,
-  comments,
-  depth = 0,
-}: {
-  comment: FlatComment;
-  comments: FlatComment[] | undefined;
-  depth?: number;
-}) => {
+const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?: number }) => {
   const { t } = useTranslation();
 
   const { role } = useAuth();
@@ -48,14 +40,6 @@ const FormattedComment = ({
   const [expanded, setExpanded] = useState(true);
   const [edit, setEdit] = useState(false);
   const [reply, setReply] = useState(false);
-
-  const childComments = useMemo(
-    () =>
-      comments?.filter(comment2 =>
-        comment.childComments?.map(childComment => childComment.id).includes(comment2.id)
-      ),
-    [comment.childComments, comments]
-  );
 
   const [pinComment] = usePinCommentMutation({
     variables: {
@@ -190,16 +174,20 @@ const FormattedComment = ({
         </div>
         {comment.picture && reply && (
           <div className='mt-2'>
-            <NewCommentForm pictureId={comment.picture.id} parentCommentId={comment.id} />
+            <NewCommentForm
+              pictureId={comment.picture.id}
+              parentCommentId={comment.id}
+              onSubmit={() => setReply(false)}
+            />
           </div>
         )}
         {comment.childComments?.length !== 0 && (
           <div className='child-container flex mt-3'>
             <div className='w-1 bg-neutral-300 flex-shrink-0'></div>
             <div className='flex flex-col'>
-              {childComments?.map(childComment => (
+              {comment.childComments?.map(childComment => (
                 <CommentVerification comment={childComment} key={childComment.id}>
-                  <FormattedComment comment={childComment} comments={comments} depth={depth + 1} />
+                  <FormattedComment comment={childComment} depth={depth + 1} />
                 </CommentVerification>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
@@ -23,13 +23,36 @@ const CommentsContainer = ({ pictureId }: { pictureId: string }) => {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const comments: FlatComment[] | undefined = useSimplifiedQueryResponseData(data)?.comments;
 
+  const commentTree = useMemo(() => {
+    if (!comments) return;
+    const commentTree = [
+      ...comments
+        .filter(comment => comment.parentComment === null)
+        .map(comment => ({ ...comment })),
+    ];
+
+    const getCommentWithChildInfo = (comment: FlatComment) => {
+      if (!comment.childComments) return;
+      comment.childComments = [
+        ...comment.childComments.map(
+          childComment => comments.find(comm => comm.id === childComment.id) as FlatComment
+        ),
+      ];
+
+      comment.childComments.forEach(childComment => getCommentWithChildInfo(childComment));
+    };
+
+    commentTree.forEach(comment => getCommentWithChildInfo(comment));
+
+    return commentTree;
+  }, [comments]);
+
   const sortedComments = () => {
-    return comments
-      ?.filter(comment => comment.parentComment === null)
-      ?.sort((comment1, comment2) => Number(comment2.pinned) - Number(comment1.pinned));
+    return commentTree?.sort(
+      (comment1, comment2) => Number(comment2.pinned) - Number(comment1.pinned)
+    );
   };
 
   const badgeNumber = (() => {
@@ -66,7 +89,7 @@ const CommentsContainer = ({ pictureId }: { pictureId: string }) => {
       <div className='comment-container'>
         {sortedComments()?.map((comment: FlatComment) => (
           <CommentVerification comment={comment} key={comment.id}>
-            <FormattedComment comment={comment} comments={comments} />
+            <FormattedComment comment={comment} />
           </CommentVerification>
         ))}
       </div>

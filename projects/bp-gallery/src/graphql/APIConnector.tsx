@@ -1981,124 +1981,6 @@ export type GetPictureInfoQuery = {
                         | null
                         | undefined;
                     };
-                    comments?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  text: string;
-                                  author?: string | null | undefined;
-                                  date: any;
-                                  publishedAt?: any | null | undefined;
-                                  pinned?: boolean | null | undefined;
-                                  picture?:
-                                    | {
-                                        data?:
-                                          | { id?: string | null | undefined }
-                                          | null
-                                          | undefined;
-                                      }
-                                    | null
-                                    | undefined;
-                                  parentComment?:
-                                    | {
-                                        data?:
-                                          | {
-                                              id?: string | null | undefined;
-                                              attributes?:
-                                                | {
-                                                    text: string;
-                                                    author?: string | null | undefined;
-                                                    date: any;
-                                                    publishedAt?: any | null | undefined;
-                                                    pinned?: boolean | null | undefined;
-                                                    picture?:
-                                                      | {
-                                                          data?:
-                                                            | { id?: string | null | undefined }
-                                                            | null
-                                                            | undefined;
-                                                        }
-                                                      | null
-                                                      | undefined;
-                                                    parentComment?:
-                                                      | {
-                                                          data?:
-                                                            | { id?: string | null | undefined }
-                                                            | null
-                                                            | undefined;
-                                                        }
-                                                      | null
-                                                      | undefined;
-                                                    childComments?:
-                                                      | {
-                                                          data: Array<{
-                                                            id?: string | null | undefined;
-                                                          }>;
-                                                        }
-                                                      | null
-                                                      | undefined;
-                                                  }
-                                                | null
-                                                | undefined;
-                                            }
-                                          | null
-                                          | undefined;
-                                      }
-                                    | null
-                                    | undefined;
-                                  childComments?:
-                                    | {
-                                        data: Array<{
-                                          id?: string | null | undefined;
-                                          attributes?:
-                                            | {
-                                                text: string;
-                                                author?: string | null | undefined;
-                                                date: any;
-                                                publishedAt?: any | null | undefined;
-                                                pinned?: boolean | null | undefined;
-                                                picture?:
-                                                  | {
-                                                      data?:
-                                                        | { id?: string | null | undefined }
-                                                        | null
-                                                        | undefined;
-                                                    }
-                                                  | null
-                                                  | undefined;
-                                                parentComment?:
-                                                  | {
-                                                      data?:
-                                                        | { id?: string | null | undefined }
-                                                        | null
-                                                        | undefined;
-                                                    }
-                                                  | null
-                                                  | undefined;
-                                                childComments?:
-                                                  | {
-                                                      data: Array<{
-                                                        id?: string | null | undefined;
-                                                      }>;
-                                                    }
-                                                  | null
-                                                  | undefined;
-                                              }
-                                            | null
-                                            | undefined;
-                                        }>;
-                                      }
-                                    | null
-                                    | undefined;
-                                }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
                     archive_tag?:
                       | {
                           data?:
@@ -3332,43 +3214,6 @@ export type UpdateArchiveMutation = {
     | undefined;
 };
 
-export type GetCommentsQueryVariables = Exact<{
-  commentIds: Array<Scalars['ID']> | Scalars['ID'];
-}>;
-
-export type GetCommentsQuery = {
-  comments?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                text: string;
-                author?: string | null | undefined;
-                date: any;
-                publishedAt?: any | null | undefined;
-                pinned?: boolean | null | undefined;
-                picture?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
-                  | null
-                  | undefined;
-                parentComment?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
-                  | null
-                  | undefined;
-                childComments?:
-                  | { data: Array<{ id?: string | null | undefined }> }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
-};
-
 export type GetCommentsByPictureIdQueryVariables = Exact<{
   pictureId: Scalars['ID'];
 }>;
@@ -3740,81 +3585,6 @@ export const GetPictureInfoDocument = gql`
               attributes {
                 url
                 updatedAt
-              }
-            }
-          }
-          comments(
-            publicationState: PREVIEW
-            sort: "date:desc"
-            filters: { parentComment: { id: { eq: null } } }
-          ) {
-            data {
-              id
-              attributes {
-                text
-                author
-                date
-                picture {
-                  data {
-                    id
-                  }
-                }
-                parentComment {
-                  data {
-                    id
-                    attributes {
-                      text
-                      author
-                      date
-                      picture {
-                        data {
-                          id
-                        }
-                      }
-                      parentComment {
-                        data {
-                          id
-                        }
-                      }
-                      childComments {
-                        data {
-                          id
-                        }
-                      }
-                      publishedAt
-                      pinned
-                    }
-                  }
-                }
-                childComments {
-                  data {
-                    id
-                    attributes {
-                      text
-                      author
-                      date
-                      picture {
-                        data {
-                          id
-                        }
-                      }
-                      parentComment {
-                        data {
-                          id
-                        }
-                      }
-                      childComments {
-                        data {
-                          id
-                        }
-                      }
-                      publishedAt
-                      pinned
-                    }
-                  }
-                }
-                publishedAt
-                pinned
               }
             }
           }
@@ -6972,83 +6742,13 @@ export type UpdateArchiveMutationOptions = Apollo.BaseMutationOptions<
   UpdateArchiveMutationVariables
 >;
 
-export const GetCommentsDocument = gql`
-  query getComments($commentIds: [ID!]!) {
-    comments(publicationState: PREVIEW, filters: { id: { in: $commentIds } }) {
-      data {
-        id
-        attributes {
-          text
-          author
-          picture {
-            data {
-              id
-            }
-          }
-          date
-          parentComment {
-            data {
-              id
-            }
-          }
-          childComments(publicationState: PREVIEW) {
-            data {
-              id
-            }
-          }
-          publishedAt
-          pinned
-        }
-      }
-    }
-  }
-`;
-
-/**
- * __useGetCommentsQuery__
- *
- * To run a query within a React component, call `useGetCommentsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCommentsQuery({
- *   variables: {
- *      commentIds: // value for 'commentIds'
- *   },
- * });
- */
-export function useGetCommentsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, options);
-}
-
-export function useGetCommentsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetCommentsQuery, GetCommentsQueryVariables>(
-    GetCommentsDocument,
-    options
-  );
-}
-
-export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>;
-
-export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>;
-
-export type GetCommentsQueryResult = Apollo.QueryResult<
-  GetCommentsQuery,
-  GetCommentsQueryVariables
->;
-
 export const GetCommentsByPictureIdDocument = gql`
   query getCommentsByPictureId($pictureId: ID!) {
-    comments(publicationState: PREVIEW, filters: { picture: { id: { eq: $pictureId } } }) {
+    comments(
+      publicationState: PREVIEW
+      sort: "date:desc"
+      filters: { picture: { id: { eq: $pictureId } } }
+    ) {
       data {
         id
         attributes {
@@ -7065,7 +6765,7 @@ export const GetCommentsByPictureIdDocument = gql`
               id
             }
           }
-          childComments(publicationState: PREVIEW) {
+          childComments(publicationState: PREVIEW, sort: "date:asc") {
             data {
               id
             }
