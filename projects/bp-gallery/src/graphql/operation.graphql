@@ -451,8 +451,9 @@ query getKeywordTagsWithThumbnail(
   $thumbnailFilters: PictureFiltersInput = {}
   $start: Int
   $limit: Int
+  $sortBy: [String]
 ) {
-  keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
+  keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
     data {
       id
       attributes {
@@ -527,8 +528,9 @@ query getLocationTagsWithThumbnail(
   $thumbnailFilters: PictureFiltersInput = {}
   $start: Int
   $limit: Int
+  $sortBy: [String]
 ) {
-  locationTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
+  locationTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
     data {
       id
       attributes {
@@ -619,8 +621,9 @@ query getPersonTagsWithThumbnail(
   $thumbnailFilters: PictureFiltersInput = {}
   $start: Int
   $limit: Int
+  $sortBy: [String]
 ) {
-  personTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
+  personTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
     data {
       id
       attributes {

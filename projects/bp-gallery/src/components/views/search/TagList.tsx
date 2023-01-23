@@ -50,6 +50,7 @@ const TagList = ({
       thumbnailFilters: thumbnailQueryParams,
       start: 0,
       limit: maxItemAmount ? maxItemAmount : 30,
+      sortBy: ['name:asc'],
     },
   });
 

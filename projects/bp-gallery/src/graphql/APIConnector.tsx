@@ -2414,6 +2414,7 @@ export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetKeywordTagsWithThumbnailQuery = {
@@ -2531,6 +2532,7 @@ export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetLocationTagsWithThumbnailQuery = {
@@ -2672,6 +2674,7 @@ export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetPersonTagsWithThumbnailQuery = {
@@ -4277,8 +4280,9 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
     $thumbnailFilters: PictureFiltersInput = {}
     $start: Int
     $limit: Int
+    $sortBy: [String]
   ) {
-    keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
+    keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4334,6 +4338,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
  *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
@@ -4556,8 +4561,9 @@ export const GetLocationTagsWithThumbnailDocument = gql`
     $thumbnailFilters: PictureFiltersInput = {}
     $start: Int
     $limit: Int
+    $sortBy: [String]
   ) {
-    locationTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
+    locationTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4613,6 +4619,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
  *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
@@ -4956,8 +4963,9 @@ export const GetPersonTagsWithThumbnailDocument = gql`
     $thumbnailFilters: PictureFiltersInput = {}
     $start: Int
     $limit: Int
+    $sortBy: [String]
   ) {
-    personTags(filters: $filters, pagination: { start: $start, limit: $limit }) {
+    personTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
       data {
         id
         attributes {
@@ -5013,6 +5021,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
  *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
