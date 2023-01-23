@@ -18,13 +18,13 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
 
   const [acceptComment] = useAcceptCommentMutation({
     variables: { commentId: comment.id, currentTime: new Date().toISOString() },
-    refetchQueries: ['getCommentsByPictureId'],
+    refetchQueries: ['getPictureInfo'],
   });
   const [declineComment] = useDeclineCommentMutation({
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getCommentsByPictureId'],
+    refetchQueries: ['getPictureInfo'],
   });
 
   const onDecline = async () => {

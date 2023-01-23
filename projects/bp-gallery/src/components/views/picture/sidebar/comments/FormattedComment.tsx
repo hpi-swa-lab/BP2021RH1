@@ -46,7 +46,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getCommentsByPictureId'],
+    refetchQueries: ['getPictureInfo'],
     onCompleted: () => setPinned(true),
   });
 
@@ -54,7 +54,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getCommentsByPictureId'],
+    refetchQueries: ['getPictureInfo'],
     onCompleted: () => setPinned(false),
   });
 
@@ -62,7 +62,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     variables: {
       commentId: comment.id,
     },
-    refetchQueries: ['getCommentsByPictureId'],
+    refetchQueries: ['getPictureInfo'],
   });
 
   const onDelete = useCallback(async () => {

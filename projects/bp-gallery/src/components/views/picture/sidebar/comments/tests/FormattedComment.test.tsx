@@ -79,7 +79,7 @@ describe('FormattedComment', () => {
       <FormattedComment comment={comments.publishedAndUnpinned} />
     );
     expect(component.container.querySelector('.pinned')).toBeNull();
-    const button = await component.findByRole('button');
+    const button = (await component.findAllByRole('button'))[1];
     userEvent.click(button);
     await waitForReRender(component);
     expect(component.container.querySelector('.pinned')).toBeInTheDocument();

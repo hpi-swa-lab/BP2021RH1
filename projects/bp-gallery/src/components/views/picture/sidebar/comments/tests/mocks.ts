@@ -12,6 +12,7 @@ export const comments = {
     date: new Date('2021-04-21'),
     publishedAt: new Date('2021-04-21'),
     pinned: true,
+    parentComment: null,
   } as FlatComment,
   publishedAndUnpinned: {
     id: '1',
@@ -20,6 +21,7 @@ export const comments = {
     date: new Date('2021-04-21'),
     publishedAt: new Date('2021-04-21'),
     pinned: false,
+    parentComment: null,
   } as FlatComment,
   unpublishedAndPinned: {
     id: '2',
@@ -27,6 +29,7 @@ export const comments = {
     author: 'Onkel Pelle',
     date: new Date('2021-04-22'),
     pinned: true,
+    parentComment: null,
   } as FlatComment,
   unpublishedAndUnpinned: {
     id: '2',
@@ -34,6 +37,7 @@ export const comments = {
     author: 'Onkel Pelle',
     date: new Date('2021-04-22'),
     pinned: false,
+    parentComment: null,
   } as FlatComment,
 };
 

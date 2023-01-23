@@ -1969,6 +1969,46 @@ export type GetPictureInfoQuery = {
                         }
                       | null
                       | undefined;
+                    comments?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  text: string;
+                                  author?: string | null | undefined;
+                                  date: any;
+                                  publishedAt?: any | null | undefined;
+                                  pinned?: boolean | null | undefined;
+                                  picture?:
+                                    | {
+                                        data?:
+                                          | { id?: string | null | undefined }
+                                          | null
+                                          | undefined;
+                                      }
+                                    | null
+                                    | undefined;
+                                  parentComment?:
+                                    | {
+                                        data?:
+                                          | { id?: string | null | undefined }
+                                          | null
+                                          | undefined;
+                                      }
+                                    | null
+                                    | undefined;
+                                  childComments?:
+                                    | { data: Array<{ id?: string | null | undefined }> }
+                                    | null
+                                    | undefined;
+                                }
+                              | null
+                              | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
                     media: {
                       data?:
                         | {
@@ -3214,43 +3254,6 @@ export type UpdateArchiveMutation = {
     | undefined;
 };
 
-export type GetCommentsByPictureIdQueryVariables = Exact<{
-  pictureId: Scalars['ID'];
-}>;
-
-export type GetCommentsByPictureIdQuery = {
-  comments?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                text: string;
-                author?: string | null | undefined;
-                date: any;
-                publishedAt?: any | null | undefined;
-                pinned?: boolean | null | undefined;
-                picture?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
-                  | null
-                  | undefined;
-                parentComment?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
-                  | null
-                  | undefined;
-                childComments?:
-                  | { data: Array<{ id?: string | null | undefined }> }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
-};
-
 export type GetUnverifiedCommentsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUnverifiedCommentsQuery = {
@@ -3576,6 +3579,37 @@ export const GetPictureInfoDocument = gql`
               id
               attributes {
                 name
+              }
+            }
+          }
+          comments(
+            publicationState: PREVIEW
+            sort: "date:desc"
+            filters: { picture: { id: { eq: $pictureId } } }
+          ) {
+            data {
+              id
+              attributes {
+                text
+                author
+                picture {
+                  data {
+                    id
+                  }
+                }
+                date
+                parentComment {
+                  data {
+                    id
+                  }
+                }
+                childComments(publicationState: PREVIEW, sort: "date:asc") {
+                  data {
+                    id
+                  }
+                }
+                publishedAt
+                pinned
               }
             }
           }
@@ -6740,97 +6774,6 @@ export type UpdateArchiveMutationResult = Apollo.MutationResult<UpdateArchiveMut
 export type UpdateArchiveMutationOptions = Apollo.BaseMutationOptions<
   UpdateArchiveMutation,
   UpdateArchiveMutationVariables
->;
-
-export const GetCommentsByPictureIdDocument = gql`
-  query getCommentsByPictureId($pictureId: ID!) {
-    comments(
-      publicationState: PREVIEW
-      sort: "date:desc"
-      filters: { picture: { id: { eq: $pictureId } } }
-    ) {
-      data {
-        id
-        attributes {
-          text
-          author
-          picture {
-            data {
-              id
-            }
-          }
-          date
-          parentComment {
-            data {
-              id
-            }
-          }
-          childComments(publicationState: PREVIEW, sort: "date:asc") {
-            data {
-              id
-            }
-          }
-          publishedAt
-          pinned
-        }
-      }
-    }
-  }
-`;
-
-/**
- * __useGetCommentsByPictureIdQuery__
- *
- * To run a query within a React component, call `useGetCommentsByPictureIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCommentsByPictureIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCommentsByPictureIdQuery({
- *   variables: {
- *      pictureId: // value for 'pictureId'
- *   },
- * });
- */
-export function useGetCommentsByPictureIdQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCommentsByPictureIdQuery,
-    GetCommentsByPictureIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetCommentsByPictureIdQuery, GetCommentsByPictureIdQueryVariables>(
-    GetCommentsByPictureIdDocument,
-    options
-  );
-}
-
-export function useGetCommentsByPictureIdLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCommentsByPictureIdQuery,
-    GetCommentsByPictureIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetCommentsByPictureIdQuery, GetCommentsByPictureIdQueryVariables>(
-    GetCommentsByPictureIdDocument,
-    options
-  );
-}
-
-export type GetCommentsByPictureIdQueryHookResult = ReturnType<
-  typeof useGetCommentsByPictureIdQuery
->;
-
-export type GetCommentsByPictureIdLazyQueryHookResult = ReturnType<
-  typeof useGetCommentsByPictureIdLazyQuery
->;
-
-export type GetCommentsByPictureIdQueryResult = Apollo.QueryResult<
-  GetCommentsByPictureIdQuery,
-  GetCommentsByPictureIdQueryVariables
 >;
 
 export const GetUnverifiedCommentsDocument = gql`

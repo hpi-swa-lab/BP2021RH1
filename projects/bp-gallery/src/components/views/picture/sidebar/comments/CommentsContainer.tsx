@@ -8,22 +8,18 @@ import { Badge, Icon } from '@mui/material';
 import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { useGetCommentsByPictureIdQuery } from '../../../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 
-const CommentsContainer = ({ pictureId }: { pictureId: string }) => {
+const CommentsContainer = ({
+  pictureId,
+  comments,
+}: {
+  pictureId: string;
+  comments?: FlatComment[];
+}) => {
   const { t } = useTranslation();
   const { role } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
-
-  const { data } = useGetCommentsByPictureIdQuery({
-    variables: {
-      pictureId: pictureId,
-    },
-  });
-
-  const comments: FlatComment[] | undefined = useSimplifiedQueryResponseData(data)?.comments;
 
   const commentTree = useMemo(() => {
     if (!comments) return;
