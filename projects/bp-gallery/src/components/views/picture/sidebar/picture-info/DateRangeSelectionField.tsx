@@ -11,6 +11,8 @@ import { de } from 'date-fns/locale';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import i18n from '../../../../../i18n';
 import { cloneDeep } from 'lodash';
+import './DateRangeSelectionField.scss';
+import Checkbox from '@mui/material/Checkbox';
 
 const DateRangeSelectionField = ({
   timeRangeTag,
@@ -112,40 +114,39 @@ const DateRangeSelectionField = ({
             horizontal: 'center',
           }}
         >
-          <label>
-            <input
-              type='checkbox'
-              checked={timeRange?.isEstimate ?? false}
-              onChange={handleChange}
-            />
-            {`${t('pictureFields.around')}`}
-          </label>
-          <DateRangePicker
-            ranges={[selectionRange]}
-            locale={de}
-            editableDateInputs={true}
-            rangeColors={['#690e6e']}
-            staticRanges={[]}
-            inputRanges={INPUT_RANGES}
-            dateDisplayFormat={'dd.MM.yyyy'}
-            minDate={dayjs(`1000-01-01`).toDate()}
-            maxDate={dayjs().add(1, 'year').toDate()}
-            onChange={range => {
-              if (range.selection.startDate && range.selection.endDate) {
-                const s = range.selection.startDate.toISOString();
-                const e = range.selection.endDate.toISOString();
-                onTouch();
-                setTimeRange(oldTimeRange => {
-                  const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
-                  tRT.start = s;
-                  tRT.end = e;
+          {' '}
+          <div>
+            <label>
+              <Checkbox checked={timeRange?.isEstimate ?? false} onChange={handleChange} />
+              {`${t('pictureFields.around')}`}
+            </label>
+            <DateRangePicker
+              ranges={[selectionRange]}
+              locale={de}
+              editableDateInputs={true}
+              rangeColors={['#690e6e']}
+              staticRanges={[]}
+              inputRanges={INPUT_RANGES}
+              dateDisplayFormat={'dd.MM.yyyy'}
+              minDate={dayjs(`1000-01-01`).toDate()}
+              maxDate={dayjs().add(1, 'year').toDate()}
+              onChange={range => {
+                if (range.selection.startDate && range.selection.endDate) {
+                  const s = range.selection.startDate.toISOString();
+                  const e = range.selection.endDate.toISOString();
+                  onTouch();
+                  setTimeRange(oldTimeRange => {
+                    const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
+                    tRT.start = s;
+                    tRT.end = e;
 
-                  return { ...tRT };
-                });
-                resetInputFields();
-              }
-            }}
-          />
+                    return { ...tRT };
+                  });
+                  resetInputFields();
+                }
+              }}
+            />
+          </div>
         </Popover>
       )}
     </>
