@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
@@ -9,13 +9,13 @@ import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 
-const CommentsContainer = ({
+const CommentsContainer = memo(function CommentsContainer({
   pictureId,
   comments,
 }: {
   pictureId: string;
   comments?: FlatComment[];
-}) => {
+}) {
   const { t } = useTranslation();
   const { role } = useAuth();
 
@@ -23,26 +23,16 @@ const CommentsContainer = ({
 
   const commentTree = useMemo(() => {
     if (!comments) return;
-    const commentTree = [
-      ...comments
-        .filter(comment => comment.parentComment === null)
-        .map(comment => ({ ...comment })),
-    ];
 
-    const getCommentWithChildInfo = (comment: FlatComment) => {
-      if (!comment.childComments) return;
-      comment.childComments = [
-        ...comment.childComments.map(
-          childComment => comments.find(comm => comm.id === childComment.id) as FlatComment
-        ),
-      ];
-
-      comment.childComments.forEach(childComment => getCommentWithChildInfo(childComment));
-    };
-
-    commentTree.forEach(comment => getCommentWithChildInfo(comment));
-
-    return commentTree;
+    const commentsById = Object.fromEntries(
+      comments.map(comment => [comment.id, { ...comment, childComments: [] as FlatComment[] }])
+    );
+    for (const comment of Object.values(commentsById)) {
+      if (comment.parentComment?.id) {
+        commentsById[comment.parentComment.id].childComments.push(comment);
+      }
+    }
+    return Object.values(commentsById).filter(comment => comment.parentComment === null);
   }, [comments]);
 
   const sortedComments = () => {
@@ -92,6 +82,6 @@ const CommentsContainer = ({
       <NewCommentForm pictureId={pictureId} />
     </div>
   );
-};
+});
 
 export default CommentsContainer;
