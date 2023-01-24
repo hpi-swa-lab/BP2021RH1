@@ -115,7 +115,7 @@ const DateRangeSelectionField = ({
           }}
         >
           {' '}
-          <div>
+          <div className='date-range-picker'>
             <label>
               <Checkbox checked={timeRange?.isEstimate ?? false} onChange={handleChange} />
               {`${t('pictureFields.around')}`}
