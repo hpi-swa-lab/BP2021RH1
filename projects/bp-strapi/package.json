@@ -23,10 +23,12 @@
     "@strapi/plugin-i18n": "4.2.0",
     "@strapi/plugin-sentry": "4.2.0",
     "@strapi/plugin-users-permissions": "4.2.0",
+    "@strapi/provider-email-nodemailer": "^4.5.6",
     "@strapi/strapi": "4.2.0",
     "cross-env": "^7.0.3",
     "pg": "8.6.0",
     "pm2": "^5.2.0",
+    "sendmail": "^1.6.1",
     "xlsx": "^0.18.5"
   },
   "author": {
