@@ -59,21 +59,44 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
   });
 
   const [deleteComment] = useDeclineCommentMutation({
-    variables: {
-      commentId: comment.id,
-    },
     refetchQueries: ['getPictureInfo'],
   });
 
   const onDelete = useCallback(async () => {
+    const getDescendants = (comment: FlatComment, descendants: string[] = []): string[] => {
+      if (!comment.childComments) return [];
+      descendants.push(...comment.childComments.map(childComment => childComment.id));
+      comment.childComments.forEach(childComment => getDescendants(childComment, descendants));
+      return descendants;
+    };
+
+    const deletedComments = getDescendants(comment);
+
     const shouldRemove = await dialog({
       title: t('curator.really-decline-comment'),
-      content: comment.text,
+      content: (
+        <>
+          <span>{comment.text}</span>
+          <br />
+          {comment.childComments?.length !== 0 && (
+            <span className='text-red-800'>
+              {t('curator.really-decline-comment-descendants', {
+                count: deletedComments.length,
+              })}
+            </span>
+          )}
+        </>
+      ),
       preset: DialogPreset.CONFIRM,
     });
     if (!shouldRemove) return;
-    await deleteComment();
-  }, [comment.text, deleteComment, dialog, t]);
+
+    deletedComments.push(comment.id);
+
+    deletedComments.forEach(deletedComment =>
+      deleteComment({ variables: { commentId: deletedComment } })
+    );
+  }, [dialog, t, comment, deleteComment]);
 
   const commentActions: CommentAction[] = useMemo(
     () => [
