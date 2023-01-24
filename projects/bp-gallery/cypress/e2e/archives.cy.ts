@@ -19,7 +19,8 @@ describe('Archives View', () => {
   });
   after(() => {
     cy.contains('Archiv editieren').click();
-    cy.get('#archive-form-name').clear().type('Herbert-Ahrens-Bilderarchiv');
+    cy.get('#archive-form-name').clear();
+    cy.get('#archive-form-name').type('Herbert-Ahrens-Bilderarchiv');
     cy.get('.jodit-react-container').clear();
     cy.get('[data-testid="DeleteIcon"]').first().click();
     cy.get('[data-testid="DeleteIcon"]').first().click();
@@ -41,15 +42,10 @@ describe('Archives View', () => {
   });
   it('successfully edits the archive name and long description', () => {
     cy.get('#archive-form-name').should('be.visible').clear();
-    cy.get('#archive-form-name')
-      .should('be.visible')
-      .clear()
-      .type('Herbert-Ahrens-Testarchiv')
-      .should('have.value', 'Herbert-Ahrens-Testarchiv');
-    cy.get('.jodit-react-container')
-      .should('have.value', '')
-      .type('Testbeschreibung')
-      .contains('Testbeschreibung');
+    cy.get('#archive-form-name').type('Herbert-Ahrens-Testarchiv');
+    cy.get('#archive-form-name').should('have.value', 'Herbert-Ahrens-Testarchiv');
+    cy.get('.jodit-react-container').should('have.value', '').type('Testbeschreibung');
+    cy.get('.jodit-react-container').contains('Testbeschreibung');
     cy.get('#archive-form-logo').should('be.visible').selectFile('public/logo512.png');
     cy.get('img').should('be.visible');
   });

@@ -10,14 +10,18 @@ describe('Comment', () => {
   });
 
   it('adds a comment to picture 1', () => {
-    cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
-    cy.get('textarea#text').should('be.visible').clear().type('Testkommentar1');
+    cy.get('input#name').should('be.visible').clear();
+    cy.get('input#name').type('Hans Hansen');
+    cy.get('textarea#text').should('be.visible').clear();
+    cy.get('textarea#text').type('Testkommentar1');
     cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
     cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
     cy.get('.MuiButton-root').contains('O.K.').should('be.visible').click();
 
-    cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
-    cy.get('textarea#text').should('be.visible').clear().type('Testkommentar2');
+    cy.get('input#name').should('be.visible').clear();
+    cy.get('input#name').type('Hans Hansen');
+    cy.get('textarea#text').should('be.visible').clear();
+    cy.get('textarea#text').type('Testkommentar2');
     cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
     cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
     cy.get('.MuiButton-root').contains('O.K.').should('be.visible').click();

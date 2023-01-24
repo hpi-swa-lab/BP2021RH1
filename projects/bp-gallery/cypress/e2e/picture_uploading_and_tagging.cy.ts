@@ -40,9 +40,9 @@ describe('picture uploading and tagging', () => {
   it('uploading picture', () => {
     cy.get('.dropzone').selectFile('./cypress/testFiles/testbild.jpg', { action: 'drag-drop' });
     cy.get('.add-to-collection').click();
+    cy.get('.MuiDialogContent-root').find('.MuiOutlinedInput-input').clear();
     cy.get('.MuiDialogContent-root')
       .find('.MuiOutlinedInput-input')
-      .clear()
       .type('Herbert-Ahrens-Bilderarchiv');
     cy.get('.MuiAutocomplete-option').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
@@ -52,39 +52,34 @@ describe('picture uploading and tagging', () => {
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-grid .picture-preview:last').click();
     cy.get('.date-indicator').click();
-    cy.contains('.rdrInputRange', 'Jahr').find('input').clear().type('1000{esc}');
+    cy.contains('.rdrInputRange', 'Jahr').find('input').clear();
+    cy.contains('.rdrInputRange', 'Jahr').find('input').type('1000{esc}');
     cy.contains('.save-state', 'Gespeichert');
 
     cy.get('.add-button').click();
-    cy.contains('.field-content', 'Beschreibungen')
-      .find('.jodit-wysiwyg')
-      .clear()
-      .type('TestBeschreibung');
+    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').clear();
+    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').type('TestBeschreibung');
     cy.contains('Beschreibungen').click();
     cy.contains('.save-state', 'Gespeichert');
 
-    cy.contains('.field-content', 'Personen')
-      .find('input')
-      .click()
-      .clear()
-      .type('TestPerson');
+    cy.contains('.field-content', 'Personen').find('input').click();
+    cy.contains('.field-content', 'Personen').find('input').clear();
+    cy.contains('.field-content', 'Personen').find('input').type('TestPerson');
     cy.contains('TestPerson hinzufügen').click();
 
-    cy.contains('.field-content', 'Orte').find('input').click().clear().type('TestOrt');
+    cy.contains('.field-content', 'Orte').find('input').click();
+    cy.contains('.field-content', 'Orte').find('input').clear();
+    cy.contains('.field-content', 'Orte').find('input').type('TestOrt');
     cy.contains('TestOrt hinzufügen').click();
 
-    cy.contains('.field-content', 'Schlagworte')
-      .find('input')
-      .click()
-      .clear()
-      .type('TestSchlagwort');
+    cy.contains('.field-content', 'Schlagworte').find('input').click();
+    cy.contains('.field-content', 'Schlagworte').find('input').clear();
+    cy.contains('.field-content', 'Schlagworte').find('input').type('TestSchlagwort');
     cy.contains('TestSchlagwort hinzufügen').click();
 
-    cy.contains('.field-content', 'Collections')
-      .find('input')
-      .click()
-      .clear()
-      .type('TestCollection{enter}');
+    cy.contains('.field-content', 'Collections').find('input').click();
+    cy.contains('.field-content', 'Collections').find('input').clear();
+    cy.contains('.field-content', 'Collections').find('input').type('TestCollection{enter}');
   });
 
   it('checking tags and deleting picture', () => {
