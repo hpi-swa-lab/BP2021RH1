@@ -24,7 +24,6 @@ const TagList = ({
   type,
   scroll = true,
   onClickBasePath,
-  maxItemAmount,
   currentItemAmount,
   queryParams,
   thumbnailQueryParams,
@@ -32,7 +31,6 @@ const TagList = ({
   type: TagType;
   scroll?: boolean;
   onClickBasePath?: string;
-  maxItemAmount?: number;
   currentItemAmount?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
@@ -49,7 +47,7 @@ const TagList = ({
       filters: queryParams,
       thumbnailFilters: thumbnailQueryParams,
       start: 0,
-      limit: maxItemAmount ? maxItemAmount : 30,
+      limit: currentItemAmount ? currentItemAmount : 30,
       sortBy: ['name:asc'],
     },
   });

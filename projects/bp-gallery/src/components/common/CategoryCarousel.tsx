@@ -34,18 +34,20 @@ const CategoryCarousel = ({
   seperator,
   archiveId = '0',
 }: CategoryCarouselProps) => {
-  const calculateMaxRowCount = () => {
-    const tempRowCount = Math.max(1, Math.floor(Math.min(window.innerWidth - 64, 1200) / 300));
-    if (Math.min(window.innerWidth - 64, 1200) >= tempRowCount * 300 + (tempRowCount - 1) * 8) {
-      return tempRowCount;
+  const basePath = '/show-more/' + archiveId + '/' + type + '/';
+
+  const calculateMaxCategoriesPerRow = () => {
+    const tempRowLenght = Math.max(1, Math.floor(Math.min(window.innerWidth - 64, 1200) / 300));
+    if (Math.min(window.innerWidth - 64, 1200) >= tempRowLenght * 300 + (tempRowLenght - 1) * 8) {
+      return tempRowLenght;
     }
-    return tempRowCount - 1;
+    return tempRowLenght - 1;
   };
 
-  const [rowCount, setRowCount] = useState<number>(calculateMaxRowCount());
+  const [rowLength, setRowLength] = useState<number>(calculateMaxCategoriesPerRow());
 
   const onResize = useCallback(() => {
-    setRowCount(calculateMaxRowCount());
+    setRowLength(calculateMaxCategoriesPerRow());
   }, []);
 
   // Set up eventListener on mount and cleanup on unmount
@@ -67,9 +69,8 @@ const CategoryCarousel = ({
               <TagList
                 type={type}
                 scroll={false}
-                onClickBasePath={'/show-more/' + archiveId + '/' + type + '/'}
-                maxItemAmount={rows ? rows * 3 : undefined}
-                currentItemAmount={rows ? rowCount * rows : undefined}
+                onClickBasePath={basePath}
+                currentItemAmount={rows ? rowLength * rows : undefined}
                 queryParams={queryParams}
                 thumbnailQueryParams={thumbnailQueryParams}
               />
@@ -77,9 +78,9 @@ const CategoryCarousel = ({
             {type === TagType.TIME_RANGE && (
               <DecadesList
                 scroll={false}
-                onClickBasePath={'/show-more/' + archiveId + '/date/'}
+                onClickBasePath={basePath}
                 thumbnailQueryParams={thumbnailQueryParams}
-                currentItemAmount={rows ? rowCount * rows : undefined}
+                currentItemAmount={rows ? rowLength * rows : undefined}
               />
             )}
           </div>
