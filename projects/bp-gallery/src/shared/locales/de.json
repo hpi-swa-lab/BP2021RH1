@@ -242,6 +242,7 @@
         "content": "Du hast noch ungespeicherte Änderungen."
       },
       "save": "Änderungen speichern",
+      "saving": "Änderungen speichern...",
       "saved": "Änderungen gespeichert",
       "nameLabel": "Archiv-Name:",
       "shortDescription": {

@@ -6,12 +6,10 @@ describe('bulk edit', () => {
     login();
   });
   after(() => {
-    cy.wait(1000);
     logout();
   });
 
   it('select multiple photos manually', () => {
-    cy.wait(500);
     cy.get('.picture-preview').eq(0).find('.adornment.bottom-left').click();
     cy.get('.picture-preview').eq(1).find('.adornment.bottom-left').click();
     cy.get('.picture-preview').eq(2).find('.adornment.bottom-left').click();

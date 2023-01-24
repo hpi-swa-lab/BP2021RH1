@@ -62,7 +62,6 @@ describe('Comment', () => {
 
     cy.visit('/');
     login();
-    cy.wait(1000);
 
     cy.visit('/picture/1');
     cy.contains('.comment-container', 'Testkommentar2').contains('button', 'Löschen').click();

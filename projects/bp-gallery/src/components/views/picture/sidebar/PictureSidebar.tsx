@@ -31,6 +31,7 @@ const PictureSidebar = ({
 
   const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
     refetchQueries: ['getPictureInfo'],
+    awaitRefetchQueries: true,
   });
 
   const onSave = useCallback(

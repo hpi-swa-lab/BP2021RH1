@@ -55,7 +55,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   const { data } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
-  const [updateArchive] = useUpdateArchiveMutation({
+  const [updateArchive, updateMutationResponse] = useUpdateArchiveMutation({
     refetchQueries: ['getArchive'],
   });
   const { createLink, updateLink, deleteLink } = useLinks(archiveId);
@@ -175,9 +175,13 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           className='button-filled button-save'
           startIcon={form.dirty ? <SaveIcon /> : <Check />}
           onClick={handleSubmit}
-          disabled={!form.dirty}
+          disabled={!form.dirty || updateMutationResponse.loading}
         >
-          {form.dirty ? t('archives.edit.save') : t('archives.edit.saved')}
+          {updateMutationResponse.loading
+            ? t('archives.edit.loading')
+            : form.dirty
+            ? t('archives.edit.save')
+            : t('archives.edit.saved')}
         </Button>
       </div>
 
