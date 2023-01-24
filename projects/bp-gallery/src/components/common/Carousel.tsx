@@ -18,43 +18,38 @@ interface CarouselProps {
 }
 
 const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselProps) => {
-  const calculateMaxRowCount = () =>
+  const calculateMaxPicturesPerRow = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
-  const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
+  const calculateMinPicturesPerRow = (maxRowLength: number) => Math.max(2, maxRowLength - 2);
 
-  const calculatePictureNumber = useCallback(
-    (hashBase: string, rows: number) => {
-      const newMaxRowCount = calculateMaxRowCount();
-      if (newMaxRowCount !== maxRowCount) {
-        setMaxRowCount(newMaxRowCount);
-      }
-      const minRowCount = Math.max(2, maxRowCount - 2);
-      let currentPictureNumber = 0;
-      let currentRowLenght = Math.round(
-        hashCode(hashBase) * (maxRowCount - minRowCount) + minRowCount
+  const calculatePicturesPerRow = (
+    maxRowLength: number,
+    minRowLength: number,
+    hashKey: string = 'carousel'
+  ) => Math.round(hashCode(hashKey) * (maxRowLength - minRowLength) + minRowLength);
+
+  //const [maxPicturesPerRow, setMaxPicturePerRow] = useState<number>(calculateMaxPicturesPerRow());
+
+  const calculatePictureNumber = useCallback(() => {
+    const maxRowLength = calculateMaxPicturesPerRow();
+    const minRowLength = calculateMinPicturesPerRow(maxRowLength);
+    let pictureNumber = calculatePicturesPerRow(maxRowLength, minRowLength);
+    for (let row = 1; row < rows; row++) {
+      pictureNumber += calculatePicturesPerRow(
+        maxRowLength,
+        minRowLength,
+        'carousel' + String((pictureNumber - 1) * 124.22417246)
       );
-      currentPictureNumber += currentRowLenght;
-      for (let i = 1; i < rows; i++) {
-        currentRowLenght = Math.round(
-          hashCode(hashBase + String((currentPictureNumber - 1) * 124.22417246)) *
-            (maxRowCount - minRowCount) +
-            minRowCount
-        );
-        currentPictureNumber += currentRowLenght;
-      }
-      return currentPictureNumber;
-    },
-    [maxRowCount]
-  );
+    }
+    return pictureNumber;
+  }, [rows]);
 
-  const [pictureNumber, setPictureNumber] = useState<number>(
-    calculatePictureNumber('carousel', rows)
-  );
+  const [pictureNumber, setPictureNumber] = useState<number>(calculatePictureNumber());
 
   const onResize = useCallback(() => {
-    setPictureNumber(calculatePictureNumber('carousel', rows));
-  }, [calculatePictureNumber, rows]);
+    setPictureNumber(calculatePictureNumber());
+  }, [calculatePictureNumber]);
 
   // Set up eventListener on mount and cleanup on unmount
   useEffect(() => {
