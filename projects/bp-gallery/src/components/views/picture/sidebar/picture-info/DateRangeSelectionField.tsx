@@ -114,7 +114,6 @@ const DateRangeSelectionField = ({
             horizontal: 'center',
           }}
         >
-          {' '}
           <div className='date-range-picker'>
             <label>
               <Checkbox checked={timeRange?.isEstimate ?? false} onChange={handleChange} />
