@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
 import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
+import Close from '@mui/icons-material/Close';
 
 interface CommentAction {
   text: string;
@@ -103,7 +104,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
       {
         text: 'Antworten',
         action: () => setReply(!reply),
-        icon: <QuestionAnswer />,
+        icon: !reply ? <QuestionAnswer /> : <Close />,
         hoverText: 'Antworten',
         state: reply,
       } as CommentAction,
@@ -112,7 +113,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
             {
               text: 'Editieren',
               action: () => setEdit(!edit),
-              icon: <EditIcon />,
+              icon: !edit ? <EditIcon /> : <Close />,
               hoverText: 'Editieren',
               state: edit,
             },
