@@ -4,7 +4,7 @@ import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
 import './CommentsContainer.scss';
 import { useTranslation } from 'react-i18next';
-import { Badge, Card, Icon } from '@mui/material';
+import { Badge, Button, Icon } from '@mui/material';
 import CommentVerification from './CommentVerification';
 import { ExpandMore } from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
@@ -22,17 +22,22 @@ const CommentsContainer = ({
 
   if (!localStorage.getItem('likes')) localStorage.setItem('likes', JSON.stringify([]));
 
-  const [likeCookies, setLikeCookies] = useState<string[]>(
+  const [likedPictures, setLikedPictures] = useState<string[]>(
     JSON.parse(localStorage.getItem('likes') || '[]')
   );
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
-  const [isLiked, setIsLiked] = useState<boolean>(likeCookies.some((x: string) => x === pictureId));
+  const [isLiked, setIsLiked] = useState<boolean>(
+    likedPictures.some((x: string) => x === pictureId)
+  );
+  const [likeNumber, setLikeNumber] = useState<number>(12);
 
-  useEffect(() => {
-    setIsLiked(likeCookies.some((x: string) => x === pictureId));
-    localStorage.setItem('likes', JSON.stringify(likeCookies));
-  }, [pictureId, likeCookies]);
+  useEffect(
+    () => setIsLiked(likedPictures.some((x: string) => x === pictureId)),
+    [pictureId, likedPictures]
+  );
+
+  useEffect(() => setLikeNumber(12), [pictureId]); //todo: hardgecodetes austauschen
 
   const sortedComments = () => {
     return comments?.sort(
@@ -46,22 +51,37 @@ const CommentsContainer = ({
       : comments?.length;
   })();
 
+  const like = (dislike: boolean) => {
+    let likes;
+    if (dislike) {
+      likes = likedPictures.filter((x: string) => x !== pictureId);
+      setLikeNumber(likeNumber - 1);
+    } else {
+      likes = [...likedPictures, pictureId];
+      setLikeNumber(likeNumber + 1);
+    }
+    setLikedPictures(likes);
+    localStorage.setItem('likes', JSON.stringify(likes));
+  };
+
   return (
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
       <div className='picture-comments-header '>
         <div className={'flex place-items-center m-0 gap-1 w-max grow'}>
-          <Card
-            className={'min-h-fit flex flex-row gap-1 align-center p-1'}
+          <Button
+            variant={'outlined'}
+            className={'min-h-fit flex flex-row gap-1 place-items-center p-1'}
             onClick={() => {
-              !isLiked
-                ? setLikeCookies([...likeCookies, pictureId])
-                : setLikeCookies(likeCookies.filter((x: string) => x !== pictureId));
+              like(isLiked);
               setIsLiked(like => !like);
             }}
           >
-            {isLiked ? <Icon>favorite</Icon> : <Icon>favorite_border</Icon>}
-            Mag ich
-          </Card>
+            <div className={'flex flex-row place-items-center'}>
+              {isLiked ? <Icon>favorite</Icon> : <Icon>favorite_border</Icon>}
+              <div className={'text-sm m-0'}>{likeNumber}</div>
+            </div>
+            {t('common.like')}
+          </Button>
           <div className={'flex grow'} onClick={() => setIsOpen(o => !o)}>
             <div className='grow' />
             <div className='picture-comments-icon'>

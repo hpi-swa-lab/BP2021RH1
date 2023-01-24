@@ -356,6 +356,17 @@ query getPicturesByAllSearch(
   }
 }
 
+#query getPictureLikes($pictureId: ID!) {
+#  picture(id: $pictureId) {
+#    data {
+#      id
+#      attributes {
+#        likes
+#      }
+#    }
+#  }
+#}
+
 query getCollectionInfoByName($collectionName: String, $publicationState: PublicationState = LIVE) {
   collections(filters: { name: { eq: $collectionName } }, publicationState: $publicationState) {
     data {

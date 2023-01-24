@@ -99,6 +99,9 @@
       "relation": "manyToOne",
       "target": "api::archive-tag.archive-tag",
       "inversedBy": "pictures"
+    },
+    "likes": {
+      "type": "integer"
     }
   }
 }

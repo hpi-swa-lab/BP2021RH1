@@ -59,7 +59,8 @@
     "and": "und",
     "and-alternative": "sowie",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "like": "Mag ich"
   },
   "comment": {
     "name": "Name",
