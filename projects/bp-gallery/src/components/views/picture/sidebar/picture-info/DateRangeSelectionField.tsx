@@ -86,7 +86,7 @@ const DateRangeSelectionField = ({
       >
         {timeRange
           ? timeRange.isEstimate
-            ? 'etwa ' + formatTimeStamp(timeRange)
+            ? `${t('pictureFields.around')}` + formatTimeStamp(timeRange)
             : formatTimeStamp(timeRange)
           : `${t('pictureFields.noTime')}`}
       </div>

@@ -117,7 +117,7 @@
     "noKeywords": "Keine Stichworte",
     "noCollections": "Keine Collections",
     "collections": "Collections",
-    "around": "etwa"
+    "around": "etwa "
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
