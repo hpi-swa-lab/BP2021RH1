@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
@@ -20,8 +20,20 @@ const CommentsContainer = ({
 
   const { role } = useAuth();
 
+  if (!localStorage.getItem('likes')) localStorage.setItem('likes', JSON.stringify([]));
+
+  const [likeCookies, setLikeCookies] = useState<string[]>(
+    JSON.parse(localStorage.getItem('likes') || '[]')
+  );
+
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(likeCookies.some((x: string) => x === pictureId));
+
+  useEffect(() => {
+    setIsLiked(likeCookies.some((x: string) => x === pictureId));
+    localStorage.setItem('likes', JSON.stringify(likeCookies));
+  }, [pictureId, likeCookies]);
+
   const sortedComments = () => {
     return comments?.sort(
       (comment1, comment2) => Number(comment2.pinned) - Number(comment1.pinned)
@@ -40,7 +52,12 @@ const CommentsContainer = ({
         <div className={'flex place-items-center m-0 gap-1 w-max grow'}>
           <Card
             className={'min-h-fit flex flex-row gap-1 align-center p-1'}
-            onClick={() => setIsLiked(like => !like)}
+            onClick={() => {
+              !isLiked
+                ? setLikeCookies([...likeCookies, pictureId])
+                : setLikeCookies(likeCookies.filter((x: string) => x !== pictureId));
+              setIsLiked(like => !like);
+            }}
           >
             {isLiked ? <Icon>favorite</Icon> : <Icon>favorite_border</Icon>}
             Mag ich
