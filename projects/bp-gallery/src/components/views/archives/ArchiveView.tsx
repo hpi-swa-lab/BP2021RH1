@@ -1,14 +1,11 @@
 import EditIcon from '@mui/icons-material/Edit';
 import LinkIcon from '@mui/icons-material/Link';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
+import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
 import { asApiPath } from '../../App';
-import PicturePreview, {
-  PicturePreviewAdornment,
-} from '../../common/picture-gallery/PicturePreview';
+import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import ScrollContainer from '../../common/ScrollContainer';
 import ArchiveInfo from './ArchiveInfo';
 import './ArchiveView.scss';
@@ -16,8 +13,6 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { History } from 'history';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { Star } from '@mui/icons-material';
 import { FALLBACK_PATH } from './../../routes';
 import Carousel from '../../common/Carousel';
 import CategoryCarousel from '../../common/CategoryCarousel';
@@ -27,39 +22,14 @@ interface ArchiveViewProps {
 }
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
-  const { t } = useTranslation();
   const history: History = useHistory();
   const { role } = useAuth();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
-  const [updateArchive] = useUpdateArchiveMutation({
-    refetchQueries: ['getArchive'],
-  });
-
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
   const src = archive?.logo?.formats?.thumbnail.url ?? '';
-
-  const showcaseAdornment: PicturePreviewAdornment = {
-    position: 'top-left',
-    icon: picture =>
-      picture.id === archive?.showcasePicture?.id ? <Star className='star-selected' /> : <Star />,
-    title: t('pictureAdornments.showcase'),
-    onClick: picture => {
-      if (showcasePicture?.id === picture.id) return;
-      updateArchive({
-        variables: {
-          archiveId,
-          data: {
-            showcasePicture: picture.id,
-          },
-        },
-      });
-    },
-  };
-
-  const { bulkEdit } = useBulkOperations();
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
