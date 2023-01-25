@@ -1,0 +1,37 @@
+{
+    "kind": "collectionType",
+    "collectionName": "person_tags",
+    "info": {
+        "singularName": "person-tag",
+        "pluralName": "person-tags",
+        "displayName": "Person_Tag",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true,
+            "unique": true
+        },
+        "pictures": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::picture.picture",
+            "mappedBy": "person_tags"
+        },
+        "verified_pictures": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::picture.picture",
+            "mappedBy": "verified_person_tags"
+        },
+        "synonyms": {
+            "type": "component",
+            "repeatable": true,
+            "component": "common.synonyms"
+        }
+    }
+}

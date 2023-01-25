@@ -1,0 +1,19 @@
+{
+    "kind": "singleType",
+    "collectionName": "browse_root_collections",
+    "info": {
+        "singularName": "browse-root-collection",
+        "pluralName": "browse-root-collections",
+        "displayName": "Browse root collection"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "attributes": {
+        "current": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::collection.collection"
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "kind": "collectionType",
+    "collectionName": "descriptions",
+    "info": {
+        "singularName": "description",
+        "pluralName": "descriptions",
+        "displayName": "Description"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "attributes": {
+        "text": {
+            "type": "richtext",
+            "required": true
+        },
+        "pictures": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::picture.picture",
+            "mappedBy": "descriptions"
+        }
+    }
+}
