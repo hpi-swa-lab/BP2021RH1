@@ -1,13 +1,13 @@
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 
-const localStorageItemName = 'clipboard';
+const sessionStorageItemName = 'clipboard';
 
 type ClipboardData = {
   pictureIds: string[];
 };
 
-function loadFromLocalStorage(): ClipboardData {
-  const item = localStorage.getItem(localStorageItemName);
+function loadFromSessionStorage(): ClipboardData {
+  const item = sessionStorage.getItem(sessionStorageItemName);
   if (item === null) {
     return {
       pictureIds: [],
@@ -16,8 +16,8 @@ function loadFromLocalStorage(): ClipboardData {
   return JSON.parse(item);
 }
 
-function storeIntoLocalStorage(data: ClipboardData) {
-  localStorage.setItem(localStorageItemName, JSON.stringify(data));
+function storeIntosessionStorage(data: ClipboardData) {
+  sessionStorage.setItem(sessionStorageItemName, JSON.stringify(data));
 }
 
 const ClipboardContext = React.createContext<
@@ -25,11 +25,11 @@ const ClipboardContext = React.createContext<
 >(null);
 
 export const ClipboardProvider: React.FC = ({ children }) => {
-  const state = useState(loadFromLocalStorage());
+  const state = useState(loadFromSessionStorage());
   const [data, _] = state;
 
   useEffect(() => {
-    storeIntoLocalStorage(data);
+    storeIntosessionStorage(data);
   }, [data]);
 
   return <ClipboardContext.Provider value={state}>{children}</ClipboardContext.Provider>;

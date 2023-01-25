@@ -76,6 +76,7 @@ export const ClipboardEditor = () => {
         )}
       </div>
       <Button
+        className='clipboard-editor-open'
         variant='contained'
         onClick={() => {
           setOpen(open => !open);
