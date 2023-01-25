@@ -57,6 +57,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
 
   const [updateArchive, updateMutationResponse] = useUpdateArchiveMutation({
     refetchQueries: ['getArchive'],
+    awaitRefetchQueries: true,
   });
   const { createLink, updateLink, deleteLink } = useLinks(archiveId);
 

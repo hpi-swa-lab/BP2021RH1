@@ -63,6 +63,7 @@ const BulkEditView = ({
 
   const [bulkEdit, bulkEditResponse] = useBulkEditMutation({
     refetchQueries: ['getPictureInfo', 'getMultiplePictureInfo'],
+    awaitRefetchQueries: true,
   });
   const save = useCallback(
     (diff: PictureDiff) => {
