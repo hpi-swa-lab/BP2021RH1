@@ -1,4 +1,4 @@
-import { defineConfig } from 'cypress'
+import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
@@ -6,8 +6,9 @@ export default defineConfig({
     // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      return require('./cypress/plugins/index.ts')(on, config)
+      return require('./cypress/plugins/index.ts')(on, config);
     },
     baseUrl: 'http://localhost:3000',
+    defaultCommandTimeout: 10000,
   },
-})
+});
