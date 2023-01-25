@@ -494,7 +494,7 @@ const pick = (original, keys) => {
   return picked;
 };
 
-const knexIdArray = (knexEngine, ids, name) => {
+const knexIdArray = (knexEngine: KnexEngine, ids, name) => {
   return knexEngine.raw(
     `(VALUES ${ids.map((_) => "(?::integer)").join(", ")}) ${name}`,
     [...ids]
@@ -502,10 +502,10 @@ const knexIdArray = (knexEngine, ids, name) => {
 };
 
 const insertCrossProductIgnoreDuplicates = async (
-  knexEngine,
+  knexEngine: KnexEngine,
   linksTable,
-  leftIdKey,
-  rightIdKey,
+  leftIdKey: string,
+  rightIdKey: string,
   leftIds,
   rightIds
 ) => {
@@ -517,14 +517,17 @@ const insertCrossProductIgnoreDuplicates = async (
       .select(leftIdKey, rightIdKey)
       .from(knexIdArray(knexEngine, leftIds, `a(${leftIdKey})`))
       .crossJoin(knexIdArray(knexEngine, rightIds, `b(${rightIdKey})`))
-      .whereNotIn([leftIdKey, rightIdKey], knexEngine(linksTable).select("*"))
+      .whereNotIn(
+        [leftIdKey, rightIdKey],
+        knexEngine(linksTable).select(leftIdKey, rightIdKey)
+      )
   );
 };
 
 const bulkEditTimeRangeTag = async (
   knexEngine: KnexEngine,
   pictureQuery,
-  pictureIds: string[],
+  pictureIds: number[],
   data
 ) => {
   // Check whether we actually need to update stuff for that tag type.
@@ -603,7 +606,7 @@ const bulkEditArchiveTag = async (knexEngine: KnexEngine, pictureIds, data) => {
 
 const bulkEditDescriptions = async (
   knexEngine: KnexEngine,
-  pictureIds: string[],
+  pictureIds: number[],
   data
 ) => {
   // Check whether we actually need to update stuff for that type.
@@ -663,7 +666,7 @@ const bulkEditDescriptions = async (
 
 const bulkEditTags = async (
   knexEngine: KnexEngine,
-  pictureIds: string[],
+  pictureIds: number[],
   data: any,
   tagsKey: string
 ) => {
@@ -718,7 +721,7 @@ const bulkEditTags = async (
 
 const bulkEdit = async (
   knexEngine: KnexEngine,
-  pictureIds: string[],
+  pictureIds: number[],
   data: any
 ) => {
   strapi.log.debug(
