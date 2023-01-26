@@ -47,11 +47,11 @@ const PictureSidebar = ({
   );
 
   const saveStatus = useCallback(
-    anyFieldTouched => {
+    (anyFieldTouched: boolean, isSaving: boolean) => {
       if (anyFieldTouched) {
         return t('curator.saveStatus.pending');
       }
-      if (updateMutationResponse.loading) {
+      if (updateMutationResponse.loading || isSaving) {
         return t('curator.saveStatus.saving');
       }
       if (updateMutationResponse.error) {
@@ -78,7 +78,7 @@ const PictureSidebar = ({
             picture={picture}
             pictureIds={[picture.id]}
             onSave={onSave}
-            topInfo={anyFieldTouched =>
+            topInfo={(anyFieldTouched, isSaving) =>
               role >= AuthRole.CURATOR && (
                 <div className='curator-ops'>
                   <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
@@ -89,7 +89,7 @@ const PictureSidebar = ({
                     open={editDialogOpen}
                     onClose={() => setEditDialogOpen(false)}
                   />
-                  <span className='save-state'>{saveStatus(anyFieldTouched)}</span>
+                  <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
                 </div>
               )
             }

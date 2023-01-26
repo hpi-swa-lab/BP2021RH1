@@ -78,11 +78,11 @@ const BulkEditView = ({
   );
 
   const saveStatus = useCallback(
-    anyFieldTouched => {
+    (anyFieldTouched: boolean, isSaving: boolean) => {
       if (anyFieldTouched) {
         return t('curator.saveStatus.pending');
       }
-      if (bulkEditResponse.loading) {
+      if (bulkEditResponse.loading || isSaving) {
         return t('curator.saveStatus.saving');
       }
       if (bulkEditResponse.error) {
@@ -133,9 +133,9 @@ const BulkEditView = ({
             picture={combinedPicture}
             pictureIds={pictureIds}
             onSave={onSave}
-            topInfo={anyFieldTouched => (
+            topInfo={(anyFieldTouched, isSaving) => (
               <div className='curator-ops'>
-                <span className='save-state'>{saveStatus(anyFieldTouched)}</span>
+                <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
               </div>
             )}
           />
