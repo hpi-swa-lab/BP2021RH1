@@ -8,6 +8,7 @@ import ScrollContainer from './ScrollContainer';
 import { PictureFiltersInput, useGetPicturesQuery } from '../../graphql/APIConnector';
 import hashCode from '../../helpers/hash-code';
 import { FlatPicture } from '../../types/additionalFlatTypes';
+import { useTranslation } from 'react-i18next';
 
 interface CarouselProps {
   title: string;
@@ -18,6 +19,8 @@ interface CarouselProps {
 }
 
 const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselProps) => {
+  const { t } = useTranslation();
+
   const calculateMaxPicturesPerRow = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
@@ -95,7 +98,7 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
             className='carousel-show-more-button'
             endIcon={<ArrowForwardIosIcon />}
           >
-            Mehr Anzeigen
+            {t('common.showMore')}
           </Button>
         </div>
       )}

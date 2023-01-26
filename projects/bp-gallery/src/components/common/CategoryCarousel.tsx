@@ -12,6 +12,7 @@ import {
 } from '../../graphql/APIConnector';
 import DecadesList from '../views/search/DecadesList';
 import TagList from '../views/search/TagList';
+import { useTranslation } from 'react-i18next';
 
 interface CategoryCarouselProps {
   title?: string;
@@ -34,6 +35,8 @@ const CategoryCarousel = ({
   seperator,
   archiveId = '0',
 }: CategoryCarouselProps) => {
+  const { t } = useTranslation();
+
   const basePath = '/show-more/' + archiveId + '/' + type + '/';
 
   const calculateMaxCategoriesPerRow = () => {
@@ -90,7 +93,7 @@ const CategoryCarousel = ({
               className='carousel-show-more-button'
               endIcon={<ArrowForwardIosIcon />}
             >
-              Mehr Anzeigen
+              {t('common.showMore')}
             </Button>
           )}
         </div>
