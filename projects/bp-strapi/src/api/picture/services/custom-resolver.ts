@@ -273,6 +273,6 @@ const findPicturesByAllSearch = async (
   return preparePictureDataForFrontend(matchingPictures, mediaFilesForPictures);
 };
 
-import { updatePictureWithTagCleanup, bulkEdit } from "./custom-update";
+import { updatePictureWithTagCleanup, bulkEdit, like } from "./custom-update";
 
-export { findPicturesByAllSearch, updatePictureWithTagCleanup, bulkEdit };
+export { findPicturesByAllSearch, updatePictureWithTagCleanup, bulkEdit, like };

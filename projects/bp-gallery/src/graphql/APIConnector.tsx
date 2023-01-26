@@ -98,6 +98,7 @@ export type BooleanFilterInput = {
   containsi?: InputMaybe<Scalars['Boolean']>;
   endsWith?: InputMaybe<Scalars['Boolean']>;
   eq?: InputMaybe<Scalars['Boolean']>;
+  eqi?: InputMaybe<Scalars['Boolean']>;
   gt?: InputMaybe<Scalars['Boolean']>;
   gte?: InputMaybe<Scalars['Boolean']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']>>>;
@@ -288,6 +289,14 @@ export type ComponentLocationCoordinates = {
   longitude: Scalars['Float'];
 };
 
+export type ComponentLocationCoordinatesFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ComponentLocationCoordinatesFiltersInput>>>;
+  latitude?: InputMaybe<FloatFilterInput>;
+  longitude?: InputMaybe<FloatFilterInput>;
+  not?: InputMaybe<ComponentLocationCoordinatesFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ComponentLocationCoordinatesFiltersInput>>>;
+};
+
 export type ComponentLocationCoordinatesInput = {
   id?: InputMaybe<Scalars['ID']>;
   latitude?: InputMaybe<Scalars['Float']>;
@@ -301,6 +310,7 @@ export type DateTimeFilterInput = {
   containsi?: InputMaybe<Scalars['DateTime']>;
   endsWith?: InputMaybe<Scalars['DateTime']>;
   eq?: InputMaybe<Scalars['DateTime']>;
+  eqi?: InputMaybe<Scalars['DateTime']>;
   gt?: InputMaybe<Scalars['DateTime']>;
   gte?: InputMaybe<Scalars['DateTime']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
@@ -381,6 +391,7 @@ export type FloatFilterInput = {
   containsi?: InputMaybe<Scalars['Float']>;
   endsWith?: InputMaybe<Scalars['Float']>;
   eq?: InputMaybe<Scalars['Float']>;
+  eqi?: InputMaybe<Scalars['Float']>;
   gt?: InputMaybe<Scalars['Float']>;
   gte?: InputMaybe<Scalars['Float']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
@@ -412,6 +423,7 @@ export type GenericMorph =
   | Picture
   | TimeRangeTag
   | UploadFile
+  | UploadFolder
   | UsersPermissionsPermission
   | UsersPermissionsRole
   | UsersPermissionsUser;
@@ -423,6 +435,7 @@ export type IdFilterInput = {
   containsi?: InputMaybe<Scalars['ID']>;
   endsWith?: InputMaybe<Scalars['ID']>;
   eq?: InputMaybe<Scalars['ID']>;
+  eqi?: InputMaybe<Scalars['ID']>;
   gt?: InputMaybe<Scalars['ID']>;
   gte?: InputMaybe<Scalars['ID']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -446,6 +459,7 @@ export type IntFilterInput = {
   containsi?: InputMaybe<Scalars['Int']>;
   endsWith?: InputMaybe<Scalars['Int']>;
   eq?: InputMaybe<Scalars['Int']>;
+  eqi?: InputMaybe<Scalars['Int']>;
   gt?: InputMaybe<Scalars['Int']>;
   gte?: InputMaybe<Scalars['Int']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
@@ -469,6 +483,7 @@ export type JsonFilterInput = {
   containsi?: InputMaybe<Scalars['JSON']>;
   endsWith?: InputMaybe<Scalars['JSON']>;
   eq?: InputMaybe<Scalars['JSON']>;
+  eqi?: InputMaybe<Scalars['JSON']>;
   gt?: InputMaybe<Scalars['JSON']>;
   gte?: InputMaybe<Scalars['JSON']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
@@ -537,6 +552,7 @@ export type KeywordTagFiltersInput = {
   not?: InputMaybe<KeywordTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
   visible?: InputMaybe<BooleanFilterInput>;
@@ -645,12 +661,14 @@ export type LocationTagEntityResponseCollection = {
 
 export type LocationTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  coordinates?: InputMaybe<ComponentLocationCoordinatesFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<LocationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
   visible?: InputMaybe<BooleanFilterInput>;
@@ -670,6 +688,8 @@ export type LocationTagRelationResponseCollection = {
 };
 
 export type Mutation = {
+  /** Change user password. Confirm with the current password. */
+  changePassword?: Maybe<UsersPermissionsLoginPayload>;
   createArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   createCollection?: Maybe<CollectionEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
@@ -681,6 +701,7 @@ export type Mutation = {
   createPicture?: Maybe<PictureEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
+  createUploadFolder?: Maybe<UploadFolderEntityResponse>;
   /** Create a new role */
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
   /** Create a new user */
@@ -697,11 +718,13 @@ export type Mutation = {
   deletePicture?: Maybe<PictureEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
+  deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
   /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
   /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   doBulkEdit?: Maybe<Scalars['Int']>;
+  doLike?: Maybe<Scalars['Int']>;
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
   /** Request a reset password token */
@@ -731,11 +754,18 @@ export type Mutation = {
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
+  updateUploadFolder?: Maybe<UploadFolderEntityResponse>;
   /** Update an existing role */
   updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>;
   /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
+};
+
+export type MutationChangePasswordArgs = {
+  currentPassword: Scalars['String'];
+  password: Scalars['String'];
+  passwordConfirmation: Scalars['String'];
 };
 
 export type MutationCreateArchiveTagArgs = {
@@ -780,6 +810,10 @@ export type MutationCreateTimeRangeTagArgs = {
 
 export type MutationCreateUploadFileArgs = {
   data: UploadFileInput;
+};
+
+export type MutationCreateUploadFolderArgs = {
+  data: UploadFolderInput;
 };
 
 export type MutationCreateUsersPermissionsRoleArgs = {
@@ -834,6 +868,10 @@ export type MutationDeleteUploadFileArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationDeleteUploadFolderArgs = {
+  id: Scalars['ID'];
+};
+
 export type MutationDeleteUsersPermissionsRoleArgs = {
   id: Scalars['ID'];
 };
@@ -845,6 +883,11 @@ export type MutationDeleteUsersPermissionsUserArgs = {
 export type MutationDoBulkEditArgs = {
   data?: InputMaybe<Scalars['JSON']>;
   ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+};
+
+export type MutationDoLikeArgs = {
+  dislike?: InputMaybe<Scalars['Boolean']>;
+  pictureId?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationEmailConfirmationArgs = {
@@ -969,6 +1012,11 @@ export type MutationUpdateUploadFileArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationUpdateUploadFolderArgs = {
+  data: UploadFolderInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdateUsersPermissionsRoleArgs = {
   data: UsersPermissionsRoleInput;
   id: Scalars['ID'];
@@ -1052,6 +1100,7 @@ export type PersonTagFiltersInput = {
   not?: InputMaybe<PersonTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PersonTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
@@ -1075,6 +1124,7 @@ export type Picture = {
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
+  likes?: Maybe<Scalars['Int']>;
   location_tags?: Maybe<LocationTagRelationResponseCollection>;
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
@@ -1169,6 +1219,7 @@ export type PictureFiltersInput = {
   descriptions?: InputMaybe<DescriptionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
+  likes?: InputMaybe<IntFilterInput>;
   location_tags?: InputMaybe<LocationTagFiltersInput>;
   not?: InputMaybe<PictureFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
@@ -1190,6 +1241,7 @@ export type PictureInput = {
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  likes?: InputMaybe<Scalars['Int']>;
   location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1237,6 +1289,8 @@ export type Query = {
   timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
   uploadFile?: Maybe<UploadFileEntityResponse>;
   uploadFiles?: Maybe<UploadFileEntityResponseCollection>;
+  uploadFolder?: Maybe<UploadFolderEntityResponse>;
+  uploadFolders?: Maybe<UploadFolderEntityResponseCollection>;
   usersPermissionsRole?: Maybe<UsersPermissionsRoleEntityResponse>;
   usersPermissionsRoles?: Maybe<UsersPermissionsRoleEntityResponseCollection>;
   usersPermissionsUser?: Maybe<UsersPermissionsUserEntityResponse>;
@@ -1367,6 +1421,16 @@ export type QueryUploadFilesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type QueryUploadFolderArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryUploadFoldersArgs = {
+  filters?: InputMaybe<UploadFolderFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type QueryUsersPermissionsRoleArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -1398,6 +1462,7 @@ export type StringFilterInput = {
   containsi?: InputMaybe<Scalars['String']>;
   endsWith?: InputMaybe<Scalars['String']>;
   eq?: InputMaybe<Scalars['String']>;
+  eqi?: InputMaybe<Scalars['String']>;
   gt?: InputMaybe<Scalars['String']>;
   gte?: InputMaybe<Scalars['String']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1511,6 +1576,8 @@ export type UploadFileFiltersInput = {
   caption?: InputMaybe<StringFilterInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   ext?: InputMaybe<StringFilterInput>;
+  folder?: InputMaybe<UploadFolderFiltersInput>;
+  folderPath?: InputMaybe<StringFilterInput>;
   formats?: InputMaybe<JsonFilterInput>;
   hash?: InputMaybe<StringFilterInput>;
   height?: InputMaybe<IntFilterInput>;
@@ -1532,6 +1599,8 @@ export type UploadFileInput = {
   alternativeText?: InputMaybe<Scalars['String']>;
   caption?: InputMaybe<Scalars['String']>;
   ext?: InputMaybe<Scalars['String']>;
+  folder?: InputMaybe<Scalars['ID']>;
+  folderPath?: InputMaybe<Scalars['String']>;
   formats?: InputMaybe<Scalars['JSON']>;
   hash?: InputMaybe<Scalars['String']>;
   height?: InputMaybe<Scalars['Int']>;
@@ -1543,6 +1612,75 @@ export type UploadFileInput = {
   size?: InputMaybe<Scalars['Float']>;
   url?: InputMaybe<Scalars['String']>;
   width?: InputMaybe<Scalars['Int']>;
+};
+
+export type UploadFileRelationResponseCollection = {
+  data: Array<UploadFileEntity>;
+};
+
+export type UploadFolder = {
+  children?: Maybe<UploadFolderRelationResponseCollection>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  files?: Maybe<UploadFileRelationResponseCollection>;
+  name: Scalars['String'];
+  parent?: Maybe<UploadFolderEntityResponse>;
+  path: Scalars['String'];
+  pathId: Scalars['Int'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type UploadFolderChildrenArgs = {
+  filters?: InputMaybe<UploadFolderFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type UploadFolderFilesArgs = {
+  filters?: InputMaybe<UploadFileFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type UploadFolderEntity = {
+  attributes?: Maybe<UploadFolder>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type UploadFolderEntityResponse = {
+  data?: Maybe<UploadFolderEntity>;
+};
+
+export type UploadFolderEntityResponseCollection = {
+  data: Array<UploadFolderEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type UploadFolderFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<UploadFolderFiltersInput>>>;
+  children?: InputMaybe<UploadFolderFiltersInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  files?: InputMaybe<UploadFileFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<UploadFolderFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<UploadFolderFiltersInput>>>;
+  parent?: InputMaybe<UploadFolderFiltersInput>;
+  path?: InputMaybe<StringFilterInput>;
+  pathId?: InputMaybe<IntFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type UploadFolderInput = {
+  children?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  files?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  name?: InputMaybe<Scalars['String']>;
+  parent?: InputMaybe<Scalars['ID']>;
+  path?: InputMaybe<Scalars['String']>;
+  pathId?: InputMaybe<Scalars['Int']>;
+};
+
+export type UploadFolderRelationResponseCollection = {
+  data: Array<UploadFolderEntity>;
 };
 
 export type UsersPermissionsCreateRolePayload = {
@@ -1842,6 +1980,7 @@ export type GetPictureInfoQuery = {
               id?: string | null | undefined;
               attributes?:
                 | {
+                    likes?: number | null | undefined;
                     descriptions?:
                       | {
                           data: Array<{
@@ -2394,6 +2533,13 @@ export type GetRootCollectionQuery = {
     | null
     | undefined;
 };
+
+export type LikeMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+  dislike?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type LikeMutation = { doLike?: number | null | undefined };
 
 export type PostCommentMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -3575,6 +3721,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
+          likes
         }
       }
     }
@@ -4206,6 +4353,45 @@ export type GetRootCollectionQueryResult = Apollo.QueryResult<
   GetRootCollectionQuery,
   GetRootCollectionQueryVariables
 >;
+
+export const LikeDocument = gql`
+  mutation like($pictureId: ID!, $dislike: Boolean) {
+    doLike(pictureId: $pictureId, dislike: $dislike)
+  }
+`;
+
+export type LikeMutationFn = Apollo.MutationFunction<LikeMutation, LikeMutationVariables>;
+
+/**
+ * __useLikeMutation__
+ *
+ * To run a mutation, you first call `useLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likeMutation, { data, loading, error }] = useLikeMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *      dislike: // value for 'dislike'
+ *   },
+ * });
+ */
+export function useLikeMutation(
+  baseOptions?: Apollo.MutationHookOptions<LikeMutation, LikeMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LikeMutation, LikeMutationVariables>(LikeDocument, options);
+}
+
+export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
+
+export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
+
+export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
 
 export const PostCommentDocument = gql`
   mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {

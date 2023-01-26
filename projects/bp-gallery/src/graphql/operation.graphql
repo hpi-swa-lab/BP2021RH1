@@ -436,7 +436,7 @@ query getRootCollection {
 }
 
 mutation like($pictureId: ID!, $dislike: Boolean) {
-  doLike(pictureId: $pictureID, dislike: $dislike)
+  doLike(pictureId: $pictureId, dislike: $dislike)
 }
 
 mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
