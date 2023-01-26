@@ -18,7 +18,6 @@ import {
   Thumbnail,
 } from '../../../types/additionalFlatTypes';
 import CategoryCarousel from '../../common/CategoryCarousel';
-import Loading from '../../common/Loading';
 import { PicturePreviewAdornment } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
@@ -154,8 +153,6 @@ const ShowMoreView = ({
 
   if (error || tagInfo.error) {
     return <QueryErrorDisplay error={error ? error : tagInfo.error!} />;
-  } else if (loading || tagInfo.loading) {
-    return <Loading />;
   } else if (categoryType === 'pictures') {
     if (categoryId && collectionsInfo && collectionsInfo.collections.length > 0) {
       return (
@@ -255,7 +252,7 @@ const ShowMoreView = ({
               type={categoryType as TagType}
               queryParams={
                 archiveId === '0'
-                  ? { visible: { eq: true } }
+                  ? { visible: { eq: true }, id: { not: { eq: '-1' } } }
                   : {
                       and: [
                         { visible: { eq: true } },
