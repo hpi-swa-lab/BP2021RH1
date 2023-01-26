@@ -217,6 +217,10 @@
   min-height: fit-content;
 }
 
+.w-2 {
+  width: 0.5rem;
+}
+
 .w-max {
   width: -webkit-max-content;
   width: max-content;
@@ -240,16 +244,8 @@
   flex-direction: row;
 }
 
-.flex-col {
-  flex-direction: column;
-}
-
 .place-items-center {
   place-items: center;
-}
-
-.justify-center {
-  justify-content: center;
 }
 
 .gap-1 {
@@ -267,11 +263,6 @@
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
-}
-
-.text-black {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .filter {

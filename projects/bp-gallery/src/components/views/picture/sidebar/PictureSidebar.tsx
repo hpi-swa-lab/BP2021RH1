@@ -28,7 +28,6 @@ const PictureSidebar = ({
   const { t } = useTranslation();
   const { sideBarOpen } = useContext(PictureViewContext);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
     refetchQueries: ['getPictureInfo'],
   });
@@ -92,7 +91,11 @@ const PictureSidebar = ({
               )
             }
           />
-          <CommentsContainer comments={picture.comments} pictureId={picture.id} />
+          <CommentsContainer
+            comments={picture.comments}
+            pictureId={picture.id}
+            likeCount={picture.likes || 0}
+          />
         </>
       )}
       <PictureViewNavigationBar />
