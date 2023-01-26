@@ -64,21 +64,25 @@ describe('picture uploading and tagging', () => {
 
     cy.contains('.field-content', 'Personen').find('input').click();
     cy.contains('.field-content', 'Personen').find('input').clear();
+    cy.get('.MuiAutocomplete-popper');
     cy.contains('.field-content', 'Personen').find('input').type('TestPerson');
     cy.contains('TestPerson hinzufügen').click();
 
     cy.contains('.field-content', 'Orte').find('input').click();
     cy.contains('.field-content', 'Orte').find('input').clear();
+    cy.get('.MuiAutocomplete-popper');
     cy.contains('.field-content', 'Orte').find('input').type('TestOrt');
     cy.contains('TestOrt hinzufügen').click();
 
     cy.contains('.field-content', 'Schlagworte').find('input').click();
     cy.contains('.field-content', 'Schlagworte').find('input').clear();
+    cy.get('.MuiAutocomplete-popper');
     cy.contains('.field-content', 'Schlagworte').find('input').type('TestSchlagwort');
     cy.contains('TestSchlagwort hinzufügen').click();
 
     cy.contains('.field-content', 'Collections').find('input').click();
     cy.contains('.field-content', 'Collections').find('input').clear();
+    cy.get('.MuiAutocomplete-popper');
     cy.contains('.field-content', 'Collections').find('input').type('TestCollection{enter}');
   });
 
