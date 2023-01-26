@@ -38,17 +38,24 @@ const ShowMoreView = ({
   const { role } = useAuth();
   const { t } = useTranslation();
 
+  const getShowMoreHeader = () => t('show-more.' + categoryType + '-title');
+  const getShowMoreText = () => t('show-more.' + categoryType + '-text');
+
   const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } =
     useBulkOperations();
 
   const archiveQueryResult = useGetArchiveQuery({ variables: { archiveId } });
+
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(
     archiveQueryResult.data
   )?.archiveTag;
+
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
+
   const [updateArchive] = useUpdateArchiveMutation({
     refetchQueries: ['getArchive'],
   });
+
   const showcaseAdornment: PicturePreviewAdornment = {
     position: 'top-left',
     icon: picture =>
@@ -67,10 +74,6 @@ const ShowMoreView = ({
     },
   };
 
-  let categoryType2 = TagType.LOCATION;
-  let headerName = '';
-  let description = '';
-
   const { data, loading, error, fetchMore } = useGetCollectionInfoByNameQuery({
     variables: {
       collectionName: categoryId ? categoryId : '',
@@ -79,34 +82,7 @@ const ShowMoreView = ({
 
   const collectionsInfo = useSimplifiedQueryResponseData(data);
 
-  switch (categoryType) {
-    case 'date': {
-      categoryType2 = TagType.TIME_RANGE;
-      headerName = 'Jahrzehnte';
-      description = 'Hier finden sie alle Bilder unseres Archivs aus bestimmten Jahrzehnten.';
-      break;
-    }
-    case 'keyword': {
-      categoryType2 = TagType.KEYWORD;
-      headerName = 'Unsere Kategorien';
-      description = 'Hier finden sie alle thematischen Kategorien unseres Archivs.';
-      break;
-    }
-    case 'person': {
-      categoryType2 = TagType.PERSON;
-      headerName = 'Personen';
-      description = 'Hier finden sie alle Personen in unserem Archiv.';
-      break;
-    }
-    case 'location':
-    default: {
-      categoryType2 = TagType.LOCATION;
-      headerName = 'Orte';
-      description = 'Hier finden sie alle Orte in unserem Archiv.';
-    }
-  }
-
-  const { tagsWithThumbnailQuery } = useGenericTagEndpoints(categoryType2);
+  const { tagsWithThumbnailQuery } = useGenericTagEndpoints(categoryType as TagType);
 
   const tagInfo = tagsWithThumbnailQuery({
     variables: {
@@ -133,61 +109,47 @@ const ShowMoreView = ({
     categoryType === 'date' && categoryId ? buildDecadeFilter(categoryId) ?? {} : {};
 
   const categoryQueryParams = () => {
+    let queryFilter;
     switch (categoryType) {
       case 'date': {
-        return archiveId === '0'
-          ? decadeFilter
-          : ({
-              archive_tag: { id: { eq: archiveId } },
-              and: decadeFilter,
-            } as PictureFiltersInput);
+        queryFilter = decadeFilter;
+        break;
       }
       case 'keyword': {
-        return archiveId === '0'
-          ? { verified_keyword_tags: { id: { eq: categoryId } } }
-          : {
-              and: [
-                { archive_tag: { id: { eq: archiveId } } },
-                {
-                  or: [
-                    { verified_keyword_tags: { id: { eq: categoryId } } },
-                    { keyword_tags: { id: { eq: categoryId } } },
-                  ],
-                },
-              ],
-            };
+        queryFilter = {
+          or: [
+            { verified_keyword_tags: { id: { eq: categoryId } } },
+            { keyword_tags: { id: { eq: categoryId } } },
+          ],
+        };
+        break;
       }
       case 'person': {
-        return archiveId === '0'
-          ? { verified_person_tags: { id: { eq: categoryId } } }
-          : {
-              and: [
-                { archive_tag: { id: { eq: archiveId } } },
-                {
-                  or: [
-                    { verified_person_tags: { id: { eq: categoryId } } },
-                    { person_tags: { id: { eq: categoryId } } },
-                  ],
-                },
-              ],
-            };
+        queryFilter = {
+          or: [
+            { verified_person_tags: { id: { eq: categoryId } } },
+            { person_tags: { id: { eq: categoryId } } },
+          ],
+        };
+        break;
       }
       case 'location':
       default:
-        return archiveId === '0'
-          ? { verified_location_tags: { id: { eq: categoryId } } }
-          : {
-              and: [
-                { archive_tag: { id: { eq: archiveId } } },
-                {
-                  or: [
-                    { verified_location_tags: { id: { eq: categoryId } } },
-                    { location_tags: { id: { eq: categoryId } } },
-                  ],
-                },
-              ],
-            };
+        queryFilter = {
+          or: [
+            { verified_location_tags: { id: { eq: categoryId } } },
+            { location_tags: { id: { eq: categoryId } } },
+          ],
+        };
+        break;
     }
+
+    return archiveId === '0'
+      ? queryFilter
+      : ({
+          archive_tag: { id: { eq: archiveId } },
+          and: queryFilter,
+        } as PictureFiltersInput);
   };
 
   if (categoryType === 'pictures') {
@@ -215,7 +177,6 @@ const ShowMoreView = ({
                 scrollPos={scrollPos}
                 scrollHeight={scrollHeight}
                 hashbase={'show-more'}
-                //uploadAreaProps={uploadAreaProps(collection)}
                 extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
                 bulkOperations={[
                   removeFromCollection,
@@ -233,21 +194,18 @@ const ShowMoreView = ({
         <ScrollContainer>
           {(scrollPos: number, scrollHeight: number) => (
             <div className='show-more-container'>
-              <h2>Unsere Bilder</h2>
-              <div className='show-more-description'>
-                Hier finden sie alle Bilder unseres Archivs.
-              </div>
+              <h2>{getShowMoreHeader()}</h2>
+              <div className='show-more-description'>{getShowMoreText()}</div>
               <PictureScrollGrid
                 queryParams={
                   archiveId === '0'
-                    ? { id: { not: { eq: '-1' } } }
+                    ? { id: { not: { eq: '-1' } } } // make sure all images get fetched
                     : { archive_tag: { id: { eq: archiveId } } }
                 }
                 scrollPos={scrollPos}
                 scrollHeight={scrollHeight}
                 hashbase={'show-more'}
                 extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
-                //uploadAreaProps={uploadAreaProps(collection)}
                 bulkOperations={[
                   removeFromCollection,
                   linkToCollection,
@@ -269,8 +227,8 @@ const ShowMoreView = ({
               <h2>
                 {categoryType === 'date'
                   ? categoryId === '4'
-                    ? 'Früher'
-                    : `19${categoryId}0er`
+                    ? t('common.past')
+                    : t('show-more.x0s', { decade: categoryId })
                   : flattenedTags[0].name}
               </h2>
             )}
@@ -280,7 +238,6 @@ const ShowMoreView = ({
               scrollHeight={scrollHeight}
               hashbase={'show-more'}
               extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
-              //uploadAreaProps={uploadAreaProps(collection)}
               bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
             />
           </div>
@@ -292,10 +249,10 @@ const ShowMoreView = ({
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='show-more-container'>
-            <h2>{headerName}</h2>
-            <div className='show-more-description'>{description}</div>
+            <h2>{getShowMoreHeader()}</h2>
+            <div className='show-more-description'>{getShowMoreText()}</div>
             <CategoryCarousel
-              type={categoryType2}
+              type={categoryType as TagType}
               queryParams={
                 archiveId === '0'
                   ? { visible: { eq: true } }
@@ -316,14 +273,13 @@ const ShowMoreView = ({
             <PictureScrollGrid
               queryParams={
                 archiveId === '0'
-                  ? { id: { not: { eq: '-1' } } }
+                  ? { id: { not: { eq: '-1' } } } // make sure all images get fetched
                   : { archive_tag: { id: { eq: archiveId } } }
               }
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={'show-more'}
               extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
-              //uploadAreaProps={uploadAreaProps(collection)}
               bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
             />
           </div>
