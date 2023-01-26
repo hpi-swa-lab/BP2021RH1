@@ -55,6 +55,7 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.E2E_DB_PASSWORD }}
       - name: Store screenshots and videos
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: screenshots-and-videos
