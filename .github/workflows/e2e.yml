@@ -3,14 +3,13 @@ name: End-to-end test
 on:
   pull_request:
     types:
-        - opened
-        - ready_for_review
-        - synchronize
+      - opened
+      - ready_for_review
+      - synchronize
     branches:
-        - main
-        - staging
+      - main
+      - staging
   workflow_dispatch:
-
 
 jobs:
   run_e2e_tests:
@@ -38,22 +37,27 @@ jobs:
         node-version: [16.x]
 
     steps:
-        - name: Checkout repository
-          uses: actions/checkout@v2
-        - name: Setup Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v2
-          with:
-            node-version: ${{ matrix.node-version }}
-        - name: Install strapi dependencies
-          run: yarn install --frozen-lockfile
-        - name: Install bp-gallery dependencies
-          run: |
-            cd ../bp-gallery
-            yarn install --frozen-lockfile
-            cd ../bp-strapi
-        - name: Run E2E script
-          run: ./e2e/setup.sh
-          env:
-            PGPASSWORD: ${{ secrets.E2E_DB_PASSWORD }}
-
-
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install strapi dependencies
+        run: yarn install --frozen-lockfile
+      - name: Install bp-gallery dependencies
+        run: |
+          cd ../bp-gallery
+          yarn install --frozen-lockfile
+          cd ../bp-strapi
+      - name: Run E2E script
+        run: ./e2e/setup.sh
+        env:
+          PGPASSWORD: ${{ secrets.E2E_DB_PASSWORD }}
+      - name: Store screenshots and videos
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots-and-videos
+          path: |
+            ../bp-gallery/cypress/screenshots/**/*
+            ../bp-gallery/cypress/videos/**/*
