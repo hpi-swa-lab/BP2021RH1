@@ -435,6 +435,10 @@ query getRootCollection {
   }
 }
 
+mutation like($pictureId: ID!, $dislike: Boolean) {
+  doLike(pictureId: $pictureID, dislike: $dislike)
+}
+
 mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
   createComment(
     data: { author: $author, text: $text, date: $date, picture: $id, publishedAt: null }
