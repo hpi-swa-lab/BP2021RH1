@@ -131,6 +131,7 @@ const BulkEditView = ({
         <div className='bulk-edit-picture-info'>
           <PictureInfo
             picture={combinedPicture}
+            pictureIds={pictureIds}
             onSave={onSave}
             topInfo={anyFieldTouched => (
               <div className='curator-ops'>

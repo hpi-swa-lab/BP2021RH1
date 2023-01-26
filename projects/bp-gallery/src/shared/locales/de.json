@@ -136,7 +136,10 @@
     "links": {
       "pictures": {
         "label": "Verlinkte Bilder",
-        "copy": "Aktuelles Bild kopieren",
+        "copy": {
+          "single": "Aktuelles Bild kopieren",
+          "multiple": "Aktuelle Bilder kopieren"
+        },
         "paste": {
           "single": "Ein kopiertes Bild einfügen",
           "multiple": "{{count}} kopierte Bilder einfügen"
@@ -144,7 +147,10 @@
       },
       "texts": {
         "label": "Verlinkte Texte",
-        "copy": "Aktuellen Text kopieren",
+        "copy": {
+          "single": "Aktuellen Text kopieren",
+          "multiple": "Aktuelle Texte kopieren"
+        },
         "paste": {
           "single": "Einen kopierten Text einfügen",
           "multiple": "{{count}} kopierte Texte einfügen"

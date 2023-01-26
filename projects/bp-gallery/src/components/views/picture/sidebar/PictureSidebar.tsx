@@ -76,6 +76,7 @@ const PictureSidebar = ({
         <>
           <PictureInfo
             picture={picture}
+            pictureIds={[picture.id]}
             onSave={onSave}
             topInfo={anyFieldTouched =>
               role >= AuthRole.CURATOR && (

@@ -44,10 +44,12 @@ export type Field = Pick<
 
 const PictureInfo = ({
   picture,
+  pictureIds,
   onSave,
   topInfo,
 }: {
   picture: FlatPicture;
+  pictureIds: string[];
   onSave: (field: Field) => void;
   topInfo?: (anyFieldTouched: boolean) => ReactNode;
 }) => {
@@ -152,9 +154,9 @@ const PictureInfo = ({
   const copyToClipboard = useCallback(() => {
     setClipboardData(data => ({
       ...data,
-      pictureIds: union(data.pictureIds, [picture.id]),
+      pictureIds: union(data.pictureIds, pictureIds),
     }));
-  }, [setClipboardData, picture.id]);
+  }, [setClipboardData, pictureIds]);
 
   const pasteFromClipboard = useCallback(() => {
     savePictureInfo({
@@ -297,7 +299,11 @@ const PictureInfo = ({
                 variant='contained'
                 onClick={copyToClipboard}
               >
-                {t(`pictureFields.links.${pictureType}.copy`)}
+                {t(
+                  `pictureFields.links.${pictureType}.copy.${
+                    pictureIds.length > 1 ? 'multiple' : 'single'
+                  }`
+                )}
               </Button>
             </ClipboardEditorButtons>
           )}
