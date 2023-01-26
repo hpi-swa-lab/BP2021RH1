@@ -8,7 +8,7 @@ const LikeButton = ({ pictureId, likeCount }: { pictureId: string; likeCount: nu
 
   if (!localStorage.getItem('likes')) localStorage.setItem('likes', JSON.stringify([]));
   const [likedPictures, setLikedPictures] = useState<string[]>(
-    JSON.parse(localStorage.getItem('likes') || '[]')
+    JSON.parse(localStorage.getItem('likes') ?? '[]')
   );
 
   const [isLiked, setIsLiked] = useState<boolean>(
