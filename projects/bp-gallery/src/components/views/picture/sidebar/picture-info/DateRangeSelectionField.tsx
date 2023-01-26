@@ -59,7 +59,7 @@ const DateRangeSelectionField = ({
     setAnchorElement(anchor);
   };
 
-  const handleChange = () => {
+  const handleCheckBoxChange = () => {
     onTouch();
     setTimeRange(oldTimeRange => {
       const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
@@ -116,7 +116,7 @@ const DateRangeSelectionField = ({
         >
           <div className='date-range-picker'>
             <label>
-              <Checkbox checked={timeRange?.isEstimate ?? false} onChange={handleChange} />
+              <Checkbox checked={timeRange?.isEstimate ?? false} onChange={handleCheckBoxChange} />
               {`${t('pictureFields.around')}`}
             </label>
             <DateRangePicker
