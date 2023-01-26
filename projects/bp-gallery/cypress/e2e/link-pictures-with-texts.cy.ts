@@ -37,6 +37,8 @@ describe('link pictures with texts', () => {
 
   it('clipboard is cleared in new session', () => {
     cy.window().then(window => window.sessionStorage.clear());
+    cy.visit('/');
+    login();
     cy.visit('/picture/1');
     cy.get('.clipboard-editor-open').click();
     cy.contains('.clipboard-editor', 'Keine Bilder');
