@@ -18,10 +18,11 @@ import {
   Thumbnail,
 } from '../../../types/additionalFlatTypes';
 import CategoryCarousel from '../../common/CategoryCarousel';
+import Loading from '../../common/Loading';
 import { PicturePreviewAdornment } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
-import { useAuth } from '../../provider/AuthProvider';
 import CollectionDescription from '../browse/CollectionDescription';
 import { buildDecadeFilter } from '../search/helpers/search-filters';
 import './ShowMoreView.scss';
@@ -35,7 +36,6 @@ const ShowMoreView = ({
   categoryType: string;
   categoryId?: string;
 }) => {
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const getShowMoreHeader = () => t('show-more.' + categoryType + '-title');
@@ -152,19 +152,21 @@ const ShowMoreView = ({
         } as PictureFiltersInput);
   };
 
-  if (categoryType === 'pictures') {
-    if (categoryId) {
+  if (error || tagInfo.error) {
+    return <QueryErrorDisplay error={error ? error : tagInfo.error!} />;
+  } else if (loading || tagInfo.loading) {
+    return <Loading />;
+  } else if (categoryType === 'pictures') {
+    if (categoryId && collectionsInfo && collectionsInfo.collections.length > 0) {
       return (
         <ScrollContainer>
           {(scrollPos: number, scrollHeight: number) => (
             <div className='show-more-container'>
-              {collectionsInfo && (
-                <CollectionDescription
-                  id={collectionsInfo.collections[0].id}
-                  description={collectionsInfo.collections[0].description ?? ''}
-                  name={collectionsInfo.collections[0].name}
-                />
-              )}
+              <CollectionDescription
+                id={collectionsInfo.collections[0].id}
+                description={collectionsInfo.collections[0].description ?? ''}
+                name={collectionsInfo.collections[0].name}
+              />
               <PictureScrollGrid
                 queryParams={
                   archiveId === '0'
@@ -218,20 +220,18 @@ const ShowMoreView = ({
         </ScrollContainer>
       );
     }
-  } else if (categoryId) {
+  } else if (categoryId && flattenedTags && (categoryType === 'date' || flattenedTags.length > 0)) {
     return (
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='show-more-container'>
-            {flattenedTags && (
-              <h2>
-                {categoryType === 'date'
-                  ? categoryId === '4'
-                    ? t('common.past')
-                    : t('show-more.x0s', { decade: categoryId })
-                  : flattenedTags[0].name}
-              </h2>
-            )}
+            <h2>
+              {categoryType === 'date'
+                ? categoryId === '4'
+                  ? t('common.past')
+                  : t('show-more.x0s', { decade: categoryId })
+                : flattenedTags[0].name}
+            </h2>
             <PictureScrollGrid
               queryParams={categoryQueryParams()}
               scrollPos={scrollPos}
