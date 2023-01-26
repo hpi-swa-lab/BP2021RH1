@@ -12,7 +12,7 @@ import {
   useGetAllKeywordTagsLazyQuery,
   useGetAllLocationTagsLazyQuery,
   useGetAllPersonTagsLazyQuery,
-  useGetMultiplePictureInfoQuery,
+  useGetMultiplePictureInfoLazyQuery,
 } from '../../../../../graphql/APIConnector';
 import TagSelectionField from './TagSelectionField';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
@@ -121,15 +121,25 @@ const PictureInfo = ({
 
   const [clipboardData, setClipboardData] = useClipboard();
 
-  const {
-    data: clipboardPicturesData,
-    loading: clipboardPicturesLoading,
-    error: clipboardPicturesError,
-  } = useGetMultiplePictureInfoQuery({
-    variables: {
-      pictureIds: clipboardData.pictureIds,
+  const [
+    getClipboardPictureInfo,
+    {
+      data: clipboardPicturesData,
+      loading: clipboardPicturesLoading,
+      error: clipboardPicturesError,
     },
-  });
+  ] = useGetMultiplePictureInfoLazyQuery();
+
+  useEffect(() => {
+    if (role >= AuthRole.CURATOR) {
+      getClipboardPictureInfo({
+        variables: {
+          pictureIds: clipboardData.pictureIds,
+        },
+      });
+    }
+  }, [role, getClipboardPictureInfo, clipboardData.pictureIds]);
+
   const clipboardPictures: FlatPicture[] | undefined =
     useSimplifiedQueryResponseData(clipboardPicturesData)?.pictures;
 
