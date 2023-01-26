@@ -51,9 +51,7 @@ jobs:
           yarn install --frozen-lockfile
           cd ../bp-strapi
       - name: Run E2E script
-        run: |
-          ./e2e/setup.sh
-          cd ../bp-gallery
+        run: ./e2e/setup.sh
         env:
           PGPASSWORD: ${{ secrets.E2E_DB_PASSWORD }}
       - name: Store screenshots and videos
@@ -62,5 +60,5 @@ jobs:
         with:
           name: screenshots-and-videos
           path: |
-            cypress/screenshots/**/*
-            cypress/videos/**/*
+            projects/bp-gallery/cypress/screenshots/**/*
+            projects/bp-gallery/cypress/videos/**/*
