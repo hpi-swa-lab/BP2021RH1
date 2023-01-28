@@ -68,6 +68,12 @@ const DateRangeSelectionField = ({
     });
   };
 
+  const formatEstimate = () => {
+    return timeRange?.isEstimate
+      ? 'etwa ' + formatTimeStamp(timeRange)
+      : formatTimeStamp(timeRange);
+  };
+
   return (
     <>
       <div
@@ -84,11 +90,7 @@ const DateRangeSelectionField = ({
         }}
         tabIndex={0}
       >
-        {timeRange
-          ? timeRange.isEstimate
-            ? `${t('pictureFields.around')}` + formatTimeStamp(timeRange)
-            : formatTimeStamp(timeRange)
-          : `${t('pictureFields.noTime')}`}
+        {timeRange ? formatEstimate() : `${t('pictureFields.noTime')}`}
       </div>
       {role >= AuthRole.CURATOR && (
         <Popover
