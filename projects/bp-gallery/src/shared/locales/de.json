@@ -59,7 +59,8 @@
     "and": "und",
     "and-alternative": "sowie",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "daily-picture": "Bild des Tages"
   },
   "comment": {
     "name": "Name",
