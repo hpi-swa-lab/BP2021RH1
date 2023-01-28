@@ -101,7 +101,7 @@ const DailyPicture = () => {
         </>
       )}
 
-      {isFocussed && picture && (
+      {isFocused && picture && (
         <Portal container={root}>
           <PictureView
             initialPictureId={picture.id}
