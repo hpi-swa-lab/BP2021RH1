@@ -50,17 +50,17 @@ const DailyPicture = () => {
     '10838',
   ];
   const { t } = useTranslation();
-  const [isFocussed, setIsFocussed] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const navigateToPicture = useCallback(
     async (id: string) => {
       window.history.pushState({}, '', `/picture/${id}`);
       await zoomIntoPicture(`picture-preview-for-${id}`);
-      setIsFocussed(true);
+      setIsFocused(true);
     },
-    [setIsFocussed]
+    [setIsFocused]
   );
-  const weeklyPictureId = choosePictureId(pictureIds);
-  const { data } = useGetPictureInfoQuery({ variables: { pictureId: weeklyPictureId } });
+  const dailyPictureId= choosePictureId(pictureIds);
+  const { data } = useGetPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
@@ -106,7 +106,7 @@ const DailyPicture = () => {
           <PictureView
             initialPictureId={picture.id}
             onBack={async () => {
-              setIsFocussed(false);
+              setIsFocused(false);
               await zoomOutOfPicture(`picture-preview-for-${picture.id}`);
             }}
           />
