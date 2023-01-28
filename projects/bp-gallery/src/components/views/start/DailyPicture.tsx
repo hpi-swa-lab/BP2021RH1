@@ -13,7 +13,6 @@ import EventIcon from '@mui/icons-material/Event';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import Editor from '../../common/editor/Editor';
 import { FolderSpecial } from '@mui/icons-material';
-import { root } from '../../../index';
 import { asApiPath } from '../../App';
 
 const choosePictureId = (pictureIds: string[]) => {
@@ -25,6 +24,7 @@ const choosePictureId = (pictureIds: string[]) => {
 };
 
 const DailyPicture = () => {
+  const root = document.getElementById('root');
   //These are hard-coded until we implemented votes
   const pictureIds = [
     '2254',
@@ -59,7 +59,7 @@ const DailyPicture = () => {
     },
     [setIsFocused]
   );
-  const dailyPictureId= choosePictureId(pictureIds);
+  const dailyPictureId = choosePictureId(pictureIds);
   const { data } = useGetPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url
