@@ -16,7 +16,7 @@ function loadFromSessionStorage(): ClipboardData {
   return JSON.parse(item);
 }
 
-function storeIntosessionStorage(data: ClipboardData) {
+function storeIntoSessionStorage(data: ClipboardData) {
   sessionStorage.setItem(sessionStorageItemName, JSON.stringify(data));
 }
 
@@ -29,7 +29,7 @@ export const ClipboardProvider: React.FC = ({ children }) => {
   const [data, _] = state;
 
   useEffect(() => {
-    storeIntosessionStorage(data);
+    storeIntoSessionStorage(data);
   }, [data]);
 
   return <ClipboardContext.Provider value={state}>{children}</ClipboardContext.Provider>;
