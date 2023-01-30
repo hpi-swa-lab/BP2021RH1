@@ -21,7 +21,6 @@ describe('Comment', () => {
   after(() => {
     cy.visit('http://localhost:3000');
     login();
-    cy.contains('Logout');
     cy.visit('http://localhost:3000/picture/1');
     cy.contains('.comment-container', 'Testkommentar').contains('button', 'Löschen').click();
     cy.contains('button', 'Bestätigen').click();
