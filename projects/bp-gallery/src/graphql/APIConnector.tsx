@@ -1961,7 +1961,13 @@ export type GetPictureInfoQuery = {
                         | {
                             id?: string | null | undefined;
                             attributes?:
-                              | { url: string; updatedAt?: any | null | undefined }
+                              | {
+                                  width?: number | null | undefined;
+                                  height?: number | null | undefined;
+                                  formats?: any | null | undefined;
+                                  url: string;
+                                  updatedAt?: any | null | undefined;
+                                }
                               | null
                               | undefined;
                           }
@@ -3550,6 +3556,9 @@ export const GetPictureInfoDocument = gql`
             data {
               id
               attributes {
+                width
+                height
+                formats
                 url
                 updatedAt
               }
