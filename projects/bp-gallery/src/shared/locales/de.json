@@ -34,6 +34,7 @@
     "showPicture": "Vollbild",
     "showInfo": "Infos & Kommentare anzeigen",
     "close": "Schließen",
+    "checkingAuth": "Überprüfe Berechtigungen...",
     "browse-view": "Alle Bilder",
     "latest-pictures": "Neuzugänge im Archiv",
     "latest-pictures-info": "In diese Kollektion fließen die jeweils jüngsten 500 „Neuzugänge“ des Fotoarchivs ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
@@ -58,7 +59,8 @@
     "and": "und",
     "and-alternative": "sowie",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "daily-picture": "Bild des Tages"
   },
   "comment": {
     "name": "Name",
@@ -151,6 +153,11 @@
     "selectOption": "Option auswählen",
     "selectCollection": "Collection auswählen",
     "selectArchiveTag": "Archiv auswählen",
+    "showLocation": "Ort/e anzeigen",
+    "hideLocation": "Ort/e verstecken",
+    "showKeyword": "Schlagwort/e anzeigen",
+    "hideKeyword": "Schlagwort/e verstecken",
+    "visibility": "Sichtbarkeit",
     "saveStatus": {
       "saving": "Speichern...",
       "saved": "Gespeichert.",
