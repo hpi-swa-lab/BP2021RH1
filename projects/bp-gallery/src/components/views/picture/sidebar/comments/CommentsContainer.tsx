@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
@@ -24,6 +24,10 @@ const CommentsContainer = ({
   const { role } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
+
+  useEffect(() => {
+    setIsOpen(role < AuthRole.CURATOR);
+  }, [role]);
 
   const sortedComments = () => {
     return comments?.sort(
