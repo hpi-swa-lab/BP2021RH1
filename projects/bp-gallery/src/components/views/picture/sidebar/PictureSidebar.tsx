@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import './PictureSidebar.scss';
 import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import { ApolloError } from '@apollo/client';
@@ -64,6 +64,25 @@ const PictureSidebar = ({
 
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
+  // Memoization is important here: if this is not memoized,
+  // the following loop will sometimes trigger a continuous rerender
+  // of all involved components, resulting in a "maximum update
+  // depth exceeded" react error:
+  // - ClipboardEditor
+  // - PictureScrollGrid (if some pictures are copied)
+  // - PictureGrid
+  // - PictureView (if focused, i. e. the user clicked on a
+  //                picture preview inside the clipboard editor)
+  // - PictureSidebar
+  // - PictureInfo
+  // - LinkedInfoField
+  // In the LinkedInfoField, a useEffect, which sets the clipboard
+  // editor buttons, indirectly depends on pictureIds (via copyToClipboard).
+  // Thus, if pictureIds is not memoized, the useEffect triggers
+  // on every render and sets the clipboard editor buttons,
+  // which triggers a rerender of the ClipboardEditor, completing the loop.
+  const pictureIds = useMemo(() => (picture ? [picture.id] : []), [picture]);
+
   return (
     <div
       className={`picture-sidebar${!sideBarOpen ? ' closed' : ''}`}
@@ -76,7 +95,7 @@ const PictureSidebar = ({
         <>
           <PictureInfo
             picture={picture}
-            pictureIds={[picture.id]}
+            pictureIds={pictureIds}
             onSave={onSave}
             topInfo={(anyFieldTouched, isSaving) =>
               role >= AuthRole.CURATOR && (

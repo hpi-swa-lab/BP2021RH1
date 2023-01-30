@@ -7,7 +7,7 @@ import { useGetMultiplePictureInfoLazyQuery } from '../../../../../graphql/APICo
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
-import { ClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
+import { useSetClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../../../common/ScrollContainer';
@@ -148,6 +148,30 @@ const LinkedInfoField = ({
     });
   }, [dialog, t, removeAllLinks]);
 
+  const setClipboardEditorButtons = useSetClipboardEditorButtons();
+
+  useEffect(() => {
+    setClipboardEditorButtons?.(
+      shouldCopy && (
+        <Button
+          className='clipboard-button'
+          startIcon={<ContentCopy />}
+          variant='contained'
+          onClick={copyToClipboard}
+        >
+          {t(
+            `pictureFields.links.${pictureType}.copy.${
+              pictureIds.length > 1 ? 'multiple' : 'single'
+            }`
+          )}
+        </Button>
+      )
+    );
+    return () => {
+      setClipboardEditorButtons?.(null);
+    };
+  }, [setClipboardEditorButtons, shouldCopy, copyToClipboard, t, pictureType, pictureIds.length]);
+
   return (
     <>
       {role >= AuthRole.CURATOR && isText !== undefined && (
@@ -173,22 +197,6 @@ const LinkedInfoField = ({
           >
             {t('common.mark-as-text.label')}
           </CheckboxButton>
-          {shouldCopy && (
-            <ClipboardEditorButtons>
-              <Button
-                className='clipboard-button'
-                startIcon={<ContentCopy />}
-                variant='contained'
-                onClick={copyToClipboard}
-              >
-                {t(
-                  `pictureFields.links.${pictureType}.copy.${
-                    pictureIds.length > 1 ? 'multiple' : 'single'
-                  }`
-                )}
-              </Button>
-            </ClipboardEditorButtons>
-          )}
         </div>
       )}
       {(role >= AuthRole.CURATOR || Boolean(linked.collection?.length)) && isText !== undefined && (
