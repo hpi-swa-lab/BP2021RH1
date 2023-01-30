@@ -48,7 +48,7 @@ const CommentsContainer = ({
           <LikeButton pictureId={pictureId} likeCount={likeCount} />
           <div className={'flex grow'} onClick={() => setIsOpen(o => !o)}>
             <div className='grow' />
-            <div className='picture-comments-icon'>
+            <div className='picture-comments-icon mr-2'>
               {isOpen || badgeNumber === 0 ? (
                 <Icon>question_answer</Icon>
               ) : (
