@@ -33,9 +33,11 @@ const getPictureFilters = (pictures: string[]) => {
 const BulkEditView = ({
   pictureIds,
   onBack,
+  onSave,
 }: {
   pictureIds: string[];
   onBack?: (pictureIds: string[]) => void;
+  onSave?: (diff: PictureDiff) => void;
 }) => {
   const { t } = useTranslation();
 
@@ -72,8 +74,9 @@ const BulkEditView = ({
           data: diff,
         },
       });
+      onSave?.(diff);
     },
-    [bulkEdit, pictureIds]
+    [bulkEdit, pictureIds, onSave]
   );
 
   const saveStatus = useCallback(

@@ -15,15 +15,15 @@
   },
   "devDependencies": {
     "jest": "^28.1.0",
-    "sqlite3": "^5.0.8",
+    "better-sqlite3": "^7.4.6",
     "supertest": "^6.2.3"
   },
   "dependencies": {
-    "@strapi/plugin-graphql": "4.2.0",
-    "@strapi/plugin-i18n": "4.2.0",
-    "@strapi/plugin-sentry": "4.2.0",
-    "@strapi/plugin-users-permissions": "4.2.0",
-    "@strapi/strapi": "4.2.0",
+    "@strapi/plugin-graphql": "4.4.5",
+    "@strapi/plugin-i18n": "4.4.5",
+    "@strapi/plugin-sentry": "4.4.5",
+    "@strapi/plugin-users-permissions": "4.4.5",
+    "@strapi/strapi": "4.4.5",
     "cross-env": "^7.0.3",
     "pg": "8.6.0",
     "pm2": "^5.2.0",
@@ -44,7 +44,8 @@
       "/node_modules/",
       ".tmp",
       ".cache",
-      "/build/"
+      "/build/",
+      "/dist/"
     ],
     "testEnvironment": "node",
     "globalSetup": "./unit-tests/setupTests.js",

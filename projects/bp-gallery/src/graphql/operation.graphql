@@ -178,6 +178,9 @@ query getPictureInfo($pictureId: ID!) {
           data {
             id
             attributes {
+              width
+              height
+              formats
               url
               updatedAt
             }
