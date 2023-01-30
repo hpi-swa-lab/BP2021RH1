@@ -42,7 +42,7 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
   } else {
     return (
       <div
-        className={`comment-verification-container ${!comment.publishedAt ? ' unverified' : ''}${
+        className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}${
           role < AuthRole.CURATOR ? ' unstyled' : ''
         }`}
       >

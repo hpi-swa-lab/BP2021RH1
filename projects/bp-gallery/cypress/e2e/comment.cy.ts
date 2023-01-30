@@ -1,8 +1,11 @@
 import { login, logout } from '../utils/login-utils';
 
 const postComment = (name: string, comment: string) => {
-  cy.get('input#name').scrollIntoView().should('be.visible').clear().type(name);
-  cy.get('textarea#text').should('be.visible').clear().type(comment);
+  cy.get('input#name').scrollIntoView();
+  cy.get('input#name').should('be.visible').clear();
+  cy.get('input#name').type(name);
+  cy.get('textarea#text').should('be.visible').clear();
+  cy.get('textarea#text').type(comment);
   cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
 };
 
@@ -18,7 +21,7 @@ describe('Comment', () => {
   after(() => {
     cy.visit('http://localhost:3000');
     login();
-    cy.wait(1000);
+    cy.contains('Logout');
     cy.visit('http://localhost:3000/picture/1');
     cy.contains('.comment-container', 'Testkommentar').contains('button', 'Löschen').click();
     cy.contains('button', 'Bestätigen').click();
@@ -28,14 +31,18 @@ describe('Comment', () => {
   });
 
   it('adds a comment to picture 1', () => {
-    cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
-    cy.get('textarea#text').should('be.visible').clear().type('Testkommentar1');
+    cy.get('input#name').should('be.visible').clear();
+    cy.get('input#name').type('Hans Hansen');
+    cy.get('textarea#text').should('be.visible').clear();
+    cy.get('textarea#text').type('Testkommentar1');
     cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
     cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
     cy.get('.MuiButton-root').contains('O.K.').should('be.visible').click();
 
-    cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
-    cy.get('textarea#text').should('be.visible').clear().type('Testkommentar2');
+    cy.get('input#name').should('be.visible').clear();
+    cy.get('input#name').type('Hans Hansen');
+    cy.get('textarea#text').should('be.visible').clear();
+    cy.get('textarea#text').type('Testkommentar2');
     cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
     cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
     cy.get('.MuiButton-root').contains('O.K.').should('be.visible').click();
@@ -48,11 +55,8 @@ describe('Comment', () => {
     cy.get('.MuiPaper-root').contains('Kommentare').click();
 
     cy.get('.comment-preview').contains('Testkommentar1').should('be.visible');
-    cy.get('.comment-preview')
-      .contains('Testkommentar2')
-      .scrollIntoView()
-      .should('be.visible')
-      .click();
+    cy.get('.comment-preview').contains('Testkommentar2').scrollIntoView();
+    cy.get('.comment-preview').contains('Testkommentar2').should('be.visible').click();
     cy.get('#comments').click();
 
     cy.contains('.comment-verification-container', 'Testkommentar1')

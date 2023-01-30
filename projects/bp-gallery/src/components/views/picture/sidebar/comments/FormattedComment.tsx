@@ -28,6 +28,13 @@ interface CommentAction {
   state?: boolean;
 }
 
+const getDescendants = (comment: FlatComment, descendants: string[] = []): string[] => {
+  if (!comment.childComments) return [];
+  descendants.push(...comment.childComments.map(childComment => childComment.id));
+  comment.childComments.forEach(childComment => getDescendants(childComment, descendants));
+  return descendants;
+};
+
 const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?: number }) => {
   const { t } = useTranslation();
 
@@ -64,13 +71,6 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
   });
 
   const onDelete = useCallback(async () => {
-    const getDescendants = (comment: FlatComment, descendants: string[] = []): string[] => {
-      if (!comment.childComments) return [];
-      descendants.push(...comment.childComments.map(childComment => childComment.id));
-      comment.childComments.forEach(childComment => getDescendants(childComment, descendants));
-      return descendants;
-    };
-
     const deletedComments = getDescendants(comment);
 
     const shouldRemove = await dialog({
