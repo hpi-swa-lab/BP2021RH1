@@ -94,7 +94,7 @@ const PictureSidebar = ({
           <CommentsContainer
             comments={picture.comments}
             pictureId={picture.id}
-            likeCount={picture.likes || 0}
+            likeCount={picture.likes ?? 0}
           />
         </>
       )}

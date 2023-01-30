@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Icon } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useLikeMutation } from '../../../../graphql/APIConnector';
@@ -7,33 +7,42 @@ const LikeButton = ({ pictureId, likeCount }: { pictureId: string; likeCount: nu
   const { t } = useTranslation();
 
   if (!localStorage.getItem('likes')) localStorage.setItem('likes', JSON.stringify([]));
+
   const [likedPictures, setLikedPictures] = useState<string[]>(
-    JSON.parse(localStorage.getItem('likes') ?? '[]')
+    JSON.parse(localStorage.getItem('likes') ?? '[]') as string[]
   );
 
   const [isLiked, setIsLiked] = useState<boolean>(
     likedPictures.some((x: string) => x === pictureId)
   );
+
+  const newLikeCount = useRef(likeCount);
+
   const [likeNumber, setLikeNumber] = useState<number>(likeCount);
-  const [likeMutation] = useLikeMutation();
+  const [likeMutation] = useLikeMutation({
+    variables: { pictureId: pictureId },
+    refetchQueries: ['getPictureInfo'],
+  });
 
   useEffect(
-    () => setIsLiked(likedPictures.some((x: string) => x === pictureId)),
+    () => setIsLiked(likedPictures.some(likedPicture => likedPicture === pictureId)),
     [pictureId, likedPictures]
   );
-
-  useEffect(() => setLikeNumber(likeCount), [pictureId, likeCount]);
+  useEffect(() => {
+    newLikeCount.current = likeCount;
+  }, [likeCount]);
+  useEffect(() => setLikeNumber(newLikeCount.current), [pictureId]);
 
   const like = async (dislike: boolean) => {
     let likes;
     if (dislike) {
-      likes = likedPictures.filter((x: string) => x !== pictureId);
-      setLikeNumber(likeNumber === 0 ? likeNumber : likeNumber - 1);
+      likes = likedPictures.filter(likedPicture => likedPicture !== pictureId);
+      setLikeNumber(likeNumber <= 0 ? 0 : likeNumber - 1);
       await likeMutation({ variables: { pictureId: pictureId, dislike: true } });
     } else {
       likes = [...likedPictures, pictureId];
       setLikeNumber(likeNumber + 1);
-      await likeMutation({ variables: { pictureId: pictureId, dislike: false } });
+      await likeMutation();
     }
     setLikedPictures(likes);
     localStorage.setItem('likes', JSON.stringify(likes));
