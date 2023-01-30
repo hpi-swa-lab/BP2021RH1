@@ -1,0 +1,35 @@
+@import 'src/shared/style';
+
+.links-operations {
+  display: flex;
+  flex-direction: row;
+  margin-right: 1.5rem;
+  margin-bottom: 0.5rem;
+
+  .MuiButton-root {
+    width: 100%;
+    background-color: $markAsTextColor;
+  }
+}
+
+.picture-info-field[data-type='links'] {
+  .field-content {
+    overflow: hidden;
+    max-height: 500px;
+    display: flex;
+    gap: 10px;
+    align-items: start;
+
+    .field-title {
+      align-self: end;
+    }
+
+    .picture-grid {
+      margin-top: 0;
+    }
+
+    .MuiButton-root:not(:disabled) {
+      background: $linkColor;
+    }
+  }
+}

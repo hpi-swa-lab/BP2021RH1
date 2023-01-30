@@ -14,18 +14,6 @@
     flex-direction: row;
   }
 
-  .links-operations {
-    display: flex;
-    flex-direction: row;
-    margin-right: 1.5rem;
-    margin-bottom: 0.5rem;
-
-    .MuiButton-root {
-      width: 100%;
-      background-color: $markAsTextColor;
-    }
-  }
-
   .curator-ops {
     display: flex;
     flex-direction: row;

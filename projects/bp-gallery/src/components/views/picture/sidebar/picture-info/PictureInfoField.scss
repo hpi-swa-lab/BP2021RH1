@@ -38,28 +38,6 @@
   @include data-type-colors('collections', $collectionColor);
   @include data-type-colors('archive', $archiveColor);
 
-  &[data-type='links'] {
-    .field-content {
-      overflow: hidden;
-      max-height: 500px;
-      display: flex;
-      gap: 10px;
-      align-items: start;
-
-      .field-title {
-        align-self: end;
-      }
-
-      .picture-grid {
-        margin-top: 0;
-      }
-
-      .MuiButton-root:not(:disabled) {
-        background: $linkColor;
-      }
-    }
-  }
-
   .icon-container {
     position: absolute;
     background-color: $primaryColor;
