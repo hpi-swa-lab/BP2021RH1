@@ -60,7 +60,8 @@
     "and-alternative": "sowie",
     "login": "Login",
     "logout": "Logout",
-    "like": "Mag ich"
+    "like": "Mag ich",
+    "daily-picture": "Bild des Tages"
   },
   "comment": {
     "name": "Name",

@@ -5,10 +5,16 @@ module.exports = {
     preflight: false,
   },
   theme: {
-    extend: {},
+    extend: {
+      height: {
+        '50vh': '50vh'
+      }
+    },
     fontFamily: {
       sans: ['Lato', 'Arial', 'sans-serif'],
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/line-clamp')
+  ],
 };
