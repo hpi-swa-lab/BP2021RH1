@@ -70,8 +70,8 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     bulkEdit: {
       name: t('curator.bulkEdit'),
       icon: 'edit',
-      action: (selectedPictures: FlatPicture[], onBulkEdit: (pictureIds: string) => void) => {
-        onBulkEdit(selectedPictures.map(picture => picture.id).join(','));
+      action: (_selectedPictures: FlatPicture[], onBulkEdit: () => void) => {
+        onBulkEdit();
       },
     },
   };

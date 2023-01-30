@@ -46,7 +46,7 @@ const PictureGrid = ({
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
-  const [focusedBulkEdit, setFocusedBulkEdit] = useState<string | undefined>(undefined);
+  const [bulkEditPictures, setBulkEditPictures] = useState<FlatPicture[] | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
   const deletePicture = useDeletePicture();
@@ -104,14 +104,6 @@ const PictureGrid = ({
     [setFocusedPicture]
   );
 
-  const navigateToBulkEdit = useCallback(
-    (pictureIds: string) => {
-      setFocusedBulkEdit(pictureIds);
-      window.history.pushState({}, '', `/bulk-edit/${pictureIds}`);
-    },
-    [setFocusedBulkEdit]
-  );
-
   const [selectedPictures, setSelectedPictures] = useState<FlatPicture[]>([]);
   const [lastSelectedPicture, setLastSelectedPicture] = useState<FlatPicture | null>(null);
 
@@ -121,6 +113,15 @@ const PictureGrid = ({
   const selectNone = useCallback(() => {
     setSelectedPictures([]);
   }, []);
+
+  const navigateToBulkEdit = useCallback(() => {
+    setBulkEditPictures(selectedPictures);
+    window.history.pushState(
+      {},
+      '',
+      `/bulk-edit/${selectedPictures.map(picture => picture.id).join(',')}`
+    );
+  }, [setBulkEditPictures, selectedPictures]);
 
   const defaultAdornments =
     role >= AuthRole.CURATOR && showDefaultAdornments
@@ -228,13 +229,14 @@ const PictureGrid = ({
           />
         </Portal>
       )}
-      {focusedBulkEdit && (
+      {bulkEditPictures && (
         <Portal container={root}>
           <BulkEditView
-            pictureIds={selectedPictures.map(picture => picture.id)}
+            pictureIds={bulkEditPictures.map(picture => picture.id)}
             onBack={() => {
-              setFocusedBulkEdit(undefined);
+              setBulkEditPictures(undefined);
             }}
+            onSave={selectNone}
           />
         </Portal>
       )}
