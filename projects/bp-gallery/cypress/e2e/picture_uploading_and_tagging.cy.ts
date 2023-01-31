@@ -2,7 +2,7 @@ import { login, logout } from '../utils/login-utils';
 
 describe('picture uploading and tagging', () => {
   before(() => {
-    cy.visit('http://localhost:3000/browse');
+    cy.visit('/browse');
     login();
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Collections').click();
@@ -14,25 +14,24 @@ describe('picture uploading and tagging', () => {
     cy.get('.MuiPaper-root').contains('Uploads').click();
   });
   after(() => {
-    cy.wait(1000);
-    cy.visit('http://localhost:3000/browse');
+    cy.visit('/browse');
     cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Schlagworte').click().wait(1000);
+    cy.get('.MuiPaper-root').contains('Schlagworte').click();
     cy.contains('.MuiDataGrid-row', 'TestSchlagwort').find('[data-testid="DeleteIcon"]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
 
     cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Orte').click().wait(1000);
+    cy.get('.MuiPaper-root').contains('Orte').click();
     cy.contains('.MuiDataGrid-row', 'TestOrt').find('[data-testid="DeleteIcon"]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
 
     cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Personen').click().wait(1000);
+    cy.get('.MuiPaper-root').contains('Personen').click();
     cy.contains('.MuiDataGrid-row', 'TestPerson').find('[data-testid="DeleteIcon"]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
 
     cy.get('.nav-bar').contains('Mehr...').click();
-    cy.get('.MuiPaper-root').contains('Collections').click().wait(1000);
+    cy.get('.MuiPaper-root').contains('Collections').click();
     cy.contains('.panel-entry', 'TestCollection').find('[data-testid="DeleteIcon"]').click();
 
     logout();
@@ -41,57 +40,54 @@ describe('picture uploading and tagging', () => {
   it('uploading picture', () => {
     cy.get('.dropzone').selectFile('./cypress/testFiles/testbild.jpg', { action: 'drag-drop' });
     cy.get('.add-to-collection').click();
+    cy.get('.MuiDialogContent-root').find('.MuiOutlinedInput-input').clear();
     cy.get('.MuiDialogContent-root')
       .find('.MuiOutlinedInput-input')
-      .clear()
       .type('Herbert-Ahrens-Bilderarchiv');
     cy.get('.MuiAutocomplete-option').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
-    cy.wait(3000);
   });
 
   it('tagging picture', () => {
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
-    cy.get('.picture-preview:last').click();
+    cy.get('.picture-grid .picture-preview:last').click();
     cy.get('.date-indicator').click();
-    cy.contains('.rdrInputRange', 'Jahr').find('input').clear().type('1000{esc}');
-    cy.wait(500);
+    cy.contains('.rdrInputRange', 'Jahr').find('input').clear();
+    cy.contains('.rdrInputRange', 'Jahr').find('input').type('1000{esc}');
+    cy.contains('.save-state', 'Gespeichert');
 
     cy.get('.add-button').click();
-    cy.contains('.field-content', 'Beschreibungen')
-      .find('.jodit-wysiwyg')
-      .clear()
-      .type('TestBeschreibung');
+    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').clear();
+    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').type('TestBeschreibung');
+    cy.contains('Beschreibungen').click();
+    cy.contains('.save-state', 'Gespeichert');
 
-    cy.contains('.field-content', 'Personen')
-      .find('input')
-      .click()
-      .wait(1000)
-      .clear()
-      .type('TestPerson');
+    cy.contains('.field-content', 'Personen').find('input').click();
+    cy.contains('.field-content', 'Personen').find('input').clear();
+    cy.contains('.field-content', 'Personen').find('input').type('TestPerson');
     cy.contains('TestPerson hinzufügen').click();
+    cy.contains('.save-state', 'Gespeichert');
 
-    cy.contains('.field-content', 'Orte').find('input').click().wait(1000).clear().type('TestOrt');
+    cy.contains('.field-content', 'Orte').find('input').click();
+    cy.contains('.field-content', 'Orte').find('input').clear();
+    cy.contains('.field-content', 'Orte').find('input').type('TestOrt');
     cy.contains('TestOrt hinzufügen').click();
+    cy.contains('.save-state', 'Gespeichert');
 
-    cy.contains('.field-content', 'Schlagworte')
-      .find('input')
-      .click()
-      .wait(1000)
-      .clear()
-      .type('TestSchlagwort');
+    cy.contains('.field-content', 'Schlagworte').find('input').click();
+    cy.contains('.field-content', 'Schlagworte').find('input').clear();
+    cy.contains('.field-content', 'Schlagworte').find('input').type('TestSchlagwort');
     cy.contains('TestSchlagwort hinzufügen').click();
+    cy.contains('.save-state', 'Gespeichert');
 
-    cy.contains('.field-content', 'Collections')
-      .find('input')
-      .click()
-      .wait(1000)
-      .clear()
-      .type('TestCollection{enter}');
+    cy.contains('.field-content', 'Collections').find('input').click();
+    cy.contains('.field-content', 'Collections').find('input').clear();
+    cy.contains('.field-content', 'Collections').find('input').type('TestCollection{enter}');
+    cy.contains('.save-state', 'Gespeichert');
   });
 
   it('checking tags and deleting picture', () => {
-    cy.visit('http://localhost:3000/browse/TestCollection').wait(2000);
+    cy.visit('/browse/TestCollection');
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
 
     cy.get('.picture-preview:last').click();
@@ -104,7 +100,8 @@ describe('picture uploading and tagging', () => {
     cy.get('.picture-info-field').contains('TestCollection').should('exist');
     cy.get('.picture-info-field').contains('Herbert-Ahrens-Bilderarchiv').should('exist');
 
-    cy.get('button').contains('arrow_back').click().wait(2000);
+    cy.get('button').contains('arrow_back').click();
+    cy.get('.picture-view').should('not.exist');
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-preview:last').find('[data-testid=DeleteIcon]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();

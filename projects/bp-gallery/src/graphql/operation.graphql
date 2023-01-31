@@ -169,6 +169,17 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        is_text
+        linked_pictures {
+          data {
+            id
+          }
+        }
+        linked_texts {
+          data {
+            id
+          }
+        }
         archive_tag {
           data {
             id
@@ -296,6 +307,17 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
               publishedAt
               pinned
             }
+          }
+        }
+        is_text
+        linked_pictures {
+          data {
+            id
+          }
+        }
+        linked_texts {
+          data {
+            id
           }
         }
         archive_tag {

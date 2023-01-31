@@ -1,3 +1,4 @@
+const { plural, singular, table } = require("../../helper");
 import type { KnexEngine } from "../../../types";
 
 const { ApplicationError } = require("@strapi/utils").errors;
@@ -6,8 +7,6 @@ const VERIFIED_PREFIX = "verified_";
 const withVerifiedPrefix = (tagKeyInPictureRelation) =>
   `${VERIFIED_PREFIX}${tagKeyInPictureRelation}`;
 
-const DATABASE_SCHEMA = process.env.DATABASE_SCHEMA;
-
 const PICTURES_KEY = "pictures";
 const DESCRIPTIONS_KEY = "descriptions";
 const KEYWORD_TAGS_KEY = "keyword_tags";
@@ -15,24 +14,9 @@ const LOCATION_TAGS_KEY = "location_tags";
 const PERSON_TAGS_KEY = "person_tags";
 const TIME_RANGE_TAG_KEY = "time_range_tag";
 const ARCHIVE_TAG_KEY = "archive_tag";
-
-const singular = (key) => {
-  if (key[key.length - 1] !== "s") {
-    return key;
-  }
-  return key.slice(0, -1);
-};
-
-const plural = (key) => {
-  if (key[key.length - 1] === "s") {
-    return key;
-  }
-  return key + "s";
-};
-
-const table = (name) => {
-  return DATABASE_SCHEMA + "." + name;
-};
+const IS_TEXT_KEY = "is_text";
+const LINKED_PICTURES_KEY = "linked_pictures";
+const LINKED_TEXTS_KEY = "linked_texts";
 
 /**
  * Returns the key of the tag type that is used for the API (so e.g. "person-tag")
@@ -465,6 +449,35 @@ const processTagUpdates = async (pictureQuery, currentPictureId, data) => {
   await processUpdatesForPersonTags(data);
 };
 
+const protectIsTextKey = async (pictureQuery, pictureIds, data) => {
+  // By using == instead of === we check both null and undefined
+  if (data[IS_TEXT_KEY] == null) return;
+
+  if (await anyPictureHasLinks(pictureQuery, pictureIds)) {
+    delete data[IS_TEXT_KEY];
+  }
+};
+
+const anyPictureHasLinks = async (pictureQuery, pictureIds) => {
+  const linkKeys = [LINKED_PICTURES_KEY, LINKED_TEXTS_KEY];
+  const pictures = await pictureQuery.findMany({
+    where: {
+      id: {
+        $in: pictureIds,
+      },
+    },
+    populate: linkKeys,
+  });
+  for (const picture of pictures) {
+    for (const linkKey of linkKeys) {
+      if (picture[linkKey].length > 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 const updatePictureWithTagCleanup = async (id: string, data) => {
   // No special handling needed if no data is passed.
   if (!data) return;
@@ -474,6 +487,8 @@ const updatePictureWithTagCleanup = async (id: string, data) => {
 
   // Process tag updates for the picture before actually updating the picture itself.
   await processTagUpdates(pictureQuery, id, data);
+
+  await protectIsTextKey(pictureQuery, [id], data);
 
   // Actually update the picture.
   await pictureQuery.update({
@@ -513,16 +528,19 @@ const insertCrossProductIgnoreDuplicates = async (
   if (leftIds.length === 0 || rightIds.length === 0) {
     return;
   }
-  await knexEngine(linksTable).insert(
-    knexEngine
-      .select(leftIdKey, rightIdKey)
-      .from(knexIdArray(knexEngine, leftIds, `a(${leftIdKey})`))
-      .crossJoin(knexIdArray(knexEngine, rightIds, `b(${rightIdKey})`))
-      .whereNotIn(
-        [leftIdKey, rightIdKey],
-        knexEngine(linksTable).select(leftIdKey, rightIdKey)
-      )
-  );
+  // use ?? (??, ??) to map the column indices of the subquery to the correct columns in the target table
+  await knexEngine
+    .from(knexEngine.raw("?? (??, ??)", [linksTable, leftIdKey, rightIdKey]))
+    .insert(
+      knexEngine
+        .select(leftIdKey, rightIdKey)
+        .from(knexIdArray(knexEngine, leftIds, `a(${leftIdKey})`))
+        .crossJoin(knexIdArray(knexEngine, rightIds, `b(${rightIdKey})`))
+        .whereNotIn(
+          [leftIdKey, rightIdKey],
+          knexEngine(linksTable).select(leftIdKey, rightIdKey)
+        )
+    );
 };
 
 const bulkEditTimeRangeTag = async (
@@ -665,6 +683,18 @@ const bulkEditDescriptions = async (
   return 1;
 };
 
+const bulkEditIsText = async (knexEngine, pictureIds, data) => {
+  // Check whether we actually need to update stuff for that type.
+  // By using == instead of === we check both null and undefined
+  if (data[IS_TEXT_KEY] == null) return 0;
+
+  await knexEngine(table(PICTURES_KEY))
+    .whereIn("id", pictureIds)
+    .update(IS_TEXT_KEY, knexEngine.raw("?::boolean", [data[IS_TEXT_KEY]]));
+
+  return 1;
+};
+
 const bulkEditTags = async (
   knexEngine: KnexEngine,
   pictureIds: number[],
@@ -720,6 +750,55 @@ const bulkEditTags = async (
   return 1;
 };
 
+const bulkEditLinks = async (
+  knexEngine,
+  pictureIds,
+  data,
+  linksKey,
+  isInverse
+) => {
+  // Check whether we actually need to update stuff for that type.
+  if (!data[linksKey]) return 0;
+
+  const diff = data[linksKey];
+
+  if (diff.added.length === 0 && diff.removed.length === 0) return 0;
+
+  const columnNames = ["picture_id", "inv_picture_id"];
+  const [left, right] = isInverse ? columnNames.reverse() : columnNames;
+
+  const linksTable = table("pictures_linked_pictures_links");
+
+  const removedIds = diff.removed.map((picture) => picture.id);
+
+  await knexEngine(linksTable)
+    .whereIn(left, pictureIds)
+    .whereIn(right, removedIds)
+    .del();
+
+  const addedIds = diff.added.map((picture) => picture.id);
+
+  console.log(
+    "inserting",
+    linksKey,
+    linksTable,
+    left,
+    right,
+    pictureIds,
+    addedIds
+  );
+  insertCrossProductIgnoreDuplicates(
+    knexEngine,
+    linksTable,
+    left,
+    right,
+    pictureIds,
+    addedIds
+  );
+
+  return 1;
+};
+
 const bulkEdit = async (
   knexEngine: KnexEngine,
   pictureIds: number[],
@@ -731,6 +810,9 @@ const bulkEdit = async (
     )} `
   );
   const pictureQuery = strapi.db.query("api::picture.picture");
+
+  await protectIsTextKey(pictureQuery, pictureIds, data);
+
   // should be a boolean (false), but we use | (bitwise or),
   // so it's a number representing a boolean instead (0 -> false, 1 -> true)
   let shouldWriteUpdatedAt = 0;
@@ -752,6 +834,7 @@ const bulkEdit = async (
     pictureIds,
     data
   );
+  shouldWriteUpdatedAt |= await bulkEditIsText(knexEngine, pictureIds, data);
   shouldWriteUpdatedAt |= await bulkEditTags(
     knexEngine,
     pictureIds,
@@ -769,6 +852,20 @@ const bulkEdit = async (
     pictureIds,
     data,
     KEYWORD_TAGS_KEY
+  );
+  shouldWriteUpdatedAt |= await bulkEditLinks(
+    knexEngine,
+    pictureIds,
+    data,
+    LINKED_PICTURES_KEY,
+    false
+  );
+  shouldWriteUpdatedAt |= await bulkEditLinks(
+    knexEngine,
+    pictureIds,
+    data,
+    LINKED_TEXTS_KEY,
+    true
   );
 
   if (shouldWriteUpdatedAt) {

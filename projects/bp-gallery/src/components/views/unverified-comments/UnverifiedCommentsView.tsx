@@ -9,6 +9,8 @@ import PictureView from '../picture/PictureView';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import './UnverifiedCommentsView.scss';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import { Portal } from '@mui/material';
+import { root } from '../../..';
 
 const UnverifiedCommentsView = () => {
   const { t } = useTranslation();
@@ -99,14 +101,16 @@ const UnverifiedCommentsView = () => {
           </table>
         </div>
         {openPictureId && (
-          <PictureView
-            initialPictureId={openPictureId}
-            siblingIds={Object.keys(groupedComments)}
-            onBack={() => {
-              refetch();
-              setOpenPictureId(undefined);
-            }}
-          />
+          <Portal container={root}>
+            <PictureView
+              initialPictureId={openPictureId}
+              siblingIds={Object.keys(groupedComments)}
+              onBack={() => {
+                refetch();
+                setOpenPictureId(undefined);
+              }}
+            />
+          </Portal>
         )}
       </>
     );

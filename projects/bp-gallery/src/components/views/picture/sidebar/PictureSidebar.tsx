@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import './PictureSidebar.scss';
 import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import { ApolloError } from '@apollo/client';
@@ -31,6 +31,7 @@ const PictureSidebar = ({
 
   const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
     refetchQueries: ['getPictureInfo'],
+    awaitRefetchQueries: true,
   });
 
   const onSave = useCallback(
@@ -46,11 +47,11 @@ const PictureSidebar = ({
   );
 
   const saveStatus = useCallback(
-    anyFieldTouched => {
+    (anyFieldTouched: boolean, isSaving: boolean) => {
       if (anyFieldTouched) {
         return t('curator.saveStatus.pending');
       }
-      if (updateMutationResponse.loading) {
+      if (updateMutationResponse.loading || isSaving) {
         return t('curator.saveStatus.saving');
       }
       if (updateMutationResponse.error) {
@@ -62,6 +63,25 @@ const PictureSidebar = ({
   );
 
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
+
+  // Memoization is important here: if this is not memoized,
+  // the following loop will sometimes trigger a continuous rerender
+  // of all involved components, resulting in a "maximum update
+  // depth exceeded" react error:
+  // - ClipboardEditor
+  // - PictureScrollGrid (if some pictures are copied)
+  // - PictureGrid
+  // - PictureView (if focused, i. e. the user clicked on a
+  //                picture preview inside the clipboard editor)
+  // - PictureSidebar
+  // - PictureInfo
+  // - LinkedInfoField
+  // In the LinkedInfoField, a useEffect, which sets the clipboard
+  // editor buttons, indirectly depends on pictureIds (via copyToClipboard).
+  // Thus, if pictureIds is not memoized, the useEffect triggers
+  // on every render and sets the clipboard editor buttons,
+  // which triggers a rerender of the ClipboardEditor, completing the loop.
+  const pictureIds = useMemo(() => (picture ? [picture.id] : []), [picture]);
 
   return (
     <div
@@ -75,8 +95,9 @@ const PictureSidebar = ({
         <>
           <PictureInfo
             picture={picture}
+            pictureIds={pictureIds}
             onSave={onSave}
-            topInfo={anyFieldTouched =>
+            topInfo={(anyFieldTouched, isSaving) =>
               role >= AuthRole.CURATOR && (
                 <div className='curator-ops'>
                   <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
@@ -87,7 +108,7 @@ const PictureSidebar = ({
                     open={editDialogOpen}
                     onClose={() => setEditDialogOpen(false)}
                   />
-                  <span className='save-state'>{saveStatus(anyFieldTouched)}</span>
+                  <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
                 </div>
               )
             }

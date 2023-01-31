@@ -1,12 +1,12 @@
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
-import { DialogContext, DialogPreset } from '../components/provider/DialogProvider';
+import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
 
   const { addPicturesToCollection, removePicturesFromCollection } = useManageCollectionPictures();
 
