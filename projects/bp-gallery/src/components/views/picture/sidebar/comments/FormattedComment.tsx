@@ -17,7 +17,7 @@ import Editor from '../../../../common/editor/Editor';
 import EditIcon from '@mui/icons-material/Edit';
 import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
-import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
+import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import Close from '@mui/icons-material/Close';
 
 interface CommentAction {
@@ -42,7 +42,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
 
   const isLong = comment.text.length > 500;
   const isCurator = role >= AuthRole.CURATOR;
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
 
   const [isOpen, setIsOpen] = useState<boolean>(!isLong);
   const [pinned, setPinned] = useState(comment.pinned);
