@@ -7,6 +7,9 @@ export const formatTimeStamp = (timeStamp?: FlatTimeRangeTag) => {
   if (!timeStamp?.start || !timeStamp.end) {
     return '---';
   }
+  if (timeStamp.isEstimate) {
+    return dayjs(timeStamp.start as string).format('YYYY');
+  }
   const duration = dayjs(timeStamp.end as string).diff(dayjs(timeStamp.start as string), 'days');
   if (duration === 0) {
     return dayjs(timeStamp.start as string).format('DD.MM.YYYY');

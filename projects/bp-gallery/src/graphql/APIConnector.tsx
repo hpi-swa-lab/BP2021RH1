@@ -1505,6 +1505,7 @@ export type StringFilterInput = {
 export type TimeRangeTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   end: Scalars['DateTime'];
+  isEstimate?: Maybe<Scalars['Boolean']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   start: Scalars['DateTime'];
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1544,6 +1545,7 @@ export type TimeRangeTagFiltersInput = {
   createdAt?: InputMaybe<DateTimeFilterInput>;
   end?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
+  isEstimate?: InputMaybe<BooleanFilterInput>;
   not?: InputMaybe<TimeRangeTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<TimeRangeTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
@@ -1554,6 +1556,7 @@ export type TimeRangeTagFiltersInput = {
 
 export type TimeRangeTagInput = {
   end?: InputMaybe<Scalars['DateTime']>;
+  isEstimate?: InputMaybe<Scalars['Boolean']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   start?: InputMaybe<Scalars['DateTime']>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -2019,7 +2022,14 @@ export type GetPictureInfoQuery = {
                           data?:
                             | {
                                 id?: string | null | undefined;
-                                attributes?: { start: any; end: any } | null | undefined;
+                                attributes?:
+                                  | {
+                                      start: any;
+                                      end: any;
+                                      isEstimate?: boolean | null | undefined;
+                                    }
+                                  | null
+                                  | undefined;
                               }
                             | null
                             | undefined;
@@ -2031,7 +2041,14 @@ export type GetPictureInfoQuery = {
                           data?:
                             | {
                                 id?: string | null | undefined;
-                                attributes?: { start: any; end: any } | null | undefined;
+                                attributes?:
+                                  | {
+                                      start: any;
+                                      end: any;
+                                      isEstimate?: boolean | null | undefined;
+                                    }
+                                  | null
+                                  | undefined;
                               }
                             | null
                             | undefined;
@@ -2212,7 +2229,10 @@ export type GetMultiplePictureInfoQuery = {
                       data?:
                         | {
                             id?: string | null | undefined;
-                            attributes?: { start: any; end: any } | null | undefined;
+                            attributes?:
+                              | { start: any; end: any; isEstimate?: boolean | null | undefined }
+                              | null
+                              | undefined;
                           }
                         | null
                         | undefined;
@@ -2224,7 +2244,10 @@ export type GetMultiplePictureInfoQuery = {
                       data?:
                         | {
                             id?: string | null | undefined;
-                            attributes?: { start: any; end: any } | null | undefined;
+                            attributes?:
+                              | { start: any; end: any; isEstimate?: boolean | null | undefined }
+                              | null
+                              | undefined;
                           }
                         | null
                         | undefined;
@@ -3665,6 +3688,7 @@ export const GetPictureInfoDocument = gql`
               attributes {
                 start
                 end
+                isEstimate
               }
             }
           }
@@ -3674,6 +3698,7 @@ export const GetPictureInfoDocument = gql`
               attributes {
                 start
                 end
+                isEstimate
               }
             }
           }
@@ -3854,6 +3879,7 @@ export const GetMultiplePictureInfoDocument = gql`
               attributes {
                 start
                 end
+                isEstimate
               }
             }
           }
@@ -3863,6 +3889,7 @@ export const GetMultiplePictureInfoDocument = gql`
               attributes {
                 start
                 end
+                isEstimate
               }
             }
           }

@@ -69,6 +69,7 @@ query getPictureInfo($pictureId: ID!) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -78,6 +79,7 @@ query getPictureInfo($pictureId: ID!) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -211,6 +213,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -220,6 +223,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
