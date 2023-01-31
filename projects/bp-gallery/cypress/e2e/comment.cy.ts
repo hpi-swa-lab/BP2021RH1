@@ -16,16 +16,16 @@ const closeModal = (text: string, buttonText: string) => {
 
 describe('Comment', () => {
   before(() => {
-    cy.visit('http://localhost:3000/picture/1');
+    cy.visit('/picture/1');
   });
   after(() => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
     login();
-    cy.visit('http://localhost:3000/picture/1');
+    cy.visit('/picture/1');
     cy.contains('.comment-container', 'Testkommentar').contains('button', 'Löschen').click();
     cy.contains('button', 'Bestätigen').click();
     cy.contains('Testkommentar').should('not.exist');
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
     logout();
   });
 
@@ -68,7 +68,7 @@ describe('Comment', () => {
       .click();
 
     // navigate again to close the CommentsVerificationView in the background
-    cy.visit('http://localhost:3000/picture/1');
+    cy.visit('/picture/1');
 
     cy.contains('Testkommentar1').should('not.exist');
     cy.contains('Testkommentar2');
@@ -120,9 +120,9 @@ describe('Comment', () => {
   });
 
   it('doesnt show an edit or reply button to unauthorized users', () => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
     logout();
-    cy.visit('http://localhost:3000/picture/1');
+    cy.visit('/picture/1');
     cy.contains('Testkommentar1').should('not.exist');
     cy.contains('Testkommentar').should('be.visible');
     cy.contains('button', 'Antworten').should('be.visible');

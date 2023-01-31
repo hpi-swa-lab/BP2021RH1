@@ -19,6 +19,28 @@
     "suggestions": "Vorschläge",
     "keywords": "Schlagworte",
     "persons": "Personen",
+    "clipboard": {
+      "name": "Kopierte Links",
+      "clear": "Ablage leeren",
+      "remove": "Aus der Ablage entfernen",
+      "mixed": {
+        "title": "Gemischte kopierte Links:",
+        "content": "Es sind sowohl Bilder als auch Texte kopiert worden. Bitte überprüfen Sie die kopierten Links."
+      }
+    },
+    "mark-as-text": {
+      "label": "Als Text markieren",
+      "still-linked": {
+        "pictures": {
+          "title": "Es sind noch Bilder verlinkt",
+          "content": "Bitte entfernen Sie alle Links zu Bildern bevor Sie diesen Text als Bild markieren."
+        },
+        "texts": {
+          "title": "Es sind noch Texte verlinkt",
+          "content": "Bitte entfernen Sie alle Links zu Texten bevor Sie dieses Bild als Text markieren."
+        }
+      }
+    },
     "locations": "Orte",
     "no-collection": "Es gibt keine Collection, die der Anfrage entspricht.",
     "no-picture": "Es gibt kein Bild, das dieser Anfrage entspricht.",
@@ -34,6 +56,7 @@
     "showPicture": "Vollbild",
     "showInfo": "Infos & Kommentare anzeigen",
     "close": "Schließen",
+    "error": "Fehler",
     "checkingAuth": "Überprüfe Berechtigungen...",
     "browse-view": "Alle Bilder",
     "latest-pictures": "Neuzugänge im Archiv",
@@ -111,6 +134,35 @@
     "descriptions": "Beschreibungen",
     "people": "Personen",
     "keywords": "Schlagworte",
+    "links": {
+      "pictures": {
+        "label": "Verlinkte Bilder",
+        "copy": {
+          "single": "Aktuelles Bild kopieren",
+          "multiple": "Aktuelle Bilder kopieren"
+        },
+        "paste": {
+          "single": "Ein kopiertes Bild einfügen",
+          "multiple": "{{count}} kopierte Bilder einfügen"
+        }
+      },
+      "texts": {
+        "label": "Verlinkte Texte",
+        "copy": {
+          "single": "Aktuellen Text kopieren",
+          "multiple": "Aktuelle Texte kopieren"
+        },
+        "paste": {
+          "single": "Einen kopierten Text einfügen",
+          "multiple": "{{count}} kopierte Texte einfügen"
+        }
+      },
+      "remove": "Link entfernen",
+      "removeAll": {
+        "label": "Alle Links entfernen",
+        "really-prompt": "Wollen Sie wirklich alle Links entfernen?"
+      }
+    },
     "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",
     "noLocations": "Keine Orte bekannt",
@@ -118,7 +170,8 @@
     "noDescription": "Keine Beschreibung vorhanden",
     "noKeywords": "Keine Stichworte",
     "noCollections": "Keine Collections",
-    "collections": "Collections"
+    "collections": "Collections",
+    "around": "etwa "
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
@@ -199,6 +252,7 @@
         "content": "Du hast noch ungespeicherte Änderungen."
       },
       "save": "Änderungen speichern",
+      "saving": "Änderungen speichern...",
       "saved": "Änderungen gespeichert",
       "nameLabel": "Archiv-Name:",
       "shortDescription": {

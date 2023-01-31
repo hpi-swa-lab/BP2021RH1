@@ -2,16 +2,14 @@ import { login, logout } from '../utils/login-utils';
 
 describe('bulk edit', () => {
   before(() => {
-    cy.visit('http://localhost:3000/latest/');
+    cy.visit('/latest/');
     login();
   });
   after(() => {
-    cy.wait(1000);
     logout();
   });
 
   it('select multiple photos manually', () => {
-    cy.wait(500);
     cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(0).click();
     cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(1).click();
     cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(2).click();

@@ -5,18 +5,13 @@ import './App.scss';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
-import {
-  KeywordTagEntityResponseCollection,
-  LocationTagEntityResponseCollection,
-  PersonTagEntityResponseCollection,
-  PictureEntity,
-  PictureEntityResponseCollection,
-} from '../graphql/APIConnector';
 import AuthProvider from './provider/AuthProvider';
 import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider';
 import DialogProvider from './provider/DialogProvider';
-import { isEmpty } from 'lodash';
+import { isEmpty, unionWith } from 'lodash';
 import NavigationBar from './top-and-bottom-bar/NavigationBar';
+import ClipboardProvider from './provider/ClipboardProvider';
+import { ClipboardEditorProvider } from './common/clipboard/ClipboardEditorContext';
 
 const apiBase = process.env.REACT_APP_API_BASE ?? '';
 
@@ -69,6 +64,20 @@ export const buildHttpLink = (
   return httpLink;
 };
 
+type MergeInput = { __typename: string; data: { __ref: string }[] };
+
+export const mergeByRef = (
+  existing: MergeInput | undefined = undefined,
+  incoming: MergeInput
+): MergeInput => ({
+  ...incoming,
+  data: unionWith<{ __ref: string }>(
+    existing?.data ?? [],
+    incoming.data,
+    (a, b) => a.__ref === b.__ref
+  ),
+});
+
 const apolloClient = new ApolloClient({
   link: buildHttpLink(sessionStorage.getItem('jwt')),
   cache: new InMemoryCache({
@@ -94,45 +103,23 @@ const apolloClient = new ApolloClient({
             // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
             // get treated as one query and the results get merged.
             keyArgs: ['filters'],
-            merge(existing = { data: [] }, incoming: PictureEntityResponseCollection) {
-              return {
-                ...incoming,
-                data: [...existing.data, ...incoming.data],
-              };
-            },
+            merge: mergeByRef,
           },
           findPicturesByAllSearch: {
             keyArgs: ['searchTerms', 'searchTimes'],
-            merge(existing = [], incoming: PictureEntity[]) {
-              return [...existing, ...incoming];
-            },
+            merge: mergeByRef,
           },
           keywordTags: {
             keyArgs: ['filters'],
-            merge(existing = { data: [] }, incoming: KeywordTagEntityResponseCollection) {
-              return {
-                ...incoming,
-                data: [...existing.data, ...incoming.data],
-              };
-            },
+            merge: mergeByRef,
           },
           personTags: {
             keyArgs: ['filters'],
-            merge(existing = { data: [] }, incoming: PersonTagEntityResponseCollection) {
-              return {
-                ...incoming,
-                data: [...existing.data, ...incoming.data],
-              };
-            },
+            merge: mergeByRef,
           },
           locationTags: {
             keyArgs: ['filters'],
-            merge(existing = { data: [] }, incoming: LocationTagEntityResponseCollection) {
-              return {
-                ...incoming,
-                data: [...existing.data, ...incoming.data],
-              };
-            },
+            merge: mergeByRef,
           },
         },
       },
@@ -171,11 +158,15 @@ const App = ({ route }: RouteConfigComponentProps) => {
       <AlertProvider>
         <AuthProvider>
           <DialogProvider>
-            <div className='App'>
-              <TopBar isMobile={isMobile} />
-              {renderRoutes(route?.routes)}
-              {isMobile && <NavigationBar isMobile={true} />}
-            </div>
+            <ClipboardProvider>
+              <div className='App'>
+                <ClipboardEditorProvider>
+                  <TopBar isMobile={isMobile} />
+                  {renderRoutes(route?.routes)}
+                  {isMobile && <NavigationBar isMobile={true} />}
+                </ClipboardEditorProvider>
+              </div>
+            </ClipboardProvider>
           </DialogProvider>
         </AuthProvider>
       </AlertProvider>

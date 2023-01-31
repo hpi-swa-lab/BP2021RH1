@@ -65,6 +65,7 @@ const BulkEditView = ({
 
   const [bulkEdit, bulkEditResponse] = useBulkEditMutation({
     refetchQueries: ['getPictureInfo', 'getMultiplePictureInfo'],
+    awaitRefetchQueries: true,
   });
   const save = useCallback(
     (diff: PictureDiff) => {
@@ -80,11 +81,11 @@ const BulkEditView = ({
   );
 
   const saveStatus = useCallback(
-    anyFieldTouched => {
+    (anyFieldTouched: boolean, isSaving: boolean) => {
       if (anyFieldTouched) {
         return t('curator.saveStatus.pending');
       }
-      if (bulkEditResponse.loading) {
+      if (bulkEditResponse.loading || isSaving) {
         return t('curator.saveStatus.saving');
       }
       if (bulkEditResponse.error) {
@@ -123,7 +124,8 @@ const BulkEditView = ({
                   scrollPos={scrollPos}
                   scrollHeight={scrollHeight}
                   hashbase={'A'}
-                  viewOnly
+                  showDefaultAdornments={false}
+                  allowClicks={false}
                 />
               )}
             </ScrollContainer>
@@ -132,10 +134,11 @@ const BulkEditView = ({
         <div className='bulk-edit-picture-info'>
           <PictureInfo
             picture={combinedPicture}
+            pictureIds={pictureIds}
             onSave={onSave}
-            topInfo={anyFieldTouched => (
+            topInfo={(anyFieldTouched, isSaving) => (
               <div className='curator-ops'>
-                <span className='save-state'>{saveStatus(anyFieldTouched)}</span>
+                <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
               </div>
             )}
           />

@@ -43,6 +43,8 @@ type FlatPictureWithoutRelations = ID &
     | 'verified_person_tags'
     | 'location_tags'
     | 'person_tags'
+    | 'linked_pictures'
+    | 'linked_texts'
     | 'archive_tag'
   >;
 
@@ -111,6 +113,8 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   location_tags?: FlatLocationTagWithoutRelations[];
   media?: FlatUploadFile;
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
+  linked_pictures?: FlatPictureWithoutRelations[];
+  linked_texts?: FlatPictureWithoutRelations[];
   archive_tag?: FlatArchiveTagWithoutRelations;
 };
 

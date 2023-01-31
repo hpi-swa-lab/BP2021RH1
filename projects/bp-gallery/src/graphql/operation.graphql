@@ -69,6 +69,7 @@ query getPictureInfo($pictureId: ID!) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -78,6 +79,7 @@ query getPictureInfo($pictureId: ID!) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -186,6 +188,17 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        is_text
+        linked_pictures {
+          data {
+            id
+          }
+        }
+        linked_texts {
+          data {
+            id
+          }
+        }
         archive_tag {
           data {
             id
@@ -218,6 +231,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -227,6 +241,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -311,6 +326,17 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
               publishedAt
               pinned
             }
+          }
+        }
+        is_text
+        linked_pictures {
+          data {
+            id
+          }
+        }
+        linked_texts {
+          data {
+            id
           }
         }
         archive_tag {
