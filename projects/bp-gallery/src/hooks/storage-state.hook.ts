@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 
 const useStorageState = <T>(initialValue: T, key: string, storage: Storage) => {
-  const valueInStorage = storage.getItem(key);
-  const [value, setValue] = useState<T>(valueInStorage ? JSON.parse(valueInStorage) : initialValue);
+  const [value, setValue] = useState<T>(() => {
+    const valueInStorage = storage.getItem(key);
+    return valueInStorage ? (JSON.parse(valueInStorage) as T) : initialValue;
+  });
 
   useEffect(() => storage.setItem(key, JSON.stringify(value)), [storage, key, value]);
 
@@ -18,7 +20,7 @@ const useStorageState = <T>(initialValue: T, key: string, storage: Storage) => {
         if (event.newValue === stringifiedValue) {
           return;
         }
-        setValue(JSON.parse(event.newValue));
+        setValue(JSON.parse(event.newValue) as T);
       }
     });
   }, [storage, key, value]);
