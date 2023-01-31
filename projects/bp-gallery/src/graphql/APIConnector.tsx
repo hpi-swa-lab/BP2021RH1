@@ -1074,7 +1074,10 @@ export type Picture = {
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
+  is_text?: Maybe<Scalars['Boolean']>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
+  linked_pictures?: Maybe<PictureRelationResponseCollection>;
+  linked_texts?: Maybe<PictureRelationResponseCollection>;
   location_tags?: Maybe<LocationTagRelationResponseCollection>;
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
@@ -1112,6 +1115,20 @@ export type PictureDescriptionsArgs = {
 export type PictureKeyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureLinked_PicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureLinked_TextsArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1168,7 +1185,10 @@ export type PictureFiltersInput = {
   createdAt?: InputMaybe<DateTimeFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
+  is_text?: InputMaybe<BooleanFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
+  linked_pictures?: InputMaybe<PictureFiltersInput>;
+  linked_texts?: InputMaybe<PictureFiltersInput>;
   location_tags?: InputMaybe<LocationTagFiltersInput>;
   not?: InputMaybe<PictureFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
@@ -1189,7 +1209,10 @@ export type PictureInput = {
   collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  is_text?: InputMaybe<Scalars['Boolean']>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  linked_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  linked_texts?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1842,6 +1865,7 @@ export type GetPictureInfoQuery = {
               id?: string | null | undefined;
               attributes?:
                 | {
+                    is_text?: boolean | null | undefined;
                     descriptions?:
                       | {
                           data: Array<{
@@ -1992,6 +2016,14 @@ export type GetPictureInfoQuery = {
                         }
                       | null
                       | undefined;
+                    linked_pictures?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                    linked_texts?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
                     archive_tag?:
                       | {
                           data?:
@@ -2026,6 +2058,7 @@ export type GetMultiplePictureInfoQuery = {
           id?: string | null | undefined;
           attributes?:
             | {
+                is_text?: boolean | null | undefined;
                 descriptions?:
                   | {
                       data: Array<{
@@ -2168,6 +2201,14 @@ export type GetMultiplePictureInfoQuery = {
                           | undefined;
                       }>;
                     }
+                  | null
+                  | undefined;
+                linked_pictures?:
+                  | { data: Array<{ id?: string | null | undefined }> }
+                  | null
+                  | undefined;
+                linked_texts?:
+                  | { data: Array<{ id?: string | null | undefined }> }
                   | null
                   | undefined;
                 archive_tag?:
@@ -3576,6 +3617,17 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
+          is_text
+          linked_pictures {
+            data {
+              id
+            }
+          }
+          linked_texts {
+            data {
+              id
+            }
+          }
           archive_tag {
             data {
               id
@@ -3748,6 +3800,17 @@ export const GetMultiplePictureInfoDocument = gql`
                 publishedAt
                 pinned
               }
+            }
+          }
+          is_text
+          linked_pictures {
+            data {
+              id
+            }
+          }
+          linked_texts {
+            data {
+              id
             }
           }
           archive_tag {

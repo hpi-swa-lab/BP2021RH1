@@ -2,22 +2,26 @@ import { login, logout } from '../utils/login-utils';
 
 describe('Comment', () => {
   before(() => {
-    cy.visit('http://localhost:3000/picture/1');
+    cy.visit('/picture/1');
   });
   after(() => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
     logout();
   });
 
   it('adds a comment to picture 1', () => {
-    cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
-    cy.get('textarea#text').should('be.visible').clear().type('Testkommentar1');
+    cy.get('input#name').should('be.visible').clear();
+    cy.get('input#name').type('Hans Hansen');
+    cy.get('textarea#text').should('be.visible').clear();
+    cy.get('textarea#text').type('Testkommentar1');
     cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
     cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
     cy.get('.MuiButton-root').contains('O.K.').should('be.visible').click();
 
-    cy.get('input#name').should('be.visible').clear().type('Hans Hansen');
-    cy.get('textarea#text').should('be.visible').clear().type('Testkommentar2');
+    cy.get('input#name').should('be.visible').clear();
+    cy.get('input#name').type('Hans Hansen');
+    cy.get('textarea#text').should('be.visible').clear();
+    cy.get('textarea#text').type('Testkommentar2');
     cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
     cy.get('.MuiDialog-container').contains('Danke für Ihren Kommentar!').should('be.visible');
     cy.get('.MuiButton-root').contains('O.K.').should('be.visible').click();
@@ -43,7 +47,7 @@ describe('Comment', () => {
       .click();
 
     // navigate again to close the CommentsVerificationView in the background
-    cy.visit('http://localhost:3000/picture/1');
+    cy.visit('/picture/1');
 
     cy.contains('Testkommentar1').should('not.exist');
     cy.contains('Testkommentar2').should('be.visible');
@@ -52,19 +56,18 @@ describe('Comment', () => {
   });
 
   it('log out and check comments visibility', () => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
     logout();
 
-    cy.visit('http://localhost:3000/picture/1');
+    cy.visit('/picture/1');
 
     cy.contains('Testkommentar1').should('not.exist');
     cy.contains('Testkommentar2').should('be.visible');
 
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
     login();
-    cy.wait(1000);
 
-    cy.visit('http://localhost:3000/picture/1');
+    cy.visit('/picture/1');
     cy.contains('.comment-container', 'Testkommentar2').contains('button', 'Löschen').click();
     cy.contains('button', 'Bestätigen').click();
   });

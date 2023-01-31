@@ -1,5 +1,7 @@
 "use strict";
 
+const { plural, table } = require("../../helper");
+
 /**
  * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
  * in both a verified and an unverified relation.
@@ -30,17 +32,20 @@ const buildJoinsForTableWithVerifiedHandling = (
   );
 
   // This special join syntax is needed in order to only join the tag table once to the aggregate
-  knexEngine = knexEngine.leftJoin(`${singularTableName}s`, function () {
-    this.on(
-      `${verifiedLinkTable}.${singularTableName}_id`,
-      "=",
-      `${singularTableName}s.id`
-    ).orOn(
-      `${unverifiedLinkTable}.${singularTableName}_id`,
-      "=",
-      `${singularTableName}s.id`
-    );
-  });
+  knexEngine = knexEngine.leftJoin(
+    table(plural(singularTableName)),
+    function () {
+      this.on(
+        `${verifiedLinkTable}.${singularTableName}_id`,
+        "=",
+        `${plural(singularTableName)}.id`
+      ).orOn(
+        `${unverifiedLinkTable}.${singularTableName}_id`,
+        "=",
+        `${plural(singularTableName)}.id`
+      );
+    }
+  );
 
   return knexEngine;
 };
@@ -56,17 +61,21 @@ const buildJoinsForTableWithoutVerifiedHandling = (
     `${linkTable}.picture_id`
   );
   knexEngine = knexEngine.leftJoin(
-    `${singularTableName}s`,
+    table(plural(singularTableName)),
     `${linkTable}.${singularTableName}_id`,
-    `${singularTableName}s.id`
+    `${plural(singularTableName)}.id`
   );
   return knexEngine;
 };
 
 const buildJoins = (knexEngine) => {
   for (const singularTableName of manyToManyWithVerified) {
-    const verifiedLinkTable = `pictures_verified_${singularTableName}s_links`;
-    const unverifiedLinkTable = `pictures_${singularTableName}s_links`;
+    const verifiedLinkTable = table(
+      `pictures_verified_${plural(singularTableName)}_links`
+    );
+    const unverifiedLinkTable = table(
+      `pictures_${plural(singularTableName)}_links`
+    );
     knexEngine = buildJoinsForTableWithVerifiedHandling(
       knexEngine,
       singularTableName,
@@ -76,8 +85,10 @@ const buildJoins = (knexEngine) => {
   }
 
   // Special handling for time-range-tags as these are in 1:n relation to the picture type
-  const verifiedTimeRangeLinkTable = "pictures_verified_time_range_tag_links";
-  const unverifiedTimeRangeLinkTable = "pictures_time_range_tag_links";
+  const verifiedTimeRangeLinkTable = table(
+    "pictures_verified_time_range_tag_links"
+  );
+  const unverifiedTimeRangeLinkTable = table("pictures_time_range_tag_links");
   knexEngine = buildJoinsForTableWithVerifiedHandling(
     knexEngine,
     "time_range_tag",
@@ -86,7 +97,7 @@ const buildJoins = (knexEngine) => {
   );
 
   for (const singularTableName of manyToManyWithoutVerified) {
-    const linkTable = `pictures_${singularTableName}s_links`;
+    const linkTable = table(`pictures_${plural(singularTableName)}_links`);
     knexEngine = buildJoinsForTableWithoutVerifiedHandling(
       knexEngine,
       singularTableName,
@@ -96,7 +107,7 @@ const buildJoins = (knexEngine) => {
 
   // Special handling for our archive-tags as these are in 1:n relation to the picture type
   // and don't have a special verified relation.
-  const archiveTagLinkTable = "pictures_archive_tag_links";
+  const archiveTagLinkTable = table("pictures_archive_tag_links");
   knexEngine = buildJoinsForTableWithoutVerifiedHandling(
     knexEngine,
     "archive_tag",
@@ -110,7 +121,7 @@ const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
   const searchTermForLikeQuery = `%${searchTerm}%`;
   for (const singularTableName of manyToManyWithVerified) {
     knexEngine = knexEngine.orWhereILike(
-      `${singularTableName}s.name`,
+      `${plural(singularTableName)}.name`,
       searchTermForLikeQuery
     );
   }
@@ -175,7 +186,7 @@ const buildQueryForAllSearch = (
   searchTimes,
   pagination = { start: 0, limit: 100 }
 ) => {
-  const withSelect = knexEngine.distinct("pictures.*").from("pictures");
+  const withSelect = knexEngine.distinct("pictures.*").from(table("pictures"));
 
   const withJoins = buildJoins(withSelect);
 
@@ -198,10 +209,10 @@ const buildQueryForMediaFiles = (knexEngine, pictureIds) => {
       "files_related_morphs.related_id",
       "files_related_morphs.related_type"
     )
-    .from("files");
+    .from(table("files"));
 
   const withJoin = withSelect.leftJoin(
-    "files_related_morphs",
+    table("files_related_morphs"),
     "files.id",
     "files_related_morphs.file_id"
   );
