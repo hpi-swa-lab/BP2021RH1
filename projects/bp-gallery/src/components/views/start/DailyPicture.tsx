@@ -65,7 +65,7 @@ const DailyPicture = () => {
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
-  const description = picture?.descriptions?.[0]?.text || '';
+  const description = picture?.descriptions?.[0]?.text ?? '';
   const pictureDate = formatTimeStamp(picture?.time_range_tag);
   const pictureArchive = picture?.archive_tag?.name;
   const pictureArchiveId = picture?.archive_tag?.id;
