@@ -214,13 +214,22 @@ export type CollectionRelationResponseCollection = {
 
 export type Comment = {
   author?: Maybe<Scalars['String']>;
+  childComments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   date: Scalars['DateTime'];
+  parentComment?: Maybe<CommentEntityResponse>;
   picture?: Maybe<PictureEntityResponse>;
   pinned?: Maybe<Scalars['Boolean']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentChildCommentsArgs = {
+  filters?: InputMaybe<CommentFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CommentEntity = {
@@ -240,11 +249,13 @@ export type CommentEntityResponseCollection = {
 export type CommentFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<CommentFiltersInput>>>;
   author?: InputMaybe<StringFilterInput>;
+  childComments?: InputMaybe<CommentFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   date?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<CommentFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<CommentFiltersInput>>>;
+  parentComment?: InputMaybe<CommentFiltersInput>;
   picture?: InputMaybe<PictureFiltersInput>;
   pinned?: InputMaybe<BooleanFilterInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
@@ -254,7 +265,9 @@ export type CommentFiltersInput = {
 
 export type CommentInput = {
   author?: InputMaybe<Scalars['String']>;
+  childComments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   date?: InputMaybe<Scalars['DateTime']>;
+  parentComment?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
   pinned?: InputMaybe<Scalars['Boolean']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
@@ -1997,6 +2010,46 @@ export type GetPictureInfoQuery = {
                         }
                       | null
                       | undefined;
+                    comments?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  text: string;
+                                  author?: string | null | undefined;
+                                  date: any;
+                                  publishedAt?: any | null | undefined;
+                                  pinned?: boolean | null | undefined;
+                                  picture?:
+                                    | {
+                                        data?:
+                                          | { id?: string | null | undefined }
+                                          | null
+                                          | undefined;
+                                      }
+                                    | null
+                                    | undefined;
+                                  parentComment?:
+                                    | {
+                                        data?:
+                                          | { id?: string | null | undefined }
+                                          | null
+                                          | undefined;
+                                      }
+                                    | null
+                                    | undefined;
+                                  childComments?:
+                                    | { data: Array<{ id?: string | null | undefined }> }
+                                    | null
+                                    | undefined;
+                                }
+                              | null
+                              | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
                     media: {
                       data?:
                         | {
@@ -2015,24 +2068,6 @@ export type GetPictureInfoQuery = {
                         | null
                         | undefined;
                     };
-                    comments?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  text: string;
-                                  author?: string | null | undefined;
-                                  date: any;
-                                  publishedAt?: any | null | undefined;
-                                  pinned?: boolean | null | undefined;
-                                }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
                     linked_pictures?:
                       | { data: Array<{ id?: string | null | undefined }> }
                       | null
@@ -2470,6 +2505,7 @@ export type PostCommentMutationVariables = Exact<{
   author: Scalars['String'];
   text: Scalars['String'];
   date: Scalars['DateTime'];
+  parentCommentId?: InputMaybe<Scalars['ID']>;
 }>;
 
 export type PostCommentMutation = {
@@ -3618,6 +3654,37 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
+          comments(
+            publicationState: PREVIEW
+            sort: "date:desc"
+            filters: { picture: { id: { eq: $pictureId } } }
+          ) {
+            data {
+              id
+              attributes {
+                text
+                author
+                picture {
+                  data {
+                    id
+                  }
+                }
+                date
+                parentComment {
+                  data {
+                    id
+                  }
+                }
+                childComments(publicationState: PREVIEW, sort: "date:asc") {
+                  data {
+                    id
+                  }
+                }
+                publishedAt
+                pinned
+              }
+            }
+          }
           media {
             data {
               id
@@ -3627,18 +3694,6 @@ export const GetPictureInfoDocument = gql`
                 formats
                 url
                 updatedAt
-              }
-            }
-          }
-          comments(publicationState: PREVIEW, sort: "date:desc") {
-            data {
-              id
-              attributes {
-                text
-                author
-                date
-                publishedAt
-                pinned
               }
             }
           }
@@ -4307,9 +4362,22 @@ export type GetRootCollectionQueryResult = Apollo.QueryResult<
 >;
 
 export const PostCommentDocument = gql`
-  mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
+  mutation postComment(
+    $id: ID!
+    $author: String!
+    $text: String!
+    $date: DateTime!
+    $parentCommentId: ID
+  ) {
     createComment(
-      data: { author: $author, text: $text, date: $date, picture: $id, publishedAt: null }
+      data: {
+        author: $author
+        text: $text
+        date: $date
+        picture: $id
+        publishedAt: null
+        parentComment: $parentCommentId
+      }
     ) {
       data {
         attributes {
@@ -4342,6 +4410,7 @@ export type PostCommentMutationFn = Apollo.MutationFunction<
  *      author: // value for 'author'
  *      text: // value for 'text'
  *      date: // value for 'date'
+ *      parentCommentId: // value for 'parentCommentId'
  *   },
  * });
  */

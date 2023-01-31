@@ -145,6 +145,37 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        comments(
+          publicationState: PREVIEW
+          sort: "date:desc"
+          filters: { picture: { id: { eq: $pictureId } } }
+        ) {
+          data {
+            id
+            attributes {
+              text
+              author
+              picture {
+                data {
+                  id
+                }
+              }
+              date
+              parentComment {
+                data {
+                  id
+                }
+              }
+              childComments(publicationState: PREVIEW, sort: "date:asc") {
+                data {
+                  id
+                }
+              }
+              publishedAt
+              pinned
+            }
+          }
+        }
         media {
           data {
             id
@@ -154,18 +185,6 @@ query getPictureInfo($pictureId: ID!) {
               formats
               url
               updatedAt
-            }
-          }
-        }
-        comments(publicationState: PREVIEW, sort: "date:desc") {
-          data {
-            id
-            attributes {
-              text
-              author
-              date
-              publishedAt
-              pinned
             }
           }
         }
@@ -463,9 +482,22 @@ query getRootCollection {
   }
 }
 
-mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
+mutation postComment(
+  $id: ID!
+  $author: String!
+  $text: String!
+  $date: DateTime!
+  $parentCommentId: ID
+) {
   createComment(
-    data: { author: $author, text: $text, date: $date, picture: $id, publishedAt: null }
+    data: {
+      author: $author
+      text: $text
+      date: $date
+      picture: $id
+      publishedAt: null
+      parentComment: $parentCommentId
+    }
   ) {
     data {
       attributes {
