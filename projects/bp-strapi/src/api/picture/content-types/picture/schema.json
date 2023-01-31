@@ -15,11 +15,7 @@
       "type": "media",
       "multiple": false,
       "required": true,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos"
-      ]
+      "allowedTypes": ["images", "files", "videos"]
     },
     "wordpress_id": {
       "type": "integer",
@@ -91,6 +87,10 @@
       "target": "api::time-range-tag.time-range-tag",
       "inversedBy": "verified_pictures"
     },
+    "is_text": {
+      "type": "boolean",
+      "default": false
+    },
     "archive_identifier": {
       "type": "string"
     },
@@ -102,6 +102,18 @@
     },
     "likes": {
       "type": "integer"
+    },
+    "linked_texts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "linked_pictures"
+    },
+    "linked_pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "linked_texts"
     }
   }
 }
