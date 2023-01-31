@@ -9,7 +9,7 @@ import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
 import './CommentVerification.scss';
 import { Button } from '@mui/material';
-import { Close, Delete, Done } from '@mui/icons-material';
+import { Close, Done } from '@mui/icons-material';
 
 const CommentVerification = ({ children, comment }: { children: any; comment: FlatComment }) => {
   const dialog = useDialog();
@@ -56,11 +56,6 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
               {t('common.accept')}
             </Button>
           </>
-        )}
-        {comment.publishedAt && role >= AuthRole.CURATOR && (
-          <Button className='delete' startIcon={<Delete />} onClick={onDecline}>
-            {t('common.delete')}
-          </Button>
         )}
       </div>
     );

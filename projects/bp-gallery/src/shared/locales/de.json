@@ -183,6 +183,8 @@
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
     "reallyDeleteDescription": "Beschreibung wirklich löschen?",
     "really-decline-comment": "Soll folgender Kommentar gelöscht werden?",
+    "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch ein Unterkommentar der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
+    "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
     "reallyDeleteCollection": "Collection wirklich löschen?",
     "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",

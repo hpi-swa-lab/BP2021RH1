@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';
@@ -10,17 +10,16 @@ import { ExpandMore } from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import LikeButton from '../LikeButton';
 
-const CommentsContainer = ({
+const CommentsContainer = memo(function CommentsContainer({
   pictureId,
   comments,
   likeCount,
 }: {
-  comments?: FlatComment[];
   pictureId: string;
+  comments?: FlatComment[];
   likeCount: number;
-}) => {
+}) {
   const { t } = useTranslation();
-
   const { role } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
@@ -29,8 +28,22 @@ const CommentsContainer = ({
     setIsOpen(role < AuthRole.CURATOR);
   }, [role]);
 
+  const commentTree = useMemo(() => {
+    if (!comments) return;
+
+    const commentsById = Object.fromEntries(
+      comments.map(comment => [comment.id, { ...comment, childComments: [] as FlatComment[] }])
+    );
+    for (const comment of Object.values(commentsById)) {
+      if (comment.parentComment?.id) {
+        commentsById[comment.parentComment.id].childComments.push(comment);
+      }
+    }
+    return Object.values(commentsById).filter(comment => comment.parentComment === null);
+  }, [comments]);
+
   const sortedComments = () => {
-    return comments?.sort(
+    return commentTree?.sort(
       (comment1, comment2) => Number(comment2.pinned) - Number(comment1.pinned)
     );
   };
@@ -80,6 +93,6 @@ const CommentsContainer = ({
       <NewCommentForm pictureId={pictureId} />
     </div>
   );
-};
+});
 
 export default CommentsContainer;

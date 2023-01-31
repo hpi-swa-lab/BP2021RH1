@@ -86,7 +86,7 @@
     "build:css": "npx tailwindcss -i ./src/shared/tailwind.css -o ./src/index.css --watch",
     "test": "env-cmd -f ./environments/.env.development react-scripts test --watchAll",
     "test:ci": "env-cmd -f ./environments/.env.development react-scripts test --verbose",
-    "cy:run": "cypress run",
+    "cy:run": "cypress run -c video=false,videoUploadOnPasses=false",
     "cy:open": "cypress open",
     "start:e2e": "env-cmd -f ./environments/.env.test react-scripts start",
     "cy": "start-server-and-test start:e2e http://localhost:3000 cy:open",

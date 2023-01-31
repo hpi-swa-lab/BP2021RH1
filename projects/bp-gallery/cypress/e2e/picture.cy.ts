@@ -57,7 +57,7 @@ describe('Picture View called via link as a curator', () => {
     cy.get('.date-range-picker .MuiCheckbox-root').click();
     cy.get('.date-range-picker .MuiCheckbox-root.Mui-checked');
     cy.get('.date-range-picker .MuiCheckbox-root').click();
-    cy.get('.date-range-picker .MuiCheckbox-root').type('{esc}')
+    cy.get('.date-range-picker .MuiCheckbox-root').type('{esc}');
   });
 });
 
