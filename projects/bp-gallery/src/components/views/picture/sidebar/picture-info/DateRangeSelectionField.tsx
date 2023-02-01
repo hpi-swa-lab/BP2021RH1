@@ -65,7 +65,7 @@ const DateRangeSelectionField = ({
       const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
       if (!timeRange) {
         tRT.start = Date.now();
-        tRT.end = Date.now();
+        tRT.end = tRT.start;
       }
       tRT.isEstimate = !tRT.isEstimate;
       return { ...tRT };
