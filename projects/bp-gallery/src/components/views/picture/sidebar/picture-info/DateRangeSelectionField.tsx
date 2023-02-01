@@ -61,11 +61,21 @@ const DateRangeSelectionField = ({
 
   const handleIsEstimateChange = () => {
     onTouch();
-    setTimeRange(oldTimeRange => {
-      const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
-      tRT.isEstimate = !tRT.isEstimate;
-      return { ...tRT };
-    });
+    if (timeRange) {
+      setTimeRange(oldTimeRange => {
+        const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
+        tRT.isEstimate = !tRT.isEstimate;
+        return { ...tRT };
+      });
+    } else {
+      setTimeRange(oldTimeRange => {
+        const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
+        tRT.start = Date.now();
+        tRT.end = Date.now();
+        tRT.isEstimate = !tRT.isEstimate;
+        return { ...tRT };
+      });
+    }
   };
 
   const formatEstimate = () => {
