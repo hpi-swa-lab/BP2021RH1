@@ -9,7 +9,7 @@ const {
   findPicturesByAllSearch,
   updatePictureWithTagCleanup,
   bulkEdit,
-} = require("./api/picture/services/custom-resolver")
+} = require("./api/picture/services/custom-resolver");
 
 module.exports = {
   /**
@@ -105,7 +105,12 @@ module.exports = {
             },
             async resolve(_, { searchTerms, searchTimes, pagination }) {
               const knexEngine = extensionArgs.strapi.db.connection;
-              return findPicturesByAllSearch(knexEngine, searchTerms, searchTimes, pagination);
+              return findPicturesByAllSearch(
+                knexEngine,
+                searchTerms,
+                searchTimes,
+                pagination
+              );
             },
           }),
           mutationField("doBulkEdit", {
@@ -118,7 +123,7 @@ module.exports = {
               const knexEngine = extensionArgs.strapi.db.connection;
               return bulkEdit(knexEngine, ids, data);
             },
-          })
+          }),
         ],
         resolversConfig: {
           Query: {
@@ -198,5 +203,5 @@ module.exports = {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap(/*{ strapi }*/) { },
+  bootstrap(/*{ strapi }*/) {},
 };
