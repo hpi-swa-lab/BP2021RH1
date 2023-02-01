@@ -63,6 +63,10 @@ const DateRangeSelectionField = ({
     onTouch();
     setTimeRange(oldTimeRange => {
       const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
+      if (!timeRange) {
+        tRT.start = Date.now();
+        tRT.end = tRT.start;
+      }
       tRT.isEstimate = !tRT.isEstimate;
       return { ...tRT };
     });
