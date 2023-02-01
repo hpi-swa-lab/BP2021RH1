@@ -616,22 +616,6 @@ mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
   }
 }
 
-mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
-  updateLocationTag(id: $tagId, data: { visible: $visible }) {
-    data {
-      id
-    }
-  }
-}
-
-mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
-  updateKeywordTag(id: $tagId, data: { visible: $visible }) {
-    data {
-      id
-    }
-  }
-}
-
 query getPersonTagsWithThumbnail(
   $filters: PersonTagFiltersInput = {}
   $thumbnailFilters: PictureFiltersInput = {}
