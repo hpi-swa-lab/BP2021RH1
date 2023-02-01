@@ -7,6 +7,7 @@ import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
 import ScrollContainer from '../../common/ScrollContainer';
+import DailyPicture from './DailyPicture';
 
 const StartView = () => {
   const { t } = useTranslation();
@@ -42,6 +43,7 @@ const StartView = () => {
               <h1>{t('startpage.welcome-title')}</h1>
               <p>{t('startpage.welcome-text')}</p>
             </div>
+            <DailyPicture />
             <h3>Unsere Archive:</h3>
             <div className='archives'>{archiveCards}</div>
           </div>

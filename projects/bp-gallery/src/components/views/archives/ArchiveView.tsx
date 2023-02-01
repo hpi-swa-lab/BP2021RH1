@@ -89,7 +89,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 <PicturePreview
                   picture={showcasePicture}
                   onClick={() => {}}
-                  viewOnly={true}
+                  allowClicks={false}
                   highQuality={true}
                 />
               </div>

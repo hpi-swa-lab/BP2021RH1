@@ -28,6 +28,7 @@
   .comment-container {
     display: flex;
     flex-direction: column;
+    margin: 0.5rem;
     margin-bottom: 1rem;
     gap: 1rem;
   }
@@ -37,7 +38,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 1rem;
+    padding: 1rem 1rem;
     padding-top: 1rem;
     cursor: pointer;
     position: relative;

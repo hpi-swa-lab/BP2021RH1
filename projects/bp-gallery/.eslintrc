@@ -83,6 +83,7 @@
     "@typescript-eslint/prefer-optional-chain": "warn",
     "@typescript-eslint/prefer-nullish-coalescing": "warn"
   },
+  "ignorePatterns": ["/build/"],
   "overrides": [
     {
       "files": ["**/*.test.tsx?"],
