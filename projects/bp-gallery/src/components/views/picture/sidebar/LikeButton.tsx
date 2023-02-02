@@ -52,7 +52,8 @@ const LikeButton = ({ pictureId, likeCount }: { pictureId: string; likeCount: nu
     <Button
       variant={'outlined'}
       className={'min-h-fit flex flex-row gap-1 place-items-center p-1 pointer-events-auto'}
-      onClick={() => {
+      onClick={event => {
+        event.stopPropagation();
         like(isLiked);
       }}
     >

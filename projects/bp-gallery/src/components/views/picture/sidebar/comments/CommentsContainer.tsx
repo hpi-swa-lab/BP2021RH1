@@ -56,12 +56,11 @@ const CommentsContainer = memo(function CommentsContainer({
 
   return (
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>
-      <div className='picture-comments-header '>
+      <div className='picture-comments-header ' onClick={() => setIsOpen(o => !o)}>
         <div className={'flex place-items-center m-0 gap-1 w-max grow'}>
           <LikeButton pictureId={pictureId} likeCount={likeCount} />
-          <div className={'flex grow'} onClick={() => setIsOpen(o => !o)}>
-            <div className='grow' />
-            <div className='picture-comments-icon mr-2'>
+          <div className={'flex grow'}>
+            <div className='picture-comments-icon mr-2 ml-auto'>
               {isOpen || badgeNumber === 0 ? (
                 <Icon>question_answer</Icon>
               ) : (

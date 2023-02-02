@@ -205,6 +205,10 @@
   margin-right: 0.5rem;
 }
 
+.ml-auto {
+  margin-left: auto;
+}
+
 .ml-2 {
   margin-left: 0.5rem;
 }
