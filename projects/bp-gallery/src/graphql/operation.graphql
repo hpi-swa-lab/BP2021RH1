@@ -207,6 +207,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        likes
       }
     }
   }
@@ -480,6 +481,10 @@ query getRootCollection {
       }
     }
   }
+}
+
+mutation like($pictureId: ID!, $dislike: Boolean) {
+  doLike(pictureId: $pictureId, dislike: $dislike)
 }
 
 mutation postComment(

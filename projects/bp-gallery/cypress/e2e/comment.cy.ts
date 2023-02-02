@@ -77,6 +77,7 @@ describe('Comment', () => {
   });
 
   it('is possible to to freely nest comments', () => {
+    cy.get('#comments').click();
     postComment('Olaf Ober', 'Oberkommentar1');
     closeModal('Danke für Ihren Kommentar!', 'Verstanden');
     cy.contains('.comment-verification-container', 'Oberkommentar1')

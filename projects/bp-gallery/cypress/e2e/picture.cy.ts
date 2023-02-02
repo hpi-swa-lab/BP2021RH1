@@ -60,3 +60,25 @@ describe('Picture View called via link as a curator', () => {
     cy.get('.date-range-picker .MuiCheckbox-root').type('{esc}');
   });
 });
+
+describe('Like Button', () => {
+  before(() => {
+    cy.visit('http://localhost:3000/picture/1');
+  });
+
+  it('increases the like counter when clicking the like Button', () => {
+    cy.contains('Mag ich').contains('0');
+    cy.contains('Mag ich').click();
+    cy.contains('Mag ich').contains('1');
+    cy.reload();
+    cy.contains('Mag ich').contains('1');
+  });
+
+  it('decreases the like counter when clicking on an already liked picture', () => {
+    cy.contains('Mag ich').contains('1');
+    cy.contains('Mag ich').click();
+    cy.contains('Mag ich').contains('0');
+    cy.reload();
+    cy.contains('Mag ich').contains('0');
+  });
+});
