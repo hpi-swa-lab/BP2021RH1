@@ -7,12 +7,10 @@ import {
   zoomOutOfPicture,
 } from '../../common/picture-gallery/helpers/picture-animations';
 import PictureView from '../picture/PictureView';
-import { Portal } from '@mui/material';
+import { Portal, Event, FolderSpecial } from 'mui';
 import { useTranslation } from 'react-i18next';
-import EventIcon from '@mui/icons-material/Event';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import Editor from '../../common/editor/Editor';
-import { FolderSpecial } from '@mui/icons-material';
 import { asApiPath } from '../../App';
 
 const choosePictureId = (pictureIds: string[]) => {
@@ -91,7 +89,7 @@ const DailyPicture = () => {
               </p>
               <div className={'flex-1'} />
               <div className={'flex items-center gap-2 my-2'}>
-                <EventIcon /> {pictureDate}
+                <Event /> {pictureDate}
               </div>
               <div className={'flex item-center gap-2'}>
                 <FolderSpecial /> <a href={pictureArchiveLink}>{pictureArchive} </a>

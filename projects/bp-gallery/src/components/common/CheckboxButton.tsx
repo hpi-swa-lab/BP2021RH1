@@ -1,6 +1,5 @@
 import React from 'react';
-import { CheckBox, CheckBoxOutlineBlank } from '@mui/icons-material';
-import { Button } from '@mui/material';
+import { Button, CheckBox, CheckBoxOutlineBlank } from 'mui';
 import { useCallback } from 'react';
 
 export const CheckboxButton: React.FC<{

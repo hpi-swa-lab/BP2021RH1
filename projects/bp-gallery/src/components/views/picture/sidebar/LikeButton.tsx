@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Icon } from '@mui/material';
+import { Button, Icon } from 'mui';
 import { useTranslation } from 'react-i18next';
 import { useLikeMutation } from '../../../../graphql/APIConnector';
 import useStorageState from '../../../../hooks/storage-state.hook';

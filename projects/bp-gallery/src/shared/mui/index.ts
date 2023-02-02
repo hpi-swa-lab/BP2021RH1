@@ -1,5 +1,17 @@
 export { default as Star } from '@mui/icons-material/Star';
 
+export { default as ChevronLeft } from '@mui/icons-material/ChevronLeft';
+
+export { default as ContentPaste } from '@mui/icons-material/ContentPaste';
+
+export { default as ContentPasteOff } from '@mui/icons-material/ContentPasteOff';
+
+export { default as ContentCopy } from '@mui/icons-material/ContentCopy';
+
+export { default as ContentPasteGo } from '@mui/icons-material/ContentPasteGo';
+
+export { default as LinkOff } from '@mui/icons-material/LinkOff';
+
 export { default as Check } from '@mui/icons-material/Check';
 
 export { default as Save } from '@mui/icons-material/Save';
@@ -131,6 +143,8 @@ export { default as DialogContent } from '@mui/material/DialogContent';
 export { default as DialogContentText } from '@mui/material/DialogContentText';
 
 export { default as DialogTitle } from '@mui/material/DialogTitle';
+
+export { default as Checkbox } from '@mui/material/Checkbox';
 
 export { default as TextField } from '@mui/material/TextField';
 

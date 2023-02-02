@@ -12,7 +12,7 @@ import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import i18n from '../../../../../i18n';
 import { cloneDeep } from 'lodash';
 import './DateRangeSelectionField.scss';
-import Checkbox from '@mui/material/Checkbox';
+import { Checkbox } from 'mui';
 
 const DateRangeSelectionField = ({
   timeRangeTag,
