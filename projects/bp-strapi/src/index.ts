@@ -1,29 +1,30 @@
 "use strict";
 
-const { mergeSourceTagIntoTargetTag } = require("./api/custom-tag-resolver");
-const {
+import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
+import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
-} = require("./api/collection/services/custom-resolver");
-const {
+} from "./api/collection/services/custom-resolver";
+import {
   findPicturesByAllSearch,
   updatePictureWithTagCleanup,
   bulkEdit,
-} = require("./api/picture/services/custom-resolver")
+  like,
+} from "./api/picture/services/custom-resolver";
+import { Strapi } from "@strapi/strapi";
+import { GqlExtension } from "./types";
 
-module.exports = {
+export default {
   /**
    * An asynchronous register function that runs before
    * your application is initialized.
    *
    * This gives you an opportunity to extend code.
    */
-  register({ strapi }) {
+  register({ strapi }: { strapi: Strapi }) {
     const gqlExtensionService = strapi.plugin("graphql").service("extension");
-
-    const gqlExtension = (extensionArgs) => {
+    const gqlExtension = (extensionArgs: GqlExtension) => {
       const { list, mutationField, queryField } = extensionArgs.nexus;
-
       return {
         types: [
           mutationField("mergeKeywordTags", {
@@ -105,7 +106,12 @@ module.exports = {
             },
             async resolve(_, { searchTerms, searchTimes, pagination }) {
               const knexEngine = extensionArgs.strapi.db.connection;
-              return findPicturesByAllSearch(knexEngine, searchTerms, searchTimes, pagination);
+              return findPicturesByAllSearch(
+                knexEngine,
+                searchTerms,
+                searchTimes,
+                pagination
+              );
             },
           }),
           mutationField("doBulkEdit", {
@@ -118,7 +124,18 @@ module.exports = {
               const knexEngine = extensionArgs.strapi.db.connection;
               return bulkEdit(knexEngine, ids, data);
             },
-          })
+          }),
+          mutationField("doLike", {
+            type: "Int",
+            args: {
+              pictureId: "ID",
+              dislike: "Boolean",
+            },
+            async resolve(_, { pictureId, dislike }) {
+              const knexEngine = extensionArgs.strapi.db.connection;
+              return like(knexEngine, pictureId, dislike);
+            },
+          }),
         ],
         resolversConfig: {
           Query: {
@@ -159,6 +176,11 @@ module.exports = {
                 scope: ["api::picture.picture.update"],
               },
             },
+            doLike: {
+              auth: {
+                scope:["api::picture.picture.find"]
+              }
+            }
           },
           Collection: {
             thumbnail: {
@@ -198,5 +220,5 @@ module.exports = {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap(/*{ strapi }*/) { },
+  bootstrap(/*{ strapi }*/) {},
 };

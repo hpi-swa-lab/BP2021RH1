@@ -14,6 +14,10 @@ export { default as NavigateBefore } from '@mui/icons-material/NavigateBefore';
 
 export { default as ExpandMore } from '@mui/icons-material/ExpandMore';
 
+export { default as ExpandLess } from '@mui/icons-material/ExpandLess';
+
+export { default as QuestionAnswer } from '@mui/icons-material/QuestionAnswer';
+
 export { default as Sell } from '@mui/icons-material/Sell';
 
 export { default as Event } from '@mui/icons-material/Event';
@@ -137,3 +141,5 @@ export { default as Snackbar } from '@mui/material/Snackbar';
 export { default as Badge } from '@mui/material/Badge';
 
 export { default as Chip } from '@mui/material/Chip';
+
+export { default as Portal } from '@mui/material/Portal';

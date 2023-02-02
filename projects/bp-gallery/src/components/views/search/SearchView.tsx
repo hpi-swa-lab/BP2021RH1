@@ -12,11 +12,10 @@ import {
   paramToTime,
   SearchType,
 } from './helpers/search-filters';
-import { Button, Typography } from 'mui';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
-import { SearchInfoTooltip } from './SearchInfoTooltip';
+import { HelpTooltip } from '../../common/HelpTooltip';
 
 export const isValidYear = (searchRequest: string) => {
   return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
@@ -79,16 +78,7 @@ const SearchView = () => {
             {(!areResultsEmpty || !search) && (
               <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
             )}
-            <SearchInfoTooltip
-              title={
-                <>
-                  <Typography color='inherit'>{t('search.question')}</Typography>
-                  <p>{t('search.help')}</p>
-                </>
-              }
-            >
-              <Button />
-            </SearchInfoTooltip>
+            <HelpTooltip title={t('search.question')} content={t('search.help')} />
             <div className='breadcrumb'>
               <SearchBreadcrumbs searchParams={searchParams} />
             </div>

@@ -11,6 +11,8 @@ import { de } from 'date-fns/locale';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import i18n from '../../../../../i18n';
 import { cloneDeep } from 'lodash';
+import './DateRangeSelectionField.scss';
+import Checkbox from '@mui/material/Checkbox';
 
 const DateRangeSelectionField = ({
   timeRangeTag,
@@ -57,6 +59,25 @@ const DateRangeSelectionField = ({
     setAnchorElement(anchor);
   };
 
+  const handleIsEstimateChange = () => {
+    onTouch();
+    setTimeRange(oldTimeRange => {
+      const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
+      if (!timeRange) {
+        tRT.start = Date.now();
+        tRT.end = tRT.start;
+      }
+      tRT.isEstimate = !tRT.isEstimate;
+      return { ...tRT };
+    });
+  };
+
+  const formatEstimate = () => {
+    return timeRange?.isEstimate
+      ? 'etwa ' + formatTimeStamp(timeRange)
+      : formatTimeStamp(timeRange);
+  };
+
   return (
     <>
       <div
@@ -73,7 +94,7 @@ const DateRangeSelectionField = ({
         }}
         tabIndex={0}
       >
-        {timeRange ? formatTimeStamp(timeRange) : `${t('pictureFields.noTime')}`}
+        {timeRange ? formatEstimate() : `${t('pictureFields.noTime')}`}
       </div>
       {role >= AuthRole.CURATOR && (
         <Popover
@@ -84,7 +105,9 @@ const DateRangeSelectionField = ({
             setAnchorElement(null);
             if (
               timeRange &&
-              (timeRange.start !== timeRangeTag?.start || timeRangeTag?.end !== timeRange.end)
+              (timeRange.start !== timeRangeTag?.start ||
+                timeRangeTag?.end !== timeRange.end ||
+                timeRange.isEstimate !== timeRangeTag?.isEstimate)
             ) {
               onChange(timeRange);
             } else {
@@ -97,31 +120,41 @@ const DateRangeSelectionField = ({
             horizontal: 'center',
           }}
         >
-          <DateRangePicker
-            ranges={[selectionRange]}
-            locale={de}
-            editableDateInputs={true}
-            rangeColors={['#690e6e']}
-            staticRanges={[]}
-            inputRanges={INPUT_RANGES}
-            dateDisplayFormat={'dd.MM.yyyy'}
-            minDate={dayjs(`1000-01-01`).toDate()}
-            maxDate={dayjs().add(1, 'year').toDate()}
-            onChange={range => {
-              if (range.selection.startDate && range.selection.endDate) {
-                const s = range.selection.startDate.toISOString();
-                const e = range.selection.endDate.toISOString();
-                onTouch();
-                setTimeRange(oldTimeRange => {
-                  const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
-                  tRT.start = s;
-                  tRT.end = e;
-                  return { ...tRT };
-                });
-                resetInputFields();
-              }
-            }}
-          />
+          <div className='date-range-picker'>
+            <label>
+              <Checkbox
+                checked={timeRange?.isEstimate ?? false}
+                onChange={handleIsEstimateChange}
+              />
+              {`${t('pictureFields.around')}`}
+            </label>
+            <DateRangePicker
+              ranges={[selectionRange]}
+              locale={de}
+              editableDateInputs={true}
+              rangeColors={['#690e6e']}
+              staticRanges={[]}
+              inputRanges={INPUT_RANGES}
+              dateDisplayFormat={'dd.MM.yyyy'}
+              minDate={dayjs(`1000-01-01`).toDate()}
+              maxDate={dayjs().add(1, 'year').toDate()}
+              onChange={range => {
+                if (range.selection.startDate && range.selection.endDate) {
+                  const s = range.selection.startDate.toISOString();
+                  const e = range.selection.endDate.toISOString();
+                  onTouch();
+                  setTimeRange(oldTimeRange => {
+                    const tRT = oldTimeRange ?? ({} as FlatTimeRangeTag);
+                    tRT.start = s;
+                    tRT.end = e;
+
+                    return { ...tRT };
+                  });
+                  resetInputFields();
+                }
+              }}
+            />
+          </div>
         </Popover>
       )}
     </>
@@ -132,7 +165,6 @@ export default DateRangeSelectionField;
 
 let yearValue = '';
 let decadeValue = '';
-
 let resetDecade = false;
 let resetYear = false;
 

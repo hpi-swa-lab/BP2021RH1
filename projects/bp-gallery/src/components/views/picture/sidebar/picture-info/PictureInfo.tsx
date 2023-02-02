@@ -19,6 +19,7 @@ import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtil
 import DescriptionsEditField from './DescriptionsEditField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import ArchiveTagField from './ArchiveTagField';
+import LinkedInfoField from './LinkedInfoField';
 
 export type Field = Pick<
   FlatPicture,
@@ -28,16 +29,19 @@ export type Field = Pick<
   | 'location_tags'
   | 'person_tags'
   | 'collections'
+  | 'is_text'
 > & { archive_tag?: Scalars['ID'] };
 
 const PictureInfo = ({
   picture,
+  pictureIds,
   onSave,
   topInfo,
 }: {
   picture: FlatPicture;
+  pictureIds: string[];
   onSave: (field: Field) => void;
-  topInfo?: (anyFieldTouched: boolean) => ReactNode;
+  topInfo?: (anyFieldTouched: boolean, isSaving: boolean) => ReactNode;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -62,15 +66,23 @@ const PictureInfo = ({
   const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
   const allCollections = useSimplifiedQueryResponseData(collectionsResponse.data)?.collections;
 
-  const [newPersonTagMutation] = useCreatePersonTagMutation({
+  const [newPersonTagMutation, newPersonTagMutationResponse] = useCreatePersonTagMutation({
     refetchQueries: ['getAllPersonTags'],
+    awaitRefetchQueries: true,
   });
-  const [newLocationTagMutation] = useCreateLocationTagMutation({
+  const [newLocationTagMutation, newLocationTagMutationResponse] = useCreateLocationTagMutation({
     refetchQueries: ['getAllLocationTags'],
+    awaitRefetchQueries: true,
   });
-  const [newKeywordTagMutation] = useCreateKeywordTagMutation({
+  const [newKeywordTagMutation, newKeywordTagMutationResponse] = useCreateKeywordTagMutation({
     refetchQueries: ['getAllKeywordTags'],
+    awaitRefetchQueries: true,
   });
+
+  const isSaving =
+    newPersonTagMutationResponse.loading ||
+    newLocationTagMutationResponse.loading ||
+    newKeywordTagMutationResponse.loading;
 
   useEffect(() => {
     if (role >= AuthRole.CURATOR) {
@@ -83,7 +95,7 @@ const PictureInfo = ({
 
   return (
     <div className='picture-info'>
-      {topInfo?.(anyFieldTouched)}
+      {topInfo?.(anyFieldTouched, isSaving)}
       <PictureInfoField title={t('pictureFields.time')} icon='event' type='date'>
         <DateRangeSelectionField
           timeRangeTag={picture.time_range_tag}
@@ -145,6 +157,11 @@ const PictureInfo = ({
           />
         </PictureInfoField>
       )}
+      <LinkedInfoField
+        picture={picture}
+        pictureIds={pictureIds}
+        savePictureInfo={savePictureInfo}
+      />
       {role >= AuthRole.CURATOR && (
         <PictureInfoField title={t('pictureFields.collections')} icon='folder' type='collections'>
           <TagSelectionField

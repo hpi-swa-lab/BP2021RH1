@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -9,7 +9,7 @@ import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
 import { cloneDeep } from 'lodash';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { Button, Close, CircularProgress, Icon } from 'mui';
 
 export interface PictureUploadAreaProps {
@@ -28,7 +28,7 @@ const PictureUploadArea = ({
   });
   const { t } = useTranslation();
   const { role } = useAuth();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
 
   const [newFiles, setNewFiles] = useState<{ file: File; preview: FlatPicture }[]>([]);
 

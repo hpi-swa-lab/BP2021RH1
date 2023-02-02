@@ -1,29 +1,19 @@
 // color scheme
 
-:root {
-  --primary-color: #7e241d;
-  --secondary-color: #404173;
-  --background-color: #f5f5f5;
-  --text-color: #0a0a0a;
-  --decade-color: #690e6e;
-  --description-color: #7e241d;
-  --person-color: #404173;
-  --location-color: #2c6e49;
-  --keyword-color: #d18c2d;
-  --title-color: rgb(95, 94, 94);
-  --all-search-color: #84b0c4;
-}
-
-$primaryColor: var(--primary-color);
-$secondaryColor: var(--secondary-color);
-$backgroundColor: var(--background-color);
-$textColor: var(--text-color);
-$decadeColor: var(--decade-color);
-$descriptionColor: var(--description-color);
-$personColor: var(--person-color);
-$locationColor: var(--location-color);
-$keywordColor: var(--keyword-color);
-$titleColor: var(--title-color);
-$allSearchColor: var(--all-search-color);
+$primaryColor: #7e241d;
+$secondaryColor: #404173;
+$backgroundColor: #f5f5f5;
+$textColor: #0a0a0a;
+$decadeColor: #690e6e;
+$descriptionColor: #7e241d;
+$personColor: #404173;
+$locationColor: #2c6e49;
+$keywordColor: #d18c2d;
+$markAsTextColor: #b95e3d;
+$linkColor: #b64b5a;
+$collectionColor: #a053a7;
+$archiveColor: #446ab7;
+$titleColor: #5f5e5e;
+$allSearchColor: #84b0c4;
 
 $mobile-breakpoint: 750px;

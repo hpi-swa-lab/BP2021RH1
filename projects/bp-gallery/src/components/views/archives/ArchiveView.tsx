@@ -115,7 +115,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 <PicturePreview
                   picture={showcasePicture}
                   onClick={() => {}}
-                  viewOnly={true}
+                  allowClicks={false}
                   highQuality={true}
                 />
               </div>
@@ -127,7 +127,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             scrollPos={scrollPos}
             scrollHeight={scrollHeight}
             hashbase={'archive'}
-            extraAdornments={[showcaseAdornment]}
+            extraAdornments={role >= AuthRole.CURATOR ? [showcaseAdornment] : []}
             bulkOperations={[bulkEdit]}
           />
         </div>

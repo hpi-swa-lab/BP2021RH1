@@ -24,7 +24,10 @@ if (matomoUrl) {
   setupMatomo(matomoUrl);
 }
 
-createRoot(document.getElementById('root')!).render(
+export const root = document.getElementById('root')!;
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+createRoot(root).render(
   <React.StrictMode>
     <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
   </React.StrictMode>

@@ -1,17 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import {
   useAcceptCommentMutation,
   useDeclineCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
+import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
 import './CommentVerification.scss';
-import { Button, Close, Delete, Done } from 'mui';
+import { Button, Close, Done } from 'mui';
 
 const CommentVerification = ({ children, comment }: { children: any; comment: FlatComment }) => {
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
   const { t } = useTranslation();
   const { role } = useAuth();
 
@@ -55,11 +55,6 @@ const CommentVerification = ({ children, comment }: { children: any; comment: Fl
               {t('common.accept')}
             </Button>
           </>
-        )}
-        {comment.publishedAt && role >= AuthRole.CURATOR && (
-          <Button className='delete' startIcon={<Delete />} onClick={onDecline}>
-            {t('common.delete')}
-          </Button>
         )}
       </div>
     );

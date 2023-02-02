@@ -6,6 +6,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.btn {
+  @apply border-none focus:ring-1 rounded cursor-pointer;
+}
+
 * {
   font-family: 'Lato', Arial, sans-serif;
 }

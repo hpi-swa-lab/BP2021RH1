@@ -1,7 +1,7 @@
 import { Icon, Tooltip } from 'mui';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +13,7 @@ const UnlinkCollectionAction = ({
   parentCollection: FlatCollection;
 }) => {
   const { t } = useTranslation();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
   const [updateCollection] = useUpdateCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });

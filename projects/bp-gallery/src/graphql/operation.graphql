@@ -69,6 +69,7 @@ query getPictureInfo($pictureId: ID!) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -78,6 +79,7 @@ query getPictureInfo($pictureId: ID!) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -143,25 +145,58 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
-        media {
-          data {
-            id
-            attributes {
-              url
-              updatedAt
-            }
-          }
-        }
-        comments(publicationState: PREVIEW, sort: "date:desc") {
+        comments(
+          publicationState: PREVIEW
+          sort: "date:desc"
+          filters: { picture: { id: { eq: $pictureId } } }
+        ) {
           data {
             id
             attributes {
               text
               author
+              picture {
+                data {
+                  id
+                }
+              }
               date
+              parentComment {
+                data {
+                  id
+                }
+              }
+              childComments(publicationState: PREVIEW, sort: "date:asc") {
+                data {
+                  id
+                }
+              }
               publishedAt
               pinned
             }
+          }
+        }
+        media {
+          data {
+            id
+            attributes {
+              width
+              height
+              formats
+              url
+              updatedAt
+            }
+          }
+        }
+        is_text
+        linked_pictures {
+          data {
+            id
+          }
+        }
+        linked_texts {
+          data {
+            id
           }
         }
         archive_tag {
@@ -172,6 +207,7 @@ query getPictureInfo($pictureId: ID!) {
             }
           }
         }
+        likes
       }
     }
   }
@@ -196,6 +232,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -205,6 +242,7 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
             attributes {
               start
               end
+              isEstimate
             }
           }
         }
@@ -289,6 +327,17 @@ query getMultiplePictureInfo($pictureIds: [ID!]) {
               publishedAt
               pinned
             }
+          }
+        }
+        is_text
+        linked_pictures {
+          data {
+            id
+          }
+        }
+        linked_texts {
+          data {
+            id
           }
         }
         archive_tag {
@@ -434,9 +483,26 @@ query getRootCollection {
   }
 }
 
-mutation postComment($id: ID!, $author: String!, $text: String!, $date: DateTime!) {
+mutation like($pictureId: ID!, $dislike: Boolean) {
+  doLike(pictureId: $pictureId, dislike: $dislike)
+}
+
+mutation postComment(
+  $id: ID!
+  $author: String!
+  $text: String!
+  $date: DateTime!
+  $parentCommentId: ID
+) {
   createComment(
-    data: { author: $author, text: $text, date: $date, picture: $id, publishedAt: null }
+    data: {
+      author: $author
+      text: $text
+      date: $date
+      picture: $id
+      publishedAt: null
+      parentComment: $parentCommentId
+    }
   ) {
     data {
       attributes {

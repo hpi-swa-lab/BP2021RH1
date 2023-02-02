@@ -5,12 +5,20 @@ import { usePostCommentMutation } from '../../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
-import { DialogContext } from '../../../../provider/DialogProvider';
+import { useDialog } from '../../../../provider/DialogProvider';
 
-const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
+const NewCommentForm = ({
+  pictureId,
+  parentCommentId,
+  onSubmit,
+}: {
+  pictureId: string;
+  parentCommentId?: string;
+  onSubmit?: () => void;
+}) => {
   const { t } = useTranslation();
   const openAlert = useContext(AlertContext);
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
 
   const [commentAuthor, setCommentAuthor] = useState('');
   const [commentText, setCommentText] = useState('');
@@ -49,6 +57,7 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
         }
       });
     },
+    refetchQueries: ['getPictureInfo'],
   });
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,10 +75,11 @@ const NewCommentForm = ({ pictureId }: { pictureId: string }) => {
           author: commentAuthor,
           text: commentText,
           date: getCurrentDateTimeString(),
+          parentCommentId: parentCommentId,
         },
-      });
+      }).then(() => onSubmit?.());
     }
-  }, [commentAuthor, commentText, pictureId, postCommentMutation]);
+  }, [commentText, postCommentMutation, pictureId, commentAuthor, parentCommentId, onSubmit]);
 
   return (
     <div

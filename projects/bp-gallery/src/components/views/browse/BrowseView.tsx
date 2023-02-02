@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
@@ -18,7 +18,7 @@ import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUplo
 import { Button, Add } from 'mui';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 import ScrollContainer from '../../common/ScrollContainer';
@@ -51,7 +51,7 @@ const BrowseView = ({
 }) => {
   const { t } = useTranslation();
   const { role } = useAuth();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
   const [addSubCollection] = useCreateSubCollectionMutation();
 
   // Query collection info

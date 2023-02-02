@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
@@ -28,9 +28,13 @@ export interface DialogProps {
   options?: DialogOption[];
 }
 
-export const DialogContext = React.createContext<(dialogProps: DialogProps) => Promise<any | null>>(
+const DialogContext = React.createContext<(dialogProps: DialogProps) => Promise<any | null>>(
   async (dialogProps: DialogProps) => null
 );
+
+export const useDialog = () => {
+  return useContext(DialogContext);
+};
 
 const DialogProvider = ({ children }: { children: any }) => {
   const [dialogState, setDialogState] = useState<DialogProps>();
