@@ -89,7 +89,8 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
                 hashBase={'carousel'}
                 loading={loading}
                 refetch={refetch}
-                viewOnly={true}
+                allowClicks={false}
+                showDefaultAdornments={false}
               />
             </div>
           )}

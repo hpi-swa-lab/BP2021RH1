@@ -161,7 +161,9 @@ const PictureGrid = ({
         ]
       : undefined;
 
-  const pictureAdornments = (defaultAdornments ?? []).concat(extraAdornments ?? []);
+  const pictureAdornments = (defaultAdornments ?? []).concat(
+    role >= AuthRole.CURATOR ? extraAdornments ?? [] : []
+  );
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
