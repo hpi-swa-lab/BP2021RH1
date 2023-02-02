@@ -9,6 +9,7 @@ import {
   findPicturesByAllSearch,
   updatePictureWithTagCleanup,
   bulkEdit,
+  like,
 } from "./api/picture/services/custom-resolver";
 import { Strapi } from "@strapi/strapi";
 import { GqlExtension } from "./types";
@@ -124,6 +125,17 @@ export default {
               return bulkEdit(knexEngine, ids, data);
             },
           }),
+          mutationField("doLike", {
+            type: "Int",
+            args: {
+              pictureId: "ID",
+              dislike: "Boolean",
+            },
+            async resolve(_, { pictureId, dislike }) {
+              const knexEngine = extensionArgs.strapi.db.connection;
+              return like(knexEngine, pictureId, dislike);
+            },
+          }),
         ],
         resolversConfig: {
           Query: {
@@ -164,6 +176,11 @@ export default {
                 scope: ["api::picture.picture.update"],
               },
             },
+            doLike: {
+              auth: {
+                scope:["api::picture.picture.find"]
+              }
+            }
           },
           Collection: {
             thumbnail: {
