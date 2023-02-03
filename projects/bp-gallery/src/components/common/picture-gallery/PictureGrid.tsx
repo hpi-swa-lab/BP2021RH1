@@ -107,6 +107,16 @@ const PictureGrid = ({
   const [selectedPictureIds, setSelectedPictureIds] = useState<string[]>([]);
   const [lastSelectedPictureId, setLastSelectedPictureId] = useState<string | null>(null);
 
+  // prevent old ids from being referenced above
+  useEffect(() => {
+    setSelectedPictureIds(current =>
+      current.filter(id => pictures.find(picture => picture.id === id))
+    );
+    setLastSelectedPictureId(current =>
+      pictures.find(picture => picture.id === current) ? current : null
+    );
+  }, [pictures]);
+
   const selectedPictures = useMemo(
     () => pictures.filter(picture => selectedPictureIds.includes(picture.id)),
     [pictures, selectedPictureIds]
