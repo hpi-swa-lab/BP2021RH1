@@ -1,3 +1,4 @@
+import { Button, CircularProgress, Icon } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,7 @@ import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
 import { cloneDeep } from 'lodash';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import { Button, Close, CircularProgress, Icon } from 'mui';
+import { Close } from '@mui/icons-material';
 
 export interface PictureUploadAreaProps {
   folderName?: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon } from 'mui';
+import { Button, Icon } from '@mui/material';
 import PictureNavigationButtons from './PictureNavigationButtons';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';

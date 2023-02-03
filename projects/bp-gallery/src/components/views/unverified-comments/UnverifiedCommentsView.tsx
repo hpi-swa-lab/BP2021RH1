@@ -9,7 +9,7 @@ import PictureView from '../picture/PictureView';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import './UnverifiedCommentsView.scss';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
-import { Portal } from 'mui';
+import { Portal } from '@mui/material';
 import { root } from '../../../main';
 
 const UnverifiedCommentsView = () => {

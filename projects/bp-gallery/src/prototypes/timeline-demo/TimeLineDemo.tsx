@@ -5,7 +5,8 @@ import './TimeLineDemo.scss';
 import dayjs from 'dayjs';
 import Timeline from './Timeline';
 import BPImage from './BPImage';
-import { IconButton, NavigateNext, NavigateBefore } from 'mui';
+import { IconButton } from '@mui/material';
+import { NavigateNext, NavigateBefore } from '@mui/icons-material';
 
 interface TimeLineDemoState {
   topLevelDescription: string;

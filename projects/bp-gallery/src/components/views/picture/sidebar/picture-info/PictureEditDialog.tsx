@@ -1,8 +1,9 @@
 import React, { useCallback, useContext, useRef } from 'react';
+import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ImageEditor from '@toast-ui/react-image-editor';
 import 'tui-image-editor/dist/tui-image-editor.css';
-import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography, Close, Save } from 'mui';
+import { Close, Save } from '@mui/icons-material';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import { asApiPath } from '../../../../App';
 import './PictureEditDialog.scss';

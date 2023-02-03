@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Login, Logout, Panorama } from 'mui';
+import { Button } from '@mui/material';
+import { Login, Logout, Panorama } from '@mui/icons-material';
 
 interface ActionsProps {
   loggedIn: boolean;

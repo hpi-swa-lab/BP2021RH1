@@ -3,7 +3,15 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import './FormattedComment.scss';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { Button, Delete, Edit, Close, ExpandLess, ExpandMore, QuestionAnswer, PushPin } from 'mui';
+import { Button } from '@mui/material';
+import {
+  Delete,
+  Close,
+  ExpandLess,
+  ExpandMore,
+  QuestionAnswer,
+  PushPin,
+} from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import {
   useDeclineCommentMutation,
@@ -12,6 +20,7 @@ import {
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
 import Editor from '../../../../common/editor/Editor';
+import EditIcon from '@mui/icons-material/Edit';
 import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
@@ -109,7 +118,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
             {
               text: 'Editieren',
               action: () => setEdit(!edit),
-              icon: !edit ? <Edit /> : <Close />,
+              icon: !edit ? <EditIcon /> : <Close />,
               hoverText: 'Editieren',
               state: edit,
             },

@@ -6,9 +6,8 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  Close,
-  Done,
-} from 'mui';
+} from '@mui/material';
+import { Close, Done } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import './SelectDialogPreset.scss';
 import { DialogProps } from '../DialogProvider';

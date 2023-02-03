@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem, TextField } from 'mui';
+import { MenuItem, TextField } from '@mui/material';
 
 interface TagMultiSelectProps {
   values: any[];

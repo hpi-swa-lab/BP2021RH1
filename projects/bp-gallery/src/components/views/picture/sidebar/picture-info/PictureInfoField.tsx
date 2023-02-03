@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'mui';
+import { Icon } from '@mui/material';
 import './PictureInfoField.scss';
 
 const PictureInfoField = ({

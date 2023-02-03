@@ -12,10 +12,11 @@ import ScrollContainer from '../../common/ScrollContainer';
 import ArchiveInfo from './ArchiveInfo';
 import './ArchiveView.scss';
 import { Redirect, useHistory } from 'react-router-dom';
+import { Button } from '@mui/material';
 import { History } from 'history';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { Star, Edit, Link, Button } from 'mui';
+import { Star, Edit, Link } from '@mui/icons-material';
 import { FALLBACK_PATH } from './../../routes';
 
 interface ArchiveViewProps {

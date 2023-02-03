@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import './NewCommentForm.scss';
-import { Button, TextField } from 'mui';
+import { Button, TextField } from '@mui/material';
 import { usePostCommentMutation } from '../../../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../../../provider/AlertProvider';

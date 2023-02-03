@@ -1,4 +1,4 @@
-import { Popover } from 'mui';
+import { Popover } from '@mui/material';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatTimeRangeTag } from '../../../../../types/additionalFlatTypes';
@@ -12,7 +12,7 @@ import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import i18n from '../../../../../i18n';
 import { cloneDeep } from 'lodash';
 import './DateRangeSelectionField.scss';
-import { Checkbox } from 'mui';
+import Checkbox from '@mui/material/Checkbox';
 
 const DateRangeSelectionField = ({
   timeRangeTag,

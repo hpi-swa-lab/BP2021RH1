@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
 import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
-import { Dialog } from 'mui';
+import { Dialog } from '@mui/material';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
 
 export interface DialogOption {

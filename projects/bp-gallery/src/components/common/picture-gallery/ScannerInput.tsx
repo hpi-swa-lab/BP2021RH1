@@ -1,4 +1,5 @@
-import { CircularProgress, Icon, Menu, MenuItem } from 'mui';
+import { Icon, Menu, MenuItem } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

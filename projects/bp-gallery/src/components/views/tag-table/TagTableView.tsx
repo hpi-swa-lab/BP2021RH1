@@ -16,9 +16,10 @@ import {
   GridRowsProp,
 } from '@mui/x-data-grid';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
+import { Button, Chip, IconButton } from '@mui/material';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useTranslation } from 'react-i18next';
-import { Button, Chip, IconButton, Delete } from 'mui';
+import { Delete } from '@mui/icons-material';
 import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';

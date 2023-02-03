@@ -1,4 +1,5 @@
-import { Button, ContentCopy, ContentPasteGo, LinkOff } from 'mui';
+import { ContentCopy, ContentPasteGo, LinkOff } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { differenceWith, isEqual, union, unionWith } from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

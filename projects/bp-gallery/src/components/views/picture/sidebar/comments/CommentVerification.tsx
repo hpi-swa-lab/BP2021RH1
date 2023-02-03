@@ -8,7 +8,8 @@ import {
 import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
 import './CommentVerification.scss';
-import { Button, Close, Done } from 'mui';
+import { Button } from '@mui/material';
+import { Close, Done } from '@mui/icons-material';
 
 const CommentVerification = ({ children, comment }: { children: any; comment: FlatComment }) => {
   const dialog = useDialog();

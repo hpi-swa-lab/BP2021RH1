@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { Badge, Button, ChevronLeft, ContentPaste, ContentPasteOff } from 'mui';
+import { ChevronLeft, ContentPaste, ContentPasteOff } from '@mui/icons-material';
+import { Badge, Button } from '@mui/material';
 import { useState } from 'react';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useClipboard } from '../../provider/ClipboardProvider';

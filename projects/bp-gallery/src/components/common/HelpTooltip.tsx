@@ -1,5 +1,8 @@
 import React, { ReactNode } from 'react';
-import { HelpOutline, IconButton, styled, Tooltip, tooltipClasses, Typography } from 'mui';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { IconButton, Tooltip, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { tooltipClasses } from '@mui/material/Tooltip';
 
 export const HelpTooltip = styled(
   ({ title, content, className }: { title: ReactNode; content: ReactNode; className?: string }) => (
@@ -13,7 +16,7 @@ export const HelpTooltip = styled(
       classes={{ popper: className }}
     >
       <IconButton className={'info-icon'}>
-        <HelpOutline />
+        <HelpOutlineIcon />
       </IconButton>
     </Tooltip>
   )

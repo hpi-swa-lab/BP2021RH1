@@ -1,4 +1,11 @@
-import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Icon } from 'mui';
+import {
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Icon,
+} from '@mui/material';
 import React from 'react';
 import { DialogProps } from '../DialogProvider';
 

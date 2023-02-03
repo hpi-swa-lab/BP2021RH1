@@ -1,5 +1,4 @@
 import { DialogProps } from '../DialogProvider';
-import React, { useState } from 'react';
 import {
   Button,
   DialogActions,
@@ -7,9 +6,9 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
-  Close,
-  Done,
-} from 'mui';
+} from '@mui/material';
+import React, { useState } from 'react';
+import { Close, Done } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
 const InputFieldDialogPreset = ({

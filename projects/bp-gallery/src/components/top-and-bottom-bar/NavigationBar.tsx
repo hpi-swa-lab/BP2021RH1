@@ -1,4 +1,4 @@
-import { Icon, Menu, MenuItem } from 'mui';
+import { Icon, Menu, MenuItem } from '@mui/material';
 import React, { useEffect, useState, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import './NavigationBar.scss';

@@ -22,7 +22,14 @@
   "parserOptions": {
     "project": ["./tsconfig.json", "./cypress/tsconfig.json", "./vite.config.ts"]
   },
-  "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier", "unused-imports"],
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier",
+    "unused-imports",
+    "react-refresh"
+  ],
   "rules": {
     "no-alert": "warn",
     "prettier/prettier": ["warn", { "endOfLine": "auto" }],
@@ -82,21 +89,7 @@
     "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
     "@typescript-eslint/prefer-optional-chain": "warn",
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
-    "no-restricted-imports": [
-      "error",
-      {
-        "paths": [
-          {
-            "name": "@mui/icons-material",
-            "message": "Please import [module] from 'mui' or '@mui/icons-material/[module]' instead."
-          },
-          {
-            "name": "@mui/material",
-            "message": "Please import [module] from 'mui' or '@mui/material/[module]' instead."
-          }
-        ]
-      }
-    ]
+    "react-refresh/only-export-components": "warn"
   },
   "ignorePatterns": ["/build/"],
   "overrides": [

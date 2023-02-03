@@ -1,4 +1,4 @@
-import { Icon, Tooltip } from 'mui';
+import { Icon, Tooltip } from '@mui/material';
 import React, { useCallback } from 'react';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { useDialog, DialogPreset } from '../../provider/DialogProvider';

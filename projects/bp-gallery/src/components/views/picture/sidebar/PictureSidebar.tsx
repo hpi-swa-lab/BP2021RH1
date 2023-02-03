@@ -10,7 +10,8 @@ import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import PictureInfo, { Field } from './picture-info/PictureInfo';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import { useTranslation } from 'react-i18next';
-import { Button, Crop } from 'mui';
+import { Button } from '@mui/material';
+import { Crop } from '@mui/icons-material';
 import PictureEditDialog from './picture-info/PictureEditDialog';
 import { useUpdatePictureMutation } from '../../../../graphql/APIConnector';
 

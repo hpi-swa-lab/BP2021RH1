@@ -1,4 +1,4 @@
-import { Icon, ListItemIcon, ListItemText, Menu, MenuItem } from 'mui';
+import { Icon, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import React, { useCallback } from 'react';
 import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
