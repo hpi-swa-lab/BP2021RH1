@@ -231,35 +231,6 @@ const buildQueryForMediaFiles = (knexEngine, pictureIds) => {
 };
 
 /**
- * Encapsulates the result data in the "Unified Response Format" of Strapi v4 and thereby combines
- * the retrieved picture entities with their associated media files.
- *
- * This was implemented in order to simplify the registration of the custom GraphQL query, as in that way,
- * its return type can be just a list of PictureEntity's (which is a type that already exists in the schema).
- */
-const preparePictureDataForFrontend = (pictures, mediaFiles) => {
-  return pictures.map((picture) => {
-    const mediaFileForPicture = mediaFiles.find(
-      (file) => file.related_id === picture.id
-    );
-
-    return {
-      id: picture.id,
-      attributes: {
-        media: {
-          data: {
-            id: mediaFileForPicture.id,
-            attributes: {
-              ...mediaFileForPicture,
-            },
-          },
-        },
-      },
-    };
-  });
-};
-
-/**
  * Encapsulates all logic that is necessary for the custom GraphQL query for the All-Search.
  *
  * Note that the Knex Query Builder is so designed, that built queries just need to be awaited
@@ -277,11 +248,9 @@ const findPicturesByAllSearch = async (
     searchTimes,
     pagination
   );
-  const mediaFilesForPictures = await buildQueryForMediaFiles(
-    knexEngine,
-    matchingPictures.map((pic) => pic.id)
-  );
-  return preparePictureDataForFrontend(matchingPictures, mediaFilesForPictures);
+  return matchingPictures.map((picture) => ({
+    id: picture.id,
+  }));
 };
 
 import { updatePictureWithTagCleanup, bulkEdit, like } from "./custom-update";
