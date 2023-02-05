@@ -35,6 +35,9 @@ export default defineConfig({
   optimizeDeps: {
     esbuildOptions: { plugins: [splitPackagesPlugin] },
   },
+  resolve: {
+    preserveSymlinks: true,
+  },
   build: {
     outDir: 'build',
     rollupOptions: {
