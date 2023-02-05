@@ -250,6 +250,7 @@ const findPicturesByAllSearch = async (
   );
   return matchingPictures.map((picture) => ({
     id: picture.id,
+    is_text: picture.is_text,
   }));
 };
 
