@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { HelpOutline } from '@mui/icons-material';
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { tooltipClasses } from '@mui/material/Tooltip';
@@ -16,7 +16,7 @@ export const HelpTooltip = styled(
       classes={{ popper: className }}
     >
       <IconButton className={'info-icon'}>
-        <HelpOutlineIcon />
+        <HelpOutline />
       </IconButton>
     </Tooltip>
   )

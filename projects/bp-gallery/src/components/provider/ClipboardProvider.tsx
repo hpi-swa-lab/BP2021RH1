@@ -24,7 +24,7 @@ const ClipboardContext = React.createContext<
   null | [ClipboardData, Dispatch<SetStateAction<ClipboardData>>]
 >(null);
 
-export const ClipboardProvider: React.FC = ({ children }) => {
+export const ClipboardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const state = useState(loadFromSessionStorage());
   const [data, _] = state;
 
@@ -35,6 +35,7 @@ export const ClipboardProvider: React.FC = ({ children }) => {
   return <ClipboardContext.Provider value={state}>{children}</ClipboardContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useClipboard = () => {
   const value = useContext(ClipboardContext);
   if (!value) {

@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 export const CheckboxButton: React.FC<{
   checked: boolean;
   onChange: (checked: boolean) => void;
+  children: React.ReactNode;
 }> = ({ checked, onChange, children }) => {
   const onClick = useCallback(() => {
     onChange(!checked);

@@ -1,9 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
 import { ClipboardEditor } from './ClipboardEditor';
 
 const Context = React.createContext<[ReactNode, Dispatch<SetStateAction<ReactNode>>] | null>(null);
 
-export const ClipboardEditorProvider: React.FC = ({ children }) => {
+export const ClipboardEditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const buttonsState = useState<ReactNode>(null);
   return (
     <Context.Provider value={buttonsState}>

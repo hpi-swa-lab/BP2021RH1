@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import {
   Delete,
   Close,
+  Edit,
   ExpandLess,
   ExpandMore,
   QuestionAnswer,
@@ -20,7 +21,6 @@ import {
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
 import Editor from '../../../../common/editor/Editor';
-import EditIcon from '@mui/icons-material/Edit';
 import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
@@ -118,7 +118,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
             {
               text: 'Editieren',
               action: () => setEdit(!edit),
-              icon: !edit ? <EditIcon /> : <Close />,
+              icon: !edit ? <Edit /> : <Close />,
               hoverText: 'Editieren',
               state: edit,
             },
