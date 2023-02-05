@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import './PictureView.scss';
-import { asApiPath } from '../../App';
+import { asApiPath } from '../../../helpers/app-helpers';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';

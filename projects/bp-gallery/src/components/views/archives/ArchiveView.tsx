@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
-import { asApiPath } from '../../App';
+import { asApiPath } from '../../../helpers/app-helpers';
 import PicturePreview, {
   PicturePreviewAdornment,
 } from '../../common/picture-gallery/PicturePreview';

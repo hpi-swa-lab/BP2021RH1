@@ -1,7 +1,6 @@
 import React from 'react';
 import { RouteConfig, RouteConfigComponentProps } from 'react-router-config';
 import { Redirect } from 'react-router-dom';
-import App from './App';
 import Demo from '../prototypes/demo';
 import TimeLineDemo from '../prototypes/timeline-demo';
 import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
@@ -24,129 +23,124 @@ export const FALLBACK_PATH = '/start';
 
 const routes: RouteConfig[] = [
   {
-    component: App,
-    routes: [
-      {
-        path: '/start',
-        render: () => {
-          return <StartView />;
-        },
-        exact: true,
-      },
-      {
-        path: '/latest',
-        render: () => {
-          return <LatestPicturesView />;
-        },
-        exact: true,
-      },
-      {
-        path: '/browse/:path+',
-        // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
-        render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
-          const browseParams = match.params.path.split('/');
-          return <BrowseView path={browseParams} />;
-        },
-      },
-      {
-        path: '/search',
-        render: () => {
-          return <SearchView />;
-        },
-        exact: true,
-      },
-      {
-        path: '/uploads-overview',
-        render: () => {
-          return <UploadsView />;
-        },
-        exact: true,
-      },
-      {
-        path: '/comment-overview',
-        render: () => {
-          return <UnverifiedCommentsView />;
-        },
-        exact: true,
-      },
-      {
-        path: '/picture/:id',
-        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
-          return <PictureView initialPictureId={match.params.id} />;
-        },
-      },
-      {
-        path: '/bulk-edit/:ids',
-        render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
-          return (
-            <ProtectedRoute>
-              <BulkEditView pictureIds={match.params.ids.split(',')} />
-            </ProtectedRoute>
-          );
-        },
-      },
-      {
-        path: '/tags/keywords',
-        render: () => {
-          return <TagTableView type={TagType.KEYWORD} />;
-        },
-      },
-      {
-        path: '/tags/locations',
-        render: () => {
-          return <TagTableView type={TagType.LOCATION} />;
-        },
-      },
-      {
-        path: '/tags/people',
-        render: () => {
-          return <TagTableView type={TagType.PERSON} />;
-        },
-      },
-      {
-        path: '/collections-overview',
-        render: () => {
-          return <CollectionCuratingView />;
-        },
-      },
-      {
-        path: '/terms-of-service',
-        render: () => {
-          return <TermsOfServiceView />;
-        },
-      },
-      {
-        path: '/prototypes/demo',
-        component: Demo,
-      },
-      {
-        path: '/prototypes/timeline-demo',
-        component: TimeLineDemo,
-      },
-      {
-        path: '/archives/:id/edit',
-        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
-          return (
-            <ProtectedRoute redirectPath={`/archives/${match.params.id}`}>
-              <ArchiveEditView archiveId={match.params.id} />
-            </ProtectedRoute>
-          );
-        },
-      },
-      {
-        path: '/archives/:id',
-        render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
-          return <ArchiveView archiveId={match.params.id} />;
-        },
-      },
+    path: '/start',
+    render: () => {
+      return <StartView />;
+    },
+    exact: true,
+  },
+  {
+    path: '/latest',
+    render: () => {
+      return <LatestPicturesView />;
+    },
+    exact: true,
+  },
+  {
+    path: '/browse/:path+',
+    // see https://stackoverflow.com/a/56162747 for details on the '+' in the path
+    render: ({ match }: RouteConfigComponentProps<{ path: '' }>) => {
+      const browseParams = match.params.path.split('/');
+      return <BrowseView path={browseParams} />;
+    },
+  },
+  {
+    path: '/search',
+    render: () => {
+      return <SearchView />;
+    },
+    exact: true,
+  },
+  {
+    path: '/uploads-overview',
+    render: () => {
+      return <UploadsView />;
+    },
+    exact: true,
+  },
+  {
+    path: '/comment-overview',
+    render: () => {
+      return <UnverifiedCommentsView />;
+    },
+    exact: true,
+  },
+  {
+    path: '/picture/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <PictureView initialPictureId={match.params.id} />;
+    },
+  },
+  {
+    path: '/bulk-edit/:ids',
+    render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
+      return (
+        <ProtectedRoute>
+          <BulkEditView pictureIds={match.params.ids.split(',')} />
+        </ProtectedRoute>
+      );
+    },
+  },
+  {
+    path: '/tags/keywords',
+    render: () => {
+      return <TagTableView type={TagType.KEYWORD} />;
+    },
+  },
+  {
+    path: '/tags/locations',
+    render: () => {
+      return <TagTableView type={TagType.LOCATION} />;
+    },
+  },
+  {
+    path: '/tags/people',
+    render: () => {
+      return <TagTableView type={TagType.PERSON} />;
+    },
+  },
+  {
+    path: '/collections-overview',
+    render: () => {
+      return <CollectionCuratingView />;
+    },
+  },
+  {
+    path: '/terms-of-service',
+    render: () => {
+      return <TermsOfServiceView />;
+    },
+  },
+  {
+    path: '/prototypes/demo',
+    component: Demo,
+  },
+  {
+    path: '/prototypes/timeline-demo',
+    component: TimeLineDemo,
+  },
+  {
+    path: '/archives/:id/edit',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return (
+        <ProtectedRoute redirectPath={`/archives/${match.params.id}`}>
+          <ArchiveEditView archiveId={match.params.id} />
+        </ProtectedRoute>
+      );
+    },
+  },
+  {
+    path: '/archives/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ArchiveView archiveId={match.params.id} />;
+    },
+  },
 
-      {
-        // fallback component for unmatched routes
-        render: () => {
-          return <Redirect to={FALLBACK_PATH} />;
-        },
-      },
-    ],
+  {
+    // fallback component for unmatched routes
+    render: () => {
+      return <Redirect to={FALLBACK_PATH} />;
+    },
   },
 ];
 

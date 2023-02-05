@@ -10,7 +10,7 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import './UnverifiedCommentsView.scss';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { Portal } from '@mui/material';
-import { root } from '../../../main';
+import { root } from '../../../helpers/app-helpers';
 
 const UnverifiedCommentsView = () => {
   const { t } = useTranslation();

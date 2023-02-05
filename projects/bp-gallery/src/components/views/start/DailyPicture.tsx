@@ -13,7 +13,7 @@ import EventIcon from '@mui/icons-material/Event';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import Editor from '../../common/editor/Editor';
 import { FolderSpecial } from '@mui/icons-material';
-import { asApiPath } from '../../App';
+import { asApiPath } from '../../../helpers/app-helpers';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();

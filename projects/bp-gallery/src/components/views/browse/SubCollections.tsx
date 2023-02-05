@@ -1,6 +1,6 @@
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
-import { asApiPath } from '../../App';
+import { asApiPath } from '../../../helpers/app-helpers';
 import React from 'react';
 import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-browse-path';
 import ItemList from '../../common/ItemList';

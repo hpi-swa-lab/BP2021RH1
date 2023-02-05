@@ -1,6 +1,6 @@
 import { OutlinedInput } from '@mui/material';
 import React, { ChangeEvent, useState } from 'react';
-import { asApiPath } from '../../App';
+import { asApiPath } from '../../../helpers/app-helpers';
 import { useTranslation } from 'react-i18next';
 
 interface ArchiveLogoInputProps {

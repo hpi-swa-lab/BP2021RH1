@@ -1,82 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { renderRoutes, RouteConfigComponentProps } from 'react-router-config';
-import TopBar from './top-and-bottom-bar/TopBar';
-import './App.scss';
+import React from 'react';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { useEffect, useState } from 'react';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, from } from '@apollo/client';
-import { onError as createErrorLink } from '@apollo/client/link/error';
-import AuthProvider from './provider/AuthProvider';
-import AlertProvider, { AlertOptions, AlertType } from './provider/AlertProvider';
-import DialogProvider from './provider/DialogProvider';
-import { isEmpty, unionWith } from 'lodash';
-import NavigationBar from './top-and-bottom-bar/NavigationBar';
-import ClipboardProvider from './provider/ClipboardProvider';
+import { renderRoutes } from 'react-router-config';
+import { buildHttpLink, mergeByRef } from '../helpers/app-helpers';
+import './App.scss';
 import { ClipboardEditorProvider } from './common/clipboard/ClipboardEditorContext';
-
-const apiBase = import.meta.env.VITE_REACT_APP_API_BASE;
-
-export const asApiPath = (pathEnding: string) => {
-  // Removes any multiple occurrences of a "/"
-  const formattedPathEnding = `/${pathEnding}`.replace(/\/+/gm, '/');
-  return `${apiBase}${formattedPathEnding}`;
-};
-
-const OPERATIONS_WITH_OWN_ERROR_HANDLING = ['login'];
-
-/**
- * Creates the link-chain for the {@link ApolloClient} consisting of:
- * - an HTTP-Link for using authentication via JWT and
- * - an Error-Link for globally catching errors and showing these in an Alert.
- * @param token JWT input, pass null to reset it.
- * @param openAlert the callback to open our Alert, can be obtained from the AlertContext
- */
-export const buildHttpLink = (
-  token: string | null,
-  openAlert?: (alertOptions: AlertOptions) => void
-) => {
-  let httpLink = createHttpLink({
-    uri: `${apiBase}/graphql`,
-    headers: {
-      authorization: token ? `Bearer ${token}` : '',
-    },
-  });
-
-  if (openAlert) {
-    const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
-      if (OPERATIONS_WITH_OWN_ERROR_HANDLING.includes(operation.operationName)) return;
-
-      const errorMessages = [];
-      if (networkError) errorMessages.push(networkError);
-      if (graphQLErrors) graphQLErrors.forEach(({ message }) => errorMessages.push(message));
-
-      if (isEmpty(errorMessages)) return;
-
-      openAlert({
-        alertType: AlertType.ERROR,
-        message: errorMessages.join('\n'),
-        duration: 5000,
-      });
-    });
-
-    httpLink = from([errorLink, httpLink]);
-  }
-
-  return httpLink;
-};
-
-type MergeInput = { __typename: string; data: { __ref: string }[] };
-
-export const mergeByRef = (
-  existing: MergeInput | undefined = undefined,
-  incoming: MergeInput
-): MergeInput => ({
-  ...incoming,
-  data: unionWith<{ __ref: string }>(
-    existing?.data ?? [],
-    incoming.data,
-    (a, b) => a.__ref === b.__ref
-  ),
-});
+import AlertProvider from './provider/AlertProvider';
+import AuthProvider from './provider/AuthProvider';
+import ClipboardProvider from './provider/ClipboardProvider';
+import DialogProvider from './provider/DialogProvider';
+import routes from './routes';
+import NavigationBar from './top-and-bottom-bar/NavigationBar';
+import TopBar from './top-and-bottom-bar/TopBar';
 
 const apolloClient = new ApolloClient({
   link: buildHttpLink(sessionStorage.getItem('jwt')),
@@ -138,7 +74,7 @@ document.body.addEventListener('keyup', event => {
   }
 });
 
-const App = ({ route }: RouteConfigComponentProps) => {
+const App = () => {
   const [width, setWidth] = useState<number>(window.innerWidth);
 
   function handleWindowSizeChange() {
@@ -162,7 +98,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
               <div className='App'>
                 <ClipboardEditorProvider>
                   <TopBar isMobile={isMobile} />
-                  {renderRoutes(route?.routes)}
+                  {renderRoutes(routes)}
                   {isMobile && <NavigationBar isMobile={true} />}
                 </ClipboardEditorProvider>
               </div>

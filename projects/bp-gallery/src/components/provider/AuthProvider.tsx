@@ -1,9 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
-import { buildHttpLink } from '../App';
 import { useApolloClient } from '@apollo/client';
 import { AlertContext, AlertType } from './AlertProvider';
 import { useTranslation } from 'react-i18next';
+import { buildHttpLink } from '../../helpers/app-helpers';
 
 export enum AuthRole {
   PUBLIC,

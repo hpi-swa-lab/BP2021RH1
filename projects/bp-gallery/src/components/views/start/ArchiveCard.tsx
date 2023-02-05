@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import './ArchiveCard.scss';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { asApiPath } from '../../App';
+import { asApiPath } from '../../../helpers/app-helpers';
 
 const ArchiveCard = ({
   picture,
