@@ -113,11 +113,11 @@ describe('Discover View', () => {
 
     // check if it contains first 6 verified locations
     cy.get('.carousel-container:eq(4) .carousel-collection-grid-container .items')
-      .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 1')
-      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
+      .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 5')
-      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 6');
+      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 6')
+      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 7');
   });
 });

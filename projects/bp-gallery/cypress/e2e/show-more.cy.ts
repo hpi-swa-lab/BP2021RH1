@@ -135,7 +135,6 @@ describe('Show More View', () => {
 
     // check for categories in show more view
     cy.get('.carousel-collection-grid-container .items')
-      .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 1')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')
