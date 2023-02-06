@@ -59,7 +59,7 @@ const DiscoverView = () => {
           />
 
           <CategoryCarousel
-            title='Weitere Kategorien'
+            title='Unsere Kategorien'
             seperator={true}
             type={TagType.KEYWORD}
             queryParams={{ visible: { eq: true } }}
