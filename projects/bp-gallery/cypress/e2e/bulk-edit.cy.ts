@@ -9,17 +9,6 @@ describe('bulk edit', () => {
     logout();
   });
 
-  it('select multiple photos manually', () => {
-    cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(0).click();
-    cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(1).click();
-    cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(2).click();
-    cy.get('.picture-preview').eq(0).find('[data-testid="CheckBoxIcon"]');
-    cy.get('.picture-preview').eq(1).find('[data-testid="CheckBoxIcon"]');
-    cy.get('.picture-preview').eq(2).find('[data-testid="CheckBoxIcon"]');
-    cy.contains('Keine auswählen').click();
-    cy.get('.picture-preview .adornment [data-testid="CheckBoxIcon"]').should('not.exist');
-  });
-
   it('deselect all if and only if something was changed', () => {
     cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(0).click();
     cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(1).click();

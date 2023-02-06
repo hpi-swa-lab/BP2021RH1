@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../views/picture/PictureView';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -46,7 +46,7 @@ const PictureGrid = ({
   const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
-  const [bulkEditPictures, setBulkEditPictures] = useState<FlatPicture[] | undefined>(undefined);
+  const [bulkEditPictureIds, setBulkEditPictureIds] = useState<string[] | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
   const deletePicture = useDeletePicture();
@@ -104,24 +104,35 @@ const PictureGrid = ({
     [setFocusedPicture]
   );
 
-  const [selectedPictures, setSelectedPictures] = useState<FlatPicture[]>([]);
-  const [lastSelectedPicture, setLastSelectedPicture] = useState<FlatPicture | null>(null);
+  const [selectedPictureIds, setSelectedPictureIds] = useState<string[]>([]);
+  const [lastSelectedPictureId, setLastSelectedPictureId] = useState<string | null>(null);
+
+  // prevent old ids from being referenced above
+  useEffect(() => {
+    setSelectedPictureIds(current =>
+      current.filter(id => pictures.find(picture => picture.id === id))
+    );
+    setLastSelectedPictureId(current =>
+      pictures.find(picture => picture.id === current) ? current : null
+    );
+  }, [pictures]);
+
+  const selectedPictures = useMemo(
+    () => pictures.filter(picture => selectedPictureIds.includes(picture.id)),
+    [pictures, selectedPictureIds]
+  );
 
   const selectAll = useCallback(() => {
-    setSelectedPictures(pictures);
+    setSelectedPictureIds(pictures.map(picture => picture.id));
   }, [pictures]);
   const selectNone = useCallback(() => {
-    setSelectedPictures([]);
+    setSelectedPictureIds([]);
   }, []);
 
   const navigateToBulkEdit = useCallback(() => {
-    setBulkEditPictures(selectedPictures);
-    window.history.pushState(
-      {},
-      '',
-      `/bulk-edit/${selectedPictures.map(picture => picture.id).join(',')}`
-    );
-  }, [setBulkEditPictures, selectedPictures]);
+    setBulkEditPictureIds(selectedPictureIds);
+    window.history.pushState({}, '', `/bulk-edit/${selectedPictureIds.join(',')}`);
+  }, [setBulkEditPictureIds, selectedPictureIds]);
 
   const defaultAdornments =
     role >= AuthRole.CURATOR && showDefaultAdornments
@@ -136,24 +147,29 @@ const PictureGrid = ({
           } as PicturePreviewAdornment,
           {
             icon: picture =>
-              selectedPictures.includes(picture) ? <CheckBox /> : <CheckBoxOutlineBlank />,
+              selectedPictureIds.includes(picture.id) ? <CheckBox /> : <CheckBoxOutlineBlank />,
             onClick: (clickedPicture, event) => {
-              if (lastSelectedPicture !== null && event.shiftKey) {
-                const lastIndex = pictures.indexOf(lastSelectedPicture);
+              if (lastSelectedPictureId !== null && event.shiftKey) {
+                const lastIndex = pictures.findIndex(
+                  picture => picture.id === lastSelectedPictureId
+                );
                 const clickedIndex = pictures.indexOf(clickedPicture);
                 const [fromIndex, toIndex] =
                   lastIndex < clickedIndex ? [lastIndex, clickedIndex] : [clickedIndex, lastIndex];
-                setSelectedPictures(currentSelected =>
-                  union(currentSelected, pictures.slice(fromIndex, toIndex + 1))
+                setSelectedPictureIds(currentSelected =>
+                  union(
+                    currentSelected,
+                    pictures.slice(fromIndex, toIndex + 1).map(picture => picture.id)
+                  )
                 );
               } else {
-                setSelectedPictures(currentSelected =>
-                  currentSelected.includes(clickedPicture)
-                    ? currentSelected.filter(p => p !== clickedPicture)
-                    : [...currentSelected, clickedPicture]
+                setSelectedPictureIds(currentSelected =>
+                  currentSelected.includes(clickedPicture.id)
+                    ? currentSelected.filter(p => p !== clickedPicture.id)
+                    : [...currentSelected, clickedPicture.id]
                 );
               }
-              setLastSelectedPicture(clickedPicture);
+              setLastSelectedPictureId(clickedPicture.id);
             },
             position: 'bottom-left',
             title: t('pictureAdornments.select'),
@@ -229,12 +245,12 @@ const PictureGrid = ({
           />
         </Portal>
       )}
-      {bulkEditPictures && (
+      {bulkEditPictureIds && (
         <Portal container={root}>
           <BulkEditView
-            pictureIds={bulkEditPictures.map(picture => picture.id)}
+            pictureIds={bulkEditPictureIds}
             onBack={() => {
-              setBulkEditPictures(undefined);
+              setBulkEditPictureIds(undefined);
             }}
             onSave={selectNone}
           />
