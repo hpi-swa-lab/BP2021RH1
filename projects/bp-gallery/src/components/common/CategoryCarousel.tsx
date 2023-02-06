@@ -3,7 +3,7 @@ import React, { MouseEventHandler, useCallback, useEffect, useState } from 'reac
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './Carousel.scss';
 import ScrollContainer from './ScrollContainer';
-import { TagType } from '../../types/additionalFlatTypes';
+import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
@@ -13,6 +13,8 @@ import {
 import DecadesList from '../views/search/DecadesList';
 import TagList from '../views/search/TagList';
 import { useTranslation } from 'react-i18next';
+import useGenericTagEndpoints from '../../hooks/generic-endpoints.hook';
+import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 
 interface CategoryCarouselProps {
   title?: string;
@@ -61,45 +63,68 @@ const CategoryCarousel = ({
     };
   }, [onResize]);
 
-  return (
-    <ScrollContainer>
-      {(scrollPos: number, scrollHeight: number) => (
-        <div className='carousel-container'>
-          {title && <h1 className='carousel-title'>{title}</h1>}
-          {seperator && <hr className='carousel-seperator' />}
-          <div className='carousel-collection-grid-container'>
-            {type !== TagType.TIME_RANGE && (
-              <TagList
-                type={type}
-                scroll={false}
-                onClickBasePath={basePath}
-                currentItemAmount={rows ? rowLength * rows : undefined}
-                queryParams={queryParams}
-                thumbnailQueryParams={thumbnailQueryParams}
-              />
-            )}
-            {type === TagType.TIME_RANGE && (
-              <DecadesList
-                scroll={false}
-                onClickBasePath={basePath}
-                thumbnailQueryParams={thumbnailQueryParams}
-                currentItemAmount={rows ? rowLength * rows : undefined}
-              />
+  const { tagsWithThumbnailQuery } = useGenericTagEndpoints(type);
+
+  const { data, loading, error, fetchMore } = tagsWithThumbnailQuery({
+    variables: {
+      filters: queryParams,
+      thumbnailFilters: thumbnailQueryParams,
+      start: 0,
+      limit: 1,
+      sortBy: ['name:asc'],
+    },
+  });
+
+  const flattened = useSimplifiedQueryResponseData(data);
+  const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened
+    ? Object.values(flattened)[0]
+    : undefined;
+
+  console.log(flattenedTags);
+
+  if (flattenedTags?.length === 0) {
+    return <div></div>;
+  } else {
+    return (
+      <ScrollContainer>
+        {(scrollPos: number, scrollHeight: number) => (
+          <div className='carousel-container'>
+            {title && <h1 className='carousel-title'>{title}</h1>}
+            {seperator && <hr className='carousel-seperator' />}
+            <div className='carousel-collection-grid-container'>
+              {type !== TagType.TIME_RANGE && (
+                <TagList
+                  type={type}
+                  scroll={false}
+                  onClickBasePath={basePath}
+                  currentItemAmount={rows ? rowLength * rows : undefined}
+                  queryParams={queryParams}
+                  thumbnailQueryParams={thumbnailQueryParams}
+                />
+              )}
+              {type === TagType.TIME_RANGE && (
+                <DecadesList
+                  scroll={false}
+                  onClickBasePath={basePath}
+                  thumbnailQueryParams={thumbnailQueryParams}
+                  currentItemAmount={rows ? rowLength * rows : undefined}
+                />
+              )}
+            </div>
+            {onClick && (
+              <Button
+                onClick={onClick}
+                className='carousel-show-more-button'
+                endIcon={<ArrowForwardIosIcon />}
+              >
+                {t('common.showMore')}
+              </Button>
             )}
           </div>
-          {onClick && (
-            <Button
-              onClick={onClick}
-              className='carousel-show-more-button'
-              endIcon={<ArrowForwardIosIcon />}
-            >
-              {t('common.showMore')}
-            </Button>
-          )}
-        </div>
-      )}
-    </ScrollContainer>
-  );
+        )}
+      </ScrollContainer>
+    );
+  }
 };
 
 export default CategoryCarousel;
