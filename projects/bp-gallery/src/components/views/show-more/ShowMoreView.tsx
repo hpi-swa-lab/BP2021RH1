@@ -252,7 +252,13 @@ const ShowMoreView = ({
               type={categoryType as TagType}
               queryParams={
                 archiveId === '0'
-                  ? { visible: { eq: true }, id: { not: { eq: '-1' } } }
+                  ? {
+                      and: [
+                        { verified_pictures: { id: { not: { eq: '-1' } } } },
+                        { visible: { eq: true } },
+                        { id: { not: { eq: '-1' } } },
+                      ],
+                    }
                   : {
                       and: [
                         { visible: { eq: true } },
