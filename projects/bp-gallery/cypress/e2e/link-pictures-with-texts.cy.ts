@@ -20,8 +20,7 @@ describe('link pictures with texts', () => {
   });
 
   it('texts are shown only for curators in search', () => {
-    cy.visit('/');
-    cy.contains('.nav-element', 'Suchen').click();
+    cy.visit('/search');
     cy.get('.search-bar-container').find('input').type('Yet another description{enter}');
     cy.get('#picture-preview-for-2');
     cy.get('#picture-preview-for-1');
