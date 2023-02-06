@@ -2442,6 +2442,7 @@ export type GetPicturesQuery = {
           id?: string | null | undefined;
           attributes?:
             | {
+                is_text?: boolean | null | undefined;
                 media: {
                   data?:
                     | {
@@ -2483,6 +2484,7 @@ export type GetPicturesByAllSearchQuery = {
             id?: string | null | undefined;
             attributes?:
               | {
+                  is_text?: boolean | null | undefined;
                   media: {
                     data?:
                       | {
@@ -4121,6 +4123,7 @@ export const GetPicturesDocument = gql`
       data {
         id
         attributes {
+          is_text
           media {
             data {
               id
@@ -4195,6 +4198,7 @@ export const GetPicturesByAllSearchDocument = gql`
     ) {
       id
       attributes {
+        is_text
         media {
           data {
             id

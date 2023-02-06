@@ -19,6 +19,27 @@ describe('link pictures with texts', () => {
     cy.contains('Verlinkte Bilder');
   });
 
+  it('texts are shown only for curators in search', () => {
+    cy.visit('/search');
+    cy.get('.search-bar-container').find('input').type('Yet another description{enter}');
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1');
+    logout();
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1').should('not.exist');
+    login();
+  });
+
+  it('texts are shown only for curators in archives view', () => {
+    cy.visit('/archives/1');
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1');
+    logout();
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1').should('not.exist');
+    login();
+  });
+
   it('link a picture to a text', () => {
     cy.visit('/picture/2');
     cy.get('.clipboard-editor-open').click();
