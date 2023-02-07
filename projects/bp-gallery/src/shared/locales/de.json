@@ -9,6 +9,7 @@
     "details": "Details",
     "comments": "Kommentare",
     "contact": "Kontakt",
+    "my-liked-pictures": "Favoriten",
     "more": "Mehr...",
     "back": "Zurück",
     "back-to-home": "Zurück zur Startseite",
@@ -128,6 +129,9 @@
     "invalid-credentials": "Benutzername oder Passwort sind falsch",
     "successful-login": "Erfolgreich eingeloggt",
     "successful-logout": "Erfolgreich ausgeloggt"
+  },
+  "my-liked-pictures": {
+    "title": "Meine Favoriten"
   },
   "pictureFields": {
     "time": "Zeit",

@@ -19,6 +19,7 @@ import ArchiveView from './views/archives/ArchiveView';
 import ArchiveEditView from './views/archives/ArchiveEditView';
 import ProtectedRoute from './common/ProtectedRoute';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
+import MyLikedPicturesView from './views/my-liked-pictures/MyLikedPicturesView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -73,6 +74,12 @@ const routes: RouteConfig[] = [
         path: '/picture/:id',
         render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
           return <PictureView initialPictureId={match.params.id} />;
+        },
+      },
+      {
+        path: '/my-liked-pictures',
+        render: () => {
+          return <MyLikedPicturesView />;
         },
       },
       {

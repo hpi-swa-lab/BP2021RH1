@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button, Icon } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useLikeMutation } from '../../../../graphql/APIConnector';
-import useStorageState from '../../../../hooks/storage-state.hook';
+import useLikes from '../../../../hooks/likes.hook';
 
 const LikeButton = ({ pictureId, likeCount }: { pictureId: string; likeCount: number }) => {
   const { t } = useTranslation();
 
-  const [likedPictures, setLikedPictures] = useStorageState<string[]>([], 'likes', localStorage);
+  const [likedPictures, setLikedPictures] = useLikes();
 
   const isLiked = useMemo(
     () => likedPictures.some((x: string) => x === pictureId),
