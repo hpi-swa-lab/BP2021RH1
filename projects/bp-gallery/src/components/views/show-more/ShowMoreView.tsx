@@ -231,6 +231,7 @@ const ShowMoreView = ({
             </h2>
             <PictureScrollGrid
               queryParams={categoryQueryParams()}
+              sortBy={['time_range_tag.start:asc']}
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={'show-more'}
