@@ -1,5 +1,5 @@
 import { Popover } from '@mui/material';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatTimeRangeTag } from '../../../../../types/additionalFlatTypes';
 import { formatTimeStamp } from '../../../../../helpers/format-timestamp';

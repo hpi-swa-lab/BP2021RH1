@@ -1,4 +1,3 @@
-import React from 'react';
 import './LatestPicturesView.scss';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';

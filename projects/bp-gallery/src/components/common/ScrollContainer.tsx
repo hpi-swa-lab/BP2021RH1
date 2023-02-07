@@ -1,4 +1,4 @@
-import React, { ReactComponentElement, useState } from 'react';
+import { ReactComponentElement, useState } from 'react';
 import './ScrollContainer.scss';
 
 const ScrollContainer = ({

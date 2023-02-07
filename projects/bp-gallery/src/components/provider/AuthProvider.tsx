@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
 import { useApolloClient } from '@apollo/client';
 import { AlertContext, AlertType } from './AlertProvider';
@@ -34,7 +34,7 @@ export interface AuthFields {
   loading: boolean;
 }
 
-export const AuthContext = React.createContext<AuthFields>({
+export const AuthContext = createContext<AuthFields>({
   role: AuthRole.PUBLIC,
   login: async () => {},
   logout: () => {},

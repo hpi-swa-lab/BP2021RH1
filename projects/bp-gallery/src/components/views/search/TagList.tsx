@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

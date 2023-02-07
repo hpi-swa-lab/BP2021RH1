@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import './PictureSidebar.scss';
 import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import { ApolloError } from '@apollo/client';

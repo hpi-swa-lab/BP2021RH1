@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import dayjs from 'dayjs';
 
 interface TimeRangeTagType {

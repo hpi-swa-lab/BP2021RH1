@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { sanitize } from 'isomorphic-dompurify';
 import './CollectionDescription.scss';
 import { Icon, IconButton } from '@mui/material';

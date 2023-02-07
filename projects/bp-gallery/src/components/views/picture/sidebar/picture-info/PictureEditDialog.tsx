@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import { useCallback, useContext, useRef } from 'react';
 import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ImageEditor from '@toast-ui/react-image-editor';

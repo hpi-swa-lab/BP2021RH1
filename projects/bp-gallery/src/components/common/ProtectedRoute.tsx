@@ -1,4 +1,4 @@
-import React, { ReactChild, ReactChildren } from 'react';
+import { ReactChild, ReactChildren } from 'react';
 import { Redirect } from 'react-router';
 import { AuthRole, useAuth } from '../provider/AuthProvider';
 import { FALLBACK_PATH } from './../routes';

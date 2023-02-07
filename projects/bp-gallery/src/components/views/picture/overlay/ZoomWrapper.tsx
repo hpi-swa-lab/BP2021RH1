@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMoveView } from '../helpers/useMoveView';
 import './ZoomWrapper.scss';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { RouteConfig, RouteConfigComponentProps } from 'react-router-config';
 import { Redirect } from 'react-router-dom';
 import Demo from '../prototypes/demo';

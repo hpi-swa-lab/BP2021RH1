@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../views/picture/PictureView';
 import { FlatPicture } from '../../../types/additionalFlatTypes';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { stringify } from 'qs';
 import { sanitize } from 'isomorphic-dompurify';
 import './TimeLineDemo.scss';

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import getLineBreaks from '../../helpers/get-linebreaks';
 
 export interface ItemListItemModel {

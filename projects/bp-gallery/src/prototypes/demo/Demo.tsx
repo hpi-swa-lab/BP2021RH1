@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { stringify } from 'qs';
 import './Demo.scss';
 import Actions from './Actions';

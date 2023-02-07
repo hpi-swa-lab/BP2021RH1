@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';

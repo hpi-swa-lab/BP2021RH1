@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';

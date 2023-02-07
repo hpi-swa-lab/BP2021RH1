@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useGetUnverifiedCommentsQuery } from '../../../graphql/APIConnector';
 import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';

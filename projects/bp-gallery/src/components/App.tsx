@@ -1,4 +1,3 @@
-import React from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import 'react-perfect-scrollbar/dist/css/styles.css';

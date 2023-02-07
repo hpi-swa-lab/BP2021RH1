@@ -1,4 +1,3 @@
-import React from 'react';
 import { Chip } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';

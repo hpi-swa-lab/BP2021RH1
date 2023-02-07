@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
 import './PictureInfo.scss';

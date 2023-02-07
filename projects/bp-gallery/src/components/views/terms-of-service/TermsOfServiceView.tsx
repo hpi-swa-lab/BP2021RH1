@@ -1,4 +1,3 @@
-import React from 'react';
 import './TermsOfServiceView.scss';
 import ScrollContainer from '../../common/ScrollContainer';
 import { useTranslation } from 'react-i18next';

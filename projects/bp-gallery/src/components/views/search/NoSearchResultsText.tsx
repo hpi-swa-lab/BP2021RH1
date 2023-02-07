@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchType } from './helpers/search-filters';
 import { getDecadeTranslation, getSearchTypeTranslation } from './helpers/search-translation';

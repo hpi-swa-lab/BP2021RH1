@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 
 const sessionStorageItemName = 'clipboard';
 
@@ -20,7 +20,7 @@ function storeIntoSessionStorage(data: ClipboardData) {
   sessionStorage.setItem(sessionStorageItemName, JSON.stringify(data));
 }
 
-const ClipboardContext = React.createContext<
+const ClipboardContext = createContext<
   null | [ClipboardData, Dispatch<SetStateAction<ClipboardData>>]
 >(null);
 

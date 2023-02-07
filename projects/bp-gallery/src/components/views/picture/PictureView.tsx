@@ -1,4 +1,5 @@
-import React, {
+import {
+  createContext,
   Dispatch,
   SetStateAction,
   useCallback,
@@ -33,7 +34,7 @@ export interface PictureViewContextFields {
   calledViaLink?: boolean;
 }
 
-export const PictureViewContext = React.createContext<PictureViewContextFields>({});
+export const PictureViewContext = createContext<PictureViewContextFields>({});
 
 // Used for the sidebar (in px) --> same as in shared.scss
 const MOBILE_BREAKPOINT = 750;
