@@ -100,7 +100,7 @@ describe('Archives View', () => {
 
     cy.get(`[data-testid="StarIcon"]`).eq(1).click();
     cy.contains('Zurück').click();
-    cy.get('.archive-showcase').children().should('contain.id', 'picture-preview-for-3');
+    cy.get('.archive-showcase').children().should('contain.id', 'picture-preview-for-2');
   });
 
   it('shows "Unsere Bilder" carousel', () => {

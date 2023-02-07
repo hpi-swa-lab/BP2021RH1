@@ -1,92 +1,135 @@
-describe('Show More View', () => {
-  before(() => {
+import { urlIs } from '../utils/url-utils';
+
+describe('Navigation to Show More View from Discover View', () => {
+  beforeEach(() => {
     cy.visit('/discover');
   });
-  afterEach(() => {
-    // leave show more view
-    cy.contains('Zurück').click();
-  });
-  after(() => {});
 
-  it('shows show more for "Unsere Bilder"', () => {
-    // click show more button
+  it('works for "Unsere Bilder"', () => {
     cy.get('.carousel-container:first').contains('Mehr anzeigen').click();
+    urlIs('/show-more/0/pictures');
+  });
 
+  it('works for "Wissen Sie mehr über diese Bilder?"', () => {
+    cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
+    urlIs('/show-more/0/pictures/Fragezeichen');
+  });
+
+  it('works for "Jahrzehnte"', () => {
+    cy.get('.carousel-container:eq(2)').contains('Mehr anzeigen').click();
+    urlIs('/show-more/0/date');
+  });
+
+  it('works for single decades', () => {
+    for (let i = 0; i < 6; i++) {
+      cy.get(
+        `.carousel-container:eq(2) .carousel-collection-grid-container .items .item:eq(${i})`
+      ).click();
+      urlIs(`/show-more/0/date/${i + 4}`);
+      cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
+    }
+  });
+
+  it('works for "Orte"', () => {
+    cy.get('.carousel-container:eq(3)').contains('Mehr anzeigen').click();
+    urlIs('/show-more/0/location');
+  });
+
+  it('works for single locations', () => {
+    // IDs of the six locations shown in carousel
+    const targetIDs = [7, 8, 9, 10, 11, 13];
+    // itterate over hte six locations shown in carousel
+    for (let i = 0; i < 6; i++) {
+      cy.get(
+        `.carousel-container:eq(3) .carousel-collection-grid-container .items .item:eq(${i})`
+      ).click();
+      urlIs(`/show-more/0/location/${targetIDs[i]}`);
+      cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
+    }
+  });
+
+  it('works for "Unsere Kategorien"', () => {
+    cy.get('.carousel-container:eq(4)').contains('Mehr anzeigen').click();
+    urlIs('/show-more/0/keyword');
+  });
+
+  it('works for single keywords', () => {
+    // IDs of the sic keywords shown in carousel
+    const targetIDs = [9, 10, 11, 13, 14, 15];
+    // itterate over the six keywords shown in carousel
+    for (let i = 0; i < 6; i++) {
+      cy.get(
+        `.carousel-container:eq(4) .carousel-collection-grid-container .items .item:eq(${i})`
+      ).click();
+      urlIs(`/show-more/0/keyword/${targetIDs[i]}`);
+      cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
+    }
+  });
+});
+
+describe('Global Show More View', () => {
+  it('shows show more for "Unsere Bilder"', () => {
+    cy.visit('/show-more/0/pictures');
     // check for text in show more view
     cy.contains('Unsere Bilder');
     cy.contains('Hier finden Sie alle Bilder unseres Archivs');
 
     // check for images in show more view
     cy.contains('5 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-3').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-2').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-1').should('exist');
+    for (let i = 1; i <= 5; i++) {
+      cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
+    }
   });
 
   it('shows show more for "Wissen Sie mehr über diese Bilder?"', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
-
+    cy.visit('/show-more/0/pictures/Fragezeichen');
     // check for text in show more view
     cy.contains('Fragezeichen');
     cy.contains('Fragezeichen Collection Testbeschreibung');
 
     // check for images in show more view
     cy.contains('4 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-3').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-2').should('exist');
+    for (let i = 2; i <= 5; i++) {
+      cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
+    }
   });
 
   it('shows show more view for "Jahrzehnte"', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(2)').contains('Mehr anzeigen').click();
-
+    cy.visit('/show-more/0/date');
     // check for text in show more view
     cy.contains('Jahrzehnte');
     cy.contains('Hier finden Sie alle Bilder unseres Archivs aus den bestimmten Jahrzehnten.');
 
     // check for categories
-    cy.get('.carousel-collection-grid-container .items .item:eq(0)').should(
-      'contain.text',
-      'FRÜHER'
-    );
-    cy.get('.carousel-collection-grid-container .items .item:eq(1)').should('contain.text', '50ER');
-    cy.get('.carousel-collection-grid-container .items .item:eq(2)').should('contain.text', '60ER');
-    cy.get('.carousel-collection-grid-container .items .item:eq(3)').should('contain.text', '70ER');
-    cy.get('.carousel-collection-grid-container .items .item:eq(4)').should('contain.text', '80ER');
-    cy.get('.carousel-collection-grid-container .items .item:eq(5)').should('contain.text', '90ER');
+    const targetTexts = ['FRÜHER', '50ER', '60ER', '70ER', '80ER', '90ER'];
+    for (let i = 0; i < 6; i++) {
+      cy.get(`.carousel-collection-grid-container .items .item:eq(${i})`).should(
+        'contain.text',
+        targetTexts[i]
+      );
+    }
 
     // check for images in show more view
     cy.contains('5 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-3').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-2').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-1').should('exist');
+    for (let i = 1; i <= 5; i++) {
+      cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
+    }
+  });
 
-    // check if navigation to single decade works
-    cy.get('.carousel-collection-grid-container .items').contains('70ER').click();
-
+  it('shows show more view for single decade "70er"', () => {
+    cy.visit('/show-more/0/date/7');
     // check text on show more view
     cy.contains('1970er');
 
     // contains no images
     cy.contains('2 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-
-    // leave show more view
-    cy.contains('Zurück').click();
+    for (let i = 4; i <= 5; i++) {
+      cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
+    }
   });
 
   it('shows show more view for "Orte', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(3)').contains('Mehr anzeigen').click();
-
+    cy.visit('/show-more/0/location');
     // check for text in show more view
     cy.contains('Orte');
     cy.contains('Hier finden Sie alle Orte unseres Archivs');
@@ -103,39 +146,30 @@ describe('Show More View', () => {
 
     // check for images in show more view
     cy.contains('5 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-3').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-2').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-1').should('exist');
+    for (let i = 1; i <= 5; i++) {
+      cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
+    }
+  });
 
-    // check if navigation to single decade works
-    cy.get('.carousel-collection-grid-container .items')
-      .contains('VERIFIZIERTER TESTORT 3')
-      .click();
-
+  it('shows show more for single location "Verifizierter Testort 3"', () => {
+    cy.visit('/show-more/0/location/9');
     // check text on show more view
     cy.contains('Verifizierter Testort 3');
 
     // contains no images
     cy.contains('1 Bild(er)');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-
-    // leave show more view
-    cy.contains('Zurück').click();
   });
 
   it('shows show more view for "Unsere Kategorien"', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(4)').contains('Mehr anzeigen').click();
-
+    cy.visit('/show-more/0/keyword');
     // check for text in show more view
     cy.contains('Unsere Kategorien');
     cy.contains('Hier finden Sie alle thematischen Kategorien unseres Archivs');
 
     // check for categories in show more view
     cy.get('.carousel-collection-grid-container .items')
-      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
+      .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 5')
@@ -144,69 +178,13 @@ describe('Show More View', () => {
 
     // check for images in show more view
     cy.contains('5 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-3').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-2').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-1').should('exist');
-
-    // check if navigation to single decade works
-    cy.get('.carousel-collection-grid-container .items')
-      .contains('VERIFIZIERTES TESTSCHLAGWORT 4')
-      .click();
-
-    // check text on show more view
-    cy.contains('Verifiziertes Testschlagwort 4');
-
-    // contains no images
-    cy.contains('1 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-
-    // leave show more view
-    cy.contains('Zurück').click();
+    for (let i = 1; i <= 5; i++) {
+      cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
+    }
   });
 
-  it('shows show more view for "Früher" (empty)', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(2)').contains('FRÜHER').click();
-
-    // check text on show more view
-    cy.contains('Früher');
-
-    // contains no images
-    cy.contains('Keine Bilder');
-    cy.get('.picture-grid').should('contain.not.class', 'picture-preview');
-  });
-
-  it('shows show more view for "70er" (not empty)', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(2)').contains('70ER').click();
-
-    // check text on show more view
-    cy.contains('1970er');
-
-    // contains no images
-    cy.contains('2 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-  });
-
-  it('shows show more view for special location "Verifizierter Testort 3"', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(3)').contains('VERIFIZIERTER TESTORT 3').click();
-
-    // check text on show more view
-    cy.contains('Verifizierter Testort 3');
-
-    // contains no images
-    cy.contains('1 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-  });
-
-  it('shows show more view for special location "Verifiziertes Testschlagwort 4"', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(4)').contains('VERIFIZIERTES TESTSCHLAGWORT 4').click();
-
+  it('shows show more for single keyword "Verifiziertes Testschlagwort 4"', () => {
+    cy.visit('/show-more/0/keyword/11');
     // check text on show more view
     cy.contains('Verifiziertes Testschlagwort 4');
 
@@ -214,31 +192,24 @@ describe('Show More View', () => {
     cy.contains('1 Bild(er)');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
+});
 
-  it('shows show more for "Unsere Bilder" from archive view', () => {
-    // got to archive view for archive 1
-    cy.visit('/archives/1');
-
-    // click show more button
-    cy.get('.carousel-container:first').contains('Mehr anzeigen').click();
-
+describe('Archive Show More View', () => {
+  it('shows show more for "Unsere Bilder"', () => {
+    cy.visit('/show-more/1/pictures');
     // check for text in show more view
     cy.contains('Unsere Bilder');
     cy.contains('Hier finden Sie alle Bilder unseres Archivs');
 
     // check for images in show more view
     cy.contains('5 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-3').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-2').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-1').should('exist');
+    for (let i = 1; i <= 5; i++) {
+      cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
+    }
   });
 
-  it('shows show more view for "Unsere Kategorien" from archive view', () => {
-    // click show more button
-    cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
-
+  it('shows show more view for "Unsere Kategorien"', () => {
+    cy.visit('/show-more/1/keyword');
     // check for text in show more view
     cy.contains('Unsere Kategorien');
     cy.contains('Hier finden Sie alle thematischen Kategorien unseres Archivs');
@@ -254,10 +225,8 @@ describe('Show More View', () => {
 
     // check for images in show more view
     cy.contains('5 Bild(er)');
-    cy.get('.picture-grid .row #picture-preview-for-5').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-3').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-2').should('exist');
-    cy.get('.picture-grid .row #picture-preview-for-1').should('exist');
+    for (let i = 1; i <= 5; i++) {
+      cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
+    }
   });
 });
