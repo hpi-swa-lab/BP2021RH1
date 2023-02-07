@@ -67,6 +67,35 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 });
 
+describe('Navigation to Show More View from Archive View', () => {
+  beforeEach(() => {
+    cy.visit('/archives/1');
+  });
+
+  it('works for "Unsere Bilder"', () => {
+    cy.get('.carousel-container:first').contains('Mehr anzeigen').click();
+    urlIs('/show-more/1/pictures');
+  });
+
+  it('works for "Unsere Kategorien"', () => {
+    cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
+    urlIs('/show-more/1/keyword');
+  });
+
+  it('works for single keywords', () => {
+    // IDs of the sic keywords shown in carousel
+    const targetIDs = [9, 10, 11, 13, 14, 15];
+    // itterate over the six keywords shown in carousel
+    for (let i = 0; i < 6; i++) {
+      cy.get(
+        `.carousel-container:eq(1) .carousel-collection-grid-container .items .item:eq(${i})`
+      ).click();
+      urlIs(`/show-more/1/keyword/${targetIDs[i]}`);
+      cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
+    }
+  });
+});
+
 describe('Global Show More View', () => {
   it('shows show more for "Unsere Bilder"', () => {
     cy.visit('/show-more/0/pictures');
@@ -228,5 +257,15 @@ describe('Archive Show More View', () => {
     for (let i = 1; i <= 5; i++) {
       cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
     }
+  });
+
+  it('shows show more for single keyword "Verifiziertes Testschlagwort 4"', () => {
+    cy.visit('/show-more/1/keyword/11');
+    // check text on show more view
+    cy.contains('Verifiziertes Testschlagwort 4');
+
+    // contains no images
+    cy.contains('1 Bild(er)');
+    cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 });
