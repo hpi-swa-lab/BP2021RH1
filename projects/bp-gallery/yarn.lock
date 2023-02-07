@@ -1721,10 +1721,10 @@
     "@swc/core-win32-ia32-msvc" "1.3.32"
     "@swc/core-win32-x64-msvc" "1.3.32"
 
-"@swc/plugin-transform-imports@^1.5.40":
-  version "1.5.40"
-  resolved "https://registry.yarnpkg.com/@swc/plugin-transform-imports/-/plugin-transform-imports-1.5.40.tgz#9ed5ecd7820f695a0be165f250fb2c423849120e"
-  integrity sha512-17S5Ixo0F/T0kTcmb/XZVGPNaagPOZw1V5YISzfmynsDhL+6HMMLWvLdNp+F3bATv1OuSwUpDDX05CGSg3dNlw==
+"@swc/plugin-transform-imports@^1.5.41":
+  version "1.5.41"
+  resolved "https://registry.yarnpkg.com/@swc/plugin-transform-imports/-/plugin-transform-imports-1.5.41.tgz#088d1c1b75e1f54a267aeffc9527bee0a362b92e"
+  integrity sha512-sywDxWfKg3Jqm7s7X81uN9P6HbrX9oBYF8lHYzT6/1c/ovVG3RGG/1bDOQpzb+IC7C/h2oI2ESOKMKibbKsq1Q==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"

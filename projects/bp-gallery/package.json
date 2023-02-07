@@ -48,7 +48,7 @@
     "@graphql-codegen/typescript": "2.4.1",
     "@graphql-codegen/typescript-operations": "2.2.1",
     "@graphql-codegen/typescript-react-apollo": "3.2.2",
-    "@swc/plugin-transform-imports": "^1.5.40",
+    "@swc/plugin-transform-imports": "^1.5.41",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.13",
     "@types/qs": "^6.9.7",

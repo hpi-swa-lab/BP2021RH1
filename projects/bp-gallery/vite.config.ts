@@ -28,7 +28,7 @@ const splitPackagesPlugin: Plugin = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(process.env.NODE_ENV !== 'test' ? { plugins: reactPlugins } : undefined)],
+  plugins: [react({ plugins: reactPlugins })],
   envDir: 'environments',
   server: {
     port: 3000,
