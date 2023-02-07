@@ -217,18 +217,20 @@ const ShowMoreView = ({
         </ScrollContainer>
       );
     }
-  } else if (categoryId && flattenedTags && (categoryType === 'date' || flattenedTags.length > 0)) {
+  } else if (categoryId) {
     return (
       <ScrollContainer>
         {(scrollPos: number, scrollHeight: number) => (
           <div className='show-more-container'>
-            <h2>
-              {categoryType === 'date'
-                ? categoryId === '4'
-                  ? t('common.past')
-                  : t('show-more.x0s', { decade: categoryId })
-                : flattenedTags[0].name}
-            </h2>
+            {flattenedTags && (categoryType === 'date' || flattenedTags.length > 0) && (
+              <h2>
+                {categoryType === 'date'
+                  ? categoryId === '4'
+                    ? t('common.past')
+                    : t('show-more.x0s', { decade: categoryId })
+                  : flattenedTags[0].name}
+              </h2>
+            )}
             <PictureScrollGrid
               queryParams={categoryQueryParams()}
               sortBy={['time_range_tag.start:asc']}
