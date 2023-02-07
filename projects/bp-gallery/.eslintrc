@@ -89,7 +89,22 @@
     "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
     "@typescript-eslint/prefer-optional-chain": "warn",
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
-    "react-refresh/only-export-components": "warn"
+    "react-refresh/only-export-components": "warn",
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": ["@mui/icons-material/*"],
+            "message": "Please try to import the module directly from '@mui/icons-material' instead. If that's not possible (e.g. the imported module is not the default export or the module name is different than the import path name), you can ignore this warning or add the import to the no-restricted-imports exceptions in .eslintrc instead."
+          },
+          {
+            "group": ["@mui/material/*", "!@mui/material/styles", "!@mui/material/Tooltip"],
+            "message": "Please try to import the module directly from '@mui/material' instead. If that's not possible (e.g. the imported module is not the default export or the module name is different than the import path name), you can ignore this warning or add the import to the no-restricted-imports exceptions in .eslintrc instead."
+          }
+        ]
+      }
+    ]
   },
   "ignorePatterns": ["/build/"],
   "overrides": [
