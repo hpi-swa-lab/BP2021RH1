@@ -5,8 +5,9 @@ import {
   useGetPicturesByAllSearchQuery,
   useGetPicturesQuery,
 } from '../graphql/APIConnector';
-import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../components/common/picture-gallery/PictureScrollGrid';
 import { AuthRole, useAuth } from '../components/provider/AuthProvider';
+
+export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },

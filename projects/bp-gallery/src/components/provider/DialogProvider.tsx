@@ -32,6 +32,7 @@ const DialogContext = React.createContext<(dialogProps: DialogProps) => Promise<
   async (dialogProps: DialogProps) => null
 );
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useDialog = () => {
   return useContext(DialogContext);
 };

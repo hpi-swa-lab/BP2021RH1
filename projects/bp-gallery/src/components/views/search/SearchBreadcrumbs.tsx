@@ -2,7 +2,6 @@ import React from 'react';
 import { Chip } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
-import { asSearchPath } from './SearchView';
 import './SearchBreadcrumbs.scss';
 import {
   Sell,
@@ -17,6 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { getDecadeTranslation } from './helpers/search-translation';
 import { SearchType } from './helpers/search-filters';
+import { asSearchPath } from './helpers/addNewParamToSearchPath';
 
 type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];

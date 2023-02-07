@@ -16,10 +16,7 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
 import { HelpTooltip } from '../../common/HelpTooltip';
-
-export const isValidYear = (searchRequest: string) => {
-  return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
-};
+import { isValidYear } from './helpers/addNewParamToSearchPath';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'
@@ -31,10 +28,6 @@ const isValidTimeSpecification = (searchRequest: string) => {
 
   // Simple year specification e.g. '1972'
   return isValidYear(searchRequest);
-};
-
-export const asSearchPath = (searchParams: URLSearchParams): string => {
-  return `/search?${searchParams.toString()}`;
 };
 
 const SearchView = () => {
