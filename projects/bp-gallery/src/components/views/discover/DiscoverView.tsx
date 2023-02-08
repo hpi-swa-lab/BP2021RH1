@@ -36,7 +36,7 @@ const DiscoverView = () => {
           <CategoryCarousel
             title='Jahrzehnte'
             type={TagType.TIME_RANGE}
-            seperator={true}
+            separator={true}
             onClick={() => {
               history.push('/show-more/0/date', {
                 showBack: true,
@@ -47,7 +47,7 @@ const DiscoverView = () => {
 
           <CategoryCarousel
             title='Orte'
-            seperator={true}
+            separator={true}
             type={TagType.LOCATION}
             queryParams={{
               and: [
@@ -65,7 +65,7 @@ const DiscoverView = () => {
 
           <CategoryCarousel
             title='Unsere Kategorien'
-            seperator={true}
+            separator={true}
             type={TagType.KEYWORD}
             queryParams={{
               and: [

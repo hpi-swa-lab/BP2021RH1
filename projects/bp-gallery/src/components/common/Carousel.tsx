@@ -61,12 +61,7 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
     };
   }, [onResize]);
 
-  const { data, loading, error, fetchMore, refetch } = useGetPictures(
-    queryParams,
-    false,
-    sortBy,
-    6 * rows
-  );
+  const { data, loading, refetch } = useGetPictures(queryParams, false, sortBy, 6 * rows);
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
@@ -75,7 +70,7 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
       {(scrollPos: number, scrollHeight: number) => (
         <div className='carousel-container'>
           <h1 className='carousel-title'>{title}</h1>
-          <hr className='carousel-seperator' />
+          <hr className='carousel-separator' />
           {pictures && (
             <div className='carousel-picture-grid-container'>
               <PictureGrid

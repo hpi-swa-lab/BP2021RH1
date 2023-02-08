@@ -108,7 +108,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
 
           <CategoryCarousel
             title='Unsere Kategorien'
-            seperator={true}
+            separator={true}
             type={TagType.KEYWORD}
             onClick={() => {
               history.push('/show-more/' + archiveId + '/keyword', {

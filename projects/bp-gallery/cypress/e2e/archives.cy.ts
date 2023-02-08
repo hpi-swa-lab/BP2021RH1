@@ -104,11 +104,11 @@ describe('Archives View', () => {
   });
 
   it('shows "Unsere Bilder" carousel', () => {
-    // check for basic components (title, seperator, show more button)
+    // check for basic components (title, separator, show more button)
     cy.get('.carousel-container:first')
       .children()
       .should('contain.text', 'Unsere Bilder')
-      .and('contain.class', 'carousel-seperator')
+      .and('contain.class', 'carousel-separator')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains rows with images
@@ -123,11 +123,11 @@ describe('Archives View', () => {
   });
 
   it('shows "Unsere Kategorien" carousel', () => {
-    // check for basic components (title, seperator, show more button)
+    // check for basic components (title, separator, show more button)
     cy.get('.carousel-container:eq(1)')
       .children()
       .should('contain.text', 'Unsere Kategorien')
-      .and('contain.class', 'carousel-seperator')
+      .and('contain.class', 'carousel-separator')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains first 6 verified locations

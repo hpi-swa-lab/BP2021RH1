@@ -23,7 +23,7 @@ interface CategoryCarouselProps {
   rows?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
-  seperator?: boolean;
+  separator?: boolean;
   archiveId?: string;
 }
 
@@ -34,7 +34,7 @@ const CategoryCarousel = ({
   rows,
   queryParams,
   thumbnailQueryParams,
-  seperator,
+  separator,
   archiveId = '0',
 }: CategoryCarouselProps) => {
   const { t } = useTranslation();
@@ -42,11 +42,11 @@ const CategoryCarousel = ({
   const basePath = '/show-more/' + archiveId + '/' + type + '/';
 
   const calculateMaxCategoriesPerRow = () => {
-    const tempRowLenght = Math.max(1, Math.floor(Math.min(window.innerWidth - 64, 1200) / 300));
-    if (Math.min(window.innerWidth - 64, 1200) >= tempRowLenght * 300 + (tempRowLenght - 1) * 8) {
-      return tempRowLenght;
+    const tempRowLength = Math.max(1, Math.floor(Math.min(window.innerWidth - 64, 1200) / 300));
+    if (Math.min(window.innerWidth - 64, 1200) >= tempRowLength * 300 + (tempRowLength - 1) * 8) {
+      return tempRowLength;
     }
-    return tempRowLenght - 1;
+    return tempRowLength - 1;
   };
 
   const [rowLength, setRowLength] = useState<number>(calculateMaxCategoriesPerRow());
@@ -87,7 +87,7 @@ const CategoryCarousel = ({
         {(scrollPos: number, scrollHeight: number) => (
           <div className='carousel-container'>
             {title && <h1 className='carousel-title'>{title}</h1>}
-            {seperator && <hr className='carousel-seperator' />}
+            {separator && <hr className='carousel-separator' />}
             <div className='carousel-collection-grid-container'>
               {type !== TagType.TIME_RANGE && (
                 <TagList
