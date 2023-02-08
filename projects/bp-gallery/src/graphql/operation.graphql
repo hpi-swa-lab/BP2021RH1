@@ -362,6 +362,7 @@ query getPictures(
     data {
       id
       attributes {
+        is_text
         media {
           data {
             id
@@ -390,6 +391,7 @@ query getPicturesByAllSearch(
   ) {
     id
     attributes {
+      is_text
       media {
         data {
           id
