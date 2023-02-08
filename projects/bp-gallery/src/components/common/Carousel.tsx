@@ -5,10 +5,11 @@ import './Carousel.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import ScrollContainer from './ScrollContainer';
-import { PictureFiltersInput, useGetPicturesQuery } from '../../graphql/APIConnector';
+import { PictureFiltersInput } from '../../graphql/APIConnector';
 import hashCode from '../../helpers/hash-code';
 import { FlatPicture } from '../../types/additionalFlatTypes';
 import { useTranslation } from 'react-i18next';
+import useGetPictures from '../../hooks/get-pictures.hook';
 
 interface CarouselProps {
   title: string;
@@ -31,8 +32,6 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
     minRowLength: number,
     hashKey: string = 'carousel'
   ) => Math.round(hashCode(hashKey) * (maxRowLength - minRowLength) + minRowLength);
-
-  //const [maxPicturesPerRow, setMaxPicturePerRow] = useState<number>(calculateMaxPicturesPerRow());
 
   const calculatePictureNumber = useCallback(() => {
     const maxRowLength = calculateMaxPicturesPerRow();
@@ -62,18 +61,13 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
     };
   }, [onResize]);
 
-  const { data, loading, error, fetchMore, refetch } = useGetPicturesQuery({
-    variables: {
-      filters: queryParams as PictureFiltersInput,
-      pagination: {
-        start: 0,
-        limit: 6 * rows,
-      },
-      sortBy,
-    },
-    notifyOnNetworkStatusChange: true,
-    skip: false,
-  });
+  const { data, loading, error, fetchMore, refetch } = useGetPictures(
+    queryParams,
+    false,
+    sortBy,
+    6 * rows
+  );
+
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   return (

@@ -5743,7 +5743,10 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     $filter80s: PictureFiltersInput!
     $filter90s: PictureFiltersInput!
   ) {
-    decade40s: pictures(filters: $filter40s, pagination: { limit: 1 }) {
+    decade40s: pictures(
+      filters: { and: [$filter40s, { is_text: { eq: false } }] }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5756,7 +5759,10 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade50s: pictures(filters: $filter50s, pagination: { limit: 1 }) {
+    decade50s: pictures(
+      filters: { and: [$filter50s, { is_text: { eq: false } }] }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5769,7 +5775,10 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade60s: pictures(filters: $filter60s, pagination: { limit: 1 }) {
+    decade60s: pictures(
+      filters: { and: [$filter60s, { is_text: { eq: false } }] }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5782,7 +5791,10 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade70s: pictures(filters: $filter70s, pagination: { limit: 1 }) {
+    decade70s: pictures(
+      filters: { and: [$filter70s, { is_text: { eq: false } }] }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5795,7 +5807,10 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade80s: pictures(filters: $filter80s, pagination: { limit: 1 }) {
+    decade80s: pictures(
+      filters: { and: [$filter80s, { is_text: { eq: false } }] }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5808,7 +5823,10 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade90s: pictures(filters: $filter90s, pagination: { limit: 1 }) {
+    decade90s: pictures(
+      filters: { and: [$filter90s, { is_text: { eq: false } }] }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {

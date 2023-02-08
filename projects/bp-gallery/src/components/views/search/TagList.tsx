@@ -6,7 +6,6 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
 import ScrollableItemList from '../../common/ScrollableItemList';
 import { asApiPath } from '../../App';
-import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
@@ -19,6 +18,7 @@ import {
   PersonTagFiltersInput,
   PictureFiltersInput,
 } from '../../../graphql/APIConnector';
+import useGetTagsWithThumbnail from '../../../hooks/get-tags-with-thumbnail.hook';
 
 const TagList = ({
   type,
@@ -40,17 +40,14 @@ const TagList = ({
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
 
-  const { tagsWithThumbnailQuery } = useGenericTagEndpoints(type);
-
-  const { data, loading, error, fetchMore } = tagsWithThumbnailQuery({
-    variables: {
-      filters: queryParams,
-      thumbnailFilters: thumbnailQueryParams,
-      start: 0,
-      limit: currentItemAmount ? currentItemAmount : 30,
-      sortBy: ['name:asc'],
-    },
-  });
+  const { data, loading, error, fetchMore } = useGetTagsWithThumbnail(
+    queryParams,
+    thumbnailQueryParams,
+    false,
+    type,
+    ['name:asc'],
+    currentItemAmount ? currentItemAmount : 30
+  );
 
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened

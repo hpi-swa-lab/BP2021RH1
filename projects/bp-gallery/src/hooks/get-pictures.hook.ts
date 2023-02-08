@@ -11,14 +11,15 @@ import { AuthRole, useAuth } from '../components/provider/AuthProvider';
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
   isAllSearchActive: boolean,
-  sortBy?: string[]
+  sortBy?: string[],
+  limit: number = NUMBER_OF_PICTURES_LOADED_PER_FETCH
 ) => {
   const queryResult = useGetPicturesQuery({
     variables: {
       filters: queryParams as PictureFiltersInput,
       pagination: {
         start: 0,
-        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+        limit: limit,
       },
       sortBy,
     },

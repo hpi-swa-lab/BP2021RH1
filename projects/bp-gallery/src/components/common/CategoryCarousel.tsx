@@ -13,8 +13,8 @@ import {
 import DecadesList from '../views/search/DecadesList';
 import TagList from '../views/search/TagList';
 import { useTranslation } from 'react-i18next';
-import useGenericTagEndpoints from '../../hooks/generic-endpoints.hook';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
+import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
 
 interface CategoryCarouselProps {
   title?: string;
@@ -63,19 +63,16 @@ const CategoryCarousel = ({
     };
   }, [onResize]);
 
-  const { tagsWithThumbnailQuery } = useGenericTagEndpoints(type);
+  const tagsWithThumbnail = useGetTagsWithThumbnail(
+    queryParams,
+    thumbnailQueryParams,
+    false,
+    type,
+    ['name:asc'],
+    1
+  );
 
-  const { data, loading, error, fetchMore } = tagsWithThumbnailQuery({
-    variables: {
-      filters: queryParams,
-      thumbnailFilters: thumbnailQueryParams,
-      start: 0,
-      limit: 1,
-      sortBy: ['name:asc'],
-    },
-  });
-
-  const flattened = useSimplifiedQueryResponseData(data);
+  const flattened = useSimplifiedQueryResponseData(tagsWithThumbnail.data);
   const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened
     ? Object.values(flattened)[0]
     : undefined;
