@@ -104,8 +104,8 @@ describe('Global Show More View', () => {
     cy.contains('Hier finden Sie alle Bilder unseres Archivs');
 
     // check for images in show more view
-    cy.contains('5 Bild(er)');
-    for (let i = 1; i <= 5; i++) {
+    cy.contains('Mehr als 100 Bilder');
+    for (let i = 2; i <= 5; i++) {
       cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
     }
   });
@@ -139,8 +139,8 @@ describe('Global Show More View', () => {
     }
 
     // check for images in show more view
-    cy.contains('5 Bild(er)');
-    for (let i = 1; i <= 5; i++) {
+    cy.contains('Mehr als 100 Bilder');
+    for (let i = 2; i <= 5; i++) {
       cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
     }
   });
@@ -174,8 +174,8 @@ describe('Global Show More View', () => {
       .and('contain.text', 'VERIFIZIERTER TESTORT 7');
 
     // check for images in show more view
-    cy.contains('5 Bild(er)');
-    for (let i = 1; i <= 5; i++) {
+    cy.contains('Mehr als 100 Bilder');
+    for (let i = 2; i <= 5; i++) {
       cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
     }
   });
@@ -206,8 +206,8 @@ describe('Global Show More View', () => {
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 7');
 
     // check for images in show more view
-    cy.contains('5 Bild(er)');
-    for (let i = 1; i <= 5; i++) {
+    cy.contains('Mehr als 100 Bilder');
+    for (let i = 2; i <= 5; i++) {
       cy.get(`.picture-grid .row #picture-preview-for-${i}`).should('exist');
     }
   });
