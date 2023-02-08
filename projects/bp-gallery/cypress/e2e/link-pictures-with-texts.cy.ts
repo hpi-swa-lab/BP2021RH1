@@ -30,8 +30,38 @@ describe('link pictures with texts', () => {
     login();
   });
 
-  it('texts are shown only for curators in archives view', () => {
+  it('texts are shown only for curators in archives view carousel', () => {
     cy.visit('/archives/1');
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1');
+    logout();
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1').should('not.exist');
+    login();
+  });
+
+  it('texts are shown only for curators in archives view show more', () => {
+    cy.visit('/show-more/1/pictures');
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1');
+    logout();
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1').should('not.exist');
+    login();
+  });
+
+  it('texts are shown only for curators in archives view keywords show more', () => {
+    cy.visit('/show-more/1/keyword');
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1');
+    logout();
+    cy.get('#picture-preview-for-2');
+    cy.get('#picture-preview-for-1').should('not.exist');
+    login();
+  });
+
+  it('texts are shown only for curators in archives view single keyword show more', () => {
+    cy.visit('/show-more/1/keyword/9');
     cy.get('#picture-preview-for-2');
     cy.get('#picture-preview-for-1');
     logout();
