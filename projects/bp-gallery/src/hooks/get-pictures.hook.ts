@@ -31,7 +31,7 @@ const useGetPictures = (
       ...(queryParams as GetPicturesByAllSearchQueryVariables),
       pagination: {
         start: 0,
-        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+        limit: limit,
       },
     },
     notifyOnNetworkStatusChange: true,

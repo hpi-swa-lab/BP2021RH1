@@ -24,6 +24,7 @@ export type PictureGridProps = {
   extraAdornments?: PicturePreviewAdornment[];
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
+  rows?: number;
 };
 
 const PictureGrid = ({
@@ -35,29 +36,59 @@ const PictureGrid = ({
   extraAdornments,
   showDefaultAdornments = true,
   allowClicks = true,
+  rows,
 }: PictureGridProps) => {
-  const calculateMaxRowCount = () =>
+  const calculateMaxPicturesPerRow = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
+
+  const calculateMinPicturesPerRow = (maxRowLength: number) => Math.max(2, maxRowLength - 2);
 
   const { role } = useAuth();
   const { t } = useTranslation();
 
-  const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
-  const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [bulkEditPictureIds, setBulkEditPictureIds] = useState<string[] | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
+  const calculatePicturesPerRow = (
+    maxRowLength: number,
+    minRowLength: number,
+    hashKey: string = 'carousel'
+  ) => Math.round(hashCode(hashKey) * (maxRowLength - minRowLength) + minRowLength);
+
+  const calculatePictureNumber = useCallback(() => {
+    if (!rows) {
+      return pictures.length;
+    }
+    const maxRowLength = calculateMaxPicturesPerRow();
+    const minRowLength = calculateMinPicturesPerRow(maxRowLength);
+    let pictureNumber = calculatePicturesPerRow(maxRowLength, minRowLength);
+    for (let row = 1; row < rows; row++) {
+      pictureNumber += calculatePicturesPerRow(
+        maxRowLength,
+        minRowLength,
+        'carousel' + String((pictureNumber - 1) * 124.22417246)
+      );
+    }
+    return pictureNumber;
+  }, [rows, pictures.length]);
+
   const deletePicture = useDeletePicture();
+
+  /*const onResize = useCallback(() => {
+    setPictureNumber(calculatePictureNumber());
+  }, [calculatePictureNumber]);*/
 
   // Initialize table with pictures from props
   useEffect(() => {
     const buffer: (FlatPicture | undefined)[][] = [[]];
+    const maxRowLength = calculateMaxPicturesPerRow();
+    const minRowLength = calculateMinPicturesPerRow(maxRowLength);
     let currentRow = 0;
     let currentRowCount = 0;
-    let rowLength = Math.round(hashCode(hashBase) * (maxRowCount - minRowCount) + minRowCount);
-    for (let i = 0; i < pictures.length; i++) {
+    let rowLength = Math.round(hashCode(hashBase) * (maxRowLength - minRowLength) + minRowLength);
+    for (let i = 0; i < calculatePictureNumber(); i++) {
       buffer[currentRow].push(pictures[i]);
       currentRowCount++;
       if (currentRowCount >= rowLength) {
@@ -66,7 +97,8 @@ const PictureGrid = ({
         buffer.push([]);
         currentRowCount = 0;
         rowLength = Math.round(
-          hashCode(hashBase + String(i * 124.22417246)) * (maxRowCount - minRowCount) + minRowCount
+          hashCode(hashBase + String(i * 124.22417246)) * (maxRowLength - minRowLength) +
+            minRowLength
         );
       }
     }
@@ -74,23 +106,15 @@ const PictureGrid = ({
       buffer[buffer.length - 1].push(undefined);
     }
     setTable(buffer);
-  }, [maxRowCount, minRowCount, pictures, hashBase]);
-
-  const onResize = useCallback(() => {
-    const newMaxRowCount = calculateMaxRowCount();
-    if (newMaxRowCount !== maxRowCount) {
-      setMaxRowCount(newMaxRowCount);
-      setMinRowCount(Math.max(2, newMaxRowCount - 2));
-    }
-  }, [maxRowCount]);
+  }, [pictures, hashBase, calculatePictureNumber]);
 
   // Set up eventListener on mount and cleanup on unmount
-  useEffect(() => {
+  /*useEffect(() => {
     window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, [onResize]);
+  }, [onResize]);*/
 
   const navigateToPicture = useCallback(
     (id: string) => {
