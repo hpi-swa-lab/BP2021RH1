@@ -2,7 +2,6 @@ import { Button } from '@mui/material';
 import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './Carousel.scss';
-import ScrollContainer from './ScrollContainer';
 import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import {
   KeywordTagFiltersInput,
@@ -63,7 +62,7 @@ const CategoryCarousel = ({
     };
   }, [onResize]);
 
-  const tagsWithThumbnail = useGetTagsWithThumbnail(
+  const { data } = useGetTagsWithThumbnail(
     queryParams,
     thumbnailQueryParams,
     false,
@@ -72,54 +71,47 @@ const CategoryCarousel = ({
     1
   );
 
-  const flattened = useSimplifiedQueryResponseData(tagsWithThumbnail.data);
+  const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened
     ? Object.values(flattened)[0]
     : undefined;
-
-  console.log(flattenedTags);
 
   if (flattenedTags?.length === 0) {
     return <div></div>;
   } else {
     return (
-      <ScrollContainer>
-        {(scrollPos: number, scrollHeight: number) => (
-          <div className='carousel-container'>
-            {title && <h1 className='carousel-title'>{title}</h1>}
-            {separator && <hr className='carousel-separator' />}
-            <div className='carousel-collection-grid-container'>
-              {type !== TagType.TIME_RANGE && (
-                <TagList
-                  type={type}
-                  scroll={false}
-                  onClickBasePath={basePath}
-                  currentItemAmount={rows ? rowLength * rows : undefined}
-                  queryParams={queryParams}
-                  thumbnailQueryParams={thumbnailQueryParams}
-                />
-              )}
-              {type === TagType.TIME_RANGE && (
-                <DecadesList
-                  scroll={false}
-                  onClickBasePath={basePath}
-                  thumbnailQueryParams={thumbnailQueryParams}
-                  currentItemAmount={rows ? rowLength * rows : undefined}
-                />
-              )}
-            </div>
-            {onClick && (
-              <Button
-                onClick={onClick}
-                className='carousel-show-more-button'
-                endIcon={<ArrowForwardIosIcon />}
-              >
-                {t('common.showMore')}
-              </Button>
-            )}
-          </div>
+      <div className='carousel-container'>
+        {title && <h1 className='carousel-title'>{title}</h1>}
+        {separator && <hr className='carousel-separator' />}
+        <div className='carousel-collection-grid-container'>
+          {type !== TagType.TIME_RANGE ? (
+            <TagList
+              type={type}
+              scroll={false}
+              onClickBasePath={basePath}
+              currentItemAmount={rows ? rowLength * rows : undefined}
+              queryParams={queryParams}
+              thumbnailQueryParams={thumbnailQueryParams}
+            />
+          ) : (
+            <DecadesList
+              scroll={false}
+              onClickBasePath={basePath}
+              thumbnailQueryParams={thumbnailQueryParams}
+              currentItemAmount={rows ? rowLength * rows : undefined}
+            />
+          )}
+        </div>
+        {onClick && (
+          <Button
+            onClick={onClick}
+            className='carousel-show-more-button'
+            endIcon={<ArrowForwardIosIcon />}
+          >
+            {t('common.showMore')}
+          </Button>
         )}
-      </ScrollContainer>
+      </div>
     );
   }
 };

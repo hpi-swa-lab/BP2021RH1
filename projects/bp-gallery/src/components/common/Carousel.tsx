@@ -4,7 +4,6 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './Carousel.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
-import ScrollContainer from './ScrollContainer';
 import { PictureFiltersInput } from '../../graphql/APIConnector';
 import hashCode from '../../helpers/hash-code';
 import { FlatPicture } from '../../types/additionalFlatTypes';
@@ -66,33 +65,29 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   return (
-    <ScrollContainer>
-      {(scrollPos: number, scrollHeight: number) => (
-        <div className='carousel-container'>
-          <h1 className='carousel-title'>{title}</h1>
-          <hr className='carousel-separator' />
-          {pictures && (
-            <div className='carousel-picture-grid-container'>
-              <PictureGrid
-                pictures={pictures.slice(0, pictureNumber)}
-                hashBase={'carousel'}
-                loading={loading}
-                refetch={refetch}
-                allowClicks={false}
-                showDefaultAdornments={false}
-              />
-            </div>
-          )}
-          <Button
-            onClick={onClick}
-            className='carousel-show-more-button'
-            endIcon={<ArrowForwardIosIcon />}
-          >
-            {t('common.showMore')}
-          </Button>
+    <div className='carousel-container'>
+      <h1 className='carousel-title'>{title}</h1>
+      <hr className='carousel-separator' />
+      {pictures && (
+        <div className='carousel-picture-grid-container'>
+          <PictureGrid
+            pictures={pictures.slice(0, pictureNumber)}
+            hashBase={'carousel'}
+            loading={loading}
+            refetch={refetch}
+            allowClicks={false}
+            showDefaultAdornments={false}
+          />
         </div>
       )}
-    </ScrollContainer>
+      <Button
+        onClick={onClick}
+        className='carousel-show-more-button'
+        endIcon={<ArrowForwardIosIcon />}
+      >
+        {t('common.showMore')}
+      </Button>
+    </div>
   );
 };
 
