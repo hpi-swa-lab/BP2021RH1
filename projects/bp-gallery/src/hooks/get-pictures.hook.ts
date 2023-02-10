@@ -1,13 +1,12 @@
 import {
   GetPicturesByAllSearchQueryVariables,
-  GetPicturesQuery,
   PictureFiltersInput,
   useGetPicturesByAllSearchQuery,
   useGetPicturesQuery,
 } from '../graphql/APIConnector';
 import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../components/common/picture-gallery/PictureScrollGrid';
 import { AuthRole, useAuth } from '../components/provider/AuthProvider';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
@@ -15,9 +14,36 @@ const useGetPictures = (
   sortBy?: string[],
   filterOutTextsForNonCurators = true
 ) => {
+  const { role } = useAuth();
+
+  const filterOutTexts = role < AuthRole.CURATOR && filterOutTextsForNonCurators;
+
+  const filters = useMemo(() => {
+    return filterOutTexts
+      ? {
+          and: [
+            {
+              or: [
+                {
+                  is_text: {
+                    eq: false,
+                  },
+                },
+                {
+                  is_text: {
+                    null: true,
+                  },
+                },
+              ],
+            },
+            queryParams as PictureFiltersInput,
+          ],
+        }
+      : (queryParams as PictureFiltersInput);
+  }, [filterOutTexts, queryParams]);
   const queryResult = useGetPicturesQuery({
     variables: {
-      filters: queryParams as PictureFiltersInput,
+      filters,
       pagination: {
         start: 0,
         limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
@@ -30,57 +56,27 @@ const useGetPictures = (
   const customQueryResult = useGetPicturesByAllSearchQuery({
     variables: {
       ...(queryParams as GetPicturesByAllSearchQueryVariables),
+      filterOutTexts,
       pagination: {
         start: 0,
         limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
       },
     },
-    notifyOnNetworkStatusChange: true,
     skip: !isAllSearchActive,
   });
 
-  const { role } = useAuth();
-
-  const doFilterOutTexts = role < AuthRole.CURATOR && filterOutTextsForNonCurators;
-
-  type PictureData = NonNullable<GetPicturesQuery['pictures']>['data'][number];
-
-  const filterOutTexts = useCallback(
-    (pictures: (PictureData | null | undefined)[] | null | undefined) => {
-      if (!pictures) {
-        return undefined;
-      }
-      return {
-        pictures: {
-          data: doFilterOutTexts
-            ? pictures.filter(picture => !picture?.attributes?.is_text)
-            : pictures,
-        },
-      };
-    },
-    [doFilterOutTexts]
-  );
-
-  const filteredAllSearchData = useMemo(
+  const allSearchResult = useMemo(
     () => ({
       ...customQueryResult,
-      data: filterOutTexts(customQueryResult.data?.findPicturesByAllSearch),
+      data: { pictures: customQueryResult.data?.findPicturesByAllSearch },
     }),
-    [filterOutTexts, customQueryResult]
-  );
-
-  const filteredQueryData = useMemo(
-    () => ({
-      ...queryResult,
-      data: filterOutTexts(queryResult.data?.pictures?.data),
-    }),
-    [filterOutTexts, queryResult]
+    [customQueryResult]
   );
 
   if (isAllSearchActive) {
-    return filteredAllSearchData;
+    return allSearchResult;
   } else {
-    return filteredQueryData;
+    return queryResult;
   }
 };
 
