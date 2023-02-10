@@ -7,7 +7,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Close, Done } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 

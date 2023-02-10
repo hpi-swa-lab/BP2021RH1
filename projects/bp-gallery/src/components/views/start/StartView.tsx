@@ -1,4 +1,3 @@
-import React from 'react';
 import './StartView.scss';
 import { useTranslation } from 'react-i18next';
 import BrowseView from '../browse/BrowseView';

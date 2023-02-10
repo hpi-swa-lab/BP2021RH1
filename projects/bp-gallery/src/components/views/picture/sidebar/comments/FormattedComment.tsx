@@ -1,10 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import './FormattedComment.scss';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import { Button } from '@mui/material';
-import { Delete, ExpandLess, ExpandMore, QuestionAnswer } from '@mui/icons-material';
+import {
+  Delete,
+  Close,
+  Edit,
+  ExpandLess,
+  ExpandMore,
+  QuestionAnswer,
+  PushPin,
+} from '@mui/icons-material';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import {
   useDeclineCommentMutation,
@@ -12,13 +20,10 @@ import {
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import PushPinIcon from '@mui/icons-material/PushPin';
 import Editor from '../../../../common/editor/Editor';
-import EditIcon from '@mui/icons-material/Edit';
 import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
-import Close from '@mui/icons-material/Close';
 
 interface CommentAction {
   text: string;
@@ -113,7 +118,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
             {
               text: 'Editieren',
               action: () => setEdit(!edit),
-              icon: !edit ? <EditIcon /> : <Close />,
+              icon: !edit ? <Edit /> : <Close />,
               hoverText: 'Editieren',
               state: edit,
             },
@@ -156,12 +161,12 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
               pinned ? unpinComment() : pinComment();
             }}
           >
-            <PushPinIcon />
+            <PushPin />
           </button>
         ) : (
           comment.pinned && (
             <div className={`pinned pin-icon`}>
-              <PushPinIcon />
+              <PushPin />
             </div>
           )
         )}

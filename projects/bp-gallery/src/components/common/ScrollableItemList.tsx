@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './ScrollableItemList.scss';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Icon, IconButton } from '@mui/material';

@@ -1,4 +1,12 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 const sessionStorageItemName = 'clipboard';
 
@@ -20,11 +28,11 @@ function storeIntoSessionStorage(data: ClipboardData) {
   sessionStorage.setItem(sessionStorageItemName, JSON.stringify(data));
 }
 
-const ClipboardContext = React.createContext<
+const ClipboardContext = createContext<
   null | [ClipboardData, Dispatch<SetStateAction<ClipboardData>>]
 >(null);
 
-export const ClipboardProvider: React.FC = ({ children }) => {
+export const ClipboardProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
   const state = useState(loadFromSessionStorage());
   const [data, _] = state;
 
@@ -35,6 +43,7 @@ export const ClipboardProvider: React.FC = ({ children }) => {
   return <ClipboardContext.Provider value={state}>{children}</ClipboardContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useClipboard = () => {
   const value = useContext(ClipboardContext);
   if (!value) {

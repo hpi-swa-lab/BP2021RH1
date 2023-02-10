@@ -1,6 +1,6 @@
 import { isFunction } from 'lodash';
-import React, { MouseEvent, MouseEventHandler, useMemo, useRef } from 'react';
-import { asApiPath } from '../../App';
+import { MouseEvent, MouseEventHandler, useMemo, useRef } from 'react';
+import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PicturePreview.scss';
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Icon } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useLikeMutation } from '../../../../graphql/APIConnector';

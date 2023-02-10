@@ -1,11 +1,10 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
 import ScrollableItemList from '../../common/ScrollableItemList';
-import { asApiPath } from '../../App';
+import { asApiPath } from '../../../helpers/app-helpers';
 import {
   useGetDecadePreviewThumbnailsQuery,
   PictureFiltersInput,

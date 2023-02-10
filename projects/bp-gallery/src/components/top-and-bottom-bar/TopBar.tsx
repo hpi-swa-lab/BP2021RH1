@@ -1,11 +1,16 @@
 import { Button, Icon } from '@mui/material';
-import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { History, Location } from 'history';
 import './TopBar.scss';
 import SearchBar from '../views/search/SearchBar';
 import NavigationBar from './NavigationBar';
+
+type LocationProps = {
+  state?: {
+    showBack: boolean;
+  };
+};
 
 const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
@@ -16,7 +21,7 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
   return (
     <div className='top-bar'>
       <div className='action-wrapper'>
-        {history.location.state?.showBack ? (
+        {(history.location as LocationProps).state?.showBack ? (
           <div className='actions'>
             <Button
               onClick={() => {

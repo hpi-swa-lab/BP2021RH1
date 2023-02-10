@@ -70,6 +70,11 @@ describe('link pictures with texts', () => {
     cy.contains(
       '.picture-info-field[data-type="links"] button',
       'Ein kopiertes Bild einfügen'
+    ).scrollIntoView();
+    cy.contains('Lädt...').should('not.exist');
+    cy.contains(
+      '.picture-info-field[data-type="links"] button',
+      'Ein kopiertes Bild einfügen'
     ).click();
     cy.get('.picture-info-field[data-type="links"] #picture-preview-for-2');
 
@@ -95,6 +100,11 @@ describe('link pictures with texts', () => {
     cy.contains('.clipboard-editor', 'Keine Bilder').should('not.exist');
 
     cy.visit('/picture/3');
+    cy.contains(
+      '.picture-info-field[data-type="links"] button',
+      'Einen kopierten Text einfügen'
+    ).scrollIntoView();
+    cy.contains('Lädt...').should('not.exist');
     cy.contains(
       '.picture-info-field[data-type="links"] button',
       'Einen kopierten Text einfügen'

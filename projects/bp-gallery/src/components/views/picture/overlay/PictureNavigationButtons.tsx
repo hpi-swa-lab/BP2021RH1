@@ -1,5 +1,5 @@
 import { Icon, IconButton } from '@mui/material';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { PictureViewContext } from '../PictureView';
 
 export enum PictureNavigationTarget {

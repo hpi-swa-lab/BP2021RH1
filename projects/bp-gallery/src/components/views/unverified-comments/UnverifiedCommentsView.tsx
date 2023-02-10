@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useGetUnverifiedCommentsQuery } from '../../../graphql/APIConnector';
 import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
@@ -10,7 +10,7 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import './UnverifiedCommentsView.scss';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { Portal } from '@mui/material';
-import { root } from '../../..';
+import { root } from '../../../helpers/app-helpers';
 
 const UnverifiedCommentsView = () => {
   const { t } = useTranslation();
