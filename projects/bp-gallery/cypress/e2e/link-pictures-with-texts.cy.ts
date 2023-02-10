@@ -40,6 +40,24 @@ describe('link pictures with texts', () => {
     login();
   });
 
+  it('texts are shown only for curators in start view', () => {
+    cy.visit('/start');
+    cy.get('#picture-preview-for-25');
+    cy.get('#picture-preview-for-1');
+    logout();
+    cy.get('#picture-preview-for-25');
+    cy.get('#picture-preview-for-1').should('not.exist');
+    login();
+  });
+
+  it('texts do not reduce the number of fetched pictures', () => {
+    cy.visit('/');
+    logout();
+    cy.visit('/start');
+    cy.contains('Mehr als 100 Bilder');
+    login();
+  });
+
   it('link a picture to a text', () => {
     cy.visit('/picture/2');
     cy.get('.clipboard-editor-open').click();
