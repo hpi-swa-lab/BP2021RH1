@@ -198,39 +198,6 @@ const buildQueryForAllSearch = (
 };
 
 /**
- * Uses the passed knexEngine instance to build the complete query for retrieving the actual media files
- * associated to the prior retrieved picture entities.
- */
-const buildQueryForMediaFiles = (knexEngine, pictureIds) => {
-  const withSelect = knexEngine
-    .distinct(
-      "files_related_morphs.order",
-      "files.*",
-      "files_related_morphs.related_id",
-      "files_related_morphs.related_type"
-    )
-    .from(table("files"));
-
-  const withJoin = withSelect.leftJoin(
-    table("files_related_morphs"),
-    "files.id",
-    "files_related_morphs.file_id"
-  );
-
-  // Function syntax for where in order to use correct bracing in the query
-  const withWhere = withJoin.where((qb) =>
-    qb
-      .whereIn("files_related_morphs.related_id", pictureIds)
-      // Only use media files related to the picture content type
-      .andWhere("files_related_morphs.related_type", "api::picture.picture")
-      // The field on the file relation on the picture content type is called 'media'
-      .andWhere("files_related_morphs.field", "media")
-  );
-
-  return withWhere.orderBy("files_related_morphs.order", "asc");
-};
-
-/**
  * Encapsulates all logic that is necessary for the custom GraphQL query for the All-Search.
  *
  * Note that the Knex Query Builder is so designed, that built queries just need to be awaited

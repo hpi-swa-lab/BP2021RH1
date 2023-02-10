@@ -5,8 +5,6 @@ import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 
 const OPERATIONS_WITH_OWN_ERROR_HANDLING = ['login'];
 
-type MergeInput = { __typename: string; data: { __ref: string }[] };
-
 const apiBase = import.meta.env.VITE_REACT_APP_API_BASE;
 export const root = document.getElementById('root')!;
 
@@ -57,14 +55,16 @@ export const buildHttpLink = (
   return httpLink;
 };
 
-export const mergeByRef = (
+type Ref = { __ref: string };
+type MergeInput = { __typename: string; data: Ref[] };
+
+export const mergeByRef = (existing: Ref[] | undefined = undefined, incoming: Ref[]): Ref[] =>
+  unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
+
+export const mergeByRefWrappedInData = (
   existing: MergeInput | undefined = undefined,
   incoming: MergeInput
 ): MergeInput => ({
   ...incoming,
-  data: unionWith<{ __ref: string }>(
-    existing?.data ?? [],
-    incoming.data,
-    (a, b) => a.__ref === b.__ref
-  ),
+  data: mergeByRef(existing?.data, incoming.data),
 });

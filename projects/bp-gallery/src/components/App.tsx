@@ -2,7 +2,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { renderRoutes } from 'react-router-config';
-import { buildHttpLink, mergeByRef } from '../helpers/app-helpers';
+import { buildHttpLink, mergeByRef, mergeByRefWrappedInData } from '../helpers/app-helpers';
 import './App.scss';
 import { ClipboardEditorProvider } from './common/clipboard/ClipboardEditorContext';
 import AlertProvider from './provider/AlertProvider';
@@ -38,7 +38,7 @@ const apolloClient = new ApolloClient({
             // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
             // get treated as one query and the results get merged.
             keyArgs: ['filters'],
-            merge: mergeByRef,
+            merge: mergeByRefWrappedInData,
           },
           findPicturesByAllSearch: {
             keyArgs: ['searchTerms', 'searchTimes'],
@@ -46,15 +46,15 @@ const apolloClient = new ApolloClient({
           },
           keywordTags: {
             keyArgs: ['filters'],
-            merge: mergeByRef,
+            merge: mergeByRefWrappedInData,
           },
           personTags: {
             keyArgs: ['filters'],
-            merge: mergeByRef,
+            merge: mergeByRefWrappedInData,
           },
           locationTags: {
             keyArgs: ['filters'],
-            merge: mergeByRef,
+            merge: mergeByRefWrappedInData,
           },
         },
       },
