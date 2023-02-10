@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import JoditEditor, { Jodit } from 'jodit-react';
 import { addPlugins } from './helpers/jodit-plugins';
 import defaultConfig from './helpers/jodit-config';

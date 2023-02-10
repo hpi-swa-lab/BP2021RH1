@@ -1,5 +1,5 @@
 import { Icon, Menu, MenuItem } from '@mui/material';
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import './NavigationBar.scss';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
 
   const { role, logout } = useAuth();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // When a user successfully logs in, the Dialog closes
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { ContentCopy, ContentPasteGo, LinkOff } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { differenceWith, isEqual, union, unionWith } from 'lodash';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetMultiplePictureInfoLazyQuery } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';

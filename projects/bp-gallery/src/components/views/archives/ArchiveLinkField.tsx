@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { LinkInfo } from './ArchiveEditView';
 import { sanitizeLink } from './helpers/link-helpers';
 import ArchiveInput from './ArchiveInput';
@@ -39,7 +39,10 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
         type='url'
         value={url}
         error={invalid}
-        onChange={event => setUrl(event.target.value)}
+        onChange={event => {
+          setUrl(event.target.value);
+          setInvalid(!regex.test(event.target.value));
+        }}
         onBlur={() => {
           setUrl(sanitizeLink(url));
           const match = regex.test(url);

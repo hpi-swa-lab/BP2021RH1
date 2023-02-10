@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';

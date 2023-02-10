@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import './NewCommentForm.scss';
 import { Button, TextField } from '@mui/material';
 import { usePostCommentMutation } from '../../../../../graphql/APIConnector';

@@ -1,6 +1,6 @@
 import { Autocomplete, Chip, Icon, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';

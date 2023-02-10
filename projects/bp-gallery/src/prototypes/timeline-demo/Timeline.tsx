@@ -1,4 +1,4 @@
-import React, { Component, createRef, MutableRefObject } from 'react';
+import { Component, createRef, MutableRefObject } from 'react';
 
 interface TimeLineProps {
   handleChange: (start: number, end: number) => void;

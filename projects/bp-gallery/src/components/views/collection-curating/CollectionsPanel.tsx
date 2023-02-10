@@ -1,6 +1,6 @@
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { useTranslation } from 'react-i18next';
-import React, { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import {
@@ -44,7 +44,7 @@ const CollectionsPanel = ({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const parentCollection: FlatCollection | undefined =
     useSimplifiedQueryResponseData(data)?.collection;

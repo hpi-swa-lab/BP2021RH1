@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -9,10 +9,10 @@ import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import { useTranslation } from 'react-i18next';
 import './PictureScrollGrid.scss';
 import { BulkOperation } from './BulkOperationsPanel';
-import useGetPictures from '../../../hooks/get-pictures.hook';
+import useGetPictures, {
+  NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+} from '../../../hooks/get-pictures.hook';
 import { PicturePreviewAdornment } from './PicturePreview';
-
-export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
 const PictureScrollGrid = ({
   queryParams,

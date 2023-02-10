@@ -2,6 +2,7 @@ node-modules
 src/reportWebVitals.js
 src/react-app-env.d.ts
 tailwind.config.js
+vite.config.ts
 src/graphql/schema/loadRemoteSchema.js
 src/graphql/APIConnector.tsx
 src/prototypes/demo/Demo.tsx

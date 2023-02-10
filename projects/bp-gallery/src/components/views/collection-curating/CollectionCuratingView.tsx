@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetRootCollectionQuery } from '../../../graphql/APIConnector';
 import './CollectionCuratingView.scss';
 import CollectionsPanel from './CollectionsPanel';

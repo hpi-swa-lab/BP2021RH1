@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import './PictureGrid.scss';
 import PictureView from '../../views/picture/PictureView';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -13,7 +13,7 @@ import { union } from 'lodash';
 import { Button, Icon, Portal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { CheckBox, CheckBoxOutlineBlank, Delete } from '@mui/icons-material';
-import { root } from '../../..';
+import { root } from '../../../helpers/app-helpers';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];

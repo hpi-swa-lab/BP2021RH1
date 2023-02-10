@@ -1,4 +1,3 @@
-import React from 'react';
 import SelectDialogPreset from './SelectDialogPreset';
 import { DialogProps } from '../DialogProvider';
 import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
