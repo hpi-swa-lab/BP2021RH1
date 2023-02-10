@@ -1,10 +1,18 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useState,
+} from 'react';
 import { ClipboardEditor } from './ClipboardEditor';
 
 const Context = createContext<[ReactNode, Dispatch<SetStateAction<ReactNode>>] | null>(null);
 
-export const ClipboardEditorProvider = ({ children }: { children: React.ReactNode }) => {
+export const ClipboardEditorProvider = ({ children }: PropsWithChildren<{}>) => {
   const buttonsState = useState<ReactNode>(null);
   return (
     <Context.Provider value={buttonsState}>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
@@ -37,7 +37,7 @@ export const useDialog = () => {
   return useContext(DialogContext);
 };
 
-const DialogProvider = ({ children }: { children: React.ReactNode }) => {
+const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
   const [dialogState, setDialogState] = useState<DialogProps>();
 
   // We save a function callback here to call once the currently active dialog has
