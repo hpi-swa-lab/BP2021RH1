@@ -62,25 +62,25 @@ const useGetPictures = (
   );
 
   const filteredAllSearchData = useMemo(
-    () => filterOutTexts(customQueryResult.data?.findPicturesByAllSearch),
+    () => ({
+      ...customQueryResult,
+      data: filterOutTexts(customQueryResult.data?.findPicturesByAllSearch),
+    }),
     [filterOutTexts, customQueryResult]
   );
 
   const filteredQueryData = useMemo(
-    () => filterOutTexts(queryResult.data?.pictures?.data),
+    () => ({
+      ...queryResult,
+      data: filterOutTexts(queryResult.data?.pictures?.data),
+    }),
     [filterOutTexts, queryResult]
   );
 
   if (isAllSearchActive) {
-    return {
-      ...customQueryResult,
-      data: filteredAllSearchData,
-    };
+    return filteredAllSearchData;
   } else {
-    return {
-      ...queryResult,
-      data: filteredQueryData,
-    };
+    return filteredQueryData;
   }
 };
 
