@@ -62,6 +62,7 @@ const useGetPictures = (
         limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
       },
     },
+    notifyOnNetworkStatusChange: true,
     skip: !isAllSearchActive,
   });
 
