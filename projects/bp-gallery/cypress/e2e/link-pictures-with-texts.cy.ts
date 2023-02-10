@@ -87,6 +87,23 @@ describe('link pictures with texts', () => {
     cy.get('.picture-info-field[data-type="links"] #picture-preview-for-3');
   });
 
+  it('linked pictures and texts are shown when not logged in', () => {
+    cy.visit('/');
+    logout();
+    cy.visit('/picture/1');
+    cy.contains('Verlinkte Bilder');
+    cy.get('.picture-info-field[data-type="links"] #picture-preview-for-2');
+    cy.get('.picture-info-field[data-type="links"] #picture-preview-for-3');
+    cy.visit('/picture/2');
+    cy.contains('Verlinkte Texte');
+    cy.get('.picture-info-field[data-type="links"] #picture-preview-for-1');
+    cy.visit('/picture/3');
+    cy.contains('Verlinkte Texte');
+    cy.get('.picture-info-field[data-type="links"] #picture-preview-for-1');
+    cy.visit('/');
+    login();
+  });
+
   it('cleanup', () => {
     cy.visit('/picture/1');
     cy.get('.clipboard-editor-open').click();
