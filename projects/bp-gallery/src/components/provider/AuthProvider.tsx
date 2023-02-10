@@ -1,11 +1,4 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
 import { useApolloClient } from '@apollo/client';
 import { AlertContext, AlertType } from './AlertProvider';
@@ -53,7 +46,7 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const AuthProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
+const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);

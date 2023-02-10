@@ -1,12 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 
 const sessionStorageItemName = 'clipboard';
 
@@ -32,7 +24,7 @@ const ClipboardContext = createContext<
   null | [ClipboardData, Dispatch<SetStateAction<ClipboardData>>]
 >(null);
 
-export const ClipboardProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
+export const ClipboardProvider = ({ children }: { children: React.ReactNode }) => {
   const state = useState(loadFromSessionStorage());
   const [data, _] = state;
 
