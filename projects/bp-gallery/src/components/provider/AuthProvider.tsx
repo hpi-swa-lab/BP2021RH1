@@ -53,7 +53,7 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const AuthProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
+const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);

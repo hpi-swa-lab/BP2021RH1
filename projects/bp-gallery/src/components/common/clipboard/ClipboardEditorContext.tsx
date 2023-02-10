@@ -12,7 +12,7 @@ import { ClipboardEditor } from './ClipboardEditor';
 
 const Context = createContext<[ReactNode, Dispatch<SetStateAction<ReactNode>>] | null>(null);
 
-export const ClipboardEditorProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
+export const ClipboardEditorProvider = ({ children }: PropsWithChildren<{}>) => {
   const buttonsState = useState<ReactNode>(null);
   return (
     <Context.Provider value={buttonsState}>

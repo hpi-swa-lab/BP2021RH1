@@ -110,8 +110,19 @@
   "ignorePatterns": ["/build/"],
   "overrides": [
     {
-      "files": ["**/*.test.tsx?"],
-      "rules": {}
+      "files": ["src/**/*.tsx"],
+      "rules": {
+        // See https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492, especially the React part
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            "extendDefaults": true,
+            "types": {
+              "{}": false
+            }
+          }
+        ]
+      }
     }
   ]
 }

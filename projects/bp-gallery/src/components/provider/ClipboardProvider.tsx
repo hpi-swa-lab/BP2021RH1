@@ -32,7 +32,7 @@ const ClipboardContext = createContext<
   null | [ClipboardData, Dispatch<SetStateAction<ClipboardData>>]
 >(null);
 
-export const ClipboardProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
+export const ClipboardProvider = ({ children }: PropsWithChildren<{}>) => {
   const state = useState(loadFromSessionStorage());
   const [data, _] = state;
 
