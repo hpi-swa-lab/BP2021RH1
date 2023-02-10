@@ -41,7 +41,7 @@ const apolloClient = new ApolloClient({
             merge: mergeByRefWrappedInData,
           },
           findPicturesByAllSearch: {
-            keyArgs: ['searchTerms', 'searchTimes'],
+            keyArgs: ['searchTerms', 'searchTimes', 'filterOutTexts'],
             merge: mergeByRef,
           },
           keywordTags: {
@@ -60,17 +60,6 @@ const apolloClient = new ApolloClient({
       },
     },
   }),
-});
-
-document.body.addEventListener('keyup', event => {
-  // alt+c clears apollo cache, as a temporary workaround
-  // for the broken cache configuration
-  if (event.altKey && event.code === 'KeyC') {
-    const { cache } = apolloClient;
-    cache.evict({ id: 'ROOT_QUERY' });
-    cache.evict({ id: 'ROOT_MUTATION' });
-    cache.gc();
-  }
 });
 
 const App = () => {

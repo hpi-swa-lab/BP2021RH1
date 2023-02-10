@@ -142,7 +142,7 @@ const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
   return knexEngine;
 };
 
-const buildWhere = (knexEngine, searchTerms, searchTimes) => {
+const buildWhere = (knexEngine, searchTerms, searchTimes, filterOutTexts) => {
   for (const searchObject of [...searchTerms, ...searchTimes]) {
     // Function syntax for where in order to use correct bracing in the query
     knexEngine = knexEngine.where((qb) => {
@@ -173,6 +173,13 @@ const buildWhere = (knexEngine, searchTerms, searchTimes) => {
   // Only retrieve published pictures
   knexEngine = knexEngine.whereNotNull("pictures.published_at");
 
+  if (filterOutTexts) {
+    knexEngine = knexEngine.where((qb) => {
+      qb.where("pictures.is_text", false);
+      qb.orWhereNull("pictures.is_text");
+    });
+  }
+
   return knexEngine;
 };
 
@@ -184,13 +191,19 @@ const buildQueryForAllSearch = (
   knexEngine,
   searchTerms,
   searchTimes,
+  filterOutTexts,
   pagination = { start: 0, limit: 100 }
 ) => {
   const withSelect = knexEngine.distinct("pictures.*").from(table("pictures"));
 
   const withJoins = buildJoins(withSelect);
 
-  const withWhere = buildWhere(withJoins, searchTerms, searchTimes);
+  const withWhere = buildWhere(
+    withJoins,
+    searchTerms,
+    searchTimes,
+    filterOutTexts
+  );
 
   const withOrder = withWhere.orderBy("pictures.published_at", "asc");
 
@@ -207,12 +220,14 @@ const findPicturesByAllSearch = async (
   knexEngine,
   searchTerms,
   searchTimes,
+  filterOutTexts,
   pagination
 ) => {
   const matchingPictures = await buildQueryForAllSearch(
     knexEngine,
     searchTerms,
     searchTimes,
+    filterOutTexts,
     pagination
   );
   return matchingPictures.map((picture) => ({

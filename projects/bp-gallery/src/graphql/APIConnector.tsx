@@ -1381,6 +1381,7 @@ export type QueryDescriptionsArgs = {
 };
 
 export type QueryFindPicturesByAllSearchArgs = {
+  filterOutTexts?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
   searchTerms?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   searchTimes?: InputMaybe<Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>>;
@@ -2475,6 +2476,7 @@ export type GetPicturesByAllSearchQueryVariables = Exact<{
   searchTimes:
     | Array<InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>>
     | InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+  filterOutTexts: Scalars['Boolean'];
 }>;
 
 export type GetPicturesByAllSearchQuery = {
@@ -4190,11 +4192,13 @@ export const GetPicturesByAllSearchDocument = gql`
     $pagination: PaginationArg!
     $searchTerms: [String]!
     $searchTimes: [[String]]!
+    $filterOutTexts: Boolean!
   ) {
     findPicturesByAllSearch(
       pagination: $pagination
       searchTerms: $searchTerms
       searchTimes: $searchTimes
+      filterOutTexts: $filterOutTexts
     ) {
       id
       attributes {
@@ -4230,6 +4234,7 @@ export const GetPicturesByAllSearchDocument = gql`
  *      pagination: // value for 'pagination'
  *      searchTerms: // value for 'searchTerms'
  *      searchTimes: // value for 'searchTimes'
+ *      filterOutTexts: // value for 'filterOutTexts'
  *   },
  * });
  */
