@@ -2,7 +2,7 @@ import { logout } from '../utils/login-utils';
 
 describe('Login', () => {
   before(() => {
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
   after(() => {
     logout();
@@ -23,10 +23,16 @@ describe('Login', () => {
   });
 
   it('should close the dialog on successful login', () => {
-    cy.get('#username').should('be.visible').clear().type('testCurator');
-    cy.get('#password').should('be.visible').clear().type('1234abc');
+    cy.get('#username').should('be.visible').clear();
+    cy.get('#username').type('testCurator');
+    cy.get('#password').should('be.visible').clear();
+    cy.get('#password').type('1234abc');
     cy.get('button[type="submit"]').should('be.visible').click();
     cy.get('.MuiDialog-container').should('not.exist');
+  });
+
+  it('should close the Mehr... Pop Up Menu', () => {
+    cy.get('nav-element-title').should('not.exist');
   });
 
   it('should show the upload-area after logging in', () => {

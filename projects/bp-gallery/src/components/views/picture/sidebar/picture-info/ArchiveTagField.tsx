@@ -1,5 +1,5 @@
-import { DialogContext, DialogPreset } from '../../../../provider/DialogProvider';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,7 @@ const ArchiveTagField = ({
   onChange: (archiveTag: FlatArchiveTag) => void;
   archiveTag?: FlatArchiveTag;
 }) => {
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
   const { role } = useAuth();
   const { t } = useTranslation();
 

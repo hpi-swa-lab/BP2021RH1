@@ -7,9 +7,9 @@ import { InMemoryCache } from '@apollo/client';
 import routes from './components/routes';
 import NavigationBar from './components/top-and-bottom-bar/NavigationBar';
 import TopBar from './components/top-and-bottom-bar/TopBar';
-import { PictureEntityResponseCollection } from './graphql/APIConnector';
 import AlertProvider from './components/provider/AlertProvider';
 import DialogProvider from './components/provider/DialogProvider';
+import { mergeByRefWrappedInData } from './components/App';
 
 /**
  * Enables using Navigation-Context in tests
@@ -64,11 +64,7 @@ const cache = new InMemoryCache({
           // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
           // get treated as one query and the results get merged.
           keyArgs: ['filters'],
-          merge(existing = { data: [] }, incoming: PictureEntityResponseCollection) {
-            return {
-              data: [...existing.data, ...incoming.data],
-            };
-          },
+          merge: mergeByRefWrappedInData,
         },
       },
     },

@@ -19,7 +19,8 @@ type ID = { id: Scalars['ID'] };
 export type FlatCollectionWithoutRelations = ID &
   Omit<Collection, 'pictures' | 'child_collections' | 'parent_collections'>;
 
-type FlatCommentWithoutRelations = ID & Omit<Comment, 'picture'>;
+type FlatCommentWithoutRelations = ID &
+  Omit<Comment, 'picture' | 'parentComment' | 'childComments'>;
 
 type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
@@ -42,6 +43,8 @@ type FlatPictureWithoutRelations = ID &
     | 'verified_person_tags'
     | 'location_tags'
     | 'person_tags'
+    | 'linked_pictures'
+    | 'linked_texts'
     | 'archive_tag'
   >;
 
@@ -60,6 +63,8 @@ export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
+  parentComment?: FlatComment | null;
+  childComments?: FlatComment[];
 };
 
 export type FlatDescription = FlatDescriptionWithoutRelations & {
@@ -108,6 +113,8 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   location_tags?: FlatLocationTagWithoutRelations[];
   media?: FlatUploadFile;
   time_range_tag?: FlatTimeRangeTagWithoutRelations;
+  linked_pictures?: FlatPictureWithoutRelations[];
+  linked_texts?: FlatPictureWithoutRelations[];
   archive_tag?: FlatArchiveTagWithoutRelations;
 };
 

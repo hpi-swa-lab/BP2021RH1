@@ -27,7 +27,8 @@ const PictureScrollGrid = ({
   maxNumPictures,
   showCount = true,
   extraAdornments,
-  viewOnly,
+  showDefaultAdornments = true,
+  allowClicks = true,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   scrollPos: number;
@@ -41,7 +42,8 @@ const PictureScrollGrid = ({
   maxNumPictures?: number;
   showCount?: boolean;
   extraAdornments?: PicturePreviewAdornment[];
-  viewOnly?: boolean;
+  showDefaultAdornments?: boolean;
+  allowClicks?: boolean;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -140,7 +142,8 @@ const PictureScrollGrid = ({
           loading={isFetching}
           bulkOperations={bulkOperations}
           extraAdornments={extraAdornments}
-          viewOnly={viewOnly}
+          showDefaultAdornments={showDefaultAdornments}
+          allowClicks={allowClicks}
         />
       </>
     );
