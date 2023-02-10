@@ -37,7 +37,7 @@ export const useDialog = () => {
   return useContext(DialogContext);
 };
 
-const DialogProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
+const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
   const [dialogState, setDialogState] = useState<DialogProps>();
 
   // We save a function callback here to call once the currently active dialog has

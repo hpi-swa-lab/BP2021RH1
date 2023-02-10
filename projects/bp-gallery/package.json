@@ -85,6 +85,7 @@
     "start": "vite optimize && vite",
     "debug": "vite -d",
     "build": "tsc && vite build",
+    "build:dev": "tsc && vite build --mode development",
     "preview": "vite preview",
     "cy:run": "cypress run -c video=false,videoUploadOnPasses=false",
     "cy:open": "cypress open",

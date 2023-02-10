@@ -19,7 +19,7 @@ export const AlertContext = React.createContext<(alertOptions: AlertOptions) => 
   (alertOptions: AlertOptions) => {}
 );
 
-const AlertProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
+const AlertProvider = ({ children }: PropsWithChildren<{}>) => {
   const [open, setOpen] = useState<boolean>(false);
   const [hideAfter, setHideAfter] = useState<number>(8000);
   const [alertType, setAlertType] = useState<AlertType>(AlertType.INFO);
