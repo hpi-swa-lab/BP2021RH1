@@ -11,7 +11,8 @@ import { AuthRole, useAuth } from '../components/provider/AuthProvider';
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
   isAllSearchActive: boolean,
-  sortBy?: string[]
+  sortBy?: string[],
+  filterOutTextsForNonCurators = true
 ) => {
   const queryResult = useGetPicturesQuery({
     variables: {
@@ -39,6 +40,8 @@ const useGetPictures = (
 
   const { role } = useAuth();
 
+  const doFilterOutTexts = role < AuthRole.CURATOR && filterOutTextsForNonCurators;
+
   type PictureData = NonNullable<GetPicturesQuery['pictures']>['data'][number];
   const filterOutTexts = (pictures: (PictureData | null | undefined)[] | null | undefined) => {
     if (!pictures) {
@@ -46,10 +49,9 @@ const useGetPictures = (
     }
     return {
       pictures: {
-        data:
-          role >= AuthRole.CURATOR
-            ? pictures
-            : pictures.filter(picture => !picture?.attributes?.is_text),
+        data: doFilterOutTexts
+          ? pictures.filter(picture => !picture?.attributes?.is_text)
+          : pictures,
       },
     };
   };
