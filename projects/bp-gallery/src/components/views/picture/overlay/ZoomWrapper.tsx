@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 import { useMoveView } from '../helpers/useMoveView';
 import './ZoomWrapper.scss';
 
@@ -10,11 +10,10 @@ const ZoomWrapper = ({
   blockScroll,
   pictureId, // This is used to determine when a picture change has happened
   children,
-}: {
+}: PropsWithChildren<{
   blockScroll: boolean;
   pictureId: string;
-  children: any;
-}) => {
+}>) => {
   const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
   const [viewport, setViewport] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 

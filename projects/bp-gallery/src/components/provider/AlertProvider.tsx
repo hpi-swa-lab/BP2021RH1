@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { Alert, IconButton, Snackbar } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
@@ -19,7 +19,7 @@ export const AlertContext = React.createContext<(alertOptions: AlertOptions) => 
   (alertOptions: AlertOptions) => {}
 );
 
-const AlertProvider = ({ children }: { children: any }) => {
+const AlertProvider = ({ children }: PropsWithChildren<Record<string, never>>) => {
   const [open, setOpen] = useState<boolean>(false);
   const [hideAfter, setHideAfter] = useState<number>(8000);
   const [alertType, setAlertType] = useState<AlertType>(AlertType.INFO);

@@ -1,4 +1,5 @@
 import { Icon } from '@mui/material';
+import { PropsWithChildren } from 'react';
 import './PictureInfoField.scss';
 
 const PictureInfoField = ({
@@ -6,12 +7,11 @@ const PictureInfoField = ({
   icon,
   children,
   type,
-}: {
+}: PropsWithChildren<{
   title: string;
   icon: string;
-  children: any;
   type?: string;
-}) => {
+}>) => {
   return (
     <div className='picture-info-field' data-type={type}>
       <div className='icon-container'>
