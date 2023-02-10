@@ -9,7 +9,7 @@ import NavigationBar from './components/top-and-bottom-bar/NavigationBar';
 import TopBar from './components/top-and-bottom-bar/TopBar';
 import AlertProvider from './components/provider/AlertProvider';
 import DialogProvider from './components/provider/DialogProvider';
-import { mergeByRef } from './components/App';
+import { mergeByRefWrappedInData } from './components/App';
 
 /**
  * Enables using Navigation-Context in tests
@@ -64,7 +64,7 @@ const cache = new InMemoryCache({
           // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
           // get treated as one query and the results get merged.
           keyArgs: ['filters'],
-          merge: mergeByRef,
+          merge: mergeByRefWrappedInData,
         },
       },
     },
