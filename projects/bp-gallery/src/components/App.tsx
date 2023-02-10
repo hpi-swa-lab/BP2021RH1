@@ -64,18 +64,18 @@ export const buildHttpLink = (
   return httpLink;
 };
 
-type MergeInput = { __typename: string; data: { __ref: string }[] };
+type Ref = { __ref: string };
+type MergeInput = { __typename: string; data: Ref[] };
 
-export const mergeByRef = (
+export const mergeByRef = (existing: Ref[] | undefined = undefined, incoming: Ref[]): Ref[] =>
+  unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
+
+export const mergeByRefWrappedInData = (
   existing: MergeInput | undefined = undefined,
   incoming: MergeInput
 ): MergeInput => ({
   ...incoming,
-  data: unionWith<{ __ref: string }>(
-    existing?.data ?? [],
-    incoming.data,
-    (a, b) => a.__ref === b.__ref
-  ),
+  data: mergeByRef(existing?.data, incoming.data),
 });
 
 const apolloClient = new ApolloClient({
@@ -103,7 +103,7 @@ const apolloClient = new ApolloClient({
             // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
             // get treated as one query and the results get merged.
             keyArgs: ['filters'],
-            merge: mergeByRef,
+            merge: mergeByRefWrappedInData,
           },
           findPicturesByAllSearch: {
             keyArgs: ['searchTerms', 'searchTimes'],
@@ -111,15 +111,15 @@ const apolloClient = new ApolloClient({
           },
           keywordTags: {
             keyArgs: ['filters'],
-            merge: mergeByRef,
+            merge: mergeByRefWrappedInData,
           },
           personTags: {
             keyArgs: ['filters'],
-            merge: mergeByRef,
+            merge: mergeByRefWrappedInData,
           },
           locationTags: {
             keyArgs: ['filters'],
-            merge: mergeByRef,
+            merge: mergeByRefWrappedInData,
           },
         },
       },
