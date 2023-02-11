@@ -7,6 +7,7 @@ import {
 } from '../graphql/APIConnector';
 import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../components/common/picture-gallery/PictureScrollGrid';
 import { AuthRole, useAuth } from '../components/provider/AuthProvider';
+import { useMemo, useCallback } from 'react';
 
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
@@ -41,31 +42,38 @@ const useGetPictures = (
   const { role } = useAuth();
 
   type PictureData = NonNullable<GetPicturesQuery['pictures']>['data'][number];
-  const filterOutTexts = (pictures: (PictureData | null | undefined)[] | null | undefined) => {
-    if (!pictures) {
-      return undefined;
-    }
-    return {
-      pictures: {
-        data:
-          role >= AuthRole.CURATOR
-            ? pictures
-            : pictures.filter(picture => !picture?.attributes?.is_text),
-      },
-    };
-  };
+  const filterOutTexts = useCallback(
+    (pictures: (PictureData | null | undefined)[] | null | undefined) => {
+      if (!pictures) {
+        return undefined;
+      }
+      return {
+        pictures: {
+          data:
+            role >= AuthRole.CURATOR
+              ? pictures
+              : pictures.filter(picture => !picture?.attributes?.is_text),
+        },
+      };
+    },
+    [role]
+  );
 
-  if (isAllSearchActive) {
-    return {
-      ...customQueryResult,
-      data: filterOutTexts(customQueryResult.data?.findPicturesByAllSearch),
-    };
-  } else {
-    return {
-      ...queryResult,
-      data: filterOutTexts(queryResult.data?.pictures?.data),
-    };
-  }
+  const result = useMemo(() => {
+    if (isAllSearchActive) {
+      return {
+        ...customQueryResult,
+        data: filterOutTexts(customQueryResult.data?.findPicturesByAllSearch),
+      };
+    } else {
+      return {
+        ...queryResult,
+        data: filterOutTexts(queryResult.data?.pictures?.data),
+      };
+    }
+  }, [customQueryResult, filterOutTexts, isAllSearchActive, queryResult]);
+
+  return result;
 };
 
 export default useGetPictures;

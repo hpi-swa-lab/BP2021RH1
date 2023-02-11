@@ -46,6 +46,7 @@ const PictureGrid = ({
   const { role } = useAuth();
   const { t } = useTranslation();
 
+  const [maxRowLength, setMaxRowLength] = useState<number>(calculateMaxPicturesPerRow());
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [bulkEditPictureIds, setBulkEditPictureIds] = useState<string[] | undefined>(undefined);
@@ -61,7 +62,6 @@ const PictureGrid = ({
     if (!rows) {
       return pictures.length;
     }
-    const maxRowLength = calculateMaxPicturesPerRow();
     const minRowLength = calculateMinPicturesPerRow(maxRowLength);
     let pictureNumber = calculatePicturesPerRow(maxRowLength, minRowLength);
     for (let row = 1; row < rows; row++) {
@@ -72,22 +72,32 @@ const PictureGrid = ({
       );
     }
     return pictureNumber;
-  }, [rows, pictures.length]);
+  }, [rows, maxRowLength, pictures.length]);
 
   const deletePicture = useDeletePicture();
 
-  /*const onResize = useCallback(() => {
-    setPictureNumber(calculatePictureNumber());
-  }, [calculatePictureNumber]);*/
+  const onResize = useCallback(() => {
+    const newMaxRowLength = calculateMaxPicturesPerRow();
+    if (newMaxRowLength !== maxRowLength) {
+      setMaxRowLength(newMaxRowLength);
+    }
+  }, [maxRowLength]);
+
+  // Set up eventListener on mount and cleanup on unmount
+  useEffect(() => {
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
+  }, [onResize]);
 
   // Initialize table with pictures from props
   useEffect(() => {
     const buffer: (FlatPicture | undefined)[][] = [[]];
-    const maxRowLength = calculateMaxPicturesPerRow();
-    const minRowLength = calculateMinPicturesPerRow(maxRowLength);
     let currentRow = 0;
     let currentRowCount = 0;
-    let rowLength = Math.round(hashCode(hashBase) * (maxRowLength - minRowLength) + minRowLength);
+    const minRowLength = calculateMinPicturesPerRow(maxRowLength);
+    let rowLength = calculatePicturesPerRow(maxRowLength, minRowLength, hashBase);
     for (let i = 0; i < calculatePictureNumber(); i++) {
       buffer[currentRow].push(pictures[i]);
       currentRowCount++;
@@ -106,15 +116,7 @@ const PictureGrid = ({
       buffer[buffer.length - 1].push(undefined);
     }
     setTable(buffer);
-  }, [pictures, hashBase, calculatePictureNumber]);
-
-  // Set up eventListener on mount and cleanup on unmount
-  /*useEffect(() => {
-    window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, [onResize]);*/
+  }, [pictures, hashBase, calculatePictureNumber, maxRowLength]);
 
   const navigateToPicture = useCallback(
     (id: string) => {
