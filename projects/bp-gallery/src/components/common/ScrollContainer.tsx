@@ -1,10 +1,10 @@
-import React, { ReactComponentElement, useState } from 'react';
+import React, { useState } from 'react';
 import './ScrollContainer.scss';
 
 const ScrollContainer = ({
   children,
 }: {
-  children: (scrollPos: number, scrollHeight: number) => ReactComponentElement<any>;
+  children: ((scrollPos: number, scrollHeight: number) => React.ReactNode) | React.ReactNode;
 }) => {
   const [scrollPos, setScrollPos] = useState<number>(0);
   const [scrollHeight, setScrollHeight] = useState<number>(0);
@@ -18,7 +18,7 @@ const ScrollContainer = ({
           setScrollHeight((event.target as HTMLElement).scrollHeight);
         }}
       >
-        {children(scrollPos, scrollHeight)}
+        {typeof children === 'function' ? children(scrollPos, scrollHeight) : children}
       </div>
     </div>
   );
