@@ -42,9 +42,7 @@ describe('Archives View', () => {
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 1');
     cy.get('#archive-form-url').should('be.visible').type('test1.de');
-    cy.get('.archive-link-entry').within(() => {
-      return cy.get('[data-testid="SaveIcon"]').click();
-    });
+    cy.get('.archive-link-entry').find('[data-testid="SaveIcon"]').click();
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 2');
     cy.get('#archive-form-url').should('be.visible').type('test2.de').blur();
