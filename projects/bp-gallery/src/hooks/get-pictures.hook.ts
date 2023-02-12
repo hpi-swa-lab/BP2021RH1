@@ -13,8 +13,8 @@ const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
   isAllSearchActive: boolean,
   sortBy?: string[],
-  limit: number = NUMBER_OF_PICTURES_LOADED_PER_FETCH,
-  filterOutTextsForNonCurators = true
+  filterOutTextsForNonCurators = true,
+  limit: number = NUMBER_OF_PICTURES_LOADED_PER_FETCH
 ) => {
   const { role } = useAuth();
 

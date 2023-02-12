@@ -1,4 +1,4 @@
-import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../components/common/picture-gallery/PictureScrollGrid';
+import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from './get-pictures.hook';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
