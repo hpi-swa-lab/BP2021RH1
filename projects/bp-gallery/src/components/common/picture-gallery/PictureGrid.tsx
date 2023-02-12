@@ -230,7 +230,7 @@ const PictureGrid = ({
           );
         })}
       </div>
-      {focusedPicture && (
+      {focusedPicture && !transitioning && (
         <Portal container={root}>
           <PictureView
             initialPictureId={focusedPicture}

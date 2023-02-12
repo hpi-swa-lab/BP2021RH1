@@ -44,7 +44,7 @@ const StartView = () => {
               <p>{t('startpage.welcome-text')}</p>
             </div>
             <DailyPicture />
-            <h3>Unsere Archive:</h3>
+            <h3>{t('startpage.our-archives')}</h3>
             <div className='archives'>{archiveCards}</div>
           </div>
           <BrowseView
