@@ -383,11 +383,13 @@ query getPicturesByAllSearch(
   $pagination: PaginationArg!
   $searchTerms: [String]!
   $searchTimes: [[String]]!
+  $filterOutTexts: Boolean!
 ) {
   findPicturesByAllSearch(
     pagination: $pagination
     searchTerms: $searchTerms
     searchTimes: $searchTimes
+    filterOutTexts: $filterOutTexts
   ) {
     id
     attributes {

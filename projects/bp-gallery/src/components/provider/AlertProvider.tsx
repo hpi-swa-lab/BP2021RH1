@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { Alert, IconButton, Snackbar } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close } from '@mui/icons-material';
 
 export enum AlertType {
   SUCCESS = 'success',
@@ -19,7 +19,7 @@ export const AlertContext = React.createContext<(alertOptions: AlertOptions) => 
   (alertOptions: AlertOptions) => {}
 );
 
-const AlertProvider = ({ children }: { children: any }) => {
+const AlertProvider = ({ children }: PropsWithChildren<{}>) => {
   const [open, setOpen] = useState<boolean>(false);
   const [hideAfter, setHideAfter] = useState<number>(8000);
   const [alertType, setAlertType] = useState<AlertType>(AlertType.INFO);
@@ -48,7 +48,7 @@ const AlertProvider = ({ children }: { children: any }) => {
           severity={alertType}
           action={
             <IconButton aria-label='close' color='inherit' size='small' onClick={close}>
-              <CloseIcon fontSize='inherit' />
+              <Close fontSize='inherit' />
             </IconButton>
           }
         >

@@ -1,16 +1,16 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import { useCallback, useContext, useRef } from 'react';
 import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ImageEditor from '@toast-ui/react-image-editor';
 import 'tui-image-editor/dist/tui-image-editor.css';
 import { Close, Save } from '@mui/icons-material';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
-import { asApiPath } from '../../../../App';
 import './PictureEditDialog.scss';
 import replaceMediaFile from './replace-media-file';
 import dayjs from 'dayjs';
 import { useApolloClient } from '@apollo/client';
 import { PictureViewContext } from '../../PictureView';
+import { asApiPath } from '../../../../../helpers/app-helpers';
 
 const isDefaultCropZone = (rect: any) => {
   return rect.width < 1 || rect.height < 1;

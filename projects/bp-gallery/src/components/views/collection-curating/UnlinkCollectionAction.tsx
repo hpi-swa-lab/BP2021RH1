@@ -1,5 +1,5 @@
 import { Icon, Tooltip } from '@mui/material';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';

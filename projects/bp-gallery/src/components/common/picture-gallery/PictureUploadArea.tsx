@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Icon } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';

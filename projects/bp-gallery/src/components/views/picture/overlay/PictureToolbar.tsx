@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Icon } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import './PictureToolbar.scss';

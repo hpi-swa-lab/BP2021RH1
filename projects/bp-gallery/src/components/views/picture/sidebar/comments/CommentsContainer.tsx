@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import NewCommentForm from './NewCommentForm';
 import FormattedComment from './FormattedComment';

@@ -1,21 +1,19 @@
-import EditIcon from '@mui/icons-material/Edit';
-import LinkIcon from '@mui/icons-material/Link';
-import React from 'react';
-import { useGetArchiveQuery } from '../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
-import { asApiPath } from '../../App';
-import PicturePreview from '../../common/picture-gallery/PicturePreview';
-import ScrollContainer from '../../common/ScrollContainer';
-import ArchiveInfo from './ArchiveInfo';
-import './ArchiveView.scss';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Edit, Link } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { History } from 'history';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { FALLBACK_PATH } from './../../routes';
+import { Redirect, useHistory } from 'react-router-dom';
+import { useGetArchiveQuery } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asApiPath } from '../../../helpers/app-helpers';
+import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
 import Carousel from '../../common/Carousel';
 import CategoryCarousel from '../../common/CategoryCarousel';
+import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import ScrollContainer from '../../common/ScrollContainer';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { FALLBACK_PATH } from './../../routes';
+import ArchiveInfo from './ArchiveInfo';
+import './ArchiveView.scss';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -43,7 +41,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             <p className='edit-button-wrapper'>
               <Button
                 className='archive-edit-button'
-                startIcon={<EditIcon />}
+                startIcon={<Edit />}
                 onClick={() => {
                   history.push(
                     `${history.location.pathname}${
@@ -77,7 +75,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 <div className='archive-links'>
                   {archive.links?.map(link => (
                     <div className='archive-link' key={link.id}>
-                      <LinkIcon className='link-icon' />
+                      <Link className='link-icon' />
                       <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
                     </div>
                   ))}

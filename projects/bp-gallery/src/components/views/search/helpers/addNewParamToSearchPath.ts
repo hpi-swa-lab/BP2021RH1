@@ -1,6 +1,13 @@
 import { isEmpty } from 'lodash';
-import { asSearchPath, isValidYear } from '../SearchView';
 import { SearchType } from './search-filters';
+
+export const asSearchPath = (searchParams: URLSearchParams): string => {
+  return `/search?${searchParams.toString()}`;
+};
+
+export const isValidYear = (searchRequest: string) => {
+  return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
+};
 
 const isDuplicatedSearchParam = (element: string, type: string, prevParams: URLSearchParams) => {
   let isDuplicate = false;

@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
 import ScrollableItemList from '../../common/ScrollableItemList';
-import { asApiPath } from '../../App';
+import { asApiPath } from '../../../helpers/app-helpers';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import useAdvancedSearch from './helpers/useAdvancedSearch';

@@ -1,4 +1,4 @@
-import { asApiPath } from '../../../../App';
+import { asApiPath } from '../../../../../helpers/app-helpers';
 
 // Using fetch (REST) because upload with GraphQL is a lot more difficult
 const replaceMediaFile = (file: File, uploadId: string): Promise<void> => {

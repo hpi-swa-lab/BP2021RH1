@@ -47,21 +47,13 @@ describe('Archives View', () => {
     });
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 2');
-    cy.get('#archive-form-url').should('be.visible').type('test2.de');
-    cy.get('.archive-link-entry')
-      .first()
-      .within(() => {
-        return cy.get('[data-testid="EditIcon"]').click();
-      });
-    cy.get('#archive-form-title').should('be.visible').type(' Edit');
+    cy.get('#archive-form-url').should('be.visible').type('test2.de').blur();
+    cy.get('.archive-link-entry').first().find('[data-testid="EditIcon"]').click();
+    cy.get('#archive-form-title').should('be.visible').type(' Edit').blur();
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 3');
-    cy.get('#archive-form-url').should('be.visible').type('test3.de');
-    cy.get('.archive-link-entry')
-      .eq(1)
-      .within(() => {
-        return cy.get(`[data-testid="DeleteIcon"]`).click();
-      });
+    cy.get('#archive-form-url').should('be.visible').type('test3.de').blur();
+    cy.get('.archive-link-entry').eq(1).find(`[data-testid="DeleteIcon"]`).click();
     cy.contains('Test-Link 1 Edit');
     cy.contains('Test-Link 2').should('not.exist');
     cy.get('[data-testid="SaveIcon"]').eq(1).click();
