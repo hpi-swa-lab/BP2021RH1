@@ -55,9 +55,9 @@ const channelFactory = (id: string) => {
 
 const usePresentationChannel = (id: string, onNavigate: (pictureId: string) => void) => {
   const producer = useMemo(() => channelFactory(id), [id]);
-  const consumer = useMemo(() => channelFactory(id), [id]);
 
   useEffect(() => {
+    const consumer = channelFactory(id);
     consumer.onmessage = (event: MessageEvent<{ pictureId: string }>) => {
       onNavigate(event.data.pictureId);
     };
@@ -65,7 +65,7 @@ const usePresentationChannel = (id: string, onNavigate: (pictureId: string) => v
     return () => {
       consumer.close();
     };
-  }, [consumer, onNavigate]);
+  }, [id, onNavigate]);
 
   return useCallback(
     (targetId: string) => {
