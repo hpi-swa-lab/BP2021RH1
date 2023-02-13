@@ -4,11 +4,10 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { Card, Portal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import EventIcon from '@mui/icons-material/Event';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import Editor from '../../common/editor/Editor';
-import { FolderSpecial } from '@mui/icons-material';
-import { asApiPath } from '../../App';
+import { FolderSpecial, Event } from '@mui/icons-material';
+import { asApiPath } from '../../../helpers/app-helpers';
 import PictureView from '../picture/PictureView';
 
 const choosePictureId = (pictureIds: string[]) => {
@@ -78,7 +77,6 @@ const DailyPicture = () => {
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
-  console.log(pictureLink);
   const description = picture?.descriptions?.[0]?.text ?? '';
   const pictureDate = formatTimeStamp(picture?.time_range_tag);
   const pictureArchive = picture?.archive_tag?.name;
@@ -97,7 +95,7 @@ const DailyPicture = () => {
               </p>
               <div className={'flex-1'} />
               <div className={'flex items-center gap-2 my-2'}>
-                <EventIcon /> {pictureDate}
+                <Event /> {pictureDate}
               </div>
               <div className={'flex item-center gap-2'}>
                 <FolderSpecial /> <a href={pictureArchiveLink}>{pictureArchive} </a>
@@ -120,7 +118,7 @@ const DailyPicture = () => {
         <Portal container={root}>
           <PictureView
             initialPictureId={picture.id}
-            onBack={async () => {
+            onBack={() => {
               setIsFocused(false);
             }}
           />
@@ -131,5 +129,3 @@ const DailyPicture = () => {
 };
 
 export default DailyPicture;
-
-export { choosePictureId };
