@@ -4,7 +4,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Icon,
 } from '@mui/material';
 import { DialogProps } from '../DialogProvider';
 
@@ -27,7 +26,7 @@ const StatelessDialogPreset = ({
             key={index}
             onClick={() => handleClose(option.value)}
             style={{ color: option.color ?? undefined }}
-            startIcon={option.icon ? <Icon>{option.icon}</Icon> : undefined}
+            startIcon={option.icon ?? undefined}
           >
             {option.name}
           </Button>

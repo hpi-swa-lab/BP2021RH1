@@ -1,5 +1,4 @@
-import { FormEvent, useCallback, useState } from 'react';
-import './LoginDialog.scss';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Alert,
   Button,
@@ -7,12 +6,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
   IconButton,
-  Icon,
+  TextField,
 } from '@mui/material';
+import { FormEvent, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../provider/AuthProvider';
+import './LoginDialog.scss';
 
 const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
   const { t } = useTranslation();
@@ -75,7 +75,7 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
               onChange={event => setPassword(event.target.value)}
             />
             <IconButton id='toggleButton' onClick={togglePassword}>
-              <Icon>{passwordShown ? 'visibility' : 'visibility_off'}</Icon>
+              {passwordShown ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </div>
         </DialogContent>

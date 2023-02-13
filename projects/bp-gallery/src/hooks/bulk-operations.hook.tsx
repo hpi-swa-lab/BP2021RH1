@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
+import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
+import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -20,7 +22,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
   return {
     linkToCollection: {
       name: t('curator.addToCollection'),
-      icon: 'add',
+      icon: <Add />,
       action: (selectedPictures: FlatPicture[]) => {
         selectCollection().then((selectedCollection: FlatCollection | undefined) => {
           if (!selectedCollection?.id) {
@@ -32,10 +34,10 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           );
         });
       },
-    },
+    } as BulkOperation,
     removeFromCollection: {
       name: t('curator.removeFromCollection'),
-      icon: 'close',
+      icon: <Close />,
       action: (selectedPictures: FlatPicture[]) => {
         if (!parentCollection?.id) {
           return;
@@ -48,7 +50,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     },
     moveToCollection: {
       name: t('curator.moveToCollection'),
-      icon: 'drive_file_move',
+      icon: <DriveFileMove />,
       action: (selectedPictures: FlatPicture[]) => {
         selectCollection().then((selectedCollection: FlatCollection | undefined) => {
           if (!selectedCollection?.id) {
@@ -69,7 +71,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     },
     bulkEdit: {
       name: t('curator.bulkEdit'),
-      icon: 'edit',
+      icon: <Edit />,
       action: (_selectedPictures: FlatPicture[], onBulkEdit: () => void) => {
         onBulkEdit();
       },

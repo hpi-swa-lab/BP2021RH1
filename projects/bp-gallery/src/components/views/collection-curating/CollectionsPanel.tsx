@@ -1,8 +1,7 @@
-import { FlatCollection } from '../../../types/additionalFlatTypes';
-import { useTranslation } from 'react-i18next';
+import { Add, Delete, Edit, MergeType, Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useCallback, useContext, useState } from 'react';
-import { useDialog, DialogPreset } from '../../provider/DialogProvider';
-import { AlertContext, AlertType } from '../../provider/AlertProvider';
+import { useTranslation } from 'react-i18next';
 import {
   useDeleteCollectionMutation,
   useGetCollectionInfoByIdQuery,
@@ -10,8 +9,9 @@ import {
   useUpdateCollectionMutation,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { Icon, IconButton } from '@mui/material';
-import { Delete, Edit, MergeType, Visibility, VisibilityOff } from '@mui/icons-material';
+import { FlatCollection } from '../../../types/additionalFlatTypes';
+import { AlertContext, AlertType } from '../../provider/AlertProvider';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import AddCollectionMenu from './AddCollectionMenu';
 import UnlinkCollectionAction from './UnlinkCollectionAction';
 
@@ -190,7 +190,7 @@ const CollectionsPanel = ({
             setAnchorEl(event.currentTarget);
           }}
         >
-          <Icon>add</Icon>
+          <Add />
           {t('curator.addCollection')}
         </div>
         <AddCollectionMenu

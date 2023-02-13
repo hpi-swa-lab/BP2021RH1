@@ -1,3 +1,4 @@
+import { Image, Info } from '@mui/icons-material';
 import { Button, Icon } from '@mui/material';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,13 +21,13 @@ const PictureViewNavigationBar = () => {
       >
         {sideBarOpen && (
           <span>
-            <Icon>image</Icon>
+            <Image />
             {t('common.showPicture')}
           </span>
         )}
         {!sideBarOpen && (
           <span>
-            <Icon>info</Icon>
+            <Info />
             {t('common.showInfo')}
           </span>
         )}

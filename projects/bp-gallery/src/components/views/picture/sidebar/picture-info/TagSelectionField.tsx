@@ -1,13 +1,14 @@
-import { Autocomplete, Chip, Icon, Stack, TextField } from '@mui/material';
+import { Help, Add } from '@mui/icons-material';
+import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { TagType } from '../../../../../types/additionalFlatTypes';
-import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 import { SearchType } from '../../../search/helpers/search-filters';
+import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 
 interface TagFields {
   name: string;
@@ -15,7 +16,7 @@ interface TagFields {
   verified?: boolean;
   createValue?: string;
   synonyms?: Maybe<Maybe<ComponentCommonSynonyms>[]> | undefined;
-  icon?: string;
+  icon?: JSX.Element;
   isNew?: boolean;
   onClick?: () => void;
 }
@@ -25,7 +26,7 @@ const TagSelectionField = <T extends TagFields>({
   allTags,
   onChange,
   createMutation,
-  nonVerifyable = false,
+  nonVerifiable = false,
   noContentText,
   type,
 }: {
@@ -33,7 +34,7 @@ const TagSelectionField = <T extends TagFields>({
   allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
-  nonVerifyable?: boolean;
+  nonVerifiable?: boolean;
   noContentText: string;
   type: TagType;
 }) => {
@@ -93,7 +94,7 @@ const TagSelectionField = <T extends TagFields>({
             if (createMutation && inputValue !== '' && !isExisting) {
               filtered.push({
                 name: inputValue,
-                icon: 'add',
+                icon: <Add sx={{ mr: 2, color: 'white' }} />,
                 verified: true,
                 createValue: inputValue,
                 id: -1,
@@ -135,7 +136,7 @@ const TagSelectionField = <T extends TagFields>({
             }
             return (
               <li {...props}>
-                {option.icon ? <Icon sx={{ mr: 2 }}>{option.icon}</Icon> : ''}
+                {option.icon ?? ''}
                 {label}
               </li>
             );
@@ -145,10 +146,10 @@ const TagSelectionField = <T extends TagFields>({
               <Chip
                 {...props({ index })}
                 key={index}
-                icon={nonVerifyable || option.verified ? undefined : <Icon>help</Icon>}
+                icon={nonVerifiable || option.verified ? undefined : <Help />}
                 label={option.name}
                 onClick={() => {
-                  if (!nonVerifyable) {
+                  if (!nonVerifiable) {
                     toggleVerified(value, index);
                   }
                 }}
