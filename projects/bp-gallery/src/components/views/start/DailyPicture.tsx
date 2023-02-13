@@ -122,7 +122,7 @@ const DailyPicture = () => {
         <Portal container={root}>
           <PictureView
             initialPictureId={picture.id}
-            onBack={async () => {
+            onBack={() => {
               setIsFocused(false);
             }}
           />
