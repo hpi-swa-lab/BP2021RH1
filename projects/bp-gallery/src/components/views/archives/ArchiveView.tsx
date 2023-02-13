@@ -104,6 +104,17 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             }}
           />
 
+          <Carousel
+            title='Wissen Sie mehr über diese Bilder?'
+            queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
+            onClick={() => {
+              history.push('/show-more/0/pictures/Fragezeichen', {
+                showBack: true,
+              });
+            }}
+            rows={1}
+          />
+
           <CategoryCarousel
             title='Unsere Kategorien'
             separator={true}
@@ -113,7 +124,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 showBack: true,
               });
             }}
-            rows={3}
+            rows={2}
             queryParams={{
               and: [
                 { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },

@@ -62,22 +62,23 @@ export const getPictureQueryParams = (
   if (categoryType === 'pictures') {
     if (categoryId && collectionsInfo && collectionsInfo.collections.length > 0) {
       return archiveId === '0'
-        ? { collections: { name: { eq: categoryId } } }
+        ? { collections: { name: { eq: categoryId } }, id: { not: { eq: '-1' } } }
         : {
             archive_tag: { id: { eq: archiveId } },
             collections: { name: { eq: categoryId } },
+            id: { not: { eq: '-1' } },
           };
     } else {
       return archiveId === '0'
         ? { id: { not: { eq: '-1' } } } // make sure all images get fetched
-        : { archive_tag: { id: { eq: archiveId } } };
+        : { archive_tag: { id: { eq: archiveId } }, id: { not: { eq: '-1' } } };
     }
   } else if (categoryId) {
     return categoryQueryParams(categoryType, categoryId, archiveId);
   } else {
     return archiveId === '0'
       ? { id: { not: { eq: '-1' } } } // make sure all images get fetched
-      : { archive_tag: { id: { eq: archiveId } } };
+      : { archive_tag: { id: { eq: archiveId } }, id: { not: { eq: '-1' } } };
   }
 };
 
