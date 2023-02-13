@@ -16,7 +16,6 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
 
   const history: History = useHistory();
-  const onDefaultBrowseView = history.location.pathname.endsWith('start');
   const { search }: Location = useLocation();
 
   return (

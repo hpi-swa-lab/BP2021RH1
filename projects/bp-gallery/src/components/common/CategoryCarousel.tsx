@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { ArrowForwardIos } from '@mui/icons-material';
 import './Carousel.scss';
 import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import {
@@ -106,7 +106,7 @@ const CategoryCarousel = ({
           <Button
             onClick={onClick}
             className='carousel-show-more-button'
-            endIcon={<ArrowForwardIosIcon />}
+            endIcon={<ArrowForwardIos />}
           >
             {t('common.showMore')}
           </Button>

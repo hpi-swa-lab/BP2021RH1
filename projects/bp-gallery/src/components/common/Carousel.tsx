@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import React, { MouseEventHandler } from 'react';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { ArrowForwardIos } from '@mui/icons-material';
 import './Carousel.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
@@ -20,7 +20,7 @@ interface CarouselProps {
 const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselProps) => {
   const { t } = useTranslation();
 
-  const { data, loading, refetch } = useGetPictures(queryParams, false, sortBy, 6 * rows);
+  const { data, loading, refetch } = useGetPictures(queryParams, false, sortBy, true, 6 * rows);
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
@@ -41,11 +41,7 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
           />
         </div>
       )}
-      <Button
-        onClick={onClick}
-        className='carousel-show-more-button'
-        endIcon={<ArrowForwardIosIcon />}
-      >
+      <Button onClick={onClick} className='carousel-show-more-button' endIcon={<ArrowForwardIos />}>
         {t('common.showMore')}
       </Button>
     </div>
