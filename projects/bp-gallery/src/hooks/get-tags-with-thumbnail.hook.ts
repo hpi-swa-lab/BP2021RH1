@@ -22,7 +22,10 @@ const useGetTagsWithThumbnail = (
     variables: {
       filters: queryParams,
       thumbnailFilters: {
-        and: [thumbnailQueryParams, { is_text: { eq: false } }],
+        and: [
+          thumbnailQueryParams,
+          { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] },
+        ],
       } as PictureFiltersInput,
       start: 0,
       limit: limit,

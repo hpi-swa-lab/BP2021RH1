@@ -5749,7 +5749,9 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     $filter90s: PictureFiltersInput!
   ) {
     decade40s: pictures(
-      filters: { and: [$filter40s, { is_text: { eq: false } }] }
+      filters: {
+        and: [$filter40s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
       pagination: { limit: 1 }
     ) {
       data {
@@ -5765,7 +5767,9 @@ export const GetDecadePreviewThumbnailsDocument = gql`
       }
     }
     decade50s: pictures(
-      filters: { and: [$filter50s, { is_text: { eq: false } }] }
+      filters: {
+        and: [$filter50s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
       pagination: { limit: 1 }
     ) {
       data {
@@ -5781,7 +5785,9 @@ export const GetDecadePreviewThumbnailsDocument = gql`
       }
     }
     decade60s: pictures(
-      filters: { and: [$filter60s, { is_text: { eq: false } }] }
+      filters: {
+        and: [$filter60s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
       pagination: { limit: 1 }
     ) {
       data {
@@ -5797,7 +5803,9 @@ export const GetDecadePreviewThumbnailsDocument = gql`
       }
     }
     decade70s: pictures(
-      filters: { and: [$filter70s, { is_text: { eq: false } }] }
+      filters: {
+        and: [$filter70s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
       pagination: { limit: 1 }
     ) {
       data {
@@ -5813,7 +5821,9 @@ export const GetDecadePreviewThumbnailsDocument = gql`
       }
     }
     decade80s: pictures(
-      filters: { and: [$filter80s, { is_text: { eq: false } }] }
+      filters: {
+        and: [$filter80s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
       pagination: { limit: 1 }
     ) {
       data {
@@ -5829,7 +5839,9 @@ export const GetDecadePreviewThumbnailsDocument = gql`
       }
     }
     decade90s: pictures(
-      filters: { and: [$filter90s, { is_text: { eq: false } }] }
+      filters: {
+        and: [$filter90s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
       pagination: { limit: 1 }
     ) {
       data {
