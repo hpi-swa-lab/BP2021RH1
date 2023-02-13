@@ -20,6 +20,7 @@
     &[data-type='#{$name}'] {
       .icon-container,
       .MuiChip-filled,
+      .MuiChip-icon,
       .MuiChip-deleteIcon {
         background: $color;
         color: white;

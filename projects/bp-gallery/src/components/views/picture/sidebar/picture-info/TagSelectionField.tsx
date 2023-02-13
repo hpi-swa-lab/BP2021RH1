@@ -94,7 +94,7 @@ const TagSelectionField = <T extends TagFields>({
             if (createMutation && inputValue !== '' && !isExisting) {
               filtered.push({
                 name: inputValue,
-                icon: <Add sx={{ mr: 2, color: 'white' }} />,
+                icon: <Add sx={{ mr: 2 }} />,
                 verified: true,
                 createValue: inputValue,
                 id: -1,

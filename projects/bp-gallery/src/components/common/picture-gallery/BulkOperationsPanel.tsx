@@ -2,11 +2,11 @@ import { Button } from '@mui/material';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './BulkOperationsPanel.scss';
 
-export type BulkOperation = {
+export interface BulkOperation {
   icon: JSX.Element;
   name: string;
   action: (selectedPictures: FlatPicture[], onBulkEdit: () => void) => void;
-};
+}
 
 const BulkOperationsPanel = ({
   operations,
