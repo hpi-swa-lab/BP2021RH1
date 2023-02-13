@@ -34,7 +34,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           );
         });
       },
-    } as BulkOperation,
+    },
     removeFromCollection: {
       name: t('curator.removeFromCollection'),
       icon: <Close />,
@@ -76,7 +76,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
         onBulkEdit();
       },
     },
-  };
+  } satisfies Record<string, BulkOperation>;
 };
 
 export default useBulkOperations;
