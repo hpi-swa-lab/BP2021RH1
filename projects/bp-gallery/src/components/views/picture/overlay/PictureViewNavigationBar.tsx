@@ -1,5 +1,5 @@
-import { Image, Info } from '@mui/icons-material';
-import { Button, Icon } from '@mui/material';
+import { ExpandLess, Image, Info } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureViewContext } from '../PictureView';
@@ -31,7 +31,7 @@ const PictureViewNavigationBar = () => {
             {t('common.showInfo')}
           </span>
         )}
-        <Icon className='exp-icon'>expand_less</Icon>
+        <ExpandLess className='exp-icon' />
       </Button>
     </div>
   );
