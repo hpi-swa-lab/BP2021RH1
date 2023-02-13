@@ -1,16 +1,16 @@
-import { useCallback, useContext, useRef } from 'react';
-import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import ImageEditor from '@toast-ui/react-image-editor';
-import 'tui-image-editor/dist/tui-image-editor.css';
+import { useApolloClient } from '@apollo/client';
 import { Close, Save } from '@mui/icons-material';
+import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
+import dayjs from 'dayjs';
+import { useCallback, useContext, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import type TuiImageEditor from 'tui-image-editor';
+import { asApiPath } from '../../../../../helpers/app-helpers';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
+import { PictureViewContext } from '../../PictureView';
+import ImageEditor from './../../../../common/editor/ImageEditor';
 import './PictureEditDialog.scss';
 import replaceMediaFile from './replace-media-file';
-import dayjs from 'dayjs';
-import { useApolloClient } from '@apollo/client';
-import { PictureViewContext } from '../../PictureView';
-import { asApiPath } from '../../../../../helpers/app-helpers';
 
 const isDefaultCropZone = (rect: any) => {
   return rect.width < 1 || rect.height < 1;
@@ -26,7 +26,7 @@ const PictureEditDialog = ({
   onClose: () => void;
 }) => {
   const { t } = useTranslation();
-  const editorRef = useRef<any>();
+  const editorRef = useRef<TuiImageEditor | null>(null);
   const apolloClient = useApolloClient();
   const { calledViaLink } = useContext(PictureViewContext);
 
@@ -34,26 +34,16 @@ const PictureEditDialog = ({
     if (!picture.media?.id) {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const editorInstance = editorRef.current?.getInstance();
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      if (!isDefaultCropZone(editorInstance?.getCropzoneRect())) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        editorInstance.crop(editorInstance.getCropzoneRect());
+      if (editorRef.current && !isDefaultCropZone(editorRef.current.getCropzoneRect())) {
+        editorRef.current.crop(editorRef.current.getCropzoneRect());
       }
-      // eslint-disable-next-line no-empty
     } catch (err) {
       // If an error is catched here, the picture was saved when in rotate/filter mode
     }
 
-    // I don't know why we have to do this, but without it it doesn't work
-    // Ask the ImageEditor library why this happens 🤷🏻‍♀️
-    await new Promise(resolve => setTimeout(resolve, 0));
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const dataUrl = editorInstance.toDataURL({
+    const dataUrl = editorRef.current?.toDataURL({
       format: 'jpeg',
     }) as string;
     const blob = await (await fetch(dataUrl)).blob();
@@ -100,16 +90,18 @@ const PictureEditDialog = ({
       </AppBar>
       <DialogContent>
         <ImageEditor
-          usageStatistics={false}
-          ref={editorRef}
-          includeUI={{
-            loadImage: {
-              path: asApiPath(picture.media.url),
-              name: 'SampleImage',
+          editorRef={editorRef}
+          options={{
+            usageStatistics: false,
+            includeUI: {
+              loadImage: {
+                path: asApiPath(picture.media.url),
+                name: 'SampleImage',
+              },
+              initMenu: 'crop',
+              menu: ['crop', 'rotate', 'flip', 'filter'],
+              menuBarPosition: 'right',
             },
-            initMenu: 'crop',
-            menu: ['crop', 'rotate', 'flip', 'filter'],
-            menuBarPosition: 'right',
           }}
         />
       </DialogContent>
