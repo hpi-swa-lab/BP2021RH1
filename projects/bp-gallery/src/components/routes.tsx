@@ -131,21 +131,27 @@ const routes: RouteConfig[] = [
     },
   },
   {
+    path: '/archives/:id/show-more/:type/:categoryId?',
+    render: ({ match }: RouteConfigComponentProps<{ id: ''; type: ''; categoryId: '' }>) => {
+      return (
+        <ShowMoreView
+          archiveId={match.params.id}
+          categoryType={match.params.type}
+          categoryId={match.params.categoryId}
+        />
+      );
+    },
+  },
+  {
     path: '/archives/:id',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
       return <ArchiveView archiveId={match.params.id} />;
     },
   },
   {
-    path: '/show-more/:archiveId/:type/:categoryId?',
-    render: ({ match }: RouteConfigComponentProps<{ archiveId: ''; type: ''; categoryId: '' }>) => {
-      return (
-        <ShowMoreView
-          archiveId={match.params.archiveId}
-          categoryType={match.params.type}
-          categoryId={match.params.categoryId}
-        />
-      );
+    path: '/show-more/:type/:categoryId?',
+    render: ({ match }: RouteConfigComponentProps<{ type: ''; categoryId: '' }>) => {
+      return <ShowMoreView categoryType={match.params.type} categoryId={match.params.categoryId} />;
     },
   },
   {

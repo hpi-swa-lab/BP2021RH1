@@ -16,7 +16,7 @@ const DiscoverView = () => {
           title='Unsere Bilder'
           queryParams={{}}
           onClick={() => {
-            history.push('/show-more/0/pictures', {
+            history.push('/show-more/pictures', {
               showBack: true,
             });
           }}
@@ -25,7 +25,7 @@ const DiscoverView = () => {
           title='Wissen Sie mehr über diese Bilder?'
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
           onClick={() => {
-            history.push('/show-more/0/pictures/Fragezeichen', {
+            history.push('/show-more/pictures/Fragezeichen', {
               showBack: true,
             });
           }}
@@ -37,7 +37,7 @@ const DiscoverView = () => {
           type={TagType.TIME_RANGE}
           separator={true}
           onClick={() => {
-            history.push('/show-more/0/date', {
+            history.push('/show-more/date', {
               showBack: true,
             });
           }}
@@ -52,7 +52,7 @@ const DiscoverView = () => {
             and: [{ verified_pictures: { id: { not: { eq: '-1' } } } }, { visible: { eq: true } }],
           }}
           onClick={() => {
-            history.push('/show-more/0/location', {
+            history.push('/show-more/location', {
               showBack: true,
             });
           }}
@@ -67,7 +67,7 @@ const DiscoverView = () => {
             and: [{ verified_pictures: { id: { not: { eq: '-1' } } } }, { visible: { eq: true } }],
           }}
           onClick={() => {
-            history.push('/show-more/0/keyword', {
+            history.push('/show-more/keyword', {
               showBack: true,
             });
           }}

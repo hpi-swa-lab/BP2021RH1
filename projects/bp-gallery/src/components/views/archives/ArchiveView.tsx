@@ -98,7 +98,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             title='Unsere Bilder'
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
             onClick={() => {
-              history.push('/show-more/' + archiveId + '/pictures', {
+              history.push('/archives/' + archiveId + '/show-more/pictures', {
                 showBack: true,
               });
             }}
@@ -109,7 +109,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             separator={true}
             type={TagType.KEYWORD}
             onClick={() => {
-              history.push('/show-more/' + archiveId + '/keyword', {
+              history.push('/archives/' + archiveId + '/show-more/keyword', {
                 showBack: true,
               });
             }}

@@ -41,7 +41,7 @@ describe('link pictures with texts', () => {
   });
 
   it('texts are shown only for curators in archives view show more', () => {
-    cy.visit('/show-more/1/pictures');
+    cy.visit('/archives/1/show-more/pictures');
     cy.get('#picture-preview-for-2');
     cy.get('#picture-preview-for-1');
     logout();
@@ -61,7 +61,7 @@ describe('link pictures with texts', () => {
   });
 
   it('texts are shown only for curators in archives view keywords show more', () => {
-    cy.visit('/show-more/1/keyword');
+    cy.visit('/archives/1/show-more/keyword');
     cy.get('#picture-preview-for-2');
     cy.get('#picture-preview-for-1');
     logout();
@@ -71,7 +71,7 @@ describe('link pictures with texts', () => {
   });
 
   it('texts are shown only for curators in archives view single keyword show more', () => {
-    cy.visit('/show-more/1/keyword/9');
+    cy.visit('/archives/1/show-more/keyword/9');
     cy.get('#picture-preview-for-2');
     cy.get('#picture-preview-for-1');
     logout();

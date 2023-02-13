@@ -7,17 +7,17 @@ describe('Navigation to Show More View from Discover View', () => {
 
   it('works for "Unsere Bilder"', () => {
     cy.get('.carousel-container:first').contains('Mehr anzeigen').click();
-    urlIs('/show-more/0/pictures');
+    urlIs('/show-more/pictures');
   });
 
   it('works for "Wissen Sie mehr über diese Bilder?"', () => {
     cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
-    urlIs('/show-more/0/pictures/Fragezeichen');
+    urlIs('/show-more/pictures/Fragezeichen');
   });
 
   it('works for "Jahrzehnte"', () => {
     cy.get('.carousel-container:eq(2)').contains('Mehr anzeigen').click();
-    urlIs('/show-more/0/date');
+    urlIs('/show-more/date');
   });
 
   it('works for single decades', () => {
@@ -25,14 +25,14 @@ describe('Navigation to Show More View from Discover View', () => {
       cy.get(
         `.carousel-container:eq(2) .carousel-collection-grid-container .items .item:eq(${i})`
       ).click();
-      urlIs(`/show-more/0/date/${i + 4}`);
+      urlIs(`/show-more/date/${i + 4}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
     }
   });
 
   it('works for "Orte"', () => {
     cy.get('.carousel-container:eq(3)').contains('Mehr anzeigen').click();
-    urlIs('/show-more/0/location');
+    urlIs('/show-more/location');
   });
 
   it('works for single locations', () => {
@@ -43,14 +43,14 @@ describe('Navigation to Show More View from Discover View', () => {
       cy.get(
         `.carousel-container:eq(3) .carousel-collection-grid-container .items .item:eq(${i})`
       ).click();
-      urlIs(`/show-more/0/location/${targetIDs[i]}`);
+      urlIs(`/show-more/location/${targetIDs[i]}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
     }
   });
 
   it('works for "Unsere Kategorien"', () => {
     cy.get('.carousel-container:eq(4)').contains('Mehr anzeigen').click();
-    urlIs('/show-more/0/keyword');
+    urlIs('/show-more/keyword');
   });
 
   it('works for single keywords', () => {
@@ -61,7 +61,7 @@ describe('Navigation to Show More View from Discover View', () => {
       cy.get(
         `.carousel-container:eq(4) .carousel-collection-grid-container .items .item:eq(${i})`
       ).click();
-      urlIs(`/show-more/0/keyword/${targetIDs[i]}`);
+      urlIs(`/show-more/keyword/${targetIDs[i]}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
     }
   });
@@ -74,12 +74,12 @@ describe('Navigation to Show More View from Archive View', () => {
 
   it('works for "Unsere Bilder"', () => {
     cy.get('.carousel-container:first').contains('Mehr anzeigen').click();
-    urlIs('/show-more/1/pictures');
+    urlIs('/archives/1/show-more/pictures');
   });
 
   it('works for "Unsere Kategorien"', () => {
     cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
-    urlIs('/show-more/1/keyword');
+    urlIs('/archives/1/show-more/keyword');
   });
 
   it('works for single keywords', () => {
@@ -90,7 +90,7 @@ describe('Navigation to Show More View from Archive View', () => {
       cy.get(
         `.carousel-container:eq(1) .carousel-collection-grid-container .items .item:eq(${i})`
       ).click();
-      urlIs(`/show-more/1/keyword/${targetIDs[i]}`);
+      urlIs(`/archives/1/show-more/keyword/${targetIDs[i]}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
     }
   });
@@ -98,7 +98,7 @@ describe('Navigation to Show More View from Archive View', () => {
 
 describe('Global Show More View', () => {
   it('shows show more for "Unsere Bilder"', () => {
-    cy.visit('/show-more/0/pictures');
+    cy.visit('/show-more/pictures');
     // check for text in show more view
     cy.contains('Unsere Bilder');
     cy.contains('Hier finden Sie alle Bilder unseres Archivs');
@@ -111,7 +111,7 @@ describe('Global Show More View', () => {
   });
 
   it('shows show more for "Wissen Sie mehr über diese Bilder?"', () => {
-    cy.visit('/show-more/0/pictures/Fragezeichen');
+    cy.visit('/show-more/pictures/Fragezeichen');
     // check for text in show more view
     cy.contains('Fragezeichen');
     cy.contains('Fragezeichen Collection Testbeschreibung');
@@ -124,7 +124,7 @@ describe('Global Show More View', () => {
   });
 
   it('shows show more view for "Jahrzehnte"', () => {
-    cy.visit('/show-more/0/date');
+    cy.visit('/show-more/date');
     // check for text in show more view
     cy.contains('Jahrzehnte');
     cy.contains('Hier finden Sie alle Bilder unseres Archivs aus den bestimmten Jahrzehnten.');
@@ -146,7 +146,7 @@ describe('Global Show More View', () => {
   });
 
   it('shows show more view for single decade "70er"', () => {
-    cy.visit('/show-more/0/date/7');
+    cy.visit('/show-more/date/7');
     // check text on show more view
     cy.contains('1970er');
 
@@ -158,7 +158,7 @@ describe('Global Show More View', () => {
   });
 
   it('shows show more view for "Orte', () => {
-    cy.visit('/show-more/0/location');
+    cy.visit('/show-more/location');
     // check for text in show more view
     cy.contains('Orte');
     cy.contains('Hier finden Sie alle Orte unseres Archivs');
@@ -181,7 +181,7 @@ describe('Global Show More View', () => {
   });
 
   it('shows show more for single location "Verifizierter Testort 3"', () => {
-    cy.visit('/show-more/0/location/9');
+    cy.visit('/show-more/location/9');
     // check text on show more view
     cy.contains('Verifizierter Testort 3');
 
@@ -191,7 +191,7 @@ describe('Global Show More View', () => {
   });
 
   it('shows show more view for "Unsere Kategorien"', () => {
-    cy.visit('/show-more/0/keyword');
+    cy.visit('/show-more/keyword');
     // check for text in show more view
     cy.contains('Unsere Kategorien');
     cy.contains('Hier finden Sie alle thematischen Kategorien unseres Archivs');
@@ -213,7 +213,7 @@ describe('Global Show More View', () => {
   });
 
   it('shows show more for single keyword "Verifiziertes Testschlagwort 4"', () => {
-    cy.visit('/show-more/0/keyword/11');
+    cy.visit('/show-more/keyword/11');
     // check text on show more view
     cy.contains('Verifiziertes Testschlagwort 4');
 
@@ -225,7 +225,7 @@ describe('Global Show More View', () => {
 
 describe('Archive Show More View', () => {
   it('shows show more for "Unsere Bilder"', () => {
-    cy.visit('/show-more/1/pictures');
+    cy.visit('/archives/1/show-more/pictures');
     // check for text in show more view
     cy.contains('Unsere Bilder');
     cy.contains('Hier finden Sie alle Bilder unseres Archivs');
@@ -238,7 +238,7 @@ describe('Archive Show More View', () => {
   });
 
   it('shows show more view for "Unsere Kategorien"', () => {
-    cy.visit('/show-more/1/keyword');
+    cy.visit('/archives/1/show-more/keyword');
     // check for text in show more view
     cy.contains('Unsere Kategorien');
     cy.contains('Hier finden Sie alle thematischen Kategorien unseres Archivs');
@@ -260,7 +260,7 @@ describe('Archive Show More View', () => {
   });
 
   it('shows show more for single keyword "Verifiziertes Testschlagwort 4"', () => {
-    cy.visit('/show-more/1/keyword/11');
+    cy.visit('/archives/1/show-more/keyword/11');
     // check text on show more view
     cy.contains('Verifiziertes Testschlagwort 4');
 

@@ -4,7 +4,7 @@ import { buildDecadeFilter } from '../../search/helpers/search-filters';
 const categoryQueryParams = (
   categoryType: string,
   categoryId: string | undefined,
-  archiveId: string
+  archiveId: string | undefined
 ) => {
   let queryFilter;
   switch (categoryType) {
@@ -41,7 +41,7 @@ const categoryQueryParams = (
       break;
   }
 
-  return archiveId === '0'
+  return !archiveId
     ? queryFilter
     : ({
         archive_tag: { id: { eq: archiveId } },
@@ -52,7 +52,7 @@ const categoryQueryParams = (
 export const getPictureQueryParams = (
   categoryType: string,
   categoryId: string | undefined,
-  archiveId: string,
+  archiveId: string | undefined,
   collectionsInfo:
     | {
         [key: string]: any;
@@ -61,7 +61,7 @@ export const getPictureQueryParams = (
 ) => {
   if (categoryType === 'pictures') {
     if (categoryId && collectionsInfo && collectionsInfo.collections.length > 0) {
-      return archiveId === '0'
+      return !archiveId
         ? { collections: { name: { eq: categoryId } }, id: { not: { eq: '-1' } } }
         : {
             archive_tag: { id: { eq: archiveId } },
@@ -69,21 +69,21 @@ export const getPictureQueryParams = (
             id: { not: { eq: '-1' } },
           };
     } else {
-      return archiveId === '0'
+      return !archiveId
         ? { id: { not: { eq: '-1' } } } // make sure all images get fetched
         : { archive_tag: { id: { eq: archiveId } }, id: { not: { eq: '-1' } } };
     }
   } else if (categoryId) {
     return categoryQueryParams(categoryType, categoryId, archiveId);
   } else {
-    return archiveId === '0'
+    return !archiveId
       ? { id: { not: { eq: '-1' } } } // make sure all images get fetched
       : { archive_tag: { id: { eq: archiveId } }, id: { not: { eq: '-1' } } };
   }
 };
 
-export const getCategoryQueryParams = (archiveId: string) => {
-  return archiveId === '0'
+export const getCategoryQueryParams = (archiveId: string | undefined) => {
+  return !archiveId
     ? {
         and: [
           { verified_pictures: { id: { not: { eq: '-1' } } } },

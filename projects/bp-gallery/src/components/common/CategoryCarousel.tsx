@@ -34,11 +34,13 @@ const CategoryCarousel = ({
   queryParams,
   thumbnailQueryParams,
   separator,
-  archiveId = '0',
+  archiveId,
 }: CategoryCarouselProps) => {
   const { t } = useTranslation();
 
-  const basePath = '/show-more/' + archiveId + '/' + type + '/';
+  const basePath = archiveId
+    ? '/archives/' + archiveId + '/show-more/' + type + '/'
+    : '/show-more/' + type + '/';
 
   const calculateMaxCategoriesPerRow = () => {
     const tempRowLength = Math.max(1, Math.floor(Math.min(window.innerWidth - 64, 1200) / 300));

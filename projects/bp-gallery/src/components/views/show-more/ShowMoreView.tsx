@@ -21,6 +21,7 @@ import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
 import { getPictureQueryParams } from './helpers/queryParams-helpers';
+import { getShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 import './ShowMoreView.scss';
 import ShowMoreViewHeader from './ShowMoreViewHeader';
 
@@ -29,7 +30,7 @@ const ShowMoreView = ({
   categoryType,
   categoryId,
 }: {
-  archiveId: string;
+  archiveId?: string;
   categoryType: string;
   categoryId?: string;
 }) => {
@@ -38,35 +39,7 @@ const ShowMoreView = ({
   const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } =
     useBulkOperations();
 
-  const archiveQueryResult = useGetArchiveQuery({ variables: { archiveId } });
-
-  const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(
-    archiveQueryResult.data
-  )?.archiveTag;
-
-  const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
-
-  const [updateArchive] = useUpdateArchiveMutation({
-    refetchQueries: ['getArchive'],
-  });
-
-  const showcaseAdornment: PicturePreviewAdornment = {
-    position: 'top-left',
-    icon: picture =>
-      picture.id === archive?.showcasePicture?.id ? <Star className='star-selected' /> : <Star />,
-    title: t('pictureAdornments.showcase'),
-    onClick: picture => {
-      if (showcasePicture?.id === picture.id) return;
-      updateArchive({
-        variables: {
-          archiveId,
-          data: {
-            showcasePicture: picture.id,
-          },
-        },
-      });
-    },
-  };
+  const showcaseAdornment = getShowcaseAdornments(archiveId);
 
   const { data, error } = useGetCollectionInfoByNameQuery({
     variables: {
@@ -128,7 +101,7 @@ const ShowMoreView = ({
                   : ['createdAt:desc']
               }
               hashbase={'show-more'}
-              extraAdornments={archiveId !== '0' ? [showcaseAdornment] : []}
+              extraAdornments={archiveId ? [showcaseAdornment] : []}
               bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
             />
           </div>

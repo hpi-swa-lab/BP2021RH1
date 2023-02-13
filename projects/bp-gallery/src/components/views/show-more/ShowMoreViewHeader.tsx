@@ -12,7 +12,7 @@ const ShowMoreViewHeader = ({
   collectionsInfo,
   flattenedTags,
 }: {
-  archiveId: string;
+  archiveId: string | undefined;
   categoryType: string;
   categoryId?: string;
   collectionsInfo:
