@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 /* ========== FALLBACK FOR SAFARI ========== */
 const fallbackLocalSingleton = new EventEmitter();
@@ -54,22 +54,25 @@ const channelFactory = (id: string) => {
 };
 
 const usePresentationChannel = (id: string, onNavigate: (pictureId: string) => void) => {
-  const producer = useMemo(() => channelFactory(id), [id]);
+  const producer = useRef<FallbackChannel | BroadcastChannel | null>(null);
 
   useEffect(() => {
     const consumer = channelFactory(id);
+    producer.current = channelFactory(id);
     consumer.onmessage = (event: MessageEvent<{ pictureId: string }>) => {
       onNavigate(event.data.pictureId);
     };
 
     return () => {
+      producer.current?.close();
+      producer.current = null;
       consumer.close();
     };
   }, [id, onNavigate]);
 
   return useCallback(
     (targetId: string) => {
-      producer.postMessage({
+      producer.current?.postMessage({
         pictureId: targetId,
       });
     },
