@@ -64,7 +64,7 @@ const BulkEditView = ({
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   const [bulkEdit, bulkEditResponse] = useBulkEditMutation({
-    refetchQueries: ['getPictureInfo', 'getMultiplePictureInfo'],
+    refetchQueries: ['getPictureInfo', 'getMultiplePictureInfo', 'getPictures'],
     awaitRefetchQueries: true,
   });
   const save = useCallback(
