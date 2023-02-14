@@ -34,7 +34,6 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
             hashBase={'carousel'}
             loading={loading}
             refetch={refetch}
-            allowClicks={false}
             showDefaultAdornments={false}
             rows={rows}
           />
