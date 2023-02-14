@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
 import { ArrowForwardIos } from '@mui/icons-material';
-import './Carousel.scss';
+import './PictureOverview.scss';
 import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import {
   KeywordTagFiltersInput,
@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
 
-interface CategoryCarouselProps {
+interface TagOverviewProps {
   title?: string;
   type: TagType;
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -25,7 +25,7 @@ interface CategoryCarouselProps {
   archiveId?: string;
 }
 
-const CategoryCarousel = ({
+const TagOverview = ({
   title,
   type,
   onClick,
@@ -33,7 +33,7 @@ const CategoryCarousel = ({
   queryParams,
   thumbnailQueryParams,
   archiveId,
-}: CategoryCarouselProps) => {
+}: TagOverviewProps) => {
   const { t } = useTranslation();
 
   const basePath = archiveId
@@ -80,9 +80,9 @@ const CategoryCarousel = ({
     return <div></div>;
   } else {
     return (
-      <div className='carousel-container'>
-        {title && <h2 className='carousel-title'>{title}</h2>}
-        <div className='carousel-collection-grid-container'>
+      <div className='overview-container'>
+        {title && <h2 className='overview-title'>{title}</h2>}
+        <div className='overview-collection-grid-container'>
           {type !== TagType.TIME_RANGE ? (
             <TagList
               type={type}
@@ -104,7 +104,7 @@ const CategoryCarousel = ({
         {onClick && (
           <Button
             onClick={onClick}
-            className='carousel-show-more-button'
+            className='overview-show-more-button'
             endIcon={<ArrowForwardIos />}
           >
             {t('common.showMore')}
@@ -115,4 +115,4 @@ const CategoryCarousel = ({
   }
 };
 
-export default CategoryCarousel;
+export default TagOverview;

@@ -30,7 +30,7 @@ describe('link pictures with texts', () => {
     login();
   });
 
-  it('texts are shown only for curators in archives view carousel', () => {
+  it('texts are shown only for curators in archives view picture overview', () => {
     cy.visit('/archives/1');
     cy.get('#picture-preview-for-2');
     cy.get('#picture-preview-for-1');

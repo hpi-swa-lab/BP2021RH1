@@ -1,13 +1,13 @@
 @import 'src/shared/style';
 
-.carousel-container {
+.overview-container {
   display: flex;
   flex-direction: column;
-  .carousel-title {
+  .overview-title {
     margin: 2rem 0 0.75rem 0;
   }
 
-  .carousel-picture-grid-container {
+  .overview-picture-grid-container {
     margin-top: 0rem;
     height: fit-content;
     //background-color: #f7f7f7;
@@ -17,12 +17,12 @@
     }
   }
 
-  .carousel-collection-grid-container {
+  .overview-collection-grid-container {
     margin: 0 0 1rem 0;
     height: fit-content;
   }
 
-  .carousel-show-more-button {
+  .overview-show-more-button {
     background-color: $primaryColor;
     color: #ffffff;
     margin-top: 0.5rem;
@@ -31,7 +31,7 @@
     align-self: center;
   }
 
-  .carousel-show-more-button:hover {
+  .overview-show-more-button:hover {
     background-color: #1565c0;
   }
 }

@@ -52,27 +52,24 @@ const PictureGrid = ({
   const [bulkEditPictureIds, setBulkEditPictureIds] = useState<string[] | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
-  const calculatePicturesPerRow = (
-    maxRowLength: number,
-    minRowLength: number,
-    hashKey: string = 'carousel'
-  ) => Math.round(hashCode(hashKey) * (maxRowLength - minRowLength) + minRowLength);
+  const calculatePicturesPerRow = (maxRowLength: number, minRowLength: number, hashKey: string) =>
+    Math.round(hashCode(hashKey) * (maxRowLength - minRowLength) + minRowLength);
 
   const calculatePictureNumber = useCallback(() => {
     if (!rows) {
       return pictures.length;
     }
     const minRowLength = calculateMinPicturesPerRow(maxRowLength);
-    let pictureNumber = calculatePicturesPerRow(maxRowLength, minRowLength);
+    let pictureNumber = calculatePicturesPerRow(maxRowLength, minRowLength, hashBase);
     for (let row = 1; row < rows; row++) {
       pictureNumber += calculatePicturesPerRow(
         maxRowLength,
         minRowLength,
-        'carousel' + String((pictureNumber - 1) * 124.22417246)
+        hashBase + String((pictureNumber - 1) * 124.22417246)
       );
     }
     return pictureNumber;
-  }, [rows, maxRowLength, pictures.length]);
+  }, [rows, maxRowLength, pictures.length, hashBase]);
 
   const deletePicture = useDeletePicture();
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
-import CategoryCarousel from '../../common/CategoryCarousel';
+import TagOverview from '../../common/TagOverview';
 import CollectionDescription from '../browse/CollectionDescription';
 import { getCategoryQueryParams } from './helpers/queryParams-helpers';
 
@@ -63,7 +63,7 @@ const ShowMoreViewHeader = ({
       <div>
         <h2>{getShowMoreHeader()}</h2>
         <div className='show-more-description'>{getShowMoreText()}</div>
-        <CategoryCarousel
+        <TagOverview
           type={categoryType as TagType}
           queryParams={getCategoryQueryParams(archiveId)}
           archiveId={archiveId}

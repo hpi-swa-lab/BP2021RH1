@@ -6,8 +6,8 @@ import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
-import Carousel from '../../common/Carousel';
-import CategoryCarousel from '../../common/CategoryCarousel';
+import PictureOverview from '../../common/PictureOverview';
+import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -94,7 +94,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             )}
           </div>
 
-          <Carousel
+          <PictureOverview
             title='Unsere Bilder'
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
             onClick={() => {
@@ -104,9 +104,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             }}
           />
 
-          <CategoryCarousel
+          <TagOverview
             title='Unsere Kategorien'
-            separator={true}
             type={TagType.KEYWORD}
             onClick={() => {
               history.push('/archives/' + archiveId + '/show-more/keyword', {

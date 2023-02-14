@@ -70,21 +70,21 @@ describe('Archives View', () => {
   });
 
   it('successfully sets an image as showcase picture when pressing on the star button via show more for keywords', () => {
-    cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:eq(1)').contains('Mehr anzeigen').click();
     cy.get(`[data-testid="StarIcon"]`).eq(1).click();
     cy.contains('Zurück').click();
     cy.get('.archive-showcase').children().should('contain.id', 'picture-preview-for-4');
   });
 
   it('successfully sets an image as showcase picture when pressing on the star button via "Unsere Bilder"', () => {
-    cy.get('.carousel-container:first').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:first').contains('Mehr anzeigen').click();
     cy.get(`[data-testid="StarIcon"]`).first().click();
     cy.contains('Zurück').click();
     cy.get('.archive-showcase').children().should('contain.id', 'picture-preview-for-5');
   });
 
   it('successfully sets an image as showcase picture when pressing on the star button via show more for "Verifiziertes Testschlagwort 5', () => {
-    cy.get('.carousel-container:eq(1)').contains('VERIFIZIERTES TESTSCHLAGWORT 2').click();
+    cy.get('.overview-container:eq(1)').contains('VERIFIZIERTES TESTSCHLAGWORT 2').click();
     // make the test run
     cy.get('.show-more-container').should('contain.text', 'Verifiziertes Testschlagwort 2');
 
@@ -93,33 +93,33 @@ describe('Archives View', () => {
     cy.get('.archive-showcase').children().should('contain.id', 'picture-preview-for-2');
   });
 
-  it('shows "Unsere Bilder" carousel', () => {
+  it('shows "Unsere Bilder" picture overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.carousel-container:first')
+    cy.get('.overview-container:first')
       .children()
       .should('contain.text', 'Unsere Bilder')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains rows with images
     cy.get(
-      '.carousel-container:first .carousel-picture-grid-container div .picture-grid .row:has(.picture-preview)'
+      '.overview-container:first .overview-picture-grid-container div .picture-grid .row:has(.picture-preview)'
     ).should('exist');
 
     // check if contains at most 2 rows of images or 2 and one empty row
     cy.get(
-      '.carousel-container:first .carousel-picture-grid-container div .picture-grid .row:has(.picture-preview)'
+      '.overview-container:first .overview-picture-grid-container div .picture-grid .row:has(.picture-preview)'
     ).should('have.length.lte', 2);
   });
 
-  it('shows "Unsere Kategorien" carousel', () => {
+  it('shows "Unsere Kategorien" picture overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.carousel-container:eq(1)')
+    cy.get('.overview-container:eq(1)')
       .children()
       .should('contain.text', 'Unsere Kategorien')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains first 6 verified locations
-    cy.get('.carousel-container:eq(1) .carousel-collection-grid-container .items')
+    cy.get('.overview-container:eq(1) .overview-collection-grid-container .items')
       .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')

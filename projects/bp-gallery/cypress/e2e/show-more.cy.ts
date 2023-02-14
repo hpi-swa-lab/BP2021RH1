@@ -6,24 +6,24 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for "Unsere Bilder"', () => {
-    cy.get('.carousel-container:first').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:first').contains('Mehr anzeigen').click();
     urlIs('/show-more/pictures');
   });
 
   it('works for "Wissen Sie mehr über diese Bilder?"', () => {
-    cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:eq(1)').contains('Mehr anzeigen').click();
     urlIs('/show-more/pictures/Fragezeichen');
   });
 
   it('works for "Jahrzehnte"', () => {
-    cy.get('.carousel-container:eq(2)').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:eq(2)').contains('Mehr anzeigen').click();
     urlIs('/show-more/date');
   });
 
   it('works for single decades', () => {
     for (let i = 0; i < 6; i++) {
       cy.get(
-        `.carousel-container:eq(2) .carousel-collection-grid-container .items .item:eq(${i})`
+        `.overview-container:eq(2) .overview-collection-grid-container .items .item:eq(${i})`
       ).click();
       urlIs(`/show-more/date/${i + 4}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
@@ -31,17 +31,17 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for "Orte"', () => {
-    cy.get('.carousel-container:eq(3)').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:eq(3)').contains('Mehr anzeigen').click();
     urlIs('/show-more/location');
   });
 
   it('works for single locations', () => {
-    // IDs of the six locations shown in carousel
+    // IDs of the six locations shown in tag overview
     const targetIDs = [7, 8, 9, 10, 11, 13];
-    // itterate over hte six locations shown in carousel
+    // iterate over the six locations shown in tag overview
     for (let i = 0; i < 6; i++) {
       cy.get(
-        `.carousel-container:eq(3) .carousel-collection-grid-container .items .item:eq(${i})`
+        `.overview-container:eq(3) .overview-collection-grid-container .items .item:eq(${i})`
       ).click();
       urlIs(`/show-more/location/${targetIDs[i]}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
@@ -49,17 +49,17 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for "Unsere Kategorien"', () => {
-    cy.get('.carousel-container:eq(4)').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:eq(4)').contains('Mehr anzeigen').click();
     urlIs('/show-more/keyword');
   });
 
   it('works for single keywords', () => {
-    // IDs of the sic keywords shown in carousel
+    // IDs of the six keywords shown in tag overview
     const targetIDs = [9, 10, 11, 13, 14, 15];
-    // itterate over the six keywords shown in carousel
+    // iterate over the six keywords shown in tag overview
     for (let i = 0; i < 6; i++) {
       cy.get(
-        `.carousel-container:eq(4) .carousel-collection-grid-container .items .item:eq(${i})`
+        `.overview-container:eq(4) .overview-collection-grid-container .items .item:eq(${i})`
       ).click();
       urlIs(`/show-more/keyword/${targetIDs[i]}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
@@ -73,22 +73,22 @@ describe('Navigation to Show More View from Archive View', () => {
   });
 
   it('works for "Unsere Bilder"', () => {
-    cy.get('.carousel-container:first').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:first').contains('Mehr anzeigen').click();
     urlIs('/archives/1/show-more/pictures');
   });
 
   it('works for "Unsere Kategorien"', () => {
-    cy.get('.carousel-container:eq(1)').contains('Mehr anzeigen').click();
+    cy.get('.overview-container:eq(1)').contains('Mehr anzeigen').click();
     urlIs('/archives/1/show-more/keyword');
   });
 
   it('works for single keywords', () => {
-    // IDs of the sic keywords shown in carousel
+    // IDs of the six keywords shown in tag overview
     const targetIDs = [9, 10, 11, 13, 14, 15];
-    // itterate over the six keywords shown in carousel
+    // iterate over the six keywords shown in tag overview
     for (let i = 0; i < 6; i++) {
       cy.get(
-        `.carousel-container:eq(1) .carousel-collection-grid-container .items .item:eq(${i})`
+        `.overview-container:eq(1) .overview-collection-grid-container .items .item:eq(${i})`
       ).click();
       urlIs(`/archives/1/show-more/keyword/${targetIDs[i]}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
@@ -132,7 +132,7 @@ describe('Global Show More View', () => {
     // check for categories
     const targetTexts = ['FRÜHER', '50ER', '60ER', '70ER', '80ER', '90ER'];
     for (let i = 0; i < 6; i++) {
-      cy.get(`.carousel-collection-grid-container .items .item:eq(${i})`).should(
+      cy.get(`.overview-collection-grid-container .items .item:eq(${i})`).should(
         'contain.text',
         targetTexts[i]
       );
@@ -164,7 +164,7 @@ describe('Global Show More View', () => {
     cy.contains('Hier finden Sie alle Orte unseres Archivs');
 
     // check for categories in show more view
-    cy.get('.carousel-collection-grid-container .items')
+    cy.get('.overview-collection-grid-container .items')
       .should('contain.text', 'VERIFIZIERTER TESTORT 1')
       .and('contain.text', 'VERIFIZIERTER TESTORT 2')
       .and('contain.text', 'VERIFIZIERTER TESTORT 3')
@@ -197,7 +197,7 @@ describe('Global Show More View', () => {
     cy.contains('Hier finden Sie alle thematischen Kategorien unseres Archivs');
 
     // check for categories in show more view
-    cy.get('.carousel-collection-grid-container .items')
+    cy.get('.overview-collection-grid-container .items')
       .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')
@@ -244,7 +244,7 @@ describe('Archive Show More View', () => {
     cy.contains('Hier finden Sie alle thematischen Kategorien unseres Archivs');
 
     // check for categories in show more view
-    cy.get('.carousel-collection-grid-container .items')
+    cy.get('.overview-collection-grid-container .items')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')

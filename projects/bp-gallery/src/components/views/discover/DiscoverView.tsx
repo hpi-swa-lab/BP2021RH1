@@ -1,11 +1,11 @@
 import React from 'react';
-import CategoryCarousel from '../../common/CategoryCarousel';
+import TagOverview from '../../common/TagOverview';
 import ScrollContainer from '../../common/ScrollContainer';
 import { TagType } from '../../../types/additionalFlatTypes';
 import './DiscoverView.scss';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
-import Carousel from '../../common/Carousel';
+import PictureOverview from '../../common/PictureOverview';
 import { useTranslation } from 'react-i18next';
 
 const DiscoverView = () => {
@@ -15,7 +15,7 @@ const DiscoverView = () => {
   return (
     <ScrollContainer>
       <div className='discover-container'>
-        <Carousel
+        <PictureOverview
           title={t('discover.our-pictures')}
           queryParams={{}}
           onClick={() => {
@@ -24,7 +24,7 @@ const DiscoverView = () => {
             });
           }}
         />
-        <Carousel
+        <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
           onClick={() => {
@@ -35,7 +35,7 @@ const DiscoverView = () => {
           rows={1}
         />
 
-        <CategoryCarousel
+        <TagOverview
           title={t('discover.decades')}
           type={TagType.TIME_RANGE}
           onClick={() => {
@@ -46,7 +46,7 @@ const DiscoverView = () => {
           rows={2}
         />
 
-        <CategoryCarousel
+        <TagOverview
           title={t('discover.locations')}
           type={TagType.LOCATION}
           queryParams={{
@@ -60,7 +60,7 @@ const DiscoverView = () => {
           rows={2}
         />
 
-        <CategoryCarousel
+        <TagOverview
           title={t('discover.our-categories')}
           type={TagType.KEYWORD}
           queryParams={{
