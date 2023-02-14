@@ -699,7 +699,8 @@ const bulkEditTags = async (
   knexEngine: KnexEngine,
   pictureIds: number[],
   data: any,
-  tagsKey: string
+  tagsKey: string,
+  hasVerifiedVersion = true
 ) => {
   // Check whether we actually need to update stuff for that type.
   if (!data[tagsKey]) return 0;
@@ -718,10 +719,14 @@ const bulkEditTags = async (
   const removedUnverified = diff.removed.filter((removed) => !removed.verified);
   const removedVerified = diff.removed.filter((removed) => removed.verified);
 
-  for (const [removed, linksTable] of [
-    [removedUnverified, unverifiedLinksTable],
-    [removedVerified, verifiedLinksTable],
-  ]) {
+  const toRemove = hasVerifiedVersion
+    ? [
+        [removedUnverified, unverifiedLinksTable],
+        [removedVerified, verifiedLinksTable],
+      ]
+    : [[diff.removed, unverifiedLinksTable]];
+
+  for (const [removed, linksTable] of toRemove) {
     const removedIds = removed.map((removed) => removed.id);
     await knexEngine(linksTable)
       .whereIn("picture_id", pictureIds)
@@ -732,10 +737,14 @@ const bulkEditTags = async (
   const addedUnverified = diff.added.filter((added) => !added.verified);
   const addedVerified = diff.added.filter((added) => added.verified);
 
-  for (const [added, linksTable] of [
-    [addedUnverified, unverifiedLinksTable],
-    [addedVerified, verifiedLinksTable],
-  ]) {
+  const toAdd = hasVerifiedVersion
+    ? [
+        [addedUnverified, unverifiedLinksTable],
+        [addedVerified, verifiedLinksTable],
+      ]
+    : [[diff.added, unverifiedLinksTable]];
+
+  for (const [added, linksTable] of toAdd) {
     const addedIds = added.map((added) => added.id);
     await insertCrossProductIgnoreDuplicates(
       knexEngine,
