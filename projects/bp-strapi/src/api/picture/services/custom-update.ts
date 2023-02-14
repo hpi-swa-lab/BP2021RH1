@@ -17,6 +17,7 @@ const ARCHIVE_TAG_KEY = "archive_tag";
 const IS_TEXT_KEY = "is_text";
 const LINKED_PICTURES_KEY = "linked_pictures";
 const LINKED_TEXTS_KEY = "linked_texts";
+const COLLECTIONS_KEY = "collections";
 
 /**
  * Returns the key of the tag type that is used for the API (so e.g. "person-tag")
@@ -875,6 +876,13 @@ const bulkEdit = async (
     data,
     LINKED_TEXTS_KEY,
     true
+  );
+  shouldWriteUpdatedAt |= await bulkEditTags(
+    knexEngine,
+    pictureIds,
+    data,
+    COLLECTIONS_KEY,
+    false
   );
 
   if (shouldWriteUpdatedAt) {
