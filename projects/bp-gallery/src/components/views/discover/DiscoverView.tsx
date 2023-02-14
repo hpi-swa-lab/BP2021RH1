@@ -6,14 +6,17 @@ import './DiscoverView.scss';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
 import Carousel from '../../common/Carousel';
+import { useTranslation } from 'react-i18next';
 
 const DiscoverView = () => {
   const history: History = useHistory();
+  const { t } = useTranslation();
+
   return (
     <ScrollContainer>
       <div className='discover-container'>
         <Carousel
-          title='Unsere Bilder'
+          title={t('discover.our-pictures')}
           queryParams={{}}
           onClick={() => {
             history.push('/show-more/pictures', {
@@ -22,7 +25,7 @@ const DiscoverView = () => {
           }}
         />
         <Carousel
-          title='Wissen Sie mehr über diese Bilder?'
+          title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
           onClick={() => {
             history.push('/show-more/pictures/Fragezeichen', {
@@ -33,7 +36,7 @@ const DiscoverView = () => {
         />
 
         <CategoryCarousel
-          title='Jahrzehnte'
+          title={t('discover.decades')}
           type={TagType.TIME_RANGE}
           onClick={() => {
             history.push('/show-more/date', {
@@ -44,7 +47,7 @@ const DiscoverView = () => {
         />
 
         <CategoryCarousel
-          title='Orte'
+          title={t('discover.locations')}
           type={TagType.LOCATION}
           queryParams={{
             and: [{ verified_pictures: { id: { not: { eq: '-1' } } } }, { visible: { eq: true } }],
@@ -58,7 +61,7 @@ const DiscoverView = () => {
         />
 
         <CategoryCarousel
-          title='Unsere Kategorien'
+          title={t('discover.our-categories')}
           type={TagType.KEYWORD}
           queryParams={{
             and: [{ verified_pictures: { id: { not: { eq: '-1' } } } }, { visible: { eq: true } }],

@@ -40,7 +40,7 @@ const ShowMoreView = ({
     variables: {
       filters:
         categoryType !== 'pictures'
-          ? archiveId === '0'
+          ? !archiveId
             ? { id: { eq: categoryId } }
             : {
                 verified_pictures: { archive_tag: { id: { eq: archiveId } } },

@@ -330,5 +330,12 @@
     "person-text": "Hier finden Sie alle Personen unseres Archiv",
     "location-title": "Orte",
     "location-text": "Hier finden Sie alle Orte unseres Archivs"
+  },
+  "discover": {
+    "our-pictures": "Unsere Bilder",
+    "decades": "Jahrzehnte",
+    "locations": "Orte",
+    "more-info": "Wissen Sie mehr über diese Bilder?",
+    "our-categories": "Unsere Kategorien"
   }
 }
