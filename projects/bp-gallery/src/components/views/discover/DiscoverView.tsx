@@ -35,7 +35,6 @@ const DiscoverView = () => {
         <CategoryCarousel
           title='Jahrzehnte'
           type={TagType.TIME_RANGE}
-          separator={true}
           onClick={() => {
             history.push('/show-more/date', {
               showBack: true,
@@ -46,7 +45,6 @@ const DiscoverView = () => {
 
         <CategoryCarousel
           title='Orte'
-          separator={true}
           type={TagType.LOCATION}
           queryParams={{
             and: [{ verified_pictures: { id: { not: { eq: '-1' } } } }, { visible: { eq: true } }],
@@ -61,7 +59,6 @@ const DiscoverView = () => {
 
         <CategoryCarousel
           title='Unsere Kategorien'
-          separator={true}
           type={TagType.KEYWORD}
           queryParams={{
             and: [{ verified_pictures: { id: { not: { eq: '-1' } } } }, { visible: { eq: true } }],

@@ -22,7 +22,6 @@ interface CategoryCarouselProps {
   rows?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
-  separator?: boolean;
   archiveId?: string;
 }
 
@@ -33,7 +32,6 @@ const CategoryCarousel = ({
   rows,
   queryParams,
   thumbnailQueryParams,
-  separator,
   archiveId,
 }: CategoryCarouselProps) => {
   const { t } = useTranslation();
@@ -83,8 +81,7 @@ const CategoryCarousel = ({
   } else {
     return (
       <div className='carousel-container'>
-        {title && <h1 className='carousel-title'>{title}</h1>}
-        {separator && <hr className='carousel-separator' />}
+        {title && <h2 className='carousel-title'>{title}</h2>}
         <div className='carousel-collection-grid-container'>
           {type !== TagType.TIME_RANGE ? (
             <TagList

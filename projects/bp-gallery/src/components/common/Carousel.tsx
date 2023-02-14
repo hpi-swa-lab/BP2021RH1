@@ -26,8 +26,7 @@ const Carousel = ({ title, queryParams, onClick, sortBy, rows = 2 }: CarouselPro
 
   return (
     <div className='carousel-container'>
-      <h1 className='carousel-title'>{title}</h1>
-      <hr className='carousel-separator' />
+      <h2 className='carousel-title'>{title}</h2>
       {pictures && (
         <div className='carousel-picture-grid-container'>
           <PictureGrid
