@@ -882,10 +882,18 @@ const bulkEdit = async (
   return 0;
 };
 
-const like = async (knexEngine:KnexEngine, pictureId:number, dislike?:boolean) => {
-  const pictureResult = knexEngine(table(PICTURES_KEY)).where("id", pictureId)
-  await pictureResult.update("likes", knexEngine.raw(dislike ? "GREATEST(COALESCE(likes, 0) - 1, 0)" : "COALESCE(likes, 0) + 1"))
-
-}
+const like = async (
+  knexEngine: KnexEngine,
+  pictureId: number,
+  dislike?: boolean
+) => {
+  const pictureResult = knexEngine(table(PICTURES_KEY)).where("id", pictureId);
+  await pictureResult.update(
+    "likes",
+    knexEngine.raw(
+      dislike ? "GREATEST(COALESCE(likes, 0) - 1, 0)" : "COALESCE(likes, 0) + 1"
+    )
+  );
+};
 
 export { updatePictureWithTagCleanup, bulkEdit, like };
