@@ -1,27 +1,14 @@
-import { Star } from '@mui/icons-material';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  useGetArchiveQuery,
-  useGetCollectionInfoByNameQuery,
-  useUpdateArchiveMutation,
-} from '../../../graphql/APIConnector';
+import { useGetCollectionInfoByNameQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
-import {
-  FlatArchiveTag,
-  FlatPicture,
-  FlatTag,
-  TagType,
-  Thumbnail,
-} from '../../../types/additionalFlatTypes';
-import { PicturePreviewAdornment } from '../../common/picture-gallery/PicturePreview';
+import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
 import { getPictureQueryParams } from './helpers/queryParams-helpers';
-import { getShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
+import { useGetShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 import './ShowMoreView.scss';
 import ShowMoreViewHeader from './ShowMoreViewHeader';
 
@@ -34,12 +21,10 @@ const ShowMoreView = ({
   categoryType: string;
   categoryId?: string;
 }) => {
-  const { t } = useTranslation();
-
   const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } =
     useBulkOperations();
 
-  const showcaseAdornment = getShowcaseAdornments(archiveId);
+  const showcaseAdornment = useGetShowcaseAdornments(archiveId);
 
   const { data, error } = useGetCollectionInfoByNameQuery({
     variables: {

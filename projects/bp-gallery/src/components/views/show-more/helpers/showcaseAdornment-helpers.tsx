@@ -5,7 +5,7 @@ import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatPicture } from '../../../../types/additionalFlatTypes';
 import { PicturePreviewAdornment } from '../../../common/picture-gallery/PicturePreview';
 
-const getArchive = (archiveId: string) => {
+const useGetArchive = (archiveId: string) => {
   const archiveQueryResult = useGetArchiveQuery({ variables: { archiveId } });
 
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(
@@ -15,20 +15,20 @@ const getArchive = (archiveId: string) => {
   return archive;
 };
 
-export const getShowcasePicture = (archiveId: string) => {
-  const archive = getArchive(archiveId);
+export const useGetShowcasePicture = (archiveId: string) => {
+  const archive = useGetArchive(archiveId);
 
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
 
   return showcasePicture;
 };
 
-export const getShowcaseAdornments = (archiveId: string = '0') => {
+export const useGetShowcaseAdornments = (archiveId: string = '0') => {
   const { t } = useTranslation();
 
-  const archive = getArchive(archiveId);
+  const archive = useGetArchive(archiveId);
 
-  const showcasePicture = getShowcasePicture(archiveId);
+  const showcasePicture = useGetShowcasePicture(archiveId);
 
   const [updateArchive] = useUpdateArchiveMutation({
     refetchQueries: ['getArchive'],
