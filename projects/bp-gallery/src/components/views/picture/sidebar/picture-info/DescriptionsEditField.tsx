@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
 import { useRef } from 'react';
-import Editor from '../../../../common/editor/Editor';
+import TextEditor from '../../../../common/editors/TextEditor';
 
 const DescriptionsEditField = ({
   descriptions,
@@ -80,7 +80,7 @@ const DescriptionsEditField = ({
             key={isEmpty(description.id) ? `new-description-${index}` : description.id}
           >
             <div className='description-content'>
-              <Editor
+              <TextEditor
                 value={description.text}
                 extraOptions={extraOptions}
                 onBlur={newText => onBlurRef.current(newText, description)}

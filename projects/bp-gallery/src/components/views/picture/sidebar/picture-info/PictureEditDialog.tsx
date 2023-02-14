@@ -8,7 +8,7 @@ import type TuiImageEditor from 'tui-image-editor';
 import { asApiPath } from '../../../../../helpers/app-helpers';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import { PictureViewContext } from '../../PictureView';
-import ImageEditor from './../../../../common/editor/ImageEditor';
+import ImageEditor from './../../../../common/editors/ImageEditor';
 import './PictureEditDialog.scss';
 import replaceMediaFile from './replace-media-file';
 
@@ -31,21 +31,21 @@ const PictureEditDialog = ({
   const { calledViaLink } = useContext(PictureViewContext);
 
   const save = useCallback(async () => {
-    if (!picture.media?.id) {
+    if (!picture.media?.id || !editorRef.current) {
       return;
     }
 
     try {
-      if (editorRef.current && !isDefaultCropZone(editorRef.current.getCropzoneRect())) {
+      if (!isDefaultCropZone(editorRef.current.getCropzoneRect())) {
         editorRef.current.crop(editorRef.current.getCropzoneRect());
       }
     } catch (err) {
       // If an error is catched here, the picture was saved when in rotate/filter mode
     }
 
-    const dataUrl = editorRef.current?.toDataURL({
+    const dataUrl = editorRef.current.toDataURL({
       format: 'jpeg',
-    }) as string;
+    });
     const blob = await (await fetch(dataUrl)).blob();
     const file = new File([blob], `${dayjs().format('YYYYMMDDHHmm_ss')}.jpg`, {
       type: 'image/jpeg',
