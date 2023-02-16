@@ -37,7 +37,7 @@ const PictureEditDialog = ({
 
     try {
       if (!isDefaultCropZone(editorRef.current.getCropzoneRect())) {
-        editorRef.current.crop(editorRef.current.getCropzoneRect());
+        await editorRef.current.crop(editorRef.current.getCropzoneRect());
       }
     } catch (err) {
       // If an error is catched here, the picture was saved when in rotate/filter mode
