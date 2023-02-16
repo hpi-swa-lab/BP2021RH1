@@ -4,10 +4,9 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { Card, Portal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import EventIcon from '@mui/icons-material/Event';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import Editor from '../../common/editor/Editor';
-import { FolderSpecial } from '@mui/icons-material';
+import { FolderSpecial, Event } from '@mui/icons-material';
 import { asApiPath } from '../../../helpers/app-helpers';
 import PictureView from '../picture/PictureView';
 
@@ -22,47 +21,51 @@ const choosePictureId = (pictureIds: string[]) => {
 const DailyPicture = () => {
   const root = document.getElementById('root');
   //These are hard-coded until we implemented votes
-  const pictureIds = [
-    '2254',
-    '2265',
-    '11715',
-    '13258',
-    '14440',
-    '13282',
-    '14998',
-    '13124',
-    '13125',
-    '13034',
-    '12689',
-    '12939',
-    '6837',
-    '7943',
-    '6863',
-    '6773',
-    '7886',
-    '7954',
-    '9350',
-    '8255',
-    '10838',
-    '16393',
-    '16297',
-    '16280',
-    '16235',
-    '16150',
-    '16155',
-    '16134',
-    '16111',
-    '16055',
-    '15941',
-    '15903',
-    '16373',
-    '12625',
-    '14365',
-    '13245',
-    '13116',
-    '13110',
-    '14064',
-  ];
+  const pictureIds =
+    import.meta.env.MODE === 'development'
+      ? ['1', '2', '3'] //just for testing purposes
+      : [
+          //here are the real pictures for production
+          '2254',
+          '2265',
+          '11715',
+          '13258',
+          '14440',
+          '13282',
+          '14998',
+          '13124',
+          '13125',
+          '13034',
+          '12689',
+          '12939',
+          '6837',
+          '7943',
+          '6863',
+          '6773',
+          '7886',
+          '7954',
+          '9350',
+          '8255',
+          '10838',
+          '16393',
+          '16297',
+          '16280',
+          '16235',
+          '16150',
+          '16155',
+          '16134',
+          '16111',
+          '16055',
+          '15941',
+          '15903',
+          '16373',
+          '12625',
+          '14365',
+          '13245',
+          '13116',
+          '13110',
+          '14064',
+        ];
   const { t } = useTranslation();
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const navigateToPicture = useCallback(
@@ -90,13 +93,13 @@ const DailyPicture = () => {
           <Card className='flex flex-col-reverse md:flex-row rounded-md justify-between max-w-4xl max-h-fit'>
             <div className='p-4 flex flex-col'>
               <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
-              <p className={'line-clamp-5'}>
+              <div className={'line-clamp-5'}>
                 <h4 className={'text-lg my-1'}>{t('pictureFields.descriptions')}:</h4>
                 <Editor value={description} />
-              </p>
+              </div>
               <div className={'flex-1'} />
               <div className={'flex items-center gap-2 my-2'}>
-                <EventIcon /> {pictureDate}
+                <Event /> {pictureDate}
               </div>
               <div className={'flex item-center gap-2'}>
                 <FolderSpecial /> <a href={pictureArchiveLink}>{pictureArchive} </a>
