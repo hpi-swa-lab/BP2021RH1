@@ -22,9 +22,11 @@ const setupMatomo = (url: string) => {
   })();
 };
 
-let lastLocation: string | null = null;
+const getLocation = () => window.location.href;
+
+let lastLocation: string = getLocation();
 export const trackHistory = () => {
-  const newLocation = window.location.pathname;
+  const newLocation = getLocation();
   if (newLocation === lastLocation) {
     return;
   }
