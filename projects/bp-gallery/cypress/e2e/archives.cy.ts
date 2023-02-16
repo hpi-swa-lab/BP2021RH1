@@ -70,35 +70,34 @@ describe('Archives View', () => {
   });
 
   it('successfully sets an image as showcase picture when pressing on the star button via show more for keywords', () => {
-    cy.get('.overview-container:eq(1)').contains('Mehr anzeigen').click();
-    cy.get(`[data-testid="StarIcon"]`).eq(1).click();
+    cy.get('.overview-container:contains(Unsere Kategorien)').contains('Mehr anzeigen').click();
+    cy.get(`[data-testid="StarIcon"]:eq(1)`).click();
     cy.contains('Zurück').click();
-    cy.get('.archive-showcase').children().should('contain.id', 'picture-preview-for-4');
+    cy.get('.archive-showcase #picture-preview-for-4').should('exist');
   });
 
   it('successfully sets an image as showcase picture when pressing on the star button via "Unsere Bilder"', () => {
-    cy.get('.overview-container:first').contains('Mehr anzeigen').click();
-    cy.get(`[data-testid="StarIcon"]`).first().click();
+    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen').click();
+    cy.get(`[data-testid="StarIcon"]:first`).click();
     cy.contains('Zurück').click();
-    cy.get('.archive-showcase').children().should('contain.id', 'picture-preview-for-5');
+    cy.get('.archive-showcase #picture-preview-for-5').should('exist');
   });
 
-  it('successfully sets an image as showcase picture when pressing on the star button via show more for "Verifiziertes Testschlagwort 5', () => {
-    cy.get('.overview-container:eq(1)').contains('VERIFIZIERTES TESTSCHLAGWORT 2').click();
+  it('successfully sets an image as showcase picture when pressing on the star button via show more for "Verifiziertes Testschlagwort 2', () => {
+    cy.get('.overview-container:contains(Unsere Kategorien)')
+      .contains('VERIFIZIERTES TESTSCHLAGWORT 2')
+      .click();
     // make the test run
     cy.get('.show-more-container').should('contain.text', 'Verifiziertes Testschlagwort 2');
 
-    cy.get(`[data-testid="StarIcon"]`).eq(1).click();
+    cy.get(`[data-testid="StarIcon"]:eq(1)`).click();
     cy.contains('Zurück').click();
-    cy.get('.archive-showcase').children().should('contain.id', 'picture-preview-for-2');
+    cy.get('.archive-showcase #picture-preview-for-2').should('exist');
   });
 
   it('shows "Unsere Bilder" picture overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.overview-container:first')
-      .children()
-      .should('contain.text', 'Unsere Bilder')
-      .and('contain.text', 'Mehr anzeigen');
+    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen');
 
     // check if it contains rows with images
     cy.get(
@@ -113,18 +112,13 @@ describe('Archives View', () => {
 
   it('shows "Unsere Kategorien" picture overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.overview-container:eq(1)')
-      .children()
-      .should('contain.text', 'Unsere Kategorien')
-      .and('contain.text', 'Mehr anzeigen');
+    cy.get('.overview-container:contains(Unsere Kategorien)').contains('Mehr anzeigen');
 
-    // check if it contains first 6 verified locations
-    cy.get('.overview-container:eq(1) .overview-collection-grid-container .items')
-      .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
-      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
-      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')
-      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 5')
-      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 6')
-      .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 7');
+    // check if it contains first 6 verified keywords
+    for (const num of [2, 3, 4, 5, 6, 7]) {
+      cy.get(
+        '.overview-container:contains(Unsere Kategorien) .overview-collection-grid-container .items'
+      ).should('contain.text', `VERIFIZIERTES TESTSCHLAGWORT ${num}`);
+    }
   });
 });
