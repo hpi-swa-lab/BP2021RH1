@@ -166,19 +166,6 @@ const App = ({ route }: RouteConfigComponentProps) => {
     };
   }, []);
 
-  const pathsWithFooter =  [
-    'start',
-    'browse',
-    'search',
-    'latest',
-    'terms-of-service',
-    'contact'
-  ]
-  const pathName = useLocation().pathname;
-
-  const showFooter = pathsWithFooter.filter(path => pathName.match(path)).length > 0
-
-
   const isMobile = width <= 750;
 
   return (
@@ -188,10 +175,7 @@ const App = ({ route }: RouteConfigComponentProps) => {
           <DialogProvider>
             <div className='App'>
               {!isMobile && <TopBar />}
-              <div className='App-contents-wrapper'>
               {renderRoutes(route?.routes)}
-              {showFooter && <Footer/>}
-              </div>
               {isMobile && <NavigationBar isMobile={true} />}
             </div>
           </DialogProvider>

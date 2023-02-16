@@ -26,7 +26,7 @@ const ContactFormView = () => {
                     <label>
                         {t('contact-form.choose-archive-label')}
                         <select name="recipient">
-                            <option value='Test'>Test</option>
+                        {/*    <option value='Test'>Test</option> */} 
                             <option value='Herbert-Ahrens-Archiv'>Herbert-Ahrens-Archiv</option>
                         </select>
                     </label>

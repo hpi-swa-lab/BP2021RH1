@@ -35,7 +35,7 @@ module.exports = ({ env }) => ({
   },
   email: {
     config: {
-      provider: env('EMAIL_PROVIDER'), // For community providers pass the full package name (e.g. provider: 'strapi-provider-email-mandrill')
+      provider: env('EMAIL_PROVIDER'), 
       providerOptions: {
         host: env('EMAIL_SMTP_HOST'),
         port: env('EMAIL_SMTP_PORT'),
@@ -47,7 +47,7 @@ module.exports = ({ env }) => ({
       settings: {
         defaultFrom: env('EMAIL_ADDRESS_FROM'),
         defaultReplyTo: env('EMAIL_ADDRESS_REPLY'),
-        testAddress: env('TEST_ADRESS')
+        testAddress: env('TEST_ADDRESS')
       },
     },
   },
