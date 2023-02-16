@@ -1,6 +1,6 @@
 describe('Start view', () => {
   before(() => {
-    cy.visit('http://localhost:3000/start');
+    cy.visit('/start');
   });
 
   it('shows the archive cards and browse view', () => {

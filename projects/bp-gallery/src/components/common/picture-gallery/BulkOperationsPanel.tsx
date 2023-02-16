@@ -1,12 +1,11 @@
 import { Button, Icon } from '@mui/material';
-import React from 'react';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './BulkOperationsPanel.scss';
 
 export interface BulkOperation {
   icon: string;
   name: string;
-  action: (selectedPictures: FlatPicture[], onBulkEdit: (pictureIds: string) => void) => void;
+  action: (selectedPictures: FlatPicture[], onBulkEdit: () => void) => void;
 }
 
 const BulkOperationsPanel = ({
@@ -16,7 +15,7 @@ const BulkOperationsPanel = ({
 }: {
   operations: BulkOperation[];
   selectedPictures: FlatPicture[];
-  onBulkEdit: (pictureIds: string) => void;
+  onBulkEdit: () => void;
 }) => {
   return (
     <div className='bulk-operations'>

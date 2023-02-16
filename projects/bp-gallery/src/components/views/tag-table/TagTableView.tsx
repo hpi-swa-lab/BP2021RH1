@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import './TagTableView.scss';
 import {
   ComponentCommonSynonyms,
@@ -9,6 +9,7 @@ import Loading from '../../common/Loading';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import {
   DataGrid,
+  GridCheckIcon,
   GridColDef,
   GridRenderCellParams,
   GridRowModel,
@@ -19,7 +20,7 @@ import { Button, Chip, IconButton } from '@mui/material';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useTranslation } from 'react-i18next';
 import { Delete } from '@mui/icons-material';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 
@@ -33,7 +34,7 @@ interface TagRow {
 
 const TagTableView = ({ type }: { type: TagType }) => {
   const openAlert = useContext(AlertContext);
-  const prompt = useContext(DialogContext);
+  const prompt = useDialog();
   const { t } = useTranslation();
   const { role } = useAuth();
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
@@ -44,6 +45,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
     updateSynonymsMutationSource,
     mergeTagsMutationSource,
     deleteTagMutationSource,
+    updateVisibilityMutationSource,
   } = useGenericTagEndpoints(type);
 
   const { data, loading, error, refetch } = allTagsQuery();
@@ -80,6 +82,13 @@ const TagTableView = ({ type }: { type: TagType }) => {
 
   const [deleteTagMutation] = deleteTagMutationSource({
     onCompleted: _ => {
+      refetch();
+    },
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const [updateVisibilityMutation] = updateVisibilityMutationSource({
+    onCompleted: (_: any) => {
       refetch();
     },
   });
@@ -149,6 +158,25 @@ const TagTableView = ({ type }: { type: TagType }) => {
     [addSynonym, tags, openAlert, updateTagNameMutation, t]
   );
 
+  const additionalColumns = useMemo(() => {
+    return type === TagType.LOCATION || type === TagType.KEYWORD
+      ? [
+          {
+            field: 'visible',
+            headerName: t('curator.visibility'),
+            flex: 1,
+            renderCell: (
+              params: GridRenderCellParams<{
+                visible: boolean;
+              }>
+            ) => {
+              return params.value?.visible ? <GridCheckIcon /> : <></>;
+            },
+          },
+        ]
+      : [];
+  }, [t, type]);
+
   const columns: GridColDef[] = useMemo(
     () => [
       { field: 'name', headerName: 'Name', flex: 2, editable: true },
@@ -177,6 +205,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
         flex: 2,
         editable: true,
       },
+      ...additionalColumns,
       {
         field: 'delete',
         headerName: t('common.delete'),
@@ -199,7 +228,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
         },
       },
     ],
-    [deleteTag, t, deleteSynonym]
+    [deleteTag, t, deleteSynonym, additionalColumns]
   );
 
   const rows: GridRowsProp = useMemo(
@@ -210,6 +239,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
           name: tag.name,
           synonyms: { synonyms: tag.synonyms, tagId: tag.id },
           add: '',
+          visible: { visible: tag.visible },
           delete: { tagId: tag.id, tagName: tag.name },
         } as TagRow;
       }),
@@ -241,16 +271,43 @@ const TagTableView = ({ type }: { type: TagType }) => {
     }
   }, [openAlert, mergeTagsMutation, selectedRowIds, getSelectedRows, t]);
 
+  const setVisible = useCallback(
+    (visible: boolean) => {
+      const selectedRows: GridRowsProp = getSelectedRows(selectedRowIds);
+      selectedRows.forEach(selectedRow => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        updateVisibilityMutation({
+          variables: {
+            tagId: selectedRow.id as string,
+            visible: visible,
+          },
+        });
+      });
+    },
+    [selectedRowIds, getSelectedRows, updateVisibilityMutation]
+  );
+
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
   } else if (Object.values(tags).length && role >= AuthRole.CURATOR) {
     return (
-      <div className='grid'>
+      <div className='tag-grid'>
         <Button onClick={mergeTags} className='merge-button'>
           {t('curator.mergeTag')}
         </Button>
+        {(type === TagType.LOCATION || type === TagType.KEYWORD) && (
+          <>
+            <Button onClick={() => setVisible(true)} className='merge-button'>
+              {t(`curator.show${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
+            </Button>
+            <Button onClick={() => setVisible(false)} className='merge-button'>
+              {t(`curator.hide${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
+            </Button>
+          </>
+        )}
+
         <DataGrid
           className='table'
           rows={rows}

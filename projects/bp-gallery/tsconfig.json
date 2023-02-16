@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "cypress.config.ts"]
+  "include": ["src", "cypress.config.ts", "tailwind.config.cjs", "postcss.config.cjs"]
 }

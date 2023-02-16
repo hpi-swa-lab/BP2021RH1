@@ -1,11 +1,9 @@
 import { Button } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import './ArchiveEditView.scss';
-import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
 import Editor from '../../common/editor/Editor';
 import { Jodit } from 'jodit-react';
 import { useHistory } from 'react-router-dom';
@@ -14,9 +12,9 @@ import ArchiveLinkForm from './ArchiveLinkForm';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import ArchiveInputField from './ArchiveInputField';
 import ArchiveLogoInput from './ArchiveLogoInput';
-import { Check } from '@mui/icons-material';
+import { Check, Save, Close } from '@mui/icons-material';
 import useLinks from './helpers/link-helpers';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
 
 interface ArchiveEditViewProps {
@@ -49,14 +47,15 @@ const extraOptions: Partial<Jodit['options']> = {
 
 const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   const history: History = useHistory();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
   const { t } = useTranslation();
 
   const { data } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
-  const [updateArchive] = useUpdateArchiveMutation({
+  const [updateArchive, updateMutationResponse] = useUpdateArchiveMutation({
     refetchQueries: ['getArchive'],
+    awaitRefetchQueries: true,
   });
   const { createLink, updateLink, deleteLink } = useLinks(archiveId);
 
@@ -156,7 +155,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       <div className='archive-navigation'>
         <Button
           className='button-filled button-close'
-          startIcon={<CloseIcon />}
+          startIcon={<Close />}
           onClick={async () => {
             if (form.dirty) {
               const confirm = await dialog({
@@ -173,11 +172,15 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         </Button>
         <Button
           className='button-filled button-save'
-          startIcon={form.dirty ? <SaveIcon /> : <Check />}
+          startIcon={form.dirty ? <Save /> : <Check />}
           onClick={handleSubmit}
-          disabled={!form.dirty}
+          disabled={!form.dirty || updateMutationResponse.loading}
         >
-          {form.dirty ? t('archives.edit.save') : t('archives.edit.saved')}
+          {updateMutationResponse.loading
+            ? t('archives.edit.loading')
+            : form.dirty
+            ? t('archives.edit.save')
+            : t('archives.edit.saved')}
         </Button>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
@@ -12,15 +12,11 @@ import {
   paramToTime,
   SearchType,
 } from './helpers/search-filters';
-import { Button, Typography } from '@mui/material';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
-import { SearchInfoTooltip } from './SearchInfoTooltip';
-
-export const isValidYear = (searchRequest: string) => {
-  return parseInt(searchRequest) && (searchRequest.length === 2 || searchRequest.length === 4);
-};
+import { HelpTooltip } from '../../common/HelpTooltip';
+import { isValidYear } from './helpers/addNewParamToSearchPath';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'
@@ -32,10 +28,6 @@ const isValidTimeSpecification = (searchRequest: string) => {
 
   // Simple year specification e.g. '1972'
   return isValidYear(searchRequest);
-};
-
-export const asSearchPath = (searchParams: URLSearchParams): string => {
-  return `/search?${searchParams.toString()}`;
 };
 
 const SearchView = () => {
@@ -79,16 +71,7 @@ const SearchView = () => {
             {(!areResultsEmpty || !search) && (
               <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
             )}
-            <SearchInfoTooltip
-              title={
-                <>
-                  <Typography color='inherit'>{t('search.question')}</Typography>
-                  <p>{t('search.help')}</p>
-                </>
-              }
-            >
-              <Button />
-            </SearchInfoTooltip>
+            <HelpTooltip title={t('search.question')} content={t('search.help')} />
             <div className='breadcrumb'>
               <SearchBreadcrumbs searchParams={searchParams} />
             </div>

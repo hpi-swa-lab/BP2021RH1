@@ -1,7 +1,7 @@
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { useTranslation } from 'react-i18next';
-import React, { useCallback, useContext, useState } from 'react';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useCallback, useContext, useState } from 'react';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import {
   useDeleteCollectionMutation,
@@ -23,7 +23,7 @@ const CollectionsPanel = ({
   onSelectChild: (child: FlatCollection) => void;
 }) => {
   const { t } = useTranslation();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
   const openAlert = useContext(AlertContext);
 
   const [selectedChild, setSelectedChild] = useState<string | undefined>(undefined);
@@ -44,7 +44,7 @@ const CollectionsPanel = ({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const parentCollection: FlatCollection | undefined =
     useSimplifiedQueryResponseData(data)?.collection;

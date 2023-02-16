@@ -4,16 +4,47 @@ import {
   useGetPicturesByAllSearchQuery,
   useGetPicturesQuery,
 } from '../graphql/APIConnector';
-import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from '../components/common/picture-gallery/PictureScrollGrid';
+import { AuthRole, useAuth } from '../components/provider/AuthProvider';
+import { useMemo } from 'react';
+
+export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
   isAllSearchActive: boolean,
-  sortBy?: string[]
+  sortBy?: string[],
+  filterOutTextsForNonCurators = true
 ) => {
+  const { role } = useAuth();
+
+  const filterOutTexts = role < AuthRole.CURATOR && filterOutTextsForNonCurators;
+
+  const filters = useMemo(() => {
+    return filterOutTexts
+      ? {
+          and: [
+            {
+              or: [
+                {
+                  is_text: {
+                    eq: false,
+                  },
+                },
+                {
+                  is_text: {
+                    null: true,
+                  },
+                },
+              ],
+            },
+            queryParams as PictureFiltersInput,
+          ],
+        }
+      : (queryParams as PictureFiltersInput);
+  }, [filterOutTexts, queryParams]);
   const queryResult = useGetPicturesQuery({
     variables: {
-      filters: queryParams as PictureFiltersInput,
+      filters,
       pagination: {
         start: 0,
         limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
@@ -26,6 +57,7 @@ const useGetPictures = (
   const customQueryResult = useGetPicturesByAllSearchQuery({
     variables: {
       ...(queryParams as GetPicturesByAllSearchQueryVariables),
+      filterOutTexts,
       pagination: {
         start: 0,
         limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
@@ -34,9 +66,17 @@ const useGetPictures = (
     notifyOnNetworkStatusChange: true,
     skip: !isAllSearchActive,
   });
+
+  const allSearchResult = useMemo(
+    () => ({
+      ...customQueryResult,
+      data: { pictures: customQueryResult.data?.findPicturesByAllSearch },
+    }),
+    [customQueryResult]
+  );
+
   if (isAllSearchActive) {
-    const reformattedResultData = { pictures: customQueryResult.data?.findPicturesByAllSearch };
-    return { ...customQueryResult, data: reformattedResultData };
+    return allSearchResult;
   } else {
     return queryResult;
   }

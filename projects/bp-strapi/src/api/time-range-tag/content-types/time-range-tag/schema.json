@@ -30,6 +30,9 @@
       "relation": "oneToMany",
       "target": "api::picture.picture",
       "mappedBy": "verified_time_range_tag"
+    },
+    "isEstimate": {
+      "type": "boolean"
     }
   }
 }

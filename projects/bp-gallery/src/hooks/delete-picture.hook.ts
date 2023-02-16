@@ -1,12 +1,12 @@
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPicture } from '../types/additionalFlatTypes';
 import { useUnpublishPictureMutation } from '../graphql/APIConnector';
-import { DialogContext, DialogPreset } from '../components/provider/DialogProvider';
+import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
 
 const useDeletePicture = () => {
   const [unpublishPicture] = useUnpublishPictureMutation();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
   const { t } = useTranslation();
 
   return useCallback(

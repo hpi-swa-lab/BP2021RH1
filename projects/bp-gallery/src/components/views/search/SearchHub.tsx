@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import TagList from './TagList';
 import { TagType } from '../../../types/additionalFlatTypes';

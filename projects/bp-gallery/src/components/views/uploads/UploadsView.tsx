@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import ScrollContainer from '../../common/ScrollContainer';
 import { Button, Icon } from '@mui/material';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 
 const UploadsView = () => {
   const { role } = useAuth();
   const { t } = useTranslation();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
 
   const [createArchiveTagMutation] = useCreateArchiveTagMutation();
 

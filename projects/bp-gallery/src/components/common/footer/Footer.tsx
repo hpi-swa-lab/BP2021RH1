@@ -1,4 +1,3 @@
-import React from 'react';
 import './Footer.scss';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';

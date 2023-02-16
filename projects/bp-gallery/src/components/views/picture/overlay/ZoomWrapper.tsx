@@ -1,94 +1,19 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
+import { useMoveView } from '../helpers/useMoveView';
 import './ZoomWrapper.scss';
 
 const MAX_ZOOM = 5.0;
 const MIN_ZOOM = 1.0;
 const DEFAULT_ZOOM = 1.0;
 
-// This hook was extracted here to enable testing for
-// different position changes
-export const useMoveView = ({
-  prevPos,
-  setZoomLevel,
-  setViewport,
-  imageRef,
-}: {
-  prevPos: React.MutableRefObject<{
-    x: number;
-    y: number;
-  } | null>;
-  setZoomLevel: React.Dispatch<React.SetStateAction<number>>;
-  setViewport: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
-  imageRef: React.MutableRefObject<HTMLImageElement | null>;
-}) => {
-  const moveView = useCallback(
-    (curPos: { x: number; y: number }) => {
-      setZoomLevel(zoomLevel => {
-        let diff = {
-          x: 0,
-          y: 0,
-        };
-        if (prevPos.current !== null) {
-          // We need the zoom level here, but since we can't have it as a callback dependency,
-          // we have to use a workaround
-          diff = {
-            x: (curPos.x - prevPos.current.x) / zoomLevel,
-            y: (curPos.y - prevPos.current.y) / zoomLevel,
-          };
-        }
-        if (imageRef.current?.parentElement) {
-          const imgRect = imageRef.current.getBoundingClientRect();
-          const parentRect = imageRef.current.parentElement.getBoundingClientRect();
-          const ratio = {
-            x: imgRect.width / parentRect.width,
-            y: imgRect.height / parentRect.height,
-          };
-          setViewport(viewport => {
-            const x =
-              ratio.x < 1
-                ? 0
-                : Math.max(
-                    Math.min(
-                      viewport.x + diff.x,
-                      (imgRect.width - parentRect.width) / (2 * zoomLevel)
-                    ),
-                    (-imgRect.width + parentRect.width) / (2 * zoomLevel)
-                  );
-            const y =
-              ratio.y < 1
-                ? 0
-                : Math.max(
-                    Math.min(
-                      viewport.y + diff.y,
-                      (imgRect.height - parentRect.height) / (2 * zoomLevel)
-                    ),
-                    (-imgRect.height + parentRect.height) / (2 * zoomLevel)
-                  );
-            return {
-              x,
-              y,
-            };
-          });
-        }
-
-        return zoomLevel;
-      });
-    },
-    [setZoomLevel, setViewport, prevPos, imageRef]
-  );
-
-  return moveView;
-};
-
 const ZoomWrapper = ({
   blockScroll,
   pictureId, // This is used to determine when a picture change has happened
   children,
-}: {
+}: PropsWithChildren<{
   blockScroll: boolean;
   pictureId: string;
-  children: any;
-}) => {
+}>) => {
   const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
   const [viewport, setViewport] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 

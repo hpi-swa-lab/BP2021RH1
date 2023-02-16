@@ -1,6 +1,6 @@
 import { Icon, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
-import React, { useCallback, useContext } from 'react';
-import { DialogContext, DialogPreset } from '../../provider/DialogProvider';
+import { useCallback } from 'react';
+import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import {
   useCreateSubCollectionMutation,
@@ -18,7 +18,7 @@ const AddCollectionMenu = ({
   parentCollectionId: string;
 }) => {
   const { t } = useTranslation();
-  const dialog = useContext(DialogContext);
+  const dialog = useDialog();
 
   const open = Boolean(anchorEl);
 

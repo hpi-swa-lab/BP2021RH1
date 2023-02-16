@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -9,10 +9,10 @@ import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 import { useTranslation } from 'react-i18next';
 import './PictureScrollGrid.scss';
 import { BulkOperation } from './BulkOperationsPanel';
-import useGetPictures from '../../../hooks/get-pictures.hook';
+import useGetPictures, {
+  NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+} from '../../../hooks/get-pictures.hook';
 import { PicturePreviewAdornment } from './PicturePreview';
-
-export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
 const PictureScrollGrid = ({
   queryParams,
@@ -27,7 +27,9 @@ const PictureScrollGrid = ({
   maxNumPictures,
   showCount = true,
   extraAdornments,
-  viewOnly,
+  showDefaultAdornments = true,
+  allowClicks = true,
+  filterOutTextsForNonCurators = true,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   scrollPos: number;
@@ -41,7 +43,9 @@ const PictureScrollGrid = ({
   maxNumPictures?: number;
   showCount?: boolean;
   extraAdornments?: PicturePreviewAdornment[];
-  viewOnly?: boolean;
+  showDefaultAdornments?: boolean;
+  allowClicks?: boolean;
+  filterOutTextsForNonCurators?: boolean;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -50,7 +54,8 @@ const PictureScrollGrid = ({
   const { data, loading, error, fetchMore, refetch } = useGetPictures(
     queryParams,
     isAllSearchActive,
-    sortBy
+    sortBy,
+    filterOutTextsForNonCurators
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
@@ -140,7 +145,8 @@ const PictureScrollGrid = ({
           loading={isFetching}
           bulkOperations={bulkOperations}
           extraAdornments={extraAdornments}
-          viewOnly={viewOnly}
+          showDefaultAdornments={showDefaultAdornments}
+          allowClicks={allowClicks}
         />
       </>
     );

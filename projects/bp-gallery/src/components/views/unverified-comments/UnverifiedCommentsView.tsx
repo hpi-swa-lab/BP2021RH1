@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useGetUnverifiedCommentsQuery } from '../../../graphql/APIConnector';
 import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
@@ -9,6 +9,8 @@ import PictureView from '../picture/PictureView';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import './UnverifiedCommentsView.scss';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import { Portal } from '@mui/material';
+import { root } from '../../../helpers/app-helpers';
 
 const UnverifiedCommentsView = () => {
   const { t } = useTranslation();
@@ -99,14 +101,16 @@ const UnverifiedCommentsView = () => {
           </table>
         </div>
         {openPictureId && (
-          <PictureView
-            initialPictureId={openPictureId}
-            siblingIds={Object.keys(groupedComments)}
-            onBack={() => {
-              refetch();
-              setOpenPictureId(undefined);
-            }}
-          />
+          <Portal container={root}>
+            <PictureView
+              initialPictureId={openPictureId}
+              siblingIds={Object.keys(groupedComments)}
+              onBack={() => {
+                refetch();
+                setOpenPictureId(undefined);
+              }}
+            />
+          </Portal>
         )}
       </>
     );
