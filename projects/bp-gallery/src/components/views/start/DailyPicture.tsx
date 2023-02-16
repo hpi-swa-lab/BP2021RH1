@@ -5,7 +5,7 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { Card, Portal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
-import Editor from '../../common/editor/Editor';
+import RichText from './../../common/RichText';
 import { FolderSpecial, Event } from '@mui/icons-material';
 import { asApiPath } from '../../../helpers/app-helpers';
 import PictureView from '../picture/PictureView';
@@ -95,7 +95,7 @@ const DailyPicture = () => {
               <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
               <div className={'line-clamp-5'}>
                 <h4 className={'text-lg my-1'}>{t('pictureFields.descriptions')}:</h4>
-                <Editor value={description} />
+                <RichText value={description} />
               </div>
               <div className={'flex-1'} />
               <div className={'flex items-center gap-2 my-2'}>

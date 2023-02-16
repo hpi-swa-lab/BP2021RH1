@@ -20,7 +20,7 @@ import {
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import Editor from '../../../../common/editor/Editor';
+import TextEditor from '../../../../common/editors/TextEditor';
 import NewCommentForm from './NewCommentForm';
 import CommentVerification from './CommentVerification';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
@@ -255,7 +255,7 @@ const CommentEditField = ({ comment, readOnly }: { comment: FlatComment; readOnl
   }, [commentRef, updateComment]);
 
   return (
-    <Editor
+    <TextEditor
       value={commentRef.current.text}
       extraOptions={{ readonly: readOnly }}
       onBlur={onBlur}

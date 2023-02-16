@@ -6,7 +6,7 @@ import getLineBreaks from '../../../helpers/get-linebreaks';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
-import Editor from '../../common/editor/Editor';
+import TextEditor from '../../common/editors/TextEditor';
 
 const CollectionDescription = ({
   description,
@@ -105,7 +105,7 @@ const EditableCollectionDescription = ({
   }, [description, collectionId, updateCollection]);
 
   return (
-    <Editor
+    <TextEditor
       value={description.current}
       extraOptions={extraOptions}
       onBlur={onBlur}
