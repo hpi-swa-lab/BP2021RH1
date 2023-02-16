@@ -1,17 +1,15 @@
 import { useCallback, useState } from 'react';
 import { Event, FolderSpecial } from '@mui/icons-material';
 import { Card, Portal } from '@mui/material';
-import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import PictureView from '../picture/PictureView';
 import RichText from './../../common/RichText';
 import { useTranslation } from 'react-i18next';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { asApiPath } from '../../../helpers/app-helpers';
 import PictureView from '../picture/PictureView';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
