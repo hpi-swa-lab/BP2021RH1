@@ -17,6 +17,8 @@ interface PictureOverviewProps {
   rows?: number;
 }
 
+const ABSOLUTE_MAX_PICTURES_PER_ROW = 6;
+
 const PictureOverview = ({
   title,
   queryParams,
@@ -26,7 +28,13 @@ const PictureOverview = ({
 }: PictureOverviewProps) => {
   const { t } = useTranslation();
 
-  const { data, loading, refetch } = useGetPictures(queryParams, false, sortBy, true, 6 * rows);
+  const { data, loading, refetch } = useGetPictures(
+    queryParams,
+    false,
+    sortBy,
+    true,
+    ABSOLUTE_MAX_PICTURES_PER_ROW * rows
+  );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 

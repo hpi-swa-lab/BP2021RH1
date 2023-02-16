@@ -1,4 +1,5 @@
 import { PictureFiltersInput } from '../../../../graphql/APIConnector';
+import { TagType } from '../../../../types/additionalFlatTypes';
 import { buildDecadeFilter } from '../../search/helpers/search-filters';
 
 const categoryQueryParams = (
@@ -8,11 +9,11 @@ const categoryQueryParams = (
 ) => {
   let queryFilter;
   switch (categoryType) {
-    case 'date': {
+    case TagType.TIME_RANGE: {
       queryFilter = categoryId ? buildDecadeFilter(categoryId) ?? {} : {};
       break;
     }
-    case 'keyword': {
+    case TagType.KEYWORD: {
       queryFilter = {
         or: [
           { verified_keyword_tags: { id: { eq: categoryId } } },
@@ -21,7 +22,7 @@ const categoryQueryParams = (
       };
       break;
     }
-    case 'person': {
+    case TagType.PERSON: {
       queryFilter = {
         or: [
           { verified_person_tags: { id: { eq: categoryId } } },
@@ -30,7 +31,7 @@ const categoryQueryParams = (
       };
       break;
     }
-    case 'location':
+    case TagType.LOCATION:
     default:
       queryFilter = {
         or: [

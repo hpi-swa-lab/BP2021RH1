@@ -46,7 +46,7 @@ const TagList = ({
     false,
     type,
     ['name:asc'],
-    currentItemAmount ? currentItemAmount : 30
+    currentItemAmount ?? 30
   );
 
   const flattened = useSimplifiedQueryResponseData(data);

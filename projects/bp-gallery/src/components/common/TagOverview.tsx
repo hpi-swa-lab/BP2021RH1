@@ -48,7 +48,10 @@ const TagOverview = ({
     return tempRowLength - 1;
   };
 
-  const [rowLength, setRowLength] = useState<number>(calculateMaxCategoriesPerRow());
+  const [rowLength, setRowLength] = useState(() => {
+    const initialState = calculateMaxCategoriesPerRow();
+    return initialState;
+  });
 
   const onResize = useCallback(() => {
     setRowLength(calculateMaxCategoriesPerRow());
