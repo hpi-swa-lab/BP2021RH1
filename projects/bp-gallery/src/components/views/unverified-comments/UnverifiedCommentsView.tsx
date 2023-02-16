@@ -11,6 +11,7 @@ import './UnverifiedCommentsView.scss';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { Portal } from '@mui/material';
 import { root } from '../../../helpers/app-helpers';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 
 const UnverifiedCommentsView = () => {
   const { t } = useTranslation();
@@ -76,7 +77,7 @@ const UnverifiedCommentsView = () => {
                   <tr
                     key={pictureId}
                     onClick={() => {
-                      window.history.pushState({}, '', `/picture/${pictureId}`);
+                      pushHistoryWithoutRouter(`/picture/${pictureId}`);
                       setOpenPictureId(pictureId);
                     }}
                   >

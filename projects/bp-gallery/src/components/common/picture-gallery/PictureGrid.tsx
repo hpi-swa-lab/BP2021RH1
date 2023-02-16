@@ -14,6 +14,7 @@ import { Button, Icon, Portal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { CheckBox, CheckBoxOutlineBlank, Delete } from '@mui/icons-material';
 import { root } from '../../../helpers/app-helpers';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -96,7 +97,7 @@ const PictureGrid = ({
     (id: string) => {
       setTransitioning(true);
       setFocusedPicture(id);
-      window.history.pushState({}, '', `/picture/${id}`);
+      pushHistoryWithoutRouter(`/picture/${id}`);
       zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
         setTransitioning(false);
       });
@@ -131,7 +132,7 @@ const PictureGrid = ({
 
   const navigateToBulkEdit = useCallback(() => {
     setBulkEditPictureIds(selectedPictureIds);
-    window.history.pushState({}, '', `/bulk-edit/${selectedPictureIds.join(',')}`);
+    pushHistoryWithoutRouter(`/bulk-edit/${selectedPictureIds.join(',')}`);
   }, [setBulkEditPictureIds, selectedPictureIds]);
 
   const defaultAdornments =
