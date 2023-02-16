@@ -86,7 +86,7 @@ const ShowMoreView = ({
                   : ['createdAt:desc']
               }
               hashbase={'show-more'}
-              extraAdornments={archiveId ? [showcaseAdornment] : []}
+              extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
               bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
             />
           </div>

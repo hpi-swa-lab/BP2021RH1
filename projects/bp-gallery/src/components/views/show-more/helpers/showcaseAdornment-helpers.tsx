@@ -5,8 +5,11 @@ import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatPicture } from '../../../../types/additionalFlatTypes';
 import { PicturePreviewAdornment } from '../../../common/picture-gallery/PicturePreview';
 
-const useGetArchive = (archiveId: string) => {
-  const archiveQueryResult = useGetArchiveQuery({ variables: { archiveId } });
+const useGetArchive = (archiveId?: string) => {
+  const archiveQueryResult = useGetArchiveQuery({
+    variables: { archiveId: archiveId ?? '' },
+    skip: archiveId === undefined,
+  });
 
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(
     archiveQueryResult.data
@@ -15,7 +18,7 @@ const useGetArchive = (archiveId: string) => {
   return archive;
 };
 
-export const useGetShowcasePicture = (archiveId: string) => {
+export const useGetShowcasePicture = (archiveId?: string) => {
   const archive = useGetArchive(archiveId);
 
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
@@ -23,7 +26,9 @@ export const useGetShowcasePicture = (archiveId: string) => {
   return showcasePicture;
 };
 
-export const useGetShowcaseAdornments = (archiveId: string = '0') => {
+export const useGetShowcaseAdornments = (
+  archiveId?: string
+): PicturePreviewAdornment | undefined => {
   const { t } = useTranslation();
 
   const archive = useGetArchive(archiveId);
@@ -34,23 +39,27 @@ export const useGetShowcaseAdornments = (archiveId: string = '0') => {
     refetchQueries: ['getArchive'],
   });
 
-  const showcaseAdornment: PicturePreviewAdornment = {
-    position: 'top-left',
-    icon: picture =>
-      picture.id === archive?.showcasePicture?.id ? <Star className='star-selected' /> : <Star />,
-    title: t('pictureAdornments.showcase'),
-    onClick: picture => {
-      if (showcasePicture?.id === picture.id) return;
-      updateArchive({
-        variables: {
-          archiveId,
-          data: {
-            showcasePicture: picture.id,
-          },
+  return archiveId === undefined
+    ? undefined
+    : {
+        position: 'top-left',
+        icon: picture =>
+          picture.id === archive?.showcasePicture?.id ? (
+            <Star className='star-selected' />
+          ) : (
+            <Star />
+          ),
+        title: t('pictureAdornments.showcase'),
+        onClick: picture => {
+          if (showcasePicture?.id === picture.id) return;
+          updateArchive({
+            variables: {
+              archiveId,
+              data: {
+                showcasePicture: picture.id,
+              },
+            },
+          });
         },
-      });
-    },
-  };
-
-  return showcaseAdornment;
+      };
 };
