@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Editor from '../../common/editor/Editor';
+import TextEditor from '../../common/editors/TextEditor';
 
 interface ArchiveInfoProps {
   description: string;
@@ -20,7 +20,7 @@ const ArchiveInfo = ({ description }: ArchiveInfoProps) => {
 
   return (
     <div className='archive-info-container'>
-      <Editor
+      <TextEditor
         value={description || t('archives.defaultLongDescription')}
         extraOptions={extraOptions}
       />
