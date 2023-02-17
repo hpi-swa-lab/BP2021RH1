@@ -1,7 +1,3 @@
-import { History } from 'history';
-import { PropsWithChildren } from 'react';
-import { useHistory } from 'react-router-dom';
-
 const setupMatomo = (url: string) => {
   const w: any = window;
   const _paq: Array<any> = (w._paq = w._paq || []);
@@ -39,11 +35,3 @@ export const trackHistory = () => {
 };
 
 export default setupMatomo;
-
-export const TrackHistoryWithMatomo = ({ children }: PropsWithChildren<{}>) => {
-  const history: History = useHistory();
-  history.listen(() => {
-    trackHistory();
-  });
-  return <>{children}</>;
-};
