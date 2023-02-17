@@ -10,15 +10,9 @@ export const isValidYear = (searchRequest: string) => {
 };
 
 const isDuplicatedSearchParam = (element: string, type: string, prevParams: URLSearchParams) => {
-  let isDuplicate = false;
-  const prevParamsIterator = prevParams.entries();
-  let nextParam = prevParamsIterator.next();
-  while (!nextParam.done) {
-    if (nextParam.value[1] === element && nextParam.value[0] === type) isDuplicate = true;
-    nextParam = prevParamsIterator.next();
-  }
-
-  return isDuplicate;
+  return !!Array.from(prevParams.entries()).find(
+    ([paramType, paramElement]) => paramElement === element && paramType === type
+  );
 };
 
 export const addNewParamToSearchPath = (

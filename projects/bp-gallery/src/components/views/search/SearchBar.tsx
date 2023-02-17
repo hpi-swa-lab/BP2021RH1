@@ -27,14 +27,8 @@ const SearchBar = ({
   const [searchType, setSearchType] = useState<string>(SearchType.ALL);
 
   const typeOfLatestSearch = useMemo(() => {
-    const searchParamsIterator = searchParams.entries();
-    let nextParam = searchParamsIterator.next();
-    let latestType;
-    while (!nextParam.done) {
-      latestType = nextParam.value[0];
-      nextParam = searchParamsIterator.next();
-    }
-    return latestType;
+    const types = Array.from(searchParams.keys());
+    return types[types.length - 1] as string | undefined;
   }, [searchParams]);
 
   useEffect(() => {
@@ -59,7 +53,8 @@ const SearchBar = ({
     }
   }, [typeOfLatestSearch]);
 
-  const dontShowAllSearch: boolean = !isAllSearchActive && !searchParams.values().next().done;
+  const dontShowAllSearch: boolean =
+    !isAllSearchActive && Array.from(searchParams.entries()).length !== 0;
 
   const onSearchStart = (searchInput: string) => {
     if (searchInput === '') return;
