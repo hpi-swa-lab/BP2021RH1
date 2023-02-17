@@ -10,6 +10,7 @@ import { getSearchTypeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import { SearchType } from './helpers/search-filters';
+import { fromURLSearchParam } from './helpers/url-search-params';
 
 const SearchBar = ({
   searchParams,
@@ -28,7 +29,8 @@ const SearchBar = ({
 
   const typeOfLatestSearch = useMemo(() => {
     const types = Array.from(searchParams.keys());
-    return types[types.length - 1] as string | undefined;
+    const type: string | undefined = types[types.length - 1];
+    return type === undefined ? type : fromURLSearchParam(type);
   }, [searchParams]);
 
   useEffect(() => {

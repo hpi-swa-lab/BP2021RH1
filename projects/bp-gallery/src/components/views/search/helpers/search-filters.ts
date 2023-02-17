@@ -1,5 +1,6 @@
 import { PictureFiltersInput } from '../../../../graphql/APIConnector';
 import { TagType } from '../../../../types/additionalFlatTypes';
+import { toURLSearchParam } from './url-search-params';
 
 export const SearchType = {
   ...TagType,
@@ -72,7 +73,7 @@ export const paramToTime = (timeParam: string) => {
 };
 
 const searchYear = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const timeParams = searchParams.getAll(SearchType.TIME_RANGE);
+  const timeParams = searchParams.getAll(toURLSearchParam(SearchType.TIME_RANGE));
   timeParams.forEach(timeParam => {
     const { startTime, endTime, valid } = paramToTime(timeParam);
     if (valid) {
@@ -118,14 +119,16 @@ export const buildDecadeFilter = (decade: string) => {
 };
 
 const searchDecade = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const timeParams = searchParams.getAll(SearchType.DECADE);
+  const timeParams = searchParams.getAll(toURLSearchParam(SearchType.DECADE));
   timeParams.forEach(timeParam => {
     filters.and?.push(buildDecadeFilter(timeParam) ?? null);
   });
 };
 
 const searchKeyword = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const keywords = searchParams.getAll(SearchType.KEYWORD).map(decodeURIComponent);
+  const keywords = searchParams
+    .getAll(toURLSearchParam(SearchType.KEYWORD))
+    .map(decodeURIComponent);
   keywords.forEach((keyword: string) => {
     const keyword_tag_filter = buildFilter(keyword);
     filters.and?.push({
@@ -142,7 +145,9 @@ const searchKeyword = (searchParams: URLSearchParams, filters: PictureFiltersInp
 };
 
 const searchCollection = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const collections = searchParams.getAll(SearchType.COLLECTION).map(decodeURIComponent);
+  const collections = searchParams
+    .getAll(toURLSearchParam(SearchType.COLLECTION))
+    .map(decodeURIComponent);
   collections.forEach((collection: string) => {
     const collection_filter = buildFilter(collection);
     filters.and?.push({
@@ -156,7 +161,9 @@ const searchCollection = (searchParams: URLSearchParams, filters: PictureFilters
 };
 
 const searchArchiveTag = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const archiveTags = searchParams.getAll(SearchType.ARCHIVE).map(decodeURIComponent);
+  const archiveTags = searchParams
+    .getAll(toURLSearchParam(SearchType.ARCHIVE))
+    .map(decodeURIComponent);
   archiveTags.forEach((archiveTag: string) => {
     const archiveTagFilter = buildFilter(archiveTag);
     filters.and?.push({
@@ -170,7 +177,9 @@ const searchArchiveTag = (searchParams: URLSearchParams, filters: PictureFilters
 };
 
 const searchLocation = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const locations = searchParams.getAll(SearchType.LOCATION).map(decodeURIComponent);
+  const locations = searchParams
+    .getAll(toURLSearchParam(SearchType.LOCATION))
+    .map(decodeURIComponent);
   locations.forEach((location: string) => {
     const location_tag_filter = buildFilter(location);
     filters.and?.push({
@@ -187,7 +196,7 @@ const searchLocation = (searchParams: URLSearchParams, filters: PictureFiltersIn
 };
 
 const searchPerson = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const persons = searchParams.getAll(SearchType.PERSON).map(decodeURIComponent);
+  const persons = searchParams.getAll(toURLSearchParam(SearchType.PERSON)).map(decodeURIComponent);
   persons.forEach((person: string) => {
     const person_tag_filter = buildFilter(person);
     filters.and?.push({
@@ -204,7 +213,7 @@ const searchPerson = (searchParams: URLSearchParams, filters: PictureFiltersInpu
 };
 
 const searchDescription = (searchParams: URLSearchParams, filters: PictureFiltersInput) => {
-  const q = searchParams.getAll(SearchType.DESCRIPTION).map(decodeURIComponent);
+  const q = searchParams.getAll(toURLSearchParam(SearchType.DESCRIPTION)).map(decodeURIComponent);
   q.forEach((param: string) => {
     filters.and?.push({
       descriptions: {
@@ -219,14 +228,18 @@ const searchDescription = (searchParams: URLSearchParams, filters: PictureFilter
 export const convertSearchParamsToPictureFilters = (searchParams: URLSearchParams) => {
   const filters: PictureFiltersInput = { and: [] };
 
-  if (searchParams.has(SearchType.TIME_RANGE)) searchYear(searchParams, filters);
-  if (searchParams.has(SearchType.KEYWORD)) searchKeyword(searchParams, filters);
-  if (searchParams.has(SearchType.DESCRIPTION)) searchDescription(searchParams, filters);
-  if (searchParams.has(SearchType.PERSON)) searchPerson(searchParams, filters);
-  if (searchParams.has(SearchType.LOCATION)) searchLocation(searchParams, filters);
-  if (searchParams.has(SearchType.DECADE)) searchDecade(searchParams, filters);
-  if (searchParams.has(SearchType.COLLECTION)) searchCollection(searchParams, filters);
-  if (searchParams.has(SearchType.ARCHIVE)) searchArchiveTag(searchParams, filters);
+  if (searchParams.has(toURLSearchParam(SearchType.TIME_RANGE))) searchYear(searchParams, filters);
+  if (searchParams.has(toURLSearchParam(SearchType.KEYWORD))) searchKeyword(searchParams, filters);
+  if (searchParams.has(toURLSearchParam(SearchType.DESCRIPTION)))
+    searchDescription(searchParams, filters);
+  if (searchParams.has(toURLSearchParam(SearchType.PERSON))) searchPerson(searchParams, filters);
+  if (searchParams.has(toURLSearchParam(SearchType.LOCATION)))
+    searchLocation(searchParams, filters);
+  if (searchParams.has(toURLSearchParam(SearchType.DECADE))) searchDecade(searchParams, filters);
+  if (searchParams.has(toURLSearchParam(SearchType.COLLECTION)))
+    searchCollection(searchParams, filters);
+  if (searchParams.has(toURLSearchParam(SearchType.ARCHIVE)))
+    searchArchiveTag(searchParams, filters);
 
   return filters;
 };

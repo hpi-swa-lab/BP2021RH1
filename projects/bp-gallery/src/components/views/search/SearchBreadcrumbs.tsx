@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { getDecadeTranslation } from './helpers/search-translation';
 import { SearchType } from './helpers/search-filters';
 import { asSearchPath } from './helpers/addNewParamToSearchPath';
+import { fromURLSearchParam } from './helpers/url-search-params';
 
 type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];
@@ -51,7 +52,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
 
   for (const [type, value] of Array.from(searchParams.entries())) {
     searchParamValues.push({
-      type,
+      type: fromURLSearchParam(type),
       value: decodeURIComponent(value),
     });
   }
@@ -59,7 +60,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
   const deleteParam = (deleteType: string, deleteValue: string) => {
     const newSearchParams = new URLSearchParams();
     for (const [type, value] of Array.from(searchParams.entries())) {
-      if (!(decodeURIComponent(value) === deleteValue && type === deleteType)) {
+      if (!(decodeURIComponent(value) === deleteValue && fromURLSearchParam(type) === deleteType)) {
         newSearchParams.append(type, value);
       }
     }

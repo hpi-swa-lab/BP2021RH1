@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash';
 import { SearchType } from './search-filters';
+import { fromURLSearchParam, toURLSearchParam } from './url-search-params';
 
 export const asSearchPath = (searchParams: URLSearchParams): string => {
   return `/search?${searchParams.toString()}`;
@@ -11,7 +12,8 @@ export const isValidYear = (searchRequest: string) => {
 
 const isDuplicatedSearchParam = (element: string, type: string, prevParams: URLSearchParams) => {
   return !!Array.from(prevParams.entries()).find(
-    ([paramType, paramElement]) => paramElement === element && paramType === type
+    ([paramType, paramElement]) =>
+      paramElement === element && fromURLSearchParam(paramType) === type
   );
 };
 
@@ -33,7 +35,7 @@ export const addNewParamToSearchPath = (
 
   paramValues.forEach(element => {
     if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !isEmpty(element)) {
-      searchParams.append(newParamType, element);
+      searchParams.append(toURLSearchParam(newParamType), element);
     }
   });
   return { searchPath: asSearchPath(searchParams), isValid: true };
