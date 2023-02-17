@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import getLineBreaks from '../../../helpers/get-linebreaks';
-import Editor from '../../common/editor/Editor';
+import TextEditor from '../../common/editors/TextEditor';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import './CollectionDescription.scss';
 
@@ -110,7 +110,7 @@ const EditableCollectionDescription = ({
   }, [description, collectionId, updateCollection]);
 
   return (
-    <Editor
+    <TextEditor
       value={description.current}
       extraOptions={extraOptions}
       onBlur={onBlur}

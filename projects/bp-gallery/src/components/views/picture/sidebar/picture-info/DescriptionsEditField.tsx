@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatDescription } from '../../../../../types/additionalFlatTypes';
-import Editor from '../../../../common/editor/Editor';
+import TextEditor from '../../../../common/editors/TextEditor';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 
@@ -80,7 +80,7 @@ const DescriptionsEditField = ({
             key={isEmpty(description.id) ? `new-description-${index}` : description.id}
           >
             <div className='description-content'>
-              <Editor
+              <TextEditor
                 value={description.text}
                 extraOptions={extraOptions}
                 onBlur={newText => onBlurRef.current(newText, description)}
