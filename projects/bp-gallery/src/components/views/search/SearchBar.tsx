@@ -29,7 +29,7 @@ const SearchBar = ({
 
   const typeOfLatestSearch = useMemo(() => {
     const types = Array.from(searchParams.keys());
-    const type: string | undefined = types[types.length - 1];
+    const type = types[types.length - 1] as string | undefined;
     return type === undefined ? type : fromURLSearchParam(type);
   }, [searchParams]);
 
