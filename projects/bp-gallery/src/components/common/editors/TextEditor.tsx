@@ -3,7 +3,7 @@ import JoditEditor, { Jodit } from 'jodit-react';
 import { addPlugins } from './helpers/jodit-plugins';
 import defaultConfig from './helpers/jodit-config';
 
-export interface EditorProps {
+export interface TextEditorProps {
   value: string;
   /** Additional configuration options for the editor. See {@link https://xdsoft.net/jodit/docs/classes/config.Config.html} */
   extraOptions?: Partial<Jodit['options']>;
@@ -16,10 +16,10 @@ addPlugins();
 /**
  * Wrapper for JoditEditor with additional plugins and default configuration
  */
-const Editor = ({ value, extraOptions, onChange, onBlur }: EditorProps) => {
+const TextEditor = ({ value, extraOptions, onChange, onBlur }: TextEditorProps) => {
   const config = useMemo(() => ({ ...defaultConfig, ...extraOptions }), [extraOptions]);
 
   return <JoditEditor value={value} config={config} onChange={onChange} onBlur={onBlur} />;
 };
 
-export default Editor;
+export default TextEditor;

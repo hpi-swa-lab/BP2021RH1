@@ -4,7 +4,7 @@ import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/A
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import './ArchiveEditView.scss';
-import Editor from '../../common/editor/Editor';
+import TextEditor from '../../common/editors/TextEditor';
 import { Jodit } from 'jodit-react';
 import { useHistory } from 'react-router-dom';
 import { History } from 'history';
@@ -204,7 +204,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           <label className='archive-form-label' htmlFor='archive-form-long-description'>
             {t('archives.edit.longDescriptionLabel')}
           </label>
-          <Editor
+          <TextEditor
             value={archive.longDescription ?? ''}
             onChange={() => {}}
             onBlur={value => setForm({ ...form, longDescription: value, dirty: true })}
