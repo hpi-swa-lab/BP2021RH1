@@ -41,8 +41,6 @@ const PictureGrid = ({
   const calculateMaxPicturesPerRow = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
-  const calculateMinPicturesPerRow = (maxRowLength: number) => Math.max(2, maxRowLength - 2);
-
   const { role } = useAuth();
   const { t } = useTranslation();
 
@@ -52,24 +50,34 @@ const PictureGrid = ({
   const [bulkEditPictureIds, setBulkEditPictureIds] = useState<string[] | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
-  const calculatePicturesPerRow = (maxRowLength: number, minRowLength: number, hashKey: string) =>
-    Math.round(hashCode(hashKey) * (maxRowLength - minRowLength) + minRowLength);
+  const minRowLength = Math.max(2, maxRowLength - 2);
+
+  const calculatePicturesPerRowWithHashKey = useCallback(
+    (hashKey: string) => {
+      return Math.round(hashCode(hashKey) * (maxRowLength - minRowLength) + minRowLength);
+    },
+    [maxRowLength, minRowLength]
+  );
+
+  const calculatePicturesPerRow = useCallback(
+    (offset?: number) => {
+      return calculatePicturesPerRowWithHashKey(
+        offset ? hashBase + String(offset * 124.22417246) : hashBase
+      );
+    },
+    [hashBase, calculatePicturesPerRowWithHashKey]
+  );
 
   const calculatePictureNumber = useCallback(() => {
     if (!rows) {
       return pictures.length;
     }
-    const minRowLength = calculateMinPicturesPerRow(maxRowLength);
-    let pictureNumber = calculatePicturesPerRow(maxRowLength, minRowLength, hashBase);
+    let pictureNumber = calculatePicturesPerRow();
     for (let row = 1; row < rows; row++) {
-      pictureNumber += calculatePicturesPerRow(
-        maxRowLength,
-        minRowLength,
-        hashBase + String((pictureNumber - 1) * 124.22417246)
-      );
+      pictureNumber += calculatePicturesPerRow(pictureNumber - 1);
     }
     return pictureNumber;
-  }, [rows, maxRowLength, pictures.length, hashBase]);
+  }, [rows, pictures.length, calculatePicturesPerRow]);
 
   const deletePicture = useDeletePicture();
 
@@ -93,8 +101,7 @@ const PictureGrid = ({
     const buffer: (FlatPicture | undefined)[][] = [[]];
     let currentRow = 0;
     let currentRowCount = 0;
-    const minRowLength = calculateMinPicturesPerRow(maxRowLength);
-    let rowLength = calculatePicturesPerRow(maxRowLength, minRowLength, hashBase);
+    let rowLength = calculatePicturesPerRow();
     for (let i = 0; i < calculatePictureNumber(); i++) {
       buffer[currentRow].push(pictures[i]);
       currentRowCount++;
@@ -103,17 +110,14 @@ const PictureGrid = ({
         currentRow++;
         buffer.push([]);
         currentRowCount = 0;
-        rowLength = Math.round(
-          hashCode(hashBase + String(i * 124.22417246)) * (maxRowLength - minRowLength) +
-            minRowLength
-        );
+        rowLength = calculatePicturesPerRow(i);
       }
     }
     for (let i = currentRowCount; i < rowLength; i++) {
       buffer[buffer.length - 1].push(undefined);
     }
     setTable(buffer);
-  }, [pictures, hashBase, calculatePictureNumber, maxRowLength]);
+  }, [pictures, calculatePictureNumber, calculatePicturesPerRow]);
 
   const navigateToPicture = useCallback(
     (id: string) => {

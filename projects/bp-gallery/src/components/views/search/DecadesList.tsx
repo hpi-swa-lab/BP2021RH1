@@ -49,6 +49,19 @@ const DecadesList = ({
   });
   const decadeThumbnails: FlatDecadeThumbnails | undefined = useSimplifiedQueryResponseData(data);
 
+  const getDecadeDisplay = (decadeKey: string) => {
+    if (!decadeThumbnails) {
+      return;
+    }
+    const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
+    const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
+    const displayedName = getDecadeTranslation(t, decadeKey);
+    return {
+      name: displayedName,
+      background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+    };
+  };
+
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
@@ -59,12 +72,8 @@ const DecadesList = ({
         <ScrollableItemList
           compact={true}
           items={DECADES.map((decadeKey: string) => {
-            const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-            const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-            const displayedName = getDecadeTranslation(t, decadeKey);
             return {
-              name: displayedName,
-              background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+              ...getDecadeDisplay(decadeKey)!,
               onClick: () => {
                 const { searchPath } = useAdvancedSearch
                   ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
@@ -86,12 +95,8 @@ const DecadesList = ({
         <ItemList
           items={(currentItemAmount ? DECADES.slice(0, currentItemAmount) : DECADES).map(
             (decadeKey: string) => {
-              const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-              const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-              const displayedName = getDecadeTranslation(t, decadeKey);
               return {
-                name: displayedName,
-                background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+                ...getDecadeDisplay(decadeKey)!,
                 onClick: () => {
                   if (onClickBasePath) {
                     history.push(onClickBasePath + decadeKey, {
