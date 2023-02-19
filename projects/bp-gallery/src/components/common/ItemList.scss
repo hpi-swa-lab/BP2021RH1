@@ -40,12 +40,7 @@
 
   &:hover {
     .image-container img {
-      @supports not (scale: 1.02) {
-        transform: scale(1.02);
-      }
-      @supports (scale: 1.02) {
-        scale: 1.02;
-      }
+      transform: scale(1.02);
     }
   }
 
@@ -58,7 +53,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 1;
-      transition: transform 0.2s;
+      transition-duration: 0.2s;
       filter: grayscale(1) brightness(0.56);
     }
   }
