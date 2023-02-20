@@ -6,7 +6,7 @@ describe('picture uploading and tagging', () => {
     login();
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Collections').click();
-    cy.contains('add').click();
+    cy.contains('Collection hinzufügen').find('[data-testid="AddIcon"]').click();
     cy.contains('Neue Collection erstellen').click();
     cy.get('.MuiDialogContent-root').find('input').type('TestCollection');
     cy.get('.MuiButton-root').contains('Bestätigen').click();
@@ -100,7 +100,7 @@ describe('picture uploading and tagging', () => {
     cy.get('.picture-info-field').contains('TestCollection').should('exist');
     cy.get('.picture-info-field').contains('Herbert-Ahrens-Bilderarchiv').should('exist');
 
-    cy.get('button').contains('arrow_back').click();
+    cy.get('.picture-toolbar').find('[data-testid="ArrowBackIcon"]').click();
     cy.get('.picture-view').should('not.exist');
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-preview:last').find('[data-testid=DeleteIcon]').click();
