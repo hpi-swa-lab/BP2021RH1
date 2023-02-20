@@ -1,5 +1,6 @@
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Icon } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useLikeMutation } from '../../../../graphql/APIConnector';
 import useStorageState from '../../../../hooks/storage-state.hook';
@@ -58,7 +59,7 @@ const LikeButton = ({ pictureId, likeCount }: { pictureId: string; likeCount: nu
       }}
     >
       <div className={'flex flex-row place-items-center'}>
-        {isLiked ? <Icon>favorite</Icon> : <Icon>favorite_border</Icon>}
+        {isLiked ? <Favorite /> : <FavoriteBorder />}
         <div className={'text-sm m-0'}>{displayedLikeCount}</div>
         <div className={'w-2'} />
         {t('common.like')}

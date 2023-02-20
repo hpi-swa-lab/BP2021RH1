@@ -1,14 +1,15 @@
+import { Close, Done } from '@mui/icons-material';
+import { Dialog } from '@mui/material';
 import { createContext, PropsWithChildren, useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
-import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
-import { Dialog } from '@mui/material';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
+import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
 
 export interface DialogOption {
   name: string;
-  icon?: string;
+  icon?: JSX.Element;
   value: any;
   color?: string;
 }
@@ -65,12 +66,12 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         {
           name: t('common.abort'),
           value: false,
-          icon: 'close',
+          icon: <Close />,
         },
         {
           name: t('common.confirm'),
           value: true,
-          icon: 'done',
+          icon: <Done />,
         },
       ];
     } else if (preset === DialogPreset.INPUT_FIELD) {
@@ -78,12 +79,12 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         {
           name: t('common.abort'),
           value: undefined,
-          icon: 'close',
+          icon: <Close />,
         },
         {
           name: t('common.confirm'),
           value: true,
-          icon: 'done',
+          icon: <Done />,
         },
       ];
     }
