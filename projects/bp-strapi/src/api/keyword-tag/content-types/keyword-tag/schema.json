@@ -37,6 +37,18 @@
     "visible": {
       "type": "boolean",
       "default": false
+    },
+    "child_keywords": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword-tag.keyword-tag",
+      "inversedBy": "parent_keywords"
+    },
+    "parent_keywords": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword-tag.keyword-tag",
+      "inversedBy": "child_keywords"
     }
   }
 }

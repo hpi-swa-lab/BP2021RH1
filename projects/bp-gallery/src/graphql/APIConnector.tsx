@@ -514,13 +514,27 @@ export type JsonFilterInput = {
 };
 
 export type KeywordTag = {
+  child_keywords?: Maybe<KeywordTagRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
+  parent_keywords?: Maybe<KeywordTagRelationResponseCollection>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
   visible?: Maybe<Scalars['Boolean']>;
+};
+
+export type KeywordTagChild_KeywordsArgs = {
+  filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type KeywordTagParent_KeywordsArgs = {
+  filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type KeywordTagPicturesArgs = {
@@ -559,11 +573,13 @@ export type KeywordTagEntityResponseCollection = {
 
 export type KeywordTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
+  child_keywords?: InputMaybe<KeywordTagFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<KeywordTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
+  parent_keywords?: InputMaybe<KeywordTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -572,7 +588,9 @@ export type KeywordTagFiltersInput = {
 };
 
 export type KeywordTagInput = {
+  child_keywords?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   name?: InputMaybe<Scalars['String']>;
+  parent_keywords?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -628,14 +646,28 @@ export type LinkRelationResponseCollection = {
 };
 
 export type LocationTag = {
+  child_locations?: Maybe<LocationTagRelationResponseCollection>;
   coordinates?: Maybe<ComponentLocationCoordinates>;
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
+  parent_locations?: Maybe<LocationTagRelationResponseCollection>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
   visible?: Maybe<Scalars['Boolean']>;
+};
+
+export type LocationTagChild_LocationsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type LocationTagParent_LocationsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type LocationTagPicturesArgs = {
@@ -674,12 +706,14 @@ export type LocationTagEntityResponseCollection = {
 
 export type LocationTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  child_locations?: InputMaybe<LocationTagFiltersInput>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<LocationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  parent_locations?: InputMaybe<LocationTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -688,8 +722,10 @@ export type LocationTagFiltersInput = {
 };
 
 export type LocationTagInput = {
+  child_locations?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
   name?: InputMaybe<Scalars['String']>;
+  parent_locations?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
