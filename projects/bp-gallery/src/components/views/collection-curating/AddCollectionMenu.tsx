@@ -1,12 +1,13 @@
-import { Icon, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import { Add, Link, MoveDown } from '@mui/icons-material';
+import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useCallback } from 'react';
-import { useDialog, DialogPreset } from '../../provider/DialogProvider';
-import { FlatCollection } from '../../../types/additionalFlatTypes';
+import { useTranslation } from 'react-i18next';
 import {
   useCreateSubCollectionMutation,
   useUpdateCollectionMutation,
 } from '../../../graphql/APIConnector';
-import { useTranslation } from 'react-i18next';
+import { FlatCollection } from '../../../types/additionalFlatTypes';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 
 const AddCollectionMenu = ({
   anchorEl,
@@ -85,19 +86,19 @@ const AddCollectionMenu = ({
     <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
       <MenuItem onClick={() => onCreateSubCollection()}>
         <ListItemIcon>
-          <Icon>add</Icon>
+          <Add />
         </ListItemIcon>
         <ListItemText>{t('curator.createCollection')}</ListItemText>
       </MenuItem>
       <MenuItem onClick={() => onLinkOrMoveSubcollection(false)}>
         <ListItemIcon>
-          <Icon>link</Icon>
+          <Link />
         </ListItemIcon>
         <ListItemText>{t('curator.linkCollection')}</ListItemText>
       </MenuItem>
       <MenuItem onClick={() => onLinkOrMoveSubcollection(true)}>
         <ListItemIcon>
-          <Icon>move_down</Icon>
+          <MoveDown />
         </ListItemIcon>
         <ListItemText>{t('curator.moveCollection')}</ListItemText>
       </MenuItem>

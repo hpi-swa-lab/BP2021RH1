@@ -1,5 +1,5 @@
-import { Icon, Menu, MenuItem } from '@mui/material';
-import { CircularProgress } from '@mui/material';
+import { CheckBox, CheckBoxOutlineBlank, Help, Print } from '@mui/icons-material';
+import { CircularProgress, Menu, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -61,7 +61,7 @@ const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
         scan();
       }}
     >
-      {scannerLoading ? <CircularProgress /> : <Icon>print</Icon>}
+      {scannerLoading ? <CircularProgress /> : <Print />}
       <p>{t('curator.scan')}</p>
       <div
         className='scanner-select'
@@ -80,7 +80,7 @@ const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
             toggleAutoCrop();
           }}
         >
-          <Icon>{autoCrop ? 'check_box' : 'check_box_outline_blank'}</Icon>
+          {autoCrop ? <CheckBox /> : <CheckBoxOutlineBlank />}
           {t('curator.autoCrop')}
         </div>
       )}
@@ -106,7 +106,7 @@ const ScannerInput = ({ onScan }: { onScan: (file: File) => void }) => {
         window.open('/scan.service.zip', '_blank');
       }}
     >
-      <Icon>help_circle</Icon>
+      <Help />
       <p style={{ whiteSpace: 'pre-line' }}>{t('curator.noScannerFound')}</p>
     </div>
   );

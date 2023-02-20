@@ -1,9 +1,10 @@
+import { FastForward, FastRewind } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useState } from 'react';
-import './ScrollableItemList.scss';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Icon, IconButton } from '@mui/material';
-import { ItemListItemModel } from './ItemListItem';
 import ItemList from './ItemList';
+import { ItemListItemModel } from './ItemListItem';
+import './ScrollableItemList.scss';
 
 const ScrollableItemList = ({
   items,
@@ -64,7 +65,7 @@ const ScrollableItemList = ({
             scrollElements(-3);
           }}
         >
-          <Icon>fast_rewind</Icon>
+          <FastRewind />
         </IconButton>
         <IconButton
           style={{ visibility: showRightButton ? 'visible' : 'hidden' }}
@@ -72,7 +73,7 @@ const ScrollableItemList = ({
             scrollElements(3);
           }}
         >
-          <Icon>fast_forward</Icon>
+          <FastForward />
         </IconButton>
       </div>
     </div>

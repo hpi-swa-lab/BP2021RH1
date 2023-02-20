@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatDescription } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { Icon, IconButton } from '@mui/material';
+import { Add, Delete } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { isEmpty } from 'lodash';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
-import { useRef } from 'react';
+import { FlatDescription } from '../../../../../types/additionalFlatTypes';
 import TextEditor from '../../../../common/editors/TextEditor';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 
 const DescriptionsEditField = ({
   descriptions,
@@ -105,7 +105,7 @@ const DescriptionsEditField = ({
                   }}
                   className='delete-button'
                 >
-                  <Icon>delete</Icon>
+                  <Delete />
                 </IconButton>
               )}
             </div>
@@ -125,7 +125,7 @@ const DescriptionsEditField = ({
           }}
           className='add-button'
         >
-          <Icon>add</Icon>
+          <Add />
         </IconButton>
       )}
     </>

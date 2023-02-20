@@ -1,11 +1,12 @@
-import { useCallback, useContext, useState } from 'react';
-import './NewCommentForm.scss';
+import { Done, DoneAll } from '@mui/icons-material';
 import { Button, TextField } from '@mui/material';
-import { usePostCommentMutation } from '../../../../../graphql/APIConnector';
+import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePostCommentMutation } from '../../../../../graphql/APIConnector';
 import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
-import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
 import { useDialog } from '../../../../provider/DialogProvider';
+import getCurrentDateTimeString from './helpers/getCurrentDateTimeString';
+import './NewCommentForm.scss';
 
 const NewCommentForm = ({
   pictureId,
@@ -42,13 +43,13 @@ const NewCommentForm = ({
           {
             name: t('common.dontShowAgain'),
             value: true,
-            icon: 'done_all',
+            icon: <DoneAll />,
             color: '#5a5a5a',
           },
           {
             name: t('common.ok'),
             value: false,
-            icon: 'done',
+            icon: <Done />,
           },
         ],
       }).then(shouldNeverShowAgain => {
