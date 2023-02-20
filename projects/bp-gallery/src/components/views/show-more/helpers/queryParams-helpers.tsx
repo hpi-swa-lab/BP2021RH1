@@ -132,7 +132,7 @@ export const getChildTagQueryParams = (
             ],
           };
     }
-    case TagType.KEYWORD:
+    case TagType.LOCATION:
     default: {
       return !archiveId
         ? {
