@@ -1,17 +1,17 @@
-import { Button, CircularProgress, Icon } from '@mui/material';
+import { Close, ExpandCircleDown, Upload } from '@mui/icons-material';
+import { Button, CircularProgress } from '@mui/material';
+import { cloneDeep } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import uploadMediaFiles from './helpers/upload-media-files';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
-import { cloneDeep } from 'lodash';
-import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import { Close } from '@mui/icons-material';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
@@ -108,7 +108,7 @@ const PictureUploadArea = ({
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
           <p>
-            <Icon sx={{ mr: '10px' }}>upload</Icon>
+            <Upload sx={{ mr: '10px' }} />
             {t('curator.uploadHere', { folderName })}
           </p>
         </div>
@@ -143,7 +143,7 @@ const PictureUploadArea = ({
           {loading ? (
             <CircularProgress sx={{ mr: '10px' }} />
           ) : (
-            <Icon sx={{ mr: '10px' }}>expand_circle_down</Icon>
+            <ExpandCircleDown sx={{ mr: '10px' }} />
           )}
           <p>{t('curator.addPictures')}</p>
         </Button>

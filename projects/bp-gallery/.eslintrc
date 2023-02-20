@@ -92,7 +92,7 @@
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "react-refresh/only-export-components": "warn",
     "no-restricted-imports": [
-      "warn",
+      "error",
       {
         "patterns": [
           {
@@ -102,6 +102,11 @@
           {
             "group": ["@mui/material/*", "!@mui/material/styles", "!@mui/material/Tooltip"],
             "message": "Please try to import the module directly from '@mui/material' instead. If that's not possible (e.g. the imported module is not the default export or the module name is different than the import path name), you can ignore this warning or add the import to the no-restricted-imports exceptions in .eslintrc instead."
+          },
+          {
+            "group": ["@mui/material"],
+            "importNames": ["Icon"],
+            "message": "Please avoid using font icons, use a SVG icon instead, e.g. rather than <Icon>delete</Icon>, use <Delete /> from '@mui/icons-material'"
           }
         ]
       }

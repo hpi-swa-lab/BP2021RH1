@@ -1,20 +1,20 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import './PictureGrid.scss';
-import PictureView from '../../views/picture/PictureView';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
-import hashCode from '../../../helpers/hash-code';
-import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
-import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
-import useDeletePicture from '../../../hooks/delete-picture.hook';
-import BulkEditView from '../../views/bulk-edit/BulkEditView';
+import { CheckBox, CheckBoxOutlineBlank, Delete, DoneAll, RemoveDone } from '@mui/icons-material';
+import { Button, Portal } from '@mui/material';
 import { union } from 'lodash';
-import { Button, Icon, Portal } from '@mui/material';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckBox, CheckBoxOutlineBlank, Delete } from '@mui/icons-material';
 import { root } from '../../../helpers/app-helpers';
+import hashCode from '../../../helpers/hash-code';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import useDeletePicture from '../../../hooks/delete-picture.hook';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import BulkEditView from '../../views/bulk-edit/BulkEditView';
+import PictureView from '../../views/picture/PictureView';
+import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
+import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
+import './PictureGrid.scss';
+import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -191,10 +191,10 @@ const PictureGrid = ({
       )}
       {defaultAdornments && (
         <div className='selection-buttons'>
-          <Button onClick={selectAll} startIcon={<Icon>done_all</Icon>} variant='contained'>
+          <Button onClick={selectAll} startIcon={<DoneAll />} variant='contained'>
             {t('curator.selectAll')}
           </Button>
-          <Button onClick={selectNone} startIcon={<Icon>remove_done</Icon>} variant='contained'>
+          <Button onClick={selectNone} startIcon={<RemoveDone />} variant='contained'>
             {t('curator.selectNone')}
           </Button>
         </div>

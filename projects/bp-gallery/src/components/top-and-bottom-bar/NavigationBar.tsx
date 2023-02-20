@@ -1,10 +1,23 @@
-import { Icon, Menu, MenuItem } from '@mui/material';
-import { useEffect, useState, useMemo } from 'react';
-import { NavLink } from 'react-router-dom';
-import './NavigationBar.scss';
+import {
+  Book,
+  Chat,
+  Folder,
+  Login,
+  Logout,
+  Menu as MenuIcon,
+  Person,
+  Place,
+  Search,
+  Sell,
+  Upload,
+} from '@mui/icons-material';
+import { Menu, MenuItem } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import LoginDialog from './LoginDialog';
+import { NavLink } from 'react-router-dom';
 import { AuthRole, useAuth } from '../provider/AuthProvider';
+import LoginDialog from './LoginDialog';
+import './NavigationBar.scss';
 
 const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
@@ -24,32 +37,32 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
     return [
       {
         to: '/uploads-overview',
-        icon: 'upload',
+        icon: <Upload />,
         title: t('curator.uploads'),
       },
       {
         to: '/tags/keywords',
-        icon: 'sell',
+        icon: <Sell />,
         title: t('pictureFields.keywords'),
       },
       {
         to: '/tags/locations',
-        icon: 'place',
+        icon: <Place />,
         title: t('pictureFields.locations'),
       },
       {
         to: '/tags/people',
-        icon: 'person',
+        icon: <Person />,
         title: t('pictureFields.people'),
       },
       {
         to: '/comment-overview',
-        icon: 'chat',
+        icon: <Chat />,
         title: t('common.comments'),
       },
       {
         to: '/collections-overview',
-        icon: 'folder',
+        icon: <Folder />,
         title: t('pictureFields.collections'),
       },
     ];
@@ -59,25 +72,25 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
     <>
       <div className='nav-bar'>
         <NavLink to='/start' className='nav-element'>
-          {isMobile && <Icon>book</Icon>}
+          {isMobile && <Book />}
           <span className='nav-element-title'>{t('common.start')}</span>
         </NavLink>
         <NavLink to='/search' className='nav-element'>
-          {isMobile && <Icon>search</Icon>}
+          {isMobile && <Search />}
           <span className='nav-element-title'>{t('common.search')}</span>
         </NavLink>
         <div
           className='nav-element'
           onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}
         >
-          {isMobile && (role === AuthRole.PUBLIC ? <Icon>login</Icon> : <Icon>logout</Icon>)}
+          {isMobile && (role === AuthRole.PUBLIC ? <Login /> : <Logout />)}
           <span className='nav-element-title'>
             {role === AuthRole.PUBLIC ? t('login.title') : t('login.logout')}
           </span>
         </div>
         {role === AuthRole.CURATOR && (
           <div className='nav-element' onClick={event => setAnchorEl(event.currentTarget)}>
-            <Icon>menu</Icon>
+            <MenuIcon />
             <span className='nav-element-title'>{t('common.more')}</span>
           </div>
         )}
@@ -113,7 +126,7 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
           >
             {curatorItems.map(item => (
               <MenuItem component={NavLink} key={item.to} to={item.to}>
-                <Icon>{item.icon}</Icon>
+                {item.icon}
                 <span className='nav-element-title'>{item.title}</span>
               </MenuItem>
             ))}
