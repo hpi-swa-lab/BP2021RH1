@@ -2702,8 +2702,11 @@ export type PostCommentMutation = {
 };
 
 export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
+  filters?: InputMaybe<KeywordTagFiltersInput>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetKeywordTagsWithThumbnailQuery = {
@@ -2817,8 +2820,11 @@ export type UpdateKeywordSynonymsMutation = {
 };
 
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetLocationTagsWithThumbnailQuery = {
@@ -2956,8 +2962,11 @@ export type UpdateKeywordVisibilityMutation = {
 };
 
 export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
+  filters?: InputMaybe<PersonTagFiltersInput>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
   start?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
 export type GetPersonTagsWithThumbnailQuery = {
@@ -4665,13 +4674,19 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetKeywordTagsWithThumbnailDocument = gql`
-  query getKeywordTagsWithThumbnail($start: Int, $limit: Int) {
-    keywordTags(pagination: { start: $start, limit: $limit }) {
+  query getKeywordTagsWithThumbnail(
+    $filters: KeywordTagFiltersInput = {}
+    $thumbnailFilters: PictureFiltersInput = {}
+    $start: Int
+    $limit: Int
+    $sortBy: [String]
+  ) {
+    keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
       data {
         id
         attributes {
           name
-          thumbnail: pictures(pagination: { limit: 1 }) {
+          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
               attributes {
                 media {
@@ -4684,7 +4699,10 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
               }
             }
           }
-          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          verified_thumbnail: verified_pictures(
+            filters: $thumbnailFilters
+            pagination: { limit: 1 }
+          ) {
             data {
               attributes {
                 media {
@@ -4715,8 +4733,11 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
  * @example
  * const { data, loading, error } = useGetKeywordTagsWithThumbnailQuery({
  *   variables: {
+ *      filters: // value for 'filters'
+ *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
@@ -4934,13 +4955,19 @@ export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetLocationTagsWithThumbnailDocument = gql`
-  query getLocationTagsWithThumbnail($start: Int, $limit: Int) {
-    locationTags(pagination: { start: $start, limit: $limit }) {
+  query getLocationTagsWithThumbnail(
+    $filters: LocationTagFiltersInput = {}
+    $thumbnailFilters: PictureFiltersInput = {}
+    $start: Int
+    $limit: Int
+    $sortBy: [String]
+  ) {
+    locationTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
       data {
         id
         attributes {
           name
-          thumbnail: pictures(pagination: { limit: 1 }) {
+          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
               attributes {
                 media {
@@ -4953,7 +4980,10 @@ export const GetLocationTagsWithThumbnailDocument = gql`
               }
             }
           }
-          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          verified_thumbnail: verified_pictures(
+            filters: $thumbnailFilters
+            pagination: { limit: 1 }
+          ) {
             data {
               attributes {
                 media {
@@ -4984,8 +5014,11 @@ export const GetLocationTagsWithThumbnailDocument = gql`
  * @example
  * const { data, loading, error } = useGetLocationTagsWithThumbnailQuery({
  *   variables: {
+ *      filters: // value for 'filters'
+ *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
@@ -5324,13 +5357,19 @@ export type UpdateKeywordVisibilityMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const GetPersonTagsWithThumbnailDocument = gql`
-  query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
-    personTags(pagination: { start: $start, limit: $limit }) {
+  query getPersonTagsWithThumbnail(
+    $filters: PersonTagFiltersInput = {}
+    $thumbnailFilters: PictureFiltersInput = {}
+    $start: Int
+    $limit: Int
+    $sortBy: [String]
+  ) {
+    personTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
       data {
         id
         attributes {
           name
-          thumbnail: pictures(pagination: { limit: 1 }) {
+          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
               attributes {
                 media {
@@ -5343,7 +5382,10 @@ export const GetPersonTagsWithThumbnailDocument = gql`
               }
             }
           }
-          verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+          verified_thumbnail: verified_pictures(
+            filters: $thumbnailFilters
+            pagination: { limit: 1 }
+          ) {
             data {
               attributes {
                 media {
@@ -5374,8 +5416,11 @@ export const GetPersonTagsWithThumbnailDocument = gql`
  * @example
  * const { data, loading, error } = useGetPersonTagsWithThumbnailQuery({
  *   variables: {
+ *      filters: // value for 'filters'
+ *      thumbnailFilters: // value for 'thumbnailFilters'
  *      start: // value for 'start'
  *      limit: // value for 'limit'
+ *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
@@ -5739,7 +5784,12 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     $filter80s: PictureFiltersInput!
     $filter90s: PictureFiltersInput!
   ) {
-    decade40s: pictures(filters: $filter40s, pagination: { limit: 1 }) {
+    decade40s: pictures(
+      filters: {
+        and: [$filter40s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5752,7 +5802,12 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade50s: pictures(filters: $filter50s, pagination: { limit: 1 }) {
+    decade50s: pictures(
+      filters: {
+        and: [$filter50s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5765,7 +5820,12 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade60s: pictures(filters: $filter60s, pagination: { limit: 1 }) {
+    decade60s: pictures(
+      filters: {
+        and: [$filter60s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5778,7 +5838,12 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade70s: pictures(filters: $filter70s, pagination: { limit: 1 }) {
+    decade70s: pictures(
+      filters: {
+        and: [$filter70s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5791,7 +5856,12 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade80s: pictures(filters: $filter80s, pagination: { limit: 1 }) {
+    decade80s: pictures(
+      filters: {
+        and: [$filter80s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {
@@ -5804,7 +5874,12 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade90s: pictures(filters: $filter90s, pagination: { limit: 1 }) {
+    decade90s: pictures(
+      filters: {
+        and: [$filter90s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+      }
+      pagination: { limit: 1 }
+    ) {
       data {
         attributes {
           media {

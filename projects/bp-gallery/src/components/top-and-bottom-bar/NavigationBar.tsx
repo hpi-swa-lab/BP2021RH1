@@ -66,6 +66,10 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
           {isMobile && <Icon>search</Icon>}
           <span className='nav-element-title'>{t('common.search')}</span>
         </NavLink>
+        <NavLink to='/discover' className='nav-element'>
+          {isMobile && <Icon>import_contacts</Icon>}
+          <span className='nav-element-title'>Stöbern</span>
+        </NavLink>
         <div
           className='nav-element'
           onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}
