@@ -2890,6 +2890,88 @@ export type GetLocationTagsWithThumbnailQuery = {
     | undefined;
 };
 
+export type GetChildLocationsByIdQueryVariables = Exact<{
+  locationID: Scalars['ID'];
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
+}>;
+
+export type GetChildLocationsByIdQuery = {
+  locationTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                child_locations?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?:
+                          | {
+                              name: string;
+                              thumbnail?:
+                                | {
+                                    data: Array<{
+                                      attributes?:
+                                        | {
+                                            media: {
+                                              data?:
+                                                | {
+                                                    attributes?:
+                                                      | { formats?: any | null | undefined }
+                                                      | null
+                                                      | undefined;
+                                                  }
+                                                | null
+                                                | undefined;
+                                            };
+                                          }
+                                        | null
+                                        | undefined;
+                                    }>;
+                                  }
+                                | null
+                                | undefined;
+                              verified_thumbnail?:
+                                | {
+                                    data: Array<{
+                                      attributes?:
+                                        | {
+                                            media: {
+                                              data?:
+                                                | {
+                                                    attributes?:
+                                                      | { formats?: any | null | undefined }
+                                                      | null
+                                                      | undefined;
+                                                  }
+                                                | null
+                                                | undefined;
+                                            };
+                                          }
+                                        | null
+                                        | undefined;
+                                    }>;
+                                  }
+                                | null
+                                | undefined;
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllLocationTagsQuery = {
@@ -5059,6 +5141,114 @@ export type GetLocationTagsWithThumbnailLazyQueryHookResult = ReturnType<
 export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetLocationTagsWithThumbnailQuery,
   GetLocationTagsWithThumbnailQueryVariables
+>;
+
+export const GetChildLocationsByIdDocument = gql`
+  query getChildLocationsById(
+    $locationID: ID!
+    $sortBy: [String]
+    $thumbnailFilters: PictureFiltersInput = {}
+  ) {
+    locationTags(filters: { id: { eq: $locationID } }, sort: $sortBy) {
+      data {
+        id
+        attributes {
+          child_locations(sort: $sortBy) {
+            data {
+              id
+              attributes {
+                name
+                thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
+                  data {
+                    attributes {
+                      media {
+                        data {
+                          attributes {
+                            formats
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                verified_thumbnail: verified_pictures(
+                  filters: $thumbnailFilters
+                  pagination: { limit: 1 }
+                ) {
+                  data {
+                    attributes {
+                      media {
+                        data {
+                          attributes {
+                            formats
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetChildLocationsByIdQuery__
+ *
+ * To run a query within a React component, call `useGetChildLocationsByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChildLocationsByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChildLocationsByIdQuery({
+ *   variables: {
+ *      locationID: // value for 'locationID'
+ *      sortBy: // value for 'sortBy'
+ *      thumbnailFilters: // value for 'thumbnailFilters'
+ *   },
+ * });
+ */
+export function useGetChildLocationsByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetChildLocationsByIdQuery,
+    GetChildLocationsByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetChildLocationsByIdQuery, GetChildLocationsByIdQueryVariables>(
+    GetChildLocationsByIdDocument,
+    options
+  );
+}
+
+export function useGetChildLocationsByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetChildLocationsByIdQuery,
+    GetChildLocationsByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetChildLocationsByIdQuery, GetChildLocationsByIdQueryVariables>(
+    GetChildLocationsByIdDocument,
+    options
+  );
+}
+
+export type GetChildLocationsByIdQueryHookResult = ReturnType<typeof useGetChildLocationsByIdQuery>;
+
+export type GetChildLocationsByIdLazyQueryHookResult = ReturnType<
+  typeof useGetChildLocationsByIdLazyQuery
+>;
+
+export type GetChildLocationsByIdQueryResult = Apollo.QueryResult<
+  GetChildLocationsByIdQuery,
+  GetChildLocationsByIdQueryVariables
 >;
 
 export const GetAllLocationTagsDocument = gql`

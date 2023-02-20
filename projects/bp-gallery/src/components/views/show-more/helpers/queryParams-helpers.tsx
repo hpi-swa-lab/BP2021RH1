@@ -104,3 +104,55 @@ export const getCategoryQueryParams = (archiveId: string | undefined) => {
         ],
       };
 };
+
+export const getChildTagQueryParams = (
+  archiveId: string | undefined,
+  categoryId: string,
+  categoryType: string
+) => {
+  switch (categoryType) {
+    case TagType.KEYWORD: {
+      return !archiveId
+        ? {
+            and: [
+              { verified_pictures: { id: { not: { eq: '-1' } } } },
+              { parent_keywords: { id: { eq: categoryId } } },
+              { id: { not: { eq: '-1' } } },
+            ],
+          }
+        : {
+            and: [
+              { parent_keywords: { id: { eq: categoryId } } },
+              {
+                or: [
+                  { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+                  { pictures: { archive_tag: { id: { eq: archiveId } } } },
+                ],
+              },
+            ],
+          };
+    }
+    case TagType.KEYWORD:
+    default: {
+      return !archiveId
+        ? {
+            and: [
+              { verified_pictures: { id: { not: { eq: '-1' } } } },
+              { parent_locations: { id: { eq: categoryId } } },
+              { id: { not: { eq: '-1' } } },
+            ],
+          }
+        : {
+            and: [
+              { parent_locations: { id: { eq: categoryId } } },
+              {
+                or: [
+                  { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+                  { pictures: { archive_tag: { id: { eq: archiveId } } } },
+                ],
+              },
+            ],
+          };
+    }
+  }
+};

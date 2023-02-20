@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import TagOverview from '../../common/TagOverview';
 import CollectionDescription from '../browse/CollectionDescription';
-import { getCategoryQueryParams } from './helpers/queryParams-helpers';
+import { getCategoryQueryParams, getChildTagQueryParams } from './helpers/queryParams-helpers';
 
 const ShowMoreViewHeader = ({
   archiveId,
@@ -55,6 +55,13 @@ const ShowMoreViewHeader = ({
                 : t('show-more.x0s', { decade: categoryId })
               : flattenedTags[0].name}
           </h2>
+        )}
+        {categoryType !== 'date' && (
+          <TagOverview
+            type={categoryType as TagType}
+            queryParams={getChildTagQueryParams(archiveId, categoryId, categoryType)}
+            archiveId={archiveId}
+          />
         )}
       </div>
     );
