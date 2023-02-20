@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -96,7 +97,7 @@ const PictureGrid = ({
     (id: string) => {
       setTransitioning(true);
       setFocusedPicture(id);
-      window.history.pushState({}, '', `/picture/${id}`);
+      pushHistoryWithoutRouter(`/picture/${id}`);
       zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
         setTransitioning(false);
       });
@@ -131,7 +132,7 @@ const PictureGrid = ({
 
   const navigateToBulkEdit = useCallback(() => {
     setBulkEditPictureIds(selectedPictureIds);
-    window.history.pushState({}, '', `/bulk-edit/${selectedPictureIds.join(',')}`);
+    pushHistoryWithoutRouter(`/bulk-edit/${selectedPictureIds.join(',')}`);
   }, [setBulkEditPictureIds, selectedPictureIds]);
 
   const defaultAdornments =

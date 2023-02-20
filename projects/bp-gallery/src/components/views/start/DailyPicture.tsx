@@ -13,6 +13,7 @@ import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import TextEditor from '../../common/editors/TextEditor';
 import { FolderSpecial, Event } from '@mui/icons-material';
 import { asApiPath } from '../../../helpers/app-helpers';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -52,7 +53,7 @@ const DailyPicture = () => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const navigateToPicture = useCallback(
     async (id: string) => {
-      window.history.pushState({}, '', `/picture/${id}`);
+      pushHistoryWithoutRouter(`/picture/${id}`);
       await zoomIntoPicture(`picture-preview-for-${id}`);
       setIsFocused(true);
     },
