@@ -10,9 +10,10 @@ import PictureView from '../picture/PictureView';
 import { Portal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
-import Editor from '../../common/editor/Editor';
+import TextEditor from '../../common/editors/TextEditor';
 import { FolderSpecial, Event } from '@mui/icons-material';
 import { asApiPath } from '../../../helpers/app-helpers';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -52,7 +53,7 @@ const DailyPicture = () => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const navigateToPicture = useCallback(
     async (id: string) => {
-      window.history.pushState({}, '', `/picture/${id}`);
+      pushHistoryWithoutRouter(`/picture/${id}`);
       await zoomIntoPicture(`picture-preview-for-${id}`);
       setIsFocused(true);
     },
@@ -86,7 +87,7 @@ const DailyPicture = () => {
             <div className={'flex flex-col max-w-4xl'}>
               <p className={'line-clamp-5'}>
                 <h4 className={'text-lg my-1'}>{t('pictureFields.descriptions')}:</h4>
-                <Editor value={description} />
+                <TextEditor value={description} />
               </p>
               <div className={'flex-1'} />
               <div className={'flex items-center gap-2 my-2'}>

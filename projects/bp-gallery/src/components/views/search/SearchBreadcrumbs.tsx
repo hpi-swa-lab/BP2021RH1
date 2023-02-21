@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { getDecadeTranslation } from './helpers/search-translation';
 import { SearchType } from './helpers/search-filters';
 import { asSearchPath } from './helpers/addNewParamToSearchPath';
+import { fromURLSearchParam } from './helpers/url-search-params';
 
 type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];
@@ -49,30 +50,19 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
     }
   };
 
-  const searchParamsIterator = searchParams.entries();
-  let nextParam = searchParamsIterator.next();
-  while (!nextParam.done) {
+  for (const [type, value] of Array.from(searchParams.entries())) {
     searchParamValues.push({
-      type: nextParam.value[0],
-      value: decodeURIComponent(nextParam.value[1]),
+      type: fromURLSearchParam(type),
+      value: decodeURIComponent(value),
     });
-    nextParam = searchParamsIterator.next();
   }
 
   const deleteParam = (deleteType: string, deleteValue: string) => {
     const newSearchParams = new URLSearchParams();
-    const searchParamsIterator = searchParams.entries();
-    let nextParam = searchParamsIterator.next();
-    while (!nextParam.done) {
-      if (
-        !(
-          decodeURIComponent(nextParam.value[1]) === deleteValue &&
-          nextParam.value[0] === deleteType
-        )
-      ) {
-        newSearchParams.append(nextParam.value[0], nextParam.value[1]);
+    for (const [type, value] of Array.from(searchParams.entries())) {
+      if (!(decodeURIComponent(value) === deleteValue && fromURLSearchParam(type) === deleteType)) {
+        newSearchParams.append(type, value);
       }
-      nextParam = searchParamsIterator.next();
     }
     history.push(asSearchPath(newSearchParams), {
       showBack: true,

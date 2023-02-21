@@ -1,7 +1,8 @@
-import { Button, Icon } from '@mui/material';
-import PictureNavigationButtons from './PictureNavigationButtons';
+import { PresentToAll } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
+import PictureNavigationButtons from './PictureNavigationButtons';
 import { PictureToolbar } from './PictureToolbar';
 
 export const PictureViewUI = ({
@@ -31,7 +32,7 @@ export const PictureViewUI = ({
             );
           }}
         >
-          <Icon>present_to_all</Icon>
+          <PresentToAll />
           {t('common.presentationMode')}
         </Button>
       )}

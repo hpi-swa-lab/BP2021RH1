@@ -17,6 +17,7 @@ import ScrollContainer from '../../common/ScrollContainer';
 import NoSearchResultsText from './NoSearchResultsText';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import { isValidYear } from './helpers/addNewParamToSearchPath';
+import { toURLSearchParam } from './helpers/url-search-params';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'
@@ -39,12 +40,17 @@ const SearchView = () => {
     return new URLSearchParams(search);
   }, [search]);
 
-  const isAllSearchActive = useMemo(() => searchParams.has(SearchType.ALL), [searchParams]);
+  const isAllSearchActive = useMemo(
+    () => searchParams.has(toURLSearchParam(SearchType.ALL)),
+    [searchParams]
+  );
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
     if (isAllSearchActive) {
-      const allSearchTerms = searchParams.getAll(SearchType.ALL).map(decodeURIComponent);
+      const allSearchTerms = searchParams
+        .getAll(toURLSearchParam(SearchType.ALL))
+        .map(decodeURIComponent);
       const searchTimes: string[][] = [];
       allSearchTerms.forEach(searchTerm => {
         if (isValidTimeSpecification(searchTerm)) {

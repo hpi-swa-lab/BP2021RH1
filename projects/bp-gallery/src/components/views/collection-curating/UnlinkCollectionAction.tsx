@@ -1,9 +1,10 @@
-import { Icon, Tooltip } from '@mui/material';
+import { Link } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import { useCallback } from 'react';
-import { FlatCollection } from '../../../types/additionalFlatTypes';
-import { useDialog, DialogPreset } from '../../provider/DialogProvider';
-import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
+import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
+import { FlatCollection } from '../../../types/additionalFlatTypes';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 
 const UnlinkCollectionAction = ({
   childCollection,
@@ -64,7 +65,7 @@ const UnlinkCollectionAction = ({
           onUnlinkChildCollection(childCollection);
         }}
       >
-        <Icon>link</Icon>
+        <Link />
         <span>{childCollection.parent_collections?.length}</span>
       </span>
     </Tooltip>

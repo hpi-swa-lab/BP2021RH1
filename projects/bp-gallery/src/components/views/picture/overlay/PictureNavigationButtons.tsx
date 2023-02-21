@@ -1,4 +1,5 @@
-import { Icon, IconButton } from '@mui/material';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { PictureViewContext } from '../PictureView';
 
@@ -33,14 +34,14 @@ const PictureNavigationButtons = () => {
         }
         size='large'
       >
-        <Icon>chevron_left</Icon>
+        <ChevronLeft />
       </IconButton>
       <IconButton
         style={{ visibility: hasNext ? 'visible' : 'hidden' }}
         onClick={navigatePicture ? () => navigatePicture(PictureNavigationTarget.NEXT) : undefined}
         size='large'
       >
-        <Icon>chevron_right</Icon>
+        <ChevronRight />
       </IconButton>
     </div>
   );

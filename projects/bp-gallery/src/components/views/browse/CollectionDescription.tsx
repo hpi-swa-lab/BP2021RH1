@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { sanitize } from 'isomorphic-dompurify';
-import './CollectionDescription.scss';
-import { Icon, IconButton } from '@mui/material';
-import getLineBreaks from '../../../helpers/get-linebreaks';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Editor from '../../common/editor/Editor';
+import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
+import getLineBreaks from '../../../helpers/get-linebreaks';
+import TextEditor from '../../common/editors/TextEditor';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import './CollectionDescription.scss';
 
 const CollectionDescription = ({
   description,
@@ -56,7 +57,11 @@ const CollectionDescription = ({
                 setIsOpen(!isOpen);
               }}
             >
-              <Icon className='icon'>{isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}</Icon>
+              {isOpen ? (
+                <KeyboardArrowUp className='icon' />
+              ) : (
+                <KeyboardArrowDown className='icon' />
+              )}
             </IconButton>
           )}
         </>
@@ -105,7 +110,7 @@ const EditableCollectionDescription = ({
   }, [description, collectionId, updateCollection]);
 
   return (
-    <Editor
+    <TextEditor
       value={description.current}
       extraOptions={extraOptions}
       onBlur={onBlur}
