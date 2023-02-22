@@ -140,25 +140,17 @@
     "links": {
       "pictures": {
         "label": "Verlinkte Bilder",
-        "copy": {
-          "single": "Aktuelles Bild kopieren",
-          "multiple": "Aktuelle Bilder kopieren"
-        },
-        "paste": {
-          "single": "Ein kopiertes Bild einfügen",
-          "multiple": "{{count}} kopierte Bilder einfügen"
-        }
+        "copy_one": "Aktuelles Bild kopieren",
+        "copy_other": "Aktuelle Bilder kopieren",
+        "paste_one": "Ein kopiertes Bild einfügen",
+        "paste_other": "{{count, number}} kopierte Bilder einfügen"
       },
       "texts": {
         "label": "Verlinkte Texte",
-        "copy": {
-          "single": "Aktuellen Text kopieren",
-          "multiple": "Aktuelle Texte kopieren"
-        },
-        "paste": {
-          "single": "Einen kopierten Text einfügen",
-          "multiple": "{{count}} kopierte Texte einfügen"
-        }
+        "copy_one": "Aktuellen Text kopieren",
+        "copy_other": "Aktuelle Texte kopieren",
+        "paste_one": "Einen kopierten Text einfügen",
+        "paste_other": "{{count, number}} kopierte Texte einfügen"
       },
       "remove": "Link entfernen",
       "removeAll": {

@@ -159,11 +159,7 @@ const LinkedInfoField = ({
           variant='contained'
           onClick={copyToClipboard}
         >
-          {t(
-            `pictureFields.links.${pictureType}.copy.${
-              pictureIds.length > 1 ? 'multiple' : 'single'
-            }`
-          )}
+          {t(`pictureFields.links.${pictureType}.copy`, { count: pictureIds.length })}
         </Button>
       )
     );
@@ -229,11 +225,9 @@ const LinkedInfoField = ({
                   onClick={shouldPaste ? pasteFromClipboard : undefined}
                   disabled={isClipboardMixed}
                 >
-                  {clipboardData.pictureIds.length > 1
-                    ? t(`pictureFields.links.${linked.name}.paste.multiple`, {
-                        count: clipboardData.pictureIds.length,
-                      })
-                    : t(`pictureFields.links.${linked.name}.paste.single`)}
+                  {t(`pictureFields.links.${linked.name}.paste`, {
+                    count: clipboardData.pictureIds.length,
+                  })}
                 </Button>
                 {isClipboardMixed && (
                   <HelpTooltip
