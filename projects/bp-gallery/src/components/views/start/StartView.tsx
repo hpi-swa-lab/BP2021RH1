@@ -1,12 +1,12 @@
-import './StartView.scss';
 import { useTranslation } from 'react-i18next';
+import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import ScrollContainer from '../../common/ScrollContainer';
 import BrowseView from '../browse/BrowseView';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
-import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
-import ScrollContainer from '../../common/ScrollContainer';
 import DailyPicture from './DailyPicture';
+import './StartView.scss';
 
 const StartView = () => {
   const { t } = useTranslation();
@@ -22,12 +22,14 @@ const StartView = () => {
           archiveName={archive.name}
           archiveDescription={archive.shortDescription ?? ''}
           archiveId={archive.id}
+          archivePictureCount={archive.pictures?.length ?? 0}
         />
       ) : (
         <ArchiveCardWithoutPicture
           archiveName={archive.name}
           archiveDescription={archive.shortDescription ?? ''}
           archiveId={archive.id}
+          archivePictureCount={archive.pictures?.length ?? 0}
         />
       )}
     </div>
