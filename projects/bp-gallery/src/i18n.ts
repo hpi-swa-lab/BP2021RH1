@@ -5,7 +5,7 @@ import TRANSLATIONS_DE from './shared/locales/de.json';
 i18n
   .use(initReactI18next)
   .init({
-    debug: true,
+    debug: import.meta.env.MODE === 'development',
     fallbackLng: 'de',
     interpolation: {
       escapeValue: false,
