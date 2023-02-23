@@ -1,22 +1,22 @@
+import { Edit, Link, Star } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { History } from 'history';
 import { useTranslation } from 'react-i18next';
+import { Redirect, useHistory } from 'react-router-dom';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
 import { asApiPath } from '../../../helpers/app-helpers';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
 import PicturePreview, {
   PicturePreviewAdornment,
 } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
-import ArchiveInfo from './ArchiveInfo';
-import './ArchiveView.scss';
-import { Redirect, useHistory } from 'react-router-dom';
-import { Button } from '@mui/material';
-import { History } from 'history';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { Star, Edit, Link } from '@mui/icons-material';
 import { FALLBACK_PATH } from './../../routes';
+import './ArchiveView.scss';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -85,7 +85,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           <h1>{archive.name}</h1>
           <div className='archive-data'>
             <div className='archive-info'>
-              <ArchiveInfo description={archive.longDescription ?? ''} />
+              <div className='archive-info-container'>
+                <RichText value={archive.longDescription ?? t('archives.defaultLongDescription')} />
+              </div>
               <div className='archive-socials'>
                 {archive.logo && (
                   <div className='archive-logo-container'>

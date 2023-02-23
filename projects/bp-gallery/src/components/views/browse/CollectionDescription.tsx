@@ -1,11 +1,11 @@
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
-import { sanitize } from 'isomorphic-dompurify';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import getLineBreaks from '../../../helpers/get-linebreaks';
 import TextEditor from '../../common/editors/TextEditor';
+import RichText from '../../common/RichText';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import './CollectionDescription.scss';
 
@@ -41,13 +41,13 @@ const CollectionDescription = ({
       ) : (
         <>
           {description && (
-            <div
+            <RichText
+              value={description}
               className={
                 isOpen || !isDescriptionLong
                   ? 'collection-description open'
                   : 'collection-description closed'
               }
-              dangerouslySetInnerHTML={{ __html: sanitize(description) }}
             />
           )}
           {isDescriptionLong && (
