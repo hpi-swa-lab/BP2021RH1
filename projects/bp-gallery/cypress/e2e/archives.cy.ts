@@ -1,17 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { aliasQuery, aliasMutation } from '../utils/graphql-test-utils';
 import { login, logout } from '../utils/login-utils';
 import { urlIs } from '../utils/url-utils';
-
-beforeEach(() => {
-  cy.intercept('POST', 'http://localhost:9000/graphql', req => {
-    // Queries
-    aliasQuery(req, 'getArchive');
-
-    // Mutations
-    aliasMutation(req, 'updateArchive');
-  });
-});
 
 describe('Archives View', () => {
   before(() => {
@@ -79,8 +68,57 @@ describe('Archives View', () => {
     cy.contains('Test-Link 1 Edit');
     cy.contains('Test-Link 3');
   });
-  it('successfully sets an image as showcase picture when pressing on the star button', () => {
-    cy.get(`[data-testid="StarIcon"]`).first().click();
-    cy.get('.archive-showcase');
+
+  it('successfully sets an image as showcase picture when pressing on the star button via show more for keywords', () => {
+    cy.get('.overview-container:contains(Unsere Kategorien)').contains('Mehr anzeigen').click();
+    cy.get(`[data-testid="StarIcon"]:eq(1)`).click();
+    cy.contains('Zurück').click();
+    cy.get('.archive-showcase #picture-preview-for-4').should('exist');
+  });
+
+  it('successfully sets an image as showcase picture when pressing on the star button via "Unsere Bilder"', () => {
+    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen').click();
+    cy.get(`[data-testid="StarIcon"]:first`).click();
+    cy.contains('Zurück').click();
+    cy.get('.archive-showcase #picture-preview-for-5').should('exist');
+  });
+
+  it('successfully sets an image as showcase picture when pressing on the star button via show more for "Verifiziertes Testschlagwort 2', () => {
+    cy.get('.overview-container:contains(Unsere Kategorien)')
+      .contains('VERIFIZIERTES TESTSCHLAGWORT 2')
+      .click();
+    // make the test run
+    cy.get('.show-more-container').should('contain.text', 'Verifiziertes Testschlagwort 2');
+
+    cy.get(`[data-testid="StarIcon"]:eq(1)`).click();
+    cy.contains('Zurück').click();
+    cy.get('.archive-showcase #picture-preview-for-2').should('exist');
+  });
+
+  it('shows "Unsere Bilder" picture overview', () => {
+    // check for basic components (title, show more button)
+    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen');
+
+    // check if it contains rows with images
+    cy.get(
+      '.overview-container:first .overview-picture-grid-container div .picture-grid .row:has(.picture-preview)'
+    ).should('exist');
+
+    // check if contains at most 2 rows of images or 2 and one empty row
+    cy.get(
+      '.overview-container:first .overview-picture-grid-container div .picture-grid .row:has(.picture-preview)'
+    ).should('have.length.lte', 2);
+  });
+
+  it('shows "Unsere Kategorien" picture overview', () => {
+    // check for basic components (title, show more button)
+    cy.get('.overview-container:contains(Unsere Kategorien)').contains('Mehr anzeigen');
+
+    // check if it contains first 6 verified keywords
+    for (const num of [2, 3, 4, 5, 6, 7]) {
+      cy.get(
+        '.overview-container:contains(Unsere Kategorien) .overview-collection-grid-container .items'
+      ).should('contain.text', `VERIFIZIERTES TESTSCHLAGWORT ${num}`);
+    }
   });
 });
