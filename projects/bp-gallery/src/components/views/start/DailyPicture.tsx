@@ -1,18 +1,15 @@
+import { Event, FolderSpecial } from '@mui/icons-material';
+import { Card, Portal } from '@mui/material';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { Card, Portal } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { formatTimeStamp } from '../../../helpers/format-timestamp';
-import RichText from './../../common/RichText';
-import { FolderSpecial, Event } from '@mui/icons-material';
 import { asApiPath } from '../../../helpers/app-helpers';
-<<<<<<< HEAD
-import PictureView from '../picture/PictureView';
-=======
+import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
->>>>>>> c3d13e7 (268 track non page load movements with matomo (#269))
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import PictureView from '../picture/PictureView';
+import RichText from './../../common/RichText';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -74,12 +71,7 @@ const DailyPicture = () => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const navigateToPicture = useCallback(
     async (id: string) => {
-<<<<<<< HEAD
-      window.history.pushState({}, '', `/picture/${id}`);
-=======
       pushHistoryWithoutRouter(`/picture/${id}`);
-      await zoomIntoPicture(`picture-preview-for-${id}`);
->>>>>>> c3d13e7 (268 track non page load movements with matomo (#269))
       setIsFocused(true);
     },
     [setIsFocused]

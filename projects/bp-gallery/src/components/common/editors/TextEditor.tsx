@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { sanitize } from 'isomorphic-dompurify';
 import JoditEditor, { Jodit } from 'jodit-react';
-import { addPlugins } from './helpers/jodit-plugins';
+import { useMemo } from 'react';
 import defaultConfig from './helpers/jodit-config';
+import { addPlugins } from './helpers/jodit-plugins';
 
 export interface TextEditorProps {
   value: string;
@@ -19,7 +20,14 @@ addPlugins();
 const TextEditor = ({ value, extraOptions, onChange, onBlur }: TextEditorProps) => {
   const config = useMemo(() => ({ ...defaultConfig, ...extraOptions }), [extraOptions]);
 
-  return <JoditEditor value={value} config={config} onChange={onChange} onBlur={onBlur} />;
+  return (
+    <JoditEditor
+      value={value}
+      config={config}
+      onChange={newValue => onChange?.(sanitize(newValue))}
+      onBlur={newValue => onBlur?.(sanitize(newValue))}
+    />
+  );
 };
 
 export default TextEditor;
