@@ -1,19 +1,17 @@
-import { Edit, Link, Star } from '@mui/icons-material';
+import { Edit, Link } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory } from 'react-router-dom';
-import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
+import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
-import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
-import PicturePreview, {
-  PicturePreviewAdornment,
-} from '../../common/picture-gallery/PicturePreview';
-import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
+import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import PictureOverview from '../../common/PictureOverview';
 import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
+import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FALLBACK_PATH } from './../../routes';
 import './ArchiveView.scss';
@@ -23,39 +21,15 @@ interface ArchiveViewProps {
 }
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
-  const { t } = useTranslation();
   const history: History = useHistory();
   const { role } = useAuth();
+  const { t } = useTranslation();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
-  const [updateArchive] = useUpdateArchiveMutation({
-    refetchQueries: ['getArchive'],
-  });
-
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
   const src = archive?.logo?.formats?.thumbnail.url ?? '';
-
-  const showcaseAdornment: PicturePreviewAdornment = {
-    position: 'top-left',
-    icon: picture =>
-      picture.id === archive?.showcasePicture?.id ? <Star className='star-selected' /> : <Star />,
-    title: t('pictureAdornments.showcase'),
-    onClick: picture => {
-      if (showcasePicture?.id === picture.id) return;
-      updateArchive({
-        variables: {
-          archiveId,
-          data: {
-            showcasePicture: picture.id,
-          },
-        },
-      });
-    },
-  };
-
-  const { bulkEdit } = useBulkOperations();
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -124,13 +98,33 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             )}
           </div>
 
-          <PictureScrollGrid
+          <PictureOverview
+            title='Unsere Bilder'
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            scrollPos={scrollPos}
-            scrollHeight={scrollHeight}
-            hashbase={'archive'}
-            extraAdornments={role >= AuthRole.CURATOR ? [showcaseAdornment] : []}
-            bulkOperations={[bulkEdit]}
+            onClick={() => {
+              history.push('/archives/' + archiveId + '/show-more/pictures', {
+                showBack: true,
+              });
+            }}
+          />
+
+          <TagOverview
+            title='Unsere Kategorien'
+            type={TagType.KEYWORD}
+            onClick={() => {
+              history.push('/archives/' + archiveId + '/show-more/keyword', {
+                showBack: true,
+              });
+            }}
+            rows={2}
+            queryParams={{
+              and: [
+                { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+                { visible: { eq: true } },
+              ],
+            }}
+            thumbnailQueryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            archiveId={archiveId}
           />
         </div>
       )}

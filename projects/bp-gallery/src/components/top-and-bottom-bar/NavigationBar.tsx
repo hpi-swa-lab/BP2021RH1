@@ -2,6 +2,7 @@ import {
   Book,
   Chat,
   Folder,
+  ImportContacts,
   Login,
   Logout,
   Menu as MenuIcon,
@@ -78,6 +79,10 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
         <NavLink to='/search' className='nav-element'>
           {isMobile && <Search />}
           <span className='nav-element-title'>{t('common.search')}</span>
+        </NavLink>
+        <NavLink to='/discover' className='nav-element'>
+          {isMobile && <ImportContacts />}
+          <span className='nav-element-title'>Stöbern</span>
         </NavLink>
         <div
           className='nav-element'

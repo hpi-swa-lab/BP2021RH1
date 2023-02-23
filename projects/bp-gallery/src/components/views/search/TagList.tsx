@@ -6,27 +6,48 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Loading from '../../common/Loading';
 import ScrollableItemList from '../../common/ScrollableItemList';
 import { asApiPath } from '../../../helpers/app-helpers';
-import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import { SearchType } from './helpers/search-filters';
+import ItemList from '../../common/ItemList';
+import {
+  KeywordTagFiltersInput,
+  LocationTagFiltersInput,
+  PersonTagFiltersInput,
+  PictureFiltersInput,
+} from '../../../graphql/APIConnector';
+import useGetTagsWithThumbnail from '../../../hooks/get-tags-with-thumbnail.hook';
 
-const TagList = ({ type }: { type: TagType }) => {
+const TagList = ({
+  type,
+  scroll = true,
+  onClickBasePath,
+  currentItemAmount,
+  queryParams,
+  thumbnailQueryParams,
+}: {
+  type: TagType;
+  scroll?: boolean;
+  onClickBasePath?: string;
+  currentItemAmount?: number;
+  queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
+  thumbnailQueryParams?: PictureFiltersInput;
+}) => {
   const history: History = useHistory();
   const { t } = useTranslation();
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
 
-  const { tagsWithThumbnailQuery } = useGenericTagEndpoints(type);
-
-  const { data, loading, error, fetchMore } = tagsWithThumbnailQuery({
-    variables: {
-      start: 0,
-      limit: 30,
-    },
-  });
+  const { data, loading, error, fetchMore } = useGetTagsWithThumbnail(
+    queryParams,
+    thumbnailQueryParams,
+    false,
+    type,
+    ['name:asc'],
+    currentItemAmount ?? 30
+  );
 
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened
@@ -52,29 +73,52 @@ const TagList = ({ type }: { type: TagType }) => {
   } else if (loading) {
     return <Loading />;
   } else if (flattenedTags?.length) {
-    return (
-      <ScrollableItemList
-        compact={true}
-        fetchMoreOnScroll={fetchMoreOnScroll}
-        items={flattenedTags.map(tag => ({
-          name: tag.name,
-          background: tag.thumbnail.length
-            ? asApiPath(
-                String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-              )
-            : DEFAULT_THUMBNAIL_URL,
-          onClick: () => {
-            const { searchPath } = addNewParamToSearchPath(
-              useAdvancedSearch ? type : SearchType.ALL,
-              encodeURIComponent(tag.name)
-            );
-            history.push(searchPath, {
-              showBack: true,
-            });
-          },
-        }))}
-      />
-    );
+    if (scroll) {
+      return (
+        <ScrollableItemList
+          compact={true}
+          fetchMoreOnScroll={fetchMoreOnScroll}
+          items={flattenedTags.map(tag => ({
+            name: tag.name,
+            background: tag.thumbnail.length
+              ? asApiPath(
+                  String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
+                )
+              : DEFAULT_THUMBNAIL_URL,
+            onClick: () => {
+              const { searchPath } = addNewParamToSearchPath(
+                useAdvancedSearch ? type : SearchType.ALL,
+                encodeURIComponent(tag.name)
+              );
+              history.push(searchPath, {
+                showBack: true,
+              });
+            },
+          }))}
+        />
+      );
+    } else if (onClickBasePath) {
+      return (
+        <ItemList
+          items={(currentItemAmount
+            ? flattenedTags.slice(0, currentItemAmount)
+            : flattenedTags
+          ).map(tag => ({
+            name: tag.name,
+            background: tag.thumbnail.length
+              ? asApiPath(
+                  String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
+                )
+              : DEFAULT_THUMBNAIL_URL,
+            onClick: () => {
+              history.push(onClickBasePath + tag.id, {
+                showBack: true,
+              });
+            },
+          }))}
+        />
+      );
+    } else return <div>{t('something-went-wrong')}</div>;
   } else return <div>{t('something-went-wrong')}</div>;
 };
 
