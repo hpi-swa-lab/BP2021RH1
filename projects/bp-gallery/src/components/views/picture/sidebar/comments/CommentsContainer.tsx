@@ -80,7 +80,7 @@ const CommentsContainer = memo(function CommentsContainer({
             {t('common.comments')}
           </div>
         </div>
-        <ExpandMore />
+        <ExpandMore className='expand-button' />
       </div>
       <div className='comment-container'>
         {sortedComments()?.map((comment: FlatComment) => (
