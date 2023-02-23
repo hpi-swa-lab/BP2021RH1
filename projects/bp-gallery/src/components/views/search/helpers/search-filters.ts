@@ -92,7 +92,10 @@ const searchYear = (searchParams: URLSearchParams, filters: PictureFiltersInput)
   });
 };
 
-export const buildDecadeFilter = (decade: string) => {
+export const buildDecadeFilter = (
+  decade: string,
+  thumbnailQueryParams: PictureFiltersInput = {}
+) => {
   let startTime: string, endTime: string;
   const year = parseInt(decade);
   if (!isNaN(year)) {
@@ -106,12 +109,17 @@ export const buildDecadeFilter = (decade: string) => {
     const time_range_tag_filter = buildTimeRangeFilter(startTime, endTime);
 
     return {
-      or: [
+      and: [
+        thumbnailQueryParams,
         {
-          time_range_tag: time_range_tag_filter,
-        },
-        {
-          verified_time_range_tag: time_range_tag_filter,
+          or: [
+            {
+              time_range_tag: time_range_tag_filter,
+            },
+            {
+              verified_time_range_tag: time_range_tag_filter,
+            },
+          ],
         },
       ],
     } as PictureFiltersInput;

@@ -318,5 +318,25 @@
     "media-upload-p3-3": ". Bei begründeten Hinweisen werden die Medien umgehend entfernt.",
     "liability-transfer-title": "Haftungsfreistellung",
     "liability-transfer-p1": "Nutzer stellen Harz-History von sämtlichen Ansprüchen frei, die Dritte gegenüber Harz-History geltend machen aufgrund einer Verletzung ihrer Rechte durch vom Teilnehmern/private Nutzer eingestellte Inhalte.  Die Teilnehmer/private Nutzer tragen im Fall der Fälle die Kosten einschließlich sämtlicher Gerichts- und Anwaltskosten in gesetzlicher Höhe. "
+  },
+  "show-more": {
+    "x0s": "19{{ decade }}0er",
+    "pictures-title": "Unsere Bilder",
+    "pictures-text": "Hier finden Sie alle Bilder unseres Archivs",
+    "date-title": "Jahrzehnte",
+    "date-text": "Hier finden Sie alle Bilder unseres Archivs aus den bestimmten Jahrzehnten.",
+    "keyword-title": "Unsere Kategorien",
+    "keyword-text": "Hier finden Sie alle thematischen Kategorien unseres Archivs",
+    "person-title": "Personen",
+    "person-text": "Hier finden Sie alle Personen unseres Archiv",
+    "location-title": "Orte",
+    "location-text": "Hier finden Sie alle Orte unseres Archivs"
+  },
+  "discover": {
+    "our-pictures": "Unsere Bilder",
+    "decades": "Jahrzehnte",
+    "locations": "Orte",
+    "more-info": "Wissen Sie mehr über diese Bilder?",
+    "our-categories": "Unsere Kategorien"
   }
 }
