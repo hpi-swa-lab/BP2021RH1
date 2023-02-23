@@ -1,5 +1,5 @@
-import ReactHtmlParser from 'react-html-parser';
 import { sanitize } from 'isomorphic-dompurify';
+import ReactHtmlParser from 'react-html-parser';
 
 type RichTextProps = {
   value: string;
@@ -7,7 +7,6 @@ type RichTextProps = {
 };
 
 const RichText = ({ value, className }: RichTextProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   return <div className={className}>{ReactHtmlParser(sanitize(value))}</div>;
 };
 
