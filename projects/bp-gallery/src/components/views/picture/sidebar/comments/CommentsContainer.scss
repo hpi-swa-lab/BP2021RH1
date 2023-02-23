@@ -8,7 +8,7 @@
     max-height: 3.5rem;
     overflow: hidden;
 
-    .picture-comments-header .MuiSvgIcon-root {
+    .picture-comments-header .expand-button {
       transform: rotate(180deg);
     }
   }
@@ -16,7 +16,7 @@
   @media only screen and (max-width: $mobile-breakpoint) {
     max-height: unset !important;
 
-    .picture-comments-header .MuiSvgIcon-root {
+    .picture-comments-header .expand-button {
       display: none;
     }
 
