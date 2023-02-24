@@ -4,12 +4,12 @@ import { Card, Portal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import RichText from './../../common/RichText';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { asApiPath } from '../../../helpers/app-helpers';
 import PictureView from '../picture/PictureView';
-import { pushHistoryWithoutRouter } from '../../../helpers/history';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
