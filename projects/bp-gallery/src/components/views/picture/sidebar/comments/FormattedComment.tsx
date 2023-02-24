@@ -1,29 +1,30 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
-import './FormattedComment.scss';
-import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { Button } from '@mui/material';
 import {
-  Delete,
   Close,
+  Delete,
   Edit,
   ExpandLess,
   ExpandMore,
-  QuestionAnswer,
   PushPin,
+  QuestionAnswer,
 } from '@mui/icons-material';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { Button } from '@mui/material';
+import dayjs from 'dayjs';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   useDeclineCommentMutation,
   useFixCommentTextMutation,
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
+import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import TextEditor from '../../../../common/editors/TextEditor';
-import NewCommentForm from './NewCommentForm';
-import CommentVerification from './CommentVerification';
+import RichText from '../../../../common/RichText';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import CommentVerification from './CommentVerification';
+import './FormattedComment.scss';
+import NewCommentForm from './NewCommentForm';
 
 interface CommentAction {
   text: string;
@@ -178,7 +179,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
           </div>
         ) : (
           <div className={`comment-text ${isOpen ? 'open' : ''} ${isLong ? 'long' : ''} mt-1`}>
-            <CommentEditField comment={comment} readOnly />
+            <RichText value={comment.text} />
           </div>
         )}
         {isLong && !edit && (
