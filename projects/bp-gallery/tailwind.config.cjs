@@ -8,6 +8,9 @@ module.exports = {
     extend: {
       height: {
         '50vh': '50vh'
+      },
+      lineClamp: {
+        10: '10'
       }
     },
     fontFamily: {
