@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 import { Event, FolderSpecial } from '@mui/icons-material';
 import { Card, Portal } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import RichText from './../../common/RichText';
-import { useTranslation } from 'react-i18next';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { asApiPath } from '../../../helpers/app-helpers';
 import PictureView from '../picture/PictureView';
@@ -95,7 +95,7 @@ const DailyPicture = () => {
             <div className='p-4 flex flex-col'>
               <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
               <div className={'line-clamp-5'}>
-                <h4 className={'text-lg my-1'}>{t('pictureFields.descriptions')}:</h4>
+                <h4 className={'text-lg my-1'}>{t('common.description')}:</h4>
                 <RichText value={description} />
               </div>
               <div className={'flex-1'} />
@@ -107,7 +107,7 @@ const DailyPicture = () => {
               </div>
             </div>
             <img
-              className={'w-screen sm:w-auto sm:h-96'}
+              className={'w-screen sm:w-auto sm:h-96 cursor-pointer'}
               id='daily-picture'
               src={pictureLink}
               alt={t('common.daily-picture')}

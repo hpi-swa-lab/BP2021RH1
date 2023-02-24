@@ -84,7 +84,8 @@
     "login": "Login",
     "logout": "Logout",
     "like": "Mag ich",
-    "daily-picture": "Bild des Tages"
+    "daily-picture": "Bild des Tages",
+    "description": "Beschreibung"
   },
   "comment": {
     "name": "Name",
