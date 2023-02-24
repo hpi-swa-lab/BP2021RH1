@@ -19,10 +19,21 @@ import {
 import { getDecadeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
+import ItemList from '../../common/ItemList';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 
-const DecadesList = () => {
+const DecadesList = ({
+  scroll = true,
+  onClickBasePath,
+  thumbnailQueryParams,
+  currentItemAmount,
+}: {
+  scroll?: boolean;
+  onClickBasePath?: string;
+  thumbnailQueryParams?: PictureFiltersInput;
+  currentItemAmount?: number;
+}) => {
   const { t } = useTranslation();
   const history: History = useHistory();
 
@@ -30,7 +41,7 @@ const DecadesList = () => {
   const decadeToFilter: { [key: string]: PictureFiltersInput | undefined } = {};
   DECADES.forEach(decade => {
     const decadeName = `filter${decade}0s`;
-    decadeToFilter[decadeName] = buildDecadeFilter(decade);
+    decadeToFilter[decadeName] = buildDecadeFilter(decade, thumbnailQueryParams);
   });
   const { data, loading, error } = useGetDecadePreviewThumbnailsQuery({
     // @ts-ignore
@@ -38,37 +49,67 @@ const DecadesList = () => {
   });
   const decadeThumbnails: FlatDecadeThumbnails | undefined = useSimplifiedQueryResponseData(data);
 
+  const getDecadeDisplay = (decadeKey: string) => {
+    if (!decadeThumbnails) {
+      return;
+    }
+    const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
+    const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
+    const displayedName = getDecadeTranslation(t, decadeKey);
+    return {
+      name: displayedName,
+      background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+    };
+  };
+
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
   } else if (decadeThumbnails) {
-    return (
-      <ScrollableItemList
-        compact={true}
-        items={DECADES.map((decadeKey: string) => {
-          const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-          const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
-          const displayedName = getDecadeTranslation(t, decadeKey);
-          return {
-            name: displayedName,
-            background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
-            onClick: () => {
-              const { searchPath } = useAdvancedSearch
-                ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
-                : addNewParamToSearchPath(
-                    SearchType.ALL,
-                    getDecadeSearchTermForAllSearch(decadeKey)
-                  );
+    if (scroll) {
+      return (
+        <ScrollableItemList
+          compact={true}
+          items={DECADES.map((decadeKey: string) => {
+            return {
+              ...getDecadeDisplay(decadeKey)!,
+              onClick: () => {
+                const { searchPath } = useAdvancedSearch
+                  ? addNewParamToSearchPath(SearchType.DECADE, decadeKey)
+                  : addNewParamToSearchPath(
+                      SearchType.ALL,
+                      getDecadeSearchTermForAllSearch(decadeKey)
+                    );
 
-              history.push(searchPath, {
-                showBack: true,
-              });
-            },
-          };
-        })}
-      />
-    );
+                history.push(searchPath, {
+                  showBack: true,
+                });
+              },
+            };
+          })}
+        />
+      );
+    } else if (onClickBasePath) {
+      return (
+        <ItemList
+          items={(currentItemAmount ? DECADES.slice(0, currentItemAmount) : DECADES).map(
+            (decadeKey: string) => {
+              return {
+                ...getDecadeDisplay(decadeKey)!,
+                onClick: () => {
+                  if (onClickBasePath) {
+                    history.push(onClickBasePath + decadeKey, {
+                      showBack: true,
+                    });
+                  }
+                },
+              };
+            }
+          )}
+        />
+      );
+    } else return <div>{t('something-went-wrong')}</div>;
   } else return <div>{t('something-went-wrong')}</div>;
 };
 

@@ -1,0 +1,36 @@
+@import 'src/shared/style';
+
+.overview-container {
+  display: flex;
+  flex-direction: column;
+  .overview-title {
+    margin: 2rem 0 0.75rem 0;
+  }
+
+  .overview-picture-grid-container {
+    margin-top: 0rem;
+    height: fit-content;
+
+    .picture-grid {
+      margin-top: 0rem;
+    }
+  }
+
+  .overview-collection-grid-container {
+    margin: 0 0 1rem 0;
+    height: fit-content;
+  }
+
+  .overview-show-more-button {
+    background-color: $primaryColor;
+    color: #ffffff;
+    margin-top: 0.5rem;
+    width: fit-content;
+    padding-inline: 1rem;
+    align-self: center;
+  }
+
+  .overview-show-more-button:hover {
+    background-color: #1565c0;
+  }
+}

@@ -1,10 +1,11 @@
-import { Button, Icon } from '@mui/material';
-import { useHistory, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { ArrowBack } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { History, Location } from 'history';
-import './TopBar.scss';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from 'react-router-dom';
 import SearchBar from '../views/search/SearchBar';
 import NavigationBar from './NavigationBar';
+import './TopBar.scss';
 
 type LocationProps = {
   state?: {
@@ -28,7 +29,7 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
                 history.go(-1);
               }}
             >
-              <Icon>arrow_back</Icon>
+              <ArrowBack />
               {t('common.back')}
             </Button>
           </div>

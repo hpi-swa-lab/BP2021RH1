@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatDescription } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { Icon, IconButton } from '@mui/material';
+import { Add, Delete } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { isEmpty } from 'lodash';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
-import { useRef } from 'react';
-import Editor from '../../../../common/editor/Editor';
+import { FlatDescription } from '../../../../../types/additionalFlatTypes';
+import TextEditor from '../../../../common/editors/TextEditor';
+import RichText from '../../../../common/RichText';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 
 const DescriptionsEditField = ({
   descriptions,
@@ -25,13 +26,6 @@ const DescriptionsEditField = ({
   useEffect(() => {
     setDescriptionState([...descriptions]);
   }, [setDescriptionState, descriptions]);
-
-  const extraOptions = useMemo(
-    () => ({
-      readonly: role < AuthRole.CURATOR,
-    }),
-    [role]
-  );
 
   // This solution is necessary because of this jodit issue:
   // https://github.com/jodit/jodit-react/issues/101
@@ -80,12 +74,15 @@ const DescriptionsEditField = ({
             key={isEmpty(description.id) ? `new-description-${index}` : description.id}
           >
             <div className='description-content'>
-              <Editor
-                value={description.text}
-                extraOptions={extraOptions}
-                onBlur={newText => onBlurRef.current(newText, description)}
-                onChange={newText => onChangeRef.current(newText, description)}
-              />
+              {role >= AuthRole.CURATOR ? (
+                <TextEditor
+                  value={description.text}
+                  onBlur={newText => onBlurRef.current(newText, description)}
+                  onChange={newText => onChangeRef.current(newText, description)}
+                />
+              ) : (
+                <RichText className='break-all' value={description.text} />
+              )}
             </div>
             <div>
               {role >= AuthRole.CURATOR && (
@@ -105,7 +102,7 @@ const DescriptionsEditField = ({
                   }}
                   className='delete-button'
                 >
-                  <Icon>delete</Icon>
+                  <Delete />
                 </IconButton>
               )}
             </div>
@@ -125,7 +122,7 @@ const DescriptionsEditField = ({
           }}
           className='add-button'
         >
-          <Icon>add</Icon>
+          <Add />
         </IconButton>
       )}
     </>
