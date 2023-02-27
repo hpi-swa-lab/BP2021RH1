@@ -131,6 +131,8 @@ export interface FlatTag {
   name: string;
   synonyms?: (ComponentCommonSynonyms | undefined)[];
   visible?: boolean;
+  parent_tag?: FlatTag;
+  child_tags?: FlatTag[];
 }
 
 export enum TagType {

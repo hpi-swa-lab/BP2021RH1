@@ -7186,7 +7186,7 @@
             "defaultValue": null
           },
           {
-            "name": "child_keywords",
+            "name": "parent_keyword",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -7196,7 +7196,7 @@
             "defaultValue": null
           },
           {
-            "name": "parent_keywords",
+            "name": "child_keywords",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -7337,21 +7337,17 @@
             "defaultValue": null
           },
           {
-            "name": "child_keywords",
+            "name": "parent_keyword",
             "description": null,
             "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "ID",
+              "ofType": null
             },
             "defaultValue": null
           },
           {
-            "name": "parent_keywords",
+            "name": "child_keywords",
             "description": null,
             "type": {
               "kind": "LIST",
@@ -7568,54 +7564,19 @@
             "deprecationReason": null
           },
           {
-            "name": "child_keywords",
+            "name": "parent_keyword",
             "description": null,
-            "args": [
-              {
-                "name": "filters",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "KeywordTagFiltersInput",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "pagination",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "PaginationArg",
-                  "ofType": null
-                },
-                "defaultValue": "{}"
-              },
-              {
-                "name": "sort",
-                "description": null,
-                "type": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": "[]"
-              }
-            ],
+            "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "KeywordTagRelationResponseCollection",
+              "name": "KeywordTagEntityResponse",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "parent_keywords",
+            "name": "child_keywords",
             "description": null,
             "args": [
               {
@@ -8281,7 +8242,7 @@
             "defaultValue": null
           },
           {
-            "name": "child_locations",
+            "name": "parent_tag",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -8291,7 +8252,7 @@
             "defaultValue": null
           },
           {
-            "name": "parent_locations",
+            "name": "child_tags",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -8442,21 +8403,17 @@
             "defaultValue": null
           },
           {
-            "name": "child_locations",
+            "name": "parent_tag",
             "description": null,
             "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "ID",
+              "ofType": null
             },
             "defaultValue": null
           },
           {
-            "name": "parent_locations",
+            "name": "child_tags",
             "description": null,
             "type": {
               "kind": "LIST",
@@ -8685,54 +8642,19 @@
             "deprecationReason": null
           },
           {
-            "name": "child_locations",
+            "name": "parent_tag",
             "description": null,
-            "args": [
-              {
-                "name": "filters",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "LocationTagFiltersInput",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "pagination",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "PaginationArg",
-                  "ofType": null
-                },
-                "defaultValue": "{}"
-              },
-              {
-                "name": "sort",
-                "description": null,
-                "type": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": "[]"
-              }
-            ],
+            "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "LocationTagRelationResponseCollection",
+              "name": "LocationTagEntityResponse",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "parent_locations",
+            "name": "child_tags",
             "description": null,
             "args": [
               {

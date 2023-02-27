@@ -1,0 +1,145 @@
+@import 'src/shared/style';
+
+hr {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.location-column-110 {
+  min-width: 110px;
+}
+
+.location-column-250 {
+  min-width: 250px;
+}
+
+.location-column-750 {
+  min-width: 750px;
+}
+
+.location-header-container {
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+
+  .location-header-name {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+
+  .location-header-edit {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: 0;
+    border-left: 2px solid darkgrey;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+
+  .location-header-detach {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 0;
+    border-left: 2px solid darkgrey;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+
+  .location-header-relocate {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 0;
+    border-left: 2px solid darkgrey;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+
+  .location-header-synonyms {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: 0;
+    border-left: 2px solid darkgrey;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+
+  .location-header-is-visible {
+    margin: auto 0 auto 0;
+    border-left: 2px solid darkgrey;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+
+  .location-header-delete {
+    margin-top: auto;
+    margin-bottom: auto;
+    border-left: 2px solid darkgrey;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+}
+
+.location-entry-container {
+  .location-entry-content {
+    display: flex;
+    flex-direction: row;
+
+    .is-visible-checkbox-container {
+      box-sizing: border-box;
+    }
+
+    .delete-button {
+      box-sizing: border-box;
+    }
+
+    .location-name {
+      margin: auto 0 auto 8px;
+    }
+
+    .location-synonyms {
+      margin-left: auto;
+      margin-right: 0;
+      display: flex;
+      flex-direction: row;
+
+      .location-synonym {
+        margin: auto 4px auto 4px;
+      }
+    }
+  }
+}
+
+.add-tag-container {
+  display: flex;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  background-color: lightgray;
+
+  .add-tag-icon {
+    color: $archiveColor;
+  }
+
+  .add-tag-text {
+    margin-top: auto;
+    margin-bottom: auto;
+    color: $archiveColor;
+  }
+}
+
+.location-branch-container {
+  .sub-location-container {
+    padding-left: 16px;
+  }
+}

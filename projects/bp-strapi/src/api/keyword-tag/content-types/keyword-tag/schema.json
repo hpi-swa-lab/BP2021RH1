@@ -38,17 +38,17 @@
       "type": "boolean",
       "default": false
     },
-    "child_keywords": {
+    "parent_keyword": {
       "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::keyword-tag.keyword-tag",
-      "inversedBy": "parent_keywords"
-    },
-    "parent_keywords": {
-      "type": "relation",
-      "relation": "manyToMany",
+      "relation": "manyToOne",
       "target": "api::keyword-tag.keyword-tag",
       "inversedBy": "child_keywords"
+    },
+    "child_keywords": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::keyword-tag.keyword-tag",
+      "mappedBy": "parent_keyword"
     }
   }
 }

@@ -1,0 +1,215 @@
+import { ChevronRight, Delete, Edit, Eject, ExpandMore, MoveDown } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  useGetChildLocationsByIdQuery,
+  useGetLocationTagByIdQuery,
+  useUpdateLocationNameMutation,
+  useUpdateLocationParentMutation,
+} from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
+import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import Checkbox from './Checkbox';
+import { useDeleteSingleTag, useDeleteTagAndChildren } from './delete-tag-helpers';
+import './LocationEntry.scss';
+
+const LocationEntry = ({
+  locationTag,
+  showMore,
+  onToggle,
+  refetch,
+}: {
+  locationTag: FlatTag;
+  showMore: boolean;
+  onToggle: () => void;
+  refetch: () => void;
+}) => {
+  const { t } = useTranslation();
+  const prompt = useDialog();
+
+  const {
+    allTagsQuery,
+    allParentTagsQuery,
+    updateTagNameMutationSource,
+    updateSynonymsMutationSource,
+    mergeTagsMutationSource,
+    deleteTagMutationSource,
+    updateVisibilityMutationSource,
+    tagsWithThumbnailQuery,
+  } = useGenericTagEndpoints(TagType.LOCATION);
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const [updateVisibilityMutation] = updateVisibilityMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+
+  const setVisible = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    updateVisibilityMutation({
+      variables: {
+        tagId: locationTag.id,
+        visible: !locationTag?.visible,
+      },
+    });
+  };
+
+  const [updateTagParentMutation] = useUpdateLocationParentMutation({
+    onCompleted: _ => {
+      refetch();
+    },
+  });
+
+  const relocateTag = async (tagId?: string, tagName?: string) => {
+    if (!tagId || !tagName) return;
+    const selectedTag = await prompt({
+      preset: DialogPreset.SELECT_LOCATION,
+      content: tagName,
+    });
+    console.log(selectedTag);
+    if (selectedTag) {
+      updateTagParentMutation({
+        variables: {
+          tagID: locationTag.id,
+          parentID: selectedTag.id,
+        },
+      });
+    }
+  };
+
+  const [updateTagNameMutation] = useUpdateLocationNameMutation({
+    onCompleted: _ => {
+      refetch();
+    },
+  });
+
+  const editName = async (tagId?: string, tagName?: string) => {
+    if (!tagId || !tagName) return;
+    const locationName = await prompt({
+      preset: DialogPreset.INPUT_FIELD,
+      title: 'Neuer Name des Orts',
+    });
+    if (locationName?.length) {
+      updateTagNameMutation({
+        variables: {
+          name: locationName,
+          tagId: tagId,
+        },
+      });
+    }
+  };
+
+  const detachTag = async (tagId?: string, tagName?: string) => {
+    if (!tagId || !tagName) return;
+    const reallyDetach = await prompt({
+      //preset: DialogPreset.CONFIRM,
+      title: 'Dieses Tag aus der Hierarchie lösen?',
+      content: tagName,
+      options: [
+        { name: 'Abbrechen', icon: 'close', value: false },
+        { name: 'Bestätigen', icon: 'done', value: true },
+      ],
+    });
+    if (reallyDetach) {
+      updateTagParentMutation({
+        variables: {
+          tagID: locationTag.id,
+          parentID: null,
+        },
+      });
+    }
+  };
+
+  const { deleteTags } = useDeleteTagAndChildren(locationTag, refetch);
+  const { deleteSingleTag } = useDeleteSingleTag(locationTag, refetch);
+
+  const deleteTag = async (tagId?: string, tagName?: string) => {
+    if (!tagId || !tagName) return;
+    const deleteOption = await prompt({
+      //preset: DialogPreset.CONFIRM,
+      title: 'Soll folgender Ort und alle seine Unterorte gelöscht werden?',
+      content: tagName,
+      options: [
+        { name: 'Abbrechen', icon: 'close', value: 0 },
+        { name: 'Nur diesen Ort löschen', icon: 'done', value: 1 },
+        { name: 'Bestätigen', icon: 'done', value: 2 },
+      ],
+    });
+    switch (deleteOption) {
+      case 1: {
+        deleteSingleTag();
+        break;
+      }
+      case 2: {
+        deleteTags();
+        break;
+      }
+    }
+  };
+
+  if (locationTag) {
+    return (
+      <div className='location-entry-container'>
+        <div className='location-entry-content'>
+          <IconButton className='show-more-button' onClick={onToggle}>
+            {showMore ? <ExpandMore /> : <ChevronRight />}
+          </IconButton>
+          <div className='location-name'>{locationTag.name}</div>
+          <div className='location-synonyms location-column-750'>
+            {locationTag.synonyms?.map(synonym => (
+              <div className='location-synonym'>{synonym?.name}</div>
+            ))}
+          </div>
+          <div className='edit-button location-column-110'>
+            <IconButton
+              onClick={() => {
+                editName(locationTag.id, locationTag.name);
+              }}
+            >
+              <Edit />
+            </IconButton>
+          </div>
+          <div className='detach-button location-column-110'>
+            <IconButton
+              onClick={() => {
+                detachTag(locationTag.id, locationTag.name);
+              }}
+            >
+              <Eject />
+            </IconButton>
+          </div>
+          <div className='relocate-button location-column-110'>
+            <IconButton
+              onClick={() => {
+                relocateTag(locationTag.id, locationTag.name);
+              }}
+            >
+              <MoveDown />
+            </IconButton>
+          </div>
+          <div className='is-visible-checkbox-container location-column-110'>
+            <Checkbox checked={locationTag?.visible ?? false} onChange={setVisible} />
+          </div>
+          <div className='delete-button location-column-110'>
+            <IconButton
+              onClick={() => {
+                deleteTag(locationTag.id, locationTag.name);
+              }}
+            >
+              <Delete />
+            </IconButton>
+          </div>
+        </div>
+        <hr />
+      </div>
+    );
+  } else {
+    return null;
+  }
+};
+
+export default LocationEntry;

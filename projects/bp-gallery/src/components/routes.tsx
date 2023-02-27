@@ -19,6 +19,7 @@ import ProtectedRoute from './common/ProtectedRoute';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import ShowMoreView from './views/show-more/ShowMoreView';
 import DiscoverView from './views/discover/DiscoverView';
+import LocationPanel from './views/location-curating/LocationPanel';
 
 export const FALLBACK_PATH = '/start';
 
@@ -119,6 +120,12 @@ const routes: RouteConfig[] = [
   {
     path: '/prototypes/timeline-demo',
     component: TimeLineDemo,
+  },
+  {
+    path: '/prototypes/location',
+    render: () => {
+      return <LocationPanel type={TagType.LOCATION} />;
+    },
   },
   {
     path: '/archives/:id/edit',

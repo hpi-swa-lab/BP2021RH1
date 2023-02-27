@@ -41,17 +41,17 @@
       "type": "boolean",
       "default": false
     },
-    "child_locations": {
+    "parent_tag": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "manyToOne",
       "target": "api::location-tag.location-tag",
-      "inversedBy": "parent_locations"
+      "inversedBy": "child_tags"
     },
-    "parent_locations": {
+    "child_tags": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "oneToMany",
       "target": "api::location-tag.location-tag",
-      "inversedBy": "child_locations"
+      "mappedBy": "parent_tag"
     }
   }
 }

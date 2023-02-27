@@ -5,6 +5,7 @@ import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialo
 import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
 import { Dialog } from '@mui/material';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
+import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
 
 export interface DialogOption {
   name: string;
@@ -18,6 +19,7 @@ export enum DialogPreset {
   CONFIRM,
   SELECT_COLLECTION,
   SELECT_ARCHIVE_TAG,
+  SELECT_LOCATION,
   INPUT_FIELD,
 }
 
@@ -112,6 +114,9 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         )}
         {dialogState?.preset === DialogPreset.SELECT_COLLECTION && (
           <CollectionSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.SELECT_LOCATION && (
+          <TagSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
         {dialogState?.preset === DialogPreset.SELECT_ARCHIVE_TAG && (
           <ArchiveTagSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />

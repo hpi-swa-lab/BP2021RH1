@@ -517,7 +517,7 @@ export type KeywordTag = {
   child_keywords?: Maybe<KeywordTagRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
-  parent_keywords?: Maybe<KeywordTagRelationResponseCollection>;
+  parent_keyword?: Maybe<KeywordTagEntityResponse>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -526,12 +526,6 @@ export type KeywordTag = {
 };
 
 export type KeywordTagChild_KeywordsArgs = {
-  filters?: InputMaybe<KeywordTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type KeywordTagParent_KeywordsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -579,7 +573,7 @@ export type KeywordTagFiltersInput = {
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<KeywordTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
-  parent_keywords?: InputMaybe<KeywordTagFiltersInput>;
+  parent_keyword?: InputMaybe<KeywordTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -590,7 +584,7 @@ export type KeywordTagFiltersInput = {
 export type KeywordTagInput = {
   child_keywords?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   name?: InputMaybe<Scalars['String']>;
-  parent_keywords?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  parent_keyword?: InputMaybe<Scalars['ID']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -646,11 +640,11 @@ export type LinkRelationResponseCollection = {
 };
 
 export type LocationTag = {
-  child_locations?: Maybe<LocationTagRelationResponseCollection>;
+  child_tags?: Maybe<LocationTagRelationResponseCollection>;
   coordinates?: Maybe<ComponentLocationCoordinates>;
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
-  parent_locations?: Maybe<LocationTagRelationResponseCollection>;
+  parent_tag?: Maybe<LocationTagEntityResponse>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -658,13 +652,7 @@ export type LocationTag = {
   visible?: Maybe<Scalars['Boolean']>;
 };
 
-export type LocationTagChild_LocationsArgs = {
-  filters?: InputMaybe<LocationTagFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type LocationTagParent_LocationsArgs = {
+export type LocationTagChild_TagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -706,14 +694,14 @@ export type LocationTagEntityResponseCollection = {
 
 export type LocationTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
-  child_locations?: InputMaybe<LocationTagFiltersInput>;
+  child_tags?: InputMaybe<LocationTagFiltersInput>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<LocationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
-  parent_locations?: InputMaybe<LocationTagFiltersInput>;
+  parent_tag?: InputMaybe<LocationTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -722,10 +710,10 @@ export type LocationTagFiltersInput = {
 };
 
 export type LocationTagInput = {
-  child_locations?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  child_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
   name?: InputMaybe<Scalars['String']>;
-  parent_locations?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  parent_tag?: InputMaybe<Scalars['ID']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -2793,6 +2781,27 @@ export type GetAllKeywordTagsQuery = {
     | undefined;
 };
 
+export type GetAllParentKeywordTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllParentKeywordTagsQuery = {
+  keywordTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                visible?: boolean | null | undefined;
+                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type UpdateKeywordNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
   name: Scalars['String'];
@@ -2815,6 +2824,28 @@ export type UpdateKeywordSynonymsMutationVariables = Exact<{
 export type UpdateKeywordSynonymsMutation = {
   updateKeywordTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type GetLocationTagByIdQueryVariables = Exact<{
+  locationID: Scalars['ID'];
+}>;
+
+export type GetLocationTagByIdQuery = {
+  locationTag?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | { name: string; visible?: boolean | null | undefined }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
     | null
     | undefined;
 };
@@ -2903,59 +2934,48 @@ export type GetChildLocationsByIdQuery = {
           id?: string | null | undefined;
           attributes?:
             | {
-                child_locations?:
+                name: string;
+                visible?: boolean | null | undefined;
+                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+                thumbnail?:
                   | {
                       data: Array<{
-                        id?: string | null | undefined;
                         attributes?:
                           | {
-                              name: string;
-                              thumbnail?:
-                                | {
-                                    data: Array<{
+                              media: {
+                                data?:
+                                  | {
                                       attributes?:
-                                        | {
-                                            media: {
-                                              data?:
-                                                | {
-                                                    attributes?:
-                                                      | { formats?: any | null | undefined }
-                                                      | null
-                                                      | undefined;
-                                                  }
-                                                | null
-                                                | undefined;
-                                            };
-                                          }
+                                        | { formats?: any | null | undefined }
                                         | null
                                         | undefined;
-                                    }>;
-                                  }
-                                | null
-                                | undefined;
-                              verified_thumbnail?:
-                                | {
-                                    data: Array<{
+                                    }
+                                  | null
+                                  | undefined;
+                              };
+                            }
+                          | null
+                          | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                verified_thumbnail?:
+                  | {
+                      data: Array<{
+                        attributes?:
+                          | {
+                              media: {
+                                data?:
+                                  | {
                                       attributes?:
-                                        | {
-                                            media: {
-                                              data?:
-                                                | {
-                                                    attributes?:
-                                                      | { formats?: any | null | undefined }
-                                                      | null
-                                                      | undefined;
-                                                  }
-                                                | null
-                                                | undefined;
-                                            };
-                                          }
+                                        | { formats?: any | null | undefined }
                                         | null
                                         | undefined;
-                                    }>;
-                                  }
-                                | null
-                                | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              };
                             }
                           | null
                           | undefined;
@@ -2984,11 +3004,93 @@ export type GetAllLocationTagsQuery = {
                 name: string;
                 visible?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+                child_tags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
+                parent_tag?:
+                  | { data?: { id?: string | null | undefined } | null | undefined }
+                  | null
+                  | undefined;
               }
             | null
             | undefined;
         }>;
       }
+    | null
+    | undefined;
+};
+
+export type GetAllParentLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllParentLocationTagsQuery = {
+  locationTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                visible?: boolean | null | undefined;
+                parent_tag?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+                child_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type CreateLocationMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+export type CreateLocationMutation = {
+  createLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreateSubLocationMutationVariables = Exact<{
+  name: Scalars['String'];
+  parentId: Scalars['ID'];
+}>;
+
+export type CreateSubLocationMutation = {
+  createLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateLocationParentMutationVariables = Exact<{
+  tagID: Scalars['ID'];
+  parentID?: InputMaybe<Scalars['ID']>;
+}>;
+
+export type UpdateLocationParentMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
 };
@@ -4923,6 +5025,77 @@ export type GetAllKeywordTagsQueryResult = Apollo.QueryResult<
   GetAllKeywordTagsQueryVariables
 >;
 
+export const GetAllParentKeywordTagsDocument = gql`
+  query getAllParentKeywordTags {
+    keywordTags(filters: { parent_keyword: { id: { eq: null } } }) {
+      data {
+        id
+        attributes {
+          name
+          synonyms {
+            name
+          }
+          visible
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllParentKeywordTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllParentKeywordTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllParentKeywordTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllParentKeywordTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllParentKeywordTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAllParentKeywordTagsQuery,
+    GetAllParentKeywordTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllParentKeywordTagsQuery, GetAllParentKeywordTagsQueryVariables>(
+    GetAllParentKeywordTagsDocument,
+    options
+  );
+}
+
+export function useGetAllParentKeywordTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllParentKeywordTagsQuery,
+    GetAllParentKeywordTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllParentKeywordTagsQuery, GetAllParentKeywordTagsQueryVariables>(
+    GetAllParentKeywordTagsDocument,
+    options
+  );
+}
+
+export type GetAllParentKeywordTagsQueryHookResult = ReturnType<
+  typeof useGetAllParentKeywordTagsQuery
+>;
+
+export type GetAllParentKeywordTagsLazyQueryHookResult = ReturnType<
+  typeof useGetAllParentKeywordTagsLazyQuery
+>;
+
+export type GetAllParentKeywordTagsQueryResult = Apollo.QueryResult<
+  GetAllParentKeywordTagsQuery,
+  GetAllParentKeywordTagsQueryVariables
+>;
+
 export const UpdateKeywordNameDocument = gql`
   mutation updateKeywordName($tagId: ID!, $name: String!) {
     updateKeywordTag(id: $tagId, data: { name: $name }) {
@@ -5034,6 +5207,70 @@ export type UpdateKeywordSynonymsMutationResult =
 export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordSynonymsMutation,
   UpdateKeywordSynonymsMutationVariables
+>;
+
+export const GetLocationTagByIdDocument = gql`
+  query getLocationTagById($locationID: ID!) {
+    locationTag(id: $locationID) {
+      data {
+        id
+        attributes {
+          name
+          visible
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLocationTagByIdQuery__
+ *
+ * To run a query within a React component, call `useGetLocationTagByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLocationTagByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLocationTagByIdQuery({
+ *   variables: {
+ *      locationID: // value for 'locationID'
+ *   },
+ * });
+ */
+export function useGetLocationTagByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<GetLocationTagByIdQuery, GetLocationTagByIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetLocationTagByIdQuery, GetLocationTagByIdQueryVariables>(
+    GetLocationTagByIdDocument,
+    options
+  );
+}
+
+export function useGetLocationTagByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetLocationTagByIdQuery,
+    GetLocationTagByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetLocationTagByIdQuery, GetLocationTagByIdQueryVariables>(
+    GetLocationTagByIdDocument,
+    options
+  );
+}
+
+export type GetLocationTagByIdQueryHookResult = ReturnType<typeof useGetLocationTagByIdQuery>;
+
+export type GetLocationTagByIdLazyQueryHookResult = ReturnType<
+  typeof useGetLocationTagByIdLazyQuery
+>;
+
+export type GetLocationTagByIdQueryResult = Apollo.QueryResult<
+  GetLocationTagByIdQuery,
+  GetLocationTagByIdQueryVariables
 >;
 
 export const GetLocationTagsWithThumbnailDocument = gql`
@@ -5149,41 +5386,38 @@ export const GetChildLocationsByIdDocument = gql`
     $sortBy: [String]
     $thumbnailFilters: PictureFiltersInput = {}
   ) {
-    locationTags(filters: { id: { eq: $locationID } }, sort: $sortBy) {
+    locationTags(filters: { parent_tag: { id: { eq: $locationID } } }, sort: $sortBy) {
       data {
         id
         attributes {
-          child_locations(sort: $sortBy) {
+          name
+          visible
+          synonyms {
+            name
+          }
+          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
-              id
               attributes {
-                name
-                thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
+                media {
                   data {
                     attributes {
-                      media {
-                        data {
-                          attributes {
-                            formats
-                          }
-                        }
-                      }
+                      formats
                     }
                   }
                 }
-                verified_thumbnail: verified_pictures(
-                  filters: $thumbnailFilters
-                  pagination: { limit: 1 }
-                ) {
+              }
+            }
+          }
+          verified_thumbnail: verified_pictures(
+            filters: $thumbnailFilters
+            pagination: { limit: 1 }
+          ) {
+            data {
+              attributes {
+                media {
                   data {
                     attributes {
-                      media {
-                        data {
-                          attributes {
-                            formats
-                          }
-                        }
-                      }
+                      formats
                     }
                   }
                 }
@@ -5262,6 +5496,16 @@ export const GetAllLocationTagsDocument = gql`
           synonyms {
             name
           }
+          child_tags {
+            data {
+              id
+            }
+          }
+          parent_tag {
+            data {
+              id
+            }
+          }
         }
       }
     }
@@ -5315,6 +5559,257 @@ export type GetAllLocationTagsLazyQueryHookResult = ReturnType<
 export type GetAllLocationTagsQueryResult = Apollo.QueryResult<
   GetAllLocationTagsQuery,
   GetAllLocationTagsQueryVariables
+>;
+
+export const GetAllParentLocationTagsDocument = gql`
+  query getAllParentLocationTags {
+    locationTags(filters: { parent_tag: { id: { eq: null } } }) {
+      data {
+        id
+        attributes {
+          name
+          visible
+          parent_tag {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          child_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          synonyms {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllParentLocationTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllParentLocationTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllParentLocationTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllParentLocationTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllParentLocationTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAllParentLocationTagsQuery,
+    GetAllParentLocationTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllParentLocationTagsQuery, GetAllParentLocationTagsQueryVariables>(
+    GetAllParentLocationTagsDocument,
+    options
+  );
+}
+
+export function useGetAllParentLocationTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllParentLocationTagsQuery,
+    GetAllParentLocationTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllParentLocationTagsQuery, GetAllParentLocationTagsQueryVariables>(
+    GetAllParentLocationTagsDocument,
+    options
+  );
+}
+
+export type GetAllParentLocationTagsQueryHookResult = ReturnType<
+  typeof useGetAllParentLocationTagsQuery
+>;
+
+export type GetAllParentLocationTagsLazyQueryHookResult = ReturnType<
+  typeof useGetAllParentLocationTagsLazyQuery
+>;
+
+export type GetAllParentLocationTagsQueryResult = Apollo.QueryResult<
+  GetAllParentLocationTagsQuery,
+  GetAllParentLocationTagsQueryVariables
+>;
+
+export const CreateLocationDocument = gql`
+  mutation createLocation($name: String!) {
+    createLocationTag(data: { name: $name }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateLocationMutationFn = Apollo.MutationFunction<
+  CreateLocationMutation,
+  CreateLocationMutationVariables
+>;
+
+/**
+ * __useCreateLocationMutation__
+ *
+ * To run a mutation, you first call `useCreateLocationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLocationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLocationMutation, { data, loading, error }] = useCreateLocationMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateLocationMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateLocationMutation, CreateLocationMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateLocationMutation, CreateLocationMutationVariables>(
+    CreateLocationDocument,
+    options
+  );
+}
+
+export type CreateLocationMutationHookResult = ReturnType<typeof useCreateLocationMutation>;
+
+export type CreateLocationMutationResult = Apollo.MutationResult<CreateLocationMutation>;
+
+export type CreateLocationMutationOptions = Apollo.BaseMutationOptions<
+  CreateLocationMutation,
+  CreateLocationMutationVariables
+>;
+
+export const CreateSubLocationDocument = gql`
+  mutation createSubLocation($name: String!, $parentId: ID!) {
+    createLocationTag(data: { name: $name, parent_tag: $parentId }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateSubLocationMutationFn = Apollo.MutationFunction<
+  CreateSubLocationMutation,
+  CreateSubLocationMutationVariables
+>;
+
+/**
+ * __useCreateSubLocationMutation__
+ *
+ * To run a mutation, you first call `useCreateSubLocationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubLocationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSubLocationMutation, { data, loading, error }] = useCreateSubLocationMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      parentId: // value for 'parentId'
+ *   },
+ * });
+ */
+export function useCreateSubLocationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSubLocationMutation,
+    CreateSubLocationMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateSubLocationMutation, CreateSubLocationMutationVariables>(
+    CreateSubLocationDocument,
+    options
+  );
+}
+
+export type CreateSubLocationMutationHookResult = ReturnType<typeof useCreateSubLocationMutation>;
+
+export type CreateSubLocationMutationResult = Apollo.MutationResult<CreateSubLocationMutation>;
+
+export type CreateSubLocationMutationOptions = Apollo.BaseMutationOptions<
+  CreateSubLocationMutation,
+  CreateSubLocationMutationVariables
+>;
+
+export const UpdateLocationParentDocument = gql`
+  mutation updateLocationParent($tagID: ID!, $parentID: ID) {
+    updateLocationTag(id: $tagID, data: { parent_tag: $parentID }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationParentMutationFn = Apollo.MutationFunction<
+  UpdateLocationParentMutation,
+  UpdateLocationParentMutationVariables
+>;
+
+/**
+ * __useUpdateLocationParentMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationParentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationParentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationParentMutation, { data, loading, error }] = useUpdateLocationParentMutation({
+ *   variables: {
+ *      tagID: // value for 'tagID'
+ *      parentID: // value for 'parentID'
+ *   },
+ * });
+ */
+export function useUpdateLocationParentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationParentMutation,
+    UpdateLocationParentMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLocationParentMutation, UpdateLocationParentMutationVariables>(
+    UpdateLocationParentDocument,
+    options
+  );
+}
+
+export type UpdateLocationParentMutationHookResult = ReturnType<
+  typeof useUpdateLocationParentMutation
+>;
+
+export type UpdateLocationParentMutationResult =
+  Apollo.MutationResult<UpdateLocationParentMutation>;
+
+export type UpdateLocationParentMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationParentMutation,
+  UpdateLocationParentMutationVariables
 >;
 
 export const UpdateLocationNameDocument = gql`

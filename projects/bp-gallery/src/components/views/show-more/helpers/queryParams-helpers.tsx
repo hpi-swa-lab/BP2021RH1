@@ -116,13 +116,13 @@ export const getChildTagQueryParams = (
         ? {
             and: [
               { verified_pictures: { id: { not: { eq: '-1' } } } },
-              { parent_keywords: { id: { eq: categoryId } } },
+              { parent_tag: { id: { eq: categoryId } } },
               { id: { not: { eq: '-1' } } },
             ],
           }
         : {
             and: [
-              { parent_keywords: { id: { eq: categoryId } } },
+              { parent_tag: { id: { eq: categoryId } } },
               {
                 or: [
                   { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
@@ -138,13 +138,13 @@ export const getChildTagQueryParams = (
         ? {
             and: [
               { verified_pictures: { id: { not: { eq: '-1' } } } },
-              { parent_locations: { id: { eq: categoryId } } },
+              { parent_tag: { id: { eq: categoryId } } },
               { id: { not: { eq: '-1' } } },
             ],
           }
         : {
             and: [
-              { parent_locations: { id: { eq: categoryId } } },
+              { parent_tag: { id: { eq: categoryId } } },
               {
                 or: [
                   { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },

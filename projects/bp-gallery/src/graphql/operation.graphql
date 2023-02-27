@@ -577,6 +577,21 @@ query getAllKeywordTags {
   }
 }
 
+query getAllParentKeywordTags {
+  keywordTags(filters: { parent_keyword: { id: { eq: null } } }) {
+    data {
+      id
+      attributes {
+        name
+        synonyms {
+          name
+        }
+        visible
+      }
+    }
+  }
+}
+
 mutation updateKeywordName($tagId: ID!, $name: String!) {
   updateKeywordTag(id: $tagId, data: { name: $name }) {
     data {
@@ -589,6 +604,18 @@ mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsI
   updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
     data {
       id
+    }
+  }
+}
+
+query getLocationTagById($locationID: ID!) {
+  locationTag(id: $locationID) {
+    data {
+      id
+      attributes {
+        name
+        visible
+      }
     }
   }
 }
@@ -644,41 +671,38 @@ query getChildLocationsById(
   $sortBy: [String]
   $thumbnailFilters: PictureFiltersInput = {}
 ) {
-  locationTags(filters: { id: { eq: $locationID } }, sort: $sortBy) {
+  locationTags(filters: { parent_tag: { id: { eq: $locationID } } }, sort: $sortBy) {
     data {
       id
       attributes {
-        child_locations(sort: $sortBy) {
+        name
+        visible
+        synonyms {
+          name
+        }
+        thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
           data {
-            id
             attributes {
-              name
-              thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
+              media {
                 data {
                   attributes {
-                    media {
-                      data {
-                        attributes {
-                          formats
-                        }
-                      }
-                    }
+                    formats
                   }
                 }
               }
-              verified_thumbnail: verified_pictures(
-                filters: $thumbnailFilters
-                pagination: { limit: 1 }
-              ) {
+            }
+          }
+        }
+        verified_thumbnail: verified_pictures(
+          filters: $thumbnailFilters
+          pagination: { limit: 1 }
+        ) {
+          data {
+            attributes {
+              media {
                 data {
                   attributes {
-                    media {
-                      data {
-                        attributes {
-                          formats
-                        }
-                      }
-                    }
+                    formats
                   }
                 }
               }
@@ -700,7 +724,72 @@ query getAllLocationTags {
         synonyms {
           name
         }
+        child_tags {
+          data {
+            id
+          }
+        }
+        parent_tag {
+          data {
+            id
+          }
+        }
       }
+    }
+  }
+}
+
+query getAllParentLocationTags {
+  locationTags(filters: { parent_tag: { id: { eq: null } } }) {
+    data {
+      id
+      attributes {
+        name
+        visible
+        parent_tag {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        child_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        synonyms {
+          name
+        }
+      }
+    }
+  }
+}
+
+mutation createLocation($name: String!) {
+  createLocationTag(data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createSubLocation($name: String!, $parentId: ID!) {
+  createLocationTag(data: { name: $name, parent_tag: $parentId }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateLocationParent($tagID: ID!, $parentID: ID) {
+  updateLocationTag(id: $tagID, data: { parent_tag: $parentID }) {
+    data {
+      id
     }
   }
 }
