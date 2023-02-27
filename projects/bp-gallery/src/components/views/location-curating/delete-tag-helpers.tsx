@@ -1,22 +1,9 @@
-import {
-  useGetChildLocationsByIdQuery,
-  useUpdateLocationParentMutation,
-} from '../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useUpdateLocationParentMutation } from '../../../graphql/APIConnector';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 
 export const useDeleteSingleTag = (tag: FlatTag, refetch: () => void) => {
-  const {
-    allTagsQuery,
-    allParentTagsQuery,
-    updateTagNameMutationSource,
-    updateSynonymsMutationSource,
-    mergeTagsMutationSource,
-    deleteTagMutationSource,
-    updateVisibilityMutationSource,
-    tagsWithThumbnailQuery,
-  } = useGenericTagEndpoints(TagType.LOCATION);
+  const { deleteTagMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
 
   const [deleteTagMutation] = deleteTagMutationSource({
     onCompleted: _ => {
@@ -50,16 +37,7 @@ export const useDeleteSingleTag = (tag: FlatTag, refetch: () => void) => {
 };
 
 export const useDeleteTagAndChildren = (tag: FlatTag, refetch: () => void) => {
-  const {
-    allTagsQuery,
-    allParentTagsQuery,
-    updateTagNameMutationSource,
-    updateSynonymsMutationSource,
-    mergeTagsMutationSource,
-    deleteTagMutationSource,
-    updateVisibilityMutationSource,
-    tagsWithThumbnailQuery,
-  } = useGenericTagEndpoints(TagType.LOCATION);
+  const { deleteTagMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
 
   const getDescendants = (comment: FlatTag, descendants: string[] = []): string[] => {
     if (!comment.child_tags) return [];

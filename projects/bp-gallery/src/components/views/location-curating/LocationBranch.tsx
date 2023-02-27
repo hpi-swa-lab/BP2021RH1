@@ -1,10 +1,6 @@
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
-import {
-  useCreateSubLocationMutation,
-  useGetChildLocationsByIdQuery,
-} from '../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useCreateSubLocationMutation } from '../../../graphql/APIConnector';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import LocationEntry from './LocationEntry';
@@ -23,12 +19,10 @@ const LocationBranch = ({
 
   const renderSubBranch = () => {
     if (locationTag.child_tags && locationTag.child_tags.length > 0) {
-      return locationTag.child_tags?.map(tag => {
-        return <LocationBranch locationTag={tag} refetch={refetch} />;
+      return locationTag.child_tags.map(tag => {
+        return <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />;
       });
     }
-
-    return null;
   };
 
   const onToggle = () => {

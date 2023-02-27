@@ -11,17 +11,9 @@ import LocationPanelHeader from './LocationPanelHeader';
 const LocationPanel = ({ type = TagType.LOCATION }: { type: TagType }) => {
   const dialog = useDialog();
 
-  const {
-    allTagsQuery,
-    allParentTagsQuery,
-    updateTagNameMutationSource,
-    updateSynonymsMutationSource,
-    mergeTagsMutationSource,
-    deleteTagMutationSource,
-    updateVisibilityMutationSource,
-  } = useGenericTagEndpoints(type);
+  const { allTagsQuery } = useGenericTagEndpoints(type);
 
-  const { data, loading, error, refetch } = allTagsQuery();
+  const { data, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
@@ -36,7 +28,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: TagType }) => {
         tagsById[tag.parent_tag.id].child_tags.push(tag);
       }
     }
-    return Object.values(tagsById).filter(tag => tag.parent_tag === null);
+    return Object.values(tagsById).filter(tag => !tag.parent_tag);
   }, [flattenedTags]);
 
   const [createLocationTag] = useCreateLocationMutation({
@@ -66,7 +58,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: TagType }) => {
       </div>
       <div className='location-panel-content'>
         {tagTree?.map(tag => (
-          <LocationBranch locationTag={tag} refetch={refetch} />
+          <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
         ))}
         <div className='add-tag-container' onClick={addNewLocation}>
           <Add className='add-tag-icon' />

@@ -1,17 +1,12 @@
-import { Add, ChevronRight, Delete, Edit, Eject, ExpandMore, MoveDown } from '@mui/icons-material';
+import { ChevronRight, Delete, Edit, Eject, ExpandMore, MoveDown } from '@mui/icons-material';
 import { Chip, IconButton } from '@mui/material';
 import { History } from 'history';
-import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   ComponentCommonSynonymsInput,
-  useGetChildLocationsByIdQuery,
-  useGetLocationTagByIdQuery,
   useUpdateLocationNameMutation,
   useUpdateLocationParentMutation,
 } from '../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -30,20 +25,12 @@ const LocationEntry = ({
   onToggle: () => void;
   refetch: () => void;
 }) => {
-  const { t } = useTranslation();
   const prompt = useDialog();
   const history: History = useHistory();
 
-  const {
-    allTagsQuery,
-    allParentTagsQuery,
-    updateTagNameMutationSource,
-    updateSynonymsMutationSource,
-    mergeTagsMutationSource,
-    deleteTagMutationSource,
-    updateVisibilityMutationSource,
-    tagsWithThumbnailQuery,
-  } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateSynonymsMutationSource, updateVisibilityMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const [updateVisibilityMutation] = updateVisibilityMutationSource({
@@ -57,7 +44,7 @@ const LocationEntry = ({
     updateVisibilityMutation({
       variables: {
         tagId: locationTag.id,
-        visible: !locationTag?.visible,
+        visible: !locationTag.visible,
       },
     });
   };
@@ -191,85 +178,81 @@ const LocationEntry = ({
     }
   };
 
-  if (locationTag) {
-    return (
-      <div className='location-entry-container'>
-        <div className='location-entry-content'>
-          <IconButton className='show-more-button' onClick={onToggle}>
-            {showMore ? <ExpandMore /> : <ChevronRight />}
-          </IconButton>
-          <div
-            className='location-name'
-            onClick={() => {
-              history.push(`/show-more/location/${locationTag.id}`, {
-                showBack: true,
-              });
-            }}
-          >
-            {locationTag.name}
-          </div>
-          <div
-            className='location-synonyms location-column-750'
-            onClick={() => {
-              addSynonym(locationTag.id, locationTag.name);
-            }}
-          >
-            {locationTag.synonyms?.map(synonym => (
-              <div className='location-synonym'>
-                <Chip
-                  key={synonym!.name}
-                  label={synonym!.name}
-                  onDelete={() => deleteSynonym(locationTag.id, synonym!.name)}
-                />
-              </div>
-            ))}
-          </div>
-          <div className='edit-button location-column-110'>
-            <IconButton
-              onClick={() => {
-                editName(locationTag.id, locationTag.name);
-              }}
-            >
-              <Edit />
-            </IconButton>
-          </div>
-          <div className='detach-button location-column-110'>
-            <IconButton
-              onClick={() => {
-                detachTag(locationTag.id, locationTag.name);
-              }}
-            >
-              <Eject />
-            </IconButton>
-          </div>
-          <div className='relocate-button location-column-110'>
-            <IconButton
-              onClick={() => {
-                relocateTag(locationTag.id, locationTag.name);
-              }}
-            >
-              <MoveDown />
-            </IconButton>
-          </div>
-          <div className='is-visible-checkbox-container location-column-110'>
-            <Checkbox checked={locationTag?.visible ?? false} onChange={setVisible} />
-          </div>
-          <div className='delete-button location-column-110'>
-            <IconButton
-              onClick={() => {
-                deleteTag(locationTag.id, locationTag.name);
-              }}
-            >
-              <Delete />
-            </IconButton>
-          </div>
+  return (
+    <div className='location-entry-container'>
+      <div className='location-entry-content'>
+        <IconButton className='show-more-button' onClick={onToggle}>
+          {showMore ? <ExpandMore /> : <ChevronRight />}
+        </IconButton>
+        <div
+          className='location-name'
+          onClick={() => {
+            history.push(`/show-more/location/${locationTag.id}`, {
+              showBack: true,
+            });
+          }}
+        >
+          {locationTag.name}
         </div>
-        <hr />
+        <div
+          className='location-synonyms location-column-750'
+          onClick={() => {
+            addSynonym(locationTag.id, locationTag.name);
+          }}
+        >
+          {locationTag.synonyms?.map((synonym, index) => (
+            <div key={index} className='location-synonym'>
+              <Chip
+                key={synonym!.name}
+                label={synonym!.name}
+                onDelete={() => deleteSynonym(locationTag.id, synonym!.name)}
+              />
+            </div>
+          ))}
+        </div>
+        <div className='edit-button location-column-110'>
+          <IconButton
+            onClick={() => {
+              editName(locationTag.id, locationTag.name);
+            }}
+          >
+            <Edit />
+          </IconButton>
+        </div>
+        <div className='detach-button location-column-110'>
+          <IconButton
+            onClick={() => {
+              detachTag(locationTag.id, locationTag.name);
+            }}
+          >
+            <Eject />
+          </IconButton>
+        </div>
+        <div className='relocate-button location-column-110'>
+          <IconButton
+            onClick={() => {
+              relocateTag(locationTag.id, locationTag.name);
+            }}
+          >
+            <MoveDown />
+          </IconButton>
+        </div>
+        <div className='is-visible-checkbox-container location-column-110'>
+          <Checkbox checked={locationTag.visible ?? false} onChange={setVisible} />
+        </div>
+        <div className='delete-button location-column-110'>
+          <IconButton
+            onClick={() => {
+              deleteTag(locationTag.id, locationTag.name);
+            }}
+          >
+            <Delete />
+          </IconButton>
+        </div>
       </div>
-    );
-  } else {
-    return null;
-  }
+      <hr />
+    </div>
+  );
 };
 
 export default LocationEntry;

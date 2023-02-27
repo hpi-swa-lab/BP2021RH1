@@ -1,4 +1,3 @@
-import Checkbox from './Checkbox';
 import './LocationEntry.scss';
 
 const LocationPanelHeader = () => {
