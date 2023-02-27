@@ -14,7 +14,7 @@ hr {
 }
 
 .location-column-750 {
-  min-width: 750px;
+  width: 750px;
 }
 
 .location-header-container {
@@ -33,7 +33,6 @@ hr {
   .location-header-edit {
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: auto;
     margin-right: 0;
     border-left: 2px solid darkgrey;
     padding-left: 8px;
@@ -112,6 +111,7 @@ hr {
       margin-right: 0;
       display: flex;
       flex-direction: row;
+      overflow: scroll;
 
       .location-synonym {
         margin: auto 4px auto 4px;

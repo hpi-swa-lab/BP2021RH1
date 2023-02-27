@@ -1,8 +1,9 @@
-import { ChevronRight, Delete, Edit, Eject, ExpandMore, MoveDown } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { Add, ChevronRight, Delete, Edit, Eject, ExpandMore, MoveDown } from '@mui/icons-material';
+import { Chip, IconButton } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  ComponentCommonSynonymsInput,
   useGetChildLocationsByIdQuery,
   useGetLocationTagByIdQuery,
   useUpdateLocationNameMutation,
@@ -124,6 +125,42 @@ const LocationEntry = ({
     }
   };
 
+  const [updateSynonymsMutation] = updateSynonymsMutationSource({
+    onCompleted: _ => {
+      refetch();
+    },
+  });
+
+  const deleteSynonym = (tagId: string, synonymName: string) => {
+    updateSynonymsMutation({
+      variables: {
+        tagId,
+        synonyms:
+          locationTag.synonyms?.filter(s => s?.name !== '' && s?.name !== synonymName) ??
+          ([] as any),
+      },
+    });
+  };
+
+  const addSynonym = async (tagId: string, tagName: string) => {
+    if (!tagId) return;
+    const synonymName = await prompt({
+      preset: DialogPreset.INPUT_FIELD,
+      title: `Name des neuen Synonyms für ${tagName}`,
+    });
+    if (synonymName.length) {
+      const synonyms: ComponentCommonSynonymsInput[] =
+        locationTag.synonyms?.map(s => ({ name: s?.name })) ?? [];
+      synonyms.push({ name: synonymName });
+      updateSynonymsMutation({
+        variables: {
+          tagId,
+          synonyms,
+        },
+      });
+    }
+  };
+
   const { deleteTags } = useDeleteTagAndChildren(locationTag, refetch);
   const { deleteSingleTag } = useDeleteSingleTag(locationTag, refetch);
 
@@ -159,9 +196,20 @@ const LocationEntry = ({
             {showMore ? <ExpandMore /> : <ChevronRight />}
           </IconButton>
           <div className='location-name'>{locationTag.name}</div>
-          <div className='location-synonyms location-column-750'>
+          <div
+            className='location-synonyms location-column-750'
+            onClick={() => {
+              addSynonym(locationTag.id, locationTag.name);
+            }}
+          >
             {locationTag.synonyms?.map(synonym => (
-              <div className='location-synonym'>{synonym?.name}</div>
+              <div className='location-synonym'>
+                <Chip
+                  key={synonym!.name}
+                  label={synonym!.name}
+                  onDelete={() => deleteSynonym(locationTag.id, synonym!.name)}
+                />
+              </div>
             ))}
           </div>
           <div className='edit-button location-column-110'>

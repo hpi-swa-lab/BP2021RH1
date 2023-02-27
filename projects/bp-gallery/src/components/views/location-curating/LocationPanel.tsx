@@ -46,7 +46,6 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: TagType }) => {
   });
 
   const addNewLocation = async () => {
-    console.log('hey');
     const collectionName = await dialog({
       preset: DialogPreset.INPUT_FIELD,
       title: 'Name des neuen Orts',
