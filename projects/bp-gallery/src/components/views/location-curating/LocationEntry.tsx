@@ -1,7 +1,9 @@
 import { Add, ChevronRight, Delete, Edit, Eject, ExpandMore, MoveDown } from '@mui/icons-material';
 import { Chip, IconButton } from '@mui/material';
+import { History } from 'history';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import {
   ComponentCommonSynonymsInput,
   useGetChildLocationsByIdQuery,
@@ -30,6 +32,7 @@ const LocationEntry = ({
 }) => {
   const { t } = useTranslation();
   const prompt = useDialog();
+  const history: History = useHistory();
 
   const {
     allTagsQuery,
@@ -195,7 +198,16 @@ const LocationEntry = ({
           <IconButton className='show-more-button' onClick={onToggle}>
             {showMore ? <ExpandMore /> : <ChevronRight />}
           </IconButton>
-          <div className='location-name'>{locationTag.name}</div>
+          <div
+            className='location-name'
+            onClick={() => {
+              history.push(`/show-more/location/${locationTag.id}`, {
+                showBack: true,
+              });
+            }}
+          >
+            {locationTag.name}
+          </div>
           <div
             className='location-synonyms location-column-750'
             onClick={() => {
