@@ -45,6 +45,7 @@ const LocationBranch = ({
         variables: {
           name: collectionName,
           parentId: locationTag.id,
+          accepted: true,
         },
       });
     }

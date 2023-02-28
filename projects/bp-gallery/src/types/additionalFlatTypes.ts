@@ -133,6 +133,7 @@ export interface FlatTag {
   visible?: boolean;
   parent_tag?: FlatTag;
   child_tags?: FlatTag[];
+  accepted?: boolean;
 }
 
 export enum TagType {

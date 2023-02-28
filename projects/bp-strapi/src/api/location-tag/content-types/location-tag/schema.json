@@ -52,6 +52,9 @@
       "relation": "oneToMany",
       "target": "api::location-tag.location-tag",
       "mappedBy": "parent_tag"
+    },
+    "accepted": {
+      "type": "boolean"
     }
   }
 }

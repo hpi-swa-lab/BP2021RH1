@@ -1,9 +1,18 @@
-import { ChevronRight, Delete, Edit, Eject, ExpandMore, MoveDown } from '@mui/icons-material';
+import {
+  Check,
+  ChevronRight,
+  Delete,
+  Edit,
+  Eject,
+  ExpandMore,
+  MoveDown,
+} from '@mui/icons-material';
 import { Chip, IconButton } from '@mui/material';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import {
   ComponentCommonSynonymsInput,
+  useUpdateLocationAcceptanceMutation,
   useUpdateLocationNameMutation,
   useUpdateLocationParentMutation,
 } from '../../../graphql/APIConnector';
@@ -121,6 +130,21 @@ const LocationEntry = ({
     },
   });
 
+  const [updateAcceptedMutation] = useUpdateLocationAcceptanceMutation({
+    onCompleted: _ => {
+      refetch();
+    },
+  });
+
+  const acceptTag = (tagId: string) => {
+    updateAcceptedMutation({
+      variables: {
+        tagId,
+        accepted: true,
+      },
+    });
+  };
+
   const deleteSynonym = (tagId: string, synonymName: string) => {
     updateSynonymsMutation({
       variables: {
@@ -179,7 +203,9 @@ const LocationEntry = ({
   };
 
   return (
-    <div className='location-entry-container'>
+    <div
+      className={`location-entry-container ${!locationTag.accepted ? 'location-not-accepted' : ''}`}
+    >
       <div className='location-entry-content'>
         <IconButton className='show-more-button' onClick={onToggle}>
           {showMore ? <ExpandMore /> : <ChevronRight />}
@@ -194,6 +220,11 @@ const LocationEntry = ({
         >
           {locationTag.name}
         </div>
+        {!locationTag.accepted && (
+          <IconButton className='accept-location-name' onClick={() => acceptTag(locationTag.id)}>
+            <Check />
+          </IconButton>
+        )}
         <div
           className='location-synonyms location-column-750'
           onClick={() => {

@@ -46,6 +46,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: TagType }) => {
       createLocationTag({
         variables: {
           name: collectionName,
+          accepted: true,
         },
       });
     }

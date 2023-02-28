@@ -721,6 +721,7 @@ query getAllLocationTags {
       attributes {
         name
         visible
+        accepted
         synonyms {
           name
         }
@@ -770,16 +771,16 @@ query getAllParentLocationTags {
   }
 }
 
-mutation createLocation($name: String!) {
-  createLocationTag(data: { name: $name }) {
+mutation createLocation($name: String!, $accepted: Boolean) {
+  createLocationTag(data: { name: $name, accepted: $accepted }) {
     data {
       id
     }
   }
 }
 
-mutation createSubLocation($name: String!, $parentId: ID!) {
-  createLocationTag(data: { name: $name, parent_tag: $parentId }) {
+mutation createSubLocation($name: String!, $parentId: ID!, $accepted: Boolean) {
+  createLocationTag(data: { name: $name, parent_tag: $parentId, accepted: $accepted }) {
     data {
       id
     }
@@ -812,6 +813,14 @@ mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonyms
 
 mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
   updateLocationTag(id: $tagId, data: { visible: $visible }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateLocationAcceptance($tagId: ID!, $accepted: Boolean) {
+  updateLocationTag(id: $tagId, data: { accepted: $accepted }) {
     data {
       id
     }

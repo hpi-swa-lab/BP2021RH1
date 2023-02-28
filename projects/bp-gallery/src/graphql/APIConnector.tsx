@@ -640,6 +640,7 @@ export type LinkRelationResponseCollection = {
 };
 
 export type LocationTag = {
+  accepted?: Maybe<Scalars['Boolean']>;
   child_tags?: Maybe<LocationTagRelationResponseCollection>;
   coordinates?: Maybe<ComponentLocationCoordinates>;
   createdAt?: Maybe<Scalars['DateTime']>;
@@ -693,6 +694,7 @@ export type LocationTagEntityResponseCollection = {
 };
 
 export type LocationTagFiltersInput = {
+  accepted?: InputMaybe<BooleanFilterInput>;
   and?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
   child_tags?: InputMaybe<LocationTagFiltersInput>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesFiltersInput>;
@@ -710,6 +712,7 @@ export type LocationTagFiltersInput = {
 };
 
 export type LocationTagInput = {
+  accepted?: InputMaybe<Scalars['Boolean']>;
   child_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
   name?: InputMaybe<Scalars['String']>;
@@ -3003,6 +3006,7 @@ export type GetAllLocationTagsQuery = {
             | {
                 name: string;
                 visible?: boolean | null | undefined;
+                accepted?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
                 child_tags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
                 parent_tag?:
@@ -3062,6 +3066,7 @@ export type GetAllParentLocationTagsQuery = {
 
 export type CreateLocationMutationVariables = Exact<{
   name: Scalars['String'];
+  accepted?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CreateLocationMutation = {
@@ -3074,6 +3079,7 @@ export type CreateLocationMutation = {
 export type CreateSubLocationMutationVariables = Exact<{
   name: Scalars['String'];
   parentId: Scalars['ID'];
+  accepted?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CreateSubLocationMutation = {
@@ -3127,6 +3133,18 @@ export type UpdateLocationVisibilityMutationVariables = Exact<{
 }>;
 
 export type UpdateLocationVisibilityMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateLocationAcceptanceMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  accepted?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type UpdateLocationAcceptanceMutation = {
   updateLocationTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
@@ -5493,6 +5511,7 @@ export const GetAllLocationTagsDocument = gql`
         attributes {
           name
           visible
+          accepted
           synonyms {
             name
           }
@@ -5649,8 +5668,8 @@ export type GetAllParentLocationTagsQueryResult = Apollo.QueryResult<
 >;
 
 export const CreateLocationDocument = gql`
-  mutation createLocation($name: String!) {
-    createLocationTag(data: { name: $name }) {
+  mutation createLocation($name: String!, $accepted: Boolean) {
+    createLocationTag(data: { name: $name, accepted: $accepted }) {
       data {
         id
       }
@@ -5677,6 +5696,7 @@ export type CreateLocationMutationFn = Apollo.MutationFunction<
  * const [createLocationMutation, { data, loading, error }] = useCreateLocationMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      accepted: // value for 'accepted'
  *   },
  * });
  */
@@ -5700,8 +5720,8 @@ export type CreateLocationMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateSubLocationDocument = gql`
-  mutation createSubLocation($name: String!, $parentId: ID!) {
-    createLocationTag(data: { name: $name, parent_tag: $parentId }) {
+  mutation createSubLocation($name: String!, $parentId: ID!, $accepted: Boolean) {
+    createLocationTag(data: { name: $name, parent_tag: $parentId, accepted: $accepted }) {
       data {
         id
       }
@@ -5729,6 +5749,7 @@ export type CreateSubLocationMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      name: // value for 'name'
  *      parentId: // value for 'parentId'
+ *      accepted: // value for 'accepted'
  *   },
  * });
  */
@@ -5981,6 +6002,64 @@ export type UpdateLocationVisibilityMutationResult =
 export type UpdateLocationVisibilityMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationVisibilityMutation,
   UpdateLocationVisibilityMutationVariables
+>;
+
+export const UpdateLocationAcceptanceDocument = gql`
+  mutation updateLocationAcceptance($tagId: ID!, $accepted: Boolean) {
+    updateLocationTag(id: $tagId, data: { accepted: $accepted }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationAcceptanceMutationFn = Apollo.MutationFunction<
+  UpdateLocationAcceptanceMutation,
+  UpdateLocationAcceptanceMutationVariables
+>;
+
+/**
+ * __useUpdateLocationAcceptanceMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationAcceptanceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationAcceptanceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationAcceptanceMutation, { data, loading, error }] = useUpdateLocationAcceptanceMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      accepted: // value for 'accepted'
+ *   },
+ * });
+ */
+export function useUpdateLocationAcceptanceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationAcceptanceMutation,
+    UpdateLocationAcceptanceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateLocationAcceptanceMutation,
+    UpdateLocationAcceptanceMutationVariables
+  >(UpdateLocationAcceptanceDocument, options);
+}
+
+export type UpdateLocationAcceptanceMutationHookResult = ReturnType<
+  typeof useUpdateLocationAcceptanceMutation
+>;
+
+export type UpdateLocationAcceptanceMutationResult =
+  Apollo.MutationResult<UpdateLocationAcceptanceMutation>;
+
+export type UpdateLocationAcceptanceMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationAcceptanceMutation,
+  UpdateLocationAcceptanceMutationVariables
 >;
 
 export const UpdateKeywordVisibilityDocument = gql`
