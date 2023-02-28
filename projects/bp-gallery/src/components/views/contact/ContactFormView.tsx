@@ -1,5 +1,4 @@
 import React from 'react';
-//import './ContactFormView.scss';
 import { useTranslation } from 'react-i18next';
 
 const ContactFormView = () => {
@@ -59,7 +58,7 @@ const ContactFormView = () => {
             </label>
           </p>
           <div className='submit-button-container flex flex-row justify-end'>
-            <button className='submit-input w-fit text-xl' type='submit'>
+            <button className='submit-input w-fit text-xl backgound' type='submit'>
               {t('contact-form.submit-button-label').toString()}
             </button>
           </div>
