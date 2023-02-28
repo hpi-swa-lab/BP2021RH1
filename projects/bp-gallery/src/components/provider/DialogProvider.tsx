@@ -6,6 +6,7 @@ import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
 import { Dialog } from '@mui/material';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
 import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
+import { TagType } from '../../types/additionalFlatTypes';
 
 export interface DialogOption {
   name: string;
@@ -28,6 +29,7 @@ export interface DialogProps {
   content?: any;
   title?: string;
   options?: DialogOption[];
+  type?: TagType;
 }
 
 const DialogContext = createContext<(dialogProps: DialogProps) => Promise<any | null>>(
@@ -61,6 +63,7 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
     content,
     title,
     options,
+    type,
   }: DialogProps): Promise<any> => {
     if (preset === DialogPreset.CONFIRM) {
       options = [
@@ -89,7 +92,7 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         },
       ];
     }
-    setDialogState({ preset, content, title, options });
+    setDialogState({ preset, content, title, options, type });
     setOpen(true);
     return new Promise<any>(r => {
       // The callback function of this Promise is saved to the ref here

@@ -38,17 +38,20 @@
       "type": "boolean",
       "default": false
     },
-    "parent_keyword": {
+    "parent_tag": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::keyword-tag.keyword-tag",
-      "inversedBy": "child_keywords"
+      "inversedBy": "child_tags"
     },
-    "child_keywords": {
+    "child_tags": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::keyword-tag.keyword-tag",
-      "mappedBy": "parent_keyword"
+      "mappedBy": "parent_tag"
+    },
+    "accepted": {
+      "type": "boolean"
     }
   }
 }

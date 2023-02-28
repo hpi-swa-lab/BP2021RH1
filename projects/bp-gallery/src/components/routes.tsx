@@ -122,9 +122,9 @@ const routes: RouteConfig[] = [
     component: TimeLineDemo,
   },
   {
-    path: '/prototypes/location',
-    render: () => {
-      return <LocationPanel type={TagType.LOCATION} />;
+    path: '/prototypes/edit/:type',
+    render: ({ match }: RouteConfigComponentProps<{ type: '' }>) => {
+      return <LocationPanel type={match.params.type} />;
     },
   },
   {

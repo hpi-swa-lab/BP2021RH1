@@ -10,12 +10,7 @@ import {
 import { Chip, IconButton } from '@mui/material';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
-import {
-  ComponentCommonSynonymsInput,
-  useUpdateLocationAcceptanceMutation,
-  useUpdateLocationNameMutation,
-  useUpdateLocationParentMutation,
-} from '../../../graphql/APIConnector';
+import { ComponentCommonSynonymsInput } from '../../../graphql/APIConnector';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -28,18 +23,24 @@ const LocationEntry = ({
   showMore,
   onToggle,
   refetch,
+  type,
 }: {
   locationTag: FlatTag;
   showMore: boolean;
   onToggle: () => void;
   refetch: () => void;
+  type: TagType;
 }) => {
   const prompt = useDialog();
   const history: History = useHistory();
 
-  const { updateSynonymsMutationSource, updateVisibilityMutationSource } = useGenericTagEndpoints(
-    TagType.LOCATION
-  );
+  const {
+    updateSynonymsMutationSource,
+    updateVisibilityMutationSource,
+    updateTagParentMutationSource,
+    updateTagNameMutationSource,
+    updateTagAcceptanceMutationSource,
+  } = useGenericTagEndpoints(type);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const [updateVisibilityMutation] = updateVisibilityMutationSource({
@@ -58,8 +59,8 @@ const LocationEntry = ({
     });
   };
 
-  const [updateTagParentMutation] = useUpdateLocationParentMutation({
-    onCompleted: _ => {
+  const [updateTagParentMutation] = updateTagParentMutationSource({
+    onCompleted: (_: any) => {
       refetch();
     },
   });
@@ -69,6 +70,7 @@ const LocationEntry = ({
     const selectedTag = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
       content: tagName,
+      type: type,
     });
     console.log(selectedTag);
     if (selectedTag) {
@@ -81,7 +83,7 @@ const LocationEntry = ({
     }
   };
 
-  const [updateTagNameMutation] = useUpdateLocationNameMutation({
+  const [updateTagNameMutation] = updateTagNameMutationSource({
     onCompleted: _ => {
       refetch();
     },
@@ -91,7 +93,7 @@ const LocationEntry = ({
     if (!tagId || !tagName) return;
     const locationName = await prompt({
       preset: DialogPreset.INPUT_FIELD,
-      title: 'Neuer Name des Orts',
+      title: 'Neuer Name des Tags',
     });
     if (locationName?.length) {
       updateTagNameMutation({
@@ -130,8 +132,8 @@ const LocationEntry = ({
     },
   });
 
-  const [updateAcceptedMutation] = useUpdateLocationAcceptanceMutation({
-    onCompleted: _ => {
+  const [updateAcceptedMutation] = updateTagAcceptanceMutationSource({
+    onCompleted: (_: any) => {
       refetch();
     },
   });
@@ -175,8 +177,8 @@ const LocationEntry = ({
     }
   };
 
-  const { deleteTags } = useDeleteTagAndChildren(locationTag, refetch);
-  const { deleteSingleTag } = useDeleteSingleTag(locationTag, refetch);
+  const { deleteTags } = useDeleteTagAndChildren(locationTag, refetch, type);
+  const { deleteSingleTag } = useDeleteSingleTag(locationTag, refetch, type);
 
   const deleteTag = async (tagId?: string, tagName?: string) => {
     if (!tagId || !tagName) return;

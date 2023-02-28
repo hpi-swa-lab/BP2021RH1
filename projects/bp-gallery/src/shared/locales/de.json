@@ -337,5 +337,13 @@
     "locations": "Orte",
     "more-info": "Wissen Sie mehr über diese Bilder?",
     "our-categories": "Unsere Kategorien"
+  },
+  "tag-panel": {
+    "name-of-sub-keyword": "Name des neuen Unterschlagworts für {{ parent }}?",
+    "name-of-sub-location": "Name des neuen Unterorts für {{ parent }}?",
+    "name-of-keyword": "Name des neuen Schlagworts?",
+    "name-of-location": "Name des neuen Orts?",
+    "add-sub-keyword": "Unterschlagwort für {{ parent }} hinzufügen",
+    "add-sub-location": "Unterort für {{ parent }} hinzufügen"
   }
 }

@@ -1,6 +1,5 @@
 import { Add } from '@mui/icons-material';
 import { useMemo } from 'react';
-import { useCreateLocationMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
@@ -8,10 +7,10 @@ import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
 
-const LocationPanel = ({ type = TagType.LOCATION }: { type: TagType }) => {
+const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
   const dialog = useDialog();
 
-  const { allTagsQuery } = useGenericTagEndpoints(type);
+  const { allTagsQuery, createTagMutationSource } = useGenericTagEndpoints(type as TagType);
 
   const { data, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
@@ -31,8 +30,8 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: TagType }) => {
     return Object.values(tagsById).filter(tag => !tag.parent_tag);
   }, [flattenedTags]);
 
-  const [createLocationTag] = useCreateLocationMutation({
-    onCompleted: _ => {
+  const [createLocationTag] = createTagMutationSource({
+    onCompleted: (_: any) => {
       refetch();
     },
   });
@@ -59,7 +58,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: TagType }) => {
       </div>
       <div className='location-panel-content'>
         {tagTree?.map(tag => (
-          <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
+          <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} type={type as TagType} />
         ))}
         <div className='add-tag-container' onClick={addNewLocation}>
           <Add className='add-tag-icon' />

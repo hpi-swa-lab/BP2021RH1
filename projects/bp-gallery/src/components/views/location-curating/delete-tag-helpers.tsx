@@ -1,9 +1,8 @@
-import { useUpdateLocationParentMutation } from '../../../graphql/APIConnector';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 
-export const useDeleteSingleTag = (tag: FlatTag, refetch: () => void) => {
-  const { deleteTagMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+export const useDeleteSingleTag = (tag: FlatTag, refetch: () => void, type: TagType) => {
+  const { deleteTagMutationSource, updateTagParentMutationSource } = useGenericTagEndpoints(type);
 
   const [deleteTagMutation] = deleteTagMutationSource({
     onCompleted: _ => {
@@ -11,8 +10,8 @@ export const useDeleteSingleTag = (tag: FlatTag, refetch: () => void) => {
     },
   });
 
-  const [updateTagParentMutation] = useUpdateLocationParentMutation({
-    onCompleted: _ => {
+  const [updateTagParentMutation] = updateTagParentMutationSource({
+    onCompleted: (_: any) => {
       refetch();
     },
   });
@@ -36,13 +35,13 @@ export const useDeleteSingleTag = (tag: FlatTag, refetch: () => void) => {
   return { deleteSingleTag };
 };
 
-export const useDeleteTagAndChildren = (tag: FlatTag, refetch: () => void) => {
-  const { deleteTagMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+export const useDeleteTagAndChildren = (tag: FlatTag, refetch: () => void, type: TagType) => {
+  const { deleteTagMutationSource } = useGenericTagEndpoints(type);
 
-  const getDescendants = (comment: FlatTag, descendants: string[] = []): string[] => {
-    if (!comment.child_tags) return [];
-    descendants.push(...comment.child_tags.map(childTag => childTag.id));
-    comment.child_tags.forEach(childTag => getDescendants(childTag, descendants));
+  const getDescendants = (tag: FlatTag, descendants: string[] = []): string[] => {
+    if (!tag.child_tags) return [];
+    descendants.push(...tag.child_tags.map(childTag => childTag.id));
+    tag.child_tags.forEach(childTag => getDescendants(childTag, descendants));
     return descendants;
   };
 

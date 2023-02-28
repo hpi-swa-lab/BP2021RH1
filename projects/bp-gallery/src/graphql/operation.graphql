@@ -568,17 +568,28 @@ query getAllKeywordTags {
       id
       attributes {
         name
+        visible
+        accepted
         synonyms {
           name
         }
-        visible
+        child_tags {
+          data {
+            id
+          }
+        }
+        parent_tag {
+          data {
+            id
+          }
+        }
       }
     }
   }
 }
 
 query getAllParentKeywordTags {
-  keywordTags(filters: { parent_keyword: { id: { eq: null } } }) {
+  keywordTags(filters: { parent_tag: { id: { eq: null } } }) {
     data {
       id
       attributes {
@@ -594,6 +605,38 @@ query getAllParentKeywordTags {
 
 mutation updateKeywordName($tagId: ID!, $name: String!) {
   updateKeywordTag(id: $tagId, data: { name: $name }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateKeywordAcceptance($tagId: ID!, $accepted: Boolean) {
+  updateKeywordTag(id: $tagId, data: { accepted: $accepted }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createKeyword($name: String!, $accepted: Boolean) {
+  createKeywordTag(data: { name: $name, accepted: $accepted }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation createSubKeyword($name: String!, $parentId: ID!, $accepted: Boolean) {
+  createKeywordTag(data: { name: $name, parent_tag: $parentId, accepted: $accepted }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateKeywordParent($tagID: ID!, $parentID: ID) {
+  updateKeywordTag(id: $tagID, data: { parent_tag: $parentID }) {
     data {
       id
     }

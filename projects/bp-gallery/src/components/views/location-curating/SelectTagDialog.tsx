@@ -1,6 +1,6 @@
-import { useGetAllLocationTagsQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatTag } from '../../../types/additionalFlatTypes';
+import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
+import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import SelectDialogPreset from '../../provider/dialog-presets/SelectDialogPreset';
 import { DialogProps } from '../../provider/DialogProvider';
 
@@ -11,8 +11,11 @@ const TagSelectDialogPreset = ({
   handleClose: (value: any) => void;
   dialogProps: DialogProps;
 }) => {
-  const { data } = useGetAllLocationTagsQuery();
-  const allTags: FlatTag[] | undefined = useSimplifiedQueryResponseData(data)?.locationTags;
+  const { allTagsQuery } = useGenericTagEndpoints(dialogProps.type as TagType);
+
+  const { data } = allTagsQuery();
+  const flattened = useSimplifiedQueryResponseData(data);
+  const allTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
   return (
     <SelectDialogPreset

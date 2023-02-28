@@ -1,7 +1,8 @@
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
-import { useCreateSubLocationMutation } from '../../../graphql/APIConnector';
-import { FlatTag } from '../../../types/additionalFlatTypes';
+import { useTranslation } from 'react-i18next';
+import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
+import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import LocationEntry from './LocationEntry';
 import './LocationEntry.scss';
@@ -9,18 +10,23 @@ import './LocationEntry.scss';
 const LocationBranch = ({
   locationTag,
   refetch,
+  type,
 }: {
   locationTag: FlatTag;
   refetch: () => void;
+  type: TagType;
 }) => {
   const dialog = useDialog();
+  const { t } = useTranslation();
+
+  const { createSubTagMutationSource } = useGenericTagEndpoints(type);
 
   const [showMore, setShowMore] = useState<boolean>(false);
 
   const renderSubBranch = () => {
     if (locationTag.child_tags && locationTag.child_tags.length > 0) {
       return locationTag.child_tags.map(tag => {
-        return <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />;
+        return <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} type={type} />;
       });
     }
   };
@@ -29,8 +35,8 @@ const LocationBranch = ({
     setShowMore(prev => !prev);
   };
 
-  const [createSubLocationTag] = useCreateSubLocationMutation({
-    onCompleted: _ => {
+  const [createSubLocationTag] = createSubTagMutationSource({
+    onCompleted: (_: any) => {
       refetch();
     },
   });
@@ -38,7 +44,7 @@ const LocationBranch = ({
   const addNewSubLocation = async () => {
     const collectionName = await dialog({
       preset: DialogPreset.INPUT_FIELD,
-      title: `Name des neuen Unterorts für ${locationTag.name}`,
+      title: t(`tag-panel.name-of-sub-${type}`, { parent: locationTag.name }),
     });
     if (collectionName?.length) {
       createSubLocationTag({
@@ -58,13 +64,16 @@ const LocationBranch = ({
         showMore={showMore}
         onToggle={onToggle}
         refetch={refetch}
+        type={type}
       />
       {showMore && (
         <div className='sub-location-container'>
           {renderSubBranch()}
           <div className='add-tag-container' onClick={addNewSubLocation}>
             <Add className='add-tag-icon' />
-            <div className='add-tag-text'>{`Unterort für ${locationTag.name} hinzufügen`}</div>
+            <div className='add-tag-text'>
+              {t(`tag-panel.add-sub-${type}`, { parent: locationTag.name })}
+            </div>
           </div>
           <hr />
         </div>
