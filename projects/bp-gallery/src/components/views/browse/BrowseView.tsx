@@ -155,7 +155,7 @@ const BrowseView = ({
                 ]}
               />
             </div>
-            <Footer/>
+            <Footer />
           </div>
         )}
       </ScrollContainer>

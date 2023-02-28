@@ -1,5 +1,5 @@
 import React from 'react';
-import './ContactFormView.scss';
+//import './ContactFormView.scss';
 import { useTranslation } from 'react-i18next';
 
 const ContactFormView = () => {
@@ -15,54 +15,54 @@ const ContactFormView = () => {
   }
 
   return (
-    <div className='contact-form-container'>
-      <h1>{t('contact-form.title')}</h1>
+    <div className='contact-form-container flex flex-col flex-nowrap items-center m-auto p-4'>
+      <h1 className='pt-8'>{t('contact-form.title')}</h1>
       <form
         action={apiPath}
         method='post'
         encType='multipart/form-data'
         target=''
-        className='contact-form'
+        className='contact-form w-fit h-fit'
       >
         <div className='form-contents'>
           <p>
-            <label>
+            <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.choose-archive-label')}
-              <select name='recipient'>
+              <select className='max-w h-6' name='recipient'>
                 {/*    <option value='Test'>Test</option> */}
                 <option value='Herbert-Ahrens-Archiv'>Herbert-Ahrens-Archiv</option>
               </select>
             </label>
           </p>
           <p>
-            <label>
+            <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.name-label')}
-              <input name='sender_name' className='form-input name-input' type='text' />
+              <input name='sender_name' className='form-input h-5 w-80 name-input' type='text' />
             </label>
           </p>
           <p>
-            <label>
+            <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.email-label')}
-              <input name='email' className='form-input email-input' type='email' />
+              <input name='email' className='form-input h-5 w-80 email-input' type='email' />
             </label>
           </p>
           <p>
-            <label>
+            <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.subject-label')}
-              <input name='subject' className='form-input subject-input' />
+              <input name='subject' className='form-input h-5 w-80 subject-input' />
             </label>
           </p>
           <p>
-            <label>
+            <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.message-label')}
-              <textarea name='message' className='form-input message-input' />
+              <textarea name='message' className='form-input max-w message-input h-20' />
             </label>
           </p>
-        </div>
-        <div className='submit-button-container'>
-          <button className='submit-input' type='submit'>
-            {t('contact-form.submit-button-label').toString()}
-          </button>
+          <div className='submit-button-container flex flex-row justify-end'>
+            <button className='submit-input w-fit text-xl' type='submit'>
+              {t('contact-form.submit-button-label').toString()}
+            </button>
+          </div>
         </div>
       </form>
     </div>
