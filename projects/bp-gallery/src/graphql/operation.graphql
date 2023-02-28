@@ -995,6 +995,11 @@ query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
             }
           }
         }
+        pictures {
+          data {
+            id
+          }
+        }
       }
     }
   }

@@ -1,4 +1,5 @@
-import { Button, Icon } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import './PictureToolbar.scss';
 
@@ -12,7 +13,7 @@ export const PictureToolbar = ({ calledViaLink }: { calledViaLink: boolean }) =>
   return (
     <div className='picture-toolbar'>
       <Button onClick={calledViaLink ? () => (location.href = '/browse') : onBack}>
-        <Icon>arrow_back</Icon>
+        <ArrowBack />
         {calledViaLink ? t('common.back-to-home') : t('common.back')}
       </Button>
       <div className='bh-logo'>

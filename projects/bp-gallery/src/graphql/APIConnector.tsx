@@ -3406,6 +3406,7 @@ export type GetAllArchiveTagsQuery = {
                     }
                   | null
                   | undefined;
+                pictures?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
               }
             | null
             | undefined;
@@ -6778,6 +6779,11 @@ export const GetAllArchiveTagsDocument = gql`
                   }
                 }
               }
+            }
+          }
+          pictures {
+            data {
+              id
             }
           }
         }

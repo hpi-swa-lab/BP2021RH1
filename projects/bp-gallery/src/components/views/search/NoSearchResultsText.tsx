@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { SearchType } from './helpers/search-filters';
 import { getDecadeTranslation, getSearchTypeTranslation } from './helpers/search-translation';
+import { toURLSearchParam } from './helpers/url-search-params';
 
 const quoteAll = (s: string[]) => {
   return s.map(str => `"${decodeURIComponent(str)}"`);
@@ -33,7 +34,7 @@ const NoSearchResultsText = ({ searchParams }: { searchParams: URLSearchParams }
   };
 
   for (const searchType of Object.values(SearchType)) {
-    params = searchParams.getAll(searchType);
+    params = searchParams.getAll(toURLSearchParam(searchType));
     if (params.length === 0) continue;
 
     if (searchType === SearchType.DECADE) {

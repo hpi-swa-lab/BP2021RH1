@@ -1,12 +1,13 @@
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { sanitize } from 'isomorphic-dompurify';
-import './CollectionDescription.scss';
-import { Icon, IconButton } from '@mui/material';
-import getLineBreaks from '../../../helpers/get-linebreaks';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { useTranslation } from 'react-i18next';
+import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
+import getLineBreaks from '../../../helpers/get-linebreaks';
 import TextEditor from '../../common/editors/TextEditor';
+import RichText from '../../common/RichText';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import './CollectionDescription.scss';
 
 const CollectionDescription = ({
   description,
@@ -40,13 +41,13 @@ const CollectionDescription = ({
       ) : (
         <>
           {description && (
-            <div
+            <RichText
+              value={description}
               className={
                 isOpen || !isDescriptionLong
                   ? 'collection-description open'
                   : 'collection-description closed'
               }
-              dangerouslySetInnerHTML={{ __html: sanitize(description) }}
             />
           )}
           {isDescriptionLong && (
@@ -56,7 +57,11 @@ const CollectionDescription = ({
                 setIsOpen(!isOpen);
               }}
             >
-              <Icon className='icon'>{isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}</Icon>
+              {isOpen ? (
+                <KeyboardArrowUp className='icon' />
+              ) : (
+                <KeyboardArrowDown className='icon' />
+              )}
             </IconButton>
           )}
         </>

@@ -1,18 +1,19 @@
 import { Edit, Link } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { History } from 'history';
+import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
-import PictureOverview from '../../common/PictureOverview';
-import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import PictureOverview from '../../common/PictureOverview';
+import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
+import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FALLBACK_PATH } from './../../routes';
-import ArchiveInfo from './ArchiveInfo';
 import './ArchiveView.scss';
 
 interface ArchiveViewProps {
@@ -22,6 +23,7 @@ interface ArchiveViewProps {
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const history: History = useHistory();
   const { role } = useAuth();
+  const { t } = useTranslation();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -57,7 +59,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           <h1>{archive.name}</h1>
           <div className='archive-data'>
             <div className='archive-info'>
-              <ArchiveInfo description={archive.longDescription ?? ''} />
+              <div className='archive-info-container'>
+                <RichText value={archive.longDescription ?? t('archives.defaultLongDescription')} />
+              </div>
               <div className='archive-socials'>
                 {archive.logo && (
                   <div className='archive-logo-container'>
@@ -102,6 +106,25 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 showBack: true,
               });
             }}
+          />
+
+          <TagOverview
+            title='Unsere Kategorien'
+            type={TagType.KEYWORD}
+            onClick={() => {
+              history.push('/archives/' + archiveId + '/show-more/keyword', {
+                showBack: true,
+              });
+            }}
+            rows={2}
+            queryParams={{
+              and: [
+                { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+                { visible: { eq: true } },
+              ],
+            }}
+            thumbnailQueryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            archiveId={archiveId}
           />
 
           <TagOverview
