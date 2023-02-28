@@ -126,25 +126,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             thumbnailQueryParams={{ archive_tag: { id: { eq: archiveId } } }}
             archiveId={archiveId}
           />
-
-          <TagOverview
-            title='Unsere Kategorien'
-            type={TagType.KEYWORD}
-            onClick={() => {
-              history.push('/archives/' + archiveId + '/show-more/keyword', {
-                showBack: true,
-              });
-            }}
-            rows={2}
-            queryParams={{
-              and: [
-                { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
-                { visible: { eq: true } },
-              ],
-            }}
-            thumbnailQueryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            archiveId={archiveId}
-          />
         </div>
       )}
     </ScrollContainer>

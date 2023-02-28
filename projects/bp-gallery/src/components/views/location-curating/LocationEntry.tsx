@@ -1,7 +1,9 @@
 import {
   Check,
   ChevronRight,
+  Close,
   Delete,
+  Done,
   Edit,
   Eject,
   ExpandMore,
@@ -113,8 +115,8 @@ const LocationEntry = ({
       title: t(`tag-panel.detach-${type}`),
       content: tagName,
       options: [
-        { name: 'Abbrechen', icon: 'close', value: false },
-        { name: 'Bestätigen', icon: 'done', value: true },
+        { name: 'Abbrechen', icon: <Close />, value: false },
+        { name: 'Bestätigen', icon: <Done />, value: true },
       ],
     });
     if (reallyDetach) {
@@ -187,9 +189,9 @@ const LocationEntry = ({
       title: t(`tag-panel.should-delete-${type}`),
       content: tagName,
       options: [
-        { name: 'Abbrechen', icon: 'close', value: 0 },
-        { name: t(`tag-panel.just-delete-single-${type}`), icon: 'done', value: 1 },
-        { name: 'Bestätigen', icon: 'done', value: 2 },
+        { name: 'Abbrechen', icon: <Close />, value: 0 },
+        { name: t(`tag-panel.just-delete-single-${type}`), icon: <Done />, value: 1 },
+        { name: 'Bestätigen', icon: <Done />, value: 2 },
       ],
     });
     switch (deleteOption) {
