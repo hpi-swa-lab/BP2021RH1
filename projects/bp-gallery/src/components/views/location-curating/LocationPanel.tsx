@@ -1,5 +1,6 @@
 import { Add } from '@mui/icons-material';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
@@ -9,6 +10,7 @@ import LocationPanelHeader from './LocationPanelHeader';
 
 const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
   const dialog = useDialog();
+  const { t } = useTranslation();
 
   const { allTagsQuery, createTagMutationSource } = useGenericTagEndpoints(type as TagType);
 
@@ -39,7 +41,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
   const addNewLocation = async () => {
     const collectionName = await dialog({
       preset: DialogPreset.INPUT_FIELD,
-      title: 'Name des neuen Orts',
+      title: t(`tag-panel.name-of-${type}`),
     });
     if (collectionName?.length) {
       createLocationTag({
@@ -62,7 +64,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
         ))}
         <div className='add-tag-container' onClick={addNewLocation}>
           <Add className='add-tag-icon' />
-          <div className='add-tag-text'>{`Ort hinzufügen`}</div>
+          <div className='add-tag-text'>{t(`tag-panel.add-${type}`)}</div>
         </div>
         <hr />
       </div>

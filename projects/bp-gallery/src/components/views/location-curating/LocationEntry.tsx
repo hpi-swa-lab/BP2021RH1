@@ -9,6 +9,7 @@ import {
 } from '@mui/icons-material';
 import { Chip, IconButton } from '@mui/material';
 import { History } from 'history';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ComponentCommonSynonymsInput } from '../../../graphql/APIConnector';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
@@ -33,6 +34,7 @@ const LocationEntry = ({
 }) => {
   const prompt = useDialog();
   const history: History = useHistory();
+  const { t } = useTranslation();
 
   const {
     updateSynonymsMutationSource,
@@ -93,7 +95,7 @@ const LocationEntry = ({
     if (!tagId || !tagName) return;
     const locationName = await prompt({
       preset: DialogPreset.INPUT_FIELD,
-      title: 'Neuer Name des Tags',
+      title: t(`tag-panel.new-${type}-name`, { tag_name: tagName }),
     });
     if (locationName?.length) {
       updateTagNameMutation({
@@ -108,8 +110,7 @@ const LocationEntry = ({
   const detachTag = async (tagId?: string, tagName?: string) => {
     if (!tagId || !tagName) return;
     const reallyDetach = await prompt({
-      //preset: DialogPreset.CONFIRM,
-      title: 'Dieses Tag aus der Hierarchie lösen?',
+      title: t(`tag-panel.detach-${type}`),
       content: tagName,
       options: [
         { name: 'Abbrechen', icon: 'close', value: false },
@@ -183,12 +184,11 @@ const LocationEntry = ({
   const deleteTag = async (tagId?: string, tagName?: string) => {
     if (!tagId || !tagName) return;
     const deleteOption = await prompt({
-      //preset: DialogPreset.CONFIRM,
-      title: 'Soll folgender Ort und alle seine Unterorte gelöscht werden?',
+      title: t(`tag-panel.should-delete-${type}`),
       content: tagName,
       options: [
         { name: 'Abbrechen', icon: 'close', value: 0 },
-        { name: 'Nur diesen Ort löschen', icon: 'done', value: 1 },
+        { name: t(`tag-panel.just-delete-single-${type}`), icon: 'done', value: 1 },
         { name: 'Bestätigen', icon: 'done', value: 2 },
       ],
     });
@@ -215,7 +215,7 @@ const LocationEntry = ({
         <div
           className='location-name'
           onClick={() => {
-            history.push(`/show-more/location/${locationTag.id}`, {
+            history.push(`/show-more/${type}/${locationTag.id}`, {
               showBack: true,
             });
           }}

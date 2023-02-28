@@ -344,6 +344,20 @@
     "name-of-keyword": "Name des neuen Schlagworts?",
     "name-of-location": "Name des neuen Orts?",
     "add-sub-keyword": "Unterschlagwort für {{ parent }} hinzufügen",
-    "add-sub-location": "Unterort für {{ parent }} hinzufügen"
+    "add-sub-location": "Unterort für {{ parent }} hinzufügen",
+    "add-location": "Ort hinzufügen",
+    "add-keyword": "Schlagwort hinzufügen",
+    "new-location-name": "Neuer Name des Ortes {{ tag_name }}?",
+    "new-keyword-name": "Neuer Name des Schalgworts {{ tag_name }}?",
+    "detach-location": "Diesen Ort aus der Hierarchie lösen?",
+    "detach-keyword": "Dieses Schalgwort aus der Hierarchie lösen?",
+    "should-delete-location": "Soll folgender Ort und alle seine Unterorte gelöscht werden?",
+    "should-delete-keyword": "Soll folgendes Schlagwort und alle seine Unterschlagworte gelöscht werden?",
+    "just-delete-single-location": "Nur diesen Ort löschen",
+    "just-delete-single-keyword": "Nur dieses Schalgwort löschen",
+    "relocate-location": "Welchem Ort wollen Sie folgenden Ort unterordnen?",
+    "relocate-keyword": "Welchem Schlagwort wollen Sie folgendes Schlagwort unterordnen?",
+    "location": "Ort",
+    "keyword": "Schlagwort"
   }
 }

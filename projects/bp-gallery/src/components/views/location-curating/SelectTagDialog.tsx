@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
@@ -11,6 +12,7 @@ const TagSelectDialogPreset = ({
   handleClose: (value: any) => void;
   dialogProps: DialogProps;
 }) => {
+  const { t } = useTranslation();
   const { allTagsQuery } = useGenericTagEndpoints(dialogProps.type as TagType);
 
   const { data } = allTagsQuery();
@@ -20,9 +22,12 @@ const TagSelectDialogPreset = ({
   return (
     <SelectDialogPreset
       handleClose={handleClose}
-      dialogProps={{ ...dialogProps, title: 'Welchem Ort wollen Sie folgenden Ort unterordnen?' }}
+      dialogProps={{
+        ...dialogProps,
+        title: t(`tag-panel.relocate-${dialogProps.type ?? TagType.KEYWORD}`),
+      }}
       allOptions={allTags ?? []}
-      inputLabel={'Ort'}
+      inputLabel={t(`tag-panel.${dialogProps.type ?? TagType.KEYWORD}`)}
     />
   );
 };
