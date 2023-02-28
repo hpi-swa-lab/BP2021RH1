@@ -111,12 +111,12 @@ const routes: RouteConfig[] = [
       return <TermsOfServiceView />;
     },
   },
-      {
-        path: '/contact',
-        render: () => {
-          return <ContactFormView />;
-        },
-      },
+  {
+    path: '/contact',
+    render: () => {
+      return <ContactFormView />;
+    },
+  },
   {
     path: '/prototypes/demo',
     component: Demo,

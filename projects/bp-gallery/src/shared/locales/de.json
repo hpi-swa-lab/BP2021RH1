@@ -321,12 +321,10 @@
   "contact-form": {
     "title": "Kontakt",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
-    "name-label":"Name",
-    "email-label":"E-Mail",
-    "subject-label":"Betreff",
+    "name-label": "Name",
+    "email-label": "E-Mail",
+    "subject-label": "Betreff",
     "message-label": "Nachricht",
     "submit-button-label": "Anfrage versenden"
-
-    
   }
 }

@@ -1,55 +1,45 @@
 @import 'src/shared/style';
 
+.contact-form-container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  margin: auto;
+  padding: 1rem;
 
-.contact-form-container{
-    display:flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    margin:auto;
-    padding: 1rem;
+  h1 {
+    padding-top: 2rem;
+  }
 
-    h1{
-        padding-top: 2rem;
+  .contact-form {
+    width: fit-content;
+    height: fit-content;
+
+    label {
+      display: flex;
+      flex-flow: column nowrap;
     }
 
-    .contact-form{
-
-        width:fit-content;
-        height: fit-content;
-
-        label{
-            display: flex;
-            flex-flow: column nowrap;
-        }
-
-        select{
-            width: 20rem;
-        }
-
-        .form-input{
-            width: 20rem;
-        }
-
-        .message-input{
-            height: 5rem;
-        }
-
-        .submit-button-container{
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-
-            .submit-input{
-                width:fit-content;
-            }
-
-        }
-        
-
+    select {
+      width: 20rem;
     }
 
+    .form-input {
+      width: 20rem;
+    }
 
-    
+    .message-input {
+      height: 5rem;
+    }
 
+    .submit-button-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
 
+      .submit-input {
+        width: fit-content;
+      }
+    }
+  }
 }
