@@ -92,7 +92,7 @@
     "preview": "vite preview",
     "cy:run": "cypress run -c video=false,videoUploadOnPasses=false",
     "cy:open": "cypress open",
-    "start:e2e": "env-cmd -f ./environments/.env.test vite",
+    "start:e2e": "vite build -m test && vite preview --port 3000",
     "cy": "start-server-and-test start:e2e http://localhost:3000 cy:open",
     "cy:ci": "start-server-and-test start:e2e http://localhost:3000 cy:run",
     "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
