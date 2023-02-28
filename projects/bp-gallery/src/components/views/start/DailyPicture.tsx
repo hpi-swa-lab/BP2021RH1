@@ -1,15 +1,15 @@
-import { useCallback, useState } from 'react';
 import { Event, FolderSpecial } from '@mui/icons-material';
 import { Card, Portal } from '@mui/material';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asApiPath } from '../../../helpers/app-helpers';
+import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import RichText from './../../common/RichText';
-import { formatTimeStamp } from '../../../helpers/format-timestamp';
-import { asApiPath } from '../../../helpers/app-helpers';
 import PictureView from '../picture/PictureView';
+import RichText from './../../common/RichText';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -94,7 +94,7 @@ const DailyPicture = () => {
           <Card className='flex flex-col-reverse md:flex-row rounded-md justify-between max-w-4xl max-h-fit'>
             <div className='p-4 flex flex-col'>
               <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
-              <div className={'line-clamp-10'}>
+              <div className={'line-clamp-[10]'}>
                 <h4 className={'text-lg my-1'}>{t('common.description')}:</h4>
                 <RichText value={description} className='break-all' />
               </div>

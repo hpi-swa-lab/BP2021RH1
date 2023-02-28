@@ -7,17 +7,12 @@ module.exports = {
   theme: {
     extend: {
       height: {
-        '50vh': '50vh'
+        '50vh': '50vh',
       },
-      lineClamp: {
-        10: '10'
-      }
     },
     fontFamily: {
       sans: ['Lato', 'Arial', 'sans-serif'],
     },
   },
-  plugins: [
-    require('@tailwindcss/line-clamp')
-  ],
+  plugins: [require('@tailwindcss/line-clamp')],
 };
