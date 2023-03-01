@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,6 +30,7 @@ const ContactFormView = () => {
               {t('contact-form.choose-archive-label')}
               <select className='max-w h-6' name='recipient'>
                 {/*    <option value='Test'>Test</option> */}
+                <option value='Test'>Test</option>
                 <option value='Herbert-Ahrens-Archiv'>Herbert-Ahrens-Archiv</option>
               </select>
             </label>
@@ -57,11 +59,14 @@ const ContactFormView = () => {
               <textarea name='message' className='form-input max-w message-input h-20' />
             </label>
           </p>
-          <div className='submit-button-container flex flex-row justify-end'>
-            <button className='submit-input w-fit text-xl backgound' type='submit'>
-              {t('contact-form.submit-button-label').toString()}
-            </button>
-          </div>
+          <div className='submit-button-container '></div>
+          <Button
+            className='submit-input'
+            sx={{ 'background-color': '#7e241d', color: 'white' }}
+            type='submit'
+          >
+            {t('contact-form.submit-button-label').toString()}
+          </Button>
         </div>
       </form>
     </div>
