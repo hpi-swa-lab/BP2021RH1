@@ -1,15 +1,14 @@
-import { useCallback, useMemo } from 'react';
 import { ChevronLeft, ContentPaste, ContentPasteOff } from '@mui/icons-material';
 import { Badge, Button } from '@mui/material';
-import { useState } from 'react';
+import { difference } from 'lodash';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useClipboard } from '../../provider/ClipboardProvider';
-import ScrollContainer from '../ScrollContainer';
-import { useTranslation } from 'react-i18next';
 import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
+import ScrollContainer from '../ScrollContainer';
 import './ClipboardEditor.scss';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { difference } from 'lodash';
 import { useClipboardEditorButtons } from './ClipboardEditorContext';
 
 export const ClipboardEditor = () => {
@@ -49,7 +48,7 @@ export const ClipboardEditor = () => {
         {data.pictureIds.length === 0 ? (
           <>
             <div className='clipboard-editor-buttons'>{clipboardButtons}</div>
-            <div className='no-pictures'>{t('common.noPictures')}</div>
+            <div className='no-pictures'>{t('common.pictureCount', { count: 0 })}</div>
           </>
         ) : (
           <>

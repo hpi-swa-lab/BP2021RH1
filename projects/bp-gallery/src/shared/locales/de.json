@@ -76,9 +76,11 @@
     "delete": "Löschen",
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen",
-    "noPictures": "Keine Bilder",
-    "pictureCount": "{{count}} Bild(er)",
-    "moreThanPictureCount": "Mehr als {{count}} Bilder",
+    "pictureCount_zero": "Keine Bilder",
+    "pictureCount_one": "Ein Bild",
+    "pictureCount_other": "{{count, number}} Bilder",
+    "moreThanPictureCount_one": "Mehr als ein Bild",
+    "moreThanPictureCount_other": "Mehr als {{count, number}} Bilder",
     "and": "und",
     "and-alternative": "sowie",
     "login": "Login",
@@ -139,25 +141,17 @@
     "links": {
       "pictures": {
         "label": "Verlinkte Bilder",
-        "copy": {
-          "single": "Aktuelles Bild kopieren",
-          "multiple": "Aktuelle Bilder kopieren"
-        },
-        "paste": {
-          "single": "Ein kopiertes Bild einfügen",
-          "multiple": "{{count}} kopierte Bilder einfügen"
-        }
+        "copy_one": "Aktuelles Bild kopieren",
+        "copy_other": "Aktuelle Bilder kopieren",
+        "paste_one": "Ein kopiertes Bild einfügen",
+        "paste_other": "{{count, number}} kopierte Bilder einfügen"
       },
       "texts": {
         "label": "Verlinkte Texte",
-        "copy": {
-          "single": "Aktuellen Text kopieren",
-          "multiple": "Aktuelle Texte kopieren"
-        },
-        "paste": {
-          "single": "Einen kopierten Text einfügen",
-          "multiple": "{{count}} kopierte Texte einfügen"
-        }
+        "copy_one": "Aktuellen Text kopieren",
+        "copy_other": "Aktuelle Texte kopieren",
+        "paste_one": "Einen kopierten Text einfügen",
+        "paste_other": "{{count, number}} kopierte Texte einfügen"
       },
       "remove": "Link entfernen",
       "removeAll": {
@@ -184,8 +178,8 @@
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
     "reallyDeleteDescription": "Beschreibung wirklich löschen?",
     "really-decline-comment": "Soll folgender Kommentar gelöscht werden?",
-    "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch ein Unterkommentar der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
-    "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
+    "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch einen Unterkommentar, der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
+    "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count, number}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
     "reallyDeleteCollection": "Collection wirklich löschen?",
     "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
