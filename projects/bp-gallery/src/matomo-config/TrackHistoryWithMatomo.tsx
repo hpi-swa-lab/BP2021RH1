@@ -10,6 +10,6 @@ export const TrackHistoryWithMatomo = ({ children }: PropsWithChildren<{}>) => {
       trackHistory();
     });
     return unlisten;
-  });
+  }, [history]);
   return <>{children}</>;
 };
