@@ -84,7 +84,8 @@
     "login": "Login",
     "logout": "Logout",
     "like": "Mag ich",
-    "daily-picture": "Bild des Tages"
+    "daily-picture": "Bild des Tages",
+    "description": "Beschreibung"
   },
   "comment": {
     "name": "Name",
@@ -282,7 +283,8 @@
   },
   "startpage": {
     "welcome-title": "Harz History",
-    "welcome-text": "In privaten Sammlungen, in Archiven und Museen im Harz lagern Schätze – die bisweilen selten das Publikum finden, das sie verdienen. Mit Unterstützung von Student*innen des Hasso-Plattner-Instituts Potsdam wird experimentell daran gearbeitet, ein lebendiges Schaufenster in die Harzer Historie zu öffnen und Lust auf Besuche in den Harzer Museen zu machen. Das Projekt wird im Erfolgsfall allen interessierten Sammlungen offenstehen. Das Projekt wird ideell vom Landkreis Goslar, von der Stadt Bad Harzburg und der Stadt Braunlage unterstützt. Medienpartner sind die Goslarsche Zeitung und der Harzkurier."
+    "welcome-text": "In privaten Sammlungen, in Archiven und Museen im Harz lagern Schätze – die bisweilen selten das Publikum finden, das sie verdienen. Mit Unterstützung von Student*innen des Hasso-Plattner-Instituts Potsdam wird experimentell daran gearbeitet, ein lebendiges Schaufenster in die Harzer Historie zu öffnen und Lust auf Besuche in den Harzer Museen zu machen. Das Projekt wird im Erfolgsfall allen interessierten Sammlungen offenstehen.",
+    "our-archives": "Unsere Archive:"
   },
   "footer": {
     "title": "Harz History",
@@ -326,5 +328,25 @@
     "subject-label": "Betreff",
     "message-label": "Nachricht",
     "submit-button-label": "Anfrage versenden"
+    },
+  "show-more": {
+    "x0s": "19{{ decade }}0er",
+    "pictures-title": "Unsere Bilder",
+    "pictures-text": "Hier finden Sie alle Bilder unseres Archivs",
+    "date-title": "Jahrzehnte",
+    "date-text": "Hier finden Sie alle Bilder unseres Archivs aus den bestimmten Jahrzehnten.",
+    "keyword-title": "Unsere Kategorien",
+    "keyword-text": "Hier finden Sie alle thematischen Kategorien unseres Archivs",
+    "person-title": "Personen",
+    "person-text": "Hier finden Sie alle Personen unseres Archiv",
+    "location-title": "Orte",
+    "location-text": "Hier finden Sie alle Orte unseres Archivs"
+  },
+  "discover": {
+    "our-pictures": "Unsere Bilder",
+    "decades": "Jahrzehnte",
+    "locations": "Orte",
+    "more-info": "Wissen Sie mehr über diese Bilder?",
+    "our-categories": "Unsere Kategorien"
   }
 }

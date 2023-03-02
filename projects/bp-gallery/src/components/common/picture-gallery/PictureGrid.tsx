@@ -25,6 +25,7 @@ export type PictureGridProps = {
   extraAdornments?: PicturePreviewAdornment[];
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
+  rows?: number;
 };
 
 const PictureGrid = ({
@@ -36,54 +37,57 @@ const PictureGrid = ({
   extraAdornments,
   showDefaultAdornments = true,
   allowClicks = true,
+  rows,
 }: PictureGridProps) => {
-  const calculateMaxRowCount = () =>
+  const calculateMaxPicturesPerRow = () =>
     Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
 
   const { role } = useAuth();
   const { t } = useTranslation();
 
-  const [maxRowCount, setMaxRowCount] = useState<number>(calculateMaxRowCount());
-  const [minRowCount, setMinRowCount] = useState<number>(Math.max(2, maxRowCount - 2));
+  const [maxRowLength, setMaxRowLength] = useState<number>(calculateMaxPicturesPerRow());
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [bulkEditPictureIds, setBulkEditPictureIds] = useState<string[] | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
+  const minRowLength = Math.max(2, maxRowLength - 2);
+
+  const calculatePicturesPerRowWithHashKey = useCallback(
+    (hashKey: string) => {
+      return Math.round(hashCode(hashKey) * (maxRowLength - minRowLength) + minRowLength);
+    },
+    [maxRowLength, minRowLength]
+  );
+
+  const calculatePicturesPerRow = useCallback(
+    (offset?: number) => {
+      return calculatePicturesPerRowWithHashKey(
+        offset ? hashBase + String(offset * 124.22417246) : hashBase
+      );
+    },
+    [hashBase, calculatePicturesPerRowWithHashKey]
+  );
+
+  const calculatePictureNumber = useCallback(() => {
+    if (!rows) {
+      return pictures.length;
+    }
+    let pictureNumber = calculatePicturesPerRow();
+    for (let row = 1; row < rows; row++) {
+      pictureNumber += calculatePicturesPerRow(pictureNumber - 1);
+    }
+    return pictureNumber;
+  }, [rows, pictures.length, calculatePicturesPerRow]);
+
   const deletePicture = useDeletePicture();
 
-  // Initialize table with pictures from props
-  useEffect(() => {
-    const buffer: (FlatPicture | undefined)[][] = [[]];
-    let currentRow = 0;
-    let currentRowCount = 0;
-    let rowLength = Math.round(hashCode(hashBase) * (maxRowCount - minRowCount) + minRowCount);
-    for (let i = 0; i < pictures.length; i++) {
-      buffer[currentRow].push(pictures[i]);
-      currentRowCount++;
-      if (currentRowCount >= rowLength) {
-        // In the next iteration the next row starts
-        currentRow++;
-        buffer.push([]);
-        currentRowCount = 0;
-        rowLength = Math.round(
-          hashCode(hashBase + String(i * 124.22417246)) * (maxRowCount - minRowCount) + minRowCount
-        );
-      }
-    }
-    for (let i = currentRowCount; i < rowLength; i++) {
-      buffer[buffer.length - 1].push(undefined);
-    }
-    setTable(buffer);
-  }, [maxRowCount, minRowCount, pictures, hashBase]);
-
   const onResize = useCallback(() => {
-    const newMaxRowCount = calculateMaxRowCount();
-    if (newMaxRowCount !== maxRowCount) {
-      setMaxRowCount(newMaxRowCount);
-      setMinRowCount(Math.max(2, newMaxRowCount - 2));
+    const newMaxRowLength = calculateMaxPicturesPerRow();
+    if (newMaxRowLength !== maxRowLength) {
+      setMaxRowLength(newMaxRowLength);
     }
-  }, [maxRowCount]);
+  }, [maxRowLength]);
 
   // Set up eventListener on mount and cleanup on unmount
   useEffect(() => {
@@ -92,6 +96,29 @@ const PictureGrid = ({
       window.removeEventListener('resize', onResize);
     };
   }, [onResize]);
+
+  // Initialize table with pictures from props
+  useEffect(() => {
+    const buffer: (FlatPicture | undefined)[][] = [[]];
+    let currentRow = 0;
+    let currentRowCount = 0;
+    let rowLength = calculatePicturesPerRow();
+    for (let i = 0; i < calculatePictureNumber(); i++) {
+      buffer[currentRow].push(pictures[i]);
+      currentRowCount++;
+      if (currentRowCount >= rowLength) {
+        // In the next iteration the next row starts
+        currentRow++;
+        buffer.push([]);
+        currentRowCount = 0;
+        rowLength = calculatePicturesPerRow(i);
+      }
+    }
+    for (let i = currentRowCount; i < rowLength; i++) {
+      buffer[buffer.length - 1].push(undefined);
+    }
+    setTable(buffer);
+  }, [pictures, calculatePictureNumber, calculatePicturesPerRow]);
 
   const navigateToPicture = useCallback(
     (id: string) => {
@@ -178,7 +205,9 @@ const PictureGrid = ({
         ]
       : undefined;
 
-  const pictureAdornments = (defaultAdornments ?? []).concat(extraAdornments ?? []);
+  const pictureAdornments = (defaultAdornments ?? []).concat(
+    role >= AuthRole.CURATOR ? extraAdornments ?? [] : []
+  );
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`}>
@@ -231,7 +260,7 @@ const PictureGrid = ({
           );
         })}
       </div>
-      {focusedPicture && (
+      {focusedPicture && !transitioning && (
         <Portal container={root}>
           <PictureView
             initialPictureId={focusedPicture}

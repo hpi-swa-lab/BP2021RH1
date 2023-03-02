@@ -18,6 +18,8 @@ import ArchiveEditView from './views/archives/ArchiveEditView';
 import ProtectedRoute from './common/ProtectedRoute';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import ContactFormView from './views/contact/ContactFormView';
+import ShowMoreView from './views/show-more/ShowMoreView';
+import DiscoverView from './views/discover/DiscoverView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -136,10 +138,35 @@ const routes: RouteConfig[] = [
     },
   },
   {
+    path: '/archives/:id/show-more/:type/:categoryId?',
+    render: ({ match }: RouteConfigComponentProps<{ id: ''; type: ''; categoryId: '' }>) => {
+      return (
+        <ShowMoreView
+          archiveId={match.params.id}
+          categoryType={match.params.type}
+          categoryId={match.params.categoryId}
+        />
+      );
+    },
+  },
+  {
     path: '/archives/:id',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
       return <ArchiveView archiveId={match.params.id} />;
     },
+  },
+  {
+    path: '/show-more/:type/:categoryId?',
+    render: ({ match }: RouteConfigComponentProps<{ type: ''; categoryId: '' }>) => {
+      return <ShowMoreView categoryType={match.params.type} categoryId={match.params.categoryId} />;
+    },
+  },
+  {
+    path: '/discover',
+    render: () => {
+      return <DiscoverView />;
+    },
+    exact: true,
   },
 
   {
