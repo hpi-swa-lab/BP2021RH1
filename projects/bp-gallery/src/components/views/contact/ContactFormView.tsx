@@ -5,8 +5,6 @@ import { asApiPath } from '../../../helpers/app-helpers';
 
 const ContactFormView = () => {
   const { t } = useTranslation();
-
-  const origin: string = window.location.origin;
   const apiPath: string = asApiPath('api/contact');
 
   return (
