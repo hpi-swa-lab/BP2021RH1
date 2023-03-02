@@ -120,7 +120,7 @@ describe('Global Show More View', () => {
     cy.contains('Fragezeichen Collection Testbeschreibung');
 
     // check for images in show more view
-    cy.contains('4 Bild(er)');
+    cy.contains('4 Bilder');
     for (const id of [2, 3, 4, 5]) {
       cy.get(`.picture-grid .row #picture-preview-for-${id}`).should('exist');
     }
@@ -154,7 +154,7 @@ describe('Global Show More View', () => {
     cy.contains('1970er');
 
     // contains no images
-    cy.contains('2 Bild(er)');
+    cy.contains('2 Bilder');
     for (const id of [4, 5]) {
       cy.get(`.picture-grid .row #picture-preview-for-${id}`).should('exist');
     }
@@ -187,7 +187,7 @@ describe('Global Show More View', () => {
     cy.contains('Verifizierter Testort 3');
 
     // contains no images
-    cy.contains('1 Bild(er)');
+    cy.contains('Ein Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 
@@ -218,7 +218,7 @@ describe('Global Show More View', () => {
     cy.contains('Verifiziertes Testschlagwort 4');
 
     // contains no images
-    cy.contains('1 Bild(er)');
+    cy.contains('Ein Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 });
@@ -231,7 +231,7 @@ describe('Archive Show More View', () => {
     cy.contains('Hier finden Sie alle Bilder unseres Archivs');
 
     // check for images in show more view
-    cy.contains('5 Bild(er)');
+    cy.contains('5 Bilder');
     for (const id of [1, 2, 3, 4, 5]) {
       cy.get(`.picture-grid .row #picture-preview-for-${id}`).should('exist');
     }
@@ -252,7 +252,7 @@ describe('Archive Show More View', () => {
     }
 
     // check for images in show more view
-    cy.contains('5 Bild(er)');
+    cy.contains('5 Bilder');
     for (const id of [1, 2, 3, 4, 5]) {
       cy.get(`.picture-grid .row #picture-preview-for-${id}`).should('exist');
     }
@@ -264,7 +264,7 @@ describe('Archive Show More View', () => {
     cy.contains('Verifiziertes Testschlagwort 4');
 
     // contains no images
-    cy.contains('1 Bild(er)');
+    cy.contains('Ein Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 });
