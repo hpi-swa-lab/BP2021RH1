@@ -7,7 +7,7 @@ const ContactFormView = () => {
   const { t } = useTranslation();
 
   const origin: string = window.location.origin;
-  let apiPath: string = asApiPath('api/contact');
+  const apiPath: string = asApiPath('api/contact');
 
   return (
     <div className='contact-form-container flex flex-col flex-nowrap items-center m-auto p-4'>
