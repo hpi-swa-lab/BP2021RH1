@@ -1,3 +1,4 @@
+import { History } from 'history';
 import {
   createContext,
   Dispatch,
@@ -8,22 +9,22 @@ import {
   useRef,
   useState,
 } from 'react';
-import './PictureView.scss';
-import { asApiPath } from '../../../helpers/app-helpers';
 import { useHistory } from 'react-router-dom';
-import { History } from 'history';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
-import PictureViewUI from './overlay/PictureViewUI';
-import PictureSidebar from './sidebar/PictureSidebar';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { PictureNavigationTarget } from './overlay/PictureNavigationButtons';
-import ZoomWrapper from './overlay/ZoomWrapper';
-import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
-import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
-import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { v4 as uuidv4 } from 'uuid';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asApiPath } from '../../../helpers/app-helpers';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
+import usePresentationChannel from '../../../hooks/presentation-channel.hook';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
+import { PictureNavigationTarget } from './overlay/PictureNavigationButtons';
+import PictureViewUI from './overlay/PictureViewUI';
+import ZoomWrapper from './overlay/ZoomWrapper';
+import './PictureView.scss';
+import PictureSidebar from './sidebar/PictureSidebar';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -88,7 +89,7 @@ const PictureView = ({
     : '';
 
   const onNavigateMessage = useCallback((pictureId: string) => {
-    window.history.replaceState({}, '', `/picture/${pictureId}${window.location.search}`);
+    pushHistoryWithoutRouter(`/picture/${pictureId}${window.location.search}`);
     setPictureId(pictureId);
   }, []);
 
