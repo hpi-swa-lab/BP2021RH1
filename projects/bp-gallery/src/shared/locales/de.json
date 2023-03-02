@@ -320,6 +320,15 @@
     "liability-transfer-title": "Haftungsfreistellung",
     "liability-transfer-p1": "Nutzer stellen Harz-History von sämtlichen Ansprüchen frei, die Dritte gegenüber Harz-History geltend machen aufgrund einer Verletzung ihrer Rechte durch vom Teilnehmern/private Nutzer eingestellte Inhalte.  Die Teilnehmer/private Nutzer tragen im Fall der Fälle die Kosten einschließlich sämtlicher Gerichts- und Anwaltskosten in gesetzlicher Höhe. "
   },
+  "contact-form": {
+    "title": "Kontakt",
+    "choose-archive-label": "Wen möchten Sie kontaktieren?",
+    "name-label": "Name",
+    "email-label": "E-Mail",
+    "subject-label": "Betreff",
+    "message-label": "Nachricht",
+    "submit-button-label": "Anfrage versenden"
+    },
   "show-more": {
     "x0s": "19{{ decade }}0er",
     "pictures-title": "Unsere Bilder",
