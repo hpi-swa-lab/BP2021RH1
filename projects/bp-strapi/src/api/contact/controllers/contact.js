@@ -5,11 +5,7 @@ module.exports = {
     const body = ctx.request.body;
     const adresses = require("../config/adresses.json");
     const sendTo = adresses[body.recipient];
-    const sender_name = body.sender_name;
-    const reply_email = body.email;
-    const subject = body.subject;
-    const message = body.message;
-
+    const { sender_name, email: reply_email, subject, message } = body;
     strapi.log.debug(`Trying to relay ${sender_name}'s message to ${sendTo}`);
 
     try {

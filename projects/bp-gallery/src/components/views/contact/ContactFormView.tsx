@@ -1,18 +1,13 @@
 import { Button } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { asApiPath } from '../../../helpers/app-helpers';
 
 const ContactFormView = () => {
   const { t } = useTranslation();
 
   const origin: string = window.location.origin;
-  let apiPath: string;
-  const regex = RegExp('localhost');
-  if (regex.exec(origin)) {
-    apiPath = 'http://localhost:9000/api/contact';
-  } else {
-    apiPath = 'https://harz-history/api/contact';
-  }
+  let apiPath: string = asApiPath('api/contact');
 
   return (
     <div className='contact-form-container flex flex-col flex-nowrap items-center m-auto p-4'>
@@ -36,6 +31,7 @@ const ContactFormView = () => {
           </p>
           <p>
             <label className='flex flex-col flex-nowrap text-xl p-0'>
+              git
               {t('contact-form.name-label')}
               <input name='sender_name' className='form-input h-5 w-80 name-input' type='text' />
             </label>
