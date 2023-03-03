@@ -5,7 +5,7 @@ import { asApiPath } from '../../../helpers/app-helpers';
 
 const ContactFormView = () => {
   const { t } = useTranslation();
-  const apiPath: string = asApiPath('contact');
+  const apiPath: string = asApiPath('/api/contact');
 
   return (
     <div className='contact-form-container flex flex-col flex-nowrap items-center m-auto p-4'>
@@ -23,13 +23,13 @@ const ContactFormView = () => {
               {t('contact-form.choose-archive-label')}
               <select className='max-w h-6' name='recipient'>
                 {/*    <option value='Test'>Test</option> */}
+                <option value='Test'>Test</option>
                 <option value='Herbert-Ahrens-Archiv'>Herbert-Ahrens-Archiv</option>
               </select>
             </label>
           </p>
           <p>
             <label className='flex flex-col flex-nowrap text-xl p-0'>
-              git
               {t('contact-form.name-label')}
               <input name='sender_name' className='form-input h-5 w-80 name-input' type='text' />
             </label>
