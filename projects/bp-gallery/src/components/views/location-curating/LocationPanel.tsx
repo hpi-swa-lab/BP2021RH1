@@ -27,9 +27,16 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
     for (const tag of Object.values(tagsById)) {
       if (tag.parent_tag?.id) {
         tagsById[tag.parent_tag.id].child_tags.push(tag);
+        // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
+        tagsById[tag.parent_tag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
       }
     }
-    return Object.values(tagsById).filter(tag => !tag.parent_tag);
+    return (
+      Object.values(tagsById)
+        .filter(tag => !tag.parent_tag)
+        // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
+        .sort((a, b) => a.name.localeCompare(b.name))
+    );
   }, [flattenedTags]);
 
   const [createLocationTag] = createTagMutationSource({
