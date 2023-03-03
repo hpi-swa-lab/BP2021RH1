@@ -1,18 +1,11 @@
 import { Button } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { asApiPath } from '../../../helpers/app-helpers';
 
 const ContactFormView = () => {
   const { t } = useTranslation();
-
-  const origin: string = window.location.origin;
-  let apiPath: string;
-  const regex = RegExp('localhost');
-  if (regex.exec(origin)) {
-    apiPath = 'http://localhost:9000/api/contact';
-  } else {
-    apiPath = 'https://harz-history/api/contact';
-  }
+  const apiPath: string = asApiPath('/api/contact');
 
   return (
     <div className='contact-form-container flex flex-col flex-nowrap items-center m-auto p-4'>
