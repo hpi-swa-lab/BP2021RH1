@@ -6,8 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './components/App';
 import { root } from './helpers/app-helpers';
 import './i18n';
-import setupMatomo from './matomo/matomo';
-import { TrackHistoryWithMatomo } from './matomo/TrackHistoryWithMatomo';
+import setupMatomo from './matomo-config/matomo';
+import { TrackHistoryWithMatomo } from './matomo-config/TrackHistoryWithMatomo';
 import reportWebVitals from './reportWebVitals';
 
 const sentryDsn = import.meta.env.VITE_REACT_APP_SENTRY_DSN;
