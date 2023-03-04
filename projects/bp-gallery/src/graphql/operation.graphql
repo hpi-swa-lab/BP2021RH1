@@ -581,6 +581,9 @@ query getAllKeywordTags {
         parent_tag {
           data {
             id
+            attributes {
+              name
+            }
           }
         }
       }
@@ -776,6 +779,9 @@ query getAllLocationTags {
         parent_tag {
           data {
             id
+            attributes {
+              name
+            }
           }
         }
       }

@@ -2781,7 +2781,15 @@ export type GetAllKeywordTagsQuery = {
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
                 child_tags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
                 parent_tag?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
                   | null
                   | undefined;
               }
@@ -3068,7 +3076,15 @@ export type GetAllLocationTagsQuery = {
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
                 child_tags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
                 parent_tag?:
-                  | { data?: { id?: string | null | undefined } | null | undefined }
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
                   | null
                   | undefined;
               }
@@ -5061,6 +5077,9 @@ export const GetAllKeywordTagsDocument = gql`
           parent_tag {
             data {
               id
+              attributes {
+                name
+              }
             }
           }
         }
@@ -5816,6 +5835,9 @@ export const GetAllLocationTagsDocument = gql`
           parent_tag {
             data {
               id
+              attributes {
+                name
+              }
             }
           }
         }

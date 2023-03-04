@@ -1,14 +1,17 @@
-import { Help, Add } from '@mui/icons-material';
+import { Help, Add, ArrowRight } from '@mui/icons-material';
 import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
-import { TagType } from '../../../../../types/additionalFlatTypes';
+import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
+import useGenericTagEndpoints from '../../../../../hooks/generic-endpoints.hook';
+import { FlatTag, TagType } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 import { SearchType } from '../../../search/helpers/search-filters';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import './TagSelection.scss';
 
 interface TagFields {
   name: string;
@@ -42,6 +45,49 @@ const TagSelectionField = <T extends TagFields>({
   const { t } = useTranslation();
 
   const [tagList, setTagList] = useState<T[]>(allTags);
+
+  const { allTagsQuery } = useGenericTagEndpoints(type);
+
+  const { data, refetch } = allTagsQuery();
+  const flattened = useSimplifiedQueryResponseData(data);
+  const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
+
+  const tagTree = useMemo(() => {
+    if (!flattenedTags) return;
+
+    const tagsById = Object.fromEntries(
+      flattenedTags.map(tag => [tag.id, { ...tag, child_tags: [] as FlatTag[] }])
+    );
+    for (const tag of Object.values(tagsById)) {
+      if (tag.parent_tag?.id) {
+        tagsById[tag.parent_tag.id].child_tags.push(tag);
+      }
+    }
+    return Object.values(tagsById).filter(tag => !tag.parent_tag);
+  }, [flattenedTags]);
+
+  const tagParentNamesList = useMemo(() => {
+    if (!flattenedTags) return;
+
+    const tagParentStrings = Object.fromEntries(flattenedTags.map(tag => [tag.id, '']));
+    // setup queue
+    const queue: FlatTag[] = [];
+    tagTree?.forEach(tag => {
+      queue.push(tag);
+    });
+
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+      tagParentStrings[nextTag!.id] = nextTag?.parent_tag
+        ? tagParentStrings[nextTag.parent_tag.id] + ' ' + nextTag.parent_tag.name
+        : '';
+      nextTag?.child_tags?.forEach(tag => {
+        queue.push(tag);
+      });
+    }
+
+    return tagParentStrings;
+  }, [flattenedTags, tagTree]);
 
   useEffect(() => {
     setTagList(allTags);
@@ -135,9 +181,30 @@ const TagSelectionField = <T extends TagFields>({
               label = `${t('common.create', { value: option.name })}`;
             }
             return (
-              <li {...props}>
-                {option.icon ?? ''}
-                {label}
+              <li {...props} key={option.id}>
+                <div className='recommendation-item-container'>
+                  {tagParentNamesList &&
+                    typeof option.id === 'string' &&
+                    tagParentNamesList[option.id] !== '' && (
+                      <div className='recommendation-item-parents'>
+                        {tagParentNamesList[option.id].split(' ').map((name, index) => {
+                          return (
+                            <div key={index} className='recommendation-item'>
+                              {index > 1 && <ArrowRight />}
+                              {name}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  {option.icon ?? ''}
+                  <div className='recommendation-item-name'>
+                    {tagParentNamesList &&
+                      typeof option.id === 'string' &&
+                      tagParentNamesList[option.id] !== '' && <ArrowRight />}
+                    {label}
+                  </div>
+                </div>
               </li>
             );
           }}
