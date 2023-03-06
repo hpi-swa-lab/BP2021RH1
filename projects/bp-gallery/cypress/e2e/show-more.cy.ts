@@ -186,8 +186,7 @@ describe('Global Show More View', () => {
     // check text on show more view
     cy.contains('Verifizierter Testort 3');
 
-    // contains no images
-    cy.contains('Ein Bild');
+    cy.contains('1 Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 
@@ -217,8 +216,7 @@ describe('Global Show More View', () => {
     // check text on show more view
     cy.contains('Verifiziertes Testschlagwort 4');
 
-    // contains no images
-    cy.contains('Ein Bild');
+    cy.contains('1 Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 });
@@ -263,8 +261,7 @@ describe('Archive Show More View', () => {
     // check text on show more view
     cy.contains('Verifiziertes Testschlagwort 4');
 
-    // contains no images
-    cy.contains('Ein Bild');
+    cy.contains('1 Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 });
