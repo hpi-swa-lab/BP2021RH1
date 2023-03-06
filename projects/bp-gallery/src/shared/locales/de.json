@@ -77,9 +77,9 @@
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen",
     "pictureCount_zero": "Keine Bilder",
-    "pictureCount_one": "Ein Bild",
+    "pictureCount_one": "1 Bild",
     "pictureCount_other": "{{count, number}} Bilder",
-    "moreThanPictureCount_one": "Mehr als ein Bild",
+    "moreThanPictureCount_one": "Mehr als 1 Bild",
     "moreThanPictureCount_other": "Mehr als {{count, number}} Bilder",
     "and": "und",
     "and-alternative": "sowie",
@@ -322,7 +322,7 @@
     "subject-label": "Betreff",
     "message-label": "Nachricht",
     "submit-button-label": "Anfrage versenden"
-    },
+  },
   "show-more": {
     "x0s": "19{{ decade }}0er",
     "pictures-title": "Unsere Bilder",
