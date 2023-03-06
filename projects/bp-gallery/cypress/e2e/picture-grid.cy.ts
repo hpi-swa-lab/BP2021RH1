@@ -1,4 +1,4 @@
-import { login, logout } from '../utils/login-utils';
+import { urlIs } from '../utils/url-utils';
 
 describe('picture grid', () => {
   it('should render more pictures after scrolling', () => {
@@ -8,5 +8,15 @@ describe('picture grid', () => {
     cy.get('.App > .scroll-context > .scrollable-container').scrollTo('bottom');
     cy.contains('.picture-count', '107 Bilder');
     cy.get('.picture-grid .picture-preview').should('have.length', 107);
+  });
+
+  it('has a working back button after navigating between pictures', () => {
+    cy.visit('/archives/1');
+    cy.get('.overview-container .picture-preview').first().click();
+    cy.url().should('contain', '/picture/');
+    cy.get('.picture-navigation-buttons [data-testid="ChevronRightIcon"]').click();
+    cy.get('.picture-navigation-buttons [data-testid="ChevronRightIcon"]').click();
+    cy.contains('Zurück').click();
+    urlIs('/archives/1');
   });
 });
