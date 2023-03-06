@@ -11,7 +11,8 @@
     "build:prod": "cross-env ENV_PATH=./config/env/production/.env strapi build",
     "strapi": "strapi",
     "test": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --watchAll",
-    "test:ci": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --verbose"
+    "test:ci": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --verbose",
+    "debug": "cross-env ENV_PATH=./config/env/development/.env node --inspect debug.js"
   },
   "devDependencies": {
     "jest": "^28.1.0",
