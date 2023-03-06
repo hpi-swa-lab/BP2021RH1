@@ -62,7 +62,7 @@ const CardLayout = ({
         <CardMedia component='img' height='140' image={pictureLink} alt='archive picture' />
         <CardContent
           style={{
-            height: '6rem',
+            height: 'auto',
           }}
         >
           <h3>{archiveName}</h3>
