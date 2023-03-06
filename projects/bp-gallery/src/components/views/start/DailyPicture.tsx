@@ -96,7 +96,7 @@ const DailyPicture = () => {
               <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
               <div className={'line-clamp-[10]'}>
                 <h4 className={'text-lg my-1'}>{t('common.description')}:</h4>
-                <RichText value={description} className='break-all' />
+                <RichText value={description} className='break-words' />
               </div>
               <div className={'flex-1'} />
               <div className={'flex items-center gap-2 my-2'}>
