@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
-import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { replaceHistoryWithoutRouter } from '../../../helpers/history';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -89,7 +89,7 @@ const PictureView = ({
     : '';
 
   const onNavigateMessage = useCallback((pictureId: string) => {
-    pushHistoryWithoutRouter(`/picture/${pictureId}${window.location.search}`);
+    replaceHistoryWithoutRouter(`/picture/${pictureId}${window.location.search}`);
     setPictureId(pictureId);
   }, []);
 
