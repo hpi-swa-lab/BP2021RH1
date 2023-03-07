@@ -1,3 +1,4 @@
+import { History } from 'history';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -12,10 +13,9 @@ import Loading from '../../common/Loading';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
+import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 import PictureInfo, { Field } from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
-import { History } from 'history';
-import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 import { combinePictures, computePictureDiff, PictureDiff } from './helpers/diffing';
 
 const getPictureFilters = (pictures: string[]) => {
@@ -110,6 +110,13 @@ const BulkEditView = ({
       const diff = computePictureDiff(combinedPictureAsField, field);
       save(diff);
     };
+    const hasHiddenLinks =
+      (combinedPicture.linked_pictures?.length ?? 0) === 0 &&
+      (combinedPicture.linked_texts?.length ?? 0) === 0 &&
+      pictures.some(
+        picture =>
+          (picture.linked_pictures?.length ?? 0) > 0 || (picture.linked_texts?.length ?? 0) > 0
+      );
     return (
       <div className='bulk-edit'>
         <div className='bulk-edit-grid-wrapper'>
@@ -135,6 +142,7 @@ const BulkEditView = ({
           <PictureInfo
             picture={combinedPicture}
             pictureIds={pictureIds}
+            hasHiddenLinks={hasHiddenLinks}
             onSave={onSave}
             topInfo={(anyFieldTouched, isSaving) => (
               <div className='curator-ops'>

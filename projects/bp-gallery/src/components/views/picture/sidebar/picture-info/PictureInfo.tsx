@@ -1,8 +1,5 @@
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
-import './PictureInfo.scss';
-import PictureInfoField from './PictureInfoField';
 import {
   Scalars,
   useCreateKeywordTagMutation,
@@ -13,13 +10,16 @@ import {
   useGetAllLocationTagsLazyQuery,
   useGetAllPersonTagsLazyQuery,
 } from '../../../../../graphql/APIConnector';
-import TagSelectionField from './TagSelectionField';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
-import DescriptionsEditField from './DescriptionsEditField';
-import DateRangeSelectionField from './DateRangeSelectionField';
+import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import ArchiveTagField from './ArchiveTagField';
+import DateRangeSelectionField from './DateRangeSelectionField';
+import DescriptionsEditField from './DescriptionsEditField';
 import LinkedInfoField from './LinkedInfoField';
+import './PictureInfo.scss';
+import PictureInfoField from './PictureInfoField';
+import TagSelectionField from './TagSelectionField';
 
 export type Field = Pick<
   FlatPicture,
@@ -35,11 +35,13 @@ export type Field = Pick<
 const PictureInfo = ({
   picture,
   pictureIds,
+  hasHiddenLinks,
   onSave,
   topInfo,
 }: {
   picture: FlatPicture;
   pictureIds: string[];
+  hasHiddenLinks: boolean;
   onSave: (field: Field) => void;
   topInfo?: (anyFieldTouched: boolean, isSaving: boolean) => ReactNode;
 }) => {
@@ -160,6 +162,7 @@ const PictureInfo = ({
       <LinkedInfoField
         picture={picture}
         pictureIds={pictureIds}
+        hasHiddenLinks={hasHiddenLinks}
         savePictureInfo={savePictureInfo}
       />
       {role >= AuthRole.CURATOR && (
