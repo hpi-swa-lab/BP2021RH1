@@ -1,26 +1,22 @@
 .recommendation-item-container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
 
   .recommendation-item-parents {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     padding-right: 8px;
 
     .recommendation-item {
       display: flex;
       flex-direction: row;
-      color: lightgray;
+      color: gray;
     }
   }
 
   .recommendation-item-name {
     display: flex;
     flex-direction: row;
-
-    .MuiSvgIcon-root {
-      margin-left: -8px;
-    }
   }
 }

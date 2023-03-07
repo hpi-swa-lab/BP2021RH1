@@ -14,6 +14,8 @@ import {
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
+  useCreateSubKeywordMutation,
+  useCreateSubLocationMutation,
   useGetAllCollectionsLazyQuery,
   useGetAllKeywordTagsLazyQuery,
   useGetAllLocationTagsLazyQuery,
@@ -88,10 +90,23 @@ const PictureInfo = ({
     awaitRefetchQueries: true,
   });
 
+  const [newChildLocationTagMutation, newChildLocationTagMutationResponse] =
+    useCreateSubLocationMutation({
+      refetchQueries: ['getAllLocationTags'],
+      awaitRefetchQueries: true,
+    });
+  const [newChildKeywordTagMutation, newChildKeywordTagMutationResponse] =
+    useCreateSubKeywordMutation({
+      refetchQueries: ['getAllKeywordTags'],
+      awaitRefetchQueries: true,
+    });
+
   const isSaving =
     newPersonTagMutationResponse.loading ||
     newLocationTagMutationResponse.loading ||
-    newKeywordTagMutationResponse.loading;
+    newKeywordTagMutationResponse.loading ||
+    newChildLocationTagMutationResponse.loading ||
+    newChildKeywordTagMutationResponse.loading;
 
   useEffect(() => {
     if (role >= AuthRole.CURATOR) {
@@ -150,6 +165,7 @@ const PictureInfo = ({
           }}
           noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
+          createChildMutation={newChildLocationTagMutation}
         />
       </PictureInfoField>
       {(role >= AuthRole.CURATOR || Boolean(picture.keyword_tags?.length)) && (
@@ -163,6 +179,7 @@ const PictureInfo = ({
             }}
             noContentText={t('pictureFields.noKeywords')}
             createMutation={newKeywordTagMutation}
+            createChildMutation={newChildKeywordTagMutation}
           />
         </PictureInfoField>
       )}

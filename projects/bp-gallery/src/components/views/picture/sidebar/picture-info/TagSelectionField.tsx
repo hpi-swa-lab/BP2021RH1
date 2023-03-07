@@ -1,4 +1,4 @@
-import { Help, Add, ArrowRight } from '@mui/icons-material';
+import { Help, Add, ArrowRight, ExitToApp } from '@mui/icons-material';
 import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -29,6 +29,7 @@ const TagSelectionField = <T extends TagFields>({
   allTags,
   onChange,
   createMutation,
+  createChildMutation,
   nonVerifiable = false,
   noContentText,
   type,
@@ -37,6 +38,7 @@ const TagSelectionField = <T extends TagFields>({
   allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
+  createChildMutation?: (attr: any) => Promise<any>;
   nonVerifiable?: boolean;
   noContentText: string;
   type: TagType;
@@ -47,6 +49,9 @@ const TagSelectionField = <T extends TagFields>({
   const [tagList, setTagList] = useState<T[]>(allTags);
 
   const { allTagsQuery } = useGenericTagEndpoints(type);
+
+  const [lastSelectedTags, setLastSelectedTags] = useState<T[]>();
+  const [lastSelectedTag, setLastSelectedTag] = useState<T>();
 
   const { data, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
@@ -69,7 +74,9 @@ const TagSelectionField = <T extends TagFields>({
   const tagParentNamesList = useMemo(() => {
     if (!flattenedTags) return;
 
-    const tagParentStrings = Object.fromEntries(flattenedTags.map(tag => [tag.id, '']));
+    const tagParentStrings = Object.fromEntries(
+      flattenedTags.map(tag => [tag.id, [] as FlatTag[]])
+    );
     // setup queue
     const queue: FlatTag[] = [];
     tagTree?.forEach(tag => {
@@ -78,15 +85,41 @@ const TagSelectionField = <T extends TagFields>({
 
     while (queue.length > 0) {
       const nextTag = queue.shift();
-      tagParentStrings[nextTag!.id] = nextTag?.parent_tag
-        ? tagParentStrings[nextTag.parent_tag.id] + ' ' + nextTag.parent_tag.name
-        : '';
+      if (nextTag?.parent_tag) {
+        tagParentStrings[nextTag.id] = tagParentStrings[nextTag.id].concat([
+          ...tagParentStrings[nextTag.parent_tag.id],
+          nextTag.parent_tag,
+        ]);
+      }
       nextTag?.child_tags?.forEach(tag => {
         queue.push(tag);
       });
     }
 
     return tagParentStrings;
+  }, [flattenedTags, tagTree]);
+
+  const tagChildTags = useMemo(() => {
+    if (!flattenedTags) return;
+
+    const tagChildren = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as T[]]));
+    // setup queue
+    const queue: FlatTag[] = [];
+    tagTree?.forEach(tag => {
+      queue.push(tag);
+    });
+
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+      if (nextTag?.child_tags) {
+        tagChildren[nextTag.id] = nextTag.child_tags as T[];
+      }
+      nextTag?.child_tags?.forEach(tag => {
+        queue.push(tag);
+      });
+    }
+
+    return tagChildren;
   }, [flattenedTags, tagTree]);
 
   useEffect(() => {
@@ -117,8 +150,8 @@ const TagSelectionField = <T extends TagFields>({
         <Autocomplete<T, true>
           multiple
           autoHighlight
-          isOptionEqualToValue={(option, value) => option.name === value.name}
-          options={tagList}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          options={lastSelectedTags && lastSelectedTags.length > 0 ? lastSelectedTags : tagList}
           filterOptions={(options, { inputValue }) => {
             let filtered = options;
             if (inputValue !== '') {
@@ -137,7 +170,13 @@ const TagSelectionField = <T extends TagFields>({
 
             const isExisting = options.some(o => o.name === inputValue);
 
-            if (createMutation && inputValue !== '' && !isExisting) {
+            if (
+              createMutation &&
+              inputValue !== '' &&
+              !isExisting &&
+              lastSelectedTags &&
+              lastSelectedTags.length === 0
+            ) {
               filtered.push({
                 name: inputValue,
                 icon: <Add sx={{ mr: 2 }} />,
@@ -145,6 +184,45 @@ const TagSelectionField = <T extends TagFields>({
                 createValue: inputValue,
                 id: -1,
               } as unknown as T);
+            }
+
+            if (
+              createChildMutation &&
+              inputValue !== '' &&
+              !isExisting &&
+              lastSelectedTags &&
+              lastSelectedTags.length > 0
+            ) {
+              filtered.push({
+                name: inputValue,
+                icon: <Add sx={{ mr: 2 }} />,
+                verified: true,
+                createValue: inputValue,
+                id: '-3',
+              } as unknown as T);
+            }
+
+            if (lastSelectedTags && lastSelectedTags.length > 0) {
+              if (inputValue.length > 1) {
+                filtered.push({
+                  name: 'Hierarchie verlassen',
+                  icon: <ExitToApp sx={{ mr: 2 }} />,
+                  verified: true,
+                  createValue: 'Hierarchie verlassen',
+                  id: '-2',
+                } as unknown as T);
+              } else {
+                filtered = [
+                  {
+                    name: 'Hierarchie verlassen',
+                    icon: <ExitToApp sx={{ mr: 2 }} />,
+                    verified: true,
+                    createValue: 'Hierarchie verlassen',
+                    id: '-2',
+                  } as unknown as T,
+                  ...filtered,
+                ];
+              }
             }
 
             return filtered;
@@ -155,55 +233,101 @@ const TagSelectionField = <T extends TagFields>({
             if (createMutation) {
               const addTag = newValue.find(val => val.createValue);
               if (addTag) {
-                const { data } = await createMutation({ variables: { name: addTag.createValue } });
-                if (data) {
-                  const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                  const newId = data[nameOfField].data.id;
-                  addTag.id = newId;
-                  delete addTag.createValue;
-                  delete addTag.icon;
-                  setTagList([...allTags, addTag]);
+                if (addTag.id === '-2') {
+                  setLastSelectedTags([] as T[]);
+                  setLastSelectedTag(undefined);
+                } else if (addTag.id === '-3' && createChildMutation && lastSelectedTag) {
+                  const { data } = await createChildMutation({
+                    variables: { name: addTag.createValue, parentId: lastSelectedTag.id },
+                  });
+                  if (data) {
+                    const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                    const newId = data[nameOfField].data.id;
+                    addTag.id = newId;
+                    delete addTag.createValue;
+                    delete addTag.icon;
+                    setTagList([...allTags, addTag]);
+                    setLastSelectedTags([] as T[]);
+                  }
+                } else {
+                  const { data } = await createMutation({
+                    variables: { name: addTag.createValue },
+                  });
+                  if (data) {
+                    const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                    const newId = data[nameOfField].data.id;
+                    addTag.id = newId;
+                    delete addTag.createValue;
+                    delete addTag.icon;
+                    setTagList([...allTags, addTag]);
+                    setLastSelectedTags([] as T[]);
+                  }
                 }
               }
             }
+            newValue = newValue.filter(value => value.id !== '-2' && value.id !== '-3');
             const newlyAddedTags = newValue.filter(
               newVal => !tags.some(tag => tag.id === newVal.id)
             );
             newlyAddedTags.forEach(tag => {
+              setLastSelectedTag(tag);
+              newValue = newValue.concat(
+                tagParentNamesList && tag.id in tagParentNamesList
+                  ? (tagParentNamesList[tag.id].filter(
+                      value => !tags.some(tag => tag.id === value.id)
+                    ) as T[])
+                  : ([] as T[])
+              );
+              tagChildTags && tag.id in tagChildTags && tagChildTags[tag.id].length > 0
+                ? setLastSelectedTags([...newValue, ...tagChildTags[tag.id]])
+                : setLastSelectedTags(newValue as T[]);
               tag.isNew = true;
               tag.verified = true;
+              if (type === TagType.PERSON) {
+                setLastSelectedTag(undefined);
+                setLastSelectedTags([] as T[]);
+              }
             });
             onChange(newValue);
           }}
           renderOption={(props, option) => {
             let label = option.name;
             if (option.createValue) {
-              label = `${t('common.create', { value: option.name })}`;
+              if (option.id === '-2') {
+                label = option.name;
+              } else if (option.id === '-3') {
+                label = `${option.name} als Untertag hinzufügen`;
+              } else {
+                label = `${t('common.create', { value: option.name })}`;
+              }
             }
             return (
               <li {...props} key={option.id}>
                 <div className='recommendation-item-container'>
                   {tagParentNamesList &&
-                    typeof option.id === 'string' &&
-                    tagParentNamesList[option.id] !== '' && (
-                      <div className='recommendation-item-parents'>
-                        {tagParentNamesList[option.id].split(' ').map((name, index) => {
-                          return (
-                            <div key={index} className='recommendation-item'>
-                              {index > 1 && <ArrowRight />}
-                              {name}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  {option.icon ?? ''}
-                  <div className='recommendation-item-name'>
-                    {tagParentNamesList &&
-                      typeof option.id === 'string' &&
-                      tagParentNamesList[option.id] !== '' && <ArrowRight />}
-                    {label}
-                  </div>
+                  typeof option.id === 'string' &&
+                  option.id !== '-2' &&
+                  option.id !== '-3' &&
+                  tagParentNamesList[option.id].length > 0 ? (
+                    <div className='recommendation-item-parents'>
+                      {tagParentNamesList[option.id].map((tag, index) => {
+                        return (
+                          <div key={index} className='recommendation-item'>
+                            {index >= 1 && <ArrowRight />}
+                            {tag.name}
+                          </div>
+                        );
+                      })}
+                      {option.icon ?? ''}
+                      {tagParentNamesList[option.id].length > 0 && <ArrowRight />}
+                      {label}
+                    </div>
+                  ) : (
+                    <div className='recommendation-item-name'>
+                      {option.icon ?? ''}
+                      {label}
+                    </div>
+                  )}
                 </div>
               </li>
             );
@@ -219,6 +343,11 @@ const TagSelectionField = <T extends TagFields>({
                   if (!nonVerifiable) {
                     toggleVerified(value, index);
                   }
+                }}
+                onDelete={event => {
+                  setLastSelectedTag(undefined);
+                  setLastSelectedTags([] as T[]);
+                  props({ index }).onDelete(event);
                 }}
               />
             ));
