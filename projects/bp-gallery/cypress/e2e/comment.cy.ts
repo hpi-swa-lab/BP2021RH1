@@ -48,7 +48,7 @@ describe('Comment', () => {
   });
 
   it('log in as curator and curate the new comments', () => {
-    cy.get('.MuiButton-root').contains('arrow_back').should('be.visible').click();
+    cy.get('.picture-toolbar').find('[data-testid="ArrowBackIcon"]').click();
     login();
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Kommentare').click();

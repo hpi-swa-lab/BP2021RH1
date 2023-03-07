@@ -18,4 +18,20 @@ const setupMatomo = (url: string) => {
   })();
 };
 
+const getLocation = () => window.location.href;
+
+let lastLocation: string = getLocation();
+export const trackHistory = () => {
+  const newLocation = getLocation();
+  if (newLocation === lastLocation) {
+    return;
+  }
+  const w: any = window;
+  const _paq: Array<any> = (w._paq = w._paq || []);
+  _paq.push(['setCustomUrl', newLocation]);
+  _paq.push(['setReferrerUrl', lastLocation]);
+  _paq.push(['trackPageView']);
+  lastLocation = newLocation;
+};
+
 export default setupMatomo;

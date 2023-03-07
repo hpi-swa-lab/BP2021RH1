@@ -1,18 +1,19 @@
+import { Event, FolderSpecial } from '@mui/icons-material';
+import { Portal } from '@mui/material';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asApiPath } from '../../../helpers/app-helpers';
+import { formatTimeStamp } from '../../../helpers/format-timestamp';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import {
   zoomIntoPicture,
   zoomOutOfPicture,
 } from '../../common/picture-gallery/helpers/picture-animations';
 import PictureView from '../picture/PictureView';
-import { Portal } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { formatTimeStamp } from '../../../helpers/format-timestamp';
-import Editor from '../../common/editor/Editor';
-import { FolderSpecial, Event } from '@mui/icons-material';
-import { asApiPath } from '../../../helpers/app-helpers';
+import RichText from './../../common/RichText';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -52,7 +53,7 @@ const DailyPicture = () => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const navigateToPicture = useCallback(
     async (id: string) => {
-      window.history.pushState({}, '', `/picture/${id}`);
+      pushHistoryWithoutRouter(`/picture/${id}`);
       await zoomIntoPicture(`picture-preview-for-${id}`);
       setIsFocused(true);
     },
@@ -86,7 +87,7 @@ const DailyPicture = () => {
             <div className={'flex flex-col max-w-4xl'}>
               <p className={'line-clamp-5'}>
                 <h4 className={'text-lg my-1'}>{t('pictureFields.descriptions')}:</h4>
-                <Editor value={description} />
+                <RichText value={description} />
               </p>
               <div className={'flex-1'} />
               <div className={'flex items-center gap-2 my-2'}>

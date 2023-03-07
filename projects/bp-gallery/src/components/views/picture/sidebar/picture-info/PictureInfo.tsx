@@ -1,3 +1,12 @@
+import {
+  Description,
+  Event,
+  Folder,
+  FolderSpecial,
+  Person,
+  Place,
+  Sell,
+} from '@mui/icons-material';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -98,7 +107,7 @@ const PictureInfo = ({
   return (
     <div className='picture-info'>
       {topInfo?.(anyFieldTouched, isSaving)}
-      <PictureInfoField title={t('pictureFields.time')} icon='event' type='date'>
+      <PictureInfoField title={t('pictureFields.time')} icon={<Event />} type='date'>
         <DateRangeSelectionField
           timeRangeTag={picture.time_range_tag}
           onChange={range => {
@@ -110,7 +119,7 @@ const PictureInfo = ({
       </PictureInfoField>
       <PictureInfoField
         title={t('pictureFields.descriptions')}
-        icon='description'
+        icon={<Description />}
         type='description'
       >
         <DescriptionsEditField
@@ -121,7 +130,7 @@ const PictureInfo = ({
           onTouch={() => setAnyFieldTouched(true)}
         />
       </PictureInfoField>
-      <PictureInfoField title={t('pictureFields.people')} icon='person' type='person'>
+      <PictureInfoField title={t('pictureFields.people')} icon={<Person />} type='person'>
         <TagSelectionField
           type={TagType.PERSON}
           tags={picture.person_tags ?? []}
@@ -133,7 +142,7 @@ const PictureInfo = ({
           createMutation={newPersonTagMutation}
         />
       </PictureInfoField>
-      <PictureInfoField title={t('pictureFields.locations')} icon='place' type='location'>
+      <PictureInfoField title={t('pictureFields.locations')} icon={<Place />} type='location'>
         <TagSelectionField
           type={TagType.LOCATION}
           tags={picture.location_tags ?? []}
@@ -146,7 +155,7 @@ const PictureInfo = ({
         />
       </PictureInfoField>
       {(role >= AuthRole.CURATOR || Boolean(picture.keyword_tags?.length)) && (
-        <PictureInfoField title={t('pictureFields.keywords')} icon='sell' type='keywords'>
+        <PictureInfoField title={t('pictureFields.keywords')} icon={<Sell />} type='keywords'>
           <TagSelectionField
             type={TagType.KEYWORD}
             tags={picture.keyword_tags ?? []}
@@ -166,7 +175,11 @@ const PictureInfo = ({
         savePictureInfo={savePictureInfo}
       />
       {role >= AuthRole.CURATOR && (
-        <PictureInfoField title={t('pictureFields.collections')} icon='folder' type='collections'>
+        <PictureInfoField
+          title={t('pictureFields.collections')}
+          icon={<Folder />}
+          type='collections'
+        >
           <TagSelectionField
             type={TagType.COLLECTION}
             tags={picture.collections ?? []}
@@ -175,14 +188,14 @@ const PictureInfo = ({
               savePictureInfo({ collections });
             }}
             noContentText={t('pictureFields.noCollections')}
-            nonVerifyable={true}
+            nonVerifiable={true}
           />
         </PictureInfoField>
       )}
       {(role >= AuthRole.CURATOR || Boolean(picture.archive_tag)) && (
         <PictureInfoField
           title={t('pictureFields.archiveTag')}
-          icon='folder_special'
+          icon={<FolderSpecial />}
           type='archive'
         >
           <ArchiveTagField

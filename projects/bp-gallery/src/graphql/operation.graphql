@@ -516,13 +516,19 @@ mutation postComment(
   }
 }
 
-query getKeywordTagsWithThumbnail($start: Int, $limit: Int) {
-  keywordTags(pagination: { start: $start, limit: $limit }) {
+query getKeywordTagsWithThumbnail(
+  $filters: KeywordTagFiltersInput = {}
+  $thumbnailFilters: PictureFiltersInput = {}
+  $start: Int
+  $limit: Int
+  $sortBy: [String]
+) {
+  keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
     data {
       id
       attributes {
         name
-        thumbnail: pictures(pagination: { limit: 1 }) {
+        thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
           data {
             attributes {
               media {
@@ -535,7 +541,10 @@ query getKeywordTagsWithThumbnail($start: Int, $limit: Int) {
             }
           }
         }
-        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+        verified_thumbnail: verified_pictures(
+          filters: $thumbnailFilters
+          pagination: { limit: 1 }
+        ) {
           data {
             attributes {
               media {
@@ -584,13 +593,19 @@ mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsI
   }
 }
 
-query getLocationTagsWithThumbnail($start: Int, $limit: Int) {
-  locationTags(pagination: { start: $start, limit: $limit }) {
+query getLocationTagsWithThumbnail(
+  $filters: LocationTagFiltersInput = {}
+  $thumbnailFilters: PictureFiltersInput = {}
+  $start: Int
+  $limit: Int
+  $sortBy: [String]
+) {
+  locationTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
     data {
       id
       attributes {
         name
-        thumbnail: pictures(pagination: { limit: 1 }) {
+        thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
           data {
             attributes {
               media {
@@ -603,7 +618,10 @@ query getLocationTagsWithThumbnail($start: Int, $limit: Int) {
             }
           }
         }
-        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+        verified_thumbnail: verified_pictures(
+          filters: $thumbnailFilters
+          pagination: { limit: 1 }
+        ) {
           data {
             attributes {
               media {
@@ -668,13 +686,19 @@ mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
   }
 }
 
-query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
-  personTags(pagination: { start: $start, limit: $limit }) {
+query getPersonTagsWithThumbnail(
+  $filters: PersonTagFiltersInput = {}
+  $thumbnailFilters: PictureFiltersInput = {}
+  $start: Int
+  $limit: Int
+  $sortBy: [String]
+) {
+  personTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
     data {
       id
       attributes {
         name
-        thumbnail: pictures(pagination: { limit: 1 }) {
+        thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
           data {
             attributes {
               media {
@@ -687,7 +711,10 @@ query getPersonTagsWithThumbnail($start: Int, $limit: Int) {
             }
           }
         }
-        verified_thumbnail: verified_pictures(pagination: { limit: 1 }) {
+        verified_thumbnail: verified_pictures(
+          filters: $thumbnailFilters
+          pagination: { limit: 1 }
+        ) {
           data {
             attributes {
               media {
@@ -789,7 +816,12 @@ query getDecadePreviewThumbnails(
   $filter80s: PictureFiltersInput!
   $filter90s: PictureFiltersInput!
 ) {
-  decade40s: pictures(filters: $filter40s, pagination: { limit: 1 }) {
+  decade40s: pictures(
+    filters: {
+      and: [$filter40s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+    }
+    pagination: { limit: 1 }
+  ) {
     data {
       attributes {
         media {
@@ -802,7 +834,12 @@ query getDecadePreviewThumbnails(
       }
     }
   }
-  decade50s: pictures(filters: $filter50s, pagination: { limit: 1 }) {
+  decade50s: pictures(
+    filters: {
+      and: [$filter50s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+    }
+    pagination: { limit: 1 }
+  ) {
     data {
       attributes {
         media {
@@ -815,7 +852,12 @@ query getDecadePreviewThumbnails(
       }
     }
   }
-  decade60s: pictures(filters: $filter60s, pagination: { limit: 1 }) {
+  decade60s: pictures(
+    filters: {
+      and: [$filter60s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+    }
+    pagination: { limit: 1 }
+  ) {
     data {
       attributes {
         media {
@@ -828,7 +870,12 @@ query getDecadePreviewThumbnails(
       }
     }
   }
-  decade70s: pictures(filters: $filter70s, pagination: { limit: 1 }) {
+  decade70s: pictures(
+    filters: {
+      and: [$filter70s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+    }
+    pagination: { limit: 1 }
+  ) {
     data {
       attributes {
         media {
@@ -841,7 +888,12 @@ query getDecadePreviewThumbnails(
       }
     }
   }
-  decade80s: pictures(filters: $filter80s, pagination: { limit: 1 }) {
+  decade80s: pictures(
+    filters: {
+      and: [$filter80s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+    }
+    pagination: { limit: 1 }
+  ) {
     data {
       attributes {
         media {
@@ -854,7 +906,12 @@ query getDecadePreviewThumbnails(
       }
     }
   }
-  decade90s: pictures(filters: $filter90s, pagination: { limit: 1 }) {
+  decade90s: pictures(
+    filters: {
+      and: [$filter90s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
+    }
+    pagination: { limit: 1 }
+  ) {
     data {
       attributes {
         media {

@@ -13,7 +13,8 @@ const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
   isAllSearchActive: boolean,
   sortBy?: string[],
-  filterOutTextsForNonCurators = true
+  filterOutTextsForNonCurators = true,
+  limit: number = NUMBER_OF_PICTURES_LOADED_PER_FETCH
 ) => {
   const { role } = useAuth();
 
@@ -47,7 +48,7 @@ const useGetPictures = (
       filters,
       pagination: {
         start: 0,
-        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+        limit: limit,
       },
       sortBy,
     },
@@ -60,7 +61,7 @@ const useGetPictures = (
       filterOutTexts,
       pagination: {
         start: 0,
-        limit: NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+        limit: limit,
       },
     },
     notifyOnNetworkStatusChange: true,

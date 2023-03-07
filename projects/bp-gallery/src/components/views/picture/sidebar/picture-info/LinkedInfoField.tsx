@@ -1,4 +1,4 @@
-import { ContentCopy, ContentPasteGo, LinkOff } from '@mui/icons-material';
+import { ContentCopy, ContentPasteGo, Link, LinkOff } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { differenceWith, isEqual, union, unionWith } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -208,7 +208,7 @@ const LinkedInfoField = ({
       {(role >= AuthRole.CURATOR || Boolean(linked.collection?.length)) && isText !== undefined && (
         <PictureInfoField
           title={t(`pictureFields.links.${linked.name}.label`)}
-          icon='link'
+          icon={<Link />}
           type='links'
         >
           <ScrollContainer>

@@ -1,14 +1,14 @@
+import { ExpandMore, QuestionAnswer } from '@mui/icons-material';
+import { Badge } from '@mui/material';
 import { memo, useEffect, useMemo, useState } from 'react';
-import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import NewCommentForm from './NewCommentForm';
-import FormattedComment from './FormattedComment';
-import './CommentsContainer.scss';
 import { useTranslation } from 'react-i18next';
-import { Badge, Icon } from '@mui/material';
-import CommentVerification from './CommentVerification';
-import { ExpandMore } from '@mui/icons-material';
+import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import LikeButton from '../LikeButton';
+import './CommentsContainer.scss';
+import CommentVerification from './CommentVerification';
+import FormattedComment from './FormattedComment';
+import NewCommentForm from './NewCommentForm';
 
 const CommentsContainer = memo(function CommentsContainer({
   pictureId,
@@ -62,7 +62,7 @@ const CommentsContainer = memo(function CommentsContainer({
           <div className={'flex grow'}>
             <div className='picture-comments-icon mr-2 ml-auto'>
               {isOpen || badgeNumber === 0 ? (
-                <Icon>question_answer</Icon>
+                <QuestionAnswer />
               ) : (
                 <Badge
                   badgeContent={badgeNumber}
@@ -73,14 +73,14 @@ const CommentsContainer = memo(function CommentsContainer({
                   }}
                   max={99}
                 >
-                  <Icon>question_answer</Icon>
+                  <QuestionAnswer />
                 </Badge>
               )}
             </div>
             {t('common.comments')}
           </div>
         </div>
-        <ExpandMore />
+        <ExpandMore className='expand-button' />
       </div>
       <div className='comment-container'>
         {sortedComments()?.map((comment: FlatComment) => (

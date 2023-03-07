@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 import type { Plugin, PluginBuild } from 'esbuild';
 import path from 'path';
+import eslint from 'vite-plugin-eslint';
 
 const splitPackages = ['@mui/icons-material', '@mui/material'];
 const reactPlugins = [
@@ -28,7 +29,7 @@ const splitPackagesPlugin: Plugin = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({ plugins: reactPlugins })],
+  plugins: [react({ plugins: reactPlugins }), eslint({ cache: true })],
   envDir: 'environments',
   server: {
     port: 3000,
@@ -49,7 +50,7 @@ export default defineConfig({
           mui: ['@mui/icons-material', '@mui/material'],
           'mui-x-data-grid': ['@mui/x-data-grid'],
           'react-date-range': ['react-date-range'],
-          'react-image-editor': ['@toast-ui/react-image-editor'],
+          'tui-image-editor': ['tui-image-editor'],
           'jodit-react': ['jodit-react'],
         },
       },
