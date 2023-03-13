@@ -370,6 +370,7 @@ query getPictures(
               width
               height
               formats
+              url
               updatedAt
             }
           }
@@ -401,6 +402,7 @@ query getPicturesByAllSearch(
             width
             height
             formats
+            url
             updatedAt
           }
         }
