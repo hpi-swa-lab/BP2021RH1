@@ -1,6 +1,15 @@
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { Close, ExpandCircleDown, Upload } from '@mui/icons-material';
 import { Button, CircularProgress } from '@mui/material';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, sortBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +21,7 @@ import uploadMediaFiles from './helpers/upload-media-files';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
+import SortableItem from './SortablePicture';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
@@ -27,6 +37,21 @@ const PictureUploadArea = ({
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: 'image/jpeg,image/png',
   });
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      // Require the mouse to move by 10 pixels before activating
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      // Press delay of 250ms, with tolerance of 5px of movement
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  );
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useDialog();
@@ -52,7 +77,7 @@ const PictureUploadArea = ({
 
   useEffect(() => {
     const filesWithPreviews = acceptedFiles.map(file => ({ preview: asFlatPicture(file), file }));
-    setNewFiles(fileList => [...fileList, ...filesWithPreviews]);
+    setNewFiles(fileList => [...fileList, ...sortBy(filesWithPreviews, f => f.file.name)]);
   }, [acceptedFiles]);
 
   const uploadPictures = useCallback(async () => {
@@ -97,6 +122,25 @@ const PictureUploadArea = ({
     setNewFiles(fileList => [...fileList, { file, preview: asFlatPicture(file) }]);
   }, []);
 
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setNewFiles(newFiles => {
+        console.log(active);
+        console.log(over);
+        const oldIndex = newFiles.indexOf(
+          newFiles.find(newFile => newFile.file.name === active.id)!
+        );
+        const newIndex = newFiles.indexOf(
+          newFiles.find(newFile => newFile.file.name === over?.id)!
+        );
+
+        return arrayMove(newFiles, oldIndex, newIndex);
+      });
+    }
+  }
+
   // Do we really want to allow uploading only when preprocessing is enabled?
   if (role < AuthRole.CURATOR || !preprocessPictures) {
     return null;
@@ -116,27 +160,32 @@ const PictureUploadArea = ({
         <ScannerInput onScan={onScan} />
       </div>
       <div className='uploaded-pictures'>
-        {newFiles.map((file, index) => (
-          <PicturePreview
-            key={`${file.file.name}-${index}`}
-            adornments={[
-              {
-                position: 'top-right',
-                icon: <Close />,
-                onClick: () => {
-                  setNewFiles(fileList => {
-                    const clone = cloneDeep(fileList);
-                    clone.splice(index, 1);
-                    return clone;
-                  });
-                },
-              },
-            ]}
-            picture={file.preview}
-            onClick={() => {}}
-            pictureOrigin={PictureOrigin.LOCAL}
-          />
-        ))}
+        <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+          <SortableContext items={newFiles.map(newFile => newFile.file.name)}>
+            {newFiles.map((file, index) => (
+              <SortableItem id={file.file.name} key={`${file.file.name}-${index}`}>
+                <PicturePreview
+                  adornments={[
+                    {
+                      position: 'top-right',
+                      icon: <Close />,
+                      onClick: () => {
+                        setNewFiles(fileList => {
+                          const clone = cloneDeep(fileList);
+                          clone.splice(index, 1);
+                          return clone;
+                        });
+                      },
+                    },
+                  ]}
+                  picture={file.preview}
+                  onClick={() => {}}
+                  pictureOrigin={PictureOrigin.LOCAL}
+                />
+              </SortableItem>
+            ))}
+          </SortableContext>
+        </DndContext>
       </div>
       {Boolean(newFiles.length) && (
         <Button disabled={loading} className='add-to-collection' onClick={uploadPictures}>
