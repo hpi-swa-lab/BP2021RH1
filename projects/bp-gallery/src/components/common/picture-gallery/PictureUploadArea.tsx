@@ -127,8 +127,6 @@ const PictureUploadArea = ({
 
     if (active.id !== over?.id) {
       setNewFiles(newFiles => {
-        console.log(active);
-        console.log(over);
         const oldIndex = newFiles.indexOf(
           newFiles.find(newFile => newFile.file.name === active.id)!
         );
