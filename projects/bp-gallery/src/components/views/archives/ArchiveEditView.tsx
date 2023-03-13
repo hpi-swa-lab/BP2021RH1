@@ -1,21 +1,21 @@
+import { Check, Close, Save } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { History } from 'history';
+import { Jodit } from 'jodit-react';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
-import './ArchiveEditView.scss';
 import TextEditor from '../../common/editors/TextEditor';
-import { Jodit } from 'jodit-react';
-import { useHistory } from 'react-router-dom';
-import { History } from 'history';
-import ArchiveLinkForm from './ArchiveLinkForm';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import './ArchiveEditView.scss';
 import ArchiveInputField from './ArchiveInputField';
+import ArchiveLinkForm from './ArchiveLinkForm';
 import ArchiveLogoInput from './ArchiveLogoInput';
-import { Check, Save, Close } from '@mui/icons-material';
 import useLinks from './helpers/link-helpers';
-import { useDialog, DialogPreset } from '../../provider/DialogProvider';
-import { useTranslation } from 'react-i18next';
 
 interface ArchiveEditViewProps {
   archiveId: string;
@@ -69,7 +69,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
 
   useEffect(() => {
     setForm(form => ({
-      dirty: form.dirty,
+      dirty: false,
       name: archive?.name ?? '',
       shortDescription: archive?.shortDescription ?? '',
       longDescription: archive?.longDescription ?? '',
@@ -93,6 +93,19 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   }, [form.dirty]);
 
   const src = archive?.logo?.formats?.thumbnail.url ?? '';
+
+  const updateForm = useCallback((newForm: Partial<ArchiveForm>) => {
+    setForm(form => {
+      return { ...form, ...newForm };
+    });
+  }, []);
+
+  const handleLinkChange = useCallback(
+    (links: LinkInfo[], invalid: boolean) => {
+      updateForm({ links, dirty: true, invalid });
+    },
+    [updateForm]
+  );
 
   const handleLinks = () => {
     form.links.forEach(link => {
@@ -147,7 +160,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         },
       });
     }
-    setForm({ ...form, dirty: false });
+    updateForm({ dirty: false });
   };
 
   return archive ? (
@@ -177,7 +190,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           disabled={!form.dirty || updateMutationResponse.loading}
         >
           {updateMutationResponse.loading
-            ? t('archives.edit.loading')
+            ? t('archives.edit.saving')
             : form.dirty
             ? t('archives.edit.save')
             : t('archives.edit.saved')}
@@ -191,13 +204,13 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           label={t('archives.edit.nameLabel')}
           id='name'
           defaultValue={archive.name}
-          onBlur={value => setForm({ ...form, name: value, dirty: true })}
+          onBlur={value => updateForm({ name: value, dirty: true })}
         />
         <ArchiveInputField
           label={t('archives.edit.shortDescription.label')}
           id='shortdescription'
           defaultValue={archive.shortDescription ?? ''}
-          onBlur={value => setForm({ ...form, shortDescription: value, dirty: true })}
+          onBlur={value => updateForm({ shortDescription: value, dirty: true })}
           helperText={t('archives.edit.shortDescription.helperText')}
         />
         <div className='archive-form-div'>
@@ -207,20 +220,15 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           <TextEditor
             value={archive.longDescription ?? ''}
             onChange={() => {}}
-            onBlur={value => setForm({ ...form, longDescription: value, dirty: true })}
+            onBlur={value => updateForm({ longDescription: value, dirty: true })}
             extraOptions={extraOptions}
           />
         </div>
         <ArchiveLogoInput
           defaultUrl={src}
-          onChange={file => setForm({ ...form, logo: file, dirty: true })}
+          onChange={file => updateForm({ logo: file, dirty: true })}
         />
-        <ArchiveLinkForm
-          links={archive.links}
-          onChange={(links, invalid) =>
-            setForm({ ...form, links: links, dirty: true, invalid: invalid })
-          }
-        />
+        <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
       </form>
     </div>
   ) : (

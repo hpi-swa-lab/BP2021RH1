@@ -1,9 +1,9 @@
 import { Add, Delete, Edit, Save } from '@mui/icons-material';
 import { Button, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { LinkInfo, LinkStatus } from './ArchiveEditView';
 import ArchiveLinkField from './ArchiveLinkField';
-import { useTranslation } from 'react-i18next';
 
 interface LinkFormProps {
   links: LinkInfo[] | undefined;
@@ -11,7 +11,7 @@ interface LinkFormProps {
 }
 
 const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
-  const [selectedLink, setselectedLink] = useState<string>();
+  const [selectedLink, setSelectedLink] = useState<string>();
   const [links, setLinks] = useState<LinkInfo[]>(defaultLinks ?? []);
 
   const { t } = useTranslation();
@@ -22,13 +22,13 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
 
   useEffect(() => {
     setLinks(defaultLinks ?? []);
+    setSelectedLink(undefined);
   }, [defaultLinks]);
 
   useEffect(() => {
     const invalid = links.find(link => link.invalid) ? true : false;
     links !== defaultLinks && onChange(links, invalid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [links]);
+  }, [defaultLinks, links, onChange]);
 
   return (
     <div className='archive-form-div'>
@@ -43,6 +43,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
                     <ArchiveLinkField
                       link={link}
                       onBlur={(title, url, match) => {
+                        if (title === link.title && url === link.url) return;
                         const updatedLink = {
                           id: link.id,
                           title: title,
@@ -58,7 +59,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
                     />
                     <IconButton
                       onClick={() => {
-                        if (!link.invalid) setselectedLink(undefined);
+                        if (!link.invalid) setSelectedLink(undefined);
                       }}
                     >
                       <Save />
@@ -70,7 +71,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
                     <IconButton
                       onClick={() => {
                         if (!links.find(value => value.id === selectedLink)?.invalid)
-                          setselectedLink(link.id);
+                          setSelectedLink(link.id);
                       }}
                     >
                       <Edit />
@@ -101,9 +102,8 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
                 url: '',
                 status: LinkStatus.Created,
               };
-              const newLinks = [...links, newLink];
-              setLinks(newLinks);
-              setselectedLink(newLink.id);
+              setLinks([...links, newLink]);
+              setSelectedLink(newLink.id);
             }
           }}
         >
