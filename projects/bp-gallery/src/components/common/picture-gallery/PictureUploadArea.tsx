@@ -17,11 +17,11 @@ import { useCreatePictureMutation } from '../../../graphql/APIConnector';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import SortableItem from '../SortableItem';
 import uploadMediaFiles from './helpers/upload-media-files';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
-import SortableItem from './SortablePicture';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
