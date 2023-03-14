@@ -1,5 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures } from './helper';
+import { selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit location tags', () => {
   before(() => {
@@ -18,7 +18,7 @@ describe('bulk edit location tags', () => {
     cy.visit('/picture/4');
     cy.contains('Testort 1');
     cy.contains('Market place').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '4');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('Testort 1');
@@ -85,7 +85,7 @@ describe('bulk edit location tags', () => {
     cy.visit('/picture/4');
     cy.contains('.MuiChip-root', 'Bad Harzburg');
     cy.contains('Market place').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '4');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Orte').find('input').type('Market{enter}');

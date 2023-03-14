@@ -1,5 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures } from './helper';
+import { selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit dates', () => {
   before(() => {
@@ -12,21 +12,21 @@ describe('bulk edit dates', () => {
   });
 
   it('shows the same date as the date', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('2', '3');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('01.01.1961 - 31.01.2022');
   });
 
   it('shows different dates as no date', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('2', '5');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('Keine Zeit bekannt');
   });
 
   it('sets the date of different dates to the same, set date', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '5');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('Keine Zeit bekannt').click();

@@ -1,5 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures } from './helper';
+import { selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit keyword tags', () => {
   before(() => {
@@ -18,7 +18,7 @@ describe('bulk edit keyword tags', () => {
     cy.visit('/picture/3');
     cy.contains('Verifiziertes Testschlagwort 2');
     cy.contains('Verifiziertes Testschlagwort 4').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('3', '4');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('Verifiziertes Testschlagwort 2');
@@ -32,7 +32,7 @@ describe('bulk edit keyword tags', () => {
     cy.visit('/picture/5');
     cy.contains('.picture-info-field', 'Schlagworte').find('input');
     cy.contains('.picture-info-field', 'Schlagworte').find('.MuiChip-root').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('4', '5');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Schlagworte').find('input');
@@ -46,7 +46,7 @@ describe('bulk edit keyword tags', () => {
     cy.visit('/picture/5');
     cy.contains('Verifiziertes Testschlagwort 2').should('not.exist');
     cy.contains('Verifiziertes Testschlagwort 4').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('3', '5');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Schlagworte')
@@ -63,7 +63,7 @@ describe('bulk edit keyword tags', () => {
   });
 
   it('removes tags while keeping untouched ones', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('3', '5');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.MuiChip-root', 'Verifiziertes Testschlagwort 4')
@@ -87,7 +87,7 @@ describe('bulk edit keyword tags', () => {
     cy.visit('/picture/3');
     cy.contains('Verifiziertes Testschlagwort 2');
     cy.contains('Verifiziertes Testschlagwort 4').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('3', '4');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Schlagworte')

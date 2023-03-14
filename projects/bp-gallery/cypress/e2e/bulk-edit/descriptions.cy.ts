@@ -1,5 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures } from './helper';
+import { selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit descriptions', () => {
   before(() => {
@@ -12,21 +12,21 @@ describe('bulk edit descriptions', () => {
   });
 
   it('shows the same description as the description', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('4', '5');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('Yet another description');
   });
 
   it('shows different descriptions as no description', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('2', '3');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('Keine Beschreibung vorhanden');
   });
 
   it('shows only the shared descriptions', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '2');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('Yet another description');
@@ -34,7 +34,7 @@ describe('bulk edit descriptions', () => {
   });
 
   it('adds and deletes descriptions while leaving exclusive descriptions as they are', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '2');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Beschreibungen')
@@ -56,7 +56,7 @@ describe('bulk edit descriptions', () => {
     cy.contains('This is a description!').should('not.exist');
     cy.contains('Irgendwas cooles');
 
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '2');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.description-wrapper', 'Irgendwas cooles')

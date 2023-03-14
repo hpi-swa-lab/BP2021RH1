@@ -1,5 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures } from './helper';
+import { selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit person tags', () => {
   before(() => {
@@ -18,7 +18,7 @@ describe('bulk edit person tags', () => {
     cy.visit('/picture/3');
     cy.contains('Simon Heraldson');
     cy.contains('Katharina Schmunk').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('2', '3');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('Simon Heraldson');
@@ -32,7 +32,7 @@ describe('bulk edit person tags', () => {
     cy.visit('/picture/2');
     cy.contains('Simon Heraldson');
     cy.contains('Katharina Schmunk');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '2');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Personen').find('input');
@@ -46,7 +46,7 @@ describe('bulk edit person tags', () => {
     cy.visit('/picture/3');
     cy.contains('Simon Heraldson');
     cy.contains('Katharina Schmunk').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '3');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Personen').find('input').type('Katharina{enter}');
@@ -61,7 +61,7 @@ describe('bulk edit person tags', () => {
   });
 
   it('removes tags while keeping untouched ones', () => {
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('1', '3');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.MuiChip-root', 'Katharina Schmunk').find('[data-testid="CancelIcon"]').click();
@@ -83,7 +83,7 @@ describe('bulk edit person tags', () => {
     cy.visit('/picture/3');
     cy.contains('Simon Heraldson');
     cy.contains('Katharina Schmunk').should('not.exist');
-    cy.visit('/archives/1');
+    visitArchive1Pictures();
     selectPictures('2', '3');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Personen').find('input').type('Katharina{enter}');
