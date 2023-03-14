@@ -187,7 +187,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           className='button-filled button-save'
           startIcon={form.dirty ? <Save /> : <Check />}
           onClick={handleSubmit}
-          disabled={!form.dirty || updateMutationResponse.loading}
+          disabled={!form.dirty || updateMutationResponse.loading || form.invalid}
         >
           {updateMutationResponse.loading
             ? t('archives.edit.saving')

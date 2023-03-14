@@ -6,7 +6,7 @@ import { sanitizeLink } from './helpers/link-helpers';
 
 interface LinkFieldProps {
   link: LinkInfo;
-  onBlur: (title: string, url: string, match: boolean) => void;
+  onBlur: (title: string, url: string, invalid: boolean) => void;
 }
 
 const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
