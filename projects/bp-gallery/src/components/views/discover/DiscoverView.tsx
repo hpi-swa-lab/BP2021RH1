@@ -16,7 +16,7 @@ const DiscoverView = () => {
     <ScrollContainer>
       <div className='discover-container'>
         <PictureOverview
-          title={t('discover.our-pictures')}
+          title={t('discover.latest-pictures')}
           queryParams={{}}
           onClick={() => {
             history.push('/show-more/pictures', {
