@@ -68,13 +68,13 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   });
 
   useEffect(() => {
-    setForm(form => ({
+    setForm({
       dirty: false,
       name: archive?.name ?? '',
       shortDescription: archive?.shortDescription ?? '',
       longDescription: archive?.longDescription ?? '',
       links: archive?.links ?? [],
-    }));
+    });
   }, [archive]);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     return () => {};
   }, [form.dirty]);
 
-  const src = archive?.logo?.formats?.thumbnail.url ?? '';
+  const logoSrc = archive?.logo?.formats?.thumbnail.url ?? '';
 
   const updateForm = useCallback((newForm: Partial<ArchiveForm>) => {
     setForm(form => {
@@ -225,7 +225,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           />
         </div>
         <ArchiveLogoInput
-          defaultUrl={src}
+          defaultUrl={logoSrc}
           onChange={file => updateForm({ logo: file, dirty: true })}
         />
         <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />

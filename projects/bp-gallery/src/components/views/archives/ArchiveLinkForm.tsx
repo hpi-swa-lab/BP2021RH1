@@ -27,7 +27,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
 
   useEffect(() => {
     const invalid = links.find(link => link.invalid) ? true : false;
-    links !== defaultLinks && onChange(links, invalid);
+    if (links !== defaultLinks) onChange(links, invalid);
   }, [defaultLinks, links, onChange]);
 
   return (
@@ -42,13 +42,13 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
                   <>
                     <ArchiveLinkField
                       link={link}
-                      onBlur={(title, url, match) => {
+                      onBlur={(title, url, invalid) => {
                         if (title === link.title && url === link.url) return;
                         const updatedLink = {
                           id: link.id,
                           title: title,
                           url: url,
-                          invalid: !match,
+                          invalid: invalid,
                           status:
                             link.status === LinkStatus.Created
                               ? LinkStatus.Created

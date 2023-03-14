@@ -14,11 +14,9 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
   const [title, setTitle] = useState(link.title ?? '');
   const [url, setUrl] = useState(link.url);
   const [invalid, setInvalid] = useState(false);
-  const [dirty, setDirty] = useState(false);
 
   const validUrl =
-    // eslint-disable-next-line no-useless-escape
-    /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+    /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
   return (
     <div className='archive-link-entry-form'>
@@ -27,11 +25,7 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
         placeholder={t('archives.edit.links.title.placeholder')}
         value={title}
         onChange={event => setTitle(event.target.value)}
-        onBlur={() => {
-          const valid = validUrl.test(url);
-          dirty && setInvalid(!valid);
-          onBlur(title, url, valid);
-        }}
+        onBlur={() => onBlur(title, url, invalid)}
         helperText={t('archives.edit.links.title.helperText')}
       />
       <ArchiveInput
@@ -51,9 +45,8 @@ const ArchiveLinkField = ({ link, onBlur }: LinkFieldProps) => {
           const sanitizedUrl = sanitizeLink(url);
           const valid = validUrl.test(sanitizedUrl);
           setUrl(sanitizedUrl);
-          setDirty(sanitizedUrl !== link.url);
           setInvalid(!valid);
-          onBlur(title, sanitizedUrl, valid);
+          onBlur(title, sanitizedUrl, !valid);
         }}
         helperText={t(`archives.edit.links.url.helperText${invalid ? 'Invalid' : 'Valid'}`)}
       />
