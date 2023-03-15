@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "picture_geo_infos",
+  "info": {
+    "singularName": "picture-geo-info",
+    "pluralName": "picture-geo-infos",
+    "displayName": "PictureGeoInfo"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "picture": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::picture.picture",
+      "inversedBy": "picture_geo_infos"
+    },
+    "latitude": {
+      "type": "decimal"
+    },
+    "longitude": {
+      "type": "decimal"
+    },
+    "radius": {
+      "type": "decimal"
+    }
+  }
+}
