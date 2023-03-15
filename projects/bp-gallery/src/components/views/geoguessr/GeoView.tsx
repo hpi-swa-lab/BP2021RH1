@@ -5,9 +5,11 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
+import { useState } from 'react';
 
 const GeoView = () => {
-  const { data } = useGetPictureInfoQuery({ variables: { pictureId: '70' } });
+  const [pictureId, setPictureId] = useState<string>('70');
+  const { data } = useGetPictureInfoQuery({ variables: { pictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
@@ -21,7 +23,7 @@ const GeoView = () => {
           </div>
         </div>
       </ZoomWrapper>
-      <GeoMap onNextPicture={() => {}} />
+      <GeoMap onNextPicture={() => {}} pictureId={pictureId} />
     </div>
   );
 };

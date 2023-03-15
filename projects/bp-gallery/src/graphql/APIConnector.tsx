@@ -434,6 +434,7 @@ export type GenericMorph =
   | LocationTag
   | PersonTag
   | Picture
+  | PictureGeoInfo
   | TimeRangeTag
   | UploadFile
   | UploadFolder
@@ -712,6 +713,7 @@ export type Mutation = {
   createLocationTag?: Maybe<LocationTagEntityResponse>;
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
+  createPictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   createUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -729,6 +731,7 @@ export type Mutation = {
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
+  deletePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -764,6 +767,7 @@ export type Mutation = {
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
+  updatePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -815,6 +819,10 @@ export type MutationCreatePersonTagArgs = {
 
 export type MutationCreatePictureArgs = {
   data: PictureInput;
+};
+
+export type MutationCreatePictureGeoInfoArgs = {
+  data: PictureGeoInfoInput;
 };
 
 export type MutationCreateTimeRangeTagArgs = {
@@ -870,6 +878,10 @@ export type MutationDeletePersonTagArgs = {
 };
 
 export type MutationDeletePictureArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeletePictureGeoInfoArgs = {
   id: Scalars['ID'];
 };
 
@@ -1010,6 +1022,11 @@ export type MutationUpdatePictureArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationUpdatePictureGeoInfoArgs = {
+  data: PictureGeoInfoInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdatePictureWithTagCleanupArgs = {
   data?: InputMaybe<Scalars['JSON']>;
   id?: InputMaybe<Scalars['ID']>;
@@ -1144,6 +1161,7 @@ export type Picture = {
   location_tags?: Maybe<LocationTagRelationResponseCollection>;
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
+  picture_geo_infos?: Maybe<PictureGeoInfoRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1207,6 +1225,12 @@ export type PicturePerson_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PicturePicture_Geo_InfosArgs = {
+  filters?: InputMaybe<PictureGeoInfoFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureVerified_Keyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
@@ -1257,6 +1281,7 @@ export type PictureFiltersInput = {
   not?: InputMaybe<PictureFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   person_tags?: InputMaybe<PersonTagFiltersInput>;
+  picture_geo_infos?: InputMaybe<PictureGeoInfoFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -1265,6 +1290,53 @@ export type PictureFiltersInput = {
   verified_person_tags?: InputMaybe<PersonTagFiltersInput>;
   verified_time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   wordpress_id?: InputMaybe<IntFilterInput>;
+};
+
+export type PictureGeoInfo = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
+  picture?: Maybe<PictureEntityResponse>;
+  radius?: Maybe<Scalars['Float']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PictureGeoInfoEntity = {
+  attributes?: Maybe<PictureGeoInfo>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PictureGeoInfoEntityResponse = {
+  data?: Maybe<PictureGeoInfoEntity>;
+};
+
+export type PictureGeoInfoEntityResponseCollection = {
+  data: Array<PictureGeoInfoEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type PictureGeoInfoFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<PictureGeoInfoFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  latitude?: InputMaybe<FloatFilterInput>;
+  longitude?: InputMaybe<FloatFilterInput>;
+  not?: InputMaybe<PictureGeoInfoFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<PictureGeoInfoFiltersInput>>>;
+  picture?: InputMaybe<PictureFiltersInput>;
+  radius?: InputMaybe<FloatFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type PictureGeoInfoInput = {
+  latitude?: InputMaybe<Scalars['Float']>;
+  longitude?: InputMaybe<Scalars['Float']>;
+  picture?: InputMaybe<Scalars['ID']>;
+  radius?: InputMaybe<Scalars['Float']>;
+};
+
+export type PictureGeoInfoRelationResponseCollection = {
+  data: Array<PictureGeoInfoEntity>;
 };
 
 export type PictureInput = {
@@ -1281,6 +1353,7 @@ export type PictureInput = {
   location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  picture_geo_infos?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1320,6 +1393,8 @@ export type Query = {
   personTag?: Maybe<PersonTagEntityResponse>;
   personTags?: Maybe<PersonTagEntityResponseCollection>;
   picture?: Maybe<PictureEntityResponse>;
+  pictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  pictureGeoInfos?: Maybe<PictureGeoInfoEntityResponseCollection>;
   pictures?: Maybe<PictureEntityResponseCollection>;
   timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
@@ -1429,6 +1504,16 @@ export type QueryPersonTagsArgs = {
 
 export type QueryPictureArgs = {
   id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPictureGeoInfoArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPictureGeoInfosArgs = {
+  filters?: InputMaybe<PictureGeoInfoFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type QueryPicturesArgs = {
@@ -3479,6 +3564,17 @@ export type UpdateArchiveMutationVariables = Exact<{
 
 export type UpdateArchiveMutation = {
   updateArchiveTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreatePictureGeoInfoMutationVariables = Exact<{
+  data: PictureGeoInfoInput;
+}>;
+
+export type CreatePictureGeoInfoMutation = {
+  createPictureGeoInfo?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -7149,6 +7245,63 @@ export type UpdateArchiveMutationResult = Apollo.MutationResult<UpdateArchiveMut
 export type UpdateArchiveMutationOptions = Apollo.BaseMutationOptions<
   UpdateArchiveMutation,
   UpdateArchiveMutationVariables
+>;
+
+export const CreatePictureGeoInfoDocument = gql`
+  mutation createPictureGeoInfo($data: PictureGeoInfoInput!) {
+    createPictureGeoInfo(data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePictureGeoInfoMutationFn = Apollo.MutationFunction<
+  CreatePictureGeoInfoMutation,
+  CreatePictureGeoInfoMutationVariables
+>;
+
+/**
+ * __useCreatePictureGeoInfoMutation__
+ *
+ * To run a mutation, you first call `useCreatePictureGeoInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePictureGeoInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPictureGeoInfoMutation, { data, loading, error }] = useCreatePictureGeoInfoMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePictureGeoInfoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePictureGeoInfoMutation,
+    CreatePictureGeoInfoMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePictureGeoInfoMutation, CreatePictureGeoInfoMutationVariables>(
+    CreatePictureGeoInfoDocument,
+    options
+  );
+}
+
+export type CreatePictureGeoInfoMutationHookResult = ReturnType<
+  typeof useCreatePictureGeoInfoMutation
+>;
+
+export type CreatePictureGeoInfoMutationResult =
+  Apollo.MutationResult<CreatePictureGeoInfoMutation>;
+
+export type CreatePictureGeoInfoMutationOptions = Apollo.BaseMutationOptions<
+  CreatePictureGeoInfoMutation,
+  CreatePictureGeoInfoMutationVariables
 >;
 
 export const GetUnverifiedCommentsDocument = gql`

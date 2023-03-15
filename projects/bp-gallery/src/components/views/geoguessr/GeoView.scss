@@ -34,6 +34,7 @@
 
 .guess-picture-view {
   height: calc(100vh - #{$top-bar-height});
+  background: #000;
 }
 .guess-picture-view .picture-wrapper {
   width: 100%;

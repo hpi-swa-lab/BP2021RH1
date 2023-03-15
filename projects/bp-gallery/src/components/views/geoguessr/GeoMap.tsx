@@ -2,9 +2,15 @@ import './leaflet.css';
 import { MapContainer, TileLayer, useMapEvent, Marker, Popup } from 'react-leaflet';
 import { useState } from 'react';
 import { Button } from '@mui/material';
+import { useCreatePictureGeoInfoMutation } from '../../../graphql/APIConnector';
 
-const LocationMarker = () => {
-  const [position, setPosition] = useState({ lat: 51.505, lng: -0.09 });
+const LocationMarker = ({
+  position,
+  setPosition,
+}: {
+  position: { lat: number; lng: number };
+  setPosition: (pos: { lat: number; lng: number }) => void;
+}) => {
   useMapEvent('click', event => {
     setPosition({ lat: event.latlng.lat, lng: event.latlng.lng });
   });
@@ -15,14 +21,21 @@ const LocationMarker = () => {
     </Marker>
   );
 };
-const GeoMap = ({ onNextPicture }: { onNextPicture: () => void }) => {
+const GeoMap = ({ onNextPicture, pictureId }: { onNextPicture: () => void; pictureId: string }) => {
+  const [guess, setGuess] = useState({ lat: 51.505, lng: -0.09 });
   const [guessComplete, setGuessComplete] = useState(false);
+
+  const [createPictureGeoInfo] = useCreatePictureGeoInfoMutation();
 
   const nextPicture = () => {
     setGuessComplete(false);
     onNextPicture();
   };
-  const guess = () => {
+
+  const sendGuess = () => {
+    createPictureGeoInfo({
+      variables: { data: { picture: pictureId, latitude: guess.lat, longitude: guess.lng } },
+    });
     setGuessComplete(true);
   };
 
@@ -35,8 +48,8 @@ const GeoMap = ({ onNextPicture }: { onNextPicture: () => void }) => {
         </div>
       )}
       <MapContainer
-        center={{ lat: 51.505, lng: -0.09 }}
-        zoom={13}
+        center={{ lat: 51.8392573, lng: 10.5279953 }}
+        zoom={10}
         className='map'
         scrollWheelZoom={true}
       >
@@ -44,10 +57,10 @@ const GeoMap = ({ onNextPicture }: { onNextPicture: () => void }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
-        <LocationMarker />
+        <LocationMarker position={guess} setPosition={setGuess} />
       </MapContainer>
       {!guessComplete && (
-        <Button variant='contained' onClick={guess}>
+        <Button variant='contained' onClick={sendGuess}>
           Ort bestätigen
         </Button>
       )}
