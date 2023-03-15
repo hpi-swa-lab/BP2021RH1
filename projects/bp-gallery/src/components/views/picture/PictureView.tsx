@@ -19,7 +19,7 @@ import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { FaceTag } from './face-tagging/FaceTag';
+import { FaceTaggingProvider, FaceTags } from './face-tagging/FaceTaggingContext';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
 import { PictureNavigationTarget } from './overlay/PictureNavigationButtons';
 import PictureViewUI from './overlay/PictureViewUI';
@@ -136,34 +136,35 @@ const PictureView = ({
     };
   }, [history, pictureId, onBack]);
 
+  const imgRef = useRef<HTMLImageElement>(null);
+
   return (
     <div className='picture-view-container'>
       <PictureViewContext.Provider value={contextValue}>
-        <div className={`picture-view`} ref={containerRef}>
-          <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
-            <div className='picture-wrapper'>
-              <div className='picture-container'>
-                <div className='relative'>
-                  <img src={pictureLink} alt={pictureLink} />
-                  <FaceTag name={'Links'} x={0.05} y={0.6} />
-                  <FaceTag name={'Unten'} x={0.5} y={0.95} />
-                  <FaceTag name={'Rechts'} x={0.95} y={0.95} />
-                  <FaceTag name={'Oben'} x={0.5} y={0.05} />
+        <FaceTaggingProvider imgRef={imgRef}>
+          <div className={`picture-view`} ref={containerRef}>
+            <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
+              <div className='picture-wrapper'>
+                <div className='picture-container'>
+                  <div className='relative max-h-[100%] max-w-[100%]'>
+                    <img ref={imgRef} src={pictureLink} alt={pictureLink} />
+                    <FaceTags />
+                  </div>
                 </div>
+                {!isPresentationMode && !loading && !error && picture && (
+                  <PictureViewUI
+                    calledViaLink={!onBack}
+                    pictureId={picture.id}
+                    sessionId={sessionId}
+                  />
+                )}
               </div>
-              {!isPresentationMode && !loading && !error && picture && (
-                <PictureViewUI
-                  calledViaLink={!onBack}
-                  pictureId={picture.id}
-                  sessionId={sessionId}
-                />
-              )}
-            </div>
-          </ZoomWrapper>
-          {!isPresentationMode && (
-            <PictureSidebar loading={loading} error={error} picture={picture} />
-          )}
-        </div>
+            </ZoomWrapper>
+            {!isPresentationMode && (
+              <PictureSidebar loading={loading} error={error} picture={picture} />
+            )}
+          </div>
+        </FaceTaggingProvider>
       </PictureViewContext.Provider>
     </div>
   );

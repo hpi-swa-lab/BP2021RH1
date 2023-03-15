@@ -4,16 +4,22 @@ const triangleHeight = 10;
 const triangleWidth = 20;
 const boundary = 0.9;
 
-export const FaceTag = ({ name, x, y }: { name: string; x: number; y: number }) => {
+export type FaceTagData = { name: string; x: number; y: number; noPointerEvents?: boolean };
+
+export const FaceTag = ({ data: { name, x, y, noPointerEvents } }: { data: FaceTagData }) => {
   const { style, triangle } = useMemo<{
     style: CSSProperties;
     triangle: { points: string; width: number; height: number };
   }>(() => {
     const w = triangleWidth;
     const h = triangleHeight;
+    const commonStyle: CSSProperties = {
+      pointerEvents: noPointerEvents ? 'none' : undefined,
+    };
     if (x > boundary) {
       return {
         style: {
+          ...commonStyle,
           right: `${(1 - x) * 100}%`,
           top: `${y * 100}%`,
           flexDirection: 'row-reverse',
@@ -29,6 +35,7 @@ export const FaceTag = ({ name, x, y }: { name: string; x: number; y: number }) 
     if (x < 1 - boundary) {
       return {
         style: {
+          ...commonStyle,
           left: `${x * 100}%`,
           top: `${y * 100}%`,
           flexDirection: 'row',
@@ -44,6 +51,7 @@ export const FaceTag = ({ name, x, y }: { name: string; x: number; y: number }) 
     if (y > boundary) {
       return {
         style: {
+          ...commonStyle,
           left: `${x * 100}%`,
           bottom: `${(1 - y) * 100}%`,
           flexDirection: 'column-reverse',
@@ -58,6 +66,7 @@ export const FaceTag = ({ name, x, y }: { name: string; x: number; y: number }) 
     }
     return {
       style: {
+        ...commonStyle,
         left: `${x * 100}%`,
         top: `${y * 100}%`,
         flexDirection: 'column',
@@ -69,7 +78,7 @@ export const FaceTag = ({ name, x, y }: { name: string; x: number; y: number }) 
         height: h,
       },
     };
-  }, [x, y]);
+  }, [x, y, noPointerEvents]);
   return (
     <div className='absolute z-[9999] flex items-center' style={style}>
       <svg width={triangle.width} height={triangle.height}>
