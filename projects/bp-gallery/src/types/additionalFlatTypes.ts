@@ -10,6 +10,7 @@ import {
   PersonTag,
   Picture,
   Scalars,
+  Slide,
   TimeRangeTag,
   UploadFile,
 } from '../graphql/APIConnector';
@@ -60,6 +61,8 @@ export type FlatArchiveTagWithoutRelations = ID &
   Omit<ArchiveTag, 'pictures' | 'links' | 'showcasePicture' | 'logo'>;
 
 export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
+
+export type FlatSlideWithoutRelations = ID & Omit<Slide, 'picture' | 'presentation'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -124,6 +127,10 @@ export type Thumbnail = {
 
 export type FlatDecadeThumbnails = {
   [decadeKey: string]: Thumbnail[];
+};
+
+export type FlatSlide = FlatSlideWithoutRelations & {
+  picture?: FlatPictureWithoutRelations;
 };
 
 export interface FlatTag {

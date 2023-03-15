@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "presentations",
+  "info": {
+    "singularName": "presentation",
+    "pluralName": "presentations",
+    "displayName": "presentation"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "slides": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::slide.slide",
+      "mappedBy": "presentation"
+    },
+    "thumbnail": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::picture.picture"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

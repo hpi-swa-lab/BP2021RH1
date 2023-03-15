@@ -1,0 +1,20 @@
+.slide-container {
+  display: flex;
+  flex-direction: row;
+  background-color: black;
+
+  .text-container {
+    padding: 8px 32px 8px 32px;
+    color: white;
+    width: 50%;
+    overflow: hidden;
+  }
+
+  .picture-container {
+    width: 50%;
+  }
+
+  .picture-container-full-width {
+    width: 100%;
+  }
+}

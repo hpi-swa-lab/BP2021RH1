@@ -20,6 +20,7 @@ import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import ContactFormView from './views/contact/ContactFormView';
 import ShowMoreView from './views/show-more/ShowMoreView';
 import DiscoverView from './views/discover/DiscoverView';
+import Slide from './views/slides/Slide';
 
 export const FALLBACK_PATH = '/start';
 
@@ -117,6 +118,12 @@ const routes: RouteConfig[] = [
     path: '/contact',
     render: () => {
       return <ContactFormView />;
+    },
+  },
+  {
+    path: '/prototypes/slide/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <Slide slideId={match.params.id} />;
     },
   },
   {

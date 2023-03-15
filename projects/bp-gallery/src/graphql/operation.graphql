@@ -593,6 +593,38 @@ mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsI
   }
 }
 
+query getSlideById($slideId: ID!) {
+  slide(id: $slideId) {
+    data {
+      id
+      attributes {
+        layout
+        title
+        description
+        picture {
+          data {
+            id
+            attributes {
+              media {
+                data {
+                  id
+                  attributes {
+                    width
+                    height
+                    formats
+                    url
+                    updatedAt
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getLocationTagsWithThumbnail(
   $filters: LocationTagFiltersInput = {}
   $thumbnailFilters: PictureFiltersInput = {}

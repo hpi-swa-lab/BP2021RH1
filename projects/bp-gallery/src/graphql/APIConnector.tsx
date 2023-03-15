@@ -391,6 +391,12 @@ export type DescriptionRelationResponseCollection = {
   data: Array<DescriptionEntity>;
 };
 
+export enum Enum_Slide_Layout {
+  Picture = 'picture',
+  PictureWithCaption = 'picture_with_caption',
+  SideBySide = 'side_by_side',
+}
+
 export type FileInfoInput = {
   alternativeText?: InputMaybe<Scalars['String']>;
   caption?: InputMaybe<Scalars['String']>;
@@ -434,6 +440,8 @@ export type GenericMorph =
   | LocationTag
   | PersonTag
   | Picture
+  | Presentation
+  | Slide
   | TimeRangeTag
   | UploadFile
   | UploadFolder
@@ -712,6 +720,8 @@ export type Mutation = {
   createLocationTag?: Maybe<LocationTagEntityResponse>;
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
+  createPresentation?: Maybe<PresentationEntityResponse>;
+  createSlide?: Maybe<SlideEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   createUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -729,6 +739,8 @@ export type Mutation = {
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
+  deletePresentation?: Maybe<PresentationEntityResponse>;
+  deleteSlide?: Maybe<SlideEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -765,6 +777,8 @@ export type Mutation = {
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
+  updatePresentation?: Maybe<PresentationEntityResponse>;
+  updateSlide?: Maybe<SlideEntityResponse>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
   updateUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -815,6 +829,14 @@ export type MutationCreatePersonTagArgs = {
 
 export type MutationCreatePictureArgs = {
   data: PictureInput;
+};
+
+export type MutationCreatePresentationArgs = {
+  data: PresentationInput;
+};
+
+export type MutationCreateSlideArgs = {
+  data: SlideInput;
 };
 
 export type MutationCreateTimeRangeTagArgs = {
@@ -870,6 +892,14 @@ export type MutationDeletePersonTagArgs = {
 };
 
 export type MutationDeletePictureArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeletePresentationArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteSlideArgs = {
   id: Scalars['ID'];
 };
 
@@ -1015,6 +1045,16 @@ export type MutationUpdatePictureWithTagCleanupArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
+export type MutationUpdatePresentationArgs = {
+  data: PresentationInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateSlideArgs = {
+  data: SlideInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdateTimeRangeTagArgs = {
   data: TimeRangeTagInput;
   id: Scalars['ID'];
@@ -1145,6 +1185,7 @@ export type Picture = {
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']>;
+  slides?: Maybe<SlideRelationResponseCollection>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
@@ -1207,6 +1248,12 @@ export type PicturePerson_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureSlidesArgs = {
+  filters?: InputMaybe<SlideFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureVerified_Keyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
@@ -1258,6 +1305,7 @@ export type PictureFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   person_tags?: InputMaybe<PersonTagFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
+  slides?: InputMaybe<SlideFiltersInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
@@ -1282,6 +1330,7 @@ export type PictureInput = {
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
+  slides?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   verified_location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1292,6 +1341,55 @@ export type PictureInput = {
 
 export type PictureRelationResponseCollection = {
   data: Array<PictureEntity>;
+};
+
+export type Presentation = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  slides?: Maybe<SlideRelationResponseCollection>;
+  thumbnail?: Maybe<PictureEntityResponse>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PresentationSlidesArgs = {
+  filters?: InputMaybe<SlideFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PresentationEntity = {
+  attributes?: Maybe<Presentation>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PresentationEntityResponse = {
+  data?: Maybe<PresentationEntity>;
+};
+
+export type PresentationEntityResponseCollection = {
+  data: Array<PresentationEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type PresentationFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<PresentationFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  description?: InputMaybe<StringFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<PresentationFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<PresentationFiltersInput>>>;
+  slides?: InputMaybe<SlideFiltersInput>;
+  thumbnail?: InputMaybe<PictureFiltersInput>;
+  title?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type PresentationInput = {
+  description?: InputMaybe<Scalars['String']>;
+  slides?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  thumbnail?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export enum PublicationState {
@@ -1321,6 +1419,10 @@ export type Query = {
   personTags?: Maybe<PersonTagEntityResponseCollection>;
   picture?: Maybe<PictureEntityResponse>;
   pictures?: Maybe<PictureEntityResponseCollection>;
+  presentation?: Maybe<PresentationEntityResponse>;
+  presentations?: Maybe<PresentationEntityResponseCollection>;
+  slide?: Maybe<SlideEntityResponse>;
+  slides?: Maybe<SlideEntityResponseCollection>;
   timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
   uploadFile?: Maybe<UploadFileEntityResponse>;
@@ -1438,6 +1540,26 @@ export type QueryPicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type QueryPresentationArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPresentationsArgs = {
+  filters?: InputMaybe<PresentationFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QuerySlideArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QuerySlidesArgs = {
+  filters?: InputMaybe<SlideFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type QueryTimeRangeTagArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -1490,6 +1612,66 @@ export type QueryUsersPermissionsUsersArgs = {
 
 export type ResponseCollectionMeta = {
   pagination: Pagination;
+};
+
+export type Slide = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  layout: Enum_Slide_Layout;
+  picture?: Maybe<PictureEntityResponse>;
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  presentation?: Maybe<PresentationEntityResponse>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type SlidePicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type SlideEntity = {
+  attributes?: Maybe<Slide>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type SlideEntityResponse = {
+  data?: Maybe<SlideEntity>;
+};
+
+export type SlideEntityResponseCollection = {
+  data: Array<SlideEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type SlideFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<SlideFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  description?: InputMaybe<StringFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  layout?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<SlideFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<SlideFiltersInput>>>;
+  picture?: InputMaybe<PictureFiltersInput>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  presentation?: InputMaybe<PresentationFiltersInput>;
+  title?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type SlideInput = {
+  description?: InputMaybe<Scalars['String']>;
+  layout?: InputMaybe<Enum_Slide_Layout>;
+  picture?: InputMaybe<Scalars['ID']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  presentation?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type SlideRelationResponseCollection = {
+  data: Array<SlideEntity>;
 };
 
 export type StringFilterInput = {
@@ -2779,6 +2961,66 @@ export type UpdateKeywordSynonymsMutationVariables = Exact<{
 export type UpdateKeywordSynonymsMutation = {
   updateKeywordTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type GetSlideByIdQueryVariables = Exact<{
+  slideId: Scalars['ID'];
+}>;
+
+export type GetSlideByIdQuery = {
+  slide?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    layout: Enum_Slide_Layout;
+                    title?: string | null | undefined;
+                    description?: string | null | undefined;
+                    picture?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?:
+                                  | {
+                                      media: {
+                                        data?:
+                                          | {
+                                              id?: string | null | undefined;
+                                              attributes?:
+                                                | {
+                                                    width?: number | null | undefined;
+                                                    height?: number | null | undefined;
+                                                    formats?: any | null | undefined;
+                                                    url: string;
+                                                    updatedAt?: any | null | undefined;
+                                                  }
+                                                | null
+                                                | undefined;
+                                            }
+                                          | null
+                                          | undefined;
+                                      };
+                                    }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
     | null
     | undefined;
 };
@@ -4917,6 +5159,85 @@ export type UpdateKeywordSynonymsMutationResult =
 export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordSynonymsMutation,
   UpdateKeywordSynonymsMutationVariables
+>;
+
+export const GetSlideByIdDocument = gql`
+  query getSlideById($slideId: ID!) {
+    slide(id: $slideId) {
+      data {
+        id
+        attributes {
+          layout
+          title
+          description
+          picture {
+            data {
+              id
+              attributes {
+                media {
+                  data {
+                    id
+                    attributes {
+                      width
+                      height
+                      formats
+                      url
+                      updatedAt
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetSlideByIdQuery__
+ *
+ * To run a query within a React component, call `useGetSlideByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSlideByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSlideByIdQuery({
+ *   variables: {
+ *      slideId: // value for 'slideId'
+ *   },
+ * });
+ */
+export function useGetSlideByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<GetSlideByIdQuery, GetSlideByIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetSlideByIdQuery, GetSlideByIdQueryVariables>(
+    GetSlideByIdDocument,
+    options
+  );
+}
+
+export function useGetSlideByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetSlideByIdQuery, GetSlideByIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetSlideByIdQuery, GetSlideByIdQueryVariables>(
+    GetSlideByIdDocument,
+    options
+  );
+}
+
+export type GetSlideByIdQueryHookResult = ReturnType<typeof useGetSlideByIdQuery>;
+
+export type GetSlideByIdLazyQueryHookResult = ReturnType<typeof useGetSlideByIdLazyQuery>;
+
+export type GetSlideByIdQueryResult = Apollo.QueryResult<
+  GetSlideByIdQuery,
+  GetSlideByIdQueryVariables
 >;
 
 export const GetLocationTagsWithThumbnailDocument = gql`
