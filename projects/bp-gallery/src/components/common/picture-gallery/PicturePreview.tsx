@@ -1,8 +1,9 @@
-import { QuestionAnswer, ThumbUpAlt } from '@mui/icons-material';
+import { QuestionAnswer, ThumbUpAlt, ThumbUpAltOutlined } from '@mui/icons-material';
 import { isFunction } from 'lodash';
 import { MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
+import useLike from '../../views/picture/sidebar/like-hooks';
 import './PicturePreview.scss';
 
 export interface PicturePreviewAdornment {
@@ -33,7 +34,6 @@ const PicturePreview = ({
   highQuality?: boolean;
 }) => {
   const [showStatistics, setShowStatistics] = useState(false);
-  const [isUnder, setIsUnder] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const thumbnailUrl = useMemo((): string => {
@@ -41,74 +41,81 @@ const PicturePreview = ({
       (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || '';
     return highQuality ? picture.media?.url ?? defaultUrl : defaultUrl;
   }, [picture, highQuality]);
-  console.log(showStatistics);
 
+  const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
   return (
     <div
       onMouseOver={() => setShowStatistics(true)}
       onMouseLeave={() => setShowStatistics(false)}
       onClick={onClick}
-      id={`picture-preview-for-${picture.id}`}
-      className={`picture-preview ${allowClicks ? 'allow-clicks' : ''}`}
       ref={containerRef}
       style={{
         flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
       }}
     >
-      {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
-      <img
-        src={
-          pictureOrigin === PictureOrigin.REMOTE
-            ? asApiPath(
-                `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
-              )
-            : thumbnailUrl
-        }
-      />
-      {showStatistics && !isUnder && (
-        <div className='absolute flex justify-center w-full bottom-0 z-0 text-white opacity-70'>
-          <div className='items-center flex gap-2'>
-            <div className='items-center flex'>
-              <ThumbUpAlt />
-              {picture.likes ?? 0}
+      <div
+        className={`picture-preview ${allowClicks ? 'allow-clicks' : ''}`}
+        id={`picture-preview-for-${picture.id}`}
+      >
+        {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
+        <img
+          className={`${showStatistics ? 'brightness-75' : ''}`}
+          src={
+            pictureOrigin === PictureOrigin.REMOTE
+              ? asApiPath(
+                  `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
+                )
+              : thumbnailUrl
+          }
+        />
+
+        <div className='adornments'>
+          {adornments?.map((adornment, index) => (
+            <div
+              className={`adornment ${adornment.position}`}
+              key={index}
+              title={adornment.title}
+              onClick={event => {
+                event.preventDefault();
+                event.stopPropagation();
+                adornment.onClick(picture, event);
+              }}
+            >
+              {isFunction(adornment.icon) ? <>{adornment.icon(picture)}</> : <>{adornment.icon}</>}
             </div>
-            <div className='items-center flex'>
-              <QuestionAnswer />
-              {picture.comments?.length}
-            </div>
-          </div>
+          ))}
         </div>
-      )}
-      <div className='adornments'>
-        {adornments?.map((adornment, index) => (
+        <div className='absolute flex w-full justify-end bottom-0 transparent right-0 text-white brightness-100'>
+          <div className={`h-20 w-full bg-gradient-to-t from-black `}></div>
           <div
-            className={`adornment ${adornment.position}`}
-            key={index}
-            title={adornment.title}
-            onClick={event => {
-              event.preventDefault();
-              event.stopPropagation();
-              adornment.onClick(picture, event);
-            }}
+            className={`absolute bottom-0 right-0 items-center flex gap-2 transparent mb-1 mr-2 transition-all ${
+              showStatistics ? 'text-xl' : 'text-base'
+            }`}
           >
-            {isFunction(adornment.icon) ? <>{adornment.icon(picture)}</> : <>{adornment.icon}</>}
-          </div>
-        ))}
-      </div>
-      {isUnder && (
-        <div className='flex justify-center w-full text-[rgb (34,34,34)] font-medium text-lg'>
-          <div className='items-center flex gap-2'>
-            <div className='items-center flex'>
-              <ThumbUpAlt />
-              {picture.likes ?? 0}
+            <div
+              className='items-center flex'
+              onClick={event => {
+                event.stopPropagation();
+                like(isLiked);
+              }}
+            >
+              {isLiked ? (
+                <ThumbUpAlt fontSize='inherit' className='text-blue-400' />
+              ) : (
+                <ThumbUpAltOutlined fontSize='inherit' />
+              )}
+              &nbsp;
+              {likeCount}
             </div>
+
             <div className='items-center flex'>
-              <QuestionAnswer />
+              <QuestionAnswer fontSize='inherit' />
+              &nbsp;
               {picture.comments?.length ?? 0}
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
