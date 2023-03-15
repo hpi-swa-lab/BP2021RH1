@@ -1102,6 +1102,14 @@ mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
   }
 }
 
+mutation createPictureGeoInfo($data: PictureGeoInfoInput!) {
+  createPictureGeoInfo(data: $data) {
+    data {
+      id
+    }
+  }
+}
+
 query getUnverifiedComments {
   comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
     data {

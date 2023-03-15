@@ -5,6 +5,7 @@ import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes'
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
+import { useState } from 'react';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   //let list = archives.reduce((elem, curr) => elem.pictures?.reduce(elem, curr => ))
@@ -12,6 +13,7 @@ const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   }
 };
 const GeoView = () => {
+  const [pictureId, setPictureId] = useState<string>('70');
   let archive_data = useGetAllArchiveTagsQuery().data;
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(archive_data)?.archiveTags;
@@ -29,7 +31,7 @@ const GeoView = () => {
           </div>
         </div>
       </ZoomWrapper>
-      <GeoMap onNextPicture={() => {}} />
+      <GeoMap onNextPicture={() => {}} pictureId={pictureId} />
     </div>
   );
 };
