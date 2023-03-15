@@ -12,9 +12,9 @@ const GeoView = () => {
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
   return (
-    <div className='map-container'>
+    <div>
       <img src={pictureLink} />
-      <GeoMap />
+      <GeoMap onNextPicture={() => {}} />
     </div>
   );
 };
