@@ -32,6 +32,10 @@
   width: 300px;
 }
 
+.geo {
+  background: #0a0a0a;
+}
+
 .guess-picture-view {
   height: calc(100vh - #{$top-bar-height});
 }
