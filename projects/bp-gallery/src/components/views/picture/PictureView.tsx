@@ -145,8 +145,10 @@ const PictureView = ({
               <div className='picture-container'>
                 <div className='relative'>
                   <img src={pictureLink} alt={pictureLink} />
-                  <FaceTag name={'Thomas'} x={0.8} y={0.6} />
-                  <FaceTag name={'Weiß'} x={0.9} y={0.9} />
+                  <FaceTag name={'Links'} x={0.05} y={0.6} />
+                  <FaceTag name={'Unten'} x={0.5} y={0.95} />
+                  <FaceTag name={'Rechts'} x={0.95} y={0.95} />
+                  <FaceTag name={'Oben'} x={0.5} y={0.05} />
                 </div>
               </div>
               {!isPresentationMode && !loading && !error && picture && (
