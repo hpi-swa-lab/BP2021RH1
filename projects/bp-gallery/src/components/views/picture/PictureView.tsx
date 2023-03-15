@@ -19,6 +19,7 @@ import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { FaceTag } from './face-tagging/FaceTag';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
 import { PictureNavigationTarget } from './overlay/PictureNavigationButtons';
 import PictureViewUI from './overlay/PictureViewUI';
@@ -87,6 +88,8 @@ const PictureView = ({
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
+  const pictureWidth = picture?.media?.width;
+  const pictureHeight = picture?.media?.height;
 
   const onNavigateMessage = useCallback((pictureId: string) => {
     replaceHistoryWithoutRouter(`/picture/${pictureId}${window.location.search}`);
@@ -140,7 +143,11 @@ const PictureView = ({
           <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
             <div className='picture-wrapper'>
               <div className='picture-container'>
-                <img src={pictureLink} alt={pictureLink} />
+                <div className='relative'>
+                  <img src={pictureLink} alt={pictureLink} />
+                  <FaceTag name={'Thomas'} x={0.8} y={0.6} />
+                  <FaceTag name={'Weiß'} x={0.9} y={0.9} />
+                </div>
               </div>
               {!isPresentationMode && !loading && !error && picture && (
                 <PictureViewUI
