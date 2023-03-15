@@ -15,7 +15,11 @@
       "type": "media",
       "multiple": false,
       "required": true,
-      "allowedTypes": ["images", "files", "videos"]
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ]
     },
     "wordpress_id": {
       "type": "integer",
@@ -114,6 +118,12 @@
       "relation": "manyToMany",
       "target": "api::picture.picture",
       "inversedBy": "linked_texts"
+    },
+    "face_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::face-tag.face-tag",
+      "mappedBy": "pictures"
     }
   }
 }

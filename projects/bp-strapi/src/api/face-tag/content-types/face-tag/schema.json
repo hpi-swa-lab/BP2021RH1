@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "face_tags",
+  "info": {
+    "singularName": "face-tag",
+    "pluralName": "face-tags",
+    "displayName": "Face_Tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "x": {
+      "type": "float"
+    },
+    "y": {
+      "type": "float"
+    },
+    "pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "face_tags"
+    },
+    "person_tag": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::person-tag.person-tag"
+    }
+  }
+}

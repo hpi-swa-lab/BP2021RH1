@@ -391,6 +391,60 @@ export type DescriptionRelationResponseCollection = {
   data: Array<DescriptionEntity>;
 };
 
+export type FaceTag = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  person_tag?: Maybe<PersonTagEntityResponse>;
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  x?: Maybe<Scalars['Float']>;
+  y?: Maybe<Scalars['Float']>;
+};
+
+export type FaceTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type FaceTagEntity = {
+  attributes?: Maybe<FaceTag>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type FaceTagEntityResponse = {
+  data?: Maybe<FaceTagEntity>;
+};
+
+export type FaceTagEntityResponseCollection = {
+  data: Array<FaceTagEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type FaceTagFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<FaceTagFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<FaceTagFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<FaceTagFiltersInput>>>;
+  person_tag?: InputMaybe<PersonTagFiltersInput>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  x?: InputMaybe<FloatFilterInput>;
+  y?: InputMaybe<FloatFilterInput>;
+};
+
+export type FaceTagInput = {
+  person_tag?: InputMaybe<Scalars['ID']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  x?: InputMaybe<Scalars['Float']>;
+  y?: InputMaybe<Scalars['Float']>;
+};
+
+export type FaceTagRelationResponseCollection = {
+  data: Array<FaceTagEntity>;
+};
+
 export type FileInfoInput = {
   alternativeText?: InputMaybe<Scalars['String']>;
   caption?: InputMaybe<Scalars['String']>;
@@ -429,6 +483,7 @@ export type GenericMorph =
   | ComponentCommonSynonyms
   | ComponentLocationCoordinates
   | Description
+  | FaceTag
   | KeywordTag
   | Link
   | LocationTag
@@ -707,6 +762,7 @@ export type Mutation = {
   createCollection?: Maybe<CollectionEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
   createDescription?: Maybe<DescriptionEntityResponse>;
+  createFaceTag?: Maybe<FaceTagEntityResponse>;
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
   createLink?: Maybe<LinkEntityResponse>;
   createLocationTag?: Maybe<LocationTagEntityResponse>;
@@ -724,6 +780,7 @@ export type Mutation = {
   deleteCollection?: Maybe<CollectionEntityResponse>;
   deleteComment?: Maybe<CommentEntityResponse>;
   deleteDescription?: Maybe<DescriptionEntityResponse>;
+  deleteFaceTag?: Maybe<FaceTagEntityResponse>;
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
   deleteLink?: Maybe<LinkEntityResponse>;
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
@@ -758,6 +815,7 @@ export type Mutation = {
   updateCollection?: Maybe<CollectionEntityResponse>;
   updateComment?: Maybe<CommentEntityResponse>;
   updateDescription?: Maybe<DescriptionEntityResponse>;
+  updateFaceTag?: Maybe<FaceTagEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
   updateLink?: Maybe<LinkEntityResponse>;
@@ -795,6 +853,10 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreateDescriptionArgs = {
   data: DescriptionInput;
+};
+
+export type MutationCreateFaceTagArgs = {
+  data: FaceTagInput;
 };
 
 export type MutationCreateKeywordTagArgs = {
@@ -850,6 +912,10 @@ export type MutationDeleteCommentArgs = {
 };
 
 export type MutationDeleteDescriptionArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteFaceTagArgs = {
   id: Scalars['ID'];
 };
 
@@ -977,6 +1043,11 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationUpdateDescriptionArgs = {
   data: DescriptionInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateFaceTagArgs = {
+  data: FaceTagInput;
   id: Scalars['ID'];
 };
 
@@ -1136,6 +1207,7 @@ export type Picture = {
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
+  face_tags?: Maybe<FaceTagRelationResponseCollection>;
   is_text?: Maybe<Scalars['Boolean']>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
   likes?: Maybe<Scalars['Int']>;
@@ -1172,6 +1244,12 @@ export type PictureDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureFace_TagsArgs = {
+  filters?: InputMaybe<FaceTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1247,6 +1325,7 @@ export type PictureFiltersInput = {
   comments?: InputMaybe<CommentFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
+  face_tags?: InputMaybe<FaceTagFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   is_text?: InputMaybe<BooleanFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
@@ -1273,6 +1352,7 @@ export type PictureInput = {
   collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  face_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   is_text?: InputMaybe<Scalars['Boolean']>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   likes?: InputMaybe<Scalars['Int']>;
@@ -1309,6 +1389,8 @@ export type Query = {
   comments?: Maybe<CommentEntityResponseCollection>;
   description?: Maybe<DescriptionEntityResponse>;
   descriptions?: Maybe<DescriptionEntityResponseCollection>;
+  faceTag?: Maybe<FaceTagEntityResponse>;
+  faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
@@ -1377,6 +1459,16 @@ export type QueryDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryFaceTagArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryFaceTagsArgs = {
+  filters?: InputMaybe<FaceTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
