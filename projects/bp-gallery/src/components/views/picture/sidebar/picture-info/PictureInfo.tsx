@@ -1,12 +1,4 @@
-import {
-  Description,
-  Event,
-  Folder,
-  FolderSpecial,
-  Person,
-  Place,
-  Sell,
-} from '@mui/icons-material';
+import { Description, Event, Folder, FolderSpecial, Place, Sell } from '@mui/icons-material';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -22,6 +14,7 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
 import ArchiveTagField from './ArchiveTagField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import DescriptionsEditField from './DescriptionsEditField';
@@ -128,18 +121,14 @@ const PictureInfo = ({
           onTouch={() => setAnyFieldTouched(true)}
         />
       </PictureInfoField>
-      <PictureInfoField title={t('pictureFields.people')} icon={<Person />} type='person'>
-        <TagSelectionField
-          type={TagType.PERSON}
-          tags={picture.person_tags ?? []}
-          allTags={allPeople ?? []}
-          onChange={people => {
-            savePictureInfo({ person_tags: people });
-          }}
-          noContentText={t('pictureFields.noPeople')}
-          createMutation={newPersonTagMutation}
-        />
-      </PictureInfoField>
+      <FaceTaggingUI
+        tags={picture.person_tags ?? []}
+        allTags={allPeople ?? []}
+        onChange={people => {
+          savePictureInfo({ person_tags: people });
+        }}
+        createMutation={newPersonTagMutation}
+      />
       <PictureInfoField title={t('pictureFields.locations')} icon={<Place />} type='location'>
         <TagSelectionField
           type={TagType.LOCATION}
