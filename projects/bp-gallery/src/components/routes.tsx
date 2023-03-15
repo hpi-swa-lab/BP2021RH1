@@ -20,7 +20,7 @@ import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import ContactFormView from './views/contact/ContactFormView';
 import ShowMoreView from './views/show-more/ShowMoreView';
 import DiscoverView from './views/discover/DiscoverView';
-import GeoMap from './views/geoguessr/GeoMap';
+import GeoView from './views/geoguessr/GeoView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -172,7 +172,7 @@ const routes: RouteConfig[] = [
   {
     path: '/geo',
     render: () => {
-      return <GeoMap />;
+      return <GeoView />;
     },
     exact: true,
   },
