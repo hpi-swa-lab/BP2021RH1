@@ -1110,6 +1110,19 @@ mutation createPictureGeoInfo($data: PictureGeoInfoInput!) {
   }
 }
 
+query getPictureGeoInfo($pictureId: ID!) {
+  pictureGeoInfos(filters: { picture: { id: { eq: $pictureId } } }) {
+    data {
+      id
+      attributes {
+        latitude
+        longitude
+        radius
+      }
+    }
+  }
+}
+
 query getUnverifiedComments {
   comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
     data {

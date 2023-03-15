@@ -1,13 +1,54 @@
 import './leaflet.css';
-import { MapContainer, TileLayer, useMapEvent, Marker, Popup } from 'react-leaflet';
-import { useState } from 'react';
+import { MapContainer, TileLayer, useMapEvent, Marker, Popup, useMap } from 'react-leaflet';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
 import {
   GetPictureGeoInfoQuery,
   useCreatePictureGeoInfoMutation,
 } from '../../../graphql/APIConnector';
+import { LatLngBounds } from 'leaflet';
 
-const LocationMarker = ({
+const PlayerMarkers = ({
+  allGuesses,
+}: {
+  allGuesses: GetPictureGeoInfoQuery['pictureGeoInfos'];
+}) => {
+  const map = useMap();
+  const coords = useMemo(
+    () =>
+      allGuesses?.data?.map(x => ({
+        lat: x.attributes!.latitude!,
+        lng: x.attributes!.longitude!,
+      })) ?? [],
+    [allGuesses]
+  ) as { lat: number; lng: number }[];
+
+  useEffect(() => {
+    setTimeout(() => {
+      map.invalidateSize();
+      map.flyToBounds(
+        new LatLngBounds(
+          {
+            lat: Math.min(...coords.map(x => x.lat)),
+            lng: Math.min(...coords.map(x => x.lng)),
+          },
+          {
+            lat: Math.max(...coords.map(x => x.lat)),
+            lng: Math.max(...coords.map(x => x.lng)),
+          }
+        )
+      );
+    }, 300);
+  }, [coords, map]);
+  return (
+    <div>
+      {coords.map((x, index) => (
+        <Marker position={x} key={index} />
+      ))}
+    </div>
+  );
+};
+const MyMarker = ({
   position,
   setPosition,
 }: {
@@ -31,7 +72,7 @@ const GeoMap = ({
 }: {
   onNextPicture: () => void;
   pictureId: string;
-  allGuesses: GetPictureGeoInfoQuery['data'];
+  allGuesses: GetPictureGeoInfoQuery['pictureGeoInfos'];
 }) => {
   const [guess, setGuess] = useState({ lat: 51.505, lng: -0.09 });
   const [guessComplete, setGuessComplete] = useState(false);
@@ -70,7 +111,8 @@ const GeoMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
-        <LocationMarker position={guess} setPosition={setGuess} />
+        {guessComplete && <PlayerMarkers allGuesses={allGuesses} />}
+        <MyMarker position={guess} setPosition={setGuess} />
       </MapContainer>
       {!guessComplete && (
         <Button variant='contained' onClick={sendGuess}>

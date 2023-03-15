@@ -3580,6 +3580,29 @@ export type CreatePictureGeoInfoMutation = {
     | undefined;
 };
 
+export type GetPictureGeoInfoQueryVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type GetPictureGeoInfoQuery = {
+  pictureGeoInfos?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                latitude?: number | null | undefined;
+                longitude?: number | null | undefined;
+                radius?: number | null | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetUnverifiedCommentsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUnverifiedCommentsQuery = {
@@ -7302,6 +7325,66 @@ export type CreatePictureGeoInfoMutationResult =
 export type CreatePictureGeoInfoMutationOptions = Apollo.BaseMutationOptions<
   CreatePictureGeoInfoMutation,
   CreatePictureGeoInfoMutationVariables
+>;
+
+export const GetPictureGeoInfoDocument = gql`
+  query getPictureGeoInfo($pictureId: ID!) {
+    pictureGeoInfos(filters: { picture: { id: { eq: $pictureId } } }) {
+      data {
+        id
+        attributes {
+          latitude
+          longitude
+          radius
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPictureGeoInfoQuery__
+ *
+ * To run a query within a React component, call `useGetPictureGeoInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPictureGeoInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPictureGeoInfoQuery({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useGetPictureGeoInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>(
+    GetPictureGeoInfoDocument,
+    options
+  );
+}
+
+export function useGetPictureGeoInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>(
+    GetPictureGeoInfoDocument,
+    options
+  );
+}
+
+export type GetPictureGeoInfoQueryHookResult = ReturnType<typeof useGetPictureGeoInfoQuery>;
+
+export type GetPictureGeoInfoLazyQueryHookResult = ReturnType<typeof useGetPictureGeoInfoLazyQuery>;
+
+export type GetPictureGeoInfoQueryResult = Apollo.QueryResult<
+  GetPictureGeoInfoQuery,
+  GetPictureGeoInfoQueryVariables
 >;
 
 export const GetUnverifiedCommentsDocument = gql`
