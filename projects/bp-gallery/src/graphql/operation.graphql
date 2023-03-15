@@ -363,6 +363,12 @@ query getPictures(
       id
       attributes {
         is_text
+        comments {
+          data {
+            id
+          }
+        }
+        likes
         media {
           data {
             id

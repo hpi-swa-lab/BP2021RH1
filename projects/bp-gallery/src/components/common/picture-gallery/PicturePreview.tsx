@@ -1,5 +1,6 @@
+import { QuestionAnswer, ThumbUpAlt } from '@mui/icons-material';
 import { isFunction } from 'lodash';
-import { MouseEvent, MouseEventHandler, useMemo, useRef } from 'react';
+import { MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PicturePreview.scss';
@@ -31,6 +32,8 @@ const PicturePreview = ({
   allowClicks?: boolean;
   highQuality?: boolean;
 }) => {
+  const [showStatistics, setShowStatistics] = useState(false);
+  const [isUnder, setIsUnder] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const thumbnailUrl = useMemo((): string => {
@@ -38,9 +41,12 @@ const PicturePreview = ({
       (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || '';
     return highQuality ? picture.media?.url ?? defaultUrl : defaultUrl;
   }, [picture, highQuality]);
+  console.log(showStatistics);
 
   return (
     <div
+      onMouseOver={() => setShowStatistics(true)}
+      onMouseLeave={() => setShowStatistics(false)}
       onClick={onClick}
       id={`picture-preview-for-${picture.id}`}
       className={`picture-preview ${allowClicks ? 'allow-clicks' : ''}`}
@@ -59,6 +65,20 @@ const PicturePreview = ({
             : thumbnailUrl
         }
       />
+      {showStatistics && !isUnder && (
+        <div className='absolute flex justify-center w-full bottom-0 z-0 text-white opacity-70'>
+          <div className='items-center flex gap-2'>
+            <div className='items-center flex'>
+              <ThumbUpAlt />
+              {picture.likes ?? 0}
+            </div>
+            <div className='items-center flex'>
+              <QuestionAnswer />
+              {picture.comments?.length}
+            </div>
+          </div>
+        </div>
+      )}
       <div className='adornments'>
         {adornments?.map((adornment, index) => (
           <div
@@ -75,6 +95,20 @@ const PicturePreview = ({
           </div>
         ))}
       </div>
+      {isUnder && (
+        <div className='flex justify-center w-full text-[rgb (34,34,34)] font-medium text-lg'>
+          <div className='items-center flex gap-2'>
+            <div className='items-center flex'>
+              <ThumbUpAlt />
+              {picture.likes ?? 0}
+            </div>
+            <div className='items-center flex'>
+              <QuestionAnswer />
+              {picture.comments?.length ?? 0}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
