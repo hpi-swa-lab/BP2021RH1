@@ -1,3 +1,5 @@
+@import 'src/shared/style';
+
 .map-container {
   position: fixed;
   width: 480px;
@@ -28,4 +30,22 @@
   text-align: center;
   border-radius: 1rem;
   width: 300px;
+}
+
+.guess-picture-view {
+  height: calc(100vh - #{$top-bar-height});
+}
+.guess-picture-view .picture-wrapper {
+  width: 100%;
+}
+.guess-picture-view .picture-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.guess-picture-view img,
+.guess-picture-view .picture-container,
+.guess-picture-view .zoom-wrapper {
+  height: 100%;
 }
