@@ -1,6 +1,6 @@
 import GeoMap from './GeoMap';
 import './GeoView.scss';
-import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
+import { useGetPictureGeoInfoQuery, useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
@@ -14,6 +14,10 @@ const GeoView = () => {
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
+
+  const { data: geoData } = useGetPictureGeoInfoQuery({ variables: { pictureId } });
+  const allGuesses = geoData?.pictureGeoInfos?.data;
+
   return (
     <div className='guess-picture-view'>
       <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
@@ -23,7 +27,7 @@ const GeoView = () => {
           </div>
         </div>
       </ZoomWrapper>
-      <GeoMap onNextPicture={() => {}} pictureId={pictureId} />
+      <GeoMap allGuesses={allGuesses} onNextPicture={() => {}} pictureId={pictureId} />
     </div>
   );
 };

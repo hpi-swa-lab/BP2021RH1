@@ -2,7 +2,10 @@ import './leaflet.css';
 import { MapContainer, TileLayer, useMapEvent, Marker, Popup } from 'react-leaflet';
 import { useState } from 'react';
 import { Button } from '@mui/material';
-import { useCreatePictureGeoInfoMutation } from '../../../graphql/APIConnector';
+import {
+  GetPictureGeoInfoQuery,
+  useCreatePictureGeoInfoMutation,
+} from '../../../graphql/APIConnector';
 
 const LocationMarker = ({
   position,
@@ -21,7 +24,15 @@ const LocationMarker = ({
     </Marker>
   );
 };
-const GeoMap = ({ onNextPicture, pictureId }: { onNextPicture: () => void; pictureId: string }) => {
+const GeoMap = ({
+  onNextPicture,
+  pictureId,
+  allGuesses,
+}: {
+  onNextPicture: () => void;
+  pictureId: string;
+  allGuesses: GetPictureGeoInfoQuery['data'];
+}) => {
   const [guess, setGuess] = useState({ lat: 51.505, lng: -0.09 });
   const [guessComplete, setGuessComplete] = useState(false);
 
@@ -34,7 +45,9 @@ const GeoMap = ({ onNextPicture, pictureId }: { onNextPicture: () => void; pictu
 
   const sendGuess = () => {
     createPictureGeoInfo({
-      variables: { data: { picture: pictureId, latitude: guess.lat, longitude: guess.lng } },
+      variables: {
+        data: { picture: pictureId, latitude: guess.lat, longitude: guess.lng, radius: 0 },
+      },
     });
     setGuessComplete(true);
   };
