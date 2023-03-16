@@ -391,6 +391,93 @@ export type DescriptionRelationResponseCollection = {
   data: Array<DescriptionEntity>;
 };
 
+export type FeatureFlag = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  feature_flag_options?: Maybe<FeatureFlagOptionRelationResponseCollection>;
+  name: Scalars['String'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type FeatureFlagFeature_Flag_OptionsArgs = {
+  filters?: InputMaybe<FeatureFlagOptionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type FeatureFlagEntity = {
+  attributes?: Maybe<FeatureFlag>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type FeatureFlagEntityResponse = {
+  data?: Maybe<FeatureFlagEntity>;
+};
+
+export type FeatureFlagEntityResponseCollection = {
+  data: Array<FeatureFlagEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type FeatureFlagFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<FeatureFlagFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  feature_flag_options?: InputMaybe<FeatureFlagOptionFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<FeatureFlagFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<FeatureFlagFiltersInput>>>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type FeatureFlagInput = {
+  feature_flag_options?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type FeatureFlagOption = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  feature_flag?: Maybe<FeatureFlagEntityResponse>;
+  name: Scalars['String'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  weight: Scalars['Float'];
+};
+
+export type FeatureFlagOptionEntity = {
+  attributes?: Maybe<FeatureFlagOption>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type FeatureFlagOptionEntityResponse = {
+  data?: Maybe<FeatureFlagOptionEntity>;
+};
+
+export type FeatureFlagOptionEntityResponseCollection = {
+  data: Array<FeatureFlagOptionEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type FeatureFlagOptionFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<FeatureFlagOptionFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  feature_flag?: InputMaybe<FeatureFlagFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<FeatureFlagOptionFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<FeatureFlagOptionFiltersInput>>>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  weight?: InputMaybe<FloatFilterInput>;
+};
+
+export type FeatureFlagOptionInput = {
+  feature_flag?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+  weight?: InputMaybe<Scalars['Float']>;
+};
+
+export type FeatureFlagOptionRelationResponseCollection = {
+  data: Array<FeatureFlagOptionEntity>;
+};
+
 export type FileInfoInput = {
   alternativeText?: InputMaybe<Scalars['String']>;
   caption?: InputMaybe<Scalars['String']>;
@@ -429,6 +516,8 @@ export type GenericMorph =
   | ComponentCommonSynonyms
   | ComponentLocationCoordinates
   | Description
+  | FeatureFlag
+  | FeatureFlagOption
   | KeywordTag
   | Link
   | LocationTag
@@ -707,6 +796,8 @@ export type Mutation = {
   createCollection?: Maybe<CollectionEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
   createDescription?: Maybe<DescriptionEntityResponse>;
+  createFeatureFlag?: Maybe<FeatureFlagEntityResponse>;
+  createFeatureFlagOption?: Maybe<FeatureFlagOptionEntityResponse>;
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
   createLink?: Maybe<LinkEntityResponse>;
   createLocationTag?: Maybe<LocationTagEntityResponse>;
@@ -724,6 +815,8 @@ export type Mutation = {
   deleteCollection?: Maybe<CollectionEntityResponse>;
   deleteComment?: Maybe<CommentEntityResponse>;
   deleteDescription?: Maybe<DescriptionEntityResponse>;
+  deleteFeatureFlag?: Maybe<FeatureFlagEntityResponse>;
+  deleteFeatureFlagOption?: Maybe<FeatureFlagOptionEntityResponse>;
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
   deleteLink?: Maybe<LinkEntityResponse>;
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
@@ -758,6 +851,8 @@ export type Mutation = {
   updateCollection?: Maybe<CollectionEntityResponse>;
   updateComment?: Maybe<CommentEntityResponse>;
   updateDescription?: Maybe<DescriptionEntityResponse>;
+  updateFeatureFlag?: Maybe<FeatureFlagEntityResponse>;
+  updateFeatureFlagOption?: Maybe<FeatureFlagOptionEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
   updateLink?: Maybe<LinkEntityResponse>;
@@ -795,6 +890,14 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreateDescriptionArgs = {
   data: DescriptionInput;
+};
+
+export type MutationCreateFeatureFlagArgs = {
+  data: FeatureFlagInput;
+};
+
+export type MutationCreateFeatureFlagOptionArgs = {
+  data: FeatureFlagOptionInput;
 };
 
 export type MutationCreateKeywordTagArgs = {
@@ -850,6 +953,14 @@ export type MutationDeleteCommentArgs = {
 };
 
 export type MutationDeleteDescriptionArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteFeatureFlagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteFeatureFlagOptionArgs = {
   id: Scalars['ID'];
 };
 
@@ -977,6 +1088,16 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationUpdateDescriptionArgs = {
   data: DescriptionInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateFeatureFlagArgs = {
+  data: FeatureFlagInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateFeatureFlagOptionArgs = {
+  data: FeatureFlagOptionInput;
   id: Scalars['ID'];
 };
 
@@ -1309,6 +1430,10 @@ export type Query = {
   comments?: Maybe<CommentEntityResponseCollection>;
   description?: Maybe<DescriptionEntityResponse>;
   descriptions?: Maybe<DescriptionEntityResponseCollection>;
+  featureFlag?: Maybe<FeatureFlagEntityResponse>;
+  featureFlagOption?: Maybe<FeatureFlagOptionEntityResponse>;
+  featureFlagOptions?: Maybe<FeatureFlagOptionEntityResponseCollection>;
+  featureFlags?: Maybe<FeatureFlagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
@@ -1377,6 +1502,26 @@ export type QueryDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryFeatureFlagArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryFeatureFlagOptionArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryFeatureFlagOptionsArgs = {
+  filters?: InputMaybe<FeatureFlagOptionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryFeatureFlagsArgs = {
+  filters?: InputMaybe<FeatureFlagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2779,6 +2924,99 @@ export type UpdateKeywordSynonymsMutationVariables = Exact<{
 export type UpdateKeywordSynonymsMutation = {
   updateKeywordTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type GetFeatureFlagByIdQueryVariables = Exact<{
+  featureFlagId: Scalars['ID'];
+}>;
+
+export type GetFeatureFlagByIdQuery = {
+  featureFlag?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    name: string;
+                    feature_flag_options?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
+export type GetAllFeatureFlagsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllFeatureFlagsQuery = {
+  featureFlags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                name: string;
+                feature_flag_options?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string; weight: number } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetFeatureFlagOptionByIdQueryVariables = Exact<{
+  optionId: Scalars['ID'];
+}>;
+
+export type GetFeatureFlagOptionByIdQuery = {
+  featureFlagOption?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    name: string;
+                    weight: number;
+                    feature_flag?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?: { name: string } | null | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
     | null
     | undefined;
 };
@@ -4917,6 +5155,222 @@ export type UpdateKeywordSynonymsMutationResult =
 export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordSynonymsMutation,
   UpdateKeywordSynonymsMutationVariables
+>;
+
+export const GetFeatureFlagByIdDocument = gql`
+  query getFeatureFlagById($featureFlagId: ID!) {
+    featureFlag(id: $featureFlagId) {
+      data {
+        id
+        attributes {
+          name
+          feature_flag_options {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetFeatureFlagByIdQuery__
+ *
+ * To run a query within a React component, call `useGetFeatureFlagByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFeatureFlagByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFeatureFlagByIdQuery({
+ *   variables: {
+ *      featureFlagId: // value for 'featureFlagId'
+ *   },
+ * });
+ */
+export function useGetFeatureFlagByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<GetFeatureFlagByIdQuery, GetFeatureFlagByIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetFeatureFlagByIdQuery, GetFeatureFlagByIdQueryVariables>(
+    GetFeatureFlagByIdDocument,
+    options
+  );
+}
+
+export function useGetFeatureFlagByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetFeatureFlagByIdQuery,
+    GetFeatureFlagByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetFeatureFlagByIdQuery, GetFeatureFlagByIdQueryVariables>(
+    GetFeatureFlagByIdDocument,
+    options
+  );
+}
+
+export type GetFeatureFlagByIdQueryHookResult = ReturnType<typeof useGetFeatureFlagByIdQuery>;
+
+export type GetFeatureFlagByIdLazyQueryHookResult = ReturnType<
+  typeof useGetFeatureFlagByIdLazyQuery
+>;
+
+export type GetFeatureFlagByIdQueryResult = Apollo.QueryResult<
+  GetFeatureFlagByIdQuery,
+  GetFeatureFlagByIdQueryVariables
+>;
+
+export const GetAllFeatureFlagsDocument = gql`
+  query getAllFeatureFlags {
+    featureFlags {
+      data {
+        id
+        attributes {
+          name
+          feature_flag_options {
+            data {
+              id
+              attributes {
+                name
+                weight
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllFeatureFlagsQuery__
+ *
+ * To run a query within a React component, call `useGetAllFeatureFlagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllFeatureFlagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllFeatureFlagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllFeatureFlagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllFeatureFlagsQuery, GetAllFeatureFlagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllFeatureFlagsQuery, GetAllFeatureFlagsQueryVariables>(
+    GetAllFeatureFlagsDocument,
+    options
+  );
+}
+
+export function useGetAllFeatureFlagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllFeatureFlagsQuery,
+    GetAllFeatureFlagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllFeatureFlagsQuery, GetAllFeatureFlagsQueryVariables>(
+    GetAllFeatureFlagsDocument,
+    options
+  );
+}
+
+export type GetAllFeatureFlagsQueryHookResult = ReturnType<typeof useGetAllFeatureFlagsQuery>;
+
+export type GetAllFeatureFlagsLazyQueryHookResult = ReturnType<
+  typeof useGetAllFeatureFlagsLazyQuery
+>;
+
+export type GetAllFeatureFlagsQueryResult = Apollo.QueryResult<
+  GetAllFeatureFlagsQuery,
+  GetAllFeatureFlagsQueryVariables
+>;
+
+export const GetFeatureFlagOptionByIdDocument = gql`
+  query getFeatureFlagOptionById($optionId: ID!) {
+    featureFlagOption(id: $optionId) {
+      data {
+        id
+        attributes {
+          name
+          weight
+          feature_flag {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetFeatureFlagOptionByIdQuery__
+ *
+ * To run a query within a React component, call `useGetFeatureFlagOptionByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFeatureFlagOptionByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFeatureFlagOptionByIdQuery({
+ *   variables: {
+ *      optionId: // value for 'optionId'
+ *   },
+ * });
+ */
+export function useGetFeatureFlagOptionByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetFeatureFlagOptionByIdQuery,
+    GetFeatureFlagOptionByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetFeatureFlagOptionByIdQuery, GetFeatureFlagOptionByIdQueryVariables>(
+    GetFeatureFlagOptionByIdDocument,
+    options
+  );
+}
+
+export function useGetFeatureFlagOptionByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetFeatureFlagOptionByIdQuery,
+    GetFeatureFlagOptionByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetFeatureFlagOptionByIdQuery, GetFeatureFlagOptionByIdQueryVariables>(
+    GetFeatureFlagOptionByIdDocument,
+    options
+  );
+}
+
+export type GetFeatureFlagOptionByIdQueryHookResult = ReturnType<
+  typeof useGetFeatureFlagOptionByIdQuery
+>;
+
+export type GetFeatureFlagOptionByIdLazyQueryHookResult = ReturnType<
+  typeof useGetFeatureFlagOptionByIdLazyQuery
+>;
+
+export type GetFeatureFlagOptionByIdQueryResult = Apollo.QueryResult<
+  GetFeatureFlagOptionByIdQuery,
+  GetFeatureFlagOptionByIdQueryVariables
 >;
 
 export const GetLocationTagsWithThumbnailDocument = gql`

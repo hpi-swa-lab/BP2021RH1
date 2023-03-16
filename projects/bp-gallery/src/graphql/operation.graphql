@@ -593,6 +593,62 @@ mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsI
   }
 }
 
+query getFeatureFlagById($featureFlagId: ID!) {
+  featureFlag(id: $featureFlagId) {
+    data {
+      id
+      attributes {
+        name
+        feature_flag_options {
+          data {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+query getAllFeatureFlags {
+  featureFlags {
+    data {
+      id
+      attributes {
+        name
+        feature_flag_options {
+          data {
+            id
+            attributes {
+              name
+              weight
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query getFeatureFlagOptionById($optionId: ID!) {
+  featureFlagOption(id: $optionId) {
+    data {
+      id
+      attributes {
+        name
+        weight
+        feature_flag {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getLocationTagsWithThumbnail(
   $filters: LocationTagFiltersInput = {}
   $thumbnailFilters: PictureFiltersInput = {}

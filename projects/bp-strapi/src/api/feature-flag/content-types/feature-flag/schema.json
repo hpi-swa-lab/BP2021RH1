@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "feature_flags",
+  "info": {
+    "singularName": "feature-flag",
+    "pluralName": "feature-flags",
+    "displayName": "Feature_Flag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "feature_flag_options": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::feature-flag-option.feature-flag-option",
+      "mappedBy": "feature_flag"
+    }
+  }
+}

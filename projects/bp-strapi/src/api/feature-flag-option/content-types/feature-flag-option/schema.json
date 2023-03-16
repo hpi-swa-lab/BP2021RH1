@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "feature_flag_options",
+  "info": {
+    "singularName": "feature-flag-option",
+    "pluralName": "feature-flag-options",
+    "displayName": "Feature_Flag_Option",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "feature_flag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::feature-flag.feature-flag",
+      "inversedBy": "feature_flag_options"
+    },
+    "weight": {
+      "type": "float",
+      "default": 1,
+      "required": true
+    }
+  }
+}
