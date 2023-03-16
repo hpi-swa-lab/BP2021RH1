@@ -24,8 +24,18 @@ const ShowMoreViewHeader = ({
 }) => {
   const { t } = useTranslation();
 
-  const getShowMoreHeader = () => t(`show-more.${categoryType}-title`);
-  const getShowMoreText = () => t(`show-more.${categoryType}-text`);
+  const getShowMoreHeader = () =>
+    t(
+      `show-more.${
+        categoryType === 'pictures' && !categoryId && !archiveId ? 'latest' : categoryType
+      }-title`
+    );
+  const getShowMoreText = () =>
+    t(
+      `show-more.${
+        categoryType === 'pictures' && !categoryId && !archiveId ? 'latest' : categoryType
+      }-text`
+    );
 
   if (categoryType === 'pictures') {
     if (categoryId && collectionsInfo && collectionsInfo.collections.length > 0) {

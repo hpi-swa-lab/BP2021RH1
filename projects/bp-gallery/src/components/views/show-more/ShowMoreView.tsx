@@ -88,6 +88,9 @@ const ShowMoreView = ({
               hashbase={'show-more'}
               extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
               bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+              maxNumPictures={
+                categoryType === 'pictures' && !categoryId && !archiveId ? 500 : undefined
+              }
             />
           </div>
         )}
