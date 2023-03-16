@@ -1,6 +1,15 @@
 import { QuestionAnswer, ThumbUpAlt, ThumbUpAltOutlined } from '@mui/icons-material';
 import { isFunction } from 'lodash';
-import { MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
+import {
+  createContext,
+  MouseEvent,
+  MouseEventHandler,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import useLike from '../../views/picture/sidebar/like-hooks';
@@ -18,6 +27,12 @@ export enum PictureOrigin {
   REMOTE,
 }
 
+export const ShowPfactzContext = createContext(false);
+
+export const ShowPfactz = ({ children }: PropsWithChildren<{}>) => (
+  <ShowPfactzContext.Provider value={true}>{children}</ShowPfactzContext.Provider>
+);
+
 const PicturePreview = ({
   picture,
   onClick,
@@ -33,6 +48,7 @@ const PicturePreview = ({
   allowClicks?: boolean;
   highQuality?: boolean;
 }) => {
+  const showPfactz = useContext(ShowPfactzContext);
   const [showStatistics, setShowStatistics] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -85,36 +101,40 @@ const PicturePreview = ({
             </div>
           ))}
         </div>
-        <div className='absolute flex w-full justify-end bottom-0 transparent right-0 text-white brightness-100'>
-          <div className={`h-20 w-full bg-gradient-to-t from-black `}></div>
-          <div
-            className={`absolute bottom-0 right-0 items-center flex gap-2 transparent mb-1 mr-2 transition-all ${
-              showStatistics ? 'text-xl' : 'text-base'
-            }`}
-          >
+        {showPfactz ? (
+          <div className='absolute flex w-full justify-end bottom-0 transparent right-0 text-white brightness-100'>
+            <div className={`h-20 w-full bg-gradient-to-t from-black `}></div>
             <div
-              className='items-center flex'
-              onClick={event => {
-                event.stopPropagation();
-                like(isLiked);
-              }}
+              className={`absolute bottom-0 right-0 items-center flex gap-2 transparent mb-1 mr-2 transition-all ${
+                showStatistics ? 'text-xl' : 'text-base'
+              }`}
             >
-              {isLiked ? (
-                <ThumbUpAlt fontSize='inherit' className='text-blue-400' />
-              ) : (
-                <ThumbUpAltOutlined fontSize='inherit' />
-              )}
-              &nbsp;
-              {likeCount}
-            </div>
+              <div
+                className='items-center flex'
+                onClick={event => {
+                  event.stopPropagation();
+                  like(isLiked);
+                }}
+              >
+                {isLiked ? (
+                  <ThumbUpAlt fontSize='inherit' className='text-blue-400' />
+                ) : (
+                  <ThumbUpAltOutlined fontSize='inherit' />
+                )}
+                &nbsp;
+                {likeCount}
+              </div>
 
-            <div className='items-center flex'>
-              <QuestionAnswer fontSize='inherit' />
-              &nbsp;
-              {picture.comments?.length ?? 0}
+              <div className='items-center flex'>
+                <QuestionAnswer fontSize='inherit' />
+                &nbsp;
+                {picture.comments?.length ?? 0}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
