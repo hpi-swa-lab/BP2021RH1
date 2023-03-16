@@ -19,7 +19,7 @@ const DiscoverView = () => {
           title={t('discover.latest-pictures')}
           queryParams={{}}
           onClick={() => {
-            history.push('/show-more/pictures', {
+            history.push('/show-more/latest', {
               showBack: true,
             });
           }}
