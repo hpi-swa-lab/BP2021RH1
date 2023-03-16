@@ -7,7 +7,7 @@ import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
-import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import PicturePreview, { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureOverview from '../../common/PictureOverview';
 import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
@@ -97,16 +97,17 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               </div>
             )}
           </div>
-
-          <PictureOverview
-            title='Unsere Bilder'
-            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {
-              history.push('/archives/' + archiveId + '/show-more/pictures', {
-                showBack: true,
-              });
-            }}
-          />
+          <ShowPfactz>
+            <PictureOverview
+              title='Unsere Bilder'
+              queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+              onClick={() => {
+                history.push('/archives/' + archiveId + '/show-more/pictures', {
+                  showBack: true,
+                });
+              }}
+            />
+          </ShowPfactz>
 
           <TagOverview
             title='Unsere Kategorien'

@@ -1,23 +1,24 @@
+import { Location } from 'history';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { Location } from 'history';
-import SearchBar from './SearchBar';
-import './SearchView.scss';
-import SearchHub from './SearchHub';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { HelpTooltip } from '../../common/HelpTooltip';
+import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import SearchBreadcrumbs from './SearchBreadcrumbs';
+import ScrollContainer from '../../common/ScrollContainer';
+import { isValidYear } from './helpers/addNewParamToSearchPath';
 import {
   convertSearchParamsToPictureFilters,
   paramToTime,
   SearchType,
 } from './helpers/search-filters';
-import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import ScrollContainer from '../../common/ScrollContainer';
-import NoSearchResultsText from './NoSearchResultsText';
-import { HelpTooltip } from '../../common/HelpTooltip';
-import { isValidYear } from './helpers/addNewParamToSearchPath';
 import { toURLSearchParam } from './helpers/url-search-params';
+import NoSearchResultsText from './NoSearchResultsText';
+import SearchBar from './SearchBar';
+import SearchBreadcrumbs from './SearchBreadcrumbs';
+import SearchHub from './SearchHub';
+import './SearchView.scss';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'
@@ -86,17 +87,19 @@ const SearchView = () => {
           {!search ? (
             <SearchHub />
           ) : (
-            <PictureScrollGrid
-              queryParams={queryParams}
-              isAllSearchActive={isAllSearchActive}
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              hashbase={search}
-              bulkOperations={[linkToCollection, bulkEdit]}
-              resultPictureCallback={(pictures: number) => {
-                setAreResultsEmpty(pictures <= 0);
-              }}
-            />
+            <ShowPfactz>
+              <PictureScrollGrid
+                queryParams={queryParams}
+                isAllSearchActive={isAllSearchActive}
+                scrollPos={scrollPos}
+                scrollHeight={scrollHeight}
+                hashbase={search}
+                bulkOperations={[linkToCollection, bulkEdit]}
+                resultPictureCallback={(pictures: number) => {
+                  setAreResultsEmpty(pictures <= 0);
+                }}
+              />
+            </ShowPfactz>
           )}
         </div>
       )}

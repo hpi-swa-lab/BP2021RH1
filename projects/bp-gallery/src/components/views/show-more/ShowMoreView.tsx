@@ -1,9 +1,9 @@
-import React from 'react';
 import { useGetCollectionInfoByNameQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
+import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
@@ -71,24 +71,31 @@ const ShowMoreView = ({
               collectionsInfo={collectionsInfo}
               flattenedTags={flattenedTags}
             />
-            <PictureScrollGrid
-              queryParams={getPictureQueryParams(
-                categoryType,
-                categoryId,
-                archiveId,
-                collectionsInfo
-              )}
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              sortBy={
-                categoryType !== 'pictures' && categoryId
-                  ? ['time_range_tag.start:asc']
-                  : ['createdAt:desc']
-              }
-              hashbase={'show-more'}
-              extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
-              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
-            />
+            <ShowPfactz>
+              <PictureScrollGrid
+                queryParams={getPictureQueryParams(
+                  categoryType,
+                  categoryId,
+                  archiveId,
+                  collectionsInfo
+                )}
+                scrollPos={scrollPos}
+                scrollHeight={scrollHeight}
+                sortBy={
+                  categoryType !== 'pictures' && categoryId
+                    ? ['time_range_tag.start:asc']
+                    : ['createdAt:desc']
+                }
+                hashbase={'show-more'}
+                extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
+                bulkOperations={[
+                  removeFromCollection,
+                  linkToCollection,
+                  moveToCollection,
+                  bulkEdit,
+                ]}
+              />
+            </ShowPfactz>
           </div>
         )}
       </ScrollContainer>

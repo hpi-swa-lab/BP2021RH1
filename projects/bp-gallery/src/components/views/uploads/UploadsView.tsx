@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -53,14 +54,16 @@ const UploadsView = () => {
             <Add />
             {t('curator.createArchive')}
           </Button>
-          <PictureScrollGrid
-            queryParams={{ collections: { id: { null: true } } }}
-            scrollPos={scrollPos}
-            scrollHeight={scrollHeight}
-            hashbase={'uploads'}
-            uploadAreaProps={uploadAreaProps}
-            bulkOperations={[moveToCollection, bulkEdit]}
-          />
+          <ShowPfactz>
+            <PictureScrollGrid
+              queryParams={{ collections: { id: { null: true } } }}
+              scrollPos={scrollPos}
+              scrollHeight={scrollHeight}
+              hashbase={'uploads'}
+              uploadAreaProps={uploadAreaProps}
+              bulkOperations={[moveToCollection, bulkEdit]}
+            />
+          </ShowPfactz>
         </div>
       )}
     </ScrollContainer>

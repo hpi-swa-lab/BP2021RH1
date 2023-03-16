@@ -1,3 +1,4 @@
+import { History } from 'history';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -9,13 +10,13 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
+import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
+import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 import PictureInfo, { Field } from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
-import { History } from 'history';
-import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 import { combinePictures, computePictureDiff, PictureDiff } from './helpers/diffing';
 
 const getPictureFilters = (pictures: string[]) => {
@@ -119,14 +120,16 @@ const BulkEditView = ({
           <div className='bulk-edit-picture-grid'>
             <ScrollContainer>
               {(scrollPos: number, scrollHeight: number) => (
-                <PictureScrollGrid
-                  queryParams={getPictureFilters(pictureIds)}
-                  scrollPos={scrollPos}
-                  scrollHeight={scrollHeight}
-                  hashbase={'A'}
-                  showDefaultAdornments={false}
-                  allowClicks={false}
-                />
+                <ShowPfactz>
+                  <PictureScrollGrid
+                    queryParams={getPictureFilters(pictureIds)}
+                    scrollPos={scrollPos}
+                    scrollHeight={scrollHeight}
+                    hashbase={'A'}
+                    showDefaultAdornments={false}
+                    allowClicks={false}
+                  />
+                </ShowPfactz>
               )}
             </ScrollContainer>
           </div>

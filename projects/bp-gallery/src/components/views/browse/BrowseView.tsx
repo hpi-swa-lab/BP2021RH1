@@ -1,9 +1,7 @@
+import { Add } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import Loading from '../../common/Loading';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import SubCollections from './SubCollections';
-import './BrowseView.scss';
 import {
   PictureFiltersInput,
   PublicationState,
@@ -11,19 +9,22 @@ import {
   useGetCollectionInfoByNameQuery,
   useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
-import CollectionDescription from './CollectionDescription';
-import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
-import { Button } from '@mui/material';
-import { Add } from '@mui/icons-material';
-import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { decodeBrowsePathComponent } from './helpers/format-browse-path';
-import ScrollContainer from '../../common/ScrollContainer';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
 import Footer from '../../common/footer/Footer';
+import Loading from '../../common/Loading';
+import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
+import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import ScrollContainer from '../../common/ScrollContainer';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import './BrowseView.scss';
+import CollectionDescription from './CollectionDescription';
+import { decodeBrowsePathComponent } from './helpers/format-browse-path';
+import SubCollections from './SubCollections';
 
 const getPictureFilters = (collectionId: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -141,19 +142,21 @@ const BrowseView = ({
                   {t('curator.createCollection')}
                 </Button>
               )}
-              <PictureScrollGrid
-                queryParams={getPictureFilters(collection.id)}
-                scrollPos={parentScrollPos ?? scrollPos}
-                scrollHeight={parentScrollHeight ?? scrollHeight}
-                hashbase={collection.name}
-                uploadAreaProps={uploadAreaProps(collection)}
-                bulkOperations={[
-                  removeFromCollection,
-                  linkToCollection,
-                  moveToCollection,
-                  bulkEdit,
-                ]}
-              />
+              <ShowPfactz>
+                <PictureScrollGrid
+                  queryParams={getPictureFilters(collection.id)}
+                  scrollPos={parentScrollPos ?? scrollPos}
+                  scrollHeight={parentScrollHeight ?? scrollHeight}
+                  hashbase={collection.name}
+                  uploadAreaProps={uploadAreaProps(collection)}
+                  bulkOperations={[
+                    removeFromCollection,
+                    linkToCollection,
+                    moveToCollection,
+                    bulkEdit,
+                  ]}
+                />
+              </ShowPfactz>
             </div>
             <Footer />
           </div>
