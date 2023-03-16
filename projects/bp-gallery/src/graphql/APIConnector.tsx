@@ -1185,7 +1185,6 @@ export type Picture = {
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']>;
-  slides?: Maybe<SlideRelationResponseCollection>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
@@ -1248,12 +1247,6 @@ export type PicturePerson_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type PictureSlidesArgs = {
-  filters?: InputMaybe<SlideFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
 export type PictureVerified_Keyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
@@ -1305,7 +1298,6 @@ export type PictureFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   person_tags?: InputMaybe<PersonTagFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
-  slides?: InputMaybe<SlideFiltersInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
@@ -1330,7 +1322,6 @@ export type PictureInput = {
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
-  slides?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   verified_location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1619,17 +1610,9 @@ export type Slide = {
   description?: Maybe<Scalars['String']>;
   layout: Enum_Slide_Layout;
   picture?: Maybe<PictureEntityResponse>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
   presentation?: Maybe<PresentationEntityResponse>;
   title?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type SlidePicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type SlideEntity = {
@@ -1655,7 +1638,6 @@ export type SlideFiltersInput = {
   not?: InputMaybe<SlideFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<SlideFiltersInput>>>;
   picture?: InputMaybe<PictureFiltersInput>;
-  pictures?: InputMaybe<PictureFiltersInput>;
   presentation?: InputMaybe<PresentationFiltersInput>;
   title?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -1665,7 +1647,6 @@ export type SlideInput = {
   description?: InputMaybe<Scalars['String']>;
   layout?: InputMaybe<Enum_Slide_Layout>;
   picture?: InputMaybe<Scalars['ID']>;
-  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   presentation?: InputMaybe<Scalars['ID']>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -2963,6 +2944,16 @@ export type UpdateKeywordSynonymsMutation = {
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
+};
+
+export type UpdateSlideTitleAndDescriptionMutationVariables = Exact<{
+  slideId: Scalars['ID'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+}>;
+
+export type UpdateSlideTitleAndDescriptionMutation = {
+  updateSlide?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
 };
 
 export type GetSlideByIdQueryVariables = Exact<{
@@ -5159,6 +5150,65 @@ export type UpdateKeywordSynonymsMutationResult =
 export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordSynonymsMutation,
   UpdateKeywordSynonymsMutationVariables
+>;
+
+export const UpdateSlideTitleAndDescriptionDocument = gql`
+  mutation updateSlideTitleAndDescription($slideId: ID!, $title: String!, $description: String!) {
+    updateSlide(id: $slideId, data: { title: $title, description: $description }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateSlideTitleAndDescriptionMutationFn = Apollo.MutationFunction<
+  UpdateSlideTitleAndDescriptionMutation,
+  UpdateSlideTitleAndDescriptionMutationVariables
+>;
+
+/**
+ * __useUpdateSlideTitleAndDescriptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateSlideTitleAndDescriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSlideTitleAndDescriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSlideTitleAndDescriptionMutation, { data, loading, error }] = useUpdateSlideTitleAndDescriptionMutation({
+ *   variables: {
+ *      slideId: // value for 'slideId'
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useUpdateSlideTitleAndDescriptionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateSlideTitleAndDescriptionMutation,
+    UpdateSlideTitleAndDescriptionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateSlideTitleAndDescriptionMutation,
+    UpdateSlideTitleAndDescriptionMutationVariables
+  >(UpdateSlideTitleAndDescriptionDocument, options);
+}
+
+export type UpdateSlideTitleAndDescriptionMutationHookResult = ReturnType<
+  typeof useUpdateSlideTitleAndDescriptionMutation
+>;
+
+export type UpdateSlideTitleAndDescriptionMutationResult =
+  Apollo.MutationResult<UpdateSlideTitleAndDescriptionMutation>;
+
+export type UpdateSlideTitleAndDescriptionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateSlideTitleAndDescriptionMutation,
+  UpdateSlideTitleAndDescriptionMutationVariables
 >;
 
 export const GetSlideByIdDocument = gql`

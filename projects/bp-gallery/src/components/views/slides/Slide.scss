@@ -1,20 +1,35 @@
+@import 'src/shared/style';
+
 .slide-container {
   display: flex;
   flex-direction: row;
   background-color: black;
+  padding: 24px;
+  @media only screen and (max-width: $mobile-breakpoint) {
+    flex-direction: column;
+  }
 
   .text-container {
-    padding: 8px 32px 8px 32px;
+    padding: 0 8px 0px 32px;
     color: white;
     width: 50%;
     overflow: hidden;
+    @media only screen and (max-width: $mobile-breakpoint) {
+      width: 100%;
+      padding: 8px 0px 16px 0px;
+    }
   }
 
   .picture-container {
     width: 50%;
+    @media only screen and (max-width: $mobile-breakpoint) {
+      width: 100%;
+    }
   }
 
   .picture-container-full-width {
-    width: 100%;
+    margin: auto;
+    max-width: 100%;
+    max-height: 100%;
   }
 }

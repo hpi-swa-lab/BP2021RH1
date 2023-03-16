@@ -593,6 +593,14 @@ mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsI
   }
 }
 
+mutation updateSlideTitleAndDescription($slideId: ID!, $title: String!, $description: String!) {
+  updateSlide(id: $slideId, data: { title: $title, description: $description }) {
+    data {
+      id
+    }
+  }
+}
+
 query getSlideById($slideId: ID!) {
   slide(id: $slideId) {
     data {
