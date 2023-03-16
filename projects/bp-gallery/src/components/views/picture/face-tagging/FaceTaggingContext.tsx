@@ -4,11 +4,17 @@ import {
   PropsWithChildren,
   RefObject,
   SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
+import {
+  useCreateFaceTagMutation,
+  useGetFaceTagsQuery,
+  useGetPersonTagQuery,
+} from '../../../../graphql/APIConnector';
 import { FaceTag, FaceTagData } from './FaceTag';
 
 type FaceTagging = {
@@ -21,21 +27,54 @@ const Context = createContext<FaceTagging | null>(null);
 
 export const FaceTaggingProvider = ({
   children,
+  pictureId,
   imgRef,
-}: PropsWithChildren<{ imgRef: RefObject<HTMLImageElement> }>) => {
+}: PropsWithChildren<{ pictureId: string; imgRef: RefObject<HTMLImageElement> }>) => {
   const [activeTagId, setActiveTagId] = useState<string | null>(null);
 
-  const tags = useMemo(
-    () => [
-      { name: 'Links', x: 0.05, y: 0.5 },
-      { name: 'Unten', x: 0.5, y: 0.95 },
-      { name: 'Rechts', x: 0.95, y: 0.5 },
-      { name: 'Oben', x: 0.5, y: 0.05 },
-    ],
-    []
-  );
+  useEffect(() => {
+    setActiveTagId(null);
+  }, [pictureId]);
+
+  const { error, loading, data } = useGetFaceTagsQuery({
+    variables: {
+      pictureId,
+    },
+  });
+  const tags = data?.faceTags?.data.map(tag => ({
+    x: tag.attributes?.x ?? 0,
+    y: tag.attributes?.y ?? 0,
+    name: tag.attributes?.person_tag?.data?.attributes?.name ?? '',
+  }));
+
+  const { data: activeData } = useGetPersonTagQuery({
+    variables: {
+      id: activeTagId ?? '-1',
+    },
+  });
+  const activeTagName = activeData?.personTag?.data?.attributes?.name ?? 'Lädt';
 
   const [position, setPosition] = useState<null | [number, number]>(null);
+
+  const [createTag] = useCreateFaceTagMutation({
+    refetchQueries: ['getFaceTags'],
+  });
+
+  const placeTag = useCallback(() => {
+    if (!position || activeTagId === null) {
+      return;
+    }
+    const [x, y] = position;
+    createTag({
+      variables: {
+        x,
+        y,
+        personTagId: activeTagId,
+        pictureId,
+      },
+    });
+    setActiveTagId(null);
+  }, [createTag, position, activeTagId, pictureId]);
 
   useEffect(() => {
     const img = imgRef.current;
@@ -50,37 +89,49 @@ export const FaceTaggingProvider = ({
     const mouseleave = () => {
       setPosition(null);
     };
+    const mouseclick = () => {
+      placeTag();
+    };
     img.addEventListener('mousemove', mousemove);
     img.addEventListener('mouseleave', mouseleave);
+    img.addEventListener('click', mouseclick);
     return () => {
       img.removeEventListener('mousemove', mousemove);
       img.removeEventListener('mouseleave', mouseleave);
+      img.removeEventListener('click', mouseclick);
     };
-  }, [imgRef]);
+  }, [imgRef, placeTag]);
 
   const activeTagData = useMemo<FaceTagData | null>(() => {
-    if (!position) {
+    if (!position || activeTagId === null) {
       return null;
     }
     const [x, y] = position;
     return {
-      name: 'Neu',
+      name: activeTagName,
       x,
       y,
       noPointerEvents: true,
     };
-  }, [position]);
+  }, [position, activeTagName, activeTagId]);
 
   const value = useMemo<FaceTagging>(
     () => ({
       activeTagId,
       setActiveTagId,
       tags: activeTagData
-        ? [...tags.map(tag => ({ ...tag, noPointerEvents: true })), activeTagData]
-        : tags,
+        ? [...(tags ?? []).map(tag => ({ ...tag, noPointerEvents: true })), activeTagData]
+        : tags ?? [],
     }),
     [activeTagId, setActiveTagId, tags, activeTagData]
   );
+
+  if (!tags) {
+    if (error) {
+      console.log(error);
+    }
+    return <>{children}</>;
+  }
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };

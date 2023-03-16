@@ -141,7 +141,7 @@ const PictureView = ({
   return (
     <div className='picture-view-container'>
       <PictureViewContext.Provider value={contextValue}>
-        <FaceTaggingProvider imgRef={imgRef}>
+        <FaceTaggingProvider pictureId={pictureId} imgRef={imgRef}>
           <div className={`picture-view`} ref={containerRef}>
             <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
               <div className='picture-wrapper'>

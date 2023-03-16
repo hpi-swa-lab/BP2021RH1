@@ -394,17 +394,10 @@ export type DescriptionRelationResponseCollection = {
 export type FaceTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   person_tag?: Maybe<PersonTagEntityResponse>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  picture?: Maybe<PictureEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   x?: Maybe<Scalars['Float']>;
   y?: Maybe<Scalars['Float']>;
-};
-
-export type FaceTagPicturesArgs = {
-  filters?: InputMaybe<PictureFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type FaceTagEntity = {
@@ -428,7 +421,7 @@ export type FaceTagFiltersInput = {
   not?: InputMaybe<FaceTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<FaceTagFiltersInput>>>;
   person_tag?: InputMaybe<PersonTagFiltersInput>;
-  pictures?: InputMaybe<PictureFiltersInput>;
+  picture?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   x?: InputMaybe<FloatFilterInput>;
   y?: InputMaybe<FloatFilterInput>;
@@ -436,7 +429,7 @@ export type FaceTagFiltersInput = {
 
 export type FaceTagInput = {
   person_tag?: InputMaybe<Scalars['ID']>;
-  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  picture?: InputMaybe<Scalars['ID']>;
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
 };
@@ -3459,6 +3452,61 @@ export type DeleteKeywordTagMutationVariables = Exact<{
 
 export type DeleteKeywordTagMutation = {
   deleteKeywordTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type GetFaceTagsQueryVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type GetFaceTagsQuery = {
+  faceTags?:
+    | {
+        data: Array<{
+          attributes?:
+            | {
+                x?: number | null | undefined;
+                y?: number | null | undefined;
+                person_tag?:
+                  | {
+                      data?:
+                        | { attributes?: { name: string } | null | undefined }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetPersonTagQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type GetPersonTagQuery = {
+  personTag?:
+    | { data?: { attributes?: { name: string } | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type CreateFaceTagMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+  personTagId: Scalars['ID'];
+  x?: InputMaybe<Scalars['Float']>;
+  y?: InputMaybe<Scalars['Float']>;
+}>;
+
+export type CreateFaceTagMutation = {
+  createFaceTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -6746,6 +6794,179 @@ export type DeleteKeywordTagMutationResult = Apollo.MutationResult<DeleteKeyword
 export type DeleteKeywordTagMutationOptions = Apollo.BaseMutationOptions<
   DeleteKeywordTagMutation,
   DeleteKeywordTagMutationVariables
+>;
+
+export const GetFaceTagsDocument = gql`
+  query getFaceTags($pictureId: ID!) {
+    faceTags(filters: { picture: { id: { eq: $pictureId } } }) {
+      data {
+        attributes {
+          x
+          y
+          person_tag {
+            data {
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetFaceTagsQuery__
+ *
+ * To run a query within a React component, call `useGetFaceTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFaceTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFaceTagsQuery({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useGetFaceTagsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetFaceTagsQuery, GetFaceTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetFaceTagsQuery, GetFaceTagsQueryVariables>(GetFaceTagsDocument, options);
+}
+
+export function useGetFaceTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetFaceTagsQuery, GetFaceTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetFaceTagsQuery, GetFaceTagsQueryVariables>(
+    GetFaceTagsDocument,
+    options
+  );
+}
+
+export type GetFaceTagsQueryHookResult = ReturnType<typeof useGetFaceTagsQuery>;
+
+export type GetFaceTagsLazyQueryHookResult = ReturnType<typeof useGetFaceTagsLazyQuery>;
+
+export type GetFaceTagsQueryResult = Apollo.QueryResult<
+  GetFaceTagsQuery,
+  GetFaceTagsQueryVariables
+>;
+
+export const GetPersonTagDocument = gql`
+  query getPersonTag($id: ID!) {
+    personTag(id: $id) {
+      data {
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPersonTagQuery__
+ *
+ * To run a query within a React component, call `useGetPersonTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPersonTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPersonTagQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetPersonTagQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPersonTagQuery, GetPersonTagQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPersonTagQuery, GetPersonTagQueryVariables>(
+    GetPersonTagDocument,
+    options
+  );
+}
+
+export function useGetPersonTagLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPersonTagQuery, GetPersonTagQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPersonTagQuery, GetPersonTagQueryVariables>(
+    GetPersonTagDocument,
+    options
+  );
+}
+
+export type GetPersonTagQueryHookResult = ReturnType<typeof useGetPersonTagQuery>;
+
+export type GetPersonTagLazyQueryHookResult = ReturnType<typeof useGetPersonTagLazyQuery>;
+
+export type GetPersonTagQueryResult = Apollo.QueryResult<
+  GetPersonTagQuery,
+  GetPersonTagQueryVariables
+>;
+
+export const CreateFaceTagDocument = gql`
+  mutation createFaceTag($pictureId: ID!, $personTagId: ID!, $x: Float, $y: Float) {
+    createFaceTag(data: { picture: $pictureId, person_tag: $personTagId, x: $x, y: $y }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateFaceTagMutationFn = Apollo.MutationFunction<
+  CreateFaceTagMutation,
+  CreateFaceTagMutationVariables
+>;
+
+/**
+ * __useCreateFaceTagMutation__
+ *
+ * To run a mutation, you first call `useCreateFaceTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFaceTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFaceTagMutation, { data, loading, error }] = useCreateFaceTagMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *      personTagId: // value for 'personTagId'
+ *      x: // value for 'x'
+ *      y: // value for 'y'
+ *   },
+ * });
+ */
+export function useCreateFaceTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateFaceTagMutation, CreateFaceTagMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateFaceTagMutation, CreateFaceTagMutationVariables>(
+    CreateFaceTagDocument,
+    options
+  );
+}
+
+export type CreateFaceTagMutationHookResult = ReturnType<typeof useCreateFaceTagMutation>;
+
+export type CreateFaceTagMutationResult = Apollo.MutationResult<CreateFaceTagMutation>;
+
+export type CreateFaceTagMutationOptions = Apollo.BaseMutationOptions<
+  CreateFaceTagMutation,
+  CreateFaceTagMutationVariables
 >;
 
 export const CreateSubCollectionDocument = gql`

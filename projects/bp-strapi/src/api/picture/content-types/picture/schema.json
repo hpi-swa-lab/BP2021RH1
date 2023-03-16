@@ -121,9 +121,9 @@
     },
     "face_tags": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "oneToMany",
       "target": "api::face-tag.face-tag",
-      "mappedBy": "pictures"
+      "mappedBy": "picture"
     }
   }
 }

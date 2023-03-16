@@ -17,16 +17,16 @@
     "y": {
       "type": "float"
     },
-    "pictures": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::picture.picture",
-      "inversedBy": "face_tags"
-    },
     "person_tag": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::person-tag.person-tag"
+    },
+    "picture": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::picture.picture",
+      "inversedBy": "face_tags"
     }
   }
 }
