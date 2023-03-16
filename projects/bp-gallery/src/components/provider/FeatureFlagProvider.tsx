@@ -40,7 +40,7 @@ const FeatureFlagContext = createContext<
 >(null);
 
 export const FeatureFlagProvider = ({ children }: PropsWithChildren<{}>) => {
-  const state = useState(loadFromSessionStorage());
+  const state = useState(() => loadFromSessionStorage());
   const [data, _] = state;
 
   useEffect(() => {
