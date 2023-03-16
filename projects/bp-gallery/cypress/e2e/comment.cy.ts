@@ -2,11 +2,11 @@ import { login, logout } from '../utils/login-utils';
 
 const postComment = (name: string, comment: string) => {
   cy.get('input#name').scrollIntoView();
-  cy.get('input#name').should('exist').clear();
+  cy.get('input#name').clear();
   cy.get('input#name').type(name);
-  cy.get('textarea#text').should('exist').clear();
+  cy.get('textarea#text').clear();
   cy.get('textarea#text').type(comment);
-  cy.get('.MuiButton-root').contains('Absenden').should('exist').click();
+  cy.get('.MuiButton-root').contains('Absenden').click();
 };
 
 const closeModal = (text: string, buttonText: string) => {
