@@ -1,21 +1,22 @@
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react';
+import { createContext, Dispatch, PropsWithChildren, SetStateAction } from 'react';
 import useStorageState from '../../hooks/storage-state.hook';
-
-const sessionStorageItemName = 'clipboard';
 
 type ClipboardData = {
   pictureIds: string[];
 };
 
-const StorageContext = createContext<null | {
-  clipboardState: [ClipboardData, Dispatch<SetStateAction<ClipboardData>>];
-  likedState: [string[], Dispatch<SetStateAction<string[]>>];
-}>(null);
+type Item<T> = [T, Dispatch<SetStateAction<T>>];
+type StorageData = {
+  clipboardState: Item<ClipboardData>;
+  likedState: Item<string[]>;
+};
+
+export const StorageContext = createContext<null | StorageData>(null);
 
 export const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
   const clipboardState = useStorageState<ClipboardData>(
     { pictureIds: [] },
-    sessionStorageItemName,
+    'clipboard',
     sessionStorage
   );
 
@@ -26,24 +27,6 @@ export const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
       {children}
     </StorageContext.Provider>
   );
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useStorage = () => {
-  const value = useContext(StorageContext);
-  if (!value) {
-    throw new Error('missing clipboard context');
-  }
-  return value;
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useClipboard = () => {
-  const value = useContext(StorageContext)?.clipboardState;
-  if (!value) {
-    throw new Error('missing clipboard context');
-  }
-  return value;
 };
 
 export default StorageProvider;
