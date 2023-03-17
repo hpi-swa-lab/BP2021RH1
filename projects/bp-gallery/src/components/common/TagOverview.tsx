@@ -45,7 +45,7 @@ const TagOverview = ({
     if (Math.min(window.innerWidth - 64, 1200) >= tempRowLength * 300 + (tempRowLength - 1) * 8) {
       return tempRowLength;
     }
-    return tempRowLength - 1;
+    return Math.max(1, tempRowLength - 1);
   };
 
   const [rowLength, setRowLength] = useState(() => {
