@@ -38,7 +38,7 @@ describe('bulk edit descriptions', () => {
     selectPictures('1', '2');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.picture-info-field', 'Beschreibungen')
-      .contains('.MuiIconButton-root', 'add')
+      .find('.MuiIconButton-root [data-testid="AddIcon"]')
       .click();
     cy.contains('.picture-info-field', 'Beschreibungen')
       .find('.jodit-wysiwyg:empty')
@@ -60,7 +60,7 @@ describe('bulk edit descriptions', () => {
     selectPictures('1', '2');
     cy.contains('Mehrere Bilder editieren').click();
     cy.contains('.description-wrapper', 'Irgendwas cooles')
-      .contains('.MuiIconButton-root', 'delete')
+      .find('.MuiIconButton-root [data-testid="DeleteIcon"]')
       .click();
     cy.contains('Bestätigen').click();
     cy.contains('.save-state', 'Gespeichert.');
