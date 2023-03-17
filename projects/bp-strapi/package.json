@@ -9,6 +9,7 @@
     "start": "cross-env ENV_PATH=./config/env/production/.env strapi start",
     "build": "cross-env ENV_PATH=./config/env/development/.env strapi build",
     "build:prod": "cross-env ENV_PATH=./config/env/production/.env strapi build",
+    "test-db": "docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=bpgallery postgres",
     "strapi": "strapi",
     "test": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --watchAll",
     "test:ci": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --verbose"
