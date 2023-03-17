@@ -1,7 +1,7 @@
 import { Add, Delete } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { isEmpty } from 'lodash';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatDescription } from '../../../../../types/additionalFlatTypes';
 import TextEditor from '../../../../common/editors/TextEditor';
@@ -20,25 +20,29 @@ const DescriptionsEditField = ({
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
-  const [descriptionState, setDescriptionState] = useState<FlatDescription[]>(descriptions);
+  const [newDescription, setNewDescription] = useState<FlatDescription | null>(null);
   const dialog = useDialog();
 
-  useEffect(() => {
-    setDescriptionState([...descriptions]);
-  }, [setDescriptionState, descriptions]);
+  const allDescriptions = useMemo(
+    () => (newDescription ? [...descriptions, newDescription] : descriptions),
+    [descriptions, newDescription]
+  );
 
   // This solution is necessary because of this jodit issue:
   // https://github.com/jodit/jodit-react/issues/101
   // problem: jodit keeps stale references to events
   const onBlurCallback = useCallback(
     (newText: string, description: FlatDescription) => {
+      if (description === newDescription) {
+        setNewDescription(null);
+      }
       onChange(
-        descriptionState
+        allDescriptions
           .map(d => (d.id === description.id ? { ...d, text: newText } : d))
           .filter(description => !isEmpty(description.text))
       );
     },
-    [descriptionState, onChange]
+    [onChange, allDescriptions, newDescription]
   );
 
   const onChangeCallback = useCallback(
@@ -59,7 +63,7 @@ const DescriptionsEditField = ({
 
   return (
     <>
-      {descriptionState.length <= 0 && (
+      {allDescriptions.length <= 0 && (
         <div
           className='none-found'
           style={role >= AuthRole.CURATOR ? { marginBottom: '4rem' } : undefined}
@@ -67,7 +71,7 @@ const DescriptionsEditField = ({
           {t('pictureFields.noDescription')}
         </div>
       )}
-      {descriptionState.map((description, index) => {
+      {allDescriptions.map((description, index) => {
         return (
           <div
             className='description-wrapper'
@@ -96,9 +100,12 @@ const DescriptionsEditField = ({
                     if (!reallyDelete) {
                       return;
                     }
-                    const allDescriptions = descriptionState.filter(d => d !== description);
-                    onChange(allDescriptions.filter(description => !isEmpty(description.text)));
-                    return [...allDescriptions];
+                    if (description === newDescription) {
+                      setNewDescription(null);
+                    } else {
+                      const withoutThis = descriptions.filter(d => d !== description);
+                      onChange(withoutThis.filter(description => !isEmpty(description.text)));
+                    }
                   }}
                   className='delete-button'
                 >
@@ -109,16 +116,13 @@ const DescriptionsEditField = ({
           </div>
         );
       })}
-      {role >= AuthRole.CURATOR && !descriptionState.some(d => isEmpty(d.id)) && (
+      {role >= AuthRole.CURATOR && !newDescription && (
         <IconButton
           onClick={() => {
-            setDescriptionState(allDescriptions => [
-              ...allDescriptions,
-              {
-                text: '',
-                id: ``,
-              },
-            ]);
+            setNewDescription({
+              text: '',
+              id: '',
+            });
           }}
           className='add-button'
         >
