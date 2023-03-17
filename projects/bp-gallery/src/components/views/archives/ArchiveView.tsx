@@ -7,12 +7,13 @@ import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
-import PicturePreview, { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
+import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import PictureOverview from '../../common/PictureOverview';
 import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
 import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import { FALLBACK_PATH } from './../../routes';
 import './ArchiveView.scss';
 
@@ -97,7 +98,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               </div>
             )}
           </div>
-          <ShowPfactz>
+          <ShowStats>
             <PictureOverview
               title='Unsere Bilder'
               queryParams={{ archive_tag: { id: { eq: archiveId } } }}
@@ -107,7 +108,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 });
               }}
             />
-          </ShowPfactz>
+          </ShowStats>
 
           <TagOverview
             title='Unsere Kategorien'

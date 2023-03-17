@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import './UploadsView.scss';
 
 const UploadsView = () => {
@@ -54,7 +54,7 @@ const UploadsView = () => {
             <Add />
             {t('curator.createArchive')}
           </Button>
-          <ShowPfactz>
+          <ShowStats>
             <PictureScrollGrid
               queryParams={{ collections: { id: { null: true } } }}
               scrollPos={scrollPos}
@@ -63,7 +63,7 @@ const UploadsView = () => {
               uploadAreaProps={uploadAreaProps}
               bulkOperations={[moveToCollection, bulkEdit]}
             />
-          </ShowPfactz>
+          </ShowStats>
         </div>
       )}
     </ScrollContainer>

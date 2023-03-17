@@ -2,10 +2,10 @@ import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { TagType } from '../../../types/additionalFlatTypes';
-import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureOverview from '../../common/PictureOverview';
 import ScrollContainer from '../../common/ScrollContainer';
 import TagOverview from '../../common/TagOverview';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import './DiscoverView.scss';
 
 const DiscoverView = () => {
@@ -15,7 +15,7 @@ const DiscoverView = () => {
   return (
     <ScrollContainer>
       <div className='discover-container'>
-        <ShowPfactz>
+        <ShowStats>
           <PictureOverview
             title={t('discover.our-pictures')}
             queryParams={{}}
@@ -35,7 +35,7 @@ const DiscoverView = () => {
             }}
             rows={1}
           />
-        </ShowPfactz>
+        </ShowStats>
 
         <TagOverview
           title={t('discover.decades')}

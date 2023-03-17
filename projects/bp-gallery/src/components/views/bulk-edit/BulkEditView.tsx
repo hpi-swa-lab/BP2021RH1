@@ -10,10 +10,10 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
-import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 import PictureInfo, { Field } from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
@@ -120,7 +120,7 @@ const BulkEditView = ({
           <div className='bulk-edit-picture-grid'>
             <ScrollContainer>
               {(scrollPos: number, scrollHeight: number) => (
-                <ShowPfactz>
+                <ShowStats>
                   <PictureScrollGrid
                     queryParams={getPictureFilters(pictureIds)}
                     scrollPos={scrollPos}
@@ -129,7 +129,7 @@ const BulkEditView = ({
                     showDefaultAdornments={false}
                     allowClicks={false}
                   />
-                </ShowPfactz>
+                </ShowStats>
               )}
             </ScrollContainer>
           </div>

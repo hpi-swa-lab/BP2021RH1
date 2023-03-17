@@ -3,10 +3,10 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
-import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import { getPictureQueryParams } from './helpers/queryParams-helpers';
 import { useGetShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 import './ShowMoreView.scss';
@@ -71,7 +71,7 @@ const ShowMoreView = ({
               collectionsInfo={collectionsInfo}
               flattenedTags={flattenedTags}
             />
-            <ShowPfactz>
+            <ShowStats>
               <PictureScrollGrid
                 queryParams={getPictureQueryParams(
                   categoryType,
@@ -95,7 +95,7 @@ const ShowMoreView = ({
                   bulkEdit,
                 ]}
               />
-            </ShowPfactz>
+            </ShowStats>
           </div>
         )}
       </ScrollContainer>

@@ -1,19 +1,9 @@
-import { QuestionAnswer, ThumbUpAlt, ThumbUpAltOutlined } from '@mui/icons-material';
 import { isFunction } from 'lodash';
-import {
-  createContext,
-  MouseEvent,
-  MouseEventHandler,
-  PropsWithChildren,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import useLike from '../../views/picture/sidebar/like-hooks';
 import './PicturePreview.scss';
+import PictureStats from './PictureStats';
 
 export interface PicturePreviewAdornment {
   position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
@@ -26,12 +16,6 @@ export enum PictureOrigin {
   LOCAL,
   REMOTE,
 }
-
-export const ShowPfactzContext = createContext(false);
-
-export const ShowPfactz = ({ children }: PropsWithChildren<{}>) => (
-  <ShowPfactzContext.Provider value={true}>{children}</ShowPfactzContext.Provider>
-);
 
 const PicturePreview = ({
   picture,
@@ -48,9 +32,8 @@ const PicturePreview = ({
   allowClicks?: boolean;
   highQuality?: boolean;
 }) => {
-  const showPfactz = useContext(ShowPfactzContext);
-  const [showStatistics, setShowStatistics] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
 
   const thumbnailUrl = useMemo((): string => {
     const defaultUrl =
@@ -58,11 +41,10 @@ const PicturePreview = ({
     return highQuality ? picture.media?.url ?? defaultUrl : defaultUrl;
   }, [picture, highQuality]);
 
-  const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
   return (
     <div
-      onMouseOver={() => setShowStatistics(true)}
-      onMouseLeave={() => setShowStatistics(false)}
+      onMouseOver={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onClick={onClick}
       ref={containerRef}
       style={{
@@ -75,7 +57,7 @@ const PicturePreview = ({
       >
         {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
         <img
-          className={`${showStatistics ? 'brightness-75' : ''}`}
+          className={`${hovered ? 'brightness-75' : ''}`}
           src={
             pictureOrigin === PictureOrigin.REMOTE
               ? asApiPath(
@@ -84,7 +66,6 @@ const PicturePreview = ({
               : thumbnailUrl
           }
         />
-
         <div className='adornments'>
           {adornments?.map((adornment, index) => (
             <div
@@ -101,40 +82,7 @@ const PicturePreview = ({
             </div>
           ))}
         </div>
-        {showPfactz ? (
-          <div className='absolute flex w-full justify-end bottom-0 transparent right-0 text-white brightness-100'>
-            <div className={`h-20 w-full bg-gradient-to-t from-black `}></div>
-            <div
-              className={`absolute bottom-0 right-0 items-center flex gap-2 transparent mb-1 mr-2 transition-all duration-200  ${
-                showStatistics ? 'text-xl' : 'text-base'
-              }`}
-            >
-              <div
-                className='items-center flex'
-                onClick={event => {
-                  event.stopPropagation();
-                  like(isLiked);
-                }}
-              >
-                {isLiked ? (
-                  <ThumbUpAlt fontSize='inherit' className='text-blue-400' />
-                ) : (
-                  <ThumbUpAltOutlined fontSize='inherit' />
-                )}
-                &nbsp;
-                {likeCount}
-              </div>
-
-              <div className='items-center flex'>
-                <QuestionAnswer fontSize='inherit' />
-                &nbsp;
-                {picture.comments?.length ?? 0}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
+        <PictureStats picture={picture} hovered />
       </div>
     </div>
   );

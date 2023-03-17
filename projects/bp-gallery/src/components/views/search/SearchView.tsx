@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { HelpTooltip } from '../../common/HelpTooltip';
-import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import { isValidYear } from './helpers/addNewParamToSearchPath';
 import {
   convertSearchParamsToPictureFilters,
@@ -87,7 +87,7 @@ const SearchView = () => {
           {!search ? (
             <SearchHub />
           ) : (
-            <ShowPfactz>
+            <ShowStats>
               <PictureScrollGrid
                 queryParams={queryParams}
                 isAllSearchActive={isAllSearchActive}
@@ -99,7 +99,7 @@ const SearchView = () => {
                   setAreResultsEmpty(pictures <= 0);
                 }}
               />
-            </ShowPfactz>
+            </ShowStats>
           )}
         </div>
       )}

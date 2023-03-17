@@ -14,13 +14,13 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
 import Footer from '../../common/footer/Footer';
 import Loading from '../../common/Loading';
-import { ShowPfactz } from '../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import './BrowseView.scss';
 import CollectionDescription from './CollectionDescription';
 import { decodeBrowsePathComponent } from './helpers/format-browse-path';
@@ -142,7 +142,7 @@ const BrowseView = ({
                   {t('curator.createCollection')}
                 </Button>
               )}
-              <ShowPfactz>
+              <ShowStats>
                 <PictureScrollGrid
                   queryParams={getPictureFilters(collection.id)}
                   scrollPos={parentScrollPos ?? scrollPos}
@@ -156,7 +156,7 @@ const BrowseView = ({
                     bulkEdit,
                   ]}
                 />
-              </ShowPfactz>
+              </ShowStats>
             </div>
             <Footer />
           </div>

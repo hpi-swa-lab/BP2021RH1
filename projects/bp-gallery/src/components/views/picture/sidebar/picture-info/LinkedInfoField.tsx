@@ -9,11 +9,11 @@ import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { useSetClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
-import { ShowPfactzContext } from '../../../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import { ShowStatsProvider } from '../../../../provider/ShowStatsProvider';
 import { useClipboard } from '../../../../provider/StorageProvider';
 import './LinkedInfoField.scss';
 import { Field } from './PictureInfo';
@@ -204,7 +204,7 @@ const LinkedInfoField = ({
         >
           <ScrollContainer>
             {(scrollPos: number, scrollHeight: number) => (
-              <ShowPfactzContext.Provider value={false}>
+              <ShowStatsProvider value={false}>
                 <PictureScrollGrid
                   queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
                   scrollPos={scrollPos}
@@ -215,7 +215,7 @@ const LinkedInfoField = ({
                   extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
                   filterOutTextsForNonCurators={false}
                 />
-              </ShowPfactzContext.Provider>
+              </ShowStatsProvider>
             )}
           </ScrollContainer>
           {role >= AuthRole.CURATOR &&
