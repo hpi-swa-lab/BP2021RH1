@@ -6,7 +6,7 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
-import { ShowStats } from '../../provider/ShowStatsProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import { isValidYear } from './helpers/addNewParamToSearchPath';
 import {
   convertSearchParamsToPictureFilters,

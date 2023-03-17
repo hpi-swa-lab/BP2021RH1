@@ -13,7 +13,7 @@ type StorageData = {
 
 export const StorageContext = createContext<null | StorageData>(null);
 
-export const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
+const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
   const clipboardState = useStorageState<ClipboardData>(
     { pictureIds: [] },
     'clipboard',

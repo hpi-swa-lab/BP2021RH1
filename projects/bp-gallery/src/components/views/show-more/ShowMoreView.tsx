@@ -6,7 +6,7 @@ import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes'
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
-import { ShowStats } from '../../provider/ShowStatsProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import { getPictureQueryParams } from './helpers/queryParams-helpers';
 import { useGetShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 import './ShowMoreView.scss';

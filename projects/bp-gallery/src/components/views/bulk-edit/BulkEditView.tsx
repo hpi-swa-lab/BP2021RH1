@@ -13,7 +13,7 @@ import Loading from '../../common/Loading';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
-import { ShowStats } from '../../provider/ShowStatsProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 import PictureInfo, { Field } from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';

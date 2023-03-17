@@ -5,7 +5,7 @@ import { TagType } from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
 import ScrollContainer from '../../common/ScrollContainer';
 import TagOverview from '../../common/TagOverview';
-import { ShowStats } from '../../provider/ShowStatsProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import './DiscoverView.scss';
 
 const DiscoverView = () => {

@@ -3,13 +3,12 @@ import { Badge, Button } from '@mui/material';
 import { difference } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useClipboard, useClipboardEditorButtons } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { useClipboard } from '../../provider/context-hooks';
 import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../ScrollContainer';
 import './ClipboardEditor.scss';
-import { useClipboardEditorButtons } from './ClipboardEditorContext';
 
 export const ClipboardEditor = () => {
   const [data, setData] = useClipboard();

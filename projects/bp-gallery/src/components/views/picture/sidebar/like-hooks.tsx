@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLikeMutation } from '../../../../graphql/APIConnector';
-import { useStorage } from '../../../provider/context-hooks';
+import { useStorage } from '../../../../hooks/context-hooks';
 
 const useLike = (pictureId: string, likeCount: number) => {
   const [likedPictures, setLikedPictures] = useStorage().likedState;

@@ -13,7 +13,7 @@ import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
 import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { ShowStats } from '../../provider/ShowStatsProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import { FALLBACK_PATH } from './../../routes';
 import './ArchiveView.scss';
 

@@ -82,7 +82,7 @@ const PicturePreview = ({
             </div>
           ))}
         </div>
-        <PictureStats picture={picture} hovered />
+        <PictureStats picture={picture} hovered={hovered} />
       </div>
     </div>
   );

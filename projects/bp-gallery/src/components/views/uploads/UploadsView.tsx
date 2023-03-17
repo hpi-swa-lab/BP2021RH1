@@ -9,7 +9,7 @@ import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import { ShowStats } from '../../provider/ShowStatsProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import './UploadsView.scss';
 
 const UploadsView = () => {

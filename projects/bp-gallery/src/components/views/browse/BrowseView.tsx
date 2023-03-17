@@ -20,7 +20,7 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import { ShowStats } from '../../provider/ShowStatsProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import './BrowseView.scss';
 import CollectionDescription from './CollectionDescription';
 import { decodeBrowsePathComponent } from './helpers/format-browse-path';
