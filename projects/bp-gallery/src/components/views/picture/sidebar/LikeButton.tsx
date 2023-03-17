@@ -3,22 +3,14 @@ import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import useLike from './like-hooks';
 
-const LikeButton = ({
-  pictureId,
-  likeCount,
-  className,
-}: {
-  pictureId: string;
-  likeCount: number;
-  className: string;
-}) => {
+const LikeButton = ({ pictureId, likeCount }: { pictureId: string; likeCount: number }) => {
   const { t } = useTranslation();
   const { likeCount: displayedLikeCount, like, isLiked } = useLike(pictureId, likeCount);
 
   return (
     <Button
       variant={'outlined'}
-      className={className}
+      className='min-h-fit flex flex-row gap-1 place-items-center p-1 pointer-events-auto'
       onClick={event => {
         event.stopPropagation();
         like(isLiked);
