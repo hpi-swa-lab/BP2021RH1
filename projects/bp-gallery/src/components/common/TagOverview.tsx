@@ -79,7 +79,7 @@ const TagOverview = ({
     ? Object.values(flattened)[0]
     : undefined;
 
-  if (flattenedTags?.length === 0) {
+  if (flattenedTags?.length === 0 && type !== TagType.TIME_RANGE) {
     return <div></div>;
   } else {
     return (
