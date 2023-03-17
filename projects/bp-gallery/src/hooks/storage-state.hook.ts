@@ -1,6 +1,10 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-const useStorageState = <T>(initialValue: T, key: string, storage: Storage) => {
+const useStorageState = <T>(
+  initialValue: T,
+  key: string,
+  storage: Storage
+): [T, Dispatch<SetStateAction<T>>] => {
   const [value, setValue] = useState<T>(() => {
     const valueInStorage = storage.getItem(key);
     return valueInStorage ? (JSON.parse(valueInStorage) as T) : initialValue;
@@ -25,7 +29,7 @@ const useStorageState = <T>(initialValue: T, key: string, storage: Storage) => {
     });
   }, [storage, key, value]);
 
-  return [value, setValue] as const;
+  return [value, setValue];
 };
 
 export default useStorageState;

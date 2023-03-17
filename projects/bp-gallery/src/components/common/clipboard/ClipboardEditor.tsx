@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { useClipboard } from '../../provider/ClipboardProvider';
+import { useClipboard } from '../../provider/StorageProvider';
 import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../ScrollContainer';
 import './ClipboardEditor.scss';

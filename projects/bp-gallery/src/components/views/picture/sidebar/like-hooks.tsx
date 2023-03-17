@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLikeMutation } from '../../../../graphql/APIConnector';
-import useStorageState from '../../../../hooks/storage-state.hook';
+import { useStorage } from '../../../provider/StorageProvider';
 
 const useLike = (pictureId: string, likeCount: number) => {
-  const [likedPictures, setLikedPictures] = useStorageState<string[]>([], 'likes', localStorage);
+  const [likedPictures, setLikedPictures] = useStorage().likedState;
 
   const isLiked = useMemo(
     () => likedPictures.some((x: string) => x === pictureId),

@@ -13,8 +13,8 @@ import { ShowPfactzContext } from '../../../../common/picture-gallery/PicturePre
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { useClipboard } from '../../../../provider/ClipboardProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import { useClipboard } from '../../../../provider/StorageProvider';
 import './LinkedInfoField.scss';
 import { Field } from './PictureInfo';
 import PictureInfoField from './PictureInfoField';

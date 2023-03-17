@@ -7,8 +7,8 @@ import './App.scss';
 import { ClipboardEditorProvider } from './common/clipboard/ClipboardEditorContext';
 import AlertProvider from './provider/AlertProvider';
 import AuthProvider from './provider/AuthProvider';
-import ClipboardProvider from './provider/ClipboardProvider';
 import DialogProvider from './provider/DialogProvider';
+import StorageProvider from './provider/StorageProvider';
 import routes from './routes';
 import NavigationBar from './top-and-bottom-bar/NavigationBar';
 import TopBar from './top-and-bottom-bar/TopBar';
@@ -82,7 +82,7 @@ const App = () => {
       <AlertProvider>
         <AuthProvider>
           <DialogProvider>
-            <ClipboardProvider>
+            <StorageProvider>
               <div className='App'>
                 <ClipboardEditorProvider>
                   <TopBar isMobile={isMobile} />
@@ -90,7 +90,7 @@ const App = () => {
                   {isMobile && <NavigationBar isMobile={true} />}
                 </ClipboardEditorProvider>
               </div>
-            </ClipboardProvider>
+            </StorageProvider>
           </DialogProvider>
         </AuthProvider>
       </AlertProvider>
