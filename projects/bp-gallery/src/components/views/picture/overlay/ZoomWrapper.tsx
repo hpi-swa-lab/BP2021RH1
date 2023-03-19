@@ -2,7 +2,7 @@ import { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'rea
 import { useMoveView } from '../helpers/useMoveView';
 import './ZoomWrapper.scss';
 
-const MAX_ZOOM = 5.0;
+const MAX_ZOOM = 30.0;
 const MIN_ZOOM = 1.0;
 const DEFAULT_ZOOM = 1.0;
 const ZOOM_RATE = -0.001;
