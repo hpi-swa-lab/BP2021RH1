@@ -87,11 +87,13 @@ const ZoomWrapper = ({
             Math.pow(pointers.current[0].clientY - pointers.current[1].clientY, 2)
         );
 
+        // setters are run async, so prevDiff.current will be overwritten inside
+        const prevDiffCached = prevDiff.current;
         setZoomLevel(zoomLevel => {
-          if (prevDiff.current > 0) {
+          if (prevDiffCached > 0) {
             zoomLevel = Math.max(
               MIN_ZOOM,
-              Math.min(zoomLevel * (curDiff / prevDiff.current), MAX_ZOOM)
+              Math.min(zoomLevel * (curDiff / prevDiffCached), MAX_ZOOM)
             );
           }
           return zoomLevel;
