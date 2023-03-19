@@ -1,7 +1,8 @@
 import { isFunction } from 'lodash';
-import { MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
+import { MouseEvent, MouseEventHandler, useContext, useMemo, useRef, useState } from 'react';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { ShowStatsContext } from '../../provider/ShowStatsProvider';
 import './PicturePreview.scss';
 import PictureStats from './PictureStats';
 
@@ -34,6 +35,7 @@ const PicturePreview = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
+  const showStats = useContext(ShowStatsContext);
 
   const thumbnailUrl = useMemo((): string => {
     const defaultUrl =
@@ -57,7 +59,9 @@ const PicturePreview = ({
       >
         {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
         <img
-          className={`${hovered ? 'brightness-75' : ''}`}
+          className={
+            showStats ? `transition-filter duration-200 ${hovered ? 'brightness-75' : ''}` : ''
+          }
           src={
             pictureOrigin === PictureOrigin.REMOTE
               ? asApiPath(
