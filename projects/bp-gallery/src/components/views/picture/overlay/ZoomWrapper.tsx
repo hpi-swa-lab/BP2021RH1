@@ -53,6 +53,7 @@ const ZoomWrapper = ({
 
   const onPointerDown = useCallback((evt: PointerEvent) => {
     pointers.current = pointers.current.concat([evt]);
+    evt.preventDefault();
   }, []);
 
   const onPointerUp = useCallback((evt: PointerEvent) => {
