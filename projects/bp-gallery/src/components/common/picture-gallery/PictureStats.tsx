@@ -17,7 +17,7 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
     <div className='absolute flex w-full justify-end bottom-0 transparent right-0 text-white brightness-100'>
       <div className={`h-20 w-full bg-gradient-to-t from-black `}></div>
       <div
-        className={`absolute bottom-0 right-0 items-center flex gap-2 transparent mb-1 mr-2 transition-all duration-200  ${
+        className={`absolute bottom-0 right-0 items-center flex gap-2 transparent mb-1 mr-2 transition-all duration-200 cursor-default ${
           hovered ? 'text-xl' : 'text-base'
         }`}
       >
@@ -29,9 +29,15 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
           }}
         >
           {isLiked ? (
-            <ThumbUpAlt fontSize='inherit' className='text-blue-400' />
+            <ThumbUpAlt
+              fontSize='inherit'
+              className='text-blue-400 cursor-pointer !transition-transform !duration-100 hover:scale-110'
+            />
           ) : (
-            <ThumbUpAltOutlined fontSize='inherit' />
+            <ThumbUpAltOutlined
+              fontSize='inherit'
+              className='cursor-pointer !transition-transform !duration-100 hover:scale-110'
+            />
           )}
           &nbsp;
           {likeCount}
