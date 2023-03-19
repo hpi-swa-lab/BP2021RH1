@@ -5,6 +5,7 @@ import './ZoomWrapper.scss';
 const MAX_ZOOM = 5.0;
 const MIN_ZOOM = 1.0;
 const DEFAULT_ZOOM = 1.0;
+const ZOOM_RATE = -0.001;
 
 const ZoomWrapper = ({
   blockScroll,
@@ -41,7 +42,10 @@ const ZoomWrapper = ({
       event.preventDefault();
       event.stopPropagation();
       setZoomLevel(previousZoom => {
-        return Math.min(Math.max(previousZoom - event.deltaY / 1000, MIN_ZOOM), MAX_ZOOM);
+        return Math.min(
+          Math.max(previousZoom * Math.exp(event.deltaY * ZOOM_RATE), MIN_ZOOM),
+          MAX_ZOOM
+        );
       });
       moveView({
         x: event.clientX,
