@@ -121,6 +121,7 @@ const ZoomWrapper = ({
       container?.removeEventListener('pointerdown', onPointerDown);
       container?.removeEventListener('pointerup', onPointerUp);
       container?.removeEventListener('pointercancel', onPointerUp);
+      container?.removeEventListener('pointerleave', onPointerUp);
       container?.removeEventListener('pointermove', onPointerMove);
     }
     if (imageRef.current) {
@@ -139,6 +140,7 @@ const ZoomWrapper = ({
       container?.addEventListener('pointerdown', onPointerDown);
       container?.addEventListener('pointerup', onPointerUp);
       container?.addEventListener('pointercancel', onPointerUp);
+      container?.addEventListener('pointerleave', onPointerUp);
       container?.addEventListener('pointermove', onPointerMove);
     }
   }, [onScroll, onPointerDown, onPointerUp, onPointerMove]);
