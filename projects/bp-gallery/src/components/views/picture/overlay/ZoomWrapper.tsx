@@ -87,9 +87,9 @@ const ZoomWrapper = ({
       };
 
       if (pointers.current.length === 2) {
-        const curDiff = Math.sqrt(
-          Math.pow(pointers.current[0].clientX - pointers.current[1].clientX, 2) +
-            Math.pow(pointers.current[0].clientY - pointers.current[1].clientY, 2)
+        const curDiff = Math.hypot(
+          pointers.current[0].clientX - pointers.current[1].clientX,
+          pointers.current[0].clientY - pointers.current[1].clientY
         );
 
         // setters are run async, so prevDiff.current will be overwritten inside
