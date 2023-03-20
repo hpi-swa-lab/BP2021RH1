@@ -1,4 +1,9 @@
-import { QuestionAnswer, ThumbUpAlt, ThumbUpAltOutlined } from '@mui/icons-material';
+import {
+  QuestionAnswer,
+  QuestionAnswerOutlined,
+  ThumbUpAlt,
+  ThumbUpAltOutlined,
+} from '@mui/icons-material';
 import { useContext } from 'react';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { ShowStatsContext } from '../../provider/ShowStatsProvider';
@@ -12,6 +17,7 @@ type PictureStatsProps = {
 const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
   const showStats = useContext(ShowStatsContext);
   const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
+  const commentsCount = picture.comments?.length ?? 0;
 
   return showStats ? (
     <div className='absolute flex w-full justify-end bottom-0 transparent right-0 text-white brightness-100'>
@@ -44,9 +50,19 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
         </div>
 
         <div className='items-center flex'>
-          <QuestionAnswer fontSize='inherit' />
-          &nbsp;
-          {picture.comments?.length ?? 0}
+          {commentsCount > 0 ? (
+            <>
+              <QuestionAnswer fontSize='inherit' className='text-red-400' />
+              &nbsp;
+              {commentsCount}
+            </>
+          ) : (
+            <>
+              <QuestionAnswerOutlined fontSize='inherit' />
+              &nbsp;
+              {commentsCount}
+            </>
+          )}
         </div>
       </div>
     </div>
