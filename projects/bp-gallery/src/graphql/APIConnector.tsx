@@ -745,6 +745,7 @@ export type Mutation = {
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
   /** Request a reset password token */
   forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
+  increaseNotAPlaceCount?: Maybe<Scalars['Int']>;
   login: UsersPermissionsLoginPayload;
   mergeCollections?: Maybe<Scalars['ID']>;
   mergeKeywordTags?: Maybe<Scalars['ID']>;
@@ -921,6 +922,11 @@ export type MutationEmailConfirmationArgs = {
 
 export type MutationForgotPasswordArgs = {
   email: Scalars['String'];
+};
+
+export type MutationIncreaseNotAPlaceCountArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  pictureId?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationLoginArgs = {
@@ -1153,6 +1159,7 @@ export type Picture = {
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
+  is_not_a_place_count?: Maybe<Scalars['Int']>;
   is_text?: Maybe<Scalars['Boolean']>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
   likes?: Maybe<Scalars['Int']>;
@@ -1272,6 +1279,7 @@ export type PictureFiltersInput = {
   createdAt?: InputMaybe<DateTimeFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
+  is_not_a_place_count?: InputMaybe<IntFilterInput>;
   is_text?: InputMaybe<BooleanFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
   likes?: InputMaybe<IntFilterInput>;
@@ -1296,6 +1304,7 @@ export type PictureGeoInfo = {
   createdAt?: Maybe<Scalars['DateTime']>;
   latitude?: Maybe<Scalars['Float']>;
   longitude?: Maybe<Scalars['Float']>;
+  notAPlaceCount?: Maybe<Scalars['Int']>;
   picture?: Maybe<PictureEntityResponse>;
   radius?: Maybe<Scalars['Float']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1322,6 +1331,7 @@ export type PictureGeoInfoFiltersInput = {
   latitude?: InputMaybe<FloatFilterInput>;
   longitude?: InputMaybe<FloatFilterInput>;
   not?: InputMaybe<PictureGeoInfoFiltersInput>;
+  notAPlaceCount?: InputMaybe<IntFilterInput>;
   or?: InputMaybe<Array<InputMaybe<PictureGeoInfoFiltersInput>>>;
   picture?: InputMaybe<PictureFiltersInput>;
   radius?: InputMaybe<FloatFilterInput>;
@@ -1331,6 +1341,7 @@ export type PictureGeoInfoFiltersInput = {
 export type PictureGeoInfoInput = {
   latitude?: InputMaybe<Scalars['Float']>;
   longitude?: InputMaybe<Scalars['Float']>;
+  notAPlaceCount?: InputMaybe<Scalars['Int']>;
   picture?: InputMaybe<Scalars['ID']>;
   radius?: InputMaybe<Scalars['Float']>;
 };
@@ -1345,6 +1356,7 @@ export type PictureInput = {
   collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  is_not_a_place_count?: InputMaybe<Scalars['Int']>;
   is_text?: InputMaybe<Scalars['Boolean']>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   likes?: InputMaybe<Scalars['Int']>;
@@ -3602,6 +3614,31 @@ export type GetPictureGeoInfoQuery = {
     | null
     | undefined;
 };
+
+export type GetPicturesGeoInfoQueryVariables = Exact<{
+  pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
+}>;
+
+export type GetPicturesGeoInfoQuery = {
+  pictureGeoInfos?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | { latitude?: number | null | undefined; longitude?: number | null | undefined }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type IncreaseNotAPlaceCountMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type IncreaseNotAPlaceCountMutation = { increaseNotAPlaceCount?: number | null | undefined };
 
 export type GetUnverifiedCommentsQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -7385,6 +7422,123 @@ export type GetPictureGeoInfoLazyQueryHookResult = ReturnType<typeof useGetPictu
 export type GetPictureGeoInfoQueryResult = Apollo.QueryResult<
   GetPictureGeoInfoQuery,
   GetPictureGeoInfoQueryVariables
+>;
+
+export const GetPicturesGeoInfoDocument = gql`
+  query getPicturesGeoInfo($pictureIds: [ID]!) {
+    pictureGeoInfos(filters: { picture: { id: { in: $pictureIds } } }) {
+      data {
+        id
+        attributes {
+          latitude
+          longitude
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesGeoInfoQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesGeoInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesGeoInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesGeoInfoQuery({
+ *   variables: {
+ *      pictureIds: // value for 'pictureIds'
+ *   },
+ * });
+ */
+export function useGetPicturesGeoInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>(
+    GetPicturesGeoInfoDocument,
+    options
+  );
+}
+
+export function useGetPicturesGeoInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPicturesGeoInfoQuery,
+    GetPicturesGeoInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>(
+    GetPicturesGeoInfoDocument,
+    options
+  );
+}
+
+export type GetPicturesGeoInfoQueryHookResult = ReturnType<typeof useGetPicturesGeoInfoQuery>;
+
+export type GetPicturesGeoInfoLazyQueryHookResult = ReturnType<
+  typeof useGetPicturesGeoInfoLazyQuery
+>;
+
+export type GetPicturesGeoInfoQueryResult = Apollo.QueryResult<
+  GetPicturesGeoInfoQuery,
+  GetPicturesGeoInfoQueryVariables
+>;
+
+export const IncreaseNotAPlaceCountDocument = gql`
+  mutation increaseNotAPlaceCount($pictureId: ID!) {
+    increaseNotAPlaceCount(id: $pictureId)
+  }
+`;
+
+export type IncreaseNotAPlaceCountMutationFn = Apollo.MutationFunction<
+  IncreaseNotAPlaceCountMutation,
+  IncreaseNotAPlaceCountMutationVariables
+>;
+
+/**
+ * __useIncreaseNotAPlaceCountMutation__
+ *
+ * To run a mutation, you first call `useIncreaseNotAPlaceCountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIncreaseNotAPlaceCountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [increaseNotAPlaceCountMutation, { data, loading, error }] = useIncreaseNotAPlaceCountMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useIncreaseNotAPlaceCountMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    IncreaseNotAPlaceCountMutation,
+    IncreaseNotAPlaceCountMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    IncreaseNotAPlaceCountMutation,
+    IncreaseNotAPlaceCountMutationVariables
+  >(IncreaseNotAPlaceCountDocument, options);
+}
+
+export type IncreaseNotAPlaceCountMutationHookResult = ReturnType<
+  typeof useIncreaseNotAPlaceCountMutation
+>;
+
+export type IncreaseNotAPlaceCountMutationResult =
+  Apollo.MutationResult<IncreaseNotAPlaceCountMutation>;
+
+export type IncreaseNotAPlaceCountMutationOptions = Apollo.BaseMutationOptions<
+  IncreaseNotAPlaceCountMutation,
+  IncreaseNotAPlaceCountMutationVariables
 >;
 
 export const GetUnverifiedCommentsDocument = gql`

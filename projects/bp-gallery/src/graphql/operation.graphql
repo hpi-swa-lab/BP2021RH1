@@ -1123,6 +1123,22 @@ query getPictureGeoInfo($pictureId: ID!) {
   }
 }
 
+query getPicturesGeoInfo($pictureIds: [ID]!) {
+  pictureGeoInfos(filters: { picture: { id: { in: $pictureIds } } }) {
+    data {
+      id
+      attributes {
+        latitude
+        longitude
+      }
+    }
+  }
+}
+
+mutation increaseNotAPlaceCount($pictureId: ID!) {
+  increaseNotAPlaceCount(id: $pictureId)
+}
+
 query getUnverifiedComments {
   comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
     data {

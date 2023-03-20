@@ -96,6 +96,14 @@
     "info": "Hier ist Platz für Erinnerungen, Gedanken und alle anderen Anmerkungen zu dem Bild. Der Kommentar wird nach einer Prüfung durch die Stiftung hier veröffentlicht.",
     "thanks": "Danke für Ihren Kommentar!"
   },
+  "geo": {
+    "tip": "Guter Tipp!Guter Tipp!",
+    "tip-sub": "So haben die anderen geraten:",
+    "end": "Vielen Dank fürs Mitspielen!",
+    "end-sub": "Morgen gibt es neue Bilder",
+    "explanation-title": "Hilf uns Ortskoordinaten ausfindig zu machen!",
+    "explanation-nav": "Bewege die Karte mit gedrückter linker Maustaste und zoome mit dem Mausrad. Möchtest du einen Tipp abgeben, klicke auf den gewünschten Ort auf der Karte und klicke 'Ort bestätigen'."
+  },
   "search": {
     "search-for-type": "In allen Bildinformationen suchen",
     "search-for-type-advance": "durchsuchen",

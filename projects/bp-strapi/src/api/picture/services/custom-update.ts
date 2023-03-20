@@ -17,6 +17,7 @@ const ARCHIVE_TAG_KEY = "archive_tag";
 const IS_TEXT_KEY = "is_text";
 const LINKED_PICTURES_KEY = "linked_pictures";
 const LINKED_TEXTS_KEY = "linked_texts";
+const PICTURE_GEO_INFO_KEY = "picture_geo_infos";
 
 /**
  * Returns the key of the tag type that is used for the API (so e.g. "person-tag")
@@ -885,7 +886,11 @@ const bulkEdit = async (
 const like = async (knexEngine:KnexEngine, pictureId:number, dislike?:boolean) => {
   const pictureResult = knexEngine(table(PICTURES_KEY)).where("id", pictureId)
   await pictureResult.update("likes", knexEngine.raw(dislike ? "GREATEST(COALESCE(likes, 0) - 1, 0)" : "COALESCE(likes, 0) + 1"))
-
 }
 
-export { updatePictureWithTagCleanup, bulkEdit, like };
+const incNotAPlaceCount = async (knexEngine:KnexEngine, pictureId:number) => {
+  const pictureResult = knexEngine(table(PICTURES_KEY)).where("id", pictureId)
+  await pictureResult.update("is_not_a_place_count", knexEngine.raw("COALESCE(is_not_a_place_count, 0) + 1"))
+}
+
+export { updatePictureWithTagCleanup, bulkEdit, like, incNotAPlaceCount};
