@@ -9,7 +9,6 @@ import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import ShowStats from '../../provider/ShowStatsProvider';
 import './UploadsView.scss';
 
 const UploadsView = () => {
@@ -54,16 +53,14 @@ const UploadsView = () => {
             <Add />
             {t('curator.createArchive')}
           </Button>
-          <ShowStats>
-            <PictureScrollGrid
-              queryParams={{ collections: { id: { null: true } } }}
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              hashbase={'uploads'}
-              uploadAreaProps={uploadAreaProps}
-              bulkOperations={[moveToCollection, bulkEdit]}
-            />
-          </ShowStats>
+          <PictureScrollGrid
+            queryParams={{ collections: { id: { null: true } } }}
+            scrollPos={scrollPos}
+            scrollHeight={scrollHeight}
+            hashbase={'uploads'}
+            uploadAreaProps={uploadAreaProps}
+            bulkOperations={[moveToCollection, bulkEdit]}
+          />
         </div>
       )}
     </ScrollContainer>
