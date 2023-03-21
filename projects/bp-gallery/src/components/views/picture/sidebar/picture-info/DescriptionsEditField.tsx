@@ -81,7 +81,7 @@ const DescriptionsEditField = ({
                   onChange={newText => onChangeRef.current(newText, description)}
                 />
               ) : (
-                <RichText className='break-all' value={description.text} />
+                <RichText className='break-words overflow-x-hidden' value={description.text} />
               )}
             </div>
             <div>
