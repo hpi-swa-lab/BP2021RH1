@@ -76,8 +76,10 @@ const PictureUploadArea = ({
   };
 
   useEffect(() => {
+    if (!acceptedFiles.length) return;
     const filesWithPreviews = acceptedFiles.map(file => ({ preview: asFlatPicture(file), file }));
-    setNewFiles(fileList => [...fileList, ...sortBy(filesWithPreviews, f => f.file.name)]);
+    const sortedFiles = sortBy(filesWithPreviews, f => f.file.name);
+    setNewFiles(fileList => [...fileList, ...sortedFiles]);
   }, [acceptedFiles]);
 
   const uploadPictures = useCallback(async () => {
@@ -116,27 +118,17 @@ const PictureUploadArea = ({
       }
       setLoading(false);
     });
-  }, [newFiles, createPicture, preprocessPictures, onUploaded, setLoading, dialog]);
+  }, [preprocessPictures, dialog, newFiles, onUploaded, createPicture]);
 
   const onScan = useCallback((file: File) => {
     setNewFiles(fileList => [...fileList, { file, preview: asFlatPicture(file) }]);
   }, []);
 
-  function handleDragEnd(event: DragEndEvent) {
+  function onDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
-    if (active.id !== over?.id) {
-      setNewFiles(newFiles => {
-        const oldIndex = newFiles.indexOf(
-          newFiles.find(newFile => newFile.file.name === active.id)!
-        );
-        const newIndex = newFiles.indexOf(
-          newFiles.find(newFile => newFile.file.name === over?.id)!
-        );
-
-        return arrayMove(newFiles, oldIndex, newIndex);
-      });
-    }
+    if (!over || active.id === over.id) return;
+    setNewFiles(newFiles => arrayMove(newFiles, Number(active.id), Number(over.id)));
   }
 
   // Do we really want to allow uploading only when preprocessing is enabled?
@@ -158,10 +150,10 @@ const PictureUploadArea = ({
         <ScannerInput onScan={onScan} />
       </div>
       <div className='uploaded-pictures'>
-        <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-          <SortableContext items={newFiles.map(newFile => newFile.file.name)}>
+        <DndContext onDragEnd={onDragEnd} sensors={sensors}>
+          <SortableContext items={newFiles.map((_, i) => `${i}`)}>
             {newFiles.map((file, index) => (
-              <SortableItem id={file.file.name} key={`${file.file.name}-${index}`}>
+              <SortableItem id={`${index}`} key={`${file.file.name}-${index}`}>
                 <PicturePreview
                   adornments={[
                     {
