@@ -14,6 +14,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
+import { useObjectIds } from '../../../hooks/object-ids.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -28,6 +29,11 @@ export interface PictureUploadAreaProps {
   preprocessPictures?: (pictures: FlatPicture[]) => FlatPicture[];
   onUploaded?: () => void;
 }
+
+type NewFile = {
+  file: File;
+  preview: FlatPicture;
+};
 
 const PictureUploadArea = ({
   folderName,
@@ -55,8 +61,9 @@ const PictureUploadArea = ({
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useDialog();
+  const { getObjectId } = useObjectIds<NewFile>();
 
-  const [newFiles, setNewFiles] = useState<{ file: File; preview: FlatPicture }[]>([]);
+  const [newFiles, setNewFiles] = useState<NewFile[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -153,7 +160,7 @@ const PictureUploadArea = ({
         <DndContext onDragEnd={onDragEnd} sensors={sensors}>
           <SortableContext items={newFiles.map((_, i) => `${i}`)}>
             {newFiles.map((file, index) => (
-              <SortableItem id={`${index}`} key={`${file.file.name}-${index}`}>
+              <SortableItem id={`${index}`} key={getObjectId(file)}>
                 <PicturePreview
                   adornments={[
                     {
