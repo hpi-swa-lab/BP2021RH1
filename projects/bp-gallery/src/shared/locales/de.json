@@ -97,12 +97,16 @@
     "thanks": "Danke für Ihren Kommentar!"
   },
   "geo": {
-    "tip": "Guter Tipp!Guter Tipp!",
+    "tip": "Guter Tipp!",
     "tip-sub": "So haben die anderen geraten:",
     "end": "Vielen Dank fürs Mitspielen!",
     "end-sub": "Morgen gibt es neue Bilder",
     "explanation-title": "Hilf uns Ortskoordinaten ausfindig zu machen!",
-    "explanation-nav": "Bewege die Karte mit gedrückter linker Maustaste und zoome mit dem Mausrad. Möchtest du einen Tipp abgeben, klicke auf den gewünschten Ort auf der Karte und klicke 'Ort bestätigen'."
+    "explanation-nav": "Bewege die Karte mit gedrückter linker Maustaste und zoome mit dem Mausrad. Möchtest du einen Tipp abgeben, klicke auf den gewünschten Ort auf der Karte und klicke 'Ort bestätigen'.",
+    "explanation-reminder": "Möchtest du einen Tipp abgeben, klicke auf den gewünschten Ort auf der Karte und klicke 'Ort bestätigen'.",
+    "submit-place": "Ort bestätigen",
+    "no-place": "Das ist kein Ort",
+    "next-picture": "Nächstes Bild"
   },
   "search": {
     "search-for-type": "In allen Bildinformationen suchen",

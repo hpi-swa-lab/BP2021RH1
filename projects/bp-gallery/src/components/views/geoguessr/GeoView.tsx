@@ -66,7 +66,9 @@ const GeoView = () => {
 
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
   const [gameOver, setGameOver] = useState(false);
-  const { data } = useGetPictureInfoQuery({ variables: { pictureId } });
+  const { data } = useGetPictureInfoQuery({
+    variables: { pictureId: pictureId || fallbackPictureId },
+  });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)

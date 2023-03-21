@@ -106,12 +106,13 @@ const GeoMap = ({
 }) => {
   const { t } = useTranslation();
   const initialMapValues = { center: { lat: 51.8392573, lng: 10.5279953 }, zoom: 10 };
+  const initialGuess = { lat: 0, lng: 0 };
   const [needsRepositioning, setNeedsRepositioning] = useState(false);
-  const [guess, setGuess] = useState({ lat: 51.505, lng: -0.09 });
+  const [guess, setGuess] = useState(initialGuess);
   const [guessComplete, setGuessComplete] = useState(false);
   const [createPictureGeoInfo] = useCreatePictureGeoInfoMutation();
   const nextPicture = () => {
-    setGuess({ lat: 51.505, lng: -0.09 });
+    setGuess(initialGuess);
     setGuessComplete(false);
     onNextPicture();
     setNeedsRepositioning(true);
@@ -119,6 +120,10 @@ const GeoMap = ({
   };
 
   const sendGuess = () => {
+    if (guess.lat === initialGuess.lat && guess.lng === initialGuess.lng) {
+      alert(t('geo.explanation-reminder'));
+      return;
+    }
     createPictureGeoInfo({
       variables: {
         data: { picture: pictureId, latitude: guess.lat, longitude: guess.lng, radius: 0 },
@@ -160,9 +165,9 @@ const GeoMap = ({
         )}
       </MapContainer>
       {!guessComplete && (
-        <>
-          <Button variant='contained' onClick={sendGuess}>
-            Ort bestätigen
+        <div className='flex gap-2'>
+          <Button variant='contained' onClick={sendGuess} className='flex-1'>
+            {t('geo.submit-place')}
           </Button>
           <Button
             variant='contained'
@@ -170,14 +175,15 @@ const GeoMap = ({
               sendNotAPlace();
               nextPicture();
             }}
+            className='flex-1'
           >
-            Das ist kein Ort{' '}
+            {t('geo.no-place')}
           </Button>
-        </>
+        </div>
       )}
       {guessComplete && (
         <Button variant='contained' onClick={nextPicture}>
-          Nächstes Bild
+          {t('geo.next-picture')}
         </Button>
       )}
     </div>
