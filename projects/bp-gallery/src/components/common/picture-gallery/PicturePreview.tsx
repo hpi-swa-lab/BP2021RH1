@@ -45,6 +45,7 @@ const PicturePreview = ({
 
   return (
     <div
+      className='preview-container'
       onMouseOver={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={onClick}
