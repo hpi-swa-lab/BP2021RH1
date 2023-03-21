@@ -52,7 +52,7 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
         <div className='items-center flex'>
           {commentsCount > 0 ? (
             <>
-              <QuestionAnswer fontSize='inherit' className='text-red-400' />
+              <QuestionAnswer fontSize='inherit' />
               &nbsp;
               {commentsCount}
             </>
