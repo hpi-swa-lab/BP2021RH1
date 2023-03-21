@@ -5,10 +5,10 @@ type ClipboardData = {
   pictureIds: string[];
 };
 
-type Item<T> = [T, Dispatch<SetStateAction<T>>];
+type State<T> = readonly [T, Dispatch<SetStateAction<T>>];
 type StorageData = {
-  clipboardState: Item<ClipboardData>;
-  likedState: Item<string[]>;
+  clipboardState: State<ClipboardData>;
+  likedState: State<string[]>;
 };
 
 export const StorageContext = createContext<null | StorageData>(null);

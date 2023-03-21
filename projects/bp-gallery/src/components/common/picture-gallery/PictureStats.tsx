@@ -5,6 +5,7 @@ import {
   ThumbUpAltOutlined,
 } from '@mui/icons-material';
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { ShowStatsContext } from '../../provider/ShowStatsProvider';
 import useLike from '../../views/picture/sidebar/like-hooks';
@@ -16,6 +17,7 @@ type PictureStatsProps = {
 
 const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
   const showStats = useContext(ShowStatsContext);
+  const { t } = useTranslation();
   const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
   const commentsCount = picture.comments?.length ?? 0;
 
@@ -29,6 +31,7 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
       >
         <div
           className='items-center flex'
+          title={t('common.like')}
           onClick={event => {
             event.stopPropagation();
             like(isLiked);
@@ -37,7 +40,7 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
           {isLiked ? (
             <ThumbUpAlt
               fontSize='inherit'
-              className='text-blue-400 cursor-pointer !transition-transform !duration-100 hover:scale-110'
+              className='text-blue-400 cursor-pointer !transition-transform !duration-100 hover:scale-110 scale-105'
             />
           ) : (
             <ThumbUpAltOutlined
@@ -49,7 +52,7 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
           {likeCount}
         </div>
 
-        <div className='items-center flex'>
+        <div className='items-center flex' title={t('common.comments')}>
           {commentsCount > 0 ? (
             <>
               <QuestionAnswer fontSize='inherit' />

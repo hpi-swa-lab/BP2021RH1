@@ -1,4 +1,4 @@
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { ThumbUpAlt, ThumbUpAltOutlined } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import useLike from './like-hooks';
@@ -16,10 +16,9 @@ const LikeButton = ({ pictureId, likeCount }: { pictureId: string; likeCount: nu
         like(isLiked);
       }}
     >
-      <div className={'flex flex-row place-items-center'}>
-        {isLiked ? <Favorite /> : <FavoriteBorder />}
-        <div className={'text-sm m-0'}>{displayedLikeCount}</div>
-        <div className={'w-2'} />
+      <div className={`flex flex-row place-items-center gap-1`}>
+        {isLiked ? <ThumbUpAlt className='scale-105' /> : <ThumbUpAltOutlined />}
+        <div className={'mr-1'}>{displayedLikeCount}</div>
         {t('common.like')}
       </div>
     </Button>
