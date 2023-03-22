@@ -33,14 +33,16 @@ const CollapsibleContainer = ({
         </div>
       </div>
       {!defaultOpen && (
-        <IconButton
-          className='icon-button hover:bg-slate-100'
-          onClick={() => {
-            setOpen(!open);
-          }}
-        >
-          {open ? <KeyboardArrowUp className='icon' /> : <KeyboardArrowDown className='icon' />}
-        </IconButton>
+        <label className='w-full flex justify-center mb-4'>
+          <IconButton
+            className='icon-button hover:bg-slate-100 !w-40'
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            {open ? <KeyboardArrowUp className='icon' /> : <KeyboardArrowDown className='icon' />}
+          </IconButton>
+        </label>
       )}
     </>
   );
