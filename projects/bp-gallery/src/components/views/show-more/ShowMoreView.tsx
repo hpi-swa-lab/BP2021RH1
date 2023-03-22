@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGetCollectionInfoByNameQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
@@ -7,6 +6,7 @@ import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes'
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollContainer from '../../common/ScrollContainer';
+import ShowStats from '../../provider/ShowStatsProvider';
 import { getPictureQueryParams } from './helpers/queryParams-helpers';
 import { useGetShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 import './ShowMoreView.scss';
@@ -71,25 +71,32 @@ const ShowMoreView = ({
               collectionsInfo={collectionsInfo}
               flattenedTags={flattenedTags}
             />
-            <PictureScrollGrid
-              queryParams={getPictureQueryParams(
-                categoryType,
-                categoryId,
-                archiveId,
-                collectionsInfo
-              )}
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              sortBy={
-                categoryType !== 'pictures' && categoryId
-                  ? ['time_range_tag.start:asc']
-                  : ['createdAt:desc']
-              }
-              hashbase={'show-more'}
-              extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
-              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
-              maxNumPictures={categoryType === 'latest' ? 500 : undefined}
-            />
+            <ShowStats>
+              <PictureScrollGrid
+                queryParams={getPictureQueryParams(
+                  categoryType,
+                  categoryId,
+                  archiveId,
+                  collectionsInfo
+                )}
+                scrollPos={scrollPos}
+                scrollHeight={scrollHeight}
+                sortBy={
+                  categoryType !== 'pictures' && categoryId
+                    ? ['time_range_tag.start:asc']
+                    : ['createdAt:desc']
+                }
+                hashbase={'show-more'}
+                extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
+                bulkOperations={[
+                  removeFromCollection,
+                  linkToCollection,
+                  moveToCollection,
+                  bulkEdit,
+                ]}
+                maxNumPictures={categoryType === 'latest' ? 500 : undefined}
+              />
+            </ShowStats>
           </div>
         )}
       </ScrollContainer>
