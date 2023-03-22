@@ -46,7 +46,7 @@ const TagList = ({
     false,
     type,
     ['name:asc'],
-    currentItemAmount ?? 30
+    currentItemAmount ?? scroll ? 30 : undefined
   );
 
   const flattened = useSimplifiedQueryResponseData(data);
