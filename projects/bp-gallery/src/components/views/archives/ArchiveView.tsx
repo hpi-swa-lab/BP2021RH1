@@ -13,6 +13,7 @@ import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
 import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import { FALLBACK_PATH } from './../../routes';
 import './ArchiveView.scss';
 
@@ -104,16 +105,17 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               </div>
             )}
           </div>
-
-          <PictureOverview
-            title='Unsere Bilder'
-            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {
-              history.push('/archives/' + archiveId + '/show-more/pictures', {
-                showBack: true,
-              });
-            }}
-          />
+          <ShowStats>
+            <PictureOverview
+              title='Unsere Bilder'
+              queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+              onClick={() => {
+                history.push('/archives/' + archiveId + '/show-more/pictures', {
+                  showBack: true,
+                });
+              }}
+            />
+          </ShowStats>
 
           <TagOverview
             title='Unsere Kategorien'

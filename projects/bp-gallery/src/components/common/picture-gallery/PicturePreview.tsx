@@ -1,8 +1,10 @@
 import { isFunction } from 'lodash';
-import { MouseEvent, MouseEventHandler, useMemo, useRef } from 'react';
+import { MouseEvent, MouseEventHandler, useContext, useMemo, useRef, useState } from 'react';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { ShowStatsContext } from '../../provider/ShowStatsProvider';
 import './PicturePreview.scss';
+import PictureStats from './PictureStats';
 
 export interface PicturePreviewAdornment {
   position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
@@ -32,6 +34,8 @@ const PicturePreview = ({
   highQuality?: boolean;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const showStats = useContext(ShowStatsContext);
 
   const thumbnailUrl = useMemo((): string => {
     const defaultUrl =
@@ -41,39 +45,49 @@ const PicturePreview = ({
 
   return (
     <div
+      className='preview-container'
+      onMouseOver={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onClick={onClick}
-      id={`picture-preview-for-${picture.id}`}
-      className={`picture-preview ${allowClicks ? 'allow-clicks' : ''}`}
       ref={containerRef}
       style={{
         flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
       }}
     >
-      {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
-      <img
-        src={
-          pictureOrigin === PictureOrigin.REMOTE
-            ? asApiPath(
-                `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
-              )
-            : thumbnailUrl
-        }
-      />
-      <div className='adornments'>
-        {adornments?.map((adornment, index) => (
-          <div
-            className={`adornment ${adornment.position}`}
-            key={index}
-            title={adornment.title}
-            onClick={event => {
-              event.preventDefault();
-              event.stopPropagation();
-              adornment.onClick(picture, event);
-            }}
-          >
-            {isFunction(adornment.icon) ? <>{adornment.icon(picture)}</> : <>{adornment.icon}</>}
-          </div>
-        ))}
+      <div
+        className={`picture-preview ${allowClicks ? 'allow-clicks' : ''}`}
+        id={`picture-preview-for-${picture.id}`}
+      >
+        {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
+        <img
+          className={
+            showStats ? `transition-filter duration-200 ${hovered ? 'brightness-75' : ''}` : ''
+          }
+          src={
+            pictureOrigin === PictureOrigin.REMOTE
+              ? asApiPath(
+                  `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
+                )
+              : thumbnailUrl
+          }
+        />
+        <div className='adornments'>
+          {adornments?.map((adornment, index) => (
+            <div
+              className={`adornment ${adornment.position}`}
+              key={index}
+              title={adornment.title}
+              onClick={event => {
+                event.preventDefault();
+                event.stopPropagation();
+                adornment.onClick(picture, event);
+              }}
+            >
+              {isFunction(adornment.icon) ? <>{adornment.icon(picture)}</> : <>{adornment.icon}</>}
+            </div>
+          ))}
+        </div>
+        <PictureStats picture={picture} hovered={hovered} />
       </div>
     </div>
   );
