@@ -39,7 +39,7 @@ const ShowMoreView = ({
   const tagInfo = tagsWithThumbnailQuery({
     variables: {
       filters:
-        categoryType !== 'pictures'
+        categoryType !== 'pictures' && categoryType !== 'latest'
           ? !archiveId
             ? { id: { eq: categoryId } }
             : {
@@ -88,6 +88,7 @@ const ShowMoreView = ({
               hashbase={'show-more'}
               extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
               bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+              maxNumPictures={categoryType === 'latest' ? 500 : undefined}
             />
           </div>
         )}
