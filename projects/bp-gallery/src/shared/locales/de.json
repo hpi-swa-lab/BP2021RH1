@@ -326,7 +326,9 @@
   "show-more": {
     "x0s": "19{{ decade }}0er",
     "pictures-title": "Unsere Bilder",
-    "pictures-text": "Hier finden Sie alle Bilder unseres Archivs",
+    "pictures-text": "Hier finden Sie alle Bilder dieses Archivs.",
+    "latest-title": "Neuzugänge im Archiv",
+    "latest-text": "Hier fließen die jeweils jüngsten 500 „Neuzugänge“ des Fotoarchivs ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
     "date-title": "Jahrzehnte",
     "date-text": "Hier finden Sie alle Bilder unseres Archivs aus den bestimmten Jahrzehnten.",
     "keyword-title": "Unsere Kategorien",
@@ -337,7 +339,7 @@
     "location-text": "Hier finden Sie alle Orte unseres Archivs"
   },
   "discover": {
-    "our-pictures": "Unsere Bilder",
+    "latest-pictures": "Neuzugänge im Archiv",
     "decades": "Jahrzehnte",
     "locations": "Orte",
     "more-info": "Wissen Sie mehr über diese Bilder?",
