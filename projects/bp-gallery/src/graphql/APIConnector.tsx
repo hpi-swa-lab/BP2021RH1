@@ -2444,6 +2444,8 @@ export type GetPicturesQuery = {
           attributes?:
             | {
                 is_text?: boolean | null | undefined;
+                likes?: number | null | undefined;
+                comments?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
                 media: {
                   data?:
                     | {
@@ -4138,6 +4140,12 @@ export const GetPicturesDocument = gql`
         id
         attributes {
           is_text
+          comments {
+            data {
+              id
+            }
+          }
+          likes
           media {
             data {
               id
