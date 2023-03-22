@@ -1,19 +1,31 @@
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+type CollapsibleContainerProps = PropsWithChildren<{
+  collapsedHeight: string;
+  defaultOpen?: boolean;
+  onToggle?: (open: boolean) => void;
+  showButton?: boolean;
+  showText?: boolean;
+  buttonStyle?: string;
+}>;
 
 const CollapsibleContainer = ({
   children,
   collapsedHeight,
   defaultOpen,
-}: {
-  children: ((open: boolean) => ReactNode | undefined) | (ReactNode | undefined);
-  collapsedHeight: string;
-  defaultOpen?: boolean;
-}) => {
+  onToggle,
+  showButton = true,
+  showText,
+  buttonStyle,
+}: CollapsibleContainerProps) => {
   const [open, setOpen] = useState(defaultOpen);
   const [fullHeight, setFullHeight] = useState(0);
   const measureRef = useRef<HTMLDivElement>(null);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (fullHeight !== measureRef.current?.clientHeight)
@@ -28,19 +40,29 @@ const CollapsibleContainer = ({
           !open ? { height: collapsedHeight } : { height: `${measureRef.current!.clientHeight}px` }
         }
       >
-        <div ref={measureRef}>
-          {typeof children === 'function' ? children(open ?? true) : children}
-        </div>
+        <div ref={measureRef}>{children}</div>
       </div>
-      {!defaultOpen && (
-        <label className='w-full flex justify-center mb-4'>
+      {showButton && (
+        <label className='w-full flex justify-center mb-4 cursor-pointer'>
           <IconButton
-            className='icon-button hover:bg-slate-100 !w-40'
-            onClick={() => {
+            className={`icon-button hover:bg-slate-100 ${buttonStyle ?? '!w-40'}`}
+            onClick={event => {
+              event.preventDefault();
               setOpen(!open);
+              onToggle?.(!open);
             }}
           >
-            {open ? <KeyboardArrowUp className='icon' /> : <KeyboardArrowDown className='icon' />}
+            {open ? (
+              <>
+                <KeyboardArrowUp className='icon' />
+                {showText && t('common.showLess')}
+              </>
+            ) : (
+              <>
+                <KeyboardArrowDown className='icon' />
+                {showText && t('common.showMore')}
+              </>
+            )}
           </IconButton>
         </label>
       )}

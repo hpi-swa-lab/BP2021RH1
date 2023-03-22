@@ -7,14 +7,13 @@ import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
-import CollapsibleContainer from '../../common/CollapsibleContainer';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import PictureOverview from '../../common/PictureOverview';
-import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
 import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FALLBACK_PATH } from './../../routes';
+import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
 
 interface ArchiveViewProps {
@@ -67,19 +66,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           <h1>{archive.name}</h1>
           <div className='archive-data'>
             <div className='archive-info'>
-              <CollapsibleContainer collapsedHeight='23rem' defaultOpen={false}>
-                {open => (
-                  <div
-                    className={`mb-1 p-1 pt-0 text-lg break-words ${
-                      !open ? 'line-clamp-[13] overflow-visible' : ''
-                    }`}
-                  >
-                    <RichText
-                      value={archive.longDescription ?? t('archives.defaultLongDescription')}
-                    />
-                  </div>
-                )}
-              </CollapsibleContainer>
+              <ArchiveDescription description={archive.longDescription} />
               <div className='archive-socials'>
                 {archive.logo && (
                   <div className='archive-logo-container'>
