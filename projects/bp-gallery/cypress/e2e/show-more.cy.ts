@@ -5,9 +5,9 @@ describe('Navigation to Show More View from Discover View', () => {
     cy.visit('/discover');
   });
 
-  it('works for "Unsere Bilder"', () => {
-    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen').click();
-    urlIs('/show-more/pictures');
+  it('works for "Neuzugänge im Archiv"', () => {
+    cy.get('.overview-container:contains(Neuzugänge im Archiv)').contains('Mehr anzeigen').click();
+    urlIs('/show-more/latest');
   });
 
   it('works for "Wissen Sie mehr über diese Bilder?"', () => {
@@ -100,11 +100,13 @@ describe('Navigation to Show More View from Archive View', () => {
 });
 
 describe('Global Show More View', () => {
-  it('shows show more for "Unsere Bilder"', () => {
-    cy.visit('/show-more/pictures');
+  it('shows show more for "Neuzugänge im Archiv"', () => {
+    cy.visit('/show-more/latest');
     // check for text in show more view
-    cy.contains('Unsere Bilder');
-    cy.contains('Hier finden Sie alle Bilder unseres Archivs');
+    cy.contains('Neuzugänge im Archiv');
+    cy.contains(
+      'Hier fließen die jeweils jüngsten 500 „Neuzugänge“ des Fotoarchivs ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.'
+    );
 
     // check for images in show more view
     cy.contains('Mehr als 100 Bilder');
@@ -226,7 +228,7 @@ describe('Archive Show More View', () => {
     cy.visit('/archives/1/show-more/pictures');
     // check for text in show more view
     cy.contains('Unsere Bilder');
-    cy.contains('Hier finden Sie alle Bilder unseres Archivs');
+    cy.contains('Hier finden Sie alle Bilder dieses Archivs');
 
     // check for images in show more view
     cy.contains('5 Bilder');
