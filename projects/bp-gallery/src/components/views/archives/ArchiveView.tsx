@@ -21,6 +21,13 @@ interface ArchiveViewProps {
   archiveId: string;
 }
 
+const addUrlProtocol = (url: string) => {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `https://${url}/`;
+};
+
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const history: History = useHistory();
   const { role } = useAuth();
@@ -91,7 +98,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                   {archive.links?.map(link => (
                     <div className='archive-link' key={link.id}>
                       <Link className='link-icon' />
-                      <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
+                      <a href={addUrlProtocol(link.url)}>{link.title ? link.title : link.url}</a>
                     </div>
                   ))}
                 </div>
