@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
-import PictureGrid from './PictureGrid';
-import QueryErrorDisplay from '../QueryErrorDisplay';
-import Loading from '../Loading';
-import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
-import { useTranslation } from 'react-i18next';
-import './PictureScrollGrid.scss';
-import { BulkOperation } from './BulkOperationsPanel';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
 } from '../../../hooks/get-pictures.hook';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import Loading from '../Loading';
+import QueryErrorDisplay from '../QueryErrorDisplay';
+import { BulkOperation } from './BulkOperationsPanel';
+import PictureGrid from './PictureGrid';
 import { PicturePreviewAdornment } from './PicturePreview';
+import './PictureScrollGrid.scss';
+import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 
 const PictureScrollGrid = ({
   queryParams,
@@ -126,16 +126,9 @@ const PictureScrollGrid = ({
         />
         {showCount && (
           <span className='picture-count'>
-            {t(
-              pictures.length === 0
-                ? 'common.noPictures'
-                : possiblyMorePictures
-                ? 'common.moreThanPictureCount'
-                : 'common.pictureCount',
-              {
-                count: pictures.length,
-              }
-            )}
+            {t(possiblyMorePictures ? 'common.moreThanPictureCount' : 'common.pictureCount', {
+              count: pictures.length,
+            })}
           </span>
         )}
         <PictureGrid

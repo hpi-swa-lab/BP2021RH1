@@ -12,19 +12,13 @@ const Footer = () => {
       <div className='footer-content'>
         <div className='footer-info'>
           <h3>{t('footer.title')}</h3>
-          <p
-            onClick={() => {
-              window.open(`mailto:${process.env.REACT_APP_CONTACT_MAIL ?? ''}`);
-            }}
-          >
-            {t('footer.contact')}
-          </p>
+          <p onClick={() => history.push('/contact', { showBack: true })}>{t('footer.contact')}</p>
           {/*  
           <p>
           {t('footer.privacy')}
           </p>
           */}
-          <p onClick={() => history.push('/terms-of-service', { showBack: false })}>
+          <p onClick={() => history.push('/terms-of-service', { showBack: true })}>
             {t('footer.tos')}
           </p>
         </div>

@@ -2,11 +2,11 @@ import { login, logout } from '../utils/login-utils';
 
 const postComment = (name: string, comment: string) => {
   cy.get('input#name').scrollIntoView();
-  cy.get('input#name').should('be.visible').clear();
+  cy.get('input#name').clear();
   cy.get('input#name').type(name);
-  cy.get('textarea#text').should('be.visible').clear();
+  cy.get('textarea#text').clear();
   cy.get('textarea#text').type(comment);
-  cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
+  cy.get('.MuiButton-root').contains('Absenden').click();
 };
 
 const closeModal = (text: string, buttonText: string) => {
@@ -48,7 +48,7 @@ describe('Comment', () => {
   });
 
   it('log in as curator and curate the new comments', () => {
-    cy.get('.MuiButton-root').contains('arrow_back').should('be.visible').click();
+    cy.get('.picture-toolbar').find('[data-testid="ArrowBackIcon"]').click();
     login();
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Kommentare').click();

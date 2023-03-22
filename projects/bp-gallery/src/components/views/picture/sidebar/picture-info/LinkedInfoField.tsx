@@ -1,4 +1,4 @@
-import { ContentCopy, ContentPasteGo, LinkOff } from '@mui/icons-material';
+import { ContentCopy, ContentPasteGo, Link, LinkOff } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { differenceWith, isEqual, union, unionWith } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -14,9 +14,9 @@ import ScrollContainer from '../../../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { useClipboard } from '../../../../provider/ClipboardProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import './LinkedInfoField.scss';
 import { Field } from './PictureInfo';
 import PictureInfoField from './PictureInfoField';
-import './LinkedInfoField.scss';
 
 const LinkedInfoField = ({
   picture,
@@ -159,11 +159,7 @@ const LinkedInfoField = ({
           variant='contained'
           onClick={copyToClipboard}
         >
-          {t(
-            `pictureFields.links.${pictureType}.copy.${
-              pictureIds.length > 1 ? 'multiple' : 'single'
-            }`
-          )}
+          {t(`pictureFields.links.${pictureType}.copy`, { count: pictureIds.length })}
         </Button>
       )
     );
@@ -202,7 +198,7 @@ const LinkedInfoField = ({
       {(role >= AuthRole.CURATOR || Boolean(linked.collection?.length)) && isText !== undefined && (
         <PictureInfoField
           title={t(`pictureFields.links.${linked.name}.label`)}
-          icon='link'
+          icon={<Link />}
           type='links'
         >
           <ScrollContainer>
@@ -229,11 +225,9 @@ const LinkedInfoField = ({
                   onClick={shouldPaste ? pasteFromClipboard : undefined}
                   disabled={isClipboardMixed}
                 >
-                  {clipboardData.pictureIds.length > 1
-                    ? t(`pictureFields.links.${linked.name}.paste.multiple`, {
-                        count: clipboardData.pictureIds.length,
-                      })
-                    : t(`pictureFields.links.${linked.name}.paste.single`)}
+                  {t(`pictureFields.links.${linked.name}.paste`, {
+                    count: clipboardData.pictureIds.length,
+                  })}
                 </Button>
                 {isClipboardMixed && (
                   <HelpTooltip

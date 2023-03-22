@@ -1,61 +1,42 @@
-import { useTranslation } from 'react-i18next';
-import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
-import { asApiPath } from '../../../helpers/app-helpers';
-import PicturePreview, {
-  PicturePreviewAdornment,
-} from '../../common/picture-gallery/PicturePreview';
-import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import ScrollContainer from '../../common/ScrollContainer';
-import ArchiveInfo from './ArchiveInfo';
-import './ArchiveView.scss';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Edit, Link } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { History } from 'history';
+import { useTranslation } from 'react-i18next';
+import { Redirect, useHistory } from 'react-router-dom';
+import { useGetArchiveQuery } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asApiPath } from '../../../helpers/app-helpers';
+import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
+import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import PictureOverview from '../../common/PictureOverview';
+import RichText from '../../common/RichText';
+import ScrollContainer from '../../common/ScrollContainer';
+import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { Star, Edit, Link } from '@mui/icons-material';
 import { FALLBACK_PATH } from './../../routes';
+import './ArchiveView.scss';
 
 interface ArchiveViewProps {
   archiveId: string;
 }
 
+const addUrlProtocol = (url: string) => {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `https://${url}/`;
+};
+
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
-  const { t } = useTranslation();
   const history: History = useHistory();
   const { role } = useAuth();
+  const { t } = useTranslation();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
-  const [updateArchive] = useUpdateArchiveMutation({
-    refetchQueries: ['getArchive'],
-  });
-
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
   const src = archive?.logo?.formats?.thumbnail.url ?? '';
-
-  const showcaseAdornment: PicturePreviewAdornment = {
-    position: 'top-left',
-    icon: picture =>
-      picture.id === archive?.showcasePicture?.id ? <Star className='star-selected' /> : <Star />,
-    title: t('pictureAdornments.showcase'),
-    onClick: picture => {
-      if (showcasePicture?.id === picture.id) return;
-      updateArchive({
-        variables: {
-          archiveId,
-          data: {
-            showcasePicture: picture.id,
-          },
-        },
-      });
-    },
-  };
-
-  const { bulkEdit } = useBulkOperations();
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -85,7 +66,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           <h1>{archive.name}</h1>
           <div className='archive-data'>
             <div className='archive-info'>
-              <ArchiveInfo description={archive.longDescription ?? ''} />
+              <div className='archive-info-container'>
+                <RichText value={archive.longDescription ?? t('archives.defaultLongDescription')} />
+              </div>
               <div className='archive-socials'>
                 {archive.logo && (
                   <div className='archive-logo-container'>
@@ -104,7 +87,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                   {archive.links?.map(link => (
                     <div className='archive-link' key={link.id}>
                       <Link className='link-icon' />
-                      <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
+                      <a href={addUrlProtocol(link.url)}>{link.title ? link.title : link.url}</a>
                     </div>
                   ))}
                 </div>
@@ -122,13 +105,33 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             )}
           </div>
 
-          <PictureScrollGrid
+          <PictureOverview
+            title='Unsere Bilder'
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            scrollPos={scrollPos}
-            scrollHeight={scrollHeight}
-            hashbase={'archive'}
-            extraAdornments={role >= AuthRole.CURATOR ? [showcaseAdornment] : []}
-            bulkOperations={[bulkEdit]}
+            onClick={() => {
+              history.push('/archives/' + archiveId + '/show-more/pictures', {
+                showBack: true,
+              });
+            }}
+          />
+
+          <TagOverview
+            title='Unsere Kategorien'
+            type={TagType.KEYWORD}
+            onClick={() => {
+              history.push('/archives/' + archiveId + '/show-more/keyword', {
+                showBack: true,
+              });
+            }}
+            rows={2}
+            queryParams={{
+              and: [
+                { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+                { visible: { eq: true } },
+              ],
+            }}
+            thumbnailQueryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            archiveId={archiveId}
           />
         </div>
       )}

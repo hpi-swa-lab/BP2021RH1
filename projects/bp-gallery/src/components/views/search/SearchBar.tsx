@@ -10,6 +10,7 @@ import { getSearchTypeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import { SearchType } from './helpers/search-filters';
+import { fromURLSearchParam } from './helpers/url-search-params';
 
 const SearchBar = ({
   searchParams,
@@ -27,14 +28,9 @@ const SearchBar = ({
   const [searchType, setSearchType] = useState<string>(SearchType.ALL);
 
   const typeOfLatestSearch = useMemo(() => {
-    const searchParamsIterator = searchParams.entries();
-    let nextParam = searchParamsIterator.next();
-    let latestType;
-    while (!nextParam.done) {
-      latestType = nextParam.value[0];
-      nextParam = searchParamsIterator.next();
-    }
-    return latestType;
+    const types = Array.from(searchParams.keys());
+    const type = types[types.length - 1] as string | undefined;
+    return type === undefined ? type : fromURLSearchParam(type);
   }, [searchParams]);
 
   useEffect(() => {
@@ -59,7 +55,8 @@ const SearchBar = ({
     }
   }, [typeOfLatestSearch]);
 
-  const dontShowAllSearch: boolean = !isAllSearchActive && !searchParams.values().next().done;
+  const dontShowAllSearch: boolean =
+    !isAllSearchActive && Array.from(searchParams.entries()).length !== 0;
 
   const onSearchStart = (searchInput: string) => {
     if (searchInput === '') return;

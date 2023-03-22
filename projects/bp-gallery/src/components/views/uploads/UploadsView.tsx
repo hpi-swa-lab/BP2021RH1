@@ -1,14 +1,15 @@
+import { Add } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useCallback, useMemo } from 'react';
-import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import './UploadsView.scss';
 import { useTranslation } from 'react-i18next';
-import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import ScrollContainer from '../../common/ScrollContainer';
-import { Button, Icon } from '@mui/material';
-import { useDialog, DialogPreset } from '../../provider/DialogProvider';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
+import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import ScrollContainer from '../../common/ScrollContainer';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import './UploadsView.scss';
 
 const UploadsView = () => {
   const { role } = useAuth();
@@ -49,7 +50,7 @@ const UploadsView = () => {
       {(scrollPos: number, scrollHeight: number) => (
         <div className='uploads-overview'>
           <Button onClick={createArchive}>
-            <Icon>add</Icon>
+            <Add />
             {t('curator.createArchive')}
           </Button>
           <PictureScrollGrid

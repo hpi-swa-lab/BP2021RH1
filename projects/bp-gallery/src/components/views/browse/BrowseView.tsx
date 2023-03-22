@@ -155,7 +155,6 @@ const BrowseView = ({
                 ]}
               />
             </div>
-
             <Footer />
           </div>
         )}
