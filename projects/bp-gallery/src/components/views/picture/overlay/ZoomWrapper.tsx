@@ -2,9 +2,10 @@ import { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'rea
 import { useMoveView } from '../helpers/useMoveView';
 import './ZoomWrapper.scss';
 
-const MAX_ZOOM = 5.0;
+const MAX_ZOOM = 30.0;
 const MIN_ZOOM = 1.0;
 const DEFAULT_ZOOM = 1.0;
+const ZOOM_RATE = -0.001;
 
 const ZoomWrapper = ({
   blockScroll,
@@ -41,7 +42,10 @@ const ZoomWrapper = ({
       event.preventDefault();
       event.stopPropagation();
       setZoomLevel(previousZoom => {
-        return Math.min(Math.max(previousZoom - event.deltaY / 1000, MIN_ZOOM), MAX_ZOOM);
+        return Math.min(
+          Math.max(previousZoom * Math.exp(event.deltaY * ZOOM_RATE), MIN_ZOOM),
+          MAX_ZOOM
+        );
       });
       moveView({
         x: event.clientX,
@@ -53,6 +57,7 @@ const ZoomWrapper = ({
 
   const onPointerDown = useCallback((evt: PointerEvent) => {
     pointers.current = pointers.current.concat([evt]);
+    evt.preventDefault();
   }, []);
 
   const onPointerUp = useCallback((evt: PointerEvent) => {
@@ -82,16 +87,18 @@ const ZoomWrapper = ({
       };
 
       if (pointers.current.length === 2) {
-        const curDiff = Math.sqrt(
-          Math.pow(pointers.current[0].clientX - pointers.current[1].clientX, 2) +
-            Math.pow(pointers.current[0].clientY - pointers.current[1].clientY, 2)
+        const curDiff = Math.hypot(
+          pointers.current[0].clientX - pointers.current[1].clientX,
+          pointers.current[0].clientY - pointers.current[1].clientY
         );
 
+        // setters are run async, so prevDiff.current will be overwritten inside
+        const prevDiffCached = prevDiff.current;
         setZoomLevel(zoomLevel => {
-          if (prevDiff.current > 0) {
+          if (prevDiffCached > 0) {
             zoomLevel = Math.max(
               MIN_ZOOM,
-              Math.min(zoomLevel * (curDiff / prevDiff.current), MAX_ZOOM)
+              Math.min(zoomLevel * (curDiff / prevDiffCached), MAX_ZOOM)
             );
           }
           return zoomLevel;
@@ -114,6 +121,7 @@ const ZoomWrapper = ({
       container?.removeEventListener('pointerdown', onPointerDown);
       container?.removeEventListener('pointerup', onPointerUp);
       container?.removeEventListener('pointercancel', onPointerUp);
+      container?.removeEventListener('pointerleave', onPointerUp);
       container?.removeEventListener('pointermove', onPointerMove);
     }
     if (imageRef.current) {
@@ -132,6 +140,7 @@ const ZoomWrapper = ({
       container?.addEventListener('pointerdown', onPointerDown);
       container?.addEventListener('pointerup', onPointerUp);
       container?.addEventListener('pointercancel', onPointerUp);
+      container?.addEventListener('pointerleave', onPointerUp);
       container?.addEventListener('pointermove', onPointerMove);
     }
   }, [onScroll, onPointerDown, onPointerUp, onPointerMove]);

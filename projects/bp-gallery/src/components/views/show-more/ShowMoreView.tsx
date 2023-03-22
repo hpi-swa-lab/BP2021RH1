@@ -39,7 +39,7 @@ const ShowMoreView = ({
   const tagInfo = tagsWithThumbnailQuery({
     variables: {
       filters:
-        categoryType !== 'pictures'
+        categoryType !== 'pictures' && categoryType !== 'latest'
           ? !archiveId
             ? { id: { eq: categoryId } }
             : {
@@ -94,6 +94,7 @@ const ShowMoreView = ({
                   moveToCollection,
                   bulkEdit,
                 ]}
+                maxNumPictures={categoryType === 'latest' ? 500 : undefined}
               />
             </ShowStats>
           </div>
