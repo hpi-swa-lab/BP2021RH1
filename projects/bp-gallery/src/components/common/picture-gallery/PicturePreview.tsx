@@ -11,6 +11,7 @@ export interface PicturePreviewAdornment {
   onClick: (picture: FlatPicture, event: MouseEvent<HTMLElement>) => void;
   icon: ((picture: FlatPicture) => JSX.Element) | JSX.Element;
   title?: string;
+  onlyShowOnHover?: boolean;
 }
 
 export enum PictureOrigin {
@@ -74,7 +75,9 @@ const PicturePreview = ({
         <div className='adornments'>
           {adornments?.map((adornment, index) => (
             <div
-              className={`adornment ${adornment.position}`}
+              className={`adornment ${adornment.position} ${
+                adornment.onlyShowOnHover ? 'opacity-0 hover:opacity-100 transition-opacity' : ''
+              }`}
               key={index}
               title={adornment.title}
               onClick={event => {
