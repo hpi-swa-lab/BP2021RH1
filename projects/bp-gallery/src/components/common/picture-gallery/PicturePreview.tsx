@@ -76,7 +76,7 @@ const PicturePreview = ({
           {adornments?.map((adornment, index) => (
             <div
               className={`adornment ${adornment.position} ${
-                adornment.onlyShowOnHover ? 'opacity-0 hover:opacity-100 transition-opacity' : ''
+                adornment.onlyShowOnHover ? 'opacity-0 hover:!opacity-100 transition-opacity' : ''
               }`}
               key={index}
               title={adornment.title}
