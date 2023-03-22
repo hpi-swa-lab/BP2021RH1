@@ -1,9 +1,4 @@
-import {
-  QuestionAnswer,
-  QuestionAnswerOutlined,
-  ThumbUpAlt,
-  ThumbUpAltOutlined,
-} from '@mui/icons-material';
+import { QuestionAnswer, ThumbUpAlt, ThumbUpAltOutlined } from '@mui/icons-material';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -52,21 +47,13 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
           {likeCount}
         </div>
 
-        <div className='items-center flex' title={t('common.comments')}>
-          {commentsCount > 0 ? (
-            <>
-              <QuestionAnswer fontSize='inherit' />
-              &nbsp;
-              {commentsCount}
-            </>
-          ) : (
-            <>
-              <QuestionAnswerOutlined fontSize='inherit' />
-              &nbsp;
-              {commentsCount}
-            </>
-          )}
-        </div>
+        {commentsCount > 0 && (
+          <div className='items-center flex' title={t('common.comments')}>
+            <QuestionAnswer fontSize='inherit' />
+            &nbsp;
+            {commentsCount}
+          </div>
+        )}
       </div>
     </div>
   ) : null;
