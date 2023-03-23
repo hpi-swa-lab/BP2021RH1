@@ -25,4 +25,14 @@ const getLineBreaks = (node?: Node) => {
   return lines;
 };
 
+export const getIsLong = (element: HTMLElement | null, text: string, maxLines: number) => {
+  const buffer = document.createElement('div');
+  buffer.className = 'collection-description open';
+  buffer.innerText = text;
+  element?.appendChild(buffer);
+  const split = getLineBreaks(buffer.childNodes[0]);
+  buffer.remove();
+  return split.length > maxLines;
+};
+
 export default getLineBreaks;

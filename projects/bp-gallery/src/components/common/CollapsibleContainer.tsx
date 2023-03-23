@@ -37,15 +37,19 @@ const CollapsibleContainer = ({
       <div
         className={`overflow-hidden transition-[height] duration-1000`}
         style={
-          !open ? { height: collapsedHeight } : { height: `${measureRef.current!.clientHeight}px` }
+          showButton
+            ? !open
+              ? { height: collapsedHeight }
+              : { height: `${measureRef.current?.clientHeight ?? 0}px` }
+            : {}
         }
       >
         <div ref={measureRef}>{children}</div>
       </div>
       {showButton && (
-        <label className='w-full flex justify-center mb-4 cursor-pointer'>
+        <label className='w-full flex justify-center mb-4 cursor-pointer box-border'>
           <IconButton
-            className={`icon-button hover:bg-slate-100 ${buttonStyle ?? '!w-40'}`}
+            className={`hover:bg-slate-100 !text-sky-600 ${buttonStyle ?? '!w-40 '}`}
             onClick={event => {
               event.preventDefault();
               setOpen(!open);
@@ -55,14 +59,15 @@ const CollapsibleContainer = ({
             {open ? (
               <>
                 <KeyboardArrowUp className='icon' />
-                {showText && t('common.showLess')}
               </>
             ) : (
               <>
                 <KeyboardArrowDown className='icon' />
-                {showText && t('common.showMore')}
               </>
             )}
+            <div className='uppercase text-sm text-sky-600'>
+              {showText && (open ? t('common.showLess') : t('common.showMore'))}
+            </div>
           </IconButton>
         </label>
       )}

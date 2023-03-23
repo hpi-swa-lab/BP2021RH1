@@ -1,9 +1,9 @@
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { t } from 'i18next';
 import { useEffect, useRef, useState } from 'react';
-import getLineBreaks from '../../../helpers/get-linebreaks';
 import CollapsibleContainer from '../../common/CollapsibleContainer';
 import RichText from '../../common/RichText';
+import { getIsLong } from './../../../helpers/get-linebreaks';
 
 const ArchiveDescription = ({ description }: { description: Maybe<string> | undefined }) => {
   const [open, setOpen] = useState(false);
@@ -11,16 +11,7 @@ const ArchiveDescription = ({ description }: { description: Maybe<string> | unde
   const [long, setLong] = useState(false);
 
   useEffect(() => {
-    const buffer = document.createElement('div');
-    buffer.className = 'collection-description open';
-    buffer.innerText = description ?? '';
-    console.log(textRef.current);
-    textRef.current?.appendChild(buffer);
-    const split = getLineBreaks(buffer.childNodes[0]);
-    console.log(split.length);
-    buffer.remove();
-
-    setLong(split.length > 13);
+    setLong(getIsLong(textRef.current, description ?? '', 13));
   }, [description]);
 
   return (
