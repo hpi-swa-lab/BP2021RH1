@@ -3465,6 +3465,7 @@ export type GetFaceTagsQuery = {
   faceTags?:
     | {
         data: Array<{
+          id?: string | null | undefined;
           attributes?:
             | {
                 x?: number | null | undefined;
@@ -3507,6 +3508,17 @@ export type CreateFaceTagMutationVariables = Exact<{
 
 export type CreateFaceTagMutation = {
   createFaceTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeleteFaceTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteFaceTagMutation = {
+  deleteFaceTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -6800,6 +6812,7 @@ export const GetFaceTagsDocument = gql`
   query getFaceTags($pictureId: ID!) {
     faceTags(filters: { picture: { id: { eq: $pictureId } } }) {
       data {
+        id
         attributes {
           x
           y
@@ -6967,6 +6980,57 @@ export type CreateFaceTagMutationResult = Apollo.MutationResult<CreateFaceTagMut
 export type CreateFaceTagMutationOptions = Apollo.BaseMutationOptions<
   CreateFaceTagMutation,
   CreateFaceTagMutationVariables
+>;
+
+export const DeleteFaceTagDocument = gql`
+  mutation deleteFaceTag($id: ID!) {
+    deleteFaceTag(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteFaceTagMutationFn = Apollo.MutationFunction<
+  DeleteFaceTagMutation,
+  DeleteFaceTagMutationVariables
+>;
+
+/**
+ * __useDeleteFaceTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteFaceTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteFaceTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteFaceTagMutation, { data, loading, error }] = useDeleteFaceTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteFaceTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteFaceTagMutation, DeleteFaceTagMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteFaceTagMutation, DeleteFaceTagMutationVariables>(
+    DeleteFaceTagDocument,
+    options
+  );
+}
+
+export type DeleteFaceTagMutationHookResult = ReturnType<typeof useDeleteFaceTagMutation>;
+
+export type DeleteFaceTagMutationResult = Apollo.MutationResult<DeleteFaceTagMutation>;
+
+export type DeleteFaceTagMutationOptions = Apollo.BaseMutationOptions<
+  DeleteFaceTagMutation,
+  DeleteFaceTagMutationVariables
 >;
 
 export const CreateSubCollectionDocument = gql`

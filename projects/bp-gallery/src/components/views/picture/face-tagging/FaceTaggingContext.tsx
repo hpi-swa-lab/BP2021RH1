@@ -12,6 +12,7 @@ import {
 } from 'react';
 import {
   useCreateFaceTagMutation,
+  useDeleteFaceTagMutation,
   useGetFaceTagsQuery,
   useGetPersonTagQuery,
 } from '../../../../graphql/APIConnector';
@@ -23,6 +24,7 @@ type FaceTagging = {
   tags: FaceTagData[];
   hideTags: boolean | null;
   setHideTags: Dispatch<SetStateAction<boolean>>;
+  removeTag: (id: string) => void;
 };
 
 const Context = createContext<FaceTagging | null>(null);
@@ -39,10 +41,6 @@ export const FaceTaggingProvider = ({
   }, [pictureId]);
 
   const [hideTags, setHideTags] = useState(false);
-  /*const toggleHideTags = useCallback(() => {
-    setHideTags(is => !is);
-  }, []);
-*/
 
   const { error, loading, data } = useGetFaceTagsQuery({
     variables: {
@@ -53,6 +51,7 @@ export const FaceTaggingProvider = ({
     x: tag.attributes?.x ?? 0,
     y: tag.attributes?.y ?? 0,
     name: tag.attributes?.person_tag?.data?.attributes?.name ?? '',
+    id: tag.id ?? '-1',
   }));
 
   const { data: activeData } = useGetPersonTagQuery({
@@ -83,6 +82,24 @@ export const FaceTaggingProvider = ({
     });
     setActiveTagId(null);
   }, [createTag, position, activeTagId, pictureId]);
+
+  const [deleteTag] = useDeleteFaceTagMutation({
+    refetchQueries: ['getFaceTags'],
+  });
+
+  const removeTag = useCallback(
+    (id: string) => {
+      if (!id) {
+        return;
+      }
+      deleteTag({
+        variables: {
+          id,
+        },
+      });
+    },
+    [deleteTag]
+  );
 
   useEffect(() => {
     const img = imgRef.current;
@@ -116,6 +133,7 @@ export const FaceTaggingProvider = ({
     }
     const [x, y] = position;
     return {
+      id: undefined,
       name: activeTagName,
       x,
       y,
@@ -132,8 +150,9 @@ export const FaceTaggingProvider = ({
         : tags ?? [],
       hideTags,
       setHideTags,
+      removeTag,
     }),
-    [activeTagId, setActiveTagId, tags, activeTagData, hideTags]
+    [activeTagId, setActiveTagId, tags, activeTagData, hideTags, removeTag]
   );
 
   if (!tags) {

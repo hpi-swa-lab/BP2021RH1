@@ -1,17 +1,31 @@
 import { Cancel } from '@mui/icons-material';
 import { CSSProperties, useMemo } from 'react';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
+import { useFaceTagging } from './FaceTaggingContext';
 import '../../../../shared/style.scss';
 
 const triangleHeight = 10;
 const triangleWidth = 20;
 const boundary = 0.9;
 
-export type FaceTagData = { name: string; x: number; y: number; noPointerEvents?: boolean };
+export type FaceTagData = {
+  id: string | undefined;
+  name: string;
+  x: number;
+  y: number;
+  noPointerEvents?: boolean;
+};
 
-export const FaceTag = ({ data: { name, x, y, noPointerEvents } }: { data: FaceTagData }) => {
+export const FaceTag = ({ data: { id, name, x, y, noPointerEvents } }: { data: FaceTagData }) => {
   const { role } = useAuth();
-  const handleDelete = () => {};
+  const context = useFaceTagging();
+  const handleDelete = () => {
+    if (id === undefined) {
+      return;
+    }
+    context?.removeTag(id);
+  };
+
   const { style, triangle } = useMemo<{
     style: CSSProperties;
     triangle: { points: string; width: number; height: number };
@@ -93,7 +107,7 @@ export const FaceTag = ({ data: { name, x, y, noPointerEvents } }: { data: FaceT
       </svg>
       <div className='flex flex-row items-center space-x-1 bg-[#404173bb] p-2 rounded-md text-white'>
         <span>{name}</span>
-        {role >= AuthRole.CURATOR && (
+        {role >= AuthRole.CURATOR && id !== undefined && (
           <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
         )}
       </div>
