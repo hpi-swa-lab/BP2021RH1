@@ -1,5 +1,4 @@
 import { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
-import { useMoveView } from '../helpers/useMoveView';
 import './ZoomWrapper.scss';
 
 const MAX_ZOOM = 30.0;
@@ -28,11 +27,21 @@ const ZoomWrapper = ({
   const prevPos = useRef<{ x: number; y: number } | null>(null);
   const prevDiff = useRef<number>(-1);
 
-  const moveView = useMoveView({
-    prevPos,
-    setViewport,
-    imageRef,
-  });
+  const moveView = useCallback(
+    (curPos: { x: number; y: number }) => {
+      // setters are run async, so prevPos.current will be overwritten inside
+      const prevPosCached = prevPos.current;
+      if (!prevPosCached) {
+        return;
+      }
+      setViewport(({ x, y, zoomLevel }) => {
+        x += (curPos.x - prevPosCached.x) / zoomLevel;
+        y += (curPos.y - prevPosCached.y) / zoomLevel;
+        return { x, y, zoomLevel };
+      });
+    },
+    [setViewport, prevPos]
+  );
 
   const resetViewport = useCallback(() => {
     setViewport({ x: 0, y: 0, zoomLevel: 1 });
@@ -41,6 +50,46 @@ const ZoomWrapper = ({
   useEffect(() => {
     resetViewport();
   }, [pictureId, resetViewport]);
+
+  // constrain position to bounds
+  useEffect(() => {
+    setViewport(viewport => {
+      const image = imageRef.current;
+      const parent = image?.parentElement;
+      if (!image || !parent) {
+        return viewport;
+      }
+
+      let { x, y } = viewport;
+      const { zoomLevel } = viewport;
+      const imgRect = image.getBoundingClientRect();
+      const parentRect = parent.getBoundingClientRect();
+      const ratio = {
+        x: imgRect.width / parentRect.width,
+        y: imgRect.height / parentRect.height,
+      };
+
+      const constrainToBounds = (
+        position: number,
+        direction: 'x' | 'y',
+        size: 'width' | 'height'
+      ) =>
+        ratio[direction] < 1
+          ? 0
+          : Math.max(
+              Math.min(position, (imgRect[size] - parentRect[size]) / (2 * zoomLevel)),
+              (-imgRect[size] + parentRect[size]) / (2 * zoomLevel)
+            );
+      x = constrainToBounds(x, 'x', 'width');
+      y = constrainToBounds(y, 'y', 'height');
+
+      if (x === viewport.x && y === viewport.y) {
+        // return same object if nothing changed to prevent infinite useEffect loop
+        return viewport;
+      }
+      return { x, y, zoomLevel };
+    });
+  }, [viewport]);
 
   const onScroll = useCallback(
     (event: WheelEvent) => {
