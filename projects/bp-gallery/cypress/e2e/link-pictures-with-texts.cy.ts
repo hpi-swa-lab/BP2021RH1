@@ -90,7 +90,7 @@ describe('link pictures with texts', () => {
 
   it('link a picture to a text', () => {
     cy.visit('/picture/2');
-    cy.get('.clipboard-editor-open').click();
+    cy.get('.clipboard-editor-open').should('have.attr', 'title', 'Kopierte Links').click();
     cy.contains('.clipboard-editor', 'Keine Bilder');
     cy.contains('.clipboard-editor button', 'Aktuelles Bild kopieren').click();
     cy.get('.clipboard-editor #picture-preview-for-2');

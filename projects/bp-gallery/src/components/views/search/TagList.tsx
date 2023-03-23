@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -19,11 +19,15 @@ import {
   PictureFiltersInput,
 } from '../../../graphql/APIConnector';
 import useGetTagsWithThumbnail from '../../../hooks/get-tags-with-thumbnail.hook';
+import './TagList.scss';
+import { IconButton } from '@mui/material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
 const TagList = ({
   type,
   scroll = true,
   onClickBasePath,
+  elementsPerRow,
   currentItemAmount,
   queryParams,
   thumbnailQueryParams,
@@ -31,6 +35,7 @@ const TagList = ({
   type: TagType;
   scroll?: boolean;
   onClickBasePath?: string;
+  elementsPerRow?: number;
   currentItemAmount?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
@@ -39,6 +44,7 @@ const TagList = ({
   const { t } = useTranslation();
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
+  const MAX_ROWS_WITHOUT_FOLDING = 3;
 
   const { data, loading, error, fetchMore } = useGetTagsWithThumbnail(
     queryParams,
@@ -46,7 +52,7 @@ const TagList = ({
     false,
     type,
     ['name:asc'],
-    currentItemAmount ?? 30
+    currentItemAmount ?? (scroll ? 30 : undefined)
   );
 
   const flattened = useSimplifiedQueryResponseData(data);
@@ -67,6 +73,19 @@ const TagList = ({
     },
     [fetchMore, flattenedTags]
   );
+
+  const isFoldable = Boolean(
+    flattenedTags &&
+      elementsPerRow &&
+      flattenedTags.length > MAX_ROWS_WITHOUT_FOLDING * elementsPerRow &&
+      !currentItemAmount
+  );
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsOpen(!isFoldable);
+  }, [isFoldable]);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -99,24 +118,42 @@ const TagList = ({
       );
     } else if (onClickBasePath) {
       return (
-        <ItemList
-          items={(currentItemAmount
-            ? flattenedTags.slice(0, currentItemAmount)
-            : flattenedTags
-          ).map(tag => ({
-            name: tag.name,
-            background: tag.thumbnail.length
-              ? asApiPath(
-                  String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-                )
-              : DEFAULT_THUMBNAIL_URL,
-            onClick: () => {
-              history.push(onClickBasePath + tag.id, {
-                showBack: true,
-              });
-            },
-          }))}
-        />
+        <>
+          <div className={isOpen ? 'open' : 'closed'}>
+            <ItemList
+              items={(currentItemAmount
+                ? flattenedTags.slice(0, currentItemAmount)
+                : flattenedTags
+              ).map(tag => ({
+                name: tag.name,
+                background: tag.thumbnail.length
+                  ? asApiPath(
+                      String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
+                    )
+                  : DEFAULT_THUMBNAIL_URL,
+                onClick: () => {
+                  history.push(onClickBasePath + tag.id, {
+                    showBack: true,
+                  });
+                },
+              }))}
+            />
+          </div>
+          {isFoldable && (
+            <IconButton
+              className='icon-button'
+              onClick={() => {
+                setIsOpen(!isOpen);
+              }}
+            >
+              {isOpen ? (
+                <KeyboardArrowUp className='icon' />
+              ) : (
+                <KeyboardArrowDown className='icon' />
+              )}
+            </IconButton>
+          )}
+        </>
       );
     } else return <div>{t('something-went-wrong')}</div>;
   } else return <div>{t('something-went-wrong')}</div>;
