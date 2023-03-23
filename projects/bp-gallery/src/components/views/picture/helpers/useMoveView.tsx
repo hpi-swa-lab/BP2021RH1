@@ -36,20 +36,18 @@ export const useMoveView = ({
             x: imgRect.width / parentRect.width,
             y: imgRect.height / parentRect.height,
           };
-          x =
-            ratio.x < 1
+          const move = (position: number, direction: 'x' | 'y', size: 'width' | 'height') =>
+            ratio[direction] < 1
               ? 0
               : Math.max(
-                  Math.min(x + diff.x / 2, (imgRect.width - parentRect.width) / (2 * zoomLevel)),
-                  (-imgRect.width + parentRect.width) / (2 * zoomLevel)
+                  Math.min(
+                    position + diff[direction] / 2,
+                    (imgRect[size] - parentRect[size]) / (2 * zoomLevel)
+                  ),
+                  (-imgRect[size] + parentRect[size]) / (2 * zoomLevel)
                 );
-          y =
-            ratio.y < 1
-              ? 0
-              : Math.max(
-                  Math.min(y + diff.y / 2, (imgRect.height - parentRect.height) / (2 * zoomLevel)),
-                  (-imgRect.height + parentRect.height) / (2 * zoomLevel)
-                );
+          x = move(x, 'x', 'width');
+          y = move(y, 'y', 'height');
         }
         return { x, y, zoomLevel };
       });
