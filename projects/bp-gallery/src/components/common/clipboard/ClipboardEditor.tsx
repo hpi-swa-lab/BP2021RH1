@@ -77,6 +77,7 @@ export const ClipboardEditor = () => {
         )}
       </div>
       <Button
+        title={t('common.clipboard.name')}
         className='clipboard-editor-open'
         variant='contained'
         onClick={() => {

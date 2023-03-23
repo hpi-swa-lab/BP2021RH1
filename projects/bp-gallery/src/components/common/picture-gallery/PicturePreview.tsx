@@ -40,7 +40,8 @@ const PicturePreview = ({
 
   const thumbnailUrl = useMemo((): string => {
     const defaultUrl =
-      (picture.media?.formats?.small || picture.media?.formats?.thumbnail)?.url || '';
+      (picture.media?.formats?.small || picture.media?.formats?.thumbnail || picture.media)?.url ||
+      '';
     return highQuality ? picture.media?.url ?? defaultUrl : defaultUrl;
   }, [picture, highQuality]);
 
