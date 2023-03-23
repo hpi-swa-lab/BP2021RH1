@@ -106,6 +106,7 @@
     "explanation-reminder": "Möchtest du einen Tipp abgeben, klicke auf den gewünschten Ort auf der Karte und klicke 'Ort bestätigen'.",
     "submit-place": "Ort bestätigen",
     "no-place": "Das ist kein Ort",
+    "dontKnow": "Weiß nicht",
     "next-picture": "Nächstes Bild"
   },
   "search": {

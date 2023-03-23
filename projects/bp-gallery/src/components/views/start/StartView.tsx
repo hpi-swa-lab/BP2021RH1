@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next';
+import { History } from 'history';
+import { useHistory } from 'react-router-dom';
 import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import PrimaryButton from '../../common/PrimaryButton';
 import ScrollContainer from '../../common/ScrollContainer';
 import BrowseView from '../browse/BrowseView';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
@@ -13,6 +16,8 @@ const StartView = () => {
 
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
+
+  const history: History = useHistory();
 
   const archiveCards = archives?.map(archive => (
     <div className='archive' key={archive.id}>
@@ -45,6 +50,22 @@ const StartView = () => {
               <p>{t('startpage.welcome-text')}</p>
             </div>
             <DailyPicture />
+            <div className='flex place-content-center gap-2'>
+              <PrimaryButton
+                text='Zu den Neuzugängen'
+                onClickFn={() => {
+                  history.push('/discover', { showBack: true });
+                }}
+                isShowMore={true}
+              />
+              <PrimaryButton
+                text='Geoguessor'
+                onClickFn={() => {
+                  history.push('/geo', { showBack: true });
+                }}
+                isShowMore={true}
+              />
+            </div>
             <h3>{t('startpage.our-archives')}</h3>
             <div className='archives'>{archiveCards}</div>
           </div>

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "picture-geo-info",
     "pluralName": "picture-geo-infos",
-    "displayName": "PictureGeoInfo"
+    "displayName": "Picture_Geo_Info",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false

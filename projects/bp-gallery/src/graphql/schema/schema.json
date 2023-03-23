@@ -9417,6 +9417,16 @@
             "defaultValue": null
           },
           {
+            "name": "is_not_a_place_count",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "IntFilterInput",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -9740,6 +9750,16 @@
                 "name": "ID",
                 "ofType": null
               }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "is_not_a_place_count",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
             },
             "defaultValue": null
           },
@@ -10472,6 +10492,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "PictureGeoInfoRelationResponseCollection",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "is_not_a_place_count",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -15511,6 +15543,29 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "increaseNotAPlaceCount",
+            "description": null,
+            "args": [
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "ID",
                   "ofType": null
                 },
                 "defaultValue": null

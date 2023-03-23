@@ -1,6 +1,4 @@
-import { Button } from '@mui/material';
 import React, { MouseEventHandler } from 'react';
-import { ArrowForwardIos } from '@mui/icons-material';
 import './PictureOverview.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
@@ -8,6 +6,7 @@ import { PictureFiltersInput } from '../../graphql/APIConnector';
 import { FlatPicture } from '../../types/additionalFlatTypes';
 import { useTranslation } from 'react-i18next';
 import useGetPictures from '../../hooks/get-pictures.hook';
+import PrimaryButton from './PrimaryButton';
 
 interface PictureOverviewProps {
   title: string;
@@ -53,9 +52,7 @@ const PictureOverview = ({
           />
         </div>
       )}
-      <Button onClick={onClick} className='overview-show-more-button' endIcon={<ArrowForwardIos />}>
-        {t('common.showMore')}
-      </Button>
+      <PrimaryButton text={t('common.showMore')} onClickFn={onClick} isShowMore={true} />
     </div>
   );
 };

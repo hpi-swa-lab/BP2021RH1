@@ -172,6 +172,15 @@ const GeoMap = ({
           <Button
             variant='contained'
             onClick={() => {
+              setGuessComplete(true);
+            }}
+            className='flex-1'
+          >
+            {t('geo.dontKnow')}
+          </Button>
+          <Button
+            variant='contained'
+            onClick={() => {
               sendNotAPlace();
               nextPicture();
             }}

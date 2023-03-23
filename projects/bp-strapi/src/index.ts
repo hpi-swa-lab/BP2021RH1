@@ -197,6 +197,11 @@ export default {
                 scope: ["api::picture.picture.find"],
               },
             },
+            increaseNotAPlaceCount: {
+              auth: {
+                scope: ["api::picture.picture.find"],
+              }, 
+            } 
           },
           Collection: {
             thumbnail: {

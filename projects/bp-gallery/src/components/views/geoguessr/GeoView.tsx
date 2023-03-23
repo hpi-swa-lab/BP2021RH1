@@ -20,32 +20,31 @@ const getAllPictureIds = (archives: FlatArchiveTag[]) => {
 };
 
 const getTodaysPictureQueue = (pictureIds: string[]) => {
+  const pictureNumber = 10;
+
   const currentDate = new Date();
   const startDate = new Date(currentDate.getFullYear(), 0, 1);
   const days = Math.floor((currentDate.valueOf() - startDate.valueOf()) / (24 * 60 * 60 * 1000));
-  const resultIndex = days % pictureIds.length;
-  const resultIndexList: number[] = [];
-  for (let i = 0; i < 10; i++) {
-    resultIndex + i >= pictureIds.length
-      ? resultIndexList.push(pictureIds.length - 1 - resultIndex)
-      : resultIndexList.push(resultIndex + i);
+  const resultIndex = pictureIds.length - (1 % days);
+  const list = [];
+  for (let i = 0; i < pictureNumber; i++) {
+    list.push(pictureIds[(resultIndex + i) % pictureIds.length]);
   }
-  const list = pictureIds.filter((elem, index) => index in resultIndexList);
   return list;
 };
 
 const GeoView = () => {
   const { t } = useTranslation();
+  const fallbackPictureId = '3';
+
   const hasReadInstructions = Boolean(
     JSON.parse(localStorage.getItem('hasReadInstructions') || 'false')
   );
   const [modalOpen, setModalOpen] = useState(!hasReadInstructions);
-  //todo setHasReadInstructions(Boolean(JSON.parse(localStorage.getItem('hasReadInstructions') || "false")))
   const dontShowAgain = () => {
     localStorage.setItem('hasReadInstructions', 'true');
     setModalOpen(false);
   };
-  const fallbackPictureId = '3';
   const archive_data = useGetAllArchiveTagsQuery().data;
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(archive_data)?.archiveTags;
@@ -61,7 +60,7 @@ const GeoView = () => {
   useEffect(() => {
     const allPictureIds = archives ? getAllPictureIds(archives) : [];
     pictureQueue.current = getTodaysPictureQueue(allPictureIds);
-    setPictureId(getNextPicture); //todo: erzeugt fehler, funktioniert aber
+    setPictureId(getNextPicture);
   }, [archives]);
 
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
