@@ -91,6 +91,7 @@ const TagOverview = ({
               type={type}
               scroll={false}
               onClickBasePath={basePath}
+              elementsPerRow={rowLength}
               currentItemAmount={rows ? rowLength * rows : undefined}
               queryParams={queryParams}
               thumbnailQueryParams={thumbnailQueryParams}
