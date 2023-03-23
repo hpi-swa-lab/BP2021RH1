@@ -811,6 +811,16 @@ query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
             }
           }
         }
+      }
+    }
+  }
+}
+
+query getAllPicturesByArchive {
+  archiveTags {
+    data {
+      id
+      attributes {
         pictures {
           data {
             id
