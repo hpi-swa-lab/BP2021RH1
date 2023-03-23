@@ -44,6 +44,7 @@ const TagList = ({
   const { t } = useTranslation();
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
+  const MAX_ROWS_WITHOUT_FOLDING = 3;
 
   const { data, loading, error, fetchMore } = useGetTagsWithThumbnail(
     queryParams,
@@ -51,7 +52,7 @@ const TagList = ({
     false,
     type,
     ['name:asc'],
-    currentItemAmount ?? scroll ? 30 : undefined
+    currentItemAmount ?? (scroll ? 30 : undefined)
   );
 
   const flattened = useSimplifiedQueryResponseData(data);
@@ -73,18 +74,18 @@ const TagList = ({
     [fetchMore, flattenedTags]
   );
 
+  const isFoldable = Boolean(
+    flattenedTags &&
+      elementsPerRow &&
+      flattenedTags.length > MAX_ROWS_WITHOUT_FOLDING * elementsPerRow &&
+      !currentItemAmount
+  );
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsOpen(
-      flattenedTags &&
-        elementsPerRow &&
-        flattenedTags.length > 3 * elementsPerRow &&
-        !currentItemAmount
-        ? false
-        : true
-    );
-  }, [flattenedTags, elementsPerRow, currentItemAmount]);
+    setIsOpen(!isFoldable);
+  }, [isFoldable]);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -138,7 +139,7 @@ const TagList = ({
               }))}
             />
           </div>
-          {!currentItemAmount && elementsPerRow && flattenedTags.length > 3 * elementsPerRow && (
+          {isFoldable && (
             <IconButton
               className='icon-button'
               onClick={() => {
