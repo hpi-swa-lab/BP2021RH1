@@ -4,7 +4,6 @@ import { useCallback } from 'react';
 // different position changes
 export const useMoveView = ({
   prevPos,
-  setZoomLevel,
   setViewport,
   imageRef,
 }: {
@@ -12,22 +11,19 @@ export const useMoveView = ({
     x: number;
     y: number;
   } | null>;
-  setZoomLevel: React.Dispatch<React.SetStateAction<number>>;
-  setViewport: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
+  setViewport: React.Dispatch<React.SetStateAction<{ x: number; y: number; zoomLevel: number }>>;
   imageRef: React.MutableRefObject<HTMLImageElement | null>;
 }) => {
   const moveView = useCallback(
     (curPos: { x: number; y: number }) => {
       // setters are run async, so prevPos.current will be overwritten inside
       const prevPosCached = prevPos.current;
-      setZoomLevel(zoomLevel => {
+      setViewport(({ x, y, zoomLevel }) => {
         let diff = {
           x: 0,
           y: 0,
         };
         if (prevPosCached !== null) {
-          // We need the zoom level here, but since we can't have it as a callback dependency,
-          // we have to use a workaround
           diff = {
             x: (curPos.x - prevPosCached.x) / zoomLevel,
             y: (curPos.y - prevPosCached.y) / zoomLevel,
@@ -40,38 +36,25 @@ export const useMoveView = ({
             x: imgRect.width / parentRect.width,
             y: imgRect.height / parentRect.height,
           };
-          setViewport(viewport => {
-            const x =
-              ratio.x < 1
-                ? 0
-                : Math.max(
-                    Math.min(
-                      viewport.x + diff.x / 2,
-                      (imgRect.width - parentRect.width) / (2 * zoomLevel)
-                    ),
-                    (-imgRect.width + parentRect.width) / (2 * zoomLevel)
-                  );
-            const y =
-              ratio.y < 1
-                ? 0
-                : Math.max(
-                    Math.min(
-                      viewport.y + diff.y / 2,
-                      (imgRect.height - parentRect.height) / (2 * zoomLevel)
-                    ),
-                    (-imgRect.height + parentRect.height) / (2 * zoomLevel)
-                  );
-            return {
-              x,
-              y,
-            };
-          });
+          x =
+            ratio.x < 1
+              ? 0
+              : Math.max(
+                  Math.min(x + diff.x / 2, (imgRect.width - parentRect.width) / (2 * zoomLevel)),
+                  (-imgRect.width + parentRect.width) / (2 * zoomLevel)
+                );
+          y =
+            ratio.y < 1
+              ? 0
+              : Math.max(
+                  Math.min(y + diff.y / 2, (imgRect.height - parentRect.height) / (2 * zoomLevel)),
+                  (-imgRect.height + parentRect.height) / (2 * zoomLevel)
+                );
         }
-
-        return zoomLevel;
+        return { x, y, zoomLevel };
       });
     },
-    [setZoomLevel, setViewport, prevPos, imageRef]
+    [setViewport, prevPos, imageRef]
   );
 
   return moveView;

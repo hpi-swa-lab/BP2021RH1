@@ -15,8 +15,11 @@ const ZoomWrapper = ({
   blockScroll: boolean;
   pictureId: string;
 }>) => {
-  const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
-  const [viewport, setViewport] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [viewport, setViewport] = useState<{ x: number; y: number; zoomLevel: number }>({
+    x: 0,
+    y: 0,
+    zoomLevel: DEFAULT_ZOOM,
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -27,32 +30,36 @@ const ZoomWrapper = ({
 
   const moveView = useMoveView({
     prevPos,
-    setZoomLevel,
     setViewport,
     imageRef,
   });
 
+  const resetViewport = useCallback(() => {
+    setViewport({ x: 0, y: 0, zoomLevel: 1 });
+  }, []);
+
   useEffect(() => {
-    setZoomLevel(1);
-    setViewport({ x: 0, y: 0 });
-  }, [pictureId]);
+    resetViewport();
+  }, [pictureId, resetViewport]);
 
   const onScroll = useCallback(
     (event: WheelEvent) => {
       event.preventDefault();
       event.stopPropagation();
-      setZoomLevel(previousZoom => {
-        return Math.min(
-          Math.max(previousZoom * Math.exp(event.deltaY * ZOOM_RATE), MIN_ZOOM),
+      setViewport(({ x, y, zoomLevel }) => ({
+        x,
+        y,
+        zoomLevel: Math.min(
+          Math.max(zoomLevel * Math.exp(event.deltaY * ZOOM_RATE), MIN_ZOOM),
           MAX_ZOOM
-        );
-      });
+        ),
+      }));
       moveView({
         x: event.clientX,
         y: event.clientY,
       });
     },
-    [setZoomLevel, moveView]
+    [moveView]
   );
 
   const onPointerDown = useCallback((evt: PointerEvent) => {
@@ -94,14 +101,14 @@ const ZoomWrapper = ({
 
         // setters are run async, so prevDiff.current will be overwritten inside
         const prevDiffCached = prevDiff.current;
-        setZoomLevel(zoomLevel => {
+        setViewport(({ x, y, zoomLevel }) => {
           if (prevDiffCached > 0) {
             zoomLevel = Math.max(
               MIN_ZOOM,
               Math.min(zoomLevel * (curDiff / prevDiffCached), MAX_ZOOM)
             );
           }
-          return zoomLevel;
+          return { x, y, zoomLevel };
         });
         prevDiff.current = curDiff;
       }
@@ -126,11 +133,10 @@ const ZoomWrapper = ({
     }
     if (imageRef.current) {
       const image = imageRef.current;
-      setZoomLevel(1);
-      setViewport({ x: 0, y: 0 });
+      resetViewport();
       image.style.transform = '';
     }
-  }, [onScroll, onPointerDown, onPointerUp, onPointerMove]);
+  }, [onScroll, onPointerDown, onPointerUp, onPointerMove, resetViewport]);
 
   const addAll = useCallback(() => {
     if (containerRef.current) {
@@ -171,8 +177,9 @@ const ZoomWrapper = ({
     if (!imageRef.current) {
       return;
     }
-    imageRef.current.style.transform = `scale(${zoomLevel}) translate(${viewport.x}px, ${viewport.y}px)`;
-  }, [zoomLevel, viewport, imageRef]);
+    const { x, y, zoomLevel } = viewport;
+    imageRef.current.style.transform = `scale(${zoomLevel}) translate(${x}px, ${y}px)`;
+  }, [viewport, imageRef]);
 
   return (
     <div className='zoom-wrapper' ref={containerRef}>
