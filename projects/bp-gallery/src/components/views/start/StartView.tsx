@@ -17,28 +17,28 @@ const StartView = () => {
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
 
-  const history: History = useHistory();
+  const { data: picturesData } = useGetAllPicturesByArchiveQuery();
+  const archivePictures: FlatArchiveTag[] | undefined =
+    useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
-  const archiveCards = archives?.map(archive => (
-    <div className='archive' key={archive.id}>
-      {archive.showcasePicture ? (
-        <ArchiveCard
-          picture={archive.showcasePicture}
-          archiveName={archive.name}
-          archiveDescription={archive.shortDescription ?? ''}
-          archiveId={archive.id}
-          archivePictureCount={archive.pictures?.length ?? 0}
-        />
-      ) : (
-        <ArchiveCardWithoutPicture
-          archiveName={archive.name}
-          archiveDescription={archive.shortDescription ?? ''}
-          archiveId={archive.id}
-          archivePictureCount={archive.pictures?.length ?? 0}
-        />
-      )}
-    </div>
-  ));
+  const archiveCards = archives?.map(archive => {
+    const sharedProps = {
+      archiveName: archive.name,
+      archiveDescription: archive.shortDescription ?? '',
+      archiveId: archive.id,
+      archivePictureCount: archivePictures?.find(a => a.id === archive.id)?.pictures?.length,
+    };
+
+    return (
+      <div className='archive' key={archive.id}>
+        {archive.showcasePicture ? (
+          <ArchiveCard picture={archive.showcasePicture} {...sharedProps} />
+        ) : (
+          <ArchiveCardWithoutPicture {...sharedProps} />
+        )}
+      </div>
+    );
+  });
 
   return (
     <ScrollContainer>

@@ -13,12 +13,20 @@ import RichText from '../../common/RichText';
 import ScrollContainer from '../../common/ScrollContainer';
 import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import ShowStats from '../../provider/ShowStatsProvider';
 import { FALLBACK_PATH } from './../../routes';
 import './ArchiveView.scss';
 
 interface ArchiveViewProps {
   archiveId: string;
 }
+
+const addUrlProtocol = (url: string) => {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `https://${url}/`;
+};
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const history: History = useHistory();
@@ -80,7 +88,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                   {archive.links?.map(link => (
                     <div className='archive-link' key={link.id}>
                       <Link className='link-icon' />
-                      <a href={`http://${link.url}/`}>{link.title ? link.title : link.url}</a>
+                      <a href={addUrlProtocol(link.url)}>{link.title ? link.title : link.url}</a>
                     </div>
                   ))}
                 </div>
@@ -97,16 +105,17 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               </div>
             )}
           </div>
-
-          <PictureOverview
-            title='Unsere Bilder'
-            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {
-              history.push('/archives/' + archiveId + '/show-more/pictures', {
-                showBack: true,
-              });
-            }}
-          />
+          <ShowStats>
+            <PictureOverview
+              title='Unsere Bilder'
+              queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+              onClick={() => {
+                history.push('/archives/' + archiveId + '/show-more/pictures', {
+                  showBack: true,
+                });
+              }}
+            />
+          </ShowStats>
 
           <TagOverview
             title='Unsere Kategorien'

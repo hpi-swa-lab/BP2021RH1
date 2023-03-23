@@ -185,7 +185,7 @@ const INPUT_RANGES: InputRange[] = [
     range(value: number, props) {
       yearValue = `${value}`;
       resetYear = false;
-      if (yearValue.length < 4) {
+      if (yearValue.length !== 4) {
         return props?.ranges?.[0] as unknown as Range;
       }
       const returnRange = {
@@ -195,10 +195,10 @@ const INPUT_RANGES: InputRange[] = [
       return returnRange;
     },
     getCurrentValue(): string {
-      if (yearValue.length) {
+      if (yearValue.length && parseInt(yearValue) > 0) {
         return yearValue;
       }
-      return '0';
+      return '';
     },
   },
   {
@@ -216,10 +216,10 @@ const INPUT_RANGES: InputRange[] = [
       return returnRange;
     },
     getCurrentValue(): string {
-      if (decadeValue.length) {
+      if (decadeValue.length && parseInt(decadeValue) > 0) {
         return decadeValue;
       }
-      return '0';
+      return '';
     },
   },
 ];

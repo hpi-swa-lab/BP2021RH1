@@ -9,9 +9,9 @@ module.exports = {
       height: {
         '50vh': '50vh',
       },
-      colors : {
-        'primary': '#7e241d'
-      }
+      colors: {
+        primary: '#7e241d'
+      },
     },
     fontFamily: {
       sans: ['Lato', 'Arial', 'sans-serif'],
