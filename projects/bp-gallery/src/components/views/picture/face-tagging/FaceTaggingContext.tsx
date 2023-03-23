@@ -21,6 +21,8 @@ type FaceTagging = {
   activeTagId: string | null;
   setActiveTagId: Dispatch<SetStateAction<string | null>>;
   tags: FaceTagData[];
+  hideTags: boolean | null;
+  setHideTags: Dispatch<SetStateAction<boolean>>;
 };
 
 const Context = createContext<FaceTagging | null>(null);
@@ -35,6 +37,12 @@ export const FaceTaggingProvider = ({
   useEffect(() => {
     setActiveTagId(null);
   }, [pictureId]);
+
+  const [hideTags, setHideTags] = useState(false);
+  /*const toggleHideTags = useCallback(() => {
+    setHideTags(is => !is);
+  }, []);
+*/
 
   const { error, loading, data } = useGetFaceTagsQuery({
     variables: {
@@ -122,8 +130,10 @@ export const FaceTaggingProvider = ({
       tags: activeTagData
         ? [...(tags ?? []).map(tag => ({ ...tag, noPointerEvents: true })), activeTagData]
         : tags ?? [],
+      hideTags,
+      setHideTags,
     }),
-    [activeTagId, setActiveTagId, tags, activeTagData]
+    [activeTagId, setActiveTagId, tags, activeTagData, hideTags]
   );
 
   if (!tags) {
@@ -142,7 +152,8 @@ export const useFaceTagging = () => {
 
 export const FaceTags = () => {
   const context = useFaceTagging();
-  if (!context) {
+
+  if (!context || context.hideTags) {
     return null;
   }
   return (

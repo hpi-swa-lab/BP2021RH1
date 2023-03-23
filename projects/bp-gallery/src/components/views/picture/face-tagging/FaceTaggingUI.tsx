@@ -31,6 +31,10 @@ export const FaceTaggingUI = ({
     setIsFaceTagging(is => !is);
   }, []);
 
+  const toggleHideTags = useCallback(() => {
+    context?.setHideTags(is => !is);
+  }, [context]);
+
   return (
     <>
       <PictureInfoField title={t('pictureFields.people')} icon={<Person />} type='person'>
@@ -65,6 +69,15 @@ export const FaceTaggingUI = ({
             onClick={toggleFaceTagging}
           >
             {t('pictureFields.tag-faces')}
+          </Button>
+        )}
+        {tags.length > 0 && (
+          <Button
+            variant='contained'
+            className='!mt-5 w-full !bg-[#7e241d]'
+            onClick={toggleHideTags}
+          >
+            {t('pictureFields.display-facetags')}
           </Button>
         )}
       </PictureInfoField>

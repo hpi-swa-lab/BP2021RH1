@@ -1,4 +1,7 @@
+import { Cancel } from '@mui/icons-material';
 import { CSSProperties, useMemo } from 'react';
+import { AuthRole, useAuth } from '../../../provider/AuthProvider';
+import '../../../../shared/style.scss';
 
 const triangleHeight = 10;
 const triangleWidth = 20;
@@ -7,15 +10,19 @@ const boundary = 0.9;
 export type FaceTagData = { name: string; x: number; y: number; noPointerEvents?: boolean };
 
 export const FaceTag = ({ data: { name, x, y, noPointerEvents } }: { data: FaceTagData }) => {
+  const { role } = useAuth();
+  const handleDelete = () => {};
   const { style, triangle } = useMemo<{
     style: CSSProperties;
     triangle: { points: string; width: number; height: number };
   }>(() => {
     const w = triangleWidth;
     const h = triangleHeight;
+
     const commonStyle: CSSProperties = {
       pointerEvents: noPointerEvents ? 'none' : undefined,
     };
+
     if (x > boundary) {
       return {
         style: {
@@ -84,7 +91,12 @@ export const FaceTag = ({ data: { name, x, y, noPointerEvents } }: { data: FaceT
       <svg width={triangle.width} height={triangle.height}>
         <polygon fill='#404173bb' points={triangle.points} />
       </svg>
-      <div className='bg-[#404173bb] p-2 rounded-md text-white'>{name}</div>
+      <div className='flex flex-row items-center space-x-1 bg-[#404173bb] p-2 rounded-md text-white'>
+        <span>{name}</span>
+        {role >= AuthRole.CURATOR && (
+          <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
+        )}
+      </div>
     </div>
   );
 };
