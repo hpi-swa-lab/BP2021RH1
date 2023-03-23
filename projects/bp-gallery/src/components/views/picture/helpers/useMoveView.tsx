@@ -41,7 +41,7 @@ export const useMoveView = ({
               ? 0
               : Math.max(
                   Math.min(
-                    position + diff[direction] / 2,
+                    position + diff[direction],
                     (imgRect[size] - parentRect[size]) / (2 * zoomLevel)
                   ),
                   (-imgRect[size] + parentRect[size]) / (2 * zoomLevel)
