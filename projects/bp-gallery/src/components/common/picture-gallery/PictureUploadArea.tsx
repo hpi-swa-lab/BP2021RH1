@@ -1,13 +1,24 @@
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { Close, ExpandCircleDown, Upload } from '@mui/icons-material';
 import { Button, CircularProgress } from '@mui/material';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, sortBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
+import { useObjectIds } from '../../../hooks/object-ids.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import SortableItem from '../SortableItem';
 import uploadMediaFiles from './helpers/upload-media-files';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
@@ -19,6 +30,11 @@ export interface PictureUploadAreaProps {
   onUploaded?: () => void;
 }
 
+type NewFile = {
+  file: File;
+  preview: FlatPicture;
+};
+
 const PictureUploadArea = ({
   folderName,
   preprocessPictures,
@@ -27,11 +43,27 @@ const PictureUploadArea = ({
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: 'image/jpeg,image/png',
   });
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      // Require the mouse to move by 10 pixels before activating
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      // Press delay of 250ms, with tolerance of 5px of movement
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  );
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useDialog();
+  const { getObjectId } = useObjectIds<NewFile>();
 
-  const [newFiles, setNewFiles] = useState<{ file: File; preview: FlatPicture }[]>([]);
+  const [newFiles, setNewFiles] = useState<NewFile[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -51,8 +83,10 @@ const PictureUploadArea = ({
   };
 
   useEffect(() => {
+    if (!acceptedFiles.length) return;
     const filesWithPreviews = acceptedFiles.map(file => ({ preview: asFlatPicture(file), file }));
-    setNewFiles(fileList => [...fileList, ...filesWithPreviews]);
+    const sortedFiles = sortBy(filesWithPreviews, f => f.file.name);
+    setNewFiles(fileList => [...fileList, ...sortedFiles]);
   }, [acceptedFiles]);
 
   const uploadPictures = useCallback(async () => {
@@ -91,11 +125,18 @@ const PictureUploadArea = ({
       }
       setLoading(false);
     });
-  }, [newFiles, createPicture, preprocessPictures, onUploaded, setLoading, dialog]);
+  }, [preprocessPictures, dialog, newFiles, onUploaded, createPicture]);
 
   const onScan = useCallback((file: File) => {
     setNewFiles(fileList => [...fileList, { file, preview: asFlatPicture(file) }]);
   }, []);
+
+  function onDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+    setNewFiles(newFiles => arrayMove(newFiles, Number(active.id), Number(over.id)));
+  }
 
   // Do we really want to allow uploading only when preprocessing is enabled?
   if (role < AuthRole.CURATOR || !preprocessPictures) {
@@ -116,27 +157,32 @@ const PictureUploadArea = ({
         <ScannerInput onScan={onScan} />
       </div>
       <div className='uploaded-pictures'>
-        {newFiles.map((file, index) => (
-          <PicturePreview
-            key={`${file.file.name}-${index}`}
-            adornments={[
-              {
-                position: 'top-right',
-                icon: <Close />,
-                onClick: () => {
-                  setNewFiles(fileList => {
-                    const clone = cloneDeep(fileList);
-                    clone.splice(index, 1);
-                    return clone;
-                  });
-                },
-              },
-            ]}
-            picture={file.preview}
-            onClick={() => {}}
-            pictureOrigin={PictureOrigin.LOCAL}
-          />
-        ))}
+        <DndContext onDragEnd={onDragEnd} sensors={sensors}>
+          <SortableContext items={newFiles.map((_, i) => `${i}`)}>
+            {newFiles.map((file, index) => (
+              <SortableItem id={`${index}`} key={getObjectId(file)}>
+                <PicturePreview
+                  adornments={[
+                    {
+                      position: 'top-right',
+                      icon: <Close />,
+                      onClick: () => {
+                        setNewFiles(fileList => {
+                          const clone = cloneDeep(fileList);
+                          clone.splice(index, 1);
+                          return clone;
+                        });
+                      },
+                    },
+                  ]}
+                  picture={file.preview}
+                  onClick={() => {}}
+                  pictureOrigin={PictureOrigin.LOCAL}
+                />
+              </SortableItem>
+            ))}
+          </SortableContext>
+        </DndContext>
       </div>
       {Boolean(newFiles.length) && (
         <Button disabled={loading} className='add-to-collection' onClick={uploadPictures}>

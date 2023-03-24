@@ -2549,6 +2549,7 @@ export type GetPicturesQuery = {
                               width?: number | null | undefined;
                               height?: number | null | undefined;
                               formats?: any | null | undefined;
+                              url: string;
                               updatedAt?: any | null | undefined;
                             }
                           | null
@@ -2592,6 +2593,7 @@ export type GetPicturesByAllSearchQuery = {
                                 width?: number | null | undefined;
                                 height?: number | null | undefined;
                                 formats?: any | null | undefined;
+                                url: string;
                                 updatedAt?: any | null | undefined;
                               }
                             | null
@@ -4320,6 +4322,7 @@ export const GetPicturesDocument = gql`
                 width
                 height
                 formats
+                url
                 updatedAt
               }
             }
@@ -4397,6 +4400,7 @@ export const GetPicturesByAllSearchDocument = gql`
               width
               height
               formats
+              url
               updatedAt
             }
           }
