@@ -24,7 +24,6 @@ const shufflePictureIds = (pictureIds: string[], seed: number) => {
   const newPictureIds = [...pictureIds];
   for (let i = newPictureIds.length - 1; i > 0; i--) {
     const j = Math.abs(Math.floor(i * Math.sin(i % seed)));
-    console.log(j);
     [newPictureIds[i], newPictureIds[j]] = [newPictureIds[j], newPictureIds[i]];
   }
   return newPictureIds;
@@ -122,10 +121,10 @@ const GeoView = () => {
           </ZoomWrapper>
           <div
             id='picture-info'
-            className='absolute top-[5rem] right-1 text-white flex justify-center gap-1'
+            className='absolute top-[5rem] right-1 text-white flex justify-center gap-1 cursor-pointer'
             onClick={() => {
               window.open(`${window.location.origin}/picture/${pictureId}`, '_blanc');
-            }} //TODO: auf neues Bild
+            }}
           >
             <Info />
             {t('geo.getTip')}
