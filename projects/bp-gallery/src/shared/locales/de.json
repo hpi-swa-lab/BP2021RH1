@@ -98,6 +98,7 @@
   },
   "geo": {
     "tip": "Guter Tipp!",
+    "tip-unknown": "Beim nächsten Bild weißt du es!",
     "tip-sub": "So haben die anderen geraten:",
     "end": "Vielen Dank fürs Mitspielen!",
     "end-sub": "Morgen gibt es neue Bilder",
@@ -107,6 +108,7 @@
     "submit-place": "Ort bestätigen",
     "no-place": "Das ist kein Ort",
     "dontKnow": "Weiß nicht",
+    "getTip": "Mehr über das Bild erfahren",
     "next-picture": "Nächstes Bild"
   },
   "search": {

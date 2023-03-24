@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
-import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
+import {
+  useGetAllArchiveTagsQuery,
+  useGetAllPicturesByArchiveQuery,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import PrimaryButton from '../../common/PrimaryButton';
@@ -13,7 +16,7 @@ import './StartView.scss';
 
 const StartView = () => {
   const { t } = useTranslation();
-
+  const history: History = useHistory();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
 
@@ -50,7 +53,7 @@ const StartView = () => {
               <p>{t('startpage.welcome-text')}</p>
             </div>
             <DailyPicture />
-            <div className='flex place-content-center gap-2'>
+            <div className='flex place-content-center gap-2 m-4'>
               <PrimaryButton
                 text='Zu den Neuzugängen'
                 onClickFn={() => {

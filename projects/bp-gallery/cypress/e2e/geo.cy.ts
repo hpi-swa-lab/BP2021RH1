@@ -1,0 +1,89 @@
+let oldPictureSrc = '';
+
+describe('Geo View', () => {
+    before(() => {
+        //code für setup
+        cy.visit('/geo');
+    });   
+    after(() => {
+        //code für break down
+    });
+
+    it('shows modal with button', () => {
+        // check if it contains a modal
+        cy.get('.modal')
+            .children()
+            .should('contain.text', 'Hilf uns Ortskoordinaten ausfindig zu machen!');
+
+        // check if it contains a button
+        cy.get('#dont-show-again-button')
+            .click();
+
+        //check if modal does not exist anymore
+        cy.get('.modal')
+            .should('not.exist');
+    });
+
+
+
+    it('shows an image and a map', () => {
+        //picture container contains a real image
+        cy.get('.picture-container')
+            .children()
+            .should('have.attr', 'src')
+            .and('include', 'http://')
+        
+        //save the src of the image
+        cy.get('#geo-image')
+            .invoke('attr', 'src')
+            .then((elem) => {
+                oldPictureSrc = elem|| '';
+            });
+
+        // check if it contains a map
+        cy.get('.map-container')
+            .should('exist');
+    });
+
+    it('shows a marker on click on the map', () => {
+        //click on the map
+        cy.get('.map-container')
+            .click();
+        
+        //check if a marker is displayed
+        cy.get('.leaflet-marker-icon')
+            .should('exist');
+    });
+
+    it('shows guess complete when guess is submitted', () => {
+        cy.get('#submit-guess')
+            .click();
+        
+        cy.get('.guess-complete-text').should('exist');
+    });
+
+    it('shows new picture when guess is submitted', () => {
+        cy.get('#next-picture').click();
+
+        cy.get('#geo-image')
+            .invoke('attr', 'src')
+            .then((elem) => {
+                expect(elem).to.not.equal(oldPictureSrc);
+            });
+    });
+
+    it('shows completed guess when user don\'t know the location', () => {
+        cy.get('#dont-know').click();
+
+        cy.get('.guess-complete-text').should('contain.text', 'Beim nächsten Bild weißt du es!');
+
+        cy.get('#next-picture').click();
+    })
+
+    it('shows directly the next picture when this isn\'t a picture', () => {
+        cy.get('#not-a-place').click();
+
+        cy.get('#next-picture').should('not.exist');
+    })
+
+});

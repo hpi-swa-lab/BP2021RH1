@@ -1,17 +1,18 @@
-import GeoMap from './GeoMap';
-import './GeoView.scss';
+import { Box, Button, Modal, Typography } from '@mui/material';
+import { Info } from '@mui/icons-material';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  useGetAllArchiveTagsQuery,
+  useGetAllPicturesByArchiveQuery,
   useGetPictureGeoInfoQuery,
   useGetPictureInfoQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
-import ZoomWrapper from '../picture/overlay/ZoomWrapper';
-import { useEffect, useRef, useState } from 'react';
 import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
-import { useTranslation } from 'react-i18next';
-import { Box, Button, Modal, Typography } from '@mui/material';
+import ZoomWrapper from '../picture/overlay/ZoomWrapper';
+import GeoMap from './GeoMap';
+import './GeoView.scss';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const list: string[] = [];
@@ -19,13 +20,22 @@ const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   return list;
 };
 
+const shufflePictureIds = (pictureIds: string[], seed: number) => {
+  const newPictureIds = [...pictureIds];
+  for (let i = newPictureIds.length - 1; i > 0; i--) {
+    const j = Math.abs(Math.floor(i * Math.sin(i % seed)));
+    console.log(j);
+    [newPictureIds[i], newPictureIds[j]] = [newPictureIds[j], newPictureIds[i]];
+  }
+  return newPictureIds;
+};
+
 const getTodaysPictureQueue = (pictureIds: string[]) => {
   const pictureNumber = 10;
-
   const currentDate = new Date();
   const startDate = new Date(currentDate.getFullYear(), 0, 1);
   const days = Math.floor((currentDate.valueOf() - startDate.valueOf()) / (24 * 60 * 60 * 1000));
-  const resultIndex = pictureIds.length - (1 % days);
+  const resultIndex = pictureIds.length % days;
   const list = [];
   for (let i = 0; i < pictureNumber; i++) {
     list.push(pictureIds[(resultIndex + i) % pictureIds.length]);
@@ -36,6 +46,8 @@ const getTodaysPictureQueue = (pictureIds: string[]) => {
 const GeoView = () => {
   const { t } = useTranslation();
   const fallbackPictureId = '3';
+  const pictureQueue = useRef(['']);
+  const seed = 42;
 
   const hasReadInstructions = Boolean(
     JSON.parse(localStorage.getItem('hasReadInstructions') || 'false')
@@ -45,23 +57,23 @@ const GeoView = () => {
     localStorage.setItem('hasReadInstructions', 'true');
     setModalOpen(false);
   };
-  const archive_data = useGetAllArchiveTagsQuery().data;
-  const archives: FlatArchiveTag[] | undefined =
-    useSimplifiedQueryResponseData(archive_data)?.archiveTags;
 
-  const pictureQueue = useRef(['']);
+  const { data: picturesData } = useGetAllPicturesByArchiveQuery();
+  const archives: FlatArchiveTag[] | undefined =
+    useSimplifiedQueryResponseData(picturesData)?.archiveTags;
+
+  useEffect(() => {
+    const allPictureIds = archives ? getAllPictureIds(archives) : [];
+    const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
+    pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
+    setPictureId(getNextPicture);
+  }, [archives]);
 
   const getNextPicture = () => {
     const nextPicture = pictureQueue.current[0];
     pictureQueue.current = pictureQueue.current.filter((elem, index) => index !== 0);
     return nextPicture;
   };
-
-  useEffect(() => {
-    const allPictureIds = archives ? getAllPictureIds(archives) : [];
-    pictureQueue.current = getTodaysPictureQueue(allPictureIds);
-    setPictureId(getNextPicture);
-  }, [archives]);
 
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
   const [gameOver, setGameOver] = useState(false);
@@ -89,12 +101,14 @@ const GeoView = () => {
         aria-labelledby='modal-title'
         aria-describedby='modal-description'
       >
-        <Box className='absolute top-1/2 left-1/2 translate-y-[-50%] translate-x-[-50%] w-[400] bg-white shadow p-4 rounded flex gap-2 flex-col'>
+        <Box className='modal absolute top-1/2 left-1/2 translate-y-[-50%] translate-x-[-50%] w-[400] bg-white shadow p-4 rounded flex gap-2 flex-col'>
           <Typography id='modal-title' variant='h6' component='h2'>
             {t('geo.explanation-title')}
           </Typography>
           <Typography id='modal-description'>{t('geo.explanation-nav')}</Typography>
-          <Button onClick={dontShowAgain}>{t('common.dontShowAgain')}</Button>
+          <Button id='dont-show-again-button' onClick={dontShowAgain}>
+            {t('common.dontShowAgain')}
+          </Button>
         </Box>
       </Modal>
       {!gameOver && (
@@ -102,10 +116,20 @@ const GeoView = () => {
           <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
             <div className='picture-wrapper'>
               <div className='picture-container'>
-                <img src={pictureLink} alt={pictureLink} />
+                <img id='geo-image' src={pictureLink} alt={pictureLink} />
               </div>
             </div>
           </ZoomWrapper>
+          <div
+            id='picture-info'
+            className='absolute top-[5rem] right-1 text-white flex justify-center gap-1'
+            onClick={() => {
+              window.open(`${window.location.origin}/picture/${pictureId}`, '_blanc');
+            }} //TODO: auf neues Bild
+          >
+            <Info />
+            {t('geo.getTip')}
+          </div>
           <GeoMap allGuesses={allGuesses} onNextPicture={onNextPicture} pictureId={pictureId} />
         </div>
       )}

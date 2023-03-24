@@ -15,7 +15,7 @@ const PlayerMarkers = ({
   myGuess,
 }: {
   allGuesses: GetPictureGeoInfoQuery['pictureGeoInfos'];
-  myGuess: { lat: number; lng: number };
+  myGuess?: { lat: number; lng: number };
 }) => {
   const map = useMap();
   const coords = useMemo(
@@ -30,18 +30,27 @@ const PlayerMarkers = ({
   useEffect(() => {
     setTimeout(() => {
       map.invalidateSize();
-      map.flyToBounds(
-        new LatLngBounds(
-          {
-            lat: Math.min(...coords.map(x => x.lat), myGuess.lat),
-            lng: Math.min(...coords.map(x => x.lng), myGuess.lng),
-          },
-          {
-            lat: Math.max(...coords.map(x => x.lat), myGuess.lat),
-            lng: Math.max(...coords.map(x => x.lng), myGuess.lng),
-          }
-        )
-      );
+      coords.length !== 0 &&
+        map.flyToBounds(
+          new LatLngBounds(
+            {
+              lat: myGuess
+                ? Math.min(...coords.map(x => x.lat), myGuess.lat)
+                : Math.min(...coords.map(x => x.lat)),
+              lng: myGuess
+                ? Math.min(...coords.map(x => x.lng), myGuess.lng)
+                : Math.min(...coords.map(x => x.lng)),
+            },
+            {
+              lat: myGuess
+                ? Math.max(...coords.map(x => x.lat), myGuess.lat)
+                : Math.max(...coords.map(x => x.lat)),
+              lng: myGuess
+                ? Math.max(...coords.map(x => x.lng), myGuess.lng)
+                : Math.max(...coords.map(x => x.lng)),
+            }
+          )
+        );
     }, 300);
   }, [coords, myGuess, map]);
   const othersIcon = new Icon({
@@ -56,7 +65,7 @@ const PlayerMarkers = ({
   return (
     <div>
       {coords.map((x, index) => (
-        <Marker icon={othersIcon} position={x} key={index} />
+        <Marker title='others-marker' icon={othersIcon} position={x} key={index} />
       ))}
     </div>
   );
@@ -74,7 +83,7 @@ const MyMarker = ({
     isPositionable && setPosition({ lat: event.latlng.lat, lng: event.latlng.lng });
   });
 
-  return <Marker position={position} />;
+  return <Marker title='my-marker' position={position} />;
 };
 
 // this is a dummy element to reset the map for every new picture
@@ -110,10 +119,12 @@ const GeoMap = ({
   const [needsRepositioning, setNeedsRepositioning] = useState(false);
   const [guess, setGuess] = useState(initialGuess);
   const [guessComplete, setGuessComplete] = useState(false);
+  const [unknown, setUnknown] = useState(false);
   const [createPictureGeoInfo] = useCreatePictureGeoInfoMutation();
   const nextPicture = () => {
     setGuess(initialGuess);
     setGuessComplete(false);
+    setUnknown(false);
     onNextPicture();
     setNeedsRepositioning(true);
     setInterval(() => setNeedsRepositioning(false), 300);
@@ -144,7 +155,7 @@ const GeoMap = ({
     <div className={'map-container ' + (guessComplete ? 'guess-complete' : '')}>
       {guessComplete && (
         <div className='guess-complete-text'>
-          <h2>{t('geo.tip')}</h2>
+          <h2>{unknown ? t('geo.tip-unknown') : t('geo.tip')}</h2>
           <p>{t('geo.tip-sub')}</p>
         </div>
       )}
@@ -158,27 +169,37 @@ const GeoMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
-        {guessComplete && <PlayerMarkers allGuesses={allGuesses} myGuess={guess} />}
-        <MyMarker position={guess} setPosition={setGuess} isPositionable={!guessComplete} />
+        {guessComplete &&
+          (unknown ? (
+            <PlayerMarkers allGuesses={allGuesses} />
+          ) : (
+            <PlayerMarkers allGuesses={allGuesses} myGuess={guess} />
+          ))}
+        {!unknown && (
+          <MyMarker position={guess} setPosition={setGuess} isPositionable={!guessComplete} />
+        )}
         {needsRepositioning && (
           <SizeResetter needsRepositioning={needsRepositioning} initialValues={initialMapValues} />
         )}
       </MapContainer>
       {!guessComplete && (
         <div className='flex gap-2'>
-          <Button variant='contained' onClick={sendGuess} className='flex-1'>
+          <Button id='submit-guess' variant='contained' onClick={sendGuess} className='flex-1'>
             {t('geo.submit-place')}
           </Button>
           <Button
+            id='dont-know'
             variant='contained'
             onClick={() => {
               setGuessComplete(true);
+              setUnknown(true);
             }}
             className='flex-1'
           >
             {t('geo.dontKnow')}
           </Button>
           <Button
+            id='not-a-place'
             variant='contained'
             onClick={() => {
               sendNotAPlace();
@@ -191,7 +212,7 @@ const GeoMap = ({
         </div>
       )}
       {guessComplete && (
-        <Button variant='contained' onClick={nextPicture}>
+        <Button id='next-picture' variant='contained' onClick={nextPicture}>
           {t('geo.next-picture')}
         </Button>
       )}
