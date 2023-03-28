@@ -24,6 +24,7 @@ export const FaceTaggingUI = ({
   const { t } = useTranslation();
 
   const context = useFaceTagging();
+  const faceTags = context?.tags;
 
   const [isFaceTagging, setIsFaceTagging] = useState(false);
 
@@ -43,10 +44,17 @@ export const FaceTaggingUI = ({
             {tags.map(tag => (
               <Chip
                 variant={tag.id === context.activeTagId ? 'outlined' : 'filled'}
+                sx={
+                  faceTags?.find(ftag => ftag.personTagId === tag.id)
+                    ? { background: 'gray !important' }
+                    : {}
+                }
                 key={tag.id}
                 label={tag.name}
                 onClick={() => {
-                  context.setActiveTagId(current => (current === tag.id ? null : tag.id));
+                  faceTags?.find(ftag => ftag.personTagId === tag.id)
+                    ? null
+                    : context.setActiveTagId(current => (current === tag.id ? null : tag.id));
                 }}
               />
             ))}

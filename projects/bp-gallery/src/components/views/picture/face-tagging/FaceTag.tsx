@@ -10,6 +10,7 @@ const boundary = 0.9;
 
 export type FaceTagData = {
   id: string | undefined;
+  personTagId: string | undefined | null;
   name: string;
   x: number;
   y: number;

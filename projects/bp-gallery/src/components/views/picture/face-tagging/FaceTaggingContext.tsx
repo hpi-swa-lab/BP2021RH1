@@ -51,6 +51,7 @@ export const FaceTaggingProvider = ({
     x: tag.attributes?.x ?? 0,
     y: tag.attributes?.y ?? 0,
     name: tag.attributes?.person_tag?.data?.attributes?.name ?? '',
+    personTagId: tag.attributes?.person_tag?.data?.id,
     id: tag.id ?? '-1',
   }));
 
@@ -134,6 +135,7 @@ export const FaceTaggingProvider = ({
     const [x, y] = position;
     return {
       id: undefined,
+      personTagId: undefined,
       name: activeTagName,
       x,
       y,

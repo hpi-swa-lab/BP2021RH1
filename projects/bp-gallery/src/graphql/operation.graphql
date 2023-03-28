@@ -1038,6 +1038,7 @@ query getFaceTags($pictureId: ID!) {
         y
         person_tag {
           data {
+            id
             attributes {
               name
             }
