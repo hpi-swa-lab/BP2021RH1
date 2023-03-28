@@ -44,7 +44,7 @@ const useLinks = (archiveId: string) => {
 };
 
 export const sanitizeLink = (url: string) => {
-  url = url.replace('http://', '').replace('https://', '');
+  url = url.replace(/^https?:\/\//, '');
   if (url.endsWith('/')) url = url.substring(0, url.length - 1);
   return url;
 };

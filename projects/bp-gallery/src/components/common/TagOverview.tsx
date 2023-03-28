@@ -45,7 +45,7 @@ const TagOverview = ({
     if (Math.min(window.innerWidth - 64, 1200) >= tempRowLength * 300 + (tempRowLength - 1) * 8) {
       return tempRowLength;
     }
-    return tempRowLength - 1;
+    return Math.max(1, tempRowLength - 1);
   };
 
   const [rowLength, setRowLength] = useState(() => {
@@ -79,7 +79,7 @@ const TagOverview = ({
     ? Object.values(flattened)[0]
     : undefined;
 
-  if (flattenedTags?.length === 0) {
+  if (flattenedTags?.length === 0 && type !== TagType.TIME_RANGE) {
     return <div></div>;
   } else {
     return (
@@ -91,6 +91,7 @@ const TagOverview = ({
               type={type}
               scroll={false}
               onClickBasePath={basePath}
+              elementsPerRow={rowLength}
               currentItemAmount={rows ? rowLength * rows : undefined}
               queryParams={queryParams}
               thumbnailQueryParams={thumbnailQueryParams}

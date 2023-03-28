@@ -1,16 +1,15 @@
-import { useCallback, useMemo } from 'react';
 import { ChevronLeft, ContentPaste, ContentPasteOff } from '@mui/icons-material';
 import { Badge, Button } from '@mui/material';
-import { useState } from 'react';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { useClipboard } from '../../provider/ClipboardProvider';
-import ScrollContainer from '../ScrollContainer';
-import { useTranslation } from 'react-i18next';
-import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
-import './ClipboardEditor.scss';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { difference } from 'lodash';
-import { useClipboardEditorButtons } from './ClipboardEditorContext';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useClipboard, useClipboardEditorButtons } from '../../../hooks/context-hooks';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { PicturePreviewAdornment } from '../picture-gallery/PicturePreview';
+import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
+import ScrollContainer from '../ScrollContainer';
+import './ClipboardEditor.scss';
 
 export const ClipboardEditor = () => {
   const [data, setData] = useClipboard();
@@ -25,14 +24,16 @@ export const ClipboardEditor = () => {
   }, [setData]);
 
   const remove = useMemo(
-    () => ({
-      position: 'top-right' as const,
-      onClick: (picture: FlatPicture) => {
-        setData(data => ({ ...data, pictureIds: difference(data.pictureIds, [picture.id]) }));
-      },
-      icon: <ContentPasteOff />,
-      title: t('common.clipboard.remove'),
-    }),
+    () =>
+      ({
+        position: 'top-right' as const,
+        onClick: (picture: FlatPicture) => {
+          setData(data => ({ ...data, pictureIds: difference(data.pictureIds, [picture.id]) }));
+        },
+        icon: <ContentPasteOff />,
+        title: t('common.clipboard.remove'),
+        onlyShowOnHover: true,
+      } satisfies PicturePreviewAdornment),
     [setData, t]
   );
 
@@ -49,7 +50,7 @@ export const ClipboardEditor = () => {
         {data.pictureIds.length === 0 ? (
           <>
             <div className='clipboard-editor-buttons'>{clipboardButtons}</div>
-            <div className='no-pictures'>{t('common.noPictures')}</div>
+            <div className='no-pictures'>{t('common.pictureCount', { count: 0 })}</div>
           </>
         ) : (
           <>
@@ -76,6 +77,7 @@ export const ClipboardEditor = () => {
         )}
       </div>
       <Button
+        title={t('common.clipboard.name')}
         className='clipboard-editor-open'
         variant='contained'
         onClick={() => {

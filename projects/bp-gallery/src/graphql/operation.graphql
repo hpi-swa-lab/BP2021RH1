@@ -363,6 +363,12 @@ query getPictures(
       id
       attributes {
         is_text
+        comments {
+          data {
+            id
+          }
+        }
+        likes
         media {
           data {
             id
@@ -370,6 +376,7 @@ query getPictures(
               width
               height
               formats
+              url
               updatedAt
             }
           }
@@ -401,6 +408,7 @@ query getPicturesByAllSearch(
             width
             height
             formats
+            url
             updatedAt
           }
         }
@@ -801,6 +809,21 @@ query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+}
+
+query getAllPicturesByArchive {
+  archiveTags {
+    data {
+      id
+      attributes {
+        pictures {
+          data {
+            id
           }
         }
       }

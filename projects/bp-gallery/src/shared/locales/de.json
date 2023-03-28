@@ -76,15 +76,18 @@
     "delete": "Löschen",
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen",
-    "noPictures": "Keine Bilder",
-    "pictureCount": "{{count}} Bild(er)",
-    "moreThanPictureCount": "Mehr als {{count}} Bilder",
+    "pictureCount_zero": "Keine Bilder",
+    "pictureCount_one": "1 Bild",
+    "pictureCount_other": "{{count, number}} Bilder",
+    "moreThanPictureCount_one": "Mehr als 1 Bild",
+    "moreThanPictureCount_other": "Mehr als {{count, number}} Bilder",
     "and": "und",
     "and-alternative": "sowie",
     "login": "Login",
     "logout": "Logout",
     "like": "Mag ich",
-    "daily-picture": "Bild des Tages"
+    "daily-picture": "Bild des Tages",
+    "description": "Beschreibung"
   },
   "comment": {
     "name": "Name",
@@ -138,25 +141,17 @@
     "links": {
       "pictures": {
         "label": "Verlinkte Bilder",
-        "copy": {
-          "single": "Aktuelles Bild kopieren",
-          "multiple": "Aktuelle Bilder kopieren"
-        },
-        "paste": {
-          "single": "Ein kopiertes Bild einfügen",
-          "multiple": "{{count}} kopierte Bilder einfügen"
-        }
+        "copy_one": "Aktuelles Bild kopieren",
+        "copy_other": "Aktuelle Bilder kopieren",
+        "paste_one": "Ein kopiertes Bild einfügen",
+        "paste_other": "{{count, number}} kopierte Bilder einfügen"
       },
       "texts": {
         "label": "Verlinkte Texte",
-        "copy": {
-          "single": "Aktuellen Text kopieren",
-          "multiple": "Aktuelle Texte kopieren"
-        },
-        "paste": {
-          "single": "Einen kopierten Text einfügen",
-          "multiple": "{{count}} kopierte Texte einfügen"
-        }
+        "copy_one": "Aktuellen Text kopieren",
+        "copy_other": "Aktuelle Texte kopieren",
+        "paste_one": "Einen kopierten Text einfügen",
+        "paste_other": "{{count, number}} kopierte Texte einfügen"
       },
       "remove": "Link entfernen",
       "removeAll": {
@@ -183,8 +178,8 @@
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
     "reallyDeleteDescription": "Beschreibung wirklich löschen?",
     "really-decline-comment": "Soll folgender Kommentar gelöscht werden?",
-    "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch ein Unterkommentar der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
-    "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
+    "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch einen Unterkommentar, der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
+    "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count, number}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
     "reallyDeleteCollection": "Collection wirklich löschen?",
     "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
@@ -282,7 +277,8 @@
   },
   "startpage": {
     "welcome-title": "Harz History",
-    "welcome-text": "In privaten Sammlungen, in Archiven und Museen im Harz lagern Schätze – die bisweilen selten das Publikum finden, das sie verdienen. Mit Unterstützung von Student*innen des Hasso-Plattner-Instituts Potsdam wird experimentell daran gearbeitet, ein lebendiges Schaufenster in die Harzer Historie zu öffnen und Lust auf Besuche in den Harzer Museen zu machen. Das Projekt wird im Erfolgsfall allen interessierten Sammlungen offenstehen. Das Projekt wird ideell vom Landkreis Goslar, von der Stadt Bad Harzburg und der Stadt Braunlage unterstützt. Medienpartner sind die Goslarsche Zeitung und der Harzkurier."
+    "welcome-text": "In privaten Sammlungen, in Archiven und Museen im Harz lagern Schätze – die bisweilen selten das Publikum finden, das sie verdienen. Mit Unterstützung von Student*innen des Hasso-Plattner-Instituts Potsdam wird experimentell daran gearbeitet, ein lebendiges Schaufenster in die Harzer Historie zu öffnen und Lust auf Besuche in den Harzer Museen zu machen. Das Projekt wird im Erfolgsfall allen interessierten Sammlungen offenstehen.",
+    "our-archives": "Unsere Archive:"
   },
   "footer": {
     "title": "Harz History",
@@ -318,10 +314,21 @@
     "liability-transfer-title": "Haftungsfreistellung",
     "liability-transfer-p1": "Nutzer stellen Harz-History von sämtlichen Ansprüchen frei, die Dritte gegenüber Harz-History geltend machen aufgrund einer Verletzung ihrer Rechte durch vom Teilnehmern/private Nutzer eingestellte Inhalte.  Die Teilnehmer/private Nutzer tragen im Fall der Fälle die Kosten einschließlich sämtlicher Gerichts- und Anwaltskosten in gesetzlicher Höhe. "
   },
+  "contact-form": {
+    "title": "Kontakt",
+    "choose-archive-label": "Wen möchten Sie kontaktieren?",
+    "name-label": "Name",
+    "email-label": "E-Mail",
+    "subject-label": "Betreff",
+    "message-label": "Nachricht",
+    "submit-button-label": "Anfrage versenden"
+  },
   "show-more": {
     "x0s": "19{{ decade }}0er",
     "pictures-title": "Unsere Bilder",
-    "pictures-text": "Hier finden Sie alle Bilder unseres Archivs",
+    "pictures-text": "Hier finden Sie alle Bilder dieses Archivs.",
+    "latest-title": "Neuzugänge im Archiv",
+    "latest-text": "Hier fließen die jeweils jüngsten 500 „Neuzugänge“ des Fotoarchivs ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
     "date-title": "Jahrzehnte",
     "date-text": "Hier finden Sie alle Bilder unseres Archivs aus den bestimmten Jahrzehnten.",
     "keyword-title": "Unsere Kategorien",
@@ -332,7 +339,7 @@
     "location-text": "Hier finden Sie alle Orte unseres Archivs"
   },
   "discover": {
-    "our-pictures": "Unsere Bilder",
+    "latest-pictures": "Neuzugänge im Archiv",
     "decades": "Jahrzehnte",
     "locations": "Orte",
     "more-info": "Wissen Sie mehr über diese Bilder?",

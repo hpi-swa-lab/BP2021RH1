@@ -5,15 +5,15 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetMultiplePictureInfoLazyQuery } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
+import { useClipboard, useSetClipboardEditorButtons } from '../../../../../hooks/context-hooks';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
-import { useSetClipboardEditorButtons } from '../../../../common/clipboard/ClipboardEditorContext';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { useClipboard } from '../../../../provider/ClipboardProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import { ShowStatsProvider } from '../../../../provider/ShowStatsProvider';
 import './LinkedInfoField.scss';
 import { Field } from './PictureInfo';
 import PictureInfoField from './PictureInfoField';
@@ -159,11 +159,7 @@ const LinkedInfoField = ({
           variant='contained'
           onClick={copyToClipboard}
         >
-          {t(
-            `pictureFields.links.${pictureType}.copy.${
-              pictureIds.length > 1 ? 'multiple' : 'single'
-            }`
-          )}
+          {t(`pictureFields.links.${pictureType}.copy`, { count: pictureIds.length })}
         </Button>
       )
     );
@@ -207,16 +203,18 @@ const LinkedInfoField = ({
         >
           <ScrollContainer>
             {(scrollPos: number, scrollHeight: number) => (
-              <PictureScrollGrid
-                queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
-                scrollPos={scrollPos}
-                scrollHeight={scrollHeight}
-                hashbase={'links'}
-                showCount={false}
-                showDefaultAdornments={false}
-                extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
-                filterOutTextsForNonCurators={false}
-              />
+              <ShowStatsProvider value={false}>
+                <PictureScrollGrid
+                  queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
+                  scrollPos={scrollPos}
+                  scrollHeight={scrollHeight}
+                  hashbase={'links'}
+                  showCount={false}
+                  showDefaultAdornments={false}
+                  extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
+                  filterOutTextsForNonCurators={false}
+                />
+              </ShowStatsProvider>
             )}
           </ScrollContainer>
           {role >= AuthRole.CURATOR &&
@@ -229,11 +227,9 @@ const LinkedInfoField = ({
                   onClick={shouldPaste ? pasteFromClipboard : undefined}
                   disabled={isClipboardMixed}
                 >
-                  {clipboardData.pictureIds.length > 1
-                    ? t(`pictureFields.links.${linked.name}.paste.multiple`, {
-                        count: clipboardData.pictureIds.length,
-                      })
-                    : t(`pictureFields.links.${linked.name}.paste.single`)}
+                  {t(`pictureFields.links.${linked.name}.paste`, {
+                    count: clipboardData.pictureIds.length,
+                  })}
                 </Button>
                 {isClipboardMixed && (
                   <HelpTooltip

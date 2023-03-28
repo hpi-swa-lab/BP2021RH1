@@ -9,6 +9,7 @@
     "start": "cross-env ENV_PATH=./config/env/production/.env strapi start",
     "build": "cross-env ENV_PATH=./config/env/development/.env strapi build",
     "build:prod": "cross-env ENV_PATH=./config/env/production/.env strapi build",
+    "test-db": "docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=bpgallery postgres",
     "strapi": "strapi",
     "test": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --watchAll",
     "test:ci": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --verbose",
@@ -24,10 +25,12 @@
     "@strapi/plugin-i18n": "4.4.5",
     "@strapi/plugin-sentry": "4.4.5",
     "@strapi/plugin-users-permissions": "4.4.5",
+    "@strapi/provider-email-nodemailer": "^4.5.6",
     "@strapi/strapi": "4.4.5",
     "cross-env": "^7.0.3",
     "pg": "8.6.0",
     "pm2": "^5.2.0",
+    "sendmail": "^1.6.1",
     "xlsx": "^0.18.5"
   },
   "author": {

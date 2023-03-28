@@ -19,11 +19,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -2444,6 +2441,8 @@ export type GetPicturesQuery = {
           attributes?:
             | {
                 is_text?: boolean | null | undefined;
+                likes?: number | null | undefined;
+                comments?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
                 media: {
                   data?:
                     | {
@@ -2453,6 +2452,7 @@ export type GetPicturesQuery = {
                               width?: number | null | undefined;
                               height?: number | null | undefined;
                               formats?: any | null | undefined;
+                              url: string;
                               updatedAt?: any | null | undefined;
                             }
                           | null
@@ -2496,6 +2496,7 @@ export type GetPicturesByAllSearchQuery = {
                                 width?: number | null | undefined;
                                 height?: number | null | undefined;
                                 formats?: any | null | undefined;
+                                url: string;
                                 updatedAt?: any | null | undefined;
                               }
                             | null
@@ -3111,6 +3112,23 @@ export type GetAllArchiveTagsQuery = {
                   | null
                   | undefined;
               }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetAllPicturesByArchiveQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllPicturesByArchiveQuery = {
+  archiveTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | { pictures?: { data: Array<{ id?: string | null | undefined }> } | null | undefined }
             | null
             | undefined;
         }>;
@@ -4135,6 +4153,12 @@ export const GetPicturesDocument = gql`
         id
         attributes {
           is_text
+          comments {
+            data {
+              id
+            }
+          }
+          likes
           media {
             data {
               id
@@ -4142,6 +4166,7 @@ export const GetPicturesDocument = gql`
                 width
                 height
                 formats
+                url
                 updatedAt
               }
             }
@@ -4219,6 +4244,7 @@ export const GetPicturesByAllSearchDocument = gql`
               width
               height
               formats
+              url
               updatedAt
             }
           }
@@ -5737,6 +5763,77 @@ export type GetAllArchiveTagsLazyQueryHookResult = ReturnType<typeof useGetAllAr
 export type GetAllArchiveTagsQueryResult = Apollo.QueryResult<
   GetAllArchiveTagsQuery,
   GetAllArchiveTagsQueryVariables
+>;
+
+export const GetAllPicturesByArchiveDocument = gql`
+  query getAllPicturesByArchive {
+    archiveTags {
+      data {
+        id
+        attributes {
+          pictures {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllPicturesByArchiveQuery__
+ *
+ * To run a query within a React component, call `useGetAllPicturesByArchiveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPicturesByArchiveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPicturesByArchiveQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllPicturesByArchiveQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAllPicturesByArchiveQuery,
+    GetAllPicturesByArchiveQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllPicturesByArchiveQuery, GetAllPicturesByArchiveQueryVariables>(
+    GetAllPicturesByArchiveDocument,
+    options
+  );
+}
+
+export function useGetAllPicturesByArchiveLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllPicturesByArchiveQuery,
+    GetAllPicturesByArchiveQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllPicturesByArchiveQuery, GetAllPicturesByArchiveQueryVariables>(
+    GetAllPicturesByArchiveDocument,
+    options
+  );
+}
+
+export type GetAllPicturesByArchiveQueryHookResult = ReturnType<
+  typeof useGetAllPicturesByArchiveQuery
+>;
+
+export type GetAllPicturesByArchiveLazyQueryHookResult = ReturnType<
+  typeof useGetAllPicturesByArchiveLazyQuery
+>;
+
+export type GetAllPicturesByArchiveQueryResult = Apollo.QueryResult<
+  GetAllPicturesByArchiveQuery,
+  GetAllPicturesByArchiveQueryVariables
 >;
 
 export const GetDecadePreviewThumbnailsDocument = gql`
