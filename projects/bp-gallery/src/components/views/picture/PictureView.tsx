@@ -144,10 +144,15 @@ const PictureView = ({
         <FaceTaggingProvider pictureId={pictureId} imgRef={imgRef}>
           <div className={`picture-view`} ref={containerRef}>
             <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
-              <div className='picture-wrapper'>
-                <div className='picture-container'>
-                  <div className='relative max-h-[100%] max-w-[100%]'>
-                    <img ref={imgRef} src={pictureLink} alt={pictureLink} />
+              <div className='picture-wrapper w-full h-full'>
+                <div className='picture-container w-full h-full'>
+                  <div className='relative w-full h-full'>
+                    <img
+                      className='max-w-full max-h-full'
+                      ref={imgRef}
+                      src={pictureLink}
+                      alt={pictureLink}
+                    />
                     <FaceTags />
                   </div>
                 </div>
