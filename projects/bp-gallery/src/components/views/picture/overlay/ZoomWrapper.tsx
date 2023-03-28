@@ -1,5 +1,4 @@
 import { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
-import { useMoveView } from '../helpers/useMoveView';
 import './ZoomWrapper.scss';
 
 const MAX_ZOOM = 30.0;
@@ -15,8 +14,11 @@ const ZoomWrapper = ({
   blockScroll: boolean;
   pictureId: string;
 }>) => {
-  const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
-  const [viewport, setViewport] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [viewport, setViewport] = useState<{ x: number; y: number; zoomLevel: number }>({
+    x: 0,
+    y: 0,
+    zoomLevel: DEFAULT_ZOOM,
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -25,34 +27,88 @@ const ZoomWrapper = ({
   const prevPos = useRef<{ x: number; y: number } | null>(null);
   const prevDiff = useRef<number>(-1);
 
-  const moveView = useMoveView({
-    prevPos,
-    setZoomLevel,
-    setViewport,
-    imageRef,
-  });
+  const moveView = useCallback(
+    (curPos: { x: number; y: number }) => {
+      // setters are run async, so prevPos.current will be overwritten inside
+      const prevPosCached = prevPos.current;
+      if (!prevPosCached) {
+        return;
+      }
+      setViewport(({ x, y, zoomLevel }) => {
+        x += (curPos.x - prevPosCached.x) / zoomLevel;
+        y += (curPos.y - prevPosCached.y) / zoomLevel;
+        return { x, y, zoomLevel };
+      });
+    },
+    [setViewport, prevPos]
+  );
+
+  const resetViewport = useCallback(() => {
+    setViewport({ x: 0, y: 0, zoomLevel: 1 });
+  }, []);
 
   useEffect(() => {
-    setZoomLevel(1);
-    setViewport({ x: 0, y: 0 });
-  }, [pictureId]);
+    resetViewport();
+  }, [pictureId, resetViewport]);
+
+  // constrain position to bounds
+  useEffect(() => {
+    setViewport(viewport => {
+      const image = imageRef.current;
+      const parent = image?.parentElement;
+      if (!image || !parent) {
+        return viewport;
+      }
+
+      let { x, y } = viewport;
+      const { zoomLevel } = viewport;
+      const imgRect = image.getBoundingClientRect();
+      const parentRect = parent.getBoundingClientRect();
+      const ratio = {
+        x: imgRect.width / parentRect.width,
+        y: imgRect.height / parentRect.height,
+      };
+
+      const constrainToBounds = (
+        position: number,
+        direction: 'x' | 'y',
+        size: 'width' | 'height'
+      ) =>
+        ratio[direction] < 1
+          ? 0
+          : Math.max(
+              Math.min(position, (imgRect[size] - parentRect[size]) / (2 * zoomLevel)),
+              (-imgRect[size] + parentRect[size]) / (2 * zoomLevel)
+            );
+      x = constrainToBounds(x, 'x', 'width');
+      y = constrainToBounds(y, 'y', 'height');
+
+      if (x === viewport.x && y === viewport.y) {
+        // return same object if nothing changed to prevent infinite useEffect loop
+        return viewport;
+      }
+      return { x, y, zoomLevel };
+    });
+  }, [viewport]);
 
   const onScroll = useCallback(
     (event: WheelEvent) => {
       event.preventDefault();
       event.stopPropagation();
-      setZoomLevel(previousZoom => {
-        return Math.min(
-          Math.max(previousZoom * Math.exp(event.deltaY * ZOOM_RATE), MIN_ZOOM),
+      setViewport(({ x, y, zoomLevel }) => ({
+        x,
+        y,
+        zoomLevel: Math.min(
+          Math.max(zoomLevel * Math.exp(event.deltaY * ZOOM_RATE), MIN_ZOOM),
           MAX_ZOOM
-        );
-      });
+        ),
+      }));
       moveView({
         x: event.clientX,
         y: event.clientY,
       });
     },
-    [setZoomLevel, moveView]
+    [moveView]
   );
 
   const onPointerDown = useCallback((evt: PointerEvent) => {
@@ -94,14 +150,14 @@ const ZoomWrapper = ({
 
         // setters are run async, so prevDiff.current will be overwritten inside
         const prevDiffCached = prevDiff.current;
-        setZoomLevel(zoomLevel => {
+        setViewport(({ x, y, zoomLevel }) => {
           if (prevDiffCached > 0) {
             zoomLevel = Math.max(
               MIN_ZOOM,
               Math.min(zoomLevel * (curDiff / prevDiffCached), MAX_ZOOM)
             );
           }
-          return zoomLevel;
+          return { x, y, zoomLevel };
         });
         prevDiff.current = curDiff;
       }
@@ -126,11 +182,10 @@ const ZoomWrapper = ({
     }
     if (imageRef.current) {
       const image = imageRef.current;
-      setZoomLevel(1);
-      setViewport({ x: 0, y: 0 });
+      resetViewport();
       image.style.transform = '';
     }
-  }, [onScroll, onPointerDown, onPointerUp, onPointerMove]);
+  }, [onScroll, onPointerDown, onPointerUp, onPointerMove, resetViewport]);
 
   const addAll = useCallback(() => {
     if (containerRef.current) {
@@ -171,8 +226,9 @@ const ZoomWrapper = ({
     if (!imageRef.current) {
       return;
     }
-    imageRef.current.style.transform = `scale(${zoomLevel}) translate(${viewport.x}px, ${viewport.y}px)`;
-  }, [zoomLevel, viewport, imageRef]);
+    const { x, y, zoomLevel } = viewport;
+    imageRef.current.style.transform = `scale(${zoomLevel}) translate(${x}px, ${y}px)`;
+  }, [viewport, imageRef]);
 
   return (
     <div className='zoom-wrapper' ref={containerRef}>
