@@ -146,9 +146,9 @@ const PictureView = ({
             <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
               <div className='picture-wrapper w-full h-full'>
                 <div className='picture-container w-full h-full'>
-                  <div className='relative w-full h-full'>
+                  <div className='relative w-full h-full flex justify-center align-center'>
                     <img
-                      className='max-w-full max-h-full'
+                      className='max-w-full max-h-full object-center'
                       ref={imgRef}
                       src={pictureLink}
                       alt={pictureLink}
