@@ -13,7 +13,6 @@
     "@mui/material": "^5.10.17",
     "@mui/x-data-grid": "5.8.0",
     "@sentry/react": "^7.24.2",
-    "@sentry/tracing": "^7.24.2",
     "@tailwindcss/line-clamp": "^0.4.2",
     "dayjs": "^1.11.7",
     "env-cmd": "^10.1.0",
