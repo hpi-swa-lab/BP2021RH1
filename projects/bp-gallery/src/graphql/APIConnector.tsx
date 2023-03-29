@@ -3473,7 +3473,10 @@ export type GetFaceTagsQuery = {
                 person_tag?:
                   | {
                       data?:
-                        | { attributes?: { name: string } | null | undefined }
+                        | {
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }
                         | null
                         | undefined;
                     }
@@ -6818,6 +6821,7 @@ export const GetFaceTagsDocument = gql`
           y
           person_tag {
             data {
+              id
               attributes {
                 name
               }
