@@ -2,7 +2,6 @@ import {
   createContext,
   Dispatch,
   PropsWithChildren,
-  RefObject,
   SetStateAction,
   useCallback,
   useContext,
@@ -32,8 +31,7 @@ const Context = createContext<FaceTagging | null>(null);
 export const FaceTaggingProvider = ({
   children,
   pictureId,
-  imgRef,
-}: PropsWithChildren<{ pictureId: string; imgRef: RefObject<HTMLImageElement> }>) => {
+}: PropsWithChildren<{ pictureId: string }>) => {
   const [activeTagId, setActiveTagId] = useState<string | null>(null);
   const [hideTags, setHideTags] = useState(false);
   useEffect(() => {
@@ -100,8 +98,9 @@ export const FaceTaggingProvider = ({
     [deleteTag]
   );
 
+  const { img } = useContext(PictureViewContext);
+
   useEffect(() => {
-    const img = imgRef.current;
     if (!img) {
       return;
     }
@@ -124,7 +123,7 @@ export const FaceTaggingProvider = ({
       img.removeEventListener('mouseleave', mouseleave);
       img.removeEventListener('click', mouseclick);
     };
-  }, [imgRef, placeTag]);
+  }, [img, placeTag]);
 
   const activeTagData = useMemo<FaceTagData | null>(() => {
     if (!position || activeTagId === null) {

@@ -34,9 +34,10 @@ export interface PictureViewContextFields {
   sideBarOpen?: boolean;
   setSideBarOpen?: Dispatch<SetStateAction<boolean>>;
   calledViaLink?: boolean;
+  img: HTMLImageElement | null;
 }
 
-export const PictureViewContext = createContext<PictureViewContextFields>({});
+export const PictureViewContext = createContext<PictureViewContextFields>({ img: null });
 
 // Used for the sidebar (in px) --> same as in shared.scss
 const MOBILE_BREAKPOINT = 750;
@@ -112,6 +113,8 @@ const PictureView = ({
     [pictureId, siblingIds, navigateToPicture]
   );
 
+  const [img, setImg] = useState<HTMLImageElement | null>(null);
+
   // Wrap all context information in this variable
   const contextValue: PictureViewContextFields = {
     navigatePicture,
@@ -120,6 +123,7 @@ const PictureView = ({
     sideBarOpen,
     setSideBarOpen,
     calledViaLink: !onBack,
+    img,
   };
 
   // Block navigation and handle yourself, i.e. block browser navigation and
@@ -136,20 +140,18 @@ const PictureView = ({
     };
   }, [history, pictureId, onBack]);
 
-  const imgRef = useRef<HTMLImageElement>(null);
-
   return (
     <div className='picture-view-container'>
       <PictureViewContext.Provider value={contextValue}>
-        <FaceTaggingProvider pictureId={pictureId} imgRef={imgRef}>
+        <FaceTaggingProvider pictureId={pictureId}>
           <div className={`picture-view`} ref={containerRef}>
             <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
               <div className='picture-wrapper w-full h-full'>
                 <div className='picture-container w-full h-full'>
                   <div className='relative w-full h-full flex justify-center align-center'>
                     <img
-                      className='max-w-full max-h-full object-center'
-                      ref={imgRef}
+                      className='max-w-full max-h-full object-contain'
+                      ref={setImg}
                       src={pictureLink}
                       alt={pictureLink}
                     />
