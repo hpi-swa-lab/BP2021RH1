@@ -35,12 +35,10 @@ export const FaceTaggingProvider = ({
   imgRef,
 }: PropsWithChildren<{ pictureId: string; imgRef: RefObject<HTMLImageElement> }>) => {
   const [activeTagId, setActiveTagId] = useState<string | null>(null);
-
+  const [hideTags, setHideTags] = useState(false);
   useEffect(() => {
     setActiveTagId(null);
   }, [pictureId]);
-
-  const [hideTags, setHideTags] = useState(false);
 
   const { error, loading, data } = useGetFaceTagsQuery({
     variables: {

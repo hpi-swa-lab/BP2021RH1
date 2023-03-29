@@ -1,4 +1,4 @@
-import { Cancel } from '@mui/icons-material';
+import { Cancel, OpenWith } from '@mui/icons-material';
 import { CSSProperties, useMemo } from 'react';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import { useFaceTagging } from './FaceTaggingContext';
@@ -17,7 +17,11 @@ export type FaceTagData = {
   noPointerEvents?: boolean;
 };
 
-export const FaceTag = ({ data: { id, name, x, y, noPointerEvents } }: { data: FaceTagData }) => {
+export const FaceTag = ({
+  data: { id, personTagId, name, x, y, noPointerEvents },
+}: {
+  data: FaceTagData;
+}) => {
   const { role } = useAuth();
   const context = useFaceTagging();
   const handleDelete = () => {
@@ -25,6 +29,14 @@ export const FaceTag = ({ data: { id, name, x, y, noPointerEvents } }: { data: F
       return;
     }
     context?.removeTag(id);
+  };
+
+  const handleMove = () => {
+    if (personTagId === undefined) {
+      return;
+    }
+    handleDelete();
+    context?.setActiveTagId(personTagId);
   };
 
   const { style, triangle } = useMemo<{
@@ -109,7 +121,10 @@ export const FaceTag = ({ data: { id, name, x, y, noPointerEvents } }: { data: F
       <div className='flex flex-row items-center space-x-1 bg-[#404173bb] p-2 rounded-md text-white'>
         <span>{name}</span>
         {role >= AuthRole.CURATOR && id !== undefined && (
-          <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
+          <>
+            <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
+            <OpenWith className='hover:text-[#00000066]' onClick={handleMove} />
+          </>
         )}
       </div>
     </div>

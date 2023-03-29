@@ -85,7 +85,9 @@ export const FaceTaggingUI = ({
             className='!mt-5 w-full !bg-[#7e241d]'
             onClick={toggleHideTags}
           >
-            {t('pictureFields.display-facetags')}
+            {context?.hideTags
+              ? t('pictureFields.display-facetags')
+              : t('pictureFields.hide-facetags')}
           </Button>
         )}
       </PictureInfoField>
