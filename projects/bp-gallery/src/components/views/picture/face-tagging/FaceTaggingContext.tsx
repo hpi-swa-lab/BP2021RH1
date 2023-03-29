@@ -15,7 +15,9 @@ import {
   useGetFaceTagsQuery,
   useGetPersonTagQuery,
 } from '../../../../graphql/APIConnector';
+import { PictureViewContext } from '../PictureView';
 import { FaceTag, FaceTagData } from './FaceTag';
+import { useImageRect } from './helpers/image-rect';
 
 type FaceTagging = {
   activeTagId: string | null;
@@ -58,7 +60,24 @@ export const FaceTaggingProvider = ({
   });
   const activeTagName = activeData?.personTag?.data?.attributes?.name ?? 'Lädt';
 
-  const [position, setPosition] = useState<null | [number, number]>(null);
+  const [mousePosition, setMousePosition] = useState<null | [number, number]>(null);
+
+  const { img } = useContext(PictureViewContext);
+  const imageRect = useImageRect(img);
+
+  const position = useMemo(() => {
+    if (!mousePosition || !imageRect) {
+      return null;
+    }
+    const [mx, my] = mousePosition;
+    const { x: ix, y: iy, width, height } = imageRect;
+    const x = (mx - ix) / width;
+    const y = (my - iy) / height;
+    if (x < 0 || x > 1 || y < 0 || y > 1) {
+      return null;
+    }
+    return [x, y];
+  }, [mousePosition, imageRect]);
 
   const [createTag] = useCreateFaceTagMutation({
     refetchQueries: ['getFaceTags'],
@@ -98,19 +117,16 @@ export const FaceTaggingProvider = ({
     [deleteTag]
   );
 
-  const { img } = useContext(PictureViewContext);
-
   useEffect(() => {
     if (!img) {
       return;
     }
     const mousemove = (event: MouseEvent) => {
-      const { width, height } = img.getBoundingClientRect();
-      const { offsetX, offsetY } = event;
-      setPosition([offsetX / width, offsetY / height]);
+      const { clientX, clientY } = event;
+      setMousePosition([clientX, clientY]);
     };
     const mouseleave = () => {
-      setPosition(null);
+      setMousePosition(null);
     };
     const mouseclick = () => {
       placeTag();
