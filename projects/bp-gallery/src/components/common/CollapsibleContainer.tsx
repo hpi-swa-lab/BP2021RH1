@@ -18,7 +18,7 @@ const CollapsibleContainer = ({
   onToggle,
   long = true,
   showText = true,
-  className: className,
+  className,
 }: CollapsibleContainerProps) => {
   const [open, setOpen] = useState(false);
   const [fullHeight, setFullHeight] = useState(0);
