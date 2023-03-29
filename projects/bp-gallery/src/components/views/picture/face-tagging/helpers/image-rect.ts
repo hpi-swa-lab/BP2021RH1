@@ -5,8 +5,8 @@ export const useImageRect = (img: HTMLImageElement | null) => {
     const { x, y, width, height } = img.getBoundingClientRect();
     const { naturalHeight, naturalWidth } = img;
     const ratio = naturalWidth / naturalHeight;
-    const realWidth = ratio > 1 ? width : height * ratio;
-    const realHeight = ratio < 1 ? height : width / ratio;
+    const realWidth = isNaN(ratio) || ratio > 1 ? width : height * ratio;
+    const realHeight = isNaN(ratio) || ratio < 1 ? height : width / ratio;
     const realX = x + (width - realWidth) / 2;
     const realY = y + (height - realHeight) / 2;
     return {
