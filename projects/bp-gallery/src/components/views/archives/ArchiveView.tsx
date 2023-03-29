@@ -1,7 +1,6 @@
 import { Edit, Link } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { History } from 'history';
-import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -31,7 +30,6 @@ const addUrlProtocol = (url: string) => {
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const history: History = useHistory();
   const { role } = useAuth();
-  const { t } = useTranslation();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
