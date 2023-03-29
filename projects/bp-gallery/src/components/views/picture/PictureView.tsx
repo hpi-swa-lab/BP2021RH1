@@ -89,8 +89,6 @@ const PictureView = ({
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
-  const pictureWidth = picture?.media?.width;
-  const pictureHeight = picture?.media?.height;
 
   const onNavigateMessage = useCallback((pictureId: string) => {
     replaceHistoryWithoutRouter(`/picture/${pictureId}${window.location.search}`);

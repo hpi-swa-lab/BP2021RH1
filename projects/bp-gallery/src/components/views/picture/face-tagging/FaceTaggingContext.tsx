@@ -40,7 +40,7 @@ export const FaceTaggingProvider = ({
     setActiveTagId(null);
   }, [pictureId]);
 
-  const { error, loading, data } = useGetFaceTagsQuery({
+  const { error, data } = useGetFaceTagsQuery({
     variables: {
       pictureId,
     },
@@ -172,7 +172,7 @@ export const FaceTaggingProvider = ({
 
   if (!tags) {
     if (error) {
-      console.log(error);
+      console.error(error);
     }
     return <>{children}</>;
   }
