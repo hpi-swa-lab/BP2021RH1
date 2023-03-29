@@ -121,22 +121,22 @@ export const FaceTaggingProvider = ({
     if (!img) {
       return;
     }
-    const mousemove = (event: MouseEvent) => {
+    const pointermove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
       setMousePosition([clientX, clientY]);
     };
-    const mouseleave = () => {
+    const pointerleave = () => {
       setMousePosition(null);
     };
     const mouseclick = () => {
       placeTag();
     };
-    img.addEventListener('mousemove', mousemove);
-    img.addEventListener('mouseleave', mouseleave);
+    img.addEventListener('pointermove', pointermove);
+    img.addEventListener('pointerleave', pointerleave);
     img.addEventListener('click', mouseclick);
     return () => {
-      img.removeEventListener('mousemove', mousemove);
-      img.removeEventListener('mouseleave', mouseleave);
+      img.removeEventListener('pointermove', pointermove);
+      img.removeEventListener('pointerleave', pointerleave);
       img.removeEventListener('click', mouseclick);
     };
   }, [img, placeTag]);
