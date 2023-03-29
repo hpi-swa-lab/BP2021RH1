@@ -1,27 +1,26 @@
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
+import { Property } from 'csstype';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type CollapsibleContainerProps = PropsWithChildren<{
-  collapsedHeight: string;
-  defaultOpen?: boolean;
+  collapsedHeight: Property.Height<string | number>;
   onToggle?: (open: boolean) => void;
-  showButton?: boolean;
+  long?: boolean;
   showText?: boolean;
-  buttonStyle?: string;
+  className?: string;
 }>;
 
 const CollapsibleContainer = ({
   children,
   collapsedHeight,
-  defaultOpen,
   onToggle,
-  showButton = true,
-  showText,
-  buttonStyle,
+  long = true,
+  showText = true,
+  className: className,
 }: CollapsibleContainerProps) => {
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(false);
   const [fullHeight, setFullHeight] = useState(0);
   const measureRef = useRef<HTMLDivElement>(null);
 
@@ -37,19 +36,19 @@ const CollapsibleContainer = ({
       <div
         className={`overflow-hidden transition-[height] duration-1000`}
         style={
-          showButton
-            ? !open
-              ? { height: collapsedHeight }
-              : { height: `${measureRef.current?.clientHeight ?? 0}px` }
+          long
+            ? open
+              ? { height: `${measureRef.current?.clientHeight ?? 0}px` }
+              : { height: collapsedHeight }
             : {}
         }
       >
         <div ref={measureRef}>{children}</div>
       </div>
-      {showButton && (
+      {long && (
         <label className='w-full flex justify-center mb-4 cursor-pointer box-border'>
           <IconButton
-            className={`hover:bg-slate-100 !text-sky-600 ${buttonStyle ?? '!w-40 '}`}
+            className={`hover:bg-slate-100 !text-sky-600 ${className ?? '!w-full'}`}
             onClick={event => {
               event.preventDefault();
               setOpen(!open);

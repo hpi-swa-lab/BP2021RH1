@@ -181,10 +181,8 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
       <div className={`ml-2 ${!expanded ? 'hidden' : ''}`}>
         <CollapsibleContainer
           collapsedHeight='250px'
-          showButton={long && !edit}
+          long={long && !edit}
           onToggle={open => setIsOpen(open)}
-          buttonStyle='w-full'
-          showText
         >
           {isCurator && edit ? (
             <div className={`text-lg break-words bg-neutral-100 mt-1`}>
@@ -192,7 +190,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
             </div>
           ) : (
             <div
-              className={`text-lg break-words ${isOpen ? '' : 'line-clamp-[9] overflow-visible'}
+              className={`text-lg break-words ${isOpen ? '' : 'line-clamp-[9] !overflow-visible'}
               } mt-1`}
             >
               <RichText value={comment.text} textRef={textRef} />

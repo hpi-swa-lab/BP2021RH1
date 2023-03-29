@@ -38,7 +38,7 @@ const CollectionDescription = ({
             <CollapsibleContainer
               collapsedHeight='125px'
               onToggle={open => setOpen(open)}
-              showButton={long}
+              long={long}
             >
               <div className='text-lg break-words'>
                 <RichText

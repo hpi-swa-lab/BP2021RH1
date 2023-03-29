@@ -27,8 +27,10 @@ const getLineBreaks = (node?: Node) => {
 
 export const getIsLong = (element: HTMLElement | null, text: string, maxLines: number) => {
   const buffer = document.createElement('div');
+  //the getLineBreaks method doesn't work with \n and writing text manually in the editor generates <br> tags instead of \n, so this only becomes a problem with copy-pasted text
+  const formattedText = text.replaceAll('\n', '');
   buffer.className = 'collection-description open';
-  buffer.innerText = text;
+  buffer.innerText = formattedText;
   element?.appendChild(buffer);
   const split = getLineBreaks(buffer.childNodes[0]);
   buffer.remove();

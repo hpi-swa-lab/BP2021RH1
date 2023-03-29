@@ -17,14 +17,14 @@ const ArchiveDescription = ({ description }: { description: Maybe<string> | unde
   return (
     <CollapsibleContainer
       collapsedHeight='23rem'
-      defaultOpen={false}
-      showButton={long}
+      long={long}
+      className='w-52'
       onToggle={open => setOpen(open)}
     >
       <div
         ref={textRef}
         className={`mb-1 p-1 pt-0 text-lg break-words ${
-          !open ? 'line-clamp-[13] overflow-visible' : ''
+          !open ? 'line-clamp-[13] !overflow-visible' : ''
         }`}
       >
         <RichText value={description ?? t('archives.defaultLongDescription')} />
