@@ -56,15 +56,7 @@ const CollapsibleContainer = ({
               onToggle?.(!open);
             }}
           >
-            {open ? (
-              <>
-                <KeyboardArrowUp className='icon' />
-              </>
-            ) : (
-              <>
-                <KeyboardArrowDown className='icon' />
-              </>
-            )}
+            {open ? <KeyboardArrowUp className='icon' /> : <KeyboardArrowDown className='icon' />}
             <div className='uppercase text-sm text-sky-600'>
               {showText && (open ? t('common.showLess') : t('common.showMore'))}
             </div>
