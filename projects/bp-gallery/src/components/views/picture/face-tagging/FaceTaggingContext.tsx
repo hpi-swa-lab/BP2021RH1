@@ -7,6 +7,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
@@ -83,7 +84,13 @@ export const FaceTaggingProvider = ({
     refetchQueries: ['getFaceTags'],
   });
 
+  // used to remove the position dependency from placeTag,
+  // which prevents the events-useEffect from firing on position changes
+  const positionRef = useRef(position);
+  positionRef.current = position;
+
   const placeTag = useCallback(() => {
+    const position = positionRef.current;
     if (!position || activeTagId === null) {
       return;
     }
@@ -97,7 +104,7 @@ export const FaceTaggingProvider = ({
       },
     });
     setActiveTagId(null);
-  }, [createTag, position, activeTagId, pictureId]);
+  }, [createTag, positionRef, activeTagId, pictureId]);
 
   const [deleteTag] = useDeleteFaceTagMutation({
     refetchQueries: ['getFaceTags'],
@@ -121,22 +128,33 @@ export const FaceTaggingProvider = ({
     if (!img) {
       return;
     }
+    let hasDragged = false;
+
     const pointermove = (event: MouseEvent) => {
+      hasDragged = true;
       const { clientX, clientY } = event;
       setMousePosition([clientX, clientY]);
     };
     const pointerleave = () => {
       setMousePosition(null);
     };
+    const pointerdown = () => {
+      hasDragged = false;
+    };
     const mouseclick = () => {
+      if (hasDragged) {
+        return;
+      }
       placeTag();
     };
     img.addEventListener('pointermove', pointermove);
     img.addEventListener('pointerleave', pointerleave);
+    img.addEventListener('pointerdown', pointerdown);
     img.addEventListener('click', mouseclick);
     return () => {
       img.removeEventListener('pointermove', pointermove);
       img.removeEventListener('pointerleave', pointerleave);
+      img.removeEventListener('pointerdown', pointerdown);
       img.removeEventListener('click', mouseclick);
     };
   }, [img, placeTag]);
