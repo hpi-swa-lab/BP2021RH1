@@ -119,7 +119,7 @@ const TagList = ({
     } else if (onClickBasePath) {
       return (
         <>
-          <div className={isOpen ? 'open' : 'closed'}>
+          <div className={`item-list-container ${isOpen ? 'open' : 'closed'}`}>
             <ItemList
               items={(currentItemAmount
                 ? flattenedTags.slice(0, currentItemAmount)
