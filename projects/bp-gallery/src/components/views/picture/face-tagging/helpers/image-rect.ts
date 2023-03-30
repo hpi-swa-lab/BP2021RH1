@@ -26,6 +26,13 @@ export const useImageRect = (img: HTMLImageElement | null) => {
     [computeRect]
   );
 
+  // The IntersectionObserver (see below) can only observe
+  // elements positioned relative to its given root.
+  // Since position: fixed; breaks that hierarchy and
+  // PictureView is sometimes positioned like so, we can't
+  // just use document.documentElement or similar.
+  // Instead, we walk upwards from img to find the first
+  // ancestor with position: fixed.
   const root = useMemo(() => {
     let current: HTMLElement | null = img;
     while (current) {
