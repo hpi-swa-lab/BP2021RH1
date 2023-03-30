@@ -32,9 +32,12 @@ export const getIsLong = (element: HTMLElement | null, text: string, maxLines: n
 
   const buffer = document.createElement('div');
   //necessary to get calculcated line count as close to real line count as possible
-  const formattedText = sanitize(text.replaceAll('<br>', '\n').replaceAll('&nbsp;', ' '), {
-    ALLOWED_TAGS: [],
-  });
+  const formattedText = sanitize(
+    text.replaceAll('\n', ' ').replaceAll('<br>', '\n').replaceAll('&nbsp;', ' '),
+    {
+      ALLOWED_TAGS: [],
+    }
+  );
   buffer.className = element.className;
   buffer.innerText = formattedText;
   element.parentElement?.appendChild(buffer);

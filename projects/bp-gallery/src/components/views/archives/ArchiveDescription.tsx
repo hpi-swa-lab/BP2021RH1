@@ -10,13 +10,15 @@ const ArchiveDescription = ({ description }: { description: Maybe<string> | unde
   const textRef = useRef<HTMLDivElement>(null);
   const [long, setLong] = useState(false);
 
+  const maxLines = 16;
+
   useEffect(() => {
-    setLong(getIsLong(textRef.current, description ?? '', 13));
+    setLong(getIsLong(textRef.current, description ?? '', maxLines));
   }, [description]);
 
   return (
     <CollapsibleContainer
-      collapsedHeight='23rem'
+      collapsedHeight={`${1.75 * maxLines}rem`}
       long={long}
       className='w-52'
       onToggle={open => setOpen(open)}
@@ -24,7 +26,8 @@ const ArchiveDescription = ({ description }: { description: Maybe<string> | unde
       <div
         ref={textRef}
         className={`mb-1 p-1 pt-0 text-lg break-words ${
-          !open ? 'line-clamp-[13] !overflow-visible' : ''
+          //unfortunately line clamp must be hardcoded since tailwind doesn't seem to support dynamic runtime css classes
+          !open ? 'line-clamp-[16] !overflow-visible' : ''
         }`}
       >
         <RichText value={description ?? t('archives.defaultLongDescription')} />
