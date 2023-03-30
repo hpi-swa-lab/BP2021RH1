@@ -17,7 +17,10 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
   const commentsCount = picture.comments?.length ?? 0;
 
   return showStats ? (
-    <div className='absolute flex w-full justify-end bottom-0 transparent right-0 text-white brightness-100'>
+    <div
+      data-cy='preview-stats'
+      className='absolute flex w-full justify-end bottom-0 transparent right-0 text-white brightness-100'
+    >
       <div className={`h-20 w-full bg-gradient-to-t from-black `}></div>
       <div
         className={`absolute bottom-0 right-0 items-center flex gap-2 transparent mb-1 mr-2 transition-all duration-200 cursor-default ${

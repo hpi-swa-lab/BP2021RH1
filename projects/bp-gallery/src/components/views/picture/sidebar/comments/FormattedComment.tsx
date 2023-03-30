@@ -73,7 +73,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
   });
 
   const [deleteComment] = useDeclineCommentMutation({
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getPictureInfo', 'getPictures', 'getPicturesByAllSearch'],
   });
 
   const onDelete = useCallback(async () => {
