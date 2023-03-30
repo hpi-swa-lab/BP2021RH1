@@ -35,13 +35,7 @@ const CollapsibleContainer = ({
     <>
       <div
         className={`overflow-hidden transition-[height] duration-1000`}
-        style={
-          long
-            ? open
-              ? { height: `${measureRef.current?.clientHeight ?? 0}px` }
-              : { height: collapsedHeight }
-            : {}
-        }
+        style={long ? (open ? { height: `${fullHeight}px` } : { height: collapsedHeight }) : {}}
       >
         <div ref={measureRef}>{children}</div>
       </div>
