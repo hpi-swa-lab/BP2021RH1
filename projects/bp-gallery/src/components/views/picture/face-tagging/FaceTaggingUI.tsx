@@ -79,7 +79,7 @@ export const FaceTaggingUI = ({
             {isFaceTagging ? t('pictureFields.edit-faces') : t('pictureFields.tag-faces')}
           </Button>
         )}
-        {faceTags?.length && (
+        {faceTags !== undefined && faceTags.length > 0 && (
           <Button
             variant='contained'
             className='!mt-5 w-full !bg-[#7e241d]'
