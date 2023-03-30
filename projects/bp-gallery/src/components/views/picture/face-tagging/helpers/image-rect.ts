@@ -19,20 +19,27 @@ export const useImageRect = (img: HTMLImageElement | null) => {
 
   const [rect, setRect] = useState(() => (img ? computeRect(img) : null));
 
+  const recompute = useCallback(
+    (img: HTMLImageElement) => {
+      setRect(computeRect(img));
+    },
+    [computeRect]
+  );
+
   useEffect(() => {
     if (!img) {
       setRect(null);
       return;
     }
-    setRect(computeRect(img));
+    recompute(img);
 
     const resizeObserver = new ResizeObserver(() => {
-      setRect(computeRect(img));
+      recompute(img);
     });
     resizeObserver.observe(img);
 
     const mutationObserver = new MutationObserver(() => {
-      setRect(computeRect(img));
+      recompute(img);
     });
     mutationObserver.observe(img, {
       attributeFilter: ['style'],
@@ -42,7 +49,7 @@ export const useImageRect = (img: HTMLImageElement | null) => {
       resizeObserver.disconnect();
       mutationObserver.disconnect();
     };
-  }, [img, computeRect]);
+  }, [img, root, recompute]);
 
   return rect;
 };
