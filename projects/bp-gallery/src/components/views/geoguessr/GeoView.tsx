@@ -49,7 +49,7 @@ const GeoView = () => {
   const seed = 42;
 
   const hasReadInstructions = Boolean(
-    JSON.parse(localStorage.getItem('hasReadInstructions') || 'false')
+    JSON.parse(localStorage.getItem('hasReadInstructions') ?? 'false')
   );
   const [modalOpen, setModalOpen] = useState(!hasReadInstructions);
   const dontShowAgain = () => {
@@ -76,6 +76,7 @@ const GeoView = () => {
 
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
   const [gameOver, setGameOver] = useState(false);
+  const [needsExplanation, setNeedsExplanation] = useState(false);
   const { data } = useGetPictureInfoQuery({
     variables: { pictureId: pictureId || fallbackPictureId },
   });
@@ -102,7 +103,7 @@ const GeoView = () => {
       >
         <Box className='modal absolute top-1/2 left-1/2 translate-y-[-50%] translate-x-[-50%] w-[400] bg-white shadow p-4 rounded flex gap-2 flex-col'>
           <Typography id='modal-title' variant='h6' component='h2'>
-            {t('geo.explanation-title')}
+            {needsExplanation ? t('geo.explanation-reminder') : t('geo.explanation-title')}
           </Typography>
           <Typography id='modal-description'>{t('geo.explanation-nav')}</Typography>
           <Button id='dont-show-again-button' onClick={dontShowAgain}>
@@ -129,7 +130,15 @@ const GeoView = () => {
             <Info />
             {t('geo.getTip')}
           </div>
-          <GeoMap allGuesses={allGuesses} onNextPicture={onNextPicture} pictureId={pictureId} />
+          <GeoMap
+            allGuesses={allGuesses}
+            onNextPicture={onNextPicture}
+            pictureId={pictureId}
+            needsExplanation={() => {
+              setModalOpen(true);
+              setNeedsExplanation(true);
+            }}
+          />
         </div>
       )}
       {gameOver && (

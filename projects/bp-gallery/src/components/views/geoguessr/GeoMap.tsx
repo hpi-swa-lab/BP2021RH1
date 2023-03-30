@@ -108,10 +108,12 @@ const GeoMap = ({
   onNextPicture,
   pictureId,
   allGuesses,
+  needsExplanation,
 }: {
   onNextPicture: () => void;
   pictureId: string;
   allGuesses: GetPictureGeoInfoQuery['pictureGeoInfos'];
+  needsExplanation: () => void;
 }) => {
   const { t } = useTranslation();
   const initialMapValues = { center: { lat: 51.8392573, lng: 10.5279953 }, zoom: 10 };
@@ -132,7 +134,7 @@ const GeoMap = ({
 
   const sendGuess = () => {
     if (guess.lat === initialGuess.lat && guess.lng === initialGuess.lng) {
-      alert(t('geo.explanation-reminder'));
+      needsExplanation();
       return;
     }
     createPictureGeoInfo({
