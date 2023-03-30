@@ -30,7 +30,7 @@ describe('Geo View', () => {
     cy.get('#geo-image')
       .invoke('attr', 'src')
       .then(elem => {
-        oldPictureSrc = elem || '';
+        oldPictureSrc = elem ?? '';
       });
 
     // check if it contains a map
