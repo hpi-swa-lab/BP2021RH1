@@ -1,15 +1,15 @@
-import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { Close, Done } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { PropsWithChildren } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   useAcceptCommentMutation,
   useDeclineCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
-import { useTranslation } from 'react-i18next';
+import { FlatComment } from '../../../../../types/additionalFlatTypes';
+import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import './CommentVerification.scss';
-import { Button } from '@mui/material';
-import { Close, Done } from '@mui/icons-material';
-import { PropsWithChildren } from 'react';
 
 const CommentVerification = ({
   children,
@@ -21,7 +21,7 @@ const CommentVerification = ({
 
   const [acceptComment] = useAcceptCommentMutation({
     variables: { commentId: comment.id, currentTime: new Date().toISOString() },
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getPictureInfo', 'getPictures', 'getPicturesByAllSearch'],
   });
   const [declineComment] = useDeclineCommentMutation({
     variables: {
