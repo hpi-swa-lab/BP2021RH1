@@ -5,8 +5,8 @@ describe('Navigation to Show More View from Discover View', () => {
     cy.visit('/discover');
   });
 
-  it('works for "Neuzugänge im Archiv"', () => {
-    cy.get('.overview-container:contains(Neuzugänge im Archiv)').contains('Mehr anzeigen').click();
+  it('works for "Neuzugänge"', () => {
+    cy.get('.overview-container:contains(Neuzugänge)').contains('Mehr anzeigen').click();
     urlIs('/show-more/latest');
   });
 
@@ -100,12 +100,12 @@ describe('Navigation to Show More View from Archive View', () => {
 });
 
 describe('Global Show More View', () => {
-  it('shows show more for "Neuzugänge im Archiv"', () => {
+  it('shows show more for "Neuzugänge"', () => {
     cy.visit('/show-more/latest');
     // check for text in show more view
-    cy.contains('Neuzugänge im Archiv');
+    cy.contains('Neuzugänge');
     cy.contains(
-      'Hier fließen die jeweils jüngsten 500 „Neuzugänge“ des Fotoarchivs ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.'
+      'Hier fließen die jüngsten 500 „Neuzugänge“ der Fotoarchive ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.'
     );
 
     // check for images in show more view

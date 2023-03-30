@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -16,7 +15,6 @@ const matomoUrl = import.meta.env.VITE_REACT_APP_MATOMO_URL;
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
-    integrations: [new BrowserTracing()],
     tracesSampleRate: 1.0,
   });
 }
