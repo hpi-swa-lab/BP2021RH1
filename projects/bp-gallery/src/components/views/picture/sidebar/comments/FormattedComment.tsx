@@ -7,7 +7,6 @@ import {
   PushPin,
   QuestionAnswer,
 } from '@mui/icons-material';
-import { Button } from '@mui/material';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,10 +17,12 @@ import {
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
+import CollapsibleContainer from '../../../../common/CollapsibleContainer';
 import TextEditor from '../../../../common/editors/TextEditor';
 import RichText from '../../../../common/RichText';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import { getIsLong } from './../../../../../helpers/get-linebreaks';
 import CommentVerification from './CommentVerification';
 import './FormattedComment.scss';
 import NewCommentForm from './NewCommentForm';
@@ -45,12 +46,17 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
   const { t } = useTranslation();
 
   const { role } = useAuth();
+  const [long, setLong] = useState(false);
 
-  const isLong = comment.text.length > 500;
+  const textRef = useRef<HTMLDivElement>(null);
   const isCurator = role >= AuthRole.CURATOR;
   const dialog = useDialog();
 
-  const [isOpen, setIsOpen] = useState<boolean>(!isLong);
+  useEffect(() => {
+    setLong(getIsLong(textRef.current, comment.text, 9));
+  }, [comment.text]);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [pinned, setPinned] = useState(comment.pinned);
   const [expanded, setExpanded] = useState(true);
   const [edit, setEdit] = useState(false);
@@ -73,7 +79,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
   });
 
   const [deleteComment] = useDeclineCommentMutation({
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getPictureInfo', 'getPictures', 'getPicturesByAllSearch'],
   });
 
   const onDelete = useCallback(async () => {
@@ -136,7 +142,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
 
   return (
     <div
-      className={`bg-neutral-200 comment${isLong ? ' long' : ''}${pinned ? ' pinned' : ''}${
+      className={`bg-neutral-200 comment${long ? ' long' : ''}${pinned ? ' pinned' : ''}${
         comment.parentComment === null ? ' rounded-lg' : ''
       }`}
       key={comment.id}
@@ -173,26 +179,24 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
         )}
       </div>
       <div className={`ml-2 ${!expanded ? 'hidden' : ''}`}>
-        {isCurator && edit ? (
-          <div className={`comment-text bg-neutral-100 open mt-1`}>
-            <CommentEditField comment={comment} />
-          </div>
-        ) : (
-          <div className={`comment-text ${isOpen ? 'open' : ''} ${isLong ? 'long' : ''} mt-1`}>
-            <RichText value={comment.text} />
-          </div>
-        )}
-        {isLong && !edit && (
-          <div className='flex items-center justify-center mt-1'>
-            <Button
-              className='expand-button'
-              onClick={() => setIsOpen(!isOpen)}
-              startIcon={<ExpandMore />}
+        <CollapsibleContainer
+          collapsedHeight='250px'
+          long={long && !edit}
+          onToggle={open => setIsOpen(open)}
+        >
+          {isCurator && edit ? (
+            <div className={`text-lg break-words bg-neutral-100 mt-1`}>
+              <CommentEditField comment={comment} />
+            </div>
+          ) : (
+            <div
+              className={`text-lg break-words ${isOpen ? '' : 'line-clamp-[9] !overflow-visible'}
+              } mt-1`}
             >
-              {isOpen ? t('common.showLess') : t('common.showMore')}
-            </Button>
-          </div>
-        )}
+              <RichText value={comment.text} textRef={textRef} />
+            </div>
+          )}
+        </CollapsibleContainer>
         <div className='flex gap-0.5 flex-wrap'>
           {comment.publishedAt &&
             commentActions.map(commentAction => (

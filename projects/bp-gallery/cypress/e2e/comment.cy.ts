@@ -86,17 +86,17 @@ describe('Comment', () => {
     cy.contains('.comment', 'Oberkommentar1').within(() => {
       cy.contains('button', 'Antworten').click();
       postComment('Hans Unter', 'Unterkommentar1');
-      cy.contains('.comment-text', 'Unterkommentar1');
+      cy.contains('.comment', 'Unterkommentar1');
       cy.contains('.comment-verification-container', 'Unterkommentar1')
         .contains('button', 'Akzeptieren')
         .click();
       cy.contains('button', 'Antworten').click();
       postComment('Hans Unter', 'Unterkommentar2');
-      cy.contains('.comment-text', 'Unterkommentar2');
+      cy.contains('.comment', 'Unterkommentar2');
       cy.contains('.comment', 'Unterkommentar1').within(() => {
         cy.contains('button', 'Antworten').click();
         postComment('Hans Unter', 'UnterUnterkommentar1');
-        cy.contains('.comment-text', 'UnterUnterkommentar1');
+        cy.contains('.comment', 'UnterUnterkommentar1');
       });
     });
   });

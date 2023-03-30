@@ -15,7 +15,7 @@ const useLike = (pictureId: string, likeCount: number) => {
   // wrap in ref so that the useEffect below doesn't trigger on changes to the current value
   const currentLikeCountWithoutMine = useRef(0);
   useEffect(() => {
-    currentLikeCountWithoutMine.current = likeCount - (isLiked ? 1 : 0);
+    currentLikeCountWithoutMine.current = likeCount > 0 ? likeCount - (isLiked ? 1 : 0) : 0;
   }, [likeCount, isLiked]);
 
   useEffect(() => {
