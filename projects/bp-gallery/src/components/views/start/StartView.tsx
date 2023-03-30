@@ -16,7 +16,6 @@ import DailyPicture from './DailyPicture';
 import './StartView.scss';
 
 const StartView = () => {
-  const history: History = useHistory();
   const { t } = useTranslation();
   const history: History = useHistory();
   const { data } = useGetAllArchiveTagsQuery();
@@ -71,7 +70,6 @@ const StartView = () => {
                 isShowMore={true}
               />
             </div>
-            <h3>{t('startpage.our-archives')}</h3>
             <PictureOverview
               title={t('discover.latest-pictures')}
               queryParams={{}}
