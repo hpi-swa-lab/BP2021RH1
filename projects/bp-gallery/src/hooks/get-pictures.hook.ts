@@ -1,11 +1,11 @@
+import { useMemo } from 'react';
+import { AuthRole, useAuth } from '../components/provider/AuthProvider';
 import {
   GetPicturesByAllSearchQueryVariables,
   PictureFiltersInput,
   useGetPicturesByAllSearchQuery,
   useGetPicturesQuery,
 } from '../graphql/APIConnector';
-import { AuthRole, useAuth } from '../components/provider/AuthProvider';
-import { useMemo } from 'react';
 
 export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
