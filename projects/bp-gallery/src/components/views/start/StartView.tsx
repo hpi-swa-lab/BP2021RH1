@@ -1,10 +1,13 @@
+import { History } from 'history';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import {
   useGetAllArchiveTagsQuery,
   useGetAllPicturesByArchiveQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import PictureOverview from '../../common/PictureOverview';
 import ScrollContainer from '../../common/ScrollContainer';
 import BrowseView from '../browse/BrowseView';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
@@ -12,6 +15,7 @@ import DailyPicture from './DailyPicture';
 import './StartView.scss';
 
 const StartView = () => {
+  const history: History = useHistory();
   const { t } = useTranslation();
 
   const { data } = useGetAllArchiveTagsQuery();
@@ -50,7 +54,16 @@ const StartView = () => {
               <p>{t('startpage.welcome-text')}</p>
             </div>
             <DailyPicture />
-            <h3>{t('startpage.our-archives')}</h3>
+            <PictureOverview
+              title={t('discover.latest-pictures')}
+              queryParams={{}}
+              onClick={() => {
+                history.push('/show-more/latest', {
+                  showBack: true,
+                });
+              }}
+            />
+            <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
             <div className='archives'>{archiveCards}</div>
           </div>
           <BrowseView
