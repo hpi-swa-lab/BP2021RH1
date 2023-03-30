@@ -58,8 +58,14 @@ describe('picture uploading and tagging', () => {
 
     cy.get('.add-button').click();
     cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').clear();
-    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').type('TestBeschreibung');
+    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').type('Test');
+    cy.contains('.save-state', 'Speichern ausstehend');
     cy.contains('Beschreibungen').click();
+    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').type('Beschreibung');
+    cy.contains('.save-state', 'Speichern ausstehend');
+    // regression test for https://github.com/hpi-swa-lab/BP2021RH1/issues/401
+    cy.get('.picture-container img').click();
     cy.contains('.save-state', 'Gespeichert');
 
     cy.contains('.field-content', 'Personen').find('input').click();
