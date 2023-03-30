@@ -132,8 +132,8 @@ export const FaceTag = ({
         <span>{name}</span>
         {role >= AuthRole.CURATOR && id !== undefined && (
           <>
-            <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
             <OpenWith className='hover:text-[#00000066]' onClick={handleMove} />
+            <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
           </>
         )}
       </div>

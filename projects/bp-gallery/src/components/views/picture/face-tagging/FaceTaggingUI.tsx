@@ -76,10 +76,10 @@ export const FaceTaggingUI = ({
             className='!mt-5 w-full !bg-[#7e241d]'
             onClick={toggleFaceTagging}
           >
-            {t('pictureFields.tag-faces')}
+            {isFaceTagging ? t('pictureFields.edit-faces') : t('pictureFields.tag-faces')}
           </Button>
         )}
-        {tags.length > 0 && (
+        {faceTags?.length && (
           <Button
             variant='contained'
             className='!mt-5 w-full !bg-[#7e241d]'
