@@ -8,4 +8,12 @@ describe('Search', () => {
     cy.contains('.picture-count', '107 Bilder');
     cy.get('.picture-grid .picture-preview').should('have.length', 107);
   });
+  it('is possible to like a picture in the search view', () => {
+    cy.get('[data-cy="preview-stats"]').first().contains('0').click();
+    cy.get('[data-cy="preview-stats"]').first().contains('1');
+    cy.reload();
+    cy.get('[data-cy="preview-stats"]').first().contains('1').click();
+    cy.reload();
+    cy.get('[data-cy="preview-stats"]').first().contains('0');
+  });
 });
