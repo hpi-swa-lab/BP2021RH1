@@ -1,11 +1,11 @@
 import { sanitize } from 'isomorphic-dompurify';
-import { LegacyRef } from 'react';
+import { RefObject } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 
 type RichTextProps = {
   value: string;
   className?: string;
-  textRef?: LegacyRef<HTMLDivElement>;
+  textRef?: RefObject<HTMLDivElement>;
 };
 
 const RichText = ({ value, className, textRef }: RichTextProps) => {
