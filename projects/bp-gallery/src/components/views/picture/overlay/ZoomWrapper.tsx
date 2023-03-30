@@ -113,6 +113,10 @@ const ZoomWrapper = ({
 
   const onPointerDown = useCallback((evt: PointerEvent) => {
     pointers.current = pointers.current.concat([evt]);
+  }, []);
+
+  // prevent dragging
+  const onDragStart = useCallback((evt: DragEvent) => {
     evt.preventDefault();
   }, []);
 
@@ -179,13 +183,14 @@ const ZoomWrapper = ({
       container?.removeEventListener('pointercancel', onPointerUp);
       container?.removeEventListener('pointerleave', onPointerUp);
       container?.removeEventListener('pointermove', onPointerMove);
+      container?.removeEventListener('dragstart', onDragStart);
     }
     if (imageRef.current) {
       const image = imageRef.current;
       resetViewport();
       image.style.transform = '';
     }
-  }, [onScroll, onPointerDown, onPointerUp, onPointerMove, resetViewport]);
+  }, [onScroll, onPointerDown, onPointerUp, onPointerMove, onDragStart, resetViewport]);
 
   const addAll = useCallback(() => {
     if (containerRef.current) {
@@ -197,8 +202,9 @@ const ZoomWrapper = ({
       container?.addEventListener('pointercancel', onPointerUp);
       container?.addEventListener('pointerleave', onPointerUp);
       container?.addEventListener('pointermove', onPointerMove);
+      container?.addEventListener('dragstart', onDragStart);
     }
-  }, [onScroll, onPointerDown, onPointerUp, onPointerMove]);
+  }, [onScroll, onPointerDown, onPointerUp, onPointerMove, onDragStart]);
 
   useEffect(() => {
     if (!containerRef.current) {
