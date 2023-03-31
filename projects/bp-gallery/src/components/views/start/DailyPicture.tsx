@@ -23,7 +23,7 @@ const DailyPicture = () => {
   //These are hard-coded until we implemented votes
   const pictureIds =
     import.meta.env.MODE === 'development'
-      ? ['1', '2', '3'] //just for testing purposes
+      ? ['1'] //just for testing purposes
       : [
           //here are the real pictures for production
           '2254',
@@ -86,17 +86,15 @@ const DailyPicture = () => {
     <div>
       {picture && (
         <div className='flex justify-center'>
-          <Card className='flex flex-col-reverse md:flex-row rounded-md justify-between max-w-4xl max-h-fit'>
-            <div className='p-4 flex flex-col'>
+          <Card className='flex flex-col-reverse md:flex-row rounded-md justify-between max-w-4xl'>
+            <div className='p-4 flex flex-col overflow-hidden'>
               <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
-              <div className={'line-clamp-[10]'}>
-                <h4 className={'text-lg my-1'}>{t('common.description')}:</h4>
-                <RichText value={description} className='break-words' />
-              </div>
+              <h4 className={'text-lg my-1'}>{t('common.description')}:</h4>
+              <RichText value={description} className='break-words line-clamp-[9]' />
               <DailyPictureInfo picture={picture} />
             </div>
             <img
-              className={'w-screen sm:w-auto sm:h-96 cursor-pointer'}
+              className={'sm:w-auto sm:h-96 cursor-pointer'}
               id='daily-picture'
               src={pictureLink}
               alt={t('common.daily-picture')}

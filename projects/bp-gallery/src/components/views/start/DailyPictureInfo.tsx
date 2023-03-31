@@ -26,7 +26,7 @@ const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
 
   return (
     <div className='flex mt-auto flex-col'>
-      <div className='flex gap-4'>
+      <div className='flex gap-4 mt-4'>
         <div
           className='items-center flex gap-2 mb-0.5'
           title={t('common.like')}
