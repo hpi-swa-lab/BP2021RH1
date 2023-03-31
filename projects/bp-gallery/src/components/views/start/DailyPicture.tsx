@@ -6,7 +6,6 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import ShowStats from '../../provider/ShowStatsProvider';
 import PictureView from '../picture/PictureView';
 import RichText from './../../common/RichText';
 import DailyPictureInfo from './DailyPictureInfo';
@@ -96,20 +95,15 @@ const DailyPicture = () => {
               </div>
               <DailyPictureInfo picture={picture} />
             </div>
-            <ShowStats>
-              <div className='relative'>
-                <img
-                  className={'w-screen h-full sm:w-auto sm:h-96 cursor-pointer'}
-                  id='daily-picture'
-                  src={pictureLink}
-                  alt={t('common.daily-picture')}
-                  onClick={async () => {
-                    await navigateToPicture(picture.id);
-                  }}
-                />
-                {/* <PictureStats picture={picture} hovered /> */}
-              </div>
-            </ShowStats>
+            <img
+              className={'w-screen sm:w-auto sm:h-96 cursor-pointer'}
+              id='daily-picture'
+              src={pictureLink}
+              alt={t('common.daily-picture')}
+              onClick={async () => {
+                await navigateToPicture(picture.id);
+              }}
+            />
           </Card>
         </div>
       )}
