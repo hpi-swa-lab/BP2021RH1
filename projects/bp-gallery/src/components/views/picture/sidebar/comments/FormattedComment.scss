@@ -64,38 +64,4 @@
       }
     }
   }
-
-  .comment-text {
-    font-size: large;
-    white-space: pre-line;
-    overflow-wrap: anywhere;
-
-    max-height: 250px;
-    overflow: hidden;
-    &.open {
-      &.long {
-        background: transparent;
-      }
-      max-height: unset;
-
-      .expand-button .MuiSvgIcon-root {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  .expand-button {
-    z-index: 3;
-  }
-}
-
-.comment-text {
-  &:not(.open) {
-    .jodit-wysiwyg {
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 11;
-    }
-  }
 }
