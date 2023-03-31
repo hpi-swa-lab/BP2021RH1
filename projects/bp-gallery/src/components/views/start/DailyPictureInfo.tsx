@@ -5,7 +5,9 @@ import {
   ThumbUpAlt,
   ThumbUpAltOutlined,
 } from '@mui/icons-material';
+import { History } from 'history';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import useLike from '../picture/sidebar/like-hooks';
@@ -16,6 +18,7 @@ type DailyPictureInfoProps = {
 
 const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
   const { t } = useTranslation();
+  const history: History = useHistory();
   const pictureDate = formatTimeStamp(picture.time_range_tag);
   const pictureArchive = picture.archive_tag?.name;
   const pictureArchiveId = picture.archive_tag?.id;
@@ -51,7 +54,18 @@ const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
         <Event /> {pictureDate}
       </div>
       <div className={'flex item-center gap-2'}>
-        <FolderSpecial /> <a href={pictureArchiveLink}>{pictureArchive} </a>
+        <FolderSpecial />
+        <a
+          href={pictureArchiveLink}
+          onClick={event => {
+            event.preventDefault();
+            history.push(pictureArchiveLink, {
+              showBack: true,
+            });
+          }}
+        >
+          {pictureArchive}
+        </a>
       </div>
     </div>
   );
