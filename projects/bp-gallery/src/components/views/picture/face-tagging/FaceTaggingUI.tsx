@@ -7,7 +7,7 @@ import { FlatPersonTagWithoutRelations, TagType } from '../../../../types/additi
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import PictureInfoField from '../sidebar/picture-info/PictureInfoField';
 import TagSelectionField from '../sidebar/picture-info/TagSelectionField';
-import { useFaceTagging } from './FaceTaggingContext';
+import { useFaceTagging } from '../../../../hooks/context-hooks';
 
 export const FaceTaggingUI = ({
   tags,

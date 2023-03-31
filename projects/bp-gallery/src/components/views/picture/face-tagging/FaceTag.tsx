@@ -3,7 +3,7 @@ import { CSSProperties, useContext, useMemo } from 'react';
 import '../../../../shared/style.scss';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import { PictureViewContext } from '../PictureView';
-import { useFaceTagging } from './FaceTaggingContext';
+import { useFaceTagging } from '../../../../hooks/context-hooks';
 import { useImageRect } from './helpers/image-rect';
 
 const triangleHeight = 10;

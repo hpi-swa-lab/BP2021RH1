@@ -15,12 +15,12 @@ import {
   useDeleteFaceTagMutation,
   useGetFaceTagsQuery,
   useGetPersonTagQuery,
-} from '../../../../graphql/APIConnector';
-import { PictureViewContext } from '../PictureView';
-import { FaceTag, FaceTagData } from './FaceTag';
-import { useImageRect } from './helpers/image-rect';
+} from '../../graphql/APIConnector';
+import { PictureViewContext } from '../views/picture/PictureView';
+import { FaceTagData } from '../views/picture/face-tagging/FaceTag';
+import { useImageRect } from '../views/picture/face-tagging/helpers/image-rect';
 
-type FaceTagging = {
+export type FaceTagging = {
   activeTagId: string | null;
   setActiveTagId: Dispatch<SetStateAction<string | null>>;
   tags: FaceTagData[];
@@ -31,7 +31,7 @@ type FaceTagging = {
   setIsFaceTagging: Dispatch<SetStateAction<boolean>>;
 };
 
-const Context = createContext<FaceTagging | null>(null);
+export const FaceTaggingContext = createContext<FaceTagging | null>(null);
 
 export const FaceTaggingProvider = ({
   children,
@@ -209,24 +209,26 @@ export const FaceTaggingProvider = ({
     return <>{children}</>;
   }
 
-  return <Context.Provider value={value}>{children}</Context.Provider>;
+  return <FaceTaggingContext.Provider value={value}>{children}</FaceTaggingContext.Provider>;
 };
 
-export const useFaceTagging = () => {
-  return useContext(Context);
+/*export const useFaceTagging = () => {
+  return useContext(FaceTaggingContext);
 };
+
 
 export const FaceTags = () => {
-  const context = useFaceTagging();
+  const FaceTaggingContext = useFaceTagging();
 
-  if (!context || context.hideTags) {
+  if (!FaceTaggingContext || FaceTaggingContext.hideTags) {
     return null;
   }
   return (
     <>
-      {context.tags.map(data => (
+      {FaceTaggingContext.tags.map(data => (
         <FaceTag data={data} key={data.name} />
       ))}
     </>
   );
 };
+*/
