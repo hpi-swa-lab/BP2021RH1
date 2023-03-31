@@ -94,7 +94,7 @@ const DailyPicture = () => {
               <DailyPictureInfo picture={picture} />
             </div>
             <img
-              className={'sm:w-auto sm:h-96 cursor-pointer'}
+              className={'sm:w-auto sm:h-96 cursor-pointer sm:max-w-2xl object-cover'}
               id='daily-picture'
               src={pictureLink}
               alt={t('common.daily-picture')}
