@@ -77,9 +77,8 @@ const BrowseView = ({
     useSimplifiedQueryResponseData(data)?.collections;
 
   //Curator functionality
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } = useBulkOperations(
-    collections?.[0]
-  );
+  const { linkToCollection, moveToCollection, removeFromCollection, downloadCollection, bulkEdit } =
+    useBulkOperations(collections?.[0]);
 
   const addCollection = useCallback(async () => {
     const collectionName = await dialog({
@@ -153,6 +152,7 @@ const BrowseView = ({
                     removeFromCollection,
                     linkToCollection,
                     moveToCollection,
+                    downloadCollection,
                     bulkEdit,
                   ]}
                 />

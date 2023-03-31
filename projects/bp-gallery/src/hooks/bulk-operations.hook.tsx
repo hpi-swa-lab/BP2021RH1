@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
-import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
+import { Add, Download, DriveFileMove, Close, Edit } from '@mui/icons-material';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
 import { asApiPath } from '../helpers/app-helpers';
 
@@ -73,7 +73,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     },
     downloadCollection: {
       name: 'Download selected pictures',
-      icon: <Close />,
+      icon: <Download />,
       action: (selectedPictures: FlatPicture[]) => {
         selectedPictures.forEach(picture => {
           const pictureLink = picture.media?.url
