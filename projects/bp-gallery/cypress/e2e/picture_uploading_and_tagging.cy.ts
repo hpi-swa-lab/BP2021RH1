@@ -48,51 +48,63 @@ describe('picture uploading and tagging', () => {
     cy.get('.MuiButton-root').contains('Bestätigen').click();
   });
 
-  it('tagging picture', () => {
+  it('tagging picture with year', () => {
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-grid .picture-preview:last').click();
     cy.get('.date-indicator').click();
     cy.contains('.rdrInputRange', 'Jahr').find('input').clear();
     cy.contains('.rdrInputRange', 'Jahr').find('input').type('1000{esc}');
     cy.contains('.save-state', 'Gespeichert');
+  });
 
+  it('tagging picture with description', () => {
     cy.get('.add-button').click();
-    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').clear();
-    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').type('Test');
-    cy.contains('.save-state', 'Speichern ausstehend');
-    cy.contains('Beschreibungen').click();
-    cy.contains('.save-state', 'Gespeichert');
-    cy.contains('.field-content', 'Beschreibungen').find('.jodit-wysiwyg').type('Beschreibung');
-    cy.contains('.save-state', 'Speichern ausstehend');
+    cy.get('.description-wrapper').find('.jodit-container').type('Test');
+    cy.get('.save-state:contains(Speichern ausstehend)').should('exist');
+    cy.get('.picture-container img').click();
+    cy.get('.save-state:contains(Gespeichert)').should('exist');
+  });
+
+  it('change picture description', () => {
+    cy.get('.description-wrapper').find('.jodit-container').type('Beschreibung');
+    cy.get('.save-state:contains(Speichern ausstehend)').should('exist');
     // regression test for https://github.com/hpi-swa-lab/BP2021RH1/issues/401
     cy.get('.picture-container img').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.get('.save-state:contains(Gespeichert)').should('exist');
+  });
 
+  it('tagging picture with person tag', () => {
     cy.contains('.field-content', 'Personen').find('input').click();
     cy.contains('.field-content', 'Personen').find('input').clear();
     cy.contains('.field-content', 'Personen').find('input').type('TestPerson');
     cy.contains('TestPerson hinzufügen').click();
     cy.contains('.save-state', 'Gespeichert');
+  });
 
+  it('tagging picture with location tag', () => {
     cy.contains('.field-content', 'Orte').find('input').click();
     cy.contains('.field-content', 'Orte').find('input').clear();
     cy.contains('.field-content', 'Orte').find('input').type('TestOrt');
     cy.contains('TestOrt hinzufügen').click();
     cy.contains('.save-state', 'Gespeichert');
+  });
 
+  it('tagging picture with keyword tag', () => {
     cy.contains('.field-content', 'Schlagworte').find('input').click();
     cy.contains('.field-content', 'Schlagworte').find('input').clear();
     cy.contains('.field-content', 'Schlagworte').find('input').type('TestSchlagwort');
     cy.contains('TestSchlagwort hinzufügen').click();
     cy.contains('.save-state', 'Gespeichert');
+  });
 
+  it('tagging picture with collection', () => {
     cy.contains('.field-content', 'Collections').find('input').click();
     cy.contains('.field-content', 'Collections').find('input').clear();
     cy.contains('.field-content', 'Collections').find('input').type('TestCollection{enter}');
     cy.contains('.save-state', 'Gespeichert');
   });
 
-  it('checking tags and deleting picture', () => {
+  it('checking tags', () => {
     cy.visit('/browse/TestCollection');
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
 
@@ -105,7 +117,9 @@ describe('picture uploading and tagging', () => {
     cy.get('.picture-info-field').contains('TestSchlagwort').should('exist');
     cy.get('.picture-info-field').contains('TestCollection').should('exist');
     cy.get('.picture-info-field').contains('Herbert-Ahrens-Bilderarchiv').should('exist');
+  });
 
+  it('deleting picture', () => {
     cy.get('.picture-toolbar').find('[data-testid="ArrowBackIcon"]').click();
     cy.get('.picture-view').should('not.exist');
     cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
