@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug strapi",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}/projects/bp-strapi",
+            "runtimeArgs": [
+                "--inspect"
+            ],
+            "envFile": "${workspaceFolder}/projects/bp-strapi/config/env/development/.env",
+            "program": "debug.js",
+            "autoAttachChildProcesses": true
+        }
+    ]
+}
