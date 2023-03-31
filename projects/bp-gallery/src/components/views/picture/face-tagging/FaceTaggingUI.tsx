@@ -1,7 +1,7 @@
 import { Person } from '@mui/icons-material';
 import { Button, Chip } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatPersonTagWithoutRelations, TagType } from '../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
@@ -26,11 +26,15 @@ export const FaceTaggingUI = ({
   const context = useFaceTagging();
   const faceTags = context?.tags;
 
-  const [isFaceTagging, setIsFaceTagging] = useState(false);
+  const isFaceTagging = context?.isFaceTagging;
+  const setIsFaceTagging = context?.setIsFaceTagging;
 
   const toggleFaceTagging = useCallback(() => {
+    if (!setIsFaceTagging) {
+      return;
+    }
     setIsFaceTagging(is => !is);
-  }, []);
+  }, [setIsFaceTagging]);
 
   const toggleHideTags = useCallback(() => {
     context?.setHideTags(is => !is);

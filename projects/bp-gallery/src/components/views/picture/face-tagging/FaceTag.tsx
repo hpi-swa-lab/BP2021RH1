@@ -26,6 +26,7 @@ export const FaceTag = ({
 }) => {
   const { role } = useAuth();
   const context = useFaceTagging();
+  const isFaceTagging = context?.isFaceTagging;
   const handleDelete = () => {
     if (id === undefined) {
       return;
@@ -124,13 +125,13 @@ export const FaceTag = ({
   }, [x, y, position, noPointerEvents]);
 
   return (
-    <div className='fixed z-[9999] flex items-center' style={style}>
+    <div className='fixed z-[999] hover:z-[9999] flex items-center' style={style}>
       <svg width={triangle.width} height={triangle.height}>
         <polygon fill='#404173bb' points={triangle.points} />
       </svg>
       <div className='flex flex-row items-center space-x-1 bg-[#404173bb] p-2 rounded-md text-white'>
         <span>{name}</span>
-        {role >= AuthRole.CURATOR && id !== undefined && (
+        {role >= AuthRole.CURATOR && id !== undefined && isFaceTagging && (
           <>
             <OpenWith className='hover:text-[#00000066]' onClick={handleMove} />
             <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />

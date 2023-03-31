@@ -27,6 +27,8 @@ type FaceTagging = {
   hideTags: boolean | null;
   setHideTags: Dispatch<SetStateAction<boolean>>;
   removeTag: (id: string) => void;
+  isFaceTagging: boolean;
+  setIsFaceTagging: Dispatch<SetStateAction<boolean>>;
 };
 
 const Context = createContext<FaceTagging | null>(null);
@@ -37,6 +39,7 @@ export const FaceTaggingProvider = ({
 }: PropsWithChildren<{ pictureId: string }>) => {
   const [activeTagId, setActiveTagId] = useState<string | null>(null);
   const [hideTags, setHideTags] = useState(false);
+  const [isFaceTagging, setIsFaceTagging] = useState(false);
   useEffect(() => {
     setActiveTagId(null);
   }, [pictureId]);
@@ -184,8 +187,19 @@ export const FaceTaggingProvider = ({
       hideTags,
       setHideTags,
       removeTag,
+      isFaceTagging,
+      setIsFaceTagging,
     }),
-    [activeTagId, setActiveTagId, tags, activeTagData, hideTags, removeTag]
+    [
+      activeTagId,
+      setActiveTagId,
+      tags,
+      activeTagData,
+      hideTags,
+      removeTag,
+      isFaceTagging,
+      setIsFaceTagging,
+    ]
   );
 
   if (!tags) {
