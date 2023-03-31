@@ -23,7 +23,7 @@ const DailyPicture = () => {
   //These are hard-coded until we implemented votes
   const pictureIds =
     import.meta.env.MODE === 'development'
-      ? ['1'] //just for testing purposes
+      ? ['1', '2', '3'] //just for testing purposes
       : [
           //here are the real pictures for production
           '2254',
