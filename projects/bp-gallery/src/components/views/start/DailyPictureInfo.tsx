@@ -20,9 +20,8 @@ const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
   const { t } = useTranslation();
   const history: History = useHistory();
   const pictureDate = formatTimeStamp(picture.time_range_tag);
-  const pictureArchive = picture.archive_tag?.name;
-  const pictureArchiveId = picture.archive_tag?.id;
-  const pictureArchiveLink = pictureArchiveId ? `/archives/${pictureArchiveId}` : '';
+  const archive = picture.archive_tag;
+  const commentsCount = picture.comments?.length ?? 0;
   const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
 
   return (
@@ -43,30 +42,32 @@ const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
           )}
           {likeCount}
         </div>
-        {(picture.comments?.length ?? 0) > -1 && (
+        {commentsCount > 0 && (
           <div className='items-center flex gap-2' title={t('common.comments')}>
             <QuestionAnswer />
-            {picture.comments?.length ?? 0}
+            {commentsCount}
           </div>
         )}
       </div>
       <div className={'flex items-center gap-2'}>
         <Event /> {pictureDate}
       </div>
-      <div className={'flex item-center gap-2'}>
-        <FolderSpecial />
-        <a
-          href={pictureArchiveLink}
-          onClick={event => {
-            event.preventDefault();
-            history.push(pictureArchiveLink, {
-              showBack: true,
-            });
-          }}
-        >
-          {pictureArchive}
-        </a>
-      </div>
+      {archive && (
+        <div className={'flex item-center gap-2'}>
+          <FolderSpecial />
+          <a
+            href={`/archives/${archive.id}`}
+            onClick={event => {
+              event.preventDefault();
+              history.push(`/archives/${archive.id}`, {
+                showBack: true,
+              });
+            }}
+          >
+            {archive.name}
+          </a>
+        </div>
+      )}
     </div>
   );
 };
