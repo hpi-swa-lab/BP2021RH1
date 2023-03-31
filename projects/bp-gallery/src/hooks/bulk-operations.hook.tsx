@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
+import { saveAs } from 'file-saver';
 import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
 import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
+import { asApiPath } from '../helpers/app-helpers';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -66,6 +68,18 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
               selectedPictures.map(p => p.id)
             );
           }
+        });
+      },
+    },
+    downloadCollection: {
+      name: 'Download selected pictures',
+      icon: <Close />,
+      action: (selectedPictures: FlatPicture[]) => {
+        selectedPictures.forEach(picture => {
+          const pictureLink = picture.media?.url
+            ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
+            : '';
+          saveAs(pictureLink, picture.id);
         });
       },
     },

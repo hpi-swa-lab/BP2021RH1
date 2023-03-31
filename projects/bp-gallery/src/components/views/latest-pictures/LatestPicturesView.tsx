@@ -6,7 +6,7 @@ import ShowStats from '../../provider/ShowStatsProvider';
 import './LatestPicturesView.scss';
 
 const LatestPicturesView = () => {
-  const { linkToCollection, bulkEdit } = useBulkOperations();
+  const { linkToCollection, bulkEdit, downloadCollection } = useBulkOperations();
   const { t } = useTranslation();
 
   return (
@@ -20,7 +20,7 @@ const LatestPicturesView = () => {
               scrollPos={scrollPos}
               scrollHeight={scrollHeight}
               hashbase={'latest'}
-              bulkOperations={[linkToCollection, bulkEdit]}
+              bulkOperations={[linkToCollection, downloadCollection, bulkEdit]}
               queryParams={{}}
               maxNumPictures={500}
               showCount={false}
