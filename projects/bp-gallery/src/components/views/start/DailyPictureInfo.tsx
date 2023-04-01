@@ -36,7 +36,7 @@ const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
           }}
         >
           {isLiked ? (
-            <ThumbUpAlt className='cursor-pointer !transition-transform !duration-100 hover:scale-110 scale-105' />
+            <ThumbUpAlt className='text-blue-500 cursor-pointer !transition-transform !duration-100 hover:scale-110 scale-105' />
           ) : (
             <ThumbUpAltOutlined className='cursor-pointer !transition-transform !duration-100 hover:scale-110' />
           )}
