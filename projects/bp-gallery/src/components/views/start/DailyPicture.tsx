@@ -1,7 +1,7 @@
 import { Card, Portal } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
+import { useGetDailyPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
@@ -76,7 +76,7 @@ const DailyPicture = () => {
     [setIsFocused]
   );
   const dailyPictureId = choosePictureId(pictureIds);
-  const { data } = useGetPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
+  const { data } = useGetDailyPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
