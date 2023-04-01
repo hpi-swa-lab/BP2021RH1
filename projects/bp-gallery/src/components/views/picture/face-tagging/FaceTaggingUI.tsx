@@ -74,7 +74,7 @@ export const FaceTaggingUI = ({
           />
         )}
 
-        {context && role >= AuthRole.CURATOR && tags.length > 0 && (
+        {context && role >= AuthRole.CURATOR && (tags.length > 0 || isFaceTagging) && (
           <Button
             variant='contained'
             className='!mt-5 w-full !bg-[#7e241d]'
