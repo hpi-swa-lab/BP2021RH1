@@ -1,4 +1,5 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import { useEffect, useState } from 'react';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { renderRoutes } from 'react-router-config';
@@ -62,13 +63,26 @@ const apolloClient = new ApolloClient({
   }),
 });
 
+const growthbook = new GrowthBook({
+  apiHost: 'http://localhost:4100',
+  clientKey: 'sdk-8ya8rFZ7rGy4tR',
+  enableDevMode: true,
+  trackingCallback: (experiment, result) => {
+    // TODO: Use your real analytics tracking system
+    console.log('Viewed Experiment', {
+      experimentId: experiment.key,
+      variationId: result.key,
+    });
+  },
+});
+
 const App = () => {
   const [width, setWidth] = useState<number>(window.innerWidth);
-
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
   }
   useEffect(() => {
+    growthbook.loadFeatures({ autoRefresh: true, timeout: 2000 });
     window.addEventListener('resize', handleWindowSizeChange);
     return () => {
       window.removeEventListener('resize', handleWindowSizeChange);
@@ -83,13 +97,15 @@ const App = () => {
         <AuthProvider>
           <DialogProvider>
             <StorageProvider>
-              <div className='App'>
-                <ClipboardEditorProvider>
-                  <TopBar isMobile={isMobile} />
-                  {renderRoutes(routes)}
-                  {isMobile && <NavigationBar isMobile={true} />}
-                </ClipboardEditorProvider>
-              </div>
+              <GrowthBookProvider growthbook={growthbook}>
+                <div className='App'>
+                  <ClipboardEditorProvider>
+                    <TopBar isMobile={isMobile} />
+                    {renderRoutes(routes)}
+                    {isMobile && <NavigationBar isMobile={true} />}
+                  </ClipboardEditorProvider>
+                </div>
+              </GrowthBookProvider>
             </StorageProvider>
           </DialogProvider>
         </AuthProvider>
