@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mongo:
+    image: 'mongo:latest'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+  growthbook:
+    image: 'growthbook/growthbook:latest'
+    ports:
+      - '4000:3000'
+      - '4100:3100'
+    depends_on:
+      - mongo
+    environment:
+      - APP_ORIGIN=http://localhost:4000
+      - API_HOST=http://localhost:4100
+      - MONGODB_URI=mongodb://root:password@mongo:27017/
+    volumes:
+      - uploads:/usr/local/src/app/packages/back-end/uploads
+volumes:
+  uploads:
