@@ -19,6 +19,7 @@ import { NavLink } from 'react-router-dom';
 import { AuthRole, useAuth } from '../provider/AuthProvider';
 import LoginDialog from './LoginDialog';
 import './NavigationBar.scss';
+import { IfFeatureEnabled } from '@growthbook/growthbook-react';
 
 const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
@@ -84,6 +85,9 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
           {isMobile && <ImportContacts />}
           <span className='nav-element-title'>Stöbern</span>
         </NavLink>
+        <IfFeatureEnabled feature='test_button_navbar'>
+          <button>Test</button>
+        </IfFeatureEnabled>
         <div
           className='nav-element'
           onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}
