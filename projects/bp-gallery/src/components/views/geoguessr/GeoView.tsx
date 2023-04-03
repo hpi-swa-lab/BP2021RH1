@@ -12,6 +12,7 @@ import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
+import { useStorageState } from 'react-use-storage-state';
 import './GeoView.scss';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
@@ -48,12 +49,13 @@ const GeoView = () => {
   const pictureQueue = useRef(['']);
   const seed = 42;
 
-  const hasReadInstructions = Boolean(
-    JSON.parse(localStorage.getItem('hasReadInstructions') ?? 'false')
+  const [hasReadInstructions, setHasReadInstructions] = useStorageState<boolean>(
+    'hasReadInstructions',
+    false
   );
   const [modalOpen, setModalOpen] = useState(!hasReadInstructions);
   const dontShowAgain = () => {
-    localStorage.setItem('hasReadInstructions', 'true');
+    setHasReadInstructions(true);
     setModalOpen(false);
   };
 

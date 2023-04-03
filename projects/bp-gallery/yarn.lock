@@ -7175,6 +7175,11 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-use-storage-state@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-use-storage-state/-/react-use-storage-state-1.0.5.tgz#9b63690d59181ddb6b84d2dfa5fec86087b57eec"
+  integrity sha512-TqhGUD5GcTGWfEneNOE/e8Ds5JA+Sm7ryLc3VSNKqA9lDIyIgH0S+aoyHjsdKFh9hE1HvZhpTMQ9BDXVOXmJwQ==
+
 react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"

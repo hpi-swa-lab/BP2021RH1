@@ -133,13 +133,9 @@ const GeoMap = ({
     map.current.flyTo(initialMapValues.center, initialMapValues.zoom);
   }, [pictureId, initialMapValues]);
 
-  const [IncreaseNotAPlaceCountMutation] = useIncreaseNotAPlaceCountMutation({
+  const [sendNotAPlace] = useIncreaseNotAPlaceCountMutation({
     variables: { pictureId: pictureId },
   });
-
-  const sendNotAPlace = () => {
-    IncreaseNotAPlaceCountMutation();
-  };
 
   return (
     <div className={'map-container ' + (guessComplete ? 'guess-complete' : '')}>
