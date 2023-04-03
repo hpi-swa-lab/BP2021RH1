@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 import {
   useGetAllPicturesByArchiveQuery,
   useGetPictureGeoInfoQuery,
-  useGetPictureInfoQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
-import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
+import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
 import { useStorageState } from 'react-use-storage-state';
@@ -67,32 +66,38 @@ const GeoView = () => {
     const allPictureIds = archives ? getAllPictureIds(archives) : [];
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
-    setPictureId(getNextPicture);
+    setPictureId(getNextPicture());
   }, [archives]);
 
   const getNextPicture = () => {
     const nextPicture = pictureQueue.current[0];
-    pictureQueue.current = pictureQueue.current.filter((elem, index) => index !== 0);
+    pictureQueue.current = pictureQueue.current.slice(1);
     return nextPicture;
   };
 
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
   const [gameOver, setGameOver] = useState(false);
   const [needsExplanation, setNeedsExplanation] = useState(false);
-  const { data } = useGetPictureInfoQuery({
-    variables: { pictureId: pictureId || fallbackPictureId },
-  });
-  const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-  const pictureLink = picture?.media?.url
-    ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
+  // const { data } = useGetPictureInfoQuery({
+  //   variables: { pictureId: pictureId || fallbackPictureId },
+  // });
+
+  const { data: geoData } = useGetPictureGeoInfoQuery({ variables: { pictureId } });
+  const allGuesses = geoData?.pictureGeoInfos;
+
+  const pictureData = geoData?.pictureGeoInfos?.data[0]?.attributes?.picture?.data;
+  const pictureMedia = pictureData?.attributes?.media.data?.attributes;
+  const pictureLink = pictureMedia
+    ? pictureMedia.url
+      ? asApiPath(`${pictureMedia.url}?updatedAt=${pictureMedia.updatedAt as string}`)
+      : ''
     : '';
 
   const onNextPicture = () => {
     const nextPicture = getNextPicture();
     nextPicture ? setPictureId(nextPicture) : setGameOver(true);
   };
-  const { data: geoData } = useGetPictureGeoInfoQuery({ variables: { pictureId } });
-  const allGuesses = geoData?.pictureGeoInfos;
+
   return (
     <div>
       <Modal
@@ -115,7 +120,7 @@ const GeoView = () => {
       </Modal>
       {!gameOver && (
         <div className='guess-picture-view'>
-          <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
+          <ZoomWrapper blockScroll={true} pictureId={pictureId}>
             <div className='picture-wrapper'>
               <div className='picture-container'>
                 <img id='geo-image' src={pictureLink} alt={pictureLink} />

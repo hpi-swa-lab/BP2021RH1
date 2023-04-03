@@ -1192,7 +1192,22 @@ query getPictureGeoInfo($pictureId: ID!) {
       attributes {
         latitude
         longitude
-        radius
+        picture {
+          data {
+            id
+            attributes {
+              media {
+                data {
+                  id
+                  attributes {
+                    url
+                    updatedAt
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

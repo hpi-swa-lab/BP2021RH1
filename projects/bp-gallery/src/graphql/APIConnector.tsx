@@ -926,7 +926,6 @@ export type MutationForgotPasswordArgs = {
 
 export type MutationIncreaseNotAPlaceCountArgs = {
   id?: InputMaybe<Scalars['ID']>;
-  pictureId?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationLoginArgs = {
@@ -1304,7 +1303,6 @@ export type PictureGeoInfo = {
   createdAt?: Maybe<Scalars['DateTime']>;
   latitude?: Maybe<Scalars['Float']>;
   longitude?: Maybe<Scalars['Float']>;
-  notAPlaceCount?: Maybe<Scalars['Int']>;
   picture?: Maybe<PictureEntityResponse>;
   radius?: Maybe<Scalars['Float']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1331,7 +1329,6 @@ export type PictureGeoInfoFiltersInput = {
   latitude?: InputMaybe<FloatFilterInput>;
   longitude?: InputMaybe<FloatFilterInput>;
   not?: InputMaybe<PictureGeoInfoFiltersInput>;
-  notAPlaceCount?: InputMaybe<IntFilterInput>;
   or?: InputMaybe<Array<InputMaybe<PictureGeoInfoFiltersInput>>>;
   picture?: InputMaybe<PictureFiltersInput>;
   radius?: InputMaybe<FloatFilterInput>;
@@ -1341,7 +1338,6 @@ export type PictureGeoInfoFiltersInput = {
 export type PictureGeoInfoInput = {
   latitude?: InputMaybe<Scalars['Float']>;
   longitude?: InputMaybe<Scalars['Float']>;
-  notAPlaceCount?: InputMaybe<Scalars['Int']>;
   picture?: InputMaybe<Scalars['ID']>;
   radius?: InputMaybe<Scalars['Float']>;
 };
@@ -3707,7 +3703,34 @@ export type GetPictureGeoInfoQuery = {
             | {
                 latitude?: number | null | undefined;
                 longitude?: number | null | undefined;
-                radius?: number | null | undefined;
+                picture?:
+                  | {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  media: {
+                                    data?:
+                                      | {
+                                          id?: string | null | undefined;
+                                          attributes?:
+                                            | { url: string; updatedAt?: any | null | undefined }
+                                            | null
+                                            | undefined;
+                                        }
+                                      | null
+                                      | undefined;
+                                  };
+                                }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    }
+                  | null
+                  | undefined;
               }
             | null
             | undefined;
@@ -7657,7 +7680,22 @@ export const GetPictureGeoInfoDocument = gql`
         attributes {
           latitude
           longitude
-          radius
+          picture {
+            data {
+              id
+              attributes {
+                media {
+                  data {
+                    id
+                    attributes {
+                      url
+                      updatedAt
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
