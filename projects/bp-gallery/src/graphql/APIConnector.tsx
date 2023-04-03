@@ -2336,6 +2336,86 @@ export type GetPictureInfoQuery = {
     | undefined;
 };
 
+export type GetDailyPictureInfoQueryVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type GetDailyPictureInfoQuery = {
+  picture?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    likes?: number | null | undefined;
+                    descriptions?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { text: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    time_range_tag?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?:
+                                  | {
+                                      start: any;
+                                      end: any;
+                                      isEstimate?: boolean | null | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                    comments?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                    media: {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | { url: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    };
+                    archive_tag?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?: { name: string } | null | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type GetMultiplePictureInfoQueryVariables = Exact<{
   pictureIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
@@ -4104,6 +4184,109 @@ export type GetPictureInfoLazyQueryHookResult = ReturnType<typeof useGetPictureI
 export type GetPictureInfoQueryResult = Apollo.QueryResult<
   GetPictureInfoQuery,
   GetPictureInfoQueryVariables
+>;
+
+export const GetDailyPictureInfoDocument = gql`
+  query getDailyPictureInfo($pictureId: ID!) {
+    picture(id: $pictureId) {
+      data {
+        id
+        attributes {
+          descriptions(sort: "createdAt:asc") {
+            data {
+              id
+              attributes {
+                text
+              }
+            }
+          }
+          time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+                isEstimate
+              }
+            }
+          }
+          comments {
+            data {
+              id
+            }
+          }
+          likes
+          media {
+            data {
+              id
+              attributes {
+                url
+                updatedAt
+              }
+            }
+          }
+          archive_tag {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetDailyPictureInfoQuery__
+ *
+ * To run a query within a React component, call `useGetDailyPictureInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDailyPictureInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDailyPictureInfoQuery({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useGetDailyPictureInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetDailyPictureInfoQuery, GetDailyPictureInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetDailyPictureInfoQuery, GetDailyPictureInfoQueryVariables>(
+    GetDailyPictureInfoDocument,
+    options
+  );
+}
+
+export function useGetDailyPictureInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetDailyPictureInfoQuery,
+    GetDailyPictureInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetDailyPictureInfoQuery, GetDailyPictureInfoQueryVariables>(
+    GetDailyPictureInfoDocument,
+    options
+  );
+}
+
+export type GetDailyPictureInfoQueryHookResult = ReturnType<typeof useGetDailyPictureInfoQuery>;
+
+export type GetDailyPictureInfoLazyQueryHookResult = ReturnType<
+  typeof useGetDailyPictureInfoLazyQuery
+>;
+
+export type GetDailyPictureInfoQueryResult = Apollo.QueryResult<
+  GetDailyPictureInfoQuery,
+  GetDailyPictureInfoQueryVariables
 >;
 
 export const GetMultiplePictureInfoDocument = gql`

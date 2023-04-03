@@ -11,6 +11,7 @@ import PrimaryButton from '../../common/PrimaryButton';
 import PictureOverview from '../../common/PictureOverview';
 import ScrollContainer from '../../common/ScrollContainer';
 import BrowseView from '../browse/BrowseView';
+import ShowStats from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
@@ -56,13 +57,6 @@ const StartView = () => {
             <DailyPicture />
             <div className='flex place-content-center gap-2 m-4'>
               <PrimaryButton
-                text='Zu den Neuzugängen'
-                onClickFn={() => {
-                  history.push('/discover', { showBack: true });
-                }}
-                isShowMore={true}
-              />
-              <PrimaryButton
                 text='Geoguessor'
                 onClickFn={() => {
                   history.push('/geo', { showBack: true });
@@ -70,15 +64,17 @@ const StartView = () => {
                 isShowMore={true}
               />
             </div>
-            <PictureOverview
-              title={t('discover.latest-pictures')}
-              queryParams={{}}
-              onClick={() => {
-                history.push('/show-more/latest', {
-                  showBack: true,
-                });
-              }}
-            />
+            <ShowStats>
+              <PictureOverview
+                title={t('discover.latest-pictures')}
+                queryParams={{}}
+                onClick={() => {
+                  history.push('/show-more/latest', {
+                    showBack: true,
+                  });
+                }}
+              />
+            </ShowStats>
             <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
             <div className='archives'>{archiveCards}</div>
           </div>

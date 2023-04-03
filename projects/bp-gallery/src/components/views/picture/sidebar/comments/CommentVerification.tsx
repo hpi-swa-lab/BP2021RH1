@@ -21,7 +21,12 @@ const CommentVerification = ({
 
   const [acceptComment] = useAcceptCommentMutation({
     variables: { commentId: comment.id, currentTime: new Date().toISOString() },
-    refetchQueries: ['getPictureInfo', 'getPictures', 'getPicturesByAllSearch'],
+    refetchQueries: [
+      'getPictureInfo',
+      'getDailyPictureInfo',
+      'getPictures',
+      'getPicturesByAllSearch',
+    ],
   });
   const [declineComment] = useDeclineCommentMutation({
     variables: {
