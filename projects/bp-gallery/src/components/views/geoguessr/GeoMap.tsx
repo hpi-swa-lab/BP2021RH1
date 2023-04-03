@@ -1,13 +1,13 @@
-import './leaflet.css';
+import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMapEvent, Marker, useMap } from 'react-leaflet';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import {
   GetPictureGeoInfoQuery,
   useCreatePictureGeoInfoMutation,
   useIncreaseNotAPlaceCountMutation,
 } from '../../../graphql/APIConnector';
-import { LatLngBounds, Icon } from 'leaflet';
+import { LatLngBounds, Icon, Map } from 'leaflet';
 import { useTranslation } from 'react-i18next';
 
 const PlayerMarkers = ({
@@ -86,24 +86,6 @@ const MyMarker = ({
   return <Marker title='my-marker' position={position} />;
 };
 
-// this is a dummy element to reset the map for every new picture
-const SizeResetter = ({
-  needsRepositioning,
-  initialValues,
-}: {
-  needsRepositioning: boolean;
-  initialValues: { center: { lat: number; lng: number }; zoom: number };
-}) => {
-  const map = useMap();
-  useEffect(() => {
-    if (needsRepositioning) {
-      map.invalidateSize();
-      map.flyTo(initialValues.center, initialValues.zoom);
-    }
-  }, [initialValues, needsRepositioning, map]);
-  return <></>;
-};
-
 const GeoMap = ({
   onNextPicture,
   pictureId,
@@ -116,9 +98,11 @@ const GeoMap = ({
   needsExplanation: () => void;
 }) => {
   const { t } = useTranslation();
-  const initialMapValues = { center: { lat: 51.8392573, lng: 10.5279953 }, zoom: 10 };
+  const initialMapValues = useMemo(() => {
+    return { center: { lat: 51.8392573, lng: 10.5279953 }, zoom: 10 };
+  }, []);
   const initialGuess = { lat: 0, lng: 0 };
-  const [needsRepositioning, setNeedsRepositioning] = useState(false);
+  const map = useRef<Map>(null);
   const [guess, setGuess] = useState(initialGuess);
   const [guessComplete, setGuessComplete] = useState(false);
   const [unknown, setUnknown] = useState(false);
@@ -128,8 +112,6 @@ const GeoMap = ({
     setGuessComplete(false);
     setUnknown(false);
     onNextPicture();
-    setNeedsRepositioning(true);
-    setInterval(() => setNeedsRepositioning(false), 300);
   };
 
   const sendGuess = () => {
@@ -144,6 +126,12 @@ const GeoMap = ({
     });
     setGuessComplete(true);
   };
+
+  useEffect(() => {
+    if (!map.current) return;
+    map.current.invalidateSize();
+    map.current.flyTo(initialMapValues.center, initialMapValues.zoom);
+  }, [pictureId, initialMapValues]);
 
   const [IncreaseNotAPlaceCountMutation] = useIncreaseNotAPlaceCountMutation({
     variables: { pictureId: pictureId },
@@ -166,6 +154,7 @@ const GeoMap = ({
         zoom={initialMapValues.zoom}
         className='map'
         scrollWheelZoom={true}
+        ref={map}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -179,9 +168,6 @@ const GeoMap = ({
           ))}
         {!unknown && (
           <MyMarker position={guess} setPosition={setGuess} isPositionable={!guessComplete} />
-        )}
-        {needsRepositioning && (
-          <SizeResetter needsRepositioning={needsRepositioning} initialValues={initialMapValues} />
         )}
       </MapContainer>
       {!guessComplete && (
