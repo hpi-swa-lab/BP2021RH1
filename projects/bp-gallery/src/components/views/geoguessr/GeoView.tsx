@@ -12,7 +12,6 @@ import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
 import { useStorageState } from 'react-use-storage-state';
-import './GeoView.scss';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const list: string[] = [];
@@ -78,10 +77,6 @@ const GeoView = () => {
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
   const [gameOver, setGameOver] = useState(false);
   const [needsExplanation, setNeedsExplanation] = useState(false);
-  // const { data } = useGetPictureInfoQuery({
-  //   variables: { pictureId: pictureId || fallbackPictureId },
-  // });
-
   const { data: geoData } = useGetPictureGeoInfoQuery({ variables: { pictureId } });
   const allGuesses = geoData?.pictureGeoInfos;
 
@@ -119,11 +114,11 @@ const GeoView = () => {
         </Box>
       </Modal>
       {!gameOver && (
-        <div className='guess-picture-view'>
-          <ZoomWrapper blockScroll={true} pictureId={pictureId}>
-            <div className='picture-wrapper'>
-              <div className='picture-container'>
-                <img id='geo-image' src={pictureLink} alt={pictureLink} />
+        <div className='guess-picture-view bg-black h-main'>
+          <ZoomWrapper className='h-full' blockScroll={true} pictureId={pictureId}>
+            <div className='picture-wrapper w-full'>
+              <div className='picture-container w-full h-full flex align-center justify-center'>
+                <img className='h-full' id='geo-image' src={pictureLink} alt={pictureLink} />
               </div>
             </div>
           </ZoomWrapper>

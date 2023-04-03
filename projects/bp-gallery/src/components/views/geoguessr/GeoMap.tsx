@@ -138,9 +138,12 @@ const GeoMap = ({
   });
 
   return (
-    <div className={'map-container ' + (guessComplete ? 'guess-complete' : '')}>
+    <div
+      className={`fixed w-[480px] h-[360px] bottom-1 right-1 items-stretch flex flex-col transition-all 
+        ${guessComplete ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
+    >
       {guessComplete && (
-        <div className='guess-complete-text'>
+        <div className='self-center bg-white p-5 mb-2 text-center rounded-2xl w-[300px]'>
           <h2>{unknown ? t('geo.tip-unknown') : t('geo.tip')}</h2>
           <p>{t('geo.tip-sub')}</p>
         </div>
@@ -148,7 +151,7 @@ const GeoMap = ({
       <MapContainer
         center={initialMapValues.center}
         zoom={initialMapValues.zoom}
-        className='map'
+        className='w-full h-full mb-1'
         scrollWheelZoom={true}
         ref={map}
       >

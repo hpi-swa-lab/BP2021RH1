@@ -9,10 +9,12 @@ const ZOOM_RATE = -0.001;
 const ZoomWrapper = ({
   blockScroll,
   pictureId, // This is used to determine when a picture change has happened
+  className,
   children,
 }: PropsWithChildren<{
   blockScroll: boolean;
   pictureId: string;
+  className?: string;
 }>) => {
   const [viewport, setViewport] = useState<{ x: number; y: number; zoomLevel: number }>({
     x: 0,
@@ -237,7 +239,7 @@ const ZoomWrapper = ({
   }, [viewport, imageRef]);
 
   return (
-    <div className='zoom-wrapper' ref={containerRef}>
+    <div className={`zoom-wrapper ${className || ''}`} ref={containerRef}>
       {children}
     </div>
   );
