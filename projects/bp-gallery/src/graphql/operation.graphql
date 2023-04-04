@@ -50,6 +50,27 @@ query getArchive($archiveId: ID!) {
   }
 }
 
+query getPictureMediaInfo($pictureId: ID!) {
+  picture(id: $pictureId) {
+    data {
+      id
+      attributes {
+        media {
+          data {
+            id
+            attributes {
+              width
+              height
+              formats
+              url
+              updatedAt
+            }
+          }
+        }
+      }
+    }
+  }
+}
 query getPictureInfo($pictureId: ID!) {
   picture(id: $pictureId) {
     data {
