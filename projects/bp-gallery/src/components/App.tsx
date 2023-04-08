@@ -67,12 +67,13 @@ const growthbook = new GrowthBook({
   apiHost: 'http://localhost:4100',
   clientKey: 'sdk-8ya8rFZ7rGy4tR',
   enableDevMode: true,
+  onFeatureUsage: (featureKey, result) => {
+    console.log('feature', featureKey, 'has value', result.value);
+  },
   trackingCallback: (experiment, result) => {
-    // TODO: Use your real analytics tracking system
-    console.log('Viewed Experiment', {
-      experimentId: experiment.key,
-      variationId: result.key,
-    });
+    const w: any = window;
+    const _paq: Array<any> = (w._paq = w._paq || []);
+    _paq.push(['trackEvent', 'ExperimentViewed', experiment.key, 'v' + String(result.variationId)]);
   },
 });
 
@@ -83,6 +84,18 @@ const App = () => {
   }
   useEffect(() => {
     growthbook.loadFeatures({ autoRefresh: true, timeout: 2000 });
+    growthbook.setAttributes({}); //TODO: replace with real targeting attributes
+
+    let visitor_id: string;
+    const w: any = window;
+    const _paq: Array<any> = (w._paq = w._paq || []);
+    _paq.push([
+      function (this: any) {
+        visitor_id = this.getVisitorId();
+        growthbook.setAttributes({ ...growthbook.getAttributes(), id: visitor_id });
+      },
+    ]);
+
     window.addEventListener('resize', handleWindowSizeChange);
     return () => {
       window.removeEventListener('resize', handleWindowSizeChange);
