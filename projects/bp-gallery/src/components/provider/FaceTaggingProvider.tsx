@@ -211,24 +211,3 @@ export const FaceTaggingProvider = ({
 
   return <FaceTaggingContext.Provider value={value}>{children}</FaceTaggingContext.Provider>;
 };
-
-/*export const useFaceTagging = () => {
-  return useContext(FaceTaggingContext);
-};
-
-
-export const FaceTags = () => {
-  const FaceTaggingContext = useFaceTagging();
-
-  if (!FaceTaggingContext || FaceTaggingContext.hideTags) {
-    return null;
-  }
-  return (
-    <>
-      {FaceTaggingContext.tags.map(data => (
-        <FaceTag data={data} key={data.name} />
-      ))}
-    </>
-  );
-};
-*/

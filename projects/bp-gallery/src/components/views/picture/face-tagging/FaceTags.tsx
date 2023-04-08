@@ -1,15 +1,19 @@
 import { FaceTag } from './FaceTag';
 import { useFaceTagging } from '../../../../hooks/context-hooks';
+import { useMemo } from 'react';
 
 export const FaceTags = () => {
-  const FaceTaggingContext = useFaceTagging();
+  const faceTaggingContext = useFaceTagging();
+  const tags = useMemo(() => {
+    return faceTaggingContext?.tags;
+  }, [faceTaggingContext?.tags]);
 
-  if (!FaceTaggingContext || FaceTaggingContext.hideTags) {
+  if (!tags || faceTaggingContext?.hideTags) {
     return null;
   }
   return (
     <>
-      {FaceTaggingContext.tags.map(data => (
+      {tags.map(data => (
         <FaceTag data={data} key={data.name} />
       ))}
     </>
