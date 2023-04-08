@@ -22,6 +22,7 @@ import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
+import { useFaceTagging } from '../../../../../hooks/context-hooks';
 
 export type Field = Pick<
   FlatPicture,
@@ -49,6 +50,7 @@ const PictureInfo = ({
   const { t } = useTranslation();
 
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
+  const faceTaggingContext = useFaceTagging();
 
   const savePictureInfo = useCallback(
     (field: Field) => {
@@ -126,6 +128,18 @@ const PictureInfo = ({
         allTags={allPeople ?? []}
         onChange={people => {
           savePictureInfo({ person_tags: people });
+          /*unfortunately I did not find a way to get the id of a person tag that is being deleted, so i had to go
+           through all facetags and all persontags, every time something about the persontag collection is changed, 
+           to find out wether a facetag needs to be deleted */
+          {
+            faceTaggingContext && console.log(faceTaggingContext.tags);
+            faceTaggingContext &&
+              faceTaggingContext.tags.forEach(ftag => {
+                if (!people.find(person => person.id === ftag.personTagId) && ftag.id) {
+                  faceTaggingContext.removeTag(ftag.id);
+                }
+              });
+          }
         }}
         createMutation={newPersonTagMutation}
       />
