@@ -19,7 +19,7 @@ import { NavLink } from 'react-router-dom';
 import { AuthRole, useAuth } from '../provider/AuthProvider';
 import LoginDialog from './LoginDialog';
 import './NavigationBar.scss';
-import { IfFeatureEnabled } from '@growthbook/growthbook-react';
+import { useFeatureIsOn } from '../../helpers/growthbook';
 
 const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
@@ -30,6 +30,8 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const testButtonEnabled = useFeatureIsOn('test_button_navbar');
+  const testButtonExperimentEnabled = useFeatureIsOn('test_button_navbar_experiment');
   // When a user successfully logs in, the Dialog closes
   useEffect(() => {
     setOpenLogin(false);
@@ -85,9 +87,8 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
           {isMobile && <ImportContacts />}
           <span className='nav-element-title'>Stöbern</span>
         </NavLink>
-        <IfFeatureEnabled feature='test_button_navbar'>
-          <button>Test</button>
-        </IfFeatureEnabled>
+        {testButtonEnabled && <button>Test</button>}
+        {testButtonExperimentEnabled && <button>Test Experiment</button>}
         <div
           className='nav-element'
           onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}

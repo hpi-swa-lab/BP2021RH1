@@ -3,6 +3,7 @@ import { useGrowthBook as _useGrowthBook } from '@growthbook/growthbook-react';
 
 export type AppFeatures = {
   test_button_navbar: boolean;
+  test_button_navbar_experiment: boolean;
 };
 
 export const useGrowthBook = (): GrowthBook<AppFeatures> | undefined =>
