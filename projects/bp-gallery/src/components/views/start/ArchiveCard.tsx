@@ -17,7 +17,7 @@ const ArchiveCard = ({
   archiveName: string;
   archiveDescription: string;
   archiveId: string;
-  archivePictureCount: number;
+  archivePictureCount: number | undefined;
 }) => {
   const pictureLink = picture.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
@@ -45,7 +45,7 @@ const CardLayout = ({
   pictureLink: string;
   archiveName: string;
   archiveDescription: string;
-  archivePictureCount: number;
+  archivePictureCount: number | undefined;
 }) => {
   const { t } = useTranslation();
 
@@ -62,16 +62,18 @@ const CardLayout = ({
         <CardMedia component='img' height='140' image={pictureLink} alt='archive picture' />
         <CardContent
           style={{
-            height: '6rem',
+            height: 'auto',
           }}
         >
           <h3>{archiveName}</h3>
           <p id='description'>{archiveDescription}</p>
-          <div className='text-right'>
-            {t('common.pictureCount', {
-              count: archivePictureCount,
-            })}
-          </div>
+          {archivePictureCount !== undefined && (
+            <div className='text-right'>
+              {t('common.pictureCount', {
+                count: archivePictureCount,
+              })}
+            </div>
+          )}
         </CardContent>
       </CardActionArea>
     </Card>
@@ -87,7 +89,7 @@ const ArchiveCardWithoutPicture = ({
   archiveName: string;
   archiveDescription: string;
   archiveId: string;
-  archivePictureCount: number;
+  archivePictureCount: number | undefined;
 }) => {
   return (
     <CardLayout

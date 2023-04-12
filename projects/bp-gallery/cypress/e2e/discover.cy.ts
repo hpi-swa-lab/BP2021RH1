@@ -7,11 +7,11 @@ describe('Discover View', () => {
     //code für break down
   });
 
-  it('shows "Unsere Bilder" picture overview', () => {
+  it('shows "Neuzugänge" picture overview', () => {
     // check for basic components (title, show more button)
     cy.get('.overview-container:first')
       .children()
-      .should('contain.text', 'Unsere Bilder')
+      .should('contain.text', 'Neuzugänge')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains rows with images

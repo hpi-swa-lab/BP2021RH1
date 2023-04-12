@@ -5,9 +5,9 @@ describe('Navigation to Show More View from Discover View', () => {
     cy.visit('/discover');
   });
 
-  it('works for "Unsere Bilder"', () => {
-    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen').click();
-    urlIs('/show-more/pictures');
+  it('works for "Neuzugänge"', () => {
+    cy.get('.overview-container:contains(Neuzugänge)').contains('Mehr anzeigen').click();
+    urlIs('/show-more/latest');
   });
 
   it('works for "Wissen Sie mehr über diese Bilder?"', () => {
@@ -100,11 +100,13 @@ describe('Navigation to Show More View from Archive View', () => {
 });
 
 describe('Global Show More View', () => {
-  it('shows show more for "Unsere Bilder"', () => {
-    cy.visit('/show-more/pictures');
+  it('shows show more for "Neuzugänge"', () => {
+    cy.visit('/show-more/latest');
     // check for text in show more view
-    cy.contains('Unsere Bilder');
-    cy.contains('Hier finden Sie alle Bilder unseres Archivs');
+    cy.contains('Neuzugänge');
+    cy.contains(
+      'Hier fließen die jüngsten 500 „Neuzugänge“ der Fotoarchive ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.'
+    );
 
     // check for images in show more view
     cy.contains('Mehr als 100 Bilder');
@@ -186,8 +188,7 @@ describe('Global Show More View', () => {
     // check text on show more view
     cy.contains('Verifizierter Testort 3');
 
-    // contains no images
-    cy.contains('Ein Bild');
+    cy.contains('1 Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 
@@ -217,8 +218,7 @@ describe('Global Show More View', () => {
     // check text on show more view
     cy.contains('Verifiziertes Testschlagwort 4');
 
-    // contains no images
-    cy.contains('Ein Bild');
+    cy.contains('1 Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 });
@@ -228,7 +228,7 @@ describe('Archive Show More View', () => {
     cy.visit('/archives/1/show-more/pictures');
     // check for text in show more view
     cy.contains('Unsere Bilder');
-    cy.contains('Hier finden Sie alle Bilder unseres Archivs');
+    cy.contains('Hier finden Sie alle Bilder dieses Archivs');
 
     // check for images in show more view
     cy.contains('5 Bilder');
@@ -263,8 +263,7 @@ describe('Archive Show More View', () => {
     // check text on show more view
     cy.contains('Verifiziertes Testschlagwort 4');
 
-    // contains no images
-    cy.contains('Ein Bild');
+    cy.contains('1 Bild');
     cy.get('.picture-grid .row #picture-preview-for-4').should('exist');
   });
 });
