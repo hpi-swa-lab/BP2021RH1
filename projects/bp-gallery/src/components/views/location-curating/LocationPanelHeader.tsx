@@ -9,6 +9,7 @@ const LocationPanelHeader = () => {
         <div className='location-header-edit location-column-110'>Bearbeiten</div>
         <div className='location-header-detach location-column-110'>Loslösen</div>
         <div className='location-header-relocate location-column-110'>Unterordnen</div>
+        <div className='location-header-relocate location-column-110'>Kopieren</div>
         <div className='location-header-is-visible location-column-110'>Sichtbarkeit</div>
         <div className='location-header-delete location-column-110'>Löschen</div>
       </div>

@@ -2,6 +2,7 @@ import {
   Check,
   ChevronRight,
   Close,
+  CopyAll,
   Delete,
   Done,
   Edit,
@@ -23,12 +24,14 @@ import './LocationEntry.scss';
 
 const LocationEntry = ({
   locationTag,
+  parentTag,
   showMore,
   onToggle,
   refetch,
   type,
 }: {
   locationTag: FlatTag;
+  parentTag?: FlatTag;
   showMore: boolean;
   onToggle: () => void;
   refetch: () => void;
@@ -76,12 +79,16 @@ const LocationEntry = ({
       content: tagName,
       type: type,
     });
-    console.log(selectedTag);
     if (selectedTag) {
       updateTagParentMutation({
         variables: {
           tagID: locationTag.id,
-          parentIDs: [selectedTag.id],
+          parentIDs: [
+            ...(parentTag
+              ? (locationTag.parent_tags?.map(t => t.id) ?? []).filter(t => t !== parentTag.id)
+              : locationTag.parent_tags?.map(t => t.id) ?? []),
+            selectedTag.id,
+          ],
         },
       });
     }
@@ -124,6 +131,23 @@ const LocationEntry = ({
         variables: {
           tagID: locationTag.id,
           parentIDs: null,
+        },
+      });
+    }
+  };
+
+  const copyTag = async (tagId?: string, tagName?: string) => {
+    if (!tagId || !tagName) return;
+    const selectedTag = await prompt({
+      preset: DialogPreset.SELECT_LOCATION,
+      content: tagName,
+      type: type,
+    });
+    if (selectedTag) {
+      updateTagParentMutation({
+        variables: {
+          tagID: locationTag.id,
+          parentIDs: [...(locationTag.parent_tags?.map(t => t.id) ?? []), selectedTag.id],
         },
       });
     }
@@ -183,6 +207,38 @@ const LocationEntry = ({
   const { deleteTags } = useDeleteTagAndChildren(locationTag, refetch, type);
   const { deleteSingleTag } = useDeleteSingleTag(locationTag, refetch, type);
 
+  const deleteLocalTagClone = () => {
+    locationTag.child_tags?.forEach(tag => {
+      updateTagParentMutation({
+        variables: {
+          tagID: tag.id,
+          parentIDs: parentTag
+            ? [...(tag.parent_tags?.map(t => t.id) ?? []), parentTag.id]
+            : tag.parent_tags?.map(t => t.id) ?? [],
+        },
+      });
+    });
+    updateTagParentMutation({
+      variables: {
+        tagID: locationTag.id,
+        parentIDs: parentTag
+          ? locationTag.parent_tags?.map(t => t.id).filter(t => t !== parentTag.id)
+          : [],
+      },
+    });
+  };
+
+  const deleteLocalTagClones = () => {
+    updateTagParentMutation({
+      variables: {
+        tagID: locationTag.id,
+        parentIDs: parentTag
+          ? (locationTag.parent_tags?.map(t => t.id) ?? []).filter(t => t !== parentTag.id)
+          : [],
+      },
+    });
+  };
+
   const deleteTag = async (tagId?: string, tagName?: string) => {
     if (!tagId || !tagName) return;
     const deleteOption = await prompt({
@@ -194,13 +250,35 @@ const LocationEntry = ({
         { name: 'Bestätigen', icon: <Done />, value: 2 },
       ],
     });
+    if (deleteOption === 0) return;
+    let deleteClones = -1;
+    if (locationTag.parent_tags && locationTag.parent_tags.length > 1) {
+      deleteClones = await prompt({
+        title: 'Dieses Tag besitzt Kopien an anderen Stellen. Sollen diese auch gelöscht werden?',
+        content: tagName,
+        options: [
+          { name: 'Abbrechen', icon: <Close />, value: 0 },
+          { name: 'Nur hier löschen', icon: <Done />, value: 1 },
+          { name: 'Überall löschen', icon: <Done />, value: 2 },
+        ],
+      });
+    }
+    if (deleteClones === 0) return;
     switch (deleteOption) {
       case 1: {
-        deleteSingleTag();
+        if (deleteClones === 1) {
+          deleteLocalTagClone();
+        } else {
+          deleteSingleTag();
+        }
         break;
       }
       case 2: {
-        deleteTags();
+        if (deleteClones === 1) {
+          deleteLocalTagClones();
+        } else {
+          deleteTags();
+        }
         break;
       }
     }
@@ -270,6 +348,15 @@ const LocationEntry = ({
             }}
           >
             <MoveDown />
+          </IconButton>
+        </div>
+        <div className='copy-button location-column-110'>
+          <IconButton
+            onClick={() => {
+              copyTag(locationTag.id, locationTag.name);
+            }}
+          >
+            <CopyAll />
           </IconButton>
         </div>
         <div className='is-visible-checkbox-container location-column-110'>

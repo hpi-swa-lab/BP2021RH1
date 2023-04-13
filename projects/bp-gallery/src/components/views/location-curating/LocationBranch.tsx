@@ -9,10 +9,12 @@ import './LocationEntry.scss';
 
 const LocationBranch = ({
   locationTag,
+  parentTag,
   refetch,
   type,
 }: {
   locationTag: FlatTag;
+  parentTag?: FlatTag;
   refetch: () => void;
   type: TagType;
 }) => {
@@ -26,7 +28,15 @@ const LocationBranch = ({
   const renderSubBranch = () => {
     if (locationTag.child_tags && locationTag.child_tags.length > 0) {
       return locationTag.child_tags.map(tag => {
-        return <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} type={type} />;
+        return (
+          <LocationBranch
+            key={tag.id}
+            locationTag={tag}
+            parentTag={locationTag}
+            refetch={refetch}
+            type={type}
+          />
+        );
       });
     }
   };
@@ -61,6 +71,7 @@ const LocationBranch = ({
     <div className='location-branch-container'>
       <LocationEntry
         locationTag={locationTag}
+        parentTag={parentTag}
         showMore={showMore}
         onToggle={onToggle}
         refetch={refetch}
