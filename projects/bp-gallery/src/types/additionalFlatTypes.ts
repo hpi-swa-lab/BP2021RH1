@@ -131,7 +131,7 @@ export interface FlatTag {
   name: string;
   synonyms?: (ComponentCommonSynonyms | undefined)[];
   visible?: boolean;
-  parent_tag?: FlatTag;
+  parent_tags?: FlatTag[];
   child_tags?: FlatTag[];
   accepted?: boolean;
 }

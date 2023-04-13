@@ -81,7 +81,7 @@ const LocationEntry = ({
       updateTagParentMutation({
         variables: {
           tagID: locationTag.id,
-          parentID: selectedTag.id,
+          parentIDs: [selectedTag.id],
         },
       });
     }
@@ -123,7 +123,7 @@ const LocationEntry = ({
       updateTagParentMutation({
         variables: {
           tagID: locationTag.id,
-          parentID: null,
+          parentIDs: null,
         },
       });
     }

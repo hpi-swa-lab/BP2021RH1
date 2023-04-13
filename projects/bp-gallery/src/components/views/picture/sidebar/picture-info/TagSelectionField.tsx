@@ -57,18 +57,20 @@ const TagSelectionField = <T extends TagFields>({
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
+  //code duplication with LocationPanel
   const tagTree = useMemo(() => {
     if (!flattenedTags) return;
 
     const tagsById = Object.fromEntries(
       flattenedTags.map(tag => [tag.id, { ...tag, child_tags: [] as FlatTag[] }])
     );
+
     for (const tag of Object.values(tagsById)) {
-      if (tag.parent_tag?.id) {
-        tagsById[tag.parent_tag.id].child_tags.push(tag);
-      }
+      tag.parent_tags?.forEach(parentTag => {
+        tagsById[parentTag.id].child_tags.push(tag);
+      });
     }
-    return Object.values(tagsById).filter(tag => !tag.parent_tag);
+    return Object.values(tagsById).filter(tag => !tag.parent_tags?.length);
   }, [flattenedTags]);
 
   const tagParentNamesList = useMemo(() => {
@@ -82,13 +84,13 @@ const TagSelectionField = <T extends TagFields>({
     tagTree?.forEach(tag => {
       queue.push(tag);
     });
-
+    // TODO: Add support for multiple paths
     while (queue.length > 0) {
       const nextTag = queue.shift();
-      if (nextTag?.parent_tag) {
+      if (nextTag?.parent_tags && nextTag.parent_tags.length >= 1) {
         tagParentStrings[nextTag.id] = tagParentStrings[nextTag.id].concat([
-          ...tagParentStrings[nextTag.parent_tag.id],
-          nextTag.parent_tag,
+          ...tagParentStrings[nextTag.parent_tags[0].id],
+          nextTag.parent_tags[0],
         ]);
       }
       nextTag?.child_tags?.forEach(tag => {
@@ -170,13 +172,7 @@ const TagSelectionField = <T extends TagFields>({
 
             const isExisting = options.some(o => o.name === inputValue);
 
-            if (
-              createMutation &&
-              inputValue !== '' &&
-              !isExisting &&
-              lastSelectedTags &&
-              lastSelectedTags.length === 0
-            ) {
+            if (createMutation && inputValue !== '' && !isExisting && !lastSelectedTags?.length) {
               filtered.push({
                 name: inputValue,
                 icon: <Add sx={{ mr: 2 }} />,
@@ -238,7 +234,7 @@ const TagSelectionField = <T extends TagFields>({
                   setLastSelectedTag(undefined);
                 } else if (addTag.id === '-3' && createChildMutation && lastSelectedTag) {
                   const { data } = await createChildMutation({
-                    variables: { name: addTag.createValue, parentId: lastSelectedTag.id },
+                    variables: { name: addTag.createValue, parentID: lastSelectedTag.id },
                   });
                   if (data) {
                     const nameOfField = Object.keys(data as { [key: string]: any })[0];

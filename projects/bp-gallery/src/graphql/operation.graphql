@@ -643,7 +643,7 @@ query getAllKeywordTags {
             id
           }
         }
-        parent_tag {
+        parent_tags {
           data {
             id
             attributes {
@@ -651,21 +651,6 @@ query getAllKeywordTags {
             }
           }
         }
-      }
-    }
-  }
-}
-
-query getAllParentKeywordTags {
-  keywordTags(filters: { parent_tag: { id: { eq: null } } }) {
-    data {
-      id
-      attributes {
-        name
-        synonyms {
-          name
-        }
-        visible
       }
     }
   }
@@ -695,16 +680,16 @@ mutation createKeyword($name: String!, $accepted: Boolean) {
   }
 }
 
-mutation createSubKeyword($name: String!, $parentId: ID!, $accepted: Boolean) {
-  createKeywordTag(data: { name: $name, parent_tag: $parentId, accepted: $accepted }) {
+mutation createSubKeyword($name: String!, $parentID: ID!, $accepted: Boolean) {
+  createKeywordTag(data: { name: $name, parent_tags: [$parentID], accepted: $accepted }) {
     data {
       id
     }
   }
 }
 
-mutation updateKeywordParent($tagID: ID!, $parentID: ID) {
-  updateKeywordTag(id: $tagID, data: { parent_tag: $parentID }) {
+mutation updateKeywordParent($tagID: ID!, $parentIDs: [ID!]) {
+  updateKeywordTag(id: $tagID, data: { parent_tags: $parentIDs }) {
     data {
       id
     }
@@ -777,54 +762,6 @@ query getLocationTagsWithThumbnail(
   }
 }
 
-query getChildLocationsById(
-  $locationID: ID!
-  $sortBy: [String]
-  $thumbnailFilters: PictureFiltersInput = {}
-) {
-  locationTags(filters: { parent_tag: { id: { eq: $locationID } } }, sort: $sortBy) {
-    data {
-      id
-      attributes {
-        name
-        visible
-        synonyms {
-          name
-        }
-        thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
-          data {
-            attributes {
-              media {
-                data {
-                  attributes {
-                    formats
-                  }
-                }
-              }
-            }
-          }
-        }
-        verified_thumbnail: verified_pictures(
-          filters: $thumbnailFilters
-          pagination: { limit: 1 }
-        ) {
-          data {
-            attributes {
-              media {
-                data {
-                  attributes {
-                    formats
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 query getAllLocationTags {
   locationTags {
     data {
@@ -841,44 +778,13 @@ query getAllLocationTags {
             id
           }
         }
-        parent_tag {
+        parent_tags {
           data {
             id
             attributes {
               name
             }
           }
-        }
-      }
-    }
-  }
-}
-
-query getAllParentLocationTags {
-  locationTags(filters: { parent_tag: { id: { eq: null } } }) {
-    data {
-      id
-      attributes {
-        name
-        visible
-        parent_tag {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        child_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        synonyms {
-          name
         }
       }
     }
@@ -893,16 +799,16 @@ mutation createLocation($name: String!, $accepted: Boolean) {
   }
 }
 
-mutation createSubLocation($name: String!, $parentId: ID!, $accepted: Boolean) {
-  createLocationTag(data: { name: $name, parent_tag: $parentId, accepted: $accepted }) {
+mutation createSubLocation($name: String!, $parentID: ID!, $accepted: Boolean) {
+  createLocationTag(data: { name: $name, parent_tags: [$parentID], accepted: $accepted }) {
     data {
       id
     }
   }
 }
 
-mutation updateLocationParent($tagID: ID!, $parentID: ID) {
-  updateLocationTag(id: $tagID, data: { parent_tag: $parentID }) {
+mutation updateLocationParent($tagID: ID!, $parentIDs: [ID!]) {
+  updateLocationTag(id: $tagID, data: { parent_tags: $parentIDs }) {
     data {
       id
     }

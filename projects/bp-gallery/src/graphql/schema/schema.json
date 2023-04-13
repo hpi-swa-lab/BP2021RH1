@@ -7186,7 +7186,7 @@
             "defaultValue": null
           },
           {
-            "name": "parent_tag",
+            "name": "parent_tags",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -7347,12 +7347,16 @@
             "defaultValue": null
           },
           {
-            "name": "parent_tag",
+            "name": "parent_tags",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "ID",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
             },
             "defaultValue": null
           },
@@ -7584,12 +7588,47 @@
             "deprecationReason": null
           },
           {
-            "name": "parent_tag",
+            "name": "parent_tags",
             "description": null,
-            "args": [],
+            "args": [
+              {
+                "name": "filters",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "KeywordTagFiltersInput",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "pagination",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "PaginationArg",
+                  "ofType": null
+                },
+                "defaultValue": "{}"
+              },
+              {
+                "name": "sort",
+                "description": null,
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "[]"
+              }
+            ],
             "type": {
               "kind": "OBJECT",
-              "name": "KeywordTagEntityResponse",
+              "name": "KeywordTagRelationResponseCollection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -8274,7 +8313,7 @@
             "defaultValue": null
           },
           {
-            "name": "parent_tag",
+            "name": "parent_tags",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -8445,12 +8484,16 @@
             "defaultValue": null
           },
           {
-            "name": "parent_tag",
+            "name": "parent_tags",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "ID",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
             },
             "defaultValue": null
           },
@@ -8694,12 +8737,47 @@
             "deprecationReason": null
           },
           {
-            "name": "parent_tag",
+            "name": "parent_tags",
             "description": null,
-            "args": [],
+            "args": [
+              {
+                "name": "filters",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "LocationTagFiltersInput",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "pagination",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "PaginationArg",
+                  "ofType": null
+                },
+                "defaultValue": "{}"
+              },
+              {
+                "name": "sort",
+                "description": null,
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "[]"
+              }
+            ],
             "type": {
               "kind": "OBJECT",
-              "name": "LocationTagEntityResponse",
+              "name": "LocationTagRelationResponseCollection",
               "ofType": null
             },
             "isDeprecated": false,

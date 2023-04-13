@@ -50,7 +50,7 @@ const LocationBranch = ({
       createSubLocationTag({
         variables: {
           name: collectionName,
-          parentId: locationTag.id,
+          parentID: locationTag.id,
           accepted: true,
         },
       });

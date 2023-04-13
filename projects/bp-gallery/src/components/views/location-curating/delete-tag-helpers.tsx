@@ -21,7 +21,7 @@ export const useDeleteSingleTag = (tag: FlatTag, refetch: () => void, type: TagT
       updateTagParentMutation({
         variables: {
           tagID: childTag.id,
-          parentID: tag.parent_tag?.id,
+          parentIDs: tag.parent_tags?.map(t => t.id),
         },
       });
     });

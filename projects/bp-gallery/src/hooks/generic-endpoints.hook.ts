@@ -9,8 +9,6 @@ import {
   useDeletePersonTagMutation,
   useGetAllKeywordTagsQuery,
   useGetAllLocationTagsQuery,
-  useGetAllParentKeywordTagsQuery,
-  useGetAllParentLocationTagsQuery,
   useGetAllPersonTagsQuery,
   useGetKeywordTagsWithThumbnailQuery,
   useGetLocationTagsWithThumbnailQuery,
@@ -40,7 +38,6 @@ const useGenericTagEndpoints = (type: TagType) => {
         return {
           allTagsQuery: useGetAllLocationTagsQuery,
           tagsWithThumbnailQuery: useGetLocationTagsWithThumbnailQuery,
-          allParentTagsQuery: useGetAllParentLocationTagsQuery,
           updateTagNameMutationSource: useUpdateLocationNameMutation,
           updateSynonymsMutationSource: useUpdateLocationSynonymsMutation,
           mergeTagsMutationSource: useMergeLocationTagsMutation,
@@ -55,7 +52,6 @@ const useGenericTagEndpoints = (type: TagType) => {
         return {
           allTagsQuery: useGetAllPersonTagsQuery,
           tagsWithThumbnailQuery: useGetPersonTagsWithThumbnailQuery,
-          allParentTagsQuery: useGetAllPersonTagsQuery,
           updateTagNameMutationSource: useUpdatePersonNameMutation,
           updateSynonymsMutationSource: useUpdatePersonSynonymsMutation,
           mergeTagsMutationSource: useMergePersonTagsMutation,
@@ -81,7 +77,6 @@ const useGenericTagEndpoints = (type: TagType) => {
         return {
           allTagsQuery: useGetAllKeywordTagsQuery,
           tagsWithThumbnailQuery: useGetKeywordTagsWithThumbnailQuery,
-          allParentTagsQuery: useGetAllParentKeywordTagsQuery,
           updateTagNameMutationSource: useUpdateKeywordNameMutation,
           updateSynonymsMutationSource: useUpdateKeywordSynonymsMutation,
           mergeTagsMutationSource: useMergeKeywordTagsMutation,

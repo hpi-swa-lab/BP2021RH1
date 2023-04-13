@@ -25,15 +25,15 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
       flattenedTags.map(tag => [tag.id, { ...tag, child_tags: [] as FlatTag[] }])
     );
     for (const tag of Object.values(tagsById)) {
-      if (tag.parent_tag?.id) {
-        tagsById[tag.parent_tag.id].child_tags.push(tag);
+      tag.parent_tags?.forEach(parentTag => {
+        tagsById[parentTag.id].child_tags.push(tag);
         // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
-        tagsById[tag.parent_tag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
-      }
+        tagsById[parentTag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
+      });
     }
     return (
       Object.values(tagsById)
-        .filter(tag => !tag.parent_tag)
+        .filter(tag => !tag.parent_tags?.length)
         // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
         .sort((a, b) => a.name.localeCompare(b.name))
     );
