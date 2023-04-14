@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { HTMLAttributes, ReactNode, useRef } from 'react';
 import {
   Autocomplete,
   Button,
@@ -17,11 +17,13 @@ const SelectDialogPreset = ({
   dialogProps,
   allOptions,
   inputLabel,
+  renderOption,
 }: {
   handleClose: (value: any) => void;
   dialogProps: DialogProps;
   allOptions: any[];
   inputLabel: string;
+  renderOption?: (props: HTMLAttributes<HTMLLIElement>, option: any) => ReactNode;
 }) => {
   const { t } = useTranslation();
 
@@ -37,6 +39,15 @@ const SelectDialogPreset = ({
           options={allOptions}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           renderInput={params => <TextField {...params} label={inputLabel} />}
+          renderOption={(props, option) => {
+            return renderOption ? (
+              renderOption(props, option)
+            ) : (
+              <li {...props} key={option.id}>
+                {option.name}
+              </li>
+            );
+          }}
           getOptionLabel={(option: any) => option.name}
           onChange={(_, value: any | null) => {
             selectedOption.current = value ?? undefined;
