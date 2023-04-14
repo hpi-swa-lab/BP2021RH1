@@ -22,6 +22,7 @@ interface TagFields {
   icon?: JSX.Element;
   isNew?: boolean;
   onClick?: () => void;
+  appearance?: number;
 }
 
 const TagSelectionField = <T extends TagFields>({
@@ -73,32 +74,36 @@ const TagSelectionField = <T extends TagFields>({
     return Object.values(tagsById).filter(tag => !tag.parent_tags?.length);
   }, [flattenedTags]);
 
-  const tagParentNamesList = useMemo(() => {
+  const tagSupertagList = useMemo(() => {
     if (!flattenedTags) return;
 
-    const tagParentStrings = Object.fromEntries(
-      flattenedTags.map(tag => [tag.id, [] as FlatTag[]])
-    );
+    const tagSupertags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[][]]));
     // setup queue
     const queue: FlatTag[] = [];
     tagTree?.forEach(tag => {
       queue.push(tag);
     });
-    // TODO: Add support for multiple paths
     while (queue.length > 0) {
       const nextTag = queue.shift();
-      if (nextTag?.parent_tags && nextTag.parent_tags.length >= 1) {
-        tagParentStrings[nextTag.id] = tagParentStrings[nextTag.id].concat([
-          ...tagParentStrings[nextTag.parent_tags[0].id],
-          nextTag.parent_tags[0],
-        ]);
-      }
+
+      // skip if clone was filled already to avoid duplicates
+      if (nextTag && tagSupertags[nextTag.id].length > 0) continue;
+
+      nextTag?.parent_tags?.forEach(parent => {
+        tagSupertags[parent.id].forEach(parentParents => {
+          tagSupertags[nextTag.id].push([...parentParents, parent]);
+        });
+        // because roots do not have parents
+        if (tagSupertags[parent.id].length === 0) {
+          tagSupertags[nextTag.id].push([parent]);
+        }
+      });
       nextTag?.child_tags?.forEach(tag => {
         queue.push(tag);
       });
     }
 
-    return tagParentStrings;
+    return tagSupertags;
   }, [flattenedTags, tagTree]);
 
   const tagChildTags = useMemo(() => {
@@ -125,8 +130,28 @@ const TagSelectionField = <T extends TagFields>({
   }, [flattenedTags, tagTree]);
 
   useEffect(() => {
-    setTagList(allTags);
-  }, [allTags, setTagList]);
+    const tempTagList = [] as T[];
+    flattenedTags?.forEach(tag => {
+      if (!tag.parent_tags?.length) {
+        tempTagList.push({ ...tag, appearance: 0 } as T);
+      } else {
+        let index = 0;
+        tag.parent_tags.forEach(parent => {
+          if (!tagSupertagList || !tagSupertagList[parent.id].length) {
+            tempTagList.push({ ...tag, appearance: index } as T);
+            index++;
+          } else {
+            tagSupertagList[parent.id].forEach(path => {
+              tempTagList.push({ ...tag, appearance: index } as T);
+              index++;
+            });
+          }
+        });
+      }
+    });
+
+    setTagList(tempTagList);
+  }, [allTags, setTagList, flattenedTags, tagSupertagList]);
 
   const toggleVerified = useCallback(
     (list: T[], index: number) => {
@@ -240,6 +265,7 @@ const TagSelectionField = <T extends TagFields>({
                     const nameOfField = Object.keys(data as { [key: string]: any })[0];
                     const newId = data[nameOfField].data.id;
                     addTag.id = newId;
+                    addTag.appearance = 0;
                     delete addTag.createValue;
                     delete addTag.icon;
                     setTagList([...allTags, addTag]);
@@ -253,6 +279,7 @@ const TagSelectionField = <T extends TagFields>({
                     const nameOfField = Object.keys(data as { [key: string]: any })[0];
                     const newId = data[nameOfField].data.id;
                     addTag.id = newId;
+                    addTag.appearance = 0;
                     delete addTag.createValue;
                     delete addTag.icon;
                     setTagList([...allTags, addTag]);
@@ -267,9 +294,10 @@ const TagSelectionField = <T extends TagFields>({
             );
             newlyAddedTags.forEach(tag => {
               setLastSelectedTag(tag);
+              // hier werden alle parents gesetzt um sie einzufügen
               newValue = newValue.concat(
-                tagParentNamesList && tag.id in tagParentNamesList
-                  ? (tagParentNamesList[tag.id].filter(
+                tagSupertagList && tag.id in tagSupertagList && tagSupertagList[tag.id].length
+                  ? (tagSupertagList[tag.id][tag.appearance ?? 0].filter(
                       value => !tags.some(tag => tag.id === value.id)
                     ) as T[])
                   : ([] as T[])
@@ -298,15 +326,24 @@ const TagSelectionField = <T extends TagFields>({
               }
             }
             return (
-              <li {...props} key={option.id}>
+              <li
+                {...props}
+                key={
+                  option.appearance
+                    ? +option.id >= option.appearance
+                      ? +option.id * +option.id + +option.id + option.appearance
+                      : +option.id + option.appearance * option.appearance
+                    : option.id
+                }
+              >
                 <div className='recommendation-item-container'>
-                  {tagParentNamesList &&
+                  {tagSupertagList &&
                   typeof option.id === 'string' &&
                   option.id !== '-2' &&
                   option.id !== '-3' &&
-                  tagParentNamesList[option.id].length > 0 ? (
+                  tagSupertagList[option.id].length > 0 ? (
                     <div className='recommendation-item-parents'>
-                      {tagParentNamesList[option.id].map((tag, index) => {
+                      {tagSupertagList[option.id][option.appearance ?? 0].map((tag, index) => {
                         return (
                           <div key={index} className='recommendation-item'>
                             {index >= 1 && <ArrowRight />}
@@ -315,7 +352,7 @@ const TagSelectionField = <T extends TagFields>({
                         );
                       })}
                       {option.icon ?? ''}
-                      {tagParentNamesList[option.id].length > 0 && <ArrowRight />}
+                      {tagSupertagList[option.id].length > 0 && <ArrowRight />}
                       {label}
                     </div>
                   ) : (

@@ -4,7 +4,7 @@ import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import SelectDialogPreset from '../../provider/dialog-presets/SelectDialogPreset';
 import { DialogProps } from '../../provider/DialogProvider';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight } from '@mui/icons-material';
 
 const TagSelectDialogPreset = ({
@@ -37,33 +37,63 @@ const TagSelectDialogPreset = ({
     return Object.values(tagsById).filter(tag => !tag.parent_tags?.length);
   }, [flattenedTags]);
 
-  const tagParentNamesList = useMemo(() => {
+  const tagSupertagList = useMemo(() => {
     if (!flattenedTags) return;
 
-    const tagParentStrings = Object.fromEntries(
-      flattenedTags.map(tag => [tag.id, [] as FlatTag[]])
-    );
+    const tagSupertags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[][]]));
     // setup queue
     const queue: FlatTag[] = [];
     tagTree?.forEach(tag => {
       queue.push(tag);
     });
-    // TODO: Add support for multiple paths
     while (queue.length > 0) {
       const nextTag = queue.shift();
-      if (nextTag?.parent_tags && nextTag.parent_tags.length >= 1) {
-        tagParentStrings[nextTag.id] = tagParentStrings[nextTag.id].concat([
-          ...tagParentStrings[nextTag.parent_tags[0].id],
-          nextTag.parent_tags[0],
-        ]);
-      }
+
+      // skip if clone was filled already to avoid duplicates
+      if (nextTag && tagSupertags[nextTag.id].length > 0) continue;
+
+      nextTag?.parent_tags?.forEach(parent => {
+        tagSupertags[parent.id].forEach(parentParents => {
+          tagSupertags[nextTag.id].push([...parentParents, parent]);
+        });
+        // because roots do not have parents
+        if (tagSupertags[parent.id].length === 0) {
+          tagSupertags[nextTag.id].push([parent]);
+        }
+      });
       nextTag?.child_tags?.forEach(tag => {
         queue.push(tag);
       });
     }
 
-    return tagParentStrings;
+    return tagSupertags;
   }, [flattenedTags, tagTree]);
+
+  const [tagList, setTagList] = useState<(FlatTag & { appearance?: number })[]>();
+
+  useEffect(() => {
+    const tempTagList = [] as (FlatTag & { appearance?: number })[];
+    flattenedTags?.forEach(tag => {
+      if (!tag.parent_tags?.length) {
+        tempTagList.push({ ...tag, appearance: 0 } as FlatTag & { appearance?: number });
+      } else {
+        let index = 0;
+        tag.parent_tags.forEach(parent => {
+          if (!tagSupertagList || !tagSupertagList[parent.id].length) {
+            tempTagList.push({ ...tag, appearance: index } as FlatTag & { appearance?: number });
+            index++;
+          } else {
+            tagSupertagList[parent.id].forEach(path => {
+              tempTagList.push({ ...tag, appearance: index } as FlatTag & { appearance?: number });
+              index++;
+            });
+          }
+        });
+      }
+    });
+
+    setTagList(tempTagList);
+  }, [setTagList, flattenedTags, tagSupertagList]);
 
   return (
     <SelectDialogPreset
@@ -72,14 +102,23 @@ const TagSelectDialogPreset = ({
         ...dialogProps,
         title: t(`tag-panel.relocate-${dialogProps.type ?? TagType.KEYWORD}`),
       }}
-      allOptions={flattenedTags ?? []}
-      renderOption={(props, option) => {
+      allOptions={tagList ?? []}
+      renderOption={(props, option: FlatTag & { appearance?: number }) => {
         return (
-          <li {...props} key={option.id}>
+          <li
+            {...props}
+            key={
+              option.appearance
+                ? +option.id >= option.appearance
+                  ? +option.id * +option.id + +option.id + option.appearance
+                  : +option.id + option.appearance * option.appearance
+                : option.id
+            }
+          >
             <div className='recommendation-item-container'>
-              {tagParentNamesList && tagParentNamesList[option.id].length > 0 ? (
+              {tagSupertagList && tagSupertagList[option.id].length > 0 ? (
                 <div className='recommendation-item-parents'>
-                  {tagParentNamesList[option.id].map((tag, index) => {
+                  {tagSupertagList[option.id][option.appearance ?? 0].map((tag, index) => {
                     return (
                       <div key={index} className='recommendation-item'>
                         {index >= 1 && <ArrowRight />}
@@ -87,7 +126,7 @@ const TagSelectDialogPreset = ({
                       </div>
                     );
                   })}
-                  {tagParentNamesList[option.id].length > 0 && <ArrowRight />}
+                  {tagSupertagList[option.id].length > 0 && <ArrowRight />}
                   {option.name}
                 </div>
               ) : (
