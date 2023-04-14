@@ -56,7 +56,8 @@ const TagSelectionField = <T extends TagFields>({
 
   const { data, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
-  const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
+  const flattenedTags: FlatTag[] | undefined =
+    flattened && type !== TagType.COLLECTION ? Object.values(flattened)[0] : undefined;
 
   //code duplication with LocationPanel
   const tagTree = useMemo(() => {
@@ -131,27 +132,29 @@ const TagSelectionField = <T extends TagFields>({
 
   useEffect(() => {
     const tempTagList = [] as T[];
-    flattenedTags?.forEach(tag => {
-      if (!tag.parent_tags?.length) {
-        tempTagList.push({ ...tag, appearance: 0 } as T);
-      } else {
-        let index = 0;
-        tag.parent_tags.forEach(parent => {
-          if (!tagSupertagList || !tagSupertagList[parent.id].length) {
-            tempTagList.push({ ...tag, appearance: index } as T);
-            index++;
-          } else {
-            tagSupertagList[parent.id].forEach(path => {
+    if (type !== TagType.COLLECTION) {
+      flattenedTags?.forEach(tag => {
+        if (!tag.parent_tags?.length) {
+          tempTagList.push({ ...tag, appearance: 0 } as T);
+        } else {
+          let index = 0;
+          tag.parent_tags.forEach(parent => {
+            if (!tagSupertagList || !tagSupertagList[parent.id].length) {
               tempTagList.push({ ...tag, appearance: index } as T);
               index++;
-            });
-          }
-        });
-      }
-    });
+            } else {
+              tagSupertagList[parent.id].forEach(path => {
+                tempTagList.push({ ...tag, appearance: index } as T);
+                index++;
+              });
+            }
+          });
+        }
+      });
+    }
 
-    setTagList(tempTagList);
-  }, [allTags, setTagList, flattenedTags, tagSupertagList]);
+    setTagList(type === TagType.COLLECTION ? allTags : tempTagList);
+  }, [allTags, setTagList, flattenedTags, tagSupertagList, type]);
 
   const toggleVerified = useCallback(
     (list: T[], index: number) => {
@@ -307,7 +310,7 @@ const TagSelectionField = <T extends TagFields>({
                 : setLastSelectedTags(newValue as T[]);
               tag.isNew = true;
               tag.verified = true;
-              if (type === TagType.PERSON) {
+              if (type === TagType.PERSON || type === TagType.COLLECTION) {
                 setLastSelectedTag(undefined);
                 setLastSelectedTags([] as T[]);
               }
