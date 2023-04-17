@@ -87,8 +87,10 @@ const TagSelectionField = <T extends TagFields>({
     while (queue.length > 0) {
       const nextTag = queue.shift();
 
-      // skip if clone was filled already to avoid duplicates
-      if (nextTag && tagSupertags[nextTag.id].length > 0) continue;
+      // override if clone was filled already to avoid duplicates
+      if (nextTag && tagSupertags[nextTag.id].length > 0) {
+        tagSupertags[nextTag.id] = [];
+      }
 
       nextTag?.parent_tags?.forEach(parent => {
         tagSupertags[parent.id].forEach(parentParents => {
@@ -129,6 +131,78 @@ const TagSelectionField = <T extends TagFields>({
 
     return tagChildren;
   }, [flattenedTags, tagTree]);
+
+  const customSetSelectedTags = (newValue: T[], tag: T) => {
+    if (!tagChildTags || !tagSupertagList) return;
+    let fullPath: FlatTag[] = [];
+    if (typeof tagSupertagList[tag.id] === 'undefined') {
+      if (lastSelectedTag) {
+        fullPath = [
+          ...tagSupertagList[lastSelectedTag.id][lastSelectedTag.appearance ?? 0],
+          (({ name, id }) => ({ name, id }))(lastSelectedTag) as FlatTag,
+          (({ name, id }) => ({ name, id }))(tag) as FlatTag,
+        ];
+      } else {
+        fullPath = [];
+      }
+    } else {
+      fullPath = [
+        ...tagSupertagList[tag.id][tag.appearance ?? 0],
+        (({ name, id }) => ({ name, id }))(tag) as FlatTag,
+      ];
+    }
+
+    if (typeof tagChildTags[tag.id] === 'undefined' || tagChildTags[tag.id].length <= 0) {
+      setLastSelectedTags([
+        ...newValue.map(value => {
+          const cloneValue = Object.assign({}, value);
+          cloneValue.appearance = getVariantByPathMatch(fullPath, value);
+          return cloneValue as T;
+        }),
+      ]);
+      return;
+    }
+    if (tagSupertagList[tag.id].length <= (tag.appearance ?? 0)) {
+      setLastSelectedTags([...newValue, ...tagChildTags[tag.id]]);
+      return;
+    }
+
+    setLastSelectedTags([
+      ...newValue.map(value => {
+        const cloneValue = Object.assign({}, value);
+        cloneValue.appearance = getVariantByPathMatch(fullPath, value);
+        return cloneValue as T;
+      }),
+      ...tagChildTags[tag.id].map(
+        (childTag, index) =>
+          ({ ...childTag, appearance: getChildVariantByPathMatch(fullPath, tag, index) } as T)
+      ),
+    ]);
+  };
+
+  const getVariantByPathMatch = (fullPath: FlatTag[], tag: T) => {
+    let variant = 0;
+    if (!tagChildTags || !tagSupertagList || typeof tagSupertagList[tag.id] === 'undefined')
+      return lastSelectedTag?.appearance ?? 0;
+    tagSupertagList[tag.id].forEach((path, i) => {
+      const completePath = [...path, (({ name, id }) => ({ name, id }))(tag) as FlatTag];
+      if (completePath.every((val, index) => val.id === fullPath[index].id)) {
+        variant = i;
+      }
+    });
+    return variant;
+  };
+
+  const getChildVariantByPathMatch = (fullPath: FlatTag[], tag: T, childIndex: number) => {
+    let test = 0;
+    if (!tagChildTags || !tagSupertagList) return 0;
+    tagSupertagList[tagChildTags[tag.id][childIndex].id].forEach((path, i) => {
+      if (path.every((val, index) => val.id === fullPath[index].id)) {
+        test = i;
+      }
+    });
+    return test;
+  };
 
   useEffect(() => {
     const tempTagList = [] as T[];
@@ -305,14 +379,16 @@ const TagSelectionField = <T extends TagFields>({
                     ) as T[])
                   : ([] as T[])
               );
-              tagChildTags && tag.id in tagChildTags && tagChildTags[tag.id].length > 0
-                ? setLastSelectedTags([...newValue, ...tagChildTags[tag.id]])
-                : setLastSelectedTags(newValue as T[]);
-              tag.isNew = true;
-              tag.verified = true;
               if (type === TagType.PERSON || type === TagType.COLLECTION) {
                 setLastSelectedTag(undefined);
                 setLastSelectedTags([] as T[]);
+              } else {
+                customSetSelectedTags(newValue, tag);
+              }
+              tag.isNew = true;
+              tag.verified = true;
+              if (tagSupertagList && typeof tagSupertagList[tag.id] === 'undefined') {
+                tag.appearance = lastSelectedTag?.appearance ?? 0;
               }
             });
             onChange(newValue);

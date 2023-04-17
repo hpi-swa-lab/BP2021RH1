@@ -49,8 +49,10 @@ const TagSelectDialogPreset = ({
     while (queue.length > 0) {
       const nextTag = queue.shift();
 
-      // skip if clone was filled already to avoid duplicates
-      if (nextTag && tagSupertags[nextTag.id].length > 0) continue;
+      // override if clone was filled already to avoid duplicates
+      if (nextTag && tagSupertags[nextTag.id].length > 0) {
+        tagSupertags[nextTag.id] = [];
+      }
 
       nextTag?.parent_tags?.forEach(parent => {
         tagSupertags[parent.id].forEach(parentParents => {
