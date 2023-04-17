@@ -365,6 +365,7 @@
     "relocate-location": "Welchem Ort wollen Sie folgenden Ort unterordnen?",
     "relocate-keyword": "Welchem Schlagwort wollen Sie folgendes Schlagwort unterordnen?",
     "location": "Ort",
-    "keyword": "Schlagwort"
+    "keyword": "Schlagwort",
+    "multiple-paths": "Mehrere Pfade"
   }
 }
