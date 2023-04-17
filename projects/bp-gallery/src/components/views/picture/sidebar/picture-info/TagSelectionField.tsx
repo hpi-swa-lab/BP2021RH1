@@ -1,4 +1,4 @@
-import { Help, Add, ArrowRight, ExitToApp } from '@mui/icons-material';
+import { Help, Add, ExitToApp } from '@mui/icons-material';
 import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -12,6 +12,7 @@ import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSe
 import { SearchType } from '../../../search/helpers/search-filters';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 import './TagSelection.scss';
+import SingleTagElement from './SingleTagElement';
 
 interface TagFields {
   name: string;
@@ -132,7 +133,7 @@ const TagSelectionField = <T extends TagFields>({
   }, [flattenedTags, tagTree]);
 
   useEffect(() => {
-    setTagList(type === TagType.COLLECTION ? allTags : (flattenedTags as T[]));
+    setTagList(allTags);
   }, [allTags, setTagList, flattenedTags, tagSupertagList, type]);
 
   const toggleVerified = useCallback(
@@ -315,47 +316,7 @@ const TagSelectionField = <T extends TagFields>({
             }
             return (
               <li {...props} key={option.id}>
-                <div className='recommendation-item-container'>
-                  {tagSupertagList &&
-                  typeof option.id === 'string' &&
-                  option.id !== '-2' &&
-                  option.id !== '-3' &&
-                  tagSupertagList[option.id].length > 0 ? (
-                    <>
-                      {tagSupertagList[option.id].length > 1 ? (
-                        // multiple paths tag
-                        <div className='recommendation-item-parents'>
-                          <div className='recommendation-item-multiple-paths'>
-                            {t('tag-panel.multiple-paths')}
-                          </div>
-                          <ArrowRight />
-                          <div className='recommendation-item-name'>{option.name}</div>
-                        </div>
-                      ) : (
-                        // single path tag
-                        <div className='recommendation-item-parents'>
-                          {tagSupertagList[option.id][0].map((tag, index) => {
-                            return (
-                              <div key={index} className='recommendation-item'>
-                                {index >= 1 && <ArrowRight />}
-                                <div className='recommendation-item-name'>{tag.name}</div>
-                              </div>
-                            );
-                          })}
-                          {option.icon ?? ''}
-                          <ArrowRight />
-                          <div className='recommendation-item-name'>{label}</div>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    // root tag
-                    <div className='recommendation-item-name'>
-                      {option.icon ?? ''}
-                      {label}
-                    </div>
-                  )}
-                </div>
+                <SingleTagElement tagSupertagList={tagSupertagList} option={option} label={label} />
               </li>
             );
           }}

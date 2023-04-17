@@ -5,7 +5,7 @@ import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import SelectDialogPreset from '../../provider/dialog-presets/SelectDialogPreset';
 import { DialogProps } from '../../provider/DialogProvider';
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight } from '@mui/icons-material';
+import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
 
 const TagSelectDialogPreset = ({
   handleClose,
@@ -88,39 +88,11 @@ const TagSelectDialogPreset = ({
       renderOption={(props, option: FlatTag) => {
         return (
           <li {...props} key={option.id}>
-            <div className='recommendation-item-container'>
-              {tagSupertagList && tagSupertagList[option.id].length > 0 ? (
-                <>
-                  {tagSupertagList[option.id].length > 1 ? (
-                    // multiple paths tag
-                    <div className='recommendation-item-parents'>
-                      <div className='recommendation-item-multiple-paths'>
-                        {t('tag-panel.multiple-paths')}
-                      </div>
-                      <ArrowRight />
-                      <div className='recommendation-item-name'>{option.name}</div>
-                    </div>
-                  ) : (
-                    // single path tag
-                    <div className='recommendation-item-parents'>
-                      {tagSupertagList[option.id][0].map((tag, index) => {
-                        return (
-                          <div key={index} className='recommendation-item'>
-                            {index >= 1 && <ArrowRight />}
-                            <div className='recommendation-item-name'>{tag.name}</div>
-                          </div>
-                        );
-                      })}
-                      <ArrowRight />
-                      <div className='recommendation-item-name'>{option.name}</div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                // root tag
-                <div className='recommendation-item-name'>{option.name}</div>
-              )}
-            </div>
+            <SingleTagElement
+              tagSupertagList={tagSupertagList}
+              option={option}
+              label={option.name}
+            />
           </li>
         );
       }}
