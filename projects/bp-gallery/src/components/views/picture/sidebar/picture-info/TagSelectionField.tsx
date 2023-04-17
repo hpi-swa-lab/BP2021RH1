@@ -22,7 +22,6 @@ interface TagFields {
   icon?: JSX.Element;
   isNew?: boolean;
   onClick?: () => void;
-  appearance?: number;
 }
 
 const TagSelectionField = <T extends TagFields>({
@@ -132,102 +131,8 @@ const TagSelectionField = <T extends TagFields>({
     return tagChildren;
   }, [flattenedTags, tagTree]);
 
-  const customSetSelectedTags = (newValue: T[], tag: T) => {
-    if (!tagChildTags || !tagSupertagList) return;
-    let fullPath: FlatTag[] = [];
-    if (typeof tagSupertagList[tag.id] === 'undefined') {
-      if (lastSelectedTag) {
-        fullPath = [
-          ...tagSupertagList[lastSelectedTag.id][lastSelectedTag.appearance ?? 0],
-          (({ name, id }) => ({ name, id }))(lastSelectedTag) as FlatTag,
-          (({ name, id }) => ({ name, id }))(tag) as FlatTag,
-        ];
-      } else {
-        fullPath = [];
-      }
-    } else {
-      fullPath = [
-        ...tagSupertagList[tag.id][tag.appearance ?? 0],
-        (({ name, id }) => ({ name, id }))(tag) as FlatTag,
-      ];
-    }
-
-    if (typeof tagChildTags[tag.id] === 'undefined' || tagChildTags[tag.id].length <= 0) {
-      setLastSelectedTags([
-        ...newValue.map(value => {
-          const cloneValue = Object.assign({}, value);
-          cloneValue.appearance = getVariantByPathMatch(fullPath, value);
-          return cloneValue as T;
-        }),
-      ]);
-      return;
-    }
-    if (tagSupertagList[tag.id].length <= (tag.appearance ?? 0)) {
-      setLastSelectedTags([...newValue, ...tagChildTags[tag.id]]);
-      return;
-    }
-
-    setLastSelectedTags([
-      ...newValue.map(value => {
-        const cloneValue = Object.assign({}, value);
-        cloneValue.appearance = getVariantByPathMatch(fullPath, value);
-        return cloneValue as T;
-      }),
-      ...tagChildTags[tag.id].map(
-        (childTag, index) =>
-          ({ ...childTag, appearance: getChildVariantByPathMatch(fullPath, tag, index) } as T)
-      ),
-    ]);
-  };
-
-  const getVariantByPathMatch = (fullPath: FlatTag[], tag: T) => {
-    let variant = 0;
-    if (!tagChildTags || !tagSupertagList || typeof tagSupertagList[tag.id] === 'undefined')
-      return lastSelectedTag?.appearance ?? 0;
-    tagSupertagList[tag.id].forEach((path, i) => {
-      const completePath = [...path, (({ name, id }) => ({ name, id }))(tag) as FlatTag];
-      if (completePath.every((val, index) => val.id === fullPath[index].id)) {
-        variant = i;
-      }
-    });
-    return variant;
-  };
-
-  const getChildVariantByPathMatch = (fullPath: FlatTag[], tag: T, childIndex: number) => {
-    let test = 0;
-    if (!tagChildTags || !tagSupertagList) return 0;
-    tagSupertagList[tagChildTags[tag.id][childIndex].id].forEach((path, i) => {
-      if (path.every((val, index) => val.id === fullPath[index].id)) {
-        test = i;
-      }
-    });
-    return test;
-  };
-
   useEffect(() => {
-    const tempTagList = [] as T[];
-    if (type !== TagType.COLLECTION) {
-      flattenedTags?.forEach(tag => {
-        if (!tag.parent_tags?.length) {
-          tempTagList.push({ ...tag, appearance: 0 } as T);
-        } else {
-          let index = 0;
-          tag.parent_tags.forEach(parent => {
-            if (!tagSupertagList || !tagSupertagList[parent.id].length) {
-              tempTagList.push({ ...tag, appearance: index } as T);
-              index++;
-            } else {
-              tagSupertagList[parent.id].forEach(path => {
-                tempTagList.push({ ...tag, appearance: index } as T);
-                index++;
-              });
-            }
-          });
-        }
-      });
-    }
-
-    setTagList(type === TagType.COLLECTION ? allTags : tempTagList);
+    setTagList(type === TagType.COLLECTION ? allTags : (flattenedTags as T[]));
   }, [allTags, setTagList, flattenedTags, tagSupertagList, type]);
 
   const toggleVerified = useCallback(
@@ -342,7 +247,6 @@ const TagSelectionField = <T extends TagFields>({
                     const nameOfField = Object.keys(data as { [key: string]: any })[0];
                     const newId = data[nameOfField].data.id;
                     addTag.id = newId;
-                    addTag.appearance = 0;
                     delete addTag.createValue;
                     delete addTag.icon;
                     setTagList([...allTags, addTag]);
@@ -356,7 +260,6 @@ const TagSelectionField = <T extends TagFields>({
                     const nameOfField = Object.keys(data as { [key: string]: any })[0];
                     const newId = data[nameOfField].data.id;
                     addTag.id = newId;
-                    addTag.appearance = 0;
                     delete addTag.createValue;
                     delete addTag.icon;
                     setTagList([...allTags, addTag]);
@@ -371,25 +274,31 @@ const TagSelectionField = <T extends TagFields>({
             );
             newlyAddedTags.forEach(tag => {
               setLastSelectedTag(tag);
-              // hier werden alle parents gesetzt um sie einzufügen
-              newValue = newValue.concat(
-                tagSupertagList && tag.id in tagSupertagList && tagSupertagList[tag.id].length
-                  ? (tagSupertagList[tag.id][tag.appearance ?? 0].filter(
-                      value => !tags.some(tag => tag.id === value.id)
+              const allSupertags: T[] = [];
+              if (tagSupertagList && tag.id in tagSupertagList) {
+                tagSupertagList[tag.id].forEach(supertags => {
+                  allSupertags.push(
+                    ...(supertags.filter(
+                      value =>
+                        !tags.some(tag => tag.id === value.id) &&
+                        !allSupertags.some(tag => tag.id === value.id)
                     ) as T[])
-                  : ([] as T[])
-              );
+                  );
+                });
+              }
+
+              newValue = newValue.concat(allSupertags);
               if (type === TagType.PERSON || type === TagType.COLLECTION) {
                 setLastSelectedTag(undefined);
                 setLastSelectedTags([] as T[]);
               } else {
-                customSetSelectedTags(newValue, tag);
+                setLastSelectedTags([
+                  ...newValue,
+                  ...(tagChildTags && tag.id in tagChildTags ? tagChildTags[tag.id] : []),
+                ]);
               }
               tag.isNew = true;
               tag.verified = true;
-              if (tagSupertagList && typeof tagSupertagList[tag.id] === 'undefined') {
-                tag.appearance = lastSelectedTag?.appearance ?? 0;
-              }
             });
             onChange(newValue);
           }}
@@ -405,36 +314,42 @@ const TagSelectionField = <T extends TagFields>({
               }
             }
             return (
-              <li
-                {...props}
-                key={
-                  option.appearance
-                    ? +option.id >= option.appearance
-                      ? +option.id * +option.id + +option.id + option.appearance
-                      : +option.id + option.appearance * option.appearance
-                    : option.id
-                }
-              >
+              <li {...props} key={option.id}>
                 <div className='recommendation-item-container'>
                   {tagSupertagList &&
                   typeof option.id === 'string' &&
                   option.id !== '-2' &&
                   option.id !== '-3' &&
                   tagSupertagList[option.id].length > 0 ? (
-                    <div className='recommendation-item-parents'>
-                      {tagSupertagList[option.id][option.appearance ?? 0].map((tag, index) => {
-                        return (
-                          <div key={index} className='recommendation-item'>
-                            {index >= 1 && <ArrowRight />}
-                            {tag.name}
+                    <>
+                      {tagSupertagList[option.id].length > 1 ? (
+                        // multiple paths tag
+                        <div className='recommendation-item-parents'>
+                          <div className='recommendation-item-multiple-paths'>
+                            {t('tag-panel.multiple-paths')}
                           </div>
-                        );
-                      })}
-                      {option.icon ?? ''}
-                      {tagSupertagList[option.id].length > 0 && <ArrowRight />}
-                      {label}
-                    </div>
+                          <ArrowRight />
+                          <div className='recommendation-item-name'>{option.name}</div>
+                        </div>
+                      ) : (
+                        // single path tag
+                        <div className='recommendation-item-parents'>
+                          {tagSupertagList[option.id][0].map((tag, index) => {
+                            return (
+                              <div key={index} className='recommendation-item'>
+                                {index >= 1 && <ArrowRight />}
+                                <div className='recommendation-item-name'>{tag.name}</div>
+                              </div>
+                            );
+                          })}
+                          {option.icon ?? ''}
+                          <ArrowRight />
+                          <div className='recommendation-item-name'>{label}</div>
+                        </div>
+                      )}
+                    </>
                   ) : (
+                    // root tag
                     <div className='recommendation-item-name'>
                       {option.icon ?? ''}
                       {label}
