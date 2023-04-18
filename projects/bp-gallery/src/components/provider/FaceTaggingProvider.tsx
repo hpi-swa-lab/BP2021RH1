@@ -16,9 +16,9 @@ import {
   useGetFaceTagsQuery,
   useGetPersonTagQuery,
 } from '../../graphql/APIConnector';
-import { PictureViewContext } from '../views/picture/PictureView';
 import { FaceTagData } from '../views/picture/face-tagging/FaceTag';
 import { useImageRect } from '../views/picture/face-tagging/helpers/image-rect';
+import { PictureViewContext } from '../views/picture/PictureView';
 
 export type FaceTagging = {
   activeTagId: string | null;
@@ -82,6 +82,7 @@ export const FaceTaggingProvider = ({
     }
     return [x, y];
   }, [mousePosition, imageRect]);
+
   const [createTag] = useCreateFaceTagMutation({
     refetchQueries: ['getFaceTags'],
   });
@@ -94,11 +95,9 @@ export const FaceTaggingProvider = ({
   const placeTag = useCallback(() => {
     const position = positionRef.current;
     if (!position || activeTagId === null) {
-      console.log(position, activeTagId);
       return;
     }
     const [x, y] = position;
-    console.log('hat geklappt');
     createTag({
       variables: {
         x,
@@ -148,7 +147,6 @@ export const FaceTaggingProvider = ({
     };
     const mouseclick = () => {
       if (hasDragged) {
-        console.log('hasdragged=false');
         return;
       }
       placeTag();
@@ -167,7 +165,6 @@ export const FaceTaggingProvider = ({
 
   const activeTagData = useMemo<FaceTagData | null>(() => {
     if (!position || activeTagId === null) {
-      console.log(position, activeTagId);
       return null;
     }
     const [x, y] = position;
