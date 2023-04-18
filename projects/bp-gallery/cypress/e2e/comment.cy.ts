@@ -2,11 +2,11 @@ import { login, logout } from '../utils/login-utils';
 
 const postComment = (name: string, comment: string) => {
   cy.get('input#name').scrollIntoView();
-  cy.get('input#name').should('be.visible').clear();
+  cy.get('input#name').clear();
   cy.get('input#name').type(name);
-  cy.get('textarea#text').should('be.visible').clear();
+  cy.get('textarea#text').clear();
   cy.get('textarea#text').type(comment);
-  cy.get('.MuiButton-root').contains('Absenden').should('be.visible').click();
+  cy.get('.MuiButton-root').contains('Absenden').click();
 };
 
 const closeModal = (text: string, buttonText: string) => {
@@ -86,17 +86,17 @@ describe('Comment', () => {
     cy.contains('.comment', 'Oberkommentar1').within(() => {
       cy.contains('button', 'Antworten').click();
       postComment('Hans Unter', 'Unterkommentar1');
-      cy.contains('.comment-text', 'Unterkommentar1');
+      cy.contains('.comment', 'Unterkommentar1');
       cy.contains('.comment-verification-container', 'Unterkommentar1')
         .contains('button', 'Akzeptieren')
         .click();
       cy.contains('button', 'Antworten').click();
       postComment('Hans Unter', 'Unterkommentar2');
-      cy.contains('.comment-text', 'Unterkommentar2');
+      cy.contains('.comment', 'Unterkommentar2');
       cy.contains('.comment', 'Unterkommentar1').within(() => {
         cy.contains('button', 'Antworten').click();
         postComment('Hans Unter', 'UnterUnterkommentar1');
-        cy.contains('.comment-text', 'UnterUnterkommentar1');
+        cy.contains('.comment', 'UnterUnterkommentar1');
       });
     });
   });

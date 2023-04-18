@@ -7,14 +7,15 @@ module.exports = {
   theme: {
     extend: {
       height: {
-        '50vh': '50vh'
-      }
+        '50vh': '50vh',
+      },
+      colors: {
+        primary: '#7e241d'
+      },
     },
     fontFamily: {
       sans: ['Lato', 'Arial', 'sans-serif'],
     },
   },
-  plugins: [
-    require('@tailwindcss/line-clamp')
-  ],
+  plugins: [require('@tailwindcss/line-clamp')],
 };

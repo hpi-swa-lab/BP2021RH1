@@ -2239,6 +2239,86 @@ export type GetPictureInfoQuery = {
     | undefined;
 };
 
+export type GetDailyPictureInfoQueryVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type GetDailyPictureInfoQuery = {
+  picture?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    likes?: number | null | undefined;
+                    descriptions?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { text: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                    time_range_tag?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?:
+                                  | {
+                                      start: any;
+                                      end: any;
+                                      isEstimate?: boolean | null | undefined;
+                                    }
+                                  | null
+                                  | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                    comments?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                    media: {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | { url: string; updatedAt?: any | null | undefined }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    };
+                    archive_tag?:
+                      | {
+                          data?:
+                            | {
+                                id?: string | null | undefined;
+                                attributes?: { name: string } | null | undefined;
+                              }
+                            | null
+                            | undefined;
+                        }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type GetMultiplePictureInfoQueryVariables = Exact<{
   pictureIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
@@ -2444,6 +2524,8 @@ export type GetPicturesQuery = {
           attributes?:
             | {
                 is_text?: boolean | null | undefined;
+                likes?: number | null | undefined;
+                comments?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
                 media: {
                   data?:
                     | {
@@ -2453,6 +2535,7 @@ export type GetPicturesQuery = {
                               width?: number | null | undefined;
                               height?: number | null | undefined;
                               formats?: any | null | undefined;
+                              url: string;
                               updatedAt?: any | null | undefined;
                             }
                           | null
@@ -2487,6 +2570,8 @@ export type GetPicturesByAllSearchQuery = {
             attributes?:
               | {
                   is_text?: boolean | null | undefined;
+                  likes?: number | null | undefined;
+                  comments?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
                   media: {
                     data?:
                       | {
@@ -2496,6 +2581,7 @@ export type GetPicturesByAllSearchQuery = {
                                 width?: number | null | undefined;
                                 height?: number | null | undefined;
                                 formats?: any | null | undefined;
+                                url: string;
                                 updatedAt?: any | null | undefined;
                               }
                             | null
@@ -3111,6 +3197,23 @@ export type GetAllArchiveTagsQuery = {
                   | null
                   | undefined;
               }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetAllPicturesByArchiveQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllPicturesByArchiveQuery = {
+  archiveTags?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | { pictures?: { data: Array<{ id?: string | null | undefined }> } | null | undefined }
             | null
             | undefined;
         }>;
@@ -3927,6 +4030,109 @@ export type GetPictureInfoQueryResult = Apollo.QueryResult<
   GetPictureInfoQueryVariables
 >;
 
+export const GetDailyPictureInfoDocument = gql`
+  query getDailyPictureInfo($pictureId: ID!) {
+    picture(id: $pictureId) {
+      data {
+        id
+        attributes {
+          descriptions(sort: "createdAt:asc") {
+            data {
+              id
+              attributes {
+                text
+              }
+            }
+          }
+          time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+                isEstimate
+              }
+            }
+          }
+          comments {
+            data {
+              id
+            }
+          }
+          likes
+          media {
+            data {
+              id
+              attributes {
+                url
+                updatedAt
+              }
+            }
+          }
+          archive_tag {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetDailyPictureInfoQuery__
+ *
+ * To run a query within a React component, call `useGetDailyPictureInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDailyPictureInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDailyPictureInfoQuery({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useGetDailyPictureInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetDailyPictureInfoQuery, GetDailyPictureInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetDailyPictureInfoQuery, GetDailyPictureInfoQueryVariables>(
+    GetDailyPictureInfoDocument,
+    options
+  );
+}
+
+export function useGetDailyPictureInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetDailyPictureInfoQuery,
+    GetDailyPictureInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetDailyPictureInfoQuery, GetDailyPictureInfoQueryVariables>(
+    GetDailyPictureInfoDocument,
+    options
+  );
+}
+
+export type GetDailyPictureInfoQueryHookResult = ReturnType<typeof useGetDailyPictureInfoQuery>;
+
+export type GetDailyPictureInfoLazyQueryHookResult = ReturnType<
+  typeof useGetDailyPictureInfoLazyQuery
+>;
+
+export type GetDailyPictureInfoQueryResult = Apollo.QueryResult<
+  GetDailyPictureInfoQuery,
+  GetDailyPictureInfoQueryVariables
+>;
+
 export const GetMultiplePictureInfoDocument = gql`
   query getMultiplePictureInfo($pictureIds: [ID!]) {
     pictures(filters: { id: { in: $pictureIds } }) {
@@ -4135,6 +4341,12 @@ export const GetPicturesDocument = gql`
         id
         attributes {
           is_text
+          comments {
+            data {
+              id
+            }
+          }
+          likes
           media {
             data {
               id
@@ -4142,6 +4354,7 @@ export const GetPicturesDocument = gql`
                 width
                 height
                 formats
+                url
                 updatedAt
               }
             }
@@ -4212,6 +4425,12 @@ export const GetPicturesByAllSearchDocument = gql`
       id
       attributes {
         is_text
+        comments {
+          data {
+            id
+          }
+        }
+        likes
         media {
           data {
             id
@@ -4219,6 +4438,7 @@ export const GetPicturesByAllSearchDocument = gql`
               width
               height
               formats
+              url
               updatedAt
             }
           }
@@ -5737,6 +5957,77 @@ export type GetAllArchiveTagsLazyQueryHookResult = ReturnType<typeof useGetAllAr
 export type GetAllArchiveTagsQueryResult = Apollo.QueryResult<
   GetAllArchiveTagsQuery,
   GetAllArchiveTagsQueryVariables
+>;
+
+export const GetAllPicturesByArchiveDocument = gql`
+  query getAllPicturesByArchive {
+    archiveTags {
+      data {
+        id
+        attributes {
+          pictures {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllPicturesByArchiveQuery__
+ *
+ * To run a query within a React component, call `useGetAllPicturesByArchiveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPicturesByArchiveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPicturesByArchiveQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllPicturesByArchiveQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAllPicturesByArchiveQuery,
+    GetAllPicturesByArchiveQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllPicturesByArchiveQuery, GetAllPicturesByArchiveQueryVariables>(
+    GetAllPicturesByArchiveDocument,
+    options
+  );
+}
+
+export function useGetAllPicturesByArchiveLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllPicturesByArchiveQuery,
+    GetAllPicturesByArchiveQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllPicturesByArchiveQuery, GetAllPicturesByArchiveQueryVariables>(
+    GetAllPicturesByArchiveDocument,
+    options
+  );
+}
+
+export type GetAllPicturesByArchiveQueryHookResult = ReturnType<
+  typeof useGetAllPicturesByArchiveQuery
+>;
+
+export type GetAllPicturesByArchiveLazyQueryHookResult = ReturnType<
+  typeof useGetAllPicturesByArchiveLazyQuery
+>;
+
+export type GetAllPicturesByArchiveQueryResult = Apollo.QueryResult<
+  GetAllPicturesByArchiveQuery,
+  GetAllPicturesByArchiveQueryVariables
 >;
 
 export const GetDecadePreviewThumbnailsDocument = gql`

@@ -1,19 +1,14 @@
-import { Event, FolderSpecial } from '@mui/icons-material';
-import { Portal } from '@mui/material';
+import { Card, Portal } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
+import { useGetDailyPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
-import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import {
-  zoomIntoPicture,
-  zoomOutOfPicture,
-} from '../../common/picture-gallery/helpers/picture-animations';
 import PictureView from '../picture/PictureView';
 import RichText from './../../common/RichText';
+import DailyPictureInfo from './DailyPictureInfo';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -26,88 +21,97 @@ const choosePictureId = (pictureIds: string[]) => {
 const DailyPicture = () => {
   const root = document.getElementById('root');
   //These are hard-coded until we implemented votes
-  const pictureIds = [
-    '2254',
-    '2265',
-    '11715',
-    '13258',
-    '14440',
-    '13282',
-    '14998',
-    '13124',
-    '13125',
-    '13034',
-    '12689',
-    '12939',
-    '6837',
-    '7943',
-    '6863',
-    '6773',
-    '7886',
-    '7954',
-    '9350',
-    '8255',
-    '10838',
-  ];
+  const pictureIds =
+    import.meta.env.MODE === 'development'
+      ? ['1', '2', '3'] //just for testing purposes
+      : [
+          //here are the real pictures for production
+          '2254',
+          '2265',
+          '11715',
+          '13258',
+          '14440',
+          '13282',
+          '14998',
+          '13124',
+          '13125',
+          '13034',
+          '12689',
+          '12939',
+          '6837',
+          '7943',
+          '6863',
+          '6773',
+          '7886',
+          '7954',
+          '9350',
+          '8255',
+          '10838',
+          '16393',
+          '16297',
+          '16280',
+          '16235',
+          '16150',
+          '16155',
+          '16134',
+          '16111',
+          '16055',
+          '15941',
+          '15903',
+          '16373',
+          '12625',
+          '14365',
+          '13245',
+          '13116',
+          '13110',
+          '14064',
+        ];
   const { t } = useTranslation();
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const navigateToPicture = useCallback(
     async (id: string) => {
       pushHistoryWithoutRouter(`/picture/${id}`);
-      await zoomIntoPicture(`picture-preview-for-${id}`);
       setIsFocused(true);
     },
     [setIsFocused]
   );
   const dailyPictureId = choosePictureId(pictureIds);
-  const { data } = useGetPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
+  const { data } = useGetDailyPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
   const description = picture?.descriptions?.[0]?.text ?? '';
-  const pictureDate = formatTimeStamp(picture?.time_range_tag);
-  const pictureArchive = picture?.archive_tag?.name;
-  const pictureArchiveId = picture?.archive_tag?.id;
-  const pictureArchiveLink = pictureArchiveId ? `/archives/${pictureArchiveId}` : '';
   return (
     <div>
       {picture && (
-        <>
-          <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
-          <div className={'flex flex-col place-items-center'}>
+        <div className='flex justify-center'>
+          <Card className='flex flex-col-reverse md:flex-row rounded-md justify-between max-w-4xl'>
+            <div className='p-4 flex flex-col overflow-hidden'>
+              <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
+              <h4 className={'text-lg my-1'}>{t('common.description')}:</h4>
+              <RichText value={description} className='break-words line-clamp-[9]' />
+              <DailyPictureInfo picture={picture} />
+            </div>
             <img
-              className={'w-screen sm:w-auto sm:h-50vh'}
+              className={'sm:w-auto sm:h-96 cursor-pointer sm:max-w-2xl object-cover'}
+              id='daily-picture'
               src={pictureLink}
               alt={t('common.daily-picture')}
               onClick={async () => {
                 await navigateToPicture(picture.id);
               }}
             />
-            <div className={'flex flex-col max-w-4xl'}>
-              <p className={'line-clamp-5'}>
-                <h4 className={'text-lg my-1'}>{t('pictureFields.descriptions')}:</h4>
-                <RichText value={description} />
-              </p>
-              <div className={'flex-1'} />
-              <div className={'flex items-center gap-2 my-2'}>
-                <Event /> {pictureDate}
-              </div>
-              <div className={'flex item-center gap-2'}>
-                <FolderSpecial /> <a href={pictureArchiveLink}>{pictureArchive} </a>
-              </div>
-            </div>
-          </div>
-        </>
+          </Card>
+        </div>
       )}
 
       {isFocused && picture && (
         <Portal container={root}>
           <PictureView
             initialPictureId={picture.id}
-            onBack={async () => {
+            onBack={() => {
               setIsFocused(false);
-              await zoomOutOfPicture(`picture-preview-for-${picture.id}`);
             }}
           />
         </Portal>
