@@ -5,6 +5,7 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
 } from '../../../hooks/get-pictures.hook';
+import { useScroll } from '../../../hooks/scrolll-hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../Loading';
 import QueryErrorDisplay from '../QueryErrorDisplay';
@@ -16,8 +17,6 @@ import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 
 const PictureScrollGrid = ({
   queryParams,
-  scrollPos,
-  scrollHeight,
   hashbase,
   isAllSearchActive = false,
   uploadAreaProps,
@@ -32,8 +31,6 @@ const PictureScrollGrid = ({
   filterOutTextsForNonCurators = true,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
-  scrollPos: number;
-  scrollHeight: number;
   hashbase: string;
   isAllSearchActive?: boolean;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
@@ -59,6 +56,8 @@ const PictureScrollGrid = ({
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+
+  const { scrollPos, scrollHeight } = useScroll();
 
   useEffect(() => {
     if (resultPictureCallback && !loading) {

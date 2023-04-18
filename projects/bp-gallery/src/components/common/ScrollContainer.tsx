@@ -1,25 +1,37 @@
-import { useState } from 'react';
+import { Location } from 'history';
+import { PropsWithChildren, useCallback, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import scrollPoss from '../../helpers/scrollPos';
+import { useScroll } from './../../hooks/scrolll-hook';
 import './ScrollContainer.scss';
 
-const ScrollContainer = ({
-  children,
-}: {
-  children: ((scrollPos: number, scrollHeight: number) => React.ReactNode) | React.ReactNode;
-}) => {
-  const [scrollPos, setScrollPos] = useState<number>(0);
-  const [scrollHeight, setScrollHeight] = useState<number>(0);
+const ScrollContainer = ({ children }: PropsWithChildren<{}>) => {
+  const { pathname }: Location = useLocation();
+  const divRef = useRef<HTMLDivElement>(null);
+  const { setScrollPos, setScrollHeight, setScrollTo, scrollPos } = useScroll();
+
+  const scrollTo = useCallback((posY: number, smooth?: boolean) => {
+    divRef.current?.scrollTo({ top: posY, behavior: smooth ? 'smooth' : 'auto' });
+  }, []);
+
+  console.log(scrollPos);
+
+  useEffect(() => {
+    setScrollTo(() => scrollTo);
+  }, [scrollTo, setScrollTo]);
 
   return (
-    <div className='scroll-context'>
-      <div
-        className='scrollable-container'
-        onScroll={event => {
-          setScrollPos((event.target as HTMLElement).scrollTop);
-          setScrollHeight((event.target as HTMLElement).scrollHeight);
-        }}
-      >
-        {typeof children === 'function' ? children(scrollPos, scrollHeight) : children}
-      </div>
+    <div
+      ref={divRef}
+      className='scrollable-container'
+      onScroll={event => {
+        const element = event.target as HTMLElement;
+        setScrollPos(element.scrollTop);
+        setScrollHeight(element.scrollHeight);
+        scrollPoss.set(pathname, element.scrollTop);
+      }}
+    >
+      {children}
     </div>
   );
 };

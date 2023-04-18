@@ -3,11 +3,11 @@
 .scroll-context {
   color: $textColor;
   display: grid;
-  min-height: 0;
   grid-template-columns: 100%;
   grid-template-rows: 1fr auto;
 
   .scrollable-container {
+    height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
   }

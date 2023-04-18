@@ -10,7 +10,6 @@ import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
-import ScrollContainer from '../../../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { ShowStatsProvider } from '../../../../provider/ShowStatsProvider';
@@ -201,22 +200,16 @@ const LinkedInfoField = ({
           icon={<Link />}
           type='links'
         >
-          <ScrollContainer>
-            {(scrollPos: number, scrollHeight: number) => (
-              <ShowStatsProvider value={false}>
-                <PictureScrollGrid
-                  queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
-                  scrollPos={scrollPos}
-                  scrollHeight={scrollHeight}
-                  hashbase={'links'}
-                  showCount={false}
-                  showDefaultAdornments={false}
-                  extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
-                  filterOutTextsForNonCurators={false}
-                />
-              </ShowStatsProvider>
-            )}
-          </ScrollContainer>
+          <ShowStatsProvider value={false}>
+            <PictureScrollGrid
+              queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
+              hashbase={'links'}
+              showCount={false}
+              showDefaultAdornments={false}
+              extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
+              filterOutTextsForNonCurators={false}
+            />
+          </ShowStatsProvider>
           {role >= AuthRole.CURATOR &&
             (shouldPaste || isClipboardMixed ? (
               <div className='clipboard-buttons'>

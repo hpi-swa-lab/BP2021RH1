@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { renderRoutes } from 'react-router-config';
 import { buildHttpLink, mergeByRef, mergeByRefWrappedInData } from '../helpers/app-helpers';
+import { ScrollProvider } from '../hooks/scrolll-hook';
 import './App.scss';
+import ScrollContainer from './common/ScrollContainer';
 import AlertProvider from './provider/AlertProvider';
 import AuthProvider from './provider/AuthProvider';
 import ClipboardEditorProvider from './provider/ClipboardEditorProvider';
@@ -85,9 +87,11 @@ const App = () => {
             <StorageProvider>
               <div className='App'>
                 <ClipboardEditorProvider>
-                  <TopBar isMobile={isMobile} />
-                  {renderRoutes(routes)}
-                  {isMobile && <NavigationBar isMobile={true} />}
+                  <ScrollProvider>
+                    <TopBar isMobile={isMobile} />
+                    <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                    {isMobile && <NavigationBar isMobile={true} />}
+                  </ScrollProvider>
                 </ClipboardEditorProvider>
               </div>
             </StorageProvider>

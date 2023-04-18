@@ -8,7 +8,6 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { PicturePreviewAdornment } from '../picture-gallery/PicturePreview';
 import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
-import ScrollContainer from '../ScrollContainer';
 import './ClipboardEditor.scss';
 
 export const ClipboardEditor = () => {
@@ -60,19 +59,13 @@ export const ClipboardEditor = () => {
             <div key='buttons' className='clipboard-editor-buttons'>
               {clipboardButtons}
             </div>
-            <ScrollContainer>
-              {(scrollPos: number, scrollHeight: number) => (
-                <PictureScrollGrid
-                  queryParams={{ id: { in: data.pictureIds } }}
-                  scrollPos={scrollPos}
-                  scrollHeight={scrollHeight}
-                  hashbase={'clipboard'}
-                  showCount={false}
-                  showDefaultAdornments={false}
-                  extraAdornments={[remove]}
-                />
-              )}
-            </ScrollContainer>
+            <PictureScrollGrid
+              queryParams={{ id: { in: data.pictureIds } }}
+              hashbase={'clipboard'}
+              showCount={false}
+              showDefaultAdornments={false}
+              extraAdornments={[remove]}
+            />
           </>
         )}
       </div>

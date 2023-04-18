@@ -12,7 +12,6 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import ScrollContainer from '../../common/ScrollContainer';
 import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 import PictureInfo, { Field } from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
@@ -117,18 +116,12 @@ const BulkEditView = ({
             <PictureToolbar calledViaLink={!onBack} />
           </div>
           <div className='bulk-edit-picture-grid'>
-            <ScrollContainer>
-              {(scrollPos: number, scrollHeight: number) => (
-                <PictureScrollGrid
-                  queryParams={getPictureFilters(pictureIds)}
-                  scrollPos={scrollPos}
-                  scrollHeight={scrollHeight}
-                  hashbase={'A'}
-                  showDefaultAdornments={false}
-                  allowClicks={false}
-                />
-              )}
-            </ScrollContainer>
+            <PictureScrollGrid
+              queryParams={getPictureFilters(pictureIds)}
+              hashbase={'A'}
+              showDefaultAdornments={false}
+              allowClicks={false}
+            />
           </div>
         </div>
         <div className='bulk-edit-picture-info'>

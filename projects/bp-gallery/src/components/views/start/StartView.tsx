@@ -8,7 +8,6 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
-import ScrollContainer from '../../common/ScrollContainer';
 import BrowseView from '../browse/BrowseView';
 import ShowStats from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
@@ -46,37 +45,29 @@ const StartView = () => {
   });
 
   return (
-    <ScrollContainer>
-      {(scrollPos, scrollHeight) => (
-        <div className='main-start-view'>
-          <div className='welcome-container'>
-            <div className='welcome'>
-              <h1>{t('startpage.welcome-title')}</h1>
-              <p>{t('startpage.welcome-text')}</p>
-            </div>
-            <DailyPicture />
-            <ShowStats>
-              <PictureOverview
-                title={t('discover.latest-pictures')}
-                queryParams={{}}
-                onClick={() => {
-                  history.push('/show-more/latest', {
-                    showBack: true,
-                  });
-                }}
-              />
-            </ShowStats>
-            <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
-            <div className='archives'>{archiveCards}</div>
-          </div>
-          <BrowseView
-            startpage={true}
-            parentScrollPos={scrollPos}
-            parentScrollHeight={scrollHeight}
-          />
+    <div className='main-start-view'>
+      <div className='welcome-container'>
+        <div className='welcome'>
+          <h1>{t('startpage.welcome-title')}</h1>
+          <p>{t('startpage.welcome-text')}</p>
         </div>
-      )}
-    </ScrollContainer>
+        <DailyPicture />
+        <ShowStats>
+          <PictureOverview
+            title={t('discover.latest-pictures')}
+            queryParams={{}}
+            onClick={() => {
+              history.push('/show-more/latest', {
+                showBack: true,
+              });
+            }}
+          />
+        </ShowStats>
+        <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
+        <div className='archives'>{archiveCards}</div>
+      </div>
+      <BrowseView startpage={true} />
+    </div>
   );
 };
 
