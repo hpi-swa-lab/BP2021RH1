@@ -4,6 +4,7 @@ import { History, Location } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import SearchBar from '../views/search/SearchBar';
+import { useScroll } from './../../hooks/scrolll-hook';
 import NavigationBar from './NavigationBar';
 import './TopBar.scss';
 
@@ -16,8 +17,9 @@ type LocationProps = {
 const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
 
+  const { scrollTo } = useScroll();
   const history: History = useHistory();
-  const { search }: Location = useLocation();
+  const { search, pathname }: Location = useLocation();
 
   return (
     <div className='top-bar'>
@@ -37,7 +39,13 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
           <div
             className={'bh-logo clickable'}
             title={t('common.back-to-home')}
-            onClick={() => history.push('/start', { showBack: false })}
+            onClick={() => {
+              if (pathname === '/start') {
+                scrollTo?.(0, true);
+                return;
+              }
+              history.push('/start', { showBack: false });
+            }}
           >
             <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
           </div>
