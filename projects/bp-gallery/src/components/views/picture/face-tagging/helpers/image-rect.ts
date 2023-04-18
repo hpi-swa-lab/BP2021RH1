@@ -107,8 +107,9 @@ export const useImageRect = (img: HTMLImageElement | null) => {
       .join(' ');
 
     const { width, height } = imgRect;
+    // account for one pixel error on each side due to subpixel rounding issues
     const onePixelError = (2 * (width + height)) / (width * height);
-    const threshold = 1 - onePixelError;
+    const threshold = isFinite(onePixelError) ? 1 - onePixelError : 1;
 
     const observer = new IntersectionObserver(
       entries => {
