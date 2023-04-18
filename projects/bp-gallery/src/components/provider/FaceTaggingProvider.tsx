@@ -26,7 +26,7 @@ export type FaceTagging = {
   tags: FaceTagData[];
   hideTags: boolean | null;
   setHideTags: Dispatch<SetStateAction<boolean>>;
-  removeTag: (id: string) => void;
+  removeTag: (id: string) => Promise<void>;
   isFaceTagging: boolean;
   setIsFaceTagging: Dispatch<SetStateAction<boolean>>;
 };
@@ -82,7 +82,6 @@ export const FaceTaggingProvider = ({
     }
     return [x, y];
   }, [mousePosition, imageRect]);
-
   const [createTag] = useCreateFaceTagMutation({
     refetchQueries: ['getFaceTags'],
   });
@@ -95,9 +94,11 @@ export const FaceTaggingProvider = ({
   const placeTag = useCallback(() => {
     const position = positionRef.current;
     if (!position || activeTagId === null) {
+      console.log(position, activeTagId);
       return;
     }
     const [x, y] = position;
+    console.log('hat geklappt');
     createTag({
       variables: {
         x,
@@ -111,14 +112,15 @@ export const FaceTaggingProvider = ({
 
   const [deleteTag] = useDeleteFaceTagMutation({
     refetchQueries: ['getFaceTags'],
+    awaitRefetchQueries: true,
   });
 
   const removeTag = useCallback(
-    (id: string) => {
+    async (id: string) => {
       if (!id) {
         return;
       }
-      deleteTag({
+      await deleteTag({
         variables: {
           id,
         },
@@ -146,6 +148,7 @@ export const FaceTaggingProvider = ({
     };
     const mouseclick = () => {
       if (hasDragged) {
+        console.log('hasdragged=false');
         return;
       }
       placeTag();
@@ -164,12 +167,13 @@ export const FaceTaggingProvider = ({
 
   const activeTagData = useMemo<FaceTagData | null>(() => {
     if (!position || activeTagId === null) {
+      console.log(position, activeTagId);
       return null;
     }
     const [x, y] = position;
     return {
       id: undefined,
-      personTagId: undefined,
+      personTagId: activeTagId,
       name: activeTagName,
       x,
       y,
@@ -181,9 +185,12 @@ export const FaceTaggingProvider = ({
     () => ({
       activeTagId,
       setActiveTagId,
-      tags: activeTagData
-        ? [...(tags ?? []).map(tag => ({ ...tag, noPointerEvents: true })), activeTagData]
-        : tags ?? [],
+      tags:
+        imageRect?.width && imageRect.height
+          ? activeTagData
+            ? [...(tags ?? []).map(tag => ({ ...tag, noPointerEvents: true })), activeTagData]
+            : tags ?? []
+          : [],
       hideTags,
       setHideTags,
       removeTag,
@@ -199,6 +206,7 @@ export const FaceTaggingProvider = ({
       removeTag,
       isFaceTagging,
       setIsFaceTagging,
+      imageRect,
     ]
   );
 

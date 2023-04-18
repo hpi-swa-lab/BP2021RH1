@@ -132,13 +132,11 @@ const PictureInfo = ({
            through all facetags and all persontags, every time something about the persontag collection is changed, 
            to find out wether a facetag needs to be deleted */
           {
-            faceTaggingContext && console.log(faceTaggingContext.tags);
-            faceTaggingContext &&
-              faceTaggingContext.tags.forEach(ftag => {
-                if (!people.find(person => person.id === ftag.personTagId) && ftag.id) {
-                  faceTaggingContext.removeTag(ftag.id);
-                }
-              });
+            faceTaggingContext?.tags.forEach(ftag => {
+              if (!people.find(person => person.id === ftag.personTagId) && ftag.id) {
+                faceTaggingContext.removeTag(ftag.id);
+              }
+            });
           }
         }}
         createMutation={newPersonTagMutation}

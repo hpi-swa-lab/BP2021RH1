@@ -27,18 +27,18 @@ export const FaceTag = ({
   const { role } = useAuth();
   const context = useFaceTagging();
   const isFaceTagging = context?.isFaceTagging;
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (id === undefined) {
       return;
     }
-    context?.removeTag(id);
+    await context?.removeTag(id);
   };
 
-  const handleMove = () => {
+  const handleMove = async () => {
     if (personTagId === undefined) {
       return;
     }
-    handleDelete();
+    await handleDelete();
     context?.setActiveTagId(personTagId);
   };
 
