@@ -54,6 +54,8 @@ const TagSelectionField = <T extends TagFields>({
   const [lastSelectedTags, setLastSelectedTags] = useState<T[]>();
   const [lastSelectedTag, setLastSelectedTag] = useState<T>();
 
+  const [lastTags, setLastTags] = useState<T[]>();
+
   const { data, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined =
@@ -301,6 +303,11 @@ const TagSelectionField = <T extends TagFields>({
               tag.isNew = true;
               tag.verified = true;
             });
+            if (lastTags && newValue.length < lastTags.length) {
+              setLastSelectedTag(undefined);
+              setLastSelectedTags([] as T[]);
+            }
+            setLastTags(newValue);
             onChange(newValue);
           }}
           renderOption={(props, option) => {
@@ -331,11 +338,6 @@ const TagSelectionField = <T extends TagFields>({
                   if (!nonVerifiable) {
                     toggleVerified(value, index);
                   }
-                }}
-                onDelete={event => {
-                  setLastSelectedTag(undefined);
-                  setLastSelectedTags([] as T[]);
-                  props({ index }).onDelete(event);
                 }}
               />
             ));
