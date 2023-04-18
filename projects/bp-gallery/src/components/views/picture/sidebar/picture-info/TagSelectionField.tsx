@@ -134,6 +134,40 @@ const TagSelectionField = <T extends TagFields>({
     return tagChildren;
   }, [flattenedTags, tagTree]);
 
+  const tagSiblingTags = useMemo(() => {
+    if (!flattenedTags || !tagChildTags) return;
+
+    const tagSiblings = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as T[]]));
+    // setup queue
+    const queue: FlatTag[] = [];
+    tagTree?.forEach(tag => {
+      queue.push(tag);
+    });
+
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+      nextTag?.parent_tags?.forEach(parent => {
+        tagSiblings[nextTag.id].push(
+          ...tagChildTags[parent.id].filter(
+            tag =>
+              tag.id !== nextTag.id &&
+              !tagSiblings[nextTag.id].some(sibling => sibling.id === tag.id)
+          )
+        );
+      });
+      if (nextTag && !nextTag.parent_tags?.length) {
+        tagSiblings[nextTag.id] = flattenedTags.filter(
+          tag => !tag.parent_tags?.length && tag.id !== nextTag.id
+        ) as T[];
+      }
+      nextTag?.child_tags?.forEach(tag => {
+        queue.push(tag);
+      });
+    }
+
+    return tagSiblings;
+  }, [flattenedTags, tagTree, tagChildTags]);
+
   useEffect(() => {
     setTagList(allTags);
   }, [allTags, setTagList, flattenedTags, tagSupertagList, type]);
@@ -295,9 +329,37 @@ const TagSelectionField = <T extends TagFields>({
                 setLastSelectedTag(undefined);
                 setLastSelectedTags([] as T[]);
               } else {
+                // add children and siblings
                 setLastSelectedTags([
                   ...newValue,
-                  ...(tagChildTags && tag.id in tagChildTags ? tagChildTags[tag.id] : []),
+                  ...(tagChildTags && tag.id in tagChildTags
+                    ? tagChildTags[tag.id].filter(
+                        tag => !newValue.some(newTag => newTag.id === tag.id)
+                      )
+                    : []),
+                  ...(tagChildTags && lastSelectedTag && lastSelectedTag.id in tagChildTags
+                    ? tagChildTags[lastSelectedTag.id].filter(
+                        tag =>
+                          !newValue.some(newTag => newTag.id === tag.id) &&
+                          !tagChildTags[tag.id].some(childTag => childTag.id === tag.id)
+                      )
+                    : tagSiblingTags && tag.id in tagSiblingTags
+                    ? tagSiblingTags[tag.id].filter(
+                        tag =>
+                          !newValue.some(newTag => newTag.id === tag.id) &&
+                          (!tagChildTags ||
+                            !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
+                      )
+                    : tagTree
+                    ? tagTree
+                        .map(tag => tag as unknown as T)
+                        .filter(
+                          tag =>
+                            !newValue.some(newTag => newTag.id === tag.id) &&
+                            (!tagChildTags ||
+                              !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
+                        )
+                    : []),
                 ]);
               }
               tag.isNew = true;
