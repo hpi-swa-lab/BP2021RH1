@@ -106,9 +106,14 @@ export const useImageRect = (img: HTMLImageElement | null) => {
       .map(margin => `${margin}px`)
       .join(' ');
 
+    const { width, height } = imgRect;
+    // account for one pixel error on each side due to subpixel rounding issues
+    const onePixelError = (2 * (width + height)) / (width * height);
+    const threshold = isFinite(onePixelError) ? 1 - onePixelError : 1;
+
     const observer = new IntersectionObserver(
       entries => {
-        if (entries[0].intersectionRatio === 1) {
+        if (entries[0].intersectionRatio >= threshold) {
           // ignore updates that don't actually
           // change the intersectionRatio
           return;
@@ -118,7 +123,7 @@ export const useImageRect = (img: HTMLImageElement | null) => {
       {
         root,
         rootMargin,
-        threshold: 1,
+        threshold,
       }
     );
     observer.observe(img);
