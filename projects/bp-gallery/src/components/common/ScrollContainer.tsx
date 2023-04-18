@@ -1,5 +1,5 @@
 import { Location } from 'history';
-import { PropsWithChildren, useCallback, useEffect, useRef } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import scrollPoss from '../../helpers/scrollPos';
 import { useScroll } from './../../hooks/scrolll-hook';
@@ -19,6 +19,14 @@ const ScrollContainer = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
     setScrollTo(() => scrollTo);
   }, [scrollTo, setScrollTo]);
+
+  useLayoutEffect(() => {
+    const pos = scrollPoss.get(pathname);
+    if (pos) {
+      scrollTo(pos);
+      setTimeout(() => scrollTo(pos, true), 100);
+    }
+  }, [pathname, scrollTo]);
 
   return (
     <div
