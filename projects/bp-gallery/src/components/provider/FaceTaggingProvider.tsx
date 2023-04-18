@@ -16,6 +16,8 @@ import {
   useGetFaceTagsQuery,
   useGetPersonTagQuery,
 } from '../../graphql/APIConnector';
+import { useMouseInElement } from '../../hooks/mouse-in-element.hook';
+import { useMousePosition } from '../../hooks/mouse-position.hook';
 import { FaceTagData } from '../views/picture/face-tagging/FaceTag';
 import { useImageRect } from '../views/picture/face-tagging/helpers/image-rect';
 import { PictureViewContext } from '../views/picture/PictureView';
@@ -64,9 +66,12 @@ export const FaceTaggingProvider = ({
   });
   const activeTagName = activeData?.personTag?.data?.attributes?.name ?? 'Lädt';
 
-  const [mousePosition, setMousePosition] = useState<null | [number, number]>(null);
-
   const { img } = useContext(PictureViewContext);
+
+  const { client: clientMousePosition } = useMousePosition();
+  const mouseInElement = useMouseInElement(img);
+  const mousePosition = mouseInElement ? clientMousePosition : null;
+
   const imageRect = useImageRect(img);
 
   const position = useMemo(() => {
@@ -134,13 +139,8 @@ export const FaceTaggingProvider = ({
     }
     let hasDragged = false;
 
-    const pointermove = (event: MouseEvent) => {
+    const pointermove = () => {
       hasDragged = true;
-      const { clientX, clientY } = event;
-      setMousePosition([clientX, clientY]);
-    };
-    const pointerleave = () => {
-      setMousePosition(null);
     };
     const pointerdown = () => {
       hasDragged = false;
@@ -152,12 +152,10 @@ export const FaceTaggingProvider = ({
       placeTag();
     };
     img.addEventListener('pointermove', pointermove);
-    img.addEventListener('pointerleave', pointerleave);
     img.addEventListener('pointerdown', pointerdown);
     img.addEventListener('click', mouseclick);
     return () => {
       img.removeEventListener('pointermove', pointermove);
-      img.removeEventListener('pointerleave', pointerleave);
       img.removeEventListener('pointerdown', pointerdown);
       img.removeEventListener('click', mouseclick);
     };
