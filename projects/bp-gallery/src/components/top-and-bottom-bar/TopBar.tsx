@@ -23,7 +23,7 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { search, pathname }: Location = useLocation();
 
   return (
-    <div className='top-bar'>
+    <div className='top-bar shrink-0'>
       <div className='action-wrapper'>
         {(history.location as LocationProps).state?.showBack ? (
           <div className='actions'>

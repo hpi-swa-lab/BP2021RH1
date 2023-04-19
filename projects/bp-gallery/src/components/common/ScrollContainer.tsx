@@ -2,7 +2,6 @@ import { throttle } from 'lodash';
 import { PropsWithChildren, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useVisit } from './../../helpers/history';
 import { useScroll } from './../../hooks/context-hooks';
-import './ScrollContainer.scss';
 
 const ScrollContainer = ({ children }: PropsWithChildren<{}>) => {
   const { location } = useVisit();

@@ -23,19 +23,8 @@ body {
 }
 
 html,
-body {
-  height: 100vh;
-}
-
+body,
 .App {
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 100%;
-  height: calc(100vh - 5rem);
-  padding-top: 5rem;
-  @media only screen and (max-width: $mobile-breakpoint) {
-    height: calc(100% - 7.5rem);
-    padding-top: 3.5rem;
-    padding-bottom: 4rem;
-  }
+  height: 100vh;
+  overflow: hidden;
 }

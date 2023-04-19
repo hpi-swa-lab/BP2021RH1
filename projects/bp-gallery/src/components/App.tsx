@@ -85,7 +85,7 @@ const App = () => {
         <AuthProvider>
           <DialogProvider>
             <StorageProvider>
-              <div className='App'>
+              <div className='App flex flex-col'>
                 <ClipboardEditorProvider>
                   <ScrollProvider>
                     <TopBar isMobile={isMobile} />

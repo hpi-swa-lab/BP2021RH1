@@ -71,7 +71,7 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
 
   return (
     <>
-      <div className='nav-bar'>
+      <div className='nav-bar shrink-0'>
         <NavLink to='/start' className='nav-element'>
           {isMobile && <Book />}
           <span className='nav-element-title'>{t('common.start')}</span>
