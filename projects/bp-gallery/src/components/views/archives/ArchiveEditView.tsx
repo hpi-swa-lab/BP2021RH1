@@ -1,16 +1,15 @@
 import { Check, Close, Save } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { History } from 'history';
 import { Jodit } from 'jodit-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import TextEditor from '../../common/editors/TextEditor';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { useVisit } from './../../../helpers/history';
 import './ArchiveEditView.scss';
 import ArchiveInputField from './ArchiveInputField';
 import ArchiveLinkForm from './ArchiveLinkForm';
@@ -46,7 +45,7 @@ const extraOptions: Partial<Jodit['options']> = {
 };
 
 const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
-  const history: History = useHistory();
+  const { visit } = useVisit();
   const dialog = useDialog();
   const { t } = useTranslation();
 
@@ -178,7 +177,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               });
               if (!confirm) return;
             }
-            history.push(`/archives/${archiveId}`);
+            visit(`/archives/${archiveId}`);
           }}
         >
           {t('archives.edit.back')}

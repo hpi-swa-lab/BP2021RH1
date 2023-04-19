@@ -1,7 +1,6 @@
 import { Edit, Link } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { History } from 'history';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
@@ -11,6 +10,7 @@ import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import ShowStats from '../../provider/ShowStatsProvider';
+import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
@@ -27,8 +27,10 @@ const addUrlProtocol = (url: string) => {
 };
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
-  const history: History = useHistory();
+  const { visit, history } = useVisit();
   const { role } = useAuth();
+
+  console.log('???');
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -48,7 +50,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             className='archive-edit-button'
             startIcon={<Edit />}
             onClick={() => {
-              history.push(
+              visit(
                 `${history.location.pathname}${
                   history.location.pathname.endsWith('/') ? '' : '/'
                 }edit`
@@ -101,9 +103,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           title='Unsere Bilder'
           queryParams={{ archive_tag: { id: { eq: archiveId } } }}
           onClick={() => {
-            history.push('/archives/' + archiveId + '/show-more/pictures', {
-              showBack: true,
-            });
+            visit('/archives/' + archiveId + '/show-more/pictures');
           }}
         />
       </ShowStats>
@@ -112,9 +112,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         title='Unsere Kategorien'
         type={TagType.KEYWORD}
         onClick={() => {
-          history.push('/archives/' + archiveId + '/show-more/keyword', {
-            showBack: true,
-          });
+          visit('/archives/' + archiveId + '/show-more/keyword');
         }}
         rows={2}
         queryParams={{

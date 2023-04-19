@@ -1,9 +1,8 @@
 import { Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
-import { History } from 'history';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { useVisit } from './../../../helpers/history';
 import './ArchiveCard.scss';
 
 const ArchiveCard = ({
@@ -48,16 +47,10 @@ const CardLayout = ({
   archivePictureCount: number | undefined;
 }) => {
   const { t } = useTranslation();
+  const { visit } = useVisit();
 
-  const history: History = useHistory();
   return (
-    <Card
-      onClick={() =>
-        history.push(`/archives/${archiveId}`, {
-          showBack: true,
-        })
-      }
-    >
+    <Card onClick={() => visit(`/archives/${archiveId}`)}>
       <CardActionArea>
         <CardMedia component='img' height='140' image={pictureLink} alt='archive picture' />
         <CardContent

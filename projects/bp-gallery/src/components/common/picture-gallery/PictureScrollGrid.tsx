@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useScroll } from '../../../hooks/context-hooks';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
 } from '../../../hooks/get-pictures.hook';
-import { useScroll } from '../../../hooks/scrolll-hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../Loading';
 import QueryErrorDisplay from '../QueryErrorDisplay';

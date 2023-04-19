@@ -1,9 +1,11 @@
 import {
   createContext,
   Dispatch,
+  MutableRefObject,
   PropsWithChildren,
   SetStateAction,
-  useContext,
+  useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -16,26 +18,25 @@ type ScrollContextProps = {
   setScrollTo: Dispatch<SetStateAction<((scrollPos: number) => void) | undefined>>;
 };
 
-export const useScroll = () => {
-  const value = useContext(ScrollContext);
-  if (!value) {
-    throw new Error('missing clipboard context');
-  }
-  return value;
-};
-
 export const ScrollProvider = ({ children }: PropsWithChildren<{}>) => {
   const [scrollPos, setScrollPos] = useState(0);
+  const scrollPosRef = useRef(0);
   const [scrollHeight, setScrollHeight] = useState(0);
   const [scrollTo, setScrollTo] = useState<(posY: number, smooth?: boolean) => void>();
+
+  useEffect(() => {
+    scrollPosRef.current = scrollPos;
+  }, [scrollPos]);
 
   return (
     <ScrollContext.Provider
       value={{ scrollPos, setScrollPos, scrollHeight, setScrollHeight, scrollTo, setScrollTo }}
     >
-      {children}
+      <RefScrollContext.Provider value={scrollPosRef}>{children}</RefScrollContext.Provider>
     </ScrollContext.Provider>
   );
 };
 
 export const ScrollContext = createContext<ScrollContextProps | null>(null);
+
+export const RefScrollContext = createContext<MutableRefObject<number> | null>(null);

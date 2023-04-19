@@ -1,27 +1,26 @@
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import Loading from '../../common/Loading';
-import ScrollableItemList from '../../common/ScrollableItemList';
-import { asApiPath } from '../../../helpers/app-helpers';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
-import useAdvancedSearch from './helpers/useAdvancedSearch';
-import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
-import { SearchType } from './helpers/search-filters';
-import ItemList from '../../common/ItemList';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
   PersonTagFiltersInput,
   PictureFiltersInput,
 } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asApiPath } from '../../../helpers/app-helpers';
 import useGetTagsWithThumbnail from '../../../hooks/get-tags-with-thumbnail.hook';
+import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
+import ItemList from '../../common/ItemList';
+import Loading from '../../common/Loading';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import ScrollableItemList from '../../common/ScrollableItemList';
+import { useVisit } from './../../../helpers/history';
+import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
+import { SearchType } from './helpers/search-filters';
+import useAdvancedSearch from './helpers/useAdvancedSearch';
 import './TagList.scss';
-import { IconButton } from '@mui/material';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
 const TagList = ({
   type,
@@ -40,7 +39,7 @@ const TagList = ({
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
 }) => {
-  const history: History = useHistory();
+  const { visit } = useVisit();
   const { t } = useTranslation();
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
@@ -109,9 +108,7 @@ const TagList = ({
                 useAdvancedSearch ? type : SearchType.ALL,
                 encodeURIComponent(tag.name)
               );
-              history.push(searchPath, {
-                showBack: true,
-              });
+              visit(searchPath);
             },
           }))}
         />
@@ -132,9 +129,7 @@ const TagList = ({
                     )
                   : DEFAULT_THUMBNAIL_URL,
                 onClick: () => {
-                  history.push(onClickBasePath + tag.id, {
-                    showBack: true,
-                  });
+                  visit(onClickBasePath + tag.id);
                 },
               }))}
             />

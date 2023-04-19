@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
+import { ScrollContext } from '../components/provider/ScrollProvider';
 import { StorageContext } from '../components/provider/StorageProvider';
 
 export const useStorage = () => {
@@ -24,4 +25,12 @@ export const useClipboardEditorButtons = () => {
 
 export const useSetClipboardEditorButtons = () => {
   return useContext(ClipboardEditorContext)?.[1];
+};
+
+export const useScroll = () => {
+  const value = useContext(ScrollContext);
+  if (!value) {
+    throw new Error('missing clipboard context');
+  }
+  return value;
 };
