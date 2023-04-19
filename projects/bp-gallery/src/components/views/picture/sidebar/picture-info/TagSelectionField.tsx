@@ -175,22 +175,27 @@ const TagSelectionField = <T extends TagFields>({
     tagTree?.forEach(tag => {
       queue.push(tag);
     });
+    queue.sort((a, b) => a.name.localeCompare(b.name));
     queue.forEach(tag => {
       if (!order.some(existingTag => existingTag.id === tag.id)) {
         order.push(tag as T);
       }
-      tag.child_tags?.forEach(child => {
-        childQueue.push(child);
-      });
+      tag.child_tags
+        ?.sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(child => {
+          childQueue.push(child);
+        });
       while (childQueue.length > 0) {
         const childTag = childQueue.shift();
         if (!childTag) continue;
         if (!order.some(existingTag => existingTag.id === childTag.id)) {
           order.push(childTag as T);
         }
-        childTag.child_tags?.forEach(child => {
-          childQueue.push(child);
-        });
+        childTag.child_tags
+          ?.sort((a, b) => a.name.localeCompare(b.name))
+          .forEach(child => {
+            childQueue.push(child);
+          });
       }
     });
     return order;
