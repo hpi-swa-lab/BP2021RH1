@@ -30,8 +30,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { visit, history } = useVisit();
   const { role } = useAuth();
 
-  console.log('???');
-
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 

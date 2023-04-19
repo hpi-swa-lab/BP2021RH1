@@ -30,7 +30,7 @@ export const useSetClipboardEditorButtons = () => {
 export const useScroll = () => {
   const value = useContext(ScrollContext);
   if (!value) {
-    throw new Error('missing clipboard context');
+    throw new Error('missing scroll context');
   }
   return value;
 };

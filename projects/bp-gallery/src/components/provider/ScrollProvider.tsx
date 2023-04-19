@@ -32,11 +32,11 @@ export const ScrollProvider = ({ children }: PropsWithChildren<{}>) => {
     <ScrollContext.Provider
       value={{ scrollPos, setScrollPos, scrollHeight, setScrollHeight, scrollTo, setScrollTo }}
     >
-      <RefScrollContext.Provider value={scrollPosRef}>{children}</RefScrollContext.Provider>
+      <ScrollRefContext.Provider value={scrollPosRef}>{children}</ScrollRefContext.Provider>
     </ScrollContext.Provider>
   );
 };
 
 export const ScrollContext = createContext<ScrollContextProps | null>(null);
 
-export const RefScrollContext = createContext<MutableRefObject<number> | null>(null);
+export const ScrollRefContext = createContext<MutableRefObject<number> | null>(null);

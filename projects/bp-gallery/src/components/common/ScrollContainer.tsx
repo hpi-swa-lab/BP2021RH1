@@ -1,6 +1,5 @@
 import { throttle } from 'lodash';
 import { PropsWithChildren, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
-import scrollPoss from '../../helpers/scrollPos';
 import { useVisit } from './../../helpers/history';
 import { useScroll } from './../../hooks/context-hooks';
 import './ScrollContainer.scss';
@@ -20,9 +19,8 @@ const ScrollContainer = ({ children }: PropsWithChildren<{}>) => {
       const element = event.target as HTMLElement;
       setScrollPos(element.scrollTop);
       setScrollHeight(element.scrollHeight);
-      scrollPoss.set(location.pathname, element.scrollTop);
     }, 100),
-    [location.pathname, setScrollHeight, setScrollPos]
+    [setScrollHeight, setScrollPos]
   );
 
   useEffect(() => {
@@ -30,11 +28,11 @@ const ScrollContainer = ({ children }: PropsWithChildren<{}>) => {
   }, [scrollTo, setScrollTo]);
 
   useLayoutEffect(() => {
-    const pos = location.state.scrollPos;
-    if (pos) {
-      scrollTo(pos);
-      setTimeout(() => scrollTo(pos, true), 100);
-    }
+    const pos = location.state?.scrollPos;
+    if (!pos) return;
+
+    scrollTo(pos);
+    setTimeout(() => scrollTo(pos, true), 100);
   }, [location, scrollTo]);
 
   return (
