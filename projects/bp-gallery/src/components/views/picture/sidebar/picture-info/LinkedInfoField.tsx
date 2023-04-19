@@ -10,8 +10,10 @@ import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
+import ScrollContainer from '../../../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import { ScrollProvider } from '../../../../provider/ScrollProvider';
 import { ShowStatsProvider } from '../../../../provider/ShowStatsProvider';
 import './LinkedInfoField.scss';
 import { Field } from './PictureInfo';
@@ -201,14 +203,18 @@ const LinkedInfoField = ({
           type='links'
         >
           <ShowStatsProvider value={false}>
-            <PictureScrollGrid
-              queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
-              hashbase={'links'}
-              showCount={false}
-              showDefaultAdornments={false}
-              extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
-              filterOutTextsForNonCurators={false}
-            />
+            <ScrollProvider>
+              <ScrollContainer>
+                <PictureScrollGrid
+                  queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
+                  hashbase={'links'}
+                  showCount={false}
+                  showDefaultAdornments={false}
+                  extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
+                  filterOutTextsForNonCurators={false}
+                />
+              </ScrollContainer>
+            </ScrollProvider>
           </ShowStatsProvider>
           {role >= AuthRole.CURATOR &&
             (shouldPaste || isClipboardMixed ? (
