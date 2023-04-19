@@ -45,7 +45,7 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
                 scrollTo?.(0, true);
                 return;
               }
-              visit('/start', false);
+              visit('/start', { state: { showBack: false } });
             }}
           >
             <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />

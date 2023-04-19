@@ -39,7 +39,7 @@ const TagList = ({
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
 }) => {
-  const { visit } = useVisit();
+  const { visit, location } = useVisit();
   const { t } = useTranslation();
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
@@ -80,11 +80,15 @@ const TagList = ({
       !currentItemAmount
   );
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(location.state?.open ?? false);
 
   useEffect(() => {
     setIsOpen(!isFoldable);
   }, [isFoldable]);
+
+  useEffect(() => {
+    if (location.state?.open) setIsOpen(location.state.open);
+  }, [location]);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -108,7 +112,7 @@ const TagList = ({
                 useAdvancedSearch ? type : SearchType.ALL,
                 encodeURIComponent(tag.name)
               );
-              visit(searchPath);
+              visit(searchPath, { wasOpen: true });
             },
           }))}
         />
@@ -129,7 +133,7 @@ const TagList = ({
                     )
                   : DEFAULT_THUMBNAIL_URL,
                 onClick: () => {
-                  visit(onClickBasePath + tag.id);
+                  visit(onClickBasePath + tag.id, { wasOpen: true });
                 },
               }))}
             />
