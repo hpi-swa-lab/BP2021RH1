@@ -168,9 +168,45 @@ const TagSelectionField = <T extends TagFields>({
     return tagSiblings;
   }, [flattenedTags, tagTree, tagChildTags]);
 
+  const tagOrder = useMemo(() => {
+    const order: T[] = [];
+    const queue: FlatTag[] = [];
+    const childQueue: FlatTag[] = [];
+    tagTree?.forEach(tag => {
+      queue.push(tag);
+    });
+    queue.forEach(tag => {
+      if (!order.some(existingTag => existingTag.id === tag.id)) {
+        order.push(tag as T);
+      }
+      tag.child_tags?.forEach(child => {
+        childQueue.push(child);
+      });
+      while (childQueue.length > 0) {
+        const childTag = childQueue.shift();
+        if (!childTag) continue;
+        if (!order.some(existingTag => existingTag.id === childTag.id)) {
+          order.push(childTag as T);
+        }
+        childTag.child_tags?.forEach(child => {
+          childQueue.push(child);
+        });
+      }
+    });
+    return order;
+  }, [tagTree]);
+
+  const customSortTags = useCallback(
+    (tags: T[]) => {
+      return tagOrder.filter(tag => tags.some(existingTag => existingTag.id === tag.id));
+    },
+    [tagOrder]
+  );
+
   useEffect(() => {
-    setTagList(allTags);
-  }, [allTags, setTagList, flattenedTags, tagSupertagList, type]);
+    const sortedTags = customSortTags(allTags);
+    setTagList(sortedTags.length ? sortedTags : allTags);
+  }, [allTags, setTagList, type, customSortTags]);
 
   const toggleVerified = useCallback(
     (list: T[], index: number) => {
@@ -330,25 +366,25 @@ const TagSelectionField = <T extends TagFields>({
                 setLastSelectedTags([] as T[]);
               } else {
                 // add children and siblings
-                setLastSelectedTags([
-                  ...newValue,
-                  ...(tagChildTags && tag.id in tagChildTags
+                const children =
+                  tagChildTags && tag.id in tagChildTags
                     ? tagChildTags[tag.id].filter(
                         tag => !newValue.some(newTag => newTag.id === tag.id)
                       )
-                    : []),
-                  ...(tagChildTags && lastSelectedTag && lastSelectedTag.id in tagChildTags
-                    ? tagChildTags[lastSelectedTag.id].filter(
-                        tag =>
-                          !newValue.some(newTag => newTag.id === tag.id) &&
-                          !tagChildTags[tag.id].some(childTag => childTag.id === tag.id)
-                      )
-                    : tagSiblingTags && tag.id in tagSiblingTags
+                    : [];
+                const siblings =
+                  tagSiblingTags && tag.id in tagSiblingTags
                     ? tagSiblingTags[tag.id].filter(
                         tag =>
                           !newValue.some(newTag => newTag.id === tag.id) &&
                           (!tagChildTags ||
                             !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
+                      )
+                    : tagChildTags && lastSelectedTag && lastSelectedTag.id in tagChildTags
+                    ? tagChildTags[lastSelectedTag.id].filter(
+                        tag =>
+                          !newValue.some(newTag => newTag.id === tag.id) &&
+                          !tagChildTags[tag.id].some(childTag => childTag.id === tag.id)
                       )
                     : tagTree
                     ? tagTree
@@ -359,7 +395,21 @@ const TagSelectionField = <T extends TagFields>({
                             (!tagChildTags ||
                               !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
                         )
-                    : []),
+                    : [];
+                const sortedRecommendations = customSortTags([...children, ...siblings]);
+                const sortedNewValues = customSortTags(newValue);
+                setLastSelectedTags([
+                  ...(sortedNewValues.length
+                    ? [
+                        ...sortedNewValues,
+                        ...newValue.filter(tag =>
+                          sortedNewValues.every(sortedTag => sortedTag.id !== tag.id)
+                        ),
+                      ]
+                    : newValue),
+                  ...(sortedRecommendations.length
+                    ? sortedRecommendations
+                    : [...children, ...siblings]),
                 ]);
               }
               tag.isNew = true;
