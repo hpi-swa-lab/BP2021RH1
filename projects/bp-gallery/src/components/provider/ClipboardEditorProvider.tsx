@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react';
 import { ClipboardEditor } from '../common/clipboard/ClipboardEditor';
+import { ScrollProvider } from './ScrollProvider';
 
 export const ClipboardEditorContext = createContext<
   [ReactNode, Dispatch<SetStateAction<ReactNode>>] | null
@@ -17,7 +18,9 @@ const ClipboardEditorProvider = ({ children }: PropsWithChildren<{}>) => {
   return (
     <ClipboardEditorContext.Provider value={buttonsState}>
       {children}
-      <ClipboardEditor />
+      <ScrollProvider>
+        <ClipboardEditor />
+      </ScrollProvider>
     </ClipboardEditorContext.Provider>
   );
 };
