@@ -1,7 +1,7 @@
 import { History, Location } from 'history';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { ScrollRefContext } from '../components/provider/ScrollProvider';
+import { useScrollRef } from '../hooks/context-hooks';
 import { trackHistory } from '../matomo-config/matomo';
 
 export const pushHistoryWithoutRouter = (newLocation: string) => {
@@ -24,17 +24,15 @@ type LocationWithState = Location & { state?: LocationState };
 export const useVisit = () => {
   const history: History & { location: LocationWithState } = useHistory();
   const location: LocationWithState = useLocation();
-  const scrollRef = useContext(ScrollRefContext);
+  const scrollRef = useScrollRef();
 
   const visit = useCallback(
     (url: string, options?: { state?: LocationState; wasOpen?: boolean }) => {
-      if (scrollRef) {
-        history.replace(history.location.pathname, {
-          ...history.location.state,
-          scrollPos: scrollRef.current,
-          open: options?.wasOpen,
-        });
-      }
+      history.replace(history.location.pathname, {
+        ...history.location.state,
+        scrollPos: scrollRef.current,
+        open: options?.wasOpen,
+      });
       history.push(url, { showBack: options?.state?.showBack ?? true, ...options?.state });
     },
     [history, scrollRef]

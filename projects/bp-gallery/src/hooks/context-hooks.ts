@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
-import { ScrollContext } from '../components/provider/ScrollProvider';
+import { ScrollContext, ScrollRefContext } from '../components/provider/ScrollProvider';
 import { StorageContext } from '../components/provider/StorageProvider';
 
 export const useStorage = () => {
@@ -31,6 +31,14 @@ export const useScroll = () => {
   const value = useContext(ScrollContext);
   if (!value) {
     throw new Error('missing scroll context');
+  }
+  return value;
+};
+
+export const useScrollRef = () => {
+  const value = useContext(ScrollRefContext);
+  if (!value) {
+    throw new Error('missing scroll ref context');
   }
   return value;
 };
