@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
 
 export const useMouseInElement = (element: HTMLElement | null | undefined) => {
   const [inElement, setInElement] = useState(false);
@@ -7,11 +8,17 @@ export const useMouseInElement = (element: HTMLElement | null | undefined) => {
     if (!element) {
       return;
     }
+    // use flushSync to ensure state is up-to-date
+    // when events fire quickly in succession, e. g. in cypress
     const over = () => {
-      setInElement(true);
+      flushSync(() => {
+        setInElement(true);
+      });
     };
     const out = () => {
-      setInElement(false);
+      flushSync(() => {
+        setInElement(false);
+      });
     };
     element.addEventListener('mouseover', over);
     element.addEventListener('mouseout', out);

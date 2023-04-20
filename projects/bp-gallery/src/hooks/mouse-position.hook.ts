@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { flushSync } from 'react-dom';
 
 type Position = [number, number];
 type MousePosition = {
@@ -23,12 +24,20 @@ window.addEventListener('mousemove', event => {
 export const useMousePosition = () => {
   const [mousePosition, setMousePosition] = useState(currentMousePosition);
 
-  useEffect(() => {
-    listeners.add(setMousePosition);
-    return () => {
-      listeners.delete(setMousePosition);
-    };
+  const listener = useCallback((position: MousePosition) => {
+    // use flushSync to ensure state is up-to-date
+    // when events fire quickly in succession, e. g. in cypress
+    flushSync(() => {
+      setMousePosition(position);
+    });
   }, []);
+
+  useEffect(() => {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }, [listener]);
 
   return mousePosition;
 };
