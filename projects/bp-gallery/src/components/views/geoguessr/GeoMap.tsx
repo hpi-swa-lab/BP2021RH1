@@ -6,7 +6,7 @@ import {
   useCreatePictureGeoInfoMutation,
   useIncreaseNotAPlaceCountMutation,
 } from '../../../graphql/APIConnector';
-import { Icon, LatLngBounds, Map } from 'leaflet';
+import { Icon, LatLng, LatLngBounds, Map } from 'leaflet';
 import { useTranslation } from 'react-i18next';
 import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 
@@ -15,7 +15,7 @@ const PlayerMarkers = ({
   myGuess,
 }: {
   allGuesses: FlatPictureGeoInfo[];
-  myGuess?: { lat: number; lng: number };
+  myGuess?: LatLng;
 }) => {
   const map = useMap();
   const coords = useMemo(
@@ -101,9 +101,9 @@ const GeoMap = ({
   const initialMapValues = useMemo(() => {
     return { center: { lat: 51.8392573, lng: 10.5279953 }, zoom: 10 };
   }, []);
-  const initialGuess = { lat: 0, lng: 0 };
+  const initialGuess = new LatLng(0, 0);
   const map = useRef<Map>(null);
-  const [guess, setGuess] = useState(initialGuess);
+  const [guess, setGuess] = useState<LatLng>(initialGuess);
   const [guessComplete, setGuessComplete] = useState(false);
   const [unknown, setUnknown] = useState(false);
   const [createPictureGeoInfo] = useCreatePictureGeoInfoMutation();
