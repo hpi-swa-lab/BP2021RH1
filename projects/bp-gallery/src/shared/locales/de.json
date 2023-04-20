@@ -59,8 +59,8 @@
     "error": "Fehler",
     "checkingAuth": "Überprüfe Berechtigungen...",
     "browse-view": "Alle Bilder",
-    "latest-pictures": "Neuzugänge im Archiv",
-    "latest-pictures-info": "In diese Kollektion fließen die jeweils jüngsten 500 „Neuzugänge“ des Fotoarchivs ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
+    "latest-pictures": "Neuzugänge",
+    "latest-pictures-info": "In diese Kollektion fließen die jüngsten 500 „Neuzugänge“ der Fotoarchive ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
     "create": "{{value}} hinzufügen",
     "presentationMode": "Präsentationsmodus",
     "or": "oder",
@@ -282,7 +282,7 @@
   "startpage": {
     "welcome-title": "Harz History",
     "welcome-text": "In privaten Sammlungen, in Archiven und Museen im Harz lagern Schätze – die bisweilen selten das Publikum finden, das sie verdienen. Mit Unterstützung von Student*innen des Hasso-Plattner-Instituts Potsdam wird experimentell daran gearbeitet, ein lebendiges Schaufenster in die Harzer Historie zu öffnen und Lust auf Besuche in den Harzer Museen zu machen. Das Projekt wird im Erfolgsfall allen interessierten Sammlungen offenstehen.",
-    "our-archives": "Unsere Archive:"
+    "our-archives": "Unsere Archive"
   },
   "footer": {
     "title": "Harz History",
@@ -331,8 +331,8 @@
     "x0s": "19{{ decade }}0er",
     "pictures-title": "Unsere Bilder",
     "pictures-text": "Hier finden Sie alle Bilder dieses Archivs.",
-    "latest-title": "Neuzugänge im Archiv",
-    "latest-text": "Hier fließen die jeweils jüngsten 500 „Neuzugänge“ des Fotoarchivs ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
+    "latest-title": "Neuzugänge",
+    "latest-text": "Hier fließen die jüngsten 500 „Neuzugänge“ der Fotoarchive ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
     "date-title": "Jahrzehnte",
     "date-text": "Hier finden Sie alle Bilder unseres Archivs aus den bestimmten Jahrzehnten.",
     "keyword-title": "Unsere Kategorien",
@@ -343,7 +343,7 @@
     "location-text": "Hier finden Sie alle Orte unseres Archivs"
   },
   "discover": {
-    "latest-pictures": "Neuzugänge im Archiv",
+    "latest-pictures": "Neuzugänge",
     "decades": "Jahrzehnte",
     "locations": "Orte",
     "more-info": "Wissen Sie mehr über diese Bilder?",

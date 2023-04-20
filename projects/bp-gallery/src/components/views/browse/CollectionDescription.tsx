@@ -1,9 +1,8 @@
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
-import getLineBreaks from '../../../helpers/get-linebreaks';
+import { getIsLong } from '../../../helpers/get-linebreaks';
+import CollapsibleContainer from '../../common/CollapsibleContainer';
 import TextEditor from '../../common/editors/TextEditor';
 import RichText from '../../common/RichText';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -18,51 +17,37 @@ const CollectionDescription = ({
   name: string;
   id: string;
 }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+  const [long, setLong] = useState(false);
 
   const { role } = useAuth();
+  const textRef = useRef<HTMLDivElement>(null);
 
-  const isDescriptionLong = useMemo(() => {
-    const buffer = document.createElement('div');
-    buffer.className = 'collection-description open';
-    buffer.innerText = description;
-    document.body.appendChild(buffer);
-    const split = getLineBreaks(buffer.childNodes[0]);
-    buffer.remove();
-
-    return split.length > 3;
+  useEffect(() => {
+    setLong(getIsLong(textRef.current, description, 4));
   }, [description]);
 
   return (
-    <div className='collection-container'>
+    <div className='collection-container mb-2'>
       <h2>{name}</h2>
       {role >= AuthRole.CURATOR ? (
         <EditableCollectionDescription initialDescription={description} collectionId={id} />
       ) : (
         <>
           {description && (
-            <RichText
-              value={description}
-              className={
-                isOpen || !isDescriptionLong
-                  ? 'collection-description open'
-                  : 'collection-description closed'
-              }
-            />
-          )}
-          {isDescriptionLong && (
-            <IconButton
-              className='icon-button'
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
+            <CollapsibleContainer
+              collapsedHeight='125px'
+              onToggle={open => setOpen(open)}
+              long={long}
             >
-              {isOpen ? (
-                <KeyboardArrowUp className='icon' />
-              ) : (
-                <KeyboardArrowDown className='icon' />
-              )}
-            </IconButton>
+              <div className='text-lg break-words'>
+                <RichText
+                  value={description}
+                  textRef={textRef}
+                  className={`collection-description mx-auto ${!open ? 'line-clamp-4' : ''}`}
+                />
+              </div>
+            </CollapsibleContainer>
           )}
         </>
       )}

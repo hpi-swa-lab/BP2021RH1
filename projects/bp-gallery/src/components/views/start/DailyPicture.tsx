@@ -1,15 +1,14 @@
-import { Event, FolderSpecial } from '@mui/icons-material';
 import { Card, Portal } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
+import { useGetDailyPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
-import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureView from '../picture/PictureView';
 import RichText from './../../common/RichText';
+import DailyPictureInfo from './DailyPictureInfo';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -77,37 +76,25 @@ const DailyPicture = () => {
     [setIsFocused]
   );
   const dailyPictureId = choosePictureId(pictureIds);
-  const { data } = useGetPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
+  const { data } = useGetDailyPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = picture?.media?.url
     ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
     : '';
   const description = picture?.descriptions?.[0]?.text ?? '';
-  const pictureDate = formatTimeStamp(picture?.time_range_tag);
-  const pictureArchive = picture?.archive_tag?.name;
-  const pictureArchiveId = picture?.archive_tag?.id;
-  const pictureArchiveLink = pictureArchiveId ? `/archives/${pictureArchiveId}` : '';
   return (
     <div>
       {picture && (
         <div className='flex justify-center'>
-          <Card className='flex flex-col-reverse md:flex-row rounded-md justify-between max-w-4xl max-h-fit'>
-            <div className='p-4 flex flex-col'>
+          <Card className='flex flex-col-reverse md:flex-row rounded-md justify-between max-w-4xl'>
+            <div className='p-4 flex flex-col overflow-hidden'>
               <h3 className={'text-2xl'}>{t('common.daily-picture')}</h3>
-              <div className={'line-clamp-[10]'}>
-                <h4 className={'text-lg my-1'}>{t('common.description')}:</h4>
-                <RichText value={description} className='break-words' />
-              </div>
-              <div className={'flex-1'} />
-              <div className={'flex items-center gap-2 my-2'}>
-                <Event /> {pictureDate}
-              </div>
-              <div className={'flex item-center gap-2'}>
-                <FolderSpecial /> <a href={pictureArchiveLink}>{pictureArchive} </a>
-              </div>
+              <h4 className={'text-lg my-1'}>{t('common.description')}:</h4>
+              <RichText value={description} className='break-words line-clamp-[9]' />
+              <DailyPictureInfo picture={picture} />
             </div>
             <img
-              className={'w-screen sm:w-auto sm:h-96 cursor-pointer'}
+              className={'w-auto h-96 cursor-pointer max-w-2xl object-cover'}
               id='daily-picture'
               src={pictureLink}
               alt={t('common.daily-picture')}

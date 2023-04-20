@@ -213,6 +213,57 @@ query getPictureInfo($pictureId: ID!) {
   }
 }
 
+query getDailyPictureInfo($pictureId: ID!) {
+  picture(id: $pictureId) {
+    data {
+      id
+      attributes {
+        descriptions(sort: "createdAt:asc") {
+          data {
+            id
+            attributes {
+              text
+            }
+          }
+        }
+        time_range_tag {
+          data {
+            id
+            attributes {
+              start
+              end
+              isEstimate
+            }
+          }
+        }
+        comments {
+          data {
+            id
+          }
+        }
+        likes
+        media {
+          data {
+            id
+            attributes {
+              url
+              updatedAt
+            }
+          }
+        }
+        archive_tag {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getMultiplePictureInfo($pictureIds: [ID!]) {
   pictures(filters: { id: { in: $pictureIds } }) {
     data {
@@ -401,6 +452,12 @@ query getPicturesByAllSearch(
     id
     attributes {
       is_text
+      comments {
+        data {
+          id
+        }
+      }
+      likes
       media {
         data {
           id

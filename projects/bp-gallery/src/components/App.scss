@@ -21,6 +21,9 @@ body {
   font-family: 'Lato', Arial, sans-serif;
   background: $backgroundColor;
   background-size: 100% 100%;
+  @media only screen and (max-width: $mobile-breakpoint) {
+    height: 100%;
+  }
 }
 
 #root {

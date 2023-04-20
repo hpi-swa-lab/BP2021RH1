@@ -1,7 +1,6 @@
 "use strict";
-
+import { bulkEdit, like, updatePictureWithTagCleanup } from "./custom-update";
 const { plural, table } = require("../../helper");
-
 /**
  * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
  * in both a verified and an unverified relation.
@@ -233,9 +232,8 @@ const findPicturesByAllSearch = async (
   return matchingPictures.map((picture) => ({
     id: picture.id,
     is_text: picture.is_text,
+    likes: picture.likes,
   }));
 };
-
-import { updatePictureWithTagCleanup, bulkEdit, like } from "./custom-update";
 
 export { findPicturesByAllSearch, updatePictureWithTagCleanup, bulkEdit, like };
