@@ -125,7 +125,7 @@ export const FaceTag = ({
   }, [x, y, position, noPointerEvents]);
 
   return (
-    <div className='fixed z-[999] hover:z-[9999] flex items-center' style={style}>
+    <div className='fixed z-[999] hover:z-[9999] flex items-center facetag' style={style}>
       <svg width={triangle.width} height={triangle.height}>
         <polygon fill='#404173bb' points={triangle.points} />
       </svg>

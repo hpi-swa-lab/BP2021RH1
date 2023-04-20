@@ -149,7 +149,7 @@ const PictureView = ({
                 <div className='picture-container w-full h-full'>
                   <div className='relative w-full h-full flex justify-center align-center'>
                     <img
-                      className='max-w-full max-h-full object-contain'
+                      className='max-w-full max-h-full object-contain picture'
                       ref={setImg}
                       src={pictureLink}
                       alt={pictureLink}
