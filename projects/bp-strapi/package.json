@@ -16,8 +16,9 @@
     "debug": "cross-env ENV_PATH=./config/env/development/.env node --inspect debug.js"
   },
   "devDependencies": {
-    "jest": "^28.1.0",
+    "@playwright/test": "^1.32.3",
     "better-sqlite3": "^7.4.6",
+    "jest": "^28.1.0",
     "supertest": "^6.2.3"
   },
   "dependencies": {
