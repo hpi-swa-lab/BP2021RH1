@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import { useEffect, useState, useCallback } from 'react';
 import { flushSync } from 'react-dom';
 
@@ -13,9 +14,13 @@ let currentMousePosition: MousePosition = {
 
 window.addEventListener('mousemove', event => {
   const { clientX, clientY } = event;
-  currentMousePosition = {
+  const newMousePosition: MousePosition = {
     client: [clientX, clientY],
   };
+  if (isEqual(currentMousePosition, newMousePosition)) {
+    return;
+  }
+  currentMousePosition = newMousePosition;
   for (const listener of Array.from(listeners)) {
     listener(currentMousePosition);
   }
