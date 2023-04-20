@@ -29,13 +29,13 @@ describe('face tagging', () => {
 
     cy.contains('.field-content', 'Personen').find('input').click();
     cy.contains('.field-content', 'Personen').find('input').clear();
-    cy.contains('.field-content', 'Personen').find('input').type('TestPerson {enter}');
+    cy.contains('.field-content', 'Personen').find('input').type('TestPerson');
     cy.contains('TestPerson hinzufügen').click();
     cy.contains('.save-state', 'Gespeichert');
 
     cy.contains('.field-content', 'Personen').find('input').click();
     cy.contains('.field-content', 'Personen').find('input').clear();
-    cy.contains('.field-content', 'Personen').find('input').type('Personentest {enter}');
+    cy.contains('.field-content', 'Personen').find('input').type('Personentest');
     cy.contains('Personentest hinzufügen').click();
     cy.contains('.save-state', 'Gespeichert');
 
