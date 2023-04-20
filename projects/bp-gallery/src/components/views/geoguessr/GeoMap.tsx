@@ -1,29 +1,29 @@
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, useMapEvent, Marker, useMap } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, useMap, useMapEvent } from 'react-leaflet';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import {
-  GetPictureGeoInfoQuery,
   useCreatePictureGeoInfoMutation,
   useIncreaseNotAPlaceCountMutation,
 } from '../../../graphql/APIConnector';
-import { LatLngBounds, Icon, Map } from 'leaflet';
+import { Icon, LatLngBounds, Map } from 'leaflet';
 import { useTranslation } from 'react-i18next';
+import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 
 const PlayerMarkers = ({
   allGuesses,
   myGuess,
 }: {
-  allGuesses: GetPictureGeoInfoQuery['pictureGeoInfos'];
+  allGuesses: FlatPictureGeoInfo[];
   myGuess?: { lat: number; lng: number };
 }) => {
   const map = useMap();
   const coords = useMemo(
     () =>
-      allGuesses?.data.map(x => ({
-        lat: x.attributes!.latitude!,
-        lng: x.attributes!.longitude!,
-      })) ?? [],
+      allGuesses.map(x => ({
+        lat: x.latitude!,
+        lng: x.longitude!,
+      })),
     [allGuesses]
   ) as { lat: number; lng: number }[];
 
@@ -94,7 +94,7 @@ const GeoMap = ({
 }: {
   onNextPicture: () => void;
   pictureId: string;
-  allGuesses: GetPictureGeoInfoQuery['pictureGeoInfos'];
+  allGuesses: FlatPictureGeoInfo[];
   needsExplanation: () => void;
 }) => {
   const { t } = useTranslation();

@@ -7,7 +7,7 @@ import {
   useGetPictureGeoInfoQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import { FlatArchiveTag, FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
 import { useStorageState } from 'react-use-storage-state';
@@ -85,7 +85,8 @@ const GeoView = () => {
   };
 
   const { data: geoData } = useGetPictureGeoInfoQuery({ variables: { pictureId } });
-  const allGuesses = geoData?.pictureGeoInfos;
+  const allGuesses: FlatPictureGeoInfo[] | undefined =
+    useSimplifiedQueryResponseData(geoData)?.pictureGeoInfos;
   return (
     <div>
       <Modal

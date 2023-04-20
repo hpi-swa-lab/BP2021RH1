@@ -9,6 +9,7 @@ import {
   LocationTag,
   PersonTag,
   Picture,
+  PictureGeoInfo,
   Scalars,
   TimeRangeTag,
   UploadFile,
@@ -47,6 +48,9 @@ type FlatPictureWithoutRelations = ID &
     | 'linked_texts'
     | 'archive_tag'
   >;
+
+export type FlatPictureGeoInfo = ID &
+  Omit<PictureGeoInfo, 'notAPlaceCount' | 'radius' | 'createdAt' | 'updatedAt'>;
 
 export type FlatLocationTagWithoutRelations = ID &
   Omit<LocationTag, 'pictures' | 'verified_pictures'>;
