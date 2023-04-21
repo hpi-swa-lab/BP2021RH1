@@ -27,7 +27,7 @@ describe('Geo View', () => {
     cy.get('.picture-container').children().should('have.attr', 'src').and('include', 'http://');
 
     //save the src of the image
-    cy.get('#geo-image')
+    cy.get('[data-testid="geo-image"]')
       .invoke('attr', 'src')
       .then(elem => {
         oldPictureSrc = elem ?? '';
