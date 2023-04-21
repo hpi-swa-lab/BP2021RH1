@@ -8,6 +8,7 @@ import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
 import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
 import { TagType } from '../../types/additionalFlatTypes';
 import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
+import PathPositionSelectDialogPreset from '../views/location-curating/SelectPathPositionDialog';
 
 export interface DialogOption {
   name: string;
@@ -23,6 +24,7 @@ export enum DialogPreset {
   SELECT_ARCHIVE_TAG,
   SELECT_LOCATION,
   INPUT_FIELD,
+  SELECT_PATH_POSITION,
 }
 
 export interface DialogProps {
@@ -127,6 +129,9 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         )}
         {dialogState?.preset === DialogPreset.INPUT_FIELD && (
           <InputFieldDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.SELECT_PATH_POSITION && (
+          <PathPositionSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
       </Dialog>
     </DialogContext.Provider>

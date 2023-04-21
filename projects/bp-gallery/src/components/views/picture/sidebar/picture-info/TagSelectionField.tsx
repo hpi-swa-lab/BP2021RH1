@@ -13,6 +13,7 @@ import { SearchType } from '../../../search/helpers/search-filters';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 import './TagSelection.scss';
 import SingleTagElement from './SingleTagElement';
+import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 
 interface TagFields {
   name: string;
@@ -22,6 +23,7 @@ interface TagFields {
   synonyms?: Maybe<Maybe<ComponentCommonSynonyms>[]> | undefined;
   icon?: JSX.Element;
   isNew?: boolean;
+  isNewRoot?: boolean;
   onClick?: () => void;
 }
 
@@ -46,13 +48,14 @@ const TagSelectionField = <T extends TagFields>({
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
+  const prompt = useDialog();
 
   const [tagList, setTagList] = useState<T[]>(allTags);
 
   const { allTagsQuery } = useGenericTagEndpoints(type);
 
   const [lastSelectedTags, setLastSelectedTags] = useState<T[]>();
-  const [lastSelectedTag, setLastSelectedTag] = useState<T>();
+  const [lastSelectedTag, setLastSelectedTag] = useState<T | undefined>();
 
   const [lastTags, setLastTags] = useState<T[]>();
 
@@ -279,7 +282,7 @@ const TagSelectionField = <T extends TagFields>({
                 icon: <Add sx={{ mr: 2 }} />,
                 verified: true,
                 createValue: inputValue,
-                id: '-3',
+                id: -1,
               } as unknown as T);
             }
 
@@ -317,18 +320,48 @@ const TagSelectionField = <T extends TagFields>({
                 if (addTag.id === '-2') {
                   setLastSelectedTags([] as T[]);
                   setLastSelectedTag(undefined);
-                } else if (addTag.id === '-3' && createChildMutation && lastSelectedTag) {
-                  const { data } = await createChildMutation({
-                    variables: { name: addTag.createValue, parentID: lastSelectedTag.id },
+                } else if (createChildMutation && lastSelectedTag) {
+                  const createOption = await prompt({
+                    preset: DialogPreset.SELECT_PATH_POSITION,
+                    content: [addTag, lastSelectedTag],
+                    type: type,
                   });
-                  if (data) {
-                    const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                    const newId = data[nameOfField].data.id;
-                    addTag.id = newId;
-                    delete addTag.createValue;
-                    delete addTag.icon;
-                    setTagList([...allTags, addTag]);
-                    setLastSelectedTags([] as T[]);
+                  if (!createOption) return;
+                  switch (createOption) {
+                    case '1': {
+                      const { data } = await createChildMutation({
+                        variables: { name: addTag.createValue, parentID: lastSelectedTag.id },
+                      });
+                      if (data) {
+                        const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                        const newId = data[nameOfField].data.id;
+                        addTag.id = newId;
+                        delete addTag.createValue;
+                        delete addTag.icon;
+                        setTagList([...allTags, addTag]);
+                        setLastSelectedTags([] as T[]);
+                      }
+                      break;
+                    }
+                    case '0': {
+                      const { data } = await createMutation({
+                        variables: { name: addTag.createValue },
+                      });
+                      if (data) {
+                        const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                        const newId = data[nameOfField].data.id;
+                        addTag.id = newId;
+                        addTag.isNewRoot = true;
+                        delete addTag.createValue;
+                        delete addTag.icon;
+                        setTagList([...allTags, addTag]);
+                        setLastSelectedTags([] as T[]);
+                      }
+                      break;
+                    }
+                    default: {
+                      break;
+                    }
                   }
                 } else {
                   const { data } = await createMutation({
@@ -338,6 +371,7 @@ const TagSelectionField = <T extends TagFields>({
                     const nameOfField = Object.keys(data as { [key: string]: any })[0];
                     const newId = data[nameOfField].data.id;
                     addTag.id = newId;
+                    addTag.isNewRoot = true;
                     delete addTag.createValue;
                     delete addTag.icon;
                     setTagList([...allTags, addTag]);
@@ -346,7 +380,7 @@ const TagSelectionField = <T extends TagFields>({
                 }
               }
             }
-            newValue = newValue.filter(value => value.id !== '-2' && value.id !== '-3');
+            newValue = newValue.filter(value => value.id !== '-2');
             const newlyAddedTags = newValue.filter(
               newVal => !tags.some(tag => tag.id === newVal.id)
             );
@@ -385,7 +419,10 @@ const TagSelectionField = <T extends TagFields>({
                           (!tagChildTags ||
                             !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
                       )
-                    : tagChildTags && lastSelectedTag && lastSelectedTag.id in tagChildTags
+                    : !tag.isNewRoot &&
+                      tagChildTags &&
+                      lastSelectedTag &&
+                      lastSelectedTag.id in tagChildTags
                     ? tagChildTags[lastSelectedTag.id].filter(
                         tag =>
                           !newValue.some(newTag => newTag.id === tag.id) &&
@@ -432,8 +469,6 @@ const TagSelectionField = <T extends TagFields>({
             if (option.createValue) {
               if (option.id === '-2') {
                 label = option.name;
-              } else if (option.id === '-3') {
-                label = `${option.name} als Untertag hinzufügen`;
               } else {
                 label = `${t('common.create', { value: option.name })}`;
               }
