@@ -52,7 +52,9 @@ const PictureOverview = ({
           />
         </div>
       )}
-      <PrimaryButton text={t('common.showMore')} onClickFn={onClick} isShowMore={true} />
+      <PrimaryButton onClickFn={onClick} isShowMore={true}>
+        {t('common.showMore')}
+      </PrimaryButton>
     </div>
   );
 };

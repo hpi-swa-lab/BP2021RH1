@@ -42,7 +42,7 @@ const PlayerMarkers = ({
   return (
     <div>
       {coords.map((x, index) => (
-        <Marker title='others-marker' icon={othersIcon} position={x} key={index} />
+        <Marker icon={othersIcon} position={x} key={index} />
       ))}
     </div>
   );
@@ -60,7 +60,7 @@ const MyMarker = ({
     isPositionable && setPosition(event.latlng.clone());
   });
 
-  return <Marker title='my-marker' position={position} />;
+  return <Marker position={position} />;
 };
 
 const GeoMap = ({

@@ -57,12 +57,13 @@ const StartView = () => {
             <DailyPicture />
             <div className='flex place-content-center gap-2 m-4'>
               <PrimaryButton
-                text={t('geo.geo-game-button')}
                 onClickFn={() => {
                   history.push('/geo', { showBack: true });
                 }}
                 isShowMore
-              />
+              >
+                {t('geo.geo-game-button')}
+              </PrimaryButton>
             </div>
             <ShowStats>
               <PictureOverview

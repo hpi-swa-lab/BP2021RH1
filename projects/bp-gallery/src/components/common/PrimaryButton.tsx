@@ -1,17 +1,16 @@
 import { ArrowForwardIos } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, PropsWithChildren } from 'react';
 import './PrimaryButton.scss';
 
 const PrimaryButton = ({
-  text,
+  children,
   onClickFn,
   isShowMore,
-}: {
-  text: string;
+}: PropsWithChildren<{
   onClickFn: MouseEventHandler;
   isShowMore?: boolean;
-}) => {
+}>) => {
   return (
     <Button
       variant='contained'
@@ -19,7 +18,7 @@ const PrimaryButton = ({
       className='primary-button'
       endIcon={isShowMore && <ArrowForwardIos />}
     >
-      {text}
+      {children}
     </Button>
   );
 };
