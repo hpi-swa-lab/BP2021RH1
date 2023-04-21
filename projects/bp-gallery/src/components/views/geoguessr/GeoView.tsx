@@ -107,7 +107,7 @@ const GeoView = () => {
             {needsExplanation ? t('geo.explanation-reminder') : t('geo.explanation-title')}
           </Typography>
           <Typography id='modal-description'>{t('geo.explanation-nav')}</Typography>
-          <Button id='dont-show-again-button' onClick={dontShowAgain}>
+          <Button data-testid='dont-show-again-button' onClick={dontShowAgain}>
             {t('common.dontShowAgain')}
           </Button>
         </Box>
