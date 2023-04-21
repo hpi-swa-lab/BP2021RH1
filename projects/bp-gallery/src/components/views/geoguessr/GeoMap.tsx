@@ -1,13 +1,13 @@
-import 'leaflet/dist/leaflet.css';
-import { MapContainer, Marker, TileLayer, useMap, useMapEvent } from 'react-leaflet';
-import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@mui/material';
+import { Icon, LatLng, Map, latLngBounds } from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MapContainer, Marker, TileLayer, useMap, useMapEvent } from 'react-leaflet';
 import {
   useCreatePictureGeoInfoMutation,
   useIncreaseNotAPlaceCountMutation,
 } from '../../../graphql/APIConnector';
-import { Icon, LatLng, LatLngBounds, LatLngTuple, Map } from 'leaflet';
-import { useTranslation } from 'react-i18next';
 import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 
 const PlayerMarkers = ({
@@ -19,15 +19,15 @@ const PlayerMarkers = ({
 }) => {
   const map = useMap();
   const coords = useMemo(
-    () => allGuesses.map(x => [x.latitude!, x.longitude!]),
+    () => allGuesses.map(x => new LatLng(x.latitude!, x.longitude!)),
     [allGuesses]
-  ) as LatLngTuple[];
+  );
 
   useEffect(() => {
     setTimeout(() => {
       map.invalidateSize();
-      const allCoords: LatLngTuple[] = myGuess ? [...coords, [myGuess.lat, myGuess.lng]] : coords;
-      coords.length !== 0 && map.flyToBounds(new LatLngBounds(allCoords));
+      const allCoords = myGuess ? [...coords, myGuess] : coords;
+      coords.length !== 0 && map.flyToBounds(latLngBounds(allCoords));
     }, 300);
   }, [coords, myGuess, map]);
   const othersIcon = new Icon({
@@ -57,7 +57,7 @@ const MyMarker = ({
   setPosition: (pos: LatLng) => void;
 }) => {
   useMapEvent('click', event => {
-    isPositionable && setPosition(new LatLng(event.latlng.lat, event.latlng.lng));
+    isPositionable && setPosition(event.latlng.clone());
   });
 
   return <Marker title='my-marker' position={position} />;
@@ -76,7 +76,7 @@ const GeoMap = ({
 }) => {
   const { t } = useTranslation();
   const initialMapValues = useMemo(() => {
-    return { center: { lat: 51.8392573, lng: 10.5279953 }, zoom: 10 };
+    return { center: new LatLng(51.8392573, 10.5279953), zoom: 10 };
   }, []);
   const initialGuess = new LatLng(0, 0);
   const map = useRef<Map>(null);
@@ -116,7 +116,7 @@ const GeoMap = ({
 
   return (
     <div
-      className={`fixed w-[480px] h-[360px] bottom-1 right-1 items-stretch flex flex-col transition-all 
+      className={`fixed w-[480px] h-[360px] bottom-1 right-1 items-stretch flex flex-col transition-all
         ${guessComplete ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
     >
       {guessComplete && (
