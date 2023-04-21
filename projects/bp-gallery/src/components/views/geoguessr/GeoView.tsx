@@ -14,9 +14,11 @@ import { useStorageState } from 'react-use-storage-state';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
-  const list: string[] = [];
-  archives.forEach(archive => archive.pictures?.forEach(picture => list.push(picture.id)));
-  return list;
+  const allPictureIds: string[] = archives
+    .map(archive => archive.pictures ?? [])
+    .flat()
+    .map(picture => picture.id);
+  return allPictureIds;
 };
 
 const shufflePictureIds = (pictureIds: string[], seed: number) => {
@@ -62,7 +64,10 @@ const GeoView = () => {
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
   useEffect(() => {
-    const allPictureIds = archives ? getAllPictureIds(archives) : [];
+    if (!archives) {
+      return;
+    }
+    const allPictureIds = getAllPictureIds(archives);
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
     setPictureId(getNextPicture());
@@ -125,14 +130,14 @@ const GeoView = () => {
             id='picture-info'
             className='absolute top-[5rem] right-1 text-white flex justify-center gap-1 cursor-pointer'
             onClick={() => {
-              window.open(`${window.location.origin}/picture/${pictureId}`, '_blanc');
+              window.open(`/picture/${pictureId}`, '_blank');
             }}
           >
             <Info />
             {t('geo.getTip')}
           </div>
           <GeoMap
-            allGuesses={allGuesses}
+            allGuesses={allGuesses ?? []}
             onNextPicture={onNextPicture}
             pictureId={pictureId}
             needsExplanation={() => {
