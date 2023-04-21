@@ -6,7 +6,7 @@ import {
   useCreatePictureGeoInfoMutation,
   useIncreaseNotAPlaceCountMutation,
 } from '../../../graphql/APIConnector';
-import { Icon, LatLng, LatLngBounds, Map } from 'leaflet';
+import { Icon, LatLng, LatLngBounds, LatLngTuple, Map } from 'leaflet';
 import { useTranslation } from 'react-i18next';
 import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 
@@ -19,38 +19,15 @@ const PlayerMarkers = ({
 }) => {
   const map = useMap();
   const coords = useMemo(
-    () =>
-      allGuesses.map(x => ({
-        lat: x.latitude!,
-        lng: x.longitude!,
-      })),
+    () => allGuesses.map(x => [x.latitude!, x.longitude!]),
     [allGuesses]
-  ) as { lat: number; lng: number }[];
+  ) as LatLngTuple[];
 
   useEffect(() => {
     setTimeout(() => {
       map.invalidateSize();
-      coords.length !== 0 &&
-        map.flyToBounds(
-          new LatLngBounds(
-            {
-              lat: myGuess
-                ? Math.min(...coords.map(x => x.lat), myGuess.lat)
-                : Math.min(...coords.map(x => x.lat)),
-              lng: myGuess
-                ? Math.min(...coords.map(x => x.lng), myGuess.lng)
-                : Math.min(...coords.map(x => x.lng)),
-            },
-            {
-              lat: myGuess
-                ? Math.max(...coords.map(x => x.lat), myGuess.lat)
-                : Math.max(...coords.map(x => x.lat)),
-              lng: myGuess
-                ? Math.max(...coords.map(x => x.lng), myGuess.lng)
-                : Math.max(...coords.map(x => x.lng)),
-            }
-          )
-        );
+      const allCoords: LatLngTuple[] = myGuess ? [...coords, [myGuess.lat, myGuess.lng]] : coords;
+      coords.length !== 0 && map.flyToBounds(new LatLngBounds(allCoords));
     }, 300);
   }, [coords, myGuess, map]);
   const othersIcon = new Icon({
@@ -75,12 +52,12 @@ const MyMarker = ({
   isPositionable,
   setPosition,
 }: {
-  position: { lat: number; lng: number };
+  position: LatLng;
   isPositionable: boolean;
-  setPosition: (pos: { lat: number; lng: number }) => void;
+  setPosition: (pos: LatLng) => void;
 }) => {
   useMapEvent('click', event => {
-    isPositionable && setPosition({ lat: event.latlng.lat, lng: event.latlng.lng });
+    isPositionable && setPosition(new LatLng(event.latlng.lat, event.latlng.lng));
   });
 
   return <Marker title='my-marker' position={position} />;
@@ -115,7 +92,7 @@ const GeoMap = ({
   };
 
   const sendGuess = () => {
-    if (guess.lat === initialGuess.lat && guess.lng === initialGuess.lng) {
+    if (guess.equals(initialGuess)) {
       needsExplanation();
       return;
     }
@@ -159,23 +136,25 @@ const GeoMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
-        {guessComplete &&
-          (unknown ? (
-            <PlayerMarkers allGuesses={allGuesses} />
-          ) : (
-            <PlayerMarkers allGuesses={allGuesses} myGuess={guess} />
-          ))}
+        {guessComplete && (
+          <PlayerMarkers allGuesses={allGuesses} myGuess={unknown ? undefined : guess} />
+        )}
         {!unknown && (
           <MyMarker position={guess} setPosition={setGuess} isPositionable={!guessComplete} />
         )}
       </MapContainer>
       {!guessComplete && (
         <div className='flex gap-2'>
-          <Button id='submit-guess' variant='contained' onClick={sendGuess} className='flex-1'>
+          <Button
+            data-testid='submit-guess'
+            variant='contained'
+            onClick={sendGuess}
+            className='flex-1'
+          >
             {t('geo.submit-place')}
           </Button>
           <Button
-            id='dont-know'
+            data-testid='dont-know'
             variant='contained'
             onClick={() => {
               setGuessComplete(true);
@@ -186,7 +165,7 @@ const GeoMap = ({
             {t('geo.dontKnow')}
           </Button>
           <Button
-            id='not-a-place'
+            data-testid='not-a-place'
             variant='contained'
             onClick={() => {
               sendNotAPlace();
@@ -199,7 +178,7 @@ const GeoMap = ({
         </div>
       )}
       {guessComplete && (
-        <Button id='next-picture' variant='contained' onClick={nextPicture}>
+        <Button data-testid='next-picture' variant='contained' onClick={nextPicture}>
           {t('geo.next-picture')}
         </Button>
       )}

@@ -16,7 +16,7 @@ describe('Geo View', () => {
       .should('contain.text', 'Hilf uns Ortskoordinaten ausfindig zu machen!');
 
     // check if it contains a button
-    cy.get('#dont-show-again-button').click();
+    cy.get('[data-testid="dont-show-again-button"]').click();
 
     //check if modal does not exist anymore
     cy.get('.modal').should('not.exist');
@@ -46,15 +46,15 @@ describe('Geo View', () => {
   });
 
   it('shows guess complete when guess is submitted', () => {
-    cy.get('#submit-guess').click();
+    cy.get('[data-testid="submit-guess"]').click();
 
     cy.get('.guess-complete-text').should('exist');
   });
 
   it('shows new picture when guess is submitted', () => {
-    cy.get('#next-picture').click();
+    cy.get('[data-testid="next-picture"]').click();
 
-    cy.get('#geo-image')
+    cy.get('[data-testid="geo-image"]')
       .invoke('attr', 'src')
       .then(elem => {
         expect(elem).to.not.equal(oldPictureSrc);
@@ -62,16 +62,16 @@ describe('Geo View', () => {
   });
 
   it("shows completed guess when user don't know the location", () => {
-    cy.get('#dont-know').click();
+    cy.get('[data-testid="dont-know"]').click();
 
     cy.get('.guess-complete-text').should('contain.text', 'Beim nächsten Bild weißt du es!');
 
-    cy.get('#next-picture').click();
+    cy.get('[data-testid="next-picture"]').click();
   });
 
   it("shows directly the next picture when this isn't a picture", () => {
-    cy.get('#not-a-place').click();
+    cy.get('[data-testid="not-a-place"]').click();
 
-    cy.get('#next-picture').should('not.exist');
+    cy.get('[data-testid="next-picture"]').should('not.exist');
   });
 });

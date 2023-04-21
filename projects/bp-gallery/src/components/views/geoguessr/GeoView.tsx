@@ -112,7 +112,12 @@ const GeoView = () => {
           <ZoomWrapper className='h-full' blockScroll={true} pictureId={pictureId}>
             <div className='picture-wrapper w-full'>
               <div className='picture-container w-full h-full flex align-center justify-center'>
-                <img className='h-full' id='geo-image' src={pictureLink} alt={pictureLink} />
+                <img
+                  className='h-full'
+                  data-testid='geo-image'
+                  src={pictureLink}
+                  alt={pictureLink}
+                />
               </div>
             </div>
           </ZoomWrapper>
