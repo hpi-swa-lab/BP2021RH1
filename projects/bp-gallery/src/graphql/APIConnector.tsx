@@ -2934,7 +2934,7 @@ export type CreateKeywordMutation = {
 
 export type CreateSubKeywordMutationVariables = Exact<{
   name: Scalars['String'];
-  parentID: Scalars['ID'];
+  parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
   accepted?: InputMaybe<Scalars['Boolean']>;
 }>;
 
@@ -3110,7 +3110,7 @@ export type CreateLocationMutation = {
 
 export type CreateSubLocationMutationVariables = Exact<{
   name: Scalars['String'];
-  parentID: Scalars['ID'];
+  parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
   accepted?: InputMaybe<Scalars['Boolean']>;
 }>;
 
@@ -5389,8 +5389,8 @@ export type CreateKeywordMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateSubKeywordDocument = gql`
-  mutation createSubKeyword($name: String!, $parentID: ID!, $accepted: Boolean) {
-    createKeywordTag(data: { name: $name, parent_tags: [$parentID], accepted: $accepted }) {
+  mutation createSubKeyword($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
+    createKeywordTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
       data {
         id
       }
@@ -5417,7 +5417,7 @@ export type CreateSubKeywordMutationFn = Apollo.MutationFunction<
  * const [createSubKeywordMutation, { data, loading, error }] = useCreateSubKeywordMutation({
  *   variables: {
  *      name: // value for 'name'
- *      parentID: // value for 'parentID'
+ *      parentIDs: // value for 'parentIDs'
  *      accepted: // value for 'accepted'
  *   },
  * });
@@ -5863,8 +5863,8 @@ export type CreateLocationMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateSubLocationDocument = gql`
-  mutation createSubLocation($name: String!, $parentID: ID!, $accepted: Boolean) {
-    createLocationTag(data: { name: $name, parent_tags: [$parentID], accepted: $accepted }) {
+  mutation createSubLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
+    createLocationTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
       data {
         id
       }
@@ -5891,7 +5891,7 @@ export type CreateSubLocationMutationFn = Apollo.MutationFunction<
  * const [createSubLocationMutation, { data, loading, error }] = useCreateSubLocationMutation({
  *   variables: {
  *      name: // value for 'name'
- *      parentID: // value for 'parentID'
+ *      parentIDs: // value for 'parentIDs'
  *      accepted: // value for 'accepted'
  *   },
  * });

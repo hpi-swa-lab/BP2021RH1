@@ -680,8 +680,8 @@ mutation createKeyword($name: String!, $accepted: Boolean) {
   }
 }
 
-mutation createSubKeyword($name: String!, $parentID: ID!, $accepted: Boolean) {
-  createKeywordTag(data: { name: $name, parent_tags: [$parentID], accepted: $accepted }) {
+mutation createSubKeyword($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
+  createKeywordTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
     data {
       id
     }
@@ -799,8 +799,8 @@ mutation createLocation($name: String!, $accepted: Boolean) {
   }
 }
 
-mutation createSubLocation($name: String!, $parentID: ID!, $accepted: Boolean) {
-  createLocationTag(data: { name: $name, parent_tags: [$parentID], accepted: $accepted }) {
+mutation createSubLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
+  createLocationTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
     data {
       id
     }

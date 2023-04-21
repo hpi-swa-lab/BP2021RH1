@@ -54,6 +54,13 @@ const PathPositionSelectDialogPreset = ({
         position: 'child',
         name: dialogProps.content[0].name,
       },
+      {
+        ...dialogProps.content[0],
+        icon: undefined,
+        id: '2',
+        position: 'sibling',
+        name: dialogProps.content[0].name,
+      },
     ];
   }, [dialogProps.content]);
 
@@ -111,6 +118,15 @@ const PathPositionSelectDialogPreset = ({
     if (!customSupertags[1].length) {
       customSupertags[1].push([dialogProps.content[1]]);
     }
+
+    // siblings
+    customSupertags[2] = (tagSupertagList ? tagSupertagList[dialogProps.content[1].id] : []).map(
+      path => {
+        return path.map(tag => {
+          return tag;
+        });
+      }
+    );
 
     return customSupertags;
   }, [customOptions, dialogProps.content, tagSupertagList]);

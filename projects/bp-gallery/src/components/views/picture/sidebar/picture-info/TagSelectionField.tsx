@@ -331,7 +331,30 @@ const TagSelectionField = <T extends TagFields>({
                   switch (createOption) {
                     case '1': {
                       const { data } = await createChildMutation({
-                        variables: { name: addTag.createValue, parentID: lastSelectedTag.id },
+                        variables: { name: addTag.createValue, parentIDs: [lastSelectedTag.id] },
+                      });
+                      if (data) {
+                        const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                        const newId = data[nameOfField].data.id;
+                        addTag.id = newId;
+                        delete addTag.createValue;
+                        delete addTag.icon;
+                        setTagList([...allTags, addTag]);
+                        setLastSelectedTags([] as T[]);
+                      }
+                      break;
+                    }
+                    case '2': {
+                      const { data } = await createChildMutation({
+                        variables: {
+                          name: addTag.createValue,
+                          parentIDs:
+                            tagSupertagList && lastSelectedTag.id in tagSupertagList
+                              ? tagSupertagList[lastSelectedTag.id].map(
+                                  path => path[path.length - 1].id
+                                )
+                              : [],
+                        },
                       });
                       if (data) {
                         const nameOfField = Object.keys(data as { [key: string]: any })[0];
