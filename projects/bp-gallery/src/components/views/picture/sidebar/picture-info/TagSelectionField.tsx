@@ -345,19 +345,27 @@ const TagSelectionField = <T extends TagFields>({
                       break;
                     }
                     case '0': {
-                      // checken, ob es das tag schon auf root ebene gibt und dieses dann nur einfügen
-                      const { data } = await createMutation({
-                        variables: { name: addTag.createValue },
-                      });
-                      if (data) {
-                        const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                        const newId = data[nameOfField].data.id;
-                        addTag.id = newId;
-                        addTag.isNewRoot = true;
-                        delete addTag.createValue;
-                        delete addTag.icon;
-                        setTagList([...allTags, addTag]);
-                        setLastSelectedTags([] as T[]);
+                      if (tagTree?.some(rootTag => rootTag.name === addTag.name)) {
+                        const existingTag = tagTree.find(
+                          tag => tag.name === addTag.name
+                        ) as unknown as T;
+                        const filteredNewValues = newValue.filter(val => !val.createValue);
+                        filteredNewValues.push(existingTag);
+                        newValue = filteredNewValues;
+                      } else {
+                        const { data } = await createMutation({
+                          variables: { name: addTag.createValue },
+                        });
+                        if (data) {
+                          const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                          const newId = data[nameOfField].data.id;
+                          addTag.id = newId;
+                          addTag.isNewRoot = true;
+                          delete addTag.createValue;
+                          delete addTag.icon;
+                          setTagList([...allTags, addTag]);
+                          setLastSelectedTags([] as T[]);
+                        }
                       }
                       break;
                     }
