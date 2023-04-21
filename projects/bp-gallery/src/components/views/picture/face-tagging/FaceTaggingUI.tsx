@@ -3,11 +3,11 @@ import { Button, Chip } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFaceTagging } from '../../../../hooks/context-hooks';
 import { FlatPersonTagWithoutRelations, TagType } from '../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import PictureInfoField from '../sidebar/picture-info/PictureInfoField';
 import TagSelectionField from '../sidebar/picture-info/TagSelectionField';
-import { useFaceTagging } from '../../../../hooks/context-hooks';
 
 export const FaceTaggingUI = ({
   tags,
@@ -55,6 +55,8 @@ export const FaceTaggingUI = ({
                 }
                 key={tag.id}
                 label={tag.name}
+                title={t('pictureFields.face-tagging-explanation')}
+                className='hover:brightness-150 !transition'
                 onClick={() => {
                   faceTags?.find(ftag => ftag.personTagId === tag.id)
                     ? null
