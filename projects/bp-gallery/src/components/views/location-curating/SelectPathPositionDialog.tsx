@@ -127,8 +127,9 @@ const PathPositionSelectDialogPreset = ({
     <>
       <DialogTitle>{dialogProps.title ?? t('curator.selectOption')}</DialogTitle>
       <DialogContent>
-        {dialogProps.content[0].name}
         <Select
+          className='w-full'
+          defaultOpen={true}
           onChange={(_, value: any | null) => {
             selectedOption.current = value.props.value ?? undefined;
           }}

@@ -323,6 +323,7 @@ const TagSelectionField = <T extends TagFields>({
                 } else if (createChildMutation && lastSelectedTag) {
                   const createOption = await prompt({
                     preset: DialogPreset.SELECT_PATH_POSITION,
+                    title: t('tag-panel.select-position', { name: addTag.name }),
                     content: [addTag, lastSelectedTag],
                     type: type,
                   });
@@ -344,6 +345,7 @@ const TagSelectionField = <T extends TagFields>({
                       break;
                     }
                     case '0': {
+                      // checken, ob es das tag schon auf root ebene gibt und dieses dann nur einfügen
                       const { data } = await createMutation({
                         variables: { name: addTag.createValue },
                       });

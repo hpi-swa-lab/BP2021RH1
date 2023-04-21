@@ -366,6 +366,7 @@
     "relocate-keyword": "Welchem Schlagwort wollen Sie folgendes Schlagwort unterordnen?",
     "location": "Ort",
     "keyword": "Schlagwort",
-    "multiple-paths": "Mehrere Pfade"
+    "multiple-paths": "Mehrere Pfade",
+    "select-position": "An welcher Position möchten Sie {{ name }} hinzufügen?"
   }
 }
