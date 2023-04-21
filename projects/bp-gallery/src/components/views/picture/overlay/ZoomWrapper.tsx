@@ -239,7 +239,7 @@ const ZoomWrapper = ({
   }, [viewport, imageRef]);
 
   return (
-    <div className={`zoom-wrapper ${className || ''}`} ref={containerRef}>
+    <div className={`zoom-wrapper ${className ?? ''}`} ref={containerRef}>
       {children}
     </div>
   );

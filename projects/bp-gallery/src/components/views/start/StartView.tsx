@@ -61,7 +61,7 @@ const StartView = () => {
                 onClickFn={() => {
                   history.push('/geo', { showBack: true });
                 }}
-                isShowMore={true}
+                isShowMore
               />
             </div>
             <ShowStats>
