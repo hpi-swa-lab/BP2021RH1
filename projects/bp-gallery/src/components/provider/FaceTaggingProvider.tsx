@@ -16,8 +16,10 @@ import {
   useGetFaceTagsQuery,
   useGetPersonTagQuery,
 } from '../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { useMouseInElement } from '../../hooks/mouse-in-element.hook';
 import { useMousePosition } from '../../hooks/mouse-position.hook';
+import { FlatFaceTag, FlatPersonTag } from '../../types/additionalFlatTypes';
 import { FaceTagData } from '../views/picture/face-tagging/FaceTag';
 import { useImageRect } from '../views/picture/face-tagging/helpers/image-rect';
 import { PictureViewContext } from '../views/picture/PictureView';
@@ -51,11 +53,13 @@ export const FaceTaggingProvider = ({
       pictureId,
     },
   });
-  const tags = data?.faceTags?.data.map(tag => ({
-    x: tag.attributes?.x ?? 0,
-    y: tag.attributes?.y ?? 0,
-    name: tag.attributes?.person_tag?.data?.attributes?.name ?? '',
-    personTagId: tag.attributes?.person_tag?.data?.id,
+  const faceTags: FlatFaceTag[] | undefined = useSimplifiedQueryResponseData(data)?.faceTags;
+
+  const tags = faceTags?.map(tag => ({
+    x: tag.x ?? 0,
+    y: tag.y ?? 0,
+    name: tag.person_tag?.name ?? '',
+    personTagId: tag.person_tag?.id,
     id: tag.id ?? '-1',
   }));
 
@@ -64,7 +68,9 @@ export const FaceTaggingProvider = ({
       id: activeTagId ?? '-1',
     },
   });
-  const activeTagName = activeData?.personTag?.data?.attributes?.name ?? 'Lädt';
+  const activePersonTag: FlatPersonTag | undefined =
+    useSimplifiedQueryResponseData(activeData)?.personTag;
+  const activeTagName = activePersonTag?.name ?? 'Lädt';
 
   const { img } = useContext(PictureViewContext);
 
