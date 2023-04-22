@@ -47,7 +47,7 @@ describe('Picture View called via link as a curator', () => {
       'archive',
     ];
 
-    cy.get('.picture-sidebar .quick-access-buttons').click();
+    cy.get('.picture-sidebar .quick-access-buttons').contains('Vollbild');
     cy.get('.picture-info-field').should('have.length', pictureInfoFields.length);
   });
 

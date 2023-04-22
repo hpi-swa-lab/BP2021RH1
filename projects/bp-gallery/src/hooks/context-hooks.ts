@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
 import { StorageContext } from '../components/provider/StorageProvider';
+import { FaceTaggingContext } from '../components/provider/FaceTaggingProvider';
 
 export const useStorage = () => {
   const value = useContext(StorageContext);
@@ -24,4 +25,8 @@ export const useClipboardEditorButtons = () => {
 
 export const useSetClipboardEditorButtons = () => {
   return useContext(ClipboardEditorContext)?.[1];
+};
+
+export const useFaceTagging = () => {
+  return useContext(FaceTaggingContext);
 };
