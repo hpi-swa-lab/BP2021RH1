@@ -182,22 +182,25 @@ export const FaceTaggingProvider = ({
     };
   }, [position, activeTagName, activeTagId]);
 
-  const value = useMemo<FaceTagging>(
-    () => ({
-      activeTagId,
-      setActiveTagId,
-      tags:
-        imageRect?.width && imageRect.height
-          ? activeTagData
-            ? [...(tags ?? []).map(tag => ({ ...tag, noPointerEvents: true })), activeTagData]
-            : tags ?? []
-          : [],
-      hideTags,
-      setHideTags,
-      removeTag,
-      isFaceTagging,
-      setIsFaceTagging,
-    }),
+  const value = useMemo<FaceTagging | null>(
+    () =>
+      tags
+        ? {
+            activeTagId,
+            setActiveTagId,
+            tags:
+              imageRect?.width && imageRect.height
+                ? activeTagData
+                  ? [...tags.map(tag => ({ ...tag, noPointerEvents: true })), activeTagData]
+                  : tags
+                : [],
+            hideTags,
+            setHideTags,
+            removeTag,
+            isFaceTagging,
+            setIsFaceTagging,
+          }
+        : null,
     [
       activeTagId,
       setActiveTagId,
@@ -211,11 +214,8 @@ export const FaceTaggingProvider = ({
     ]
   );
 
-  if (!tags) {
-    if (error) {
-      console.error(error);
-    }
-    return <>{children}</>;
+  if (error) {
+    console.error(error);
   }
 
   return <FaceTaggingContext.Provider value={value}>{children}</FaceTaggingContext.Provider>;
