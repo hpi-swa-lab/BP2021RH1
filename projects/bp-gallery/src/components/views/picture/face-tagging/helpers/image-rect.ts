@@ -5,12 +5,9 @@ type Rect = { x: number; y: number; width: number; height: number };
 export const useImageRect = (img: HTMLImageElement | null) => {
   const [rect, setRect] = useState(() => (img ? computeRect(img) : null));
 
-  const recompute = useCallback(
-    (img: HTMLImageElement) => {
-      setRect(computeRect(img));
-    },
-    [computeRect]
-  );
+  const recompute = useCallback((img: HTMLImageElement) => {
+    setRect(computeRect(img));
+  }, []);
 
   // The IntersectionObserver (see below) can only observe
   // elements positioned relative to its given root.
@@ -27,7 +24,7 @@ export const useImageRect = (img: HTMLImageElement | null) => {
       return;
     }
     recompute(img);
-  }, [img, root]);
+  }, [img, root, recompute]);
 
   // observe root too, so the IntersectionObserver below always has correct margins
   useResizeObserver(img, [root], recompute);

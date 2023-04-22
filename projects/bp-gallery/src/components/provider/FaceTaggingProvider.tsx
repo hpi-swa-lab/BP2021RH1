@@ -60,7 +60,7 @@ export const FaceTaggingProvider = ({
     y: tag.y ?? 0,
     name: tag.person_tag?.name ?? '',
     personTagId: tag.person_tag?.id,
-    id: tag.id ?? '-1',
+    id: tag.id,
   }));
 
   const { data: activeData } = useGetPersonTagQuery({
