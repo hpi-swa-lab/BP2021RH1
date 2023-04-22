@@ -27,7 +27,11 @@ export const useImageRect = (img: HTMLImageElement | null) => {
   }, [img, root, recompute]);
 
   // observe root too, so the IntersectionObserver below always has correct margins
-  useResizeObserver(img, [root], recompute);
+  useResizeObserver(
+    img,
+    useMemo(() => [root], [root]),
+    recompute
+  );
 
   useStyleObserver(img, recompute);
 
