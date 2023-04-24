@@ -273,7 +273,15 @@ const TagSelectionField = <T extends TagFields>({
             if (
               createChildMutation &&
               inputValue !== '' &&
-              !isExisting &&
+              lastSelectedTag &&
+              (!isExisting ||
+                (tagSiblingTags &&
+                  lastSelectedTag.name !== inputValue &&
+                  lastSelectedTag.id in tagSiblingTags &&
+                  !tagSiblingTags[lastSelectedTag.id].some(tag => tag.name === inputValue)) ||
+                (tagChildTags &&
+                  lastSelectedTag.id in tagChildTags &&
+                  !tagChildTags[lastSelectedTag.id].some(tag => tag.name === inputValue))) &&
               lastSelectedTags &&
               lastSelectedTags.length > 0
             ) {
@@ -330,40 +338,69 @@ const TagSelectionField = <T extends TagFields>({
                   if (!createOption) return;
                   switch (createOption) {
                     case '1': {
-                      const { data } = await createChildMutation({
-                        variables: { name: addTag.createValue, parentIDs: [lastSelectedTag.id] },
-                      });
-                      if (data) {
-                        const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                        const newId = data[nameOfField].data.id;
-                        addTag.id = newId;
-                        delete addTag.createValue;
-                        delete addTag.icon;
-                        setTagList([...allTags, addTag]);
-                        setLastSelectedTags([] as T[]);
+                      if (
+                        tagChildTags &&
+                        lastSelectedTag.id in tagChildTags &&
+                        tagChildTags[lastSelectedTag.id].some(tag => tag.name === addTag.name)
+                      ) {
+                        const existingTag = tagChildTags[lastSelectedTag.id].find(
+                          tag => tag.name === addTag.name
+                        ) as unknown as T;
+                        const filteredNewValues = newValue.filter(val => !val.createValue);
+                        filteredNewValues.push(existingTag);
+                        newValue = filteredNewValues;
+                      } else {
+                        const { data } = await createChildMutation({
+                          variables: { name: addTag.createValue, parentIDs: [lastSelectedTag.id] },
+                        });
+                        if (data) {
+                          const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                          const newId = data[nameOfField].data.id;
+                          addTag.id = newId;
+                          delete addTag.createValue;
+                          delete addTag.icon;
+                          setTagList([...allTags, addTag]);
+                          setLastSelectedTags([] as T[]);
+                        }
                       }
                       break;
                     }
                     case '2': {
-                      const { data } = await createChildMutation({
-                        variables: {
-                          name: addTag.createValue,
-                          parentIDs:
-                            tagSupertagList && lastSelectedTag.id in tagSupertagList
-                              ? tagSupertagList[lastSelectedTag.id].map(
-                                  path => path[path.length - 1].id
-                                )
-                              : [],
-                        },
-                      });
-                      if (data) {
-                        const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                        const newId = data[nameOfField].data.id;
-                        addTag.id = newId;
-                        delete addTag.createValue;
-                        delete addTag.icon;
-                        setTagList([...allTags, addTag]);
-                        setLastSelectedTags([] as T[]);
+                      if (
+                        tagSiblingTags &&
+                        lastSelectedTag.id in tagSiblingTags &&
+                        tagSiblingTags[lastSelectedTag.id].some(tag => tag.name === addTag.name)
+                      ) {
+                        const existingTag = tagSiblingTags[lastSelectedTag.id].find(
+                          tag => tag.name === addTag.name
+                        ) as unknown as T;
+                        const filteredNewValues = newValue.filter(val => !val.createValue);
+                        filteredNewValues.push(existingTag);
+                        newValue = filteredNewValues;
+                      } else if (lastSelectedTag.name !== addTag.name) {
+                        const { data } = await createChildMutation({
+                          variables: {
+                            name: addTag.createValue,
+                            parentIDs:
+                              tagSupertagList && lastSelectedTag.id in tagSupertagList
+                                ? tagSupertagList[lastSelectedTag.id].map(
+                                    path => path[path.length - 1].id
+                                  )
+                                : [],
+                          },
+                        });
+                        if (data) {
+                          const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                          const newId = data[nameOfField].data.id;
+                          addTag.id = newId;
+                          delete addTag.createValue;
+                          delete addTag.icon;
+                          setTagList([...allTags, addTag]);
+                          setLastSelectedTags([] as T[]);
+                        }
+                      } else {
+                        const filteredNewValues = newValue.filter(val => !val.createValue);
+                        newValue = filteredNewValues;
                       }
                       break;
                     }
