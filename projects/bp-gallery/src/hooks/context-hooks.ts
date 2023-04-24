@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
+import { FaceTaggingContext } from '../components/provider/FaceTaggingProvider';
 import { ScrollContext, ScrollRefContext } from '../components/provider/ScrollProvider';
 import { StorageContext } from '../components/provider/StorageProvider';
 
@@ -41,4 +42,8 @@ export const useScrollRef = () => {
     throw new Error('missing scroll ref context');
   }
   return value;
+};
+
+export const useFaceTagging = () => {
+  return useContext(FaceTaggingContext);
 };
