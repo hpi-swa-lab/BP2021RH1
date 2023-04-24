@@ -5,20 +5,19 @@ import { useLocation } from 'react-router-dom';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import ScrollContainer from '../../common/ScrollContainer';
-import ShowStats from '../../provider/ShowStatsProvider';
-import { isValidYear } from './helpers/addNewParamToSearchPath';
-import {
-  convertSearchParamsToPictureFilters,
-  paramToTime,
-  SearchType,
-} from './helpers/search-filters';
-import { toURLSearchParam } from './helpers/url-search-params';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import NoSearchResultsText from './NoSearchResultsText';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
 import SearchHub from './SearchHub';
 import './SearchView.scss';
+import { isValidYear } from './helpers/addNewParamToSearchPath';
+import {
+  SearchType,
+  convertSearchParamsToPictureFilters,
+  paramToTime,
+} from './helpers/search-filters';
+import { toURLSearchParam } from './helpers/url-search-params';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'
@@ -70,40 +69,34 @@ const SearchView = () => {
   const { linkToCollection, bulkEdit } = useBulkOperations();
 
   return (
-    <ScrollContainer>
-      {(scrollPos: number, scrollHeight: number) => (
-        <div className='search-content'>
-          <div className='search-bar-container'>
-            {' '}
-            {(!areResultsEmpty || !search) && (
-              <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
-            )}
-            <HelpTooltip title={t('search.question')} content={t('search.help')} />
-            <div className='breadcrumb'>
-              <SearchBreadcrumbs searchParams={searchParams} />
-            </div>
-          </div>
-          {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
-          {!search ? (
-            <SearchHub />
-          ) : (
-            <ShowStats>
-              <PictureScrollGrid
-                queryParams={queryParams}
-                isAllSearchActive={isAllSearchActive}
-                scrollPos={scrollPos}
-                scrollHeight={scrollHeight}
-                hashbase={search}
-                bulkOperations={[linkToCollection, bulkEdit]}
-                resultPictureCallback={(pictures: number) => {
-                  setAreResultsEmpty(pictures <= 0);
-                }}
-              />
-            </ShowStats>
-          )}
+    <div className='search-content'>
+      <div className='search-bar-container'>
+        {' '}
+        {(!areResultsEmpty || !search) && (
+          <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
+        )}
+        <HelpTooltip title={t('search.question')} content={t('search.help')} />
+        <div className='breadcrumb'>
+          <SearchBreadcrumbs searchParams={searchParams} />
         </div>
+      </div>
+      {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
+      {!search ? (
+        <SearchHub />
+      ) : (
+        <ShowStats>
+          <PictureScrollGrid
+            queryParams={queryParams}
+            isAllSearchActive={isAllSearchActive}
+            hashbase={search}
+            bulkOperations={[linkToCollection, bulkEdit]}
+            resultPictureCallback={(pictures: number) => {
+              setAreResultsEmpty(pictures <= 0);
+            }}
+          />
+        </ShowStats>
       )}
-    </ScrollContainer>
+    </div>
   );
 };
 

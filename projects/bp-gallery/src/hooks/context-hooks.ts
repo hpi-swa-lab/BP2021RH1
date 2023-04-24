@@ -1,22 +1,27 @@
-import { useContext } from 'react';
+import { Context, useContext } from 'react';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
-import { StorageContext } from '../components/provider/StorageProvider';
 import { FaceTaggingContext } from '../components/provider/FaceTaggingProvider';
+import { MobileContext } from '../components/provider/MobileProvider';
+import { ShowStatsContext } from '../components/provider/ShowStatsProvider';
+import { StorageContext } from '../components/provider/StorageProvider';
+import { ScrollContext, ScrollRefContext } from '../components/provider/contexts';
 
-export const useStorage = () => {
-  const value = useContext(StorageContext);
-  if (!value) {
-    throw new Error('missing storage context');
-  }
+const useErrorContext = <T>(context: Context<T>, title: string) => {
+  const value = useContext(context);
+  if (!value) throw new Error(`missing ${title} context`);
   return value;
 };
 
-export const useClipboard = () => {
-  const value = useContext(StorageContext)?.clipboardState;
-  if (!value) {
-    throw new Error('missing clipboard context');
-  }
-  return value;
+export const useStorage = () => useErrorContext(StorageContext, 'storage');
+
+export const useClipboard = () => useErrorContext(StorageContext, 'clipboard').clipboardState;
+
+export const useScroll = () => useErrorContext(ScrollContext, 'scroll');
+
+export const useScrollRef = () => useErrorContext(ScrollRefContext, 'scroll ref');
+
+export const useStats = () => {
+  return useContext(ShowStatsContext);
 };
 
 export const useClipboardEditorButtons = () => {
@@ -29,4 +34,8 @@ export const useSetClipboardEditorButtons = () => {
 
 export const useFaceTagging = () => {
   return useContext(FaceTaggingContext);
+};
+
+export const useMobile = () => {
+  return useContext(MobileContext);
 };

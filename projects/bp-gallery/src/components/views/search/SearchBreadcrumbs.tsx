@@ -1,28 +1,27 @@
-import { Chip } from '@mui/material';
-import { useHistory } from 'react-router-dom';
-import { History } from 'history';
-import './SearchBreadcrumbs.scss';
 import {
-  Sell,
-  Event,
   Description,
-  Search,
-  Person,
-  LocationOn,
+  Event,
   Folder,
   FolderSpecial,
+  LocationOn,
+  Person,
+  Search,
+  Sell,
 } from '@mui/icons-material';
+import { Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { getDecadeTranslation } from './helpers/search-translation';
-import { SearchType } from './helpers/search-filters';
+import { useVisit } from './../../../helpers/history';
 import { asSearchPath } from './helpers/addNewParamToSearchPath';
+import { SearchType } from './helpers/search-filters';
+import { getDecadeTranslation } from './helpers/search-translation';
 import { fromURLSearchParam } from './helpers/url-search-params';
+import './SearchBreadcrumbs.scss';
 
 type SearchParam = { type: string; value: string };
 type SearchParams = SearchParam[];
 
 const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) => {
-  const history: History = useHistory();
+  const { visit } = useVisit();
   const { t } = useTranslation();
   const searchParamValues: SearchParams = [];
 
@@ -64,9 +63,7 @@ const SearchBreadcrumbs = ({ searchParams }: { searchParams: URLSearchParams }) 
         newSearchParams.append(type, value);
       }
     }
-    history.push(asSearchPath(newSearchParams), {
-      showBack: true,
-    });
+    visit(asSearchPath(newSearchParams));
   };
 
   return (

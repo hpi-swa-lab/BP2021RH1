@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { useClipboard, useClipboardEditorButtons } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { ScrollProvider } from '../../provider/ScrollProvider';
+import { HideStats } from '../../provider/ShowStatsProvider';
+import ScrollContainer from '../ScrollContainer';
 import { PicturePreviewAdornment } from '../picture-gallery/PicturePreview';
 import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
-import ScrollContainer from '../ScrollContainer';
 import './ClipboardEditor.scss';
 
 export const ClipboardEditor = () => {
@@ -60,19 +62,19 @@ export const ClipboardEditor = () => {
             <div key='buttons' className='clipboard-editor-buttons'>
               {clipboardButtons}
             </div>
-            <ScrollContainer>
-              {(scrollPos: number, scrollHeight: number) => (
-                <PictureScrollGrid
-                  queryParams={{ id: { in: data.pictureIds } }}
-                  scrollPos={scrollPos}
-                  scrollHeight={scrollHeight}
-                  hashbase={'clipboard'}
-                  showCount={false}
-                  showDefaultAdornments={false}
-                  extraAdornments={[remove]}
-                />
-              )}
-            </ScrollContainer>
+            <ScrollProvider>
+              <ScrollContainer>
+                <HideStats>
+                  <PictureScrollGrid
+                    queryParams={{ id: { in: data.pictureIds } }}
+                    hashbase={'clipboard'}
+                    showCount={false}
+                    showDefaultAdornments={false}
+                    extraAdornments={[remove]}
+                  />
+                </HideStats>
+              </ScrollContainer>
+            </ScrollProvider>
           </>
         )}
       </div>
