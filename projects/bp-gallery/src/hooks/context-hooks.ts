@@ -2,9 +2,9 @@ import { Context, useContext } from 'react';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
 import { FaceTaggingContext } from '../components/provider/FaceTaggingProvider';
 import { MobileContext } from '../components/provider/MobileProvider';
-import { ScrollContext, ScrollRefContext } from '../components/provider/ScrollProvider';
 import { ShowStatsContext } from '../components/provider/ShowStatsProvider';
 import { StorageContext } from '../components/provider/StorageProvider';
+import { ScrollContext, ScrollRefContext } from '../components/provider/contexts';
 
 const useErrorContext = <T>(context: Context<T>, title: string) => {
   const value = useContext(context);

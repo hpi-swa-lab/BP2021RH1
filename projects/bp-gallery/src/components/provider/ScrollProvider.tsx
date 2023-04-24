@@ -1,6 +1,5 @@
 import { throttle } from 'lodash';
 import {
-  createContext,
   MutableRefObject,
   PropsWithChildren,
   useCallback,
@@ -12,8 +11,9 @@ import {
 import { useLocation } from 'react-router-dom';
 import { LocationWithState } from '../../helpers/history';
 import { useMobile } from '../../hooks/context-hooks';
+import { ScrollContext, ScrollRefContext } from './contexts';
 
-type ScrollContextProps = {
+export type ScrollContextProps = {
   scrollPos: number;
   scrollHeight: number;
   scrollTo: ((scrollPos: number, smooth?: boolean) => void) | undefined;
@@ -87,8 +87,3 @@ export const ScrollProvider = ({
     </ScrollContext.Provider>
   );
 };
-
-export const ScrollContext = createContext<ScrollContextProps | null>(null);
-
-//exists to avoid constant rerenders on components that only need the scroll position on e.g. click
-export const ScrollRefContext = createContext<MutableRefObject<number> | null>(null);
