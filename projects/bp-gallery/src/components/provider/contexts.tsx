@@ -1,5 +1,12 @@
 import { createContext, MutableRefObject } from 'react';
-import { ScrollContextProps } from './ScrollProvider';
+
+type ScrollContextProps = {
+  scrollPos: number;
+  scrollHeight: number;
+  scrollTo: ((scrollPos: number, smooth?: boolean) => void) | undefined;
+  useWindow?: boolean;
+  elementRef: MutableRefObject<HTMLElement | null>;
+};
 
 export const ScrollContext = createContext<ScrollContextProps | null>(null);
 

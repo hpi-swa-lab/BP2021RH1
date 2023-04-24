@@ -1,6 +1,5 @@
 import { throttle } from 'lodash';
 import {
-  MutableRefObject,
   PropsWithChildren,
   useCallback,
   useEffect,
@@ -12,14 +11,6 @@ import { useLocation } from 'react-router-dom';
 import { LocationWithState } from '../../helpers/history';
 import { useMobile } from '../../hooks/context-hooks';
 import { ScrollContext, ScrollRefContext } from './contexts';
-
-export type ScrollContextProps = {
-  scrollPos: number;
-  scrollHeight: number;
-  scrollTo: ((scrollPos: number, smooth?: boolean) => void) | undefined;
-  useWindow?: boolean;
-  elementRef: MutableRefObject<HTMLElement | null>;
-};
 
 export const ScrollProvider = ({
   children,
