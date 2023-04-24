@@ -10,7 +10,7 @@ import {
   ExpandMore,
   MoveDown,
 } from '@mui/icons-material';
-import { Chip, IconButton } from '@mui/material';
+import { Badge, Chip, IconButton } from '@mui/material';
 import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -29,6 +29,7 @@ const LocationEntry = ({
   onToggle,
   refetch,
   type,
+  unacceptedSubtags = 0,
 }: {
   locationTag: FlatTag;
   parentTag?: FlatTag;
@@ -36,6 +37,7 @@ const LocationEntry = ({
   onToggle: () => void;
   refetch: () => void;
   type: TagType;
+  unacceptedSubtags?: number;
 }) => {
   const prompt = useDialog();
   const history: History = useHistory();
@@ -289,9 +291,11 @@ const LocationEntry = ({
       className={`location-entry-container ${!locationTag.accepted ? 'location-not-accepted' : ''}`}
     >
       <div className='location-entry-content'>
-        <IconButton className='show-more-button' onClick={onToggle}>
-          {showMore ? <ExpandMore /> : <ChevronRight />}
-        </IconButton>
+        <Badge color='info' overlap='circular' variant='dot' badgeContent={unacceptedSubtags}>
+          <IconButton className='show-more-button' onClick={onToggle}>
+            {showMore ? <ExpandMore /> : <ChevronRight />}
+          </IconButton>
+        </Badge>
         <div
           className='location-name'
           onClick={() => {

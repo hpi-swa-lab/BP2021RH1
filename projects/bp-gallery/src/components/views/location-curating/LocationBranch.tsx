@@ -13,7 +13,7 @@ const LocationBranch = ({
   refetch,
   type,
 }: {
-  locationTag: FlatTag;
+  locationTag: any;
   parentTag?: FlatTag;
   refetch: () => void;
   type: TagType;
@@ -27,7 +27,7 @@ const LocationBranch = ({
 
   const renderSubBranch = () => {
     if (locationTag.child_tags && locationTag.child_tags.length > 0) {
-      return locationTag.child_tags.map(tag => {
+      return locationTag.child_tags.map((tag: any) => {
         return (
           <LocationBranch
             key={tag.id}
@@ -76,6 +76,7 @@ const LocationBranch = ({
         onToggle={onToggle}
         refetch={refetch}
         type={type}
+        unacceptedSubtags={locationTag.unacceptedSubtags}
       />
       {showMore && (
         <div className='sub-location-container'>
