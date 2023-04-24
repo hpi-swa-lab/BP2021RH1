@@ -19,7 +19,7 @@ type LocationState = {
   scrollPos?: number;
   open?: boolean;
 };
-type LocationWithState = Location & { state?: LocationState };
+export type LocationWithState = Location & { state?: LocationState };
 
 export const useVisit = () => {
   const history: History & { location: LocationWithState } = useHistory();

@@ -87,7 +87,7 @@ const App = () => {
             <StorageProvider>
               <div className='App flex flex-col'>
                 <ClipboardEditorProvider>
-                  <ScrollProvider>
+                  <ScrollProvider useWindow={isMobile}>
                     <TopBar isMobile={isMobile} />
                     <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
                     {isMobile && <NavigationBar isMobile={true} />}
