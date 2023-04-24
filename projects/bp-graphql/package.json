@@ -2,10 +2,14 @@
   "name": "bp-graphql",
   "version": "0.1.0",
   "description": "Collection of all valid GraphQL operations with metadata",
-  "main": "index.js",
   "author": "BP2021RH1",
   "license": "MIT",
   "private": true,
+  "directories": {
+    "build": "./build"
+  },
+  "main": "./build",
+  "types": "./build",
   "dependencies": {
     "@types/node": "^18.16.0"
   }
