@@ -12,7 +12,11 @@ const ScrollContainer = ({ children }: PropsWithChildren<{}>) => {
   }, [isMobile, scrollElement, useWindow]);
 
   return (
-    <div ref={divRef} className='scrollable-container'>
+    <div
+      ref={divRef}
+      data-testid='scrollable-container'
+      className='overflow-y-auto overflow-x-hidden'
+    >
       {children}
     </div>
   );
