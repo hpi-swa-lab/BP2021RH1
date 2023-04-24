@@ -1,0 +1,12 @@
+{
+  "name": "bp-graphql",
+  "version": "0.1.0",
+  "description": "Collection of all valid GraphQL operations with metadata",
+  "main": "index.js",
+  "author": "BP2021RH1",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^18.16.0"
+  }
+}
