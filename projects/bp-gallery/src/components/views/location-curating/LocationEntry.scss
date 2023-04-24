@@ -95,6 +95,10 @@ hr {
 }
 
 .location-entry-container {
+  :hover {
+    background-color: lightgray;
+    transition: 0.5s;
+  }
   .location-entry-content {
     display: flex;
     flex-direction: row;
