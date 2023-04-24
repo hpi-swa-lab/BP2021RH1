@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import SearchBar from '../views/search/SearchBar';
 import { useVisit } from './../../helpers/history';
-import { useScroll } from './../../hooks/context-hooks';
+import { useMobile, useScroll } from './../../hooks/context-hooks';
 import NavigationBar from './NavigationBar';
 import './TopBar.scss';
 
@@ -15,11 +15,12 @@ type LocationProps = {
   };
 };
 
-const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
+const TopBar = () => {
   const { t } = useTranslation();
 
   const { scrollTo } = useScroll();
   const { visit, history } = useVisit();
+  const { isMobile } = useMobile();
   const { search, pathname }: Location = useLocation();
 
   return (

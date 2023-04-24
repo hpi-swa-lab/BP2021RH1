@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
 import { FaceTaggingContext } from '../components/provider/FaceTaggingProvider';
+import { MobileContext } from '../components/provider/MobileProvider';
 import { ScrollContext, ScrollRefContext } from '../components/provider/ScrollProvider';
 import { StorageContext } from '../components/provider/StorageProvider';
 
@@ -46,4 +47,8 @@ export const useScrollRef = () => {
 
 export const useFaceTagging = () => {
   return useContext(FaceTaggingContext);
+};
+
+export const useMobile = () => {
+  return useContext(MobileContext);
 };

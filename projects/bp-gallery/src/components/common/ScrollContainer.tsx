@@ -1,16 +1,15 @@
 import { PropsWithChildren, useEffect, useRef } from 'react';
-import { useScroll } from './../../hooks/context-hooks';
+import { useMobile, useScroll } from './../../hooks/context-hooks';
 
 const ScrollContainer = ({ children }: PropsWithChildren<{}>) => {
   const divRef = useRef<HTMLDivElement>(null);
-  const { useWindow, scrollElement } = useScroll();
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const { useWindow, elementRef: scrollElement } = useScroll();
+  const { isMobile } = useMobile();
 
   useEffect(() => {
-    if (useWindow) return;
+    if (useWindow && isMobile) return;
     scrollElement.current = divRef.current;
-  }, [scrollElement, useWindow]);
+  }, [isMobile, scrollElement, useWindow]);
 
   return (
     <div ref={divRef} className='scrollable-container'>

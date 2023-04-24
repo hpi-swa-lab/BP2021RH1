@@ -78,7 +78,7 @@ const PictureScrollGrid = ({
       scrollPos &&
       scrollHeight &&
       scrollHeight !== lastScrollHeight &&
-      scrollPos > scrollHeight - 1.5 * window.innerHeight
+      scrollPos > scrollHeight - 1.75 * window.innerHeight
     ) {
       let fetchCount = NUMBER_OF_PICTURES_LOADED_PER_FETCH;
       if (maxNumPictures && pictures) {

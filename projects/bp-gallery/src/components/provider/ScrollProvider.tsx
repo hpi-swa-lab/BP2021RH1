@@ -1,10 +1,8 @@
 import { throttle } from 'lodash';
 import {
   createContext,
-  Dispatch,
   MutableRefObject,
   PropsWithChildren,
-  SetStateAction,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -13,15 +11,14 @@ import {
 } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LocationWithState } from '../../helpers/history';
+import { useMobile } from '../../hooks/context-hooks';
 
 type ScrollContextProps = {
   scrollPos: number;
-  setScrollPos: Dispatch<SetStateAction<number>>;
   scrollHeight: number;
-  setScrollHeight: Dispatch<SetStateAction<number>>;
   scrollTo: ((scrollPos: number, smooth?: boolean) => void) | undefined;
   useWindow?: boolean;
-  scrollElement: MutableRefObject<HTMLElement | null>;
+  elementRef: MutableRefObject<HTMLElement | null>;
 };
 
 export const ScrollProvider = ({
@@ -32,7 +29,8 @@ export const ScrollProvider = ({
   const scrollPosRef = useRef(0);
   const [scrollHeight, setScrollHeight] = useState(0);
   const location: LocationWithState = useLocation();
-  const scrollElement = useRef(useWindow ? document.documentElement : null);
+  const { isMobile } = useMobile();
+  const elementRef = useRef(useWindow && isMobile ? document.documentElement : null);
 
   useEffect(() => {
     scrollPosRef.current = scrollPos;
@@ -41,17 +39,22 @@ export const ScrollProvider = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = useCallback(
     throttle(() => {
-      setScrollPos(scrollElement.current?.scrollTop ?? 0);
-      setScrollHeight(scrollElement.current?.scrollHeight ?? 0);
+      setScrollPos(elementRef.current?.scrollTop ?? 0);
+      setScrollHeight(elementRef.current?.scrollHeight ?? 0);
     }, 500),
     [setScrollHeight, setScrollPos]
   );
 
+  console.log('isMobile', isMobile);
+  console.log('elementRef', elementRef);
+  console.log('scrollPos', scrollPos);
+  console.log('scrollHeight', scrollHeight);
+
   const scrollTo = useCallback(
     (posY: number, smooth?: boolean) => {
-      scrollElement.current?.scrollTo({ top: posY, behavior: smooth ? 'smooth' : 'auto' });
+      elementRef.current?.scrollTo({ top: posY, behavior: smooth ? 'smooth' : 'auto' });
     },
-    [scrollElement]
+    [elementRef]
   );
 
   useLayoutEffect(() => {
@@ -63,23 +66,21 @@ export const ScrollProvider = ({
   }, [location, scrollTo]);
 
   useEffect(() => {
-    const element = useWindow ? window : scrollElement.current;
+    const element = useWindow && isMobile ? window : elementRef.current;
     if (!element) return;
     element.addEventListener('scroll', handleScroll);
 
     return () => element.removeEventListener('scroll', handleScroll);
-  }, [handleScroll, useWindow]);
+  }, [handleScroll, isMobile, useWindow]);
 
   return (
     <ScrollContext.Provider
       value={{
         scrollPos,
-        setScrollPos,
         scrollHeight,
-        setScrollHeight,
         scrollTo,
         useWindow,
-        scrollElement,
+        elementRef,
       }}
     >
       <ScrollRefContext.Provider value={scrollPosRef}>{children}</ScrollRefContext.Provider>
