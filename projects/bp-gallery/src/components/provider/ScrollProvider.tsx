@@ -62,6 +62,7 @@ export const ScrollProvider = ({
 
   useEffect(() => {
     const element = useWindow && isMobile ? window : elementRef.current;
+    window.history.scrollRestoration = 'manual';
     if (!element) return;
     element.addEventListener('scroll', handleScroll);
 
