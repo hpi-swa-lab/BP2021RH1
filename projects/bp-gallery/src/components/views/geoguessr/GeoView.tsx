@@ -75,7 +75,7 @@ const GeoView = () => {
 
   const getNextPicture = () => {
     const nextPicture = pictureQueue.current[0];
-    pictureQueue.current = pictureQueue.current.slice(1);
+    pictureQueue.current.shift();
     return nextPicture;
   };
 

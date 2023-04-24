@@ -120,7 +120,7 @@ const GeoMap = ({
         ${guessComplete ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
     >
       {guessComplete && (
-        <div className='guess-complete-text self-center bg-white p-5 mb-2 text-center rounded-2xl w-[300px]'>
+        <div className='guess-complete-text self-center bg-white p-5 mb-2 text-center rounded-2xl w-[350px]'>
           <h2>{unknown ? t('geo.tip-unknown') : t('geo.tip')}</h2>
           <p>{t('geo.tip-sub')}</p>
         </div>
