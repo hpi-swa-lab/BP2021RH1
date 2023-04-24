@@ -24,6 +24,7 @@ interface TagFields {
   icon?: JSX.Element;
   isNew?: boolean;
   isNewRoot?: boolean;
+  isNewSibling?: boolean;
   onClick?: () => void;
 }
 
@@ -393,6 +394,7 @@ const TagSelectionField = <T extends TagFields>({
                           const nameOfField = Object.keys(data as { [key: string]: any })[0];
                           const newId = data[nameOfField].data.id;
                           addTag.id = newId;
+                          addTag.isNewSibling = true;
                           delete addTag.createValue;
                           delete addTag.icon;
                           setTagList([...allTags, addTag]);
@@ -489,6 +491,13 @@ const TagSelectionField = <T extends TagFields>({
                           (!tagChildTags ||
                             !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
                       )
+                    : tag.isNewSibling &&
+                      lastSelectedTag &&
+                      tagSiblingTags &&
+                      lastSelectedTag.id in tagSiblingTags
+                    ? [...tagSiblingTags[lastSelectedTag.id], lastSelectedTag].filter(
+                        siblingTag => !newValue.some(tag => tag.id === siblingTag.id)
+                      )
                     : !tag.isNewRoot &&
                       tagChildTags &&
                       lastSelectedTag &&
@@ -508,7 +517,40 @@ const TagSelectionField = <T extends TagFields>({
                               !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
                         )
                     : [];
-                const sortedRecommendations = customSortTags([...children, ...siblings]);
+                const selectedSiblings =
+                  tagSiblingTags && tag.id in tagSiblingTags
+                    ? tagSiblingTags[tag.id].filter(siblingTag =>
+                        newValue.some(tag => tag.id === siblingTag.id)
+                      )
+                    : tag.isNewSibling &&
+                      lastSelectedTag &&
+                      tagSiblingTags &&
+                      lastSelectedTag.id in tagSiblingTags
+                    ? [...tagSiblingTags[lastSelectedTag.id], lastSelectedTag].filter(siblingTag =>
+                        newValue.some(tag => tag.id === siblingTag.id)
+                      )
+                    : [];
+                let selectedSiblingChildren: T[] = [];
+                if (tagChildTags) {
+                  selectedSiblings.forEach(selectedSibling => {
+                    const test =
+                      selectedSibling.id in tagChildTags
+                        ? tagChildTags[selectedSibling.id].filter(
+                            tag => !selectedSiblingChildren.some(t => t.id === tag.id)
+                          )
+                        : ([] as T[]);
+                    selectedSiblingChildren = [...selectedSiblingChildren, ...test];
+                  });
+                }
+                selectedSiblingChildren = selectedSiblingChildren.filter(
+                  tag =>
+                    !children.some(t => t.id === tag.id) && !siblings.some(t => t.id === tag.id)
+                );
+                const sortedRecommendations = customSortTags([
+                  ...children,
+                  ...siblings,
+                  ...selectedSiblingChildren,
+                ]);
                 const sortedNewValues = customSortTags(newValue);
                 setLastSelectedTags([
                   ...(sortedNewValues.length
@@ -521,7 +563,7 @@ const TagSelectionField = <T extends TagFields>({
                     : newValue),
                   ...(sortedRecommendations.length
                     ? sortedRecommendations
-                    : [...children, ...siblings]),
+                    : [...children, ...siblings, ...selectedSiblingChildren]),
                 ]);
               }
               tag.isNew = true;
