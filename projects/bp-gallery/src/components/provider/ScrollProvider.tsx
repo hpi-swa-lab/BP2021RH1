@@ -42,7 +42,7 @@ export const ScrollProvider = ({
       setScrollPos(elementRef.current?.scrollTop ?? 0);
       setScrollHeight(elementRef.current?.scrollHeight ?? 0);
     }, 500),
-    [setScrollHeight, setScrollPos]
+    [elementRef, setScrollHeight, setScrollPos]
   );
 
   const scrollTo = useCallback(
@@ -62,11 +62,15 @@ export const ScrollProvider = ({
 
   useEffect(() => {
     const element = useWindow && isMobile ? window : elementRef.current;
-    window.history.scrollRestoration = 'manual';
     if (!element) return;
+
+    window.history.scrollRestoration = 'manual';
     element.addEventListener('scroll', handleScroll);
 
-    return () => element.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.history.scrollRestoration = 'auto';
+      element.removeEventListener('scroll', handleScroll);
+    };
   }, [handleScroll, isMobile, useWindow]);
 
   return (
