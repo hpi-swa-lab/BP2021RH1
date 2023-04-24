@@ -45,11 +45,6 @@ export const ScrollProvider = ({
     [setScrollHeight, setScrollPos]
   );
 
-  console.log('isMobile', isMobile);
-  console.log('elementRef', elementRef);
-  console.log('scrollPos', scrollPos);
-  console.log('scrollHeight', scrollHeight);
-
   const scrollTo = useCallback(
     (posY: number, smooth?: boolean) => {
       elementRef.current?.scrollTo({ top: posY, behavior: smooth ? 'smooth' : 'auto' });
@@ -90,4 +85,5 @@ export const ScrollProvider = ({
 
 export const ScrollContext = createContext<ScrollContextProps | null>(null);
 
+//exists to avoid constant rerenders on components that only need the scroll position on e.g. click
 export const ScrollRefContext = createContext<MutableRefObject<number> | null>(null);
