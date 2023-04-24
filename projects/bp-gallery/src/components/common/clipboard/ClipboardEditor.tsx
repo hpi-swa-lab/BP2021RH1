@@ -7,9 +7,10 @@ import { useClipboard, useClipboardEditorButtons } from '../../../hooks/context-
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { ScrollProvider } from '../../provider/ScrollProvider';
+import { HideStats } from '../../provider/ShowStatsProvider';
+import ScrollContainer from '../ScrollContainer';
 import { PicturePreviewAdornment } from '../picture-gallery/PicturePreview';
 import PictureScrollGrid from '../picture-gallery/PictureScrollGrid';
-import ScrollContainer from '../ScrollContainer';
 import './ClipboardEditor.scss';
 
 export const ClipboardEditor = () => {
@@ -63,13 +64,15 @@ export const ClipboardEditor = () => {
             </div>
             <ScrollProvider>
               <ScrollContainer>
-                <PictureScrollGrid
-                  queryParams={{ id: { in: data.pictureIds } }}
-                  hashbase={'clipboard'}
-                  showCount={false}
-                  showDefaultAdornments={false}
-                  extraAdornments={[remove]}
-                />
+                <HideStats>
+                  <PictureScrollGrid
+                    queryParams={{ id: { in: data.pictureIds } }}
+                    hashbase={'clipboard'}
+                    showCount={false}
+                    showDefaultAdornments={false}
+                    extraAdornments={[remove]}
+                  />
+                </HideStats>
               </ScrollContainer>
             </ScrollProvider>
           </>

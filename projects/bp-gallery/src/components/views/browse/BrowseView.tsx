@@ -12,18 +12,18 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
-import Footer from '../../common/footer/Footer';
 import Loading from '../../common/Loading';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import Footer from '../../common/footer/Footer';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import ShowStats from '../../provider/ShowStatsProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import './BrowseView.scss';
 import CollectionDescription from './CollectionDescription';
-import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 import SubCollections from './SubCollections';
+import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 
 const getPictureFilters = (collectionId: string) => {
   const filters: PictureFiltersInput = { and: [] };

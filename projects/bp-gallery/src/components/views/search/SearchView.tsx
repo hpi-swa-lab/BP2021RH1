@@ -5,19 +5,19 @@ import { useLocation } from 'react-router-dom';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import ShowStats from '../../provider/ShowStatsProvider';
-import { isValidYear } from './helpers/addNewParamToSearchPath';
-import {
-  convertSearchParamsToPictureFilters,
-  paramToTime,
-  SearchType,
-} from './helpers/search-filters';
-import { toURLSearchParam } from './helpers/url-search-params';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import NoSearchResultsText from './NoSearchResultsText';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
 import SearchHub from './SearchHub';
 import './SearchView.scss';
+import { isValidYear } from './helpers/addNewParamToSearchPath';
+import {
+  SearchType,
+  convertSearchParamsToPictureFilters,
+  paramToTime,
+} from './helpers/search-filters';
+import { toURLSearchParam } from './helpers/url-search-params';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import ShowStats from '../../provider/ShowStatsProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import './LatestPicturesView.scss';
 
 const LatestPicturesView = () => {

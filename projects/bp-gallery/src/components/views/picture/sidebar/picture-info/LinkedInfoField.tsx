@@ -9,12 +9,12 @@ import { useClipboard, useSetClipboardEditorButtons } from '../../../../../hooks
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
-import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../../../common/ScrollContainer';
+import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { ScrollProvider } from '../../../../provider/ScrollProvider';
-import { ShowStatsProvider } from '../../../../provider/ShowStatsProvider';
+import { HideStats } from '../../../../provider/ShowStatsProvider';
 import './LinkedInfoField.scss';
 import { Field } from './PictureInfo';
 import PictureInfoField from './PictureInfoField';
@@ -202,7 +202,7 @@ const LinkedInfoField = ({
           icon={<Link />}
           type='links'
         >
-          <ShowStatsProvider value={false}>
+          <HideStats>
             <ScrollProvider>
               <ScrollContainer>
                 <PictureScrollGrid
@@ -215,7 +215,7 @@ const LinkedInfoField = ({
                 />
               </ScrollContainer>
             </ScrollProvider>
-          </ShowStatsProvider>
+          </HideStats>
           {role >= AuthRole.CURATOR &&
             (shouldPaste || isClipboardMixed ? (
               <div className='clipboard-buttons'>

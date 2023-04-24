@@ -3,6 +3,7 @@ import { ClipboardEditorContext } from '../components/provider/ClipboardEditorPr
 import { FaceTaggingContext } from '../components/provider/FaceTaggingProvider';
 import { MobileContext } from '../components/provider/MobileProvider';
 import { ScrollContext, ScrollRefContext } from '../components/provider/ScrollProvider';
+import { ShowStatsContext } from '../components/provider/ShowStatsProvider';
 import { StorageContext } from '../components/provider/StorageProvider';
 
 export const useStorage = () => {
@@ -19,6 +20,10 @@ export const useClipboard = () => {
     throw new Error('missing clipboard context');
   }
   return value;
+};
+
+export const useStats = () => {
+  return useContext(ShowStatsContext);
 };
 
 export const useClipboardEditorButtons = () => {

@@ -8,7 +8,7 @@ import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
 import BrowseView from '../browse/BrowseView';
 import { useVisit } from './../../../helpers/history';
-import ShowStats from './../../provider/ShowStatsProvider';
+import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';

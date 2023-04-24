@@ -9,7 +9,7 @@ import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import ShowStats from '../../provider/ShowStatsProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';

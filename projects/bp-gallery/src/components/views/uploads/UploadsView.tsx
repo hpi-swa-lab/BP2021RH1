@@ -8,6 +8,7 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { HideStats } from '../../provider/ShowStatsProvider';
 import './UploadsView.scss';
 
 const UploadsView = () => {
@@ -50,12 +51,14 @@ const UploadsView = () => {
         <Add />
         {t('curator.createArchive')}
       </Button>
-      <PictureScrollGrid
-        queryParams={{ collections: { id: { null: true } } }}
-        hashbase={'uploads'}
-        uploadAreaProps={uploadAreaProps}
-        bulkOperations={[moveToCollection, bulkEdit]}
-      />
+      <HideStats>
+        <PictureScrollGrid
+          queryParams={{ collections: { id: { null: true } } }}
+          hashbase={'uploads'}
+          uploadAreaProps={uploadAreaProps}
+          bulkOperations={[moveToCollection, bulkEdit]}
+        />
+      </HideStats>
     </div>
   );
 };

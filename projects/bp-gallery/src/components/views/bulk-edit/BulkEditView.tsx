@@ -10,13 +10,13 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
-import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import { ShowStatsProvider } from '../../provider/ShowStatsProvider';
+import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { HideStats } from '../../provider/ShowStatsProvider';
 import { PictureToolbar } from '../picture/overlay/PictureToolbar';
 import PictureInfo, { Field } from '../picture/sidebar/picture-info/PictureInfo';
 import './BulkEditView.scss';
-import { combinePictures, computePictureDiff, PictureDiff } from './helpers/diffing';
+import { PictureDiff, combinePictures, computePictureDiff } from './helpers/diffing';
 
 const getPictureFilters = (pictures: string[]) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -117,14 +117,14 @@ const BulkEditView = ({
             <PictureToolbar calledViaLink={!onBack} />
           </div>
           <div className='bulk-edit-picture-grid'>
-            <ShowStatsProvider value={false}>
+            <HideStats>
               <PictureScrollGrid
                 queryParams={getPictureFilters(pictureIds)}
                 hashbase={'A'}
                 showDefaultAdornments={false}
                 allowClicks={false}
               />
-            </ShowStatsProvider>
+            </HideStats>
           </div>
         </div>
         <div className='bulk-edit-picture-info'>
