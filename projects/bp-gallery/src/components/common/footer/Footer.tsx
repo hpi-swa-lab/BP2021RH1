@@ -1,26 +1,23 @@
-import './Footer.scss';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useVisit } from '../../../helpers/history';
+import './Footer.scss';
 
 const Footer = () => {
   const { t } = useTranslation();
-  const history: History = useHistory();
+  const { visit } = useVisit();
 
   return (
     <div className='footer'>
       <div className='footer-content'>
         <div className='footer-info'>
           <h3>{t('footer.title')}</h3>
-          <p onClick={() => history.push('/contact', { showBack: true })}>{t('footer.contact')}</p>
+          <p onClick={() => visit('/contact')}>{t('footer.contact')}</p>
           {/*  
           <p>
           {t('footer.privacy')}
           </p>
           */}
-          <p onClick={() => history.push('/terms-of-service', { showBack: true })}>
-            {t('footer.tos')}
-          </p>
+          <p onClick={() => visit('/terms-of-service')}>{t('footer.tos')}</p>
         </div>
 
         <div className='footer-associates'>
