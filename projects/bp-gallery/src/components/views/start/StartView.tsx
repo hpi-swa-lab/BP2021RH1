@@ -13,11 +13,12 @@ import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
+import { useMobile } from '../../../hooks/context-hooks';
 
 const StartView = () => {
   const { visit } = useVisit();
   const { t } = useTranslation();
-
+  const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
 
@@ -52,16 +53,18 @@ const StartView = () => {
           <p>{t('startpage.welcome-text')}</p>
         </div>
         <DailyPicture />
-        <div className='flex place-content-center gap-2 m-4'>
-          <PrimaryButton
-            onClickFn={() => {
-              visit('/geo');
-            }}
-            isShowMore
-          >
-            {t('geo.geo-game-button')}
-          </PrimaryButton>
-        </div>
+        {!isMobile && (
+          <div className='flex place-content-center gap-2 m-4'>
+            <PrimaryButton
+              onClickFn={() => {
+                visit('/geo');
+              }}
+              isShowMore
+            >
+              {t('geo.geo-game-button')}
+            </PrimaryButton>
+          </div>
+        )}
         <ShowStats>
           <PictureOverview
             title={t('discover.latest-pictures')}

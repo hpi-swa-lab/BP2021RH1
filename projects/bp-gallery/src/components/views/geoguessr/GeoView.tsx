@@ -74,9 +74,7 @@ const GeoView = () => {
   }, [archives]);
 
   const getNextPicture = () => {
-    const nextPicture = pictureQueue.current[0];
-    pictureQueue.current.shift();
-    return nextPicture;
+    return pictureQueue.current.shift() || fallbackPictureId;
   };
 
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
