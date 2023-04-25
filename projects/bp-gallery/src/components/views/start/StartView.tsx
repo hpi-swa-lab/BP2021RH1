@@ -1,3 +1,4 @@
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllArchiveTagsQuery,
@@ -5,6 +6,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import DonateButton from '../../common/DonateButton';
 import PictureOverview from '../../common/PictureOverview';
 import BrowseView from '../browse/BrowseView';
 import { useVisit } from './../../../helpers/history';
@@ -43,26 +45,35 @@ const StartView = () => {
     );
   });
 
+  const paypalOptions = {
+    'client-id': 'Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8',
+    currency: 'EUR',
+  };
+
   return (
-    <div className='main-start-view'>
-      <div className='welcome-container'>
-        <div className='welcome'>
-          <h1>{t('startpage.welcome-title')}</h1>
-          <p>{t('startpage.welcome-text')}</p>
+    <PayPalScriptProvider options={paypalOptions}>
+      <div className='main-start-view'>
+        <div className='welcome-container'>
+          <div className='welcome'>
+            <h1>{t('startpage.welcome-title')}</h1>
+            <p>{t('startpage.welcome-text')}</p>
+          </div>
+          <DailyPicture />
+          <DonateButton />
+
+          <ShowStats>
+            <PictureOverview
+              title={t('discover.latest-pictures')}
+              queryParams={{}}
+              onClick={() => visit('/show-more/latest')}
+            />
+          </ShowStats>
+          <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
+          <div className='archives'>{archiveCards}</div>
         </div>
-        <DailyPicture />
-        <ShowStats>
-          <PictureOverview
-            title={t('discover.latest-pictures')}
-            queryParams={{}}
-            onClick={() => visit('/show-more/latest')}
-          />
-        </ShowStats>
-        <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
-        <div className='archives'>{archiveCards}</div>
+        <BrowseView startpage={true} />
       </div>
-      <BrowseView startpage={true} />
-    </div>
+    </PayPalScriptProvider>
   );
 };
 
