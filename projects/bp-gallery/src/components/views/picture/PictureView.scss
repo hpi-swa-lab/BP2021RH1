@@ -77,7 +77,6 @@
 
     img {
       max-width: 100%;
-      position: absolute;
       z-index: 15;
       max-height: 100%;
       width: initial;
@@ -90,6 +89,7 @@
           from {
             transform: translateX(0%);
           }
+
           to {
             transform: translateX(-100vw);
           }
@@ -104,6 +104,7 @@
           from {
             transform: translateX(0%);
           }
+
           to {
             transform: translateX(100vw);
           }
@@ -112,6 +113,7 @@
 
       &.another-image {
         position: absolute;
+
         &.slide-left {
           left: 100vw;
         }

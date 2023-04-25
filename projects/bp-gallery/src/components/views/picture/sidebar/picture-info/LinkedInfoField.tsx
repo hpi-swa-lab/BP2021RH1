@@ -9,11 +9,12 @@ import { useClipboard, useSetClipboardEditorButtons } from '../../../../../hooks
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
-import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../../../common/ScrollContainer';
+import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
-import { ShowStatsProvider } from '../../../../provider/ShowStatsProvider';
+import { ScrollProvider } from '../../../../provider/ScrollProvider';
+import { HideStats } from '../../../../provider/ShowStatsProvider';
 import './LinkedInfoField.scss';
 import { Field } from './PictureInfo';
 import PictureInfoField from './PictureInfoField';
@@ -207,22 +208,20 @@ const LinkedInfoField = ({
           icon={<Link />}
           type='links'
         >
-          <ScrollContainer>
-            {(scrollPos: number, scrollHeight: number) => (
-              <ShowStatsProvider value={false}>
+          <HideStats>
+            <ScrollProvider>
+              <ScrollContainer>
                 <PictureScrollGrid
                   queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
-                  scrollPos={scrollPos}
-                  scrollHeight={scrollHeight}
                   hashbase={'links'}
                   showCount={false}
                   showDefaultAdornments={false}
                   extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
                   filterOutTextsForNonCurators={false}
                 />
-              </ShowStatsProvider>
-            )}
-          </ScrollContainer>
+              </ScrollContainer>
+            </ScrollProvider>
+          </HideStats>
           {role >= AuthRole.CURATOR &&
             (shouldPaste || isClipboardMixed ? (
               <div className='clipboard-buttons'>

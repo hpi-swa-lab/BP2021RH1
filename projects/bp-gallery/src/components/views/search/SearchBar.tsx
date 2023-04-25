@@ -1,16 +1,15 @@
+import { Search } from '@mui/icons-material';
+import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/material';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
-import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/material';
-import { Search } from '@mui/icons-material';
-import { History } from 'history';
-import './SearchBar.scss';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
-import { getSearchTypeTranslation } from './helpers/search-translation';
-import useAdvancedSearch from './helpers/useAdvancedSearch';
+import { useVisit } from './../../../helpers/history';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import { SearchType } from './helpers/search-filters';
+import { getSearchTypeTranslation } from './helpers/search-translation';
 import { fromURLSearchParam } from './helpers/url-search-params';
+import useAdvancedSearch from './helpers/useAdvancedSearch';
+import './SearchBar.scss';
 
 const SearchBar = ({
   searchParams,
@@ -22,7 +21,7 @@ const SearchBar = ({
   isTopBarSearch?: boolean;
 }) => {
   const { t } = useTranslation();
-  const history: History = useHistory();
+  const { visit } = useVisit();
   const openAlert = useContext(AlertContext);
   const textFieldRef = useRef<any>();
   const [searchType, setSearchType] = useState<string>(SearchType.ALL);
@@ -76,9 +75,7 @@ const SearchBar = ({
         duration: 7000,
       });
     } else {
-      history.push(searchPath, {
-        showBack: true,
-      });
+      visit(searchPath);
       textFieldRef.current.value = '';
     }
   };

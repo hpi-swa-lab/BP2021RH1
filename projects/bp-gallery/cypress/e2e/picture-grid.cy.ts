@@ -7,7 +7,8 @@ describe('picture grid', () => {
     cy.contains('.picture-count', 'Mehr als 100 Bilder');
     cy.get('.collection-picture-display .picture-grid .picture-preview').should('have.length', 100);
     waitForAllImagesLoaded();
-    cy.get('.App > .scroll-context > .scrollable-container').scrollTo('bottom');
+
+    cy.get('.App').find('[data-testid="scrollable-container"]').scrollTo('bottom');
     cy.contains('.picture-count', '107 Bilder');
     cy.get('.collection-picture-display .picture-grid .picture-preview').should('have.length', 107);
   });

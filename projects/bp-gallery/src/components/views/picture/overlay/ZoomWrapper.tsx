@@ -6,6 +6,14 @@ const MIN_ZOOM = 1.0;
 const DEFAULT_ZOOM = 1.0;
 const ZOOM_RATE = -0.001;
 
+type Viewport = { x: number; y: number; zoomLevel: number };
+
+const defaultViewport: Viewport = {
+  x: 0,
+  y: 0,
+  zoomLevel: DEFAULT_ZOOM,
+};
+
 const ZoomWrapper = ({
   blockScroll,
   pictureId, // This is used to determine when a picture change has happened
@@ -14,7 +22,7 @@ const ZoomWrapper = ({
   blockScroll: boolean;
   pictureId: string;
 }>) => {
-  const [viewport, setViewport] = useState<{ x: number; y: number; zoomLevel: number }>({
+  const [viewport, setViewport] = useState<Viewport>({
     x: 0,
     y: 0,
     zoomLevel: DEFAULT_ZOOM,
@@ -44,7 +52,7 @@ const ZoomWrapper = ({
   );
 
   const resetViewport = useCallback(() => {
-    setViewport({ x: 0, y: 0, zoomLevel: 1 });
+    setViewport(defaultViewport);
   }, []);
 
   useEffect(() => {

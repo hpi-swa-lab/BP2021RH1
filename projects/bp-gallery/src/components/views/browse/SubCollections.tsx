@@ -1,11 +1,10 @@
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
-import { asApiPath } from '../../../helpers/app-helpers';
-import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-browse-path';
-import ItemList from '../../common/ItemList';
-import { FlatCollectionWithoutRelations } from '../../../types/additionalFlatTypes';
-import { ItemListItemModel } from '../../common/ItemListItem';
 import { useTranslation } from 'react-i18next';
+import { asApiPath } from '../../../helpers/app-helpers';
+import { FlatCollectionWithoutRelations } from '../../../types/additionalFlatTypes';
+import ItemList from '../../common/ItemList';
+import { ItemListItemModel } from '../../common/ItemListItem';
+import { useVisit } from './../../../helpers/history';
+import { decodeBrowsePathComponent, formatBrowsePath } from './helpers/format-browse-path';
 
 const SubCollections = ({
   childCollections,
@@ -15,7 +14,7 @@ const SubCollections = ({
   path?: string[];
 }) => {
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
-  const history: History = useHistory();
+  const { visit } = useVisit();
   const { t } = useTranslation();
 
   const buildItem = (collection: FlatCollectionWithoutRelations, index: number) => {
@@ -28,7 +27,7 @@ const SubCollections = ({
       background: collection.thumbnail ? asApiPath(collection.thumbnail) : DEFAULT_THUMBNAIL_URL,
       color,
       onClick: () => {
-        history.push(formatBrowsePath(path, collection.name), { showBack: true });
+        visit(formatBrowsePath(path, collection.name));
       },
     };
   };
@@ -40,7 +39,7 @@ const SubCollections = ({
       background: DEFAULT_THUMBNAIL_URL,
       color: '#404272',
       onClick: () => {
-        history.push('/latest', { showBack: true });
+        visit('/latest');
       },
     });
   }

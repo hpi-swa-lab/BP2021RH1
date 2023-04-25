@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useScroll } from '../../../hooks/context-hooks';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
 } from '../../../hooks/get-pictures.hook';
@@ -16,8 +17,6 @@ import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
 
 const PictureScrollGrid = ({
   queryParams,
-  scrollPos,
-  scrollHeight,
   hashbase,
   isAllSearchActive = false,
   uploadAreaProps,
@@ -32,8 +31,6 @@ const PictureScrollGrid = ({
   filterOutTextsForNonCurators = true,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
-  scrollPos: number;
-  scrollHeight: number;
   hashbase: string;
   isAllSearchActive?: boolean;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
@@ -60,6 +57,8 @@ const PictureScrollGrid = ({
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
+  const { scrollPos, scrollHeight } = useScroll();
+
   useEffect(() => {
     if (resultPictureCallback && !loading) {
       resultPictureCallback(pictures?.length ?? 0);
@@ -79,7 +78,7 @@ const PictureScrollGrid = ({
       scrollPos &&
       scrollHeight &&
       scrollHeight !== lastScrollHeight &&
-      scrollPos > scrollHeight - 1.5 * window.innerHeight
+      scrollPos > scrollHeight - 1.75 * window.innerHeight
     ) {
       let fetchCount = NUMBER_OF_PICTURES_LOADED_PER_FETCH;
       if (maxNumPictures && pictures) {

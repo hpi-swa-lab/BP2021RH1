@@ -56,7 +56,6 @@ describe('Comment', () => {
     cy.get('.comment-preview').contains('Testkommentar1').should('be.visible');
     cy.get('.comment-preview').contains('Testkommentar2').scrollIntoView();
     cy.get('.comment-preview').contains('Testkommentar2').should('be.visible').click();
-    cy.get('#comments').click();
 
     cy.contains('.comment-verification-container', 'Testkommentar1')
       .contains('button', 'Ablehnen')
@@ -77,7 +76,6 @@ describe('Comment', () => {
   });
 
   it('is possible to to freely nest comments', () => {
-    cy.get('#comments').click();
     postComment('Olaf Ober', 'Oberkommentar1');
     closeModal('Danke für Ihren Kommentar!', 'Verstanden');
     cy.contains('.comment-verification-container', 'Oberkommentar1')
