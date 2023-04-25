@@ -4,6 +4,7 @@ import {
   Comment,
   ComponentCommonSynonyms,
   Description,
+  FaceTag,
   KeywordTag,
   Link,
   LocationTag,
@@ -64,6 +65,8 @@ export type FlatArchiveTagWithoutRelations = ID &
   Omit<ArchiveTag, 'pictures' | 'links' | 'showcasePicture' | 'logo'>;
 
 export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
+
+export type FlatFaceTagWithoutRelations = ID & Omit<FaceTag, 'person_tag' | 'picture'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -128,6 +131,11 @@ export type Thumbnail = {
 
 export type FlatDecadeThumbnails = {
   [decadeKey: string]: Thumbnail[];
+};
+
+export type FlatFaceTag = FlatFaceTagWithoutRelations & {
+  person_tag?: FlatPersonTagWithoutRelations;
+  picture?: FlatPictureWithoutRelations;
 };
 
 export interface FlatTag {

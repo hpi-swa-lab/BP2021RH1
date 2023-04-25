@@ -127,6 +127,12 @@
     },
     "is_not_a_place_count": {
       "type": "integer"
+    },
+    "face_tags": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::face-tag.face-tag",
+      "mappedBy": "picture"
     }
   }
 }

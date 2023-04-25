@@ -1,16 +1,18 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { useEffect, useState } from 'react';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { renderRoutes } from 'react-router-config';
 import { buildHttpLink, mergeByRef, mergeByRefWrappedInData } from '../helpers/app-helpers';
 import './App.scss';
+import ScrollContainer from './common/ScrollContainer';
 import AlertProvider from './provider/AlertProvider';
 import AuthProvider from './provider/AuthProvider';
 import ClipboardEditorProvider from './provider/ClipboardEditorProvider';
 import DialogProvider from './provider/DialogProvider';
+import { MobileProvider } from './provider/MobileProvider';
+import { ScrollProvider } from './provider/ScrollProvider';
 import StorageProvider from './provider/StorageProvider';
 import routes from './routes';
-import NavigationBar from './top-and-bottom-bar/NavigationBar';
+import BottomBar from './top-and-bottom-bar/BottomBar';
 import TopBar from './top-and-bottom-bar/TopBar';
 
 const apolloClient = new ApolloClient({
@@ -63,33 +65,23 @@ const apolloClient = new ApolloClient({
 });
 
 const App = () => {
-  const [width, setWidth] = useState<number>(window.innerWidth);
-
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-  }, []);
-
-  const isMobile = width <= 750;
-
   return (
     <ApolloProvider client={apolloClient}>
       <AlertProvider>
         <AuthProvider>
           <DialogProvider>
             <StorageProvider>
-              <div className='App'>
-                <ClipboardEditorProvider>
-                  <TopBar isMobile={isMobile} />
-                  {renderRoutes(routes)}
-                  {isMobile && <NavigationBar isMobile={true} />}
-                </ClipboardEditorProvider>
-              </div>
+              <MobileProvider>
+                <div className='App'>
+                  <ClipboardEditorProvider>
+                    <ScrollProvider useWindow>
+                      <TopBar />
+                      <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                      <BottomBar />
+                    </ScrollProvider>
+                  </ClipboardEditorProvider>
+                </div>
+              </MobileProvider>
             </StorageProvider>
           </DialogProvider>
         </AuthProvider>

@@ -1,8 +1,8 @@
 import { isFunction } from 'lodash';
-import { MouseEvent, MouseEventHandler, useContext, useMemo, useRef, useState } from 'react';
+import { MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
 import { asApiPath } from '../../../helpers/app-helpers';
+import { useStats } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { ShowStatsContext } from '../../provider/ShowStatsProvider';
 import './PicturePreview.scss';
 import PictureStats from './PictureStats';
 
@@ -36,7 +36,7 @@ const PicturePreview = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
-  const showStats = useContext(ShowStatsContext);
+  const showStats = useStats();
 
   const thumbnailUrl = useMemo((): string => {
     const defaultUrl =

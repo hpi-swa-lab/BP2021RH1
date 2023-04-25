@@ -1,9 +1,6 @@
 @import 'src/shared/style';
 
-.scrollable-container {
-  overflow-x: hidden;
-  overflow-y: auto;
-
+.comments-table {
   table {
     width: 100%;
     thead {

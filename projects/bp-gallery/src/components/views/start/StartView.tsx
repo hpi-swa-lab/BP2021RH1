@@ -1,6 +1,4 @@
-import { History } from 'history';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import {
   useGetAllArchiveTagsQuery,
   useGetAllPicturesByArchiveQuery,
@@ -9,16 +7,17 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import PrimaryButton from '../../common/PrimaryButton';
 import PictureOverview from '../../common/PictureOverview';
-import ScrollContainer from '../../common/ScrollContainer';
 import BrowseView from '../browse/BrowseView';
-import ShowStats from './../../provider/ShowStatsProvider';
+import { useVisit } from './../../../helpers/history';
+import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
 
 const StartView = () => {
+  const { visit } = useVisit();
   const { t } = useTranslation();
-  const history: History = useHistory();
+
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
 
@@ -46,47 +45,35 @@ const StartView = () => {
   });
 
   return (
-    <ScrollContainer>
-      {(scrollPos, scrollHeight) => (
-        <div className='main-start-view'>
-          <div className='welcome-container'>
-            <div className='welcome'>
-              <h1>{t('startpage.welcome-title')}</h1>
-              <p>{t('startpage.welcome-text')}</p>
-            </div>
-            <DailyPicture />
-            <div className='flex place-content-center gap-2 m-4'>
-              <PrimaryButton
-                onClickFn={() => {
-                  history.push('/geo', { showBack: true });
-                }}
-                isShowMore
-              >
-                {t('geo.geo-game-button')}
-              </PrimaryButton>
-            </div>
-            <ShowStats>
-              <PictureOverview
-                title={t('discover.latest-pictures')}
-                queryParams={{}}
-                onClick={() => {
-                  history.push('/show-more/latest', {
-                    showBack: true,
-                  });
-                }}
-              />
-            </ShowStats>
-            <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
-            <div className='archives'>{archiveCards}</div>
-          </div>
-          <BrowseView
-            startpage={true}
-            parentScrollPos={scrollPos}
-            parentScrollHeight={scrollHeight}
-          />
+    <div className='main-start-view'>
+      <div className='welcome-container'>
+        <div className='welcome'>
+          <h1>{t('startpage.welcome-title')}</h1>
+          <p>{t('startpage.welcome-text')}</p>
         </div>
-      )}
-    </ScrollContainer>
+        <DailyPicture />
+        <div className='flex place-content-center gap-2 m-4'>
+          <PrimaryButton
+            onClickFn={() => {
+              visit('/geo');
+            }}
+            isShowMore
+          >
+            {t('geo.geo-game-button')}
+          </PrimaryButton>
+        </div>
+        <ShowStats>
+          <PictureOverview
+            title={t('discover.latest-pictures')}
+            queryParams={{}}
+            onClick={() => visit('/show-more/latest')}
+          />
+        </ShowStats>
+        <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
+        <div className='archives'>{archiveCards}</div>
+      </div>
+      <BrowseView startpage={true} />
+    </div>
   );
 };
 
