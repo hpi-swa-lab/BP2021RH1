@@ -1,0 +1,130 @@
+@import 'src/shared/style';
+
+.location-management-location-name {
+  padding: 0;
+  margin: 0;
+}
+
+.location-management-close-dialog {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.location-management-dialog-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: -20px;
+  margin-bottom: -20px;
+
+  .location-management-left {
+    padding-right: 8px;
+    .location-management-name-container {
+      display: flex;
+      .MuiButtonBase-root {
+        padding: 0;
+        margin-left: auto;
+      }
+    }
+    .location-management-synonyms {
+      height: 150px;
+      width: 400px;
+      background-color: darkgray;
+      border-radius: 15px;
+      margin-bottom: 4px;
+    }
+
+    .location-management-children {
+      height: 150px;
+      width: 400px;
+      background-color: darkgray;
+      border-radius: 15px;
+      margin-bottom: 4px;
+    }
+
+    .location-management-parents {
+      height: 150px;
+      width: 400px;
+      background-color: darkgray;
+      border-radius: 15px;
+    }
+  }
+
+  .location-management-right {
+    padding-left: 8px;
+    max-width: 400px;
+    .location-management-map {
+      width: 400px;
+      height: 406px;
+      background-color: greenyellow;
+    }
+
+    .location-management-actions {
+      .location-management-actions-first-row {
+        .location-management-show-pictures-button {
+          background-color: $primaryColor;
+          color: #ffffff;
+          margin-top: 0.5rem;
+          width: 100%;
+          padding-inline: 1rem;
+          align-self: center;
+        }
+      }
+
+      .location-management-actions-second-row {
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+
+        .location-management-eject-button {
+          background-color: $primaryColor;
+          color: #ffffff;
+          margin-top: 0.5rem;
+          padding-inline: 1rem;
+          align-self: center;
+        }
+        .location-management-move-button {
+          background-color: $primaryColor;
+          color: #ffffff;
+          margin-top: 0.5rem;
+          padding-inline: 1rem;
+          align-self: center;
+        }
+      }
+
+      .location-management-actions-third-row {
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+
+        .location-management-copy-button {
+          background-color: $primaryColor;
+          color: #ffffff;
+          margin-top: 0.5rem;
+          padding-inline: 1rem;
+          align-self: center;
+        }
+        .location-management-show-button {
+          background-color: $primaryColor;
+          color: #ffffff;
+          margin-top: 0.5rem;
+          padding-inline: 1rem;
+          align-self: center;
+        }
+      }
+    }
+  }
+}
+
+.location-management-navigation {
+  display: flex;
+  .location-management-previous-button {
+    margin-left: 10px;
+    margin-right: auto;
+  }
+  .location-management-next-button {
+    margin-left: auto;
+    margin-right: 4px;
+  }
+}

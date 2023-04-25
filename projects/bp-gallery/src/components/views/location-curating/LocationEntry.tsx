@@ -299,10 +299,17 @@ const LocationEntry = ({
         <div
           className='location-name'
           onClick={() => {
+            prompt({
+              preset: DialogPreset.LOCATION_MANAGEMENT,
+              title: 'Ortsname',
+              maxWidth: false,
+            });
+          }}
+          /*onClick={() => {
             history.push(`/show-more/${type}/${locationTag.id}`, {
               showBack: true,
             });
-          }}
+          }}*/
         >
           {locationTag.name}
         </div>
