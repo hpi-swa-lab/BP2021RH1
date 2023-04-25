@@ -1,24 +1,18 @@
-import { readFile, writeFile } from "fs/promises";
-import {
-  operationGraphQLPath,
-  sourceOperationsDirectoryPath,
-} from "./paths.js";
+import { readFile, writeFile } from 'fs/promises';
+import { operationGraphQLPath, sourceOperationsDirectoryPath } from './paths.js';
 
-const matchingClosingBraceIndex = (
-  content: string,
-  openingBraceIndex: number
-) => {
-  if (content[openingBraceIndex] !== "{") {
-    throw new Error("starting on non-opening-brace");
+const matchingClosingBraceIndex = (content: string, openingBraceIndex: number) => {
+  if (content[openingBraceIndex] !== '{') {
+    throw new Error('starting on non-opening-brace');
   }
   let currentIndex = openingBraceIndex + 1;
   let depth = 1;
   while (depth > 0) {
     switch (content[currentIndex]) {
-      case "{":
+      case '{':
         depth++;
         break;
-      case "}":
+      case '}':
         depth--;
         break;
     }
@@ -28,7 +22,7 @@ const matchingClosingBraceIndex = (
 };
 
 const indent = (source: string, indentation: string) => {
-  return source.replaceAll("\n", "\n" + indentation);
+  return source.replaceAll('\n', '\n' + indentation);
 };
 
 const splitOperationsGraphQL = async () => {
@@ -36,8 +30,7 @@ const splitOperationsGraphQL = async () => {
   const operationsFile = operationsBuffer.toString();
   // match type, then capture operation name, then look for first opening brace
   // after the optional parameter list (which could also contain opening braces)
-  const startOfOperation =
-    /(?:query|mutation) ([a-zA-Z]+)\s*(?:\([^)]*\)\s*)?\{/g;
+  const startOfOperation = /(?:query|mutation) ([a-zA-Z]+)\s*(?:\([^)]*\)\s*)?\{/g;
   const operations: { name: string; source: string }[] = [];
   let match: RegExpExecArray | null;
   while ((match = startOfOperation.exec(operationsFile))) {
@@ -52,18 +45,18 @@ const splitOperationsGraphQL = async () => {
     });
   }
   await Promise.all(
-    operations.map(async (operation) => {
+    operations.map(async operation => {
       const path = `${sourceOperationsDirectoryPath}/${operation.name}.ts`;
       const code = `
-import { Operation, graphql } from "../Operation.js";
+import { Operation, graphql } from '../Operation.js';
 
 export default {
   document: graphql\`
-    ${indent(operation.source, "    ")}
+    ${indent(operation.source, '    ')}
   \`,
 } satisfies Operation;
       `;
-      await writeFile(path, code.trim() + "\n");
+      await writeFile(path, code.trim() + '\n');
     })
   );
 };

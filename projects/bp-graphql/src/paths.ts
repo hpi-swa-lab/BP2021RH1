@@ -1,4 +1,4 @@
-import { basename, dirname, resolve } from "path";
+import { basename, dirname, resolve } from 'path';
 
 const ancestorNamed = (child: string, ancestor: string) => {
   let current = child;
@@ -13,19 +13,10 @@ const ancestorNamed = (child: string, ancestor: string) => {
 
 const moduleDirectory = __dirname;
 
-export const bpGraphqlDirectoryPath = ancestorNamed(
-  moduleDirectory,
-  "bp-graphql"
-);
+export const bpGraphqlDirectoryPath = ancestorNamed(moduleDirectory, 'bp-graphql');
 export const operationGraphQLPath = resolve(
   bpGraphqlDirectoryPath,
-  "../bp-gallery/src/graphql/operation.graphql"
+  '../bp-gallery/src/graphql/operation.graphql'
 );
-export const compiledOperationsDirectoryPath = resolve(
-  moduleDirectory,
-  "./operations"
-);
-export const sourceOperationsDirectoryPath = resolve(
-  bpGraphqlDirectoryPath,
-  "src/operations"
-);
+export const compiledOperationsDirectoryPath = resolve(moduleDirectory, './operations');
+export const sourceOperationsDirectoryPath = resolve(bpGraphqlDirectoryPath, 'src/operations');

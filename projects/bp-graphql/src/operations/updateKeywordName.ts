@@ -1,4 +1,4 @@
-import { Operation, graphql } from "../Operation.js";
+import { Operation, graphql } from '../Operation.js';
 
 export default {
   document: graphql`

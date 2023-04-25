@@ -1,8 +1,11 @@
-import { Operation, graphql } from "../Operation.js";
+import { Operation, graphql } from '../Operation.js';
 
 export default {
   document: graphql`
-    query getCollectionInfoByName($collectionName: String, $publicationState: PublicationState = LIVE) {
+    query getCollectionInfoByName(
+      $collectionName: String
+      $publicationState: PublicationState = LIVE
+    ) {
       collections(filters: { name: { eq: $collectionName } }, publicationState: $publicationState) {
         data {
           id
