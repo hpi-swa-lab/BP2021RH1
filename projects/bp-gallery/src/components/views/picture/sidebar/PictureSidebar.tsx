@@ -1,19 +1,19 @@
-import { useCallback, useContext, useMemo, useRef, useState } from 'react';
-import './PictureSidebar.scss';
-import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import { ApolloError } from '@apollo/client';
-import CommentsContainer from './comments/CommentsContainer';
+import { Crop } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useUpdatePictureMutation } from '../../../../graphql/APIConnector';
 import { FlatPicture } from '../../../../types/additionalFlatTypes';
-import { PictureViewContext } from '../PictureView';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
-import PictureInfo, { Field } from './picture-info/PictureInfo';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@mui/material';
-import { Crop } from '@mui/icons-material';
+import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
+import { PictureViewContext } from '../PictureView';
+import CommentsContainer from './comments/CommentsContainer';
 import PictureEditDialog from './picture-info/PictureEditDialog';
-import { useUpdatePictureMutation } from '../../../../graphql/APIConnector';
+import PictureInfo, { Field } from './picture-info/PictureInfo';
+import './PictureSidebar.scss';
 
 const PictureSidebar = ({
   picture,
@@ -95,6 +95,7 @@ const PictureSidebar = ({
           <PictureInfo
             picture={picture}
             pictureIds={pictureIds}
+            hasHiddenLinks={false}
             onSave={onSave}
             topInfo={(anyFieldTouched, isSaving) =>
               role >= AuthRole.CURATOR && (
