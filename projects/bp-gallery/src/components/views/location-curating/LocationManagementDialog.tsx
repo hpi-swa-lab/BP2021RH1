@@ -1,9 +1,10 @@
 import {
   ArrowBackIos,
   ArrowForwardIos,
+  Check,
   Close,
   CopyAll,
-  Delete,
+  Edit,
   Eject,
   MoveDown,
   Place,
@@ -24,7 +25,7 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
 import TagSelectionField from '../picture/sidebar/picture-info/TagSelectionField';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Loading from '../../common/Loading';
 
 const LocationManagementDialogPreset = ({
@@ -37,6 +38,7 @@ const LocationManagementDialogPreset = ({
   const refetch = dialogProps.content.refetch;
 
   const [locationTagID, setLocationTagID] = useState<any>(dialogProps.content.locationTag.id);
+  const [editName, setEditName] = useState<boolean>(false);
 
   const { data, loading } = useGetLocationTagByIdQuery({
     variables: { locationID: locationTagID },
@@ -49,6 +51,7 @@ const LocationManagementDialogPreset = ({
     allTagsQuery,
     updateTagParentMutationSource,
     updateTagChildMutationSource,
+    updateTagNameMutationSource,
   } = useGenericTagEndpoints(TagType.LOCATION);
 
   const allTagQueryResponse = allTagsQuery();
@@ -139,7 +142,7 @@ const LocationManagementDialogPreset = ({
     },
   });
 
-  const deleteSynonym = (tagId: string, synonymName: string) => {
+  const deleteSynonym = async (tagId: string, synonymName: string) => {
     updateSynonymsMutation({
       variables: {
         tagId,
@@ -189,12 +192,35 @@ const LocationManagementDialogPreset = ({
       awaitRefetchQueries: true,
     });
 
+  const [updateTagNameMutation] = updateTagNameMutationSource({
+    onCompleted: _ => {
+      refetch();
+    },
+  });
+
+  const updateName = async (tagID: string, tagName: string = '') => {
+    updateTagNameMutation({
+      variables: {
+        name: tagName,
+        tagId: tagID,
+      },
+    });
+  };
+
   const currentSiblings = [
     ...(tagSiblingTags && locationTag.id in tagSiblingTags ? tagSiblingTags[locationTag.id] : []),
     locationTag,
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   const currentIndex = currentSiblings.indexOf(locationTag);
+
+  const title = useRef<string>(locationTag.name);
+  const [changed, setChanged] = useState<boolean>(false);
+
+  useEffect(() => {
+    setChanged(false);
+    title.current = locationTag.name;
+  }, [locationTag]);
 
   if (loading) {
     return (
@@ -214,9 +240,33 @@ const LocationManagementDialogPreset = ({
           <div className='location-management-dialog-container'>
             <div className='location-management-left'>
               <div className='location-management-name-container'>
-                <h2 className='location-management-location-name'>{locationTag.name}</h2>
-                <IconButton onClick={() => {}}>
-                  <Delete />
+                {editName ? (
+                  <TextField
+                    variant='standard'
+                    margin='none'
+                    defaultValue={title.current}
+                    onBlur={event => {
+                      updateName(locationTag.id, event.target.value);
+                      setEditName(!editName);
+                    }}
+                    onChange={event => {
+                      title.current = event.target.value;
+                      setChanged(true);
+                    }}
+                  />
+                ) : (
+                  <h2 className='location-management-location-name'>
+                    {title.current !== locationTag.name && !changed
+                      ? locationTag.name
+                      : title.current}
+                  </h2>
+                )}
+                <IconButton
+                  onClick={() => {
+                    setEditName(!editName);
+                  }}
+                >
+                  {editName ? <Check /> : <Edit />}
                 </IconButton>
               </div>
               <div className='location-management-left-content'>
