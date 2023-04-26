@@ -483,7 +483,7 @@ const TagSelectionField = <T extends TagFields>({
             newlyAddedTags.forEach(tag => {
               setLastSelectedTag(tag);
               const allSupertags: T[] = [];
-              if (tagSupertagList && tag.id in tagSupertagList) {
+              if (!fixedTag && tagSupertagList && tag.id in tagSupertagList) {
                 tagSupertagList[tag.id].forEach(supertags => {
                   allSupertags.push(
                     ...(supertags.filter(
