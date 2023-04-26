@@ -1307,6 +1307,20 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
+"@growthbook/growthbook-react@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@growthbook/growthbook-react/-/growthbook-react-0.15.0.tgz#22f46fa32abe2d9c59cb82343c830d9e6f581e15"
+  integrity sha512-GB6oyWKsxi9KguYAJqG2el+a16eLi8kZIdObeM4K8qfjw2hV73bI+lszpgInUBPrkJuB1LvNZ5M0lLpAULgOgA==
+  dependencies:
+    "@growthbook/growthbook" "^0.25.0"
+
+"@growthbook/growthbook@^0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@growthbook/growthbook/-/growthbook-0.25.0.tgz#8de029b0a2dce4938da4b012b47efd13985b8f57"
+  integrity sha512-H0L2i5G5UtaoU34zDGxxNfF0LezL5fbr31XXqIPu1faGeJ1ujBvfFT8/99EKS26dO6YzwCNU47PlPD+XV/5akw==
+  dependencies:
+    dom-mutator "^0.4.0"
+
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.3.0.tgz#8368869dcb735be2e7f5cb7647de78e167a251fb"
@@ -3523,6 +3537,11 @@ dom-helpers@^5.0.1:
   dependencies:
     "@babel/runtime" "^7.8.7"
     csstype "^3.0.2"
+
+dom-mutator@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/dom-mutator/-/dom-mutator-0.4.0.tgz#cb0a6981ed58bdba25028cb0e5c75777b9b68c07"
+  integrity sha512-H8pcE9Tmmnxs6FTZCX4aRthcweGsVdytqpBSiVIDnTnmosXXYO+jatDWwRReMbJJsAmsnAWsc0Ht4ZYGdN8gZw==
 
 dom-serializer@0:
   version "0.2.2"

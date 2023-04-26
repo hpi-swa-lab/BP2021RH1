@@ -8,9 +8,18 @@ import './i18n';
 import setupMatomo from './matomo-config/matomo';
 import { TrackHistoryWithMatomo } from './matomo-config/TrackHistoryWithMatomo';
 import reportWebVitals from './reportWebVitals';
+import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 
 const sentryDsn = import.meta.env.VITE_REACT_APP_SENTRY_DSN;
 const matomoUrl = import.meta.env.VITE_REACT_APP_MATOMO_URL;
+const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
+const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
+
+const growthbook = new GrowthBook({
+  apiHost: growthbookApiHost,
+  clientKey: growthbookClientKey,
+  enableDevMode: false,
+});
 
 if (sentryDsn) {
   Sentry.init({
@@ -28,7 +37,9 @@ createRoot(root).render(
   <React.StrictMode>
     <BrowserRouter>
       <TrackHistoryWithMatomo>
-        <App />
+        <GrowthBookProvider growthbook={growthbook}>
+          <App />
+        </GrowthBookProvider>
       </TrackHistoryWithMatomo>
     </BrowserRouter>
   </React.StrictMode>
