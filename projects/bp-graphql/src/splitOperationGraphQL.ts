@@ -32,8 +32,11 @@ const indent = (source: string, indentation: string) => {
 const splitOperationGraphQL = async () => {
   const operationsBuffer = await readFile(operationGraphQLPath);
   const operationsFile = operationsBuffer.toString();
-  // match type, then capture operation name, then look for first opening brace
-  // after the optional parameter list (which could also contain opening braces)
+  // Find the start of an operation up to the first opening brace,
+  // after the parameter list, which opens the operation body.
+  // Match the operation type, then capture the operation name,
+  // then match an optional parameter list (which could also
+  // contain opening braces) and finally match the opening brace.
   const startOfOperation = /(?:query|mutation) ([a-zA-Z]+)\s*(?:\([^)]*\)\s*)?\{/g;
   const operations: { name: string; source: string }[] = [];
   let match: RegExpExecArray | null;
