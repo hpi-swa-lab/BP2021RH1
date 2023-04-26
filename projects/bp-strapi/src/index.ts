@@ -13,6 +13,7 @@ import {
 } from "./api/picture/services/custom-resolver";
 import { Strapi } from "@strapi/strapi";
 import { GqlExtension } from "./types";
+import {incNotAPlaceCount} from "./api/picture/services/custom-update";
 
 export default {
   /**
@@ -141,6 +142,16 @@ export default {
               return like(knexEngine, pictureId, dislike);
             },
           }),
+          mutationField("increaseNotAPlaceCount", {
+            type: "Int",
+            args: {
+              id: "ID",
+            },
+            async resolve(_, { id }) {
+              const knexEngine = extensionArgs.strapi.db.connection;
+              return incNotAPlaceCount(knexEngine, id);
+            },
+          })
         ],
         resolversConfig: {
           Query: {
@@ -186,6 +197,11 @@ export default {
                 scope: ["api::picture.picture.find"],
               },
             },
+            increaseNotAPlaceCount: {
+              auth: {
+                scope: ["api::picture.picture.find"],
+              }, 
+            } 
           },
           Collection: {
             thumbnail: {
