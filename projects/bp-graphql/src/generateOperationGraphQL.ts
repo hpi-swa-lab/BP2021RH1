@@ -22,18 +22,18 @@ const operationType = (operation: Operation): OperationType => {
 };
 
 export const loadOperations = async (): Promise<LoadedOperation[]> => {
-  const operationFiles = await readdir(compiledOperationsDirectoryPath);
+  const operationFileNames = await readdir(compiledOperationsDirectoryPath);
   const operations = await Promise.all(
-    operationFiles.map(async file => {
-      if (!file.endsWith('.js')) {
+    operationFileNames.map(async fileName => {
+      if (!fileName.endsWith('.js')) {
         return null;
       }
       const { default: operation }: { default: Operation } = await import(
-        `${compiledOperationsDirectoryPath}/${file}`
+        `${compiledOperationsDirectoryPath}/${fileName}`
       );
       return {
         ...operation,
-        name: file.slice(0, -'.js'.length),
+        name: fileName.slice(0, -'.js'.length),
         type: operationType(operation),
       };
     })
