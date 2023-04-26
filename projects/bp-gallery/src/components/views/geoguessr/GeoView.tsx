@@ -1,17 +1,17 @@
-import { Box, Button, Modal, Typography } from '@mui/material';
 import { Info } from '@mui/icons-material';
+import { Box, Button, Modal, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useStorageState } from 'react-use-storage-state';
 import {
   useGetAllPicturesByArchiveQuery,
   useGetPictureGeoInfoQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 import { FlatArchiveTag, FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
-import { useStorageState } from 'react-use-storage-state';
-import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const allPictureIds: string[] = archives
@@ -74,7 +74,7 @@ const GeoView = () => {
   }, [archives]);
 
   const getNextPicture = () => {
-    return pictureQueue.current.shift() || fallbackPictureId;
+    return pictureQueue.current.shift() ?? fallbackPictureId;
   };
 
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
