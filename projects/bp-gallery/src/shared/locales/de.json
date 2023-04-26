@@ -33,11 +33,13 @@
       "still-linked": {
         "pictures": {
           "title": "Es sind noch Bilder verlinkt",
-          "content": "Bitte entfernen Sie alle Links zu Bildern bevor Sie diesen Text als Bild markieren."
+          "content": "Bitte entfernen Sie alle Links zu Bildern bevor Sie diesen Text als Bild markieren.",
+          "content-hidden": "Es gibt Links zu Texten, die nicht bei allen Bildern vorhanden sind. Bitte entferne diese Links, indem du zu den einzelnen Bildern navigierst."
         },
         "texts": {
           "title": "Es sind noch Texte verlinkt",
-          "content": "Bitte entfernen Sie alle Links zu Texten bevor Sie dieses Bild als Text markieren."
+          "content": "Bitte entfernen Sie alle Links zu Texten bevor Sie dieses Bild als Text markieren.",
+          "content-hidden": "Es gibt Links zu Bildern, die nicht bei allen Texten vorhanden sind. Bitte entferne diese Links, indem du zu den einzelnen Texten navigierst."
         }
       }
     },

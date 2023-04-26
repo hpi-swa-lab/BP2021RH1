@@ -22,10 +22,12 @@ import PictureInfoField from './PictureInfoField';
 const LinkedInfoField = ({
   picture,
   pictureIds,
+  hasHiddenLinks,
   savePictureInfo,
 }: {
   picture: FlatPicture;
   pictureIds: string[];
+  hasHiddenLinks: boolean;
   savePictureInfo: (field: Field) => void;
 }) => {
   const { t } = useTranslation();
@@ -176,10 +178,14 @@ const LinkedInfoField = ({
           <CheckboxButton
             checked={isText}
             onChange={isText => {
-              if ((linked.collection?.length ?? 0) > 0) {
+              if ((linked.collection?.length ?? 0) > 0 || hasHiddenLinks) {
                 dialog({
                   title: t(`common.mark-as-text.still-linked.${linked.name}.title`),
-                  content: t(`common.mark-as-text.still-linked.${linked.name}.content`),
+                  content: t(
+                    `common.mark-as-text.still-linked.${linked.name}.content${
+                      hasHiddenLinks ? '-hidden' : ''
+                    }`
+                  ),
                   options: [
                     {
                       name: t('common.ok'),
