@@ -2987,7 +2987,12 @@ export type GetLocationTagByIdQuery = {
                     visible?: boolean | null | undefined;
                     synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
                     child_tags?:
-                      | { data: Array<{ id?: string | null | undefined }> }
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
                       | null
                       | undefined;
                     parent_tags?:
@@ -3138,12 +3143,37 @@ export type CreateSubLocationMutation = {
     | undefined;
 };
 
+export type CreateSuperLocationMutationVariables = Exact<{
+  name: Scalars['String'];
+  childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  accepted?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type CreateSuperLocationMutation = {
+  createLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type UpdateLocationParentMutationVariables = Exact<{
   tagID: Scalars['ID'];
   parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
 export type UpdateLocationParentMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type UpdateLocationChildMutationVariables = Exact<{
+  tagID: Scalars['ID'];
+  childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+export type UpdateLocationChildMutation = {
   updateLocationTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
@@ -5590,6 +5620,9 @@ export const GetLocationTagByIdDocument = gql`
           child_tags {
             data {
               id
+              attributes {
+                name
+              }
             }
           }
           parent_tags {
@@ -5951,6 +5984,64 @@ export type CreateSubLocationMutationOptions = Apollo.BaseMutationOptions<
   CreateSubLocationMutationVariables
 >;
 
+export const CreateSuperLocationDocument = gql`
+  mutation createSuperLocation($name: String!, $childIDs: [ID!], $accepted: Boolean) {
+    createLocationTag(data: { name: $name, child_tags: $childIDs, accepted: $accepted }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateSuperLocationMutationFn = Apollo.MutationFunction<
+  CreateSuperLocationMutation,
+  CreateSuperLocationMutationVariables
+>;
+
+/**
+ * __useCreateSuperLocationMutation__
+ *
+ * To run a mutation, you first call `useCreateSuperLocationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSuperLocationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSuperLocationMutation, { data, loading, error }] = useCreateSuperLocationMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      childIDs: // value for 'childIDs'
+ *      accepted: // value for 'accepted'
+ *   },
+ * });
+ */
+export function useCreateSuperLocationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSuperLocationMutation,
+    CreateSuperLocationMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateSuperLocationMutation, CreateSuperLocationMutationVariables>(
+    CreateSuperLocationDocument,
+    options
+  );
+}
+
+export type CreateSuperLocationMutationHookResult = ReturnType<
+  typeof useCreateSuperLocationMutation
+>;
+
+export type CreateSuperLocationMutationResult = Apollo.MutationResult<CreateSuperLocationMutation>;
+
+export type CreateSuperLocationMutationOptions = Apollo.BaseMutationOptions<
+  CreateSuperLocationMutation,
+  CreateSuperLocationMutationVariables
+>;
+
 export const UpdateLocationParentDocument = gql`
   mutation updateLocationParent($tagID: ID!, $parentIDs: [ID!]) {
     updateLocationTag(id: $tagID, data: { parent_tags: $parentIDs }) {
@@ -6007,6 +6098,63 @@ export type UpdateLocationParentMutationResult =
 export type UpdateLocationParentMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationParentMutation,
   UpdateLocationParentMutationVariables
+>;
+
+export const UpdateLocationChildDocument = gql`
+  mutation updateLocationChild($tagID: ID!, $childIDs: [ID!]) {
+    updateLocationTag(id: $tagID, data: { child_tags: $childIDs }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationChildMutationFn = Apollo.MutationFunction<
+  UpdateLocationChildMutation,
+  UpdateLocationChildMutationVariables
+>;
+
+/**
+ * __useUpdateLocationChildMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationChildMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationChildMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationChildMutation, { data, loading, error }] = useUpdateLocationChildMutation({
+ *   variables: {
+ *      tagID: // value for 'tagID'
+ *      childIDs: // value for 'childIDs'
+ *   },
+ * });
+ */
+export function useUpdateLocationChildMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationChildMutation,
+    UpdateLocationChildMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLocationChildMutation, UpdateLocationChildMutationVariables>(
+    UpdateLocationChildDocument,
+    options
+  );
+}
+
+export type UpdateLocationChildMutationHookResult = ReturnType<
+  typeof useUpdateLocationChildMutation
+>;
+
+export type UpdateLocationChildMutationResult = Apollo.MutationResult<UpdateLocationChildMutation>;
+
+export type UpdateLocationChildMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationChildMutation,
+  UpdateLocationChildMutationVariables
 >;
 
 export const UpdateLocationNameDocument = gql`

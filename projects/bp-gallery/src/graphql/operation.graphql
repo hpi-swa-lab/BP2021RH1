@@ -717,6 +717,9 @@ query getLocationTagById($locationID: ID!) {
         child_tags {
           data {
             id
+            attributes {
+              name
+            }
           }
         }
         parent_tags {
@@ -823,8 +826,24 @@ mutation createSubLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean
   }
 }
 
+mutation createSuperLocation($name: String!, $childIDs: [ID!], $accepted: Boolean) {
+  createLocationTag(data: { name: $name, child_tags: $childIDs, accepted: $accepted }) {
+    data {
+      id
+    }
+  }
+}
+
 mutation updateLocationParent($tagID: ID!, $parentIDs: [ID!]) {
   updateLocationTag(id: $tagID, data: { parent_tags: $parentIDs }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation updateLocationChild($tagID: ID!, $childIDs: [ID!]) {
+  updateLocationTag(id: $tagID, data: { child_tags: $childIDs }) {
     data {
       id
     }

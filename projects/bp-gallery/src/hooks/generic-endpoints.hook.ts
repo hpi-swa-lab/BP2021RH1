@@ -22,6 +22,7 @@ import {
   useUpdateKeywordSynonymsMutation,
   useUpdateKeywordVisibilityMutation,
   useUpdateLocationAcceptanceMutation,
+  useUpdateLocationChildMutation,
   useUpdateLocationNameMutation,
   useUpdateLocationParentMutation,
   useUpdateLocationSynonymsMutation,
@@ -47,6 +48,7 @@ const useGenericTagEndpoints = (type: TagType) => {
           createTagMutationSource: useCreateLocationMutation,
           createSubTagMutationSource: useCreateSubLocationMutation,
           updateTagAcceptanceMutationSource: useUpdateLocationAcceptanceMutation,
+          updateTagChildMutationSource: useUpdateLocationChildMutation,
         };
       case TagType.PERSON:
         return {
@@ -71,6 +73,9 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateTagAcceptanceMutationSource: (dummy: any) => {
             return [dummy];
           },
+          updateTagChildMutationSource: (dummy: any) => {
+            return [dummy];
+          },
         };
       case TagType.KEYWORD:
       default:
@@ -86,6 +91,9 @@ const useGenericTagEndpoints = (type: TagType) => {
           createTagMutationSource: useCreateKeywordMutation,
           createSubTagMutationSource: useCreateSubKeywordMutation,
           updateTagAcceptanceMutationSource: useUpdateKeywordAcceptanceMutation,
+          updateTagChildMutationSource: (dummy: any) => {
+            return [dummy];
+          },
         };
     }
   }, [type]);

@@ -34,18 +34,22 @@ const TagSelectionField = <T extends TagFields>({
   onChange,
   createMutation,
   createChildMutation,
+  createParentMutation,
   nonVerifiable = false,
   noContentText,
   type,
+  fixedTag,
 }: {
   tags: T[];
   allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
   createChildMutation?: (attr: any) => Promise<any>;
+  createParentMutation?: (attr: any) => Promise<any>;
   nonVerifiable?: boolean;
   noContentText: string;
   type: TagType;
+  fixedTag?: FlatTag;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -268,6 +272,26 @@ const TagSelectionField = <T extends TagFields>({
                 verified: true,
                 createValue: inputValue,
                 id: -1,
+              } as unknown as T);
+            }
+
+            if (createChildMutation && fixedTag && inputValue !== '') {
+              filtered.push({
+                name: inputValue,
+                icon: <Add sx={{ mr: 2 }} />,
+                verified: true,
+                createValue: inputValue,
+                id: -3,
+              } as unknown as T);
+            }
+
+            if (createParentMutation && fixedTag && inputValue !== '') {
+              filtered.push({
+                name: inputValue,
+                icon: <Add sx={{ mr: 2 }} />,
+                verified: true,
+                createValue: inputValue,
+                id: -4,
               } as unknown as T);
             }
 
@@ -572,6 +596,39 @@ const TagSelectionField = <T extends TagFields>({
             if (lastTags && newValue.length < lastTags.length) {
               setLastSelectedTag(undefined);
               setLastSelectedTags([] as T[]);
+            }
+            if (fixedTag) {
+              const addTag = newValue.find(val => val.createValue);
+              if (addTag && createChildMutation) {
+                const { data } = await createChildMutation({
+                  variables: { name: addTag.createValue, parentIDs: [fixedTag.id], accepted: true },
+                });
+                if (data) {
+                  const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                  const newId = data[nameOfField].data.id;
+                  addTag.id = newId;
+                  delete addTag.createValue;
+                  delete addTag.icon;
+                  setTagList([...allTags, addTag]);
+                }
+              }
+
+              if (addTag && createParentMutation) {
+                const { data } = await createParentMutation({
+                  variables: { name: addTag.createValue, childIDs: [fixedTag.id], accepted: true },
+                });
+                if (data) {
+                  const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                  const newId = data[nameOfField].data.id;
+                  addTag.id = newId;
+                  delete addTag.createValue;
+                  delete addTag.icon;
+                  setTagList([...allTags, addTag]);
+                }
+              }
+
+              setLastSelectedTags([] as T[]);
+              setLastSelectedTag(undefined);
             }
             setLastTags(newValue);
             onChange(newValue);
