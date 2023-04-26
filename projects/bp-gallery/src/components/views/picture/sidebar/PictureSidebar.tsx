@@ -8,12 +8,12 @@ import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
-import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import { PictureViewContext } from '../PictureView';
+import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
+import './PictureSidebar.scss';
 import CommentsContainer from './comments/CommentsContainer';
 import PictureEditDialog from './picture-info/PictureEditDialog';
 import PictureInfo, { Field } from './picture-info/PictureInfo';
-import './PictureSidebar.scss';
 
 const PictureSidebar = ({
   picture,
@@ -81,6 +81,7 @@ const PictureSidebar = ({
   // on every render and sets the clipboard editor buttons,
   // which triggers a rerender of the ClipboardEditor, completing the loop.
   const pictureIds = useMemo(() => (picture ? [picture.id] : []), [picture]);
+  const onDialogClose = useCallback(() => setEditDialogOpen(false), []);
 
   return (
     <div
@@ -106,7 +107,7 @@ const PictureSidebar = ({
                   <PictureEditDialog
                     picture={picture}
                     open={editDialogOpen}
-                    onClose={() => setEditDialogOpen(false)}
+                    onClose={onDialogClose}
                   />
                   <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
                 </div>
