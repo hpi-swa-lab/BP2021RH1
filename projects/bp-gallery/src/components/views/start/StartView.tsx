@@ -1,4 +1,3 @@
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllArchiveTagsQuery,
@@ -45,35 +44,28 @@ const StartView = () => {
     );
   });
 
-  const paypalOptions = {
-    'client-id': 'Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8',
-    currency: 'EUR',
-  };
-
   return (
-    <PayPalScriptProvider options={paypalOptions}>
-      <div className='main-start-view'>
-        <div className='welcome-container'>
-          <div className='welcome'>
-            <h1>{t('startpage.welcome-title')}</h1>
-            <p>{t('startpage.welcome-text')}</p>
-          </div>
-          <DailyPicture />
-          <DonateButton />
-
-          <ShowStats>
-            <PictureOverview
-              title={t('discover.latest-pictures')}
-              queryParams={{}}
-              onClick={() => visit('/show-more/latest')}
-            />
-          </ShowStats>
-          <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
-          <div className='archives'>{archiveCards}</div>
+    <div className='main-start-view'>
+      <div className='welcome-container'>
+        <div className='welcome'>
+          <h1>{t('startpage.welcome-title')}</h1>
+          <p>{t('startpage.welcome-text')}</p>
         </div>
-        <BrowseView startpage={true} />
+        <DailyPicture />
+        <DonateButton clientId='Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8' />
+
+        <ShowStats>
+          <PictureOverview
+            title={t('discover.latest-pictures')}
+            queryParams={{}}
+            onClick={() => visit('/show-more/latest')}
+          />
+        </ShowStats>
+        <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
+        <div className='archives'>{archiveCards}</div>
       </div>
-    </PayPalScriptProvider>
+      <BrowseView startpage={true} />
+    </div>
   );
 };
 

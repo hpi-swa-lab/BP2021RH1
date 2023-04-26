@@ -24,6 +24,7 @@ interface ArchiveForm {
   name: string;
   shortDescription: string;
   longDescription: string;
+  paypalClient: string;
   logo?: File;
   links: LinkInfo[];
   dirty: boolean;
@@ -62,6 +63,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     name: '',
     shortDescription: '',
     longDescription: '',
+    paypalClient: '',
     links: [],
     dirty: false,
   });
@@ -72,6 +74,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       name: archive?.name ?? '',
       shortDescription: archive?.shortDescription ?? '',
       longDescription: archive?.longDescription ?? '',
+      paypalClient: archive?.paypalClient ?? '',
       links: archive?.links ?? [],
     });
   }, [archive]);
