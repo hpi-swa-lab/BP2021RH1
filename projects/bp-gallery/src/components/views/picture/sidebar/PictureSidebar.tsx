@@ -10,6 +10,7 @@ import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import { PictureViewContext } from '../PictureView';
 import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
+import './PictureSidebar.scss';
 import CommentsContainer from './comments/CommentsContainer';
 import PictureEditDialog from './picture-info/PictureEditDialog';
 import PictureInfo, { Field } from './picture-info/PictureInfo';
