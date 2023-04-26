@@ -8,7 +8,8 @@ import './i18n';
 import setupMatomo from './matomo-config/matomo';
 import { TrackHistoryWithMatomo } from './matomo-config/TrackHistoryWithMatomo';
 import reportWebVitals from './reportWebVitals';
-import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
+import { GrowthBook } from '@growthbook/growthbook-react';
+import { GrowthBookProvider } from './components/provider/GrowthBookProvider';
 
 const sentryDsn = import.meta.env.VITE_REACT_APP_SENTRY_DSN;
 const matomoUrl = import.meta.env.VITE_REACT_APP_MATOMO_URL;
@@ -19,6 +20,16 @@ const growthbook = new GrowthBook({
   apiHost: growthbookApiHost,
   clientKey: growthbookClientKey,
   enableDevMode: false,
+  trackingCallback: (experiment, result) => {
+    const w: any = window;
+    const _paq: Array<any> = (w._paq = w._paq || []);
+    _paq.push(['trackEvent', 'ExperimentViewed', experiment.key, 'v' + String(result.variationId)]);
+  },
+  onFeatureUsage: (featureKey, result) => {
+    const w: any = window;
+    const _paq: Array<any> = (w._paq = w._paq || []);
+    _paq.push(['trackEvent', 'ExperimentViewed', featureKey, 'v' + String(result)]);
+  },
 });
 
 if (sentryDsn) {
