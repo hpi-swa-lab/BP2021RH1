@@ -711,6 +711,22 @@ query getLocationTagById($locationID: ID!) {
       attributes {
         name
         visible
+        synonyms {
+          name
+        }
+        child_tags {
+          data {
+            id
+          }
+        }
+        parent_tags {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
       }
     }
   }

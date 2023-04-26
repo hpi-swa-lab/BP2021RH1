@@ -301,7 +301,8 @@ const LocationEntry = ({
           onClick={() => {
             prompt({
               preset: DialogPreset.LOCATION_MANAGEMENT,
-              title: 'Ortsname',
+              title: locationTag.name,
+              content: { locationTag: locationTag, refetch: refetch },
               maxWidth: false,
             });
           }}

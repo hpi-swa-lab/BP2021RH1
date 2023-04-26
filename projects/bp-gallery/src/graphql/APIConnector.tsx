@@ -2982,7 +2982,24 @@ export type GetLocationTagByIdQuery = {
           | {
               id?: string | null | undefined;
               attributes?:
-                | { name: string; visible?: boolean | null | undefined }
+                | {
+                    name: string;
+                    visible?: boolean | null | undefined;
+                    synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
+                    child_tags?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                    parent_tags?:
+                      | {
+                          data: Array<{
+                            id?: string | null | undefined;
+                            attributes?: { name: string } | null | undefined;
+                          }>;
+                        }
+                      | null
+                      | undefined;
+                  }
                 | null
                 | undefined;
             }
@@ -5567,6 +5584,22 @@ export const GetLocationTagByIdDocument = gql`
         attributes {
           name
           visible
+          synonyms {
+            name
+          }
+          child_tags {
+            data {
+              id
+            }
+          }
+          parent_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
         }
       }
     }

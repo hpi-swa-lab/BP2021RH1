@@ -28,9 +28,30 @@
     .location-management-synonyms {
       height: 150px;
       width: 400px;
-      background-color: darkgray;
+      border: 1px solid lightgray;
       border-radius: 15px;
       margin-bottom: 4px;
+      display: flex;
+      flex-direction: row;
+      overflow-wrap: normal;
+      display: flex;
+      flex-direction: column;
+
+      .location-management-synonyms-grid {
+        margin-bottom: auto;
+        margin-top: 0;
+        overflow: scroll;
+
+        .location-management-synonym {
+          margin: 1px 2px 1px 2px;
+          background-color: lightgray;
+        }
+      }
+
+      .location-management-synonyms-input {
+        margin-left: 16px;
+        margin-right: 16px;
+      }
     }
 
     .location-management-children {
