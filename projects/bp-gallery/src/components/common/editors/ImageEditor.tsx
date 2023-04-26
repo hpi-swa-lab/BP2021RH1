@@ -16,9 +16,7 @@ const ImageEditor = ({
   useEffect(() => {
     // There's currently a bug in the tui image editor where it always throws an unhandled rejection error upon loading an image. Since the image still loads and the error is in the tui image editor itself and therefore not fixable by us, I've decided to just ignore it until the package gets updated.
     const onUnhandledRejection = (event: PromiseRejectionEvent) => {
-      if (
-        (event.reason.message as string).includes("Cannot read properties of null (reading 'fire')")
-      ) {
+      if (event.reason instanceof TypeError && event.reason.message.includes('null')) {
         event.preventDefault();
         event.stopPropagation();
       }
