@@ -25,6 +25,10 @@ const indent = (source: string, indentation: string) => {
   return source.replaceAll('\n', '\n' + indentation);
 };
 
+// helper script for https://github.com/hpi-swa-lab/BP2021RH1/pull/444
+// intended for migration from an authoritative operation.graphql
+// to an operation.graphql generated from multiple authoritative .ts files,
+// each containing one operation
 const splitOperationGraphQL = async () => {
   const operationsBuffer = await readFile(operationGraphQLPath);
   const operationsFile = operationsBuffer.toString();
