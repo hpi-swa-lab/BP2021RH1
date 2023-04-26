@@ -31,7 +31,6 @@ describe('bulk edit descriptions', () => {
     visitArchive1Pictures();
     selectPictures('2', '3');
     cy.contains('Mehrere Bilder editieren').click();
-    cy.find('.MuiIconButton-root [data-testid="AddIcon"]');
     cy.contains('Keine Zeit bekannt').should('not.exist');
     cy.contains('Keine Beschreibung vorhanden');
   });
