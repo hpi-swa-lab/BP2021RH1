@@ -25,7 +25,7 @@ const indent = (source: string, indentation: string) => {
   return source.replaceAll('\n', '\n' + indentation);
 };
 
-const splitOperationsGraphQL = async () => {
+const splitOperationGraphQL = async () => {
   const operationsBuffer = await readFile(operationGraphQLPath);
   const operationsFile = operationsBuffer.toString();
   // match type, then capture operation name, then look for first opening brace
@@ -61,4 +61,4 @@ export default {
   );
 };
 
-splitOperationsGraphQL();
+splitOperationGraphQL();
