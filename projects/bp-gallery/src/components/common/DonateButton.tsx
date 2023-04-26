@@ -1,16 +1,25 @@
 import { Button } from '@mui/material';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
+import './DonateButton.scss';
 
 const DonateButton = ({ clientId }: { clientId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [donation, setDonation] = useState('0.00');
+  const transitionRef = useRef(null);
   const paypalOptions = {
     'client-id': clientId,
     currency: 'EUR',
   };
-
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(function () {
+        transitionRef.current.className = 'parent-active';
+        console.log('here');
+      }, 20);
+    }
+  }, [isOpen]);
   return (
     <PayPalScriptProvider options={paypalOptions}>
       <div className='max-w-xs'>
@@ -31,7 +40,7 @@ const DonateButton = ({ clientId }: { clientId: string }) => {
           </Button>
         </div>
         {isOpen && (
-          <>
+          <div ref={transitionRef} className='paypal-parent'>
             <PayPalButtons
               createOrder={(data, actions) => {
                 return actions.order.create({
@@ -49,7 +58,7 @@ const DonateButton = ({ clientId }: { clientId: string }) => {
                 tagline: false,
               }}
             />
-          </>
+          </div>
         )}
       </div>
     </PayPalScriptProvider>

@@ -53,7 +53,6 @@ const StartView = () => {
         </div>
         <DailyPicture />
         <DonateButton clientId='Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8' />
-
         <ShowStats>
           <PictureOverview
             title={t('discover.latest-pictures')}
