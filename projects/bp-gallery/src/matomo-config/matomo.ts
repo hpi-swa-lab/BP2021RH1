@@ -6,6 +6,7 @@ const setupMatomo = (url: string) => {
   _paq.push(['enableLinkTracking']);
   _paq.push(['requireCookieConsent']);
   _paq.push(['disableCookies']);
+  _paq.push(['enableHeartBeatTimer', 5]);
   (function () {
     _paq.push(['setTrackerUrl', url + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
@@ -31,6 +32,7 @@ export const trackHistory = () => {
   _paq.push(['setCustomUrl', newLocation]);
   _paq.push(['setReferrerUrl', lastLocation]);
   _paq.push(['trackPageView']);
+  _paq.push(['trackVisibleContentImpressions']);
   lastLocation = newLocation;
 };
 
