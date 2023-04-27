@@ -3,13 +3,12 @@ import {
   ArrowForwardIos,
   Check,
   Close,
-  CopyAll,
   Edit,
   Eject,
-  MoveDown,
   Place,
-  RemoveRedEye,
   Subtitles,
+  Visibility,
+  VisibilityOff,
 } from '@mui/icons-material';
 import { Button, Chip, DialogContent, Grid, IconButton, TextField } from '@mui/material';
 import { DialogProps } from '../../provider/DialogProvider';
@@ -53,6 +52,7 @@ const LocationManagementDialogPreset = ({
     updateTagChildMutationSource,
     updateTagNameMutationSource,
     updateTagAcceptanceMutationSource,
+    updateVisibilityMutationSource,
   } = useGenericTagEndpoints(TagType.LOCATION);
 
   const allTagQueryResponse = allTagsQuery();
@@ -214,11 +214,33 @@ const LocationManagementDialogPreset = ({
     },
   });
 
-  const acceptTag = (tagId: string) => {
+  const acceptTag = async (tagId: string) => {
     updateAcceptedMutation({
       variables: {
         tagId,
         accepted: true,
+      },
+    });
+  };
+
+  const [visible, setVisible] = useState<boolean>(locationTag.visible ?? false);
+
+  useEffect(() => {
+    setVisible(locationTag.visible ?? false);
+  }, [locationTag]);
+
+  const [updateVisibilityMutation] = updateVisibilityMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+
+  const setVisibility = async (tagId: string, tagVisible: boolean) => {
+    setVisible(tagVisible);
+    updateVisibilityMutation({
+      variables: {
+        tagId: tagId,
+        visible: tagVisible,
       },
     });
   };
@@ -399,47 +421,41 @@ const LocationManagementDialogPreset = ({
             <div className='location-management-right'>
               <div className='location-management-map'></div>
               <div className='location-management-actions'>
-                <div className='location-management-actions-first-row'>
-                  <Button
-                    className='location-management-show-pictures-button'
-                    onClick={() => {}}
-                    endIcon={<ArrowForwardIos />}
-                  >
-                    Bilder Anzeigen
-                  </Button>
-                </div>
-                <div className='location-management-actions-second-row'>
-                  <Button
-                    className='location-management-eject-button'
-                    onClick={() => {}}
-                    endIcon={<Eject />}
-                  >
-                    Loslösen
-                  </Button>
-                  <Button
-                    className='location-management-move-button'
-                    onClick={() => {}}
-                    endIcon={<MoveDown />}
-                  >
-                    Unterordnen
-                  </Button>
-                </div>
-                <div className='location-management-actions-third-row'>
-                  <Button
-                    className='location-management-copy-button'
-                    onClick={() => {}}
-                    endIcon={<CopyAll />}
-                  >
-                    Kopieren
-                  </Button>
+                <Button
+                  className='location-management-show-pictures-button'
+                  onClick={() => {}}
+                  endIcon={<ArrowForwardIos />}
+                >
+                  Bilder Anzeigen
+                </Button>
+                <Button
+                  className='location-management-eject-button'
+                  onClick={() => {}}
+                  endIcon={<Eject />}
+                >
+                  Loslösen
+                </Button>
+                {visible ? (
                   <Button
                     className='location-management-show-button'
-                    onClick={() => {}}
-                    endIcon={<RemoveRedEye />}
+                    onClick={() => {
+                      setVisibility(locationTag.id, false);
+                    }}
+                    endIcon={<Visibility />}
                   >
                     Sichtbar
                   </Button>
-                </div>
+                ) : (
+                  <Button
+                    className='location-management-not-show-button'
+                    onClick={() => {
+                      setVisibility(locationTag.id, true);
+                    }}
+                    endIcon={<VisibilityOff />}
+                  >
+                    Unsichtbar
+                  </Button>
+                )}
               </div>
             </div>
           </div>

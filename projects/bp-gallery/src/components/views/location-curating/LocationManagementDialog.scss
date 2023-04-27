@@ -78,59 +78,40 @@
     }
 
     .location-management-actions {
-      .location-management-actions-first-row {
-        .location-management-show-pictures-button {
-          background-color: $primaryColor;
-          color: #ffffff;
-          margin-top: 0.5rem;
-          width: 100%;
-          padding-inline: 1rem;
-          align-self: center;
-        }
+      .location-management-show-pictures-button {
+        background-color: $primaryColor;
+        color: #ffffff;
+        margin-top: 0.5rem;
+        width: 100%;
+        padding-inline: 1rem;
+        align-self: center;
       }
 
-      .location-management-actions-second-row {
-        display: inline-grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+      .location-management-eject-button {
+        background-color: $primaryColor;
+        color: #ffffff;
+        margin-top: 0.5rem;
         width: 100%;
-
-        .location-management-eject-button {
-          background-color: $primaryColor;
-          color: #ffffff;
-          margin-top: 0.5rem;
-          padding-inline: 1rem;
-          align-self: center;
-        }
-        .location-management-move-button {
-          background-color: $primaryColor;
-          color: #ffffff;
-          margin-top: 0.5rem;
-          padding-inline: 1rem;
-          align-self: center;
-        }
+        padding-inline: 1rem;
+        align-self: center;
       }
 
-      .location-management-actions-third-row {
-        display: inline-grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+      .location-management-show-button {
+        background-color: $primaryColor;
+        color: #ffffff;
+        margin-top: 0.5rem;
         width: 100%;
+        padding-inline: 1rem;
+        align-self: center;
+      }
 
-        .location-management-copy-button {
-          background-color: $primaryColor;
-          color: #ffffff;
-          margin-top: 0.5rem;
-          padding-inline: 1rem;
-          align-self: center;
-        }
-        .location-management-show-button {
-          background-color: $primaryColor;
-          color: #ffffff;
-          margin-top: 0.5rem;
-          padding-inline: 1rem;
-          align-self: center;
-        }
+      .location-management-not-show-button {
+        background-color: lightgray;
+        color: #ffffff;
+        margin-top: 0.5rem;
+        width: 100%;
+        padding-inline: 1rem;
+        align-self: center;
       }
     }
   }
