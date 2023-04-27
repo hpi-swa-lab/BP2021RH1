@@ -27,6 +27,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Loading from '../../common/Loading';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
+import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -138,6 +139,41 @@ const LocationManagementDialogPreset = ({
 
     return tagSiblings;
   }, [flattenedTags, tagTree, tagChildTags]);
+
+  const tagSupertagList = useMemo(() => {
+    if (!flattenedTags) return;
+
+    const tagSupertags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[][]]));
+    // setup queue
+    const queue: FlatTag[] = [];
+    tagTree?.forEach(tag => {
+      queue.push(tag);
+    });
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+
+      // override if clone was filled already to avoid duplicates
+      if (nextTag && tagSupertags[nextTag.id].length > 0) {
+        tagSupertags[nextTag.id] = [];
+      }
+
+      nextTag?.parent_tags?.forEach(parent => {
+        tagSupertags[parent.id].forEach(parentParents => {
+          tagSupertags[nextTag.id].push([...parentParents, parent]);
+        });
+
+        // because roots do not have parents
+        if (tagSupertags[parent.id].length === 0) {
+          tagSupertags[nextTag.id].push([parent]);
+        }
+      });
+      nextTag?.child_tags?.forEach(tag => {
+        queue.push(tag);
+      });
+    }
+
+    return tagSupertags;
+  }, [flattenedTags, tagTree]);
 
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: _ => {
@@ -327,6 +363,13 @@ const LocationManagementDialogPreset = ({
                     {editName ? <Check /> : <Edit />}
                   </IconButton>
                 </div>
+              </div>
+              <div className='location-management-location-path'>
+                <SingleTagElement
+                  option={locationTag}
+                  label={locationTag.name}
+                  tagSupertagList={tagSupertagList}
+                />
               </div>
               <div className='location-management-left-content'>
                 <div className='location-management-synonyms-container'>
