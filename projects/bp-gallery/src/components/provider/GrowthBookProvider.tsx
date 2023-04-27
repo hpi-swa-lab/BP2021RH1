@@ -21,6 +21,14 @@ export function GrowthBookProvider({
         growthbook?.setAttributes({ ...growthbook.getAttributes(), id: visitor_id });
       },
     ]);
+
+    const refresh = (): NodeJS.Timeout => {
+      growthbook?.refreshFeatures();
+      return setTimeout(refresh, 5000);
+    };
+
+    const r = refresh();
+    return () => clearTimeout(r);
   });
 
   return <_GrowthBookProvider growthbook={growthbook}>{children}</_GrowthBookProvider>;

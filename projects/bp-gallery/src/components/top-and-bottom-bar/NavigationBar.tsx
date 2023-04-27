@@ -19,7 +19,6 @@ import { NavLink } from 'react-router-dom';
 import { AuthRole, useAuth } from '../provider/AuthProvider';
 import LoginDialog from './LoginDialog';
 import './NavigationBar.scss';
-import { IfFeatureEnabled } from '@growthbook/growthbook-react';
 
 const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();
@@ -73,9 +72,6 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   return (
     <>
       <div className='nav-bar'>
-        <IfFeatureEnabled feature='test_button'>
-          <button>Test Button</button>
-        </IfFeatureEnabled>
         <NavLink to='/start' className='nav-element'>
           {isMobile && <Book />}
           <span className='nav-element-title'>{t('common.start')}</span>
