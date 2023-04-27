@@ -5,10 +5,10 @@ import {
 import { PropsWithChildren, useEffect } from 'react';
 import { AppFeatures } from '../../helpers/growthbook';
 
-export function GrowthBookProvider({
+export const GrowthBookProvider = ({
   children,
   growthbook,
-}: PropsWithChildren<{ growthbook: GrowthBook<AppFeatures> | undefined }>) {
+}: PropsWithChildren<{ growthbook: GrowthBook<AppFeatures> | undefined }>) => {
   useEffect(() => {
     // Set user attributes for targeting (from cookie, auth system, etc.)
     let visitor_id: string;
@@ -32,4 +32,4 @@ export function GrowthBookProvider({
   });
 
   return <_GrowthBookProvider growthbook={growthbook}>{children}</_GrowthBookProvider>;
-}
+};
