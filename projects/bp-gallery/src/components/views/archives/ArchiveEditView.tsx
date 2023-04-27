@@ -22,6 +22,7 @@ interface ArchiveEditViewProps {
 
 interface ArchiveForm {
   name: string;
+  s;
   shortDescription: string;
   longDescription: string;
   paypalClient: string;

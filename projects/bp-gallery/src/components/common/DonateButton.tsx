@@ -3,8 +3,10 @@ import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import './DonateButton.scss';
+import PrimaryButton from './PrimaryButton';
 
 const DonateButton = ({ clientId }: { clientId: string }) => {
+  const [isClicked, setIsClicked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [donation, setDonation] = useState('0.00');
   const transitionRef = useRef(null);
@@ -16,28 +18,38 @@ const DonateButton = ({ clientId }: { clientId: string }) => {
     if (isOpen) {
       setTimeout(function () {
         transitionRef.current.className = 'parent-active';
-        console.log('here');
       }, 20);
     }
   }, [isOpen]);
   return (
     <PayPalScriptProvider options={paypalOptions}>
       <div className='max-w-xs'>
-        <div className='flex place-content-center my-3 gap-1'>
-          <CurrencyInput
-            disabled={isOpen}
-            id='donate-amount'
-            className='w-fit text-lg'
-            allowNegativeValue={false}
-            placeholder='Bitte Spendenbetrag eingeben'
-            decimalScale={2}
-            decimalsLimit={2}
-            suffix={'€'}
-            onValueChange={(value, name) => setDonation(value ?? '0.00')}
-          />
-          <Button variant='outlined' onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? 'Anpassen' : 'Spenden'}
-          </Button>
+        <div className='flex flex-col md:flex-row align-center my-3 gap-1'>
+          {isClicked ? (
+            <>
+              <CurrencyInput
+                disabled={isOpen}
+                id='donate-amount'
+                className='w-fit text-lg'
+                allowNegativeValue={false}
+                placeholder='Bitte Spendenbetrag eingeben'
+                decimalScale={2}
+                decimalsLimit={2}
+                suffix={'€'}
+                onValueChange={(value, name) => {
+                  value && setDonation(() => value.replace(',', '.'));
+                }}
+              />
+              <Button
+                variant='outlined'
+                onClick={() => (parseInt(donation) > 0 ? setIsOpen(!isOpen) : '')}
+              >
+                {isOpen ? 'Anpassen' : 'Spenden'}
+              </Button>
+            </>
+          ) : (
+            <PrimaryButton onClickFn={() => setIsClicked(true)}>Spenden</PrimaryButton>
+          )}
         </div>
         {isOpen && (
           <div ref={transitionRef} className='paypal-parent'>
@@ -47,7 +59,7 @@ const DonateButton = ({ clientId }: { clientId: string }) => {
                   purchase_units: [
                     {
                       amount: {
-                        value: donation.replace(',', '.'),
+                        value: donation,
                       },
                     },
                   ],

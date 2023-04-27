@@ -52,6 +52,7 @@ const StartView = () => {
         <div className='welcome'>
           <h1>{t('startpage.welcome-title')}</h1>
           <p>{t('startpage.welcome-text')}</p>
+          <DonateButton clientId='Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8' />
         </div>
         <DailyPicture />
         {!isMobile && (
@@ -66,7 +67,7 @@ const StartView = () => {
             </PrimaryButton>
           </div>
         )}
-        <DonateButton clientId='Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8' />
+
         <ShowStats>
           <PictureOverview
             title={t('discover.latest-pictures')}

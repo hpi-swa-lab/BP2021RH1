@@ -1,15 +1,10 @@
 .paypal-parent {
   overflow: hidden;
-  height: 0px;
+  max-height: 0px;
 }
 
 .parent-active {
   overflow: hidden;
-  transition: 0.4s;
-  height: 319px;
-}
-
-.child {
-  height: 4rem;
-  background-color: green;
+  transition: 1s;
+  max-height: 60rem;
 }

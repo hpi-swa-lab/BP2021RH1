@@ -14,6 +14,7 @@ import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
+import DonateButton from '../../common/DonateButton';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -63,6 +64,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
       <div className='archive-data'>
         <div className='archive-info'>
           <ArchiveDescription description={archive.longDescription} />
+
           <div className='archive-socials'>
             {archive.logo && (
               <div className='archive-logo-container'>
@@ -76,6 +78,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               </div>
             )}
             <div className='archive-links'>
+              {archive.paypalClient && archive.paypalClient !== '' && (
+                <DonateButton clientId={archive.paypalClient} />
+              )}
               {archive.links?.map(link => (
                 <div className='archive-link' key={link.id}>
                   <Link className='link-icon' />
