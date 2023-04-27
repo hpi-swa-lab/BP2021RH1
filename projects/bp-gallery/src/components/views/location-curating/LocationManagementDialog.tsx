@@ -431,6 +431,9 @@ const LocationManagementDialogPreset = ({
                       }}
                       noContentText={''}
                       fixedTag={locationTag}
+                      fixedTagOnClick={(id: string) => {
+                        setLocationTagID(id);
+                      }}
                       createChildMutation={newChildLocationTagMutation}
                     />
                   </PictureInfoField>
@@ -457,6 +460,9 @@ const LocationManagementDialogPreset = ({
                       }}
                       noContentText={''}
                       fixedTag={locationTag}
+                      fixedTagOnClick={(id: string) => {
+                        setLocationTagID(id);
+                      }}
                       createParentMutation={newParentLocationTagMutation}
                     />
                   </PictureInfoField>

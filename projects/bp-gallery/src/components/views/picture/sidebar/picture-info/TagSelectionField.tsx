@@ -39,6 +39,7 @@ const TagSelectionField = <T extends TagFields>({
   noContentText,
   type,
   fixedTag,
+  fixedTagOnClick,
 }: {
   tags: T[];
   allTags: T[];
@@ -50,6 +51,7 @@ const TagSelectionField = <T extends TagFields>({
   noContentText: string;
   type: TagType;
   fixedTag?: FlatTag;
+  fixedTagOnClick?: (id: string) => void;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -656,6 +658,9 @@ const TagSelectionField = <T extends TagFields>({
                 icon={nonVerifiable || option.verified ? undefined : <Help />}
                 label={option.name}
                 onClick={() => {
+                  if (fixedTagOnClick) {
+                    fixedTagOnClick(option.id);
+                  }
                   if (!nonVerifiable) {
                     toggleVerified(value, index);
                   }
