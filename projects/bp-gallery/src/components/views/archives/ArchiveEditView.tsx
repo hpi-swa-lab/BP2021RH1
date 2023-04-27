@@ -235,10 +235,23 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
         <ArchiveInputField
           label={t('archives.edit.paypal.label')}
-          defaultValue=''
+          defaultValue={archive.paypalClient ?? ''}
           placeholder={t('archives.edit.paypal.placeholder')}
           id='paypal'
-          onBlur={value => updateForm({ paypalClient: value, dirty: true })}
+          errorText='Dies ist keine valide Paypal Client-Id'
+          errorFn={async value => {
+            if (value === '') return false;
+            const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${value}`);
+            return !response.ok;
+          }}
+          onBlur={async value => {
+            if (value === '') {
+              updateForm({ paypalClient: '', dirty: true });
+              return;
+            }
+            const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${value}`);
+            response.ok ? updateForm({ paypalClient: value, dirty: true }) : '';
+          }}
         />
       </form>
     </div>

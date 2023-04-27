@@ -3303,18 +3303,6 @@ csstype@^3.0.2, csstype@^3.1.1:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
 
-cypress-plugin-config@^1.0.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/cypress-plugin-config/-/cypress-plugin-config-1.2.1.tgz#aa7eaa55ab5ce5e186ab7d0e37cc7e42bfb609b4"
-  integrity sha512-z+bQ7oyfDKun51HiCVNBOR+g38/nYRJ7zVdCZT2/9UozzE8P4iA1zF/yc85ePZLy5NOj/0atutoUPBBR5SqjSQ==
-
-cypress-slow-down@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/cypress-slow-down/-/cypress-slow-down-1.2.1.tgz#d10c75c2f79240812f4e58824e09d057a2d0e24d"
-  integrity sha512-Pd+nESR+Ca8I+mLGbBrPVMEFvJBWxkJcEdcIUDxSBnMoWI00hiIKxzEgVqCv5c6Oap2OPpnrPLbJBwveCNKLig==
-  dependencies:
-    cypress-plugin-config "^1.0.0"
-
 cypress@^11.0.0:
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-11.2.0.tgz#63edef8c387b687066c5493f6f0ad7b9ced4b2b7"
