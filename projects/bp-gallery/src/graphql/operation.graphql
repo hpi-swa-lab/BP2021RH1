@@ -51,6 +51,27 @@ query getArchive($archiveId: ID!) {
   }
 }
 
+query getPictureMediaInfo($pictureId: ID!) {
+  picture(id: $pictureId) {
+    data {
+      id
+      attributes {
+        media {
+          data {
+            id
+            attributes {
+              width
+              height
+              formats
+              url
+              updatedAt
+            }
+          }
+        }
+      }
+    }
+  }
+}
 query getPictureInfo($pictureId: ID!) {
   picture(id: $pictureId) {
     data {
@@ -1222,6 +1243,43 @@ mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
       id
     }
   }
+}
+
+mutation createPictureGeoInfo($data: PictureGeoInfoInput!) {
+  createPictureGeoInfo(data: $data) {
+    data {
+      id
+    }
+  }
+}
+
+query getPictureGeoInfo($pictureId: ID!) {
+  pictureGeoInfos(filters: { picture: { id: { eq: $pictureId } } }) {
+    data {
+      id
+      attributes {
+        latitude
+        longitude
+        radius
+      }
+    }
+  }
+}
+
+query getPicturesGeoInfo($pictureIds: [ID]!) {
+  pictureGeoInfos(filters: { picture: { id: { in: $pictureIds } } }) {
+    data {
+      id
+      attributes {
+        latitude
+        longitude
+      }
+    }
+  }
+}
+
+mutation increaseNotAPlaceCount($pictureId: ID!) {
+  increaseNotAPlaceCount(id: $pictureId)
 }
 
 query getUnverifiedComments {

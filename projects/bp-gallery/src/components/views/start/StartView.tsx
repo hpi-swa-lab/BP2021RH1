@@ -5,6 +5,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import PrimaryButton from '../../common/PrimaryButton';
 import DonateButton from '../../common/DonateButton';
 import PictureOverview from '../../common/PictureOverview';
 import BrowseView from '../browse/BrowseView';
@@ -13,11 +14,12 @@ import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
+import { useMobile } from '../../../hooks/context-hooks';
 
 const StartView = () => {
   const { visit } = useVisit();
   const { t } = useTranslation();
-
+  const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
 
@@ -52,6 +54,18 @@ const StartView = () => {
           <p>{t('startpage.welcome-text')}</p>
         </div>
         <DailyPicture />
+        {!isMobile && (
+          <div className='flex place-content-center gap-2 m-4'>
+            <PrimaryButton
+              onClickFn={() => {
+                visit('/geo');
+              }}
+              isShowMore
+            >
+              {t('geo.geo-game-button')}
+            </PrimaryButton>
+          </div>
+        )}
         <DonateButton clientId='Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8' />
         <ShowStats>
           <PictureOverview

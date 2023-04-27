@@ -1,6 +1,4 @@
-import { Button } from '@mui/material';
 import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
-import { ArrowForwardIos } from '@mui/icons-material';
 import './PictureOverview.scss';
 import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import {
@@ -14,6 +12,7 @@ import TagList from '../views/search/TagList';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
+import PrimaryButton from './PrimaryButton';
 
 interface TagOverviewProps {
   title?: string;
@@ -106,13 +105,9 @@ const TagOverview = ({
           )}
         </div>
         {onClick && (
-          <Button
-            onClick={onClick}
-            className='overview-show-more-button'
-            endIcon={<ArrowForwardIos />}
-          >
+          <PrimaryButton onClickFn={onClick} isShowMore={true}>
             {t('common.showMore')}
-          </Button>
+          </PrimaryButton>
         )}
       </div>
     );

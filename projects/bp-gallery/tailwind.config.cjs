@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       height: {
         '50vh': '50vh',
+        'main': 'calc(100vh - 5rem)',
       },
       colors: {
         primary: '#7e241d'
