@@ -1,5 +1,7 @@
 import { Button } from '@mui/material';
 import { Icon, LatLng, Map, latLngBounds } from 'leaflet';
+import markerIcon from 'leaflet/dist/images/marker-icon-2x.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,8 +11,6 @@ import {
   useIncreaseNotAPlaceCountMutation,
 } from '../../../graphql/APIConnector';
 import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import markerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import otherMarkerIcon from './location-map-pin.svg';
 
 const PlayerMarkers = ({
@@ -34,13 +34,9 @@ const PlayerMarkers = ({
     }, 300);
   }, [coords, myGuess, map]);
   const othersIcon = new Icon({
+    ...Icon.Default.prototype.options,
     iconUrl: otherMarkerIcon,
-    iconSize: Icon.Default.prototype.options.iconSize,
-    iconAnchor: Icon.Default.prototype.options.iconAnchor,
-    popupAnchor: Icon.Default.prototype.options.popupAnchor,
     shadowUrl: markerShadow,
-    shadowSize: Icon.Default.prototype.options.shadowSize,
-    shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
   });
 
   return (
@@ -65,13 +61,9 @@ const MyMarker = ({
   });
 
   const myIcon = new Icon({
+    ...Icon.Default.prototype.options,
     iconUrl: markerIcon,
-    iconSize: Icon.Default.prototype.options.iconSize,
-    iconAnchor: Icon.Default.prototype.options.iconAnchor,
-    popupAnchor: Icon.Default.prototype.options.popupAnchor,
     shadowUrl: markerShadow,
-    shadowSize: Icon.Default.prototype.options.shadowSize,
-    shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
   });
 
   return <Marker icon={myIcon} position={position} />;
