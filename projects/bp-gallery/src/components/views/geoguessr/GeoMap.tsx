@@ -31,14 +31,15 @@ const PlayerMarkers = ({
     }, 300);
   }, [coords, myGuess, map]);
   const othersIcon = new Icon({
-    iconUrl: '/images/location-map-pin.svg',
+    iconUrl: '/geoIcons/location-map-pin.svg',
     iconSize: Icon.Default.prototype.options.iconSize,
     iconAnchor: Icon.Default.prototype.options.iconAnchor,
     popupAnchor: Icon.Default.prototype.options.popupAnchor,
-    shadowUrl: 'images/marker-shadow.png',
+    shadowUrl: 'geoIcons/marker-shadow.png',
     shadowSize: Icon.Default.prototype.options.shadowSize,
     shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
   });
+
   return (
     <div>
       {coords.map((x, index) => (
@@ -60,7 +61,17 @@ const MyMarker = ({
     isPositionable && setPosition(event.latlng.clone());
   });
 
-  return <Marker position={position} />;
+  const myIcon = new Icon({
+    iconUrl: '/geoIcons/marker-icon-2x.png',
+    iconSize: Icon.Default.prototype.options.iconSize,
+    iconAnchor: Icon.Default.prototype.options.iconAnchor,
+    popupAnchor: Icon.Default.prototype.options.popupAnchor,
+    shadowUrl: 'geoIcons/marker-shadow.png',
+    shadowSize: Icon.Default.prototype.options.shadowSize,
+    shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
+  });
+
+  return <Marker icon={myIcon} position={position} />;
 };
 
 const GeoMap = ({

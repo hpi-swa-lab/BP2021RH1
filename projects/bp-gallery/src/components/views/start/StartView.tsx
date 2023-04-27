@@ -61,6 +61,14 @@ const StartView = () => {
               }}
               isShowMore
             >
+              {t('discover.discover-button')}
+            </PrimaryButton>
+            <PrimaryButton
+              onClickFn={() => {
+                visit('/geo');
+              }}
+              isShowMore
+            >
               {t('geo.geo-game-button')}
             </PrimaryButton>
           </div>
