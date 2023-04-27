@@ -2985,6 +2985,7 @@ export type GetLocationTagByIdQuery = {
                 | {
                     name: string;
                     visible?: boolean | null | undefined;
+                    accepted?: boolean | null | undefined;
                     synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
                     child_tags?:
                       | {
@@ -5614,6 +5615,7 @@ export const GetLocationTagByIdDocument = gql`
         attributes {
           name
           visible
+          accepted
           synonyms {
             name
           }

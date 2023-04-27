@@ -25,6 +25,15 @@
     padding-right: 8px;
     .location-management-name-container {
       display: flex;
+
+      .location-management-accept-location {
+        margin: auto auto auto 8px;
+      }
+
+      .location-management-edit-location {
+        margin: auto 0px auto auto;
+      }
+
       .MuiButtonBase-root {
         padding: 0;
         margin-left: auto;

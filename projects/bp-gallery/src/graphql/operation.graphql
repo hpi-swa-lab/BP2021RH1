@@ -711,6 +711,7 @@ query getLocationTagById($locationID: ID!) {
       attributes {
         name
         visible
+        accepted
         synonyms {
           name
         }

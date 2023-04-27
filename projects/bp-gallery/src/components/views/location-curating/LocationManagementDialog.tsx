@@ -52,6 +52,7 @@ const LocationManagementDialogPreset = ({
     updateTagParentMutationSource,
     updateTagChildMutationSource,
     updateTagNameMutationSource,
+    updateTagAcceptanceMutationSource,
   } = useGenericTagEndpoints(TagType.LOCATION);
 
   const allTagQueryResponse = allTagsQuery();
@@ -207,6 +208,21 @@ const LocationManagementDialogPreset = ({
     });
   };
 
+  const [updateAcceptedMutation] = updateTagAcceptanceMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+
+  const acceptTag = (tagId: string) => {
+    updateAcceptedMutation({
+      variables: {
+        tagId,
+        accepted: true,
+      },
+    });
+  };
+
   const currentSiblings = [
     ...(tagSiblingTags && locationTag.id in tagSiblingTags ? tagSiblingTags[locationTag.id] : []),
     locationTag,
@@ -255,19 +271,38 @@ const LocationManagementDialogPreset = ({
                     }}
                   />
                 ) : (
-                  <h2 className='location-management-location-name'>
+                  <h2
+                    className={`location-management-location-name ${
+                      !locationTag.accepted ? 'text-gray-400' : ''
+                    }`}
+                  >
                     {title.current !== locationTag.name && !changed
                       ? locationTag.name
                       : title.current}
                   </h2>
                 )}
-                <IconButton
-                  onClick={() => {
-                    setEditName(!editName);
-                  }}
-                >
-                  {editName ? <Check /> : <Edit />}
-                </IconButton>
+                {!locationTag.accepted && !editName ? (
+                  <div className='location-management-accept-location'>
+                    <IconButton
+                      onClick={() => {
+                        acceptTag(locationTag.id);
+                      }}
+                    >
+                      <Check />
+                    </IconButton>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+                <div className='location-management-edit-location'>
+                  <IconButton
+                    onClick={() => {
+                      setEditName(!editName);
+                    }}
+                  >
+                    {editName ? <Check /> : <Edit />}
+                  </IconButton>
+                </div>
               </div>
               <div className='location-management-left-content'>
                 <div className='location-management-synonyms-container'>
