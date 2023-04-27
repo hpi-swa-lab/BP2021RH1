@@ -4,7 +4,6 @@ import {
   Check,
   Close,
   Edit,
-  Eject,
   Place,
   Subtitles,
   Visibility,
@@ -26,6 +25,8 @@ import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
 import TagSelectionField from '../picture/sidebar/picture-info/TagSelectionField';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Loading from '../../common/Loading';
+import { History } from 'history';
+import { useHistory } from 'react-router-dom';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -34,6 +35,7 @@ const LocationManagementDialogPreset = ({
   handleClose: (value: any) => void;
   dialogProps: DialogProps;
 }) => {
+  const history: History = useHistory();
   const refetch = dialogProps.content.refetch;
 
   const [locationTagID, setLocationTagID] = useState<any>(dialogProps.content.locationTag.id);
@@ -423,17 +425,15 @@ const LocationManagementDialogPreset = ({
               <div className='location-management-actions'>
                 <Button
                   className='location-management-show-pictures-button'
-                  onClick={() => {}}
+                  onClick={() => {
+                    handleClose(undefined);
+                    history.push(`/show-more/location/${locationTag.id}`, {
+                      showBack: true,
+                    });
+                  }}
                   endIcon={<ArrowForwardIos />}
                 >
                   Bilder Anzeigen
-                </Button>
-                <Button
-                  className='location-management-eject-button'
-                  onClick={() => {}}
-                  endIcon={<Eject />}
-                >
-                  Loslösen
                 </Button>
                 {visible ? (
                   <Button
