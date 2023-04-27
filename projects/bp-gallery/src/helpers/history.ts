@@ -37,6 +37,7 @@ export const useVisit = () => {
       });
       history.push(url, { showBack: options?.state?.showBack ?? true, ...options?.state });
       growthbook?.setURL(window.location.href);
+      growthbook?.refreshFeatures();
     },
     [history, scrollRef, growthbook]
   );

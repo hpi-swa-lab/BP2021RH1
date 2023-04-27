@@ -10,13 +10,13 @@ export function GrowthBookProvider({
   growthbook,
 }: PropsWithChildren<{ growthbook: GrowthBook<AppFeatures> | undefined }>) {
   useEffect(() => {
-    growthbook?.loadFeatures({ autoRefresh: true, timeout: 2000 });
     // Set user attributes for targeting (from cookie, auth system, etc.)
     let visitor_id: string;
     const w: any = window;
     const _paq: Array<any> = (w._paq = w._paq || []);
     _paq.push([
       function (this: any) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         visitor_id = this.getVisitorId();
         growthbook?.setAttributes({ ...growthbook.getAttributes(), id: visitor_id });
       },

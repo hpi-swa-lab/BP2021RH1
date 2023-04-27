@@ -14,6 +14,12 @@ import StorageProvider from './provider/StorageProvider';
 import routes from './routes';
 import BottomBar from './top-and-bottom-bar/BottomBar';
 import TopBar from './top-and-bottom-bar/TopBar';
+import { useEffect } from 'react';
+import { GrowthBook } from '@growthbook/growthbook-react';
+import { GrowthBookProvider } from './provider/GrowthBookProvider';
+
+const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
+const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
 
 const apolloClient = new ApolloClient({
   link: buildHttpLink(sessionStorage.getItem('jwt')),
@@ -64,7 +70,27 @@ const apolloClient = new ApolloClient({
   }),
 });
 
+const growthbook = new GrowthBook({
+  apiHost: growthbookApiHost,
+  clientKey: growthbookClientKey,
+  enableDevMode: true,
+  trackingCallback: (experiment, result) => {
+    const w: any = window;
+    const _paq: Array<any> = (w._paq = w._paq || []);
+    _paq.push(['trackEvent', 'ExperimentViewed', experiment.key, 'v' + String(result.variationId)]);
+  },
+  onFeatureUsage: (featureKey, result) => {
+    const w: any = window;
+    const _paq: Array<any> = (w._paq = w._paq || []);
+    _paq.push(['trackEvent', 'ExperimentViewed', featureKey, 'v' + String(result)]);
+  },
+});
+
 const App = () => {
+  useEffect(() => {
+    growthbook.loadFeatures({ autoRefresh: true });
+  }, []);
+
   return (
     <ApolloProvider client={apolloClient}>
       <AlertProvider>
@@ -74,11 +100,13 @@ const App = () => {
               <MobileProvider>
                 <div className='App'>
                   <ClipboardEditorProvider>
-                    <ScrollProvider useWindow>
-                      <TopBar />
-                      <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
-                      <BottomBar />
-                    </ScrollProvider>
+                    <GrowthBookProvider growthbook={growthbook}>
+                      <ScrollProvider useWindow>
+                        <TopBar />
+                        <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                        <BottomBar />
+                      </ScrollProvider>
+                    </GrowthBookProvider>
                   </ClipboardEditorProvider>
                 </div>
               </MobileProvider>

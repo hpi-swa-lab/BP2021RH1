@@ -8,29 +8,9 @@ import './i18n';
 import setupMatomo from './matomo-config/matomo';
 import { TrackHistoryWithMatomo } from './matomo-config/TrackHistoryWithMatomo';
 import reportWebVitals from './reportWebVitals';
-import { GrowthBook } from '@growthbook/growthbook-react';
-import { GrowthBookProvider } from './components/provider/GrowthBookProvider';
 
 const sentryDsn = import.meta.env.VITE_REACT_APP_SENTRY_DSN;
 const matomoUrl = import.meta.env.VITE_REACT_APP_MATOMO_URL;
-const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
-const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
-
-const growthbook = new GrowthBook({
-  apiHost: growthbookApiHost,
-  clientKey: growthbookClientKey,
-  enableDevMode: false,
-  trackingCallback: (experiment, result) => {
-    const w: any = window;
-    const _paq: Array<any> = (w._paq = w._paq || []);
-    _paq.push(['trackEvent', 'ExperimentViewed', experiment.key, 'v' + String(result.variationId)]);
-  },
-  onFeatureUsage: (featureKey, result) => {
-    const w: any = window;
-    const _paq: Array<any> = (w._paq = w._paq || []);
-    _paq.push(['trackEvent', 'ExperimentViewed', featureKey, 'v' + String(result)]);
-  },
-});
 
 if (sentryDsn) {
   Sentry.init({
@@ -48,9 +28,7 @@ createRoot(root).render(
   <React.StrictMode>
     <BrowserRouter>
       <TrackHistoryWithMatomo>
-        <GrowthBookProvider growthbook={growthbook}>
-          <App />
-        </GrowthBookProvider>
+        <App />
       </TrackHistoryWithMatomo>
     </BrowserRouter>
   </React.StrictMode>
