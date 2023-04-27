@@ -33,6 +33,7 @@ export type ArchiveTag = {
   logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  paypalClient?: Maybe<Scalars['String']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
@@ -75,6 +76,7 @@ export type ArchiveTagFiltersInput = {
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ArchiveTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
+  paypalClient?: InputMaybe<StringFilterInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
@@ -86,6 +88,7 @@ export type ArchiveTagInput = {
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  paypalClient?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
@@ -2016,6 +2019,7 @@ export type GetArchiveQuery = {
                     name: string;
                     shortDescription?: string | null | undefined;
                     longDescription?: string | null | undefined;
+                    paypalClient?: string | null | undefined;
                     logo?:
                       | {
                           data?:
@@ -3891,6 +3895,7 @@ export const GetArchiveDocument = gql`
           name
           shortDescription
           longDescription
+          paypalClient
           logo {
             data {
               id
