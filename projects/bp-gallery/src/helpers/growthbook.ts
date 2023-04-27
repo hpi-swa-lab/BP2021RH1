@@ -1,8 +1,8 @@
 import {
   GrowthBook,
-  useFeatureIsOn as _useFeatureIsOn,
-  useFeatureValue as _useFeatureValue,
   useGrowthBook as _useGrowthBook,
+  useFeatureIsOn,
+  useFeatureValue,
 } from '@growthbook/growthbook-react';
 
 export type AppFeatures = {
@@ -14,7 +14,7 @@ export type FeatureId = keyof AppFeatures;
 export const useGrowthBook = (): GrowthBook<AppFeatures> | undefined =>
   _useGrowthBook<AppFeatures>();
 
-export const useFeatureIsOn = (id: FeatureId): boolean => _useFeatureIsOn<AppFeatures>(id);
+export const useFlag = (id: FeatureId): boolean => useFeatureIsOn<AppFeatures>(id);
 
-export const useFeatureValue = ({ id, fallback }: { id: FeatureId; fallback: string }): string =>
-  _useFeatureValue(id, fallback);
+export const useVariant = ({ id, fallback }: { id: FeatureId; fallback: string }): string =>
+  useFeatureValue(id, fallback);
