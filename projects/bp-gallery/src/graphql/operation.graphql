@@ -6,6 +6,7 @@ query getArchive($archiveId: ID!) {
         name
         shortDescription
         longDescription
+        paypalClient
         logo {
           data {
             id

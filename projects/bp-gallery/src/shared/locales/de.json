@@ -277,6 +277,10 @@
           "helperTextInvalid": "Bitte geben sie eine gültige URL an."
         },
         "addLink": "Link hinzufügen"
+      },
+      "paypal": {
+        "label": "Paypal-Spenden",
+        "placeholder": "Gib deine Paypal-Client-Id an"
       }
     }
   },

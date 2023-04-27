@@ -145,6 +145,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               name: form.name,
               shortDescription: form.shortDescription,
               longDescription: form.longDescription,
+              paypalClient: form.paypalClient,
               logo: ids[0],
             },
           },
@@ -158,6 +159,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
             name: form.name,
             shortDescription: form.shortDescription,
             longDescription: form.longDescription,
+            paypalClient: form.paypalClient,
           },
         },
       });
@@ -231,6 +233,13 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           onChange={file => updateForm({ logo: file, dirty: true })}
         />
         <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
+        <ArchiveInputField
+          label={t('archives.edit.paypal.label')}
+          defaultValue=''
+          placeholder={t('archives.edit.paypal.placeholder')}
+          id='paypal'
+          onBlur={value => updateForm({ paypalClient: value, dirty: true })}
+        />
       </form>
     </div>
   ) : (
