@@ -23,5 +23,5 @@ export function GrowthBookProvider({
     ]);
   });
 
-  return <_GrowthBookProvider>{children}</_GrowthBookProvider>;
+  return <_GrowthBookProvider growthbook={growthbook}>{children}</_GrowthBookProvider>;
 }
