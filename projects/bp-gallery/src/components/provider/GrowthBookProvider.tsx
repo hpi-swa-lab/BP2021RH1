@@ -7,25 +7,33 @@ import { PropsWithChildren, useEffect } from 'react';
 const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
 const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
 
-const growthbook = new GrowthBook({
-  apiHost: growthbookApiHost,
-  clientKey: growthbookClientKey,
-  enableDevMode: true,
-  trackingCallback: (experiment, result) => {
-    const w: any = window;
-    const _paq: Array<any> = (w._paq = w._paq || []);
-    _paq.push(['trackEvent', 'ExperimentViewed', experiment.key, 'v' + String(result.variationId)]);
-  },
-  onFeatureUsage: (featureKey, result) => {
-    const w: any = window;
-    const _paq: Array<any> = (w._paq = w._paq || []);
-    _paq.push(['trackEvent', 'ExperimentViewed', featureKey, 'v' + String(result)]);
-  },
-});
+const growthbook =
+  growthbookApiHost && growthbookClientKey
+    ? new GrowthBook({
+        apiHost: growthbookApiHost,
+        clientKey: growthbookClientKey,
+        enableDevMode: import.meta.env.MODE === 'development',
+        trackingCallback: (experiment, result) => {
+          const w: any = window;
+          const _paq: Array<any> = (w._paq = w._paq || []);
+          _paq.push([
+            'trackEvent',
+            'ExperimentViewed',
+            experiment.key,
+            'v' + String(result.variationId),
+          ]);
+        },
+        onFeatureUsage: (featureKey, result) => {
+          const w: any = window;
+          const _paq: Array<any> = (w._paq = w._paq || []);
+          _paq.push(['trackEvent', 'ExperimentViewed', featureKey, 'v' + String(result)]);
+        },
+      })
+    : undefined;
 
 export const GrowthBookProvider = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
-    growthbook.loadFeatures({ autoRefresh: true });
+    growthbook?.loadFeatures({ autoRefresh: true });
   }, []);
   useEffect(() => {
     // Set user attributes for targeting (from cookie, auth system, etc.)
@@ -36,11 +44,12 @@ export const GrowthBookProvider = ({ children }: PropsWithChildren<{}>) => {
       function (this: any) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         visitor_id = this.getVisitorId();
-        growthbook.setAttributes({ ...growthbook.getAttributes(), id: visitor_id });
+        growthbook?.setAttributes({ ...growthbook.getAttributes(), id: visitor_id });
       },
     ]);
 
-    const refresh = (): NodeJS.Timeout => {
+    const refresh = (): NodeJS.Timeout | undefined => {
+      if (!growthbook) return;
       growthbook.refreshFeatures();
       return setTimeout(refresh, 5000);
     };
