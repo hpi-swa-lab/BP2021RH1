@@ -2,14 +2,14 @@ import {
   GrowthBook,
   useFeatureIsOn as _useFeatureIsOn,
   useFeatureValue as _useFeatureValue,
+  useGrowthBook as _useGrowthBook,
 } from '@growthbook/growthbook-react';
-import { useGrowthBook as _useGrowthBook } from '@growthbook/growthbook-react';
 
 export type AppFeatures = {
   test_button: boolean;
 };
 
-type FeatureId = keyof AppFeatures & string;
+export type FeatureId = keyof AppFeatures;
 
 export const useGrowthBook = (): GrowthBook<AppFeatures> | undefined =>
   _useGrowthBook<AppFeatures>();
