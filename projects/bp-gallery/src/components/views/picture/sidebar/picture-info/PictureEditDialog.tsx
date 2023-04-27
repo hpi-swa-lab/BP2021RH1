@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client';
 import { Close, Save } from '@mui/icons-material';
 import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { useCallback, useContext, useRef } from 'react';
+import { memo, useCallback, useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type TuiImageEditor from 'tui-image-editor';
 import { asApiPath } from '../../../../../helpers/app-helpers';
@@ -16,7 +16,7 @@ const isDefaultCropZone = (rect: any) => {
   return rect.width < 1 || rect.height < 1;
 };
 
-const PictureEditDialog = ({
+const PictureEditDialog = memo(function PictureEditDialog({
   picture,
   open,
   onClose,
@@ -24,7 +24,7 @@ const PictureEditDialog = ({
   picture: FlatPicture;
   open: boolean;
   onClose: () => void;
-}) => {
+}) {
   const { t } = useTranslation();
   const editorRef = useRef<TuiImageEditor | null>(null);
   const apolloClient = useApolloClient();
@@ -107,6 +107,6 @@ const PictureEditDialog = ({
       </DialogContent>
     </Dialog>
   );
-};
+});
 
 export default PictureEditDialog;

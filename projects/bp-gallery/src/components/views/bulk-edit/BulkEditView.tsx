@@ -110,6 +110,13 @@ const BulkEditView = ({
       const diff = computePictureDiff(combinedPictureAsField, field);
       save(diff);
     };
+    const hasHiddenLinks =
+      (combinedPicture.linked_pictures?.length ?? 0) === 0 &&
+      (combinedPicture.linked_texts?.length ?? 0) === 0 &&
+      pictures.some(
+        picture =>
+          (picture.linked_pictures?.length ?? 0) > 0 || (picture.linked_texts?.length ?? 0) > 0
+      );
     return (
       <div className='bulk-edit'>
         <div className='bulk-edit-grid-wrapper'>
@@ -131,6 +138,7 @@ const BulkEditView = ({
           <PictureInfo
             picture={combinedPicture}
             pictureIds={pictureIds}
+            hasHiddenLinks={hasHiddenLinks}
             onSave={onSave}
             topInfo={(anyFieldTouched, isSaving) => (
               <div className='curator-ops'>

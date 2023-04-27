@@ -1,0 +1,14 @@
+@import 'src/shared/style';
+
+.primary-button {
+  background-color: $primaryColor !important;
+  color: #ffffff;
+  margin-top: 0.5rem;
+  width: fit-content;
+  padding-inline: 1rem;
+  align-self: center;
+}
+
+.primary-button:hover {
+  background-color: #1565c0;
+}

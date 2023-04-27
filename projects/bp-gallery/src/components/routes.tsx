@@ -20,6 +20,7 @@ import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import ContactFormView from './views/contact/ContactFormView';
 import ShowMoreView from './views/show-more/ShowMoreView';
 import DiscoverView from './views/discover/DiscoverView';
+import GeoView from './views/geoguessr/GeoView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -168,7 +169,13 @@ const routes: RouteConfig[] = [
     },
     exact: true,
   },
-
+  {
+    path: '/geo',
+    render: () => {
+      return <GeoView />;
+    },
+    exact: true,
+  },
   {
     // fallback component for unmatched routes
     render: () => {
