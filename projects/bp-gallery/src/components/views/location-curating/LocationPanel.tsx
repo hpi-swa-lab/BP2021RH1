@@ -69,7 +69,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
       preset: DialogPreset.INPUT_FIELD,
       title: t(`tag-panel.name-of-${type}`),
     });
-    if (collectionName?.length) {
+    if (collectionName?.length && !tagTree?.some((child: any) => child.name === collectionName)) {
       createLocationTag({
         variables: {
           name: collectionName,

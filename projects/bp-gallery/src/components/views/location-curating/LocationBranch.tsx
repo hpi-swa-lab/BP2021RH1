@@ -56,7 +56,10 @@ const LocationBranch = ({
       preset: DialogPreset.INPUT_FIELD,
       title: t(`tag-panel.name-of-sub-${type}`, { parent: locationTag.name }),
     });
-    if (collectionName?.length) {
+    if (
+      collectionName?.length &&
+      !locationTag.child_tags.some((child: any) => child.name === collectionName)
+    ) {
       createSubLocationTag({
         variables: {
           name: collectionName,
