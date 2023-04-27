@@ -251,6 +251,14 @@ const TagSelectionField = <T extends TagFields>({
           options={lastSelectedTags && lastSelectedTags.length > 0 ? lastSelectedTags : tagList}
           filterOptions={(options, { inputValue }) => {
             let filtered = options;
+            if (fixedTag) {
+              filtered = filtered.filter(
+                tag =>
+                  !tags.some(
+                    existingTag => existingTag.name === tag.name && existingTag.id !== tag.id
+                  )
+              );
+            }
             if (inputValue !== '') {
               // Only fuzzy match "real" inputs.
               const fuzzyMatcher = new Fuse(options, {
@@ -277,7 +285,12 @@ const TagSelectionField = <T extends TagFields>({
               } as unknown as T);
             }
 
-            if (createChildMutation && fixedTag && inputValue !== '') {
+            if (
+              createChildMutation &&
+              fixedTag &&
+              inputValue !== '' &&
+              !tags.some(tag => tag.name === inputValue)
+            ) {
               filtered.push({
                 name: inputValue,
                 icon: <Add sx={{ mr: 2 }} />,
@@ -287,7 +300,12 @@ const TagSelectionField = <T extends TagFields>({
               } as unknown as T);
             }
 
-            if (createParentMutation && fixedTag && inputValue !== '') {
+            if (
+              createParentMutation &&
+              fixedTag &&
+              inputValue !== '' &&
+              !tags.some(tag => tag.name === inputValue)
+            ) {
               filtered.push({
                 name: inputValue,
                 icon: <Add sx={{ mr: 2 }} />,
