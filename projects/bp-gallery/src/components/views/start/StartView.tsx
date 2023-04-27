@@ -57,7 +57,7 @@ const StartView = () => {
           <div className='flex place-content-center gap-2 m-4'>
             <PrimaryButton
               onClickFn={() => {
-                visit('/geo');
+                visit('/discover');
               }}
               isShowMore
             >
