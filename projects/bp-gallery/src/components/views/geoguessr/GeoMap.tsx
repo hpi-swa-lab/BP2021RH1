@@ -146,7 +146,7 @@ const GeoMap = ({
       )}
       {!guessComplete && (
         <div
-          className='w-fit p-2 absolute z-[999] right-1 top-1 cursor-pointer'
+          className='w-fit p-2 absolute z-[999] right-2 top-4 cursor-pointer decoration-black bg-white border-solid flex justify-center border-gray-400'
           onClick={event => {
             event.stopPropagation();
             setIsMaximised(!isMaximised);
@@ -154,7 +154,6 @@ const GeoMap = ({
               map.current && map.current.invalidateSize();
             }, 200);
           }}
-          style={{ color: 'black' }}
         >
           {isMaximised ? <ZoomInMapOutlined /> : <ZoomOutMapOutlined />}
         </div>
