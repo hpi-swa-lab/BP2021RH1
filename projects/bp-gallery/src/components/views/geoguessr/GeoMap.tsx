@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { Icon, LatLng, Map, latLngBounds } from 'leaflet';
+import { Icon, LatLng, latLngBounds, Map } from 'leaflet';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -12,6 +12,7 @@ import {
 import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 import otherMarkerIcon from './location-map-pin.svg';
 import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
+import { ZoomInMapOutlined, ZoomOutMapOutlined } from '@mui/icons-material';
 
 const PlayerMarkers = ({
   allGuesses,
@@ -55,10 +56,12 @@ const MyMarker = ({
   position,
   isPositionable,
   setPosition,
+  ref,
 }: {
   position: LatLng;
   isPositionable: boolean;
   setPosition: (pos: LatLng) => void;
+  ref?: any;
 }) => {
   useMapEvent('click', event => {
     isPositionable && setPosition(event.latlng.clone());
@@ -74,7 +77,7 @@ const MyMarker = ({
     shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
   });
 
-  return <Marker icon={myIcon} position={position} />;
+  return <Marker ref={ref} icon={myIcon} position={position} />;
 };
 
 const GeoMap = ({
@@ -97,6 +100,7 @@ const GeoMap = ({
   const [guess, setGuess] = useState<LatLng>(initialGuess);
   const [guessComplete, setGuessComplete] = useState(false);
   const [unknown, setUnknown] = useState(false);
+  const [isMaximised, setIsMaximised] = useState(false);
   const [createPictureGeoInfo] = useCreatePictureGeoInfoMutation();
   const nextPicture = () => {
     setGuess(initialGuess);
@@ -131,12 +135,28 @@ const GeoMap = ({
   return (
     <div
       className={`fixed w-[480px] h-[360px] bottom-1 right-1 items-stretch flex flex-col transition-all
-        ${guessComplete ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
+        ${guessComplete || isMaximised ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
     >
+      <div className='flex flex-row-reverse m-1'></div>
       {guessComplete && (
         <div className='guess-complete-text self-center bg-white p-5 mb-2 text-center rounded-2xl w-[350px]'>
           <h2>{unknown ? t('geo.tip-unknown') : t('geo.tip')}</h2>
           <p>{t('geo.tip-sub')}</p>
+        </div>
+      )}
+      {!guessComplete && (
+        <div
+          className='w-fit p-2 absolute z-[999] right-1 top-1 cursor-pointer'
+          onClick={event => {
+            event.stopPropagation();
+            setIsMaximised(!isMaximised);
+            setTimeout(() => {
+              map.current && map.current.invalidateSize();
+            }, 200);
+          }}
+          style={{ color: 'black' }}
+        >
+          {isMaximised ? <ZoomInMapOutlined /> : <ZoomOutMapOutlined />}
         </div>
       )}
       <MapContainer
@@ -150,6 +170,7 @@ const GeoMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
+
         {guessComplete && (
           <PlayerMarkers allGuesses={allGuesses} myGuess={unknown ? undefined : guess} />
         )}
