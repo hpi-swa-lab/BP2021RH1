@@ -241,6 +241,8 @@ const TagSelectionField = <T extends TagFields>({
     [onChange]
   );
 
+  const [highlight, setHighlight] = useState<T | null>();
+
   if (role >= AuthRole.CURATOR) {
     return (
       <div className='tag-selection'>
@@ -653,6 +655,9 @@ const TagSelectionField = <T extends TagFields>({
             setLastTags(newValue);
             onChange(newValue);
           }}
+          onHighlightChange={(event, option, reason) => {
+            setHighlight(option);
+          }}
           renderOption={(props, option) => {
             let label = option.name;
             if (option.createValue) {
@@ -664,7 +669,12 @@ const TagSelectionField = <T extends TagFields>({
             }
             return (
               <li {...props} key={option.id}>
-                <SingleTagElement tagSupertagList={tagSupertagList} option={option} label={label} />
+                <SingleTagElement
+                  tagSupertagList={tagSupertagList}
+                  option={option}
+                  label={label}
+                  highlighted={highlight && highlight.id === option.id ? true : false}
+                />
               </li>
             );
           }}

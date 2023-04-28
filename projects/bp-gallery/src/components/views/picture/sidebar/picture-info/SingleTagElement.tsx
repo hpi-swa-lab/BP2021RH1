@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { FlatTag } from '../../../../../types/additionalFlatTypes';
 import { ArrowRight } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -7,21 +6,14 @@ const SingleTagElement = ({
   tagSupertagList,
   option,
   label,
+  highlighted,
 }: {
   tagSupertagList?: { [k: string]: FlatTag[][] };
   option: any;
   label: string;
+  highlighted?: boolean;
 }) => {
   const { t } = useTranslation();
-  const [isHovering, setIsHovering] = useState<boolean>(false);
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovering(true);
-  };
 
   return (
     <div className='recommendation-item-container'>
@@ -33,17 +25,17 @@ const SingleTagElement = ({
         <>
           {tagSupertagList[option.id].length > 1 ? (
             // multiple paths tag
-            <div className='recommendation-item-parents' onMouseLeave={handleMouseLeave}>
-              <div className='recommendation-item-multiple-paths' onMouseEnter={handleMouseEnter}>
+            <div className='recommendation-item-parents'>
+              <div className='recommendation-item-multiple-paths'>
                 {t('tag-panel.multiple-paths')}
               </div>
               <ArrowRight />
               <div className='recommendation-item-name'>{option.name}</div>
-              {isHovering && (
+              {highlighted && (
                 <>
                   {tagSupertagList[option.id].map((paths, i) => {
                     return (
-                      <div className='w-full' key={i}>
+                      <div className='w-full pl-1' key={i}>
                         {i === 0 && <hr />}
                         <div className='recommendation-item-parents'>
                           {paths.map((tag, j) => {
