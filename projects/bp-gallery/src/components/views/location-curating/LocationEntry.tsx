@@ -167,12 +167,22 @@ const LocationEntry = ({
       type: type,
     });
     if (selectedTag) {
-      updateTagParentMutation({
-        variables: {
-          tagID: locationTag.id,
-          parentIDs: [...(locationTag.parent_tags?.map(t => t.id) ?? []), selectedTag.id],
-        },
-      });
+      if (selectedTag.child_tags.some((tag: any) => tag.name === tagName)) {
+        if (!selectedTag.child_tags.some((tag: any) => tag.id === tagId)) {
+          prompt({
+            preset: DialogPreset.CONFIRM,
+            title:
+              'Es existiert bereits ein anderes Tag mit diesem Namen an der Stelle, wo sie das Tag einfügen wollen. Diese Operation wird deswegen nicht durchgeführt!',
+          });
+        }
+      } else {
+        updateTagParentMutation({
+          variables: {
+            tagID: locationTag.id,
+            parentIDs: [...(locationTag.parent_tags?.map(t => t.id) ?? []), selectedTag.id],
+          },
+        });
+      }
     }
   };
 
