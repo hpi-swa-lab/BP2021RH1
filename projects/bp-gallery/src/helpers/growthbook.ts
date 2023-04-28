@@ -7,6 +7,7 @@ import {
 
 export type AppFeatures = {
   test_button: boolean;
+  dummy_experiment: boolean;
 };
 
 export type FeatureId = keyof AppFeatures;
