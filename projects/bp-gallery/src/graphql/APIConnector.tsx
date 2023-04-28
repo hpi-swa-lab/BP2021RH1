@@ -2877,7 +2877,15 @@ export type GetAllKeywordTagsQuery = {
                 visible?: boolean | null | undefined;
                 accepted?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
-                child_tags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
+                child_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
                 parent_tags?:
                   | {
                       data: Array<{
@@ -3100,7 +3108,15 @@ export type GetAllLocationTagsQuery = {
                 visible?: boolean | null | undefined;
                 accepted?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
-                child_tags?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
+                child_tags?:
+                  | {
+                      data: Array<{
+                        id?: string | null | undefined;
+                        attributes?: { name: string } | null | undefined;
+                      }>;
+                    }
+                  | null
+                  | undefined;
                 parent_tags?:
                   | {
                       data: Array<{
@@ -5211,6 +5227,9 @@ export const GetAllKeywordTagsDocument = gql`
           child_tags {
             data {
               id
+              attributes {
+                name
+              }
             }
           }
           parent_tags {
@@ -5813,6 +5832,9 @@ export const GetAllLocationTagsDocument = gql`
           child_tags {
             data {
               id
+              attributes {
+                name
+              }
             }
           }
           parent_tags {
