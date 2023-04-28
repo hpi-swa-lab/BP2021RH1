@@ -482,6 +482,7 @@ export type GenericMorph =
   | LocationTag
   | PersonTag
   | Picture
+  | PictureGeoInfo
   | TimeRangeTag
   | UploadFile
   | UploadFolder
@@ -761,6 +762,7 @@ export type Mutation = {
   createLocationTag?: Maybe<LocationTagEntityResponse>;
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
+  createPictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   createUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -779,6 +781,7 @@ export type Mutation = {
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
+  deletePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -792,6 +795,7 @@ export type Mutation = {
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>;
   /** Request a reset password token */
   forgotPassword?: Maybe<UsersPermissionsPasswordPayload>;
+  increaseNotAPlaceCount?: Maybe<Scalars['Int']>;
   login: UsersPermissionsLoginPayload;
   mergeCollections?: Maybe<Scalars['ID']>;
   mergeKeywordTags?: Maybe<Scalars['ID']>;
@@ -815,6 +819,7 @@ export type Mutation = {
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
+  updatePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -870,6 +875,10 @@ export type MutationCreatePersonTagArgs = {
 
 export type MutationCreatePictureArgs = {
   data: PictureInput;
+};
+
+export type MutationCreatePictureGeoInfoArgs = {
+  data: PictureGeoInfoInput;
 };
 
 export type MutationCreateTimeRangeTagArgs = {
@@ -932,6 +941,10 @@ export type MutationDeletePictureArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationDeletePictureGeoInfoArgs = {
+  id: Scalars['ID'];
+};
+
 export type MutationDeleteTimeRangeTagArgs = {
   id: Scalars['ID'];
 };
@@ -968,6 +981,10 @@ export type MutationEmailConfirmationArgs = {
 
 export type MutationForgotPasswordArgs = {
   email: Scalars['String'];
+};
+
+export type MutationIncreaseNotAPlaceCountArgs = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationLoginArgs = {
@@ -1071,6 +1088,11 @@ export type MutationUpdatePersonTagArgs = {
 
 export type MutationUpdatePictureArgs = {
   data: PictureInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdatePictureGeoInfoArgs = {
+  data: PictureGeoInfoInput;
   id: Scalars['ID'];
 };
 
@@ -1201,6 +1223,7 @@ export type Picture = {
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
   face_tags?: Maybe<FaceTagRelationResponseCollection>;
+  is_not_a_place_count?: Maybe<Scalars['Int']>;
   is_text?: Maybe<Scalars['Boolean']>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
   likes?: Maybe<Scalars['Int']>;
@@ -1209,6 +1232,7 @@ export type Picture = {
   location_tags?: Maybe<LocationTagRelationResponseCollection>;
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
+  picture_geo_infos?: Maybe<PictureGeoInfoRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1278,6 +1302,12 @@ export type PicturePerson_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PicturePicture_Geo_InfosArgs = {
+  filters?: InputMaybe<PictureGeoInfoFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureVerified_Keyword_TagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
@@ -1320,6 +1350,7 @@ export type PictureFiltersInput = {
   descriptions?: InputMaybe<DescriptionFiltersInput>;
   face_tags?: InputMaybe<FaceTagFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
+  is_not_a_place_count?: InputMaybe<IntFilterInput>;
   is_text?: InputMaybe<BooleanFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
   likes?: InputMaybe<IntFilterInput>;
@@ -1329,6 +1360,7 @@ export type PictureFiltersInput = {
   not?: InputMaybe<PictureFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   person_tags?: InputMaybe<PersonTagFiltersInput>;
+  picture_geo_infos?: InputMaybe<PictureGeoInfoFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -1339,6 +1371,53 @@ export type PictureFiltersInput = {
   wordpress_id?: InputMaybe<IntFilterInput>;
 };
 
+export type PictureGeoInfo = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
+  picture?: Maybe<PictureEntityResponse>;
+  radius?: Maybe<Scalars['Float']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PictureGeoInfoEntity = {
+  attributes?: Maybe<PictureGeoInfo>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PictureGeoInfoEntityResponse = {
+  data?: Maybe<PictureGeoInfoEntity>;
+};
+
+export type PictureGeoInfoEntityResponseCollection = {
+  data: Array<PictureGeoInfoEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type PictureGeoInfoFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<PictureGeoInfoFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  latitude?: InputMaybe<FloatFilterInput>;
+  longitude?: InputMaybe<FloatFilterInput>;
+  not?: InputMaybe<PictureGeoInfoFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<PictureGeoInfoFiltersInput>>>;
+  picture?: InputMaybe<PictureFiltersInput>;
+  radius?: InputMaybe<FloatFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type PictureGeoInfoInput = {
+  latitude?: InputMaybe<Scalars['Float']>;
+  longitude?: InputMaybe<Scalars['Float']>;
+  picture?: InputMaybe<Scalars['ID']>;
+  radius?: InputMaybe<Scalars['Float']>;
+};
+
+export type PictureGeoInfoRelationResponseCollection = {
+  data: Array<PictureGeoInfoEntity>;
+};
+
 export type PictureInput = {
   archive_identifier?: InputMaybe<Scalars['String']>;
   archive_tag?: InputMaybe<Scalars['ID']>;
@@ -1346,6 +1425,7 @@ export type PictureInput = {
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   face_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  is_not_a_place_count?: InputMaybe<Scalars['Int']>;
   is_text?: InputMaybe<Scalars['Boolean']>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   likes?: InputMaybe<Scalars['Int']>;
@@ -1354,6 +1434,7 @@ export type PictureInput = {
   location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  picture_geo_infos?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1395,6 +1476,8 @@ export type Query = {
   personTag?: Maybe<PersonTagEntityResponse>;
   personTags?: Maybe<PersonTagEntityResponseCollection>;
   picture?: Maybe<PictureEntityResponse>;
+  pictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  pictureGeoInfos?: Maybe<PictureGeoInfoEntityResponseCollection>;
   pictures?: Maybe<PictureEntityResponseCollection>;
   timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
@@ -1514,6 +1597,16 @@ export type QueryPersonTagsArgs = {
 
 export type QueryPictureArgs = {
   id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPictureGeoInfoArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPictureGeoInfosArgs = {
+  filters?: InputMaybe<PictureGeoInfoFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type QueryPicturesArgs = {
@@ -2994,6 +3087,29 @@ export type GetPersonTagsWithThumbnailQuery = {
     | undefined;
 };
 
+export type GetPictureGeoInfoQueryVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type GetPictureGeoInfoQuery = {
+  pictureGeoInfos?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | {
+                latitude?: number | null | undefined;
+                longitude?: number | null | undefined;
+                radius?: number | null | undefined;
+              }
+            | null
+            | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetPictureInfoQueryVariables = Exact<{
   pictureId: Scalars['ID'];
 }>;
@@ -3225,6 +3341,47 @@ export type GetPictureInfoQuery = {
     | undefined;
 };
 
+export type GetPictureMediaInfoQueryVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type GetPictureMediaInfoQuery = {
+  picture?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    media: {
+                      data?:
+                        | {
+                            id?: string | null | undefined;
+                            attributes?:
+                              | {
+                                  width?: number | null | undefined;
+                                  height?: number | null | undefined;
+                                  formats?: any | null | undefined;
+                                  url: string;
+                                  updatedAt?: any | null | undefined;
+                                }
+                              | null
+                              | undefined;
+                          }
+                        | null
+                        | undefined;
+                    };
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type GetPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
   pagination: PaginationArg;
@@ -3338,6 +3495,25 @@ export type GetPicturesForCollectionQuery = {
             }
           | null
           | undefined;
+      }
+    | null
+    | undefined;
+};
+
+export type GetPicturesGeoInfoQueryVariables = Exact<{
+  pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
+}>;
+
+export type GetPicturesGeoInfoQuery = {
+  pictureGeoInfos?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?:
+            | { latitude?: number | null | undefined; longitude?: number | null | undefined }
+            | null
+            | undefined;
+        }>;
       }
     | null
     | undefined;
@@ -3539,6 +3715,17 @@ export type CreatePictureMutation = {
     | undefined;
 };
 
+export type CreatePictureGeoInfoMutationVariables = Exact<{
+  data: PictureGeoInfoInput;
+}>;
+
+export type CreatePictureGeoInfoMutation = {
+  createPictureGeoInfo?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type CreateSubCollectionMutationVariables = Exact<{
   name: Scalars['String'];
   parentId: Scalars['ID'];
@@ -3637,6 +3824,12 @@ export type FixCommentTextMutation = {
     | null
     | undefined;
 };
+
+export type IncreaseNotAPlaceCountMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type IncreaseNotAPlaceCountMutation = { increaseNotAPlaceCount?: number | null | undefined };
 
 export type LikeMutationVariables = Exact<{
   pictureId: Scalars['ID'];
@@ -5471,6 +5664,66 @@ export type GetPersonTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetPersonTagsWithThumbnailQueryVariables
 >;
 
+export const GetPictureGeoInfoDocument = gql`
+  query getPictureGeoInfo($pictureId: ID!) {
+    pictureGeoInfos(filters: { picture: { id: { eq: $pictureId } } }) {
+      data {
+        id
+        attributes {
+          latitude
+          longitude
+          radius
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPictureGeoInfoQuery__
+ *
+ * To run a query within a React component, call `useGetPictureGeoInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPictureGeoInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPictureGeoInfoQuery({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useGetPictureGeoInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>(
+    GetPictureGeoInfoDocument,
+    options
+  );
+}
+
+export function useGetPictureGeoInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>(
+    GetPictureGeoInfoDocument,
+    options
+  );
+}
+
+export type GetPictureGeoInfoQueryHookResult = ReturnType<typeof useGetPictureGeoInfoQuery>;
+
+export type GetPictureGeoInfoLazyQueryHookResult = ReturnType<typeof useGetPictureGeoInfoLazyQuery>;
+
+export type GetPictureGeoInfoQueryResult = Apollo.QueryResult<
+  GetPictureGeoInfoQuery,
+  GetPictureGeoInfoQueryVariables
+>;
+
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
@@ -5679,6 +5932,80 @@ export type GetPictureInfoLazyQueryHookResult = ReturnType<typeof useGetPictureI
 export type GetPictureInfoQueryResult = Apollo.QueryResult<
   GetPictureInfoQuery,
   GetPictureInfoQueryVariables
+>;
+
+export const GetPictureMediaInfoDocument = gql`
+  query getPictureMediaInfo($pictureId: ID!) {
+    picture(id: $pictureId) {
+      data {
+        id
+        attributes {
+          media {
+            data {
+              id
+              attributes {
+                width
+                height
+                formats
+                url
+                updatedAt
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPictureMediaInfoQuery__
+ *
+ * To run a query within a React component, call `useGetPictureMediaInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPictureMediaInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPictureMediaInfoQuery({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useGetPictureMediaInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPictureMediaInfoQuery, GetPictureMediaInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPictureMediaInfoQuery, GetPictureMediaInfoQueryVariables>(
+    GetPictureMediaInfoDocument,
+    options
+  );
+}
+
+export function useGetPictureMediaInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPictureMediaInfoQuery,
+    GetPictureMediaInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPictureMediaInfoQuery, GetPictureMediaInfoQueryVariables>(
+    GetPictureMediaInfoDocument,
+    options
+  );
+}
+
+export type GetPictureMediaInfoQueryHookResult = ReturnType<typeof useGetPictureMediaInfoQuery>;
+
+export type GetPictureMediaInfoLazyQueryHookResult = ReturnType<
+  typeof useGetPictureMediaInfoLazyQuery
+>;
+
+export type GetPictureMediaInfoQueryResult = Apollo.QueryResult<
+  GetPictureMediaInfoQuery,
+  GetPictureMediaInfoQueryVariables
 >;
 
 export const GetPicturesDocument = gql`
@@ -5927,6 +6254,70 @@ export type GetPicturesForCollectionLazyQueryHookResult = ReturnType<
 export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
   GetPicturesForCollectionQuery,
   GetPicturesForCollectionQueryVariables
+>;
+
+export const GetPicturesGeoInfoDocument = gql`
+  query getPicturesGeoInfo($pictureIds: [ID]!) {
+    pictureGeoInfos(filters: { picture: { id: { in: $pictureIds } } }) {
+      data {
+        id
+        attributes {
+          latitude
+          longitude
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesGeoInfoQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesGeoInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesGeoInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesGeoInfoQuery({
+ *   variables: {
+ *      pictureIds: // value for 'pictureIds'
+ *   },
+ * });
+ */
+export function useGetPicturesGeoInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>(
+    GetPicturesGeoInfoDocument,
+    options
+  );
+}
+
+export function useGetPicturesGeoInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPicturesGeoInfoQuery,
+    GetPicturesGeoInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>(
+    GetPicturesGeoInfoDocument,
+    options
+  );
+}
+
+export type GetPicturesGeoInfoQueryHookResult = ReturnType<typeof useGetPicturesGeoInfoQuery>;
+
+export type GetPicturesGeoInfoLazyQueryHookResult = ReturnType<
+  typeof useGetPicturesGeoInfoLazyQuery
+>;
+
+export type GetPicturesGeoInfoQueryResult = Apollo.QueryResult<
+  GetPicturesGeoInfoQuery,
+  GetPicturesGeoInfoQueryVariables
 >;
 
 export const GetRootCollectionDocument = gql`
@@ -6592,6 +6983,63 @@ export type CreatePictureMutationOptions = Apollo.BaseMutationOptions<
   CreatePictureMutationVariables
 >;
 
+export const CreatePictureGeoInfoDocument = gql`
+  mutation createPictureGeoInfo($data: PictureGeoInfoInput!) {
+    createPictureGeoInfo(data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePictureGeoInfoMutationFn = Apollo.MutationFunction<
+  CreatePictureGeoInfoMutation,
+  CreatePictureGeoInfoMutationVariables
+>;
+
+/**
+ * __useCreatePictureGeoInfoMutation__
+ *
+ * To run a mutation, you first call `useCreatePictureGeoInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePictureGeoInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPictureGeoInfoMutation, { data, loading, error }] = useCreatePictureGeoInfoMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePictureGeoInfoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePictureGeoInfoMutation,
+    CreatePictureGeoInfoMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePictureGeoInfoMutation, CreatePictureGeoInfoMutationVariables>(
+    CreatePictureGeoInfoDocument,
+    options
+  );
+}
+
+export type CreatePictureGeoInfoMutationHookResult = ReturnType<
+  typeof useCreatePictureGeoInfoMutation
+>;
+
+export type CreatePictureGeoInfoMutationResult =
+  Apollo.MutationResult<CreatePictureGeoInfoMutation>;
+
+export type CreatePictureGeoInfoMutationOptions = Apollo.BaseMutationOptions<
+  CreatePictureGeoInfoMutation,
+  CreatePictureGeoInfoMutationVariables
+>;
+
 export const CreateSubCollectionDocument = gql`
   mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
     createCollection(
@@ -7071,6 +7519,59 @@ export type FixCommentTextMutationResult = Apollo.MutationResult<FixCommentTextM
 export type FixCommentTextMutationOptions = Apollo.BaseMutationOptions<
   FixCommentTextMutation,
   FixCommentTextMutationVariables
+>;
+
+export const IncreaseNotAPlaceCountDocument = gql`
+  mutation increaseNotAPlaceCount($pictureId: ID!) {
+    increaseNotAPlaceCount(id: $pictureId)
+  }
+`;
+
+export type IncreaseNotAPlaceCountMutationFn = Apollo.MutationFunction<
+  IncreaseNotAPlaceCountMutation,
+  IncreaseNotAPlaceCountMutationVariables
+>;
+
+/**
+ * __useIncreaseNotAPlaceCountMutation__
+ *
+ * To run a mutation, you first call `useIncreaseNotAPlaceCountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIncreaseNotAPlaceCountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [increaseNotAPlaceCountMutation, { data, loading, error }] = useIncreaseNotAPlaceCountMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useIncreaseNotAPlaceCountMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    IncreaseNotAPlaceCountMutation,
+    IncreaseNotAPlaceCountMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    IncreaseNotAPlaceCountMutation,
+    IncreaseNotAPlaceCountMutationVariables
+  >(IncreaseNotAPlaceCountDocument, options);
+}
+
+export type IncreaseNotAPlaceCountMutationHookResult = ReturnType<
+  typeof useIncreaseNotAPlaceCountMutation
+>;
+
+export type IncreaseNotAPlaceCountMutationResult =
+  Apollo.MutationResult<IncreaseNotAPlaceCountMutation>;
+
+export type IncreaseNotAPlaceCountMutationOptions = Apollo.BaseMutationOptions<
+  IncreaseNotAPlaceCountMutation,
+  IncreaseNotAPlaceCountMutationVariables
 >;
 
 export const LikeDocument = gql`
