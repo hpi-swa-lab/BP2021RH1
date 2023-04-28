@@ -13,12 +13,15 @@ export type LoadedOperation = Operation & {
   type: OperationType;
 };
 
-const operationType = (operation: Operation): OperationType => {
-  const match = operation.document.source.match(/\s*(query|mutation)/);
+const operationTypeAndName = (operation: Operation): { type: OperationType; name: string } => {
+  const match = operation.document.source.match(/\s*(query|mutation) ([a-zA-Z]+)/);
   if (!match) {
     throw new Error('unknown operation type');
   }
-  return match[1] as OperationType;
+  return {
+    type: match[1] as OperationType,
+    name: match[2],
+  };
 };
 
 export const loadOperations = async (): Promise<LoadedOperation[]> => {
@@ -31,10 +34,17 @@ export const loadOperations = async (): Promise<LoadedOperation[]> => {
       const { default: operation }: { default: Operation } = await import(
         `${compiledOperationsDirectoryPath}/${fileName}`
       );
+      const { type, name } = operationTypeAndName(operation);
+      // safety check
+      if (fileName.slice(0, -'.js'.length) !== name) {
+        throw new Error(
+          `operation file ${fileName} is not named like the contained query (${name})`
+        );
+      }
       return {
         ...operation,
-        name: fileName.slice(0, -'.js'.length),
-        type: operationType(operation),
+        name,
+        type,
       };
     })
   );
