@@ -5,12 +5,11 @@ import {
   ThumbUpAlt,
   ThumbUpAltOutlined,
 } from '@mui/icons-material';
-import { History } from 'history';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { formatTimeStamp } from '../../../helpers/format-timestamp';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import useLike from '../picture/sidebar/like-hooks';
+import { useVisit } from './../../../helpers/history';
 
 type DailyPictureInfoProps = {
   picture: FlatPicture;
@@ -18,7 +17,7 @@ type DailyPictureInfoProps = {
 
 const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
   const { t } = useTranslation();
-  const history: History = useHistory();
+  const { visit } = useVisit();
   const pictureDate = formatTimeStamp(picture.time_range_tag);
   const archive = picture.archive_tag;
   const commentsCount = picture.comments?.length ?? 0;
@@ -59,9 +58,7 @@ const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
             href={`/archives/${archive.id}`}
             onClick={event => {
               event.preventDefault();
-              history.push(`/archives/${archive.id}`, {
-                showBack: true,
-              });
+              visit(`/archives/${archive.id}`);
             }}
           >
             {archive.name}

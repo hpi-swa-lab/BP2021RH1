@@ -1,25 +1,23 @@
-import { useState } from 'react';
-import './ScrollContainer.scss';
+import { PropsWithChildren, useEffect, useRef } from 'react';
+import { useMobile, useScroll } from './../../hooks/context-hooks';
 
-const ScrollContainer = ({
-  children,
-}: {
-  children: ((scrollPos: number, scrollHeight: number) => React.ReactNode) | React.ReactNode;
-}) => {
-  const [scrollPos, setScrollPos] = useState<number>(0);
-  const [scrollHeight, setScrollHeight] = useState<number>(0);
+const ScrollContainer = ({ children }: PropsWithChildren<{}>) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const { useWindow, elementRef: scrollElement } = useScroll();
+  const { isMobile } = useMobile();
+
+  useEffect(() => {
+    if (useWindow && isMobile) return;
+    scrollElement.current = divRef.current;
+  }, [isMobile, scrollElement, useWindow]);
 
   return (
-    <div className='scroll-context'>
-      <div
-        className='scrollable-container'
-        onScroll={event => {
-          setScrollPos((event.target as HTMLElement).scrollTop);
-          setScrollHeight((event.target as HTMLElement).scrollHeight);
-        }}
-      >
-        {typeof children === 'function' ? children(scrollPos, scrollHeight) : children}
-      </div>
+    <div
+      ref={divRef}
+      data-testid='scrollable-container'
+      className='overflow-y-auto overflow-x-hidden'
+    >
+      {children}
     </div>
   );
 };

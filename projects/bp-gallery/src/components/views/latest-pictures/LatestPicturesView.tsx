@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import ScrollContainer from '../../common/ScrollContainer';
-import ShowStats from '../../provider/ShowStatsProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import './LatestPicturesView.scss';
 
 const LatestPicturesView = () => {
@@ -10,25 +9,19 @@ const LatestPicturesView = () => {
   const { t } = useTranslation();
 
   return (
-    <ScrollContainer>
-      {(scrollPos: number, scrollHeight: number) => (
-        <div className='latest-pictures'>
-          <h2>{t('common.latest-pictures')}</h2>
-          {t('common.latest-pictures-info')}
-          <ShowStats>
-            <PictureScrollGrid
-              scrollPos={scrollPos}
-              scrollHeight={scrollHeight}
-              hashbase={'latest'}
-              bulkOperations={[linkToCollection, bulkEdit]}
-              queryParams={{}}
-              maxNumPictures={500}
-              showCount={false}
-            />
-          </ShowStats>
-        </div>
-      )}
-    </ScrollContainer>
+    <div className='latest-pictures'>
+      <h2>{t('common.latest-pictures')}</h2>
+      {t('common.latest-pictures-info')}
+      <ShowStats>
+        <PictureScrollGrid
+          hashbase={'latest'}
+          bulkOperations={[linkToCollection, bulkEdit]}
+          queryParams={{}}
+          maxNumPictures={500}
+          showCount={false}
+        />
+      </ShowStats>
+    </div>
   );
 };
 

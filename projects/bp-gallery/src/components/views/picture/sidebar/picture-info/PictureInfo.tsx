@@ -38,11 +38,13 @@ export type Field = Pick<
 const PictureInfo = ({
   picture,
   pictureIds,
+  hasHiddenLinks,
   onSave,
   topInfo,
 }: {
   picture: FlatPicture;
   pictureIds: string[];
+  hasHiddenLinks: boolean;
   onSave: (field: Field) => void;
   topInfo?: (anyFieldTouched: boolean, isSaving: boolean) => ReactNode;
 }) => {
@@ -170,6 +172,7 @@ const PictureInfo = ({
       <LinkedInfoField
         picture={picture}
         pictureIds={pictureIds}
+        hasHiddenLinks={hasHiddenLinks}
         savePictureInfo={savePictureInfo}
       />
       {role >= AuthRole.CURATOR && (

@@ -1,8 +1,7 @@
 import { QuestionAnswer, ThumbUpAlt, ThumbUpAltOutlined } from '@mui/icons-material';
-import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useStats } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { ShowStatsContext } from '../../provider/ShowStatsProvider';
 import useLike from '../../views/picture/sidebar/like-hooks';
 
 type PictureStatsProps = {
@@ -11,7 +10,7 @@ type PictureStatsProps = {
 };
 
 const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
-  const showStats = useContext(ShowStatsContext);
+  const showStats = useStats();
   const { t } = useTranslation();
   const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
   const commentsCount = picture.comments?.length ?? 0;

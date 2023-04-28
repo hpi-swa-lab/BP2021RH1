@@ -1,17 +1,17 @@
-import { useMemo, useState } from 'react';
-import { useGetUnverifiedCommentsQuery } from '../../../graphql/APIConnector';
-import Loading from '../../common/Loading';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import { FlatComment, FlatPicture } from '../../../types/additionalFlatTypes';
-import { useTranslation } from 'react-i18next';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import PictureView from '../picture/PictureView';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import './UnverifiedCommentsView.scss';
-import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { Portal } from '@mui/material';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useGetUnverifiedCommentsQuery } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { FlatComment, FlatPicture } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import PictureView from '../picture/PictureView';
+import './UnverifiedCommentsView.scss';
 
 const UnverifiedCommentsView = () => {
   const { t } = useTranslation();
@@ -62,7 +62,7 @@ const UnverifiedCommentsView = () => {
   } else if (groupedComments && allPictures) {
     return (
       <>
-        <div className='scrollable-container'>
+        <div className='comments-table'>
           <table>
             <thead>
               <tr>

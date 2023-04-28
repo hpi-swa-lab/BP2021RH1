@@ -13,7 +13,6 @@ import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { asApiPath } from '../../../helpers/app-helpers';
 import { replaceHistoryWithoutRouter } from '../../../helpers/history';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
@@ -27,6 +26,7 @@ import PictureViewUI from './overlay/PictureViewUI';
 import ZoomWrapper from './overlay/ZoomWrapper';
 import './PictureView.scss';
 import PictureSidebar from './sidebar/PictureSidebar';
+import { getPictureLinkFromFlatPicture } from '../../../hooks/get-pictureLink.hook';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
@@ -87,9 +87,7 @@ const PictureView = ({
 
   const { data, loading, error } = useGetPictureInfoQuery({ variables: { pictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-  const pictureLink = picture?.media?.url
-    ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
-    : '';
+  const pictureLink = getPictureLinkFromFlatPicture(picture);
 
   const onNavigateMessage = useCallback((pictureId: string) => {
     replaceHistoryWithoutRouter(`/picture/${pictureId}${window.location.search}`);
