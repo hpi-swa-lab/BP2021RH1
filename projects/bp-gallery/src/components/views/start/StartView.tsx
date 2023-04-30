@@ -4,16 +4,17 @@ import {
   useGetAllPicturesByArchiveQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
-import PrimaryButton from '../../common/PrimaryButton';
+import { IfFlagEnabled } from '../../common/IfFlagEnabled';
 import PictureOverview from '../../common/PictureOverview';
+import PrimaryButton from '../../common/PrimaryButton';
 import BrowseView from '../browse/BrowseView';
 import { useVisit } from './../../../helpers/history';
 import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
-import { useMobile } from '../../../hooks/context-hooks';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -48,10 +49,12 @@ const StartView = () => {
   return (
     <div className='main-start-view'>
       <div className='welcome-container'>
-        <div className='welcome'>
-          <h1>{t('startpage.welcome-title')}</h1>
-          <p>{t('startpage.welcome-text')}</p>
-        </div>
+        <IfFlagEnabled feature='dummy_experiment'>
+          <div className='welcome'>
+            <h1>{t('startpage.welcome-title')}</h1>
+            <p>{t('startpage.welcome-text')}</p>
+          </div>
+        </IfFlagEnabled>
         <DailyPicture />
         {!isMobile && (
           <div className='flex place-content-center gap-2 m-4'>
@@ -83,6 +86,7 @@ const StartView = () => {
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>
       </div>
+
       <BrowseView startpage={true} />
     </div>
   );
