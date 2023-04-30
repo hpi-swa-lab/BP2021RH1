@@ -15,7 +15,8 @@ export type FeatureId = keyof AppFeatures;
 export const useGrowthBook = (): GrowthBook<AppFeatures> | undefined =>
   _useGrowthBook<AppFeatures>() ?? undefined;
 
-export const useFlag = (id: FeatureId): boolean => useFeatureIsOn<AppFeatures>(id) ?? true;
+// useFeatureIsOn returns false when it cannot retrieve a value
+export const useFlag = (id: FeatureId): boolean => useFeatureIsOn<AppFeatures>(id);
 
 export const useVariant = ({ id, fallback }: { id: FeatureId; fallback: string }): string =>
-  useFeatureValue(id, fallback) ?? '';
+  useFeatureValue(id, fallback);
