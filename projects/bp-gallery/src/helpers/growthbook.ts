@@ -15,13 +15,37 @@ export type AppFeatures = {
 
 export type FeatureId = keyof AppFeatures;
 
+export const growthbook =
+  growthbookApiHost && growthbookClientKey
+    ? new GrowthBook({
+        apiHost: growthbookApiHost,
+        clientKey: growthbookClientKey,
+        enableDevMode: import.meta.env.MODE === 'development',
+        trackingCallback: (experiment, result) => {
+          const w: any = window;
+          const _paq: Array<any> = (w._paq = w._paq || []);
+          _paq.push([
+            'trackEvent',
+            'ExperimentViewed',
+            experiment.key,
+            'v' + String(result.variationId),
+          ]);
+        },
+        onFeatureUsage: (featureKey, result) => {
+          const w: any = window;
+          const _paq: Array<any> = (w._paq = w._paq || []);
+          _paq.push(['trackEvent', 'FeatureViewed', featureKey, 'v' + String(result)]);
+        },
+      })
+    : undefined;
+
 export const useGrowthBook = (): GrowthBook<AppFeatures> | undefined =>
   _useGrowthBook<AppFeatures>() ?? undefined;
 
 // useFeatureIsOn returns false when it cannot retrieve a value
 export const useFlag = (id: FeatureId): boolean => {
   const enabled = useFeatureIsOn<AppFeatures>(id);
-  if (growthbookApiHost && growthbookClientKey) return enabled;
+  if (growthbook) return enabled;
   return true;
 };
 

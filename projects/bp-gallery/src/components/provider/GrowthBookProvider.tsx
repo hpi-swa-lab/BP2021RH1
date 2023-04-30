@@ -1,35 +1,6 @@
-import {
-  GrowthBook,
-  GrowthBookProvider as _GrowthBookProvider,
-} from '@growthbook/growthbook-react';
+import { GrowthBookProvider as _GrowthBookProvider } from '@growthbook/growthbook-react';
 import { PropsWithChildren, useEffect } from 'react';
-
-const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
-const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
-
-const growthbook =
-  growthbookApiHost && growthbookClientKey
-    ? new GrowthBook({
-        apiHost: growthbookApiHost,
-        clientKey: growthbookClientKey,
-        enableDevMode: import.meta.env.MODE === 'development',
-        trackingCallback: (experiment, result) => {
-          const w: any = window;
-          const _paq: Array<any> = (w._paq = w._paq || []);
-          _paq.push([
-            'trackEvent',
-            'ExperimentViewed',
-            experiment.key,
-            'v' + String(result.variationId),
-          ]);
-        },
-        onFeatureUsage: (featureKey, result) => {
-          const w: any = window;
-          const _paq: Array<any> = (w._paq = w._paq || []);
-          _paq.push(['trackEvent', 'ExperimentViewed', featureKey, 'v' + String(result)]);
-        },
-      })
-    : undefined;
+import { growthbook } from '../../helpers/growthbook';
 
 export const GrowthBookProvider = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
@@ -48,14 +19,13 @@ export const GrowthBookProvider = ({ children }: PropsWithChildren<{}>) => {
       },
     ]);
 
-    const refresh = (): NodeJS.Timeout | undefined => {
+    const refresh = () => {
       if (!growthbook) return;
       growthbook.refreshFeatures();
-      return setTimeout(refresh, 5000);
     };
 
-    const r = refresh();
-    return () => clearTimeout(r);
+    const r = setInterval(refresh, 5000);
+    return () => clearInterval(r);
   });
 
   return <_GrowthBookProvider growthbook={growthbook}>{children}</_GrowthBookProvider>;
