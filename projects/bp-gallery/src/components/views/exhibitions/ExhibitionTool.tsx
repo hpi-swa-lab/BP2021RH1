@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { PropsWithChildren, useState } from 'react';
-import { DndContext, DragEndEvent, useDraggable, useDroppable } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, Over, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 
 const DraggablePicture = ({ id, picture }: { id: string; picture?: FlatPicture }) => {
@@ -49,27 +49,32 @@ const DropZone = ({ id, children }: PropsWithChildren<{ id: string }>) => {
 //   );
 // };
 
-interface DragChildren {
+interface DropzoneContent {
   id: string;
-  children: string[];
+  dragIds: string[];
+}
+
+interface DragElement {
+  id: string;
+  element: JSX.Element;
 }
 
 const ExhibitionManipulator = ({
-  dropZone,
+  dropzones,
   draggables,
-  parent,
 }: {
-  dropZone: DragChildren[];
-  draggables: { id: string; element: JSX.Element }[];
-  parent: any;
+  dropzones: DropzoneContent[];
+  draggables: DragElement[];
 }) => {
   return (
     <div className='flex flex-col items-stretch h-full w-full'>
       <div className='text-xl'>Ausstellungstool</div>
       <div className='border-solid flex-1'>
-        {dropZone.map(x => (
-          <DropZone key={x.id} id={x.id}>
-            {/*  Todo: rendere die draggables, die die gleiche Id wie x.children haben*/}
+        {dropzones.map(dropzone => (
+          <DropZone key={dropzone.id} id={dropzone.id}>
+            {draggables.map(draggable =>
+              dropzone.dragIds.includes(draggable.id) ? draggable.element : null
+            )}
           </DropZone>
         ))}
       </div>
@@ -78,30 +83,44 @@ const ExhibitionManipulator = ({
 };
 
 const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
-  const [parent, setParent] = useState<any>(null);
-  const [children, setChildren] = useState<DragChildren[]>([
-    { id: '1', children: [] },
-    { id: '2', children: [] },
+  const [dropzones, setDropzones] = useState<DropzoneContent[]>([
+    { id: '1', dragIds: [] },
+    { id: '2', dragIds: [] },
   ]);
   const draggable = <DraggablePicture id='draggable' />;
   const draggable2 = <DraggablePicture id='draggable2' />;
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event;
-    setParent(over ? over.id : null);
-    setChildren(
-      children.map(x => {
+
+    const addToDropzone = (dropzone: DropzoneContent, over: Over) => {
+      return dropzone.id === over.id
+        ? ({ id: dropzone.id, dragIds: [...dropzone.dragIds, active.id] } as DropzoneContent)
+        : dropzone;
+    };
+
+    const removeFromDropzone = (dropzone: DropzoneContent) => {
+      return dropzone.dragIds.some(x => x === active.id)
+        ? ({
+            id: dropzone.id,
+            dragIds: dropzone.dragIds.filter(x => x !== active.id),
+          } as DropzoneContent)
+        : dropzone;
+    };
+    setDropzones(
+      dropzones.map(dropzone => {
         if (over) {
-          return x.id === over.id
-            ? ({ id: x.id, children: [...x.children, active.id] } as DragChildren)
-            : x;
+          return addToDropzone(removeFromDropzone(dropzone), over);
         }
-        return x.children.some(x => x === active.id)
-          ? ({ id: x.id, children: x.children.filter(x => x !== active.id) } as DragChildren)
-          : x;
+        return removeFromDropzone(dropzone);
       })
     );
-    console.log(children);
+    console.log(dropzones);
   };
+  const draggableList = [
+    { id: 'draggable', element: draggable },
+    { id: 'draggable2', element: draggable2 },
+  ];
   return (
     <>
       <div className='absolute z-[999] right-7 top-[6rem]'>
@@ -109,15 +128,12 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
       </div>
       <div className='flex gap-7 items-stretch h-full w-full p-7 box-border'>
         <DndContext onDragEnd={handleDragEnd}>
-          <IdeaLot>{!parent ? draggable : null}</IdeaLot>
-          <ExhibitionManipulator
-            dropZone={children}
-            draggables={[
-              { id: 'draggable', element: draggable },
-              { id: 'draggable2', element: draggable2 },
-            ]}
-            parent={parent}
-          />
+          <IdeaLot>
+            {draggableList.map(drag =>
+              !dropzones.some(x => x.dragIds.includes(drag.id)) ? drag.element : null
+            )}
+          </IdeaLot>
+          <ExhibitionManipulator dropzones={dropzones} draggables={draggableList} parent={parent} />
         </DndContext>
       </div>
     </>
