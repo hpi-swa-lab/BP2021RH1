@@ -5,10 +5,19 @@ import {
   operations as operationsMap,
   sections as sectionNames,
 } from 'bp-graphql';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetUsersPermissionsUserQuery } from '../../../../graphql/APIConnector';
+import {
+  useCreateParameterizedPermissionMutation,
+  useDeleteParameterizedPermissionMutation,
+  useGetParameterizedPermissionsQuery,
+  useGetUsersPermissionsUserQuery,
+} from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
-import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
+import {
+  FlatParameterizedPermission,
+  FlatUsersPermissionsUser,
+} from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 
@@ -58,21 +67,59 @@ const sections = generateOperationsStructure();
 
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
-  const { data, loading, error } = useGetUsersPermissionsUserQuery({
+  const {
+    data: userData,
+    loading: userLoading,
+    error: userError,
+  } = useGetUsersPermissionsUserQuery({
     variables: {
       id: userId,
     },
   });
   const user: FlatUsersPermissionsUser | undefined =
-    useSimplifiedQueryResponseData(data)?.usersPermissionsUser;
+    useSimplifiedQueryResponseData(userData)?.usersPermissionsUser;
+
+  const {
+    data: permissionsData,
+    loading: permissionsLoading,
+    error: permissionsError,
+  } = useGetParameterizedPermissionsQuery({
+    variables: {
+      userId,
+    },
+  });
+  const permissions: FlatParameterizedPermission[] | undefined =
+    useSimplifiedQueryResponseData(permissionsData)?.parameterizedPermissions;
+
+  const permissionLookup: Partial<Record<string, FlatParameterizedPermission>> | undefined =
+    useMemo(
+      () =>
+        permissions
+          ? Object.fromEntries(
+              permissions.map(permission => [permission.operation_name ?? '', permission] as const)
+            )
+          : undefined,
+      [permissions]
+    );
+
+  const [createPermission] = useCreateParameterizedPermissionMutation({
+    refetchQueries: ['getParameterizedPermissions'],
+  });
+  const [deletePermission] = useDeleteParameterizedPermissionMutation({
+    refetchQueries: ['getParameterizedPermissions'],
+  });
+
+  const loading = userLoading || permissionsLoading;
+  const error = userError ?? permissionsError;
+
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else {
+  } else if (user && permissionLookup) {
     return (
       <div className='w-[800px] mx-auto mt-4'>
-        <h1>{t('admin.permissions.title', { userName: user?.username })}</h1>
+        <h1>{t('admin.permissions.title', { userName: user.username })}</h1>
         <div className=''>
           {sections.map(section => (
             <div key={section.name}>
@@ -80,11 +127,55 @@ const PermissionsView = ({ userId }: { userId: string }) => {
               {section.groups
                 .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
                 .sort(([a], [b]) => a.localeCompare(b))
-                .map(([name, group]) => (
-                  <div key={group.name}>
-                    <FormControlLabel control={<Checkbox />} label={name} />
-                  </div>
-                ))}
+                .map(([name, group]) => {
+                  const hasOperations = group.operations.map(
+                    operation => operation.document.name in permissionLookup
+                  );
+                  const hasAll = hasOperations.every(has => has);
+                  const hasNone = hasOperations.every(has => !has);
+                  const checked = hasAll ? true : hasNone ? false : undefined;
+                  const indeterminate = checked === undefined;
+
+                  const onClick = !hasNone
+                    ? () => {
+                        for (const operation of group.operations) {
+                          const permission = permissionLookup[operation.document.name];
+                          if (!permission) {
+                            continue;
+                          }
+                          deletePermission({
+                            variables: {
+                              id: permission.id,
+                            },
+                          });
+                        }
+                      }
+                    : () => {
+                        for (const operation of group.operations) {
+                          createPermission({
+                            variables: {
+                              operationName: operation.document.name,
+                              userId,
+                            },
+                          });
+                        }
+                      };
+
+                  return (
+                    <div key={group.name}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            indeterminate={indeterminate}
+                            checked={checked}
+                            onChange={onClick}
+                          />
+                        }
+                        label={name}
+                      />
+                    </div>
+                  );
+                })}
             </div>
           ))}
         </div>
