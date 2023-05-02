@@ -14,7 +14,6 @@ import { Badge, Chip, IconButton } from '@mui/material';
 import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ComponentCommonSynonymsInput } from '../../../graphql/APIConnector';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -218,25 +217,6 @@ const LocationEntry = ({
     });
   };
 
-  const addSynonym = async (tagId: string, tagName: string) => {
-    if (!tagId) return;
-    const synonymName = await prompt({
-      preset: DialogPreset.INPUT_FIELD,
-      title: `Name des neuen Synonyms für ${tagName}`,
-    });
-    if (synonymName.length) {
-      const synonyms: ComponentCommonSynonymsInput[] =
-        locationTag.synonyms?.map(s => ({ name: s?.name })) ?? [];
-      synonyms.push({ name: synonymName });
-      updateSynonymsMutation({
-        variables: {
-          tagId,
-          synonyms,
-        },
-      });
-    }
-  };
-
   const { deleteTags } = useDeleteTagAndChildren(locationTag, refetch, type);
   const { deleteSingleTag } = useDeleteSingleTag(locationTag, refetch, type);
 
@@ -320,42 +300,42 @@ const LocationEntry = ({
   return (
     <div
       className={`location-entry-container ${!locationTag.accepted ? 'location-not-accepted' : ''}`}
+      onClick={() => {
+        prompt({
+          preset: DialogPreset.LOCATION_MANAGEMENT,
+          title: locationTag.name,
+          content: { locationTag: locationTag, refetch: refetch },
+          maxWidth: false,
+        });
+      }}
     >
       <div className='location-entry-content'>
         <Badge color='info' overlap='circular' variant='dot' badgeContent={unacceptedSubtags}>
-          <IconButton className='show-more-button' onClick={onToggle}>
+          <IconButton
+            className='show-more-button'
+            onClick={e => {
+              e.stopPropagation();
+              onToggle();
+            }}
+          >
             {showMore ? <ExpandMore /> : <ChevronRight />}
           </IconButton>
         </Badge>
         <div className='location-entry-inner-content-container'>
           <div className='location-entry-inner-content'>
-            <div
-              className='location-name'
-              onClick={() => {
-                prompt({
-                  preset: DialogPreset.LOCATION_MANAGEMENT,
-                  title: locationTag.name,
-                  content: { locationTag: locationTag, refetch: refetch },
-                  maxWidth: false,
-                });
-              }}
-            >
-              {locationTag.name}
-            </div>
+            <div className='location-name'>{locationTag.name}</div>
             {!locationTag.accepted && (
               <IconButton
                 className='accept-location-name'
-                onClick={() => acceptTag(locationTag.id)}
+                onClick={e => {
+                  e.stopPropagation();
+                  acceptTag(locationTag.id);
+                }}
               >
                 <Check />
               </IconButton>
             )}
-            <div
-              className='location-synonyms location-column-750'
-              onClick={() => {
-                addSynonym(locationTag.id, locationTag.name);
-              }}
-            >
+            <div className='location-synonyms location-column-750'>
               {locationTag.synonyms?.map((synonym, index) => (
                 <div key={index} className='location-synonym'>
                   <Chip
@@ -368,7 +348,8 @@ const LocationEntry = ({
             </div>
             <div className='edit-button location-column-110'>
               <IconButton
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   editName(locationTag.id, locationTag.name);
                 }}
               >
@@ -377,7 +358,8 @@ const LocationEntry = ({
             </div>
             <div className='detach-button location-column-110'>
               <IconButton
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   detachTag(locationTag.id, locationTag.name);
                 }}
               >
@@ -386,7 +368,8 @@ const LocationEntry = ({
             </div>
             <div className='relocate-button location-column-110'>
               <IconButton
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   relocateTag(locationTag.id, locationTag.name);
                 }}
               >
@@ -395,19 +378,26 @@ const LocationEntry = ({
             </div>
             <div className='copy-button location-column-110'>
               <IconButton
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   copyTag(locationTag.id, locationTag.name);
                 }}
               >
                 <CopyAll />
               </IconButton>
             </div>
-            <div className='is-visible-checkbox-container location-column-110'>
+            <div
+              className='is-visible-checkbox-container location-column-110'
+              onClick={e => {
+                e.stopPropagation();
+              }}
+            >
               <Checkbox checked={locationTag.visible ?? false} onChange={setVisible} />
             </div>
             <div className='delete-button location-column-110'>
               <IconButton
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   deleteTag(locationTag.id, locationTag.name);
                 }}
               >
