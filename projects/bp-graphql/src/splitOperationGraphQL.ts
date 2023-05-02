@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'fs/promises';
-import { operationGraphQLPath, sourceOperationsDirectoryPath } from './paths.js';
+import { operationGraphQLPath, operationsDirectoryPath } from './paths.js';
 
 const matchingClosingBraceIndex = (content: string, openingBraceIndex: number) => {
   if (content[openingBraceIndex] !== '{') {
@@ -53,7 +53,7 @@ const splitOperationGraphQL = async () => {
   }
   await Promise.all(
     operations.map(async operation => {
-      const path = `${sourceOperationsDirectoryPath}/${operation.name}.ts`;
+      const path = `${operationsDirectoryPath}/${operation.name}.ts`;
       const code = `
 import { Operation, graphql } from '../Operation.js';
 
