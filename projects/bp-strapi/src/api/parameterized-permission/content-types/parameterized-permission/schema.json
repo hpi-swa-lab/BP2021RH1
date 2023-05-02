@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "parameterized_permissions",
+  "info": {
+    "singularName": "parameterized-permission",
+    "pluralName": "parameterized-permissions",
+    "displayName": "Parameterized_Permission",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "operation_name": {
+      "type": "string"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
