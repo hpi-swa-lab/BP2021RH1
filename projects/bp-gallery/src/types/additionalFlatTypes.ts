@@ -8,6 +8,7 @@ import {
   KeywordTag,
   Link,
   LocationTag,
+  ParameterizedPermission,
   PersonTag,
   Picture,
   PictureGeoInfo,
@@ -79,6 +80,9 @@ export type FlatUsersPermissionsRoleWithoutRelations = ID &
 
 export type FlatUsersPermissionsUserWithoutRelations = ID & Omit<UsersPermissionsUser, 'role'>;
 
+export type FlatParamaterizedPermissionWithoutRelations = ID &
+  Omit<ParameterizedPermission, 'users_permissions_user'>;
+
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
   parentComment?: FlatComment | null;
@@ -147,6 +151,10 @@ export type FlatUsersPermissionsRole = FlatUsersPermissionsRoleWithoutRelations 
 
 export type FlatUsersPermissionsUser = FlatUsersPermissionsUserWithoutRelations & {
   role?: FlatUsersPermissionsRole;
+};
+
+export type FlatParameterizedPermission = FlatParamaterizedPermissionWithoutRelations & {
+  users_permissions_user?: FlatUsersPermissionsUser;
 };
 
 export type Thumbnail = {
