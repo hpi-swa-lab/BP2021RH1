@@ -198,6 +198,9 @@
         "getAllArchiveTags": "Liste aller Archive ansehen",
         "getArchive": "Archiv ansehen",
         "geo": "GeoQuiz spielen",
+        "createParameterizedPermission": "Recht vergeben",
+        "getParameterizedPermissions": "Rechte ansehen",
+        "deleteParameterizedPermission": "Recht entziehen",
         "getUsersPermissionsUser": "Nutzer-Daten ansehen",
         "login": "Sich anmelden"
       }

@@ -480,6 +480,7 @@ export type GenericMorph =
   | KeywordTag
   | Link
   | LocationTag
+  | ParameterizedPermission
   | PersonTag
   | Picture
   | PictureGeoInfo
@@ -760,6 +761,7 @@ export type Mutation = {
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
   createLink?: Maybe<LinkEntityResponse>;
   createLocationTag?: Maybe<LocationTagEntityResponse>;
+  createParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
   createPictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
@@ -779,6 +781,7 @@ export type Mutation = {
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
   deleteLink?: Maybe<LinkEntityResponse>;
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
+  deleteParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
   deletePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
@@ -817,6 +820,7 @@ export type Mutation = {
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
   updateLink?: Maybe<LinkEntityResponse>;
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
+  updateParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updatePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
@@ -867,6 +871,10 @@ export type MutationCreateLinkArgs = {
 
 export type MutationCreateLocationTagArgs = {
   data: LocationTagInput;
+};
+
+export type MutationCreateParameterizedPermissionArgs = {
+  data: ParameterizedPermissionInput;
 };
 
 export type MutationCreatePersonTagArgs = {
@@ -930,6 +938,10 @@ export type MutationDeleteLinkArgs = {
 };
 
 export type MutationDeleteLocationTagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteParameterizedPermissionArgs = {
   id: Scalars['ID'];
 };
 
@@ -1081,6 +1093,11 @@ export type MutationUpdateLocationTagArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationUpdateParameterizedPermissionArgs = {
+  data: ParameterizedPermissionInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdatePersonTagArgs = {
   data: PersonTagInput;
   id: Scalars['ID'];
@@ -1146,6 +1163,43 @@ export type PaginationArg = {
   page?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
   start?: InputMaybe<Scalars['Int']>;
+};
+
+export type ParameterizedPermission = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  operation_name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  users_permissions_user?: Maybe<UsersPermissionsUserEntityResponse>;
+};
+
+export type ParameterizedPermissionEntity = {
+  attributes?: Maybe<ParameterizedPermission>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ParameterizedPermissionEntityResponse = {
+  data?: Maybe<ParameterizedPermissionEntity>;
+};
+
+export type ParameterizedPermissionEntityResponseCollection = {
+  data: Array<ParameterizedPermissionEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ParameterizedPermissionFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ParameterizedPermissionFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<ParameterizedPermissionFiltersInput>;
+  operation_name?: InputMaybe<StringFilterInput>;
+  or?: InputMaybe<Array<InputMaybe<ParameterizedPermissionFiltersInput>>>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  users_permissions_user?: InputMaybe<UsersPermissionsUserFiltersInput>;
+};
+
+export type ParameterizedPermissionInput = {
+  operation_name?: InputMaybe<Scalars['String']>;
+  users_permissions_user?: InputMaybe<Scalars['ID']>;
 };
 
 export type PersonTag = {
@@ -1473,6 +1527,8 @@ export type Query = {
   locationTag?: Maybe<LocationTagEntityResponse>;
   locationTags?: Maybe<LocationTagEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
+  parameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
+  parameterizedPermissions?: Maybe<ParameterizedPermissionEntityResponseCollection>;
   personTag?: Maybe<PersonTagEntityResponse>;
   personTags?: Maybe<PersonTagEntityResponseCollection>;
   picture?: Maybe<PictureEntityResponse>;
@@ -1581,6 +1637,16 @@ export type QueryLocationTagArgs = {
 
 export type QueryLocationTagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryParameterizedPermissionArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryParameterizedPermissionsArgs = {
+  filters?: InputMaybe<ParameterizedPermissionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
@@ -3005,6 +3071,22 @@ export type GetMultiplePictureInfoQuery = {
     | undefined;
 };
 
+export type GetParameterizedPermissionsQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['ID']>;
+}>;
+
+export type GetParameterizedPermissionsQuery = {
+  parameterizedPermissions?:
+    | {
+        data: Array<{
+          id?: string | null | undefined;
+          attributes?: { operation_name?: string | null | undefined } | null | undefined;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
 export type GetPersonTagQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -3709,6 +3791,18 @@ export type CreateLocationTagMutation = {
     | undefined;
 };
 
+export type CreateParameterizedPermissionMutationVariables = Exact<{
+  userId?: InputMaybe<Scalars['ID']>;
+  operationName: Scalars['String'];
+}>;
+
+export type CreateParameterizedPermissionMutation = {
+  createParameterizedPermission?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type CreatePersonTagMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
@@ -3813,6 +3907,17 @@ export type DeleteLocationTagMutationVariables = Exact<{
 
 export type DeleteLocationTagMutation = {
   deleteLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
+export type DeleteParameterizedPermissionMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteParameterizedPermissionMutation = {
+  deleteParameterizedPermission?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
@@ -5516,6 +5621,74 @@ export type GetMultiplePictureInfoQueryResult = Apollo.QueryResult<
   GetMultiplePictureInfoQueryVariables
 >;
 
+export const GetParameterizedPermissionsDocument = gql`
+  query getParameterizedPermissions($userId: ID) {
+    parameterizedPermissions(filters: { users_permissions_user: { id: { eq: $userId } } }) {
+      data {
+        id
+        attributes {
+          operation_name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetParameterizedPermissionsQuery__
+ *
+ * To run a query within a React component, call `useGetParameterizedPermissionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetParameterizedPermissionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetParameterizedPermissionsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetParameterizedPermissionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetParameterizedPermissionsQuery,
+    GetParameterizedPermissionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetParameterizedPermissionsQuery,
+    GetParameterizedPermissionsQueryVariables
+  >(GetParameterizedPermissionsDocument, options);
+}
+
+export function useGetParameterizedPermissionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetParameterizedPermissionsQuery,
+    GetParameterizedPermissionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetParameterizedPermissionsQuery,
+    GetParameterizedPermissionsQueryVariables
+  >(GetParameterizedPermissionsDocument, options);
+}
+
+export type GetParameterizedPermissionsQueryHookResult = ReturnType<
+  typeof useGetParameterizedPermissionsQuery
+>;
+
+export type GetParameterizedPermissionsLazyQueryHookResult = ReturnType<
+  typeof useGetParameterizedPermissionsLazyQuery
+>;
+
+export type GetParameterizedPermissionsQueryResult = Apollo.QueryResult<
+  GetParameterizedPermissionsQuery,
+  GetParameterizedPermissionsQueryVariables
+>;
+
 export const GetPersonTagDocument = gql`
   query getPersonTag($id: ID!) {
     personTag(id: $id) {
@@ -6962,6 +7135,66 @@ export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationTagMutationVariables
 >;
 
+export const CreateParameterizedPermissionDocument = gql`
+  mutation createParameterizedPermission($userId: ID, $operationName: String!) {
+    createParameterizedPermission(
+      data: { users_permissions_user: $userId, operation_name: $operationName }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateParameterizedPermissionMutationFn = Apollo.MutationFunction<
+  CreateParameterizedPermissionMutation,
+  CreateParameterizedPermissionMutationVariables
+>;
+
+/**
+ * __useCreateParameterizedPermissionMutation__
+ *
+ * To run a mutation, you first call `useCreateParameterizedPermissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateParameterizedPermissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createParameterizedPermissionMutation, { data, loading, error }] = useCreateParameterizedPermissionMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      operationName: // value for 'operationName'
+ *   },
+ * });
+ */
+export function useCreateParameterizedPermissionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateParameterizedPermissionMutation,
+    CreateParameterizedPermissionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateParameterizedPermissionMutation,
+    CreateParameterizedPermissionMutationVariables
+  >(CreateParameterizedPermissionDocument, options);
+}
+
+export type CreateParameterizedPermissionMutationHookResult = ReturnType<
+  typeof useCreateParameterizedPermissionMutation
+>;
+
+export type CreateParameterizedPermissionMutationResult =
+  Apollo.MutationResult<CreateParameterizedPermissionMutation>;
+
+export type CreateParameterizedPermissionMutationOptions = Apollo.BaseMutationOptions<
+  CreateParameterizedPermissionMutation,
+  CreateParameterizedPermissionMutationVariables
+>;
+
 export const CreatePersonTagDocument = gql`
   mutation createPersonTag($name: String!) {
     createPersonTag(data: { name: $name }) {
@@ -7497,6 +7730,63 @@ export type DeleteLocationTagMutationResult = Apollo.MutationResult<DeleteLocati
 export type DeleteLocationTagMutationOptions = Apollo.BaseMutationOptions<
   DeleteLocationTagMutation,
   DeleteLocationTagMutationVariables
+>;
+
+export const DeleteParameterizedPermissionDocument = gql`
+  mutation deleteParameterizedPermission($id: ID!) {
+    deleteParameterizedPermission(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteParameterizedPermissionMutationFn = Apollo.MutationFunction<
+  DeleteParameterizedPermissionMutation,
+  DeleteParameterizedPermissionMutationVariables
+>;
+
+/**
+ * __useDeleteParameterizedPermissionMutation__
+ *
+ * To run a mutation, you first call `useDeleteParameterizedPermissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteParameterizedPermissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteParameterizedPermissionMutation, { data, loading, error }] = useDeleteParameterizedPermissionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteParameterizedPermissionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteParameterizedPermissionMutation,
+    DeleteParameterizedPermissionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteParameterizedPermissionMutation,
+    DeleteParameterizedPermissionMutationVariables
+  >(DeleteParameterizedPermissionDocument, options);
+}
+
+export type DeleteParameterizedPermissionMutationHookResult = ReturnType<
+  typeof useDeleteParameterizedPermissionMutation
+>;
+
+export type DeleteParameterizedPermissionMutationResult =
+  Apollo.MutationResult<DeleteParameterizedPermissionMutation>;
+
+export type DeleteParameterizedPermissionMutationOptions = Apollo.BaseMutationOptions<
+  DeleteParameterizedPermissionMutation,
+  DeleteParameterizedPermissionMutationVariables
 >;
 
 export const DeletePersonTagDocument = gql`
