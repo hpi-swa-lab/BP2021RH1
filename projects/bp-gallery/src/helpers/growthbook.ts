@@ -34,7 +34,13 @@ export const growthbook =
         onFeatureUsage: (featureKey, result) => {
           const w: any = window;
           const _paq: Array<any> = (w._paq = w._paq || []);
-          _paq.push(['trackEvent', 'FeatureViewed', featureKey, 'v' + String(result)]);
+          _paq.push([
+            'trackEvent',
+            'FeatureViewed',
+            featureKey,
+            'v' + String(result.experimentResult),
+            Number(result.on),
+          ]);
         },
       })
     : undefined;
