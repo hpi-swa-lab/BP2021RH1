@@ -85,13 +85,14 @@ const TagSelectDialogPreset = ({
         title: t(`tag-panel.relocate-${dialogProps.type ?? TagType.KEYWORD}`),
       }}
       allOptions={tagList ?? []}
-      renderOption={(props, option: FlatTag) => {
+      renderOption={(props, option: FlatTag, highlight?: any) => {
         return (
           <li {...props} key={option.id}>
             <SingleTagElement
               tagSupertagList={tagSupertagList}
               option={option}
               label={option.name}
+              highlighted={highlight && highlight.id === option.id ? true : false}
             />
           </li>
         );

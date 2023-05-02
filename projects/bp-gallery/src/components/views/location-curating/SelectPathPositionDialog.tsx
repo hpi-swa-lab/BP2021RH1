@@ -5,7 +5,14 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { TagType, FlatTag } from '../../../types/additionalFlatTypes';
 import { Close, Done } from '@mui/icons-material';
-import { DialogTitle, DialogContent, DialogActions, Button, Select, MenuItem } from '@mui/material';
+import {
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Autocomplete,
+  TextField,
+} from '@mui/material';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
 
 const PathPositionSelectDialogPreset = ({
@@ -137,32 +144,57 @@ const PathPositionSelectDialogPreset = ({
     setTagList(flattenedTags);
   }, [setTagList, flattenedTags, tagSupertagList]);
 
-  const selectedOption = useRef<any | undefined>('1');
+  const selectedOption = useRef<any | undefined>(customOptions[1]);
+  const [highlight, setHighlight] = useState<any>();
 
   return (
     <>
       <DialogTitle>{dialogProps.title ?? t('curator.selectOption')}</DialogTitle>
       <DialogContent>
-        <Select
-          className='w-full'
-          defaultOpen={true}
+        <Autocomplete
+          autoHighlight
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          options={customOptions}
           onChange={(_, value: any | null) => {
-            selectedOption.current = value.props.value ?? undefined;
+            selectedOption.current = value ?? undefined;
           }}
-          defaultValue={selectedOption.current}
-        >
-          {customOptions.map((option, index) => {
+          onHighlightChange={(event, option, reason) => {
+            setHighlight(option);
+          }}
+          renderOption={(props, option) => {
             return (
-              <MenuItem value={option.id} key={index}>
+              <li {...props} key={option.id}>
                 <SingleTagElement
                   tagSupertagList={customSupertagList}
                   option={option}
                   label={option.name}
+                  highlighted={highlight && highlight.id === option.id ? true : false}
                 />
-              </MenuItem>
+              </li>
             );
-          })}
-        </Select>
+          }}
+          getOptionLabel={(option: any) => {
+            let pathString = '';
+            if (option.id in customSupertagList && customSupertagList[option.id].length > 1) {
+              pathString = 'Mehrere Pfade';
+            } else if (
+              option.id in customSupertagList &&
+              customSupertagList[option.id].length === 1
+            ) {
+              customSupertagList[option.id][0].forEach((supertag: any) => {
+                pathString += (supertag.name as string) + ' ';
+              });
+            }
+
+            return pathString !== ''
+              ? (option.name as string) + ' ( ' + pathString + ')'
+              : option.name;
+          }}
+          renderInput={params => {
+            return <TextField variant='standard' {...params} />;
+          }}
+          defaultValue={selectedOption.current}
+        />
       </DialogContent>
       <DialogActions style={{ justifyContent: 'space-between' }}>
         <Button onClick={() => handleClose(undefined)} startIcon={<Close />}>

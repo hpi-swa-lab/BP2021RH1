@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode, useRef } from 'react';
+import { HTMLAttributes, ReactNode, useRef, useState } from 'react';
 import {
   Autocomplete,
   Button,
@@ -23,10 +23,11 @@ const SelectDialogPreset = ({
   dialogProps: DialogProps;
   allOptions: any[];
   inputLabel: string;
-  renderOption?: (props: HTMLAttributes<HTMLLIElement>, option: any) => ReactNode;
+  renderOption?: (props: HTMLAttributes<HTMLLIElement>, option: any, highlight?: any) => ReactNode;
 }) => {
   const { t } = useTranslation();
 
+  const [highlight, setHighlight] = useState<any>();
   const selectedOption = useRef<any | undefined>(undefined);
 
   return (
@@ -41,7 +42,7 @@ const SelectDialogPreset = ({
           renderInput={params => <TextField {...params} label={inputLabel} />}
           renderOption={(props, option) => {
             return renderOption ? (
-              renderOption(props, option)
+              renderOption(props, option, highlight)
             ) : (
               <li {...props} key={option.id}>
                 {option.name}
@@ -51,6 +52,9 @@ const SelectDialogPreset = ({
           getOptionLabel={(option: any) => option.name}
           onChange={(_, value: any | null) => {
             selectedOption.current = value ?? undefined;
+          }}
+          onHighlightChange={(event, option, reason) => {
+            setHighlight(option);
           }}
         />
       </DialogContent>

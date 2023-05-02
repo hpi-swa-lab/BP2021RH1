@@ -383,7 +383,7 @@ const TagSelectionField = <T extends TagFields>({
                     type: type,
                   });
                   if (!createOption) return;
-                  switch (createOption) {
+                  switch (createOption.id) {
                     case '1': {
                       if (
                         tagChildTags &&
