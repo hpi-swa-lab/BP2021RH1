@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'editPicture',
   document: graphql`
     mutation updatePicture($pictureId: ID!, $data: JSON!) {
       updatePictureWithTagCleanup(id: $pictureId, data: $data)

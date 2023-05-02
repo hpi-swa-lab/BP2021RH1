@@ -57,4 +57,9 @@ export type GroupName = keyof typeof groups;
 
 export type Operation = {
   document: GraphQLDocument;
-};
+} & (
+  | {
+      group: GroupName;
+    }
+  | GroupSettings
+);

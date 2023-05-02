@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  section: 'comment',
   document: graphql`
     query getUnverifiedComments {
       comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {

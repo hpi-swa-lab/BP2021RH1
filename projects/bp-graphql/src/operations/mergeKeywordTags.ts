@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'mergeTags',
   document: graphql`
     mutation mergeKeywordTags($targetId: ID!, $sourceId: ID!) {
       mergeKeywordTags(targetId: $targetId, sourceId: $sourceId)

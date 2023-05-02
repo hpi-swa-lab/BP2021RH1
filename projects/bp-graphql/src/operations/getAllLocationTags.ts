@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'getAllTags',
   document: graphql`
     query getAllLocationTags {
       locationTags {

@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'viewPicture',
   document: graphql`
     query getPicturesByAllSearch(
       $pagination: PaginationArg!

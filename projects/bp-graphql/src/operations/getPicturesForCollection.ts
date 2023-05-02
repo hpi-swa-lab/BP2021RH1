@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'viewCollection',
   document: graphql`
     query getPicturesForCollection($collectionId: ID!) {
       collection(id: $collectionId) {

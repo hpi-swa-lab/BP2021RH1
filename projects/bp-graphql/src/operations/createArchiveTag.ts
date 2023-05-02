@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  section: 'archive',
   document: graphql`
     mutation createArchiveTag($name: String!) {
       createArchiveTag(data: { name: $name }) {

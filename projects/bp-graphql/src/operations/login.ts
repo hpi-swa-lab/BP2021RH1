@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'login',
   document: graphql`
     mutation login($username: String!, $password: String!) {
       login(input: { identifier: $username, password: $password }) {

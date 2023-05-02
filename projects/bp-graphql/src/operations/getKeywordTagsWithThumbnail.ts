@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'getTagThumbnails',
   document: graphql`
     query getKeywordTagsWithThumbnail(
       $filters: KeywordTagFiltersInput = {}

@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  section: 'picture',
   document: graphql`
     query getDailyPictureInfo($pictureId: ID!) {
       picture(id: $pictureId) {

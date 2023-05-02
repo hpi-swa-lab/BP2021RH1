@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'viewCollection',
   document: graphql`
     query getRootCollection {
       browseRootCollection {

@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'geo',
   document: graphql`
     query getPictureMediaInfo($pictureId: ID!) {
       picture(id: $pictureId) {

@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  section: 'collection',
   document: graphql`
     mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
       createCollection(

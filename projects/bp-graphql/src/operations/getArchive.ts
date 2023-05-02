@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  section: 'archive',
   document: graphql`
     query getArchive($archiveId: ID!) {
       archiveTag(id: $archiveId) {

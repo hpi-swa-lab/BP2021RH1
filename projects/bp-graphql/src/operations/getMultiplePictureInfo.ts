@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'editPicture',
   document: graphql`
     query getMultiplePictureInfo($pictureIds: [ID!]) {
       pictures(filters: { id: { in: $pictureIds } }) {

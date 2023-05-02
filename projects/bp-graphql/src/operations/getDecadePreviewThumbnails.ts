@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  group: 'getTagThumbnails',
   document: graphql`
     query getDecadePreviewThumbnails(
       $filter40s: PictureFiltersInput!
