@@ -31,7 +31,7 @@
     "pg": "8.6.0",
     "pm2": "^5.2.0",
     "sendmail": "^1.6.1",
-    "strapi-provider-upload-aws-s3-plus-cdn": "^4.0.0",
+    "strapi-provider-upload-aws-s3-advanced": "^5.0.1",
     "xlsx": "^0.18.5"
   },
   "author": {
