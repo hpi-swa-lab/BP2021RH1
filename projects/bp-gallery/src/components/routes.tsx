@@ -21,6 +21,7 @@ import ContactFormView from './views/contact/ContactFormView';
 import ShowMoreView from './views/show-more/ShowMoreView';
 import DiscoverView from './views/discover/DiscoverView';
 import GeoView from './views/geoguessr/GeoView';
+import ExhibitionTool from './views/exhibitions/ExhibitionTool';
 
 export const FALLBACK_PATH = '/start';
 
@@ -72,6 +73,12 @@ const routes: RouteConfig[] = [
     path: '/picture/:id',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
       return <PictureView initialPictureId={match.params.id} />;
+    },
+  },
+  {
+    path: '/exhibition/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ExhibitionTool exhibitionId={match.params.id} />;
     },
   },
   {
