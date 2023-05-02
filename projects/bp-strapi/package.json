@@ -16,8 +16,8 @@
     "debug": "cross-env ENV_PATH=./config/env/development/.env node --inspect debug.js"
   },
   "devDependencies": {
-    "jest": "^28.1.0",
     "better-sqlite3": "^7.4.6",
+    "jest": "^28.1.0",
     "supertest": "^6.2.3"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "pg": "8.6.0",
     "pm2": "^5.2.0",
     "sendmail": "^1.6.1",
+    "strapi-provider-upload-aws-s3-plus-cdn": "^4.0.0",
     "xlsx": "^0.18.5"
   },
   "author": {

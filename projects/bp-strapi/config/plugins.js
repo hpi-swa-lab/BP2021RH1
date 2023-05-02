@@ -51,4 +51,27 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  upload: {
+    config: {
+      provider: "aws-s3-plus-cdn",
+      providerOptions: {
+        accessKeyId: env("AWS_ACCESS_KEY_ID"),
+        secretAccessKey: env("AWS_ACCESS_SECRET"),
+        region: env("AWS_REGION"),
+        params: {
+          Bucket: env("AWS_BUCKET_NAME"),
+        },
+        cdnUrl: env("CDN_URL"), // Optional CDN URL - include protocol and trailing forward slash, e.g. 'https://assets.example.com/'
+      },
+      // These parameters could solve issues with ACL public-read access — see [this issue](https://github.com/strapi/strapi/issues/5868) for details
+      actionOptions: {
+        upload: {
+          ACL: null,
+        },
+        uploadStream: {
+          ACL: null,
+        },
+      },
+    },
+  },
 });
