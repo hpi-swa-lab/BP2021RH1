@@ -90,7 +90,6 @@ const LocationBranch = ({
               {t(`tag-panel.add-sub-${type}`, { parent: locationTag.name })}
             </div>
           </div>
-          <hr />
         </div>
       )}
     </div>

@@ -327,95 +327,96 @@ const LocationEntry = ({
             {showMore ? <ExpandMore /> : <ChevronRight />}
           </IconButton>
         </Badge>
-        <div
-          className='location-name'
-          onClick={() => {
-            prompt({
-              preset: DialogPreset.LOCATION_MANAGEMENT,
-              title: locationTag.name,
-              content: { locationTag: locationTag, refetch: refetch },
-              maxWidth: false,
-            });
-          }}
-          /*onClick={() => {
-            history.push(`/show-more/${type}/${locationTag.id}`, {
-              showBack: true,
-            });
-          }}*/
-        >
-          {locationTag.name}
-        </div>
-        {!locationTag.accepted && (
-          <IconButton className='accept-location-name' onClick={() => acceptTag(locationTag.id)}>
-            <Check />
-          </IconButton>
-        )}
-        <div
-          className='location-synonyms location-column-750'
-          onClick={() => {
-            addSynonym(locationTag.id, locationTag.name);
-          }}
-        >
-          {locationTag.synonyms?.map((synonym, index) => (
-            <div key={index} className='location-synonym'>
-              <Chip
-                key={synonym!.name}
-                label={synonym!.name}
-                onDelete={() => deleteSynonym(locationTag.id, synonym!.name)}
-              />
+        <div className='location-entry-inner-content-container'>
+          <div className='location-entry-inner-content'>
+            <div
+              className='location-name'
+              onClick={() => {
+                prompt({
+                  preset: DialogPreset.LOCATION_MANAGEMENT,
+                  title: locationTag.name,
+                  content: { locationTag: locationTag, refetch: refetch },
+                  maxWidth: false,
+                });
+              }}
+            >
+              {locationTag.name}
             </div>
-          ))}
-        </div>
-        <div className='edit-button location-column-110'>
-          <IconButton
-            onClick={() => {
-              editName(locationTag.id, locationTag.name);
-            }}
-          >
-            <Edit />
-          </IconButton>
-        </div>
-        <div className='detach-button location-column-110'>
-          <IconButton
-            onClick={() => {
-              detachTag(locationTag.id, locationTag.name);
-            }}
-          >
-            <Eject />
-          </IconButton>
-        </div>
-        <div className='relocate-button location-column-110'>
-          <IconButton
-            onClick={() => {
-              relocateTag(locationTag.id, locationTag.name);
-            }}
-          >
-            <MoveDown />
-          </IconButton>
-        </div>
-        <div className='copy-button location-column-110'>
-          <IconButton
-            onClick={() => {
-              copyTag(locationTag.id, locationTag.name);
-            }}
-          >
-            <CopyAll />
-          </IconButton>
-        </div>
-        <div className='is-visible-checkbox-container location-column-110'>
-          <Checkbox checked={locationTag.visible ?? false} onChange={setVisible} />
-        </div>
-        <div className='delete-button location-column-110'>
-          <IconButton
-            onClick={() => {
-              deleteTag(locationTag.id, locationTag.name);
-            }}
-          >
-            <Delete />
-          </IconButton>
+            {!locationTag.accepted && (
+              <IconButton
+                className='accept-location-name'
+                onClick={() => acceptTag(locationTag.id)}
+              >
+                <Check />
+              </IconButton>
+            )}
+            <div
+              className='location-synonyms location-column-750'
+              onClick={() => {
+                addSynonym(locationTag.id, locationTag.name);
+              }}
+            >
+              {locationTag.synonyms?.map((synonym, index) => (
+                <div key={index} className='location-synonym'>
+                  <Chip
+                    key={synonym!.name}
+                    label={synonym!.name}
+                    onDelete={() => deleteSynonym(locationTag.id, synonym!.name)}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className='edit-button location-column-110'>
+              <IconButton
+                onClick={() => {
+                  editName(locationTag.id, locationTag.name);
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </div>
+            <div className='detach-button location-column-110'>
+              <IconButton
+                onClick={() => {
+                  detachTag(locationTag.id, locationTag.name);
+                }}
+              >
+                <Eject />
+              </IconButton>
+            </div>
+            <div className='relocate-button location-column-110'>
+              <IconButton
+                onClick={() => {
+                  relocateTag(locationTag.id, locationTag.name);
+                }}
+              >
+                <MoveDown />
+              </IconButton>
+            </div>
+            <div className='copy-button location-column-110'>
+              <IconButton
+                onClick={() => {
+                  copyTag(locationTag.id, locationTag.name);
+                }}
+              >
+                <CopyAll />
+              </IconButton>
+            </div>
+            <div className='is-visible-checkbox-container location-column-110'>
+              <Checkbox checked={locationTag.visible ?? false} onChange={setVisible} />
+            </div>
+            <div className='delete-button location-column-110'>
+              <IconButton
+                onClick={() => {
+                  deleteTag(locationTag.id, locationTag.name);
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </div>
+          </div>
         </div>
       </div>
-      <hr />
     </div>
   );
 };

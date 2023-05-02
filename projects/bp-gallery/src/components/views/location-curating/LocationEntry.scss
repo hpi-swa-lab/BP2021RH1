@@ -102,28 +102,43 @@ hr {
   .location-entry-content {
     display: flex;
     flex-direction: row;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-left: 1px solid gray;
+    margin-top: -1px;
 
-    .is-visible-checkbox-container {
-      box-sizing: border-box;
-    }
-
-    .delete-button {
-      box-sizing: border-box;
-    }
-
-    .location-name {
-      margin: auto 0 auto 8px;
-    }
-
-    .location-synonyms {
-      margin-left: auto;
-      margin-right: 0;
+    .location-entry-inner-content-container {
       display: flex;
-      flex-direction: row;
-      overflow: scroll;
+      flex-direction: column;
+      width: 100%;
 
-      .location-synonym {
-        margin: auto 4px auto 4px;
+      .location-entry-inner-content {
+        display: flex;
+        flex-direction: row;
+
+        .is-visible-checkbox-container {
+          box-sizing: border-box;
+        }
+
+        .delete-button {
+          box-sizing: border-box;
+        }
+
+        .location-name {
+          margin: auto 0 auto 8px;
+        }
+
+        .location-synonyms {
+          margin-left: auto;
+          margin-right: 0;
+          display: flex;
+          flex-direction: row;
+          overflow: scroll;
+
+          .location-synonym {
+            margin: auto 4px auto 4px;
+          }
+        }
       }
     }
   }
@@ -134,7 +149,10 @@ hr {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 8px;
-  background-color: lightgray;
+  border-bottom: 1px solid gray;
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+  margin-top: -1px;
 
   .add-tag-icon {
     color: $archiveColor;
@@ -143,12 +161,18 @@ hr {
   .add-tag-text {
     margin-top: auto;
     margin-bottom: auto;
+    padding-left: 16px;
     color: $archiveColor;
   }
 }
 
 .location-branch-container {
   .sub-location-container {
-    padding-left: 16px;
+    margin-left: 20px;
   }
+}
+
+.add-tag-container:hover {
+  background-color: lightgray;
+  transition: 0.5s;
 }
