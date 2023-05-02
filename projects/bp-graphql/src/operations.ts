@@ -44,6 +44,7 @@ export { default as getPicturesForCollection } from './operations/getPicturesFor
 export { default as getPicturesGeoInfo } from './operations/getPicturesGeoInfo.js';
 export { default as getRootCollection } from './operations/getRootCollection.js';
 export { default as getUnverifiedComments } from './operations/getUnverifiedComments.js';
+export { default as getUsersPermissionsUser } from './operations/getUsersPermissionsUser.js';
 export { default as increaseNotAPlaceCount } from './operations/increaseNotAPlaceCount.js';
 export { default as like } from './operations/like.js';
 export { default as login } from './operations/login.js';

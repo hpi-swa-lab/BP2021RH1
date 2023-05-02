@@ -3604,6 +3604,22 @@ export type GetUnverifiedCommentsQuery = {
     | undefined;
 };
 
+export type GetUsersPermissionsUserQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type GetUsersPermissionsUserQuery = {
+  usersPermissionsUser?:
+    | {
+        data?:
+          | { id?: string | null | undefined; attributes?: { username: string } | null | undefined }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -6465,6 +6481,74 @@ export type GetUnverifiedCommentsLazyQueryHookResult = ReturnType<
 export type GetUnverifiedCommentsQueryResult = Apollo.QueryResult<
   GetUnverifiedCommentsQuery,
   GetUnverifiedCommentsQueryVariables
+>;
+
+export const GetUsersPermissionsUserDocument = gql`
+  query getUsersPermissionsUser($id: ID!) {
+    usersPermissionsUser(id: $id) {
+      data {
+        id
+        attributes {
+          username
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUsersPermissionsUserQuery__
+ *
+ * To run a query within a React component, call `useGetUsersPermissionsUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersPermissionsUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersPermissionsUserQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUsersPermissionsUserQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetUsersPermissionsUserQuery,
+    GetUsersPermissionsUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUsersPermissionsUserQuery, GetUsersPermissionsUserQueryVariables>(
+    GetUsersPermissionsUserDocument,
+    options
+  );
+}
+
+export function useGetUsersPermissionsUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUsersPermissionsUserQuery,
+    GetUsersPermissionsUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUsersPermissionsUserQuery, GetUsersPermissionsUserQueryVariables>(
+    GetUsersPermissionsUserDocument,
+    options
+  );
+}
+
+export type GetUsersPermissionsUserQueryHookResult = ReturnType<
+  typeof useGetUsersPermissionsUserQuery
+>;
+
+export type GetUsersPermissionsUserLazyQueryHookResult = ReturnType<
+  typeof useGetUsersPermissionsUserLazyQuery
+>;
+
+export type GetUsersPermissionsUserQueryResult = Apollo.QueryResult<
+  GetUsersPermissionsUserQuery,
+  GetUsersPermissionsUserQueryVariables
 >;
 
 export const MeDocument = gql`
