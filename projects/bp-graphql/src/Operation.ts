@@ -1,3 +1,5 @@
+import * as groups from './groups';
+
 export enum OperationType {
   query = 'query',
   mutation = 'mutation',
@@ -30,6 +32,28 @@ export const graphql = (parts: TemplateStringsArray): GraphQLDocument => {
     type,
   };
 };
+
+export const sections = [
+  'picture',
+  'collection',
+  'tags',
+  'comment',
+  'archive',
+  'games',
+  'user',
+] as const;
+
+type Section = (typeof sections)[number];
+
+export type GroupSettings = {
+  section: Section;
+};
+
+export type Group = {
+  name: string;
+} & GroupSettings;
+
+export type GroupName = keyof typeof groups;
 
 export type Operation = {
   document: GraphQLDocument;

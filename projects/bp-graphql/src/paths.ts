@@ -20,3 +20,5 @@ export const operationGraphQLPath = resolve(
 );
 export const operationsDirectoryPath = resolve(bpGraphqlDirectoryPath, 'src/operations');
 export const operationsTsPath = resolve(bpGraphqlDirectoryPath, 'src/operations.ts');
+export const groupsDirectoryPath = resolve(bpGraphqlDirectoryPath, 'src/groups');
+export const groupsTsPath = resolve(bpGraphqlDirectoryPath, 'src/groups.ts');
