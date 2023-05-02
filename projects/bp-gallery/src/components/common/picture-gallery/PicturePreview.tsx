@@ -25,6 +25,7 @@ const PicturePreview = ({
   pictureOrigin = PictureOrigin.REMOTE,
   adornments,
   allowClicks = true,
+  height,
   highQuality,
 }: {
   picture: FlatPicture;
@@ -33,6 +34,7 @@ const PicturePreview = ({
   adornments?: PicturePreviewAdornment[];
   allowClicks?: boolean;
   highQuality?: boolean;
+  height?: string;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
@@ -72,6 +74,7 @@ const PicturePreview = ({
                 )
               : thumbnailUrl
           }
+          style={height ? { height: height } : {}}
         />
         <div className='adornments'>
           {adornments?.map((adornment, index) => (
