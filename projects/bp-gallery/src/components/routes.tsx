@@ -2,25 +2,26 @@ import { RouteConfig, RouteConfigComponentProps } from 'react-router-config';
 import { Redirect } from 'react-router-dom';
 import Demo from '../prototypes/demo';
 import TimeLineDemo from '../prototypes/timeline-demo';
-import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
-import TagTableView from './views/tag-table/TagTableView';
-import PictureView from './views/picture/PictureView';
-import UnverifiedCommentsView from './views/unverified-comments/UnverifiedCommentsView';
 import { TagType } from '../types/additionalFlatTypes';
-import BrowseView from './views/browse/BrowseView';
-import SearchView from './views/search/SearchView';
-import UploadsView from './views/uploads/UploadsView';
-import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
-import BulkEditView from './views/bulk-edit/BulkEditView';
-import StartView from './views/start/StartView';
-import ArchiveView from './views/archives/ArchiveView';
-import ArchiveEditView from './views/archives/ArchiveEditView';
 import ProtectedRoute from './common/ProtectedRoute';
-import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
+import PermissionsView from './views/admin/user/PermissionsView';
+import ArchiveEditView from './views/archives/ArchiveEditView';
+import ArchiveView from './views/archives/ArchiveView';
+import BrowseView from './views/browse/BrowseView';
+import BulkEditView from './views/bulk-edit/BulkEditView';
+import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
 import ContactFormView from './views/contact/ContactFormView';
-import ShowMoreView from './views/show-more/ShowMoreView';
 import DiscoverView from './views/discover/DiscoverView';
 import GeoView from './views/geoguessr/GeoView';
+import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
+import PictureView from './views/picture/PictureView';
+import SearchView from './views/search/SearchView';
+import ShowMoreView from './views/show-more/ShowMoreView';
+import StartView from './views/start/StartView';
+import TagTableView from './views/tag-table/TagTableView';
+import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
+import UnverifiedCommentsView from './views/unverified-comments/UnverifiedCommentsView';
+import UploadsView from './views/uploads/UploadsView';
 
 export const FALLBACK_PATH = '/start';
 
@@ -118,6 +119,12 @@ const routes: RouteConfig[] = [
     path: '/contact',
     render: () => {
       return <ContactFormView />;
+    },
+  },
+  {
+    path: '/admin/user/:id/permissions',
+    render({ match }: RouteConfigComponentProps<{ id: '' }>) {
+      return <PermissionsView userId={match.params.id} />;
     },
   },
   {
