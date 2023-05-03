@@ -36,9 +36,9 @@ export const growthbook =
           const _paq: Array<any> = (w._paq = w._paq || []);
           _paq.push([
             'trackEvent',
-            'FeatureViewed',
+            'FeatureViewed' + '_s_' + String(result.source),
             featureKey,
-            String(result.value),
+            'v' + String(result.value),
             Number(result.experimentResult?.variationId),
           ]);
         },
