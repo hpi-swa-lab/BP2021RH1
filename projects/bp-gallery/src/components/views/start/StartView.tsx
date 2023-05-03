@@ -7,6 +7,7 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import PrimaryButton from '../../common/PrimaryButton';
 import DonateButton from '../../common/DonateButton';
+import { IfFlagEnabled } from '../../common/IfFlagEnabled';
 import PictureOverview from '../../common/PictureOverview';
 import BrowseView from '../browse/BrowseView';
 import { useVisit } from './../../../helpers/history';
@@ -49,14 +50,23 @@ const StartView = () => {
   return (
     <div className='main-start-view'>
       <div className='welcome-container'>
-        <div className='welcome'>
-          <h1>{t('startpage.welcome-title')}</h1>
-          <p>{t('startpage.welcome-text')}</p>
-          <DonateButton clientId='Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8' />
-        </div>
+        <IfFlagEnabled feature='dummy_experiment'>
+          <div className='welcome'>
+            <h1>{t('startpage.welcome-title')}</h1>
+            <p>{t('startpage.welcome-text')}</p>
+          </div>
+        </IfFlagEnabled>
         <DailyPicture />
         {!isMobile && (
           <div className='flex place-content-center gap-2 m-4'>
+            <PrimaryButton
+              onClickFn={() => {
+                visit('/discover');
+              }}
+              isShowMore
+            >
+              {t('discover.discover-button')}
+            </PrimaryButton>
             <PrimaryButton
               onClickFn={() => {
                 visit('/geo');
@@ -65,9 +75,9 @@ const StartView = () => {
             >
               {t('geo.geo-game-button')}
             </PrimaryButton>
+            <DonateButton clientId='Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8' />
           </div>
         )}
-
         <ShowStats>
           <PictureOverview
             title={t('discover.latest-pictures')}

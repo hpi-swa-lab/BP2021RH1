@@ -1,5 +1,6 @@
 import { Button } from '@mui/material';
-import { Icon, LatLng, Map, latLngBounds } from 'leaflet';
+import { Icon, LatLng, latLngBounds, Map } from 'leaflet';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,9 @@ import {
   useIncreaseNotAPlaceCountMutation,
 } from '../../../graphql/APIConnector';
 import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
+import otherMarkerIcon from './location-map-pin.svg';
+import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
+import { ZoomInMapOutlined, ZoomOutMapOutlined } from '@mui/icons-material';
 
 const PlayerMarkers = ({
   allGuesses,
@@ -31,14 +35,15 @@ const PlayerMarkers = ({
     }, 300);
   }, [coords, myGuess, map]);
   const othersIcon = new Icon({
-    iconUrl: '/images/location-map-pin.svg',
+    iconUrl: otherMarkerIcon,
     iconSize: Icon.Default.prototype.options.iconSize,
     iconAnchor: Icon.Default.prototype.options.iconAnchor,
     popupAnchor: Icon.Default.prototype.options.popupAnchor,
-    shadowUrl: 'images/marker-shadow.png',
+    shadowUrl: markerShadow,
     shadowSize: Icon.Default.prototype.options.shadowSize,
     shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
   });
+
   return (
     <div>
       {coords.map((x, index) => (
@@ -51,16 +56,28 @@ const MyMarker = ({
   position,
   isPositionable,
   setPosition,
+  ref,
 }: {
   position: LatLng;
   isPositionable: boolean;
   setPosition: (pos: LatLng) => void;
+  ref?: any;
 }) => {
   useMapEvent('click', event => {
     isPositionable && setPosition(event.latlng.clone());
   });
 
-  return <Marker position={position} />;
+  const myIcon = new Icon({
+    iconUrl: myMarkerIcon,
+    iconSize: Icon.Default.prototype.options.iconSize,
+    iconAnchor: Icon.Default.prototype.options.iconAnchor,
+    popupAnchor: Icon.Default.prototype.options.popupAnchor,
+    shadowUrl: markerShadow,
+    shadowSize: Icon.Default.prototype.options.shadowSize,
+    shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
+  });
+
+  return <Marker ref={ref} icon={myIcon} position={position} />;
 };
 
 const GeoMap = ({
@@ -83,6 +100,7 @@ const GeoMap = ({
   const [guess, setGuess] = useState<LatLng>(initialGuess);
   const [guessComplete, setGuessComplete] = useState(false);
   const [unknown, setUnknown] = useState(false);
+  const [isMaximised, setIsMaximised] = useState(false);
   const [createPictureGeoInfo] = useCreatePictureGeoInfoMutation();
   const nextPicture = () => {
     setGuess(initialGuess);
@@ -117,12 +135,27 @@ const GeoMap = ({
   return (
     <div
       className={`fixed w-[480px] h-[360px] bottom-1 right-1 items-stretch flex flex-col transition-all
-        ${guessComplete ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
+        ${guessComplete || isMaximised ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
     >
+      <div className='flex flex-row-reverse m-1'></div>
       {guessComplete && (
         <div className='guess-complete-text self-center bg-white p-5 mb-2 text-center rounded-2xl w-[350px]'>
           <h2>{unknown ? t('geo.tip-unknown') : t('geo.tip')}</h2>
           <p>{t('geo.tip-sub')}</p>
+        </div>
+      )}
+      {!guessComplete && (
+        <div
+          className='w-fit p-2 absolute z-[999] right-2 top-4 cursor-pointer decoration-black bg-white border-solid flex justify-center border-gray-400'
+          onClick={event => {
+            event.stopPropagation();
+            setIsMaximised(!isMaximised);
+            setTimeout(() => {
+              map.current && map.current.invalidateSize();
+            }, 200);
+          }}
+        >
+          {isMaximised ? <ZoomInMapOutlined /> : <ZoomOutMapOutlined />}
         </div>
       )}
       <MapContainer
@@ -136,6 +169,7 @@ const GeoMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
+
         {guessComplete && (
           <PlayerMarkers allGuesses={allGuesses} myGuess={unknown ? undefined : guess} />
         )}

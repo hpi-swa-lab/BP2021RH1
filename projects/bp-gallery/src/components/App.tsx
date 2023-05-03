@@ -8,6 +8,7 @@ import AlertProvider from './provider/AlertProvider';
 import AuthProvider from './provider/AuthProvider';
 import ClipboardEditorProvider from './provider/ClipboardEditorProvider';
 import DialogProvider from './provider/DialogProvider';
+import { GrowthBookProvider } from './provider/GrowthBookProvider';
 import { MobileProvider } from './provider/MobileProvider';
 import { ScrollProvider } from './provider/ScrollProvider';
 import StorageProvider from './provider/StorageProvider';
@@ -74,11 +75,13 @@ const App = () => {
               <MobileProvider>
                 <div className='App'>
                   <ClipboardEditorProvider>
-                    <ScrollProvider useWindow>
-                      <TopBar />
-                      <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
-                      <BottomBar />
-                    </ScrollProvider>
+                    <GrowthBookProvider>
+                      <ScrollProvider useWindow>
+                        <TopBar />
+                        <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                        <BottomBar />
+                      </ScrollProvider>
+                    </GrowthBookProvider>
                   </ClipboardEditorProvider>
                 </div>
               </MobileProvider>
