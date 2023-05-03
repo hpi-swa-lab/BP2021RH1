@@ -38,8 +38,8 @@ export const growthbook =
             'trackEvent',
             'FeatureViewed',
             featureKey,
-            'v' + String(result.experimentResult),
-            Number(result.on),
+            String(result.value),
+            Number(result.experimentResult?.variationId),
           ]);
         },
       })
