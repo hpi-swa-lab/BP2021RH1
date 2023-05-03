@@ -5,19 +5,19 @@ import {
   CopyAll,
   Delete,
   Done,
-  Edit,
   Eject,
   ExpandMore,
   MoveDown,
+  Visibility,
+  VisibilityOffOutlined,
 } from '@mui/icons-material';
-import { Badge, Chip, IconButton } from '@mui/material';
+import { Badge, Chip, IconButton, Tooltip } from '@mui/material';
 import { History } from 'history';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import Checkbox from './Checkbox';
 import { useDeleteSingleTag, useDeleteTagAndChildren } from './delete-tag-helpers';
 import './LocationEntry.scss';
 
@@ -121,22 +121,6 @@ const LocationEntry = ({
       refetch();
     },
   });
-
-  const editName = async (tagId?: string, tagName?: string) => {
-    if (!tagId || !tagName) return;
-    const locationName = await prompt({
-      preset: DialogPreset.INPUT_FIELD,
-      title: t(`tag-panel.new-${type}-name`, { tag_name: tagName }),
-    });
-    if (locationName?.length) {
-      updateTagNameMutation({
-        variables: {
-          name: locationName,
-          tagId: tagId,
-        },
-      });
-    }
-  };
 
   const detachTag = async (tagId?: string, tagName?: string) => {
     if (!tagId || !tagName) return;
@@ -323,19 +307,21 @@ const LocationEntry = ({
         </Badge>
         <div className='location-entry-inner-content-container'>
           <div className='location-entry-inner-content'>
-            <div className='location-name'>{locationTag.name}</div>
-            {!locationTag.accepted && (
-              <IconButton
-                className='accept-location-name'
-                onClick={e => {
-                  e.stopPropagation();
-                  acceptTag(locationTag.id);
-                }}
-              >
-                <Check />
-              </IconButton>
-            )}
-            <div className='location-synonyms location-column-750'>
+            <div className='location-name'>
+              {locationTag.name}
+              {!locationTag.accepted && (
+                <IconButton
+                  className='accept-location-name'
+                  onClick={e => {
+                    e.stopPropagation();
+                    acceptTag(locationTag.id);
+                  }}
+                >
+                  <Check />
+                </IconButton>
+              )}
+            </div>
+            <div className='location-synonyms'>
               {locationTag.synonyms?.map((synonym, index) => (
                 <div key={index} className='location-synonym'>
                   <Chip
@@ -346,63 +332,67 @@ const LocationEntry = ({
                 </div>
               ))}
             </div>
-            <div className='edit-button location-column-110'>
-              <IconButton
-                onClick={e => {
-                  e.stopPropagation();
-                  editName(locationTag.id, locationTag.name);
-                }}
+            <div className='location-action-buttons-container'>
+              <Tooltip
+                title={'Ort aus der Hierarchie lösen'}
+                arrow={true}
+                followCursor={true}
+                placement='left'
               >
-                <Edit />
-              </IconButton>
-            </div>
-            <div className='detach-button location-column-110'>
-              <IconButton
-                onClick={e => {
-                  e.stopPropagation();
-                  detachTag(locationTag.id, locationTag.name);
-                }}
+                <IconButton
+                  onClick={e => {
+                    e.stopPropagation();
+                    detachTag(locationTag.id, locationTag.name);
+                  }}
+                >
+                  <Eject />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={'Ort unterordnen'} arrow={true} followCursor={true} placement='left'>
+                <IconButton
+                  onClick={e => {
+                    e.stopPropagation();
+                    relocateTag(locationTag.id, locationTag.name);
+                  }}
+                >
+                  <MoveDown />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={'Ort kopieren'} arrow={true} followCursor={true} placement='left'>
+                <IconButton
+                  onClick={e => {
+                    e.stopPropagation();
+                    copyTag(locationTag.id, locationTag.name);
+                  }}
+                >
+                  <CopyAll />
+                </IconButton>
+              </Tooltip>
+              <Tooltip
+                title={locationTag.visible ? 'Ort verstecken' : 'Ort anzeigen'}
+                arrow={true}
+                followCursor={true}
+                placement='left'
               >
-                <Eject />
-              </IconButton>
-            </div>
-            <div className='relocate-button location-column-110'>
-              <IconButton
-                onClick={e => {
-                  e.stopPropagation();
-                  relocateTag(locationTag.id, locationTag.name);
-                }}
-              >
-                <MoveDown />
-              </IconButton>
-            </div>
-            <div className='copy-button location-column-110'>
-              <IconButton
-                onClick={e => {
-                  e.stopPropagation();
-                  copyTag(locationTag.id, locationTag.name);
-                }}
-              >
-                <CopyAll />
-              </IconButton>
-            </div>
-            <div
-              className='is-visible-checkbox-container location-column-110'
-              onClick={e => {
-                e.stopPropagation();
-              }}
-            >
-              <Checkbox checked={locationTag.visible ?? false} onChange={setVisible} />
-            </div>
-            <div className='delete-button location-column-110'>
-              <IconButton
-                onClick={e => {
-                  e.stopPropagation();
-                  deleteTag(locationTag.id, locationTag.name);
-                }}
-              >
-                <Delete />
-              </IconButton>
+                <IconButton
+                  onClick={e => {
+                    e.stopPropagation();
+                    setVisible();
+                  }}
+                >
+                  {locationTag.visible ? <Visibility /> : <VisibilityOffOutlined />}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={'Ort löschen'} arrow={true} followCursor={true} placement='left'>
+                <IconButton
+                  onClick={e => {
+                    e.stopPropagation();
+                    deleteTag(locationTag.id, locationTag.name);
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              </Tooltip>
             </div>
           </div>
         </div>

@@ -30,61 +30,15 @@ hr {
   .location-header-name {
     margin-top: auto;
     margin-bottom: auto;
-    padding-left: 8px;
-    padding-right: 8px;
-    box-sizing: border-box;
-  }
-
-  .location-header-edit {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 0;
     border-left: 2px solid darkgrey;
+    margin-left: 40px;
     padding-left: 8px;
     padding-right: 8px;
     box-sizing: border-box;
-  }
-
-  .location-header-detach {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 0;
-    border-left: 2px solid darkgrey;
-    padding-left: 8px;
-    padding-right: 8px;
-    box-sizing: border-box;
-  }
-
-  .location-header-relocate {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 0;
-    border-left: 2px solid darkgrey;
-    padding-left: 8px;
-    padding-right: 8px;
-    box-sizing: border-box;
+    width: 25%;
   }
 
   .location-header-synonyms {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: auto;
-    margin-right: 0;
-    border-left: 2px solid darkgrey;
-    padding-left: 8px;
-    padding-right: 8px;
-    box-sizing: border-box;
-  }
-
-  .location-header-is-visible {
-    margin: auto 0 auto 0;
-    border-left: 2px solid darkgrey;
-    padding-left: 8px;
-    padding-right: 8px;
-    box-sizing: border-box;
-  }
-
-  .location-header-delete {
     margin-top: auto;
     margin-bottom: auto;
     border-left: 2px solid darkgrey;
@@ -116,21 +70,18 @@ hr {
         display: flex;
         flex-direction: row;
 
-        .is-visible-checkbox-container {
-          box-sizing: border-box;
-        }
-
-        .delete-button {
-          box-sizing: border-box;
+        .location-action-buttons-container {
+          margin-right: 0px;
+          margin-left: auto;
+          display: flex;
         }
 
         .location-name {
           margin: auto 0 auto 8px;
+          width: 25%;
         }
 
         .location-synonyms {
-          margin-left: auto;
-          margin-right: 0;
           display: flex;
           flex-direction: row;
           overflow: scroll;
