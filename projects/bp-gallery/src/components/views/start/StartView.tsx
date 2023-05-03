@@ -16,6 +16,7 @@ import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
 import { useMobile } from '../../../hooks/context-hooks';
+import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -23,7 +24,7 @@ const StartView = () => {
   const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
-
+  const paypalClientId = useFeatureValue('paypal_client_id', '');
   const { data: picturesData } = useGetAllPicturesByArchiveQuery();
   const archivePictures: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
@@ -57,16 +58,17 @@ const StartView = () => {
           </div>
         </IfFlagEnabled>
         <DailyPicture />
-        {!isMobile && (
-          <div className='flex place-content-center gap-2 m-4'>
-            <PrimaryButton
-              onClickFn={() => {
-                visit('/discover');
-              }}
-              isShowMore
-            >
-              {t('discover.discover-button')}
-            </PrimaryButton>
+
+        <div className='flex place-content-center gap-2 m-4 flex-wrap'>
+          <PrimaryButton
+            onClickFn={() => {
+              visit('/discover');
+            }}
+            isShowMore
+          >
+            {t('discover.discover-button')}
+          </PrimaryButton>
+          {!isMobile && (
             <PrimaryButton
               onClickFn={() => {
                 visit('/geo');
@@ -75,9 +77,13 @@ const StartView = () => {
             >
               {t('geo.geo-game-button')}
             </PrimaryButton>
-            <DonateButton clientId='Af995AL7EAaDJugFaepw6fajUE_oBrrrMFePYbGpPMGPb9FdmI01TUIlfLtln6y8M7AjIvxnIsSvw6b8' />
-          </div>
-        )}
+          )}
+          <div className='flex basis-full' />
+          <IfFeatureEnabled feature='paypal_client_id'>
+            {paypalClientId !== '' && <DonateButton clientId={paypalClientId} />}
+          </IfFeatureEnabled>
+        </div>
+
         <ShowStats>
           <PictureOverview
             title={t('discover.latest-pictures')}

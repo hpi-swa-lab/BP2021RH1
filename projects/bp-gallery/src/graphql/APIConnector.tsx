@@ -33,6 +33,7 @@ export type ArchiveTag = {
   logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  paypalClient?: Maybe<Scalars['String']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
@@ -75,6 +76,7 @@ export type ArchiveTagFiltersInput = {
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ArchiveTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
+  paypalClient?: InputMaybe<StringFilterInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
@@ -86,6 +88,7 @@ export type ArchiveTagInput = {
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  paypalClient?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
@@ -391,6 +394,176 @@ export type DescriptionRelationResponseCollection = {
   data: Array<DescriptionEntity>;
 };
 
+export type ExhibitionSection = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  exhibition_pictures?: Maybe<IdealotRelationResponseCollection>;
+  exhibiton?: Maybe<ExhibitonEntityResponse>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  text?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ExhibitionSectionExhibition_PicturesArgs = {
+  filters?: InputMaybe<IdealotFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExhibitionSectionEntity = {
+  attributes?: Maybe<ExhibitionSection>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ExhibitionSectionEntityResponse = {
+  data?: Maybe<ExhibitionSectionEntity>;
+};
+
+export type ExhibitionSectionEntityResponseCollection = {
+  data: Array<ExhibitionSectionEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ExhibitionSectionFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ExhibitionSectionFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  exhibition_pictures?: InputMaybe<IdealotFiltersInput>;
+  exhibiton?: InputMaybe<ExhibitonFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<ExhibitionSectionFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ExhibitionSectionFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  text?: InputMaybe<StringFilterInput>;
+  title?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ExhibitionSectionInput = {
+  exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  exhibiton?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  text?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ExhibitionSectionRelationResponseCollection = {
+  data: Array<ExhibitionSectionEntity>;
+};
+
+export type ExhibitionSource = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  exhibiton?: Maybe<ExhibitonEntityResponse>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  source?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ExhibitionSourceEntity = {
+  attributes?: Maybe<ExhibitionSource>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ExhibitionSourceEntityResponse = {
+  data?: Maybe<ExhibitionSourceEntity>;
+};
+
+export type ExhibitionSourceEntityResponseCollection = {
+  data: Array<ExhibitionSourceEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ExhibitionSourceFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ExhibitionSourceFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  exhibiton?: InputMaybe<ExhibitonFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<ExhibitionSourceFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ExhibitionSourceFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  source?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ExhibitionSourceInput = {
+  exhibiton?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  source?: InputMaybe<Scalars['String']>;
+};
+
+export type ExhibitionSourceRelationResponseCollection = {
+  data: Array<ExhibitionSourceEntity>;
+};
+
+export type Exhibiton = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  epilog?: Maybe<Scalars['String']>;
+  exhibition_sections?: Maybe<ExhibitionSectionRelationResponseCollection>;
+  exhibition_sources?: Maybe<ExhibitionSourceRelationResponseCollection>;
+  introduction?: Maybe<Scalars['String']>;
+  is_published?: Maybe<Scalars['Boolean']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  title?: Maybe<Scalars['String']>;
+  title_picture?: Maybe<IdealotEntityResponse>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ExhibitonExhibition_SectionsArgs = {
+  filters?: InputMaybe<ExhibitionSectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExhibitonExhibition_SourcesArgs = {
+  filters?: InputMaybe<ExhibitionSourceFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExhibitonEntity = {
+  attributes?: Maybe<Exhibiton>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ExhibitonEntityResponse = {
+  data?: Maybe<ExhibitonEntity>;
+};
+
+export type ExhibitonEntityResponseCollection = {
+  data: Array<ExhibitonEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ExhibitonFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ExhibitonFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  epilog?: InputMaybe<StringFilterInput>;
+  exhibition_sections?: InputMaybe<ExhibitionSectionFiltersInput>;
+  exhibition_sources?: InputMaybe<ExhibitionSourceFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  introduction?: InputMaybe<StringFilterInput>;
+  is_published?: InputMaybe<BooleanFilterInput>;
+  not?: InputMaybe<ExhibitonFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ExhibitonFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  title?: InputMaybe<StringFilterInput>;
+  title_picture?: InputMaybe<IdealotFiltersInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ExhibitonInput = {
+  epilog?: InputMaybe<Scalars['String']>;
+  exhibition_sections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  exhibition_sources?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  introduction?: InputMaybe<Scalars['String']>;
+  is_published?: InputMaybe<Scalars['Boolean']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_picture?: InputMaybe<Scalars['ID']>;
+};
+
 export type FaceTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   person_tag?: Maybe<PersonTagEntityResponse>;
@@ -476,7 +649,12 @@ export type GenericMorph =
   | ComponentCommonSynonyms
   | ComponentLocationCoordinates
   | Description
+  | ExhibitionSection
+  | ExhibitionSource
+  | Exhibiton
   | FaceTag
+  | IdeaLot
+  | Idealot
   | KeywordTag
   | Link
   | LocationTag
@@ -512,6 +690,107 @@ export type IdFilterInput = {
   null?: InputMaybe<Scalars['Boolean']>;
   or?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   startsWith?: InputMaybe<Scalars['ID']>;
+};
+
+export type IdeaLot = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  exhibition_pictures?: Maybe<IdealotRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type IdeaLotExhibition_PicturesArgs = {
+  filters?: InputMaybe<IdealotFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type IdeaLotEntity = {
+  attributes?: Maybe<IdeaLot>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type IdeaLotEntityResponse = {
+  data?: Maybe<IdeaLotEntity>;
+};
+
+export type IdeaLotEntityResponseCollection = {
+  data: Array<IdeaLotEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type IdeaLotFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<IdeaLotFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  exhibition_pictures?: InputMaybe<IdealotFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<IdeaLotFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<IdeaLotFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type IdeaLotInput = {
+  exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type Idealot = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  exhibition_section?: Maybe<ExhibitionSectionEntityResponse>;
+  idea_lot?: Maybe<IdeaLotEntityResponse>;
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  subtitle?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type IdealotPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type IdealotEntity = {
+  attributes?: Maybe<Idealot>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type IdealotEntityResponse = {
+  data?: Maybe<IdealotEntity>;
+};
+
+export type IdealotEntityResponseCollection = {
+  data: Array<IdealotEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type IdealotFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<IdealotFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  exhibition_section?: InputMaybe<ExhibitionSectionFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  idea_lot?: InputMaybe<IdeaLotFiltersInput>;
+  not?: InputMaybe<IdealotFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<IdealotFiltersInput>>>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  subtitle?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type IdealotInput = {
+  exhibition_section?: InputMaybe<Scalars['ID']>;
+  idea_lot?: InputMaybe<Scalars['ID']>;
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  subtitle?: InputMaybe<Scalars['String']>;
+};
+
+export type IdealotRelationResponseCollection = {
+  data: Array<IdealotEntity>;
 };
 
 export type IntFilterInput = {
@@ -756,7 +1035,12 @@ export type Mutation = {
   createCollection?: Maybe<CollectionEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
   createDescription?: Maybe<DescriptionEntityResponse>;
+  createExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
+  createExhibitionSource?: Maybe<ExhibitionSourceEntityResponse>;
+  createExhibiton?: Maybe<ExhibitonEntityResponse>;
   createFaceTag?: Maybe<FaceTagEntityResponse>;
+  createIdeaLot?: Maybe<IdeaLotEntityResponse>;
+  createIdealot?: Maybe<IdealotEntityResponse>;
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
   createLink?: Maybe<LinkEntityResponse>;
   createLocationTag?: Maybe<LocationTagEntityResponse>;
@@ -775,7 +1059,12 @@ export type Mutation = {
   deleteCollection?: Maybe<CollectionEntityResponse>;
   deleteComment?: Maybe<CommentEntityResponse>;
   deleteDescription?: Maybe<DescriptionEntityResponse>;
+  deleteExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
+  deleteExhibitionSource?: Maybe<ExhibitionSourceEntityResponse>;
+  deleteExhibiton?: Maybe<ExhibitonEntityResponse>;
   deleteFaceTag?: Maybe<FaceTagEntityResponse>;
+  deleteIdeaLot?: Maybe<IdeaLotEntityResponse>;
+  deleteIdealot?: Maybe<IdealotEntityResponse>;
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
   deleteLink?: Maybe<LinkEntityResponse>;
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
@@ -812,8 +1101,13 @@ export type Mutation = {
   updateCollection?: Maybe<CollectionEntityResponse>;
   updateComment?: Maybe<CommentEntityResponse>;
   updateDescription?: Maybe<DescriptionEntityResponse>;
+  updateExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
+  updateExhibitionSource?: Maybe<ExhibitionSourceEntityResponse>;
+  updateExhibiton?: Maybe<ExhibitonEntityResponse>;
   updateFaceTag?: Maybe<FaceTagEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
+  updateIdeaLot?: Maybe<IdeaLotEntityResponse>;
+  updateIdealot?: Maybe<IdealotEntityResponse>;
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
   updateLink?: Maybe<LinkEntityResponse>;
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
@@ -853,8 +1147,28 @@ export type MutationCreateDescriptionArgs = {
   data: DescriptionInput;
 };
 
+export type MutationCreateExhibitionSectionArgs = {
+  data: ExhibitionSectionInput;
+};
+
+export type MutationCreateExhibitionSourceArgs = {
+  data: ExhibitionSourceInput;
+};
+
+export type MutationCreateExhibitonArgs = {
+  data: ExhibitonInput;
+};
+
 export type MutationCreateFaceTagArgs = {
   data: FaceTagInput;
+};
+
+export type MutationCreateIdeaLotArgs = {
+  data: IdeaLotInput;
+};
+
+export type MutationCreateIdealotArgs = {
+  data: IdealotInput;
 };
 
 export type MutationCreateKeywordTagArgs = {
@@ -917,7 +1231,27 @@ export type MutationDeleteDescriptionArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationDeleteExhibitionSectionArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteExhibitionSourceArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteExhibitonArgs = {
+  id: Scalars['ID'];
+};
+
 export type MutationDeleteFaceTagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteIdeaLotArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteIdealotArgs = {
   id: Scalars['ID'];
 };
 
@@ -1056,6 +1390,21 @@ export type MutationUpdateDescriptionArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationUpdateExhibitionSectionArgs = {
+  data: ExhibitionSectionInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateExhibitionSourceArgs = {
+  data: ExhibitionSourceInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateExhibitonArgs = {
+  data: ExhibitonInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdateFaceTagArgs = {
   data: FaceTagInput;
   id: Scalars['ID'];
@@ -1064,6 +1413,16 @@ export type MutationUpdateFaceTagArgs = {
 export type MutationUpdateFileInfoArgs = {
   id: Scalars['ID'];
   info?: InputMaybe<FileInfoInput>;
+};
+
+export type MutationUpdateIdeaLotArgs = {
+  data: IdeaLotInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateIdealotArgs = {
+  data: IdealotInput;
+  id: Scalars['ID'];
 };
 
 export type MutationUpdateKeywordTagArgs = {
@@ -1223,6 +1582,7 @@ export type Picture = {
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
   face_tags?: Maybe<FaceTagRelationResponseCollection>;
+  idealots?: Maybe<IdealotRelationResponseCollection>;
   is_not_a_place_count?: Maybe<Scalars['Int']>;
   is_text?: Maybe<Scalars['Boolean']>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
@@ -1267,6 +1627,13 @@ export type PictureDescriptionsArgs = {
 export type PictureFace_TagsArgs = {
   filters?: InputMaybe<FaceTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureIdealotsArgs = {
+  filters?: InputMaybe<IdealotFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1350,6 +1717,7 @@ export type PictureFiltersInput = {
   descriptions?: InputMaybe<DescriptionFiltersInput>;
   face_tags?: InputMaybe<FaceTagFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
+  idealots?: InputMaybe<IdealotFiltersInput>;
   is_not_a_place_count?: InputMaybe<IntFilterInput>;
   is_text?: InputMaybe<BooleanFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
@@ -1425,6 +1793,7 @@ export type PictureInput = {
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   face_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  idealots?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   is_not_a_place_count?: InputMaybe<Scalars['Int']>;
   is_text?: InputMaybe<Scalars['Boolean']>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1463,9 +1832,19 @@ export type Query = {
   comments?: Maybe<CommentEntityResponseCollection>;
   description?: Maybe<DescriptionEntityResponse>;
   descriptions?: Maybe<DescriptionEntityResponseCollection>;
+  exhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
+  exhibitionSections?: Maybe<ExhibitionSectionEntityResponseCollection>;
+  exhibitionSource?: Maybe<ExhibitionSourceEntityResponse>;
+  exhibitionSources?: Maybe<ExhibitionSourceEntityResponseCollection>;
+  exhibiton?: Maybe<ExhibitonEntityResponse>;
+  exhibitons?: Maybe<ExhibitonEntityResponseCollection>;
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
+  ideaLot?: Maybe<IdeaLotEntityResponse>;
+  ideaLots?: Maybe<IdeaLotEntityResponseCollection>;
+  idealot?: Maybe<IdealotEntityResponse>;
+  idealots?: Maybe<IdealotEntityResponseCollection>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -1538,6 +1917,39 @@ export type QueryDescriptionsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type QueryExhibitionSectionArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryExhibitionSectionsArgs = {
+  filters?: InputMaybe<ExhibitionSectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryExhibitionSourceArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryExhibitionSourcesArgs = {
+  filters?: InputMaybe<ExhibitionSourceFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryExhibitonArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryExhibitonsArgs = {
+  filters?: InputMaybe<ExhibitonFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type QueryFaceTagArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -1553,6 +1965,28 @@ export type QueryFindPicturesByAllSearchArgs = {
   pagination?: InputMaybe<PaginationArg>;
   searchTerms?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   searchTimes?: InputMaybe<Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>>;
+};
+
+export type QueryIdeaLotArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryIdeaLotsArgs = {
+  filters?: InputMaybe<IdeaLotFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryIdealotArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryIdealotsArgs = {
+  filters?: InputMaybe<IdealotFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type QueryKeywordTagArgs = {
@@ -2200,6 +2634,7 @@ export type GetArchiveQuery = {
         name: string;
         shortDescription?: string | null;
         longDescription?: string | null;
+        paypalClient?: string | null;
         logo?: {
           data?: {
             id?: string | null;
@@ -3655,6 +4090,7 @@ export const GetArchiveDocument = gql`
           name
           shortDescription
           longDescription
+          paypalClient
           logo {
             data {
               id

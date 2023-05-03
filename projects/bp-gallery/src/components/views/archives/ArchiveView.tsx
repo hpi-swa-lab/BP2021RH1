@@ -78,15 +78,15 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               </div>
             )}
             <div className='archive-links'>
-              {archive.paypalClient && archive.paypalClient !== '' && (
-                <DonateButton clientId={archive.paypalClient} />
-              )}
               {archive.links?.map(link => (
                 <div className='archive-link' key={link.id}>
                   <Link className='link-icon' />
                   <a href={addUrlProtocol(link.url)}>{link.title ? link.title : link.url}</a>
                 </div>
               ))}
+              {archive.paypalClient && archive.paypalClient !== '' && (
+                <DonateButton clientId={archive.paypalClient} />
+              )}
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ export default {
             name
             shortDescription
             longDescription
+            paypalClient
             logo {
               data {
                 id

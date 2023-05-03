@@ -133,6 +133,12 @@
       "relation": "oneToMany",
       "target": "api::face-tag.face-tag",
       "mappedBy": "picture"
+    },
+    "idealots": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::idealot.idealot",
+      "mappedBy": "pictures"
     }
   }
 }
