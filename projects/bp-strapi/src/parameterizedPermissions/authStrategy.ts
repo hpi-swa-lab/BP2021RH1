@@ -1,6 +1,7 @@
 import { getService as getUsersPermissionsService } from "@strapi/plugin-users-permissions/server/utils/index.js";
 import { errors } from "@strapi/utils";
 import { OperationDefinitionNode } from "graphql/language/ast";
+import { verifyOperation } from "./verifyOperation";
 
 const { UnauthorizedError } = errors;
 
@@ -76,7 +77,7 @@ const verify = (auth, config) => {
       throw new UnauthorizedError();
     }
 
-    // TODO: check whether operation is known
+    verifyOperation(operation);
 
     // TODO: run custom check on authorizingPermissions, using variables
   } else {
