@@ -1,3 +1,7 @@
+const {
+  apolloPlugin: apolloParameterizedPermissionsPlugin,
+} = require("../src/parameterizedPermissions/apolloServerPlugin");
+
 /* eslint-disable no-unused-vars */
 module.exports = ({ env }) => ({
   // disable i18n (all content is explicitly german as it's a german photo archive)
@@ -15,6 +19,7 @@ module.exports = ({ env }) => ({
         tracing: false,
         // https://www.apollographql.com/docs/apollo-server/api/apollo-server/#introspection
         introspection: true,
+        plugins: [apolloParameterizedPermissionsPlugin],
       },
     },
   },
