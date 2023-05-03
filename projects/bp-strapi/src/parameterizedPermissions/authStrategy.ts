@@ -1,4 +1,8 @@
 import { getService as getUsersPermissionsService } from "@strapi/plugin-users-permissions/server/utils/index.js";
+import { errors } from "@strapi/utils";
+import { OperationDefinitionNode } from "graphql/language/ast";
+
+const { UnauthorizedError } = errors;
 
 const authenticate = async (ctx) => {
   const token = await getUsersPermissionsService("jwt").getToken(ctx);
@@ -50,8 +54,34 @@ const authenticate = async (ctx) => {
   };
 };
 
+type ParameterizedPermission = {
+  operation_name: string;
+};
+
 const verify = (auth, config) => {
-  // TODO: do the actual check
+  if ("operation" in config) {
+    const permissions: ParameterizedPermission[] = auth.ability;
+
+    const {
+      operation,
+      variables,
+    }: { operation: OperationDefinitionNode; variables: Record<string, any> } =
+      config;
+
+    const operationName = operation.name.value;
+    const authorizingPermissions = permissions.filter(
+      (permission) => permission.operation_name === operationName
+    );
+    if (authorizingPermissions.length === 0) {
+      throw new UnauthorizedError();
+    }
+
+    // TODO: check whether operation is known
+
+    // TODO: run custom check on authorizingPermissions, using variables
+  } else {
+    // regular graphql verify call, let it pass through unchecked
+  }
 };
 
 export const authStrategy = {
