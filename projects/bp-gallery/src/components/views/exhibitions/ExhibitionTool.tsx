@@ -1,13 +1,13 @@
-import { Button, IconButton, TextField } from '@mui/material';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { PropsWithChildren, useState } from 'react';
 import { DndContext, DragEndEvent, Over, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import TextEditor from '../../common/editors/TextEditor';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import { Button, IconButton, TextField } from '@mui/material';
+import { PropsWithChildren, useState } from 'react';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
+import TextEditor from '../../common/editors/TextEditor';
+import PicturePreview from '../../common/picture-gallery/PicturePreview';
 
 const DraggablePicture = ({ id, picture }: { id: string; picture?: FlatPicture }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -17,7 +17,7 @@ const DraggablePicture = ({ id, picture }: { id: string; picture?: FlatPicture }
     transform: CSS.Translate.toString(transform),
   };
   return (
-    <div className='' ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div className='z-[1000]' ref={setNodeRef} style={style} {...listeners} {...attributes}>
       {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
     </div>
   );
@@ -94,6 +94,7 @@ const Section = ({
     placeholder: 'Abschnittsbeschreibung',
     statusbar: false,
     tabIndex: 0,
+    className: 'z-0',
   };
 
   const [isOpen, setIsOpen] = useState(true);
