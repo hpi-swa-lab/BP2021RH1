@@ -97,6 +97,7 @@ const GeoMap = ({
   }, []);
   const initialGuess = new LatLng(0, 0);
   const map = useRef<Map>(null);
+  const mainDivRef = useRef<HTMLDivElement>(null);
   const [guess, setGuess] = useState<LatLng>(initialGuess);
   const [guessComplete, setGuessComplete] = useState(false);
   const [unknown, setUnknown] = useState(false);
@@ -106,6 +107,7 @@ const GeoMap = ({
     setGuess(initialGuess);
     setGuessComplete(false);
     setUnknown(false);
+    setIsMaximised(false);
     onNextPicture();
   };
 
@@ -124,16 +126,27 @@ const GeoMap = ({
 
   useEffect(() => {
     if (!map.current) return;
-    map.current.invalidateSize();
     map.current.flyTo(initialMapValues.center, initialMapValues.zoom);
   }, [pictureId, initialMapValues]);
 
+  useEffect(() => {
+    if (!map.current && !mainDivRef.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      map.current ? map.current.invalidateSize() : null;
+    });
+    // @ts-ignore
+    resizeObserver.observe(mainDivRef.current);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  });
   const [sendNotAPlace] = useIncreaseNotAPlaceCountMutation({
     variables: { pictureId: pictureId },
   });
 
   return (
     <div
+      ref={mainDivRef}
       className={`fixed w-[480px] h-[360px] bottom-1 right-1 items-stretch flex flex-col transition-all
         ${guessComplete || isMaximised ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
     >
@@ -150,9 +163,6 @@ const GeoMap = ({
           onClick={event => {
             event.stopPropagation();
             setIsMaximised(!isMaximised);
-            setTimeout(() => {
-              map.current && map.current.invalidateSize();
-            }, 200);
           }}
         >
           {isMaximised ? <ZoomInMapOutlined /> : <ZoomOutMapOutlined />}
