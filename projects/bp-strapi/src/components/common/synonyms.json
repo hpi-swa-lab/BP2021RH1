@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_common_synonyms",
+  "info": {
+    "displayName": "synonym",
+    "icon": "layer-group",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

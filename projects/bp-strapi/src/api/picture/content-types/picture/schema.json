@@ -1,0 +1,144 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pictures",
+  "info": {
+    "singularName": "picture",
+    "pluralName": "pictures",
+    "displayName": "Picture",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ]
+    },
+    "wordpress_id": {
+      "type": "integer",
+      "unique": true
+    },
+    "descriptions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::description.description",
+      "inversedBy": "pictures"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "picture"
+    },
+    "keyword_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword-tag.keyword-tag",
+      "inversedBy": "pictures"
+    },
+    "time_range_tag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::time-range-tag.time-range-tag",
+      "inversedBy": "pictures"
+    },
+    "collections": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::collection.collection",
+      "inversedBy": "pictures"
+    },
+    "person_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::person-tag.person-tag",
+      "inversedBy": "pictures"
+    },
+    "location_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::location-tag.location-tag",
+      "inversedBy": "pictures"
+    },
+    "verified_person_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::person-tag.person-tag",
+      "inversedBy": "verified_pictures"
+    },
+    "verified_location_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::location-tag.location-tag",
+      "inversedBy": "verified_pictures"
+    },
+    "verified_keyword_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword-tag.keyword-tag",
+      "inversedBy": "verified_pictures"
+    },
+    "verified_time_range_tag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::time-range-tag.time-range-tag",
+      "inversedBy": "verified_pictures"
+    },
+    "is_text": {
+      "type": "boolean",
+      "default": false
+    },
+    "archive_identifier": {
+      "type": "string"
+    },
+    "archive_tag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::archive-tag.archive-tag",
+      "inversedBy": "pictures"
+    },
+    "likes": {
+      "type": "integer"
+    },
+    "linked_texts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "linked_pictures"
+    },
+    "linked_pictures": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::picture.picture",
+      "inversedBy": "linked_texts"
+    },
+    "picture_geo_infos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::picture-geo-info.picture-geo-info",
+      "mappedBy": "picture"
+    },
+    "is_not_a_place_count": {
+      "type": "integer"
+    },
+    "face_tags": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::face-tag.face-tag",
+      "mappedBy": "picture"
+    },
+    "idealots": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::idealot.idealot",
+      "mappedBy": "pictures"
+    }
+  }
+}

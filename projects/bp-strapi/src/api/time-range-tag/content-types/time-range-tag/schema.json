@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "time_range_tags",
+  "info": {
+    "singularName": "time-range-tag",
+    "pluralName": "time-range-tags",
+    "displayName": "Time_Range_Tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "start": {
+      "type": "datetime",
+      "required": true
+    },
+    "end": {
+      "type": "datetime",
+      "required": true
+    },
+    "pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "time_range_tag"
+    },
+    "verified_pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "verified_time_range_tag"
+    },
+    "isEstimate": {
+      "type": "boolean"
+    }
+  }
+}
