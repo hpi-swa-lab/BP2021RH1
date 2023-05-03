@@ -1,0 +1,59 @@
+{
+  "name": "bp-strapi",
+  "private": true,
+  "version": "0.1.0",
+  "description": "The backend system to manage picture and tag data",
+  "scripts": {
+    "develop": "cross-env ENV_PATH=./config/env/development/.env strapi develop",
+    "develop:test": "cross-env ENV_PATH=./e2e/test.env strapi develop",
+    "start": "cross-env ENV_PATH=./config/env/production/.env strapi start",
+    "build": "cross-env ENV_PATH=./config/env/development/.env strapi build",
+    "build:prod": "cross-env ENV_PATH=./config/env/production/.env strapi build",
+    "test-db": "docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=bpgallery postgres",
+    "strapi": "strapi",
+    "test": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --watchAll",
+    "test:ci": "cross-env ENV_PATH=./config/env/test/.env jest --forceExit --detectOpenHandles --verbose",
+    "debug": "cross-env ENV_PATH=./config/env/development/.env node --inspect debug.js"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "better-sqlite3": "^7.4.6",
+    "supertest": "^6.2.3"
+  },
+  "dependencies": {
+    "@strapi/plugin-graphql": "4.4.5",
+    "@strapi/plugin-i18n": "4.4.5",
+    "@strapi/plugin-sentry": "4.4.5",
+    "@strapi/plugin-users-permissions": "4.4.5",
+    "@strapi/provider-email-nodemailer": "^4.5.6",
+    "@strapi/strapi": "4.4.5",
+    "cross-env": "^7.0.3",
+    "pg": "8.6.0",
+    "pm2": "^5.2.0",
+    "sendmail": "^1.6.1",
+    "xlsx": "^0.18.5"
+  },
+  "author": {
+    "name": "BP2021RH1"
+  },
+  "strapi": {
+    "uuid": "b2b5bab5-6b6e-4feb-ae28-403e43047dd9"
+  },
+  "engines": {
+    "node": ">=14.x.x <=16.x.x",
+    "npm": ">=6.0.0"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      ".tmp",
+      ".cache",
+      "/build/",
+      "/dist/"
+    ],
+    "testEnvironment": "node",
+    "globalSetup": "./unit-tests/setupTests.js",
+    "globalTeardown": "./unit-tests/tearDownTests.js"
+  },
+  "license": "MIT"
+}
