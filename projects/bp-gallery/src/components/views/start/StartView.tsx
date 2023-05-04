@@ -6,7 +6,6 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
 import PrimaryButton from '../../common/PrimaryButton';
-import DonateButton from '../../common/DonateButton';
 import { IfFlagEnabled } from '../../common/IfFlagEnabled';
 import PictureOverview from '../../common/PictureOverview';
 import BrowseView from '../browse/BrowseView';
@@ -16,7 +15,9 @@ import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
 import { useMobile } from '../../../hooks/context-hooks';
-import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
+import { IfFeatureEnabled } from '@growthbook/growthbook-react';
+import { useVariant } from '../../../helpers/growthbook';
+import DonateButton from '../../common/DonateButton';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -24,7 +25,11 @@ const StartView = () => {
   const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
-  const paypalClientId = useFeatureValue('paypal_client_id', '');
+  // @ts-ignore
+  const paypalData = JSON.stringify(useVariant({ id: 'paypal_mainpage', fallback: '' }));
+  const paypalJson = JSON.parse(paypalData !== '' ? paypalData : '{clientId: "", donationText:""}');
+  const paypalClientId = paypalJson?.clientId;
+  const paypalDonationText = paypalJson?.donationText;
   const { data: picturesData } = useGetAllPicturesByArchiveQuery();
   const archivePictures: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
@@ -81,10 +86,7 @@ const StartView = () => {
           <div className='flex basis-full' />
           <IfFeatureEnabled feature='paypal_client_id'>
             {paypalClientId !== '' && (
-              <DonateButton
-                donationText='Spenden Sie an das Herbert-Ahrens-Archiv und sorgen Sie dafür, dass unsere Server laufen!'
-                clientId={paypalClientId}
-              />
+              <DonateButton donationText={paypalDonationText} clientId={paypalClientId} />
             )}
           </IfFeatureEnabled>
         </div>

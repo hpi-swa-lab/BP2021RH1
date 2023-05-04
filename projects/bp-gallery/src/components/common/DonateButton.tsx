@@ -62,6 +62,7 @@ const DonateButton = ({ clientId, donationText }: { clientId: string; donationTe
                 return actions.order.create({
                   purchase_units: [
                     {
+                      description: 'Spende an Simon',
                       amount: {
                         value: donation,
                       },
