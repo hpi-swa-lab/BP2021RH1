@@ -25,6 +25,7 @@ interface ArchiveForm {
   shortDescription: string;
   longDescription: string;
   paypalClient: string;
+  paypalDonationText: string;
   logo?: File;
   links: LinkInfo[];
   dirty: boolean;
@@ -64,6 +65,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     shortDescription: '',
     longDescription: '',
     paypalClient: '',
+    paypalDonationText: '',
     links: [],
     dirty: false,
   });
@@ -75,6 +77,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       shortDescription: archive?.shortDescription ?? '',
       longDescription: archive?.longDescription ?? '',
       paypalClient: archive?.paypalClient ?? '',
+      paypalDonationText: archive?.paypalDonationText ?? '',
       links: archive?.links ?? [],
     });
   }, [archive]);
@@ -146,6 +149,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               shortDescription: form.shortDescription,
               longDescription: form.longDescription,
               paypalClient: form.paypalClient,
+              paypalDonationText: form.paypalDonationText,
               logo: ids[0],
             },
           },
@@ -160,6 +164,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
             shortDescription: form.shortDescription,
             longDescription: form.longDescription,
             paypalClient: form.paypalClient,
+            paypalDonationText: form.paypalDonationText,
           },
         },
       });
@@ -234,9 +239,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         />
         <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
         <ArchiveInputField
-          label={t('archives.edit.paypal.label')}
+          label={t('archives.edit.paypal.client-label')}
           defaultValue={archive.paypalClient ?? ''}
-          placeholder={t('archives.edit.paypal.placeholder')}
+          placeholder={t('archives.edit.paypal.client-placeholder')}
           id='paypal'
           errorText='Dies ist keine valide Paypal Client-Id'
           errorFn={async value => {
@@ -252,6 +257,13 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
             const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${value}`);
             response.ok ? updateForm({ paypalClient: value, dirty: true }) : '';
           }}
+        />
+        <ArchiveInputField
+          defaultValue={archive.paypalDonationText ?? ''}
+          label={t('archives.edit.paypal.donation-label')}
+          id='donationText'
+          onBlur={value => updateForm({ paypalDonationText: value, dirty: true })}
+          placeholder={t('archives.edit.paypal.donation-placeholder')}
         />
       </form>
     </div>

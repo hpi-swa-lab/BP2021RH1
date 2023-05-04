@@ -5,7 +5,7 @@ import CurrencyInput from 'react-currency-input-field';
 import './DonateButton.scss';
 import PrimaryButton from './PrimaryButton';
 
-const DonateButton = ({ clientId }: { clientId: string }) => {
+const DonateButton = ({ clientId, donationText }: { clientId: string; donationText?: string }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [donation, setDonation] = useState('0.00');
@@ -14,6 +14,7 @@ const DonateButton = ({ clientId }: { clientId: string }) => {
     'client-id': clientId,
     currency: 'EUR',
   };
+
   useEffect(() => {
     if (isOpen) {
       setTimeout(function () {
@@ -21,12 +22,14 @@ const DonateButton = ({ clientId }: { clientId: string }) => {
       }, 20);
     }
   }, [isOpen]);
+
   return (
     <PayPalScriptProvider options={paypalOptions}>
-      <div className='max-w-xs'>
-        <div className='flex flex-col md:flex-row align-center my-3 gap-1'>
-          {isClicked ? (
-            <>
+      <div className='max-w-xs grid grid-cols-1 auto-rows-min gap-2'>
+        {isClicked ? (
+          <>
+            <div className='text-lg text-center'>{donationText}</div>
+            <div className='flex flex-col md:flex-row align-center my-3 gap-1 h-8'>
               <CurrencyInput
                 disabled={isOpen}
                 id='donate-amount'
@@ -46,11 +49,12 @@ const DonateButton = ({ clientId }: { clientId: string }) => {
               >
                 {isOpen ? 'Anpassen' : 'Spenden'}
               </Button>
-            </>
-          ) : (
-            <PrimaryButton onClickFn={() => setIsClicked(true)}>Spenden</PrimaryButton>
-          )}
-        </div>
+            </div>
+          </>
+        ) : (
+          <PrimaryButton onClickFn={() => setIsClicked(true)}>Spenden</PrimaryButton>
+        )}
+
         {isOpen && (
           <div ref={transitionRef} className='paypal-parent'>
             <PayPalButtons

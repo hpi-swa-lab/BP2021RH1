@@ -11,6 +11,7 @@ export default {
             shortDescription
             longDescription
             paypalClient
+            paypalDonationText
             logo {
               data {
                 id

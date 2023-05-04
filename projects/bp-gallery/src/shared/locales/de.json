@@ -297,8 +297,10 @@
         "addLink": "Link hinzufügen"
       },
       "paypal": {
-        "label": "Paypal-Spenden",
-        "placeholder": "Gib deine Paypal-Client-Id an"
+        "client-label": "Paypal-Spenden",
+        "client-placeholder": "Gib deine Paypal-Client-Id an",
+        "donation-label": "Spendentext",
+        "donation-placeholder": "Gib an, für was Spenden zugute kommen"
       }
     }
   },

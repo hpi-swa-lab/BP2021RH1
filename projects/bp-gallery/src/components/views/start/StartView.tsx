@@ -80,7 +80,12 @@ const StartView = () => {
           )}
           <div className='flex basis-full' />
           <IfFeatureEnabled feature='paypal_client_id'>
-            {paypalClientId !== '' && <DonateButton clientId={paypalClientId} />}
+            {paypalClientId !== '' && (
+              <DonateButton
+                donationText='Spenden Sie an das Herbert-Ahrens-Archiv und sorgen Sie dafür, dass unsere Server laufen!'
+                clientId={paypalClientId}
+              />
+            )}
           </IfFeatureEnabled>
         </div>
 
