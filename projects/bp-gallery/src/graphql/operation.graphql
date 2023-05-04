@@ -903,6 +903,14 @@ mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
   }
 }
 
+mutation updateLocationRoot($tagId: ID!, $root: Boolean!) {
+  updateLocationTag(id: $tagId, data: { root: $root }) {
+    data {
+      id
+    }
+  }
+}
+
 mutation updateLocationAcceptance($tagId: ID!, $accepted: Boolean) {
   updateLocationTag(id: $tagId, data: { accepted: $accepted }) {
     data {

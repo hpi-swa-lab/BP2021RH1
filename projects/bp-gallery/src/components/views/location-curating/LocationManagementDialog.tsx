@@ -1,4 +1,5 @@
 import {
+  AccountTree,
   ArrowBackIos,
   ArrowForwardIos,
   Check,
@@ -57,6 +58,7 @@ const LocationManagementDialogPreset = ({
     updateTagAcceptanceMutationSource,
     updateVisibilityMutationSource,
     tagPictures,
+    updateRootMutationSource,
   } = useGenericTagEndpoints(TagType.LOCATION);
 
   const allTagQueryResponse = allTagsQuery();
@@ -270,12 +272,22 @@ const LocationManagementDialogPreset = ({
   };
 
   const [visible, setVisible] = useState<boolean>(locationTag.visible ?? false);
+  const [isRoot, setIsRoot] = useState<boolean>(
+    locationTag.root || !locationTag.parent_tags?.length
+  );
 
   useEffect(() => {
     setVisible(locationTag.visible ?? false);
+    setIsRoot(locationTag.root || !locationTag.parent_tags?.length);
   }, [locationTag]);
 
   const [updateVisibilityMutation] = updateVisibilityMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+
+  const [updateRootMutation] = updateRootMutationSource({
     onCompleted: (_: any) => {
       refetch();
     },
@@ -289,6 +301,28 @@ const LocationManagementDialogPreset = ({
         visible: tagVisible,
       },
     });
+  };
+
+  const setTagAsRoot = async (tagId: string, tagIsRoot: boolean) => {
+    if (tagIsRoot) {
+      setIsRoot(tagIsRoot);
+      updateRootMutation({
+        variables: {
+          tagId: tagId,
+          root: tagIsRoot,
+        },
+      });
+    } else {
+      if (locationTag.parent_tags?.length) {
+        setIsRoot(tagIsRoot);
+        updateRootMutation({
+          variables: {
+            tagId: tagId,
+            root: tagIsRoot,
+          },
+        });
+      }
+    }
   };
 
   const currentSiblings = [
@@ -514,6 +548,27 @@ const LocationManagementDialogPreset = ({
                     endIcon={<VisibilityOff />}
                   >
                     Unsichtbar
+                  </Button>
+                )}
+                {isRoot ? (
+                  <Button
+                    className='location-management-root-button'
+                    onClick={() => {
+                      setTagAsRoot(locationTag.id, false);
+                    }}
+                    endIcon={<AccountTree />}
+                  >
+                    Wurzel
+                  </Button>
+                ) : (
+                  <Button
+                    className='location-management-not-root-button'
+                    onClick={() => {
+                      setTagAsRoot(locationTag.id, true);
+                    }}
+                    endIcon={<AccountTree />}
+                  >
+                    Keine Wurzel
                   </Button>
                 )}
               </div>

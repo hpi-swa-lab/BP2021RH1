@@ -3271,6 +3271,18 @@ export type UpdateLocationVisibilityMutation = {
     | undefined;
 };
 
+export type UpdateLocationRootMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  root: Scalars['Boolean'];
+}>;
+
+export type UpdateLocationRootMutation = {
+  updateLocationTag?:
+    | { data?: { id?: string | null | undefined } | null | undefined }
+    | null
+    | undefined;
+};
+
 export type UpdateLocationAcceptanceMutationVariables = Exact<{
   tagId: Scalars['ID'];
   accepted?: InputMaybe<Scalars['Boolean']>;
@@ -6465,6 +6477,61 @@ export type UpdateLocationVisibilityMutationResult =
 export type UpdateLocationVisibilityMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationVisibilityMutation,
   UpdateLocationVisibilityMutationVariables
+>;
+
+export const UpdateLocationRootDocument = gql`
+  mutation updateLocationRoot($tagId: ID!, $root: Boolean!) {
+    updateLocationTag(id: $tagId, data: { root: $root }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationRootMutationFn = Apollo.MutationFunction<
+  UpdateLocationRootMutation,
+  UpdateLocationRootMutationVariables
+>;
+
+/**
+ * __useUpdateLocationRootMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationRootMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationRootMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationRootMutation, { data, loading, error }] = useUpdateLocationRootMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      root: // value for 'root'
+ *   },
+ * });
+ */
+export function useUpdateLocationRootMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationRootMutation,
+    UpdateLocationRootMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLocationRootMutation, UpdateLocationRootMutationVariables>(
+    UpdateLocationRootDocument,
+    options
+  );
+}
+
+export type UpdateLocationRootMutationHookResult = ReturnType<typeof useUpdateLocationRootMutation>;
+
+export type UpdateLocationRootMutationResult = Apollo.MutationResult<UpdateLocationRootMutation>;
+
+export type UpdateLocationRootMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationRootMutation,
+  UpdateLocationRootMutationVariables
 >;
 
 export const UpdateLocationAcceptanceDocument = gql`

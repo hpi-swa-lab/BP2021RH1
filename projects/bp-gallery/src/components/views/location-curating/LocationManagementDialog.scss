@@ -115,6 +115,24 @@
         padding-inline: 1rem;
         align-self: center;
       }
+
+      .location-management-root-button {
+        background-color: $primaryColor;
+        color: #ffffff;
+        margin-top: 0.5rem;
+        width: 100%;
+        padding-inline: 1rem;
+        align-self: center;
+      }
+
+      .location-management-not-root-button {
+        background-color: lightgray;
+        color: #ffffff;
+        margin-top: 0.5rem;
+        width: 100%;
+        padding-inline: 1rem;
+        align-self: center;
+      }
     }
   }
 }
