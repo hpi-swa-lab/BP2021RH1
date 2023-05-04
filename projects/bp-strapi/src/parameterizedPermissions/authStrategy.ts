@@ -10,6 +10,10 @@ const authenticate = async (ctx) => {
 
   let permissions = [];
 
+  const permissionsQuery = strapi.db.query(
+    "api::parameterized-permission.parameterized-permission"
+  );
+
   if (token) {
     const { id } = token;
 
@@ -34,10 +38,6 @@ const authenticate = async (ctx) => {
 
     ctx.state.user = user;
 
-    const permissionsQuery = strapi.db.query(
-      "api::parameterized-permission.parameterized-permission"
-    );
-
     permissions = await permissionsQuery.findMany({
       where: {
         users_permissions_user: {
@@ -46,7 +46,13 @@ const authenticate = async (ctx) => {
       },
     });
   } else {
-    // TODO: get public permissions for user `null` or something
+    permissions = await permissionsQuery.findMany({
+      where: {
+        users_permissions_user: {
+          id: { $null: true },
+        },
+      },
+    });
   }
 
   return {
