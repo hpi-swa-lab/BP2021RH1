@@ -1,7 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
-  group: 'editFaceTags',
+  group: 'viewPicture',
   document: graphql`
     query getPersonTag($id: ID!) {
       personTag(id: $id) {
