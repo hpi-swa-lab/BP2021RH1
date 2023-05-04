@@ -395,6 +395,7 @@ export type FaceTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   person_tag?: Maybe<PersonTagEntityResponse>;
   picture?: Maybe<PictureEntityResponse>;
+  tag_direction?: Maybe<Scalars['Int']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   x?: Maybe<Scalars['Float']>;
   y?: Maybe<Scalars['Float']>;
@@ -422,6 +423,7 @@ export type FaceTagFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<FaceTagFiltersInput>>>;
   person_tag?: InputMaybe<PersonTagFiltersInput>;
   picture?: InputMaybe<PictureFiltersInput>;
+  tag_direction?: InputMaybe<IntFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   x?: InputMaybe<FloatFilterInput>;
   y?: InputMaybe<FloatFilterInput>;
@@ -430,6 +432,7 @@ export type FaceTagFiltersInput = {
 export type FaceTagInput = {
   person_tag?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
+  tag_direction?: InputMaybe<Scalars['Int']>;
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
 };
@@ -2397,6 +2400,7 @@ export type GetFaceTagsQuery = {
       attributes?: {
         x?: number | null;
         y?: number | null;
+        tag_direction?: number | null;
         person_tag?: {
           data?: { id?: string | null; attributes?: { name: string } | null } | null;
         } | null;
@@ -2919,6 +2923,7 @@ export type CreateFaceTagMutationVariables = Exact<{
   personTagId: Scalars['ID'];
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
+  tag_direction?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type CreateFaceTagMutation = {
@@ -3155,6 +3160,15 @@ export type UpdateCollectionMutationVariables = Exact<{
 
 export type UpdateCollectionMutation = {
   updateCollection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateFaceTagDirectionMutationVariables = Exact<{
+  faceTagId: Scalars['ID'];
+  tag_direction?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdateFaceTagDirectionMutation = {
+  updateFaceTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateKeywordNameMutationVariables = Exact<{
@@ -4207,6 +4221,7 @@ export const GetFaceTagsDocument = gql`
         attributes {
           x
           y
+          tag_direction
           person_tag {
             data {
               id
@@ -5838,8 +5853,22 @@ export type CreateArchiveTagMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateFaceTagDocument = gql`
-  mutation createFaceTag($pictureId: ID!, $personTagId: ID!, $x: Float, $y: Float) {
-    createFaceTag(data: { picture: $pictureId, person_tag: $personTagId, x: $x, y: $y }) {
+  mutation createFaceTag(
+    $pictureId: ID!
+    $personTagId: ID!
+    $x: Float
+    $y: Float
+    $tag_direction: Int
+  ) {
+    createFaceTag(
+      data: {
+        picture: $pictureId
+        person_tag: $personTagId
+        x: $x
+        y: $y
+        tag_direction: $tag_direction
+      }
+    ) {
       data {
         id
       }
@@ -5869,6 +5898,7 @@ export type CreateFaceTagMutationFn = Apollo.MutationFunction<
  *      personTagId: // value for 'personTagId'
  *      x: // value for 'x'
  *      y: // value for 'y'
+ *      tag_direction: // value for 'tag_direction'
  *   },
  * });
  */
@@ -7426,6 +7456,64 @@ export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollect
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
+>;
+
+export const UpdateFaceTagDirectionDocument = gql`
+  mutation updateFaceTagDirection($faceTagId: ID!, $tag_direction: Int) {
+    updateFaceTag(id: $faceTagId, data: { tag_direction: $tag_direction }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateFaceTagDirectionMutationFn = Apollo.MutationFunction<
+  UpdateFaceTagDirectionMutation,
+  UpdateFaceTagDirectionMutationVariables
+>;
+
+/**
+ * __useUpdateFaceTagDirectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateFaceTagDirectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFaceTagDirectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFaceTagDirectionMutation, { data, loading, error }] = useUpdateFaceTagDirectionMutation({
+ *   variables: {
+ *      faceTagId: // value for 'faceTagId'
+ *      tag_direction: // value for 'tag_direction'
+ *   },
+ * });
+ */
+export function useUpdateFaceTagDirectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateFaceTagDirectionMutation,
+    UpdateFaceTagDirectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateFaceTagDirectionMutation,
+    UpdateFaceTagDirectionMutationVariables
+  >(UpdateFaceTagDirectionDocument, options);
+}
+
+export type UpdateFaceTagDirectionMutationHookResult = ReturnType<
+  typeof useUpdateFaceTagDirectionMutation
+>;
+
+export type UpdateFaceTagDirectionMutationResult =
+  Apollo.MutationResult<UpdateFaceTagDirectionMutation>;
+
+export type UpdateFaceTagDirectionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateFaceTagDirectionMutation,
+  UpdateFaceTagDirectionMutationVariables
 >;
 
 export const UpdateKeywordNameDocument = gql`
