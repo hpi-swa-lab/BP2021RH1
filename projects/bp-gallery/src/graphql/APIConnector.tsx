@@ -3140,6 +3140,37 @@ export type GetAllLocationTagsQuery = {
     | undefined;
 };
 
+export type GetPicturesForLocationQueryVariables = Exact<{
+  tagID: Scalars['ID'];
+}>;
+
+export type GetPicturesForLocationQuery = {
+  locationTag?:
+    | {
+        data?:
+          | {
+              id?: string | null | undefined;
+              attributes?:
+                | {
+                    pictures?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                    verified_pictures?:
+                      | { data: Array<{ id?: string | null | undefined }> }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export type CreateLocationMutationVariables = Exact<{
   name: Scalars['String'];
   accepted?: InputMaybe<Scalars['Boolean']>;
@@ -5905,6 +5936,83 @@ export type GetAllLocationTagsLazyQueryHookResult = ReturnType<
 export type GetAllLocationTagsQueryResult = Apollo.QueryResult<
   GetAllLocationTagsQuery,
   GetAllLocationTagsQueryVariables
+>;
+
+export const GetPicturesForLocationDocument = gql`
+  query getPicturesForLocation($tagID: ID!) {
+    locationTag(id: $tagID) {
+      data {
+        id
+        attributes {
+          pictures {
+            data {
+              id
+            }
+          }
+          verified_pictures {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesForLocationQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesForLocationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesForLocationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesForLocationQuery({
+ *   variables: {
+ *      tagID: // value for 'tagID'
+ *   },
+ * });
+ */
+export function useGetPicturesForLocationQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPicturesForLocationQuery,
+    GetPicturesForLocationQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesForLocationQuery, GetPicturesForLocationQueryVariables>(
+    GetPicturesForLocationDocument,
+    options
+  );
+}
+
+export function useGetPicturesForLocationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPicturesForLocationQuery,
+    GetPicturesForLocationQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesForLocationQuery, GetPicturesForLocationQueryVariables>(
+    GetPicturesForLocationDocument,
+    options
+  );
+}
+
+export type GetPicturesForLocationQueryHookResult = ReturnType<
+  typeof useGetPicturesForLocationQuery
+>;
+
+export type GetPicturesForLocationLazyQueryHookResult = ReturnType<
+  typeof useGetPicturesForLocationLazyQuery
+>;
+
+export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
+  GetPicturesForLocationQuery,
+  GetPicturesForLocationQueryVariables
 >;
 
 export const CreateLocationDocument = gql`

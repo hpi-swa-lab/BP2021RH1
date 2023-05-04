@@ -56,11 +56,15 @@ const LocationManagementDialogPreset = ({
     updateTagNameMutationSource,
     updateTagAcceptanceMutationSource,
     updateVisibilityMutationSource,
+    tagPictures,
   } = useGenericTagEndpoints(TagType.LOCATION);
 
   const allTagQueryResponse = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(allTagQueryResponse.data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
+
+  const tagPicturesQueryResponse = tagPictures({ variables: { tagID: locationTag.id } });
+  const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
 
   const tagTree = useMemo(() => {
     if (!flattenedTags) return;
@@ -476,6 +480,9 @@ const LocationManagementDialogPreset = ({
             <div className='location-management-right'>
               <div className='location-management-map'></div>
               <div className='location-management-actions'>
+                <div className='location-management-picture-count'>{`${
+                  flattenedPictures?.locationTag.pictures.length as string
+                } Bild/er in diesem Ort`}</div>
                 <Button
                   className='location-management-show-pictures-button'
                   onClick={() => {

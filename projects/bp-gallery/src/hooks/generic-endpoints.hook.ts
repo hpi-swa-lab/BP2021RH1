@@ -13,6 +13,7 @@ import {
   useGetKeywordTagsWithThumbnailQuery,
   useGetLocationTagsWithThumbnailQuery,
   useGetPersonTagsWithThumbnailQuery,
+  useGetPicturesForLocationQuery,
   useMergeKeywordTagsMutation,
   useMergeLocationTagsMutation,
   useMergePersonTagsMutation,
@@ -49,6 +50,7 @@ const useGenericTagEndpoints = (type: TagType) => {
           createSubTagMutationSource: useCreateSubLocationMutation,
           updateTagAcceptanceMutationSource: useUpdateLocationAcceptanceMutation,
           updateTagChildMutationSource: useUpdateLocationChildMutation,
+          tagPictures: useGetPicturesForLocationQuery,
         };
       case TagType.PERSON:
         return {
@@ -76,6 +78,7 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateTagChildMutationSource: (dummy: any) => {
             return [dummy];
           },
+          tagPictures: useGetPicturesForLocationQuery,
         };
       case TagType.KEYWORD:
       default:
@@ -94,6 +97,7 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateTagChildMutationSource: (dummy: any) => {
             return [dummy];
           },
+          tagPictures: useGetPicturesForLocationQuery,
         };
     }
   }, [type]);
