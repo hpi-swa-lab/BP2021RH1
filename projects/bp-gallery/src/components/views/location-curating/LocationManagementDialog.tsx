@@ -39,6 +39,8 @@ const LocationManagementDialogPreset = ({
 }) => {
   const history: History = useHistory();
   const refetch = dialogProps.content.refetch;
+  const [parentTag, setParentTag] = useState<any>(dialogProps.content.parentTag);
+  const [parentTagHistory, setParentTagHistory] = useState<any[]>([]);
 
   const [locationTagID, setLocationTagID] = useState<any>(dialogProps.content.locationTag.id);
   const [editName, setEditName] = useState<boolean>(false);
@@ -125,17 +127,19 @@ const LocationManagementDialogPreset = ({
     while (queue.length > 0) {
       const nextTag = queue.shift();
       nextTag?.parent_tags?.forEach(parent => {
-        tagSiblings[nextTag.id].push(
-          ...tagChildTags[parent.id].filter(
-            tag =>
-              tag.id !== nextTag.id &&
-              !tagSiblings[nextTag.id].some(sibling => sibling.id === tag.id)
-          )
-        );
+        if (parentTag && parent.id === parentTag.id) {
+          tagSiblings[nextTag.id].push(
+            ...tagChildTags[parent.id].filter(
+              tag =>
+                tag.id !== nextTag.id &&
+                !tagSiblings[nextTag.id].some(sibling => sibling.id === tag.id)
+            )
+          );
+        }
       });
-      if (nextTag && !nextTag.parent_tags?.length) {
+      if (nextTag && typeof parentTag === 'undefined') {
         tagSiblings[nextTag.id] = flattenedTags.filter(
-          tag => !tag.parent_tags?.length && tag.id !== nextTag.id
+          tag => (!tag.parent_tags?.length || tag.root) && tag.id !== nextTag.id
         );
       }
       nextTag?.child_tags?.forEach(tag => {
@@ -144,7 +148,7 @@ const LocationManagementDialogPreset = ({
     }
 
     return tagSiblings;
-  }, [flattenedTags, tagTree, tagChildTags]);
+  }, [flattenedTags, tagTree, tagChildTags, parentTag]);
 
   const tagSupertagList = useMemo(() => {
     if (!flattenedTags) return;
@@ -474,6 +478,8 @@ const LocationManagementDialogPreset = ({
                       noContentText={''}
                       fixedTag={locationTag}
                       fixedTagOnClick={(id: string) => {
+                        parentTagHistory.push(parentTag);
+                        setParentTag(locationTag);
                         setLocationTagID(id);
                       }}
                       createChildMutation={newChildLocationTagMutation}
@@ -503,6 +509,7 @@ const LocationManagementDialogPreset = ({
                       noContentText={''}
                       fixedTag={locationTag}
                       fixedTagOnClick={(id: string) => {
+                        setParentTag(parentTagHistory.pop());
                         setLocationTagID(id);
                       }}
                       createParentMutation={newParentLocationTagMutation}
@@ -590,9 +597,7 @@ const LocationManagementDialogPreset = ({
           ) : (
             <div></div>
           )}
-          {typeof currentIndex !== 'undefined' &&
-          currentIndex < currentSiblings.length &&
-          currentSiblings.length > 1 ? (
+          {typeof currentIndex !== 'undefined' && currentIndex < currentSiblings.length - 1 ? (
             <Button
               className='location-management-next-button'
               onClick={() => {

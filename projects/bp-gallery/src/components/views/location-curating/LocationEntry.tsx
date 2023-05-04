@@ -288,7 +288,7 @@ const LocationEntry = ({
         prompt({
           preset: DialogPreset.LOCATION_MANAGEMENT,
           title: locationTag.name,
-          content: { locationTag: locationTag, refetch: refetch },
+          content: { locationTag: locationTag, parentTag: parentTag, refetch: refetch },
           maxWidth: false,
         });
       }}
