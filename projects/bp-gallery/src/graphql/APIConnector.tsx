@@ -19,11 +19,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -2634,15 +2631,9 @@ export type GetParameterizedPermissionsQueryVariables = Exact<{
 }>;
 
 export type GetParameterizedPermissionsQuery = {
-  parameterizedPermissions?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?: { operation_name?: string | null | undefined } | null | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  parameterizedPermissions?: {
+    data: Array<{ id?: string | null; attributes?: { operation_name?: string | null } | null }>;
+  } | null;
 };
 
 export type GetPersonTagQueryVariables = Exact<{
@@ -2971,15 +2962,9 @@ export type GetUsersPermissionsUserQueryVariables = Exact<{
 }>;
 
 export type GetUsersPermissionsUserQuery = {
-  usersPermissionsUser?:
-    | {
-        data?:
-          | { id?: string | null | undefined; attributes?: { username: string } | null | undefined }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  usersPermissionsUser?: {
+    data?: { id?: string | null; attributes?: { username: string } | null } | null;
+  } | null;
 };
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
@@ -3053,10 +3038,7 @@ export type CreateParameterizedPermissionMutationVariables = Exact<{
 }>;
 
 export type CreateParameterizedPermissionMutation = {
-  createParameterizedPermission?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createParameterizedPermission?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreatePersonTagMutationVariables = Exact<{
@@ -3144,10 +3126,7 @@ export type DeleteParameterizedPermissionMutationVariables = Exact<{
 }>;
 
 export type DeleteParameterizedPermissionMutation = {
-  deleteParameterizedPermission?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  deleteParameterizedPermission?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeletePersonTagMutationVariables = Exact<{
