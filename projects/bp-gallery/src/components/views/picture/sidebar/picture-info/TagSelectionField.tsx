@@ -1,4 +1,4 @@
-import { Help, Add, ExitToApp } from '@mui/icons-material';
+import { Help, Add } from '@mui/icons-material';
 import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -212,8 +212,16 @@ const TagSelectionField = <T extends TagFields>({
           });
       }
     });
-    return order;
-  }, [tagTree]);
+
+    const finalOrder = order.filter(tag =>
+      lastSelectedTags?.some(selectedTag => selectedTag.id === tag.id)
+    );
+    finalOrder.push(
+      ...order.filter(tag => !lastSelectedTags?.some(selectedTag => selectedTag.id === tag.id))
+    );
+
+    return finalOrder;
+  }, [tagTree, lastSelectedTags]);
 
   const customSortTags = useCallback(
     (tags: T[]) => {
@@ -254,7 +262,7 @@ const TagSelectionField = <T extends TagFields>({
           multiple
           autoHighlight
           isOptionEqualToValue={(option, value) => option.id === value.id}
-          options={lastSelectedTags && lastSelectedTags.length > 0 ? lastSelectedTags : tagList}
+          options={tagList}
           filterOptions={(options, { inputValue }) => {
             let filtered = options;
             if (fixedTag) {
@@ -345,29 +353,6 @@ const TagSelectionField = <T extends TagFields>({
               } as unknown as T);
             }
 
-            if (lastSelectedTags && lastSelectedTags.length > 0) {
-              if (inputValue.length > 1) {
-                filtered.push({
-                  name: 'Hierarchie verlassen',
-                  icon: <ExitToApp sx={{ mr: 2 }} />,
-                  verified: true,
-                  createValue: 'Hierarchie verlassen',
-                  id: '-2',
-                } as unknown as T);
-              } else {
-                filtered = [
-                  {
-                    name: 'Hierarchie verlassen',
-                    icon: <ExitToApp sx={{ mr: 2 }} />,
-                    verified: true,
-                    createValue: 'Hierarchie verlassen',
-                    id: '-2',
-                  } as unknown as T,
-                  ...filtered,
-                ];
-              }
-            }
-
             return filtered;
           }}
           onChange={async (_, newValue) => {
@@ -376,10 +361,7 @@ const TagSelectionField = <T extends TagFields>({
             if (createMutation) {
               const addTag = newValue.find(val => val.createValue);
               if (addTag) {
-                if (addTag.id === '-2') {
-                  setLastSelectedTags([] as T[]);
-                  setLastSelectedTag(undefined);
-                } else if (createChildMutation && lastSelectedTag) {
+                if (createChildMutation && lastSelectedTag) {
                   const createOption = await prompt({
                     preset: DialogPreset.SELECT_PATH_POSITION,
                     title: t('tag-panel.select-position', { name: addTag.name }),
@@ -502,7 +484,6 @@ const TagSelectionField = <T extends TagFields>({
                 }
               }
             }
-            newValue = newValue.filter(value => value.id !== '-2');
             const newlyAddedTags = newValue.filter(
               newVal => !tags.some(tag => tag.id === newVal.id)
             );
