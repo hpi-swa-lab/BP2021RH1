@@ -52,6 +52,9 @@
     },
     "paypalDonationText": {
       "type": "string"
+    },
+    "paypalPurpose": {
+      "type": "string"
     }
   }
 }

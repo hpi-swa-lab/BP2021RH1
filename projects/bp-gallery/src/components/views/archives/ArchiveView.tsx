@@ -87,7 +87,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               {archive.paypalClient && archive.paypalClient !== '' && (
                 <DonateButton
                   clientId={archive.paypalClient}
-                  donationText={archive.paypalDonationText}
+                  donationText={archive.paypalDonationText ?? 'Spenden'}
+                  purposeText={archive.paypalPurpose ?? ''}
                 />
               )}
             </div>

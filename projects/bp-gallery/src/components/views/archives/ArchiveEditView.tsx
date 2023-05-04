@@ -26,6 +26,7 @@ interface ArchiveForm {
   longDescription: string;
   paypalClient: string;
   paypalDonationText: string;
+  paypalPurpose: string;
   logo?: File;
   links: LinkInfo[];
   dirty: boolean;
@@ -66,6 +67,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     longDescription: '',
     paypalClient: '',
     paypalDonationText: '',
+    paypalPurpose: '',
     links: [],
     dirty: false,
   });
@@ -78,6 +80,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       longDescription: archive?.longDescription ?? '',
       paypalClient: archive?.paypalClient ?? '',
       paypalDonationText: archive?.paypalDonationText ?? '',
+      paypalPurpose: archive?.paypalPurpose ?? '',
       links: archive?.links ?? [],
     });
   }, [archive]);
@@ -150,6 +153,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               longDescription: form.longDescription,
               paypalClient: form.paypalClient,
               paypalDonationText: form.paypalDonationText,
+              paypalPurpose: form.paypalPurpose,
               logo: ids[0],
             },
           },
@@ -165,6 +169,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
             longDescription: form.longDescription,
             paypalClient: form.paypalClient,
             paypalDonationText: form.paypalDonationText,
+            paypalPurpose: form.paypalPurpose,
           },
         },
       });
@@ -264,6 +269,13 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           id='donationText'
           onBlur={value => updateForm({ paypalDonationText: value, dirty: true })}
           placeholder={t('archives.edit.paypal.donation-placeholder')}
+        />
+        <ArchiveInputField
+          defaultValue={archive.paypalPurpose ?? ''}
+          label={t('archives.edit.paypal.purpose-label')}
+          id='purpose'
+          onBlur={value => updateForm({ paypalPurpose: value, dirty: true })}
+          placeholder={t('archives.edit.paypal.purpose-placeholder')}
         />
       </form>
     </div>
