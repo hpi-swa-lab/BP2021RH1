@@ -7,6 +7,7 @@ import {
 } from 'bp-graphql';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Redirect } from 'react-router-dom';
 import {
   useCreateParameterizedPermissionMutation,
   useDeleteParameterizedPermissionMutation,
@@ -20,6 +21,7 @@ import {
 } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
+import { FALLBACK_PATH } from '../../../routes';
 
 type SectionStructure = {
   name: string;
@@ -181,6 +183,8 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         </div>
       </div>
     );
+  } else {
+    return <Redirect to={FALLBACK_PATH} />;
   }
 };
 
