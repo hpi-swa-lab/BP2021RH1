@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { memo, useCallback, useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type TuiImageEditor from 'tui-image-editor';
-import { asApiPath } from '../../../../../helpers/app-helpers';
+import { asUploadPath } from '../../../../../helpers/app-helpers';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import { PictureViewContext } from '../../PictureView';
 import ImageEditor from './../../../../common/editors/ImageEditor';
@@ -95,7 +95,8 @@ const PictureEditDialog = memo(function PictureEditDialog({
             usageStatistics: false,
             includeUI: {
               loadImage: {
-                path: asApiPath(picture.media.url),
+                // TODO Fix "blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource." error
+                path: asUploadPath(picture.media),
                 name: 'SampleImage',
               },
               initMenu: 'crop',

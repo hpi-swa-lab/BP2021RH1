@@ -17,6 +17,8 @@ const SubCollections = ({
   const { visit } = useVisit();
   const { t } = useTranslation();
 
+  console.log(childCollections);
+
   const buildItem = (collection: FlatCollectionWithoutRelations, index: number) => {
     let color = index % 2 === 0 ? '#7E241D' : '#404272';
     if (!collection.publishedAt) {
@@ -24,7 +26,12 @@ const SubCollections = ({
     }
     return {
       name: decodeBrowsePathComponent(collection.name),
-      background: collection.thumbnail ? asApiPath(collection.thumbnail) : DEFAULT_THUMBNAIL_URL,
+      // TODO Actually fixing the backend method for generating collection thumbnails
+      background: collection.thumbnail
+        ? !collection.thumbnail.includes('http')
+          ? asApiPath(collection.thumbnail)
+          : collection.thumbnail
+        : DEFAULT_THUMBNAIL_URL,
       color,
       onClick: () => {
         visit(formatBrowsePath(path, collection.name));

@@ -4,7 +4,7 @@ import {
   useGetDecadePreviewThumbnailsQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { FlatDecadeThumbnails } from '../../../types/additionalFlatTypes';
 import ItemList from '../../common/ItemList';
 import Loading from '../../common/Loading';
@@ -13,9 +13,9 @@ import ScrollableItemList from '../../common/ScrollableItemList';
 import { useVisit } from './../../../helpers/history';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import {
+  SearchType,
   buildDecadeFilter,
   getDecadeSearchTermForAllSearch,
-  SearchType,
 } from './helpers/search-filters';
 import { getDecadeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
@@ -53,11 +53,13 @@ const DecadesList = ({
       return;
     }
     const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-    const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
     const displayedName = getDecadeTranslation(t, decadeKey);
     return {
       name: displayedName,
-      background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+      background: asUploadPath(thumbnailData[0]?.media, {
+        highQuality: false,
+        fallback: DEFAULT_THUMBNAIL_URL,
+      }),
     };
   };
 

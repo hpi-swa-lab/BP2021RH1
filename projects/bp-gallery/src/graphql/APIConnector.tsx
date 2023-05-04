@@ -2118,7 +2118,11 @@ export type GetAllArchiveTagsQuery = {
                                     data?:
                                       | {
                                           attributes?:
-                                            | { url: string; updatedAt?: any | null | undefined }
+                                            | {
+                                                url: string;
+                                                updatedAt?: any | null | undefined;
+                                                provider: string;
+                                              }
                                             | null
                                             | undefined;
                                         }
@@ -2276,6 +2280,7 @@ export type GetArchiveQuery = {
                                       height?: number | null | undefined;
                                       formats?: any | null | undefined;
                                       updatedAt?: any | null | undefined;
+                                      provider: string;
                                     }
                                   | null
                                   | undefined;
@@ -2303,6 +2308,7 @@ export type GetArchiveQuery = {
                                                     formats?: any | null | undefined;
                                                     url: string;
                                                     updatedAt?: any | null | undefined;
+                                                    provider: string;
                                                   }
                                                 | null
                                                 | undefined;
@@ -2488,7 +2494,11 @@ export type GetDailyPictureInfoQuery = {
                         | {
                             id?: string | null | undefined;
                             attributes?:
-                              | { url: string; updatedAt?: any | null | undefined }
+                              | {
+                                  url: string;
+                                  updatedAt?: any | null | undefined;
+                                  provider: string;
+                                }
                               | null
                               | undefined;
                           }
@@ -2535,7 +2545,12 @@ export type GetDecadePreviewThumbnailsQuery = {
             | {
                 media: {
                   data?:
-                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | {
+                        attributes?:
+                          | { formats?: any | null | undefined; provider: string }
+                          | null
+                          | undefined;
+                      }
                     | null
                     | undefined;
                 };
@@ -2553,7 +2568,12 @@ export type GetDecadePreviewThumbnailsQuery = {
             | {
                 media: {
                   data?:
-                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | {
+                        attributes?:
+                          | { formats?: any | null | undefined; provider: string }
+                          | null
+                          | undefined;
+                      }
                     | null
                     | undefined;
                 };
@@ -2571,7 +2591,12 @@ export type GetDecadePreviewThumbnailsQuery = {
             | {
                 media: {
                   data?:
-                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | {
+                        attributes?:
+                          | { formats?: any | null | undefined; provider: string }
+                          | null
+                          | undefined;
+                      }
                     | null
                     | undefined;
                 };
@@ -2589,7 +2614,12 @@ export type GetDecadePreviewThumbnailsQuery = {
             | {
                 media: {
                   data?:
-                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | {
+                        attributes?:
+                          | { formats?: any | null | undefined; provider: string }
+                          | null
+                          | undefined;
+                      }
                     | null
                     | undefined;
                 };
@@ -2607,7 +2637,12 @@ export type GetDecadePreviewThumbnailsQuery = {
             | {
                 media: {
                   data?:
-                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | {
+                        attributes?:
+                          | { formats?: any | null | undefined; provider: string }
+                          | null
+                          | undefined;
+                      }
                     | null
                     | undefined;
                 };
@@ -2625,7 +2660,12 @@ export type GetDecadePreviewThumbnailsQuery = {
             | {
                 media: {
                   data?:
-                    | { attributes?: { formats?: any | null | undefined } | null | undefined }
+                    | {
+                        attributes?:
+                          | { formats?: any | null | undefined; provider: string }
+                          | null
+                          | undefined;
+                      }
                     | null
                     | undefined;
                 };
@@ -2697,7 +2737,7 @@ export type GetKeywordTagsWithThumbnailQuery = {
                                 data?:
                                   | {
                                       attributes?:
-                                        | { formats?: any | null | undefined }
+                                        | { formats?: any | null | undefined; provider: string }
                                         | null
                                         | undefined;
                                     }
@@ -2720,7 +2760,7 @@ export type GetKeywordTagsWithThumbnailQuery = {
                                 data?:
                                   | {
                                       attributes?:
-                                        | { formats?: any | null | undefined }
+                                        | { formats?: any | null | undefined; provider: string }
                                         | null
                                         | undefined;
                                     }
@@ -2768,7 +2808,7 @@ export type GetLocationTagsWithThumbnailQuery = {
                                 data?:
                                   | {
                                       attributes?:
-                                        | { formats?: any | null | undefined }
+                                        | { formats?: any | null | undefined; provider: string }
                                         | null
                                         | undefined;
                                     }
@@ -2791,7 +2831,7 @@ export type GetLocationTagsWithThumbnailQuery = {
                                 data?:
                                   | {
                                       attributes?:
-                                        | { formats?: any | null | undefined }
+                                        | { formats?: any | null | undefined; provider: string }
                                         | null
                                         | undefined;
                                     }
@@ -2951,7 +2991,7 @@ export type GetMultiplePictureInfoQuery = {
                     | {
                         id?: string | null | undefined;
                         attributes?:
-                          | { url: string; updatedAt?: any | null | undefined }
+                          | { url: string; updatedAt?: any | null | undefined; provider: string }
                           | null
                           | undefined;
                       }
@@ -3041,7 +3081,7 @@ export type GetPersonTagsWithThumbnailQuery = {
                                 data?:
                                   | {
                                       attributes?:
-                                        | { formats?: any | null | undefined }
+                                        | { formats?: any | null | undefined; provider: string }
                                         | null
                                         | undefined;
                                     }
@@ -3064,7 +3104,7 @@ export type GetPersonTagsWithThumbnailQuery = {
                                 data?:
                                   | {
                                       attributes?:
-                                        | { formats?: any | null | undefined }
+                                        | { formats?: any | null | undefined; provider: string }
                                         | null
                                         | undefined;
                                     }
@@ -3303,6 +3343,7 @@ export type GetPictureInfoQuery = {
                                   formats?: any | null | undefined;
                                   url: string;
                                   updatedAt?: any | null | undefined;
+                                  provider: string;
                                 }
                               | null
                               | undefined;
@@ -3364,6 +3405,7 @@ export type GetPictureMediaInfoQuery = {
                                   formats?: any | null | undefined;
                                   url: string;
                                   updatedAt?: any | null | undefined;
+                                  provider: string;
                                 }
                               | null
                               | undefined;
@@ -3409,6 +3451,7 @@ export type GetPicturesQuery = {
                               formats?: any | null | undefined;
                               url: string;
                               updatedAt?: any | null | undefined;
+                              provider: string;
                             }
                           | null
                           | undefined;
@@ -3455,6 +3498,7 @@ export type GetPicturesByAllSearchQuery = {
                                 formats?: any | null | undefined;
                                 url: string;
                                 updatedAt?: any | null | undefined;
+                                provider: string;
                               }
                             | null
                             | undefined;
@@ -3579,6 +3623,7 @@ export type GetUnverifiedCommentsQuery = {
                                                 height?: number | null | undefined;
                                                 formats?: any | null | undefined;
                                                 updatedAt?: any | null | undefined;
+                                                provider: string;
                                               }
                                             | null
                                             | undefined;
@@ -4092,6 +4137,7 @@ export const GetAllArchiveTagsDocument = gql`
                     attributes {
                       url
                       updatedAt
+                      provider
                     }
                   }
                 }
@@ -4489,6 +4535,7 @@ export const GetArchiveDocument = gql`
                 height
                 formats
                 updatedAt
+                provider
               }
             }
           }
@@ -4505,6 +4552,7 @@ export const GetArchiveDocument = gql`
                       formats
                       url
                       updatedAt
+                      provider
                     }
                   }
                 }
@@ -4778,6 +4826,7 @@ export const GetDailyPictureInfoDocument = gql`
               attributes {
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -4866,6 +4915,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4884,6 +4934,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4902,6 +4953,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4920,6 +4972,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4938,6 +4991,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4956,6 +5010,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -5109,6 +5164,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -5125,6 +5181,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -5216,6 +5273,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -5232,6 +5290,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -5405,6 +5464,7 @@ export const GetMultiplePictureInfoDocument = gql`
               attributes {
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -5577,6 +5637,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -5593,6 +5654,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -5860,6 +5922,7 @@ export const GetPictureInfoDocument = gql`
                 formats
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -5949,6 +6012,7 @@ export const GetPictureMediaInfoDocument = gql`
                 formats
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -6034,6 +6098,7 @@ export const GetPicturesDocument = gql`
                 formats
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -6118,6 +6183,7 @@ export const GetPicturesByAllSearchDocument = gql`
               formats
               url
               updatedAt
+              provider
             }
           }
         }
@@ -6401,6 +6467,7 @@ export const GetUnverifiedCommentsDocument = gql`
                       height
                       formats
                       updatedAt
+                      provider
                     }
                   }
                 }

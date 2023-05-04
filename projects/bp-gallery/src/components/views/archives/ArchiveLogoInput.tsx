@@ -1,6 +1,5 @@
 import { OutlinedInput } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
-import { asApiPath } from '../../../helpers/app-helpers';
 import { useTranslation } from 'react-i18next';
 
 interface ArchiveLogoInputProps {
@@ -35,10 +34,7 @@ const ArchiveLogoInput = ({ defaultUrl, onChange }: ArchiveLogoInputProps) => {
           <div>
             {t('archives.edit.logo.preview')}
             <div className='archive-logo-container'>
-              <img
-                className='archive-logo'
-                src={logo ? URL.createObjectURL(logo) : asApiPath(`/${defaultUrl}`)}
-              />
+              <img className='archive-logo' src={logo ? URL.createObjectURL(logo) : defaultUrl} />
             </div>
           </div>
         )}

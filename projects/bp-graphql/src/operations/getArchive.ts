@@ -18,6 +18,7 @@ export default {
                   height
                   formats
                   updatedAt
+                  provider
                 }
               }
             }
@@ -34,6 +35,7 @@ export default {
                         formats
                         url
                         updatedAt
+                        provider
                       }
                     }
                   }

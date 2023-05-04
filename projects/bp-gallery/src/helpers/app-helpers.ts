@@ -2,16 +2,50 @@ import { createHttpLink, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { isEmpty, unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
+import type { FlatUploadFile } from '../types/additionalFlatTypes';
 
 const OPERATIONS_WITH_OWN_ERROR_HANDLING = ['login'];
 
 const apiBase = import.meta.env.VITE_REACT_APP_API_BASE;
+
 export const root = document.getElementById('root')!;
+
+export enum PictureOrigin {
+  LOCAL,
+  REMOTE,
+}
 
 export const asApiPath = (pathEnding: string) => {
   // Removes any multiple occurrences of a "/"
   const formattedPathEnding = `/${pathEnding}`.replace(/\/+/gm, '/');
   return `${apiBase}${formattedPathEnding}`;
+};
+
+type UploadOptions = {
+  highQuality?: boolean;
+  pictureOrigin?: PictureOrigin;
+  fallback?: string;
+};
+
+export const asUploadPath = (
+  media: FlatUploadFile | undefined,
+  options: UploadOptions = { highQuality: true, pictureOrigin: PictureOrigin.REMOTE, fallback: '' }
+) => {
+  const { highQuality, pictureOrigin, fallback } = options;
+
+  const defaultUrl: string =
+    (media?.formats?.small || media?.formats?.thumbnail || media)?.url || fallback;
+
+  const imgSrc = `${highQuality ? media?.url ?? defaultUrl : defaultUrl}?updatedAt=${
+    (media?.updatedAt ?? 'unknown') as string
+  }`;
+
+  const onCdn = media?.provider === 'strapi-provider-upload-aws-s3-advanced';
+
+  if (onCdn) return imgSrc;
+  if (pictureOrigin === PictureOrigin.LOCAL || defaultUrl === fallback) return defaultUrl;
+
+  return asApiPath(imgSrc);
 };
 
 /**
