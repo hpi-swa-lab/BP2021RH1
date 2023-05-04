@@ -35,6 +35,7 @@ export const FaceTaggingProvider = ({
 
   useEffect(() => {
     setActiveTagId(null);
+    setHideTags(false);
   }, [pictureId]);
 
   const { error, data } = useGetFaceTagsQuery({

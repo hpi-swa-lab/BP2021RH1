@@ -60,7 +60,6 @@ const useResizeObserver = <Subject extends HTMLElement>(
     }
     const observer = new ResizeObserver(() => {
       onChange(subject);
-      console.log('resize');
     });
     for (const element of [subject, ...additionalElements]) {
       if (element) {
@@ -83,7 +82,6 @@ const useStyleObserver = <Subject extends HTMLElement>(
     }
     const observer = new MutationObserver(() => {
       onChange(subject);
-      console.log('style');
     });
     observer.observe(subject, {
       attributeFilter: ['style'],

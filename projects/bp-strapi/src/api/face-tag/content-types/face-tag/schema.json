@@ -27,6 +27,9 @@
       "relation": "manyToOne",
       "target": "api::picture.picture",
       "inversedBy": "face_tags"
+    },
+    "tag_direction": {
+      "type": "integer"
     }
   }
 }
