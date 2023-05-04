@@ -69,14 +69,19 @@ const sections = generateOperationsStructure();
 
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
+
+  const isPublic = userId === 'public';
+  const parsedUserId = isPublic ? null : userId;
+
   const {
     data: userData,
     loading: userLoading,
     error: userError,
   } = useGetUsersPermissionsUserQuery({
     variables: {
-      id: userId,
+      id: parsedUserId ?? '',
     },
+    skip: isPublic,
   });
   const user: FlatUsersPermissionsUser | undefined =
     useSimplifiedQueryResponseData(userData)?.usersPermissionsUser;
@@ -87,7 +92,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     error: permissionsError,
   } = useGetParameterizedPermissionsQuery({
     variables: {
-      userId,
+      userId: parsedUserId,
     },
   });
   const permissions: FlatParameterizedPermission[] | undefined =
@@ -118,10 +123,14 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
     return <Loading />;
-  } else if (user && permissionLookup) {
+  } else if (permissionLookup) {
     return (
       <div className='w-[800px] mx-auto mt-4'>
-        <h1>{t('admin.permissions.title', { userName: user.username })}</h1>
+        <h1>
+          {isPublic
+            ? t('admin.permissions.publicTitle')
+            : t('admin.permissions.title', { userName: user?.username })}
+        </h1>
         <div className=''>
           {sections.map(section => (
             <div key={section.name}>
@@ -157,7 +166,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                           createPermission({
                             variables: {
                               operationName: operation.document.name,
-                              userId,
+                              userId: parsedUserId,
                             },
                           });
                         }

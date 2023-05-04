@@ -153,6 +153,7 @@
   "admin": {
     "permissions": {
       "title": "Rechte des Nutzers {{userName}}",
+      "publicTitle": "Rechte eines unangemeldeten Nutzers",
       "section": {
         "picture": "Bilder",
         "collection": "Collections",
