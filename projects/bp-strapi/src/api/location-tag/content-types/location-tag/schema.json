@@ -55,6 +55,9 @@
     },
     "accepted": {
       "type": "boolean"
+    },
+    "root": {
+      "type": "boolean"
     }
   }
 }

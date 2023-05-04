@@ -84,7 +84,7 @@ const TagSelectionField = <T extends TagFields>({
         tagsById[parentTag.id].child_tags.push(tag);
       });
     }
-    return Object.values(tagsById).filter(tag => !tag.parent_tags?.length);
+    return Object.values(tagsById).filter(tag => !tag.parent_tags?.length || tag.root);
   }, [flattenedTags]);
 
   const tagSupertagList = useMemo(() => {
@@ -102,6 +102,10 @@ const TagSelectionField = <T extends TagFields>({
       // override if clone was filled already to avoid duplicates
       if (nextTag && tagSupertags[nextTag.id].length > 0) {
         tagSupertags[nextTag.id] = [];
+      }
+
+      if (nextTag && nextTag.root) {
+        tagSupertags[nextTag.id].push([]);
       }
 
       nextTag?.parent_tags?.forEach(parent => {

@@ -656,6 +656,7 @@ export type LocationTag = {
   name: Scalars['String'];
   parent_tags?: Maybe<LocationTagRelationResponseCollection>;
   pictures?: Maybe<PictureRelationResponseCollection>;
+  root?: Maybe<Scalars['Boolean']>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
@@ -720,6 +721,7 @@ export type LocationTagFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
   parent_tags?: InputMaybe<LocationTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  root?: InputMaybe<BooleanFilterInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
@@ -733,6 +735,7 @@ export type LocationTagInput = {
   name?: InputMaybe<Scalars['String']>;
   parent_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  root?: InputMaybe<Scalars['Boolean']>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   visible?: InputMaybe<Scalars['Boolean']>;
@@ -2993,6 +2996,7 @@ export type GetLocationTagByIdQuery = {
                 | {
                     name: string;
                     visible?: boolean | null | undefined;
+                    root?: boolean | null | undefined;
                     accepted?: boolean | null | undefined;
                     synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
                     child_tags?:
@@ -3106,6 +3110,7 @@ export type GetAllLocationTagsQuery = {
             | {
                 name: string;
                 visible?: boolean | null | undefined;
+                root?: boolean | null | undefined;
                 accepted?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
                 child_tags?:
@@ -5634,6 +5639,7 @@ export const GetLocationTagByIdDocument = gql`
         attributes {
           name
           visible
+          root
           accepted
           synonyms {
             name
@@ -5825,6 +5831,7 @@ export const GetAllLocationTagsDocument = gql`
         attributes {
           name
           visible
+          root
           accepted
           synonyms {
             name

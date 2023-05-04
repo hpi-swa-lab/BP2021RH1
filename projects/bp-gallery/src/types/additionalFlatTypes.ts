@@ -134,6 +134,7 @@ export interface FlatTag {
   parent_tags?: FlatTag[];
   child_tags?: FlatTag[];
   accepted?: boolean;
+  root?: boolean;
 }
 
 export enum TagType {

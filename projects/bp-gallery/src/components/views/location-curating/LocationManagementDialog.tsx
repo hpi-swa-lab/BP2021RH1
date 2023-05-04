@@ -76,7 +76,7 @@ const LocationManagementDialogPreset = ({
       });
     }
     const sortedTagTree = Object.values(tagsById)
-      .filter(tag => !tag.parent_tags?.length)
+      .filter(tag => !tag.parent_tags?.length || tag.root)
       // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
       .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -155,6 +155,10 @@ const LocationManagementDialogPreset = ({
       // override if clone was filled already to avoid duplicates
       if (nextTag && tagSupertags[nextTag.id].length > 0) {
         tagSupertags[nextTag.id] = [];
+      }
+
+      if (nextTag && nextTag.root) {
+        tagSupertags[nextTag.id].push([]);
       }
 
       nextTag?.parent_tags?.forEach(parent => {

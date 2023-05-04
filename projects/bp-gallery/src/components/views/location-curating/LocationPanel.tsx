@@ -47,7 +47,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
       });
     }
     const sortedTagTree = Object.values(tagsById)
-      .filter(tag => !tag.parent_tags?.length)
+      .filter(tag => !tag.parent_tags?.length || tag.root)
       // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
       .sort((a, b) => a.name.localeCompare(b.name));
 

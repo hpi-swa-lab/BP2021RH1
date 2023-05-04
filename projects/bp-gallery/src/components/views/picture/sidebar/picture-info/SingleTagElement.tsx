@@ -1,5 +1,6 @@
 import { FlatTag } from '../../../../../types/additionalFlatTypes';
 import { ArrowRight } from '@mui/icons-material';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const SingleTagElement = ({
@@ -15,6 +16,8 @@ const SingleTagElement = ({
 }) => {
   const { t } = useTranslation();
 
+  const [isHover, setIsHover] = useState<boolean>(false);
+
   return (
     <div className='recommendation-item-container'>
       {tagSupertagList &&
@@ -25,20 +28,30 @@ const SingleTagElement = ({
         <>
           {tagSupertagList[option.id].length > 1 ? (
             // multiple paths tag
-            <div className='recommendation-item-parents'>
-              <div className='recommendation-item-multiple-paths'>
+            <div
+              className='recommendation-item-parents'
+              onMouseLeave={() => {
+                setIsHover(false);
+              }}
+            >
+              <div
+                className='recommendation-item-multiple-paths'
+                onMouseEnter={() => {
+                  setIsHover(true);
+                }}
+              >
                 {t('tag-panel.multiple-paths')}
               </div>
               <ArrowRight />
               <div className='recommendation-item-name'>{option.name}</div>
-              {highlighted && (
+              {(highlighted || (typeof highlighted === 'undefined' && isHover)) && (
                 <>
-                  {tagSupertagList[option.id].map((paths, i) => {
+                  {tagSupertagList[option.id].map((path, i) => {
                     return (
                       <div className='w-full pl-1' key={i}>
                         {i === 0 && <hr />}
                         <div className='recommendation-item-parents'>
-                          {paths.map((tag, j) => {
+                          {path.map((tag, j) => {
                             return (
                               <div key={j} className='recommendation-item'>
                                 {j >= 1 && <ArrowRight />}
@@ -46,7 +59,7 @@ const SingleTagElement = ({
                               </div>
                             );
                           })}
-                          <ArrowRight />
+                          {path.length ? <ArrowRight /> : <></>}
                           <div className='recommendation-item-name'>{option.name}</div>
                         </div>
                         <hr />
