@@ -121,12 +121,17 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
     { id: '1', dragIds: [] },
     { id: '2', dragIds: [] },
   ]);
+  const [draggedItem, setDraggedItem] = useState('');
   const { data: pictureOne } = useGetPictureInfoQuery({ variables: { pictureId: '6' } });
   const picture1: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureOne)?.picture;
   const { data: pictureTwo } = useGetPictureInfoQuery({ variables: { pictureId: '5' } });
   const picture2: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureTwo)?.picture;
-  const draggable = <DraggablePicture id='draggable' picture={picture1} />;
-  const draggable2 = <DraggablePicture id='draggable2' picture={picture2} />;
+  const draggable = <DraggablePicture key='1' id='draggable' picture={picture1} />;
+  const draggable2 = <DraggablePicture key='2' id='draggable2' picture={picture2} />;
+  const draggableList = [
+    { id: 'draggable', element: draggable },
+    { id: 'draggable2', element: draggable2 },
+  ];
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event;
@@ -145,6 +150,7 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
           } as DropzoneContent)
         : dropzone;
     };
+    setDraggedItem('');
     setDropzones(
       dropzones.map(dropzone => {
         if (over) {
@@ -154,16 +160,16 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
       })
     );
   };
-  const [draggableList, setDraggableList] = useState([
-    { id: 'draggable', element: draggable },
-    { id: 'draggable2', element: draggable2 },
-  ]);
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    setDraggableList(
-      draggableList.map(drag => (drag.id === active.id ? { ...drag, isDragged: true } : drag))
+    setDropzones(
+      dropzones.map(dropzone => ({
+        ...dropzone,
+        dragIds: dropzone.dragIds.filter(x => x !== active.id),
+      }))
     );
+    setDraggedItem(String(active.id));
   };
   return (
     <>
@@ -172,10 +178,14 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
       </div>
       <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-          <DragOverlay>{draggable}</DragOverlay>
+          <DragOverlay>
+            {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
+          </DragOverlay>
           <IdeaLot>
             {draggableList.map(drag =>
-              !dropzones.some(x => x.dragIds.includes(drag.id)) ? drag.element : null
+              drag.id !== draggedItem && !dropzones.some(x => x.dragIds.includes(drag.id))
+                ? drag.element
+                : null
             )}
           </IdeaLot>
           <ExhibitionManipulator dropzones={dropzones} draggables={draggableList} />
