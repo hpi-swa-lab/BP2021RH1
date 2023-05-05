@@ -1,5 +1,6 @@
 import { createHttpLink, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
+import { Maybe } from 'graphql/jsutils/Maybe';
 import { isEmpty, unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
@@ -27,25 +28,23 @@ type UploadOptions = {
   fallback?: string;
 };
 
-export const asUploadPath = (
-  media: FlatUploadFile | undefined,
-  options: UploadOptions = { highQuality: true, pictureOrigin: PictureOrigin.REMOTE, fallback: '' }
-) => {
-  const { highQuality, pictureOrigin, fallback } = options;
+export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadOptions = {}) => {
+  const { highQuality = true, pictureOrigin = PictureOrigin.REMOTE, fallback = '' } = options;
 
-  const defaultUrl: string =
-    (media?.formats?.small || media?.formats?.thumbnail || media)?.url || fallback;
+  const previewUrl = (media?.formats?.small || media?.formats?.thumbnail)?.url as Maybe<string>;
 
-  const imgSrc = `${highQuality ? media?.url ?? defaultUrl : defaultUrl}?updatedAt=${
-    (media?.updatedAt ?? 'unknown') as string
-  }`;
+  // depending on highQuality, prioritize either full resolution URL or reduced resolution URL, fallback to the other one or custom fallback
+  const imgSrc = (highQuality ? media?.url ?? previewUrl : previewUrl ?? media?.url) ?? fallback;
+
+  // necessary to always get latest version of the picture from CDN/Strapi (after e.g. using the image editor)
+  const imgSrcWithParams = `${imgSrc}?updatedAt=${(media?.updatedAt ?? '') as string}`;
 
   const onCdn = media?.provider === 'strapi-provider-upload-aws-s3-advanced';
 
-  if (onCdn) return imgSrc;
-  if (pictureOrigin === PictureOrigin.LOCAL || defaultUrl === fallback) return defaultUrl;
+  if (pictureOrigin === PictureOrigin.LOCAL || imgSrc === fallback) return imgSrc;
+  if (onCdn) return imgSrcWithParams;
 
-  return asApiPath(imgSrc);
+  return asApiPath(imgSrcWithParams);
 };
 
 /**

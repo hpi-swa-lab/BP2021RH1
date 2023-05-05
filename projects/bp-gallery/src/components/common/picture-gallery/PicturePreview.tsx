@@ -53,7 +53,7 @@ const PicturePreview = ({
           className={
             showStats ? `transition-filter duration-200 ${hovered ? 'brightness-75' : ''}` : ''
           }
-          src={asUploadPath(picture.media, { highQuality, pictureOrigin })}
+          src={asUploadPath(picture.media, { highQuality: highQuality ?? false, pictureOrigin })}
         />
         <div className='adornments'>
           {adornments?.map((adornment, index) => (

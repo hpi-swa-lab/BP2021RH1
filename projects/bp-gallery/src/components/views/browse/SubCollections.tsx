@@ -17,8 +17,6 @@ const SubCollections = ({
   const { visit } = useVisit();
   const { t } = useTranslation();
 
-  console.log(childCollections);
-
   const buildItem = (collection: FlatCollectionWithoutRelations, index: number) => {
     let color = index % 2 === 0 ? '#7E241D' : '#404272';
     if (!collection.publishedAt) {
