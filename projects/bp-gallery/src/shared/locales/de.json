@@ -300,7 +300,7 @@
         "client-label": "Paypal-Spenden",
         "client-placeholder": "Gib deine Paypal-Client-Id an",
         "donation-label": "Spendentext",
-        "donation-placeholder": "Gib an, für was Spenden zugute kommen",
+        "donation-placeholder": "Gib an, für was du Spenden sammelst",
         "purpose-label": "Verwendungszweck",
         "purpose-placeholder": "Gib an, welchen Verwendungszweck die Spende auf Paypal haben soll",
         "thankyou-label": "Vielen Dank für Ihre Spende von {{amount}}€",

@@ -84,7 +84,7 @@ const StartView = () => {
             </PrimaryButton>
           )}
           <div className='flex basis-full' />
-          <IfFeatureEnabled feature='paypal_client_id'>
+          <IfFeatureEnabled feature='paypal_mainpage'>
             {paypalClientId !== '' && (
               <DonateButton donationText={paypalDonationText} clientId={paypalClientId} />
             )}
