@@ -135,7 +135,7 @@ const GeoMap = ({
   useEffect(() => {
     if (!map.current || !mainDivRef.current) return;
     const resizeObserver = new ResizeObserver(() => {
-      map.current ? map.current.invalidateSize() : null;
+      map.current?.invalidateSize();
     });
     resizeObserver.observe(mainDivRef.current);
     return () => {
