@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exhibition_sources",
+  "info": {
+    "singularName": "exhibition-source",
+    "pluralName": "exhibition-sources",
+    "displayName": "Exhibition_Source"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "source": {
+      "type": "string"
+    },
+    "exhibiton": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::exhibiton.exhibiton",
+      "inversedBy": "exhibition_sources"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exhibition_pictures",
+  "info": {
+    "singularName": "exhibition-picture",
+    "pluralName": "exhibition-pictures",
+    "displayName": "Exhibition_Picture"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "picture": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::picture.picture",
+      "inversedBy": "exhibition_pictures"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "idea_lot": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::idea-lot.idea-lot",
+      "inversedBy": "exhibition_pictures"
+    },
+    "exhibition_section": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::exhibition-section.exhibition-section",
+      "inversedBy": "exhibition_pictures"
+    }
+  }
+}
