@@ -1,5 +1,12 @@
-import { DndContext, DragEndEvent, Over, useDraggable, useDroppable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  Over,
+  useDraggable,
+  useDroppable,
+} from '@dnd-kit/core';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Button, IconButton, TextField } from '@mui/material';
 import { PropsWithChildren, useState } from 'react';
@@ -13,11 +20,8 @@ const DraggablePicture = ({ id, picture }: { id: string; picture?: FlatPicture }
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
   });
-  const style = {
-    transform: CSS.Translate.toString(transform),
-  };
   return (
-    <div className='z-[1000]' ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div className='z-[1000] relative' ref={setNodeRef} {...listeners} {...attributes}>
       {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
     </div>
   );
@@ -25,7 +29,7 @@ const DraggablePicture = ({ id, picture }: { id: string; picture?: FlatPicture }
 
 const IdeaLot = ({ children }: PropsWithChildren<{}>) => {
   return (
-    <div className='flex flex-col items-stretch h-full w-full'>
+    <div className='flex flex-col items-stretch h-full w-full relative'>
       <div className='text-xl'>Ideenparkplatz</div>
       <div className='border-solid flex-1 flex gap-2 '>{children}</div>
     </div>
@@ -43,15 +47,6 @@ const DropZone = ({ id, children }: PropsWithChildren<{ id: string }>) => {
     </div>
   );
 };
-
-// const DnDExample = () => {
-//   return (
-//     <DndContext onDragEnd={handleDragEnd}>
-//       {!parent ? draggable : null}
-//       <DropZone id='1'>{parent === '1' && draggable}</DropZone>
-//     </DndContext>
-//   );
-// };
 
 interface DropzoneContent {
   id: string;
@@ -128,7 +123,6 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
   ]);
   const { data: pictureOne } = useGetPictureInfoQuery({ variables: { pictureId: '6' } });
   const picture1: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureOne)?.picture;
-
   const { data: pictureTwo } = useGetPictureInfoQuery({ variables: { pictureId: '5' } });
   const picture2: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureTwo)?.picture;
   const draggable = <DraggablePicture id='draggable' picture={picture1} />;
@@ -159,25 +153,32 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
         return removeFromDropzone(dropzone);
       })
     );
-    console.log(dropzones);
   };
-  const draggableList = [
+  const [draggableList, setDraggableList] = useState([
     { id: 'draggable', element: draggable },
     { id: 'draggable2', element: draggable2 },
-  ];
+  ]);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setDraggableList(
+      draggableList.map(drag => (drag.id === active.id ? { ...drag, isDragged: true } : drag))
+    );
+  };
   return (
     <>
       <div className='absolute z-[999] right-7 top-[6rem]'>
         <Button variant='contained'>Veröffentlichen</Button>
       </div>
-      <div className='flex gap-7 items-stretch h-full w-full p-7 box-border'>
-        <DndContext onDragEnd={handleDragEnd}>
+      <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
+        <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+          <DragOverlay>{draggable}</DragOverlay>
           <IdeaLot>
             {draggableList.map(drag =>
               !dropzones.some(x => x.dragIds.includes(drag.id)) ? drag.element : null
             )}
           </IdeaLot>
-          <ExhibitionManipulator dropzones={dropzones} draggables={draggableList} parent={parent} />
+          <ExhibitionManipulator dropzones={dropzones} draggables={draggableList} />
         </DndContext>
       </div>
     </>
