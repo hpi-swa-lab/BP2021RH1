@@ -51,31 +51,32 @@ module.exports = ({ env }) => ({
       },
     },
   },
-  upload: env("AWS_ENABLED", false)
-    ? {
-        config: {
-          provider: "strapi-provider-upload-aws-s3-advanced",
-          providerOptions: {
-            accessKeyId: env("AWS_ACCESS_KEY_ID"),
-            secretAccessKey: env("AWS_ACCESS_SECRET"),
-            region: env("AWS_REGION"),
-            params: {
-              bucket: env("AWS_BUCKET_NAME"),
-              // acl: env("AWS_BUCKET_ACL"),
+  upload:
+    env("AWS_ENABLED", "false") === "true"
+      ? {
+          config: {
+            provider: "strapi-provider-upload-aws-s3-advanced",
+            providerOptions: {
+              accessKeyId: env("AWS_ACCESS_KEY_ID"),
+              secretAccessKey: env("AWS_ACCESS_SECRET"),
+              region: env("AWS_REGION"),
+              params: {
+                bucket: env("AWS_BUCKET_NAME"),
+                // acl: env("AWS_BUCKET_ACL"),
+              },
+              baseUrl: env("CDN_BASE_URL"), // e.g. "https://cdn.example.com", this is stored in strapi's database to point to the file
+              // prefix: env("BUCKET_PREFIX"), // e.g. "strapi-assets". If BUCKET_PREFIX contains leading or trailing slashes, they are removed internally to construct the URL safely
             },
-            baseUrl: env("CDN_BASE_URL"), // e.g. "https://cdn.example.com", this is stored in strapi's database to point to the file
-            // prefix: env("BUCKET_PREFIX"), // e.g. "strapi-assets". If BUCKET_PREFIX contains leading or trailing slashes, they are removed internally to construct the URL safely
+            // These parameters could solve issues with ACL public-read access — see [this issue](https://github.com/strapi/strapi/issues/5868) for details
+            actionOptions: {
+              upload: {
+                ACL: null,
+              },
+              uploadStream: {
+                ACL: null,
+              },
+            },
           },
-          // These parameters could solve issues with ACL public-read access — see [this issue](https://github.com/strapi/strapi/issues/5868) for details
-          actionOptions: {
-            upload: {
-              ACL: null,
-            },
-            uploadStream: {
-              ACL: null,
-            },
-          },
-        },
-      }
-    : undefined,
+        }
+      : undefined,
 });
