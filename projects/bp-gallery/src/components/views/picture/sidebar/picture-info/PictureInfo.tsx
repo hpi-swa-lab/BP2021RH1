@@ -12,6 +12,7 @@ import {
   useGetAllPersonTagsLazyQuery,
 } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
+import { useFaceTagging } from '../../../../../hooks/context-hooks';
 import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
@@ -22,7 +23,6 @@ import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
-import { useFaceTagging } from '../../../../../hooks/context-hooks';
 
 export type Field = Pick<
   FlatPicture,

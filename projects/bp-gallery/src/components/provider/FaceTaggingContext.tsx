@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, createContext } from 'react';
-import { FaceTagData } from '../views/picture/face-tagging/FaceTag';
+import { FaceTagData } from '../views/picture/face-tagging/FaceTagTypes';
 import { Rect } from '../views/picture/face-tagging/helpers/image-rect';
 
 export type FaceTagging = {

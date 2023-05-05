@@ -19,7 +19,7 @@ import { useMouseInElement } from '../../hooks/mouse-in-element.hook';
 import { useMousePosition } from '../../hooks/mouse-position.hook';
 import { FlatFaceTag, FlatPersonTag } from '../../types/additionalFlatTypes';
 import { PictureViewContext } from '../views/picture/PictureView';
-import { FaceTagData, TagDirection } from '../views/picture/face-tagging/FaceTag';
+import { FaceTagData, TagDirection } from '../views/picture/face-tagging/FaceTagTypes';
 import { useImageRect } from '../views/picture/face-tagging/helpers/image-rect';
 import { FaceTagging, FaceTaggingContext } from './FaceTaggingContext';
 
@@ -91,9 +91,9 @@ export const FaceTaggingProvider = ({
     } else if (angleAbs > (Math.PI * 3) / 4) {
       return TagDirection.LEFT;
     } else if (my - ty < 0) {
-      return TagDirection.DOWN;
-    } else {
       return TagDirection.UP;
+    } else {
+      return TagDirection.DOWN;
     }
   }, [referencedTag, clientMousePosition, imageRect]);
 
