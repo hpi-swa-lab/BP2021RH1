@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exhibition_sections",
+  "info": {
+    "singularName": "exhibition-section",
+    "pluralName": "exhibition-sections",
+    "displayName": "Exhibition_Section"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "text": {
+      "type": "richtext"
+    },
+    "exhibition_pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition-picture.exhibition-picture",
+      "mappedBy": "exhibition_section"
+    },
+    "exhibiton": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::exhibiton.exhibiton",
+      "inversedBy": "exhibition_sections"
+    }
+  }
+}

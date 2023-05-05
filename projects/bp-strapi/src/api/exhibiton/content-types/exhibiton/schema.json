@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exhibitons",
+  "info": {
+    "singularName": "exhibiton",
+    "pluralName": "exhibitons",
+    "displayName": "Exhibiton",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "idea_lot": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::idea-lot.idea-lot",
+      "inversedBy": "exhibiton"
+    },
+    "titlePicture": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::exhibition-picture.exhibition-picture"
+    },
+    "introduction": {
+      "type": "richtext"
+    },
+    "exhibition_sections": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition-section.exhibition-section",
+      "mappedBy": "exhibiton"
+    },
+    "epilog": {
+      "type": "richtext"
+    },
+    "exhibition_sources": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition-source.exhibition-source",
+      "mappedBy": "exhibiton"
+    }
+  }
+}
