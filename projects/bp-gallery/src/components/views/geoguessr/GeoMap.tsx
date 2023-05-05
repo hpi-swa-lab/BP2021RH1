@@ -133,11 +133,10 @@ const GeoMap = ({
   }, [pictureId, initialMapValues]);
 
   useEffect(() => {
-    if (!map.current && !mainDivRef.current) return;
+    if (!map.current || !mainDivRef.current) return;
     const resizeObserver = new ResizeObserver(() => {
       map.current ? map.current.invalidateSize() : null;
     });
-    // @ts-ignore
     resizeObserver.observe(mainDivRef.current);
     return () => {
       resizeObserver.disconnect();
