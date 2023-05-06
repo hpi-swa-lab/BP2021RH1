@@ -367,6 +367,18 @@
     "location": "Ort",
     "keyword": "Schlagwort",
     "multiple-paths": "Mehrere Pfade",
-    "select-position": "An welcher Position möchten Sie {{ name }} hinzufügen?"
+    "select-position": "An welcher Position möchten Sie {{ name }} hinzufügen?",
+    "location-already-exists": "Es existiert bereits ein Ort mit dem Namen {{ name }} an der Stelle, wo sie en Ort einfügen wollen. Diese Operation wird deswegen nicht ausgeführt.",
+    "delete-elsewhere": "Der Ort {{ name }} besitzt eine Kopie an anderer Stelle. Soll diese auch gelöscht werden?",
+    "only-delete-here": "Nur hier löschen.",
+    "delete-everywhere": "Überall löschen."
+  },
+  "tooltips": {
+    "detach-location": "Ort aus der Hierarchie lösen.",
+    "relocate-location": "Ort unterordnen.",
+    "copy-location": "Ort kopieren.",
+    "show-location": "Ort anzeigen.",
+    "hide-location": "Ort verstecken.",
+    "delete-location": "Ort löschen."
   }
 }

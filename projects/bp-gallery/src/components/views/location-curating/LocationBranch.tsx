@@ -72,7 +72,7 @@ const LocationBranch = ({
         locationTag={locationTag}
         parentTag={parentTag}
         showMore={showMore}
-        onToggle={() => {
+        onToggleShowMore={() => {
           setShowMore(prev => !prev);
         }}
         refetch={refetch}

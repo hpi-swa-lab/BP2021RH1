@@ -1,10 +1,8 @@
 import {
   Check,
   ChevronRight,
-  Close,
   CopyAll,
   Delete,
-  Done,
   Eject,
   ExpandMore,
   MoveDown,
@@ -12,20 +10,25 @@ import {
   VisibilityOffOutlined,
 } from '@mui/icons-material';
 import { Badge, Chip, IconButton, Tooltip } from '@mui/material';
-import { History } from 'history';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
-import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import { useDeleteSingleTag, useDeleteTagAndChildren } from './delete-tag-helpers';
 import './LocationEntry.scss';
+import {
+  useAcceptTag,
+  useCopyTag,
+  useDeleteSynonym,
+  useDeleteTag,
+  useDetachTag,
+  useRelocateTag,
+  useSetVisible,
+} from './location-management-helpers';
+import { t } from 'i18next';
 
 const LocationEntry = ({
   locationTag,
   parentTag,
   showMore,
-  onToggle,
+  onToggleShowMore,
   refetch,
   type,
   unacceptedSubtags = 0,
@@ -33,265 +36,34 @@ const LocationEntry = ({
   locationTag: FlatTag;
   parentTag?: FlatTag;
   showMore: boolean;
-  onToggle: () => void;
+  onToggleShowMore: () => void;
   refetch: () => void;
   type: TagType;
   unacceptedSubtags?: number;
 }) => {
   const prompt = useDialog();
-  const history: History = useHistory();
-  const { t } = useTranslation();
 
-  const {
-    updateSynonymsMutationSource,
-    updateVisibilityMutationSource,
-    updateTagParentMutationSource,
-    updateTagNameMutationSource,
-    updateTagAcceptanceMutationSource,
-  } = useGenericTagEndpoints(type);
+  const { setVisible } = useSetVisible(locationTag, refetch);
+  const { relocateTag } = useRelocateTag(locationTag, refetch, parentTag);
+  const { detachTag } = useDetachTag(locationTag, refetch);
+  const { copyTag } = useCopyTag(locationTag, refetch);
+  const { acceptTag } = useAcceptTag(locationTag, refetch);
+  const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
+  const { deleteTag } = useDeleteTag(locationTag, refetch, parentTag);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const [updateVisibilityMutation] = updateVisibilityMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const setVisible = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    updateVisibilityMutation({
-      variables: {
-        tagId: locationTag.id,
-        visible: !locationTag.visible,
-      },
+  const openLocationManagementDialog = () => {
+    prompt({
+      preset: DialogPreset.LOCATION_MANAGEMENT,
+      title: locationTag.name,
+      content: { locationTag: locationTag, parentTag: parentTag, refetch: refetch },
+      maxWidth: false,
     });
-  };
-
-  const [updateTagParentMutation] = updateTagParentMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const relocateTag = async (tagId?: string, tagName?: string) => {
-    if (!tagId || !tagName) return;
-    const selectedTag = await prompt({
-      preset: DialogPreset.SELECT_LOCATION,
-      content: tagName,
-      type: type,
-    });
-    if (selectedTag) {
-      if (selectedTag.child_tags.some((tag: any) => tag.name === tagName)) {
-        if (selectedTag.child_tags.some((tag: any) => tag.id === tagId)) {
-          updateTagParentMutation({
-            variables: {
-              tagID: locationTag.id,
-              parentIDs: [
-                ...(parentTag
-                  ? (locationTag.parent_tags?.map(t => t.id) ?? []).filter(t => t !== parentTag.id)
-                  : locationTag.parent_tags?.map(t => t.id) ?? []),
-              ],
-            },
-          });
-        } else {
-          prompt({
-            preset: DialogPreset.CONFIRM,
-            title:
-              'Es existiert bereits ein anderes Tag mit diesem Namen an der Stelle, wo sie das Tag einfügen wollen. Diese Operation wird deswegen nicht durchgeführt!',
-          });
-        }
-      } else {
-        updateTagParentMutation({
-          variables: {
-            tagID: locationTag.id,
-            parentIDs: [
-              ...(parentTag
-                ? (locationTag.parent_tags?.map(t => t.id) ?? []).filter(t => t !== parentTag.id)
-                : locationTag.parent_tags?.map(t => t.id) ?? []),
-              selectedTag.id,
-            ],
-          },
-        });
-      }
-    }
-  };
-
-  const [updateTagNameMutation] = updateTagNameMutationSource({
-    onCompleted: _ => {
-      refetch();
-    },
-  });
-
-  const detachTag = async (tagId?: string, tagName?: string) => {
-    if (!tagId || !tagName) return;
-    const reallyDetach = await prompt({
-      title: t(`tag-panel.detach-${type}`),
-      content: tagName,
-      options: [
-        { name: 'Abbrechen', icon: <Close />, value: false },
-        { name: 'Bestätigen', icon: <Done />, value: true },
-      ],
-    });
-    if (reallyDetach) {
-      updateTagParentMutation({
-        variables: {
-          tagID: locationTag.id,
-          parentIDs: null,
-        },
-      });
-    }
-  };
-
-  const copyTag = async (tagId?: string, tagName?: string) => {
-    if (!tagId || !tagName) return;
-    const selectedTag = await prompt({
-      preset: DialogPreset.SELECT_LOCATION,
-      content: tagName,
-      type: type,
-    });
-    if (selectedTag) {
-      if (selectedTag.child_tags.some((tag: any) => tag.name === tagName)) {
-        if (!selectedTag.child_tags.some((tag: any) => tag.id === tagId)) {
-          prompt({
-            preset: DialogPreset.CONFIRM,
-            title:
-              'Es existiert bereits ein anderes Tag mit diesem Namen an der Stelle, wo sie das Tag einfügen wollen. Diese Operation wird deswegen nicht durchgeführt!',
-          });
-        }
-      } else {
-        updateTagParentMutation({
-          variables: {
-            tagID: locationTag.id,
-            parentIDs: [...(locationTag.parent_tags?.map(t => t.id) ?? []), selectedTag.id],
-          },
-        });
-      }
-    }
-  };
-
-  const [updateSynonymsMutation] = updateSynonymsMutationSource({
-    onCompleted: _ => {
-      refetch();
-    },
-  });
-
-  const [updateAcceptedMutation] = updateTagAcceptanceMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const acceptTag = (tagId: string) => {
-    updateAcceptedMutation({
-      variables: {
-        tagId,
-        accepted: true,
-      },
-    });
-  };
-
-  const deleteSynonym = (tagId: string, synonymName: string) => {
-    updateSynonymsMutation({
-      variables: {
-        tagId,
-        synonyms:
-          locationTag.synonyms?.filter(s => s?.name !== '' && s?.name !== synonymName) ??
-          ([] as any),
-      },
-    });
-  };
-
-  const { deleteTags } = useDeleteTagAndChildren(locationTag, refetch, type);
-  const { deleteSingleTag } = useDeleteSingleTag(locationTag, refetch, type);
-
-  const deleteLocalTagClone = () => {
-    locationTag.child_tags?.forEach(tag => {
-      updateTagParentMutation({
-        variables: {
-          tagID: tag.id,
-          parentIDs: parentTag
-            ? [...(tag.parent_tags?.map(t => t.id) ?? []), parentTag.id]
-            : tag.parent_tags?.map(t => t.id) ?? [],
-        },
-      });
-    });
-    updateTagParentMutation({
-      variables: {
-        tagID: locationTag.id,
-        parentIDs: parentTag
-          ? locationTag.parent_tags?.map(t => t.id).filter(t => t !== parentTag.id)
-          : [],
-      },
-    });
-  };
-
-  const deleteLocalTagClones = () => {
-    updateTagParentMutation({
-      variables: {
-        tagID: locationTag.id,
-        parentIDs: parentTag
-          ? (locationTag.parent_tags?.map(t => t.id) ?? []).filter(t => t !== parentTag.id)
-          : [],
-      },
-    });
-  };
-
-  const deleteTag = async (tagId?: string, tagName?: string) => {
-    if (!tagId || !tagName) return;
-    const deleteOption = await prompt({
-      title: t(`tag-panel.should-delete-${type}`),
-      content: tagName,
-      options: [
-        { name: 'Abbrechen', icon: <Close />, value: 0 },
-        { name: t(`tag-panel.just-delete-single-${type}`), icon: <Done />, value: 1 },
-        { name: 'Bestätigen', icon: <Done />, value: 2 },
-      ],
-    });
-    if (deleteOption === 0) return;
-    let deleteClones = -1;
-    if (locationTag.parent_tags && locationTag.parent_tags.length > 1) {
-      deleteClones = await prompt({
-        title: 'Dieses Tag besitzt Kopien an anderen Stellen. Sollen diese auch gelöscht werden?',
-        content: tagName,
-        options: [
-          { name: 'Abbrechen', icon: <Close />, value: 0 },
-          { name: 'Nur hier löschen', icon: <Done />, value: 1 },
-          { name: 'Überall löschen', icon: <Done />, value: 2 },
-        ],
-      });
-    }
-    if (deleteClones === 0) return;
-    switch (deleteOption) {
-      case 1: {
-        if (deleteClones === 1) {
-          deleteLocalTagClone();
-        } else {
-          deleteSingleTag();
-        }
-        break;
-      }
-      case 2: {
-        if (deleteClones === 1) {
-          deleteLocalTagClones();
-        } else {
-          deleteTags();
-        }
-        break;
-      }
-    }
   };
 
   return (
     <div
       className={`location-entry-container ${!locationTag.accepted ? 'location-not-accepted' : ''}`}
-      onClick={() => {
-        prompt({
-          preset: DialogPreset.LOCATION_MANAGEMENT,
-          title: locationTag.name,
-          content: { locationTag: locationTag, parentTag: parentTag, refetch: refetch },
-          maxWidth: false,
-        });
-      }}
+      onClick={openLocationManagementDialog}
     >
       <div className='location-entry-content'>
         <Badge color='info' overlap='circular' variant='dot' badgeContent={unacceptedSubtags}>
@@ -299,7 +71,7 @@ const LocationEntry = ({
             className='show-more-button'
             onClick={e => {
               e.stopPropagation();
-              onToggle();
+              onToggleShowMore();
             }}
           >
             {showMore ? <ExpandMore /> : <ChevronRight />}
@@ -314,7 +86,7 @@ const LocationEntry = ({
                   className='accept-location-name'
                   onClick={e => {
                     e.stopPropagation();
-                    acceptTag(locationTag.id);
+                    acceptTag();
                   }}
                 >
                   <Check />
@@ -327,14 +99,14 @@ const LocationEntry = ({
                   <Chip
                     key={synonym!.name}
                     label={synonym!.name}
-                    onDelete={() => deleteSynonym(locationTag.id, synonym!.name)}
+                    onDelete={() => deleteSynonym(synonym!.name)}
                   />
                 </div>
               ))}
             </div>
             <div className='location-action-buttons-container'>
               <Tooltip
-                title={'Ort aus der Hierarchie lösen'}
+                title={t('tooltips.detach-location')}
                 arrow={true}
                 followCursor={true}
                 placement='left'
@@ -342,34 +114,46 @@ const LocationEntry = ({
                 <IconButton
                   onClick={e => {
                     e.stopPropagation();
-                    detachTag(locationTag.id, locationTag.name);
+                    detachTag();
                   }}
                 >
                   <Eject />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={'Ort unterordnen'} arrow={true} followCursor={true} placement='left'>
+              <Tooltip
+                title={t('tooltips.relocate-location')}
+                arrow={true}
+                followCursor={true}
+                placement='left'
+              >
                 <IconButton
                   onClick={e => {
                     e.stopPropagation();
-                    relocateTag(locationTag.id, locationTag.name);
+                    relocateTag();
                   }}
                 >
                   <MoveDown />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={'Ort kopieren'} arrow={true} followCursor={true} placement='left'>
+              <Tooltip
+                title={t('tooltips.copy-location')}
+                arrow={true}
+                followCursor={true}
+                placement='left'
+              >
                 <IconButton
                   onClick={e => {
                     e.stopPropagation();
-                    copyTag(locationTag.id, locationTag.name);
+                    copyTag();
                   }}
                 >
                   <CopyAll />
                 </IconButton>
               </Tooltip>
               <Tooltip
-                title={locationTag.visible ? 'Ort verstecken' : 'Ort anzeigen'}
+                title={
+                  locationTag.visible ? t('tooltips.hide-location') : t('tooltips.show-location')
+                }
                 arrow={true}
                 followCursor={true}
                 placement='left'
@@ -383,11 +167,16 @@ const LocationEntry = ({
                   {locationTag.visible ? <Visibility /> : <VisibilityOffOutlined />}
                 </IconButton>
               </Tooltip>
-              <Tooltip title={'Ort löschen'} arrow={true} followCursor={true} placement='left'>
+              <Tooltip
+                title={t('tooltips.delete-location')}
+                arrow={true}
+                followCursor={true}
+                placement='left'
+              >
                 <IconButton
                   onClick={e => {
                     e.stopPropagation();
-                    deleteTag(locationTag.id, locationTag.name);
+                    deleteTag();
                   }}
                 >
                   <Delete />
