@@ -26,12 +26,12 @@ const LocationBranch = ({
   const [showMore, setShowMore] = useState<boolean>(false);
 
   const renderSubBranch = () => {
-    if (locationTag.child_tags && locationTag.child_tags.length > 0) {
-      return locationTag.child_tags.map((tag: any) => {
+    if (locationTag.child_tags.length) {
+      return locationTag.child_tags.map((childTag: any) => {
         return (
           <LocationBranch
-            key={tag.id}
-            locationTag={tag}
+            key={childTag.id}
+            locationTag={childTag}
             parentTag={locationTag}
             refetch={refetch}
             type={type}
@@ -41,10 +41,6 @@ const LocationBranch = ({
     }
   };
 
-  const onToggle = () => {
-    setShowMore(prev => !prev);
-  };
-
   const [createSubLocationTag] = createSubTagMutationSource({
     onCompleted: (_: any) => {
       refetch();
@@ -52,17 +48,17 @@ const LocationBranch = ({
   });
 
   const addNewSubLocation = async () => {
-    const collectionName = await dialog({
+    const locationName = await dialog({
       preset: DialogPreset.INPUT_FIELD,
       title: t(`tag-panel.name-of-sub-${type}`, { parent: locationTag.name }),
     });
     if (
-      collectionName?.length &&
-      !locationTag.child_tags.some((child: any) => child.name === collectionName)
+      locationName?.length &&
+      !locationTag.child_tags.some((child: any) => child.name === locationName)
     ) {
       createSubLocationTag({
         variables: {
-          name: collectionName,
+          name: locationName,
           parentIDs: [locationTag.id],
           accepted: true,
         },
@@ -76,7 +72,9 @@ const LocationBranch = ({
         locationTag={locationTag}
         parentTag={parentTag}
         showMore={showMore}
-        onToggle={onToggle}
+        onToggle={() => {
+          setShowMore(prev => !prev);
+        }}
         refetch={refetch}
         type={type}
         unacceptedSubtags={locationTag.unacceptedSubtags}
