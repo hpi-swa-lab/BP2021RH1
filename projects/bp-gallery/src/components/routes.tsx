@@ -93,7 +93,7 @@ const routes: RouteConfig[] = [
   {
     path: '/tags/locations',
     render: () => {
-      return <TagTableView type={TagType.LOCATION} />;
+      return <LocationPanel type={TagType.LOCATION} />;
     },
   },
   {
@@ -127,12 +127,6 @@ const routes: RouteConfig[] = [
   {
     path: '/prototypes/timeline-demo',
     component: TimeLineDemo,
-  },
-  {
-    path: '/prototypes/edit/:type',
-    render: ({ match }: RouteConfigComponentProps<{ type: '' }>) => {
-      return <LocationPanel type={match.params.type} />;
-    },
   },
   {
     path: '/archives/:id/edit',
