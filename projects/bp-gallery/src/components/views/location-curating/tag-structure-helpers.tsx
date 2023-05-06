@@ -28,3 +28,33 @@ export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
 
   return tagTree;
 };
+
+export const useGetTagChildren = (
+  tagTree: FlatTag[] | undefined,
+  flattenedTags: FlatTag[] | undefined
+) => {
+  const tagChildTags = useMemo(() => {
+    if (!flattenedTags) return;
+
+    const tagChildren = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
+    // setup queue
+    const queue: FlatTag[] = [];
+    tagTree?.forEach(tag => {
+      queue.push(tag);
+    });
+
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+      if (nextTag?.child_tags) {
+        tagChildren[nextTag.id] = nextTag.child_tags;
+      }
+      nextTag?.child_tags?.forEach(tag => {
+        queue.push(tag);
+      });
+    }
+
+    return tagChildren;
+  }, [flattenedTags, tagTree]);
+
+  return tagChildTags;
+};

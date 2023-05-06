@@ -29,7 +29,7 @@ import Loading from '../../common/Loading';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagTree } from './tag-structure-helpers';
+import { useGetTagChildren, useGetTagTree } from './tag-structure-helpers';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -73,28 +73,7 @@ const LocationManagementDialogPreset = ({
 
   const tagTree = useGetTagTree(flattenedTags);
 
-  const tagChildTags = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagChildren = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-      if (nextTag?.child_tags) {
-        tagChildren[nextTag.id] = nextTag.child_tags;
-      }
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
-    }
-
-    return tagChildren;
-  }, [flattenedTags, tagTree]);
+  const tagChildTags = useGetTagChildren(tagTree as FlatTag[], flattenedTags);
 
   const tagSiblingTags = useMemo(() => {
     if (!flattenedTags || !tagChildTags) return;

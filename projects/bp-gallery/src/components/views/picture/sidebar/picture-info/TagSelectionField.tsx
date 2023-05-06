@@ -14,7 +14,7 @@ import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 import './TagSelection.scss';
 import SingleTagElement from './SingleTagElement';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
-import { useGetTagTree } from '../../../location-curating/tag-structure-helpers';
+import { useGetTagChildren, useGetTagTree } from '../../../location-curating/tag-structure-helpers';
 
 interface TagFields {
   name: string;
@@ -75,6 +75,12 @@ const TagSelectionField = <T extends TagFields>({
   //code duplication with LocationPanel
   const tagTree = useGetTagTree(flattenedTags);
 
+  const tagChildTags = useGetTagChildren(tagTree, flattenedTags) as
+    | {
+        [k: string]: T[];
+      }
+    | undefined;
+
   const tagSupertagList = useMemo(() => {
     if (!flattenedTags) return;
 
@@ -111,29 +117,6 @@ const TagSelectionField = <T extends TagFields>({
     }
 
     return tagSupertags;
-  }, [flattenedTags, tagTree]);
-
-  const tagChildTags = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagChildren = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as T[]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-      if (nextTag?.child_tags) {
-        tagChildren[nextTag.id] = nextTag.child_tags as T[];
-      }
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
-    }
-
-    return tagChildren;
   }, [flattenedTags, tagTree]);
 
   const tagSiblingTags = useMemo(() => {
