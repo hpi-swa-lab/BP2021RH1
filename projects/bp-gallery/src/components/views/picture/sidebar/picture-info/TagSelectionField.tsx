@@ -14,6 +14,7 @@ import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 import './TagSelection.scss';
 import SingleTagElement from './SingleTagElement';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import { useGetTagTree } from '../../../location-curating/tag-structure-helpers';
 
 interface TagFields {
   name: string;
@@ -72,20 +73,7 @@ const TagSelectionField = <T extends TagFields>({
     flattened && type !== TagType.COLLECTION ? Object.values(flattened)[0] : undefined;
 
   //code duplication with LocationPanel
-  const tagTree = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagsById = Object.fromEntries(
-      flattenedTags.map(tag => [tag.id, { ...tag, child_tags: [] as FlatTag[] }])
-    );
-
-    for (const tag of Object.values(tagsById)) {
-      tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags.push(tag);
-      });
-    }
-    return Object.values(tagsById).filter(tag => !tag.parent_tags?.length || tag.root);
-  }, [flattenedTags]);
+  const tagTree = useGetTagTree(flattenedTags);
 
   const tagSupertagList = useMemo(() => {
     if (!flattenedTags) return;

@@ -7,6 +7,7 @@ import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
+import { useGetTagTree } from './tag-structure-helpers';
 
 const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
   const dialog = useDialog();
@@ -30,33 +31,17 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
     return subtagCount;
   }, []);
 
-  const tagTree = useMemo(() => {
-    if (!flattenedTags) return;
+  const sortedTagTree = useGetTagTree(flattenedTags);
 
-    const tagsById = Object.fromEntries(
-      flattenedTags.map(tag => [
-        tag.id,
-        { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
-      ])
-    );
-    for (const tag of Object.values(tagsById)) {
-      tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags.push(tag);
-        // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
-        tagsById[parentTag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
-      });
-    }
-    const sortedTagTree = Object.values(tagsById)
-      .filter(tag => !tag.parent_tags?.length || tag.root)
-      // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
-      .sort((a, b) => a.name.localeCompare(b.name));
+  const tagTree = useMemo(() => {
+    if (!sortedTagTree) return;
 
     sortedTagTree.forEach(tag => {
       tag.name, setUnacceptedSubtagsCount(tag);
     });
 
     return sortedTagTree;
-  }, [flattenedTags, setUnacceptedSubtagsCount]);
+  }, [sortedTagTree, setUnacceptedSubtagsCount]);
 
   const [createLocationTag] = createTagMutationSource({
     onCompleted: (_: any) => {

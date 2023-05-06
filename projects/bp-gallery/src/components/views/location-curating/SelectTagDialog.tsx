@@ -6,6 +6,7 @@ import SelectDialogPreset from '../../provider/dialog-presets/SelectDialogPreset
 import { DialogProps } from '../../provider/DialogProvider';
 import { useEffect, useMemo, useState } from 'react';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
+import { useGetTagTree } from './tag-structure-helpers';
 
 const TagSelectDialogPreset = ({
   handleClose,
@@ -21,21 +22,7 @@ const TagSelectDialogPreset = ({
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  //code duplication with LocationPanel
-  const tagTree = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagsById = Object.fromEntries(
-      flattenedTags.map(tag => [tag.id, { ...tag, child_tags: [] as FlatTag[] }])
-    );
-
-    for (const tag of Object.values(tagsById)) {
-      tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags.push(tag);
-      });
-    }
-    return Object.values(tagsById).filter(tag => !tag.parent_tags?.length || tag.root);
-  }, [flattenedTags]);
+  const tagTree = useGetTagTree(flattenedTags);
 
   const tagSupertagList = useMemo(() => {
     if (!flattenedTags) return;

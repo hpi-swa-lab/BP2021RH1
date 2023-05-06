@@ -22,7 +22,6 @@ const SingleTagElement = ({
     <div className='recommendation-item-container'>
       {tagSupertagList &&
       typeof option.id === 'string' &&
-      option.id !== '-2' &&
       option.id !== '-3' &&
       tagSupertagList[option.id].length > 0 ? (
         <>

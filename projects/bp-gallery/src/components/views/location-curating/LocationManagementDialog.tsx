@@ -29,6 +29,7 @@ import Loading from '../../common/Loading';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
+import { useGetTagTree } from './tag-structure-helpers';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -70,26 +71,7 @@ const LocationManagementDialogPreset = ({
   const tagPicturesQueryResponse = tagPictures({ variables: { tagID: locationTag.id } });
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
 
-  const tagTree = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagsById = Object.fromEntries(
-      flattenedTags.map(tag => [tag.id, { ...tag, child_tags: [] as FlatTag[] }])
-    );
-    for (const tag of Object.values(tagsById)) {
-      tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags.push(tag);
-        // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
-        tagsById[parentTag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
-      });
-    }
-    const sortedTagTree = Object.values(tagsById)
-      .filter(tag => !tag.parent_tags?.length || tag.root)
-      // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
-      .sort((a, b) => a.name.localeCompare(b.name));
-
-    return sortedTagTree;
-  }, [flattenedTags]);
+  const tagTree = useGetTagTree(flattenedTags);
 
   const tagChildTags = useMemo(() => {
     if (!flattenedTags) return;

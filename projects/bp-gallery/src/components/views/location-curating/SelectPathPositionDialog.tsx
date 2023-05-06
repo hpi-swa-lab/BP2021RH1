@@ -14,6 +14,7 @@ import {
   TextField,
 } from '@mui/material';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
+import { useGetTagTree } from './tag-structure-helpers';
 
 const PathPositionSelectDialogPreset = ({
   handleClose,
@@ -29,21 +30,7 @@ const PathPositionSelectDialogPreset = ({
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  //code duplication with LocationPanel
-  const tagTree = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagsById = Object.fromEntries(
-      flattenedTags.map(tag => [tag.id, { ...tag, child_tags: [] as FlatTag[] }])
-    );
-
-    for (const tag of Object.values(tagsById)) {
-      tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags.push(tag);
-      });
-    }
-    return Object.values(tagsById).filter(tag => !tag.parent_tags?.length || tag.root);
-  }, [flattenedTags]);
+  const tagTree = useGetTagTree(flattenedTags);
 
   const customOptions = useMemo(() => {
     return [
