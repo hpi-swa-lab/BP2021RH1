@@ -1,7 +1,12 @@
 import { getService as getUsersPermissionsService } from "@strapi/plugin-users-permissions/server/utils/index.js";
 import { errors } from "@strapi/utils";
-import type { UsersPermissionsUser } from "bp-graphql/build/db-types";
+import type { Variables } from "bp-graphql";
+import type {
+  ParameterizedPermission,
+  UsersPermissionsUser,
+} from "bp-graphql/build/db-types";
 import { OperationDefinitionNode } from "graphql/language/ast";
+import { checkAllowed } from "./checkAllowed";
 import { isIntrospectionQuery } from "./isIntrospectionQuery";
 import { verifyOperation } from "./verifyOperation";
 
@@ -75,11 +80,7 @@ const authenticate = async (ctx) => {
   };
 };
 
-type ParameterizedPermission = {
-  operation_name: string;
-};
-
-const verify = (auth, config) => {
+const verify = async (auth, config) => {
   if ("operation" in config) {
     const permissions: ParameterizedPermission[] = auth.ability;
     const user: UsersPermissionsUser | null = auth.credentials;
@@ -87,8 +88,7 @@ const verify = (auth, config) => {
     const {
       operation,
       variables,
-    }: { operation: OperationDefinitionNode; variables: Record<string, any> } =
-      config;
+    }: { operation: OperationDefinitionNode; variables: Variables } = config;
 
     if (isIntrospectionQuery(operation)) {
       // allow
@@ -105,7 +105,13 @@ const verify = (auth, config) => {
 
     verifyOperation(operation);
 
-    // TODO: run custom check on authorizingPermissions, using variables
+    await checkAllowed(
+      operationName,
+      authorizingPermissions,
+      permissions,
+      variables,
+      user
+    );
   } else {
     // regular graphql verify call, let it pass through unchecked
   }
