@@ -29,7 +29,7 @@ import Loading from '../../common/Loading';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagChildren, useGetTagTree } from './tag-structure-helpers';
+import { useGetTagChildren, useGetTagSiblings, useGetTagTree } from './tag-structure-helpers';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -75,41 +75,13 @@ const LocationManagementDialogPreset = ({
 
   const tagChildTags = useGetTagChildren(tagTree as FlatTag[], flattenedTags);
 
-  const tagSiblingTags = useMemo(() => {
-    if (!flattenedTags || !tagChildTags) return;
-
-    const tagSiblings = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-      nextTag?.parent_tags?.forEach(parent => {
-        if (parentTag && parent.id === parentTag.id) {
-          tagSiblings[nextTag.id].push(
-            ...tagChildTags[parent.id].filter(
-              tag =>
-                tag.id !== nextTag.id &&
-                !tagSiblings[nextTag.id].some(sibling => sibling.id === tag.id)
-            )
-          );
-        }
-      });
-      if (nextTag && typeof parentTag === 'undefined') {
-        tagSiblings[nextTag.id] = flattenedTags.filter(
-          tag => (!tag.parent_tags?.length || tag.root) && tag.id !== nextTag.id
-        );
-      }
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
-    }
-
-    return tagSiblings;
-  }, [flattenedTags, tagTree, tagChildTags, parentTag]);
+  const tagSiblingTags = useGetTagSiblings(
+    tagTree as FlatTag[],
+    flattenedTags,
+    tagChildTags,
+    parentTag as FlatTag,
+    !parentTag
+  );
 
   const tagSupertagList = useMemo(() => {
     if (!flattenedTags) return;

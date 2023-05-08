@@ -58,3 +58,53 @@ export const useGetTagChildren = (
 
   return tagChildTags;
 };
+
+export const useGetTagSiblings = (
+  tagTree: FlatTag[] | undefined,
+  flattenedTags: FlatTag[] | undefined,
+  tagChildTags:
+    | {
+        [k: string]: FlatTag[];
+      }
+    | undefined,
+  parentTag?: FlatTag,
+  isRoot?: boolean
+) => {
+  const tagSiblings = useMemo(() => {
+    if (!flattenedTags || !tagChildTags) return;
+
+    const tagSiblings = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
+    // setup queue
+    const queue: FlatTag[] = [];
+    tagTree?.forEach(tag => {
+      queue.push(tag);
+    });
+
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+      nextTag?.parent_tags?.forEach(parent => {
+        if (!parentTag || parent.id === parentTag.id) {
+          tagSiblings[nextTag.id].push(
+            ...tagChildTags[parent.id].filter(
+              tag =>
+                tag.id !== nextTag.id &&
+                !tagSiblings[nextTag.id].some(sibling => sibling.id === tag.id)
+            )
+          );
+        }
+      });
+      if (nextTag && (isRoot || !nextTag.parent_tags?.length)) {
+        tagSiblings[nextTag.id] = flattenedTags.filter(
+          tag => (!tag.parent_tags?.length || tag.root) && tag.id !== nextTag.id
+        );
+      }
+      nextTag?.child_tags?.forEach(tag => {
+        queue.push(tag);
+      });
+    }
+
+    return tagSiblings;
+  }, [flattenedTags, tagTree, tagChildTags, parentTag, isRoot]);
+
+  return tagSiblings;
+};

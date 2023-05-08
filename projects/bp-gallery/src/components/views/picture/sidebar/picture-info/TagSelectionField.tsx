@@ -14,7 +14,11 @@ import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
 import './TagSelection.scss';
 import SingleTagElement from './SingleTagElement';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
-import { useGetTagChildren, useGetTagTree } from '../../../location-curating/tag-structure-helpers';
+import {
+  useGetTagChildren,
+  useGetTagSiblings,
+  useGetTagTree,
+} from '../../../location-curating/tag-structure-helpers';
 
 interface TagFields {
   name: string;
@@ -81,6 +85,16 @@ const TagSelectionField = <T extends TagFields>({
       }
     | undefined;
 
+  const tagSiblingTags = useGetTagSiblings(
+    tagTree,
+    flattenedTags,
+    tagChildTags as { [k: string]: FlatTag[] } | undefined
+  ) as
+    | {
+        [k: string]: T[];
+      }
+    | undefined;
+
   const tagSupertagList = useMemo(() => {
     if (!flattenedTags) return;
 
@@ -118,40 +132,6 @@ const TagSelectionField = <T extends TagFields>({
 
     return tagSupertags;
   }, [flattenedTags, tagTree]);
-
-  const tagSiblingTags = useMemo(() => {
-    if (!flattenedTags || !tagChildTags) return;
-
-    const tagSiblings = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as T[]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-      nextTag?.parent_tags?.forEach(parent => {
-        tagSiblings[nextTag.id].push(
-          ...tagChildTags[parent.id].filter(
-            tag =>
-              tag.id !== nextTag.id &&
-              !tagSiblings[nextTag.id].some(sibling => sibling.id === tag.id)
-          )
-        );
-      });
-      if (nextTag && !nextTag.parent_tags?.length) {
-        tagSiblings[nextTag.id] = flattenedTags.filter(
-          tag => !tag.parent_tags?.length && tag.id !== nextTag.id
-        ) as T[];
-      }
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
-    }
-
-    return tagSiblings;
-  }, [flattenedTags, tagTree, tagChildTags]);
 
   const tagOrder = useMemo(() => {
     const order: T[] = [];
