@@ -22,6 +22,7 @@ const authenticate = async (ctx) => {
   const permissionsQuery = strapi.db.query(
     "api::parameterized-permission.parameterized-permission"
   );
+  const permissionsPopulate = ["users_permissions_user", "archive_tag"];
 
   if (token) {
     const { id } = token;
@@ -53,6 +54,7 @@ const authenticate = async (ctx) => {
           id: { $eq: user.id },
         },
       },
+      populate: permissionsPopulate,
     });
   } else {
     permissions = await permissionsQuery.findMany({
@@ -61,6 +63,7 @@ const authenticate = async (ctx) => {
           id: { $null: true },
         },
       },
+      populate: permissionsPopulate,
     });
   }
 
