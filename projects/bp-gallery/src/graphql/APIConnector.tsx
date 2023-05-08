@@ -3081,7 +3081,11 @@ export type GetPersonTagsWithThumbnailQuery = {
                                 data?:
                                   | {
                                       attributes?:
-                                        | { formats?: any | null | undefined; provider: string }
+                                        | {
+                                            formats?: any | null | undefined;
+                                            url: string;
+                                            provider: string;
+                                          }
                                         | null
                                         | undefined;
                                     }
@@ -3104,7 +3108,11 @@ export type GetPersonTagsWithThumbnailQuery = {
                                 data?:
                                   | {
                                       attributes?:
-                                        | { formats?: any | null | undefined; provider: string }
+                                        | {
+                                            formats?: any | null | undefined;
+                                            url: string;
+                                            provider: string;
+                                          }
                                         | null
                                         | undefined;
                                     }
@@ -5637,6 +5645,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      url
                       provider
                     }
                   }
@@ -5654,6 +5663,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      url
                       provider
                     }
                   }

@@ -31,7 +31,7 @@ type UploadOptions = {
 export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadOptions = {}) => {
   const { highQuality = true, pictureOrigin = PictureOrigin.REMOTE, fallback = '' } = options;
 
-  const previewUrl = (media?.formats?.small || media?.formats?.thumbnail)?.url as Maybe<string>;
+  const previewUrl = (media?.formats?.small ?? media?.formats?.thumbnail)?.url as Maybe<string>;
 
   // depending on highQuality, prioritize either full resolution URL or reduced resolution URL, fallback to the other one or custom fallback
   const imgSrc = (highQuality ? media?.url ?? previewUrl : previewUrl ?? media?.url) ?? fallback;
