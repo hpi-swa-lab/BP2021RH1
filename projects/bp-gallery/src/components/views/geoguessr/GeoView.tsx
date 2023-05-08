@@ -74,7 +74,7 @@ const GeoView = () => {
   }, [archives]);
 
   const getNextPicture = () => {
-    return pictureQueue.current.shift() ?? fallbackPictureId;
+    return pictureQueue.current.shift() ?? '';
   };
 
   const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
@@ -84,14 +84,14 @@ const GeoView = () => {
 
   const onNextPicture = () => {
     const nextPicture = getNextPicture();
-    nextPicture ? setPictureId(nextPicture) : setGameOver(true);
+    nextPicture !== '' ? setPictureId(nextPicture) : setGameOver(true);
   };
 
   const { data: geoData } = useGetPictureGeoInfoQuery({ variables: { pictureId } });
   const allGuesses: FlatPictureGeoInfo[] | undefined =
     useSimplifiedQueryResponseData(geoData)?.pictureGeoInfos;
   return (
-    <div>
+    <div className='h-full'>
       <Modal
         open={modalOpen}
         onClose={() => {
