@@ -4,14 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStorageState } from 'react-use-storage-state';
 import {
+  Collection,
   useGetAllPicturesByArchiveQuery,
   useGetPictureGeoInfoQuery,
+  useGetPicturesForCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 import { FlatArchiveTag, FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
+import { useFlag } from '../../../helpers/growthbook';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const allPictureIds: string[] = archives
@@ -43,6 +46,8 @@ const getTodaysPictureQueue = (pictureIds: string[]) => {
   return list;
 };
 
+const getGeoCollectionPictureIds = (geoCollection: Collection) => {};
+
 const GeoView = () => {
   const { t } = useTranslation();
   const fallbackPictureId = '3';
@@ -63,15 +68,26 @@ const GeoView = () => {
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
+  const isGeoCollectionPictures = useFlag('geopictures_from_collection');
+  const geoCollectionId = '357';
+  const { data: geoCollectionPictureData } = useGetPicturesForCollectionQuery({
+    variables: { collectionId: geoCollectionId },
+  });
+  const geoCollectionPictureIds: string[] | undefined = useSimplifiedQueryResponseData(
+    geoCollectionPictureData
+  )?.collection?.pictures?.map(picture => picture?.id ?? '');
+
   useEffect(() => {
     if (!archives) {
       return;
     }
-    const allPictureIds = getAllPictureIds(archives);
+    const allPictureIds = isGeoCollectionPictures
+      ? geoCollectionPictureIds ?? ['3']
+      : getAllPictureIds(archives);
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
     setPictureId(getNextPicture());
-  }, [archives]);
+  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures]);
 
   const getNextPicture = () => {
     return pictureQueue.current.shift() ?? '';
