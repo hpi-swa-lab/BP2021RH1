@@ -21,6 +21,7 @@ export default {
                     data {
                       attributes {
                         formats
+                        provider
                       }
                     }
                   }
@@ -37,6 +38,7 @@ export default {
                     data {
                       attributes {
                         formats
+                        provider
                       }
                     }
                   }
