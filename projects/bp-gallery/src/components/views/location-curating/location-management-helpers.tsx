@@ -4,6 +4,47 @@ import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { useDeleteTagAndChildren, useDeleteSingleTag } from './delete-tag-helpers';
 import { useTranslation } from 'react-i18next';
+import { ComponentCommonSynonymsInput } from '../../../graphql/APIConnector';
+
+export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
+  const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const [updateTagParentMutation] = updateTagParentMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+
+  const setParentTags = (parentIDs: string[]) => {
+    updateTagParentMutation({
+      variables: {
+        tagID: locationTag.id,
+        parentIDs: parentIDs,
+      },
+    });
+  };
+
+  return { setParentTags };
+};
+
+export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
+  const { updateTagChildMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const [updateTagChildMutation] = updateTagChildMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+
+  const setChildTags = (childIDs: string[]) => {
+    updateTagChildMutation({
+      variables: {
+        tagID: locationTag.id,
+        childIDs: childIDs,
+      },
+    });
+  };
+
+  return { setChildTags };
+};
 
 export const useSetVisible = (locationTag: FlatTag, refetch: () => void) => {
   const { updateVisibilityMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
@@ -12,16 +53,36 @@ export const useSetVisible = (locationTag: FlatTag, refetch: () => void) => {
       refetch();
     },
   });
-  const setVisible = () => {
+  const setVisible = (value: boolean) => {
     updateVisibilityMutation({
       variables: {
         tagId: locationTag.id,
-        visible: !locationTag.visible,
+        visible: value,
       },
     });
   };
 
   return { setVisible };
+};
+
+export const useSetRoot = (locationTag: FlatTag, refetch: () => void) => {
+  const { updateRootMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const [updateRootMutation] = updateRootMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+
+  const setTagAsRoot = async (isRoot: boolean) => {
+    updateRootMutation({
+      variables: {
+        tagId: locationTag.id,
+        root: isRoot,
+      },
+    });
+  };
+
+  return { setTagAsRoot };
 };
 
 export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parentTag?: FlatTag) => {
@@ -188,6 +249,31 @@ export const useDeleteSynonym = (locationTag: FlatTag, refetch: () => void) => {
   return { deleteSynonym };
 };
 
+export const useAddSynonym = (locationTag: FlatTag, refetch: () => void) => {
+  const { updateSynonymsMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const [updateSynonymsMutation] = updateSynonymsMutationSource({
+    onCompleted: _ => {
+      refetch();
+    },
+  });
+  const addSynonym = (synonymName: string) => {
+    if (synonymName.length) {
+      const synonyms: ComponentCommonSynonymsInput[] =
+        locationTag.synonyms
+          ?.filter(s => s?.name !== '' && s?.name !== synonymName)
+          .map(s => ({ name: s?.name })) ?? [];
+      synonyms.push({ name: synonymName });
+      updateSynonymsMutation({
+        variables: {
+          tagId: locationTag.id,
+          synonyms,
+        },
+      });
+    }
+  };
+  return { addSynonym };
+};
+
 const useDeleteLocalTagClone = (locationTag: FlatTag, refetch: () => void, parentTag?: FlatTag) => {
   const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateTagParentMutation] = updateTagParentMutationSource({
@@ -297,4 +383,55 @@ export const useDeleteTag = (locationTag: FlatTag, refetch: () => void, parentTa
   };
 
   return { deleteTag };
+};
+
+export const useUpdateName = (locationTag: FlatTag, refetch: () => void) => {
+  const { updateTagNameMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const [updateTagNameMutation] = updateTagNameMutationSource({
+    onCompleted: _ => {
+      refetch();
+    },
+  });
+
+  const updateName = (newName: string = '') => {
+    updateTagNameMutation({
+      variables: {
+        name: newName,
+        tagId: locationTag.id,
+      },
+    });
+  };
+
+  return { updateName };
+};
+
+export const useCreateNewTag = (refetch: () => void) => {
+  const dialog = useDialog();
+  const { t } = useTranslation();
+  const { createTagMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const [createTagMutation] = createTagMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+
+  const createNewTag = async (potentialSiblings?: FlatTag[], parent?: FlatTag) => {
+    const tagName = await dialog({
+      preset: DialogPreset.INPUT_FIELD,
+      title: parent
+        ? t(`tag-panel.name-of-sub-${TagType.LOCATION}`, { parent: parent.name })
+        : t(`tag-panel.name-of-${TagType.LOCATION}`),
+    });
+    if (tagName?.length && !potentialSiblings?.some(tag => tag.name === tagName)) {
+      createTagMutation({
+        variables: {
+          name: tagName,
+          parentIDs: parent ? [parent.id] : [],
+          accepted: true,
+        },
+      });
+    }
+  };
+
+  return { createNewTag };
 };

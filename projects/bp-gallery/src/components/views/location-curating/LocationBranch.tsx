@@ -1,11 +1,10 @@
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
-import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import LocationEntry from './LocationEntry';
 import './LocationEntry.scss';
+import { useCreateNewTag } from './location-management-helpers';
 
 const LocationBranch = ({
   locationTag,
@@ -18,11 +17,7 @@ const LocationBranch = ({
   refetch: () => void;
   type: TagType;
 }) => {
-  const dialog = useDialog();
   const { t } = useTranslation();
-
-  const { createSubTagMutationSource } = useGenericTagEndpoints(type);
-
   const [showMore, setShowMore] = useState<boolean>(false);
 
   const renderSubBranch = () => {
@@ -41,30 +36,7 @@ const LocationBranch = ({
     }
   };
 
-  const [createSubLocationTag] = createSubTagMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const addNewSubLocation = async () => {
-    const locationName = await dialog({
-      preset: DialogPreset.INPUT_FIELD,
-      title: t(`tag-panel.name-of-sub-${type}`, { parent: locationTag.name }),
-    });
-    if (
-      locationName?.length &&
-      !locationTag.child_tags.some((child: any) => child.name === locationName)
-    ) {
-      createSubLocationTag({
-        variables: {
-          name: locationName,
-          parentIDs: [locationTag.id],
-          accepted: true,
-        },
-      });
-    }
-  };
+  const { createNewTag } = useCreateNewTag(refetch);
 
   return (
     <div className='location-branch-container'>
@@ -82,7 +54,12 @@ const LocationBranch = ({
       {showMore && (
         <div className='sub-location-container'>
           {renderSubBranch()}
-          <div className='add-tag-container' onClick={addNewSubLocation}>
+          <div
+            className='add-tag-container'
+            onClick={() => {
+              createNewTag(locationTag.child_tags as FlatTag[], locationTag as FlatTag);
+            }}
+          >
             <Add className='add-tag-icon' />
             <div className='add-tag-text'>
               {t(`tag-panel.add-sub-${type}`, { parent: locationTag.name })}

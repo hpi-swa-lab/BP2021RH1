@@ -16,8 +16,7 @@ import './LocationManagementDialog.scss';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import {
-  ComponentCommonSynonymsInput,
-  useCreateSubLocationMutation,
+  useCreateLocationMutation,
   useCreateSuperLocationMutation,
   useGetLocationTagByIdQuery,
 } from '../../../graphql/APIConnector';
@@ -35,6 +34,16 @@ import {
   useGetTagSupertagList,
   useGetTagTree,
 } from './tag-structure-helpers';
+import {
+  useAcceptTag,
+  useAddSynonym,
+  useDeleteSynonym,
+  useSetChildTags,
+  useSetParentTags,
+  useSetRoot,
+  useSetVisible,
+  useUpdateName,
+} from './location-management-helpers';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -44,7 +53,7 @@ const LocationManagementDialogPreset = ({
   dialogProps: DialogProps;
 }) => {
   const history: History = useHistory();
-  const refetch = dialogProps.content.refetch;
+  const refetch: () => void = dialogProps.content.refetch;
   const [parentTag, setParentTag] = useState<any>(dialogProps.content.parentTag);
   const [parentTagHistory, setParentTagHistory] = useState<any[]>([]);
 
@@ -57,17 +66,7 @@ const LocationManagementDialogPreset = ({
   const locationTag: FlatTag =
     useSimplifiedQueryResponseData(data)?.locationTag ?? dialogProps.content.locationTag;
 
-  const {
-    updateSynonymsMutationSource,
-    allTagsQuery,
-    updateTagParentMutationSource,
-    updateTagChildMutationSource,
-    updateTagNameMutationSource,
-    updateTagAcceptanceMutationSource,
-    updateVisibilityMutationSource,
-    tagPictures,
-    updateRootMutationSource,
-  } = useGenericTagEndpoints(TagType.LOCATION);
+  const { allTagsQuery, tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
 
   const allTagQueryResponse = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(allTagQueryResponse.data);
@@ -90,55 +89,19 @@ const LocationManagementDialogPreset = ({
 
   const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
 
-  const [updateSynonymsMutation] = updateSynonymsMutationSource({
-    onCompleted: _ => {
-      refetch();
-    },
+  const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
+  const { addSynonym } = useAddSynonym(locationTag, refetch);
+  const { updateName } = useUpdateName(locationTag, refetch);
+  const { acceptTag } = useAcceptTag(locationTag, refetch);
+  const { setVisible } = useSetVisible(locationTag, refetch);
+  const { setTagAsRoot } = useSetRoot(locationTag, refetch);
+  const { setParentTags } = useSetParentTags(locationTag, refetch);
+  const { setChildTags } = useSetChildTags(locationTag, refetch);
+
+  const [newLocationTagMutation, newLocationTagMutationResponse] = useCreateLocationMutation({
+    refetchQueries: ['getAllLocationTags'],
+    awaitRefetchQueries: true,
   });
-
-  const deleteSynonym = async (tagId: string, synonymName: string) => {
-    updateSynonymsMutation({
-      variables: {
-        tagId,
-        synonyms:
-          locationTag.synonyms?.filter(s => s?.name !== '' && s?.name !== synonymName) ??
-          ([] as any),
-      },
-    });
-  };
-
-  const addSynonym = async (tagId: string, tagName: string, synonymName: string) => {
-    if (!tagId) return;
-    if (synonymName.length) {
-      const synonyms: ComponentCommonSynonymsInput[] =
-        locationTag.synonyms?.map(s => ({ name: s?.name })) ?? [];
-      synonyms.push({ name: synonymName });
-      updateSynonymsMutation({
-        variables: {
-          tagId,
-          synonyms,
-        },
-      });
-    }
-  };
-
-  const [updateTagParentMutation] = updateTagParentMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const [updateTagChildMutation] = updateTagChildMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const [newChildLocationTagMutation, newChildLocationTagMutationResponse] =
-    useCreateSubLocationMutation({
-      refetchQueries: ['getAllLocationTags'],
-      awaitRefetchQueries: true,
-    });
 
   const [newParentLocationTagMutation, newParentLocationTagMutationResponse] =
     useCreateSuperLocationMutation({
@@ -146,89 +109,10 @@ const LocationManagementDialogPreset = ({
       awaitRefetchQueries: true,
     });
 
-  const [updateTagNameMutation] = updateTagNameMutationSource({
-    onCompleted: _ => {
-      refetch();
-    },
-  });
-
-  const updateName = async (tagID: string, tagName: string = '') => {
-    updateTagNameMutation({
-      variables: {
-        name: tagName,
-        tagId: tagID,
-      },
-    });
-  };
-
-  const [updateAcceptedMutation] = updateTagAcceptanceMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const acceptTag = async (tagId: string) => {
-    updateAcceptedMutation({
-      variables: {
-        tagId,
-        accepted: true,
-      },
-    });
-  };
-
-  const [visible, setVisible] = useState<boolean>(locationTag.visible ?? false);
+  const [localVisibility, setLocalVisibility] = useState<boolean>(locationTag.visible ?? false);
   const [isRoot, setIsRoot] = useState<boolean>(
     locationTag.root || !locationTag.parent_tags?.length
   );
-
-  useEffect(() => {
-    setVisible(locationTag.visible ?? false);
-    setIsRoot(locationTag.root || !locationTag.parent_tags?.length);
-  }, [locationTag]);
-
-  const [updateVisibilityMutation] = updateVisibilityMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const [updateRootMutation] = updateRootMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const setVisibility = async (tagId: string, tagVisible: boolean) => {
-    setVisible(tagVisible);
-    updateVisibilityMutation({
-      variables: {
-        tagId: tagId,
-        visible: tagVisible,
-      },
-    });
-  };
-
-  const setTagAsRoot = async (tagId: string, tagIsRoot: boolean) => {
-    if (tagIsRoot) {
-      setIsRoot(tagIsRoot);
-      updateRootMutation({
-        variables: {
-          tagId: tagId,
-          root: tagIsRoot,
-        },
-      });
-    } else {
-      if (locationTag.parent_tags?.length) {
-        setIsRoot(tagIsRoot);
-        updateRootMutation({
-          variables: {
-            tagId: tagId,
-            root: tagIsRoot,
-          },
-        });
-      }
-    }
-  };
 
   const currentSiblings = [
     ...(tagSiblingTags && locationTag.id in tagSiblingTags ? tagSiblingTags[locationTag.id] : []),
@@ -241,6 +125,8 @@ const LocationManagementDialogPreset = ({
   const [changed, setChanged] = useState<boolean>(false);
 
   useEffect(() => {
+    setLocalVisibility(locationTag.visible ?? false);
+    setIsRoot(locationTag.root || !locationTag.parent_tags?.length);
     setChanged(false);
     title.current = locationTag.name;
   }, [locationTag]);
@@ -269,7 +155,7 @@ const LocationManagementDialogPreset = ({
                     margin='none'
                     defaultValue={title.current}
                     onBlur={event => {
-                      updateName(locationTag.id, event.target.value);
+                      updateName(event.target.value);
                       setEditName(!editName);
                     }}
                     onChange={event => {
@@ -292,7 +178,7 @@ const LocationManagementDialogPreset = ({
                   <div className='location-management-accept-location'>
                     <IconButton
                       onClick={() => {
-                        acceptTag(locationTag.id);
+                        acceptTag();
                       }}
                     >
                       <Check />
@@ -335,7 +221,7 @@ const LocationManagementDialogPreset = ({
                               key={synonym!.name}
                               label={synonym!.name}
                               className='location-management-synonym'
-                              onDelete={() => deleteSynonym(locationTag.id, synonym!.name)}
+                              onDelete={() => deleteSynonym(synonym!.name)}
                             />
                           </div>
                         ))}
@@ -346,11 +232,7 @@ const LocationManagementDialogPreset = ({
                         margin='dense'
                         onKeyDown={(event: any) => {
                           if (event.key === 'Enter' && event.target.value.length > 0) {
-                            addSynonym(
-                              locationTag.id,
-                              locationTag.name,
-                              event.target.value as string
-                            );
+                            addSynonym(event.target.value as string);
                             event.target.value = '';
                           }
                         }}
@@ -369,12 +251,7 @@ const LocationManagementDialogPreset = ({
                       }
                       allTags={(flattenedTags as any) ?? []}
                       onChange={locations => {
-                        updateTagChildMutation({
-                          variables: {
-                            tagID: locationTag.id,
-                            childIDs: locations.map(t => t.id),
-                          },
-                        });
+                        setChildTags(locations.map(t => t.id));
                       }}
                       noContentText={''}
                       fixedTag={locationTag}
@@ -383,7 +260,7 @@ const LocationManagementDialogPreset = ({
                         setParentTag(locationTag);
                         setLocationTagID(id);
                       }}
-                      createChildMutation={newChildLocationTagMutation}
+                      createChildMutation={newLocationTagMutation}
                     />
                   </PictureInfoField>
                 </div>
@@ -400,12 +277,7 @@ const LocationManagementDialogPreset = ({
                       }
                       allTags={(flattenedTags as any) ?? []}
                       onChange={locations => {
-                        updateTagParentMutation({
-                          variables: {
-                            tagID: locationTag.id,
-                            parentIDs: locations.map(t => t.id),
-                          },
-                        });
+                        setParentTags(locations.map(t => t.id));
                       }}
                       noContentText={''}
                       fixedTag={locationTag}
@@ -437,11 +309,12 @@ const LocationManagementDialogPreset = ({
                 >
                   Bilder Anzeigen
                 </Button>
-                {visible ? (
+                {localVisibility ? (
                   <Button
                     className='location-management-show-button'
                     onClick={() => {
-                      setVisibility(locationTag.id, false);
+                      setVisible(false);
+                      setLocalVisibility(false);
                     }}
                     endIcon={<Visibility />}
                   >
@@ -451,7 +324,8 @@ const LocationManagementDialogPreset = ({
                   <Button
                     className='location-management-not-show-button'
                     onClick={() => {
-                      setVisibility(locationTag.id, true);
+                      setVisible(true);
+                      setLocalVisibility(true);
                     }}
                     endIcon={<VisibilityOff />}
                   >
@@ -462,7 +336,10 @@ const LocationManagementDialogPreset = ({
                   <Button
                     className='location-management-root-button'
                     onClick={() => {
-                      setTagAsRoot(locationTag.id, false);
+                      if (locationTag.parent_tags?.length) {
+                        setTagAsRoot(false);
+                        setIsRoot(false);
+                      }
                     }}
                     endIcon={<AccountTree />}
                   >
@@ -472,7 +349,8 @@ const LocationManagementDialogPreset = ({
                   <Button
                     className='location-management-not-root-button'
                     onClick={() => {
-                      setTagAsRoot(locationTag.id, true);
+                      setTagAsRoot(true);
+                      setIsRoot(true);
                     }}
                     endIcon={<AccountTree />}
                   >

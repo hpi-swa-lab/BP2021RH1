@@ -11,11 +11,11 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
+  useCreateKeywordMutation,
   useCreateKeywordTagMutation,
+  useCreateLocationMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
-  useCreateSubKeywordMutation,
-  useCreateSubLocationMutation,
   useGetAllCollectionsLazyQuery,
   useGetAllKeywordTagsLazyQuery,
   useGetAllLocationTagsLazyQuery,
@@ -91,15 +91,16 @@ const PictureInfo = ({
   });
 
   const [newChildLocationTagMutation, newChildLocationTagMutationResponse] =
-    useCreateSubLocationMutation({
+    useCreateLocationMutation({
       refetchQueries: ['getAllLocationTags'],
       awaitRefetchQueries: true,
     });
-  const [newChildKeywordTagMutation, newChildKeywordTagMutationResponse] =
-    useCreateSubKeywordMutation({
+  const [newChildKeywordTagMutation, newChildKeywordTagMutationResponse] = useCreateKeywordMutation(
+    {
       refetchQueries: ['getAllKeywordTags'],
       awaitRefetchQueries: true,
-    });
+    }
+  );
 
   const isSaving =
     newPersonTagMutationResponse.loading ||

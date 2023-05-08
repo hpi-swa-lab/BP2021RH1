@@ -161,7 +161,7 @@ const LocationEntry = ({
                 <IconButton
                   onClick={e => {
                     e.stopPropagation();
-                    setVisible();
+                    setVisible(!locationTag.visible);
                   }}
                 >
                   {locationTag.visible ? <Visibility /> : <VisibilityOffOutlined />}

@@ -2,8 +2,6 @@ import { useMemo } from 'react';
 import {
   useCreateKeywordMutation,
   useCreateLocationMutation,
-  useCreateSubKeywordMutation,
-  useCreateSubLocationMutation,
   useDeleteKeywordTagMutation,
   useDeleteLocationTagMutation,
   useDeletePersonTagMutation,
@@ -48,7 +46,6 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateVisibilityMutationSource: useUpdateLocationVisibilityMutation,
           updateTagParentMutationSource: useUpdateLocationParentMutation,
           createTagMutationSource: useCreateLocationMutation,
-          createSubTagMutationSource: useCreateSubLocationMutation,
           updateTagAcceptanceMutationSource: useUpdateLocationAcceptanceMutation,
           updateTagChildMutationSource: useUpdateLocationChildMutation,
           tagPictures: useGetPicturesForLocationQuery,
@@ -69,9 +66,6 @@ const useGenericTagEndpoints = (type: TagType) => {
             return [dummy];
           },
           createTagMutationSource: (dummy: any) => {
-            return [dummy];
-          },
-          createSubTagMutationSource: (dummy: any) => {
             return [dummy];
           },
           updateTagAcceptanceMutationSource: (dummy: any) => {
@@ -95,7 +89,6 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
           updateTagParentMutationSource: useUpdateKeywordParentMutation,
           createTagMutationSource: useCreateKeywordMutation,
-          createSubTagMutationSource: useCreateSubKeywordMutation,
           updateTagAcceptanceMutationSource: useUpdateKeywordAcceptanceMutation,
           updateTagChildMutationSource: (dummy: any) => {
             return [dummy];

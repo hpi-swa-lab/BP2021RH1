@@ -2933,23 +2933,11 @@ export type UpdateKeywordAcceptanceMutation = {
 
 export type CreateKeywordMutationVariables = Exact<{
   name: Scalars['String'];
-  accepted?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-export type CreateKeywordMutation = {
-  createKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
-};
-
-export type CreateSubKeywordMutationVariables = Exact<{
-  name: Scalars['String'];
   parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
   accepted?: InputMaybe<Scalars['Boolean']>;
 }>;
 
-export type CreateSubKeywordMutation = {
+export type CreateKeywordMutation = {
   createKeywordTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
@@ -3173,23 +3161,11 @@ export type GetPicturesForLocationQuery = {
 
 export type CreateLocationMutationVariables = Exact<{
   name: Scalars['String'];
-  accepted?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-export type CreateLocationMutation = {
-  createLocationTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
-};
-
-export type CreateSubLocationMutationVariables = Exact<{
-  name: Scalars['String'];
   parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
   accepted?: InputMaybe<Scalars['Boolean']>;
 }>;
 
-export type CreateSubLocationMutation = {
+export type CreateLocationMutation = {
   createLocationTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
@@ -5452,8 +5428,8 @@ export type UpdateKeywordAcceptanceMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateKeywordDocument = gql`
-  mutation createKeyword($name: String!, $accepted: Boolean) {
-    createKeywordTag(data: { name: $name, accepted: $accepted }) {
+  mutation createKeyword($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
+    createKeywordTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
       data {
         id
       }
@@ -5480,6 +5456,7 @@ export type CreateKeywordMutationFn = Apollo.MutationFunction<
  * const [createKeywordMutation, { data, loading, error }] = useCreateKeywordMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      parentIDs: // value for 'parentIDs'
  *      accepted: // value for 'accepted'
  *   },
  * });
@@ -5501,62 +5478,6 @@ export type CreateKeywordMutationResult = Apollo.MutationResult<CreateKeywordMut
 export type CreateKeywordMutationOptions = Apollo.BaseMutationOptions<
   CreateKeywordMutation,
   CreateKeywordMutationVariables
->;
-
-export const CreateSubKeywordDocument = gql`
-  mutation createSubKeyword($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
-    createKeywordTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type CreateSubKeywordMutationFn = Apollo.MutationFunction<
-  CreateSubKeywordMutation,
-  CreateSubKeywordMutationVariables
->;
-
-/**
- * __useCreateSubKeywordMutation__
- *
- * To run a mutation, you first call `useCreateSubKeywordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSubKeywordMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSubKeywordMutation, { data, loading, error }] = useCreateSubKeywordMutation({
- *   variables: {
- *      name: // value for 'name'
- *      parentIDs: // value for 'parentIDs'
- *      accepted: // value for 'accepted'
- *   },
- * });
- */
-export function useCreateSubKeywordMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateSubKeywordMutation,
-    CreateSubKeywordMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateSubKeywordMutation, CreateSubKeywordMutationVariables>(
-    CreateSubKeywordDocument,
-    options
-  );
-}
-
-export type CreateSubKeywordMutationHookResult = ReturnType<typeof useCreateSubKeywordMutation>;
-
-export type CreateSubKeywordMutationResult = Apollo.MutationResult<CreateSubKeywordMutation>;
-
-export type CreateSubKeywordMutationOptions = Apollo.BaseMutationOptions<
-  CreateSubKeywordMutation,
-  CreateSubKeywordMutationVariables
 >;
 
 export const UpdateKeywordParentDocument = gql`
@@ -6028,8 +5949,8 @@ export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
 >;
 
 export const CreateLocationDocument = gql`
-  mutation createLocation($name: String!, $accepted: Boolean) {
-    createLocationTag(data: { name: $name, accepted: $accepted }) {
+  mutation createLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
+    createLocationTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
       data {
         id
       }
@@ -6056,6 +5977,7 @@ export type CreateLocationMutationFn = Apollo.MutationFunction<
  * const [createLocationMutation, { data, loading, error }] = useCreateLocationMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      parentIDs: // value for 'parentIDs'
  *      accepted: // value for 'accepted'
  *   },
  * });
@@ -6077,62 +5999,6 @@ export type CreateLocationMutationResult = Apollo.MutationResult<CreateLocationM
 export type CreateLocationMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationMutation,
   CreateLocationMutationVariables
->;
-
-export const CreateSubLocationDocument = gql`
-  mutation createSubLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
-    createLocationTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type CreateSubLocationMutationFn = Apollo.MutationFunction<
-  CreateSubLocationMutation,
-  CreateSubLocationMutationVariables
->;
-
-/**
- * __useCreateSubLocationMutation__
- *
- * To run a mutation, you first call `useCreateSubLocationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSubLocationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSubLocationMutation, { data, loading, error }] = useCreateSubLocationMutation({
- *   variables: {
- *      name: // value for 'name'
- *      parentIDs: // value for 'parentIDs'
- *      accepted: // value for 'accepted'
- *   },
- * });
- */
-export function useCreateSubLocationMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateSubLocationMutation,
-    CreateSubLocationMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateSubLocationMutation, CreateSubLocationMutationVariables>(
-    CreateSubLocationDocument,
-    options
-  );
-}
-
-export type CreateSubLocationMutationHookResult = ReturnType<typeof useCreateSubLocationMutation>;
-
-export type CreateSubLocationMutationResult = Apollo.MutationResult<CreateSubLocationMutation>;
-
-export type CreateSubLocationMutationOptions = Apollo.BaseMutationOptions<
-  CreateSubLocationMutation,
-  CreateSubLocationMutationVariables
 >;
 
 export const CreateSuperLocationDocument = gql`

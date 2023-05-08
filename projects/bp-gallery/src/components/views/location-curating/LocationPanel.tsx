@@ -4,20 +4,21 @@ import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
-import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
 import { useGetTagTree } from './tag-structure-helpers';
+import { useCreateNewTag } from './location-management-helpers';
 
 const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
-  const dialog = useDialog();
   const { t } = useTranslation();
 
-  const { allTagsQuery, createTagMutationSource } = useGenericTagEndpoints(type as TagType);
+  const { allTagsQuery } = useGenericTagEndpoints(type as TagType);
 
   const { data, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
+
+  const { createNewTag } = useCreateNewTag(refetch);
 
   const setUnacceptedSubtagsCount = useCallback((tag: any) => {
     if (!tag.child_tags.length) {
@@ -43,27 +44,6 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
     return sortedTagTree;
   }, [sortedTagTree, setUnacceptedSubtagsCount]);
 
-  const [createLocationTag] = createTagMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
-  });
-
-  const addNewLocation = async () => {
-    const collectionName = await dialog({
-      preset: DialogPreset.INPUT_FIELD,
-      title: t(`tag-panel.name-of-${type}`),
-    });
-    if (collectionName?.length && !tagTree?.some((child: any) => child.name === collectionName)) {
-      createLocationTag({
-        variables: {
-          name: collectionName,
-          accepted: true,
-        },
-      });
-    }
-  };
-
   return (
     <div>
       <div className='location-panel-header'>
@@ -73,7 +53,12 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
         {tagTree?.map(tag => (
           <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} type={type as TagType} />
         ))}
-        <div className='add-tag-container' onClick={addNewLocation}>
+        <div
+          className='add-tag-container'
+          onClick={() => {
+            createNewTag(tagTree);
+          }}
+        >
           <Add className='add-tag-icon' />
           <div className='add-tag-text'>{t(`tag-panel.add-${type}`)}</div>
         </div>
