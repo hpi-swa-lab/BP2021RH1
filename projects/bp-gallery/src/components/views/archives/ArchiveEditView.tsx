@@ -20,13 +20,17 @@ interface ArchiveEditViewProps {
   archiveId: string;
 }
 
+interface PaypalProperties {
+  paypalClient?: string;
+  paypalDonationText?: string;
+  paypalPurpose?: string;
+}
+
 interface ArchiveForm {
   name: string;
   shortDescription: string;
   longDescription: string;
-  paypalClient: string;
-  paypalDonationText: string;
-  paypalPurpose: string;
+  paypal: PaypalProperties;
   logo?: File;
   links: LinkInfo[];
   dirty: boolean;
@@ -65,9 +69,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     name: '',
     shortDescription: '',
     longDescription: '',
-    paypalClient: '',
-    paypalDonationText: '',
-    paypalPurpose: '',
+    paypal: { paypalClient: '', paypalDonationText: '', paypalPurpose: '' },
     links: [],
     dirty: false,
   });
@@ -78,9 +80,11 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       name: archive?.name ?? '',
       shortDescription: archive?.shortDescription ?? '',
       longDescription: archive?.longDescription ?? '',
-      paypalClient: archive?.paypalClient ?? '',
-      paypalDonationText: archive?.paypalDonationText ?? '',
-      paypalPurpose: archive?.paypalPurpose ?? '',
+      paypal: {
+        paypalClient: archive?.paypalClient ?? '',
+        paypalDonationText: archive?.paypalDonationText ?? '',
+        paypalPurpose: archive?.paypalPurpose ?? '',
+      },
       links: archive?.links ?? [],
     });
   }, [archive]);
@@ -151,9 +155,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               name: form.name,
               shortDescription: form.shortDescription,
               longDescription: form.longDescription,
-              paypalClient: form.paypalClient,
-              paypalDonationText: form.paypalDonationText,
-              paypalPurpose: form.paypalPurpose,
+              paypalClient: form.paypal.paypalClient,
+              paypalDonationText: form.paypal.paypalDonationText,
+              paypalPurpose: form.paypal.paypalPurpose,
               logo: ids[0],
             },
           },
@@ -167,9 +171,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
             name: form.name,
             shortDescription: form.shortDescription,
             longDescription: form.longDescription,
-            paypalClient: form.paypalClient,
-            paypalDonationText: form.paypalDonationText,
-            paypalPurpose: form.paypalPurpose,
+            paypalClient: form.paypal.paypalClient,
+            paypalDonationText: form.paypal.paypalDonationText,
+            paypalPurpose: form.paypal.paypalPurpose,
           },
         },
       });
@@ -256,25 +260,27 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           }}
           onBlur={async value => {
             if (value === '') {
-              updateForm({ paypalClient: '', dirty: true });
+              updateForm({ paypal: { paypalClient: '' }, dirty: true });
               return;
             }
             const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${value}`);
-            response.ok ? updateForm({ paypalClient: value, dirty: true }) : '';
+            if (response.ok) {
+              updateForm({ paypal: { paypalClient: value }, dirty: true });
+            }
           }}
         />
         <ArchiveInputField
           defaultValue={archive.paypalDonationText ?? ''}
           label={t('archives.edit.paypal.donation-label')}
           id='donationText'
-          onBlur={value => updateForm({ paypalDonationText: value, dirty: true })}
+          onBlur={value => updateForm({ paypal: { paypalDonationText: value }, dirty: true })}
           placeholder={t('archives.edit.paypal.donation-placeholder')}
         />
         <ArchiveInputField
           defaultValue={archive.paypalPurpose ?? ''}
           label={t('archives.edit.paypal.purpose-label')}
           id='purpose'
-          onBlur={value => updateForm({ paypalPurpose: value, dirty: true })}
+          onBlur={value => updateForm({ paypal: { paypalPurpose: value }, dirty: true })}
           placeholder={t('archives.edit.paypal.purpose-placeholder')}
         />
       </form>
