@@ -1,3 +1,5 @@
+import { DB } from './DB';
+import { ParameterizedPermission, UsersPermissionsUser } from './db-types';
 import * as groups from './groups';
 
 export enum OperationType {
@@ -47,6 +49,7 @@ type Section = (typeof sections)[number];
 
 export type GroupSettings = {
   section: Section;
+  needsParameters?: Parameter[];
 };
 
 export type Group = {
@@ -55,8 +58,26 @@ export type Group = {
 
 export type GroupName = keyof typeof groups;
 
+export type Variables = Record<string, any>;
+
+export type IsAllowedContext = {
+  parameters: ParameterizedPermission;
+  variables: Variables;
+  db: DB;
+  permissions: ParameterizedPermission[];
+  user: UsersPermissionsUser;
+};
+
+export type IsAllowed = (context: IsAllowedContext) => Promise<boolean>;
+
+export type Parameter = Exclude<
+  keyof ParameterizedPermission,
+  'id' | 'operation_name' | 'users_permissions_user'
+>;
+
 export type Operation = {
   document: GraphQLDocument;
+  isAllowed?: IsAllowed;
 } & (
   | {
       group: GroupName;
