@@ -1,18 +1,3 @@
-//.paypal-parent {
-//  display: grid;
-//  grid-template-rows: 0px;
-//}
-//
-//.paypal-parent > div {
-//  height: auto;
-//  overflow: hidden;
-//}
-//
-//.parent-active {
-//  display: grid;
-//  grid-template-rows: 1fr;
-//  transition: grid-template-rows 1s;
-//}
 .paypal-parent {
   overflow: hidden;
   max-height: 0px;
