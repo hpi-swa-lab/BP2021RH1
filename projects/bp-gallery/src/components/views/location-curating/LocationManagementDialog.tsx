@@ -24,12 +24,17 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
 import TagSelectionField from '../picture/sidebar/picture-info/TagSelectionField';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Loading from '../../common/Loading';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagChildren, useGetTagSiblings, useGetTagTree } from './tag-structure-helpers';
+import {
+  useGetTagChildren,
+  useGetTagSiblings,
+  useGetTagSupertagList,
+  useGetTagTree,
+} from './tag-structure-helpers';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -83,44 +88,7 @@ const LocationManagementDialogPreset = ({
     !parentTag
   );
 
-  const tagSupertagList = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagSupertags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[][]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-
-      // override if clone was filled already to avoid duplicates
-      if (nextTag && tagSupertags[nextTag.id].length > 0) {
-        tagSupertags[nextTag.id] = [];
-      }
-
-      if (nextTag && nextTag.root) {
-        tagSupertags[nextTag.id].push([]);
-      }
-
-      nextTag?.parent_tags?.forEach(parent => {
-        tagSupertags[parent.id].forEach(parentParents => {
-          tagSupertags[nextTag.id].push([...parentParents, parent]);
-        });
-
-        // because roots do not have parents
-        if (tagSupertags[parent.id].length === 0) {
-          tagSupertags[nextTag.id].push([parent]);
-        }
-      });
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
-    }
-
-    return tagSupertags;
-  }, [flattenedTags, tagTree]);
+  const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
 
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: _ => {
