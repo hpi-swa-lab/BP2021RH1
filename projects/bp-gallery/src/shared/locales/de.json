@@ -165,6 +165,7 @@
       },
       "group": {
         "createPicture": "Bild hochladen",
+        "getPictures": "Bilder-Übersichten sehen",
         "editFaceTags": "Personen markieren",
         "editPicture": "Bild bearbeiten",
         "getAllPicturesByArchive": "Bilderanzahl je Archiv sehen",

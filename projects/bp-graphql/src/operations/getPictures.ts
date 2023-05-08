@@ -1,7 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
-  group: 'viewPicture',
+  group: 'getPictures',
   document: graphql`
     query getPictures(
       $filters: PictureFiltersInput!
