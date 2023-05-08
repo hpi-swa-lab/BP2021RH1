@@ -15,6 +15,7 @@ module.exports = {
       user: process.env.REMOTE_USER,
       ref: "origin/466-setup-strapi-for-aws",
       host: process.env.REMOTE_HOST,
+      ssh_options: "StrictHostKeyChecking=no",
       path: "/home/github/harz-history",
       repo: "https://github.com/hpi-swa-lab/BP2021RH1",
       "post-deploy":
