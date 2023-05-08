@@ -1,7 +1,9 @@
 import { Operation, graphql } from '../Operation.js';
+import { always } from '../isAllowedHelpers.js';
 
 export default {
   group: 'getPictures',
+  isAllowed: always,
   document: graphql`
     query getPicturesByAllSearch(
       $pagination: PaginationArg!

@@ -1,7 +1,9 @@
 import { Operation, graphql } from '../Operation.js';
+import { checkMultiplePictures } from '../isAllowedHelpers.js';
 
 export default {
   group: 'editPicture',
+  isAllowed: checkMultiplePictures('pictureIds'),
   document: graphql`
     query getMultiplePictureInfo($pictureIds: [ID!]) {
       pictures(filters: { id: { in: $pictureIds } }) {

@@ -1,7 +1,9 @@
 import { Operation, graphql } from '../Operation.js';
+import { always } from '../isAllowedHelpers.js';
 
 export default {
   group: 'getTagThumbnails',
+  isAllowed: always,
   document: graphql`
     query getLocationTagsWithThumbnail(
       $filters: LocationTagFiltersInput = {}

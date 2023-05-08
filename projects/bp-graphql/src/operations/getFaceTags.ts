@@ -1,7 +1,9 @@
 import { Operation, graphql } from '../Operation.js';
+import { checkPicture } from '../isAllowedHelpers.js';
 
 export default {
   group: 'viewPicture',
+  isAllowed: checkPicture('pictureId'),
   document: graphql`
     query getFaceTags($pictureId: ID!) {
       faceTags(filters: { picture: { id: { eq: $pictureId } } }) {

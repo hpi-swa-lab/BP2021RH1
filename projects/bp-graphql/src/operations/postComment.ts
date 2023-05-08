@@ -1,7 +1,10 @@
 import { Operation, graphql } from '../Operation.js';
+import { checkPicture } from '../isAllowedHelpers.js';
 
 export default {
   section: 'comment',
+  needsParameters: ['archive_tag'],
+  isAllowed: checkPicture('id'),
   document: graphql`
     mutation postComment(
       $id: ID!
