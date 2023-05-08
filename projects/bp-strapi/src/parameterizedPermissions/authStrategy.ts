@@ -1,5 +1,6 @@
 import { getService as getUsersPermissionsService } from "@strapi/plugin-users-permissions/server/utils/index.js";
 import { errors } from "@strapi/utils";
+import type { UsersPermissionsUser } from "bp-graphql/build/db-types";
 import { OperationDefinitionNode } from "graphql/language/ast";
 import { isIntrospectionQuery } from "./isIntrospectionQuery";
 import { verifyOperation } from "./verifyOperation";
@@ -24,6 +25,8 @@ const authenticate = async (ctx) => {
   );
   const permissionsPopulate = ["users_permissions_user", "archive_tag"];
 
+  let user: UsersPermissionsUser | null = null;
+
   if (token) {
     const { id } = token;
 
@@ -32,9 +35,7 @@ const authenticate = async (ctx) => {
       return { authenticated: false };
     }
 
-    const user = await getUsersPermissionsService(
-      "user"
-    ).fetchAuthenticatedUser(id);
+    user = await getUsersPermissionsService("user").fetchAuthenticatedUser(id);
 
     // No user associated to the token
     if (!user) {
@@ -69,6 +70,7 @@ const authenticate = async (ctx) => {
 
   return {
     authenticated: true,
+    credentials: user,
     ability: permissions,
   };
 };
@@ -80,6 +82,7 @@ type ParameterizedPermission = {
 const verify = (auth, config) => {
   if ("operation" in config) {
     const permissions: ParameterizedPermission[] = auth.ability;
+    const user: UsersPermissionsUser | null = auth.credentials;
 
     const {
       operation,
