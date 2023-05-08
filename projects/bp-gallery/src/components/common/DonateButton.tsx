@@ -69,7 +69,7 @@ const DonateButton = ({
                   id='donate-amount'
                   className='w-fit text-lg'
                   allowNegativeValue={false}
-                  placeholder='Bitte Spendenbetrag eingeben'
+                  placeholder={t('archives.edit.paypal.currency-label')}
                   decimalScale={2}
                   decimalsLimit={2}
                   suffix={'€'}
@@ -81,12 +81,16 @@ const DonateButton = ({
                   variant='outlined'
                   onClick={() => (parseInt(donation) > 0 ? setIsOpen(!isOpen) : '')}
                 >
-                  {isOpen ? 'Anpassen' : 'Spenden'}
+                  {isOpen
+                    ? t('archives.edit.paypal.donation-edit')
+                    : t('archives.edit.paypal.donation-default')}
                 </Button>
               </div>
             </>
           ) : (
-            <PrimaryButton onClickFn={() => setIsClicked(true)}>Spenden</PrimaryButton>
+            <PrimaryButton onClickFn={() => setIsClicked(true)}>
+              {t('archives.edit.paypal.donation-default')}
+            </PrimaryButton>
           )}
 
           {isOpen && (

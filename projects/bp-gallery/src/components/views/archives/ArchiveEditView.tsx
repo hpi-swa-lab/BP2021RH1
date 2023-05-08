@@ -248,7 +248,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           defaultValue={archive.paypalClient ?? ''}
           placeholder={t('archives.edit.paypal.client-placeholder')}
           id='paypal'
-          errorText='Dies ist keine valide Paypal Client-Id'
+          errorText={t('archives.edit.paypal.client-error')}
           errorFn={async value => {
             if (value === '') return false;
             const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${value}`);

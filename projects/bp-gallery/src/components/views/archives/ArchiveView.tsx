@@ -15,6 +15,7 @@ import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
 import DonateButton from '../../common/DonateButton';
+import { useTranslation } from 'react-i18next';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -30,6 +31,7 @@ const addUrlProtocol = (url: string) => {
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { visit, history } = useVisit();
   const { role } = useAuth();
+  const { t } = useTranslation();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -87,7 +89,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               {archive.paypalClient && archive.paypalClient !== '' && (
                 <DonateButton
                   clientId={archive.paypalClient}
-                  donationText={archive.paypalDonationText ?? 'Spenden'}
+                  donationText={
+                    archive.paypalDonationText ?? t('archives.edit.paypal.donation-default')
+                  }
                   purposeText={archive.paypalPurpose ?? ''}
                 />
               )}

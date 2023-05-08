@@ -299,7 +299,11 @@
       "paypal": {
         "client-label": "Paypal-Spenden",
         "client-placeholder": "Gib deine Paypal-Client-Id an",
+        "client-error": "Dies ist keine valide Paypal Client-Id",
+        "currency-label": "Bitte Spendenbetrag eingeben",
         "donation-label": "Spendentext",
+        "donation-default": "Spenden",
+        "donation-edit": "Anpassen",
         "donation-placeholder": "Gib an, für was du Spenden sammelst",
         "purpose-label": "Verwendungszweck",
         "purpose-placeholder": "Gib an, welchen Verwendungszweck die Spende auf Paypal haben soll",
