@@ -6,8 +6,16 @@ import { verifyOperation } from "./verifyOperation";
 
 const { UnauthorizedError } = errors;
 
+const getToken = async (ctx): Promise<{ id: string | undefined } | null> => {
+  try {
+    return await getUsersPermissionsService("jwt").getToken(ctx);
+  } catch {
+    throw new UnauthorizedError();
+  }
+};
+
 const authenticate = async (ctx) => {
-  const token = await getUsersPermissionsService("jwt").getToken(ctx);
+  let token = await getToken(ctx);
 
   let permissions = [];
 
