@@ -14,7 +14,7 @@ import {
   TextField,
 } from '@mui/material';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagTree } from './tag-structure-helpers';
+import { useGetTagSupertagList, useGetTagTree } from './tag-structure-helpers';
 
 const PathPositionSelectDialogPreset = ({
   handleClose,
@@ -58,44 +58,7 @@ const PathPositionSelectDialogPreset = ({
     ];
   }, [dialogProps.content]);
 
-  const tagSupertagList = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagSupertags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[][]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-
-      // override if clone was filled already to avoid duplicates
-      if (nextTag && tagSupertags[nextTag.id].length > 0) {
-        tagSupertags[nextTag.id] = [];
-      }
-
-      if (nextTag && nextTag.root) {
-        tagSupertags[nextTag.id].push([]);
-      }
-
-      nextTag?.parent_tags?.forEach(parent => {
-        tagSupertags[parent.id].forEach(parentParents => {
-          tagSupertags[nextTag.id].push([...parentParents, parent]);
-        });
-
-        // because roots do not have parents
-        if (tagSupertags[parent.id].length === 0) {
-          tagSupertags[nextTag.id].push([parent]);
-        }
-      });
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
-    }
-
-    return tagSupertags;
-  }, [flattenedTags, tagTree]);
+  const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
 
   const customSupertagList = useMemo(() => {
     const customSupertags = Object.fromEntries(
