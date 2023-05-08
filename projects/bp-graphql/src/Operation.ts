@@ -49,7 +49,7 @@ type Section = (typeof sections)[number];
 
 export type GroupSettings = {
   section: Section;
-  needsParameters?: Parameter[];
+  needsParameters: Parameter[];
 };
 
 export type Group = {
@@ -77,7 +77,7 @@ export type Parameter = Exclude<
 
 export type Operation = {
   document: GraphQLDocument;
-  isAllowed?: IsAllowed;
+  isAllowed: IsAllowed;
 } & (
   | {
       group: GroupName;
