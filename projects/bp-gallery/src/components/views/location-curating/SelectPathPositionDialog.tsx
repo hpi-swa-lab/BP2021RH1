@@ -32,31 +32,34 @@ const PathPositionSelectDialogPreset = ({
 
   const tagTree = useGetTagTree(flattenedTags);
 
+  const newTag: FlatTag = dialogProps.content.newTag;
+  const lastTag: FlatTag = dialogProps.content.lastTag;
+
   const customOptions = useMemo(() => {
     return [
       {
-        ...dialogProps.content[0],
+        ...newTag,
         icon: undefined,
         id: '0',
         position: 'root',
-        name: dialogProps.content[0].name,
+        name: newTag.name,
       },
       {
-        ...dialogProps.content[0],
+        ...newTag,
         icon: undefined,
         id: '1',
         position: 'child',
-        name: dialogProps.content[0].name,
+        name: newTag.name,
       },
       {
-        ...dialogProps.content[0],
+        ...newTag,
         icon: undefined,
         id: '2',
         position: 'sibling',
-        name: dialogProps.content[0].name,
+        name: newTag.name,
       },
     ];
-  }, [dialogProps.content]);
+  }, [newTag]);
 
   const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
 
@@ -66,31 +69,27 @@ const PathPositionSelectDialogPreset = ({
     );
     customSupertags[0] = [];
     // children
-    customSupertags[1] = (tagSupertagList ? tagSupertagList[dialogProps.content[1].id] : []).map(
-      path => {
-        return path.map(tag => {
-          return tag;
-        });
-      }
-    );
+    customSupertags[1] = (tagSupertagList ? tagSupertagList[lastTag.id] : []).map(path => {
+      return path.map(tag => {
+        return tag;
+      });
+    });
     for (let i = 0; i < customSupertags[1].length; i++) {
-      customSupertags[1][i].push(dialogProps.content[1]);
+      customSupertags[1][i].push(lastTag);
     }
     if (!customSupertags[1].length) {
-      customSupertags[1].push([dialogProps.content[1]]);
+      customSupertags[1].push([lastTag]);
     }
 
     // siblings
-    customSupertags[2] = (tagSupertagList ? tagSupertagList[dialogProps.content[1].id] : []).map(
-      path => {
-        return path.map(tag => {
-          return tag;
-        });
-      }
-    );
+    customSupertags[2] = (tagSupertagList ? tagSupertagList[lastTag.id] : []).map(path => {
+      return path.map(tag => {
+        return tag;
+      });
+    });
 
     return customSupertags;
-  }, [customOptions, dialogProps.content, tagSupertagList]);
+  }, [customOptions, lastTag, tagSupertagList]);
 
   const [tagList, setTagList] = useState<FlatTag[]>();
 
