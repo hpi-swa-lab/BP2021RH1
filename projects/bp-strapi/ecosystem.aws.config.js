@@ -11,7 +11,7 @@ module.exports = {
   ],
   deploy: {
     production: {
-      key: "deploy.key",
+      key: "deploy_rsa",
       user: process.env.REMOTE_USER,
       ref: "origin/466-setup-strapi-for-aws",
       host: process.env.REMOTE_HOST,

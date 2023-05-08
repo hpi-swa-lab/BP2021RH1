@@ -64,8 +64,8 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$AWS_SSH_KEY" > ./deploy.key
-          sudo chmod 600 ./deploy.key
+          echo "$AWS_SSH_KEY" > ./deploy_rsa
+          sudo chmod 600 ./deploy_rsa
           echo "$AWS_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         shell: bash
         env:
