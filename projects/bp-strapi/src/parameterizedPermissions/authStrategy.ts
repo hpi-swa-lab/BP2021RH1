@@ -1,6 +1,7 @@
 import { getService as getUsersPermissionsService } from "@strapi/plugin-users-permissions/server/utils/index.js";
 import { errors } from "@strapi/utils";
 import { OperationDefinitionNode } from "graphql/language/ast";
+import { isIntrospectionQuery } from "./isIntrospectionQuery";
 import { verifyOperation } from "./verifyOperation";
 
 const { UnauthorizedError } = errors;
@@ -74,6 +75,11 @@ const verify = (auth, config) => {
       variables,
     }: { operation: OperationDefinitionNode; variables: Record<string, any> } =
       config;
+
+    if (isIntrospectionQuery(operation)) {
+      // allow
+      return;
+    }
 
     const operationName = operation.name.value;
     const authorizingPermissions = permissions.filter(
