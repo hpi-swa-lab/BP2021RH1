@@ -9,6 +9,11 @@ export default {
           id
           attributes {
             operation_name
+            archive_tag {
+              data {
+                id
+              }
+            }
           }
         }
       }

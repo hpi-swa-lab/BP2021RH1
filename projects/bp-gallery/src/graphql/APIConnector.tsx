@@ -2638,7 +2638,13 @@ export type GetParameterizedPermissionsQueryVariables = Exact<{
 
 export type GetParameterizedPermissionsQuery = {
   parameterizedPermissions?: {
-    data: Array<{ id?: string | null; attributes?: { operation_name?: string | null } | null }>;
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        operation_name?: string | null;
+        archive_tag?: { data?: { id?: string | null } | null } | null;
+      } | null;
+    }>;
   } | null;
 };
 
@@ -3041,6 +3047,7 @@ export type CreateLocationTagMutation = {
 export type CreateParameterizedPermissionMutationVariables = Exact<{
   userId?: InputMaybe<Scalars['ID']>;
   operationName: Scalars['String'];
+  archiveId?: InputMaybe<Scalars['ID']>;
 }>;
 
 export type CreateParameterizedPermissionMutation = {
@@ -4787,6 +4794,11 @@ export const GetParameterizedPermissionsDocument = gql`
         id
         attributes {
           operation_name
+          archive_tag {
+            data {
+              id
+            }
+          }
         }
       }
     }
@@ -6295,9 +6307,13 @@ export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateParameterizedPermissionDocument = gql`
-  mutation createParameterizedPermission($userId: ID, $operationName: String!) {
+  mutation createParameterizedPermission($userId: ID, $operationName: String!, $archiveId: ID) {
     createParameterizedPermission(
-      data: { users_permissions_user: $userId, operation_name: $operationName }
+      data: {
+        users_permissions_user: $userId
+        operation_name: $operationName
+        archive_tag: $archiveId
+      }
     ) {
       data {
         id
@@ -6326,6 +6342,7 @@ export type CreateParameterizedPermissionMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      userId: // value for 'userId'
  *      operationName: // value for 'operationName'
+ *      archiveId: // value for 'archiveId'
  *   },
  * });
  */
