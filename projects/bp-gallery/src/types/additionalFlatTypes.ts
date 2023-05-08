@@ -81,7 +81,7 @@ export type FlatUsersPermissionsRoleWithoutRelations = ID &
 export type FlatUsersPermissionsUserWithoutRelations = ID & Omit<UsersPermissionsUser, 'role'>;
 
 export type FlatParamaterizedPermissionWithoutRelations = ID &
-  Omit<ParameterizedPermission, 'users_permissions_user'>;
+  Omit<ParameterizedPermission, 'users_permissions_user' | 'archive_tag'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -155,6 +155,7 @@ export type FlatUsersPermissionsUser = FlatUsersPermissionsUserWithoutRelations 
 
 export type FlatParameterizedPermission = FlatParamaterizedPermissionWithoutRelations & {
   users_permissions_user?: FlatUsersPermissionsUser;
+  archive_tag?: FlatArchiveTag;
 };
 
 export type Thumbnail = {

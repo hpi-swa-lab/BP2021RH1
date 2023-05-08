@@ -18,6 +18,11 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
+    },
+    "archive_tag": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::archive-tag.archive-tag"
     }
   }
 }
