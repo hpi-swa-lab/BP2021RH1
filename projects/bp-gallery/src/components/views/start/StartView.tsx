@@ -25,7 +25,6 @@ const StartView = () => {
   const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
-  // @ts-ignore
   const paypalData = JSON.stringify(useVariant({ id: 'paypal_mainpage', fallback: '' }));
   const paypalJson = JSON.parse(paypalData !== '' ? paypalData : '{clientId: "", donationText:""}');
   const paypalClientId = paypalJson?.clientId;
@@ -83,7 +82,6 @@ const StartView = () => {
               {t('geo.geo-game-button')}
             </PrimaryButton>
           )}
-          <div className='flex basis-full' />
           <IfFeatureEnabled feature='paypal_mainpage'>
             {paypalClientId !== '' && (
               <DonateButton donationText={paypalDonationText} clientId={paypalClientId} />
