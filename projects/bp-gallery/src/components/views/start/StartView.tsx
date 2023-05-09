@@ -1,23 +1,23 @@
+import { IfFeatureEnabled } from '@growthbook/growthbook-react';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllArchiveTagsQuery,
   useGetAllPicturesByArchiveQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useVariant } from '../../../helpers/growthbook';
+import { useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
-import PrimaryButton from '../../common/PrimaryButton';
+import DonateButton from '../../common/DonateButton';
 import { IfFlagEnabled } from '../../common/IfFlagEnabled';
 import PictureOverview from '../../common/PictureOverview';
+import PrimaryButton from '../../common/PrimaryButton';
 import BrowseView from '../browse/BrowseView';
 import { useVisit } from './../../../helpers/history';
 import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
-import { useMobile } from '../../../hooks/context-hooks';
-import { IfFeatureEnabled } from '@growthbook/growthbook-react';
-import { useVariant } from '../../../helpers/growthbook';
-import DonateButton from '../../common/DonateButton';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -82,6 +82,7 @@ const StartView = () => {
               {t('geo.geo-game-button')}
             </PrimaryButton>
           )}
+          <div className='flex basis-full' />
           <IfFeatureEnabled feature='paypal_mainpage'>
             {paypalClientId !== '' && (
               <DonateButton donationText={paypalDonationText} clientId={paypalClientId} />
