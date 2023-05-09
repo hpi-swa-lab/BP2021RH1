@@ -117,8 +117,8 @@ const DonateButton = ({
                   layout: 'vertical',
                   tagline: false,
                 }}
-                onApprove={(data, actions) => onApprove(data, actions)}
-                onError={err => onError(err)}
+                onApprove={onApprove}
+                onError={onError}
               />
             </div>
           )}
