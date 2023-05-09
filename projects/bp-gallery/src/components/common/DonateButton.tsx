@@ -48,7 +48,7 @@ const DonateButton = ({
   useEffect(() => {
     if (isOpen) {
       setTimeout(function () {
-        transitionRef.current.className = 'parent-active';
+        transitionRef.current.className = 'overflow-hidden max-h-[60rem] duration-1000';
       }, 20);
     }
   }, [isOpen]);
@@ -99,7 +99,7 @@ const DonateButton = ({
           )}
 
           {isOpen && (
-            <div ref={transitionRef} className='paypal-parent'>
+            <div ref={transitionRef} className='overflow-hidden max-h-0'>
               <PayPalButtons
                 createOrder={(data, actions) => {
                   return actions.order.create({
