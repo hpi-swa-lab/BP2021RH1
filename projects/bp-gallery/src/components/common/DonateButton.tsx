@@ -84,7 +84,7 @@ const DonateButton = ({
                 />
                 <Button
                   variant='outlined'
-                  onClick={() => (parseInt(donation) > 0 ? setIsOpen(!isOpen) : '')}
+                  onClick={() => (parseFloat(donation) > 0 ? setIsOpen(!isOpen) : '')}
                 >
                   {isOpen
                     ? t('archives.edit.paypal.donation-edit')
