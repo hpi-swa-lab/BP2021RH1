@@ -3,9 +3,10 @@ import { FlatPicture } from '../types/additionalFlatTypes';
 import { useSimplifiedQueryResponseData } from '../graphql/queryUtils';
 import { asApiPath } from '../helpers/app-helpers';
 
-const useGetPictureLink = (pictureId: string) => {
+const useGetPictureLink = (pictureId: string | null | undefined) => {
   const { data: pictureData } = useGetPictureInfoQuery({
-    variables: { pictureId: pictureId },
+    variables: { pictureId: pictureId ?? '' },
+    skip: typeof pictureId !== 'string',
   });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureData)?.picture;
   return getPictureLinkFromFlatPicture(picture);

@@ -4,17 +4,20 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStorageState } from 'react-use-storage-state';
 import {
-  Collection,
   useGetAllPicturesByArchiveQuery,
   useGetPictureGeoInfoQuery,
   useGetPicturesForCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
-import { FlatArchiveTag, FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
+import {
+  FlatArchiveTag,
+  FlatCollection,
+  FlatPictureGeoInfo,
+} from '../../../types/additionalFlatTypes';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
-import { useFlag } from '../../../helpers/growthbook';
+import { useVariant } from '../../../helpers/growthbook';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const allPictureIds: string[] = archives
@@ -46,11 +49,8 @@ const getTodaysPictureQueue = (pictureIds: string[]) => {
   return list;
 };
 
-const getGeoCollectionPictureIds = (geoCollection: Collection) => {};
-
 const GeoView = () => {
   const { t } = useTranslation();
-  const fallbackPictureId = '3';
   const pictureQueue = useRef(['']);
   const seed = 42;
 
@@ -59,51 +59,57 @@ const GeoView = () => {
     false
   );
   const [modalOpen, setModalOpen] = useState(!hasReadInstructions);
-  const dontShowAgain = () => {
-    setHasReadInstructions(true);
-    setModalOpen(false);
-  };
+  const [pictureId, setPictureId] = useState<string | null>(null);
+  const [gameOver, setGameOver] = useState(false);
+  const [needsExplanation, setNeedsExplanation] = useState(false);
+  const pictureLink = useGetPictureLink(pictureId);
 
   const { data: picturesData } = useGetAllPicturesByArchiveQuery();
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
-  const isGeoCollectionPictures = useFlag('geopictures_from_collection');
-  const geoCollectionId = '357';
+  const geoCollectionId = useVariant({ id: 'geopictures_collection_id', fallback: '' });
+  const isGeoCollectionPictures = geoCollectionId !== '';
   const { data: geoCollectionPictureData } = useGetPicturesForCollectionQuery({
     variables: { collectionId: geoCollectionId },
   });
-  const geoCollectionPictureIds: string[] | undefined = useSimplifiedQueryResponseData(
-    geoCollectionPictureData
-  )?.collection?.pictures?.map(picture => picture?.id ?? '');
+
+  const geoCollection: FlatCollection | undefined =
+    useSimplifiedQueryResponseData(geoCollectionPictureData)?.collection;
+  const geoCollectionPictureIds: string[] | undefined = geoCollection?.pictures?.map(
+    picture => picture.id
+  );
 
   useEffect(() => {
     if (!archives) {
       return;
     }
     const allPictureIds = isGeoCollectionPictures
-      ? geoCollectionPictureIds ?? ['3']
+      ? geoCollectionPictureIds ?? []
       : getAllPictureIds(archives);
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
     setPictureId(getNextPicture());
   }, [archives, geoCollectionPictureIds, isGeoCollectionPictures]);
 
+  const dontShowAgain = () => {
+    setHasReadInstructions(true);
+    setModalOpen(false);
+  };
+
   const getNextPicture = () => {
     return pictureQueue.current.shift() ?? '';
   };
-
-  const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
-  const [gameOver, setGameOver] = useState(false);
-  const [needsExplanation, setNeedsExplanation] = useState(false);
-  const pictureLink = useGetPictureLink(pictureId);
 
   const onNextPicture = () => {
     const nextPicture = getNextPicture();
     nextPicture !== '' ? setPictureId(nextPicture) : setGameOver(true);
   };
 
-  const { data: geoData } = useGetPictureGeoInfoQuery({ variables: { pictureId } });
+  const { data: geoData } = useGetPictureGeoInfoQuery({
+    variables: { pictureId: pictureId ?? '' },
+    skip: !pictureId,
+  });
   const allGuesses: FlatPictureGeoInfo[] | undefined =
     useSimplifiedQueryResponseData(geoData)?.pictureGeoInfos;
   return (
@@ -144,7 +150,7 @@ const GeoView = () => {
             id='picture-info'
             className='absolute top-[5rem] right-1 text-white flex justify-center gap-1 cursor-pointer'
             onClick={() => {
-              window.open(`/picture/${pictureId}`, '_blank');
+              window.open(`/picture/${pictureId ?? ''}`, '_blank');
             }}
           >
             <Info />
