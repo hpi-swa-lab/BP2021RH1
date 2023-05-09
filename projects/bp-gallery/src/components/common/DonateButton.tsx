@@ -1,7 +1,7 @@
 import { Button, Dialog } from '@mui/material';
 import { OnApproveActions, OnApproveData } from '@paypal/paypal-js';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import { useTranslation } from 'react-i18next';
 import PrimaryButton from './PrimaryButton';
@@ -32,17 +32,22 @@ const DonateButton = ({
     currency: 'EUR',
   };
 
-  const onApprove = (data: OnApproveData, actions: OnApproveActions) => {
-    return actions.order.capture().then(() => {
+  const onApprove = useCallback(
+    async (data: OnApproveData, actions: OnApproveActions) => {
+      await actions.order.capture();
       setDialogText(t('archives.edit.paypal.thankyou-label', { amount: donation }));
       setIsDialogOpen(true);
-    });
-  };
+    },
+    [t, donation]
+  );
 
-  const onError = (err: any) => {
-    setDialogText(t('archives.edit.paypal.error-label'));
-    setIsDialogOpen(true);
-  };
+  const onError = useCallback(
+    (err: any) => {
+      setDialogText(t('archives.edit.paypal.error-label'));
+      setIsDialogOpen(true);
+    },
+    [t]
+  );
 
   return (
     <>
