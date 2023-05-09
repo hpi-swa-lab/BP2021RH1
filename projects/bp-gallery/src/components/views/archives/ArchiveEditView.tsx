@@ -1,7 +1,7 @@
 import { Check, Close, Save } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { Jodit } from 'jodit-react';
-import { merge } from 'lodash';
+import { merge, pick } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
@@ -156,12 +156,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           variables: {
             archiveId,
             data: {
-              name: form.name,
-              shortDescription: form.shortDescription,
-              longDescription: form.longDescription,
-              paypalClient: form.paypal.client,
-              paypalDonationText: form.paypal.donationText,
-              paypalPurpose: form.paypal.purpose,
+              ...pick(form, ['name', 'shortDescription', 'longDescription', 'paypal']),
               logo: ids[0],
             },
           },
@@ -172,12 +167,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         variables: {
           archiveId,
           data: {
-            name: form.name,
-            shortDescription: form.shortDescription,
-            longDescription: form.longDescription,
-            paypalClient: form.paypal.client,
-            paypalDonationText: form.paypal.donationText,
-            paypalPurpose: form.paypal.purpose,
+            ...pick(form, ['name', 'shortDescription', 'longDescription', 'paypal']),
           },
         },
       });
