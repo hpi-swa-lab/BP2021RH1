@@ -19,7 +19,7 @@ module.exports = {
       path: "/home/github/harz-history",
       repo: "https://github.com/hpi-swa-lab/BP2021RH1",
       "post-deploy":
-        "cd projects/bp-strapi && yarn install --frozen-lockfile && yarn build:prod && yarn pm2 reload ecosystem.aws.config.js --env production && yarn pm2 save",
+        'export PATH="$PATH:~/.npm-global/bin/" && cd projects/bp-strapi && yarn install --frozen-lockfile && yarn build:prod && yarn pm2 reload ecosystem.aws.config.js --env production && yarn pm2 save',
     },
     staging: {
       key: "deploy.key",
