@@ -1,10 +1,9 @@
 import { Button, Dialog } from '@mui/material';
 import { OnApproveActions, OnApproveData } from '@paypal/paypal-js';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import { useTranslation } from 'react-i18next';
-import './DonateButton.scss';
 import PrimaryButton from './PrimaryButton';
 
 export const isValidClientId = async (clientId: string) => {
@@ -44,14 +43,6 @@ const DonateButton = ({
     setDialogText(t('archives.edit.paypal.error-label'));
     setIsDialogOpen(true);
   };
-
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(function () {
-        transitionRef.current.className = 'overflow-hidden max-h-[60rem] duration-1000';
-      }, 20);
-    }
-  }, [isOpen]);
 
   return (
     <>
@@ -99,7 +90,7 @@ const DonateButton = ({
           )}
 
           {isOpen && (
-            <div ref={transitionRef} className='overflow-hidden max-h-0'>
+            <div ref={transitionRef} className='overflow-hidden animate-paypal-open'>
               <PayPalButtons
                 createOrder={(data, actions) => {
                   return actions.order.create({
