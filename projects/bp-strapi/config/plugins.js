@@ -51,4 +51,22 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  upload:
+    env("AWS_ENABLED", "false") === "true"
+      ? {
+          config: {
+            provider: "strapi-provider-upload-aws-s3-advanced",
+            providerOptions: {
+              accessKeyId: env("AWS_ACCESS_KEY_ID"),
+              secretAccessKey: env("AWS_ACCESS_SECRET"),
+              region: env("AWS_REGION"),
+              params: {
+                bucket: env("AWS_BUCKET_NAME"),
+              },
+              baseUrl: env("CDN_BASE_URL"), // e.g. "https://cdn.example.com", this is stored in strapi's database to point to the file
+              prefix: env("BUCKET_PREFIX"), // e.g. "strapi-assets". If BUCKET_PREFIX contains leading or trailing slashes, they are removed internally to construct the URL safely
+            },
+          },
+        }
+      : undefined,
 });

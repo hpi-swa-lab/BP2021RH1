@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
@@ -37,7 +37,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
-  const src = archive?.logo?.formats?.thumbnail.url ?? '';
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -72,10 +71,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               <div className='archive-logo-container'>
                 <img
                   className='archive-logo'
-                  src={asApiPath(
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    `/${src as string}?updatedAt=${(archive.logo.updatedAt ?? 'unknown') as string}`
-                  )}
+                  src={asUploadPath(archive.logo, { highQuality: false })}
                 />
               </div>
             )}

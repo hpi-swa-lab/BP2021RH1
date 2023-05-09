@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import { isValidClientId } from '../../common/DonateButton';
 import TextEditor from '../../common/editors/TextEditor';
@@ -237,7 +238,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           />
         </div>
         <ArchiveLogoInput
-          defaultUrl={logoSrc}
+          defaultUrl={asUploadPath(archive.logo, { highQuality: false })}
           onChange={file => updateForm({ logo: file, dirty: true })}
         />
         <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
