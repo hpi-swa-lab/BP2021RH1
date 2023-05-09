@@ -85,6 +85,12 @@ const verify = async (auth, config) => {
     const permissions: ParameterizedPermission[] = auth.ability;
     const user: UsersPermissionsUser | null = auth.credentials;
 
+    if (user?.isSuperUser) {
+      // allow everything, regardless of permissions
+      // this is intended for bootstrapping and emergency purposes only
+      return;
+    }
+
     const {
       operation,
       variables,
