@@ -8,6 +8,7 @@ export type ArchiveTag = ID;
 
 export type UsersPermissionsUser = ID & {
   blocked?: Maybe<boolean>;
+  isSuperUser?: Maybe<boolean>;
 };
 
 export type ParameterizedPermission = ID & {
