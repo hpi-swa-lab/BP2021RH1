@@ -1,11 +1,16 @@
 import { Button, Dialog } from '@mui/material';
+import { OnApproveActions, OnApproveData } from '@paypal/paypal-js';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
+import { useTranslation } from 'react-i18next';
 import './DonateButton.scss';
 import PrimaryButton from './PrimaryButton';
-import { OnApproveActions, OnApproveData } from '@paypal/paypal-js';
-import { useTranslation } from 'react-i18next';
+
+export const isValidClientId = async (clientId: string) => {
+  const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${clientId}`);
+  return response.ok;
+};
 
 const DonateButton = ({
   clientId,

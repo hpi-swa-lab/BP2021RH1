@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
+import { isValidClientId } from '../../common/DonateButton';
 import TextEditor from '../../common/editors/TextEditor';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -255,16 +256,14 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           errorText={t('archives.edit.paypal.client-error')}
           errorFn={async value => {
             if (value === '') return false;
-            const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${value}`);
-            return !response.ok;
+            return !(await isValidClientId(value));
           }}
           onBlur={async value => {
             if (value === '') {
               updateForm({ paypal: { paypalClient: '' }, dirty: true });
               return;
             }
-            const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${value}`);
-            if (response.ok) {
+            if (await isValidClientId(value)) {
               updateForm({ paypal: { paypalClient: value }, dirty: true });
             }
           }}
