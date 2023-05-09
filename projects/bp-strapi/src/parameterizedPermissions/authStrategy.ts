@@ -1,4 +1,3 @@
-import { getService as getUsersPermissionsService } from "@strapi/plugin-users-permissions/server/utils/index.js";
 import { errors } from "@strapi/utils";
 import type { Variables } from "bp-graphql";
 import type {
@@ -8,13 +7,14 @@ import type {
 import { OperationDefinitionNode } from "graphql/language/ast";
 import { checkAllowed } from "./checkAllowed";
 import { isIntrospectionQuery } from "./isIntrospectionQuery";
+import { getJwtService, getUserService } from "./userService";
 import { verifyOperation } from "./verifyOperation";
 
 const { UnauthorizedError } = errors;
 
 const getToken = async (ctx): Promise<{ id: string | undefined } | null> => {
   try {
-    return await getUsersPermissionsService("jwt").getToken(ctx);
+    return await getJwtService().getToken(ctx);
   } catch {
     throw new UnauthorizedError();
   }
@@ -40,7 +40,7 @@ const authenticate = async (ctx) => {
       return { authenticated: false };
     }
 
-    user = await getUsersPermissionsService("user").fetchAuthenticatedUser(id);
+    user = await getUserService().fetchAuthenticatedUser(id);
 
     // No user associated to the token
     if (!user) {
