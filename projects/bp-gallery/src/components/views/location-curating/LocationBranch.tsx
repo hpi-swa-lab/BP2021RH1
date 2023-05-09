@@ -12,7 +12,7 @@ const LocationBranch = ({
   refetch,
   type,
 }: {
-  locationTag: any;
+  locationTag: FlatTag;
   parentTag?: FlatTag;
   refetch: () => void;
   type: TagType;
@@ -21,8 +21,8 @@ const LocationBranch = ({
   const [showMore, setShowMore] = useState<boolean>(false);
 
   const renderSubBranch = () => {
-    if (locationTag.child_tags.length) {
-      return locationTag.child_tags.map((childTag: any) => {
+    if (locationTag.child_tags?.length) {
+      return locationTag.child_tags.map((childTag: FlatTag) => {
         return (
           <LocationBranch
             key={childTag.id}
@@ -57,7 +57,7 @@ const LocationBranch = ({
           <div
             className='add-tag-container'
             onClick={() => {
-              createNewTag(locationTag.child_tags as FlatTag[], locationTag as FlatTag);
+              createNewTag(locationTag.child_tags as FlatTag[], locationTag);
             }}
           >
             <Add className='add-tag-icon' />
