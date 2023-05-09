@@ -3,12 +3,12 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetDailyPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureView from '../picture/PictureView';
 import RichText from './../../common/RichText';
 import DailyPictureInfo from './DailyPictureInfo';
-import { getPictureLinkFromFlatPicture } from '../../../hooks/get-pictureLink.hook';
 
 const choosePictureId = (pictureIds: string[]) => {
   const currentDate = new Date();
@@ -78,7 +78,7 @@ const DailyPicture = () => {
   const dailyPictureId = choosePictureId(pictureIds);
   const { data } = useGetDailyPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-  const pictureLink = getPictureLinkFromFlatPicture(picture);
+  const pictureLink = asUploadPath(picture?.media);
   const description = picture?.descriptions?.[0]?.text ?? '';
   return (
     <div>

@@ -103,6 +103,7 @@ export default {
                 attributes {
                   url
                   updatedAt
+                  provider
                 }
               }
             }
