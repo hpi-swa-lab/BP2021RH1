@@ -25,10 +25,10 @@ const StartView = () => {
   const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
-  const paypalData = JSON.stringify(useVariant({ id: 'paypal_mainpage', fallback: '' }));
-  const paypalJson = JSON.parse(paypalData !== '' ? paypalData : '{clientId: "", donationText:""}');
-  const paypalClientId = paypalJson?.clientId;
-  const paypalDonationText = paypalJson?.donationText;
+  const { clientId: paypalClientId, donationText: paypalDonationText } = useVariant({
+    id: 'paypal_mainpage',
+    fallback: { clientId: '', donationText: '' },
+  });
   const { data: picturesData } = useGetAllPicturesByArchiveQuery();
   const archivePictures: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
