@@ -1,6 +1,7 @@
 import { Check, Close, Save } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { Jodit } from 'jodit-react';
+import { merge } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
@@ -22,9 +23,9 @@ interface ArchiveEditViewProps {
 }
 
 interface PaypalProperties {
-  client?: string;
-  donationText?: string;
-  purpose?: string;
+  client: string;
+  donationText: string;
+  purpose: string;
 }
 
 interface ArchiveForm {
@@ -107,9 +108,11 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
 
   const logoSrc = archive?.logo?.formats?.thumbnail.url ?? '';
 
-  const updateForm = useCallback((newForm: Partial<ArchiveForm>) => {
+  type PartialForm = Omit<Partial<ArchiveForm>, 'paypal'> & { paypal?: Partial<PaypalProperties> };
+
+  const updateForm = useCallback((newForm: PartialForm) => {
     setForm(form => {
-      return { ...form, ...newForm };
+      return merge({}, form, newForm);
     });
   }, []);
 
