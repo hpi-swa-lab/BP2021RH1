@@ -7,6 +7,7 @@ import type {
 import { OperationDefinitionNode } from "graphql/language/ast";
 import { checkAllowed } from "./checkAllowed";
 import { isIntrospectionQuery } from "./isIntrospectionQuery";
+import { isSuperUserLoggingIn } from "./isSuperUserLoggingIn";
 import { getJwtService, getUserService } from "./userService";
 import { verifyOperation } from "./verifyOperation";
 
@@ -95,6 +96,19 @@ const verify = async (auth, config) => {
       operation,
       variables,
     }: { operation: OperationDefinitionNode; variables: Variables } = config;
+
+    if (await isSuperUserLoggingIn(operation, variables)) {
+      // Let anyone attempt to login as a super user
+      // as it can happen that the public user doesn't have
+      // the permission to login and we still want super users
+      // to gain access.
+      // The function only checks whether a super user with the given
+      // username exists, the actual password check is done by the
+      // login mutation resolver. So this only allows the *attempt*
+      // to login and doesn't let anyone pass through without them
+      // knowing the super user's password.
+      return;
+    }
 
     if (isIntrospectionQuery(operation)) {
       // allow
