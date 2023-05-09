@@ -20,6 +20,7 @@ import {
   useDeleteTag,
   useDetachTag,
   useRelocateTag,
+  useSetRoot,
   useSetVisible,
 } from './location-management-helpers';
 import { t } from 'i18next';
@@ -48,6 +49,7 @@ const LocationEntry = ({
   const { acceptTag } = useAcceptTag(locationTag, refetch);
   const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
   const { deleteTag } = useDeleteTag(locationTag, refetch, parentTag);
+  const { setTagAsRoot } = useSetRoot(locationTag, refetch);
 
   const openLocationManagementDialog = () => {
     prompt({
@@ -147,6 +149,9 @@ const LocationEntry = ({
                 <IconButton
                   onClick={e => {
                     e.stopPropagation();
+                    if (!locationTag.parent_tags?.length) {
+                      setTagAsRoot(true);
+                    }
                     copyTag();
                   }}
                 >

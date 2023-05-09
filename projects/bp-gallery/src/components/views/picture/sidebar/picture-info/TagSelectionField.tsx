@@ -332,10 +332,14 @@ const TagSelectionField = <T extends TagFields>({
                             name: addTag.createValue,
                             parentIDs:
                               tagSupertagList && lastSelectedTag.id in tagSupertagList
-                                ? tagSupertagList[lastSelectedTag.id].map(
-                                    path => path[path.length - 1].id
-                                  )
+                                ? tagSupertagList[lastSelectedTag.id]
+                                    .filter(path => path.length)
+                                    .map(path => path[path.length - 1].id)
                                 : [],
+                            root:
+                              tagSupertagList &&
+                              lastSelectedTag.id in tagSupertagList &&
+                              tagSupertagList[lastSelectedTag.id].some(path => !path.length),
                           },
                         });
                         if (data) {

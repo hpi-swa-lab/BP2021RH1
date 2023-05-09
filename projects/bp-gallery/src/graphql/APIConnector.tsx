@@ -3163,6 +3163,7 @@ export type CreateLocationMutationVariables = Exact<{
   name: Scalars['String'];
   parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
   accepted?: InputMaybe<Scalars['Boolean']>;
+  root?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CreateLocationMutation = {
@@ -5949,8 +5950,10 @@ export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
 >;
 
 export const CreateLocationDocument = gql`
-  mutation createLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
-    createLocationTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
+  mutation createLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean, $root: Boolean) {
+    createLocationTag(
+      data: { name: $name, parent_tags: $parentIDs, accepted: $accepted, root: $root }
+    ) {
       data {
         id
       }
@@ -5979,6 +5982,7 @@ export type CreateLocationMutationFn = Apollo.MutationFunction<
  *      name: // value for 'name'
  *      parentIDs: // value for 'parentIDs'
  *      accepted: // value for 'accepted'
+ *      root: // value for 'root'
  *   },
  * });
  */

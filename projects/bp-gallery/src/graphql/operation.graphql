@@ -831,8 +831,10 @@ query getPicturesForLocation($tagID: ID!) {
   }
 }
 
-mutation createLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
-  createLocationTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
+mutation createLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean, $root: Boolean) {
+  createLocationTag(
+    data: { name: $name, parent_tags: $parentIDs, accepted: $accepted, root: $root }
+  ) {
     data {
       id
     }
