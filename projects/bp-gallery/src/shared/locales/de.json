@@ -1,11 +1,18 @@
 {
   "common": {
+    "sublocations": "Unterorte",
+    "superlocations": "Oberorte",
     "start": "Start",
     "search": "Suchen",
     "browse": "Stöbern",
     "menu": "Menü",
     "picture": "Bild",
     "pictures": "Bilder",
+    "show-pictures": "Bilder Anzeigen",
+    "visible": "Sichtbar",
+    "invisible": "Unsichtbar",
+    "root": "Wurzel",
+    "no-root": "Keine Wurzel",
     "details": "Details",
     "comments": "Kommentare",
     "contact": "Kontakt",

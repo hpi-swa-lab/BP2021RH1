@@ -25,7 +25,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
       return tag.accepted ? 0 : 1;
     }
     let subtagCount = 0;
-    tag.child_tags.forEach((childTag: any) => {
+    tag.child_tags.forEach((childTag: FlatTag) => {
       subtagCount += setUnacceptedSubtagsCount(childTag);
     });
     tag.unacceptedSubtags = subtagCount;

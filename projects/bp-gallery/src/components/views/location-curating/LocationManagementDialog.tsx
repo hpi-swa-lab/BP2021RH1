@@ -44,6 +44,7 @@ import {
   useSetVisible,
   useUpdateName,
 } from './location-management-helpers';
+import { useTranslation } from 'react-i18next';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -52,10 +53,11 @@ const LocationManagementDialogPreset = ({
   handleClose: (value: any) => void;
   dialogProps: DialogProps;
 }) => {
+  const { t } = useTranslation();
   const history: History = useHistory();
   const refetch: () => void = dialogProps.content.refetch;
   const [parentTag, setParentTag] = useState<any>(dialogProps.content.parentTag);
-  const [parentTagHistory, setParentTagHistory] = useState<any[]>([]);
+  const parentTagHistory = useRef<any[]>([]);
 
   const [locationTagID, setLocationTagID] = useState<any>(dialogProps.content.locationTag.id);
   const [editName, setEditName] = useState<boolean>(false);
@@ -98,20 +100,19 @@ const LocationManagementDialogPreset = ({
   const { setParentTags } = useSetParentTags(locationTag, refetch);
   const { setChildTags } = useSetChildTags(locationTag, refetch);
 
-  const [newLocationTagMutation, newLocationTagMutationResponse] = useCreateLocationMutation({
+  const [newLocationTagMutation] = useCreateLocationMutation({
     refetchQueries: ['getAllLocationTags'],
     awaitRefetchQueries: true,
   });
 
-  const [newParentLocationTagMutation, newParentLocationTagMutationResponse] =
-    useCreateSuperLocationMutation({
-      refetchQueries: ['getAllLocationTags'],
-      awaitRefetchQueries: true,
-    });
+  const [newParentLocationTagMutation] = useCreateSuperLocationMutation({
+    refetchQueries: ['getAllLocationTags'],
+    awaitRefetchQueries: true,
+  });
 
   const [localVisibility, setLocalVisibility] = useState<boolean>(locationTag.visible ?? false);
   const [isRoot, setIsRoot] = useState<boolean>(
-    locationTag.root || !locationTag.parent_tags?.length
+    locationTag.root ?? !locationTag.parent_tags?.length
   );
 
   const currentSiblings = [
@@ -126,7 +127,7 @@ const LocationManagementDialogPreset = ({
 
   useEffect(() => {
     setLocalVisibility(locationTag.visible ?? false);
-    setIsRoot(locationTag.root || !locationTag.parent_tags?.length);
+    setIsRoot(locationTag.root ?? !locationTag.parent_tags?.length);
     setChanged(false);
     title.current = locationTag.name;
   }, [locationTag]);
@@ -206,8 +207,12 @@ const LocationManagementDialogPreset = ({
               </div>
               <div className='location-management-left-content'>
                 <div className='location-management-synonyms-container'>
-                  <div>Synonyme</div>
-                  <PictureInfoField title={'Synonyme'} icon={<Subtitles />} type='location'>
+                  <div>{t('curator.synonyms')}</div>
+                  <PictureInfoField
+                    title={t('curator.synonyms')}
+                    icon={<Subtitles />}
+                    type='location'
+                  >
                     <div className='location-management-synonyms'>
                       <Grid
                         className='location-management-synonyms-grid'
@@ -241,8 +246,12 @@ const LocationManagementDialogPreset = ({
                   </PictureInfoField>
                 </div>
                 <div className='location-management-children-container'>
-                  <div>Unterorte</div>
-                  <PictureInfoField title={'Unterorte'} icon={<Place />} type='location'>
+                  <div>{t('common.sublocations')}</div>
+                  <PictureInfoField
+                    title={t('common.sublocations')}
+                    icon={<Place />}
+                    type='location'
+                  >
                     <TagSelectionField
                       type={TagType.LOCATION}
                       tags={
@@ -256,7 +265,7 @@ const LocationManagementDialogPreset = ({
                       noContentText={''}
                       fixedTag={locationTag}
                       fixedTagOnClick={(id: string) => {
-                        parentTagHistory.push(parentTag);
+                        parentTagHistory.current.push(parentTag);
                         setParentTag(locationTag);
                         setLocationTagID(id);
                       }}
@@ -265,8 +274,12 @@ const LocationManagementDialogPreset = ({
                   </PictureInfoField>
                 </div>
                 <div className='location-management-parents-container'>
-                  <div>Oberorte</div>
-                  <PictureInfoField title={'Oberorte'} icon={<Place />} type='location'>
+                  <div>{t('common.superlocations')}</div>
+                  <PictureInfoField
+                    title={t('common.superlocations')}
+                    icon={<Place />}
+                    type='location'
+                  >
                     <TagSelectionField
                       type={TagType.LOCATION}
                       tags={
@@ -282,7 +295,7 @@ const LocationManagementDialogPreset = ({
                       noContentText={''}
                       fixedTag={locationTag}
                       fixedTagOnClick={(id: string) => {
-                        setParentTag(parentTagHistory.pop());
+                        setParentTag(parentTagHistory.current.pop());
                         setLocationTagID(id);
                       }}
                       createParentMutation={newParentLocationTagMutation}
@@ -307,7 +320,7 @@ const LocationManagementDialogPreset = ({
                   }}
                   endIcon={<ArrowForwardIos />}
                 >
-                  Bilder Anzeigen
+                  {t('common.show-pictures')}
                 </Button>
                 {localVisibility ? (
                   <Button
@@ -318,7 +331,7 @@ const LocationManagementDialogPreset = ({
                     }}
                     endIcon={<Visibility />}
                   >
-                    Sichtbar
+                    {t('common.visible')}
                   </Button>
                 ) : (
                   <Button
@@ -329,7 +342,7 @@ const LocationManagementDialogPreset = ({
                     }}
                     endIcon={<VisibilityOff />}
                   >
-                    Unsichtbar
+                    {t('common.invisible')}
                   </Button>
                 )}
                 {isRoot ? (
@@ -343,7 +356,7 @@ const LocationManagementDialogPreset = ({
                     }}
                     endIcon={<AccountTree />}
                   >
-                    Wurzel
+                    {t('common.root')}
                   </Button>
                 ) : (
                   <Button
@@ -354,7 +367,7 @@ const LocationManagementDialogPreset = ({
                     }}
                     endIcon={<AccountTree />}
                   >
-                    Keine Wurzel
+                    {t('common.no-root')}
                   </Button>
                 )}
               </div>

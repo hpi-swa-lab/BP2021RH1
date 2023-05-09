@@ -31,7 +31,6 @@ const LocationEntry = ({
   onToggleShowMore,
   refetch,
   type,
-  unacceptedSubtags = 0,
 }: {
   locationTag: FlatTag;
   parentTag?: FlatTag;
@@ -39,7 +38,6 @@ const LocationEntry = ({
   onToggleShowMore: () => void;
   refetch: () => void;
   type: TagType;
-  unacceptedSubtags?: number;
 }) => {
   const prompt = useDialog();
 
@@ -66,7 +64,12 @@ const LocationEntry = ({
       onClick={openLocationManagementDialog}
     >
       <div className='location-entry-content'>
-        <Badge color='info' overlap='circular' variant='dot' badgeContent={unacceptedSubtags}>
+        <Badge
+          color='info'
+          overlap='circular'
+          variant='dot'
+          badgeContent={locationTag.unacceptedSubtags}
+        >
           <IconButton
             className='show-more-button'
             onClick={e => {

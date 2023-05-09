@@ -49,7 +49,6 @@ const LocationBranch = ({
         }}
         refetch={refetch}
         type={type}
-        unacceptedSubtags={locationTag.unacceptedSubtags}
       />
       {showMore && (
         <div className='sub-location-container'>
