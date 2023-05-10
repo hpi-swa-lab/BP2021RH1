@@ -35,7 +35,7 @@ type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verifi
 type FlatUploadFile = ID & UploadFile;
 
 type FlatExhibitionPictureWithoutRelations = ID &
-  Omit<ExhibitionPicture, 'picture' | 'exhibition_section' | 'exhibition'>;
+  Omit<ExhibitionPicture, 'picture' | 'exhibition_section' | 'exhibition_idealot'>;
 
 type FlatExhibitionWithoutRelations = ID &
   Omit<
@@ -98,7 +98,7 @@ export type FlatExhibitionSection = FlatExhibitionSectionWithoutRelations & {
 export type FlatExhibitionPicture = FlatExhibitionPictureWithoutRelations & {
   picture?: FlatPicture;
   exhibition_section?: FlatExhibitionSection;
-  exhibition?: FlatExhibition;
+  exhibition_idealot?: FlatExhibition;
 };
 
 export type FlatExhibition = FlatExhibitionWithoutRelations & {

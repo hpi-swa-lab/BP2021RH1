@@ -7803,7 +7803,7 @@
             "defaultValue": null
           },
           {
-            "name": "exhibition",
+            "name": "exhibition_idealot",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -7922,7 +7922,7 @@
             "defaultValue": null
           },
           {
-            "name": "exhibition",
+            "name": "exhibition_idealot",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -7988,7 +7988,7 @@
             "deprecationReason": null
           },
           {
-            "name": "exhibition",
+            "name": "exhibition_idealot",
             "description": null,
             "args": [],
             "type": {

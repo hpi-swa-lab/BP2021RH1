@@ -469,7 +469,7 @@ export type ExhibitionInput = {
 
 export type ExhibitionPicture = {
   createdAt?: Maybe<Scalars['DateTime']>;
-  exhibition?: Maybe<ExhibitionEntityResponse>;
+  exhibition_idealot?: Maybe<ExhibitionEntityResponse>;
   exhibition_section?: Maybe<ExhibitionSectionEntityResponse>;
   picture?: Maybe<PictureEntityResponse>;
   publishedAt?: Maybe<Scalars['DateTime']>;
@@ -494,7 +494,7 @@ export type ExhibitionPictureEntityResponseCollection = {
 export type ExhibitionPictureFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ExhibitionPictureFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
-  exhibition?: InputMaybe<ExhibitionFiltersInput>;
+  exhibition_idealot?: InputMaybe<ExhibitionFiltersInput>;
   exhibition_section?: InputMaybe<ExhibitionSectionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<ExhibitionPictureFiltersInput>;
@@ -506,7 +506,7 @@ export type ExhibitionPictureFiltersInput = {
 };
 
 export type ExhibitionPictureInput = {
-  exhibition?: InputMaybe<Scalars['ID']>;
+  exhibition_idealot?: InputMaybe<Scalars['ID']>;
   exhibition_section?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2743,6 +2743,116 @@ export type GetDecadePreviewThumbnailsQuery = {
   } | null;
 };
 
+export type GetExhibitionQueryVariables = Exact<{
+  exhibitionId: Scalars['ID'];
+}>;
+
+export type GetExhibitionQuery = {
+  exhibition?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        title?: string | null;
+        introduction?: string | null;
+        epilog?: string | null;
+        title_picture?: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              subtitle?: string | null;
+              picture?: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    media: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          width?: number | null;
+                          height?: number | null;
+                          formats?: any | null;
+                          url: string;
+                          updatedAt?: any | null;
+                        } | null;
+                      } | null;
+                    };
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+          } | null;
+        } | null;
+        idealot_pictures?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              subtitle?: string | null;
+              picture?: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    media: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          width?: number | null;
+                          height?: number | null;
+                          formats?: any | null;
+                          url: string;
+                          updatedAt?: any | null;
+                        } | null;
+                      } | null;
+                    };
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+          }>;
+        } | null;
+        exhibition_sections?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              title?: string | null;
+              text?: string | null;
+              exhibition_pictures?: {
+                data: Array<{
+                  id?: string | null;
+                  attributes?: {
+                    subtitle?: string | null;
+                    picture?: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          media: {
+                            data?: {
+                              id?: string | null;
+                              attributes?: {
+                                width?: number | null;
+                                height?: number | null;
+                                formats?: any | null;
+                                url: string;
+                                updatedAt?: any | null;
+                              } | null;
+                            } | null;
+                          };
+                        } | null;
+                      } | null;
+                    } | null;
+                  } | null;
+                }>;
+              } | null;
+            } | null;
+          }>;
+        } | null;
+        exhibition_sources?: {
+          data: Array<{ id?: string | null; attributes?: { source?: string | null } | null }>;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
+};
+
 export type GetFaceTagsQueryVariables = Exact<{
   pictureId: Scalars['ID'];
 }>;
@@ -4595,6 +4705,164 @@ export type GetDecadePreviewThumbnailsLazyQueryHookResult = ReturnType<
 export type GetDecadePreviewThumbnailsQueryResult = Apollo.QueryResult<
   GetDecadePreviewThumbnailsQuery,
   GetDecadePreviewThumbnailsQueryVariables
+>;
+
+export const GetExhibitionDocument = gql`
+  query getExhibition($exhibitionId: ID!) {
+    exhibition(id: $exhibitionId) {
+      data {
+        id
+        attributes {
+          title
+          introduction
+          epilog
+          title_picture {
+            data {
+              id
+              attributes {
+                subtitle
+                picture {
+                  data {
+                    id
+                    attributes {
+                      media {
+                        data {
+                          id
+                          attributes {
+                            width
+                            height
+                            formats
+                            url
+                            updatedAt
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          idealot_pictures {
+            data {
+              id
+              attributes {
+                subtitle
+                picture {
+                  data {
+                    id
+                    attributes {
+                      media {
+                        data {
+                          id
+                          attributes {
+                            width
+                            height
+                            formats
+                            url
+                            updatedAt
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          exhibition_sections {
+            data {
+              id
+              attributes {
+                title
+                text
+                exhibition_pictures {
+                  data {
+                    id
+                    attributes {
+                      subtitle
+                      picture {
+                        data {
+                          id
+                          attributes {
+                            media {
+                              data {
+                                id
+                                attributes {
+                                  width
+                                  height
+                                  formats
+                                  url
+                                  updatedAt
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          exhibition_sources {
+            data {
+              id
+              attributes {
+                source
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetExhibitionQuery__
+ *
+ * To run a query within a React component, call `useGetExhibitionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExhibitionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExhibitionQuery({
+ *   variables: {
+ *      exhibitionId: // value for 'exhibitionId'
+ *   },
+ * });
+ */
+export function useGetExhibitionQuery(
+  baseOptions: Apollo.QueryHookOptions<GetExhibitionQuery, GetExhibitionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetExhibitionQuery, GetExhibitionQueryVariables>(
+    GetExhibitionDocument,
+    options
+  );
+}
+
+export function useGetExhibitionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetExhibitionQuery, GetExhibitionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetExhibitionQuery, GetExhibitionQueryVariables>(
+    GetExhibitionDocument,
+    options
+  );
+}
+
+export type GetExhibitionQueryHookResult = ReturnType<typeof useGetExhibitionQuery>;
+
+export type GetExhibitionLazyQueryHookResult = ReturnType<typeof useGetExhibitionLazyQuery>;
+
+export type GetExhibitionQueryResult = Apollo.QueryResult<
+  GetExhibitionQuery,
+  GetExhibitionQueryVariables
 >;
 
 export const GetFaceTagsDocument = gql`
