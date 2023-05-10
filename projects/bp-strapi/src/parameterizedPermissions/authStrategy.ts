@@ -6,6 +6,7 @@ import type {
 } from "bp-graphql/build/db-types";
 import { OperationDefinitionNode } from "graphql/language/ast";
 import { checkAllowed } from "./checkAllowed";
+import { getUserPermissions } from "./getUserPermissions";
 import { isIntrospectionQuery } from "./isIntrospectionQuery";
 import { isSuperUserLoggingIn } from "./isSuperUserLoggingIn";
 import { getJwtService, getUserService } from "./userService";
@@ -23,13 +24,6 @@ const getToken = async (ctx): Promise<{ id: string | undefined } | null> => {
 
 const authenticate = async (ctx) => {
   let token = await getToken(ctx);
-
-  let permissions = [];
-
-  const permissionsQuery = strapi.db.query(
-    "api::parameterized-permission.parameterized-permission"
-  );
-  const permissionsPopulate = ["users_permissions_user", "archive_tag"];
 
   let user: UsersPermissionsUser | null = null;
 
@@ -54,25 +48,9 @@ const authenticate = async (ctx) => {
     }
 
     ctx.state.user = user;
-
-    permissions = await permissionsQuery.findMany({
-      where: {
-        users_permissions_user: {
-          id: { $eq: user.id },
-        },
-      },
-      populate: permissionsPopulate,
-    });
-  } else {
-    permissions = await permissionsQuery.findMany({
-      where: {
-        users_permissions_user: {
-          id: { $null: true },
-        },
-      },
-      populate: permissionsPopulate,
-    });
   }
+
+  const permissions = await getUserPermissions(user);
 
   return {
     authenticated: true,
