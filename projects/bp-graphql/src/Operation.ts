@@ -1,6 +1,7 @@
 import { DB } from './DB';
 import { ParameterizedPermission, UsersPermissionsUser } from './db-types';
 import * as groups from './groups';
+import * as operations from './operations';
 
 export enum OperationType {
   query = 'query',
@@ -57,6 +58,19 @@ export type Group = {
 } & GroupSettings;
 
 export type GroupName = keyof typeof groups;
+
+export type Operations = typeof operations;
+
+export type OperationName = keyof Operations;
+
+export type OperationWithoutGroupName = Exclude<
+  {
+    [Name in OperationName]: [Name, Operations[Name]];
+  }[OperationName],
+  [string, { group: unknown }]
+>[0];
+
+export type PermissionName = GroupName | OperationWithoutGroupName;
 
 export type Variables = Record<string, any>;
 
