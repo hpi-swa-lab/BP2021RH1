@@ -104,6 +104,12 @@ const generateOperationsStructure = (): OperationsStructure => {
 
 const sections = generateOperationsStructure();
 
+enum HasGroup {
+  NONE,
+  SOME,
+  ALL,
+}
+
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
 
@@ -154,6 +160,52 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     [permissionLookup]
   );
 
+  const hasGroup = useCallback(
+    (group: GroupStructure, archive: FlatArchiveTag | null) => {
+      const hasOperations = group.operations.map(operation => {
+        const permission = findPermission(operation, archive);
+        return !!permission && equalOrBothNullish(archive?.id, permission.archive_tag?.id);
+      });
+      if (hasOperations.every(has => has)) {
+        return HasGroup.ALL;
+      }
+      if (hasOperations.every(has => !has)) {
+        return HasGroup.NONE;
+      }
+      return HasGroup.SOME;
+    },
+    [findPermission]
+  );
+
+  const toggleGroup = useCallback(
+    (group: GroupStructure, archive: FlatArchiveTag | null, hasGroup: HasGroup) => {
+      if (hasGroup !== HasGroup.NONE) {
+        for (const operation of group.operations) {
+          const permission = findPermission(operation, archive);
+          if (!permission) {
+            continue;
+          }
+          deletePermission({
+            variables: {
+              id: permission.id,
+            },
+          });
+        }
+      } else {
+        for (const operation of group.operations) {
+          createPermission({
+            variables: {
+              operationName: operation.document.name,
+              userId: parsedUserId,
+              archiveId: archive?.id,
+            },
+          });
+        }
+      }
+    },
+    []
+  );
+
   const {
     data: archivesData,
     loading: archivesLoading,
@@ -174,6 +226,13 @@ const PermissionsView = ({ userId }: { userId: string }) => {
 
   const renderSections = useCallback(
     (summary: ReactNode, sections: SectionStructure[], archive: FlatArchiveTag | null) => {
+      const sectionsWithHasGroups = sections.map(section => ({
+        ...section,
+        groups: section.groups.map(group => ({
+          ...group,
+          hasGroup: hasGroup(group, archive),
+        })),
+      }));
       return (
         <Accordion key={archive?.id ?? 'global'} sx={{ backgroundColor: '#e9e9e9' }}>
           <AccordionSummary expandIcon={<ExpandMore />}>
@@ -188,7 +247,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
               ))}
             </Stack>
             <div className='mt-2'>
-              {sections.map(section => (
+              {sectionsWithHasGroups.map(section => (
                 <Accordion key={section.name}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
                     {t(`admin.permissions.section.${section.name}`)}
@@ -198,43 +257,12 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                       .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
                       .sort(([a], [b]) => a.localeCompare(b))
                       .map(([name, group]) => {
-                        const hasOperations = group.operations.map(operation => {
-                          const permission = findPermission(operation, archive);
-                          return (
-                            !!permission &&
-                            equalOrBothNullish(archive?.id, permission.archive_tag?.id)
-                          );
-                        });
-                        const hasAll = hasOperations.every(has => has);
-                        const hasNone = hasOperations.every(has => !has);
-                        const checked = hasAll ? true : hasNone ? false : undefined;
+                        const has = group.hasGroup;
+                        const checked =
+                          has === HasGroup.ALL ? true : has === HasGroup.NONE ? false : undefined;
                         const indeterminate = checked === undefined;
 
-                        const onClick = !hasNone
-                          ? () => {
-                              for (const operation of group.operations) {
-                                const permission = findPermission(operation, archive);
-                                if (!permission) {
-                                  continue;
-                                }
-                                deletePermission({
-                                  variables: {
-                                    id: permission.id,
-                                  },
-                                });
-                              }
-                            }
-                          : () => {
-                              for (const operation of group.operations) {
-                                createPermission({
-                                  variables: {
-                                    operationName: operation.document.name,
-                                    userId: parsedUserId,
-                                    archiveId: archive?.id,
-                                  },
-                                });
-                              }
-                            };
+                        const onClick = () => toggleGroup(group, archive, has);
 
                         return (
                           <div key={group.name}>
