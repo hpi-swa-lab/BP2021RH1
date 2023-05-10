@@ -42,7 +42,7 @@ import { FALLBACK_PATH } from '../../../routes';
 import { equalOrBothNullish } from './helper';
 
 type OperationsStructure = {
-  global: SectionStructure[];
+  system: SectionStructure[];
   perArchive: SectionStructure[];
 };
 
@@ -57,7 +57,7 @@ type GroupStructure = {
 };
 
 const generateOperationsStructure = (): OperationsStructure => {
-  const globalSections: SectionStructure[] = sectionNames.map(name => ({
+  const systemSections: SectionStructure[] = sectionNames.map(name => ({
     name,
     groups: [],
   }));
@@ -73,7 +73,7 @@ const generateOperationsStructure = (): OperationsStructure => {
   const isArchiveSpecificGroup = (settings: GroupSettings) =>
     settings.needsParameters.includes('archive_tag');
   const getSections = (settings: GroupSettings) =>
-    isArchiveSpecificGroup(settings) ? perArchiveSections : globalSections;
+    isArchiveSpecificGroup(settings) ? perArchiveSections : systemSections;
 
   for (const [name, group] of Object.entries(groupsMap)) {
     getSections(group)
@@ -101,7 +101,7 @@ const generateOperationsStructure = (): OperationsStructure => {
     sections.filter(section => section.groups.length > 0);
 
   return {
-    global: filterOutEmptySections(globalSections),
+    system: filterOutEmptySections(systemSections),
     perArchive: filterOutEmptySections(perArchiveSections),
   };
 };
@@ -165,7 +165,7 @@ const HasGroupCheckbox = ({
   );
 };
 
-type PresetType = 'global' | 'archive';
+type PresetType = 'system' | 'archive';
 
 type Preset = {
   type: PresetType;
@@ -175,7 +175,7 @@ type Preset = {
 
 const presets: Preset[] = [
   {
-    type: 'global',
+    type: 'system',
     name: 'public',
     permissions: [
       'getPictures',
@@ -359,7 +359,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         })),
       }));
       const relevantPresets = presets
-        .filter(preset => preset.type === (archive === null ? 'global' : 'archive'))
+        .filter(preset => preset.type === (archive === null ? 'system' : 'archive'))
         .map(preset => ({
           ...preset,
           operations: sectionsWithHasGroups.flatMap(section =>
@@ -369,7 +369,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
           ),
         }));
       return (
-        <Accordion key={archive?.id ?? 'global'} sx={{ backgroundColor: '#e9e9e9' }}>
+        <Accordion key={archive?.id ?? 'system'} sx={{ backgroundColor: '#e9e9e9' }}>
           <AccordionSummary expandIcon={<ExpandMore />}>
             <Typography fontWeight='bold'>
               <HasGroupCheckbox
@@ -453,7 +453,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
             ? t('admin.permissions.publicTitle')
             : t('admin.permissions.title', { userName: user?.username })}
         </h1>
-        {renderSections(t('admin.permissions.globalPermissions'), sections.global, null)}
+        {renderSections(t('admin.permissions.systemPermissions'), sections.system, null)}
         {archives.map(archive => renderSections(archive.name, sections.perArchive, archive))}
       </div>
     );
