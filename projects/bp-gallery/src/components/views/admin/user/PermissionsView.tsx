@@ -16,7 +16,7 @@ import {
   operations as operationsMap,
   sections as sectionNames,
 } from 'bp-graphql';
-import { ReactNode, useCallback, useMemo } from 'react';
+import { ChangeEvent, ReactNode, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import {
@@ -110,6 +110,53 @@ enum HasGroup {
   ALL,
 }
 
+const combineHasGroups = (hasGroups: HasGroup[]) => {
+  if (hasGroups.every(has => has === HasGroup.ALL)) {
+    return HasGroup.ALL;
+  }
+  if (hasGroups.every(has => has === HasGroup.NONE)) {
+    return HasGroup.NONE;
+  }
+  return HasGroup.SOME;
+};
+
+const HasGroupCheckbox = ({
+  hasGroup,
+  operations,
+  archive,
+  label,
+  toggleOperations,
+}: {
+  hasGroup: HasGroup;
+  operations: Operation[];
+  archive: FlatArchiveTag | null;
+  label: ReactNode;
+  toggleOperations: (
+    operations: Operation[],
+    archive: FlatArchiveTag | null,
+    hasGroup: HasGroup
+  ) => void;
+}) => {
+  const checked = hasGroup === HasGroup.ALL;
+  const indeterminate = hasGroup === HasGroup.SOME;
+
+  const onClick = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      toggleOperations(operations, archive, hasGroup);
+      // prevent Accordion from toggling
+      event.stopPropagation();
+    },
+    [toggleOperations, operations, archive, hasGroup]
+  );
+
+  return (
+    <FormControlLabel
+      control={<Checkbox indeterminate={indeterminate} checked={checked} onChange={onClick} />}
+      label={label}
+    />
+  );
+};
+
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
 
@@ -166,44 +213,9 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         const permission = findPermission(operation, archive);
         return !!permission && equalOrBothNullish(archive?.id, permission.archive_tag?.id);
       });
-      if (hasOperations.every(has => has)) {
-        return HasGroup.ALL;
-      }
-      if (hasOperations.every(has => !has)) {
-        return HasGroup.NONE;
-      }
-      return HasGroup.SOME;
+      return combineHasGroups(hasOperations.map(has => (has ? HasGroup.ALL : HasGroup.NONE)));
     },
     [findPermission]
-  );
-
-  const toggleGroup = useCallback(
-    (group: GroupStructure, archive: FlatArchiveTag | null, hasGroup: HasGroup) => {
-      if (hasGroup !== HasGroup.NONE) {
-        for (const operation of group.operations) {
-          const permission = findPermission(operation, archive);
-          if (!permission) {
-            continue;
-          }
-          deletePermission({
-            variables: {
-              id: permission.id,
-            },
-          });
-        }
-      } else {
-        for (const operation of group.operations) {
-          createPermission({
-            variables: {
-              operationName: operation.document.name,
-              userId: parsedUserId,
-              archiveId: archive?.id,
-            },
-          });
-        }
-      }
-    },
-    []
   );
 
   const {
@@ -224,6 +236,35 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const loading = userLoading || permissionsLoading || archivesLoading;
   const error = userError ?? permissionsError ?? archivesError;
 
+  const toggleOperations = useCallback(
+    (operations: Operation[], archive: FlatArchiveTag | null, hasGroup: HasGroup) => {
+      if (hasGroup !== HasGroup.NONE) {
+        for (const operation of operations) {
+          const permission = findPermission(operation, archive);
+          if (!permission) {
+            continue;
+          }
+          deletePermission({
+            variables: {
+              id: permission.id,
+            },
+          });
+        }
+      } else {
+        for (const operation of operations) {
+          createPermission({
+            variables: {
+              operationName: operation.document.name,
+              userId: parsedUserId,
+              archiveId: archive?.id,
+            },
+          });
+        }
+      }
+    },
+    [findPermission, deletePermission, createPermission, parsedUserId]
+  );
+
   const renderSections = useCallback(
     (summary: ReactNode, sections: SectionStructure[], archive: FlatArchiveTag | null) => {
       const sectionsWithHasGroups = sections.map(section => ({
@@ -236,7 +277,21 @@ const PermissionsView = ({ userId }: { userId: string }) => {
       return (
         <Accordion key={archive?.id ?? 'global'} sx={{ backgroundColor: '#e9e9e9' }}>
           <AccordionSummary expandIcon={<ExpandMore />}>
-            <Typography fontWeight='bold'>{summary}</Typography>
+            <Typography fontWeight='bold'>
+              <HasGroupCheckbox
+                hasGroup={combineHasGroups(
+                  sectionsWithHasGroups.flatMap(section =>
+                    section.groups.map(group => group.hasGroup)
+                  )
+                )}
+                operations={sectionsWithHasGroups.flatMap(section =>
+                  section.groups.flatMap(group => group.operations)
+                )}
+                archive={archive}
+                label={summary}
+                toggleOperations={toggleOperations}
+              />
+            </Typography>
           </AccordionSummary>
           <div className='m-4'>
             <Stack direction='row' spacing={1}>
@@ -250,35 +305,30 @@ const PermissionsView = ({ userId }: { userId: string }) => {
               {sectionsWithHasGroups.map(section => (
                 <Accordion key={section.name}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    {t(`admin.permissions.section.${section.name}`)}
+                    <HasGroupCheckbox
+                      hasGroup={combineHasGroups(section.groups.map(group => group.hasGroup))}
+                      operations={section.groups.flatMap(group => group.operations)}
+                      archive={archive}
+                      label={t(`admin.permissions.section.${section.name}`)}
+                      toggleOperations={toggleOperations}
+                    />
                   </AccordionSummary>
                   <AccordionDetails>
                     {section.groups
                       .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
                       .sort(([a], [b]) => a.localeCompare(b))
-                      .map(([name, group]) => {
-                        const has = group.hasGroup;
-                        const checked =
-                          has === HasGroup.ALL ? true : has === HasGroup.NONE ? false : undefined;
-                        const indeterminate = checked === undefined;
-
-                        const onClick = () => toggleGroup(group, archive, has);
-
-                        return (
-                          <div key={group.name}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  indeterminate={indeterminate}
-                                  checked={checked}
-                                  onChange={onClick}
-                                />
-                              }
-                              label={name}
-                            />
-                          </div>
-                        );
-                      })}
+                      .map(([name, group]) => (
+                        // div forces every checkbox on a separate line
+                        <div key={group.name}>
+                          <HasGroupCheckbox
+                            hasGroup={group.hasGroup}
+                            operations={group.operations}
+                            archive={archive}
+                            label={name}
+                            toggleOperations={toggleOperations}
+                          />
+                        </div>
+                      ))}
                   </AccordionDetails>
                 </Accordion>
               ))}
@@ -287,7 +337,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         </Accordion>
       );
     },
-    [createPermission, deletePermission, parsedUserId, findPermission, t]
+    [hasGroup, toggleOperations, t]
   );
 
   if (error) {
