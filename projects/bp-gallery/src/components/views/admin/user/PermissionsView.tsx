@@ -16,7 +16,7 @@ import {
   operations as operationsMap,
   sections as sectionNames,
 } from 'bp-graphql';
-import { ChangeEvent, ReactNode, useCallback, useMemo } from 'react';
+import { ChangeEvent, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import {
@@ -34,6 +34,7 @@ import {
 } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
+import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
 import { equalOrBothNullish } from './helper';
 
@@ -125,16 +126,20 @@ const HasGroupCheckbox = ({
   operations,
   archive,
   label,
+  prompt,
   toggleOperations,
 }: {
   hasGroup: HasGroup;
   operations: Operation[];
   archive: FlatArchiveTag | null;
-  label: ReactNode;
+  label: string;
+  prompt?: boolean;
   toggleOperations: (
     operations: Operation[],
     archive: FlatArchiveTag | null,
-    hasGroup: HasGroup
+    hasGroup: HasGroup,
+    header: string,
+    prompt?: boolean
   ) => void;
 }) => {
   const checked = hasGroup === HasGroup.ALL;
@@ -142,11 +147,11 @@ const HasGroupCheckbox = ({
 
   const onClick = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      toggleOperations(operations, archive, hasGroup);
+      toggleOperations(operations, archive, hasGroup, label, prompt);
       // prevent Accordion from toggling
       event.stopPropagation();
     },
-    [toggleOperations, operations, archive, hasGroup]
+    [toggleOperations, operations, archive, hasGroup, label, prompt]
   );
 
   return (
@@ -236,9 +241,30 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const loading = userLoading || permissionsLoading || archivesLoading;
   const error = userError ?? permissionsError ?? archivesError;
 
+  const dialog = useDialog();
+
   const toggleOperations = useCallback(
-    (operations: Operation[], archive: FlatArchiveTag | null, hasGroup: HasGroup) => {
-      if (hasGroup !== HasGroup.NONE) {
+    async (
+      operations: Operation[],
+      archive: FlatArchiveTag | null,
+      hasGroup: HasGroup,
+      header: string,
+      prompt = false
+    ) => {
+      const removeAll = hasGroup !== HasGroup.NONE;
+      if (prompt) {
+        const really = await dialog({
+          preset: DialogPreset.CONFIRM,
+          title: removeAll
+            ? t('admin.permissions.reallyRemoveAllPermissions', { header })
+            : t('admin.permissions.reallyGrantAllPermissions', { header }),
+          content: t('admin.permissions.reallyEditAllPermissionsContent'),
+        });
+        if (!really) {
+          return;
+        }
+      }
+      if (removeAll) {
         for (const operation of operations) {
           const permission = findPermission(operation, archive);
           if (!permission) {
@@ -262,11 +288,11 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         }
       }
     },
-    [findPermission, deletePermission, createPermission, parsedUserId]
+    [dialog, t, findPermission, deletePermission, createPermission, parsedUserId]
   );
 
   const renderSections = useCallback(
-    (summary: ReactNode, sections: SectionStructure[], archive: FlatArchiveTag | null) => {
+    (summary: string, sections: SectionStructure[], archive: FlatArchiveTag | null) => {
       const sectionsWithHasGroups = sections.map(section => ({
         ...section,
         groups: section.groups.map(group => ({
@@ -289,6 +315,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                 )}
                 archive={archive}
                 label={summary}
+                prompt
                 toggleOperations={toggleOperations}
               />
             </Typography>
@@ -310,6 +337,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                       operations={section.groups.flatMap(group => group.operations)}
                       archive={archive}
                       label={t(`admin.permissions.section.${section.name}`)}
+                      prompt
                       toggleOperations={toggleOperations}
                     />
                   </AccordionSummary>

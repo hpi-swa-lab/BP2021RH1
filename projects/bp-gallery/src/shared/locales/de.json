@@ -155,6 +155,9 @@
       "title": "Rechte des Nutzers {{userName}}",
       "publicTitle": "Rechte eines unangemeldeten Nutzers",
       "globalPermissions": "System-Rechte",
+      "reallyGrantAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" vergeben?",
+      "reallyRemoveAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" entziehen?",
+      "reallyEditAllPermissionsContent": "Sie können dies nicht rückgängig machen, sondern müssen den vorigen Stand manuell wiederherstellen.",
       "section": {
         "picture": "Bilder",
         "collection": "Collections",
@@ -206,6 +209,9 @@
         "deleteParameterizedPermission": "Recht entziehen",
         "getUsersPermissionsUser": "Nutzer-Daten ansehen",
         "login": "Sich anmelden"
+      },
+      "preset": {
+        "public": "Öffentlicher Nutzer"
       }
     }
   },
