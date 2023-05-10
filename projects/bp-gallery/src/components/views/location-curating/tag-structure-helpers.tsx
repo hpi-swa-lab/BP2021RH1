@@ -14,13 +14,13 @@ export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
     for (const tag of Object.values(tagsById)) {
       tag.parent_tags?.forEach(parentTag => {
         tagsById[parentTag.id].child_tags.push(tag);
-        // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
-        tagsById[parentTag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
       });
+    }
+    for (const tag of Object.values(tagsById)) {
+      tagsById[tag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
     }
     const sortedTagTree = Object.values(tagsById)
       .filter(tag => !tag.parent_tags?.length || tag.root)
-      // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
       .sort((a, b) => a.name.localeCompare(b.name));
 
     const queue: FlatTag[] = [];
