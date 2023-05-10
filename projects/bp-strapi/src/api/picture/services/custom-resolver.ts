@@ -1,4 +1,5 @@
 "use strict";
+import { KnexEngine } from "../../../types";
 import { bulkEdit, like, updatePictureWithTagCleanup } from "./custom-update";
 const { plural, table } = require("../../helper");
 /**
@@ -141,13 +142,33 @@ const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
   return knexEngine;
 };
 
-const buildWhere = (knexEngine, searchTerms, searchTimes, filterOutTexts) => {
+const buildWhere = (
+  queryBuilder,
+  searchTerms,
+  searchTimes,
+  filterOutTexts,
+  knexEngine: KnexEngine
+) => {
   for (const searchObject of [...searchTerms, ...searchTimes]) {
     // Function syntax for where in order to use correct bracing in the query
-    knexEngine = knexEngine.where((qb) => {
+    queryBuilder = queryBuilder.where((qb) => {
       if (typeof searchObject === "string") {
         qb = buildLikeWhereForSearchTerm(qb, searchObject);
       } else if (Array.isArray(searchObject)) {
+        //the timestamps of the time range tags are incorrectly saved in the data bank due to time zone shenanigans
+        //wich caused some searches not return results even though they should e.g. if a picture was tagged with
+        //just the year 1954, the start of its timerange would be saved as 1953-12-31T23:00:00 instead of
+        //1954-01-01T00:00:00 which would cause searches for '1954' to not return this picture even though
+        //they should
+        //by shifting the bounds of the search time range backward by 1 hour the search should now work
+        //correctly without having to migrate the whole data base
+
+        //the parser kept throwing syntax errors when i tried to use the knexEngine.raw() method as intended, since
+        // the method did not correctly build this part of the query, but with these prebuild strings it seems to work fine
+        const startDateCorrection =
+          "timestamp '" + searchObject[1] + "' - interval '1 hour'";
+        const endDateCorrection =
+          "timestamp '" + searchObject[2] + "' - interval '1 hour'";
         // If the search object is an array, it must be our custom format for search times
         // e.g. ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
         qb = buildLikeWhereForSearchTerm(qb, searchObject[0]);
@@ -155,12 +176,12 @@ const buildWhere = (knexEngine, searchTerms, searchTimes, filterOutTexts) => {
           timeRangeQb = timeRangeQb.where(
             "time_range_tags.start",
             ">=",
-            searchObject[1]
+            knexEngine.raw(startDateCorrection)
           );
           timeRangeQb = timeRangeQb.andWhere(
             "time_range_tags.end",
             "<=",
-            searchObject[2]
+            knexEngine.raw(endDateCorrection)
           );
           return timeRangeQb;
         });
@@ -170,16 +191,16 @@ const buildWhere = (knexEngine, searchTerms, searchTimes, filterOutTexts) => {
   }
 
   // Only retrieve published pictures
-  knexEngine = knexEngine.whereNotNull("pictures.published_at");
+  queryBuilder = queryBuilder.whereNotNull("pictures.published_at");
 
   if (filterOutTexts) {
-    knexEngine = knexEngine.where((qb) => {
+    queryBuilder = queryBuilder.where((qb) => {
       qb.where("pictures.is_text", false);
       qb.orWhereNull("pictures.is_text");
     });
   }
 
-  return knexEngine;
+  return queryBuilder;
 };
 
 /**
@@ -201,7 +222,8 @@ const buildQueryForAllSearch = (
     withJoins,
     searchTerms,
     searchTimes,
-    filterOutTexts
+    filterOutTexts,
+    knexEngine
   );
 
   const withOrder = withWhere.orderBy("pictures.published_at", "asc");
