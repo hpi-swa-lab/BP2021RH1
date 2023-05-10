@@ -10,8 +10,11 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  GroupName,
   GroupSettings,
   Operation,
+  OperationWithoutGroupName,
+  PermissionName,
   groups as groupsMap,
   operations as operationsMap,
   sections as sectionNames,
@@ -49,7 +52,7 @@ type SectionStructure = {
 };
 
 type GroupStructure = {
-  name: string;
+  name: PermissionName;
   operations: Operation[];
 };
 
@@ -64,7 +67,7 @@ const generateOperationsStructure = (): OperationsStructure => {
   }));
 
   const groups: Record<string, GroupStructure> = Object.fromEntries(
-    Object.entries(groupsMap).map(([name, group]) => [name, { name, operations: [] }])
+    Object.keys(groupsMap).map(name => [name, { name: name as GroupName, operations: [] }])
   );
 
   const isArchiveSpecificGroup = (settings: GroupSettings) =>
@@ -75,7 +78,7 @@ const generateOperationsStructure = (): OperationsStructure => {
   for (const [name, group] of Object.entries(groupsMap)) {
     getSections(group)
       .find(section => section.name === group.section)
-      ?.groups.push(groups[name]);
+      ?.groups.push(groups[name as GroupName]);
   }
   for (const operation of Object.values(operationsMap)) {
     if ('group' in operation) {
@@ -89,7 +92,7 @@ const generateOperationsStructure = (): OperationsStructure => {
         continue;
       }
       section.groups.push({
-        name: operation.document.name,
+        name: operation.document.name as OperationWithoutGroupName,
         operations: [operation],
       });
     }
@@ -161,6 +164,35 @@ const HasGroupCheckbox = ({
     />
   );
 };
+
+type PresetType = 'global' | 'archive';
+
+type Preset = {
+  type: PresetType;
+  name: string;
+  permissions: readonly PermissionName[];
+};
+
+const presets: Preset[] = [
+  {
+    type: 'global',
+    name: 'public',
+    permissions: [
+      'getPictures',
+      'getAllPicturesByArchive',
+      'viewCollection',
+      'getTagThumbnails',
+      'getAllArchiveTags',
+      'geo',
+      'login',
+    ],
+  },
+  {
+    type: 'archive',
+    name: 'public',
+    permissions: ['viewPicture', 'getDailyPictureInfo', 'like', 'postComment', 'getArchive'],
+  },
+];
 
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
@@ -243,6 +275,38 @@ const PermissionsView = ({ userId }: { userId: string }) => {
 
   const dialog = useDialog();
 
+  const addPermission = useCallback(
+    (operation: Operation, archive: FlatArchiveTag | null) => {
+      createPermission({
+        variables: {
+          operationName: operation.document.name,
+          userId: parsedUserId,
+          archiveId: archive?.id,
+        },
+      });
+    },
+    [createPermission, parsedUserId]
+  );
+
+  const addPermissionIfMissing = useCallback(
+    (operation: Operation, archive: FlatArchiveTag | null) => {
+      if (findPermission(operation, archive)) {
+        return;
+      }
+      addPermission(operation, archive);
+    },
+    [findPermission, addPermission]
+  );
+
+  const addPermissionsIfMissing = useCallback(
+    (operations: Operation[], archive: FlatArchiveTag | null) => {
+      for (const operation of operations) {
+        addPermissionIfMissing(operation, archive);
+      }
+    },
+    [addPermissionIfMissing]
+  );
+
   const toggleOperations = useCallback(
     async (
       operations: Operation[],
@@ -278,17 +342,11 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         }
       } else {
         for (const operation of operations) {
-          createPermission({
-            variables: {
-              operationName: operation.document.name,
-              userId: parsedUserId,
-              archiveId: archive?.id,
-            },
-          });
+          addPermission(operation, archive);
         }
       }
     },
-    [dialog, t, findPermission, deletePermission, createPermission, parsedUserId]
+    [dialog, t, findPermission, deletePermission, addPermission]
   );
 
   const renderSections = useCallback(
@@ -300,6 +358,16 @@ const PermissionsView = ({ userId }: { userId: string }) => {
           hasGroup: hasGroup(group, archive),
         })),
       }));
+      const relevantPresets = presets
+        .filter(preset => preset.type === (archive === null ? 'global' : 'archive'))
+        .map(preset => ({
+          ...preset,
+          operations: sectionsWithHasGroups.flatMap(section =>
+            section.groups
+              .filter(group => preset.permissions.includes(group.name))
+              .flatMap(group => group.operations)
+          ),
+        }));
       return (
         <Accordion key={archive?.id ?? 'global'} sx={{ backgroundColor: '#e9e9e9' }}>
           <AccordionSummary expandIcon={<ExpandMore />}>
@@ -322,9 +390,14 @@ const PermissionsView = ({ userId }: { userId: string }) => {
           </AccordionSummary>
           <div className='m-4'>
             <Stack direction='row' spacing={1}>
-              {['Preset 1', 'Preset 2'].map(name => (
-                <Button key={name} color='info' variant='outlined'>
-                  {name}
+              {relevantPresets.map(preset => (
+                <Button
+                  key={preset.name}
+                  color='info'
+                  variant='outlined'
+                  onClick={() => addPermissionsIfMissing(preset.operations, archive)}
+                >
+                  {t(`admin.permissions.preset.${preset.name}`)}
                 </Button>
               ))}
             </Stack>
@@ -365,7 +438,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         </Accordion>
       );
     },
-    [hasGroup, toggleOperations, t]
+    [hasGroup, addPermissionsIfMissing, toggleOperations, t]
   );
 
   if (error) {
