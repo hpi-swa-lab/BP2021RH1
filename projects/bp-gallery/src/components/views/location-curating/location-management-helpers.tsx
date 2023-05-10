@@ -5,8 +5,72 @@ import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { useDeleteTagAndChildren, useDeleteSingleTag } from './delete-tag-helpers';
 import { useTranslation } from 'react-i18next';
 import { ComponentCommonSynonymsInput } from '../../../graphql/APIConnector';
+import { useContext } from 'react';
+import { AlertContext, AlertType } from '../../provider/AlertProvider';
+
+const useClosesLoop = () => {
+  const openAlert = useContext(AlertContext);
+  const { t } = useTranslation();
+  const closesLoop = (childTag: FlatTag, parentTag: FlatTag) => {
+    // direct loop
+    if (childTag.id === parentTag.id) {
+      openAlert({
+        alertType: AlertType.ERROR,
+        message: t('tag-panel.loop-error'),
+        duration: 5000,
+      });
+      return true;
+    }
+
+    // loop with children
+    const queue: FlatTag[] = [];
+    childTag.child_tags?.forEach(child => {
+      queue.push(child);
+    });
+
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+      if (nextTag && nextTag.id === parentTag.id) {
+        openAlert({
+          alertType: AlertType.ERROR,
+          message: t('tag-panel.loop-error'),
+          duration: 5000,
+        });
+        return true;
+      }
+      nextTag?.child_tags?.forEach(child => {
+        queue.push(child);
+      });
+    }
+
+    // loop with parents
+    const parentQueue: FlatTag[] = [];
+    parentTag.parent_tags?.forEach(parent => {
+      parentQueue.push(parent);
+    });
+
+    while (parentQueue.length > 0) {
+      const nextTag = parentQueue.shift();
+      if (nextTag && nextTag.id === childTag.id) {
+        openAlert({
+          alertType: AlertType.ERROR,
+          message: t('tag-panel.loop-error'),
+          duration: 5000,
+        });
+        return true;
+      }
+      nextTag?.parent_tags?.forEach(parent => {
+        parentQueue.push(parent);
+      });
+    }
+
+    return false;
+  };
+  return { closesLoop };
+};
 
 export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
+  const { closesLoop } = useClosesLoop();
   const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateTagParentMutation] = updateTagParentMutationSource({
     onCompleted: (_: any) => {
@@ -14,11 +78,16 @@ export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
     },
   });
 
-  const setParentTags = (parentIDs: string[]) => {
+  const setParentTags = (parentTags: FlatTag[]) => {
+    const newParentTag = parentTags.filter(tag => tag.child_tags);
+    if (newParentTag.length && closesLoop(locationTag, newParentTag[0])) {
+      return;
+    }
+
     updateTagParentMutation({
       variables: {
         tagID: locationTag.id,
-        parentIDs: parentIDs,
+        parentIDs: parentTags.map(parent => parent.id),
       },
     });
   };
@@ -27,6 +96,7 @@ export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
 };
 
 export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
+  const { closesLoop } = useClosesLoop();
   const { updateTagChildMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateTagChildMutation] = updateTagChildMutationSource({
     onCompleted: (_: any) => {
@@ -34,11 +104,16 @@ export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
     },
   });
 
-  const setChildTags = (childIDs: string[]) => {
+  const setChildTags = (childTags: FlatTag[]) => {
+    const newChildTag = childTags.filter(tag => tag.child_tags);
+    if (newChildTag.length && closesLoop(newChildTag[0], locationTag)) {
+      return;
+    }
+
     updateTagChildMutation({
       variables: {
         tagID: locationTag.id,
-        childIDs: childIDs,
+        childIDs: childTags.map(child => child.id),
       },
     });
   };
@@ -88,6 +163,7 @@ export const useSetRoot = (locationTag: FlatTag, refetch: () => void) => {
 export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parentTag?: FlatTag) => {
   const prompt = useDialog();
   const { t } = useTranslation();
+  const { closesLoop } = useClosesLoop();
 
   const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateTagParentMutation] = updateTagParentMutationSource({
@@ -103,24 +179,15 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
     });
     if (selectedTag) {
       if (selectedTag.child_tags.some((tag: any) => tag.name === locationTag.name)) {
-        if (selectedTag.child_tags.some((tag: any) => tag.id === locationTag.id)) {
-          updateTagParentMutation({
-            variables: {
-              tagID: locationTag.id,
-              parentIDs: [
-                ...(parentTag
-                  ? (locationTag.parent_tags?.map(t => t.id) ?? []).filter(t => t !== parentTag.id)
-                  : locationTag.parent_tags?.map(t => t.id) ?? []),
-              ],
-            },
-          });
-        } else {
+        if (!selectedTag.child_tags.some((tag: any) => tag.id === locationTag.id)) {
           prompt({
             preset: DialogPreset.CONFIRM,
             title: t('tag-panel.location-already-exists', { name: locationTag.name }),
           });
         }
       } else {
+        if (closesLoop(locationTag, selectedTag as FlatTag)) return;
+
         updateTagParentMutation({
           variables: {
             tagID: locationTag.id,
@@ -174,6 +241,7 @@ export const useDetachTag = (locationTag: FlatTag, refetch: () => void) => {
 export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
   const prompt = useDialog();
   const { t } = useTranslation();
+  const { closesLoop } = useClosesLoop();
 
   const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateTagParentMutation] = updateTagParentMutationSource({
@@ -196,6 +264,8 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
           });
         }
       } else {
+        if (closesLoop(locationTag, selectedTag as FlatTag)) return;
+
         updateTagParentMutation({
           variables: {
             tagID: locationTag.id,

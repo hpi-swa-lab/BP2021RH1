@@ -260,7 +260,7 @@ const LocationManagementDialogPreset = ({
                       }
                       allTags={(flattenedTags as any) ?? []}
                       onChange={locations => {
-                        setChildTags(locations.map(t => t.id));
+                        setChildTags(locations as FlatTag[]);
                       }}
                       noContentText={''}
                       fixedTag={locationTag}
@@ -290,7 +290,7 @@ const LocationManagementDialogPreset = ({
                       }
                       allTags={(flattenedTags as any) ?? []}
                       onChange={locations => {
-                        setParentTags(locations.map(t => t.id));
+                        setParentTags(locations as FlatTag[]);
                       }}
                       noContentText={''}
                       fixedTag={locationTag}

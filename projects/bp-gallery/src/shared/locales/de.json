@@ -378,7 +378,8 @@
     "location-already-exists": "Es existiert bereits ein Ort mit dem Namen {{ name }} an der Stelle, wo sie en Ort einfügen wollen. Diese Operation wird deswegen nicht ausgeführt.",
     "delete-elsewhere": "Der Ort {{ name }} besitzt eine Kopie an anderer Stelle. Soll diese auch gelöscht werden?",
     "only-delete-here": "Nur hier löschen.",
-    "delete-everywhere": "Überall löschen."
+    "delete-everywhere": "Überall löschen.",
+    "loop-error": "Diese Aktion würde eine Kreisschluss der Orte zur Folge haben und wird deswegen nicht ausgeführt."
   },
   "tooltips": {
     "detach-location": "Ort aus der Hierarchie lösen.",

@@ -23,6 +23,22 @@ export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
       // THIS IS JUST FOR THE PROTOTYPE DO NOT USE IT IN THE FUTURE
       .sort((a, b) => a.name.localeCompare(b.name));
 
+    const queue: FlatTag[] = [];
+    sortedTagTree.forEach(tag => {
+      queue.push(tag);
+    });
+
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+      if (nextTag) {
+        nextTag.child_tags?.forEach(child => {
+          child.parent_tags = child.parent_tags?.filter(tag => tag.id !== nextTag.id);
+          child.parent_tags?.push(nextTag);
+          queue.push(child);
+        });
+      }
+    }
+
     return sortedTagTree;
   }, [flattenedTags]);
 
