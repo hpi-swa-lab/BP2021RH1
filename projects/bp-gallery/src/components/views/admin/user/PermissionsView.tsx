@@ -1,4 +1,14 @@
-import { Checkbox, FormControlLabel } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  Typography,
+} from '@mui/material';
 import {
   GroupSettings,
   Operation,
@@ -6,7 +16,7 @@ import {
   operations as operationsMap,
   sections as sectionNames,
 } from 'bp-graphql';
-import { useCallback, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import {
@@ -163,66 +173,91 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const error = userError ?? permissionsError ?? archivesError;
 
   const renderSections = useCallback(
-    (sections: SectionStructure[], archive: FlatArchiveTag | null) => {
-      return sections.map(section => (
-        <div key={section.name}>
-          <h4>{t(`admin.permissions.section.${section.name}`)}</h4>
-          {section.groups
-            .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
-            .sort(([a], [b]) => a.localeCompare(b))
-            .map(([name, group]) => {
-              const hasOperations = group.operations.map(operation => {
-                const permission = findPermission(operation, archive);
-                return !!permission && equalOrBothNullish(archive?.id, permission.archive_tag?.id);
-              });
-              const hasAll = hasOperations.every(has => has);
-              const hasNone = hasOperations.every(has => !has);
-              const checked = hasAll ? true : hasNone ? false : undefined;
-              const indeterminate = checked === undefined;
+    (summary: ReactNode, sections: SectionStructure[], archive: FlatArchiveTag | null) => {
+      return (
+        <Accordion key={archive?.id ?? 'global'} sx={{ backgroundColor: '#e9e9e9' }}>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography fontWeight='bold'>{summary}</Typography>
+          </AccordionSummary>
+          <div className='m-4'>
+            <Stack direction='row' spacing={1}>
+              {['Preset 1', 'Preset 2'].map(name => (
+                <Button key={name} color='info' variant='outlined'>
+                  {name}
+                </Button>
+              ))}
+            </Stack>
+            <div className='mt-2'>
+              {sections.map(section => (
+                <Accordion key={section.name}>
+                  <AccordionSummary expandIcon={<ExpandMore />}>
+                    {t(`admin.permissions.section.${section.name}`)}
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {section.groups
+                      .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([name, group]) => {
+                        const hasOperations = group.operations.map(operation => {
+                          const permission = findPermission(operation, archive);
+                          return (
+                            !!permission &&
+                            equalOrBothNullish(archive?.id, permission.archive_tag?.id)
+                          );
+                        });
+                        const hasAll = hasOperations.every(has => has);
+                        const hasNone = hasOperations.every(has => !has);
+                        const checked = hasAll ? true : hasNone ? false : undefined;
+                        const indeterminate = checked === undefined;
 
-              const onClick = !hasNone
-                ? () => {
-                    for (const operation of group.operations) {
-                      const permission = findPermission(operation, archive);
-                      if (!permission) {
-                        continue;
-                      }
-                      deletePermission({
-                        variables: {
-                          id: permission.id,
-                        },
-                      });
-                    }
-                  }
-                : () => {
-                    for (const operation of group.operations) {
-                      createPermission({
-                        variables: {
-                          operationName: operation.document.name,
-                          userId: parsedUserId,
-                          archiveId: archive?.id,
-                        },
-                      });
-                    }
-                  };
+                        const onClick = !hasNone
+                          ? () => {
+                              for (const operation of group.operations) {
+                                const permission = findPermission(operation, archive);
+                                if (!permission) {
+                                  continue;
+                                }
+                                deletePermission({
+                                  variables: {
+                                    id: permission.id,
+                                  },
+                                });
+                              }
+                            }
+                          : () => {
+                              for (const operation of group.operations) {
+                                createPermission({
+                                  variables: {
+                                    operationName: operation.document.name,
+                                    userId: parsedUserId,
+                                    archiveId: archive?.id,
+                                  },
+                                });
+                              }
+                            };
 
-              return (
-                <div key={group.name}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        indeterminate={indeterminate}
-                        checked={checked}
-                        onChange={onClick}
-                      />
-                    }
-                    label={name}
-                  />
-                </div>
-              );
-            })}
-        </div>
-      ));
+                        return (
+                          <div key={group.name}>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  indeterminate={indeterminate}
+                                  checked={checked}
+                                  onChange={onClick}
+                                />
+                              }
+                              label={name}
+                            />
+                          </div>
+                        );
+                      })}
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </div>
+          </div>
+        </Accordion>
+      );
     },
     [createPermission, deletePermission, parsedUserId, findPermission, t]
   );
@@ -239,15 +274,8 @@ const PermissionsView = ({ userId }: { userId: string }) => {
             ? t('admin.permissions.publicTitle')
             : t('admin.permissions.title', { userName: user?.username })}
         </h1>
-        <div className=''>
-          {renderSections(sections.global, null)}
-          {archives.map(archive => (
-            <>
-              <h2>{archive.name}</h2>
-              {renderSections(sections.perArchive, archive)}
-            </>
-          ))}
-        </div>
+        {renderSections(t('admin.permissions.globalPermissions'), sections.global, null)}
+        {archives.map(archive => renderSections(archive.name, sections.perArchive, archive))}
       </div>
     );
   } else {

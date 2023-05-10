@@ -154,6 +154,7 @@
     "permissions": {
       "title": "Rechte des Nutzers {{userName}}",
       "publicTitle": "Rechte eines unangemeldeten Nutzers",
+      "globalPermissions": "System-Rechte",
       "section": {
         "picture": "Bilder",
         "collection": "Collections",
