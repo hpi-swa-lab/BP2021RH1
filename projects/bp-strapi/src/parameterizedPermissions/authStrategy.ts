@@ -8,7 +8,7 @@ import { OperationDefinitionNode } from "graphql/language/ast";
 import { checkAllowed } from "./checkAllowed";
 import { getUserPermissions } from "./getUserPermissions";
 import { isIntrospectionQuery } from "./isIntrospectionQuery";
-import { isSuperUserLoggingIn } from "./isSuperUserLoggingIn";
+import { getUserTryingToLogin, isLoginOperation } from "./loginOperation";
 import { getJwtService, getUserService } from "./userService";
 import { verifyOperation } from "./verifyOperation";
 
@@ -61,35 +61,39 @@ const authenticate = async (ctx) => {
 
 const verify = async (auth, config) => {
   if ("operation" in config) {
-    const permissions: ParameterizedPermission[] = auth.ability;
-    const user: UsersPermissionsUser | null = auth.credentials;
-
-    if (user?.isSuperUser) {
-      // allow everything, regardless of permissions
-      // this is intended for bootstrapping and emergency purposes only
-      return;
-    }
+    let permissions: ParameterizedPermission[] = auth.ability;
+    let user: UsersPermissionsUser | null = auth.credentials;
 
     const {
       operation,
       variables,
     }: { operation: OperationDefinitionNode; variables: Variables } = config;
 
-    if (await isSuperUserLoggingIn(operation, variables)) {
-      // Let anyone attempt to login as a super user
-      // as it can happen that the public user doesn't have
-      // the permission to login and we still want super users
-      // to gain access.
-      // The function only checks whether a super user with the given
-      // username exists, the actual password check is done by the
-      // login mutation resolver. So this only allows the *attempt*
-      // to login and doesn't let anyone pass through without them
-      // knowing the super user's password.
+    if (isIntrospectionQuery(operation)) {
+      // allow
       return;
     }
 
-    if (isIntrospectionQuery(operation)) {
-      // allow
+    if (isLoginOperation(operation)) {
+      // Act as if the (currently not logged in) user has the permissions
+      // of the user as which they are trying to login.
+      // With this code, only users who have the permission to run the login
+      // operation are allowed to login. Otherwise, the only way to control
+      // whether someone can login is to give the public user the permission
+      // to login.
+      // This has the added benefit of super users always being able to login,
+      // because of the next if statement.
+      // This is not a loophole to get anyone's permissions since the permissions
+      // are only granted in case of the login operation and only for the remainder
+      // of this function (user and permissions are local variables). Also, the
+      // actual resolver of the login operation still checks for the correct password.
+      user = await getUserTryingToLogin(variables);
+      permissions = await getUserPermissions(user);
+    }
+
+    if (user?.isSuperUser) {
+      // allow everything, regardless of permissions
+      // this is intended for bootstrapping and emergency purposes only
       return;
     }
 
