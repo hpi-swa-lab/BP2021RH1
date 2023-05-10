@@ -8,18 +8,27 @@ import {
   useDroppable,
 } from '@dnd-kit/core';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Button, IconButton, TextField } from '@mui/material';
-import { PropsWithChildren, useState } from 'react';
-import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
+import { Button, IconButton, Paper, TextField } from '@mui/material';
+import { useContext, useState } from 'react';
+import { useGetIdeaLotContentQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
+import { FlatExhibitionPicture } from '../../../types/additionalFlatTypes';
 import TextEditor from '../../common/editors/TextEditor';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import { useTranslation } from 'react-i18next';
+import { createContext } from 'react';
 
-const DraggablePicture = ({ id, picture }: { id: string; picture?: FlatPicture }) => {
+const DraggablePicture = ({
+  id,
+  exhibitionPicture,
+}: {
+  id: string;
+  exhibitionPicture: FlatExhibitionPicture;
+}) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
   });
+  const picture = exhibitionPicture.picture;
   return (
     <div className='z-[1000] relative' ref={setNodeRef} {...listeners} {...attributes}>
       {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
@@ -27,23 +36,41 @@ const DraggablePicture = ({ id, picture }: { id: string; picture?: FlatPicture }
   );
 };
 
-const IdeaLot = ({ children }: PropsWithChildren<{}>) => {
+const IdeaLot = () => {
+  const draggableList = useContext(DragListContext);
+  const dropzones = useContext(DropzoneContext);
+  const draggedItem = useContext(DraggedItemContext);
   return (
     <div className='flex flex-col items-stretch h-full w-full relative'>
       <div className='text-xl'>Ideenparkplatz</div>
-      <div className='border-solid flex-1 flex gap-2 '>{children}</div>
+      <div className='border-solid flex-1 flex gap-2 '>
+        {draggableList.map(drag =>
+          drag.id !== draggedItem && !dropzones.some(x => x.dragIds.includes(drag.id))
+            ? drag.element
+            : null
+        )}
+      </div>
     </div>
   );
 };
 
-const DropZone = ({ id, children }: PropsWithChildren<{ id: string }>) => {
+const DropZone = ({ id }: { id: string }) => {
   const { setNodeRef } = useDroppable({ id: id });
+  const draggables = useContext(DragListContext);
+  const dropzone = useContext(DropzoneContext).find(x => x.id === id);
+  const items = draggables.filter(draggable => dropzone?.dragIds.includes(draggable.id));
+  const itemIds = items.map(item => item.id);
+  const itemElements = items.map(item => item.element);
+
   return (
     <div
       ref={setNodeRef}
       className='h-40 border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200'
     >
-      {children}
+      {/* <DndContext>
+        <SortableContext items={itemIds}>{itemElements}</SortableContext>
+      </DndContext> */}
+      {itemElements}
     </div>
   );
 };
@@ -58,62 +85,92 @@ interface DragElement {
   element: JSX.Element;
 }
 
-const ExhibitionManipulator = ({
-  dropzones,
-  draggables,
-}: {
-  dropzones: DropzoneContent[];
-  draggables: DragElement[];
-}) => {
+const ExhibitionManipulator = () => {
+  const dropzones = useContext(DropzoneContext);
   return (
-    <div className='flex flex-col items-stretch h-full w-full overflow-auto'>
+    <div className='flex flex-col items-stretch h-full w-full'>
       <div className='text-xl'>Ausstellungstool</div>
-      <div className='border-solid flex-1'>
+      <div className='border-solid flex-1 p-2 overflow-auto'>
+        <Introduction />
         {dropzones.map(dropzone => (
-          <Section key={dropzone.id} dropzone={dropzone} draggables={draggables} />
+          <Section key={dropzone.id} id={dropzone.id} />
         ))}
       </div>
     </div>
   );
 };
 
-const Section = ({
-  dropzone,
-  draggables,
-}: {
-  dropzone: DropzoneContent;
-  draggables: DragElement[];
-}) => {
-  const extraOptions = {
+const editorOptions = ({ placeholder }: { placeholder: string }) => {
+  return {
     preset: undefined,
-    placeholder: 'Abschnittsbeschreibung',
+    placeholder: placeholder,
     statusbar: false,
     tabIndex: 0,
     className: 'z-0',
   };
+};
 
-  const [isOpen, setIsOpen] = useState(true);
-
+const Introduction = () => {
+  const { t } = useTranslation();
+  const extraOptions = {
+    preset: undefined,
+    placeholder: t('exhibition.manipulator.intro-text-placeholder'),
+    statusbar: false,
+    tabIndex: 0,
+    className: 'z-0',
+  };
   return (
-    <div className='flex flex-col gap-2 p-2 border-solid rounded-3xl m-2'>
-      <div className='flex'>
-        <TextField className='flex-1' placeholder='Abschnittstitel' />
-        <IconButton onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <ExpandLess /> : <ExpandMore />}
-        </IconButton>
-      </div>
-      {isOpen && (
-        <>
-          <TextEditor value='' extraOptions={extraOptions} />
-          <DropZone key={dropzone.id} id={dropzone.id}>
-            {draggables.map(draggable =>
-              dropzone.dragIds.includes(draggable.id) ? draggable.element : null
-            )}
-          </DropZone>
-        </>
-      )}
+    <div className='flex flex-col gap-2'>
+      <TextField
+        className='flex-1'
+        variant='standard'
+        placeholder={t('exhibition.manipulator.intro-title-placeholder')}
+      />
+      <TextEditor value='' extraOptions={extraOptions} />
     </div>
   );
+};
+
+const Section = ({ id }: { id: string }) => {
+  const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(true);
+  const dropzone = useContext(DropzoneContext).find(x => x.id === id);
+  const extraOptions = {
+    preset: undefined,
+    placeholder: t('exhibition.manipulator.intro-text-placeholder'),
+    statusbar: false,
+    tabIndex: 0,
+    className: 'z-0',
+  };
+  return (
+    <Paper elevation={3}>
+      <div className='flex flex-col gap-2 p-2 m-2'>
+        <div className='flex'>
+          <TextField className='flex-1' placeholder='Abschnittstitel' variant='standard' />
+          <IconButton onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        </div>
+        {isOpen && dropzone && (
+          <>
+            <TextEditor value='' extraOptions={extraOptions} />
+            <DropZone key={dropzone.id} id={dropzone.id} />
+          </>
+        )}
+      </div>
+    </Paper>
+  );
+};
+
+const DragListContext = createContext<DragElement[]>([]);
+const DropzoneContext = createContext<DropzoneContent[]>([]);
+const DraggedItemContext = createContext<string>('');
+
+const getDraggableList = (ideaLotPictures: FlatExhibitionPicture[]): DragElement[] => {
+  return ideaLotPictures.map(picture => ({
+    id: picture.id,
+    element: <DraggablePicture id={picture.id} exhibitionPicture={picture} />,
+  }));
 };
 
 const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
@@ -122,16 +179,21 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
     { id: '2', dragIds: [] },
   ]);
   const [draggedItem, setDraggedItem] = useState('');
-  const { data: pictureOne } = useGetPictureInfoQuery({ variables: { pictureId: '6' } });
-  const picture1: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureOne)?.picture;
-  const { data: pictureTwo } = useGetPictureInfoQuery({ variables: { pictureId: '5' } });
-  const picture2: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureTwo)?.picture;
-  const draggable = <DraggablePicture key='1' id='draggable' picture={picture1} />;
-  const draggable2 = <DraggablePicture key='2' id='draggable2' picture={picture2} />;
-  const draggableList = [
-    { id: 'draggable', element: draggable },
-    { id: 'draggable2', element: draggable2 },
-  ];
+  const { data: ideaLotData } = useGetIdeaLotContentQuery({ variables: { exhibitionId: '1' } });
+  const ideaLotPictures: FlatExhibitionPicture[] | undefined =
+    useSimplifiedQueryResponseData(ideaLotData)?.exhibition.idealot_pictures;
+
+  const draggableList = getDraggableList(ideaLotPictures ?? []);
+  // const { data: pictureOne } = useGetPictureInfoQuery({ variables: { pictureId: '6' } });
+  // const picture1: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureOne)?.picture;
+  // const { data: pictureTwo } = useGetPictureInfoQuery({ variables: { pictureId: '5' } });
+  // const picture2: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureTwo)?.picture;
+  // const draggable = <DraggablePicture key='1' id='draggable' picture={picture1} />;
+  // const draggable2 = <DraggablePicture key='2' id='draggable2' picture={picture2} />;
+  // const draggableList = [
+  //   { id: 'draggable', element: draggable },
+  //   { id: 'draggable2', element: draggable2 },
+  // ];
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event;
@@ -178,17 +240,17 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
       </div>
       <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-          <DragOverlay>
-            {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
-          </DragOverlay>
-          <IdeaLot>
-            {draggableList.map(drag =>
-              drag.id !== draggedItem && !dropzones.some(x => x.dragIds.includes(drag.id))
-                ? drag.element
-                : null
-            )}
-          </IdeaLot>
-          <ExhibitionManipulator dropzones={dropzones} draggables={draggableList} />
+          <DragListContext.Provider value={draggableList}>
+            <DropzoneContext.Provider value={dropzones}>
+              <DraggedItemContext.Provider value={draggedItem}>
+                <DragOverlay>
+                  {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
+                </DragOverlay>
+                <IdeaLot />
+                <ExhibitionManipulator />
+              </DraggedItemContext.Provider>
+            </DropzoneContext.Provider>
+          </DragListContext.Provider>
         </DndContext>
       </div>
     </>

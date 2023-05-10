@@ -4,7 +4,8 @@
   "info": {
     "singularName": "exhibition-picture",
     "pluralName": "exhibition-pictures",
-    "displayName": "Exhibition_Picture"
+    "displayName": "Exhibition_Picture",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,17 +20,17 @@
     "subtitle": {
       "type": "string"
     },
-    "idea_lot": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::idea-lot.idea-lot",
-      "inversedBy": "exhibition_pictures"
-    },
     "exhibition_section": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::exhibition-section.exhibition-section",
       "inversedBy": "exhibition_pictures"
+    },
+    "exhibition_idealot": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::exhibition.exhibition",
+      "inversedBy": "idealot_pictures"
     }
   }
 }

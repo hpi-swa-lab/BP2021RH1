@@ -22,10 +22,10 @@
       "target": "api::exhibition-picture.exhibition-picture",
       "mappedBy": "exhibition_section"
     },
-    "exhibiton": {
+    "exhibition": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::exhibiton.exhibiton",
+      "target": "api::exhibition.exhibition",
       "inversedBy": "exhibition_sections"
     }
   }

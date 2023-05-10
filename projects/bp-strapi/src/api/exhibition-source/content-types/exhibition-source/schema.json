@@ -13,10 +13,10 @@
     "source": {
       "type": "string"
     },
-    "exhibiton": {
+    "exhibition": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::exhibiton.exhibiton",
+      "target": "api::exhibition.exhibition",
       "inversedBy": "exhibition_sources"
     }
   }

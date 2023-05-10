@@ -368,5 +368,12 @@
     "locations": "Orte",
     "more-info": "Wissen Sie mehr über diese Bilder?",
     "our-categories": "Unsere Kategorien"
+  },
+  "exhibition": {
+    "manipulator": {
+      "intro-title-placeholder": "Ausstellungstitel",
+      "intro-text-placeholder": "Einführungstext",
+      "section-text-placeholder": "Abschnittstext"
+    }
   }
 }

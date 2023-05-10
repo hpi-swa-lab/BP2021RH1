@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "exhibitons",
+  "collectionName": "exhibitions",
   "info": {
-    "singularName": "exhibiton",
-    "pluralName": "exhibitons",
-    "displayName": "Exhibiton",
+    "singularName": "exhibition",
+    "pluralName": "exhibitions",
+    "displayName": "Exhibition",
     "description": ""
   },
   "options": {
@@ -14,25 +14,19 @@
     "title": {
       "type": "string"
     },
-    "idea_lot": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::idea-lot.idea-lot",
-      "inversedBy": "exhibiton"
+    "introduction": {
+      "type": "richtext"
     },
-    "titlePicture": {
+    "title_picture": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::exhibition-picture.exhibition-picture"
-    },
-    "introduction": {
-      "type": "richtext"
     },
     "exhibition_sections": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::exhibition-section.exhibition-section",
-      "mappedBy": "exhibiton"
+      "mappedBy": "exhibition"
     },
     "epilog": {
       "type": "richtext"
@@ -41,7 +35,13 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::exhibition-source.exhibition-source",
-      "mappedBy": "exhibiton"
+      "mappedBy": "exhibition"
+    },
+    "idealot_pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition-picture.exhibition-picture",
+      "mappedBy": "exhibition_idealot"
     }
   }
 }
