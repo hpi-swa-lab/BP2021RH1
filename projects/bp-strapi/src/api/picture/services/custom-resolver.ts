@@ -160,28 +160,22 @@ const buildWhere = (
         //just the year 1954, the start of its timerange would be saved as 1953-12-31T23:00:00 instead of
         //1954-01-01T00:00:00 which would cause searches for '1954' to not return this picture even though
         //they should
-        //by shifting the bounds of the search time range backward by 1 hour the search should now work
-        //correctly without having to migrate the whole data base
+        //by querying time range + 1 hour the search should now work and comparing that to the search range the
+        //search should now work correctly without having to migrate the whole data base
 
-        //the parser kept throwing syntax errors when i tried to use the knexEngine.raw() method as intended, since
-        // the method did not correctly build this part of the query, but with these prebuild strings it seems to work fine
-        const startDateCorrection =
-          "timestamp '" + searchObject[1] + "' - interval '1 hour'";
-        const endDateCorrection =
-          "timestamp '" + searchObject[2] + "' - interval '1 hour'";
         // If the search object is an array, it must be our custom format for search times
         // e.g. ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
         qb = buildLikeWhereForSearchTerm(qb, searchObject[0]);
         qb = qb.orWhere((timeRangeQb) => {
           timeRangeQb = timeRangeQb.where(
-            "time_range_tags.start",
+            knexEngine.raw("time_range_tags.start + interval '1 hour'"),
             ">=",
-            knexEngine.raw(startDateCorrection)
+            searchObject[1]
           );
           timeRangeQb = timeRangeQb.andWhere(
-            "time_range_tags.end",
+            knexEngine.raw("time_range_tags.end + interval '1 hour'"),
             "<=",
-            knexEngine.raw(endDateCorrection)
+            searchObject[2]
           );
           return timeRangeQb;
         });
