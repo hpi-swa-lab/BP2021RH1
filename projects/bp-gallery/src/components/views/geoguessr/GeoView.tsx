@@ -1,6 +1,6 @@
 import { Info } from '@mui/icons-material';
 import { Box, Button, Modal, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStorageState } from 'react-use-storage-state';
 import {
@@ -18,6 +18,7 @@ import {
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
 import { useVariant } from '../../../helpers/growthbook';
+import Loading from '../../common/Loading';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const allPictureIds: string[] = archives
@@ -37,6 +38,9 @@ const shufflePictureIds = (pictureIds: string[], seed: number) => {
 };
 
 const getTodaysPictureQueue = (pictureIds: string[]) => {
+  if (pictureIds.length === 0) {
+    return [];
+  }
   const pictureNumber = 10;
   const currentDate = new Date();
   const startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -69,7 +73,7 @@ const GeoView = () => {
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
   const geoCollectionId = useVariant({ id: 'geopictures_collection_id', fallback: '' });
-  const isGeoCollectionPictures = geoCollectionId !== '';
+  const isGeoCollectionPictures = geoCollectionId !== '' && import.meta.env.MODE === 'production';
   const { data: geoCollectionPictureData } = useGetPicturesForCollectionQuery({
     variables: { collectionId: geoCollectionId },
   });
@@ -80,6 +84,15 @@ const GeoView = () => {
     picture => picture.id
   );
 
+  const getNextPicture = useCallback(() => {
+    return pictureQueue.current.shift() ?? null;
+  }, []);
+
+  const onNextPicture = useCallback(() => {
+    const nextPicture = getNextPicture();
+    nextPicture ? setPictureId(nextPicture) : setGameOver(true);
+  }, [getNextPicture]);
+
   useEffect(() => {
     if (!archives) {
       return;
@@ -89,21 +102,12 @@ const GeoView = () => {
       : getAllPictureIds(archives);
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
-    setPictureId(getNextPicture());
-  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures]);
+    onNextPicture();
+  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures, onNextPicture]);
 
   const dontShowAgain = () => {
     setHasReadInstructions(true);
     setModalOpen(false);
-  };
-
-  const getNextPicture = () => {
-    return pictureQueue.current.shift() ?? '';
-  };
-
-  const onNextPicture = () => {
-    const nextPicture = getNextPicture();
-    nextPicture !== '' ? setPictureId(nextPicture) : setGameOver(true);
   };
 
   const { data: geoData } = useGetPictureGeoInfoQuery({
@@ -132,7 +136,7 @@ const GeoView = () => {
           </Button>
         </Box>
       </Modal>
-      {!gameOver && (
+      {pictureId ? (
         <div className='guess-picture-view bg-black h-main'>
           <ZoomWrapper className='h-full' blockScroll={true} pictureId={pictureId}>
             <div className='picture-wrapper w-full'>
@@ -150,7 +154,7 @@ const GeoView = () => {
             id='picture-info'
             className='absolute top-[5rem] right-1 text-white flex justify-center gap-1 cursor-pointer'
             onClick={() => {
-              window.open(`/picture/${pictureId ?? ''}`, '_blank');
+              window.open(`/picture/${pictureId}`, '_blank');
             }}
           >
             <Info />
@@ -166,12 +170,13 @@ const GeoView = () => {
             }}
           />
         </div>
-      )}
-      {gameOver && (
+      ) : gameOver ? (
         <div className='flex h-full justify-center items-center flex-col gap-4'>
           <div className='font-bold text-5xl'>{t('geo.end')}</div>
           <div className='text-xl'>{t('geo.end-sub')}</div>
         </div>
+      ) : (
+        <Loading />
       )}
     </div>
   );
