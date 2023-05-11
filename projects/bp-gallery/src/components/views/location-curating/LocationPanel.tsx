@@ -1,5 +1,5 @@
 import { Add } from '@mui/icons-material';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
@@ -9,28 +9,28 @@ import LocationPanelHeader from './LocationPanelHeader';
 import { useGetTagTree } from './tag-structure-helpers';
 import { useCreateNewTag } from './location-management-helpers';
 
-const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
+const setUnacceptedSubtagsCount = (tag: FlatTag) => {
+  if (!tag.child_tags?.length) {
+    return tag.accepted ? 0 : 1;
+  }
+  let subtagCount = 0;
+  tag.child_tags.forEach((childTag: FlatTag) => {
+    subtagCount += setUnacceptedSubtagsCount(childTag);
+  });
+  tag.unacceptedSubtags = subtagCount;
+  return subtagCount;
+};
+
+const LocationPanel = () => {
   const { t } = useTranslation();
 
-  const { allTagsQuery } = useGenericTagEndpoints(type as TagType);
+  const { allTagsQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
   const { data, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
   const { createNewTag } = useCreateNewTag(refetch);
-
-  const setUnacceptedSubtagsCount = useCallback((tag: any) => {
-    if (!tag.child_tags.length) {
-      return tag.accepted ? 0 : 1;
-    }
-    let subtagCount = 0;
-    tag.child_tags.forEach((childTag: FlatTag) => {
-      subtagCount += setUnacceptedSubtagsCount(childTag);
-    });
-    tag.unacceptedSubtags = subtagCount;
-    return subtagCount;
-  }, []);
 
   const sortedTagTree = useGetTagTree(flattenedTags);
 
@@ -42,7 +42,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
     });
 
     return sortedTagTree;
-  }, [sortedTagTree, setUnacceptedSubtagsCount]);
+  }, [sortedTagTree]);
 
   return (
     <div>
@@ -51,7 +51,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
       </div>
       <div className='location-panel-content'>
         {tagTree?.map(tag => (
-          <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} type={type as TagType} />
+          <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
         ))}
         <div
           className='add-tag-container'
@@ -60,7 +60,7 @@ const LocationPanel = ({ type = TagType.LOCATION }: { type: string }) => {
           }}
         >
           <Add className='add-tag-icon' />
-          <div className='add-tag-text'>{t(`tag-panel.add-${type}`)}</div>
+          <div className='add-tag-text'>{t(`tag-panel.add-location`)}</div>
         </div>
         <hr />
       </div>
