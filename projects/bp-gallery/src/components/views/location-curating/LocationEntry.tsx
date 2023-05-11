@@ -1,29 +1,10 @@
-import {
-  Check,
-  ChevronRight,
-  CopyAll,
-  Delete,
-  Eject,
-  ExpandMore,
-  MoveDown,
-  Visibility,
-  VisibilityOffOutlined,
-} from '@mui/icons-material';
-import { Badge, Chip, IconButton, Tooltip } from '@mui/material';
+import { Check, ChevronRight, ExpandMore } from '@mui/icons-material';
+import { Badge, Chip, IconButton } from '@mui/material';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import './LocationEntry.scss';
-import {
-  useAcceptTag,
-  useCopyTag,
-  useDeleteSynonym,
-  useDeleteTag,
-  useDetachTag,
-  useRelocateTag,
-  useSetRoot,
-  useSetVisible,
-} from './location-management-helpers';
-import { t } from 'i18next';
+import { useAcceptTag, useDeleteSynonym } from './location-management-helpers';
+import LocationEntryActions from './LocationEntryActions';
 
 const LocationEntry = ({
   locationTag,
@@ -40,14 +21,8 @@ const LocationEntry = ({
 }) => {
   const prompt = useDialog();
 
-  const { setVisible } = useSetVisible(locationTag, refetch);
-  const { relocateTag } = useRelocateTag(locationTag, refetch, parentTag);
-  const { detachTag } = useDetachTag(locationTag, refetch);
-  const { copyTag } = useCopyTag(locationTag, refetch);
   const { acceptTag } = useAcceptTag(locationTag, refetch);
   const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
-  const { deleteTag } = useDeleteTag(locationTag, refetch, parentTag);
-  const { setTagAsRoot } = useSetRoot(locationTag, refetch);
 
   const openLocationManagementDialog = () => {
     prompt({
@@ -107,88 +82,11 @@ const LocationEntry = ({
                 </div>
               ))}
             </div>
-            <div className='location-action-buttons-container'>
-              <Tooltip
-                title={t('tooltips.detach-location')}
-                arrow={true}
-                followCursor={true}
-                placement='left'
-              >
-                <IconButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    detachTag();
-                  }}
-                >
-                  <Eject />
-                </IconButton>
-              </Tooltip>
-              <Tooltip
-                title={t('tooltips.relocate-location')}
-                arrow={true}
-                followCursor={true}
-                placement='left'
-              >
-                <IconButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    relocateTag();
-                  }}
-                >
-                  <MoveDown />
-                </IconButton>
-              </Tooltip>
-              <Tooltip
-                title={t('tooltips.copy-location')}
-                arrow={true}
-                followCursor={true}
-                placement='left'
-              >
-                <IconButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    if (!locationTag.parent_tags?.length) {
-                      setTagAsRoot(true);
-                    }
-                    copyTag();
-                  }}
-                >
-                  <CopyAll />
-                </IconButton>
-              </Tooltip>
-              <Tooltip
-                title={
-                  locationTag.visible ? t('tooltips.hide-location') : t('tooltips.show-location')
-                }
-                arrow={true}
-                followCursor={true}
-                placement='left'
-              >
-                <IconButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    setVisible(!locationTag.visible);
-                  }}
-                >
-                  {locationTag.visible ? <Visibility /> : <VisibilityOffOutlined />}
-                </IconButton>
-              </Tooltip>
-              <Tooltip
-                title={t('tooltips.delete-location')}
-                arrow={true}
-                followCursor={true}
-                placement='left'
-              >
-                <IconButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    deleteTag();
-                  }}
-                >
-                  <Delete />
-                </IconButton>
-              </Tooltip>
-            </div>
+            <LocationEntryActions
+              locationTag={locationTag}
+              parentTag={parentTag}
+              refetch={refetch}
+            />
           </div>
         </div>
       </div>
