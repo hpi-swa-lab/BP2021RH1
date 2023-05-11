@@ -42,6 +42,9 @@
       "relation": "oneToMany",
       "target": "api::exhibition-picture.exhibition-picture",
       "mappedBy": "exhibition_idealot"
+    },
+    "is_published": {
+      "type": "boolean"
     }
   }
 }

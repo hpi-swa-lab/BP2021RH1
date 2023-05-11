@@ -10,6 +10,7 @@ export default {
             title
             introduction
             epilog
+            is_published
             title_picture {
               data {
                 id

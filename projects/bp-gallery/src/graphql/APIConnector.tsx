@@ -398,6 +398,7 @@ export type Exhibition = {
   exhibition_sources?: Maybe<ExhibitionSourceRelationResponseCollection>;
   idealot_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
   introduction?: Maybe<Scalars['String']>;
+  is_published?: Maybe<Scalars['Boolean']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   title?: Maybe<Scalars['String']>;
   title_picture?: Maybe<ExhibitionPictureEntityResponse>;
@@ -448,6 +449,7 @@ export type ExhibitionFiltersInput = {
   id?: InputMaybe<IdFilterInput>;
   idealot_pictures?: InputMaybe<ExhibitionPictureFiltersInput>;
   introduction?: InputMaybe<StringFilterInput>;
+  is_published?: InputMaybe<BooleanFilterInput>;
   not?: InputMaybe<ExhibitionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ExhibitionFiltersInput>>>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
@@ -462,6 +464,7 @@ export type ExhibitionInput = {
   exhibition_sources?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   idealot_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   introduction?: InputMaybe<Scalars['String']>;
+  is_published?: InputMaybe<Scalars['Boolean']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   title?: InputMaybe<Scalars['String']>;
   title_picture?: InputMaybe<Scalars['ID']>;
@@ -2755,6 +2758,7 @@ export type GetExhibitionQuery = {
         title?: string | null;
         introduction?: string | null;
         epilog?: string | null;
+        is_published?: boolean | null;
         title_picture?: {
           data?: {
             id?: string | null;
@@ -4716,6 +4720,7 @@ export const GetExhibitionDocument = gql`
           title
           introduction
           epilog
+          is_published
           title_picture {
             data {
               id
