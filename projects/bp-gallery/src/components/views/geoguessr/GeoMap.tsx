@@ -13,6 +13,7 @@ import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 import otherMarkerIcon from './location-map-pin.svg';
 import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import { ZoomInMapOutlined, ZoomOutMapOutlined } from '@mui/icons-material';
+import { pick } from 'lodash';
 
 const PlayerMarkers = ({
   allGuesses,
@@ -35,13 +36,15 @@ const PlayerMarkers = ({
     }, 300);
   }, [coords, myGuess, map]);
   const othersIcon = new Icon({
+    ...pick(Icon.Default.prototype.options, [
+      'iconSize',
+      'iconAnchor',
+      'popupAnchor',
+      'shadowSize',
+      'shadowAnchor',
+    ]),
     iconUrl: otherMarkerIcon,
-    iconSize: Icon.Default.prototype.options.iconSize,
-    iconAnchor: Icon.Default.prototype.options.iconAnchor,
-    popupAnchor: Icon.Default.prototype.options.popupAnchor,
     shadowUrl: markerShadow,
-    shadowSize: Icon.Default.prototype.options.shadowSize,
-    shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
   });
 
   return (
@@ -56,28 +59,28 @@ const MyMarker = ({
   position,
   isPositionable,
   setPosition,
-  ref,
 }: {
   position: LatLng;
   isPositionable: boolean;
   setPosition: (pos: LatLng) => void;
-  ref?: any;
 }) => {
   useMapEvent('click', event => {
     isPositionable && setPosition(event.latlng.clone());
   });
 
   const myIcon = new Icon({
+    ...pick(Icon.Default.prototype.options, [
+      'iconSize',
+      'iconAnchor',
+      'popupAnchor',
+      'shadowSize',
+      'shadowAnchor',
+    ]),
     iconUrl: myMarkerIcon,
-    iconSize: Icon.Default.prototype.options.iconSize,
-    iconAnchor: Icon.Default.prototype.options.iconAnchor,
-    popupAnchor: Icon.Default.prototype.options.popupAnchor,
     shadowUrl: markerShadow,
-    shadowSize: Icon.Default.prototype.options.shadowSize,
-    shadowAnchor: Icon.Default.prototype.options.shadowAnchor,
   });
 
-  return <Marker ref={ref} icon={myIcon} position={position} />;
+  return <Marker icon={myIcon} position={position} />;
 };
 
 const GeoMap = ({
@@ -97,6 +100,7 @@ const GeoMap = ({
   }, []);
   const initialGuess = new LatLng(0, 0);
   const map = useRef<Map>(null);
+  const mainDivRef = useRef<HTMLDivElement>(null);
   const [guess, setGuess] = useState<LatLng>(initialGuess);
   const [guessComplete, setGuessComplete] = useState(false);
   const [unknown, setUnknown] = useState(false);
@@ -106,6 +110,7 @@ const GeoMap = ({
     setGuess(initialGuess);
     setGuessComplete(false);
     setUnknown(false);
+    setIsMaximised(false);
     onNextPicture();
   };
 
@@ -124,20 +129,29 @@ const GeoMap = ({
 
   useEffect(() => {
     if (!map.current) return;
-    map.current.invalidateSize();
     map.current.flyTo(initialMapValues.center, initialMapValues.zoom);
   }, [pictureId, initialMapValues]);
 
+  useEffect(() => {
+    if (!map.current || !mainDivRef.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      map.current?.invalidateSize();
+    });
+    resizeObserver.observe(mainDivRef.current);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  });
   const [sendNotAPlace] = useIncreaseNotAPlaceCountMutation({
     variables: { pictureId: pictureId },
   });
 
   return (
     <div
+      ref={mainDivRef}
       className={`fixed w-[480px] h-[360px] bottom-1 right-1 items-stretch flex flex-col transition-all
         ${guessComplete || isMaximised ? 'w-[80%] h-[80%] bottom-[10%] right-[10%]' : ''}`}
     >
-      <div className='flex flex-row-reverse m-1'></div>
       {guessComplete && (
         <div className='guess-complete-text self-center bg-white p-5 mb-2 text-center rounded-2xl w-[350px]'>
           <h2>{unknown ? t('geo.tip-unknown') : t('geo.tip')}</h2>
@@ -150,9 +164,6 @@ const GeoMap = ({
           onClick={event => {
             event.stopPropagation();
             setIsMaximised(!isMaximised);
-            setTimeout(() => {
-              map.current && map.current.invalidateSize();
-            }, 200);
           }}
         >
           {isMaximised ? <ZoomInMapOutlined /> : <ZoomOutMapOutlined />}
