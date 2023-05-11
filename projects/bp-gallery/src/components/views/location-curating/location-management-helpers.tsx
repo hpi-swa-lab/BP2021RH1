@@ -165,8 +165,15 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
   const { t } = useTranslation();
   const { closesLoop } = useClosesLoop();
 
-  const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateTagParentMutationSource, updateRootMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
   const [updateTagParentMutation] = updateTagParentMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+  const [updateRootMutation] = updateRootMutationSource({
     onCompleted: (_: any) => {
       refetch();
     },
@@ -198,6 +205,15 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
             ],
           },
         });
+
+        if (locationTag.root && !parentTag) {
+          updateRootMutation({
+            variables: {
+              tagId: locationTag.id,
+              root: false,
+            },
+          });
+        }
       }
     }
   };
@@ -205,12 +221,19 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
   return { relocateTag };
 };
 
-export const useDetachTag = (locationTag: FlatTag, refetch: () => void) => {
+export const useDetachTag = (locationTag: FlatTag, refetch: () => void, parentTag?: FlatTag) => {
   const prompt = useDialog();
   const { t } = useTranslation();
 
-  const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateTagParentMutationSource, updateRootMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
   const [updateTagParentMutation] = updateTagParentMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+  const [updateRootMutation] = updateRootMutationSource({
     onCompleted: (_: any) => {
       refetch();
     },
@@ -224,13 +247,24 @@ export const useDetachTag = (locationTag: FlatTag, refetch: () => void) => {
         { name: t('common.confirm'), icon: <Done />, value: true },
       ],
     });
+    const filteredParents = locationTag.parent_tags?.filter(
+      tag => !parentTag || tag.id !== parentTag.id
+    );
     if (reallyDetach) {
       updateTagParentMutation({
         variables: {
           tagID: locationTag.id,
-          parentIDs: null,
+          parentIDs: filteredParents?.map(tag => tag.id),
         },
       });
+      if (filteredParents?.length) {
+        updateRootMutation({
+          variables: {
+            tagId: locationTag.id,
+            root: true,
+          },
+        });
+      }
     }
   };
 
@@ -242,8 +276,15 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
   const { t } = useTranslation();
   const { closesLoop } = useClosesLoop();
 
-  const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateTagParentMutationSource, updateRootMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
   const [updateTagParentMutation] = updateTagParentMutationSource({
+    onCompleted: (_: any) => {
+      refetch();
+    },
+  });
+  const [updateRootMutation] = updateRootMutationSource({
     onCompleted: (_: any) => {
       refetch();
     },
@@ -263,6 +304,15 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
         }
       } else {
         if (closesLoop(locationTag, selectedTag as FlatTag)) return;
+
+        if (!locationTag.parent_tags?.length) {
+          updateRootMutation({
+            variables: {
+              tagId: locationTag.id,
+              root: true,
+            },
+          });
+        }
 
         updateTagParentMutation({
           variables: {
@@ -418,7 +468,11 @@ export const useDeleteTag = (locationTag: FlatTag, refetch: () => void, parentTa
     });
     if (deleteOption === 0) return;
     let deleteClones = -1;
-    if (locationTag.parent_tags && locationTag.parent_tags.length > 1) {
+    if (
+      locationTag.parent_tags &&
+      (locationTag.parent_tags.length > 1 ||
+        (locationTag.parent_tags.length === 1 && locationTag.root))
+    ) {
       deleteClones = await prompt({
         title: t('tag-panel.delete-elsewhere', { name: locationTag.name }),
         content: locationTag.name,
