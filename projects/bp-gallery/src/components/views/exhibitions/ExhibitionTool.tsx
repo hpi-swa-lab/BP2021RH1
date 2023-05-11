@@ -9,8 +9,8 @@ import {
 } from '@dnd-kit/core';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Button, IconButton, Paper, TextField } from '@mui/material';
-import { useContext, useState } from 'react';
-import { useGetExhibitionQuery, useGetIdeaLotContentQuery } from '../../../graphql/APIConnector';
+import { PropsWithChildren, useContext, useState } from 'react';
+import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import {
   FlatExhibition,
@@ -175,22 +175,38 @@ const getDraggableList = (ideaLotPictures: FlatExhibitionPicture[]): DragElement
   }));
 };
 
-class DragNDropHandler {
-  public dropzones: DropzoneContent[];
-  public draggableList: DragElement[];
-  public draggedItem: string;
-  private static _instance: DragNDropHandler;
+// class DragNDropHandler {
+//   public dropzones: DropzoneContent[];
+//   public draggableList: DragElement[];
+//   public draggedItem: string;
+//   private static _instance: DragNDropHandler;
 
-  private buildDropzones(exhibition: FlatExhibition): DropzoneContent[] {
+//   private constructor(exhibition: FlatExhibition) {
+//     this.dropzones = this.buildDropzones(exhibition);
+//     this.draggableList = this.buildDraggableList(exhibition);
+//     this.draggedItem = '';
+//   }
+
+//   public static Instance(exhibition: FlatExhibition) {
+//     // eslint-disable-next-line
+//     return this._instance || (this._instance = new this(exhibition));
+//   }
+// }
+
+const DragNDropHandler = ({
+  exhibition,
+  children,
+}: PropsWithChildren<{ exhibition: FlatExhibition }>) => {
+  const buildDropzones = ((): DropzoneContent[] => {
     return exhibition.exhibition_sections
       ? exhibition.exhibition_sections.map(section => ({
           id: section.id,
           dragIds: section.exhibition_pictures?.map(picture => picture.id) || [],
         }))
       : [];
-  }
+  })();
 
-  private buildDraggableList(exhibition: FlatExhibition): DragElement[] {
+  const buildDraggableList = ((): DragElement[] => {
     const sections: FlatExhibitionSection[] = exhibition.exhibition_sections || [];
     const sectionItems: DragElement[] = sections
       .map(section =>
@@ -208,45 +224,11 @@ class DragNDropHandler {
     }));
     omitBy(idealotItems, isUndefined);
     return sectionItems.concat(idealotItems);
-  }
-  private constructor(exhibition: FlatExhibition) {
-    this.dropzones = this.buildDropzones(exhibition);
-    this.draggableList = this.buildDraggableList(exhibition);
-    this.draggedItem = '';
-  }
+  })();
 
-  public static Instance(exhibition: FlatExhibition) {
-    // eslint-disable-next-line
-    return this._instance || (this._instance = new this(exhibition));
-  }
-}
-
-const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
-  const [dropzones, setDropzones] = useState<DropzoneContent[]>([
-    { id: '1', dragIds: [] },
-    { id: '2', dragIds: [] },
-  ]);
+  const [dropzones, setDropzones] = useState<DropzoneContent[]>(buildDropzones);
+  const [draggableList, setDraggableList] = useState<DragElement[]>(buildDraggableList);
   const [draggedItem, setDraggedItem] = useState('');
-  const { data: ideaLotData } = useGetIdeaLotContentQuery({ variables: { exhibitionId: '1' } });
-  const ideaLotPictures: FlatExhibitionPicture[] | undefined =
-    useSimplifiedQueryResponseData(ideaLotData)?.exhibition.idealot_pictures;
-  const { data: exhibitionData } = useGetExhibitionQuery({ variables: { exhibitionId: '1' } });
-  const exhibition: FlatExhibition | undefined =
-    useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
-  const dragndrop = exhibition ? DragNDropHandler.Instance(exhibition) : undefined;
-  console.log(dragndrop?.draggableList);
-  const draggableList = getDraggableList(ideaLotPictures ?? []);
-
-  // const { data: pictureOne } = useGetPictureInfoQuery({ variables: { pictureId: '6' } });
-  // const picture1: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureOne)?.picture;
-  // const { data: pictureTwo } = useGetPictureInfoQuery({ variables: { pictureId: '5' } });
-  // const picture2: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureTwo)?.picture;
-  // const draggable = <DraggablePicture key='1' id='draggable' picture={picture1} />;
-  // const draggable2 = <DraggablePicture key='2' id='draggable2' picture={picture2} />;
-  // const draggableList = [
-  //   { id: 'draggable', element: draggable },
-  //   { id: 'draggable2', element: draggable2 },
-  // ];
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event;
@@ -286,26 +268,43 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
     );
     setDraggedItem(String(active.id));
   };
+
+  return (
+    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+      <DragListContext.Provider value={draggableList}>
+        <DropzoneContext.Provider value={dropzones}>
+          <DraggedItemContext.Provider value={draggedItem}>
+            <DragOverlay>
+              {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
+            </DragOverlay>
+            {children}
+          </DraggedItemContext.Provider>
+        </DropzoneContext.Provider>
+      </DragListContext.Provider>
+    </DndContext>
+  );
+};
+
+const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
+  const { data: exhibitionData } = useGetExhibitionQuery({ variables: { exhibitionId } });
+  const exhibition: FlatExhibition | undefined =
+    useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
+
   return (
     <>
-      <div className='absolute z-[999] right-7 top-[6rem]'>
-        <Button variant='contained'>Veröffentlichen</Button>
-      </div>
-      <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
-        <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-          <DragListContext.Provider value={dragndrop?.draggableList ?? draggableList}>
-            <DropzoneContext.Provider value={dragndrop?.dropzones ?? dropzones}>
-              <DraggedItemContext.Provider value={dragndrop?.draggedItem ?? draggedItem}>
-                <DragOverlay>
-                  {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
-                </DragOverlay>
-                <IdeaLot />
-                <ExhibitionManipulator />
-              </DraggedItemContext.Provider>
-            </DropzoneContext.Provider>
-          </DragListContext.Provider>
-        </DndContext>
-      </div>
+      {exhibition && (
+        <>
+          <div className='absolute z-[999] right-7 top-[6rem]'>
+            <Button variant='contained'>Veröffentlichen</Button>
+          </div>
+          <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
+            <DragNDropHandler exhibition={exhibition}>
+              <IdeaLot />
+              <ExhibitionManipulator />
+            </DragNDropHandler>
+          </div>
+        </>
+      )}
     </>
   );
 };
