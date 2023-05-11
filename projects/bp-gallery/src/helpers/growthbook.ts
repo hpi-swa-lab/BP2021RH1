@@ -11,6 +11,7 @@ const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
 export type AppFeatures = {
   test_button: boolean;
   dummy_experiment: boolean;
+  geopictures_collection_id: string;
 };
 
 export type FeatureId = keyof AppFeatures;
