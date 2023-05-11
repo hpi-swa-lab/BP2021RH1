@@ -24,7 +24,7 @@ const PathPositionSelectDialogPreset = ({
   dialogProps: DialogProps;
 }) => {
   const { t } = useTranslation();
-  const { allTagsQuery } = useGenericTagEndpoints(dialogProps.type as TagType);
+  const { allTagsQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
   const { data } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);

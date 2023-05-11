@@ -6,7 +6,6 @@ import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialo
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
 import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
-import { TagType } from '../../types/additionalFlatTypes';
 import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
 import PathPositionSelectDialogPreset from '../views/location-curating/SelectPathPositionDialog';
 import LocationManagementDialogPreset from '../views/location-curating/LocationManagementDialog';
@@ -34,7 +33,6 @@ export interface DialogProps {
   content?: any;
   title?: string;
   options?: DialogOption[];
-  type?: TagType;
   maxWidth?: false | Breakpoint | undefined;
 }
 
@@ -69,7 +67,6 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
     content,
     title,
     options,
-    type,
     maxWidth,
   }: DialogProps): Promise<any> => {
     if (preset === DialogPreset.CONFIRM) {
@@ -99,7 +96,7 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         },
       ];
     }
-    setDialogState({ preset, content, title, options, type, maxWidth });
+    setDialogState({ preset, content, title, options, maxWidth });
     setOpen(true);
     return new Promise<any>(r => {
       // The callback function of this Promise is saved to the ref here

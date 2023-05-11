@@ -16,7 +16,7 @@ const TagSelectDialogPreset = ({
   dialogProps: DialogProps;
 }) => {
   const { t } = useTranslation();
-  const { allTagsQuery } = useGenericTagEndpoints(dialogProps.type as TagType);
+  const { allTagsQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
   const { data } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
@@ -37,7 +37,7 @@ const TagSelectDialogPreset = ({
       handleClose={handleClose}
       dialogProps={{
         ...dialogProps,
-        title: t(`tag-panel.relocate-${dialogProps.type ?? TagType.KEYWORD}`),
+        title: t(`tag-panel.relocate-location`),
       }}
       allOptions={tagList ?? []}
       renderOption={(props, option: FlatTag, highlight?: any) => {
@@ -52,7 +52,7 @@ const TagSelectDialogPreset = ({
           </li>
         );
       }}
-      inputLabel={t(`tag-panel.${dialogProps.type ?? TagType.KEYWORD}`)}
+      inputLabel={t(`tag-panel.location`)}
     />
   );
 };

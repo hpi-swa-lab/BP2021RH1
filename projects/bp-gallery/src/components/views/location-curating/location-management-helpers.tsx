@@ -175,7 +175,6 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
     const selectedTag = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
       content: locationTag.name,
-      type: TagType.LOCATION,
     });
     if (selectedTag) {
       if (selectedTag.child_tags.some((tag: any) => tag.name === locationTag.name)) {
@@ -253,7 +252,6 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
     const selectedTag = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
       content: locationTag.name,
-      type: TagType.LOCATION,
     });
     if (selectedTag) {
       if (selectedTag.child_tags.some((tag: any) => tag.name === locationTag.name)) {

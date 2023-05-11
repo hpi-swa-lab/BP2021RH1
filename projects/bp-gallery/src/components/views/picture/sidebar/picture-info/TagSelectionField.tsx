@@ -282,7 +282,6 @@ const TagSelectionField = <T extends TagFields>({
                     preset: DialogPreset.SELECT_PATH_POSITION,
                     title: t('tag-panel.select-position', { name: addTag.name }),
                     content: { newTag: addTag, lastTag: lastSelectedTag },
-                    type: type,
                   });
                   if (!createOption) return;
                   switch (createOption.id) {
