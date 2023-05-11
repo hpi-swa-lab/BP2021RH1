@@ -3,31 +3,31 @@ import { Operation } from 'bp-graphql/build';
 import { ChangeEvent, useCallback } from 'react';
 import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
 
-export enum HasGroup {
+export enum Coverage {
   NONE,
   SOME,
   ALL,
 }
 
-export const combineHasGroups = (hasGroups: HasGroup[]) => {
-  if (hasGroups.every(has => has === HasGroup.ALL)) {
-    return HasGroup.ALL;
+export const combineCoverages = (coverages: Coverage[]) => {
+  if (coverages.every(coverage => coverage === Coverage.ALL)) {
+    return Coverage.ALL;
   }
-  if (hasGroups.every(has => has === HasGroup.NONE)) {
-    return HasGroup.NONE;
+  if (coverages.every(coverage => coverage === Coverage.NONE)) {
+    return Coverage.NONE;
   }
-  return HasGroup.SOME;
+  return Coverage.SOME;
 };
 
-export const HasGroupCheckbox = ({
-  hasGroup,
+export const CoverageCheckbox = ({
+  coverage,
   operations,
   archive,
   label,
   prompt,
   toggleOperations,
 }: {
-  hasGroup: HasGroup;
+  coverage: Coverage;
   operations: Operation[];
   archive: FlatArchiveTag | null;
   label: string;
@@ -35,21 +35,21 @@ export const HasGroupCheckbox = ({
   toggleOperations: (
     operations: Operation[],
     archive: FlatArchiveTag | null,
-    hasGroup: HasGroup,
+    coverage: Coverage,
     header: string,
     prompt?: boolean
   ) => void;
 }) => {
-  const checked = hasGroup === HasGroup.ALL;
-  const indeterminate = hasGroup === HasGroup.SOME;
+  const checked = coverage === Coverage.ALL;
+  const indeterminate = coverage === Coverage.SOME;
 
   const onClick = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      toggleOperations(operations, archive, hasGroup, label, prompt);
+      toggleOperations(operations, archive, coverage, label, prompt);
       // prevent Accordion from toggling
       event.stopPropagation();
     },
-    [toggleOperations, operations, archive, hasGroup, label, prompt]
+    [toggleOperations, operations, archive, coverage, label, prompt]
   );
 
   return (

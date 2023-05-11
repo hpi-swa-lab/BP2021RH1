@@ -29,7 +29,7 @@ import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
 import { equalOrBothNullish } from './helper';
-import { HasGroup, HasGroupCheckbox, combineHasGroups } from './permissions/HasGroup';
+import { Coverage, CoverageCheckbox, combineCoverages } from './permissions/Coverage';
 import { GroupStructure, SectionStructure, sections } from './permissions/operations';
 import { presets } from './permissions/presets';
 
@@ -83,13 +83,13 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     [permissionLookup]
   );
 
-  const hasGroup = useCallback(
+  const groupCoverage = useCallback(
     (group: GroupStructure, archive: FlatArchiveTag | null) => {
       const hasOperations = group.operations.map(operation => {
         const permission = findPermission(operation, archive);
         return !!permission && equalOrBothNullish(archive?.id, permission.archive_tag?.id);
       });
-      return combineHasGroups(hasOperations.map(has => (has ? HasGroup.ALL : HasGroup.NONE)));
+      return combineCoverages(hasOperations.map(has => (has ? Coverage.ALL : Coverage.NONE)));
     },
     [findPermission]
   );
@@ -150,11 +150,11 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     async (
       operations: Operation[],
       archive: FlatArchiveTag | null,
-      hasGroup: HasGroup,
+      coverage: Coverage,
       header: string,
       prompt = false
     ) => {
-      const removeAll = hasGroup !== HasGroup.NONE;
+      const removeAll = coverage !== Coverage.NONE;
       if (prompt) {
         const really = await dialog({
           preset: DialogPreset.CONFIRM,
@@ -190,18 +190,18 @@ const PermissionsView = ({ userId }: { userId: string }) => {
 
   const renderSections = useCallback(
     (summary: string, sections: SectionStructure[], archive: FlatArchiveTag | null) => {
-      const sectionsWithHasGroups = sections.map(section => ({
+      const sectionsWithCoverages = sections.map(section => ({
         ...section,
         groups: section.groups.map(group => ({
           ...group,
-          hasGroup: hasGroup(group, archive),
+          coverage: groupCoverage(group, archive),
         })),
       }));
       const relevantPresets = presets
         .filter(preset => preset.type === (archive === null ? 'system' : 'archive'))
         .map(preset => ({
           ...preset,
-          operations: sectionsWithHasGroups.flatMap(section =>
+          operations: sectionsWithCoverages.flatMap(section =>
             section.groups
               .filter(group => preset.permissions.includes(group.name))
               .flatMap(group => group.operations)
@@ -211,13 +211,13 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         <Accordion key={archive?.id ?? 'system'} sx={{ backgroundColor: '#e9e9e9' }}>
           <AccordionSummary expandIcon={<ExpandMore />}>
             <Typography fontWeight='bold'>
-              <HasGroupCheckbox
-                hasGroup={combineHasGroups(
-                  sectionsWithHasGroups.flatMap(section =>
-                    section.groups.map(group => group.hasGroup)
+              <CoverageCheckbox
+                coverage={combineCoverages(
+                  sectionsWithCoverages.flatMap(section =>
+                    section.groups.map(group => group.coverage)
                   )
                 )}
-                operations={sectionsWithHasGroups.flatMap(section =>
+                operations={sectionsWithCoverages.flatMap(section =>
                   section.groups.flatMap(group => group.operations)
                 )}
                 archive={archive}
@@ -241,11 +241,11 @@ const PermissionsView = ({ userId }: { userId: string }) => {
               ))}
             </Stack>
             <div className='mt-2'>
-              {sectionsWithHasGroups.map(section => (
+              {sectionsWithCoverages.map(section => (
                 <Accordion key={section.name}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    <HasGroupCheckbox
-                      hasGroup={combineHasGroups(section.groups.map(group => group.hasGroup))}
+                    <CoverageCheckbox
+                      coverage={combineCoverages(section.groups.map(group => group.coverage))}
                       operations={section.groups.flatMap(group => group.operations)}
                       archive={archive}
                       label={t(`admin.permissions.section.${section.name}`)}
@@ -260,8 +260,8 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                       .map(([name, group]) => (
                         // div forces every checkbox on a separate line
                         <div key={group.name}>
-                          <HasGroupCheckbox
-                            hasGroup={group.hasGroup}
+                          <CoverageCheckbox
+                            coverage={group.coverage}
                             operations={group.operations}
                             archive={archive}
                             label={name}
@@ -277,7 +277,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         </Accordion>
       );
     },
-    [hasGroup, addPermissionsIfMissing, toggleOperations, t]
+    [groupCoverage, addPermissionsIfMissing, toggleOperations, t]
   );
 
   if (error) {
