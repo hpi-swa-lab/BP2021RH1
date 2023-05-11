@@ -1,7 +1,7 @@
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import { FlatTag } from '../../../types/additionalFlatTypes';
 import LocationEntry from './LocationEntry';
 import './LocationEntry.scss';
 import { useCreateNewTag } from './location-management-helpers';
@@ -10,17 +10,15 @@ const LocationBranch = ({
   locationTag,
   parentTag,
   refetch,
-  type,
 }: {
   locationTag: FlatTag;
   parentTag?: FlatTag;
   refetch: () => void;
-  type: TagType;
 }) => {
   const { t } = useTranslation();
   const [showMore, setShowMore] = useState<boolean>(false);
 
-  const renderSubBranch = () => {
+  const renderSubBranches = () => {
     if (locationTag.child_tags?.length) {
       return locationTag.child_tags.map((childTag: FlatTag) => {
         return (
@@ -29,7 +27,6 @@ const LocationBranch = ({
             locationTag={childTag}
             parentTag={locationTag}
             refetch={refetch}
-            type={type}
           />
         );
       });
@@ -48,11 +45,10 @@ const LocationBranch = ({
           setShowMore(prev => !prev);
         }}
         refetch={refetch}
-        type={type}
       />
       {showMore && (
         <div className='sub-location-container'>
-          {renderSubBranch()}
+          {renderSubBranches()}
           <div
             className='add-tag-container'
             onClick={() => {
@@ -61,7 +57,7 @@ const LocationBranch = ({
           >
             <Add className='add-tag-icon' />
             <div className='add-tag-text'>
-              {t(`tag-panel.add-sub-${type}`, { parent: locationTag.name })}
+              {t(`tag-panel.add-sub-location`, { parent: locationTag.name })}
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@ import {
   VisibilityOffOutlined,
 } from '@mui/icons-material';
 import { Badge, Chip, IconButton, Tooltip } from '@mui/material';
-import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import { FlatTag } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import './LocationEntry.scss';
 import {
@@ -31,14 +31,12 @@ const LocationEntry = ({
   showMore,
   onToggleShowMore,
   refetch,
-  type,
 }: {
   locationTag: FlatTag;
   parentTag?: FlatTag;
   showMore: boolean;
   onToggleShowMore: () => void;
   refetch: () => void;
-  type: TagType;
 }) => {
   const prompt = useDialog();
 
