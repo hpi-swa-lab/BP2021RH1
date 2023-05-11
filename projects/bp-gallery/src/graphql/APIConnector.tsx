@@ -3162,24 +3162,12 @@ export type GetPicturesForLocationQuery = {
 export type CreateLocationMutationVariables = Exact<{
   name: Scalars['String'];
   parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
   accepted?: InputMaybe<Scalars['Boolean']>;
   root?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CreateLocationMutation = {
-  createLocationTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
-};
-
-export type CreateSuperLocationMutationVariables = Exact<{
-  name: Scalars['String'];
-  childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-  accepted?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-export type CreateSuperLocationMutation = {
   createLocationTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
@@ -5950,9 +5938,21 @@ export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
 >;
 
 export const CreateLocationDocument = gql`
-  mutation createLocation($name: String!, $parentIDs: [ID!], $accepted: Boolean, $root: Boolean) {
+  mutation createLocation(
+    $name: String!
+    $parentIDs: [ID!]
+    $childIDs: [ID!]
+    $accepted: Boolean
+    $root: Boolean
+  ) {
     createLocationTag(
-      data: { name: $name, parent_tags: $parentIDs, accepted: $accepted, root: $root }
+      data: {
+        name: $name
+        parent_tags: $parentIDs
+        child_tags: $childIDs
+        accepted: $accepted
+        root: $root
+      }
     ) {
       data {
         id
@@ -5981,6 +5981,7 @@ export type CreateLocationMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      name: // value for 'name'
  *      parentIDs: // value for 'parentIDs'
+ *      childIDs: // value for 'childIDs'
  *      accepted: // value for 'accepted'
  *      root: // value for 'root'
  *   },
@@ -6003,64 +6004,6 @@ export type CreateLocationMutationResult = Apollo.MutationResult<CreateLocationM
 export type CreateLocationMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationMutation,
   CreateLocationMutationVariables
->;
-
-export const CreateSuperLocationDocument = gql`
-  mutation createSuperLocation($name: String!, $childIDs: [ID!], $accepted: Boolean) {
-    createLocationTag(data: { name: $name, child_tags: $childIDs, accepted: $accepted }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type CreateSuperLocationMutationFn = Apollo.MutationFunction<
-  CreateSuperLocationMutation,
-  CreateSuperLocationMutationVariables
->;
-
-/**
- * __useCreateSuperLocationMutation__
- *
- * To run a mutation, you first call `useCreateSuperLocationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSuperLocationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSuperLocationMutation, { data, loading, error }] = useCreateSuperLocationMutation({
- *   variables: {
- *      name: // value for 'name'
- *      childIDs: // value for 'childIDs'
- *      accepted: // value for 'accepted'
- *   },
- * });
- */
-export function useCreateSuperLocationMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateSuperLocationMutation,
-    CreateSuperLocationMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateSuperLocationMutation, CreateSuperLocationMutationVariables>(
-    CreateSuperLocationDocument,
-    options
-  );
-}
-
-export type CreateSuperLocationMutationHookResult = ReturnType<
-  typeof useCreateSuperLocationMutation
->;
-
-export type CreateSuperLocationMutationResult = Apollo.MutationResult<CreateSuperLocationMutation>;
-
-export type CreateSuperLocationMutationOptions = Apollo.BaseMutationOptions<
-  CreateSuperLocationMutation,
-  CreateSuperLocationMutationVariables
 >;
 
 export const UpdateLocationParentDocument = gql`

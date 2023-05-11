@@ -17,7 +17,6 @@ import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import {
   useCreateLocationMutation,
-  useCreateSuperLocationMutation,
   useGetLocationTagByIdQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -55,20 +54,21 @@ const LocationManagementDialogPreset = ({
 }) => {
   const { t } = useTranslation();
   const history: History = useHistory();
-  const refetch: () => void = dialogProps.content.refetch;
-  const [parentTag, setParentTag] = useState<any>(dialogProps.content.parentTag);
-  const parentTagHistory = useRef<any[]>([]);
+  const { allTagsQuery, tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
 
+  const refetch: () => void = dialogProps.content.refetch;
+
+  const [parentTag, setParentTag] = useState<any>(dialogProps.content.parentTag);
   const [locationTagID, setLocationTagID] = useState<any>(dialogProps.content.locationTag.id);
   const [editName, setEditName] = useState<boolean>(false);
+
+  const parentTagHistory = useRef<any[]>([]);
 
   const { data, loading } = useGetLocationTagByIdQuery({
     variables: { locationID: locationTagID },
   });
   const locationTag: FlatTag =
     useSimplifiedQueryResponseData(data)?.locationTag ?? dialogProps.content.locationTag;
-
-  const { allTagsQuery, tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
 
   const allTagQueryResponse = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(allTagQueryResponse.data);
@@ -78,9 +78,7 @@ const LocationManagementDialogPreset = ({
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
 
   const tagTree = useGetTagTree(flattenedTags);
-
   const tagChildTags = useGetTagChildren(tagTree as FlatTag[], flattenedTags);
-
   const tagSiblingTags = useGetTagSiblings(
     tagTree as FlatTag[],
     flattenedTags,
@@ -88,8 +86,13 @@ const LocationManagementDialogPreset = ({
     parentTag as FlatTag,
     !parentTag
   );
-
   const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
+  const currentSiblings = [
+    ...(tagSiblingTags && locationTag.id in tagSiblingTags ? tagSiblingTags[locationTag.id] : []),
+    locationTag,
+  ].sort((a, b) => a.name.localeCompare(b.name));
+
+  const currentIndex = currentSiblings.indexOf(locationTag);
 
   const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
   const { addSynonym } = useAddSynonym(locationTag, refetch);
@@ -105,31 +108,17 @@ const LocationManagementDialogPreset = ({
     awaitRefetchQueries: true,
   });
 
-  const [newParentLocationTagMutation] = useCreateSuperLocationMutation({
-    refetchQueries: ['getAllLocationTags'],
-    awaitRefetchQueries: true,
-  });
-
   const [localVisibility, setLocalVisibility] = useState<boolean>(locationTag.visible ?? false);
   const [isRoot, setIsRoot] = useState<boolean>(
     locationTag.root ?? !locationTag.parent_tags?.length
   );
 
-  const currentSiblings = [
-    ...(tagSiblingTags && locationTag.id in tagSiblingTags ? tagSiblingTags[locationTag.id] : []),
-    locationTag,
-  ].sort((a, b) => a.name.localeCompare(b.name));
-
-  const currentIndex = currentSiblings.indexOf(locationTag);
-
-  const title = useRef<string>(locationTag.name);
-  const [changed, setChanged] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>(locationTag.name);
 
   useEffect(() => {
     setLocalVisibility(locationTag.visible ?? false);
     setIsRoot(locationTag.root ?? !locationTag.parent_tags?.length);
-    setChanged(false);
-    title.current = locationTag.name;
+    setTitle(locationTag.name);
   }, [locationTag]);
 
   if (loading) {
@@ -154,14 +143,13 @@ const LocationManagementDialogPreset = ({
                   <TextField
                     variant='standard'
                     margin='none'
-                    defaultValue={title.current}
+                    defaultValue={title}
                     onBlur={event => {
                       updateName(event.target.value);
                       setEditName(!editName);
                     }}
                     onChange={event => {
-                      title.current = event.target.value;
-                      setChanged(true);
+                      setTitle(event.target.value);
                     }}
                   />
                 ) : (
@@ -170,9 +158,7 @@ const LocationManagementDialogPreset = ({
                       !locationTag.accepted ? 'text-gray-400' : ''
                     }`}
                   >
-                    {title.current !== locationTag.name && !changed
-                      ? locationTag.name
-                      : title.current}
+                    {title}
                   </h2>
                 )}
                 {!locationTag.accepted && !editName ? (
@@ -298,7 +284,7 @@ const LocationManagementDialogPreset = ({
                         setParentTag(parentTagHistory.current.pop());
                         setLocationTagID(id);
                       }}
-                      createParentMutation={newParentLocationTagMutation}
+                      createParentMutation={newLocationTagMutation}
                     />
                   </PictureInfoField>
                 </div>
@@ -307,9 +293,11 @@ const LocationManagementDialogPreset = ({
             <div className='location-management-right'>
               <div className='location-management-map'></div>
               <div className='location-management-actions'>
-                <div className='location-management-picture-count'>{`${
-                  flattenedPictures?.locationTag.pictures.length as string
-                } Bild/er in diesem Ort`}</div>
+                <div className='location-management-picture-count'>
+                  {t('tag-panel.location-pictures', {
+                    amount: flattenedPictures?.locationTag.pictures.length,
+                  })}
+                </div>
                 <Button
                   className='location-management-show-pictures-button'
                   onClick={() => {

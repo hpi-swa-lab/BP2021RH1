@@ -379,7 +379,8 @@
     "delete-elsewhere": "Der Ort {{ name }} besitzt eine Kopie an anderer Stelle. Soll diese auch gelöscht werden?",
     "only-delete-here": "Nur hier löschen.",
     "delete-everywhere": "Überall löschen.",
-    "loop-error": "Diese Aktion würde eine Kreisschluss der Orte zur Folge haben und wird deswegen nicht ausgeführt."
+    "loop-error": "Diese Aktion würde eine Kreisschluss der Orte zur Folge haben und wird deswegen nicht ausgeführt.",
+    "location-pictures": "{{ amount }} Bild/er in diesem Ort"
   },
   "tooltips": {
     "detach-location": "Ort aus der Hierarchie lösen.",
