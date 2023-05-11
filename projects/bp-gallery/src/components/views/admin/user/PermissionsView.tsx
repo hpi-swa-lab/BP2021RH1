@@ -4,22 +4,11 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
-  Checkbox,
-  FormControlLabel,
   Stack,
   Typography,
 } from '@mui/material';
-import {
-  GroupName,
-  GroupSettings,
-  Operation,
-  OperationWithoutGroupName,
-  PermissionName,
-  groups as groupsMap,
-  operations as operationsMap,
-  sections as sectionNames,
-} from 'bp-graphql';
-import { ChangeEvent, useCallback, useMemo } from 'react';
+import { Operation } from 'bp-graphql/build';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import {
@@ -40,159 +29,9 @@ import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
 import { equalOrBothNullish } from './helper';
-
-type OperationsStructure = {
-  system: SectionStructure[];
-  perArchive: SectionStructure[];
-};
-
-type SectionStructure = {
-  name: string;
-  groups: GroupStructure[];
-};
-
-type GroupStructure = {
-  name: PermissionName;
-  operations: Operation[];
-};
-
-const generateOperationsStructure = (): OperationsStructure => {
-  const systemSections: SectionStructure[] = sectionNames.map(name => ({
-    name,
-    groups: [],
-  }));
-  const perArchiveSections: SectionStructure[] = sectionNames.map(name => ({
-    name,
-    groups: [],
-  }));
-
-  const groups: Record<string, GroupStructure> = Object.fromEntries(
-    Object.keys(groupsMap).map(name => [name, { name: name as GroupName, operations: [] }])
-  );
-
-  const isArchiveSpecificGroup = (settings: GroupSettings) =>
-    settings.needsParameters.includes('archive_tag');
-  const getSections = (settings: GroupSettings) =>
-    isArchiveSpecificGroup(settings) ? perArchiveSections : systemSections;
-
-  for (const [name, group] of Object.entries(groupsMap)) {
-    getSections(group)
-      .find(section => section.name === group.section)
-      ?.groups.push(groups[name as GroupName]);
-  }
-  for (const operation of Object.values(operationsMap)) {
-    if ('group' in operation) {
-      groups[operation.group].operations.push(operation);
-    } else {
-      const section = getSections(operation).find(section => section.name === operation.section);
-      if (!section) {
-        console.warn(
-          `operation ${operation.document.name} has an invalid section ${operation.section}`
-        );
-        continue;
-      }
-      section.groups.push({
-        name: operation.document.name as OperationWithoutGroupName,
-        operations: [operation],
-      });
-    }
-  }
-  const filterOutEmptySections = (sections: SectionStructure[]) =>
-    sections.filter(section => section.groups.length > 0);
-
-  return {
-    system: filterOutEmptySections(systemSections),
-    perArchive: filterOutEmptySections(perArchiveSections),
-  };
-};
-
-const sections = generateOperationsStructure();
-
-enum HasGroup {
-  NONE,
-  SOME,
-  ALL,
-}
-
-const combineHasGroups = (hasGroups: HasGroup[]) => {
-  if (hasGroups.every(has => has === HasGroup.ALL)) {
-    return HasGroup.ALL;
-  }
-  if (hasGroups.every(has => has === HasGroup.NONE)) {
-    return HasGroup.NONE;
-  }
-  return HasGroup.SOME;
-};
-
-const HasGroupCheckbox = ({
-  hasGroup,
-  operations,
-  archive,
-  label,
-  prompt,
-  toggleOperations,
-}: {
-  hasGroup: HasGroup;
-  operations: Operation[];
-  archive: FlatArchiveTag | null;
-  label: string;
-  prompt?: boolean;
-  toggleOperations: (
-    operations: Operation[],
-    archive: FlatArchiveTag | null,
-    hasGroup: HasGroup,
-    header: string,
-    prompt?: boolean
-  ) => void;
-}) => {
-  const checked = hasGroup === HasGroup.ALL;
-  const indeterminate = hasGroup === HasGroup.SOME;
-
-  const onClick = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      toggleOperations(operations, archive, hasGroup, label, prompt);
-      // prevent Accordion from toggling
-      event.stopPropagation();
-    },
-    [toggleOperations, operations, archive, hasGroup, label, prompt]
-  );
-
-  return (
-    <FormControlLabel
-      control={<Checkbox indeterminate={indeterminate} checked={checked} onChange={onClick} />}
-      label={label}
-    />
-  );
-};
-
-type PresetType = 'system' | 'archive';
-
-type Preset = {
-  type: PresetType;
-  name: string;
-  permissions: readonly PermissionName[];
-};
-
-const presets: Preset[] = [
-  {
-    type: 'system',
-    name: 'public',
-    permissions: [
-      'getPictures',
-      'getAllPicturesByArchive',
-      'viewCollection',
-      'getTagThumbnails',
-      'getAllArchiveTags',
-      'geo',
-      'login',
-    ],
-  },
-  {
-    type: 'archive',
-    name: 'public',
-    permissions: ['viewPicture', 'getDailyPictureInfo', 'like', 'postComment', 'getArchive'],
-  },
-];
+import { HasGroup, HasGroupCheckbox, combineHasGroups } from './permissions/HasGroup';
+import { GroupStructure, SectionStructure, sections } from './permissions/operations';
+import { presets } from './permissions/presets';
 
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
@@ -461,7 +300,5 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     return <Redirect to={FALLBACK_PATH} />;
   }
 };
-
-export const Sections = ({ sections }: { sections: SectionStructure[] }) => {};
 
 export default PermissionsView;
