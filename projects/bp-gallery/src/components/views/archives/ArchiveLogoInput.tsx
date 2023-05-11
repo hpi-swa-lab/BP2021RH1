@@ -1,7 +1,7 @@
 import { OutlinedInput } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
-import { asApiPath } from '../../../helpers/app-helpers';
 import { useTranslation } from 'react-i18next';
+import { useObjectURL } from '../../../hooks/url-hook';
 
 interface ArchiveLogoInputProps {
   defaultUrl: string;
@@ -11,6 +11,8 @@ interface ArchiveLogoInputProps {
 const ArchiveLogoInput = ({ defaultUrl, onChange }: ArchiveLogoInputProps) => {
   const [logo, setLogo] = useState<File | undefined>();
   const { t } = useTranslation();
+  const logoUrl = useObjectURL(logo);
+
   return (
     <div className='archive-form-div'>
       <label className='archive-form-label' htmlFor='archive-form-logo'>
@@ -35,10 +37,7 @@ const ArchiveLogoInput = ({ defaultUrl, onChange }: ArchiveLogoInputProps) => {
           <div>
             {t('archives.edit.logo.preview')}
             <div className='archive-logo-container'>
-              <img
-                className='archive-logo'
-                src={logo ? URL.createObjectURL(logo) : asApiPath(`/${defaultUrl}`)}
-              />
+              <img className='archive-logo' src={logo ? logoUrl : defaultUrl} />
             </div>
           </div>
         )}

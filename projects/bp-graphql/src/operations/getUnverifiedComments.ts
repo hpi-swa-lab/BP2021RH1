@@ -19,6 +19,7 @@ export default {
                         height
                         formats
                         updatedAt
+                        provider
                       }
                     }
                   }

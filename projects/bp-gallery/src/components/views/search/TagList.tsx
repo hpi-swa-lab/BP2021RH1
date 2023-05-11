@@ -9,7 +9,7 @@ import {
   PictureFiltersInput,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import useGetTagsWithThumbnail from '../../../hooks/get-tags-with-thumbnail.hook';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import ItemList from '../../common/ItemList';
@@ -17,10 +17,10 @@ import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import ScrollableItemList from '../../common/ScrollableItemList';
 import { useVisit } from './../../../helpers/history';
+import './TagList.scss';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import { SearchType } from './helpers/search-filters';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
-import './TagList.scss';
 
 const TagList = ({
   type,
@@ -55,7 +55,7 @@ const TagList = ({
   );
 
   const flattened = useSimplifiedQueryResponseData(data);
-  const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened
+  const flattenedTags: (FlatTag & { thumbnail?: Thumbnail[] })[] | undefined = flattened
     ? Object.values(flattened)[0]
     : undefined;
 
@@ -102,11 +102,10 @@ const TagList = ({
           fetchMoreOnScroll={fetchMoreOnScroll}
           items={flattenedTags.map(tag => ({
             name: tag.name,
-            background: tag.thumbnail.length
-              ? asApiPath(
-                  String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-                )
-              : DEFAULT_THUMBNAIL_URL,
+            background: asUploadPath(tag.thumbnail?.[0]?.media, {
+              highQuality: false,
+              fallback: DEFAULT_THUMBNAIL_URL,
+            }),
             onClick: () => {
               const { searchPath } = addNewParamToSearchPath(
                 useAdvancedSearch ? type : SearchType.ALL,
@@ -127,11 +126,10 @@ const TagList = ({
                 : flattenedTags
               ).map(tag => ({
                 name: tag.name,
-                background: tag.thumbnail.length
-                  ? asApiPath(
-                      String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-                    )
-                  : DEFAULT_THUMBNAIL_URL,
+                background: asUploadPath(tag.thumbnail?.[0]?.media, {
+                  highQuality: false,
+                  fallback: DEFAULT_THUMBNAIL_URL,
+                }),
                 onClick: () => {
                   visit(onClickBasePath + tag.id, { wasOpen: true });
                 },
