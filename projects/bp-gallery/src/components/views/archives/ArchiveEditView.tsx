@@ -1,7 +1,7 @@
 import { Check, Close, Save } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { Jodit } from 'jodit-react';
-import { merge, pick } from 'lodash';
+import { pick } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
@@ -22,18 +22,13 @@ import useLinks from './helpers/link-helpers';
 interface ArchiveEditViewProps {
   archiveId: string;
 }
-
-interface PaypalProperties {
-  client: string;
-  donationText: string;
-  purpose: string;
-}
-
 interface ArchiveForm {
   name: string;
   shortDescription: string;
   longDescription: string;
-  paypal: PaypalProperties;
+  paypalClient: string;
+  paypalDonationText: string;
+  paypalPurpose: string;
   logo?: File;
   links: LinkInfo[];
   dirty: boolean;
@@ -72,7 +67,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     name: '',
     shortDescription: '',
     longDescription: '',
-    paypal: { client: '', donationText: '', purpose: '' },
+    paypalClient: '',
+    paypalDonationText: '',
+    paypalPurpose: '',
     links: [],
     dirty: false,
   });
@@ -83,11 +80,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       name: archive?.name ?? '',
       shortDescription: archive?.shortDescription ?? '',
       longDescription: archive?.longDescription ?? '',
-      paypal: {
-        client: archive?.paypalClient ?? '',
-        donationText: archive?.paypalDonationText ?? '',
-        purpose: archive?.paypalPurpose ?? '',
-      },
+      paypalClient: archive?.paypalClient ?? '',
+      paypalDonationText: archive?.paypalDonationText ?? '',
+      paypalPurpose: archive?.paypalPurpose ?? '',
       links: archive?.links ?? [],
     });
   }, [archive]);
@@ -109,11 +104,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
 
   const logoSrc = archive?.logo?.formats?.thumbnail.url ?? '';
 
-  type PartialForm = Omit<Partial<ArchiveForm>, 'paypal'> & { paypal?: Partial<PaypalProperties> };
-
-  const updateForm = useCallback((newForm: PartialForm) => {
+  const updateForm = useCallback((newForm: Partial<ArchiveForm>) => {
     setForm(form => {
-      return merge({}, form, newForm);
+      return { ...form, ...newForm };
     });
   }, []);
 
@@ -157,7 +150,14 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           variables: {
             archiveId,
             data: {
-              ...pick(form, ['name', 'shortDescription', 'longDescription', 'paypal']),
+              ...pick(form, [
+                'name',
+                'shortDescription',
+                'longDescription',
+                'paypalClient',
+                'paypalDonationText',
+                'paypalPurpose',
+              ]),
               logo: ids[0],
             },
           },
@@ -168,7 +168,14 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         variables: {
           archiveId,
           data: {
-            ...pick(form, ['name', 'shortDescription', 'longDescription', 'paypal']),
+            ...pick(form, [
+              'name',
+              'shortDescription',
+              'longDescription',
+              'paypalClient',
+              'paypalDonationText',
+              'paypalPurpose',
+            ]),
           },
         },
       });
@@ -254,11 +261,11 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           }}
           onBlur={async value => {
             if (value === '') {
-              updateForm({ paypal: { client: '' }, dirty: true });
+              updateForm({ paypalClient: '', dirty: true });
               return;
             }
             if (await isValidClientId(value)) {
-              updateForm({ paypal: { client: value }, dirty: true });
+              updateForm({ paypalClient: value, dirty: true });
             }
           }}
         />
@@ -266,14 +273,14 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           defaultValue={archive.paypalDonationText ?? ''}
           label={t('archives.edit.paypal.donation-label')}
           id='donationText'
-          onBlur={value => updateForm({ paypal: { donationText: value }, dirty: true })}
+          onBlur={value => updateForm({ paypalDonationText: value, dirty: true })}
           placeholder={t('archives.edit.paypal.donation-placeholder')}
         />
         <ArchiveInputField
           defaultValue={archive.paypalPurpose ?? ''}
           label={t('archives.edit.paypal.purpose-label')}
           id='purpose'
-          onBlur={value => updateForm({ paypal: { purpose: value }, dirty: true })}
+          onBlur={value => updateForm({ paypalPurpose: value, dirty: true })}
           placeholder={t('archives.edit.paypal.purpose-placeholder')}
         />
       </form>
