@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { DialogProps } from '../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -31,6 +31,7 @@ const PathPositionSelectDialogPreset = ({
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
   const tagTree = useGetTagTree(flattenedTags);
+  const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
 
   const newTag: FlatTag = dialogProps.content.newTag;
   const lastTag: FlatTag = dialogProps.content.lastTag;
@@ -61,8 +62,6 @@ const PathPositionSelectDialogPreset = ({
     ];
   }, [newTag]);
 
-  const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
-
   const customSupertagList = useMemo(() => {
     const customSupertags = Object.fromEntries(
       customOptions.map(tag => [tag.id, [] as FlatTag[][]])
@@ -90,12 +89,6 @@ const PathPositionSelectDialogPreset = ({
 
     return customSupertags;
   }, [customOptions, lastTag, tagSupertagList]);
-
-  const [tagList, setTagList] = useState<FlatTag[]>();
-
-  useEffect(() => {
-    setTagList(flattenedTags);
-  }, [setTagList, flattenedTags, tagSupertagList]);
 
   const selectedOption = useRef<any | undefined>(customOptions[1]);
   const [highlight, setHighlight] = useState<any>();

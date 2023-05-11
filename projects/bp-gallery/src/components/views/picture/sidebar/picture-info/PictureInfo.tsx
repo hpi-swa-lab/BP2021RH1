@@ -162,7 +162,11 @@ const PictureInfo = ({
           tags={picture.location_tags ?? []}
           allTags={allLocations ?? []}
           onChange={locations => {
-            savePictureInfo({ location_tags: locations });
+            savePictureInfo({
+              location_tags: locations.map(location => {
+                return (({ name, id, visible }) => ({ name, id, visible }))(location);
+              }),
+            });
           }}
           noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
