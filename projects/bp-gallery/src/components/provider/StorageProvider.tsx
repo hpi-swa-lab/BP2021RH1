@@ -24,7 +24,7 @@ const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const likedState = useStorageState<string[]>([], 'likes', localStorage);
 
-  const anonymousId = useStorageState<string>(nanoid(), 'anonymous_id', sessionStorage);
+  const anonymousId = useStorageState<string>(() => nanoid(), 'anonymous_id', sessionStorage);
   return (
     <StorageContext.Provider value={{ clipboardState, likedState, anonymousId }}>
       {children}
