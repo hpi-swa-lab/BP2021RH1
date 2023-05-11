@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { createContext, Dispatch, PropsWithChildren, SetStateAction } from 'react';
 import useStorageState from '../../hooks/storage-state.hook';
 
@@ -9,6 +10,7 @@ type State<T> = readonly [T, Dispatch<SetStateAction<T>>];
 type StorageData = {
   clipboardState: State<ClipboardData>;
   likedState: State<string[]>;
+  anonymousId: State<string>;
 };
 
 export const StorageContext = createContext<null | StorageData>(null);
@@ -22,8 +24,9 @@ const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const likedState = useStorageState<string[]>([], 'likes', localStorage);
 
+  const anonymousId = useStorageState<string>(() => nanoid(), 'anonymous_id', sessionStorage);
   return (
-    <StorageContext.Provider value={{ clipboardState, likedState }}>
+    <StorageContext.Provider value={{ clipboardState, likedState, anonymousId }}>
       {children}
     </StorageContext.Provider>
   );
