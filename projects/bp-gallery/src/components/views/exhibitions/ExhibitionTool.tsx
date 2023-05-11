@@ -175,24 +175,6 @@ const getDraggableList = (ideaLotPictures: FlatExhibitionPicture[]): DragElement
   }));
 };
 
-// class DragNDropHandler {
-//   public dropzones: DropzoneContent[];
-//   public draggableList: DragElement[];
-//   public draggedItem: string;
-//   private static _instance: DragNDropHandler;
-
-//   private constructor(exhibition: FlatExhibition) {
-//     this.dropzones = this.buildDropzones(exhibition);
-//     this.draggableList = this.buildDraggableList(exhibition);
-//     this.draggedItem = '';
-//   }
-
-//   public static Instance(exhibition: FlatExhibition) {
-//     // eslint-disable-next-line
-//     return this._instance || (this._instance = new this(exhibition));
-//   }
-// }
-
 const DragNDropHandler = ({
   exhibition,
   children,
