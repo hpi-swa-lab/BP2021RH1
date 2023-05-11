@@ -1,32 +1,23 @@
-import { Cancel, OpenWith } from '@mui/icons-material';
-import { CSSProperties, useContext, useMemo } from 'react';
+import { Cancel, Label, OpenWith } from '@mui/icons-material';
+import { CSSProperties, useMemo } from 'react';
+import { useFaceTagging } from '../../../../hooks/context-hooks';
 import '../../../../shared/style.scss';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
-import { PictureViewContext } from '../PictureView';
-import { useFaceTagging } from '../../../../hooks/context-hooks';
-import { useImageRect } from './helpers/image-rect';
+import { FaceTagData, TagDirection } from './FaceTagTypes';
 
 const triangleHeight = 10;
 const triangleWidth = 20;
 const boundary = 0.9;
 
-export type FaceTagData = {
-  id: string | undefined;
-  personTagId: string | undefined | null;
-  name: string;
-  x: number;
-  y: number;
-  noPointerEvents?: boolean;
-};
-
 export const FaceTag = ({
-  data: { id, personTagId, name, x, y, noPointerEvents },
+  data: { id, personTagId, name, x, y, noPointerEvents, tagDirection },
 }: {
   data: FaceTagData;
 }) => {
   const { role } = useAuth();
   const context = useFaceTagging();
   const isFaceTagging = context?.isFaceTagging;
+
   const handleDelete = async () => {
     if (id === undefined) {
       return;
@@ -42,23 +33,24 @@ export const FaceTag = ({
     context?.setActiveTagId(personTagId);
   };
 
-  const { img } = useContext(PictureViewContext);
-  const imageRect = useImageRect(img);
+  const toggleSetDirectionMode = () => {
+    context?.setTagDirectionReferenceTagId(context.tagDirectionReferenceTagId ? null : id ?? null);
+  };
 
   const position = useMemo<CSSProperties>(() => {
-    if (!imageRect) {
+    if (!context?.imageRect) {
       return { display: 'none' };
     }
-    const { x: ix, y: iy, width, height } = imageRect;
+    const { x: ix, y: iy, width, height } = context.imageRect;
     return {
       left: x * width + ix,
       top: y * height + iy,
     };
-  }, [imageRect, x, y]);
+  }, [context?.imageRect, x, y]);
 
   const { style, triangle } = useMemo<{
     style: CSSProperties;
-    triangle: { points: string; width: number; height: number };
+    triangle: { points: string; width: number; height: number; testid: string };
   }>(() => {
     const w = triangleWidth;
     const h = triangleHeight;
@@ -68,7 +60,10 @@ export const FaceTag = ({
       ...position,
     } satisfies CSSProperties;
 
-    if (x > boundary) {
+    if (
+      (tagDirection === TagDirection.DEFAULT && x > boundary) ||
+      tagDirection === TagDirection.RIGHT
+    ) {
       return {
         style: {
           ...commonStyle,
@@ -79,10 +74,14 @@ export const FaceTag = ({
           points: `0,0 ${h},${w / 2} 0,${w}`,
           width: h,
           height: w,
+          testid: 'tag direction: right',
         },
       };
     }
-    if (x < 1 - boundary) {
+    if (
+      (tagDirection === TagDirection.DEFAULT && x < 1 - boundary) ||
+      tagDirection === TagDirection.LEFT
+    ) {
       return {
         style: {
           ...commonStyle,
@@ -93,10 +92,14 @@ export const FaceTag = ({
           points: `${h},0 0,${w / 2} ${h},${w}`,
           width: h,
           height: w,
+          testid: 'tag direction: left',
         },
       };
     }
-    if (y > boundary) {
+    if (
+      (tagDirection === TagDirection.DEFAULT && y > boundary) ||
+      tagDirection === TagDirection.DOWN
+    ) {
       return {
         style: {
           ...commonStyle,
@@ -107,6 +110,7 @@ export const FaceTag = ({
           points: `0,0 ${w / 2},${h} ${w},0`,
           width: w,
           height: h,
+          testid: 'tag direction: down',
         },
       };
     }
@@ -120,13 +124,14 @@ export const FaceTag = ({
         points: `0,${h} ${w / 2},0 ${w},${h}`,
         width: w,
         height: h,
+        testid: 'tag direction: up',
       },
     };
-  }, [x, y, position, noPointerEvents]);
+  }, [x, y, position, noPointerEvents, tagDirection]);
 
   return (
     <div className='fixed z-[999] hover:z-[9999] flex items-center facetag' style={style}>
-      <svg width={triangle.width} height={triangle.height}>
+      <svg width={triangle.width} height={triangle.height} data-testid={triangle.testid}>
         <polygon fill='#404173bb' points={triangle.points} />
       </svg>
       <div className='flex flex-row items-center space-x-1 bg-[#404173bb] p-2 rounded-md text-white'>
@@ -134,6 +139,14 @@ export const FaceTag = ({
         {role >= AuthRole.CURATOR && id !== undefined && isFaceTagging && (
           <>
             <OpenWith className='hover:text-[#00000066]' onClick={handleMove} />
+            <Label
+              className={
+                id === context.tagDirectionReferenceTagId
+                  ? 'text-[#00000066]'
+                  : 'hover:text-[#00000066]'
+              }
+              onClick={toggleSetDirectionMode}
+            />
             <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
           </>
         )}
