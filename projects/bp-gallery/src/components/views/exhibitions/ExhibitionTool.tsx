@@ -9,7 +9,7 @@ import {
 } from '@dnd-kit/core';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Button, IconButton, Paper, TextField } from '@mui/material';
-import { PropsWithChildren, useContext, useState } from 'react';
+import { Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from 'react';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import {
@@ -22,6 +22,7 @@ import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { useTranslation } from 'react-i18next';
 import { createContext } from 'react';
 import { isUndefined, omitBy } from 'lodash';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 
 const DraggablePicture = ({
   id,
@@ -72,7 +73,9 @@ const DropZone = ({ id }: { id: string }) => {
       ref={setNodeRef}
       className='h-40 border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200'
     >
-      {itemElements}
+      <SortableContext items={itemIds} strategy={horizontalListSortingStrategy}>
+        {itemElements}
+      </SortableContext>
     </div>
   );
 };
@@ -87,15 +90,28 @@ interface DragElement {
   element: JSX.Element;
 }
 
+interface ExhibitionText {
+  title: string;
+  introduction: string;
+  sections: {
+    id: string;
+    title: string;
+    text: string;
+  }[];
+  epilog: string;
+  sources: string[];
+  isPublished: boolean;
+}
+
 const ExhibitionManipulator = () => {
-  const dropzones = useContext(DropzoneContext);
+  const exhibition = useContext(ExhibitionContext);
   return (
     <div className='flex flex-col items-stretch h-full w-full'>
       <div className='text-xl'>Ausstellungstool</div>
       <div className='border-solid flex-1 p-2 overflow-auto'>
         <Introduction />
-        {dropzones.map(dropzone => (
-          <Section key={dropzone.id} id={dropzone.id} />
+        {exhibition.exhibition_sections?.map(section => (
+          <Section key={section.id} id={section.id} />
         ))}
       </div>
     </div>
@@ -114,6 +130,7 @@ const editorOptions = ({ placeholder }: { placeholder: string }) => {
 
 const Introduction = () => {
   const { t } = useTranslation();
+  const [exhibitionText, setExhibitionText] = useContext(ExhibitionTextContext);
   const extraOptions = {
     preset: undefined,
     placeholder: t('exhibition.manipulator.intro-text-placeholder'),
@@ -127,8 +144,9 @@ const Introduction = () => {
         className='flex-1'
         variant='standard'
         placeholder={t('exhibition.manipulator.intro-title-placeholder')}
+        value={exhibitionText.title}
       />
-      <TextEditor value='' extraOptions={extraOptions} />
+      <TextEditor value={exhibitionText.introduction} extraOptions={extraOptions} />
     </div>
   );
 };
@@ -144,18 +162,26 @@ const Section = ({ id }: { id: string }) => {
     tabIndex: 0,
     className: 'z-0',
   };
+  const [exhibitionText, setExhibitionText] = useContext(ExhibitionTextContext);
+  const section = exhibitionText.sections.find(x => x.id === id);
+
   return (
     <Paper elevation={3}>
       <div className='flex flex-col gap-2 p-2 m-2'>
         <div className='flex'>
-          <TextField className='flex-1' placeholder='Abschnittstitel' variant='standard' />
+          <TextField
+            className='flex-1'
+            placeholder='Abschnittstitel'
+            variant='standard'
+            value={section?.title}
+          />
           <IconButton onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
         </div>
         {isOpen && dropzone && (
           <>
-            <TextEditor value='' extraOptions={extraOptions} />
+            <TextEditor value={section?.text ?? ''} extraOptions={extraOptions} />
             <DropZone key={dropzone.id} id={dropzone.id} />
           </>
         )}
@@ -167,13 +193,18 @@ const Section = ({ id }: { id: string }) => {
 const DragListContext = createContext<DragElement[]>([]);
 const DropzoneContext = createContext<DropzoneContent[]>([]);
 const DraggedItemContext = createContext<string>('');
-
-const getDraggableList = (ideaLotPictures: FlatExhibitionPicture[]): DragElement[] => {
-  return ideaLotPictures.map(picture => ({
-    id: picture.id,
-    element: <DraggablePicture id={picture.id} exhibitionPicture={picture} />,
-  }));
+const ExhibitionContext = createContext<FlatExhibition>({} as FlatExhibition);
+const exhibitonTextNull = {
+  title: '',
+  introduction: '',
+  sections: [{ id: '', title: '', text: '' }],
+  epilog: '',
+  sources: [''],
+  isPublished: false,
 };
+const ExhibitionTextContext = createContext<
+  [ExhibitionText, Dispatch<SetStateAction<ExhibitionText>>]
+>([exhibitonTextNull, () => {}]);
 
 const DragNDropHandler = ({
   exhibition,
@@ -267,6 +298,35 @@ const DragNDropHandler = ({
   );
 };
 
+const ExhibitionSaver = ({ children }: PropsWithChildren<{}>) => {
+  const dropzones = useContext(DropzoneContext);
+  const draggableList = useContext(DragListContext);
+  const exhibition = useContext(ExhibitionContext);
+  const buildExhibitionText = ((): ExhibitionText => {
+    return {
+      title: exhibition.title,
+      introduction: exhibition.introduction,
+      sections:
+        exhibition.exhibition_sections?.map(section => ({
+          id: section.id,
+          title: section.title,
+          text: section.text,
+        })) || [],
+      epilog: exhibition.epilog,
+      sources: exhibition.exhibition_sources?.map(source => source.source) || [],
+      isPublished: exhibition.is_published,
+    } as ExhibitionText;
+  })();
+
+  const [exhibitionText, setExhibitionText] = useState<ExhibitionText>(buildExhibitionText);
+
+  return (
+    <ExhibitionTextContext.Provider value={[exhibitionText, setExhibitionText]}>
+      {children}
+    </ExhibitionTextContext.Provider>
+  );
+};
+
 const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
   const { data: exhibitionData } = useGetExhibitionQuery({ variables: { exhibitionId } });
   const exhibition: FlatExhibition | undefined =
@@ -280,10 +340,14 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
             <Button variant='contained'>Veröffentlichen</Button>
           </div>
           <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
-            <DragNDropHandler exhibition={exhibition}>
-              <IdeaLot />
-              <ExhibitionManipulator />
-            </DragNDropHandler>
+            <ExhibitionContext.Provider value={exhibition}>
+              <DragNDropHandler exhibition={exhibition}>
+                <ExhibitionSaver>
+                  <IdeaLot />
+                  <ExhibitionManipulator />
+                </ExhibitionSaver>
+              </DragNDropHandler>
+            </ExhibitionContext.Provider>
           </div>
         </>
       )}
