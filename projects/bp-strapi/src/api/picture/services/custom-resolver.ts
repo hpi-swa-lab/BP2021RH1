@@ -1,5 +1,5 @@
 "use strict";
-import { KnexEngine } from "../../../types";
+import { KnexEngine, QueryBuilder } from "../../../types";
 import { bulkEdit, like, updatePictureWithTagCleanup } from "./custom-update";
 const { plural, table } = require("../../helper");
 /**
@@ -15,24 +15,24 @@ const manyToManyWithVerified = ["keyword_tag", "location_tag", "person_tag"];
 const manyToManyWithoutVerified = ["description", "collection"];
 
 const buildJoinsForTableWithVerifiedHandling = (
-  knexEngine,
-  singularTableName,
-  verifiedLinkTable,
-  unverifiedLinkTable
+  queryBuilder: QueryBuilder,
+  singularTableName: string,
+  verifiedLinkTable: string,
+  unverifiedLinkTable: string
 ) => {
-  knexEngine = knexEngine.leftJoin(
+  queryBuilder = queryBuilder.leftJoin(
     unverifiedLinkTable,
     "pictures.id",
     `${unverifiedLinkTable}.picture_id`
   );
-  knexEngine = knexEngine.leftJoin(
+  queryBuilder = queryBuilder.leftJoin(
     verifiedLinkTable,
     "pictures.id",
     `${verifiedLinkTable}.picture_id`
   );
 
   // This special join syntax is needed in order to only join the tag table once to the aggregate
-  knexEngine = knexEngine.leftJoin(
+  queryBuilder = queryBuilder.leftJoin(
     table(plural(singularTableName)),
     function () {
       this.on(
@@ -47,28 +47,28 @@ const buildJoinsForTableWithVerifiedHandling = (
     }
   );
 
-  return knexEngine;
+  return queryBuilder;
 };
 
 const buildJoinsForTableWithoutVerifiedHandling = (
-  knexEngine,
-  singularTableName,
-  linkTable
+  queryBuilder: QueryBuilder,
+  singularTableName: string,
+  linkTable: string
 ) => {
-  knexEngine = knexEngine.leftJoin(
+  queryBuilder = queryBuilder.leftJoin(
     linkTable,
     "pictures.id",
     `${linkTable}.picture_id`
   );
-  knexEngine = knexEngine.leftJoin(
+  queryBuilder = queryBuilder.leftJoin(
     table(plural(singularTableName)),
     `${linkTable}.${singularTableName}_id`,
     `${plural(singularTableName)}.id`
   );
-  return knexEngine;
+  return queryBuilder;
 };
 
-const buildJoins = (knexEngine) => {
+const buildJoins = (queryBuilder: QueryBuilder) => {
   for (const singularTableName of manyToManyWithVerified) {
     const verifiedLinkTable = table(
       `pictures_verified_${plural(singularTableName)}_links`
@@ -76,8 +76,8 @@ const buildJoins = (knexEngine) => {
     const unverifiedLinkTable = table(
       `pictures_${plural(singularTableName)}_links`
     );
-    knexEngine = buildJoinsForTableWithVerifiedHandling(
-      knexEngine,
+    queryBuilder = buildJoinsForTableWithVerifiedHandling(
+      queryBuilder,
       singularTableName,
       verifiedLinkTable,
       unverifiedLinkTable
@@ -89,8 +89,8 @@ const buildJoins = (knexEngine) => {
     "pictures_verified_time_range_tag_links"
   );
   const unverifiedTimeRangeLinkTable = table("pictures_time_range_tag_links");
-  knexEngine = buildJoinsForTableWithVerifiedHandling(
-    knexEngine,
+  queryBuilder = buildJoinsForTableWithVerifiedHandling(
+    queryBuilder,
     "time_range_tag",
     verifiedTimeRangeLinkTable,
     unverifiedTimeRangeLinkTable
@@ -98,8 +98,8 @@ const buildJoins = (knexEngine) => {
 
   for (const singularTableName of manyToManyWithoutVerified) {
     const linkTable = table(`pictures_${plural(singularTableName)}_links`);
-    knexEngine = buildJoinsForTableWithoutVerifiedHandling(
-      knexEngine,
+    queryBuilder = buildJoinsForTableWithoutVerifiedHandling(
+      queryBuilder,
       singularTableName,
       linkTable
     );
@@ -108,78 +108,136 @@ const buildJoins = (knexEngine) => {
   // Special handling for our archive-tags as these are in 1:n relation to the picture type
   // and don't have a special verified relation.
   const archiveTagLinkTable = table("pictures_archive_tag_links");
-  knexEngine = buildJoinsForTableWithoutVerifiedHandling(
-    knexEngine,
+  queryBuilder = buildJoinsForTableWithoutVerifiedHandling(
+    queryBuilder,
     "archive_tag",
     archiveTagLinkTable
   );
 
-  return knexEngine;
+  return queryBuilder;
 };
 
-const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
-  const searchTermForLikeQuery = `%${searchTerm}%`;
-  for (const singularTableName of manyToManyWithVerified) {
-    knexEngine = knexEngine.orWhereILike(
-      `${plural(singularTableName)}.name`,
-      searchTermForLikeQuery
-    );
+type Score = {
+  column: string;
+  matches: {
+    regex: (escapedSearchTerm: string) => string;
+    score: number;
+  }[];
+};
+
+const wholeString = (escapedSearchTerm: string) => `^${escapedSearchTerm}$`;
+
+const wholeWord = (escapedSearchTerm: string) =>
+  `[[:<:]]${escapedSearchTerm}[[:>:]]`;
+
+const startOfWord = (escapedSearchTerm: string) =>
+  `[[:<:]]${escapedSearchTerm}`;
+
+const anywhere = (escapedSearchTerm: string) => escapedSearchTerm;
+
+const exponentialMatches = (factor: number) => [
+  {
+    regex: wholeString,
+    score: 1000000 * factor,
+  },
+  {
+    regex: wholeWord,
+    score: 10000 * factor,
+  },
+  {
+    regex: startOfWord,
+    score: 100 * factor,
+  },
+  {
+    regex: anywhere,
+    score: 1 * factor,
+  },
+];
+
+const scoreMatches: Score[] = [
+  ...manyToManyWithVerified.map((singularTableName) => ({
+    column: `${plural(singularTableName)}.name`,
+    matches: exponentialMatches(8),
+  })),
+  {
+    column: "descriptions.text",
+    matches: exponentialMatches(4),
+  },
+  {
+    column: "collections.name",
+    matches: exponentialMatches(2),
+  },
+  {
+    column: "archive_tags.name",
+    matches: [
+      {
+        regex: wholeWord,
+        score: 1,
+      },
+    ],
+  },
+];
+
+const escapeRegex = (searchTerm: string) => {
+  return searchTerm.replace(/([()[{*+.$^\\|?])/g, "\\$1");
+};
+
+const alternatePairs = [
+  ["ß", "ss"],
+  ["ä", "ae"],
+  ["ö", "oe"],
+  ["ü", "ue"],
+];
+
+const acceptAlternatePairs = (searchTerm: string) => {
+  let term = searchTerm;
+  for (const [a, b] of alternatePairs) {
+    term = term.replace(new RegExp(`${a}|${b}`, "g"), `(?:${a}|${b})`);
   }
-
-  knexEngine = knexEngine.orWhereILike(
-    "collections.name",
-    searchTermForLikeQuery
-  );
-  knexEngine = knexEngine.orWhereILike(
-    "archive_tags.name",
-    searchTermForLikeQuery
-  );
-  knexEngine = knexEngine.orWhereILike(
-    "descriptions.text",
-    searchTermForLikeQuery
-  );
-
-  return knexEngine;
+  return term;
 };
+
+const SCORE_COLUMN_NAME = "score";
+
+const buildScore = (knexEngine: KnexEngine, searchTerms: string[]) => {
+  const scores = searchTerms.flatMap((term) =>
+    scoreMatches.flatMap((score) =>
+      score.matches.map((match) => ({
+        expression: `CASE WHEN ${score.column} ~* ? THEN ${match.score} ELSE 0 END`,
+        bindings: [match.regex(acceptAlternatePairs(escapeRegex(term)))],
+      }))
+    )
+  );
+  const scoreSum = scores.map((score) => score.expression).join(" + ");
+  const bindings = scores.flatMap((score) => score.bindings);
+  return knexEngine.raw(`${scoreSum} as ${SCORE_COLUMN_NAME}`, bindings);
+};
+
+// Our custom format for search times looks like this:
+// ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
+type SearchTime = [string, string, string];
 
 const buildWhere = (
-  queryBuilder,
-  searchTerms,
-  searchTimes,
-  filterOutTexts,
-  knexEngine: KnexEngine
+  queryBuilder: QueryBuilder,
+  searchTimes: SearchTime[],
+  filterOutTexts: boolean
 ) => {
-  for (const searchObject of [...searchTerms, ...searchTimes]) {
+  for (const searchTime of searchTimes) {
     // Function syntax for where in order to use correct bracing in the query
     queryBuilder = queryBuilder.where((qb) => {
-      if (typeof searchObject === "string") {
-        qb = buildLikeWhereForSearchTerm(qb, searchObject);
-      } else if (Array.isArray(searchObject)) {
-        //the timestamps of the time range tags are incorrectly saved in the data bank due to time zone shenanigans
-        //wich caused some searches not return results even though they should e.g. if a picture was tagged with
-        //just the year 1954, the start of its timerange would be saved as 1953-12-31T23:00:00 instead of
-        //1954-01-01T00:00:00 which would cause searches for '1954' to not return this picture even though
-        //they should
-        //by querying time range + 1 hour the search should now work and comparing that to the search range the
-        //search should now work correctly without having to migrate the whole data base
-
-        // If the search object is an array, it must be our custom format for search times
-        // e.g. ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
-        qb = buildLikeWhereForSearchTerm(qb, searchObject[0]);
-        qb = qb.orWhere((timeRangeQb) => {
-          timeRangeQb = timeRangeQb.where(
-            knexEngine.raw("time_range_tags.start + interval '1 hour'"),
-            ">=",
-            searchObject[1]
-          );
-          timeRangeQb = timeRangeQb.andWhere(
-            knexEngine.raw("time_range_tags.end + interval '1 hour'"),
-            "<=",
-            searchObject[2]
-          );
-          return timeRangeQb;
-        });
-      }
+      qb = qb.orWhere((timeRangeQb) => {
+        timeRangeQb = timeRangeQb.where(
+          "time_range_tags.start",
+          ">=",
+          searchTime[1]
+        );
+        timeRangeQb = timeRangeQb.andWhere(
+          "time_range_tags.end",
+          "<=",
+          searchTime[2]
+        );
+        return timeRangeQb;
+      });
       return qb;
     });
   }
@@ -202,27 +260,47 @@ const buildWhere = (
  * for the given search terms, time-related search input and the given pagination arguments.
  */
 const buildQueryForAllSearch = (
-  knexEngine,
-  searchTerms,
-  searchTimes,
-  filterOutTexts,
+  knexEngine: KnexEngine,
+  searchTerms: string[],
+  searchTimes: SearchTime[],
+  filterOutTexts: boolean,
   pagination = { start: 0, limit: 100 }
 ) => {
-  const withSelect = knexEngine.distinct("pictures.*").from(table("pictures"));
+  const score = buildScore(knexEngine, searchTerms);
+
+  const withSelect = knexEngine
+    .distinct("pictures.*")
+    .column(score)
+    .from(table("pictures"));
 
   const withJoins = buildJoins(withSelect);
 
-  const withWhere = buildWhere(
-    withJoins,
-    searchTerms,
-    searchTimes,
-    filterOutTexts,
-    knexEngine
-  );
+  const withWhere = buildWhere(withJoins, searchTimes, filterOutTexts);
 
-  const withOrder = withWhere.orderBy("pictures.published_at", "asc");
+  const withOrder = withWhere.orderBy([
+    {
+      column: SCORE_COLUMN_NAME,
+      order: "desc",
+    },
+    {
+      column: "pictures.published_at",
+      order: "asc",
+    },
+  ]);
 
-  return withOrder.limit(pagination.limit).offset(pagination.start);
+  const innerQueryAlias = "inner";
+  const withoutScore0 = knexEngine
+    .with(innerQueryAlias, withOrder)
+    .select("*")
+    .from(innerQueryAlias)
+    .where(SCORE_COLUMN_NAME, ">", 0);
+
+  return withoutScore0.limit(pagination.limit).offset(pagination.start);
+};
+
+type Pagination = {
+  start: number;
+  limit: number;
 };
 
 /**
@@ -232,11 +310,11 @@ const buildQueryForAllSearch = (
  * in order to execute the associated SQL queries on the underlying database.
  */
 const findPicturesByAllSearch = async (
-  knexEngine,
-  searchTerms,
-  searchTimes,
-  filterOutTexts,
-  pagination
+  knexEngine: KnexEngine,
+  searchTerms: string[],
+  searchTimes: SearchTime[],
+  filterOutTexts: boolean,
+  pagination: Pagination
 ) => {
   const matchingPictures = await buildQueryForAllSearch(
     knexEngine,
