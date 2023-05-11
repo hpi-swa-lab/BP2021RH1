@@ -21,6 +21,8 @@ export default {
                     data {
                       attributes {
                         formats
+                        url
+                        provider
                       }
                     }
                   }
@@ -37,6 +39,8 @@ export default {
                     data {
                       attributes {
                         formats
+                        url
+                        provider
                       }
                     }
                   }
