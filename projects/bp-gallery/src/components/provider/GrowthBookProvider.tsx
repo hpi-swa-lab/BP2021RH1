@@ -15,7 +15,7 @@ export const GrowthBookProvider = ({ children }: PropsWithChildren<{}>) => {
   }, []);
   useEffect(() => {
     // Set user attributes for targeting (from cookie, auth system, etc.)
-    growthbook?.setAttributes({ ...growthbook.getAttributes, id: anonymousId });
+    growthbook?.setAttributes({ ...growthbook.getAttributes(), id: anonymousId });
     const w: any = window;
     const _paq: Array<any> = (w._paq = w._paq || []);
     _paq.push([
