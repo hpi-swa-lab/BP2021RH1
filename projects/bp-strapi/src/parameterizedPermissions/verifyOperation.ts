@@ -1,10 +1,7 @@
-import { errors } from "@strapi/utils";
 import { operations } from "bp-graphql";
 import { OperationDefinitionNode } from "graphql/language/ast";
 import { operationDefinitionsEqual } from "./operationDefinitionsEqual";
 import { parseOperation } from "./parseOperation";
-
-const { UnauthorizedError } = errors;
 
 const parsedAllowedOperations = Object.fromEntries(
   Object.entries(operations).map(([name, operation]) => [
@@ -16,10 +13,8 @@ const parsedAllowedOperations = Object.fromEntries(
 export const verifyOperation = (operation: OperationDefinitionNode) => {
   const name = operation.name.value;
   if (!(name in parsedAllowedOperations)) {
-    throw new UnauthorizedError();
+    return false;
   }
   const allowedOperation = parsedAllowedOperations[name];
-  if (!operationDefinitionsEqual(allowedOperation, operation)) {
-    throw new UnauthorizedError();
-  }
+  return operationDefinitionsEqual(allowedOperation, operation);
 };

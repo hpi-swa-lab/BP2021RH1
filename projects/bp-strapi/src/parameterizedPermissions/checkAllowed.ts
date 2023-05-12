@@ -1,11 +1,8 @@
-import { errors } from "@strapi/utils";
 import { DB, Operation, operations, Variables } from "bp-graphql";
 import type {
   ParameterizedPermission,
   UsersPermissionsUser,
 } from "bp-graphql/build/db-types";
-
-const { UnauthorizedError } = errors;
 
 export const checkAllowed = async (
   operationName: string,
@@ -35,9 +32,9 @@ export const checkAllowed = async (
     });
 
     if (isAllowed) {
-      return;
+      return true;
     }
   }
 
-  throw new UnauthorizedError();
+  return false;
 };
