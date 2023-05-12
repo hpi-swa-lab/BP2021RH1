@@ -3,8 +3,10 @@ import {
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
+  DraggableAttributes,
   Over,
   UniqueIdentifier,
+  useDraggable,
   useDroppable,
 } from '@dnd-kit/core';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -23,7 +25,8 @@ import { useTranslation } from 'react-i18next';
 import { createContext } from 'react';
 import { isUndefined, omitBy } from 'lodash';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { createPortal } from 'react-dom';
+import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 
 const DragListContext = createContext<DragElement[]>([]);
 const DropzoneContext = createContext<DropzoneContent[]>([]);
@@ -51,16 +54,53 @@ const DraggablePicture = ({
   id: string;
   exhibitionPicture: FlatExhibitionPicture;
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
   });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  return (
+    <ExhibitionPicture
+      exhibitionPicture={exhibitionPicture}
+      setNodeRef={setNodeRef}
+      listeners={listeners}
+      attributes={attributes}
+    />
+  );
+};
+
+const SortablePicture = ({
+  id,
+  exhibitionPicture,
+}: {
+  id: string;
+  exhibitionPicture: FlatExhibitionPicture;
+}) => {
+  const { attributes, listeners, setNodeRef, transform } = useSortable({
+    id: id,
+  });
+  return (
+    <ExhibitionPicture
+      exhibitionPicture={exhibitionPicture}
+      setNodeRef={setNodeRef}
+      listeners={listeners}
+      attributes={attributes}
+    />
+  );
+};
+
+const ExhibitionPicture = ({
+  exhibitionPicture,
+  setNodeRef,
+  listeners,
+  attributes,
+}: {
+  exhibitionPicture: FlatExhibitionPicture;
+  setNodeRef: (element: HTMLElement | null) => void;
+  listeners: SyntheticListenerMap | undefined;
+  attributes: DraggableAttributes;
+}) => {
   const picture = exhibitionPicture.picture;
   return (
-    <div className='z-[9] relative' ref={setNodeRef} {...listeners} {...attributes} style={style}>
+    <div className='z-[9] relative' ref={setNodeRef} {...listeners} {...attributes}>
       {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
     </div>
   );
@@ -131,22 +171,25 @@ const DropZone = ({ id }: { id: string }) => {
       {isSort ? (
         <DndContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           <DragOverlay>
-            {activeId ? items?.find(item => item?.id === activeId)?.element : null}
+            {activeId ? items?.find(item => item?.id === activeId)?.sortableElement : null}
           </DragOverlay>
           <SortableContext items={itemIds}>
             {items?.map(item =>
               item?.id === activeId ? (
                 <div key={item?.id} className='opacity-25'>
-                  {item?.element}
+                  {item?.sortableElement}
                 </div>
               ) : (
-                item?.element
+                item?.sortableElement
               )
             )}
           </SortableContext>
         </DndContext>
       ) : (
-        <>{items?.map(item => item?.element)}</>
+        <>
+          {items?.map(item => item?.element)}
+          <div className='w-full' />
+        </>
       )}
     </div>
   );
@@ -160,6 +203,7 @@ interface DropzoneContent {
 interface DragElement {
   id: string;
   element: JSX.Element;
+  sortableElement: JSX.Element;
 }
 
 interface ExhibitionText {
@@ -177,6 +221,8 @@ interface ExhibitionText {
 
 const ExhibitionManipulator = () => {
   const exhibition = useContext(ExhibitionContext);
+  // const scrollDivRef = useRef(null);
+  // const scroll = useRef(0)
 
   return (
     <div className='flex flex-col items-stretch h-full w-full'>
@@ -283,6 +329,7 @@ const DragNDropHandler = ({
         section.exhibition_pictures!.map(picture => ({
           id: picture.id,
           element: <DraggablePicture id={picture.id} exhibitionPicture={picture} />,
+          sortableElement: <SortablePicture id={picture.id} exhibitionPicture={picture} />,
         }))
       )
       .flat();
@@ -291,6 +338,7 @@ const DragNDropHandler = ({
     const idealotItems = idealot.map(picture => ({
       id: picture.id,
       element: <DraggablePicture id={picture.id} exhibitionPicture={picture} />,
+      sortableElement: <SortablePicture id={picture.id} exhibitionPicture={picture} />,
     }));
     omitBy(idealotItems, isUndefined);
     return sectionItems.concat(idealotItems);
@@ -301,7 +349,6 @@ const DragNDropHandler = ({
   const [draggedItem, setDraggedItem] = useState('');
 
   const swapDropzoneContent = (dropzoneId: string, oldIndex: number, newIndex: number) => {
-    console.log(dropzones[0].dragIds);
     setDropzones(
       dropzones.map(dropzone =>
         dropzone.id === dropzoneId
@@ -317,7 +364,6 @@ const DragNDropHandler = ({
           : dropzone
       )
     );
-    console.log(dropzones[0].dragIds);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -365,9 +411,12 @@ const DragNDropHandler = ({
         <DropzoneContext.Provider value={dropzones}>
           <DraggedItemContext.Provider value={draggedItem}>
             <SwapDropzoneContentContext.Provider value={swapDropzoneContent}>
-              <DragOverlay>
-                {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
-              </DragOverlay>
+              {createPortal(
+                <DragOverlay>
+                  {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
+                </DragOverlay>,
+                document.body
+              )}
               {children}
             </SwapDropzoneContentContext.Provider>
           </DraggedItemContext.Provider>
