@@ -6,11 +6,6 @@ import CurrencyInput from 'react-currency-input-field';
 import { useTranslation } from 'react-i18next';
 import PrimaryButton from './PrimaryButton';
 
-export const isValidClientId = async (clientId: string) => {
-  const response = await fetch(`https://www.paypal.com/sdk/js?client-id=${clientId}`);
-  return response.ok;
-};
-
 const DonateButton = ({
   clientId,
   donationText,

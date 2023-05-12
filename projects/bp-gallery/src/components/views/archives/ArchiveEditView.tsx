@@ -8,7 +8,7 @@ import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/A
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
-import { isValidClientId } from '../../common/DonateButton';
+import { isValidClientId } from '../../common/checkPaypalClientId';
 import TextEditor from '../../common/editors/TextEditor';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -101,8 +101,6 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     }
     return () => {};
   }, [form.dirty]);
-
-  const logoSrc = archive?.logo?.formats?.thumbnail.url ?? '';
 
   const updateForm = useCallback((newForm: Partial<ArchiveForm>) => {
     setForm(form => {
