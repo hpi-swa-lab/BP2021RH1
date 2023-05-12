@@ -38,64 +38,72 @@ const useGenericTagEndpoints = (type: TagType) => {
         return {
           allTagsQuery: useGetAllLocationTagsQuery,
           tagsWithThumbnailQuery: useGetLocationTagsWithThumbnailQuery,
+          tagPictures: useGetPicturesForLocationQuery,
           updateTagNameMutationSource: useUpdateLocationNameMutation,
           updateSynonymsMutationSource: useUpdateLocationSynonymsMutation,
-          mergeTagsMutationSource: useMergeLocationTagsMutation,
-          deleteTagMutationSource: useDeleteLocationTagMutation,
           updateVisibilityMutationSource: useUpdateLocationVisibilityMutation,
           updateTagParentMutationSource: useUpdateLocationParentMutation,
-          createTagMutationSource: useCreateLocationTagMutation,
           updateTagAcceptanceMutationSource: useUpdateLocationAcceptanceMutation,
           updateTagChildMutationSource: useUpdateLocationChildMutation,
-          tagPictures: useGetPicturesForLocationQuery,
           updateRootMutationSource: useUpdateLocationRootMutation,
+          mergeTagsMutationSource: useMergeLocationTagsMutation,
+          deleteTagMutationSource: useDeleteLocationTagMutation,
+          createTagMutationSource: useCreateLocationTagMutation,
         };
       case TagType.PERSON:
         return {
           allTagsQuery: useGetAllPersonTagsQuery,
           tagsWithThumbnailQuery: useGetPersonTagsWithThumbnailQuery,
+          tagPictures: () => {
+            return { data: undefined };
+          },
           updateTagNameMutationSource: useUpdatePersonNameMutation,
           updateSynonymsMutationSource: useUpdatePersonSynonymsMutation,
-          mergeTagsMutationSource: useMergePersonTagsMutation,
-          deleteTagMutationSource: useDeletePersonTagMutation,
           updateVisibilityMutationSource: (dummy: any) => {
             return [dummy];
           },
           updateTagParentMutationSource: (dummy: any) => {
             return [dummy];
           },
-          createTagMutationSource: useCreatePersonTagMutation,
           updateTagAcceptanceMutationSource: (dummy: any) => {
             return [dummy];
           },
           updateTagChildMutationSource: (dummy: any) => {
             return [dummy];
           },
-          tagPictures: useGetPicturesForLocationQuery,
-          updateRootMutationSource: useUpdateLocationRootMutation,
+          updateRootMutationSource: (dummy: any) => {
+            return [dummy];
+          },
+          mergeTagsMutationSource: useMergePersonTagsMutation,
+          deleteTagMutationSource: useDeletePersonTagMutation,
+          createTagMutationSource: useCreatePersonTagMutation,
         };
       case TagType.KEYWORD:
       default:
         return {
           allTagsQuery: useGetAllKeywordTagsQuery,
           tagsWithThumbnailQuery: useGetKeywordTagsWithThumbnailQuery,
+          tagPictures: () => {
+            return { data: undefined };
+          },
           updateTagNameMutationSource: useUpdateKeywordNameMutation,
           updateSynonymsMutationSource: useUpdateKeywordSynonymsMutation,
-          mergeTagsMutationSource: useMergeKeywordTagsMutation,
-          deleteTagMutationSource: useDeleteKeywordTagMutation,
           updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
           updateTagParentMutationSource: (dummy: any) => {
             return [dummy];
           },
-          createTagMutationSource: useCreateKeywordTagMutation,
           updateTagAcceptanceMutationSource: (dummy: any) => {
             return [dummy];
           },
           updateTagChildMutationSource: (dummy: any) => {
             return [dummy];
           },
-          tagPictures: useGetPicturesForLocationQuery,
-          updateRootMutationSource: useUpdateLocationRootMutation,
+          updateRootMutationSource: (dummy: any) => {
+            return [dummy];
+          },
+          mergeTagsMutationSource: useMergeKeywordTagsMutation,
+          deleteTagMutationSource: useDeleteKeywordTagMutation,
+          createTagMutationSource: useCreateKeywordTagMutation,
         };
     }
   }, [type]);
