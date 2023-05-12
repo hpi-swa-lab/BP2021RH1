@@ -154,6 +154,7 @@
     "permissions": {
       "title": "Rechte des Nutzers {{userName}}",
       "publicTitle": "Rechte eines unangemeldeten Nutzers",
+      "filterPlaceholder": "Archive filtern",
       "systemPermissions": "System-Rechte",
       "reallyGrantAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" vergeben?",
       "reallyRemoveAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" entziehen?",

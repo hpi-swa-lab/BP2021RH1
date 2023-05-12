@@ -4,11 +4,12 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  Input,
   Stack,
   Typography,
 } from '@mui/material';
 import { Operation } from 'bp-graphql/build';
-import { useCallback, useMemo } from 'react';
+import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import {
@@ -188,8 +189,20 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     [dialog, t, findPermission, deletePermission, addPermission]
   );
 
+  const [filter, setFilter] = useState('');
+
+  const onFilterChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = useCallback(
+    event => {
+      setFilter(event.currentTarget.value);
+    },
+    []
+  );
+
   const renderSections = useCallback(
     (summary: string, sections: SectionStructure[], archive: FlatArchiveTag | null) => {
+      if (!summary.toLocaleLowerCase().includes(filter.toLocaleLowerCase())) {
+        return null;
+      }
       const sectionsWithCoverages = sections.map(section => ({
         ...section,
         groups: section.groups.map(group => ({
@@ -277,7 +290,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         </Accordion>
       );
     },
-    [groupCoverage, addPermissionsIfMissing, toggleOperations, t]
+    [filter, groupCoverage, addPermissionsIfMissing, toggleOperations, t]
   );
 
   if (error) {
@@ -292,6 +305,14 @@ const PermissionsView = ({ userId }: { userId: string }) => {
             ? t('admin.permissions.publicTitle')
             : t('admin.permissions.title', { userName: user?.username })}
         </h1>
+        <div className='mb-2'>
+          <Input
+            fullWidth
+            value={filter}
+            onChange={onFilterChange}
+            placeholder={t('admin.permissions.filterPlaceholder')}
+          />
+        </div>
         {renderSections(t('admin.permissions.systemPermissions'), sections.system, null)}
         {archives.map(archive => renderSections(archive.name, sections.perArchive, archive))}
       </div>
