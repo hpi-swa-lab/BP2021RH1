@@ -371,9 +371,15 @@
   },
   "exhibition": {
     "manipulator": {
-      "intro-title-placeholder": "Ausstellungstitel",
-      "intro-text-placeholder": "Einführungstext",
-      "section-text-placeholder": "Abschnittstext"
+      "intro": {
+        "title-placeholder": "Ausstellungstitel",
+        "text-placeholder": "Einführungstext"
+      },
+      "section": {
+        "text-placeholder": "Abschnittstext",
+        "sort": "Sortieren",
+        "exit-sort": "Fertig sortiert"
+      }
     }
   }
 }

@@ -4,7 +4,7 @@ import {
   DragOverlay,
   DragStartEvent,
   Over,
-  useDraggable,
+  UniqueIdentifier,
   useDroppable,
 } from '@dnd-kit/core';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -22,7 +22,27 @@ import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { useTranslation } from 'react-i18next';
 import { createContext } from 'react';
 import { isUndefined, omitBy } from 'lodash';
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+const DragListContext = createContext<DragElement[]>([]);
+const DropzoneContext = createContext<DropzoneContent[]>([]);
+const DraggedItemContext = createContext<string>('');
+const ExhibitionContext = createContext<FlatExhibition>({} as FlatExhibition);
+const SwapDropzoneContentContext = createContext<
+  (dropzoneId: string, oldIndex: number, newIndex: number) => void
+>(() => {});
+const exhibitonTextNull = {
+  title: '',
+  introduction: '',
+  sections: [{ id: '', title: '', text: '' }],
+  epilog: '',
+  sources: [''],
+  isPublished: false,
+};
+const ExhibitionTextContext = createContext<
+  [ExhibitionText, Dispatch<SetStateAction<ExhibitionText>>]
+>([exhibitonTextNull, () => {}]);
 
 const DraggablePicture = ({
   id,
@@ -31,12 +51,16 @@ const DraggablePicture = ({
   id: string;
   exhibitionPicture: FlatExhibitionPicture;
 }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: id,
   });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
   const picture = exhibitionPicture.picture;
   return (
-    <div className='z-[1000] relative' ref={setNodeRef} {...listeners} {...attributes}>
+    <div className='z-[9] relative' ref={setNodeRef} {...listeners} {...attributes} style={style}>
       {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
     </div>
   );
@@ -61,21 +85,69 @@ const IdeaLot = () => {
 };
 
 const DropZone = ({ id }: { id: string }) => {
+  const { t } = useTranslation();
   const { setNodeRef } = useDroppable({ id: id });
   const draggables = useContext(DragListContext);
+  const dropzones = useContext(DropzoneContext);
   const dropzone = useContext(DropzoneContext).find(x => x.id === id);
-  const items = draggables.filter(draggable => dropzone?.dragIds.includes(draggable.id));
-  const itemIds = items.map(item => item.id);
-  const itemElements = items.map(item => item.element);
+  const swapDropzoneContent = useContext(SwapDropzoneContentContext);
+  const items = dropzone?.dragIds.map(id => draggables.find(draggable => draggable.id === id));
+  const itemIds = items?.map(item => item?.id);
+  const [activeId, setActiveId] = useState<UniqueIdentifier | undefined>(undefined);
+  const [isSort, setIsSort] = useState<boolean>(false);
 
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (active.id !== over?.id) {
+      const oldIndex = dropzone?.dragIds.findIndex((x: UniqueIdentifier) => x === active.id);
+      const newIndex = dropzone?.dragIds.findIndex(
+        (x: UniqueIdentifier | undefined) => x === over?.id
+      );
+      if (oldIndex !== undefined && newIndex !== undefined) {
+        swapDropzoneContent(id, oldIndex, newIndex);
+      }
+    }
+    setActiveId(undefined);
+  };
+
+  const onDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setActiveId(active.id);
+  };
   return (
     <div
       ref={setNodeRef}
-      className='h-40 border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200'
+      className='min-h-[9rem] border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200'
     >
-      <SortableContext items={itemIds} strategy={horizontalListSortingStrategy}>
-        {itemElements}
-      </SortableContext>
+      <div className='relative w-full'>
+        <div className='absolute right-0 z-[2000]'>
+          <Button variant='contained' onClick={() => setIsSort(!isSort)}>
+            {isSort
+              ? t('exhibition.manipulator.section.exit-sort')
+              : t('exhibition.manipulator.section.sort')}
+          </Button>
+        </div>
+      </div>
+      {isSort ? (
+        <DndContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
+          <DragOverlay>
+            {activeId ? items?.find(item => item?.id === activeId)?.element : null}
+          </DragOverlay>
+          <SortableContext items={itemIds}>
+            {items?.map(item =>
+              item?.id === activeId ? (
+                <div key={item?.id} className='opacity-25'>
+                  {item?.element}
+                </div>
+              ) : (
+                item?.element
+              )
+            )}
+          </SortableContext>
+        </DndContext>
+      ) : (
+        <>{items?.map(item => item?.element)}</>
+      )}
     </div>
   );
 };
@@ -105,10 +177,11 @@ interface ExhibitionText {
 
 const ExhibitionManipulator = () => {
   const exhibition = useContext(ExhibitionContext);
+
   return (
     <div className='flex flex-col items-stretch h-full w-full'>
       <div className='text-xl'>Ausstellungstool</div>
-      <div className='border-solid flex-1 p-2 overflow-auto'>
+      <div className='border-solid flex-1 p-2 overflow-y-auto'>
         <Introduction />
         {exhibition.exhibition_sections?.map(section => (
           <Section key={section.id} id={section.id} />
@@ -143,7 +216,7 @@ const Introduction = () => {
       <TextField
         className='flex-1'
         variant='standard'
-        placeholder={t('exhibition.manipulator.intro-title-placeholder')}
+        placeholder={t('exhibition.manipulator.intro.title-placeholder')}
         value={exhibitionText.title}
       />
       <TextEditor value={exhibitionText.introduction} extraOptions={extraOptions} />
@@ -157,7 +230,7 @@ const Section = ({ id }: { id: string }) => {
   const dropzone = useContext(DropzoneContext).find(x => x.id === id);
   const extraOptions = {
     preset: undefined,
-    placeholder: t('exhibition.manipulator.intro-text-placeholder'),
+    placeholder: t('exhibition.manipulator.section.text-placeholder'),
     statusbar: false,
     tabIndex: 0,
     className: 'z-0',
@@ -171,7 +244,7 @@ const Section = ({ id }: { id: string }) => {
         <div className='flex'>
           <TextField
             className='flex-1'
-            placeholder='Abschnittstitel'
+            placeholder={t('exhibition.manipulator.section.title-placeholder')}
             variant='standard'
             value={section?.title}
           />
@@ -189,22 +262,6 @@ const Section = ({ id }: { id: string }) => {
     </Paper>
   );
 };
-
-const DragListContext = createContext<DragElement[]>([]);
-const DropzoneContext = createContext<DropzoneContent[]>([]);
-const DraggedItemContext = createContext<string>('');
-const ExhibitionContext = createContext<FlatExhibition>({} as FlatExhibition);
-const exhibitonTextNull = {
-  title: '',
-  introduction: '',
-  sections: [{ id: '', title: '', text: '' }],
-  epilog: '',
-  sources: [''],
-  isPublished: false,
-};
-const ExhibitionTextContext = createContext<
-  [ExhibitionText, Dispatch<SetStateAction<ExhibitionText>>]
->([exhibitonTextNull, () => {}]);
 
 const DragNDropHandler = ({
   exhibition,
@@ -242,6 +299,26 @@ const DragNDropHandler = ({
   const [dropzones, setDropzones] = useState<DropzoneContent[]>(buildDropzones);
   const [draggableList, setDraggableList] = useState<DragElement[]>(buildDraggableList);
   const [draggedItem, setDraggedItem] = useState('');
+
+  const swapDropzoneContent = (dropzoneId: string, oldIndex: number, newIndex: number) => {
+    console.log(dropzones[0].dragIds);
+    setDropzones(
+      dropzones.map(dropzone =>
+        dropzone.id === dropzoneId
+          ? ({
+              id: dropzone.id,
+              //swaps old with new array
+              dragIds: dropzone.dragIds.map((id, index) => {
+                if (index === oldIndex) return dropzone.dragIds[newIndex];
+                if (index === newIndex) return dropzone.dragIds[oldIndex];
+                return id;
+              }),
+            } as DropzoneContent)
+          : dropzone
+      )
+    );
+    console.log(dropzones[0].dragIds);
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event;
@@ -287,10 +364,12 @@ const DragNDropHandler = ({
       <DragListContext.Provider value={draggableList}>
         <DropzoneContext.Provider value={dropzones}>
           <DraggedItemContext.Provider value={draggedItem}>
-            <DragOverlay>
-              {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
-            </DragOverlay>
-            {children}
+            <SwapDropzoneContentContext.Provider value={swapDropzoneContent}>
+              <DragOverlay>
+                {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
+              </DragOverlay>
+              {children}
+            </SwapDropzoneContentContext.Provider>
           </DraggedItemContext.Provider>
         </DropzoneContext.Provider>
       </DragListContext.Provider>
@@ -331,7 +410,6 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
   const { data: exhibitionData } = useGetExhibitionQuery({ variables: { exhibitionId } });
   const exhibition: FlatExhibition | undefined =
     useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
-
   return (
     <>
       {exhibition && (
