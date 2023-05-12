@@ -16,7 +16,7 @@ import './LocationManagementDialog.scss';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import {
-  useCreateLocationMutation,
+  useCreateLocationTagMutation,
   useGetLocationTagByIdQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -103,7 +103,7 @@ const LocationManagementDialogPreset = ({
   const { setParentTags } = useSetParentTags(locationTag, refetch);
   const { setChildTags } = useSetChildTags(locationTag, refetch);
 
-  const [newLocationTagMutation] = useCreateLocationMutation({
+  const [newLocationTagMutation] = useCreateLocationTagMutation({
     refetchQueries: ['getAllLocationTags'],
     awaitRefetchQueries: true,
   });

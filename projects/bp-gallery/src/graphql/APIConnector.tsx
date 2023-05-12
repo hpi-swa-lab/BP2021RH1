@@ -2878,26 +2878,7 @@ export type GetAllKeywordTagsQuery = {
             | {
                 name: string;
                 visible?: boolean | null | undefined;
-                accepted?: boolean | null | undefined;
                 synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
-                child_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?: { name: string } | null | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                parent_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?: { name: string } | null | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
               }
             | null
             | undefined;
@@ -2913,43 +2894,6 @@ export type UpdateKeywordNameMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordNameMutation = {
-  updateKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
-};
-
-export type UpdateKeywordAcceptanceMutationVariables = Exact<{
-  tagId: Scalars['ID'];
-  accepted?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-export type UpdateKeywordAcceptanceMutation = {
-  updateKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
-};
-
-export type CreateKeywordMutationVariables = Exact<{
-  name: Scalars['String'];
-  parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-  accepted?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-export type CreateKeywordMutation = {
-  createKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
-};
-
-export type UpdateKeywordParentMutationVariables = Exact<{
-  tagID: Scalars['ID'];
-  parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-}>;
-
-export type UpdateKeywordParentMutation = {
   updateKeywordTag?:
     | { data?: { id?: string | null | undefined } | null | undefined }
     | null
@@ -3155,21 +3099,6 @@ export type GetPicturesForLocationQuery = {
           | null
           | undefined;
       }
-    | null
-    | undefined;
-};
-
-export type CreateLocationMutationVariables = Exact<{
-  name: Scalars['String'];
-  parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-  childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-  accepted?: InputMaybe<Scalars['Boolean']>;
-  root?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-export type CreateLocationMutation = {
-  createLocationTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
     | null
     | undefined;
 };
@@ -3634,6 +3563,10 @@ export type CreateKeywordTagMutation = {
 
 export type CreateLocationTagMutationVariables = Exact<{
   name: Scalars['String'];
+  parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  accepted?: InputMaybe<Scalars['Boolean']>;
+  root?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CreateLocationTagMutation = {
@@ -5233,25 +5166,8 @@ export const GetAllKeywordTagsDocument = gql`
         attributes {
           name
           visible
-          accepted
           synonyms {
             name
-          }
-          child_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          parent_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
           }
         }
       }
@@ -5356,174 +5272,6 @@ export type UpdateKeywordNameMutationResult = Apollo.MutationResult<UpdateKeywor
 export type UpdateKeywordNameMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordNameMutation,
   UpdateKeywordNameMutationVariables
->;
-
-export const UpdateKeywordAcceptanceDocument = gql`
-  mutation updateKeywordAcceptance($tagId: ID!, $accepted: Boolean) {
-    updateKeywordTag(id: $tagId, data: { accepted: $accepted }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type UpdateKeywordAcceptanceMutationFn = Apollo.MutationFunction<
-  UpdateKeywordAcceptanceMutation,
-  UpdateKeywordAcceptanceMutationVariables
->;
-
-/**
- * __useUpdateKeywordAcceptanceMutation__
- *
- * To run a mutation, you first call `useUpdateKeywordAcceptanceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateKeywordAcceptanceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateKeywordAcceptanceMutation, { data, loading, error }] = useUpdateKeywordAcceptanceMutation({
- *   variables: {
- *      tagId: // value for 'tagId'
- *      accepted: // value for 'accepted'
- *   },
- * });
- */
-export function useUpdateKeywordAcceptanceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateKeywordAcceptanceMutation,
-    UpdateKeywordAcceptanceMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateKeywordAcceptanceMutation,
-    UpdateKeywordAcceptanceMutationVariables
-  >(UpdateKeywordAcceptanceDocument, options);
-}
-
-export type UpdateKeywordAcceptanceMutationHookResult = ReturnType<
-  typeof useUpdateKeywordAcceptanceMutation
->;
-
-export type UpdateKeywordAcceptanceMutationResult =
-  Apollo.MutationResult<UpdateKeywordAcceptanceMutation>;
-
-export type UpdateKeywordAcceptanceMutationOptions = Apollo.BaseMutationOptions<
-  UpdateKeywordAcceptanceMutation,
-  UpdateKeywordAcceptanceMutationVariables
->;
-
-export const CreateKeywordDocument = gql`
-  mutation createKeyword($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
-    createKeywordTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type CreateKeywordMutationFn = Apollo.MutationFunction<
-  CreateKeywordMutation,
-  CreateKeywordMutationVariables
->;
-
-/**
- * __useCreateKeywordMutation__
- *
- * To run a mutation, you first call `useCreateKeywordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateKeywordMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createKeywordMutation, { data, loading, error }] = useCreateKeywordMutation({
- *   variables: {
- *      name: // value for 'name'
- *      parentIDs: // value for 'parentIDs'
- *      accepted: // value for 'accepted'
- *   },
- * });
- */
-export function useCreateKeywordMutation(
-  baseOptions?: Apollo.MutationHookOptions<CreateKeywordMutation, CreateKeywordMutationVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateKeywordMutation, CreateKeywordMutationVariables>(
-    CreateKeywordDocument,
-    options
-  );
-}
-
-export type CreateKeywordMutationHookResult = ReturnType<typeof useCreateKeywordMutation>;
-
-export type CreateKeywordMutationResult = Apollo.MutationResult<CreateKeywordMutation>;
-
-export type CreateKeywordMutationOptions = Apollo.BaseMutationOptions<
-  CreateKeywordMutation,
-  CreateKeywordMutationVariables
->;
-
-export const UpdateKeywordParentDocument = gql`
-  mutation updateKeywordParent($tagID: ID!, $parentIDs: [ID!]) {
-    updateKeywordTag(id: $tagID, data: { parent_tags: $parentIDs }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type UpdateKeywordParentMutationFn = Apollo.MutationFunction<
-  UpdateKeywordParentMutation,
-  UpdateKeywordParentMutationVariables
->;
-
-/**
- * __useUpdateKeywordParentMutation__
- *
- * To run a mutation, you first call `useUpdateKeywordParentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateKeywordParentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateKeywordParentMutation, { data, loading, error }] = useUpdateKeywordParentMutation({
- *   variables: {
- *      tagID: // value for 'tagID'
- *      parentIDs: // value for 'parentIDs'
- *   },
- * });
- */
-export function useUpdateKeywordParentMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateKeywordParentMutation,
-    UpdateKeywordParentMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UpdateKeywordParentMutation, UpdateKeywordParentMutationVariables>(
-    UpdateKeywordParentDocument,
-    options
-  );
-}
-
-export type UpdateKeywordParentMutationHookResult = ReturnType<
-  typeof useUpdateKeywordParentMutation
->;
-
-export type UpdateKeywordParentMutationResult = Apollo.MutationResult<UpdateKeywordParentMutation>;
-
-export type UpdateKeywordParentMutationOptions = Apollo.BaseMutationOptions<
-  UpdateKeywordParentMutation,
-  UpdateKeywordParentMutationVariables
 >;
 
 export const UpdateKeywordSynonymsDocument = gql`
@@ -5935,75 +5683,6 @@ export type GetPicturesForLocationLazyQueryHookResult = ReturnType<
 export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
   GetPicturesForLocationQuery,
   GetPicturesForLocationQueryVariables
->;
-
-export const CreateLocationDocument = gql`
-  mutation createLocation(
-    $name: String!
-    $parentIDs: [ID!]
-    $childIDs: [ID!]
-    $accepted: Boolean
-    $root: Boolean
-  ) {
-    createLocationTag(
-      data: {
-        name: $name
-        parent_tags: $parentIDs
-        child_tags: $childIDs
-        accepted: $accepted
-        root: $root
-      }
-    ) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type CreateLocationMutationFn = Apollo.MutationFunction<
-  CreateLocationMutation,
-  CreateLocationMutationVariables
->;
-
-/**
- * __useCreateLocationMutation__
- *
- * To run a mutation, you first call `useCreateLocationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateLocationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createLocationMutation, { data, loading, error }] = useCreateLocationMutation({
- *   variables: {
- *      name: // value for 'name'
- *      parentIDs: // value for 'parentIDs'
- *      childIDs: // value for 'childIDs'
- *      accepted: // value for 'accepted'
- *      root: // value for 'root'
- *   },
- * });
- */
-export function useCreateLocationMutation(
-  baseOptions?: Apollo.MutationHookOptions<CreateLocationMutation, CreateLocationMutationVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateLocationMutation, CreateLocationMutationVariables>(
-    CreateLocationDocument,
-    options
-  );
-}
-
-export type CreateLocationMutationHookResult = ReturnType<typeof useCreateLocationMutation>;
-
-export type CreateLocationMutationResult = Apollo.MutationResult<CreateLocationMutation>;
-
-export type CreateLocationMutationOptions = Apollo.BaseMutationOptions<
-  CreateLocationMutation,
-  CreateLocationMutationVariables
 >;
 
 export const UpdateLocationParentDocument = gql`
@@ -7286,8 +6965,22 @@ export type CreateKeywordTagMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateLocationTagDocument = gql`
-  mutation createLocationTag($name: String!) {
-    createLocationTag(data: { name: $name }) {
+  mutation createLocationTag(
+    $name: String!
+    $parentIDs: [ID!]
+    $childIDs: [ID!]
+    $accepted: Boolean
+    $root: Boolean
+  ) {
+    createLocationTag(
+      data: {
+        name: $name
+        parent_tags: $parentIDs
+        child_tags: $childIDs
+        accepted: $accepted
+        root: $root
+      }
+    ) {
       data {
         id
       }
@@ -7314,6 +7007,10 @@ export type CreateLocationTagMutationFn = Apollo.MutationFunction<
  * const [createLocationTagMutation, { data, loading, error }] = useCreateLocationTagMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      parentIDs: // value for 'parentIDs'
+ *      childIDs: // value for 'childIDs'
+ *      accepted: // value for 'accepted'
+ *      root: // value for 'root'
  *   },
  * });
  */

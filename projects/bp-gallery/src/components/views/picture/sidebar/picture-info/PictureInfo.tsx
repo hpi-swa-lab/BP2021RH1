@@ -11,9 +11,7 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
-  useCreateKeywordMutation,
   useCreateKeywordTagMutation,
-  useCreateLocationMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
   useGetAllCollectionsLazyQuery,
@@ -90,24 +88,10 @@ const PictureInfo = ({
     awaitRefetchQueries: true,
   });
 
-  const [newChildLocationTagMutation, newChildLocationTagMutationResponse] =
-    useCreateLocationMutation({
-      refetchQueries: ['getAllLocationTags'],
-      awaitRefetchQueries: true,
-    });
-  const [newChildKeywordTagMutation, newChildKeywordTagMutationResponse] = useCreateKeywordMutation(
-    {
-      refetchQueries: ['getAllKeywordTags'],
-      awaitRefetchQueries: true,
-    }
-  );
-
   const isSaving =
     newPersonTagMutationResponse.loading ||
     newLocationTagMutationResponse.loading ||
-    newKeywordTagMutationResponse.loading ||
-    newChildLocationTagMutationResponse.loading ||
-    newChildKeywordTagMutationResponse.loading;
+    newKeywordTagMutationResponse.loading;
 
   useEffect(() => {
     if (role >= AuthRole.CURATOR) {
@@ -170,7 +154,7 @@ const PictureInfo = ({
           }}
           noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
-          createChildMutation={newChildLocationTagMutation}
+          createChildMutation={newLocationTagMutation}
         />
       </PictureInfoField>
       {(role >= AuthRole.CURATOR || Boolean(picture.keyword_tags?.length)) && (
@@ -184,7 +168,6 @@ const PictureInfo = ({
             }}
             noContentText={t('pictureFields.noKeywords')}
             createMutation={newKeywordTagMutation}
-            createChildMutation={newChildKeywordTagMutation}
           />
         </PictureInfoField>
       )}

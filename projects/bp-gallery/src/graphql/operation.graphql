@@ -634,25 +634,8 @@ query getAllKeywordTags {
       attributes {
         name
         visible
-        accepted
         synonyms {
           name
-        }
-        child_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
-        }
-        parent_tags {
-          data {
-            id
-            attributes {
-              name
-            }
-          }
         }
       }
     }
@@ -661,30 +644,6 @@ query getAllKeywordTags {
 
 mutation updateKeywordName($tagId: ID!, $name: String!) {
   updateKeywordTag(id: $tagId, data: { name: $name }) {
-    data {
-      id
-    }
-  }
-}
-
-mutation updateKeywordAcceptance($tagId: ID!, $accepted: Boolean) {
-  updateKeywordTag(id: $tagId, data: { accepted: $accepted }) {
-    data {
-      id
-    }
-  }
-}
-
-mutation createKeyword($name: String!, $parentIDs: [ID!], $accepted: Boolean) {
-  createKeywordTag(data: { name: $name, parent_tags: $parentIDs, accepted: $accepted }) {
-    data {
-      id
-    }
-  }
-}
-
-mutation updateKeywordParent($tagID: ID!, $parentIDs: [ID!]) {
-  updateKeywordTag(id: $tagID, data: { parent_tags: $parentIDs }) {
     data {
       id
     }
@@ -827,28 +786,6 @@ query getPicturesForLocation($tagID: ID!) {
           }
         }
       }
-    }
-  }
-}
-
-mutation createLocation(
-  $name: String!
-  $parentIDs: [ID!]
-  $childIDs: [ID!]
-  $accepted: Boolean
-  $root: Boolean
-) {
-  createLocationTag(
-    data: {
-      name: $name
-      parent_tags: $parentIDs
-      child_tags: $childIDs
-      accepted: $accepted
-      root: $root
-    }
-  ) {
-    data {
-      id
     }
   }
 }
@@ -1194,8 +1131,22 @@ mutation createKeywordTag($name: String!) {
   }
 }
 
-mutation createLocationTag($name: String!) {
-  createLocationTag(data: { name: $name }) {
+mutation createLocationTag(
+  $name: String!
+  $parentIDs: [ID!]
+  $childIDs: [ID!]
+  $accepted: Boolean
+  $root: Boolean
+) {
+  createLocationTag(
+    data: {
+      name: $name
+      parent_tags: $parentIDs
+      child_tags: $childIDs
+      accepted: $accepted
+      root: $root
+    }
+  ) {
     data {
       id
     }

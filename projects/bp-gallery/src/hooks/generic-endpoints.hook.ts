@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import {
-  useCreateKeywordMutation,
-  useCreateLocationMutation,
+  useCreateKeywordTagMutation,
+  useCreateLocationTagMutation,
+  useCreatePersonTagMutation,
   useDeleteKeywordTagMutation,
   useDeleteLocationTagMutation,
   useDeletePersonTagMutation,
@@ -15,9 +16,7 @@ import {
   useMergeKeywordTagsMutation,
   useMergeLocationTagsMutation,
   useMergePersonTagsMutation,
-  useUpdateKeywordAcceptanceMutation,
   useUpdateKeywordNameMutation,
-  useUpdateKeywordParentMutation,
   useUpdateKeywordSynonymsMutation,
   useUpdateKeywordVisibilityMutation,
   useUpdateLocationAcceptanceMutation,
@@ -45,7 +44,7 @@ const useGenericTagEndpoints = (type: TagType) => {
           deleteTagMutationSource: useDeleteLocationTagMutation,
           updateVisibilityMutationSource: useUpdateLocationVisibilityMutation,
           updateTagParentMutationSource: useUpdateLocationParentMutation,
-          createTagMutationSource: useCreateLocationMutation,
+          createTagMutationSource: useCreateLocationTagMutation,
           updateTagAcceptanceMutationSource: useUpdateLocationAcceptanceMutation,
           updateTagChildMutationSource: useUpdateLocationChildMutation,
           tagPictures: useGetPicturesForLocationQuery,
@@ -65,9 +64,7 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateTagParentMutationSource: (dummy: any) => {
             return [dummy];
           },
-          createTagMutationSource: (dummy: any) => {
-            return [dummy];
-          },
+          createTagMutationSource: useCreatePersonTagMutation,
           updateTagAcceptanceMutationSource: (dummy: any) => {
             return [dummy];
           },
@@ -87,9 +84,13 @@ const useGenericTagEndpoints = (type: TagType) => {
           mergeTagsMutationSource: useMergeKeywordTagsMutation,
           deleteTagMutationSource: useDeleteKeywordTagMutation,
           updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
-          updateTagParentMutationSource: useUpdateKeywordParentMutation,
-          createTagMutationSource: useCreateKeywordMutation,
-          updateTagAcceptanceMutationSource: useUpdateKeywordAcceptanceMutation,
+          updateTagParentMutationSource: (dummy: any) => {
+            return [dummy];
+          },
+          createTagMutationSource: useCreateKeywordTagMutation,
+          updateTagAcceptanceMutationSource: (dummy: any) => {
+            return [dummy];
+          },
           updateTagChildMutationSource: (dummy: any) => {
             return [dummy];
           },
