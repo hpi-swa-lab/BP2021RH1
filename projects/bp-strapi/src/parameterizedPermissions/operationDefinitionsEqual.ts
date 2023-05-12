@@ -6,7 +6,7 @@ import {
   isNode,
 } from "graphql/language/ast";
 
-const objectsEqual = (a: unknown, b: unknown) => {
+const objectsEqual = (a: unknown, b: unknown): boolean => {
   if (a instanceof Array && b instanceof Array) {
     return arraysEqual(a, b);
   }
@@ -47,7 +47,10 @@ const nodesEqual = (a: ASTNode, b: ASTNode) => {
   });
 };
 
-const arraysEqual = (as: readonly ASTNode[], bs: readonly ASTNode[]) => {
+const arraysEqual = (
+  as: readonly ASTNode[],
+  bs: readonly ASTNode[]
+): boolean => {
   return (
     as.length === bs.length &&
     as.every((a, index) => objectsEqual(a, bs[index]))
