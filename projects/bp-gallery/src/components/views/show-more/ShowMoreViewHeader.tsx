@@ -56,7 +56,7 @@ const ShowMoreViewHeader = ({
               : flattenedTags[0].name}
           </h2>
         )}
-        {categoryType !== 'date' && (
+        {categoryType === 'location' && (
           <TagOverview
             type={categoryType as TagType}
             queryParams={getChildTagQueryParams(archiveId, categoryId, categoryType)}

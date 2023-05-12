@@ -20,10 +20,7 @@ const SingleTagElement = ({
 
   return (
     <div className='recommendation-item-container'>
-      {tagSupertagList &&
-      typeof option.id === 'string' &&
-      option.id !== '-3' &&
-      tagSupertagList[option.id].length > 0 ? (
+      {tagSupertagList && typeof option.id === 'string' && tagSupertagList[option.id].length > 0 ? (
         <>
           {tagSupertagList[option.id].length > 1 ? (
             // multiple paths tag

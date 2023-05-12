@@ -11,6 +11,7 @@ export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
         { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
       ])
     );
+    // set child tags for each tag in tree
     for (const tag of Object.values(tagsById)) {
       tag.parent_tags?.forEach(parentTag => {
         tagsById[parentTag.id].child_tags.push(tag);
@@ -19,6 +20,7 @@ export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
     for (const tag of Object.values(tagsById)) {
       tagsById[tag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
     }
+    // filter for roots of tree
     const sortedTagTree = Object.values(tagsById)
       .filter(tag => !tag.parent_tags?.length || tag.root)
       .sort((a, b) => a.name.localeCompare(b.name));
@@ -27,7 +29,7 @@ export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
     sortedTagTree.forEach(tag => {
       queue.push(tag);
     });
-
+    // set parent tags for each tag in tree
     while (queue.length > 0) {
       const nextTag = queue.shift();
       if (nextTag) {
