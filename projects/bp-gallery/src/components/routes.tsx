@@ -93,7 +93,11 @@ const routes: RouteConfig[] = [
   {
     path: '/tags/locations',
     render: () => {
-      return <LocationPanel type={TagType.LOCATION} />;
+      return (
+        <ProtectedRoute>
+          <LocationPanel />
+        </ProtectedRoute>
+      );
     },
   },
   {
