@@ -1,7 +1,7 @@
 import { Help, Add } from '@mui/icons-material';
 import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
@@ -15,6 +15,7 @@ import './TagSelection.scss';
 import SingleTagElement from './SingleTagElement';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import {
+  useGetBreadthFirstOrder,
   useGetTagChildren,
   useGetTagSiblings,
   useGetTagSupertagList,
@@ -44,8 +45,9 @@ const TagSelectionField = <T extends TagFields>({
   nonVerifiable = false,
   noContentText,
   type,
-  fixedTag,
-  fixedTagOnClick,
+  fixedParentTag,
+  fixedChildTag,
+  customChipOnClick,
 }: {
   tags: T[];
   allTags: T[];
@@ -56,36 +58,33 @@ const TagSelectionField = <T extends TagFields>({
   nonVerifiable?: boolean;
   noContentText: string;
   type: TagType;
-  fixedTag?: FlatTag;
-  fixedTagOnClick?: (id: string) => void;
+  fixedParentTag?: FlatTag;
+  fixedChildTag?: FlatTag;
+  customChipOnClick?: (id: string) => void;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
   const prompt = useDialog();
 
-  const [tagList, setTagList] = useState<T[]>(allTags);
-
   const { allTagsQuery } = useGenericTagEndpoints(type);
 
-  const [lastSelectedTags, setLastSelectedTags] = useState<T[]>();
-  const [lastSelectedTag, setLastSelectedTag] = useState<T | undefined>();
+  const [options, setOptions] = useState<T[]>(allTags);
+  // TODO: check the conditions using this
+  const [prioritizedOptions, setPrioritizedOptions] = useState<T[]>();
+  const [lastAddedTag, setLastAddedTag] = useState<T | undefined>();
+  const [highlight, setHighlight] = useState<T | null>();
 
-  const [lastTags, setLastTags] = useState<T[]>();
-
-  const { data, refetch } = allTagsQuery();
+  const { data } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined =
     flattened && type !== TagType.COLLECTION ? Object.values(flattened)[0] : undefined;
 
-  //code duplication with LocationPanel
   const tagTree = useGetTagTree(flattenedTags);
-
   const tagChildTags = useGetTagChildren(tagTree, flattenedTags) as
     | {
         [k: string]: T[];
       }
     | undefined;
-
   const tagSiblingTags = useGetTagSiblings(
     tagTree,
     flattenedTags,
@@ -95,49 +94,8 @@ const TagSelectionField = <T extends TagFields>({
         [k: string]: T[];
       }
     | undefined;
-
   const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
-
-  const tagOrder = useMemo(() => {
-    const order: T[] = [];
-    const queue: FlatTag[] = [];
-    const childQueue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-    queue.sort((a, b) => a.name.localeCompare(b.name));
-    queue.forEach(tag => {
-      if (!order.some(existingTag => existingTag.id === tag.id)) {
-        order.push(tag as T);
-      }
-      tag.child_tags
-        ?.sort((a, b) => a.name.localeCompare(b.name))
-        .forEach(child => {
-          childQueue.push(child);
-        });
-      while (childQueue.length > 0) {
-        const childTag = childQueue.shift();
-        if (!childTag) continue;
-        if (!order.some(existingTag => existingTag.id === childTag.id)) {
-          order.push(childTag as T);
-        }
-        childTag.child_tags
-          ?.sort((a, b) => a.name.localeCompare(b.name))
-          .forEach(child => {
-            childQueue.push(child);
-          });
-      }
-    });
-
-    const finalOrder = order.filter(tag =>
-      lastSelectedTags?.some(selectedTag => selectedTag.id === tag.id)
-    );
-    finalOrder.push(
-      ...order.filter(tag => !lastSelectedTags?.some(selectedTag => selectedTag.id === tag.id))
-    );
-
-    return finalOrder;
-  }, [tagTree, lastSelectedTags]);
+  const tagOrder = useGetBreadthFirstOrder(tagTree, prioritizedOptions as FlatTag[]) as T[];
 
   const customSortTags = useCallback(
     (tags: T[]) => {
@@ -148,8 +106,8 @@ const TagSelectionField = <T extends TagFields>({
 
   useEffect(() => {
     const sortedTags = customSortTags(allTags);
-    setTagList(sortedTags.length ? sortedTags : allTags);
-  }, [allTags, setTagList, type, customSortTags]);
+    setOptions(sortedTags.length ? sortedTags : allTags);
+  }, [allTags, setOptions, customSortTags]);
 
   const toggleVerified = useCallback(
     (list: T[], index: number) => {
@@ -169,8 +127,6 @@ const TagSelectionField = <T extends TagFields>({
     [onChange]
   );
 
-  const [highlight, setHighlight] = useState<T | null>();
-
   if (role >= AuthRole.CURATOR) {
     return (
       <div className='tag-selection'>
@@ -178,10 +134,11 @@ const TagSelectionField = <T extends TagFields>({
           multiple
           autoHighlight
           isOptionEqualToValue={(option, value) => option.id === value.id}
-          options={tagList}
+          options={options}
           filterOptions={(options, { inputValue }) => {
             let filtered = options;
-            if (fixedTag) {
+            // avoid tags with the same name in the same position in path
+            if (fixedParentTag) {
               filtered = filtered.filter(
                 tag =>
                   !tags.some(
@@ -204,8 +161,25 @@ const TagSelectionField = <T extends TagFields>({
             }
 
             const isExisting = options.some(o => o.name === inputValue);
+            const isExistingInSiblings =
+              lastAddedTag &&
+              tagSiblingTags &&
+              lastAddedTag.name !== inputValue &&
+              lastAddedTag.id in tagSiblingTags &&
+              tagSiblingTags[lastAddedTag.id].some(tag => tag.name === inputValue);
+            const isExistingInChildren =
+              lastAddedTag &&
+              tagChildTags &&
+              lastAddedTag.id in tagChildTags &&
+              tagChildTags[lastAddedTag.id].some(tag => tag.name === inputValue);
+            const isExistingAsRoot = tagTree && tagTree.some(tag => tag.name === inputValue);
 
-            if (createMutation && inputValue !== '' && !isExisting && !lastSelectedTags?.length) {
+            // option to add a tag as root or relative to last selected tag
+            if (
+              createMutation &&
+              inputValue !== '' &&
+              (!isExisting || !isExistingInSiblings || !isExistingInChildren || !isExistingAsRoot)
+            ) {
               filtered.push({
                 name: inputValue,
                 icon: <Add sx={{ mr: 2 }} />,
@@ -214,10 +188,10 @@ const TagSelectionField = <T extends TagFields>({
                 id: -1,
               } as unknown as T);
             }
-
+            // option to add a child tag for a fixed parent
             if (
               createChildMutation &&
-              fixedTag &&
+              fixedParentTag &&
               inputValue !== '' &&
               !tags.some(tag => tag.name === inputValue)
             ) {
@@ -229,43 +203,14 @@ const TagSelectionField = <T extends TagFields>({
                 id: -3,
               } as unknown as T);
             }
-
-            if (
-              createParentMutation &&
-              fixedTag &&
-              inputValue !== '' &&
-              !tags.some(tag => tag.name === inputValue)
-            ) {
+            // option to add a parent tag for a fixed child
+            if (createParentMutation && fixedChildTag && inputValue !== '' && !isExisting) {
               filtered.push({
                 name: inputValue,
                 icon: <Add sx={{ mr: 2 }} />,
                 verified: true,
                 createValue: inputValue,
                 id: -4,
-              } as unknown as T);
-            }
-
-            if (
-              createChildMutation &&
-              inputValue !== '' &&
-              lastSelectedTag &&
-              (!isExisting ||
-                (tagSiblingTags &&
-                  lastSelectedTag.name !== inputValue &&
-                  lastSelectedTag.id in tagSiblingTags &&
-                  !tagSiblingTags[lastSelectedTag.id].some(tag => tag.name === inputValue)) ||
-                (tagChildTags &&
-                  lastSelectedTag.id in tagChildTags &&
-                  !tagChildTags[lastSelectedTag.id].some(tag => tag.name === inputValue))) &&
-              lastSelectedTags &&
-              lastSelectedTags.length > 0
-            ) {
-              filtered.push({
-                name: inputValue,
-                icon: <Add sx={{ mr: 2 }} />,
-                verified: true,
-                createValue: inputValue,
-                id: -1,
               } as unknown as T);
             }
 
@@ -277,21 +222,21 @@ const TagSelectionField = <T extends TagFields>({
             if (createMutation) {
               const addTag = newValue.find(val => val.createValue);
               if (addTag) {
-                if (createChildMutation && lastSelectedTag) {
+                if (createChildMutation && lastAddedTag) {
                   const createOption = await prompt({
                     preset: DialogPreset.SELECT_PATH_POSITION,
                     title: t('tag-panel.select-position', { name: addTag.name }),
-                    content: { newTag: addTag, lastTag: lastSelectedTag },
+                    content: { newTag: addTag, lastTag: lastAddedTag },
                   });
                   if (!createOption) return;
                   switch (createOption.id) {
                     case '1': {
                       if (
                         tagChildTags &&
-                        lastSelectedTag.id in tagChildTags &&
-                        tagChildTags[lastSelectedTag.id].some(tag => tag.name === addTag.name)
+                        lastAddedTag.id in tagChildTags &&
+                        tagChildTags[lastAddedTag.id].some(tag => tag.name === addTag.name)
                       ) {
-                        const existingTag = tagChildTags[lastSelectedTag.id].find(
+                        const existingTag = tagChildTags[lastAddedTag.id].find(
                           tag => tag.name === addTag.name
                         ) as unknown as T;
                         const filteredNewValues = newValue.filter(val => !val.createValue);
@@ -299,7 +244,7 @@ const TagSelectionField = <T extends TagFields>({
                         newValue = filteredNewValues;
                       } else {
                         const { data } = await createChildMutation({
-                          variables: { name: addTag.createValue, parentIDs: [lastSelectedTag.id] },
+                          variables: { name: addTag.createValue, parentIDs: [lastAddedTag.id] },
                         });
                         if (data) {
                           const nameOfField = Object.keys(data as { [key: string]: any })[0];
@@ -307,8 +252,8 @@ const TagSelectionField = <T extends TagFields>({
                           addTag.id = newId;
                           delete addTag.createValue;
                           delete addTag.icon;
-                          setTagList([...allTags, addTag]);
-                          setLastSelectedTags([] as T[]);
+                          setOptions([...allTags, addTag]);
+                          setPrioritizedOptions([] as T[]);
                         }
                       }
                       break;
@@ -316,29 +261,29 @@ const TagSelectionField = <T extends TagFields>({
                     case '2': {
                       if (
                         tagSiblingTags &&
-                        lastSelectedTag.id in tagSiblingTags &&
-                        tagSiblingTags[lastSelectedTag.id].some(tag => tag.name === addTag.name)
+                        lastAddedTag.id in tagSiblingTags &&
+                        tagSiblingTags[lastAddedTag.id].some(tag => tag.name === addTag.name)
                       ) {
-                        const existingTag = tagSiblingTags[lastSelectedTag.id].find(
+                        const existingTag = tagSiblingTags[lastAddedTag.id].find(
                           tag => tag.name === addTag.name
                         ) as unknown as T;
                         const filteredNewValues = newValue.filter(val => !val.createValue);
                         filteredNewValues.push(existingTag);
                         newValue = filteredNewValues;
-                      } else if (lastSelectedTag.name !== addTag.name) {
+                      } else if (lastAddedTag.name !== addTag.name) {
                         const { data } = await createChildMutation({
                           variables: {
                             name: addTag.createValue,
                             parentIDs:
-                              tagSupertagList && lastSelectedTag.id in tagSupertagList
-                                ? tagSupertagList[lastSelectedTag.id]
+                              tagSupertagList && lastAddedTag.id in tagSupertagList
+                                ? tagSupertagList[lastAddedTag.id]
                                     .filter(path => path.length)
                                     .map(path => path[path.length - 1].id)
                                 : [],
                             root:
                               tagSupertagList &&
-                              lastSelectedTag.id in tagSupertagList &&
-                              tagSupertagList[lastSelectedTag.id].some(path => !path.length),
+                              lastAddedTag.id in tagSupertagList &&
+                              tagSupertagList[lastAddedTag.id].some(path => !path.length),
                           },
                         });
                         if (data) {
@@ -348,8 +293,8 @@ const TagSelectionField = <T extends TagFields>({
                           addTag.isNewSibling = true;
                           delete addTag.createValue;
                           delete addTag.icon;
-                          setTagList([...allTags, addTag]);
-                          setLastSelectedTags([] as T[]);
+                          setOptions([...allTags, addTag]);
+                          setPrioritizedOptions([] as T[]);
                         }
                       } else {
                         const filteredNewValues = newValue.filter(val => !val.createValue);
@@ -376,8 +321,8 @@ const TagSelectionField = <T extends TagFields>({
                           addTag.isNewRoot = true;
                           delete addTag.createValue;
                           delete addTag.icon;
-                          setTagList([...allTags, addTag]);
-                          setLastSelectedTags([] as T[]);
+                          setOptions([...allTags, addTag]);
+                          setPrioritizedOptions([] as T[]);
                         }
                       }
                       break;
@@ -397,8 +342,8 @@ const TagSelectionField = <T extends TagFields>({
                     addTag.isNewRoot = true;
                     delete addTag.createValue;
                     delete addTag.icon;
-                    setTagList([...allTags, addTag]);
-                    setLastSelectedTags([] as T[]);
+                    setOptions([...allTags, addTag]);
+                    setPrioritizedOptions([] as T[]);
                   }
                 }
               }
@@ -407,9 +352,14 @@ const TagSelectionField = <T extends TagFields>({
               newVal => !tags.some(tag => tag.id === newVal.id)
             );
             newlyAddedTags.forEach(tag => {
-              setLastSelectedTag(tag);
+              setLastAddedTag(tag);
               const allSupertags: T[] = [];
-              if (!fixedTag && tagSupertagList && tag.id in tagSupertagList) {
+              if (
+                !fixedChildTag &&
+                !fixedParentTag &&
+                tagSupertagList &&
+                tag.id in tagSupertagList
+              ) {
                 tagSupertagList[tag.id].forEach(supertags => {
                   allSupertags.push(
                     ...(supertags.filter(
@@ -423,8 +373,8 @@ const TagSelectionField = <T extends TagFields>({
 
               newValue = newValue.concat(allSupertags);
               if (type === TagType.PERSON || type === TagType.COLLECTION) {
-                setLastSelectedTag(undefined);
-                setLastSelectedTags([] as T[]);
+                setLastAddedTag(undefined);
+                setPrioritizedOptions([] as T[]);
               } else {
                 // add children and siblings
                 const children =
@@ -442,17 +392,17 @@ const TagSelectionField = <T extends TagFields>({
                             !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
                       )
                     : tag.isNewSibling &&
-                      lastSelectedTag &&
+                      lastAddedTag &&
                       tagSiblingTags &&
-                      lastSelectedTag.id in tagSiblingTags
-                    ? [...tagSiblingTags[lastSelectedTag.id], lastSelectedTag].filter(
+                      lastAddedTag.id in tagSiblingTags
+                    ? [...tagSiblingTags[lastAddedTag.id], lastAddedTag].filter(
                         siblingTag => !newValue.some(tag => tag.id === siblingTag.id)
                       )
                     : !tag.isNewRoot &&
                       tagChildTags &&
-                      lastSelectedTag &&
-                      lastSelectedTag.id in tagChildTags
-                    ? tagChildTags[lastSelectedTag.id].filter(
+                      lastAddedTag &&
+                      lastAddedTag.id in tagChildTags
+                    ? tagChildTags[lastAddedTag.id].filter(
                         tag =>
                           !newValue.some(newTag => newTag.id === tag.id) &&
                           !tagChildTags[tag.id].some(childTag => childTag.id === tag.id)
@@ -473,10 +423,10 @@ const TagSelectionField = <T extends TagFields>({
                         newValue.some(tag => tag.id === siblingTag.id)
                       )
                     : tag.isNewSibling &&
-                      lastSelectedTag &&
+                      lastAddedTag &&
                       tagSiblingTags &&
-                      lastSelectedTag.id in tagSiblingTags
-                    ? [...tagSiblingTags[lastSelectedTag.id], lastSelectedTag].filter(siblingTag =>
+                      lastAddedTag.id in tagSiblingTags
+                    ? [...tagSiblingTags[lastAddedTag.id], lastAddedTag].filter(siblingTag =>
                         newValue.some(tag => tag.id === siblingTag.id)
                       )
                     : [];
@@ -502,7 +452,7 @@ const TagSelectionField = <T extends TagFields>({
                   ...selectedSiblingChildren,
                 ]);
                 const sortedNewValues = customSortTags(newValue);
-                setLastSelectedTags([
+                setPrioritizedOptions([
                   ...(sortedNewValues.length
                     ? [
                         ...sortedNewValues,
@@ -519,44 +469,50 @@ const TagSelectionField = <T extends TagFields>({
               tag.isNew = true;
               tag.verified = true;
             });
-            if (lastTags && newValue.length < lastTags.length) {
-              setLastSelectedTag(undefined);
-              setLastSelectedTags([] as T[]);
+            if (newValue.length < tags.length) {
+              setLastAddedTag(undefined);
+              setPrioritizedOptions([] as T[]);
             }
-            if (fixedTag) {
-              const addTag = newValue.find(val => val.createValue);
-              if (addTag && createChildMutation) {
-                const { data } = await createChildMutation({
-                  variables: { name: addTag.createValue, parentIDs: [fixedTag.id], accepted: true },
-                });
-                if (data) {
-                  const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                  const newId = data[nameOfField].data.id;
-                  addTag.id = newId;
-                  delete addTag.createValue;
-                  delete addTag.icon;
-                  setTagList([...allTags, addTag]);
-                }
+            const addTag = newValue.find(val => val.createValue);
+            if (addTag && createChildMutation && fixedParentTag) {
+              const { data } = await createChildMutation({
+                variables: {
+                  name: addTag.createValue,
+                  parentIDs: [fixedParentTag.id],
+                  accepted: true,
+                },
+              });
+              if (data) {
+                const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                const newId = data[nameOfField].data.id;
+                addTag.id = newId;
+                delete addTag.createValue;
+                delete addTag.icon;
+                setOptions([...allTags, addTag]);
               }
-
-              if (addTag && createParentMutation) {
-                const { data } = await createParentMutation({
-                  variables: { name: addTag.createValue, childIDs: [fixedTag.id], accepted: true },
-                });
-                if (data) {
-                  const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                  const newId = data[nameOfField].data.id;
-                  addTag.id = newId;
-                  delete addTag.createValue;
-                  delete addTag.icon;
-                  setTagList([...allTags, addTag]);
-                }
-              }
-
-              setLastSelectedTags([] as T[]);
-              setLastSelectedTag(undefined);
+              setPrioritizedOptions([] as T[]);
+              setLastAddedTag(undefined);
             }
-            setLastTags(newValue);
+
+            if (addTag && createParentMutation && fixedChildTag) {
+              const { data } = await createParentMutation({
+                variables: {
+                  name: addTag.createValue,
+                  childIDs: [fixedChildTag.id],
+                  accepted: true,
+                },
+              });
+              if (data) {
+                const nameOfField = Object.keys(data as { [key: string]: any })[0];
+                const newId = data[nameOfField].data.id;
+                addTag.id = newId;
+                delete addTag.createValue;
+                delete addTag.icon;
+                setOptions([...allTags, addTag]);
+              }
+              setPrioritizedOptions([] as T[]);
+              setLastAddedTag(undefined);
+            }
             onChange(newValue);
           }}
           onHighlightChange={(event, option, reason) => {
@@ -565,11 +521,7 @@ const TagSelectionField = <T extends TagFields>({
           renderOption={(props, option) => {
             let label = option.name;
             if (option.createValue) {
-              if (option.id === '-2') {
-                label = option.name;
-              } else {
-                label = `${t('common.create', { value: option.name })}`;
-              }
+              label = `${t('common.create', { value: option.name })}`;
             }
             return (
               <li {...props} key={option.id}>
@@ -590,8 +542,8 @@ const TagSelectionField = <T extends TagFields>({
                 icon={nonVerifiable || option.verified ? undefined : <Help />}
                 label={option.name}
                 onClick={() => {
-                  if (fixedTagOnClick) {
-                    fixedTagOnClick(option.id);
+                  if (customChipOnClick) {
+                    customChipOnClick(option.id);
                   }
                   if (!nonVerifiable) {
                     toggleVerified(value, index);

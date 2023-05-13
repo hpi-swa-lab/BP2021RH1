@@ -172,3 +172,42 @@ export const useGetTagSupertagList = (
 
   return tagSupertagList;
 };
+
+export const useGetBreadthFirstOrder = (
+  tagTree: FlatTag[] | undefined,
+  prioritizedOptions: FlatTag[] | undefined
+) => {
+  const tagOrder = useMemo(() => {
+    const order: FlatTag[] = [];
+
+    const queue: FlatTag[] = [];
+    tagTree?.forEach(tag => {
+      queue.push(tag);
+    });
+
+    while (queue.length > 0) {
+      const nextTag = queue.shift();
+      if (nextTag) {
+        if (!order.some(tag => tag.id === nextTag.id)) {
+          order.push(nextTag);
+        }
+        nextTag.child_tags?.forEach(child => {
+          queue.push(child);
+        });
+      }
+    }
+
+    const finalOrder = order.filter(tag =>
+      prioritizedOptions?.some(prioritizedTag => prioritizedTag.id === tag.id)
+    );
+    finalOrder.push(
+      ...order.filter(
+        tag => !prioritizedOptions?.some(prioritizedTag => prioritizedTag.id === tag.id)
+      )
+    );
+
+    return finalOrder;
+  }, [tagTree, prioritizedOptions]);
+
+  return tagOrder;
+};

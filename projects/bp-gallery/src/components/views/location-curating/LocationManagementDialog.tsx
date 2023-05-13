@@ -249,8 +249,8 @@ const LocationManagementDialogPreset = ({
                         setChildTags(locations as FlatTag[]);
                       }}
                       noContentText={''}
-                      fixedTag={locationTag}
-                      fixedTagOnClick={(id: string) => {
+                      fixedParentTag={locationTag}
+                      customChipOnClick={(id: string) => {
                         parentTagHistory.current.push(parentTag);
                         setParentTag(locationTag);
                         setLocationTagID(id);
@@ -279,8 +279,8 @@ const LocationManagementDialogPreset = ({
                         setParentTags(locations as FlatTag[]);
                       }}
                       noContentText={''}
-                      fixedTag={locationTag}
-                      fixedTagOnClick={(id: string) => {
+                      fixedChildTag={locationTag}
+                      customChipOnClick={(id: string) => {
                         setParentTag(parentTagHistory.current.pop());
                         setLocationTagID(id);
                       }}
