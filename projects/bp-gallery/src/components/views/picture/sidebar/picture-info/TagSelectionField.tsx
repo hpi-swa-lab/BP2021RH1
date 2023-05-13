@@ -127,6 +127,25 @@ const TagSelectionField = <T extends TagFields>({
     [onChange]
   );
 
+  const handleAfterCreate = (
+    addTag: T,
+    data: any,
+    createdAsRoot?: boolean,
+    createdAsSibling?: boolean
+  ) => {
+    if (data) {
+      const nameOfField = Object.keys(data as { [key: string]: any })[0];
+      const newId = data[nameOfField].data.id;
+      addTag.id = newId;
+      addTag.isNewRoot = createdAsRoot;
+      addTag.isNewSibling = createdAsSibling;
+      delete addTag.createValue;
+      delete addTag.icon;
+      setOptions([...allTags, addTag]);
+      setPrioritizedOptions([] as T[]);
+    }
+  };
+
   if (role >= AuthRole.CURATOR) {
     return (
       <div className='tag-selection'>
@@ -222,6 +241,7 @@ const TagSelectionField = <T extends TagFields>({
             if (createMutation) {
               const addTag = newValue.find(val => val.createValue);
               if (addTag) {
+                // create new tag relative to lastAddedTag
                 if (createChildMutation && lastAddedTag) {
                   const createOption = await prompt({
                     preset: DialogPreset.SELECT_PATH_POSITION,
@@ -230,12 +250,15 @@ const TagSelectionField = <T extends TagFields>({
                   });
                   if (!createOption) return;
                   switch (createOption.id) {
+                    // add as child tag relative to lastAddedTag
                     case '1': {
+                      // check if the name already exists in child tags
                       if (
                         tagChildTags &&
                         lastAddedTag.id in tagChildTags &&
                         tagChildTags[lastAddedTag.id].some(tag => tag.name === addTag.name)
                       ) {
+                        // if yes then just add it to the selected tags
                         const existingTag = tagChildTags[lastAddedTag.id].find(
                           tag => tag.name === addTag.name
                         ) as unknown as T;
@@ -243,27 +266,23 @@ const TagSelectionField = <T extends TagFields>({
                         filteredNewValues.push(existingTag);
                         newValue = filteredNewValues;
                       } else {
+                        // if not create a new tag in the corresponding position
                         const { data } = await createChildMutation({
                           variables: { name: addTag.createValue, parentIDs: [lastAddedTag.id] },
                         });
-                        if (data) {
-                          const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                          const newId = data[nameOfField].data.id;
-                          addTag.id = newId;
-                          delete addTag.createValue;
-                          delete addTag.icon;
-                          setOptions([...allTags, addTag]);
-                          setPrioritizedOptions([] as T[]);
-                        }
+                        handleAfterCreate(addTag, data);
                       }
                       break;
                     }
+                    // add as sibling tag relative to lastAddedTag
                     case '2': {
+                      // check if name already exists for sibling tags
                       if (
                         tagSiblingTags &&
                         lastAddedTag.id in tagSiblingTags &&
                         tagSiblingTags[lastAddedTag.id].some(tag => tag.name === addTag.name)
                       ) {
+                        // if yes just add it
                         const existingTag = tagSiblingTags[lastAddedTag.id].find(
                           tag => tag.name === addTag.name
                         ) as unknown as T;
@@ -271,6 +290,7 @@ const TagSelectionField = <T extends TagFields>({
                         filteredNewValues.push(existingTag);
                         newValue = filteredNewValues;
                       } else if (lastAddedTag.name !== addTag.name) {
+                        // if not create a new tag
                         const { data } = await createChildMutation({
                           variables: {
                             name: addTag.createValue,
@@ -286,16 +306,7 @@ const TagSelectionField = <T extends TagFields>({
                               tagSupertagList[lastAddedTag.id].some(path => !path.length),
                           },
                         });
-                        if (data) {
-                          const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                          const newId = data[nameOfField].data.id;
-                          addTag.id = newId;
-                          addTag.isNewSibling = true;
-                          delete addTag.createValue;
-                          delete addTag.icon;
-                          setOptions([...allTags, addTag]);
-                          setPrioritizedOptions([] as T[]);
-                        }
+                        handleAfterCreate(addTag, data, false, true);
                       } else {
                         const filteredNewValues = newValue.filter(val => !val.createValue);
                         newValue = filteredNewValues;
@@ -314,16 +325,7 @@ const TagSelectionField = <T extends TagFields>({
                         const { data } = await createMutation({
                           variables: { name: addTag.createValue },
                         });
-                        if (data) {
-                          const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                          const newId = data[nameOfField].data.id;
-                          addTag.id = newId;
-                          addTag.isNewRoot = true;
-                          delete addTag.createValue;
-                          delete addTag.icon;
-                          setOptions([...allTags, addTag]);
-                          setPrioritizedOptions([] as T[]);
-                        }
+                        handleAfterCreate(addTag, data, true);
                       }
                       break;
                     }
@@ -335,16 +337,7 @@ const TagSelectionField = <T extends TagFields>({
                   const { data } = await createMutation({
                     variables: { name: addTag.createValue },
                   });
-                  if (data) {
-                    const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                    const newId = data[nameOfField].data.id;
-                    addTag.id = newId;
-                    addTag.isNewRoot = true;
-                    delete addTag.createValue;
-                    delete addTag.icon;
-                    setOptions([...allTags, addTag]);
-                    setPrioritizedOptions([] as T[]);
-                  }
+                  handleAfterCreate(addTag, data, true);
                 }
               }
             }
