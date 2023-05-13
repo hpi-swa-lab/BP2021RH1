@@ -238,6 +238,79 @@ const TagSelectionField = <T extends TagFields>({
     return selectedSiblingChildren;
   };
 
+  const addNewChildTag = async (addTag: T, newValue: T[]) => {
+    if (
+      tagChildTags &&
+      lastAddedTag!.id in tagChildTags &&
+      tagChildTags[lastAddedTag!.id].some(tag => tag.name === addTag.name)
+    ) {
+      // if yes then just add it to the selected tags
+      const existingTag = tagChildTags[lastAddedTag!.id].find(
+        tag => tag.name === addTag.name
+      ) as unknown as T;
+      const filteredNewValues = newValue.filter(val => !val.createValue);
+      filteredNewValues.push(existingTag);
+      newValue = filteredNewValues;
+    } else {
+      // if not create a new tag in the corresponding position
+      const { data } = await createChildMutation!({
+        variables: { name: addTag.createValue, parentIDs: [lastAddedTag!.id] },
+      });
+      handleAfterCreate(addTag, data);
+    }
+  };
+
+  const addNewSiblingTag = async (addTag: T, newValue: T[]) => {
+    if (
+      tagSiblingTags &&
+      lastAddedTag!.id in tagSiblingTags &&
+      tagSiblingTags[lastAddedTag!.id].some(tag => tag.name === addTag.name)
+    ) {
+      // if yes just add it
+      const existingTag = tagSiblingTags[lastAddedTag!.id].find(
+        tag => tag.name === addTag.name
+      ) as unknown as T;
+      const filteredNewValues = newValue.filter(val => !val.createValue);
+      filteredNewValues.push(existingTag);
+      newValue = filteredNewValues;
+    } else if (lastAddedTag!.name !== addTag.name) {
+      // if not create a new tag
+      const { data } = await createChildMutation!({
+        variables: {
+          name: addTag.createValue,
+          parentIDs:
+            tagSupertagList && lastAddedTag!.id in tagSupertagList
+              ? tagSupertagList[lastAddedTag!.id]
+                  .filter(path => path.length)
+                  .map(path => path[path.length - 1].id)
+              : [],
+          root:
+            tagSupertagList &&
+            lastAddedTag!.id in tagSupertagList &&
+            tagSupertagList[lastAddedTag!.id].some(path => !path.length),
+        },
+      });
+      handleAfterCreate(addTag, data, false, true);
+    } else {
+      const filteredNewValues = newValue.filter(val => !val.createValue);
+      newValue = filteredNewValues;
+    }
+  };
+
+  const addNewRootTag = async (addTag: T, newValue: T[]) => {
+    if (tagTree?.some(rootTag => rootTag.name === addTag.name)) {
+      const existingTag = tagTree.find(tag => tag.name === addTag.name) as unknown as T;
+      const filteredNewValues = newValue.filter(val => !val.createValue);
+      filteredNewValues.push(existingTag);
+      newValue = filteredNewValues;
+    } else {
+      const { data } = await createMutation!({
+        variables: { name: addTag.createValue },
+      });
+      handleAfterCreate(addTag, data, true);
+    }
+  };
+
   if (role >= AuthRole.CURATOR) {
     return (
       <div className='tag-selection'>
@@ -331,106 +404,34 @@ const TagSelectionField = <T extends TagFields>({
             if (!onChange) return;
             // newValue is an array, but we are sure that only one element can be created at a time
             const addTag = newValue.find(val => val.createValue);
-            if (createMutation) {
-              if (addTag) {
-                // create new tag relative to lastAddedTag
-                if (createChildMutation && lastAddedTag) {
-                  const createOption = await prompt({
-                    preset: DialogPreset.SELECT_PATH_POSITION,
-                    title: t('tag-panel.select-position', { name: addTag.name }),
-                    content: { newTag: addTag, lastTag: lastAddedTag },
-                  });
-                  if (!createOption) return;
-                  switch (createOption.id) {
-                    // add as child tag relative to lastAddedTag
-                    case '1': {
-                      // check if the name already exists in child tags
-                      if (
-                        tagChildTags &&
-                        lastAddedTag.id in tagChildTags &&
-                        tagChildTags[lastAddedTag.id].some(tag => tag.name === addTag.name)
-                      ) {
-                        // if yes then just add it to the selected tags
-                        const existingTag = tagChildTags[lastAddedTag.id].find(
-                          tag => tag.name === addTag.name
-                        ) as unknown as T;
-                        const filteredNewValues = newValue.filter(val => !val.createValue);
-                        filteredNewValues.push(existingTag);
-                        newValue = filteredNewValues;
-                      } else {
-                        // if not create a new tag in the corresponding position
-                        const { data } = await createChildMutation({
-                          variables: { name: addTag.createValue, parentIDs: [lastAddedTag.id] },
-                        });
-                        handleAfterCreate(addTag, data);
-                      }
-                      break;
-                    }
-                    // add as sibling tag relative to lastAddedTag
-                    case '2': {
-                      // check if name already exists for sibling tags
-                      if (
-                        tagSiblingTags &&
-                        lastAddedTag.id in tagSiblingTags &&
-                        tagSiblingTags[lastAddedTag.id].some(tag => tag.name === addTag.name)
-                      ) {
-                        // if yes just add it
-                        const existingTag = tagSiblingTags[lastAddedTag.id].find(
-                          tag => tag.name === addTag.name
-                        ) as unknown as T;
-                        const filteredNewValues = newValue.filter(val => !val.createValue);
-                        filteredNewValues.push(existingTag);
-                        newValue = filteredNewValues;
-                      } else if (lastAddedTag.name !== addTag.name) {
-                        // if not create a new tag
-                        const { data } = await createChildMutation({
-                          variables: {
-                            name: addTag.createValue,
-                            parentIDs:
-                              tagSupertagList && lastAddedTag.id in tagSupertagList
-                                ? tagSupertagList[lastAddedTag.id]
-                                    .filter(path => path.length)
-                                    .map(path => path[path.length - 1].id)
-                                : [],
-                            root:
-                              tagSupertagList &&
-                              lastAddedTag.id in tagSupertagList &&
-                              tagSupertagList[lastAddedTag.id].some(path => !path.length),
-                          },
-                        });
-                        handleAfterCreate(addTag, data, false, true);
-                      } else {
-                        const filteredNewValues = newValue.filter(val => !val.createValue);
-                        newValue = filteredNewValues;
-                      }
-                      break;
-                    }
-                    case '0': {
-                      if (tagTree?.some(rootTag => rootTag.name === addTag.name)) {
-                        const existingTag = tagTree.find(
-                          tag => tag.name === addTag.name
-                        ) as unknown as T;
-                        const filteredNewValues = newValue.filter(val => !val.createValue);
-                        filteredNewValues.push(existingTag);
-                        newValue = filteredNewValues;
-                      } else {
-                        const { data } = await createMutation({
-                          variables: { name: addTag.createValue },
-                        });
-                        handleAfterCreate(addTag, data, true);
-                      }
-                      break;
-                    }
-                    default: {
-                      break;
-                    }
+            if (addTag && createMutation) {
+              // create new tag relative to lastAddedTag
+              if (createChildMutation && lastAddedTag) {
+                const createOption = await prompt({
+                  preset: DialogPreset.SELECT_PATH_POSITION,
+                  title: t('tag-panel.select-position', { name: addTag.name }),
+                  content: { newTag: addTag, lastTag: lastAddedTag },
+                });
+                if (!createOption) return;
+                switch (createOption.id) {
+                  case '1': {
+                    await addNewChildTag(addTag, newValue);
+                    break;
                   }
-                } else {
-                  const { data } = await createMutation({
-                    variables: { name: addTag.createValue },
-                  });
-                  handleAfterCreate(addTag, data, true);
+                  case '2': {
+                    await addNewSiblingTag(addTag, newValue);
+                    break;
+                  }
+                  case '0': {
+                    await addNewRootTag(addTag, newValue);
+                    break;
+                  }
+                  default: {
+                    break;
+                  }
                 }
+              } else {
+                await addNewRootTag(addTag, newValue);
               }
             }
 
