@@ -4,7 +4,6 @@ import {
   DragOverlay,
   DragStartEvent,
   DraggableAttributes,
-  Over,
   UniqueIdentifier,
   useDraggable,
   useDroppable,
@@ -18,15 +17,15 @@ import {
   FlatExhibition,
   FlatExhibitionPicture,
   FlatExhibitionSection,
+  FlatPicture,
 } from '../../../types/additionalFlatTypes';
 import TextEditor from '../../common/editors/TextEditor';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { useTranslation } from 'react-i18next';
 import { createContext } from 'react';
-import { isUndefined, omitBy } from 'lodash';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
-import { createPortal } from 'react-dom';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import { cloneDeep } from 'lodash';
 
 const DragListContext = createContext<DragElement[]>([]);
 const DropzoneContext = createContext<DropzoneContent[]>([]);
@@ -46,6 +45,8 @@ const exhibitonTextNull = {
 const ExhibitionTextContext = createContext<
   [ExhibitionText, Dispatch<SetStateAction<ExhibitionText>>]
 >([exhibitonTextNull, () => {}]);
+
+const ExhibitionStateContext = createContext<ExhibitionState>({} as ExhibitionState);
 
 const DraggablePicture = ({
   id,
@@ -195,30 +196,6 @@ const DropZone = ({ id }: { id: string }) => {
   );
 };
 
-interface DropzoneContent {
-  id: string;
-  dragIds: string[];
-}
-
-interface DragElement {
-  id: string;
-  element: JSX.Element;
-  sortableElement: JSX.Element;
-}
-
-interface ExhibitionText {
-  title: string;
-  introduction: string;
-  sections: {
-    id: string;
-    title: string;
-    text: string;
-  }[];
-  epilog: string;
-  sources: string[];
-  isPublished: boolean;
-}
-
 const ExhibitionManipulator = () => {
   const exhibition = useContext(ExhibitionContext);
   // const scrollDivRef = useRef(null);
@@ -235,16 +212,6 @@ const ExhibitionManipulator = () => {
       </div>
     </div>
   );
-};
-
-const editorOptions = ({ placeholder }: { placeholder: string }) => {
-  return {
-    preset: undefined,
-    placeholder: placeholder,
-    statusbar: false,
-    tabIndex: 0,
-    className: 'z-0',
-  };
 };
 
 const Introduction = () => {
@@ -309,122 +276,269 @@ const Section = ({ id }: { id: string }) => {
   );
 };
 
-const DragNDropHandler = ({
+interface DropzoneContent {
+  id: string;
+  dragIds: string[];
+}
+
+interface ExhibitionText {
+  title: string;
+  introduction: string;
+  sections: {
+    id: string;
+    title: string;
+    text: string;
+  }[];
+  epilog: string;
+  sources: string[];
+  isPublished: boolean;
+}
+
+interface DragElement {
+  id: string;
+  picture: FlatPicture;
+  subtitle: string;
+  element: JSX.Element;
+  sortableElement: JSX.Element;
+}
+
+interface SectionState {
+  id: string;
+  title: string;
+  text: string;
+  dragElements: DragElement[];
+}
+
+interface ExhibitionState {
+  title: string;
+  introduction: string;
+  titlePicture: DragElement;
+  ideaPictures: DragElement[];
+  sections: SectionState[];
+  epilog: string;
+  sources: string[];
+  isPublished: boolean;
+}
+
+const ExhibitionStateManager = ({
   exhibition,
   children,
 }: PropsWithChildren<{ exhibition: FlatExhibition }>) => {
-  const buildDropzones = ((): DropzoneContent[] => {
-    return exhibition.exhibition_sections
-      ? exhibition.exhibition_sections.map(section => ({
-          id: section.id,
-          dragIds: section.exhibition_pictures?.map(picture => picture.id) || [],
-        }))
-      : [];
+  const buildDragElements = (exhibitionPictures: FlatExhibitionPicture[] | undefined) => {
+    return exhibitionPictures?.map(exhibitionPicture => {
+      return {
+        id: exhibitionPicture.id,
+        picture: exhibitionPicture.picture,
+        subtitle: exhibitionPicture.subtitle,
+        element: (
+          <DraggablePicture id={exhibitionPicture.id} exhibitionPicture={exhibitionPicture} />
+        ),
+        sortableElement: (
+          <SortablePicture id={exhibitionPicture.id} exhibitionPicture={exhibitionPicture} />
+        ),
+      } as DragElement;
+    }) as DragElement[];
+  };
+
+  const buildSectionState = (sections: FlatExhibitionSection[] | undefined) => {
+    return sections?.map(section => {
+      return {
+        id: section.id,
+        title: section.title,
+        text: section.text,
+        dragElements: buildDragElements(section.exhibition_pictures),
+      } as SectionState;
+    }) as SectionState[];
+  };
+  const buildExhibitionState = (() => {
+    return {
+      title: exhibition.title,
+      introduction: exhibition.introduction,
+      titlePicture: exhibition.title_picture,
+      ideaPictures: buildDragElements(exhibition.idealot_pictures),
+      sections: buildSectionState(exhibition.exhibition_sections),
+      epilog: exhibition.epilog,
+      sources: exhibition.exhibition_sources?.map(source => source.source),
+      isPublished: exhibition.is_published,
+    } as ExhibitionState;
   })();
 
-  const buildDraggableList = ((): DragElement[] => {
-    const sections: FlatExhibitionSection[] = exhibition.exhibition_sections || [];
-    const sectionItems: DragElement[] = sections
-      .map(section =>
-        section.exhibition_pictures!.map(picture => ({
-          id: picture.id,
-          element: <DraggablePicture id={picture.id} exhibitionPicture={picture} />,
-          sortableElement: <SortablePicture id={picture.id} exhibitionPicture={picture} />,
-        }))
-      )
-      .flat();
+  const [exhibitionState, setExhibitionState] = useState<ExhibitionState>(buildExhibitionState);
 
-    const idealot: FlatExhibitionPicture[] = exhibition.idealot_pictures || [];
-    const idealotItems = idealot.map(picture => ({
-      id: picture.id,
-      element: <DraggablePicture id={picture.id} exhibitionPicture={picture} />,
-      sortableElement: <SortablePicture id={picture.id} exhibitionPicture={picture} />,
-    }));
-    omitBy(idealotItems, isUndefined);
-    return sectionItems.concat(idealotItems);
-  })();
+  const getDragElement = (dragElementId: string) => {
+    if (exhibitionState.ideaPictures.some(dragElement => dragElement.id === dragElementId)) {
+      return exhibitionState.ideaPictures.find(dragElement => dragElement.id === dragElementId);
+    }
+    let dragElement;
+    exhibitionState.sections.forEach(section => {
+      if (section.dragElements.some(dragElement => dragElement.id === dragElementId)) {
+        dragElement = section.dragElements.find(dragElement => dragElement.id === dragElementId);
+      }
+    });
+    return dragElement;
+  };
 
-  const [dropzones, setDropzones] = useState<DropzoneContent[]>(buildDropzones);
-  const [draggableList, setDraggableList] = useState<DragElement[]>(buildDraggableList);
-  const [draggedItem, setDraggedItem] = useState('');
+  const addDraggables = (
+    dragElement: DragElement,
+    exhibitionClone: ExhibitionState,
+    sectionId: string | undefined
+  ) => {
+    if (sectionId) {
+      return exhibitionClone.sections
+        .find(section => section.id === sectionId)
+        ?.dragElements.splice(0, 0, dragElement);
+    }
+    return exhibitionClone.ideaPictures.splice(0, 0, dragElement);
+  };
 
-  const swapDropzoneContent = (dropzoneId: string, oldIndex: number, newIndex: number) => {
-    setDropzones(
-      dropzones.map(dropzone =>
-        dropzone.id === dropzoneId
-          ? ({
-              id: dropzone.id,
-              //swaps old with new array
-              dragIds: dropzone.dragIds.map((id, index) => {
-                if (index === oldIndex) return dropzone.dragIds[newIndex];
-                if (index === newIndex) return dropzone.dragIds[oldIndex];
-                return id;
-              }),
-            } as DropzoneContent)
-          : dropzone
-      )
+  const removeDraggables = (dragElementId: string, exhibitionClone: ExhibitionState) => {
+    exhibitionClone.sections.map(section => {
+      section.dragElements.splice(
+        section.dragElements.findIndex(value => value.id === dragElementId),
+        1
+      );
+    });
+    return exhibitionClone.ideaPictures.splice(
+      exhibitionClone.ideaPictures.findIndex(value => value.id === dragElementId)
     );
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { over, active } = event;
-
-    const addToDropzone = (dropzone: DropzoneContent, over: Over) => {
-      return dropzone.id === over.id
-        ? ({ id: dropzone.id, dragIds: [...dropzone.dragIds, active.id] } as DropzoneContent)
-        : dropzone;
-    };
-
-    const removeFromDropzone = (dropzone: DropzoneContent) => {
-      return dropzone.dragIds.some(x => x === active.id)
-        ? ({
-            id: dropzone.id,
-            dragIds: dropzone.dragIds.filter(x => x !== active.id),
-          } as DropzoneContent)
-        : dropzone;
-    };
-    setDraggedItem('');
-    setDropzones(
-      dropzones.map(dropzone => {
-        if (over) {
-          return addToDropzone(removeFromDropzone(dropzone), over);
-        }
-        return removeFromDropzone(dropzone);
-      })
-    );
-  };
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    setDropzones(
-      dropzones.map(dropzone => ({
-        ...dropzone,
-        dragIds: dropzone.dragIds.filter(x => x !== active.id),
-      }))
-    );
-    setDraggedItem(String(active.id));
+  const updateDraggables = (dragElementId: string, overId: string | undefined) => {
+    //find dragElement
+    const dragElement = getDragElement(dragElementId);
+    if (!dragElement) return;
+    const exhibitionClone = cloneDeep(exhibitionState);
+    removeDraggables(dragElementId, exhibitionClone);
+    addDraggables(dragElement, exhibitionClone, overId);
+    setExhibitionState(exhibitionClone);
   };
 
   return (
-    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-      <DragListContext.Provider value={draggableList}>
-        <DropzoneContext.Provider value={dropzones}>
-          <DraggedItemContext.Provider value={draggedItem}>
-            <SwapDropzoneContentContext.Provider value={swapDropzoneContent}>
-              {createPortal(
-                <DragOverlay>
-                  {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
-                </DragOverlay>,
-                document.body
-              )}
-              {children}
-            </SwapDropzoneContentContext.Provider>
-          </DraggedItemContext.Provider>
-        </DropzoneContext.Provider>
-      </DragListContext.Provider>
-    </DndContext>
+    <ExhibitionStateContext.Provider value={exhibitionState}>
+      <Button onClick={() => updateDraggables('2', '1')}>Test</Button>
+      {children}
+    </ExhibitionStateContext.Provider>
   );
 };
+
+// const DragNDropHandler = ({
+//   exhibition,
+//   children,
+// }: PropsWithChildren<{ exhibition: FlatExhibition }>) => {
+//   const buildDropzones = ((): DropzoneContent[] => {
+//     return exhibition.exhibition_sections
+//       ? exhibition.exhibition_sections.map(section => ({
+//           id: section.id,
+//           dragIds: section.exhibition_pictures?.map(picture => picture.id) || [],
+//         }))
+//       : [];
+//   })();
+
+//   const buildDraggableList = ((): DragElement[] => {
+//     const sections: FlatExhibitionSection[] = exhibition.exhibition_sections || [];
+//     const sectionItems: DragElement[] = sections
+//       .map(section =>
+//         section.exhibition_pictures!.map(picture => ({
+//           id: picture.id,
+//           subtitle: picture.subtitle,
+//           picture: picture.picture,
+//           element: <DraggablePicture id={picture.id} exhibitionPicture={picture} />,
+//           sortableElement: <SortablePicture id={picture.id} exhibitionPicture={picture} />,
+//         }))
+//       )
+//       .flat();
+
+//     const idealot: FlatExhibitionPicture[] = exhibition.idealot_pictures || [];
+//     const idealotItems = idealot.map(picture => ({
+//       id: picture.id,
+//       element: <DraggablePicture id={picture.id} exhibitionPicture={picture} />,
+//       sortableElement: <SortablePicture id={picture.id} exhibitionPicture={picture} />,
+//     }));
+//     omitBy(idealotItems, isUndefined);
+//     return sectionItems.concat(idealotItems);
+//   })();
+
+//   const [dropzones, setDropzones] = useState<DropzoneContent[]>(buildDropzones);
+//   const [draggableList, setDraggableList] = useState<DragElement[]>(buildDraggableList);
+//   const [draggedItem, setDraggedItem] = useState('');
+
+//   const swapDropzoneContent = (dropzoneId: string, oldIndex: number, newIndex: number) => {
+//     setDropzones(
+//       dropzones.map(dropzone =>
+//         dropzone.id === dropzoneId
+//           ? ({
+//               id: dropzone.id,
+//               //swaps old with new array
+//               dragIds: dropzone.dragIds.map((id, index) => {
+//                 if (index === oldIndex) return dropzone.dragIds[newIndex];
+//                 if (index === newIndex) return dropzone.dragIds[oldIndex];
+//                 return id;
+//               }),
+//             } as DropzoneContent)
+//           : dropzone
+//       )
+//     );
+//   };
+
+//   const handleDragEnd = (event: DragEndEvent) => {
+//     const { over, active } = event;
+
+//     const addToDropzone = (dropzone: DropzoneContent, over: Over) => {
+//       return dropzone.id === over.id
+//         ? ({ id: dropzone.id, dragIds: [...dropzone.dragIds, active.id] } as DropzoneContent)
+//         : dropzone;
+//     };
+
+//     const removeFromDropzone = (dropzone: DropzoneContent) => {
+//       return dropzone.dragIds.some(x => x === active.id)
+//         ? ({
+//             id: dropzone.id,
+//             dragIds: dropzone.dragIds.filter(x => x !== active.id),
+//           } as DropzoneContent)
+//         : dropzone;
+//     };
+//     setDraggedItem('');
+//     setDropzones(
+//       dropzones.map(dropzone => {
+//         if (over) {
+//           return addToDropzone(removeFromDropzone(dropzone), over);
+//         }
+//         return removeFromDropzone(dropzone);
+//       })
+//     );
+//   };
+
+//   const handleDragStart = (event: DragStartEvent) => {
+//     const { active } = event;
+//     setDropzones(
+//       dropzones.map(dropzone => ({
+//         ...dropzone,
+//         dragIds: dropzone.dragIds.filter(x => x !== active.id),
+//       }))
+//     );
+//     setDraggedItem(String(active.id));
+//   };
+
+//   return (
+//     <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+//       <DragListContext.Provider value={draggableList}>
+//         <DropzoneContext.Provider value={dropzones}>
+//           <DraggedItemContext.Provider value={draggedItem}>
+//             <SwapDropzoneContentContext.Provider value={swapDropzoneContent}>
+//               {createPortal(
+//                 <DragOverlay>
+//                   {draggableList.map(drag => (drag.id === draggedItem ? drag.element : null))}
+//                 </DragOverlay>,
+//                 document.body
+//               )}
+//               {children}
+//             </SwapDropzoneContentContext.Provider>
+//           </DraggedItemContext.Provider>
+//         </DropzoneContext.Provider>
+//       </DragListContext.Provider>
+//     </DndContext>
+//   );
+// };
 
 const ExhibitionSaver = ({ children }: PropsWithChildren<{}>) => {
   const dropzones = useContext(DropzoneContext);
@@ -468,12 +582,12 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
           </div>
           <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
             <ExhibitionContext.Provider value={exhibition}>
-              <DragNDropHandler exhibition={exhibition}>
+              <ExhibitionStateManager exhibition={exhibition}>
                 <ExhibitionSaver>
                   <IdeaLot />
                   <ExhibitionManipulator />
                 </ExhibitionSaver>
-              </DragNDropHandler>
+              </ExhibitionStateManager>
             </ExhibitionContext.Provider>
           </div>
         </>
