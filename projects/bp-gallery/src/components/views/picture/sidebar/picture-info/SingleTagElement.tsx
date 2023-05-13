@@ -77,7 +77,7 @@ const SingleTagElement = ({
                 );
               })}
               {option.icon ?? ''}
-              <ArrowRight />
+              {tagSupertagList[option.id][0].length ? <ArrowRight /> : <></>}
               <div className='recommendation-item-name'>{label}</div>
             </div>
           )}
