@@ -197,14 +197,12 @@ export const useGetBreadthFirstOrder = (
       }
     }
 
-    const finalOrder = order.filter(tag =>
-      prioritizedOptions?.some(prioritizedTag => prioritizedTag.id === tag.id)
-    );
-    finalOrder.push(
+    const finalOrder = [
+      ...(prioritizedOptions ?? []),
       ...order.filter(
         tag => !prioritizedOptions?.some(prioritizedTag => prioritizedTag.id === tag.id)
-      )
-    );
+      ),
+    ];
 
     return finalOrder;
   }, [tagTree, prioritizedOptions]);

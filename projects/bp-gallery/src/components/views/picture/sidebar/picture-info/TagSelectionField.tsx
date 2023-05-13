@@ -146,6 +146,98 @@ const TagSelectionField = <T extends TagFields>({
     }
   };
 
+  const getAllNotSelectedSupertags = (tag: T) => {
+    const supertags: T[] = [];
+    if (!fixedChildTag && !fixedParentTag && tagSupertagList && tag.id in tagSupertagList) {
+      tagSupertagList[tag.id].forEach(path => {
+        supertags.push(
+          ...(path.filter(
+            supertag =>
+              !tags.some(tag => tag.id === supertag.id) &&
+              !supertags.some(tag => tag.id === supertag.id)
+          ) as T[])
+        );
+      });
+    }
+    return supertags;
+  };
+
+  const getTagChildrenRecommendations = (tag: T, filterOutValues: T[]) => {
+    return tagChildTags && tag.id in tagChildTags
+      ? tagChildTags[tag.id].filter(tag => !filterOutValues.some(t => t.id === tag.id))
+      : [];
+  };
+
+  const getTagSiblingRecommendations = (tag: T, filterOutValues: T[]) => {
+    if (tagSiblingTags && tag.id in tagSiblingTags) {
+      // add siblings for tag if siblings are in data structure
+      return tagSiblingTags[tag.id].filter(
+        siblingTag => !filterOutValues.some(t => t.id === siblingTag.id)
+      );
+    } else if (
+      tag.isNewSibling &&
+      lastAddedTag &&
+      tagSiblingTags &&
+      lastAddedTag.id in tagSiblingTags
+    ) {
+      // add siblings for lastAddedTag if tag was added as sibling of lastSelectedTag
+      return [...tagSiblingTags[lastAddedTag.id], lastAddedTag].filter(
+        siblingTag => !filterOutValues.some(t => t.id === siblingTag.id)
+      );
+    } else if (!tag.isNewRoot && tagChildTags && lastAddedTag && lastAddedTag.id in tagChildTags) {
+      // add children for lastAddedTag if tag was added as child of lastSelectedTag
+      return tagChildTags[lastAddedTag.id].filter(
+        siblingTag => !filterOutValues.some(t => t.id === siblingTag.id)
+      );
+    } else if (tag.isNewRoot && tagTree) {
+      // add root tags if tag was added as root tag
+      return tagTree
+        .map(tag => tag as unknown as T)
+        .filter(siblingTag => !filterOutValues.some(t => t.id === siblingTag.id));
+    } else {
+      return [];
+    }
+  };
+
+  const getTagSelectedSiblings = (tag: T, selectedValues: T[]) => {
+    if (tagSiblingTags && tag.id in tagSiblingTags) {
+      return tagSiblingTags[tag.id].filter(siblingTag =>
+        selectedValues.some(t => t.id === siblingTag.id)
+      );
+    } else if (
+      tag.isNewSibling &&
+      lastAddedTag &&
+      tagSiblingTags &&
+      lastAddedTag.id in tagSiblingTags
+    ) {
+      return [...tagSiblingTags[lastAddedTag.id], lastAddedTag].filter(siblingTag =>
+        selectedValues.some(t => t.id === siblingTag.id)
+      );
+    } else {
+      return [];
+    }
+  };
+
+  const getSelectedSiblingsChildren = (selectedSiblings: T[], filterOutValues: T[]) => {
+    let selectedSiblingChildren: T[] = [];
+    if (tagChildTags) {
+      selectedSiblings.forEach(selectedSibling => {
+        const siblingChildren =
+          selectedSibling.id in tagChildTags
+            ? tagChildTags[selectedSibling.id].filter(
+                tag => !selectedSiblingChildren.some(t => t.id === tag.id)
+              )
+            : ([] as T[]);
+        selectedSiblingChildren.push(...siblingChildren);
+      });
+    }
+    selectedSiblingChildren = selectedSiblingChildren.filter(
+      tag => !filterOutValues.some(t => t.id === tag.id)
+    );
+
+    return selectedSiblingChildren;
+  };
+
   if (role >= AuthRole.CURATOR) {
     return (
       <div className='tag-selection'>
@@ -238,8 +330,8 @@ const TagSelectionField = <T extends TagFields>({
           onChange={async (_, newValue) => {
             if (!onChange) return;
             // newValue is an array, but we are sure that only one element can be created at a time
+            const addTag = newValue.find(val => val.createValue);
             if (createMutation) {
-              const addTag = newValue.find(val => val.createValue);
               if (addTag) {
                 // create new tag relative to lastAddedTag
                 if (createChildMutation && lastAddedTag) {
@@ -341,132 +433,7 @@ const TagSelectionField = <T extends TagFields>({
                 }
               }
             }
-            const newlyAddedTags = newValue.filter(
-              newVal => !tags.some(tag => tag.id === newVal.id)
-            );
-            newlyAddedTags.forEach(tag => {
-              setLastAddedTag(tag);
-              const allSupertags: T[] = [];
-              if (
-                !fixedChildTag &&
-                !fixedParentTag &&
-                tagSupertagList &&
-                tag.id in tagSupertagList
-              ) {
-                tagSupertagList[tag.id].forEach(supertags => {
-                  allSupertags.push(
-                    ...(supertags.filter(
-                      value =>
-                        !tags.some(tag => tag.id === value.id) &&
-                        !allSupertags.some(tag => tag.id === value.id)
-                    ) as T[])
-                  );
-                });
-              }
 
-              newValue = newValue.concat(allSupertags);
-              if (type === TagType.PERSON || type === TagType.COLLECTION) {
-                setLastAddedTag(undefined);
-                setPrioritizedOptions([] as T[]);
-              } else {
-                // add children and siblings
-                const children =
-                  tagChildTags && tag.id in tagChildTags
-                    ? tagChildTags[tag.id].filter(
-                        tag => !newValue.some(newTag => newTag.id === tag.id)
-                      )
-                    : [];
-                const siblings =
-                  tagSiblingTags && tag.id in tagSiblingTags
-                    ? tagSiblingTags[tag.id].filter(
-                        tag =>
-                          !newValue.some(newTag => newTag.id === tag.id) &&
-                          (!tagChildTags ||
-                            !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
-                      )
-                    : tag.isNewSibling &&
-                      lastAddedTag &&
-                      tagSiblingTags &&
-                      lastAddedTag.id in tagSiblingTags
-                    ? [...tagSiblingTags[lastAddedTag.id], lastAddedTag].filter(
-                        siblingTag => !newValue.some(tag => tag.id === siblingTag.id)
-                      )
-                    : !tag.isNewRoot &&
-                      tagChildTags &&
-                      lastAddedTag &&
-                      lastAddedTag.id in tagChildTags
-                    ? tagChildTags[lastAddedTag.id].filter(
-                        tag =>
-                          !newValue.some(newTag => newTag.id === tag.id) &&
-                          !tagChildTags[tag.id].some(childTag => childTag.id === tag.id)
-                      )
-                    : tagTree
-                    ? tagTree
-                        .map(tag => tag as unknown as T)
-                        .filter(
-                          tag =>
-                            !newValue.some(newTag => newTag.id === tag.id) &&
-                            (!tagChildTags ||
-                              !tagChildTags[tag.id].some(childTag => childTag.id === tag.id))
-                        )
-                    : [];
-                const selectedSiblings =
-                  tagSiblingTags && tag.id in tagSiblingTags
-                    ? tagSiblingTags[tag.id].filter(siblingTag =>
-                        newValue.some(tag => tag.id === siblingTag.id)
-                      )
-                    : tag.isNewSibling &&
-                      lastAddedTag &&
-                      tagSiblingTags &&
-                      lastAddedTag.id in tagSiblingTags
-                    ? [...tagSiblingTags[lastAddedTag.id], lastAddedTag].filter(siblingTag =>
-                        newValue.some(tag => tag.id === siblingTag.id)
-                      )
-                    : [];
-                let selectedSiblingChildren: T[] = [];
-                if (tagChildTags) {
-                  selectedSiblings.forEach(selectedSibling => {
-                    const test =
-                      selectedSibling.id in tagChildTags
-                        ? tagChildTags[selectedSibling.id].filter(
-                            tag => !selectedSiblingChildren.some(t => t.id === tag.id)
-                          )
-                        : ([] as T[]);
-                    selectedSiblingChildren = [...selectedSiblingChildren, ...test];
-                  });
-                }
-                selectedSiblingChildren = selectedSiblingChildren.filter(
-                  tag =>
-                    !children.some(t => t.id === tag.id) && !siblings.some(t => t.id === tag.id)
-                );
-                const sortedRecommendations = customSortTags([
-                  ...children,
-                  ...siblings,
-                  ...selectedSiblingChildren,
-                ]);
-                const sortedNewValues = customSortTags(newValue);
-                setPrioritizedOptions([
-                  ...(sortedNewValues.length
-                    ? [
-                        ...sortedNewValues,
-                        ...newValue.filter(tag =>
-                          sortedNewValues.every(sortedTag => sortedTag.id !== tag.id)
-                        ),
-                      ]
-                    : newValue),
-                  ...(sortedRecommendations.length
-                    ? sortedRecommendations
-                    : [...children, ...siblings, ...selectedSiblingChildren]),
-                ]);
-              }
-              tag.isNew = true;
-              tag.verified = true;
-            });
-            if (newValue.length < tags.length) {
-              setLastAddedTag(undefined);
-              setPrioritizedOptions([] as T[]);
-            }
-            const addTag = newValue.find(val => val.createValue);
             if (addTag && createChildMutation && fixedParentTag) {
               const { data } = await createChildMutation({
                 variables: {
@@ -475,15 +442,7 @@ const TagSelectionField = <T extends TagFields>({
                   accepted: true,
                 },
               });
-              if (data) {
-                const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                const newId = data[nameOfField].data.id;
-                addTag.id = newId;
-                delete addTag.createValue;
-                delete addTag.icon;
-                setOptions([...allTags, addTag]);
-              }
-              setPrioritizedOptions([] as T[]);
+              handleAfterCreate(addTag, data);
               setLastAddedTag(undefined);
             }
 
@@ -495,16 +454,53 @@ const TagSelectionField = <T extends TagFields>({
                   accepted: true,
                 },
               });
-              if (data) {
-                const nameOfField = Object.keys(data as { [key: string]: any })[0];
-                const newId = data[nameOfField].data.id;
-                addTag.id = newId;
-                delete addTag.createValue;
-                delete addTag.icon;
-                setOptions([...allTags, addTag]);
-              }
-              setPrioritizedOptions([] as T[]);
+              handleAfterCreate(addTag, data);
               setLastAddedTag(undefined);
+            }
+
+            const newlyAddedTags = newValue.filter(
+              newVal => !tags.some(tag => tag.id === newVal.id)
+            );
+            newlyAddedTags.forEach(tag => {
+              setLastAddedTag(tag);
+              const allSupertags: T[] = getAllNotSelectedSupertags(tag);
+              newValue = newValue.concat(allSupertags);
+
+              if (type === TagType.LOCATION) {
+                const children = getTagChildrenRecommendations(tag, newValue);
+                const siblings = getTagSiblingRecommendations(tag, [...newValue, ...children]);
+                const selectedSiblings = getTagSelectedSiblings(tag, newValue);
+                const selectedSiblingsChildren = getSelectedSiblingsChildren(selectedSiblings, [
+                  ...newValue,
+                  ...children,
+                  ...siblings,
+                ]);
+
+                const sortedChildren = customSortTags(children);
+                const sortedSiblings = customSortTags(siblings);
+                const sortedSelectedSiblingsChildren = customSortTags(selectedSiblingsChildren);
+                const sortedNewValues = customSortTags(newValue);
+
+                setPrioritizedOptions([
+                  ...sortedNewValues,
+                  ...newValue.filter(
+                    tag => !sortedNewValues.some(sortedTag => sortedTag.id === tag.id)
+                  ),
+                  ...sortedSiblings,
+                  ...sortedChildren,
+                  ...sortedSelectedSiblingsChildren,
+                ]);
+              } else {
+                setLastAddedTag(undefined);
+                setPrioritizedOptions([] as T[]);
+              }
+              tag.isNew = true;
+              tag.verified = true;
+            });
+            // handle if tags get removed from selection
+            if (newValue.length < tags.length) {
+              setLastAddedTag(undefined);
+              setPrioritizedOptions([] as T[]);
             }
             onChange(newValue);
           }}
