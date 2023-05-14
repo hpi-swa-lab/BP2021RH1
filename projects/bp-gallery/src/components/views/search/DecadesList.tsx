@@ -1,25 +1,24 @@
 import { useTranslation } from 'react-i18next';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import Loading from '../../common/Loading';
-import ScrollableItemList from '../../common/ScrollableItemList';
-import { asApiPath } from '../../../helpers/app-helpers';
 import {
-  useGetDecadePreviewThumbnailsQuery,
   PictureFiltersInput,
+  useGetDecadePreviewThumbnailsQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { FlatDecadeThumbnails } from '../../../types/additionalFlatTypes';
+import ItemList from '../../common/ItemList';
+import Loading from '../../common/Loading';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import ScrollableItemList from '../../common/ScrollableItemList';
+import { useVisit } from './../../../helpers/history';
+import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import {
+  SearchType,
   buildDecadeFilter,
   getDecadeSearchTermForAllSearch,
-  SearchType,
 } from './helpers/search-filters';
 import { getDecadeTranslation } from './helpers/search-translation';
 import useAdvancedSearch from './helpers/useAdvancedSearch';
-import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
-import ItemList from '../../common/ItemList';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 
@@ -35,7 +34,7 @@ const DecadesList = ({
   currentItemAmount?: number;
 }) => {
   const { t } = useTranslation();
-  const history: History = useHistory();
+  const { visit } = useVisit();
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
   const decadeToFilter: { [key: string]: PictureFiltersInput | undefined } = {};
@@ -54,11 +53,13 @@ const DecadesList = ({
       return;
     }
     const thumbnailData = decadeThumbnails[`decade${decadeKey}0s`];
-    const thumbnail: string = thumbnailData[0]?.media?.formats?.small?.url;
     const displayedName = getDecadeTranslation(t, decadeKey);
     return {
       name: displayedName,
-      background: thumbnail ? asApiPath(thumbnail) : DEFAULT_THUMBNAIL_URL,
+      background: asUploadPath(thumbnailData[0]?.media, {
+        highQuality: false,
+        fallback: DEFAULT_THUMBNAIL_URL,
+      }),
     };
   };
 
@@ -82,9 +83,7 @@ const DecadesList = ({
                       getDecadeSearchTermForAllSearch(decadeKey)
                     );
 
-                history.push(searchPath, {
-                  showBack: true,
-                });
+                visit(searchPath);
               },
             };
           })}
@@ -99,9 +98,7 @@ const DecadesList = ({
                 ...getDecadeDisplay(decadeKey)!,
                 onClick: () => {
                   if (onClickBasePath) {
-                    history.push(onClickBasePath + decadeKey, {
-                      showBack: true,
-                    });
+                    visit(onClickBasePath + decadeKey);
                   }
                 },
               };

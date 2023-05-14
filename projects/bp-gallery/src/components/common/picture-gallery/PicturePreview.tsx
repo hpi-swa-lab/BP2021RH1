@@ -1,8 +1,8 @@
 import { isFunction } from 'lodash';
-import { MouseEvent, MouseEventHandler, useContext, useMemo, useRef, useState } from 'react';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { MouseEvent, MouseEventHandler, useRef, useState } from 'react';
+import { PictureOrigin, asUploadPath } from '../../../helpers/app-helpers';
+import { useStats } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { ShowStatsContext } from '../../provider/ShowStatsProvider';
 import './PicturePreview.scss';
 import PictureStats from './PictureStats';
 
@@ -12,11 +12,6 @@ export interface PicturePreviewAdornment {
   icon: ((picture: FlatPicture) => JSX.Element) | JSX.Element;
   title?: string;
   onlyShowOnHover?: boolean;
-}
-
-export enum PictureOrigin {
-  LOCAL,
-  REMOTE,
 }
 
 const PicturePreview = ({
@@ -36,14 +31,7 @@ const PicturePreview = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
-  const showStats = useContext(ShowStatsContext);
-
-  const thumbnailUrl = useMemo((): string => {
-    const defaultUrl =
-      (picture.media?.formats?.small || picture.media?.formats?.thumbnail || picture.media)?.url ||
-      '';
-    return highQuality ? picture.media?.url ?? defaultUrl : defaultUrl;
-  }, [picture, highQuality]);
+  const showStats = useStats();
 
   return (
     <div
@@ -65,13 +53,7 @@ const PicturePreview = ({
           className={
             showStats ? `transition-filter duration-200 ${hovered ? 'brightness-75' : ''}` : ''
           }
-          src={
-            pictureOrigin === PictureOrigin.REMOTE
-              ? asApiPath(
-                  `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
-                )
-              : thumbnailUrl
-          }
+          src={asUploadPath(picture.media, { highQuality: highQuality ?? false, pictureOrigin })}
         />
         <div className='adornments'>
           {adornments?.map((adornment, index) => (

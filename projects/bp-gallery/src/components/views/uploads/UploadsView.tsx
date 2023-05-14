@@ -6,9 +6,9 @@ import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { HideStats } from '../../provider/ShowStatsProvider';
 import './UploadsView.scss';
 
 const UploadsView = () => {
@@ -46,24 +46,20 @@ const UploadsView = () => {
 
   if (role < AuthRole.CURATOR) return null;
   return (
-    <ScrollContainer>
-      {(scrollPos: number, scrollHeight: number) => (
-        <div className='uploads-overview'>
-          <Button onClick={createArchive}>
-            <Add />
-            {t('curator.createArchive')}
-          </Button>
-          <PictureScrollGrid
-            queryParams={{ collections: { id: { null: true } } }}
-            scrollPos={scrollPos}
-            scrollHeight={scrollHeight}
-            hashbase={'uploads'}
-            uploadAreaProps={uploadAreaProps}
-            bulkOperations={[moveToCollection, bulkEdit]}
-          />
-        </div>
-      )}
-    </ScrollContainer>
+    <div className='uploads-overview'>
+      <Button onClick={createArchive}>
+        <Add />
+        {t('curator.createArchive')}
+      </Button>
+      <HideStats>
+        <PictureScrollGrid
+          queryParams={{ collections: { id: { null: true } } }}
+          hashbase={'uploads'}
+          uploadAreaProps={uploadAreaProps}
+          bulkOperations={[moveToCollection, bulkEdit]}
+        />
+      </HideStats>
+    </div>
   );
 };
 export default UploadsView;

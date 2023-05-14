@@ -9,11 +9,12 @@ import { useClipboard, useSetClipboardEditorButtons } from '../../../../../hooks
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
-import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import ScrollContainer from '../../../../common/ScrollContainer';
+import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
-import { ShowStatsProvider } from '../../../../provider/ShowStatsProvider';
+import { ScrollProvider } from '../../../../provider/ScrollProvider';
+import { HideStats } from '../../../../provider/ShowStatsProvider';
 import './LinkedInfoField.scss';
 import { Field } from './PictureInfo';
 import PictureInfoField from './PictureInfoField';
@@ -21,10 +22,12 @@ import PictureInfoField from './PictureInfoField';
 const LinkedInfoField = ({
   picture,
   pictureIds,
+  hasHiddenLinks,
   savePictureInfo,
 }: {
   picture: FlatPicture;
   pictureIds: string[];
+  hasHiddenLinks: boolean;
   savePictureInfo: (field: Field) => void;
 }) => {
   const { t } = useTranslation();
@@ -175,10 +178,14 @@ const LinkedInfoField = ({
           <CheckboxButton
             checked={isText}
             onChange={isText => {
-              if ((linked.collection?.length ?? 0) > 0) {
+              if ((linked.collection?.length ?? 0) > 0 || hasHiddenLinks) {
                 dialog({
                   title: t(`common.mark-as-text.still-linked.${linked.name}.title`),
-                  content: t(`common.mark-as-text.still-linked.${linked.name}.content`),
+                  content: t(
+                    `common.mark-as-text.still-linked.${linked.name}.content${
+                      hasHiddenLinks ? '-hidden' : ''
+                    }`
+                  ),
                   options: [
                     {
                       name: t('common.ok'),
@@ -201,22 +208,20 @@ const LinkedInfoField = ({
           icon={<Link />}
           type='links'
         >
-          <ScrollContainer>
-            {(scrollPos: number, scrollHeight: number) => (
-              <ShowStatsProvider value={false}>
+          <HideStats>
+            <ScrollProvider>
+              <ScrollContainer>
                 <PictureScrollGrid
                   queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
-                  scrollPos={scrollPos}
-                  scrollHeight={scrollHeight}
                   hashbase={'links'}
                   showCount={false}
                   showDefaultAdornments={false}
                   extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
                   filterOutTextsForNonCurators={false}
                 />
-              </ShowStatsProvider>
-            )}
-          </ScrollContainer>
+              </ScrollContainer>
+            </ScrollProvider>
+          </HideStats>
           {role >= AuthRole.CURATOR &&
             (shouldPaste || isClipboardMixed ? (
               <div className='clipboard-buttons'>

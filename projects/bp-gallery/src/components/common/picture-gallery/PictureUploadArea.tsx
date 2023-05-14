@@ -6,7 +6,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { arrayMove, SortableContext } from '@dnd-kit/sortable';
+import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { Close, ExpandCircleDown, Upload } from '@mui/icons-material';
 import { Button, CircularProgress } from '@mui/material';
 import { cloneDeep, sortBy } from 'lodash';
@@ -14,15 +14,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
+import { PictureOrigin } from '../../../helpers/app-helpers';
 import { useObjectIds } from '../../../hooks/object-ids.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import SortableItem from '../SortableItem';
-import uploadMediaFiles from './helpers/upload-media-files';
-import PicturePreview, { PictureOrigin } from './PicturePreview';
+import PicturePreview from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
+import uploadMediaFiles from './helpers/upload-media-files';
 
 export interface PictureUploadAreaProps {
   folderName?: string;

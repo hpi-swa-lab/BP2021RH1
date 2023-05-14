@@ -1,11 +1,8 @@
 .tag-grid {
   width: 100%;
+  height: calc(100% - 2rem);
 
   .merge-button {
     height: 2rem;
-  }
-
-  .table {
-    height: calc(100% - 2rem);
   }
 }

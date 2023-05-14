@@ -49,7 +49,7 @@ describe('picture uploading and tagging', () => {
   });
 
   it('tagging picture with year', () => {
-    cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
+    cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-grid .picture-preview:last').click();
     cy.get('.date-indicator').click();
     cy.contains('.rdrInputRange', 'Jahr').find('input').clear();
@@ -106,7 +106,7 @@ describe('picture uploading and tagging', () => {
 
   it('checking tags', () => {
     cy.visit('/browse/TestCollection');
-    cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
+    cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false });
 
     cy.get('.picture-preview:last').click();
 
@@ -122,7 +122,7 @@ describe('picture uploading and tagging', () => {
   it('deleting picture', () => {
     cy.get('.picture-toolbar').find('[data-testid="ArrowBackIcon"]').click();
     cy.get('.picture-view').should('not.exist');
-    cy.get('.scrollable-container').scrollTo('bottom', { ensureScrollable: false });
+    cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-preview:last').find('[data-testid=DeleteIcon]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
   });

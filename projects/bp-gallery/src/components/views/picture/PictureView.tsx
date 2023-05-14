@@ -13,12 +13,14 @@ import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { replaceHistoryWithoutRouter } from '../../../helpers/history';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { FaceTaggingProvider } from '../../provider/FaceTaggingProvider';
+import { FaceTags } from './face-tagging/FaceTags';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
 import { PictureNavigationTarget } from './overlay/PictureNavigationButtons';
 import PictureViewUI from './overlay/PictureViewUI';
@@ -33,9 +35,10 @@ export interface PictureViewContextFields {
   sideBarOpen?: boolean;
   setSideBarOpen?: Dispatch<SetStateAction<boolean>>;
   calledViaLink?: boolean;
+  img: HTMLImageElement | null;
 }
 
-export const PictureViewContext = createContext<PictureViewContextFields>({});
+export const PictureViewContext = createContext<PictureViewContextFields>({ img: null });
 
 // Used for the sidebar (in px) --> same as in shared.scss
 const MOBILE_BREAKPOINT = 750;
@@ -84,9 +87,7 @@ const PictureView = ({
 
   const { data, loading, error } = useGetPictureInfoQuery({ variables: { pictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-  const pictureLink = picture?.media?.url
-    ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
-    : '';
+  const pictureLink = asUploadPath(picture?.media);
 
   const onNavigateMessage = useCallback((pictureId: string) => {
     replaceHistoryWithoutRouter(`/picture/${pictureId}${window.location.search}`);
@@ -109,6 +110,8 @@ const PictureView = ({
     [pictureId, siblingIds, navigateToPicture]
   );
 
+  const [img, setImg] = useState<HTMLImageElement | null>(null);
+
   // Wrap all context information in this variable
   const contextValue: PictureViewContextFields = {
     navigatePicture,
@@ -117,6 +120,7 @@ const PictureView = ({
     sideBarOpen,
     setSideBarOpen,
     calledViaLink: !onBack,
+    img,
   };
 
   // Block navigation and handle yourself, i.e. block browser navigation and
@@ -136,25 +140,35 @@ const PictureView = ({
   return (
     <div className='picture-view-container'>
       <PictureViewContext.Provider value={contextValue}>
-        <div className={`picture-view`} ref={containerRef}>
-          <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
-            <div className='picture-wrapper'>
-              <div className='picture-container'>
-                <img src={pictureLink} alt={pictureLink} />
+        <FaceTaggingProvider pictureId={pictureId}>
+          <div className={`picture-view`} ref={containerRef}>
+            <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
+              <div className='picture-wrapper w-full h-full'>
+                <div className='picture-container w-full h-full'>
+                  <div className='relative w-full h-full flex justify-center align-center'>
+                    <img
+                      className='max-w-full max-h-full object-contain picture'
+                      ref={setImg}
+                      src={pictureLink}
+                      alt={pictureLink}
+                    />
+                    <FaceTags />
+                  </div>
+                </div>
+                {!isPresentationMode && !loading && !error && picture && (
+                  <PictureViewUI
+                    calledViaLink={!onBack}
+                    pictureId={picture.id}
+                    sessionId={sessionId}
+                  />
+                )}
               </div>
-              {!isPresentationMode && !loading && !error && picture && (
-                <PictureViewUI
-                  calledViaLink={!onBack}
-                  pictureId={picture.id}
-                  sessionId={sessionId}
-                />
-              )}
-            </div>
-          </ZoomWrapper>
-          {!isPresentationMode && (
-            <PictureSidebar loading={loading} error={error} picture={picture} />
-          )}
-        </div>
+            </ZoomWrapper>
+            {!isPresentationMode && (
+              <PictureSidebar loading={loading} error={error} picture={picture} />
+            )}
+          </div>
+        </FaceTaggingProvider>
       </PictureViewContext.Provider>
     </div>
   );

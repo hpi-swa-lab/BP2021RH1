@@ -1,27 +1,26 @@
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import Loading from '../../common/Loading';
-import ScrollableItemList from '../../common/ScrollableItemList';
-import { asApiPath } from '../../../helpers/app-helpers';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
-import useAdvancedSearch from './helpers/useAdvancedSearch';
-import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
-import { SearchType } from './helpers/search-filters';
-import ItemList from '../../common/ItemList';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
   PersonTagFiltersInput,
   PictureFiltersInput,
 } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import useGetTagsWithThumbnail from '../../../hooks/get-tags-with-thumbnail.hook';
+import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
+import ItemList from '../../common/ItemList';
+import Loading from '../../common/Loading';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import ScrollableItemList from '../../common/ScrollableItemList';
+import { useVisit } from './../../../helpers/history';
 import './TagList.scss';
-import { IconButton } from '@mui/material';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
+import { SearchType } from './helpers/search-filters';
+import useAdvancedSearch from './helpers/useAdvancedSearch';
 
 const TagList = ({
   type,
@@ -40,7 +39,7 @@ const TagList = ({
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
 }) => {
-  const history: History = useHistory();
+  const { visit, location } = useVisit();
   const { t } = useTranslation();
 
   const DEFAULT_THUMBNAIL_URL = '/bad-harzburg-stiftung-logo.png';
@@ -56,7 +55,7 @@ const TagList = ({
   );
 
   const flattened = useSimplifiedQueryResponseData(data);
-  const flattenedTags: (FlatTag & { thumbnail: Thumbnail[] })[] | undefined = flattened
+  const flattenedTags: (FlatTag & { thumbnail?: Thumbnail[] })[] | undefined = flattened
     ? Object.values(flattened)[0]
     : undefined;
 
@@ -81,11 +80,15 @@ const TagList = ({
       !currentItemAmount
   );
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(location.state?.open ?? false);
 
   useEffect(() => {
     setIsOpen(!isFoldable);
   }, [isFoldable]);
+
+  useEffect(() => {
+    if (location.state?.open) setIsOpen(location.state.open);
+  }, [location]);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -99,19 +102,16 @@ const TagList = ({
           fetchMoreOnScroll={fetchMoreOnScroll}
           items={flattenedTags.map(tag => ({
             name: tag.name,
-            background: tag.thumbnail.length
-              ? asApiPath(
-                  String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-                )
-              : DEFAULT_THUMBNAIL_URL,
+            background: asUploadPath(tag.thumbnail?.[0]?.media, {
+              highQuality: false,
+              fallback: DEFAULT_THUMBNAIL_URL,
+            }),
             onClick: () => {
               const { searchPath } = addNewParamToSearchPath(
                 useAdvancedSearch ? type : SearchType.ALL,
                 encodeURIComponent(tag.name)
               );
-              history.push(searchPath, {
-                showBack: true,
-              });
+              visit(searchPath, { wasOpen: true });
             },
           }))}
         />
@@ -126,15 +126,12 @@ const TagList = ({
                 : flattenedTags
               ).map(tag => ({
                 name: tag.name,
-                background: tag.thumbnail.length
-                  ? asApiPath(
-                      String(tag.thumbnail[0].media?.formats?.small?.url || DEFAULT_THUMBNAIL_URL)
-                    )
-                  : DEFAULT_THUMBNAIL_URL,
+                background: asUploadPath(tag.thumbnail?.[0]?.media, {
+                  highQuality: false,
+                  fallback: DEFAULT_THUMBNAIL_URL,
+                }),
                 onClick: () => {
-                  history.push(onClickBasePath + tag.id, {
-                    showBack: true,
-                  });
+                  visit(onClickBasePath + tag.id, { wasOpen: true });
                 },
               }))}
             />

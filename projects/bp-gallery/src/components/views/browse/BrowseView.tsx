@@ -12,19 +12,18 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
-import Footer from '../../common/footer/Footer';
 import Loading from '../../common/Loading';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import Footer from '../../common/footer/Footer';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import ScrollContainer from '../../common/ScrollContainer';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import ShowStats from '../../provider/ShowStatsProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import './BrowseView.scss';
 import CollectionDescription from './CollectionDescription';
-import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 import SubCollections from './SubCollections';
+import { decodeBrowsePathComponent } from './helpers/format-browse-path';
 
 const getPictureFilters = (collectionId: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -123,45 +122,34 @@ const BrowseView = ({
     const collection = collections[0];
     const childCount = collection.child_collections?.length ?? 0;
     return (
-      <ScrollContainer>
-        {(scrollPos: number, scrollHeight: number) => (
-          <div className='browse-container'>
-            <div className='collection-picture-display'>
-              {!startpage && (
-                <CollectionDescription
-                  id={collection.id}
-                  description={collection.description ?? ''}
-                  name={collection.name}
-                />
-              )}
-              {childCount > 0 && (
-                <SubCollections childCollections={collection.child_collections ?? []} path={path} />
-              )}
-              {role >= AuthRole.CURATOR && (
-                <Button startIcon={<Add />} onClick={addCollection}>
-                  {t('curator.createCollection')}
-                </Button>
-              )}
-              <ShowStats>
-                <PictureScrollGrid
-                  queryParams={getPictureFilters(collection.id)}
-                  scrollPos={parentScrollPos ?? scrollPos}
-                  scrollHeight={parentScrollHeight ?? scrollHeight}
-                  hashbase={collection.name}
-                  uploadAreaProps={uploadAreaProps(collection)}
-                  bulkOperations={[
-                    removeFromCollection,
-                    linkToCollection,
-                    moveToCollection,
-                    bulkEdit,
-                  ]}
-                />
-              </ShowStats>
-            </div>
-            <Footer />
-          </div>
-        )}
-      </ScrollContainer>
+      <div className='browse-container'>
+        <div className='collection-picture-display'>
+          {!startpage && (
+            <CollectionDescription
+              id={collection.id}
+              description={collection.description ?? ''}
+              name={collection.name}
+            />
+          )}
+          {childCount > 0 && (
+            <SubCollections childCollections={collection.child_collections ?? []} path={path} />
+          )}
+          {role >= AuthRole.CURATOR && (
+            <Button startIcon={<Add />} onClick={addCollection}>
+              {t('curator.createCollection')}
+            </Button>
+          )}
+          <ShowStats>
+            <PictureScrollGrid
+              queryParams={getPictureFilters(collection.id)}
+              hashbase={collection.name}
+              uploadAreaProps={uploadAreaProps(collection)}
+              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+            />
+          </ShowStats>
+        </div>
+        <Footer />
+      </div>
     );
   } else {
     return <div>{t('common.no-collection')}</div>;

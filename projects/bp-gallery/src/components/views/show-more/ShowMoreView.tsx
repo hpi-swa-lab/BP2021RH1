@@ -5,8 +5,7 @@ import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import ScrollContainer from '../../common/ScrollContainer';
-import ShowStats from '../../provider/ShowStatsProvider';
+import { ShowStats } from '../../provider/ShowStatsProvider';
 import { getPictureQueryParams } from './helpers/queryParams-helpers';
 import { useGetShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 import './ShowMoreView.scss';
@@ -61,45 +60,34 @@ const ShowMoreView = ({
     return <QueryErrorDisplay error={error ? error : tagInfo.error!} />;
   } else {
     return (
-      <ScrollContainer>
-        {(scrollPos: number, scrollHeight: number) => (
-          <div className='show-more-container'>
-            <ShowMoreViewHeader
-              archiveId={archiveId}
-              categoryType={categoryType}
-              categoryId={categoryId}
-              collectionsInfo={collectionsInfo}
-              flattenedTags={flattenedTags}
-            />
-            <ShowStats>
-              <PictureScrollGrid
-                queryParams={getPictureQueryParams(
-                  categoryType,
-                  categoryId,
-                  archiveId,
-                  collectionsInfo
-                )}
-                scrollPos={scrollPos}
-                scrollHeight={scrollHeight}
-                sortBy={
-                  categoryType !== 'pictures' && categoryId
-                    ? ['time_range_tag.start:asc']
-                    : ['createdAt:desc']
-                }
-                hashbase={'show-more'}
-                extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
-                bulkOperations={[
-                  removeFromCollection,
-                  linkToCollection,
-                  moveToCollection,
-                  bulkEdit,
-                ]}
-                maxNumPictures={categoryType === 'latest' ? 500 : undefined}
-              />
-            </ShowStats>
-          </div>
-        )}
-      </ScrollContainer>
+      <div className='show-more-container'>
+        <ShowMoreViewHeader
+          archiveId={archiveId}
+          categoryType={categoryType}
+          categoryId={categoryId}
+          collectionsInfo={collectionsInfo}
+          flattenedTags={flattenedTags}
+        />
+        <ShowStats>
+          <PictureScrollGrid
+            queryParams={getPictureQueryParams(
+              categoryType,
+              categoryId,
+              archiveId,
+              collectionsInfo
+            )}
+            sortBy={
+              categoryType !== 'pictures' && categoryId
+                ? ['time_range_tag.start:asc']
+                : ['createdAt:desc']
+            }
+            hashbase={'show-more'}
+            extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
+            bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+            maxNumPictures={categoryType === 'latest' ? 500 : undefined}
+          />
+        </ShowStats>
+      </div>
     );
   }
 };

@@ -2,10 +2,10 @@ import { createContext, PropsWithChildren } from 'react';
 
 export const ShowStatsContext = createContext(false);
 
-export const ShowStatsProvider = ShowStatsContext.Provider;
-
-const ShowStats = ({ children }: PropsWithChildren<{}>) => (
+export const ShowStats = ({ children }: PropsWithChildren<{}>) => (
   <ShowStatsContext.Provider value={true}>{children}</ShowStatsContext.Provider>
 );
 
-export default ShowStats;
+export const HideStats = ({ children }: PropsWithChildren<{}>) => (
+  <ShowStatsContext.Provider value={false}>{children}</ShowStatsContext.Provider>
+);

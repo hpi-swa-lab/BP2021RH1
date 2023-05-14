@@ -4,11 +4,13 @@ import {
   Comment,
   ComponentCommonSynonyms,
   Description,
+  FaceTag,
   KeywordTag,
   Link,
   LocationTag,
   PersonTag,
   Picture,
+  PictureGeoInfo,
   Scalars,
   TimeRangeTag,
   UploadFile,
@@ -26,7 +28,7 @@ type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
 type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
-type FlatUploadFile = ID & UploadFile;
+export type FlatUploadFile = ID & UploadFile;
 
 type FlatPictureWithoutRelations = ID &
   Omit<
@@ -48,6 +50,9 @@ type FlatPictureWithoutRelations = ID &
     | 'archive_tag'
   >;
 
+export type FlatPictureGeoInfo = ID &
+  Omit<PictureGeoInfo, 'notAPlaceCount' | 'radius' | 'createdAt' | 'updatedAt'>;
+
 export type FlatLocationTagWithoutRelations = ID &
   Omit<LocationTag, 'pictures' | 'verified_pictures'>;
 
@@ -60,6 +65,8 @@ export type FlatArchiveTagWithoutRelations = ID &
   Omit<ArchiveTag, 'pictures' | 'links' | 'showcasePicture' | 'logo'>;
 
 export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
+
+export type FlatFaceTagWithoutRelations = ID & Omit<FaceTag, 'person_tag' | 'picture'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -101,7 +108,7 @@ export type FlatArchiveTag = FlatArchiveTagWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
   links?: FlatLinkWithoutRelations[];
   showcasePicture?: FlatPictureWithoutRelations;
-  logo?: UploadFile;
+  logo?: FlatUploadFile;
 };
 
 export type FlatPicture = FlatPictureWithoutRelations & {
@@ -124,6 +131,11 @@ export type Thumbnail = {
 
 export type FlatDecadeThumbnails = {
   [decadeKey: string]: Thumbnail[];
+};
+
+export type FlatFaceTag = FlatFaceTagWithoutRelations & {
+  person_tag?: FlatPersonTagWithoutRelations;
+  picture?: FlatPictureWithoutRelations;
 };
 
 export interface FlatTag {

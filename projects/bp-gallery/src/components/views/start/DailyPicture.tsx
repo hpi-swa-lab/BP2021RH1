@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetDailyPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureView from '../picture/PictureView';
@@ -78,9 +78,7 @@ const DailyPicture = () => {
   const dailyPictureId = choosePictureId(pictureIds);
   const { data } = useGetDailyPictureInfoQuery({ variables: { pictureId: dailyPictureId } });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
-  const pictureLink = picture?.media?.url
-    ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
-    : '';
+  const pictureLink = asUploadPath(picture?.media);
   const description = picture?.descriptions?.[0]?.text ?? '';
   return (
     <div>
@@ -94,7 +92,7 @@ const DailyPicture = () => {
               <DailyPictureInfo picture={picture} />
             </div>
             <img
-              className={'sm:w-auto sm:h-96 cursor-pointer sm:max-w-2xl object-cover'}
+              className={'w-auto h-96 cursor-pointer max-w-2xl object-cover'}
               id='daily-picture'
               src={pictureLink}
               alt={t('common.daily-picture')}

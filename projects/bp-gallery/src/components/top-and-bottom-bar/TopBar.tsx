@@ -1,9 +1,11 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { History, Location } from 'history';
+import { Location } from 'history';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import SearchBar from '../views/search/SearchBar';
+import { useVisit } from './../../helpers/history';
+import { useMobile, useScroll } from './../../hooks/context-hooks';
 import NavigationBar from './NavigationBar';
 import './TopBar.scss';
 
@@ -13,11 +15,13 @@ type LocationProps = {
   };
 };
 
-const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
+const TopBar = () => {
   const { t } = useTranslation();
 
-  const history: History = useHistory();
-  const { search }: Location = useLocation();
+  const { scrollTo } = useScroll();
+  const { visit, history } = useVisit();
+  const { isMobile } = useMobile();
+  const { search, pathname }: Location = useLocation();
 
   return (
     <div className='top-bar'>
@@ -37,7 +41,13 @@ const TopBar = ({ isMobile }: { isMobile?: boolean }) => {
           <div
             className={'bh-logo clickable'}
             title={t('common.back-to-home')}
-            onClick={() => history.push('/start', { showBack: false })}
+            onClick={() => {
+              if (pathname === '/start') {
+                scrollTo?.(0, true);
+                return;
+              }
+              visit('/start', { state: { showBack: false } });
+            }}
           >
             <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' />
           </div>
