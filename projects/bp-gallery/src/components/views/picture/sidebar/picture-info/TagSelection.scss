@@ -1,28 +1,40 @@
 @import 'src/shared/style';
 
 .recommendation-item-container {
+  width: 100%;
   display: flex;
   flex-direction: row;
+  border: 1px solid gray;
+  border-radius: 10px;
 
-  .recommendation-item-parents {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding-right: 8px;
+  .recommendation-item-content {
+    padding: 0 8px 0 8px;
 
-    .recommendation-item {
+    .recommendation-item-parents {
       display: flex;
       flex-direction: row;
-      color: gray;
+      flex-wrap: wrap;
+      width: 100%;
+
+      .recommendation-item-separator {
+        width: 100%;
+        border-top: 1px solid gray;
+      }
+
+      .recommendation-item {
+        display: flex;
+        flex-direction: row;
+        color: gray;
+      }
+
+      .recommendation-item-multiple-paths {
+        color: $archiveColor;
+      }
     }
 
-    .recommendation-item-multiple-paths {
-      color: $archiveColor;
+    .recommendation-item-name {
+      display: flex;
+      flex-direction: row;
     }
-  }
-
-  .recommendation-item-name {
-    display: flex;
-    flex-direction: row;
   }
 }
