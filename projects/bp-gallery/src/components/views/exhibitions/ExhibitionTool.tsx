@@ -1,6 +1,6 @@
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Button, IconButton, Paper, TextField } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
@@ -104,10 +104,24 @@ const DropZone = ({ id }: { id: string }) => {
 
 const ExhibitionManipulator = () => {
   const sections = useContext(ExhibitionSectionsContext).getAllSections();
+  const scroll = useRef(0);
+  const scrollDivRef = useRef<HTMLDivElement | null>(null);
+
+  //TODO: add type
+  //@ts-ignore
+  const handleScroll = e => {
+    if (e.target.scrollTop !== 0) scroll.current = Number(e.target.scrollTop);
+  };
+
+  useEffect(() => scrollDivRef.current?.scrollTo(0, scroll.current));
   return (
     <div className='flex flex-col items-stretch h-full w-full'>
       <div className='text-xl'>Ausstellungstool</div>
-      <div className='border-solid flex-1 p-2 overflow-y-auto'>
+      <div
+        className='border-solid flex-1 p-2 overflow-y-auto'
+        ref={scrollDivRef}
+        onScroll={handleScroll}
+      >
         <Introduction />
         {sections?.map(section => (
           <Section key={section.id} id={section.id} />

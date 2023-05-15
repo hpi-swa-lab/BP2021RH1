@@ -16,7 +16,6 @@ import {
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
-import { Button } from '@mui/material';
 
 interface ExhibitionText {
   title: string;
@@ -278,14 +277,12 @@ export const ExhibitionStateManager = ({
     isTitle: boolean = false,
     isIdeaLot: boolean = false
   ) => {
-    if (!dragElement) return;
     if (sectionId) return addToSection(dragElement, sectionId);
     if (isTitle) return setTitlePicture(dragElement);
     if (isIdeaLot && idealot) return setIdealot([...idealot, dragElement]);
   };
 
   const removeDraggable = (dragElement: DragElement) => {
-    if (!dragElement) return;
     if (titlePicture === dragElement) return setTitlePicture(undefined);
     removeFromSection(dragElement);
     setIdealot(idealot?.filter(elem => elem !== dragElement));
