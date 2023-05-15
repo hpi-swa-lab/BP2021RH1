@@ -8,19 +8,43 @@ export const archiveId = (parameters: ParameterizedPermission) => parameters.arc
 
 export type KeysWithValue<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T];
 
-export type VariableGetter<T> = KeysWithValue<Variables, T> | ((variables: Variables) => T);
+export type VariableGetter<T> = keyof Variables | ((variables: Variables) => T);
 
-export const getVariable = <T>(variables: Variables, getter: VariableGetter<T>): T => {
-  if (typeof getter === 'string') {
-    return variables[getter];
-  } else {
-    return getter(variables);
+export const getVariable =
+  <T>(validator: (value: unknown) => value is T) =>
+  (variables: Variables, getter: VariableGetter<T>): T => {
+    if (typeof getter !== 'string') {
+      return getter(variables);
+    }
+    return validate(variables[getter], validator, getter);
+  };
+
+export const validate = <T>(
+  value: unknown,
+  validator: (value: unknown) => value is T,
+  valueName: string
+): T => {
+  if (validator(value)) {
+    return value;
   }
+  throw new TypeError(`'${valueName}' has the wrong type`);
 };
+
+export const isObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
+
+export const isIDLike = (value: unknown): value is IDLike =>
+  typeof value === 'string' || typeof value === 'number' || value === null || value === undefined;
+
+export const isIDLikeArray = (value: unknown): value is IDLike[] =>
+  value instanceof Array && value.every(isIDLike);
+
+export const getIDLikeVariable = getVariable(isIDLike);
+export const getIDLikeArrayVariable = getVariable(isIDLikeArray);
 
 type IDLike = string | number | null | undefined;
 
-const toId = (id: IDLike): ID => {
+export const toId = (id: IDLike): ID => {
   if (typeof id === 'number') {
     return id;
   }
@@ -37,7 +61,7 @@ const toId = (id: IDLike): ID => {
 export const checkArchive =
   (variable: VariableGetter<IDLike>): IsAllowed =>
   async ({ variables, parameters }) =>
-    archiveId(parameters) === toId(getVariable(variables, variable));
+    archiveId(parameters) === toId(getIDLikeVariable(variables, variable));
 
 type EntityToArchiveDBMethodName = KeysWithValue<DB, (id: ID) => Promise<ID>>;
 
@@ -46,7 +70,7 @@ const createCheckEntityFactory =
   (variable: VariableGetter<IDLike>): IsAllowed =>
   async ({ variables, parameters, db }) =>
     archiveId(parameters) ===
-    (await db[entityToArchiveDBMethodName](toId(getVariable(variables, variable))));
+    (await db[entityToArchiveDBMethodName](toId(getIDLikeVariable(variables, variable))));
 
 const createCheckMultipleEntitiesFactory =
   (entityToArchiveDBMethodName: EntityToArchiveDBMethodName) =>
@@ -58,7 +82,9 @@ const createCheckMultipleEntitiesFactory =
     );
     const allowedArchives = permissionsForSameOperation.map(permission => archiveId(permission));
     const requestedArchives = await Promise.all(
-      getVariable(variables, variable).map(id => db[entityToArchiveDBMethodName](toId(id)))
+      getIDLikeArrayVariable(variables, variable).map(id =>
+        db[entityToArchiveDBMethodName](toId(id))
+      )
     );
     return requestedArchives.every(archive => allowedArchives.includes(archive));
   };

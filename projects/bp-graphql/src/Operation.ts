@@ -72,7 +72,7 @@ export type OperationWithoutGroupName = Exclude<
 
 export type PermissionName = GroupName | OperationWithoutGroupName;
 
-export type Variables = Record<string, any>;
+export type Variables = Record<string, unknown>;
 
 export type IsAllowedContext = {
   parameters: ParameterizedPermission;
