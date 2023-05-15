@@ -5,8 +5,9 @@ import {
   useFeatureIsOn,
 } from '@growthbook/growthbook-react';
 
-const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
-const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
+export const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
+
+export const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
 
 export type AppFeatures = {
   test_button: boolean;
@@ -15,6 +16,7 @@ export type AppFeatures = {
     clientId: string;
     donationText: string;
   };
+  geopictures_collection_id: string;
 };
 
 export type FeatureId = keyof AppFeatures;
@@ -42,7 +44,7 @@ export const growthbook =
             'trackEvent',
             'FeatureViewed' + '_' + String(result.source),
             featureKey,
-            'v' + String(result.value),
+            String(result.value),
             Number(result.experimentResult?.variationId),
           ]);
         },

@@ -1,8 +1,5 @@
 import {
-  createContext,
-  Dispatch,
   PropsWithChildren,
-  SetStateAction,
   useCallback,
   useContext,
   useEffect,
@@ -15,27 +12,16 @@ import {
   useDeleteFaceTagMutation,
   useGetFaceTagsQuery,
   useGetPersonTagQuery,
+  useUpdateFaceTagDirectionMutation,
 } from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { useMouseInElement } from '../../hooks/mouse-in-element.hook';
 import { useMousePosition } from '../../hooks/mouse-position.hook';
 import { FlatFaceTag, FlatPersonTag } from '../../types/additionalFlatTypes';
-import { FaceTagData } from '../views/picture/face-tagging/FaceTag';
-import { useImageRect } from '../views/picture/face-tagging/helpers/image-rect';
 import { PictureViewContext } from '../views/picture/PictureView';
-
-export type FaceTagging = {
-  activeTagId: string | null;
-  setActiveTagId: Dispatch<SetStateAction<string | null>>;
-  tags: FaceTagData[];
-  hideTags: boolean | null;
-  setHideTags: Dispatch<SetStateAction<boolean>>;
-  removeTag: (id: string) => Promise<void>;
-  isFaceTagging: boolean;
-  setIsFaceTagging: Dispatch<SetStateAction<boolean>>;
-};
-
-export const FaceTaggingContext = createContext<FaceTagging | null>(null);
+import { FaceTagData, TagDirection } from '../views/picture/face-tagging/FaceTagTypes';
+import { useImageRect } from '../views/picture/face-tagging/helpers/image-rect';
+import { FaceTagging, FaceTaggingContext } from './FaceTaggingContext';
 
 export const FaceTaggingProvider = ({
   children,
@@ -44,8 +30,12 @@ export const FaceTaggingProvider = ({
   const [activeTagId, setActiveTagId] = useState<string | null>(null);
   const [hideTags, setHideTags] = useState(false);
   const [isFaceTagging, setIsFaceTagging] = useState(false);
+  const [tagDirectionReferenceTagId, setTagDirectionReferenceTagId] = useState<string | null>(null);
+  const isSettingTagDirection = tagDirectionReferenceTagId !== null;
+
   useEffect(() => {
     setActiveTagId(null);
+    setHideTags(false);
   }, [pictureId]);
 
   const { error, data } = useGetFaceTagsQuery({
@@ -55,30 +45,13 @@ export const FaceTaggingProvider = ({
   });
   const faceTags: FlatFaceTag[] | undefined = useSimplifiedQueryResponseData(data)?.faceTags;
 
-  const tags = faceTags?.map(tag => ({
-    x: tag.x ?? 0,
-    y: tag.y ?? 0,
-    name: tag.person_tag?.name ?? '',
-    personTagId: tag.person_tag?.id,
-    id: tag.id,
-  }));
-
-  const { data: activeData } = useGetPersonTagQuery({
-    variables: {
-      id: activeTagId ?? '-1',
-    },
-  });
-  const activePersonTag: FlatPersonTag | undefined =
-    useSimplifiedQueryResponseData(activeData)?.personTag;
-  const activeTagName = activePersonTag?.name ?? 'Lädt';
-
   const { img } = useContext(PictureViewContext);
 
   const { client: clientMousePosition } = useMousePosition();
   const mouseInElement = useMouseInElement(img);
   const mousePosition = mouseInElement ? clientMousePosition : null;
 
-  const imageRect = useImageRect(img);
+  const imageRect = useImageRect(img, img?.parentElement ?? null);
 
   const position = useMemo(() => {
     if (!mousePosition || !imageRect) {
@@ -93,6 +66,60 @@ export const FaceTaggingProvider = ({
     }
     return [x, y];
   }, [mousePosition, imageRect]);
+
+  const referencedTag = useMemo(
+    () => faceTags?.find(tag => tag.id === tagDirectionReferenceTagId),
+    [faceTags, tagDirectionReferenceTagId]
+  );
+
+  const newTagDirection = useMemo(() => {
+    if (
+      !referencedTag ||
+      typeof referencedTag.x !== 'number' ||
+      typeof referencedTag.y !== 'number' ||
+      !imageRect
+    ) {
+      return null;
+    }
+    const [mx, my] = clientMousePosition;
+    const tx = referencedTag.x * imageRect.width + imageRect.x;
+    const ty = referencedTag.y * imageRect.height + imageRect.y;
+    const angle = Math.atan2(my - ty, mx - tx);
+    const angleAbs = Math.abs(angle);
+    if (angleAbs < Math.PI / 4) {
+      return TagDirection.RIGHT;
+    } else if (angleAbs > (Math.PI * 3) / 4) {
+      return TagDirection.LEFT;
+    } else if (my - ty < 0) {
+      return TagDirection.UP;
+    } else {
+      return TagDirection.DOWN;
+    }
+  }, [referencedTag, clientMousePosition, imageRect]);
+
+  const tags = useMemo(
+    () =>
+      faceTags?.map(tag => ({
+        x: tag.x ?? 0,
+        y: tag.y ?? 0,
+        name: tag.person_tag?.name ?? '',
+        personTagId: tag.person_tag?.id,
+        id: tag.id,
+        tagDirection:
+          (tag.id === tagDirectionReferenceTagId ? newTagDirection : tag.tag_direction) ??
+          TagDirection.DEFAULT,
+      })),
+    [faceTags, tagDirectionReferenceTagId, newTagDirection]
+  );
+
+  const { data: activeData } = useGetPersonTagQuery({
+    variables: {
+      id: activeTagId ?? '-1',
+    },
+  });
+  const activePersonTag: FlatPersonTag | undefined =
+    useSimplifiedQueryResponseData(activeData)?.personTag;
+  const activeTagName = activePersonTag?.name ?? 'Lädt';
 
   const [createTag] = useCreateFaceTagMutation({
     refetchQueries: ['getFaceTags'],
@@ -113,6 +140,7 @@ export const FaceTaggingProvider = ({
       variables: {
         x,
         y,
+        tag_direction: TagDirection.DEFAULT,
         personTagId: activeTagId,
         pictureId,
       },
@@ -139,12 +167,24 @@ export const FaceTaggingProvider = ({
     [deleteTag]
   );
 
+  const [updateFaceTagDirection] = useUpdateFaceTagDirectionMutation({
+    refetchQueries: ['getFaceTags'],
+  });
+
+  const setFaceTagDirection = useCallback(
+    (faceTagId: string, tag_direction: TagDirection) => {
+      if (isSettingTagDirection) {
+        updateFaceTagDirection({ variables: { faceTagId, tag_direction } });
+      }
+    },
+    [updateFaceTagDirection, isSettingTagDirection]
+  );
+
   useEffect(() => {
     if (!img) {
       return;
     }
     let hasDragged = false;
-
     const pointermove = () => {
       hasDragged = true;
     };
@@ -152,10 +192,18 @@ export const FaceTaggingProvider = ({
       hasDragged = false;
     };
     const mouseclick = () => {
-      if (hasDragged) {
+      if (activeTagId) {
+        if (hasDragged) {
+          return;
+        }
+        placeTag();
         return;
       }
-      placeTag();
+
+      if (tagDirectionReferenceTagId !== null && newTagDirection !== null) {
+        setFaceTagDirection(tagDirectionReferenceTagId, newTagDirection);
+        setTagDirectionReferenceTagId(null);
+      }
     };
     img.addEventListener('pointermove', pointermove);
     img.addEventListener('pointerdown', pointerdown);
@@ -165,7 +213,14 @@ export const FaceTaggingProvider = ({
       img.removeEventListener('pointerdown', pointerdown);
       img.removeEventListener('click', mouseclick);
     };
-  }, [img, placeTag]);
+  }, [
+    img,
+    placeTag,
+    activeTagId,
+    setFaceTagDirection,
+    tagDirectionReferenceTagId,
+    newTagDirection,
+  ]);
 
   const activeTagData = useMemo<FaceTagData | null>(() => {
     if (!position || activeTagId === null) {
@@ -179,6 +234,7 @@ export const FaceTaggingProvider = ({
       x,
       y,
       noPointerEvents: true,
+      tagDirection: TagDirection.DEFAULT,
     };
   }, [position, activeTagName, activeTagId]);
 
@@ -199,6 +255,9 @@ export const FaceTaggingProvider = ({
             removeTag,
             isFaceTagging,
             setIsFaceTagging,
+            tagDirectionReferenceTagId,
+            setTagDirectionReferenceTagId,
+            imageRect,
           }
         : null,
     [
@@ -210,6 +269,8 @@ export const FaceTaggingProvider = ({
       removeTag,
       isFaceTagging,
       setIsFaceTagging,
+      tagDirectionReferenceTagId,
+      setTagDirectionReferenceTagId,
       imageRect,
     ]
   );
