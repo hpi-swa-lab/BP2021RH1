@@ -13,7 +13,7 @@ module.exports = {
     production: {
       key: "deploy_key",
       user: process.env.REMOTE_USER,
-      ref: "origin/483-add-deployment-scripts-for-aws",
+      ref: "origin/main",
       host: process.env.REMOTE_HOST,
       path: "/home/github/harz-history",
       repo: "https://github.com/hpi-swa-lab/BP2021RH1",
@@ -22,7 +22,7 @@ module.exports = {
     staging: {
       key: "deploy_key",
       user: process.env.REMOTE_USER,
-      ref: "origin/483-add-deployment-scripts-for-aws",
+      ref: "origin/staging",
       host: process.env.REMOTE_HOST,
       path: "/home/github/harz-history-staging",
       repo: "https://github.com/hpi-swa-lab/BP2021RH1",

@@ -2,8 +2,7 @@ name: Build & Deploy AWS CI
 
 on:
   push:
-    branches:
-      - "483-add-deployment-scripts-for-aws"
+    branches: [main]
 
 jobs:
   build_bp_gallery:

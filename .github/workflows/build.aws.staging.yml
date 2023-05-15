@@ -2,8 +2,7 @@ name: Build & Deploy AWS Staging CI
 
 on:
   push:
-    branches:
-      - "483-add-deployment-scripts-for-aws"
+    branches: [staging]
 
 jobs:
   build_bp_gallery:
