@@ -4365,6 +4365,16 @@
             "defaultValue": null
           },
           {
+            "name": "isSuperUser",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "BooleanFilterInput",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -4522,6 +4532,16 @@
               "ofType": null
             },
             "defaultValue": null
+          },
+          {
+            "name": "isSuperUser",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
           }
         ],
         "interfaces": null,
@@ -4608,6 +4628,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "UsersPermissionsRoleEntityResponse",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSuperUser",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
