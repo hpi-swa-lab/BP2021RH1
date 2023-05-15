@@ -1511,7 +1511,7 @@ export type Query = {
   archiveTag?: Maybe<ArchiveTagEntityResponse>;
   archiveTags?: Maybe<ArchiveTagEntityResponseCollection>;
   browseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
-  canRunOperation?: Maybe<Scalars['Boolean']>;
+  canRunOperation?: Maybe<Array<Maybe<Scalars['Boolean']>>>;
   collection?: Maybe<CollectionEntityResponse>;
   collections?: Maybe<CollectionEntityResponseCollection>;
   comment?: Maybe<CommentEntityResponse>;
@@ -1564,7 +1564,7 @@ export type QueryBrowseRootCollectionArgs = {
 
 export type QueryCanRunOperationArgs = {
   operation?: InputMaybe<Scalars['String']>;
-  variables?: InputMaybe<Scalars['JSON']>;
+  variableSets?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
 };
 
 export type QueryCollectionArgs = {
@@ -2171,10 +2171,10 @@ export type UsersPermissionsUserRelationResponseCollection = {
 
 export type CanRunOperationQueryVariables = Exact<{
   operation: Scalars['String'];
-  variables: Scalars['JSON'];
+  variableSets: Array<Scalars['JSON']> | Scalars['JSON'];
 }>;
 
-export type CanRunOperationQuery = { canRunOperation?: boolean | null };
+export type CanRunOperationQuery = { canRunOperation?: Array<boolean | null> | null };
 
 export type GetAllArchiveTagsQueryVariables = Exact<{
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
@@ -3376,8 +3376,8 @@ export type UpdatePictureMutationVariables = Exact<{
 export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null };
 
 export const CanRunOperationDocument = gql`
-  query canRunOperation($operation: String!, $variables: JSON!) {
-    canRunOperation(operation: $operation, variables: $variables)
+  query canRunOperation($operation: String!, $variableSets: [JSON!]!) {
+    canRunOperation(operation: $operation, variableSets: $variableSets)
   }
 `;
 
@@ -3394,7 +3394,7 @@ export const CanRunOperationDocument = gql`
  * const { data, loading, error } = useCanRunOperationQuery({
  *   variables: {
  *      operation: // value for 'operation'
- *      variables: // value for 'variables'
+ *      variableSets: // value for 'variableSets'
  *   },
  * });
  */

@@ -1,6 +1,7 @@
 "use strict";
 
 import { Strapi } from "@strapi/strapi";
+import { Variables } from "bp-graphql/build";
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
@@ -14,7 +15,7 @@ import {
 } from "./api/picture/services/custom-resolver";
 import { incNotAPlaceCount } from "./api/picture/services/custom-update";
 import { canRunOperation } from "./parameterizedPermissions/canRunOperation";
-import { parseOperation } from "./parameterizedPermissions/parseOperation";
+import { parseOperationSource } from "./parameterizedPermissions/parseOperation";
 import { GqlExtension } from "./types";
 
 export default {
@@ -123,16 +124,31 @@ export default {
             },
           }),
           queryField("canRunOperation", {
-            type: "Boolean",
+            type: list("Boolean"),
             args: {
               operation: "String",
-              variables: "JSON",
+              variableSets: list("JSON"),
             },
-            async resolve(_, { operation, variables }, context) {
-              return canRunOperation(
-                context.auth,
-                parseOperation(operation),
-                variables
+            async resolve(
+              _,
+              {
+                operation,
+                variableSets,
+              }: { operation: string; variableSets: Variables[] },
+              context
+            ) {
+              const parsedOperation = parseOperationSource(
+                operation,
+                "unknown"
+              );
+              return Promise.all(
+                variableSets.map((variables) =>
+                  canRunOperation(
+                    context.state.auth,
+                    parsedOperation,
+                    variables
+                  )
+                )
               );
             },
           }),
