@@ -11,7 +11,7 @@ module.exports = {
   ],
   deploy: {
     production: {
-      key: "deploy_rsa",
+      key: "deploy_key",
       user: process.env.REMOTE_USER,
       ref: "origin/483-add-deployment-scripts-for-aws",
       host: process.env.REMOTE_HOST,
@@ -20,7 +20,7 @@ module.exports = {
       "post-deploy": "cd projects/bp-strapi && ./postdeploy.sh",
     },
     staging: {
-      key: "deploy_rsa",
+      key: "deploy_key",
       user: process.env.REMOTE_USER,
       ref: "origin/483-add-deployment-scripts-for-aws",
       host: process.env.REMOTE_HOST,
