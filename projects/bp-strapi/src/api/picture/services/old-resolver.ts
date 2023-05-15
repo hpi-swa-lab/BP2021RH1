@@ -1,6 +1,10 @@
 "use strict";
 import { KnexEngine } from "../../../types";
 import { bulkEdit, like, updatePictureWithTagCleanup } from "./custom-update";
+
+//the old resolver is kept here so it can later be used to compare the old search
+//and the new search in user tests
+
 const { plural, table } = require("../../helper");
 /**
  * These are the (singular) table names of tags related to the pictures type in a many-to-many manner

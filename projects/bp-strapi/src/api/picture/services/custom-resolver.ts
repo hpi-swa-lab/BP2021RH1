@@ -125,6 +125,7 @@ type Score = {
   }[];
 };
 
+//regex for the different types of matches
 const wholeString = (escapedSearchTerm: string) => `^${escapedSearchTerm}$`;
 
 const wholeWord = (escapedSearchTerm: string) =>
@@ -135,6 +136,11 @@ const startOfWord = (escapedSearchTerm: string) =>
 
 const anywhere = (escapedSearchTerm: string) => escapedSearchTerm;
 
+//scoring table, the scores are all separated by a factor of 100 to make sure a more important match cannot
+//be trumped by the sum of smaller matches
+//the additional factor is used in scoreMatches to enable a prioritization according to
+//where the searchterm was matched (tags/description/collection/archive)
+//all of these values are rather arbitrary and may need some tweaking, but work fine for now
 const exponentialMatches = (factor: number) => [
   {
     regex: wholeString,
@@ -217,7 +223,7 @@ const buildScore = (knexEngine: KnexEngine, searchTerms: string[]) => {
 // ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
 type SearchTime = [string, string, string];
 
-const buildWhere = (
+const buildWhereForTimeRanges = (
   queryBuilder: QueryBuilder,
   searchTimes: SearchTime[],
   filterOutTexts: boolean
@@ -275,7 +281,11 @@ const buildQueryForAllSearch = (
 
   const withJoins = buildJoins(withSelect);
 
-  const withWhere = buildWhere(withJoins, searchTimes, filterOutTexts);
+  const withWhere = buildWhereForTimeRanges(
+    withJoins,
+    searchTimes,
+    filterOutTexts
+  );
 
   const withOrder = withWhere.orderBy([
     {
