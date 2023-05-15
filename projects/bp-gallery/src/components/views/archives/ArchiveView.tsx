@@ -14,6 +14,8 @@ import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
+import DonateButton from '../../common/DonateButton';
+import { useTranslation } from 'react-i18next';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -29,6 +31,7 @@ const addUrlProtocol = (url: string) => {
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { visit, history } = useVisit();
   const { role } = useAuth();
+  const { t } = useTranslation();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -62,6 +65,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
       <div className='archive-data'>
         <div className='archive-info'>
           <ArchiveDescription description={archive.longDescription} />
+
           <div className='archive-socials'>
             {archive.logo && (
               <div className='archive-logo-container'>
@@ -78,6 +82,15 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                   <a href={addUrlProtocol(link.url)}>{link.title ? link.title : link.url}</a>
                 </div>
               ))}
+              {archive.paypalClient && archive.paypalClient !== '' && (
+                <DonateButton
+                  clientId={archive.paypalClient}
+                  donationText={
+                    archive.paypalDonationText ?? t('archives.edit.paypal.donation-default')
+                  }
+                  purposeText={archive.paypalPurpose ?? ''}
+                />
+              )}
             </div>
           </div>
         </div>
