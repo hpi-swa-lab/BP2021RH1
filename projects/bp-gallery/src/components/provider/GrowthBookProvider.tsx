@@ -1,10 +1,6 @@
-import {
-  FeatureDefinition,
-  GrowthBookProvider as _GrowthBookProvider,
-} from '@growthbook/growthbook-react';
-import { isEqual } from 'lodash';
+import { GrowthBookProvider as _GrowthBookProvider } from '@growthbook/growthbook-react';
 import { PropsWithChildren, useEffect } from 'react';
-import { growthbook, growthbookApiHost, growthbookClientKey } from '../../helpers/growthbook';
+import { growthbook } from '../../helpers/growthbook';
 import { useStorage } from '../../hooks/context-hooks';
 
 export const GrowthBookProvider = ({ children }: PropsWithChildren<{}>) => {
@@ -24,19 +20,6 @@ export const GrowthBookProvider = ({ children }: PropsWithChildren<{}>) => {
         this.setUserId(anonymousId);
       },
     ]);
-
-    const refresh = () => {
-      if (!growthbook) return;
-      fetch(`${growthbookApiHost}/api/features/${growthbookClientKey}`).then(res =>
-        res.json().then(json => {
-          const features: Record<string, FeatureDefinition<any>> = json.features;
-          if (!isEqual(features, growthbook?.getFeatures())) growthbook?.setFeatures(features);
-        })
-      );
-    };
-
-    const r = setInterval(refresh, 5000);
-    return () => clearInterval(r);
   });
 
   return <_GrowthBookProvider growthbook={growthbook}>{children}</_GrowthBookProvider>;

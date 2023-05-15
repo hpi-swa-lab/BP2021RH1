@@ -2,4 +2,4 @@
 .idea
 .vscode/**/*
 !.vscode/launch.json
-remote-debug-profile/**/*
+remote-debug-profile/**

@@ -45,11 +45,15 @@ h1 {
       }
       .archive-socials {
         display: flex;
+        @media (max-width: $mobile-breakpoint) {
+          flex-direction: column;
+        }
         .archive-logo-container {
           overflow: hidden;
           display: flex;
           padding-top: 0.45rem;
           padding-left: 1rem;
+          padding-right: 2rem;
           min-height: 130px;
           max-height: 150px;
           min-width: 130px;
@@ -63,10 +67,8 @@ h1 {
         .archive-links {
           overflow: hidden;
           display: flex;
-          padding: 1rem;
           padding-right: 0rem;
           padding-top: 0rem;
-          margin-left: 1rem;
           flex-direction: column;
           .archive-link {
             display: flex;
