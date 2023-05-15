@@ -13,6 +13,19 @@ module.exports = {
       colors: {
         primary: '#7e241d'
       },
+      animation: {
+        'paypal-open': 'paypal-open 1s',
+      },
+      keyframes: {
+        'paypal-open': {
+          from: {
+            maxHeight: '0px',
+          },
+          to: {
+            maxHeight: '60rem',
+          },
+        },
+      },
     },
     fontFamily: {
       sans: ['Lato', 'Arial', 'sans-serif'],
