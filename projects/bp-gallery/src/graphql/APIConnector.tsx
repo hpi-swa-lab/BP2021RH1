@@ -33,6 +33,9 @@ export type ArchiveTag = {
   logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  paypalClient?: Maybe<Scalars['String']>;
+  paypalDonationText?: Maybe<Scalars['String']>;
+  paypalPurpose?: Maybe<Scalars['String']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
@@ -75,6 +78,9 @@ export type ArchiveTagFiltersInput = {
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ArchiveTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
+  paypalClient?: InputMaybe<StringFilterInput>;
+  paypalDonationText?: InputMaybe<StringFilterInput>;
+  paypalPurpose?: InputMaybe<StringFilterInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
@@ -86,6 +92,9 @@ export type ArchiveTagInput = {
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  paypalClient?: InputMaybe<Scalars['String']>;
+  paypalDonationText?: InputMaybe<Scalars['String']>;
+  paypalPurpose?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
@@ -2205,6 +2214,9 @@ export type GetArchiveQuery = {
         name: string;
         shortDescription?: string | null;
         longDescription?: string | null;
+        paypalClient?: string | null;
+        paypalDonationText?: string | null;
+        paypalPurpose?: string | null;
         logo?: {
           data?: {
             id?: string | null;
@@ -3695,6 +3707,9 @@ export const GetArchiveDocument = gql`
           name
           shortDescription
           longDescription
+          paypalClient
+          paypalDonationText
+          paypalPurpose
           logo {
             data {
               id

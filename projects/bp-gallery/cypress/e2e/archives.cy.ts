@@ -47,6 +47,7 @@ describe('Archives View', () => {
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 2');
     cy.get('#archive-form-url').should('be.visible').type('test2.de').blur();
     cy.get('.archive-link-entry').first().find('[data-testid="EditIcon"]').click();
+    cy.get('#archive-form-title').scrollIntoView();
     cy.get('#archive-form-title').should('be.visible').type(' Edit').blur();
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 3');
