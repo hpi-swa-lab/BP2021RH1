@@ -138,11 +138,7 @@ const routes: RouteConfig[] = [
   {
     path: '/archives/:id/edit',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
-      return (
-        <ProtectedRoute redirectPath={`/archives/${match.params.id}`}>
-          <ArchiveEditView archiveId={match.params.id} />
-        </ProtectedRoute>
-      );
+      return <ArchiveEditView archiveId={match.params.id} />;
     },
   },
   {

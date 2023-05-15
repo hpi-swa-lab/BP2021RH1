@@ -3,8 +3,10 @@ import { Button } from '@mui/material';
 import { Jodit } from 'jodit-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useCanEditArchive } from '../../../hooks/can-do-hooks';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import TextEditor from '../../common/editors/TextEditor';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
@@ -161,6 +163,12 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     }
     updateForm({ dirty: false });
   };
+
+  const { canEditArchive, loading: canEditArchiveLoading } = useCanEditArchive(archiveId);
+
+  if (!canEditArchive && !canEditArchiveLoading) {
+    return <Redirect to={`/archives/${archiveId}`} />;
+  }
 
   return archive ? (
     <div className='archive-edit-container'>

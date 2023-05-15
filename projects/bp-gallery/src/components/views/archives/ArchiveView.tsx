@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asApiPath } from '../../../helpers/app-helpers';
-import { useAuth } from '../../../hooks/context-hooks';
+import { useCanEditArchive } from '../../../hooks/can-do-hooks';
 import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
@@ -28,7 +28,6 @@ const addUrlProtocol = (url: string) => {
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { visit, history } = useVisit();
-  const { role } = useAuth();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -36,13 +35,15 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
   const src = archive?.logo?.formats?.thumbnail.url ?? '';
 
+  const { canEditArchive } = useCanEditArchive(archiveId);
+
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
   }
 
   return (
     <div className='archive-container'>
-      {role >= AuthRole.CURATOR && (
+      {canEditArchive && (
         <p className='edit-button-wrapper'>
           <Button
             className='archive-edit-button'
