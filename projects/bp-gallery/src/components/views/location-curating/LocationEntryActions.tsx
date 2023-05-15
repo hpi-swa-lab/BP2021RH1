@@ -107,6 +107,7 @@ const LocationEntryActions = ({
         placement='left'
       >
         <IconButton
+          className='location-entry-delete-button'
           onClick={e => {
             e.stopPropagation();
             deleteTag();
