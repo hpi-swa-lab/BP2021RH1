@@ -21,3 +21,22 @@
     height: fit-content;
   }
 }
+
+.overview-selection-container {
+  display: flex;
+  flex-direction: column;
+
+  .overview-selection-header {
+    display: flex;
+    flex-direction: row;
+    margin: 2rem 0 0.75rem 0;
+    @media (max-width: $mobile-breakpoint) {
+      flex-direction: column;
+    }
+    .overview-selection-title {
+      margin-left: 0;
+      margin-right: auto;
+      margin-bottom: 0;
+    }
+  }
+}
