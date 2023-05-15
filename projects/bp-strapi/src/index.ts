@@ -1,19 +1,21 @@
 "use strict";
 
-import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
+import { Strapi } from "@strapi/strapi";
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } from "./api/collection/services/custom-resolver";
+import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
 import {
-  findPicturesByAllSearch,
-  updatePictureWithTagCleanup,
   bulkEdit,
+  findPicturesByAllSearch,
   like,
+  updatePictureWithTagCleanup,
 } from "./api/picture/services/custom-resolver";
-import { Strapi } from "@strapi/strapi";
+import { incNotAPlaceCount } from "./api/picture/services/custom-update";
+import { canRunOperation } from "./parameterizedPermissions/canRunOperation";
+import { parseOperation } from "./parameterizedPermissions/parseOperation";
 import { GqlExtension } from "./types";
-import {incNotAPlaceCount} from "./api/picture/services/custom-update";
 
 export default {
   /**
@@ -120,6 +122,20 @@ export default {
               );
             },
           }),
+          queryField("canRunOperation", {
+            type: "Boolean",
+            args: {
+              operation: "String",
+              variables: "JSON",
+            },
+            async resolve(_, { operation, variables }, context) {
+              return canRunOperation(
+                context.auth,
+                parseOperation(operation),
+                variables
+              );
+            },
+          }),
           mutationField("doBulkEdit", {
             type: "Int",
             args: {
@@ -151,7 +167,7 @@ export default {
               const knexEngine = extensionArgs.strapi.db.connection;
               return incNotAPlaceCount(knexEngine, id);
             },
-          })
+          }),
         ],
         resolversConfig: {
           Query: {
@@ -200,8 +216,8 @@ export default {
             increaseNotAPlaceCount: {
               auth: {
                 scope: ["api::picture.picture.find"],
-              }, 
-            } 
+              },
+            },
           },
           Collection: {
             thumbnail: {

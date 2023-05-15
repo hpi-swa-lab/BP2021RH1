@@ -1,4 +1,5 @@
 # NOTE: this file is auto-generated, edit /projects/bp-graphql/operations instead
+query canRunOperation($operation: String! $variables: JSON!) { canRunOperation(operation: $operation variables: $variables) }
 query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) { archiveTags(sort: $sortBy) { data { id attributes { name shortDescription showcasePicture { data { id attributes { media { data { attributes { url updatedAt } } } } } } } } } }
 query getAllCollections { collections(publicationState: PREVIEW) { data { id attributes { name parent_collections(publicationState: PREVIEW) { data { id attributes { name } } } } } } }
 query getAllKeywordTags { keywordTags { data { id attributes { name synonyms { name } visible } } } }

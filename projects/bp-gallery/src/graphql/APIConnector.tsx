@@ -19,11 +19,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -1514,6 +1511,7 @@ export type Query = {
   archiveTag?: Maybe<ArchiveTagEntityResponse>;
   archiveTags?: Maybe<ArchiveTagEntityResponseCollection>;
   browseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
+  canRunOperation?: Maybe<Scalars['Boolean']>;
   collection?: Maybe<CollectionEntityResponse>;
   collections?: Maybe<CollectionEntityResponseCollection>;
   comment?: Maybe<CommentEntityResponse>;
@@ -1562,6 +1560,11 @@ export type QueryArchiveTagsArgs = {
 
 export type QueryBrowseRootCollectionArgs = {
   publicationState?: InputMaybe<PublicationState>;
+};
+
+export type QueryCanRunOperationArgs = {
+  operation?: InputMaybe<Scalars['String']>;
+  variables?: InputMaybe<Scalars['JSON']>;
 };
 
 export type QueryCollectionArgs = {
@@ -2165,6 +2168,13 @@ export type UsersPermissionsUserInput = {
 export type UsersPermissionsUserRelationResponseCollection = {
   data: Array<UsersPermissionsUserEntity>;
 };
+
+export type CanRunOperationQueryVariables = Exact<{
+  operation: Scalars['String'];
+  variables: Scalars['JSON'];
+}>;
+
+export type CanRunOperationQuery = { canRunOperation?: boolean | null };
 
 export type GetAllArchiveTagsQueryVariables = Exact<{
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
@@ -3364,6 +3374,58 @@ export type UpdatePictureMutationVariables = Exact<{
 }>;
 
 export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null };
+
+export const CanRunOperationDocument = gql`
+  query canRunOperation($operation: String!, $variables: JSON!) {
+    canRunOperation(operation: $operation, variables: $variables)
+  }
+`;
+
+/**
+ * __useCanRunOperationQuery__
+ *
+ * To run a query within a React component, call `useCanRunOperationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCanRunOperationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCanRunOperationQuery({
+ *   variables: {
+ *      operation: // value for 'operation'
+ *      variables: // value for 'variables'
+ *   },
+ * });
+ */
+export function useCanRunOperationQuery(
+  baseOptions: Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<CanRunOperationQuery, CanRunOperationQueryVariables>(
+    CanRunOperationDocument,
+    options
+  );
+}
+
+export function useCanRunOperationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<CanRunOperationQuery, CanRunOperationQueryVariables>(
+    CanRunOperationDocument,
+    options
+  );
+}
+
+export type CanRunOperationQueryHookResult = ReturnType<typeof useCanRunOperationQuery>;
+
+export type CanRunOperationLazyQueryHookResult = ReturnType<typeof useCanRunOperationLazyQuery>;
+
+export type CanRunOperationQueryResult = Apollo.QueryResult<
+  CanRunOperationQuery,
+  CanRunOperationQueryVariables
+>;
 
 export const GetAllArchiveTagsDocument = gql`
   query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {

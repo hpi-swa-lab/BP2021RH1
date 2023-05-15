@@ -1,6 +1,7 @@
 // NOTE: this file is auto-generated, run yarn generate-api instead
 export { default as acceptComment } from './operations/acceptComment.js';
 export { default as bulkEdit } from './operations/bulkEdit.js';
+export { default as canRunOperation } from './operations/canRunOperation.js';
 export { default as createArchiveTag } from './operations/createArchiveTag.js';
 export { default as createFaceTag } from './operations/createFaceTag.js';
 export { default as createKeywordTag } from './operations/createKeywordTag.js';
