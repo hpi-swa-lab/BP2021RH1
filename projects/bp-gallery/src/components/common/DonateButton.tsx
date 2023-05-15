@@ -29,7 +29,7 @@ const DonateButton = ({
 
   const onApprove = useCallback(
     async (data: OnApproveData, actions: OnApproveActions) => {
-      await actions.order.capture();
+      await actions.order?.capture();
       setDialogText(t('archives.edit.paypal.thankyou-label', { amount: donation }));
       setIsDialogOpen(true);
     },
