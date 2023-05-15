@@ -5,13 +5,17 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetMultiplePictureInfoLazyQuery } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
-import { useClipboard, useSetClipboardEditorButtons } from '../../../../../hooks/context-hooks';
+import {
+  useAuth,
+  useClipboard,
+  useSetClipboardEditorButtons,
+} from '../../../../../hooks/context-hooks';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { AuthRole } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { ScrollProvider } from '../../../../provider/ScrollProvider';
 import { HideStats } from '../../../../provider/ShowStatsProvider';

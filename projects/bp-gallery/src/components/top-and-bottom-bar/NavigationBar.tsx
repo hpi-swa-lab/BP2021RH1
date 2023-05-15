@@ -16,9 +16,10 @@ import { Menu, MenuItem } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
-import { AuthRole, useAuth } from '../provider/AuthProvider';
+import { AuthRole } from '../provider/AuthProvider';
 import LoginDialog from './LoginDialog';
 import './NavigationBar.scss';
+import { useAuth } from '../../hooks/context-hooks';
 
 const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useTranslation();

@@ -3,10 +3,11 @@ import { IconButton } from '@mui/material';
 import { isEmpty } from 'lodash';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../../../../hooks/context-hooks';
 import { FlatDescription } from '../../../../../types/additionalFlatTypes';
-import TextEditor from '../../../../common/editors/TextEditor';
 import RichText from '../../../../common/RichText';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import TextEditor from '../../../../common/editors/TextEditor';
+import { AuthRole } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 
 const DescriptionsEditField = ({

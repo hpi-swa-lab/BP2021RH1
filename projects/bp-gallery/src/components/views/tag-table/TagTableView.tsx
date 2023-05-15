@@ -1,12 +1,5 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
-import './TagTableView.scss';
-import {
-  ComponentCommonSynonyms,
-  ComponentCommonSynonymsInput,
-} from '../../../graphql/APIConnector';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import Loading from '../../common/Loading';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { Delete } from '@mui/icons-material';
+import { Button, Chip, IconButton } from '@mui/material';
 import {
   DataGrid,
   GridCheckIcon,
@@ -15,14 +8,22 @@ import {
   GridRowModel,
   GridRowsProp,
 } from '@mui/x-data-grid';
-import { AlertContext, AlertType } from '../../provider/AlertProvider';
-import { Button, Chip, IconButton } from '@mui/material';
-import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Delete } from '@mui/icons-material';
-import { useDialog, DialogPreset } from '../../provider/DialogProvider';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import {
+  ComponentCommonSynonyms,
+  ComponentCommonSynonymsInput,
+} from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useAuth } from '../../../hooks/context-hooks';
+import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import { AlertContext, AlertType } from '../../provider/AlertProvider';
+import { AuthRole } from '../../provider/AuthProvider';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import './TagTableView.scss';
 
 interface TagRow {
   id: string;

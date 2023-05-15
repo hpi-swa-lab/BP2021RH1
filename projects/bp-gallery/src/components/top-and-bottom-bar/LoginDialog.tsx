@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { FormEvent, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../provider/AuthProvider';
+import { useAuth } from '../../hooks/context-hooks';
 import './LoginDialog.scss';
 
 const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {

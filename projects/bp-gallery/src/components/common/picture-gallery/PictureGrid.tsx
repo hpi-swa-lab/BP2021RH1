@@ -6,15 +6,16 @@ import { useTranslation } from 'react-i18next';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { useAuth } from '../../../hooks/context-hooks';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { AuthRole } from '../../provider/AuthProvider';
 import BulkEditView from '../../views/bulk-edit/BulkEditView';
 import PictureView from '../../views/picture/PictureView';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
-import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 import './PictureGrid.scss';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
+import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];

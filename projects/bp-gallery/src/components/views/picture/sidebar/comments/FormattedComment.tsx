@@ -18,14 +18,15 @@ import {
 } from '../../../../../graphql/APIConnector';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import CollapsibleContainer from '../../../../common/CollapsibleContainer';
-import TextEditor from '../../../../common/editors/TextEditor';
 import RichText from '../../../../common/RichText';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import TextEditor from '../../../../common/editors/TextEditor';
+import { AuthRole } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { getIsLong } from './../../../../../helpers/get-linebreaks';
 import CommentVerification from './CommentVerification';
 import './FormattedComment.scss';
 import NewCommentForm from './NewCommentForm';
+import { useAuth } from '../../../../../hooks/context-hooks';
 
 interface CommentAction {
   text: string;

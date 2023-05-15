@@ -1,14 +1,15 @@
-import { Help, Add } from '@mui/icons-material';
+import { Add, Help } from '@mui/icons-material';
 import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { TagType } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { AuthRole } from '../../../../provider/AuthProvider';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 import { SearchType } from '../../../search/helpers/search-filters';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import { useAuth } from '../../../../../hooks/context-hooks';
 
 interface TagFields {
   name: string;

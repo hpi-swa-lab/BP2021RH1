@@ -1,7 +1,8 @@
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router';
-import { AuthRole, useAuth } from '../provider/AuthProvider';
+import { useAuth } from '../../hooks/context-hooks';
+import { AuthRole } from '../provider/AuthProvider';
 import { FALLBACK_PATH } from './../routes';
 
 interface ProtectedRouteProps {

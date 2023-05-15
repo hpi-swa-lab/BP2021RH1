@@ -1,9 +1,9 @@
 import { Cancel, OpenWith } from '@mui/icons-material';
 import { CSSProperties, useContext, useMemo } from 'react';
+import { useAuth, useFaceTagging } from '../../../../hooks/context-hooks';
 import '../../../../shared/style.scss';
-import { AuthRole, useAuth } from '../../../provider/AuthProvider';
+import { AuthRole } from '../../../provider/AuthProvider';
 import { PictureViewContext } from '../PictureView';
-import { useFaceTagging } from '../../../../hooks/context-hooks';
 import { useImageRect } from './helpers/image-rect';
 
 const triangleHeight = 10;

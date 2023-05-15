@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client';
 import {
   createContext,
   PropsWithChildren,
@@ -6,11 +7,10 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
-import { useApolloClient } from '@apollo/client';
-import { AlertContext, AlertType } from './AlertProvider';
 import { useTranslation } from 'react-i18next';
+import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
 import { buildHttpLink } from '../../helpers/app-helpers';
+import { AlertContext, AlertType } from './AlertProvider';
 
 export enum AuthRole {
   PUBLIC,
@@ -47,11 +47,6 @@ export const AuthContext = createContext<AuthFields>({
   logout: () => {},
   loading: false,
 });
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
 
 const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);

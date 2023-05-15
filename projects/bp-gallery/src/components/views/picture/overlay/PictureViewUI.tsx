@@ -1,7 +1,8 @@
 import { PresentToAll } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { AuthRole, useAuth } from '../../../provider/AuthProvider';
+import { useAuth } from '../../../../hooks/context-hooks';
+import { AuthRole } from '../../../provider/AuthProvider';
 import PictureNavigationButtons from './PictureNavigationButtons';
 import { PictureToolbar } from './PictureToolbar';
 

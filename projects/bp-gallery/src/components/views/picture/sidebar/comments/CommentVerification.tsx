@@ -6,8 +6,9 @@ import {
   useAcceptCommentMutation,
   useDeclineCommentMutation,
 } from '../../../../../graphql/APIConnector';
+import { useAuth } from '../../../../../hooks/context-hooks';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { AuthRole } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import './CommentVerification.scss';
 

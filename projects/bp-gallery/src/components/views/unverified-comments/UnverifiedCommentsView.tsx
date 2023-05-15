@@ -5,11 +5,12 @@ import { useGetUnverifiedCommentsQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { useAuth } from '../../../hooks/context-hooks';
 import { FlatComment, FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { AuthRole } from '../../provider/AuthProvider';
 import PictureView from '../picture/PictureView';
 import './UnverifiedCommentsView.scss';
 

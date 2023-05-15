@@ -12,8 +12,9 @@ import {
   useGetAllPersonTagsLazyQuery,
 } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
+import { useAuth, useFaceTagging } from '../../../../../hooks/context-hooks';
 import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { AuthRole } from '../../../../provider/AuthProvider';
 import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
 import ArchiveTagField from './ArchiveTagField';
 import DateRangeSelectionField from './DateRangeSelectionField';
@@ -22,7 +23,6 @@ import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
-import { useFaceTagging } from '../../../../../hooks/context-hooks';
 
 export type Field = Pick<
   FlatPicture,
@@ -131,7 +131,7 @@ const PictureInfo = ({
         onChange={people => {
           savePictureInfo({ person_tags: people });
           /*unfortunately I did not find a way to get the id of a person tag that is being deleted, so i had to go
-           through all facetags and all persontags, every time something about the persontag collection is changed, 
+           through all facetags and all persontags, every time something about the persontag collection is changed,
            to find out wether a facetag needs to be deleted */
           {
             faceTaggingContext?.tags.forEach(ftag => {

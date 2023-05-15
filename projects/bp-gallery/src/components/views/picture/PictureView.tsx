@@ -14,10 +14,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { replaceHistoryWithoutRouter } from '../../../helpers/history';
+import { useAuth } from '../../../hooks/context-hooks';
+import { getPictureLinkFromFlatPicture } from '../../../hooks/get-pictureLink.hook';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import { AuthRole } from '../../provider/AuthProvider';
 import { FaceTaggingProvider } from '../../provider/FaceTaggingProvider';
 import { FaceTags } from './face-tagging/FaceTags';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
@@ -26,7 +28,6 @@ import PictureViewUI from './overlay/PictureViewUI';
 import ZoomWrapper from './overlay/ZoomWrapper';
 import './PictureView.scss';
 import PictureSidebar from './sidebar/PictureSidebar';
-import { getPictureLinkFromFlatPicture } from '../../../hooks/get-pictureLink.hook';
 
 export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;

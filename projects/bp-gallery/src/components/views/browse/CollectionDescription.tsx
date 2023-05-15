@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
 import { getIsLong } from '../../../helpers/get-linebreaks';
+import { useAuth } from '../../../hooks/context-hooks';
 import CollapsibleContainer from '../../common/CollapsibleContainer';
-import TextEditor from '../../common/editors/TextEditor';
 import RichText from '../../common/RichText';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import TextEditor from '../../common/editors/TextEditor';
+import { AuthRole } from '../../provider/AuthProvider';
 import './CollectionDescription.scss';
 
 const CollectionDescription = ({

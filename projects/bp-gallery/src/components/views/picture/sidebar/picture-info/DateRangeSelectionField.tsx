@@ -1,18 +1,18 @@
-import { Popover } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { FlatTimeRangeTag } from '../../../../../types/additionalFlatTypes';
-import { formatTimeStamp } from '../../../../../helpers/format-timestamp';
-import { DateRangePicker, InputRange, Range } from 'react-date-range';
+import { Checkbox, Popover } from '@mui/material';
+import { de } from 'date-fns/locale';
 import dayjs from 'dayjs';
+import { cloneDeep } from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { DateRangePicker, InputRange, Range } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import { de } from 'date-fns/locale';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { useTranslation } from 'react-i18next';
+import { formatTimeStamp } from '../../../../../helpers/format-timestamp';
+import { useAuth } from '../../../../../hooks/context-hooks';
 import i18n from '../../../../../i18n';
-import { cloneDeep } from 'lodash';
+import { FlatTimeRangeTag } from '../../../../../types/additionalFlatTypes';
+import { AuthRole } from '../../../../provider/AuthProvider';
 import './DateRangeSelectionField.scss';
-import { Checkbox } from '@mui/material';
 
 const DateRangeSelectionField = ({
   timeRangeTag,

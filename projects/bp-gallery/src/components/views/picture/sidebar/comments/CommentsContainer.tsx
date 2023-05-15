@@ -3,12 +3,13 @@ import { Badge } from '@mui/material';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { AuthRole } from '../../../../provider/AuthProvider';
 import LikeButton from '../LikeButton';
-import './CommentsContainer.scss';
 import CommentVerification from './CommentVerification';
+import './CommentsContainer.scss';
 import FormattedComment from './FormattedComment';
 import NewCommentForm from './NewCommentForm';
+import { useAuth } from '../../../../../hooks/context-hooks';
 
 const CommentsContainer = memo(function CommentsContainer({
   pictureId,
