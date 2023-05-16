@@ -51,42 +51,34 @@ interface ExhibitionState {
   isPublished: boolean;
 }
 
-export const ExhibitionTitleContext = createContext<{
+export const ExhibitionTextContext = createContext<{
   getTitle: () => string;
   setTitle: (title: string) => void;
-}>({
-  getTitle: () => '',
-  setTitle: () => {},
-});
-
-export const ExhibitionIntroductionContext = createContext<{
   getIntroduction: () => string;
   setIntroduction: (introduction: string) => void;
-}>({
-  getIntroduction: () => '',
-  setIntroduction: () => {},
-});
-
-export const ExhibitionEpilogContext = createContext<{
+  getSectionTitle: (sectionId: string) => string | undefined;
+  setSectionTitle: (sectionId: string, title: string) => void;
+  getSectionText: (sectionId: string) => string | undefined;
+  setSectionText: (sectionId: string, text: string) => void;
   getEpilog: () => string;
   setEpilog: (epilog: string) => void;
-}>({
-  getEpilog: () => '',
-  setEpilog: () => {},
-});
-
-export const ExhibitionSourcesContext = createContext<{
   getSources: () => string[];
   setSources: (sources: string[]) => void;
-}>({
-  getSources: () => [],
-  setSources: () => {},
-});
-
-export const ExhibitionIsPublishedContext = createContext<{
   getIsPublished: () => boolean;
   setIsPublished: (isPublished: boolean) => void;
 }>({
+  getTitle: () => '',
+  setTitle: () => {},
+  getIntroduction: () => '',
+  setIntroduction: () => {},
+  getSectionTitle: () => '',
+  setSectionTitle: () => {},
+  getSectionText: () => '',
+  setSectionText: () => {},
+  getEpilog: () => '',
+  setEpilog: () => {},
+  getSources: () => [],
+  setSources: () => {},
   getIsPublished: () => false,
   setIsPublished: () => {},
 });
@@ -278,7 +270,10 @@ export const ExhibitionStateManager = ({
     isIdeaLot: boolean = false
   ) => {
     if (sectionId) return addToSection(dragElement, sectionId);
-    if (isTitle) return setTitlePicture(dragElement);
+    if (isTitle) {
+      if (idealot && titlePicture) setIdealot([...idealot, titlePicture]);
+      setTitlePicture(dragElement);
+    }
     if (isIdeaLot && idealot) return setIdealot([...idealot, dragElement]);
   };
 
@@ -312,6 +307,16 @@ export const ExhibitionStateManager = ({
 
   const getAllSections = () => {
     return sections;
+  };
+
+  const getSectionTitle = (sectionId: string) => {
+    const section = sections.find(section => section.id === sectionId);
+    return section?.title;
+  };
+
+  const getSectionText = (sectionId: string) => {
+    const section = sections.find(section => section.id === sectionId);
+    return section?.text;
   };
 
   const setSectionText = (sectionId: string, text: string) => {
@@ -380,23 +385,32 @@ export const ExhibitionStateManager = ({
       addDraggable={addDraggable}
       removeDraggable={removeDraggable}
     >
-      <ExhibitionTitleContext.Provider value={{ getTitle, setTitle }}>
-        <ExhibitionIntroductionContext.Provider value={{ getIntroduction, setIntroduction }}>
-          <ExhibitionEpilogContext.Provider value={{ getEpilog, setEpilog }}>
-            <ExhibitionSourcesContext.Provider value={{ getSources, setSources }}>
-              <ExhibitionTitlePictureContext.Provider value={getTitlePicture}>
-                <ExhibitionIdealotContext.Provider value={getIdealot}>
-                  <ExhibitionSectionsContext.Provider
-                    value={{ getSection, getAllSections, swapSectionDraggables, getDraggable }}
-                  >
-                    {children}
-                  </ExhibitionSectionsContext.Provider>
-                </ExhibitionIdealotContext.Provider>
-              </ExhibitionTitlePictureContext.Provider>
-            </ExhibitionSourcesContext.Provider>
-          </ExhibitionEpilogContext.Provider>
-        </ExhibitionIntroductionContext.Provider>
-      </ExhibitionTitleContext.Provider>
+      <ExhibitionTextContext.Provider
+        value={{
+          getTitle,
+          setTitle,
+          getIntroduction,
+          setIntroduction,
+          getSectionText,
+          setSectionText,
+          getSectionTitle,
+          setSectionTitle,
+          getEpilog,
+          setEpilog,
+          getSources,
+          setSources,
+        }}
+      >
+        <ExhibitionTitlePictureContext.Provider value={getTitlePicture}>
+          <ExhibitionIdealotContext.Provider value={getIdealot}>
+            <ExhibitionSectionsContext.Provider
+              value={{ getSection, getAllSections, swapSectionDraggables, getDraggable }}
+            >
+              {children}
+            </ExhibitionSectionsContext.Provider>
+          </ExhibitionIdealotContext.Provider>
+        </ExhibitionTitlePictureContext.Provider>
+      </ExhibitionTextContext.Provider>
     </DragNDropHandler>
   );
 };
@@ -423,7 +437,11 @@ const DragNDropHandler = ({
     if (!activeDraggable) return;
     removeDraggable(activeDraggable);
     if (over) {
-      addDraggable(activeDraggable, String(over.id));
+      if (over.id === 'titleDropzone') {
+        addDraggable(activeDraggable, undefined, true, false);
+      } else {
+        addDraggable(activeDraggable, String(over.id));
+      }
     } else {
       addDraggable(activeDraggable, undefined, false, true);
     }

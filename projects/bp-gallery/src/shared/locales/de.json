@@ -377,6 +377,7 @@
       },
       "section": {
         "text-placeholder": "Abschnittstext",
+        "title-placeholder": "Abschnittstitel",
         "sort": "Sortieren",
         "exit-sort": "Fertig sortiert"
       }

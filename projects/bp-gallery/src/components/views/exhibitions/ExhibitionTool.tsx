@@ -8,10 +8,10 @@ import TextEditor from '../../common/editors/TextEditor';
 import { useTranslation } from 'react-i18next';
 import {
   ExhibitionIdealotContext,
-  ExhibitionIntroductionContext,
   ExhibitionSectionsContext,
   ExhibitionStateManager,
-  ExhibitionTitleContext,
+  ExhibitionTextContext,
+  ExhibitionTitlePictureContext,
 } from './ExhibitonUtils';
 import {
   DndContext,
@@ -102,6 +102,19 @@ const DropZone = ({ id }: { id: string }) => {
   );
 };
 
+const TitleDropzone = () => {
+  const titlePicture = useContext(ExhibitionTitlePictureContext);
+  const { setNodeRef } = useDroppable({ id: 'titleDropzone' });
+  return (
+    <div
+      ref={setNodeRef}
+      className='h-[10rem] overflow-hidden w-[12rem] border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200'
+    >
+      {titlePicture()?.element}
+    </div>
+  );
+};
+
 const ExhibitionManipulator = () => {
   const sections = useContext(ExhibitionSectionsContext).getAllSections();
   const scroll = useRef(0);
@@ -133,18 +146,21 @@ const ExhibitionManipulator = () => {
 
 const Introduction = () => {
   const { t } = useTranslation();
-  const { getTitle, setTitle } = useContext(ExhibitionTitleContext);
-  const { getIntroduction, setIntroduction } = useContext(ExhibitionIntroductionContext);
+  const { getTitle, setTitle, getIntroduction, setIntroduction } =
+    useContext(ExhibitionTextContext);
 
   const extraOptions = {
+    height: 300,
+    allowReziseX: false,
+    allowReziseY: false,
     preset: undefined,
-    placeholder: t('exhibition.manipulator.intro-text-placeholder'),
+    placeholder: t('exhibition.manipulator.intro.text-placeholder'),
     statusbar: false,
     tabIndex: 0,
     className: 'z-0',
   };
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col flex-1 gap-2'>
       <TextField
         className='flex-1'
         variant='standard'
@@ -152,11 +168,16 @@ const Introduction = () => {
         value={getTitle()}
         onChange={event => setTitle(event.target.value)}
       />
-      <TextEditor
-        value={getIntroduction()}
-        extraOptions={extraOptions}
-        onBlur={value => setIntroduction(value)}
-      />
+      <div className='flex gap-2'>
+        <div className='flex-1'>
+          <TextEditor
+            value={getIntroduction()}
+            extraOptions={extraOptions}
+            onBlur={value => setIntroduction(value)}
+          />
+        </div>
+        <TitleDropzone />
+      </div>
     </div>
   );
 };
@@ -165,6 +186,8 @@ const Section = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(true);
   const section = useContext(ExhibitionSectionsContext).getSection(id);
+  const { getSectionTitle, setSectionTitle, getSectionText, setSectionText } =
+    useContext(ExhibitionTextContext);
 
   const extraOptions = {
     preset: undefined,
@@ -182,7 +205,8 @@ const Section = ({ id }: { id: string }) => {
             className='flex-1'
             placeholder={t('exhibition.manipulator.section.title-placeholder')}
             variant='standard'
-            value={section?.title}
+            value={getSectionTitle(id)}
+            onChange={event => setSectionTitle(id, event.target.value)}
           />
           <IconButton onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <ExpandLess /> : <ExpandMore />}
@@ -190,7 +214,11 @@ const Section = ({ id }: { id: string }) => {
         </div>
         {isOpen && section && (
           <>
-            <TextEditor value={section.text} extraOptions={extraOptions} />
+            <TextEditor
+              value={getSectionText(id) ?? ''}
+              extraOptions={extraOptions}
+              onBlur={text => setSectionText(id, text)}
+            />
             <DropZone key={section.id} id={section.id} />
           </>
         )}
