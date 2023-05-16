@@ -380,6 +380,11 @@
         "title-placeholder": "Abschnittstitel",
         "sort": "Sortieren",
         "exit-sort": "Fertig sortiert"
+      },
+      "epilog": {
+        "title": "Epilog",
+        "text-placeholder": "Epilogtext",
+        "sources": "Quellen"
       }
     }
   }
