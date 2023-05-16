@@ -9,6 +9,7 @@ export default {
           attributes {
             x
             y
+            tag_direction
             person_tag {
               data {
                 id
