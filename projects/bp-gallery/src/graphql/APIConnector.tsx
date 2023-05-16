@@ -19,8 +19,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -2143,7 +2146,9 @@ export type GetAllArchiveTagsQuery = {
             id?: string | null;
             attributes?: {
               media: {
-                data?: { attributes?: { url: string; updatedAt?: any | null } | null } | null;
+                data?: {
+                  attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
+                } | null;
               };
             } | null;
           } | null;
@@ -2252,6 +2257,7 @@ export type GetArchiveQuery = {
               height?: number | null;
               formats?: any | null;
               updatedAt?: any | null;
+              provider: string;
             } | null;
           } | null;
         } | null;
@@ -2268,6 +2274,7 @@ export type GetArchiveQuery = {
                     formats?: any | null;
                     url: string;
                     updatedAt?: any | null;
+                    provider: string;
                   } | null;
                 } | null;
               };
@@ -2365,7 +2372,7 @@ export type GetDailyPictureInfoQuery = {
         media: {
           data?: {
             id?: string | null;
-            attributes?: { url: string; updatedAt?: any | null } | null;
+            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
           } | null;
         };
         archive_tag?: {
@@ -2389,42 +2396,42 @@ export type GetDecadePreviewThumbnailsQuery = {
   decade40s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade50s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade60s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade70s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade80s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade90s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
@@ -2467,14 +2474,18 @@ export type GetKeywordTagsWithThumbnailQuery = {
         thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
             } | null;
           }>;
         } | null;
         verified_thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
             } | null;
           }>;
         } | null;
@@ -2525,14 +2536,18 @@ export type GetLocationTagsWithThumbnailQuery = {
         thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
             } | null;
           }>;
         } | null;
         verified_thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
             } | null;
           }>;
         } | null;
@@ -2608,7 +2623,7 @@ export type GetMultiplePictureInfoQuery = {
         media: {
           data?: {
             id?: string | null;
-            attributes?: { url: string; updatedAt?: any | null } | null;
+            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
           } | null;
         };
         comments?: {
@@ -2658,14 +2673,22 @@ export type GetPersonTagsWithThumbnailQuery = {
         thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: {
+                  attributes?: { formats?: any | null; url: string; provider: string } | null;
+                } | null;
+              };
             } | null;
           }>;
         } | null;
         verified_thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: {
+                  attributes?: { formats?: any | null; url: string; provider: string } | null;
+                } | null;
+              };
             } | null;
           }>;
         } | null;
@@ -2780,6 +2803,7 @@ export type GetPictureInfoQuery = {
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
+              provider: string;
             } | null;
           } | null;
         };
@@ -2843,6 +2867,7 @@ export type GetPicturesQuery = {
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
+              provider: string;
             } | null;
           } | null;
         };
@@ -2876,6 +2901,7 @@ export type GetPicturesByAllSearchQuery = {
             formats?: any | null;
             url: string;
             updatedAt?: any | null;
+            provider: string;
           } | null;
         } | null;
       };
@@ -2960,6 +2986,7 @@ export type GetUnverifiedCommentsQuery = {
                     height?: number | null;
                     formats?: any | null;
                     updatedAt?: any | null;
+                    provider: string;
                   } | null;
                 } | null;
               };
@@ -3403,6 +3430,7 @@ export const GetAllArchiveTagsDocument = gql`
                     attributes {
                       url
                       updatedAt
+                      provider
                     }
                   }
                 }
@@ -3821,6 +3849,7 @@ export const GetArchiveDocument = gql`
                 height
                 formats
                 updatedAt
+                provider
               }
             }
           }
@@ -3837,6 +3866,7 @@ export const GetArchiveDocument = gql`
                       formats
                       url
                       updatedAt
+                      provider
                     }
                   }
                 }
@@ -4110,6 +4140,7 @@ export const GetDailyPictureInfoDocument = gql`
               attributes {
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -4198,6 +4229,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4216,6 +4248,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4234,6 +4267,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4252,6 +4286,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4270,6 +4305,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4288,6 +4324,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4442,6 +4479,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -4458,6 +4496,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -4634,6 +4673,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -4650,6 +4690,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -4823,6 +4864,7 @@ export const GetMultiplePictureInfoDocument = gql`
               attributes {
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -4995,6 +5037,8 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      url
+                      provider
                     }
                   }
                 }
@@ -5011,6 +5055,8 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      url
+                      provider
                     }
                   }
                 }
@@ -5278,6 +5324,7 @@ export const GetPictureInfoDocument = gql`
                 formats
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -5453,6 +5500,7 @@ export const GetPicturesDocument = gql`
                 formats
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -5537,6 +5585,7 @@ export const GetPicturesByAllSearchDocument = gql`
               formats
               url
               updatedAt
+              provider
             }
           }
         }
@@ -5897,6 +5946,7 @@ export const GetUnverifiedCommentsDocument = gql`
                       height
                       formats
                       updatedAt
+                      provider
                     }
                   }
                 }
