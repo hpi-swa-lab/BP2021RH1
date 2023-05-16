@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 import './PictureOverview.scss';
 import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import {
@@ -34,27 +34,33 @@ const TagOverview = ({
   archiveId,
 }: TagOverviewProps) => {
   const { t } = useTranslation();
+  const ref = useRef<any>();
 
   const basePath = archiveId
     ? '/archives/' + archiveId + '/show-more/' + type + '/'
     : '/show-more/' + type + '/';
 
-  const calculateMaxCategoriesPerRow = () => {
-    const tempRowLength = Math.max(1, Math.floor(Math.min(window.innerWidth - 64, 1200) / 300));
-    if (Math.min(window.innerWidth - 64, 1200) >= tempRowLength * 300 + (tempRowLength - 1) * 8) {
+  const calculateMaxCategoriesPerRow = useCallback((width: number) => {
+    const tempRowLength = Math.max(1, Math.floor(Math.min(width, 1200) / 300));
+    if (Math.min(width, 1200) >= tempRowLength * 300 + (tempRowLength - 1) * 8) {
       return tempRowLength;
     }
     return Math.max(1, tempRowLength - 1);
-  };
+  }, []);
 
   const [rowLength, setRowLength] = useState(() => {
-    const initialState = calculateMaxCategoriesPerRow();
+    const initialState = calculateMaxCategoriesPerRow((ref.current?.clientWidth ?? 0) as number);
     return initialState;
   });
 
   const onResize = useCallback(() => {
-    setRowLength(calculateMaxCategoriesPerRow());
-  }, []);
+    setRowLength(calculateMaxCategoriesPerRow((ref.current?.clientWidth ?? 0) as number));
+  }, [calculateMaxCategoriesPerRow]);
+
+  //ensure correct set up of
+  useEffect(() => {
+    setRowLength(calculateMaxCategoriesPerRow((ref.current?.clientWidth ?? 0) as number));
+  }, [ref.current?.clientWidth, calculateMaxCategoriesPerRow]);
 
   // Set up eventListener on mount and cleanup on unmount
   useEffect(() => {
@@ -82,7 +88,7 @@ const TagOverview = ({
     return <div></div>;
   } else {
     return (
-      <div className='overview-container'>
+      <div className='overview-container' ref={ref}>
         {title && <h2 className='overview-title'>{title}</h2>}
         <div className='overview-collection-grid-container'>
           {type !== TagType.TIME_RANGE ? (
