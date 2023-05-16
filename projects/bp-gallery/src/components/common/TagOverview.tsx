@@ -41,8 +41,8 @@ const TagOverview = ({
     : '/show-more/' + type + '/';
 
   const calculateMaxCategoriesPerRow = useCallback((width: number) => {
-    const tempRowLength = Math.max(1, Math.floor(Math.min(width, 1200) / 300));
-    if (Math.min(width, 1200) >= tempRowLength * 300 + (tempRowLength - 1) * 8) {
+    const tempRowLength = Math.max(1, Math.floor(Math.min(width, 1200) / 260));
+    if (Math.min(width, 1200) >= tempRowLength * 260 + (tempRowLength - 1) * 8) {
       return tempRowLength;
     }
     return Math.max(1, tempRowLength - 1);
