@@ -49,7 +49,7 @@ const PictureGrid = ({
   const { t } = useTranslation();
 
   const [maxRowLength, setMaxRowLength] = useState<number>(
-    calculateMaxPicturesPerRow((ref.current?.clientWidth ?? 0) as number)
+    calculateMaxPicturesPerRow((ref.current?.clientWidth ?? window.innerWidth) as number)
   );
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
@@ -88,7 +88,9 @@ const PictureGrid = ({
   const deletePicture = useDeletePicture();
 
   const onResize = useCallback(() => {
-    const newMaxRowLength = calculateMaxPicturesPerRow((ref.current?.clientWidth ?? 0) as number);
+    const newMaxRowLength = calculateMaxPicturesPerRow(
+      (ref.current?.clientWidth ?? window.innerWidth) as number
+    );
     if (newMaxRowLength !== maxRowLength) {
       setMaxRowLength(newMaxRowLength);
     }
@@ -96,7 +98,9 @@ const PictureGrid = ({
 
   //ensure correct set up of
   useEffect(() => {
-    setMaxRowLength(calculateMaxPicturesPerRow((ref.current?.clientWidth ?? 0) as number));
+    setMaxRowLength(
+      calculateMaxPicturesPerRow((ref.current?.clientWidth ?? window.innerWidth) as number)
+    );
   }, [ref.current?.clientWidth, calculateMaxPicturesPerRow]);
 
   // Set up eventListener on mount and cleanup on unmount
