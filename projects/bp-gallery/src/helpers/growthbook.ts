@@ -15,6 +15,7 @@ export type AppFeatures = {
   paypal_mainpage: {
     clientId: string;
     donationText: string;
+    purposeText: string;
   };
   geopictures_collection_id: string;
 };
