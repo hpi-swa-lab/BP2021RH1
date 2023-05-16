@@ -102,4 +102,36 @@ describe('face tagging', () => {
     cy.contains('.MuiChip-root', 'Personentest').should('not.exist');
     cy.contains('.facetag', 'Personentest').should('not.exist');
   });
+
+  it('change face tag direction', () => {
+    cy.contains('Personen bearbeiten').should('not.exist');
+    cy.contains('Personen markieren').click();
+    cy.contains('TestPerson').click();
+    cy.get('.picture').click();
+
+    // the force:true options are unfortunately necessary because there are other elements
+    //overlapping with the picture causing the tests to fail
+    //don't ask me why click('left') has worked before, it didn't work in this section of the test
+
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="LabelIcon"]').click();
+    cy.get('.picture').click('top', { force: true });
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="tag direction: up"]');
+
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="LabelIcon"]').click();
+    cy.get('.picture').click('right', { force: true });
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="tag direction: right"]');
+
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="LabelIcon"]').click();
+    cy.get('.picture').click('bottom', { force: true });
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="tag direction: down"]');
+
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="LabelIcon"]').click();
+    cy.get('.picture').click('left', { force: true });
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="tag direction: left"]');
+
+    cy.contains('Personen bearbeiten').click();
+    cy.contains('.MuiChip-root', 'TestPerson').find('[data-testid="CancelIcon"]').click();
+    cy.contains('.MuiChip-root', 'TestPerson').should('not.exist');
+    cy.contains('.facetag', 'TestPerson').should('not.exist');
+  });
 });

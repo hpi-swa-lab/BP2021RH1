@@ -11,6 +11,8 @@ interface ArchiveInputFieldProps {
   helperText?: string;
   regEx?: string;
   type?: string;
+  errorFn?: (value: string) => Promise<boolean>;
+  errorText?: string;
 }
 
 const ArchiveInputField = ({
@@ -23,13 +25,24 @@ const ArchiveInputField = ({
   helperText,
   regEx,
   type = 'text',
+  errorFn,
+  errorText,
 }: ArchiveInputFieldProps) => {
   const [value, setValue] = useState(defaultValue);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     setValue(defaultValue);
   }, [defaultValue]);
 
+  useEffect(() => {
+    const fetchError = async (value: string) => {
+      if (!errorFn) return false;
+      const isError = await errorFn(value);
+      setError(isError);
+    };
+    fetchError(value).catch();
+  });
   return (
     <div className='archive-form-div'>
       {label && (
@@ -44,7 +57,8 @@ const ArchiveInputField = ({
         onChange={event => setValue(event.target.value)}
         onBlur={() => onBlur(value)}
         value={value}
-        helperText={helperText}
+        helperText={error && errorText ? errorText : helperText}
+        error={error}
       />
     </div>
   );

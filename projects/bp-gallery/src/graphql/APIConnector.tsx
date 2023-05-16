@@ -11,7 +11,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 
-const defaultOptions = { errorPolicy: 'all' as ErrorPolicy };
+const defaultOptions = { errorPolicy: 'all' as ErrorPolicy } as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -33,6 +33,9 @@ export type ArchiveTag = {
   logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  paypalClient?: Maybe<Scalars['String']>;
+  paypalDonationText?: Maybe<Scalars['String']>;
+  paypalPurpose?: Maybe<Scalars['String']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
@@ -75,6 +78,9 @@ export type ArchiveTagFiltersInput = {
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ArchiveTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
+  paypalClient?: InputMaybe<StringFilterInput>;
+  paypalDonationText?: InputMaybe<StringFilterInput>;
+  paypalPurpose?: InputMaybe<StringFilterInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
@@ -86,6 +92,9 @@ export type ArchiveTagInput = {
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  paypalClient?: InputMaybe<Scalars['String']>;
+  paypalDonationText?: InputMaybe<Scalars['String']>;
+  paypalPurpose?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
@@ -395,6 +404,7 @@ export type FaceTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   person_tag?: Maybe<PersonTagEntityResponse>;
   picture?: Maybe<PictureEntityResponse>;
+  tag_direction?: Maybe<Scalars['Int']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   x?: Maybe<Scalars['Float']>;
   y?: Maybe<Scalars['Float']>;
@@ -422,6 +432,7 @@ export type FaceTagFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<FaceTagFiltersInput>>>;
   person_tag?: InputMaybe<PersonTagFiltersInput>;
   picture?: InputMaybe<PictureFiltersInput>;
+  tag_direction?: InputMaybe<IntFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   x?: InputMaybe<FloatFilterInput>;
   y?: InputMaybe<FloatFilterInput>;
@@ -430,6 +441,7 @@ export type FaceTagFiltersInput = {
 export type FaceTagInput = {
   person_tag?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
+  tag_direction?: InputMaybe<Scalars['Int']>;
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
 };
@@ -2099,159 +2111,95 @@ export type GetAllArchiveTagsQueryVariables = Exact<{
 }>;
 
 export type GetAllArchiveTagsQuery = {
-  archiveTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                shortDescription?: string | null | undefined;
-                showcasePicture?:
-                  | {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  media: {
-                                    data?:
-                                      | {
-                                          attributes?:
-                                            | {
-                                                url: string;
-                                                updatedAt?: any | null | undefined;
-                                                provider: string;
-                                              }
-                                            | null
-                                            | undefined;
-                                        }
-                                      | null
-                                      | undefined;
-                                  };
-                                }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  archiveTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        shortDescription?: string | null;
+        showcasePicture?: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              media: {
+                data?: {
+                  attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
+                } | null;
+              };
+            } | null;
+          } | null;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetAllCollectionsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllCollectionsQuery = {
-  collections?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                parent_collections?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?: { name: string } | null | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  collections?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        parent_collections?: {
+          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetAllKeywordTagsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllKeywordTagsQuery = {
-  keywordTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                visible?: boolean | null | undefined;
-                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  keywordTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        visible?: boolean | null;
+        synonyms?: Array<{ name: string } | null> | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllLocationTagsQuery = {
-  locationTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                visible?: boolean | null | undefined;
-                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  locationTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        visible?: boolean | null;
+        synonyms?: Array<{ name: string } | null> | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetAllPersonTagsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllPersonTagsQuery = {
-  personTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                synonyms?: Array<{ name: string } | null | undefined> | null | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  personTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: { name: string; synonyms?: Array<{ name: string } | null> | null } | null;
+    }>;
+  } | null;
 };
 
 export type GetAllPicturesByArchiveQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllPicturesByArchiveQuery = {
-  archiveTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | { pictures?: { data: Array<{ id?: string | null | undefined }> } | null | undefined }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  archiveTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+    }>;
+  } | null;
 };
 
 export type GetArchiveQueryVariables = Exact<{
@@ -2259,93 +2207,57 @@ export type GetArchiveQueryVariables = Exact<{
 }>;
 
 export type GetArchiveQuery = {
-  archiveTag?:
-    | {
-        data?:
-          | {
-              id?: string | null | undefined;
-              attributes?:
-                | {
-                    name: string;
-                    shortDescription?: string | null | undefined;
-                    longDescription?: string | null | undefined;
-                    logo?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?:
-                                  | {
-                                      width?: number | null | undefined;
-                                      height?: number | null | undefined;
-                                      formats?: any | null | undefined;
-                                      updatedAt?: any | null | undefined;
-                                      provider: string;
-                                    }
-                                  | null
-                                  | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                    showcasePicture?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?:
-                                  | {
-                                      media: {
-                                        data?:
-                                          | {
-                                              id?: string | null | undefined;
-                                              attributes?:
-                                                | {
-                                                    width?: number | null | undefined;
-                                                    height?: number | null | undefined;
-                                                    formats?: any | null | undefined;
-                                                    url: string;
-                                                    updatedAt?: any | null | undefined;
-                                                    provider: string;
-                                                  }
-                                                | null
-                                                | undefined;
-                                            }
-                                          | null
-                                          | undefined;
-                                      };
-                                    }
-                                  | null
-                                  | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                    links?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { title?: string | null | undefined; url: string }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  archiveTag?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        name: string;
+        shortDescription?: string | null;
+        longDescription?: string | null;
+        paypalClient?: string | null;
+        paypalDonationText?: string | null;
+        paypalPurpose?: string | null;
+        logo?: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              width?: number | null;
+              height?: number | null;
+              formats?: any | null;
+              updatedAt?: any | null;
+              provider: string;
+            } | null;
+          } | null;
+        } | null;
+        showcasePicture?: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              media: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    width?: number | null;
+                    height?: number | null;
+                    formats?: any | null;
+                    url: string;
+                    updatedAt?: any | null;
+                    provider: string;
+                  } | null;
+                } | null;
+              };
+            } | null;
+          } | null;
+        } | null;
+        links?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { title?: string | null; url: string } | null;
+          }>;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
 };
 
 export type GetCollectionInfoByIdQueryVariables = Exact<{
@@ -2353,56 +2265,29 @@ export type GetCollectionInfoByIdQueryVariables = Exact<{
 }>;
 
 export type GetCollectionInfoByIdQuery = {
-  collection?:
-    | {
-        data?:
-          | {
-              id?: string | null | undefined;
-              attributes?:
-                | {
-                    name: string;
-                    description?: string | null | undefined;
-                    child_collections?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  name: string;
-                                  publishedAt?: any | null | undefined;
-                                  pictures?:
-                                    | { data: Array<{ id?: string | null | undefined }> }
-                                    | null
-                                    | undefined;
-                                  child_collections?:
-                                    | { data: Array<{ id?: string | null | undefined }> }
-                                    | null
-                                    | undefined;
-                                  parent_collections?:
-                                    | {
-                                        data: Array<{
-                                          id?: string | null | undefined;
-                                          attributes?: { name: string } | null | undefined;
-                                        }>;
-                                      }
-                                    | null
-                                    | undefined;
-                                }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  collection?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        name: string;
+        description?: string | null;
+        child_collections?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              name: string;
+              publishedAt?: any | null;
+              pictures?: { data: Array<{ id?: string | null }> } | null;
+              child_collections?: { data: Array<{ id?: string | null }> } | null;
+              parent_collections?: {
+                data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
+              } | null;
+            } | null;
+          }>;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
 };
 
 export type GetCollectionInfoByNameQueryVariables = Exact<{
@@ -2411,37 +2296,25 @@ export type GetCollectionInfoByNameQueryVariables = Exact<{
 }>;
 
 export type GetCollectionInfoByNameQuery = {
-  collections?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                description?: string | null | undefined;
-                child_collections?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | {
-                              name: string;
-                              thumbnail?: string | null | undefined;
-                              publishedAt?: any | null | undefined;
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  collections?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        description?: string | null;
+        child_collections?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              name: string;
+              thumbnail?: string | null;
+              publishedAt?: any | null;
+            } | null;
+          }>;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetDailyPictureInfoQueryVariables = Exact<{
@@ -2449,83 +2322,33 @@ export type GetDailyPictureInfoQueryVariables = Exact<{
 }>;
 
 export type GetDailyPictureInfoQuery = {
-  picture?:
-    | {
-        data?:
-          | {
-              id?: string | null | undefined;
-              attributes?:
-                | {
-                    likes?: number | null | undefined;
-                    descriptions?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?: { text: string } | null | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    time_range_tag?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?:
-                                  | {
-                                      start: any;
-                                      end: any;
-                                      isEstimate?: boolean | null | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                    comments?:
-                      | { data: Array<{ id?: string | null | undefined }> }
-                      | null
-                      | undefined;
-                    media: {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  url: string;
-                                  updatedAt?: any | null | undefined;
-                                  provider: string;
-                                }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    };
-                    archive_tag?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?: { name: string } | null | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  picture?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        likes?: number | null;
+        descriptions?: {
+          data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
+        } | null;
+        time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
+        comments?: { data: Array<{ id?: string | null }> } | null;
+        media: {
+          data?: {
+            id?: string | null;
+            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
+          } | null;
+        };
+        archive_tag?: {
+          data?: { id?: string | null; attributes?: { name: string } | null } | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
 };
 
 export type GetDecadePreviewThumbnailsQueryVariables = Exact<{
@@ -2538,144 +2361,48 @@ export type GetDecadePreviewThumbnailsQueryVariables = Exact<{
 }>;
 
 export type GetDecadePreviewThumbnailsQuery = {
-  decade40s?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media: {
-                  data?:
-                    | {
-                        attributes?:
-                          | { formats?: any | null | undefined; provider: string }
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined;
-                };
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
-  decade50s?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media: {
-                  data?:
-                    | {
-                        attributes?:
-                          | { formats?: any | null | undefined; provider: string }
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined;
-                };
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
-  decade60s?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media: {
-                  data?:
-                    | {
-                        attributes?:
-                          | { formats?: any | null | undefined; provider: string }
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined;
-                };
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
-  decade70s?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media: {
-                  data?:
-                    | {
-                        attributes?:
-                          | { formats?: any | null | undefined; provider: string }
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined;
-                };
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
-  decade80s?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media: {
-                  data?:
-                    | {
-                        attributes?:
-                          | { formats?: any | null | undefined; provider: string }
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined;
-                };
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
-  decade90s?:
-    | {
-        data: Array<{
-          attributes?:
-            | {
-                media: {
-                  data?:
-                    | {
-                        attributes?:
-                          | { formats?: any | null | undefined; provider: string }
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined;
-                };
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  decade40s?: {
+    data: Array<{
+      attributes?: {
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+      } | null;
+    }>;
+  } | null;
+  decade50s?: {
+    data: Array<{
+      attributes?: {
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+      } | null;
+    }>;
+  } | null;
+  decade60s?: {
+    data: Array<{
+      attributes?: {
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+      } | null;
+    }>;
+  } | null;
+  decade70s?: {
+    data: Array<{
+      attributes?: {
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+      } | null;
+    }>;
+  } | null;
+  decade80s?: {
+    data: Array<{
+      attributes?: {
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+      } | null;
+    }>;
+  } | null;
+  decade90s?: {
+    data: Array<{
+      attributes?: {
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetFaceTagsQueryVariables = Exact<{
@@ -2683,33 +2410,19 @@ export type GetFaceTagsQueryVariables = Exact<{
 }>;
 
 export type GetFaceTagsQuery = {
-  faceTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                x?: number | null | undefined;
-                y?: number | null | undefined;
-                person_tag?:
-                  | {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
-                          }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  faceTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        x?: number | null;
+        y?: number | null;
+        tag_direction?: number | null;
+        person_tag?: {
+          data?: { id?: string | null; attributes?: { name: string } | null } | null;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
@@ -2721,66 +2434,32 @@ export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
 }>;
 
 export type GetKeywordTagsWithThumbnailQuery = {
-  keywordTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                thumbnail?:
-                  | {
-                      data: Array<{
-                        attributes?:
-                          | {
-                              media: {
-                                data?:
-                                  | {
-                                      attributes?:
-                                        | { formats?: any | null | undefined; provider: string }
-                                        | null
-                                        | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              };
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                verified_thumbnail?:
-                  | {
-                      data: Array<{
-                        attributes?:
-                          | {
-                              media: {
-                                data?:
-                                  | {
-                                      attributes?:
-                                        | { formats?: any | null | undefined; provider: string }
-                                        | null
-                                        | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              };
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  keywordTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        thumbnail?: {
+          data: Array<{
+            attributes?: {
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
+            } | null;
+          }>;
+        } | null;
+        verified_thumbnail?: {
+          data: Array<{
+            attributes?: {
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
+            } | null;
+          }>;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
@@ -2792,66 +2471,32 @@ export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
 }>;
 
 export type GetLocationTagsWithThumbnailQuery = {
-  locationTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                thumbnail?:
-                  | {
-                      data: Array<{
-                        attributes?:
-                          | {
-                              media: {
-                                data?:
-                                  | {
-                                      attributes?:
-                                        | { formats?: any | null | undefined; provider: string }
-                                        | null
-                                        | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              };
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                verified_thumbnail?:
-                  | {
-                      data: Array<{
-                        attributes?:
-                          | {
-                              media: {
-                                data?:
-                                  | {
-                                      attributes?:
-                                        | { formats?: any | null | undefined; provider: string }
-                                        | null
-                                        | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              };
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  locationTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        thumbnail?: {
+          data: Array<{
+            attributes?: {
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
+            } | null;
+          }>;
+        } | null;
+        verified_thumbnail?: {
+          data: Array<{
+            attributes?: {
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
+            } | null;
+          }>;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetMultiplePictureInfoQueryVariables = Exact<{
@@ -2859,190 +2504,91 @@ export type GetMultiplePictureInfoQueryVariables = Exact<{
 }>;
 
 export type GetMultiplePictureInfoQuery = {
-  pictures?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                is_text?: boolean | null | undefined;
-                descriptions?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?: { text: string } | null | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                time_range_tag?:
-                  | {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { start: any; end: any; isEstimate?: boolean | null | undefined }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-                verified_time_range_tag?:
-                  | {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { start: any; end: any; isEstimate?: boolean | null | undefined }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-                keyword_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | { name: string; updatedAt?: any | null | undefined }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                verified_keyword_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | { name: string; updatedAt?: any | null | undefined }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                location_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | { name: string; updatedAt?: any | null | undefined }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                verified_location_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | { name: string; updatedAt?: any | null | undefined }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                person_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | { name: string; updatedAt?: any | null | undefined }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                verified_person_tags?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | { name: string; updatedAt?: any | null | undefined }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                collections?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?: { name: string } | null | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                media: {
-                  data?:
-                    | {
-                        id?: string | null | undefined;
-                        attributes?:
-                          | { url: string; updatedAt?: any | null | undefined; provider: string }
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined;
-                };
-                comments?:
-                  | {
-                      data: Array<{
-                        id?: string | null | undefined;
-                        attributes?:
-                          | {
-                              text: string;
-                              author?: string | null | undefined;
-                              date: any;
-                              publishedAt?: any | null | undefined;
-                              pinned?: boolean | null | undefined;
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                linked_pictures?:
-                  | { data: Array<{ id?: string | null | undefined }> }
-                  | null
-                  | undefined;
-                linked_texts?:
-                  | { data: Array<{ id?: string | null | undefined }> }
-                  | null
-                  | undefined;
-                archive_tag?:
-                  | {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
-                          }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  pictures?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        is_text?: boolean | null;
+        descriptions?: {
+          data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
+        } | null;
+        time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
+        verified_time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
+        keyword_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        verified_keyword_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        location_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        verified_location_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        person_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        verified_person_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        collections?: {
+          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
+        } | null;
+        media: {
+          data?: {
+            id?: string | null;
+            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
+          } | null;
+        };
+        comments?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              text: string;
+              author?: string | null;
+              date: any;
+              publishedAt?: any | null;
+              pinned?: boolean | null;
+            } | null;
+          }>;
+        } | null;
+        linked_pictures?: { data: Array<{ id?: string | null }> } | null;
+        linked_texts?: { data: Array<{ id?: string | null }> } | null;
+        archive_tag?: {
+          data?: { id?: string | null; attributes?: { name: string } | null } | null;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetPersonTagQueryVariables = Exact<{
@@ -3050,10 +2596,7 @@ export type GetPersonTagQueryVariables = Exact<{
 }>;
 
 export type GetPersonTagQuery = {
-  personTag?:
-    | { data?: { attributes?: { name: string } | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  personTag?: { data?: { attributes?: { name: string } | null } | null } | null;
 };
 
 export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
@@ -3065,74 +2608,36 @@ export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
 }>;
 
 export type GetPersonTagsWithThumbnailQuery = {
-  personTags?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                name: string;
-                thumbnail?:
-                  | {
-                      data: Array<{
-                        attributes?:
-                          | {
-                              media: {
-                                data?:
-                                  | {
-                                      attributes?:
-                                        | {
-                                            formats?: any | null | undefined;
-                                            url: string;
-                                            provider: string;
-                                          }
-                                        | null
-                                        | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              };
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-                verified_thumbnail?:
-                  | {
-                      data: Array<{
-                        attributes?:
-                          | {
-                              media: {
-                                data?:
-                                  | {
-                                      attributes?:
-                                        | {
-                                            formats?: any | null | undefined;
-                                            url: string;
-                                            provider: string;
-                                          }
-                                        | null
-                                        | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              };
-                            }
-                          | null
-                          | undefined;
-                      }>;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  personTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        thumbnail?: {
+          data: Array<{
+            attributes?: {
+              media: {
+                data?: {
+                  attributes?: { formats?: any | null; url: string; provider: string } | null;
+                } | null;
+              };
+            } | null;
+          }>;
+        } | null;
+        verified_thumbnail?: {
+          data: Array<{
+            attributes?: {
+              media: {
+                data?: {
+                  attributes?: { formats?: any | null; url: string; provider: string } | null;
+                } | null;
+              };
+            } | null;
+          }>;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetPictureGeoInfoQueryVariables = Exact<{
@@ -3140,22 +2645,16 @@ export type GetPictureGeoInfoQueryVariables = Exact<{
 }>;
 
 export type GetPictureGeoInfoQuery = {
-  pictureGeoInfos?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                latitude?: number | null | undefined;
-                longitude?: number | null | undefined;
-                radius?: number | null | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  pictureGeoInfos?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        latitude?: number | null;
+        longitude?: number | null;
+        radius?: number | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetPictureInfoQueryVariables = Exact<{
@@ -3163,231 +2662,102 @@ export type GetPictureInfoQueryVariables = Exact<{
 }>;
 
 export type GetPictureInfoQuery = {
-  picture?:
-    | {
-        data?:
-          | {
-              id?: string | null | undefined;
-              attributes?:
-                | {
-                    is_text?: boolean | null | undefined;
-                    likes?: number | null | undefined;
-                    descriptions?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?: { text: string } | null | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    time_range_tag?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?:
-                                  | {
-                                      start: any;
-                                      end: any;
-                                      isEstimate?: boolean | null | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                    verified_time_range_tag?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?:
-                                  | {
-                                      start: any;
-                                      end: any;
-                                      isEstimate?: boolean | null | undefined;
-                                    }
-                                  | null
-                                  | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                    keyword_tags?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { name: string; updatedAt?: any | null | undefined }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    verified_keyword_tags?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { name: string; updatedAt?: any | null | undefined }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    location_tags?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { name: string; updatedAt?: any | null | undefined }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    verified_location_tags?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { name: string; updatedAt?: any | null | undefined }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    person_tags?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { name: string; updatedAt?: any | null | undefined }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    verified_person_tags?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | { name: string; updatedAt?: any | null | undefined }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    collections?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?: { name: string } | null | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    comments?:
-                      | {
-                          data: Array<{
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  text: string;
-                                  author?: string | null | undefined;
-                                  date: any;
-                                  publishedAt?: any | null | undefined;
-                                  pinned?: boolean | null | undefined;
-                                  picture?:
-                                    | {
-                                        data?:
-                                          | { id?: string | null | undefined }
-                                          | null
-                                          | undefined;
-                                      }
-                                    | null
-                                    | undefined;
-                                  parentComment?:
-                                    | {
-                                        data?:
-                                          | { id?: string | null | undefined }
-                                          | null
-                                          | undefined;
-                                      }
-                                    | null
-                                    | undefined;
-                                  childComments?:
-                                    | { data: Array<{ id?: string | null | undefined }> }
-                                    | null
-                                    | undefined;
-                                }
-                              | null
-                              | undefined;
-                          }>;
-                        }
-                      | null
-                      | undefined;
-                    media: {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  width?: number | null | undefined;
-                                  height?: number | null | undefined;
-                                  formats?: any | null | undefined;
-                                  url: string;
-                                  updatedAt?: any | null | undefined;
-                                  provider: string;
-                                }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    };
-                    linked_pictures?:
-                      | { data: Array<{ id?: string | null | undefined }> }
-                      | null
-                      | undefined;
-                    linked_texts?:
-                      | { data: Array<{ id?: string | null | undefined }> }
-                      | null
-                      | undefined;
-                    archive_tag?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?: { name: string } | null | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  picture?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        is_text?: boolean | null;
+        likes?: number | null;
+        descriptions?: {
+          data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
+        } | null;
+        time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
+        verified_time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
+        keyword_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        verified_keyword_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        location_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        verified_location_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        person_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        verified_person_tags?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: { name: string; updatedAt?: any | null } | null;
+          }>;
+        } | null;
+        collections?: {
+          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
+        } | null;
+        comments?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              text: string;
+              author?: string | null;
+              date: any;
+              publishedAt?: any | null;
+              pinned?: boolean | null;
+              picture?: { data?: { id?: string | null } | null } | null;
+              parentComment?: { data?: { id?: string | null } | null } | null;
+              childComments?: { data: Array<{ id?: string | null }> } | null;
+            } | null;
+          }>;
+        } | null;
+        media: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              width?: number | null;
+              height?: number | null;
+              formats?: any | null;
+              url: string;
+              updatedAt?: any | null;
+              provider: string;
+            } | null;
+          } | null;
+        };
+        linked_pictures?: { data: Array<{ id?: string | null }> } | null;
+        linked_texts?: { data: Array<{ id?: string | null }> } | null;
+        archive_tag?: {
+          data?: { id?: string | null; attributes?: { name: string } | null } | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
 };
 
 export type GetPictureMediaInfoQueryVariables = Exact<{
@@ -3395,41 +2765,26 @@ export type GetPictureMediaInfoQueryVariables = Exact<{
 }>;
 
 export type GetPictureMediaInfoQuery = {
-  picture?:
-    | {
-        data?:
-          | {
-              id?: string | null | undefined;
-              attributes?:
-                | {
-                    media: {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  width?: number | null | undefined;
-                                  height?: number | null | undefined;
-                                  formats?: any | null | undefined;
-                                  url: string;
-                                  updatedAt?: any | null | undefined;
-                                  provider: string;
-                                }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    };
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  picture?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        media: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              width?: number | null;
+              height?: number | null;
+              formats?: any | null;
+              url: string;
+              updatedAt?: any | null;
+              provider: string;
+            } | null;
+          } | null;
+        };
+      } | null;
+    } | null;
+  } | null;
 };
 
 export type GetPicturesQueryVariables = Exact<{
@@ -3439,41 +2794,29 @@ export type GetPicturesQueryVariables = Exact<{
 }>;
 
 export type GetPicturesQuery = {
-  pictures?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                is_text?: boolean | null | undefined;
-                likes?: number | null | undefined;
-                comments?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
-                media: {
-                  data?:
-                    | {
-                        id?: string | null | undefined;
-                        attributes?:
-                          | {
-                              width?: number | null | undefined;
-                              height?: number | null | undefined;
-                              formats?: any | null | undefined;
-                              url: string;
-                              updatedAt?: any | null | undefined;
-                              provider: string;
-                            }
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined;
-                };
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  pictures?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        is_text?: boolean | null;
+        likes?: number | null;
+        comments?: { data: Array<{ id?: string | null }> } | null;
+        media: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              width?: number | null;
+              height?: number | null;
+              formats?: any | null;
+              url: string;
+              updatedAt?: any | null;
+              provider: string;
+            } | null;
+          } | null;
+        };
+      } | null;
+    }>;
+  } | null;
 };
 
 export type GetPicturesByAllSearchQueryVariables = Exact<{
@@ -3486,43 +2829,27 @@ export type GetPicturesByAllSearchQueryVariables = Exact<{
 }>;
 
 export type GetPicturesByAllSearchQuery = {
-  findPicturesByAllSearch?:
-    | Array<
-        | {
-            id?: string | null | undefined;
-            attributes?:
-              | {
-                  is_text?: boolean | null | undefined;
-                  likes?: number | null | undefined;
-                  comments?: { data: Array<{ id?: string | null | undefined }> } | null | undefined;
-                  media: {
-                    data?:
-                      | {
-                          id?: string | null | undefined;
-                          attributes?:
-                            | {
-                                width?: number | null | undefined;
-                                height?: number | null | undefined;
-                                formats?: any | null | undefined;
-                                url: string;
-                                updatedAt?: any | null | undefined;
-                                provider: string;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                  };
-                }
-              | null
-              | undefined;
-          }
-        | null
-        | undefined
-      >
-    | null
-    | undefined;
+  findPicturesByAllSearch?: Array<{
+    id?: string | null;
+    attributes?: {
+      is_text?: boolean | null;
+      likes?: number | null;
+      comments?: { data: Array<{ id?: string | null }> } | null;
+      media: {
+        data?: {
+          id?: string | null;
+          attributes?: {
+            width?: number | null;
+            height?: number | null;
+            formats?: any | null;
+            url: string;
+            updatedAt?: any | null;
+            provider: string;
+          } | null;
+        } | null;
+      };
+    } | null;
+  } | null> | null;
 };
 
 export type GetPicturesForCollectionQueryVariables = Exact<{
@@ -3530,26 +2857,12 @@ export type GetPicturesForCollectionQueryVariables = Exact<{
 }>;
 
 export type GetPicturesForCollectionQuery = {
-  collection?:
-    | {
-        data?:
-          | {
-              id?: string | null | undefined;
-              attributes?:
-                | {
-                    pictures?:
-                      | { data: Array<{ id?: string | null | undefined }> }
-                      | null
-                      | undefined;
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  collection?: {
+    data?: {
+      id?: string | null;
+      attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+    } | null;
+  } | null;
 };
 
 export type GetPicturesGeoInfoQueryVariables = Exact<{
@@ -3557,117 +2870,65 @@ export type GetPicturesGeoInfoQueryVariables = Exact<{
 }>;
 
 export type GetPicturesGeoInfoQuery = {
-  pictureGeoInfos?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | { latitude?: number | null | undefined; longitude?: number | null | undefined }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  pictureGeoInfos?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: { latitude?: number | null; longitude?: number | null } | null;
+    }>;
+  } | null;
 };
 
 export type GetRootCollectionQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetRootCollectionQuery = {
-  browseRootCollection?:
-    | {
-        data?:
-          | {
-              attributes?:
-                | {
-                    current?:
-                      | {
-                          data?:
-                            | {
-                                id?: string | null | undefined;
-                                attributes?: { name: string } | null | undefined;
-                              }
-                            | null
-                            | undefined;
-                        }
-                      | null
-                      | undefined;
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  browseRootCollection?: {
+    data?: {
+      attributes?: {
+        current?: {
+          data?: { id?: string | null; attributes?: { name: string } | null } | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
 };
 
 export type GetUnverifiedCommentsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUnverifiedCommentsQuery = {
-  comments?:
-    | {
-        data: Array<{
-          id?: string | null | undefined;
-          attributes?:
-            | {
-                text: string;
-                author?: string | null | undefined;
-                picture?:
-                  | {
-                      data?:
-                        | {
-                            id?: string | null | undefined;
-                            attributes?:
-                              | {
-                                  media: {
-                                    data?:
-                                      | {
-                                          id?: string | null | undefined;
-                                          attributes?:
-                                            | {
-                                                width?: number | null | undefined;
-                                                height?: number | null | undefined;
-                                                formats?: any | null | undefined;
-                                                updatedAt?: any | null | undefined;
-                                                provider: string;
-                                              }
-                                            | null
-                                            | undefined;
-                                        }
-                                      | null
-                                      | undefined;
-                                  };
-                                }
-                              | null
-                              | undefined;
-                          }
-                        | null
-                        | undefined;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>;
-      }
-    | null
-    | undefined;
+  comments?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        text: string;
+        author?: string | null;
+        picture?: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              media: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    width?: number | null;
+                    height?: number | null;
+                    formats?: any | null;
+                    updatedAt?: any | null;
+                    provider: string;
+                  } | null;
+                } | null;
+              };
+            } | null;
+          } | null;
+        } | null;
+      } | null;
+    }>;
+  } | null;
 };
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
-  me?:
-    | {
-        username: string;
-        email?: string | null | undefined;
-        role?: { name: string } | null | undefined;
-      }
-    | null
-    | undefined;
+  me?: { username: string; email?: string | null; role?: { name: string } | null } | null;
 };
 
 export type AcceptCommentMutationVariables = Exact<{
@@ -3676,10 +2937,7 @@ export type AcceptCommentMutationVariables = Exact<{
 }>;
 
 export type AcceptCommentMutation = {
-  updateComment?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateComment?: { data?: { id?: string | null } | null } | null;
 };
 
 export type BulkEditMutationVariables = Exact<{
@@ -3687,17 +2945,14 @@ export type BulkEditMutationVariables = Exact<{
   data: Scalars['JSON'];
 }>;
 
-export type BulkEditMutation = { doBulkEdit?: number | null | undefined };
+export type BulkEditMutation = { doBulkEdit?: number | null };
 
 export type CreateArchiveTagMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
 
 export type CreateArchiveTagMutation = {
-  createArchiveTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createArchiveTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreateFaceTagMutationVariables = Exact<{
@@ -3705,13 +2960,11 @@ export type CreateFaceTagMutationVariables = Exact<{
   personTagId: Scalars['ID'];
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
+  tag_direction?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type CreateFaceTagMutation = {
-  createFaceTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createFaceTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreateKeywordTagMutationVariables = Exact<{
@@ -3719,10 +2972,7 @@ export type CreateKeywordTagMutationVariables = Exact<{
 }>;
 
 export type CreateKeywordTagMutation = {
-  createKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createKeywordTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreateLinkMutationVariables = Exact<{
@@ -3731,19 +2981,14 @@ export type CreateLinkMutationVariables = Exact<{
   archive_tag: Scalars['ID'];
 }>;
 
-export type CreateLinkMutation = {
-  createLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
-};
+export type CreateLinkMutation = { createLink?: { data?: { id?: string | null } | null } | null };
 
 export type CreateLocationTagMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
 
 export type CreateLocationTagMutation = {
-  createLocationTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreatePersonTagMutationVariables = Exact<{
@@ -3751,10 +2996,7 @@ export type CreatePersonTagMutationVariables = Exact<{
 }>;
 
 export type CreatePersonTagMutation = {
-  createPersonTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createPersonTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreatePictureMutationVariables = Exact<{
@@ -3762,10 +3004,7 @@ export type CreatePictureMutationVariables = Exact<{
 }>;
 
 export type CreatePictureMutation = {
-  createPicture?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createPicture?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreatePictureGeoInfoMutationVariables = Exact<{
@@ -3773,10 +3012,7 @@ export type CreatePictureGeoInfoMutationVariables = Exact<{
 }>;
 
 export type CreatePictureGeoInfoMutation = {
-  createPictureGeoInfo?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createPictureGeoInfo?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreateSubCollectionMutationVariables = Exact<{
@@ -3786,10 +3022,7 @@ export type CreateSubCollectionMutationVariables = Exact<{
 }>;
 
 export type CreateSubCollectionMutation = {
-  createCollection?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createCollection?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeclineCommentMutationVariables = Exact<{
@@ -3797,10 +3030,7 @@ export type DeclineCommentMutationVariables = Exact<{
 }>;
 
 export type DeclineCommentMutation = {
-  deleteComment?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  deleteComment?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeleteCollectionMutationVariables = Exact<{
@@ -3808,10 +3038,7 @@ export type DeleteCollectionMutationVariables = Exact<{
 }>;
 
 export type DeleteCollectionMutation = {
-  deleteCollection?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  deleteCollection?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeleteFaceTagMutationVariables = Exact<{
@@ -3819,10 +3046,7 @@ export type DeleteFaceTagMutationVariables = Exact<{
 }>;
 
 export type DeleteFaceTagMutation = {
-  deleteFaceTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  deleteFaceTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeleteKeywordTagMutationVariables = Exact<{
@@ -3830,29 +3054,21 @@ export type DeleteKeywordTagMutationVariables = Exact<{
 }>;
 
 export type DeleteKeywordTagMutation = {
-  deleteKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  deleteKeywordTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeleteLinkMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeleteLinkMutation = {
-  deleteLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
-};
+export type DeleteLinkMutation = { deleteLink?: { data?: { id?: string | null } | null } | null };
 
 export type DeleteLocationTagMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 export type DeleteLocationTagMutation = {
-  deleteLocationTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  deleteLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeletePersonTagMutationVariables = Exact<{
@@ -3860,10 +3076,7 @@ export type DeletePersonTagMutationVariables = Exact<{
 }>;
 
 export type DeletePersonTagMutation = {
-  deletePersonTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  deletePersonTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type FixCommentTextMutationVariables = Exact<{
@@ -3872,69 +3085,63 @@ export type FixCommentTextMutationVariables = Exact<{
 }>;
 
 export type FixCommentTextMutation = {
-  updateComment?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateComment?: { data?: { id?: string | null } | null } | null;
 };
 
 export type IncreaseNotAPlaceCountMutationVariables = Exact<{
   pictureId: Scalars['ID'];
 }>;
 
-export type IncreaseNotAPlaceCountMutation = { increaseNotAPlaceCount?: number | null | undefined };
+export type IncreaseNotAPlaceCountMutation = { increaseNotAPlaceCount?: number | null };
 
 export type LikeMutationVariables = Exact<{
   pictureId: Scalars['ID'];
   dislike?: InputMaybe<Scalars['Boolean']>;
 }>;
 
-export type LikeMutation = { doLike?: number | null | undefined };
+export type LikeMutation = { doLike?: number | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
 }>;
 
-export type LoginMutation = { login: { jwt?: string | null | undefined } };
+export type LoginMutation = { login: { jwt?: string | null } };
 
 export type MergeCollectionsMutationVariables = Exact<{
   targetId: Scalars['ID'];
   sourceId: Scalars['ID'];
 }>;
 
-export type MergeCollectionsMutation = { mergeCollections?: string | null | undefined };
+export type MergeCollectionsMutation = { mergeCollections?: string | null };
 
 export type MergeKeywordTagsMutationVariables = Exact<{
   targetId: Scalars['ID'];
   sourceId: Scalars['ID'];
 }>;
 
-export type MergeKeywordTagsMutation = { mergeKeywordTags?: string | null | undefined };
+export type MergeKeywordTagsMutation = { mergeKeywordTags?: string | null };
 
 export type MergeLocationTagsMutationVariables = Exact<{
   targetId: Scalars['ID'];
   sourceId: Scalars['ID'];
 }>;
 
-export type MergeLocationTagsMutation = { mergeLocationTags?: string | null | undefined };
+export type MergeLocationTagsMutation = { mergeLocationTags?: string | null };
 
 export type MergePersonTagsMutationVariables = Exact<{
   targetId: Scalars['ID'];
   sourceId: Scalars['ID'];
 }>;
 
-export type MergePersonTagsMutation = { mergePersonTags?: string | null | undefined };
+export type MergePersonTagsMutation = { mergePersonTags?: string | null };
 
 export type PinCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
 }>;
 
 export type PinCommentMutation = {
-  updateComment?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateComment?: { data?: { id?: string | null } | null } | null;
 };
 
 export type PostCommentMutationVariables = Exact<{
@@ -3946,10 +3153,7 @@ export type PostCommentMutationVariables = Exact<{
 }>;
 
 export type PostCommentMutation = {
-  createComment?:
-    | { data?: { attributes?: { text: string } | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  createComment?: { data?: { attributes?: { text: string } | null } | null } | null;
 };
 
 export type SetPicturesForCollectionMutationVariables = Exact<{
@@ -3958,10 +3162,7 @@ export type SetPicturesForCollectionMutationVariables = Exact<{
 }>;
 
 export type SetPicturesForCollectionMutation = {
-  updateCollection?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateCollection?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UnpinCommentMutationVariables = Exact<{
@@ -3969,10 +3170,7 @@ export type UnpinCommentMutationVariables = Exact<{
 }>;
 
 export type UnpinCommentMutation = {
-  updateComment?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateComment?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UnpublishPictureMutationVariables = Exact<{
@@ -3980,10 +3178,7 @@ export type UnpublishPictureMutationVariables = Exact<{
 }>;
 
 export type UnpublishPictureMutation = {
-  updatePicture?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updatePicture?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateArchiveMutationVariables = Exact<{
@@ -3992,10 +3187,7 @@ export type UpdateArchiveMutationVariables = Exact<{
 }>;
 
 export type UpdateArchiveMutation = {
-  updateArchiveTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateArchiveTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateCollectionMutationVariables = Exact<{
@@ -4004,10 +3196,16 @@ export type UpdateCollectionMutationVariables = Exact<{
 }>;
 
 export type UpdateCollectionMutation = {
-  updateCollection?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateCollection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateFaceTagDirectionMutationVariables = Exact<{
+  faceTagId: Scalars['ID'];
+  tag_direction?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdateFaceTagDirectionMutation = {
+  updateFaceTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateKeywordNameMutationVariables = Exact<{
@@ -4016,10 +3214,7 @@ export type UpdateKeywordNameMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordNameMutation = {
-  updateKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateKeywordTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateKeywordSynonymsMutationVariables = Exact<{
@@ -4030,10 +3225,7 @@ export type UpdateKeywordSynonymsMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordSynonymsMutation = {
-  updateKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateKeywordTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateKeywordVisibilityMutationVariables = Exact<{
@@ -4042,10 +3234,7 @@ export type UpdateKeywordVisibilityMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordVisibilityMutation = {
-  updateKeywordTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateKeywordTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateLinkMutationVariables = Exact<{
@@ -4053,9 +3242,7 @@ export type UpdateLinkMutationVariables = Exact<{
   data: LinkInput;
 }>;
 
-export type UpdateLinkMutation = {
-  updateLink?: { data?: { id?: string | null | undefined } | null | undefined } | null | undefined;
-};
+export type UpdateLinkMutation = { updateLink?: { data?: { id?: string | null } | null } | null };
 
 export type UpdateLocationNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
@@ -4063,10 +3250,7 @@ export type UpdateLocationNameMutationVariables = Exact<{
 }>;
 
 export type UpdateLocationNameMutation = {
-  updateLocationTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateLocationSynonymsMutationVariables = Exact<{
@@ -4077,10 +3261,7 @@ export type UpdateLocationSynonymsMutationVariables = Exact<{
 }>;
 
 export type UpdateLocationSynonymsMutation = {
-  updateLocationTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateLocationVisibilityMutationVariables = Exact<{
@@ -4089,10 +3270,7 @@ export type UpdateLocationVisibilityMutationVariables = Exact<{
 }>;
 
 export type UpdateLocationVisibilityMutation = {
-  updateLocationTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdatePersonNameMutationVariables = Exact<{
@@ -4101,10 +3279,7 @@ export type UpdatePersonNameMutationVariables = Exact<{
 }>;
 
 export type UpdatePersonNameMutation = {
-  updatePersonTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updatePersonTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdatePersonSynonymsMutationVariables = Exact<{
@@ -4115,10 +3290,7 @@ export type UpdatePersonSynonymsMutationVariables = Exact<{
 }>;
 
 export type UpdatePersonSynonymsMutation = {
-  updatePersonTag?:
-    | { data?: { id?: string | null | undefined } | null | undefined }
-    | null
-    | undefined;
+  updatePersonTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdatePictureMutationVariables = Exact<{
@@ -4126,7 +3298,7 @@ export type UpdatePictureMutationVariables = Exact<{
   data: Scalars['JSON'];
 }>;
 
-export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null | undefined };
+export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null };
 
 export const GetAllArchiveTagsDocument = gql`
   query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
@@ -4535,6 +3707,9 @@ export const GetArchiveDocument = gql`
           name
           shortDescription
           longDescription
+          paypalClient
+          paypalDonationText
+          paypalPurpose
           logo {
             data {
               id
@@ -5096,6 +4271,7 @@ export const GetFaceTagsDocument = gql`
         attributes {
           x
           y
+          tag_direction
           person_tag {
             data {
               id
@@ -6741,8 +5917,22 @@ export type CreateArchiveTagMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateFaceTagDocument = gql`
-  mutation createFaceTag($pictureId: ID!, $personTagId: ID!, $x: Float, $y: Float) {
-    createFaceTag(data: { picture: $pictureId, person_tag: $personTagId, x: $x, y: $y }) {
+  mutation createFaceTag(
+    $pictureId: ID!
+    $personTagId: ID!
+    $x: Float
+    $y: Float
+    $tag_direction: Int
+  ) {
+    createFaceTag(
+      data: {
+        picture: $pictureId
+        person_tag: $personTagId
+        x: $x
+        y: $y
+        tag_direction: $tag_direction
+      }
+    ) {
       data {
         id
       }
@@ -6772,6 +5962,7 @@ export type CreateFaceTagMutationFn = Apollo.MutationFunction<
  *      personTagId: // value for 'personTagId'
  *      x: // value for 'x'
  *      y: // value for 'y'
+ *      tag_direction: // value for 'tag_direction'
  *   },
  * });
  */
@@ -8329,6 +7520,64 @@ export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollect
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
+>;
+
+export const UpdateFaceTagDirectionDocument = gql`
+  mutation updateFaceTagDirection($faceTagId: ID!, $tag_direction: Int) {
+    updateFaceTag(id: $faceTagId, data: { tag_direction: $tag_direction }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateFaceTagDirectionMutationFn = Apollo.MutationFunction<
+  UpdateFaceTagDirectionMutation,
+  UpdateFaceTagDirectionMutationVariables
+>;
+
+/**
+ * __useUpdateFaceTagDirectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateFaceTagDirectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFaceTagDirectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFaceTagDirectionMutation, { data, loading, error }] = useUpdateFaceTagDirectionMutation({
+ *   variables: {
+ *      faceTagId: // value for 'faceTagId'
+ *      tag_direction: // value for 'tag_direction'
+ *   },
+ * });
+ */
+export function useUpdateFaceTagDirectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateFaceTagDirectionMutation,
+    UpdateFaceTagDirectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateFaceTagDirectionMutation,
+    UpdateFaceTagDirectionMutationVariables
+  >(UpdateFaceTagDirectionDocument, options);
+}
+
+export type UpdateFaceTagDirectionMutationHookResult = ReturnType<
+  typeof useUpdateFaceTagDirectionMutation
+>;
+
+export type UpdateFaceTagDirectionMutationResult =
+  Apollo.MutationResult<UpdateFaceTagDirectionMutation>;
+
+export type UpdateFaceTagDirectionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateFaceTagDirectionMutation,
+  UpdateFaceTagDirectionMutationVariables
 >;
 
 export const UpdateKeywordNameDocument = gql`

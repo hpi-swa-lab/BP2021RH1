@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
 
-const useStorageState = <T>(initialValue: T, key: string, storage: Storage) => {
+const useStorageState = <T extends object | string | number>(
+  initialValue: T | (() => T),
+  key: string,
+  storage: Storage
+) => {
   const [value, setValue] = useState<T>(() => {
     const valueInStorage = storage.getItem(key);
-    return valueInStorage ? (JSON.parse(valueInStorage) as T) : initialValue;
+    return valueInStorage
+      ? (JSON.parse(valueInStorage) as T)
+      : typeof initialValue === 'function'
+      ? initialValue()
+      : initialValue;
   });
 
   useEffect(() => storage.setItem(key, JSON.stringify(value)), [storage, key, value]);
