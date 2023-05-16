@@ -226,19 +226,20 @@ type SearchTime = [string, string, string];
 const buildWhereForTimeRanges = (
   queryBuilder: QueryBuilder,
   searchTimes: SearchTime[],
-  filterOutTexts: boolean
+  filterOutTexts: boolean,
+  knexEngine: KnexEngine
 ) => {
   for (const searchTime of searchTimes) {
     // Function syntax for where in order to use correct bracing in the query
     queryBuilder = queryBuilder.where((qb) => {
       qb = qb.orWhere((timeRangeQb) => {
         timeRangeQb = timeRangeQb.where(
-          "time_range_tags.start",
+          knexEngine.raw("time_range_tags.start + interval '1 hour'"),
           ">=",
           searchTime[1]
         );
         timeRangeQb = timeRangeQb.andWhere(
-          "time_range_tags.end",
+          knexEngine.raw("time_range_tags.end + interval '1 hour'"),
           "<=",
           searchTime[2]
         );
@@ -284,7 +285,8 @@ const buildQueryForAllSearch = (
   const withWhere = buildWhereForTimeRanges(
     withJoins,
     searchTimes,
-    filterOutTexts
+    filterOutTexts,
+    knexEngine
   );
 
   const withOrder = withWhere.orderBy([
