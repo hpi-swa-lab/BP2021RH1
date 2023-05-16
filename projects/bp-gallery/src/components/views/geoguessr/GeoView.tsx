@@ -9,16 +9,16 @@ import {
   useGetPicturesForCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useVariant } from '../../../helpers/growthbook';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 import {
   FlatArchiveTag,
   FlatCollection,
   FlatPictureGeoInfo,
 } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
-import { useVariant } from '../../../helpers/growthbook';
-import Loading from '../../common/Loading';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const allPictureIds: string[] = archives
@@ -66,6 +66,7 @@ const GeoView = () => {
   const [pictureId, setPictureId] = useState<string | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [needsExplanation, setNeedsExplanation] = useState(false);
+  const [isSet, setIsSet] = useState(false);
   const pictureLink = useGetPictureLink(pictureId);
 
   const { data: picturesData } = useGetAllPicturesByArchiveQuery();
@@ -73,7 +74,7 @@ const GeoView = () => {
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
   const geoCollectionId = useVariant({ id: 'geopictures_collection_id', fallback: '' });
-  const isGeoCollectionPictures = geoCollectionId !== '' && import.meta.env.MODE === 'production';
+  const isGeoCollectionPictures = geoCollectionId !== ''; //&& import.meta.env.MODE === 'production';
   const { data: geoCollectionPictureData } = useGetPicturesForCollectionQuery({
     variables: { collectionId: geoCollectionId },
   });
@@ -90,11 +91,14 @@ const GeoView = () => {
 
   const onNextPicture = useCallback(() => {
     const nextPicture = getNextPicture();
-    nextPicture ? setPictureId(nextPicture) : setGameOver(true);
+    setPictureId(nextPicture);
+    if (!nextPicture) {
+      setGameOver(true);
+    }
   }, [getNextPicture]);
 
   useEffect(() => {
-    if (!archives) {
+    if (!archives || isSet) {
       return;
     }
     const allPictureIds = isGeoCollectionPictures
@@ -103,7 +107,8 @@ const GeoView = () => {
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
     onNextPicture();
-  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures, onNextPicture]);
+    setIsSet(true);
+  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures, isSet, onNextPicture]);
 
   const dontShowAgain = () => {
     setHasReadInstructions(true);
