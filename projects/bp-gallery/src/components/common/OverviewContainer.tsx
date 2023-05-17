@@ -2,11 +2,13 @@ import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
 import { ReactElement, useState } from 'react';
 
 const OverviewContainer = ({
+  defaultValue = 0,
   tabs,
 }: {
+  defaultValue: number;
   tabs: { title: string; icon: ReactElement<IconProps>; content: ReactElement }[];
 }) => {
-  const [tabIndex, setTabIndex] = useState<number>(0);
+  const [tabIndex, setTabIndex] = useState<number>(defaultValue);
 
   return (
     <div className='overview-selection-container'>
