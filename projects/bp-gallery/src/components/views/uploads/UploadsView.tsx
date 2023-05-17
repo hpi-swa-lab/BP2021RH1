@@ -2,14 +2,18 @@ import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Redirect } from 'react-router-dom';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { useCanUseUploadsView } from '../../../hooks/can-do-hooks';
 import { useAuth } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { AuthRole } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
+import { FALLBACK_PATH } from '../../routes';
 import './UploadsView.scss';
 
 const UploadsView = () => {
@@ -45,13 +49,23 @@ const UploadsView = () => {
     }
   }, [createArchiveTagMutation, dialog, t]);
 
-  if (role < AuthRole.CURATOR) return null;
+  const { canUseUploadsView, loading, canCreateArchive } = useCanUseUploadsView();
+
+  if (!canUseUploadsView) {
+    if (!loading) {
+      return <Redirect to={FALLBACK_PATH} />;
+    }
+    return <Loading />;
+  }
+
   return (
     <div className='uploads-overview'>
-      <Button onClick={createArchive}>
-        <Add />
-        {t('curator.createArchive')}
-      </Button>
+      {canCreateArchive && (
+        <Button onClick={createArchive}>
+          <Add />
+          {t('curator.createArchive')}
+        </Button>
+      )}
       <HideStats>
         <PictureScrollGrid
           queryParams={{ collections: { id: { null: true } } }}

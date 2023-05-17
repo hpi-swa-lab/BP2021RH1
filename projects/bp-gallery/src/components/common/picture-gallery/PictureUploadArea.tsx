@@ -68,7 +68,7 @@ const PictureUploadArea = ({
 
   const [createPicture] = useCreatePictureMutation();
 
-  const canUpload = useCanUploadPicture();
+  const { canUploadPicture } = useCanUploadPicture();
 
   const asFlatPicture = (file: File): FlatPicture => {
     return {
@@ -140,7 +140,7 @@ const PictureUploadArea = ({
   }
 
   // Do we really want to allow uploading only when preprocessing is enabled?
-  if (!canUpload || !preprocessPictures) {
+  if (!canUploadPicture || !preprocessPictures) {
     return null;
   }
 
