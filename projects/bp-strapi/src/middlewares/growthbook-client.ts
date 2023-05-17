@@ -20,6 +20,17 @@ export default (_, { strapi }: { strapi: Strapi }) => {
     apiHost: "https://growthbook.harz-history.de/proxy",
     clientKey: "sdk-g7fN7JoMErl22b8e",
     enableDevMode: true,
+    trackingCallback: (experiment, result) => {
+      const response = currentCtx.koaContext.response;
+      let growthbookHeader = response.get("x-growthbook");
+      growthbookHeader ||= "[]";
+      const growthbookEvents = JSON.parse(growthbookHeader);
+      growthbookEvents.push({
+        experimentId: experiment.key,
+        variationId: "v" + String(result.variationId),
+      });
+      response.set("x-growthbook", JSON.stringify(growthbookEvents));
+    },
   });
   // Add your own logic here.
   return async (ctx, next) => {

@@ -1,4 +1,4 @@
-import { createHttpLink, from } from '@apollo/client';
+import { ApolloLink, createHttpLink, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { isEmpty, unionWith } from 'lodash';
@@ -56,14 +56,49 @@ export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadO
  */
 export const buildHttpLink = (
   token: string | null,
-  openAlert?: (alertOptions: AlertOptions) => void
+  openAlert?: (alertOptions: AlertOptions) => void,
+  anonymousId?: string | null
 ) => {
   let httpLink = createHttpLink({
     uri: `${apiBase}/graphql`,
     headers: {
+      'Access-Control-Request-Headers': 'anonymousId',
       authorization: token ? `Bearer ${token}` : '',
+      anonymousId: anonymousId,
     },
   });
+
+  const growthbookLink = new ApolloLink((operation, forward) => {
+    return forward(operation).map(response => {
+      const experimentData = JSON.parse(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+        operation.getContext().response.headers.get('x-growthbook')
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      experimentData?.map((experiment: { experimentId: string; variationId: string }) => {
+        const w: any = window;
+        const _paq: Array<any> = (w._paq = w._paq || []);
+        _paq.push([
+          'trackEvent',
+          'ExperimentViewed',
+          experiment.experimentId,
+          experiment.variationId,
+        ]);
+      });
+      return response;
+    });
+  });
+
+  //
+
+  //     experimentData?.map(experiment => {
+  //
+  //
+  //       }
+  //       return response;
+  //     })
+
+  httpLink = from([growthbookLink, httpLink]);
 
   if (openAlert) {
     const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
