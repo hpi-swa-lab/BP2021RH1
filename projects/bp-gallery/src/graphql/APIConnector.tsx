@@ -2260,6 +2260,19 @@ export type GetArchiveQuery = {
   } | null;
 };
 
+export type GetArchivePictureIdsQueryVariables = Exact<{
+  archiveId: Scalars['ID'];
+}>;
+
+export type GetArchivePictureIdsQuery = {
+  archiveTag?: {
+    data?: {
+      id?: string | null;
+      attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+    } | null;
+  } | null;
+};
+
 export type GetCollectionInfoByIdQueryVariables = Exact<{
   collectionId: Scalars['ID'];
 }>;
@@ -3795,6 +3808,76 @@ export type GetArchiveQueryHookResult = ReturnType<typeof useGetArchiveQuery>;
 export type GetArchiveLazyQueryHookResult = ReturnType<typeof useGetArchiveLazyQuery>;
 
 export type GetArchiveQueryResult = Apollo.QueryResult<GetArchiveQuery, GetArchiveQueryVariables>;
+
+export const GetArchivePictureIdsDocument = gql`
+  query getArchivePictureIds($archiveId: ID!) {
+    archiveTag(id: $archiveId) {
+      data {
+        id
+        attributes {
+          pictures {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetArchivePictureIdsQuery__
+ *
+ * To run a query within a React component, call `useGetArchivePictureIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivePictureIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivePictureIdsQuery({
+ *   variables: {
+ *      archiveId: // value for 'archiveId'
+ *   },
+ * });
+ */
+export function useGetArchivePictureIdsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetArchivePictureIdsQuery,
+    GetArchivePictureIdsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetArchivePictureIdsQuery, GetArchivePictureIdsQueryVariables>(
+    GetArchivePictureIdsDocument,
+    options
+  );
+}
+
+export function useGetArchivePictureIdsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetArchivePictureIdsQuery,
+    GetArchivePictureIdsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetArchivePictureIdsQuery, GetArchivePictureIdsQueryVariables>(
+    GetArchivePictureIdsDocument,
+    options
+  );
+}
+
+export type GetArchivePictureIdsQueryHookResult = ReturnType<typeof useGetArchivePictureIdsQuery>;
+
+export type GetArchivePictureIdsLazyQueryHookResult = ReturnType<
+  typeof useGetArchivePictureIdsLazyQuery
+>;
+
+export type GetArchivePictureIdsQueryResult = Apollo.QueryResult<
+  GetArchivePictureIdsQuery,
+  GetArchivePictureIdsQueryVariables
+>;
 
 export const GetCollectionInfoByIdDocument = gql`
   query getCollectionInfoById($collectionId: ID!) {

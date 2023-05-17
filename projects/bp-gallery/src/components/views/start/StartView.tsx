@@ -1,9 +1,6 @@
 import { IfFeatureEnabled } from '@growthbook/growthbook-react';
 import { useTranslation } from 'react-i18next';
-import {
-  useGetAllArchiveTagsQuery,
-  useGetAllPicturesByArchiveQuery,
-} from '../../../graphql/APIConnector';
+import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVariant } from '../../../helpers/growthbook';
 import { useMobile } from '../../../hooks/context-hooks';
@@ -33,16 +30,12 @@ const StartView = () => {
     id: 'paypal_mainpage',
     fallback: { clientId: '', donationText: '', purposeText: '' },
   });
-  const { data: picturesData } = useGetAllPicturesByArchiveQuery();
-  const archivePictures: FlatArchiveTag[] | undefined =
-    useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
   const archiveCards = archives?.map(archive => {
     const sharedProps = {
       archiveName: archive.name,
       archiveDescription: archive.shortDescription ?? '',
       archiveId: archive.id,
-      archivePictureCount: archivePictures?.find(a => a.id === archive.id)?.pictures?.length,
     };
 
     return (

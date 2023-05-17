@@ -4,19 +4,18 @@ import { asUploadPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { useVisit } from './../../../helpers/history';
 import './ArchiveCard.scss';
+import ArchivePictureCount from './ArchivePictureCount';
 
 const ArchiveCard = ({
   picture,
   archiveName,
   archiveDescription,
   archiveId,
-  archivePictureCount,
 }: {
   picture: FlatPicture;
   archiveName: string;
   archiveDescription: string;
   archiveId: string;
-  archivePictureCount: number | undefined;
 }) => {
   const pictureLink = asUploadPath(picture.media, { fallback: '/bad-harzburg-stiftung-logo.png' });
 
@@ -26,7 +25,6 @@ const ArchiveCard = ({
       pictureLink={pictureLink}
       archiveName={archiveName}
       archiveDescription={archiveDescription}
-      archivePictureCount={archivePictureCount}
     />
   );
 };
@@ -36,13 +34,11 @@ const CardLayout = ({
   pictureLink,
   archiveName,
   archiveDescription,
-  archivePictureCount,
 }: {
   archiveId: string;
   pictureLink: string;
   archiveName: string;
   archiveDescription: string;
-  archivePictureCount: number | undefined;
 }) => {
   const { t } = useTranslation();
   const { visit } = useVisit();
@@ -58,13 +54,7 @@ const CardLayout = ({
         >
           <h3>{archiveName}</h3>
           <p id='description'>{archiveDescription}</p>
-          {archivePictureCount !== undefined && (
-            <div className='text-right'>
-              {t('common.pictureCount', {
-                count: archivePictureCount,
-              })}
-            </div>
-          )}
+          <ArchivePictureCount archiveId={archiveId} />
         </CardContent>
       </CardActionArea>
     </Card>
@@ -75,12 +65,10 @@ const ArchiveCardWithoutPicture = ({
   archiveName,
   archiveDescription,
   archiveId,
-  archivePictureCount,
 }: {
   archiveName: string;
   archiveDescription: string;
   archiveId: string;
-  archivePictureCount: number | undefined;
 }) => {
   return (
     <CardLayout
@@ -88,7 +76,6 @@ const ArchiveCardWithoutPicture = ({
       pictureLink={'/bad-harzburg-stiftung-logo.png'}
       archiveName={archiveName}
       archiveDescription={archiveDescription}
-      archivePictureCount={archivePictureCount}
     />
   );
 };
