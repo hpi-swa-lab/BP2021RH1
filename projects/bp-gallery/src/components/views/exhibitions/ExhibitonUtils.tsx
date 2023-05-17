@@ -29,6 +29,7 @@ interface DragElement {
   id: string;
   picture: FlatPicture;
   subtitle: string;
+  order: number;
   element: JSX.Element;
   sortableElement: JSX.Element;
 }
@@ -37,6 +38,7 @@ interface SectionState {
   id: string;
   title: string;
   text: string;
+  nextOrder: number;
   dragElements: DragElement[];
 }
 
@@ -182,6 +184,7 @@ const buildDragElement = (exhibitionPicture: FlatExhibitionPicture | undefined) 
     ? ({
         id: exhibitionPicture.id,
         picture: exhibitionPicture.picture,
+        order: exhibitionPicture.order,
         subtitle: exhibitionPicture.subtitle,
         element: (
           <DraggablePicture
@@ -211,6 +214,7 @@ const buildSectionState = (sections: FlatExhibitionSection[] | undefined) => {
     return {
       id: section.id,
       title: section.title,
+      nextOrder: section.exhibition_pictures?.length ?? 0,
       text: section.text,
       dragElements: buildDragElements(section.exhibition_pictures),
     } as SectionState;
@@ -227,7 +231,6 @@ const buildExhibitionTextState = (exhibition: FlatExhibition) => {
   } as ExhibitionText;
 };
 
-//TODO: addDraggable und removeDraggable sind beide sehr buggy, cloneDeep nicht verwenden
 export const ExhibitionStateManager = ({
   exhibition,
   children,
@@ -254,7 +257,8 @@ export const ExhibitionStateManager = ({
           ? ({
               id: section.id,
               text: section.text,
-              dragElements: [...section.dragElements, dragElement],
+              nextOrder: section.nextOrder + 1,
+              dragElements: [...section.dragElements, { ...dragElement, order: section.nextOrder }],
             } as SectionState)
           : section
       )
@@ -268,6 +272,7 @@ export const ExhibitionStateManager = ({
           ? ({
               id: section.id,
               text: section.text,
+              nextOrder: section.nextOrder - 1,
               dragElements: section.dragElements.filter(elem => elem !== dragElement),
             } as SectionState)
           : section
@@ -312,8 +317,16 @@ export const ExhibitionStateManager = ({
               id: section.id,
               text: section.text,
               dragElements: section.dragElements.map((elem, index) => {
-                if (index === oldIndex) return section.dragElements[newIndex];
-                if (index === newIndex) return section.dragElements[oldIndex];
+                if (index === oldIndex)
+                  return {
+                    ...section.dragElements[newIndex],
+                    order: section.dragElements[newIndex].order,
+                  };
+                if (index === newIndex)
+                  return {
+                    ...section.dragElements[oldIndex],
+                    order: section.dragElements[oldIndex].order,
+                  };
                 return elem;
               }),
             } as SectionState)
