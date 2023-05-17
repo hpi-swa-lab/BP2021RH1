@@ -74,6 +74,10 @@ export const getPictureQueryParams = (
         ? { id: { not: { eq: '-1' } } } // make sure all images get fetched
         : { archive_tag: { id: { eq: archiveId } }, id: { not: { eq: '-1' } } };
     }
+  } else if (categoryType === 'most-liked') {
+    return !archiveId
+      ? { likes: { ne: null }, id: { not: { eq: '-1' } } }
+      : { archive_tag: { id: { eq: archiveId } }, likes: { ne: null }, id: { not: { eq: '-1' } } };
   } else if (categoryId) {
     return categoryQueryParams(categoryType, categoryId, archiveId);
   } else {

@@ -80,7 +80,7 @@ const ShowMoreView = ({
               categoryType !== 'pictures' && categoryId
                 ? ['time_range_tag.start:asc']
                 : categoryType === 'most-liked'
-                ? ['likes:asc']
+                ? ['likes:desc']
                 : ['createdAt:desc']
             }
             hashbase={'show-more'}

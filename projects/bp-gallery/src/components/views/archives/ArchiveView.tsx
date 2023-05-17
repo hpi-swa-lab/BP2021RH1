@@ -118,6 +118,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                   onClick={() => {
                     visit('/archives/' + archiveId + '/show-more/pictures');
                   }}
+                  sortBy={['createdAt:desc']}
                 />
               ),
             },
@@ -126,11 +127,11 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               icon: <ThumbUp key='1' />,
               content: (
                 <PictureOverview
-                  queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+                  queryParams={{ archive_tag: { id: { eq: archiveId } }, likes: { ne: null } }}
                   onClick={() => {
                     visit('/archives/' + archiveId + '/show-more/most-liked');
                   }}
-                  sortBy={['likes:asc']}
+                  sortBy={['likes:desc']}
                 />
               ),
             },

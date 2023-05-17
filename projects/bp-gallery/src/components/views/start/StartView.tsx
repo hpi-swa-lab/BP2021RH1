@@ -112,6 +112,7 @@ const StartView = () => {
                     onClick={() => {
                       visit('/show-more/latest');
                     }}
+                    sortBy={['createdAt:desc']}
                   />
                 ),
               },
@@ -120,11 +121,11 @@ const StartView = () => {
                 icon: <ThumbUp key='1' />,
                 content: (
                   <PictureOverview
-                    queryParams={{}}
+                    queryParams={{ likes: { ne: null } }}
                     onClick={() => {
                       visit('/show-more/most-liked');
                     }}
-                    sortBy={['likes:asc']}
+                    sortBy={['likes:desc']}
                   />
                 ),
               },

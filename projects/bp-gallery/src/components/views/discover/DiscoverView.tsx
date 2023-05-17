@@ -26,6 +26,7 @@ const DiscoverView = () => {
                   onClick={() => {
                     visit('/show-more/latest');
                   }}
+                  sortBy={['createdAt:desc']}
                 />
               ),
             },
@@ -34,11 +35,11 @@ const DiscoverView = () => {
               icon: <ThumbUp key='1' />,
               content: (
                 <PictureOverview
-                  queryParams={{}}
+                  queryParams={{ likes: { ne: null } }}
                   onClick={() => {
                     visit('/show-more/most-liked');
                   }}
-                  sortBy={['likes:asc']}
+                  sortBy={['likes:desc']}
                 />
               ),
             },
