@@ -95,11 +95,15 @@ export const ExhibitionSectionsContext = createContext<{
   getSection: (sectionId: string) => SectionState | undefined;
   getAllSections: () => SectionState[] | undefined;
   swapSectionDraggables: (oldIndex: number, newIndex: number, sectionId: string) => void;
+  getSorting: () => boolean;
+  setSorting: (isSorting: boolean) => void;
   getDraggable: (dragElementId: string) => DragElement | undefined;
 }>({
   getSection: () => undefined,
   getAllSections: () => undefined,
   swapSectionDraggables: () => {},
+  getSorting: () => false,
+  setSorting: () => {},
   getDraggable: () => undefined,
 });
 
@@ -116,6 +120,9 @@ const DraggablePicture = ({
 }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
+    data: {
+      type: 'draggable',
+    },
   });
   return (
     <ExhibitionPicture
@@ -136,7 +143,11 @@ const SortablePicture = ({
 }) => {
   const { attributes, listeners, setNodeRef, transform } = useSortable({
     id: id,
+    data: {
+      type: 'sortable',
+    },
   });
+
   return (
     <ExhibitionPicture
       exhibitionPicture={exhibitionPicture}
@@ -173,10 +184,18 @@ const buildDragElement = (exhibitionPicture: FlatExhibitionPicture | undefined) 
         picture: exhibitionPicture.picture,
         subtitle: exhibitionPicture.subtitle,
         element: (
-          <DraggablePicture id={exhibitionPicture.id} exhibitionPicture={exhibitionPicture} />
+          <DraggablePicture
+            id={exhibitionPicture.id}
+            exhibitionPicture={exhibitionPicture}
+            key={exhibitionPicture.id}
+          />
         ),
         sortableElement: (
-          <SortablePicture id={exhibitionPicture.id} exhibitionPicture={exhibitionPicture} />
+          <SortablePicture
+            id={exhibitionPicture.id}
+            exhibitionPicture={exhibitionPicture}
+            key={exhibitionPicture.id}
+          />
         ),
       } as DragElement)
     : undefined;
@@ -225,6 +244,8 @@ export const ExhibitionStateManager = ({
   const [sections, setSections] = useState<SectionState[]>(
     buildSectionState(exhibition.exhibition_sections)
   );
+
+  const [isSorting, setIsSorting] = useState(false);
 
   const addToSection = (dragElement: DragElement, sectionId: string) => {
     setSections(
@@ -343,6 +364,13 @@ export const ExhibitionStateManager = ({
     return titlePicture;
   };
 
+  const getSorting = () => {
+    return isSorting;
+  };
+
+  const setSorting = (isSorting: boolean) => {
+    setIsSorting(isSorting);
+  };
   //getter and setter for title in exhibitionText
   const getTitle = () => {
     return exhibitionText.title;
@@ -384,6 +412,7 @@ export const ExhibitionStateManager = ({
       getDraggable={getDraggable}
       addDraggable={addDraggable}
       removeDraggable={removeDraggable}
+      isSorting={isSorting}
     >
       <ExhibitionTextContext.Provider
         value={{
@@ -404,7 +433,14 @@ export const ExhibitionStateManager = ({
         <ExhibitionTitlePictureContext.Provider value={getTitlePicture}>
           <ExhibitionIdealotContext.Provider value={getIdealot}>
             <ExhibitionSectionsContext.Provider
-              value={{ getSection, getAllSections, swapSectionDraggables, getDraggable }}
+              value={{
+                getSection,
+                getAllSections,
+                swapSectionDraggables,
+                getDraggable,
+                setSorting,
+                getSorting,
+              }}
             >
               {children}
             </ExhibitionSectionsContext.Provider>
@@ -419,6 +455,7 @@ const DragNDropHandler = ({
   getDraggable,
   addDraggable,
   removeDraggable,
+  isSorting,
   children,
 }: PropsWithChildren<{
   getDraggable: (dragElementId: string) => DragElement | undefined;
@@ -429,12 +466,14 @@ const DragNDropHandler = ({
     isIdeaLot?: boolean
   ) => void;
   removeDraggable: (dragElement: DragElement) => void;
+  isSorting: boolean;
 }>) => {
   const [activeDraggable, setActiveDraggable] = useState<DragElement | undefined>(undefined);
 
   const dragHandleEnd = (event: DragEndEvent) => {
     const { over, active } = event;
     if (!activeDraggable) return;
+    console.log(active.id);
     removeDraggable(activeDraggable);
     if (over) {
       if (over.id === 'titleDropzone') {
@@ -457,7 +496,10 @@ const DragNDropHandler = ({
   };
 
   return (
-    <DndContext onDragEnd={dragHandleEnd} onDragStart={dragHandleStart}>
+    <DndContext
+      onDragEnd={!isSorting ? dragHandleEnd : () => {}}
+      onDragStart={!isSorting ? dragHandleStart : () => {}}
+    >
       <DragOverlay>{activeDraggable && activeDraggable.element}</DragOverlay>
       {children}
     </DndContext>

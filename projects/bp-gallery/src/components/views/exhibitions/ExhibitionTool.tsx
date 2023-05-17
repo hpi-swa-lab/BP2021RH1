@@ -29,8 +29,10 @@ const IdeaLot = () => {
   return (
     <div className='flex flex-col items-stretch h-full w-full relative'>
       <div className='text-xl'>Ideenparkplatz</div>
-      <div className='border-solid flex-1 flex gap-2 '>
-        {idealot?.map(picture => picture.element)}
+      <div className='border-solid overflow-auto flex-1 h-full'>
+        <div className='flex gap-2 flex-wrap items-start'>
+          {idealot?.map(picture => picture.element)}
+        </div>
       </div>
     </div>
   );
@@ -41,17 +43,17 @@ const DropZone = ({ id }: { id: string }) => {
   const { setNodeRef } = useDroppable({ id });
   const swapDropzoneContent = useContext(ExhibitionSectionsContext).swapSectionDraggables;
   const section = useContext(ExhibitionSectionsContext).getSection(id);
+  const { getSorting, setSorting } = useContext(ExhibitionSectionsContext);
   const itemIds = section?.dragElements.map(elem => elem.id);
   const dragItems = section?.dragElements;
   const [activeId, setActiveId] = useState<UniqueIdentifier | undefined>(undefined);
   const activeSortable = section?.dragElements.find(elem => elem.id === activeId)?.sortableElement;
-  const [isSort, setIsSort] = useState<boolean>(false);
-
   const dragHandleEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over?.id) {
+    if (!over) return setActiveId(undefined);
+    if (active.id !== over.id) {
       const oldIndex = section?.dragElements.findIndex(x => x.id === active.id);
-      const newIndex = section?.dragElements.findIndex(x => x.id === over?.id);
+      const newIndex = section?.dragElements.findIndex(x => x.id === over.id);
       if (oldIndex !== undefined && newIndex !== undefined)
         swapDropzoneContent(oldIndex, newIndex, id);
       setActiveId(undefined);
@@ -70,14 +72,14 @@ const DropZone = ({ id }: { id: string }) => {
     >
       <div className='relative w-full'>
         <div className='absolute right-0 z-[2000]'>
-          <Button variant='contained' onClick={() => setIsSort(!isSort)}>
-            {isSort
+          <Button variant='contained' onClick={() => setSorting(!getSorting())}>
+            {getSorting()
               ? t('exhibition.manipulator.section.exit-sort')
               : t('exhibition.manipulator.section.sort')}
           </Button>
         </div>
       </div>
-      {isSort && itemIds ? (
+      {getSorting() && itemIds ? (
         <DndContext onDragEnd={dragHandleEnd} onDragStart={dragHandleStart}>
           <DragOverlay>{activeId && activeSortable}</DragOverlay>
           <SortableContext items={itemIds}>
