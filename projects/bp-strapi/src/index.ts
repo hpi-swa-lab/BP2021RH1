@@ -1,19 +1,19 @@
 "use strict";
 
-import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
+import { Strapi } from "@strapi/strapi";
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } from "./api/collection/services/custom-resolver";
+import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
 import {
-  findPicturesByAllSearch,
-  updatePictureWithTagCleanup,
   bulkEdit,
+  findPicturesByAllSearch,
   like,
+  updatePictureWithTagCleanup,
 } from "./api/picture/services/custom-resolver";
-import { Strapi } from "@strapi/strapi";
+import { incNotAPlaceCount } from "./api/picture/services/custom-update";
 import { GqlExtension } from "./types";
-import {incNotAPlaceCount} from "./api/picture/services/custom-update";
 
 export default {
   /**
@@ -137,8 +137,14 @@ export default {
               pictureId: "ID",
               dislike: "Boolean",
             },
-            async resolve(_, { pictureId, dislike }) {
+            async resolve(_, { pictureId, dislike }, ctx) {
               const knexEngine = extensionArgs.strapi.db.connection;
+
+              ctx.state.withGrowthBook(ctx, (growthbook) => {
+                if (growthbook.isOn("like_resolve_test")) {
+                  console.log("Feature Enabled");
+                }
+              });
               return like(knexEngine, pictureId, dislike);
             },
           }),
@@ -151,7 +157,7 @@ export default {
               const knexEngine = extensionArgs.strapi.db.connection;
               return incNotAPlaceCount(knexEngine, id);
             },
-          })
+          }),
         ],
         resolversConfig: {
           Query: {
@@ -200,8 +206,8 @@ export default {
             increaseNotAPlaceCount: {
               auth: {
                 scope: ["api::picture.picture.find"],
-              }, 
-            } 
+              },
+            },
           },
           Collection: {
             thumbnail: {
