@@ -25,9 +25,13 @@ const StartView = () => {
   const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
-  const { clientId: paypalClientId, donationText: paypalDonationText } = useVariant({
+  const {
+    clientId: paypalClientId,
+    donationText: paypalDonationText,
+    purposeText: paypalPurposeText,
+  } = useVariant({
     id: 'paypal_mainpage',
-    fallback: { clientId: '', donationText: '' },
+    fallback: { clientId: '', donationText: '', purposeText: '' },
   });
   const { data: picturesData } = useGetAllPicturesByArchiveQuery();
   const archivePictures: FlatArchiveTag[] | undefined =
@@ -85,7 +89,11 @@ const StartView = () => {
           <div className='flex basis-full' />
           <IfFeatureEnabled feature='paypal_mainpage'>
             {paypalClientId !== '' && (
-              <DonateButton donationText={paypalDonationText} clientId={paypalClientId} />
+              <DonateButton
+                donationText={paypalDonationText}
+                clientId={paypalClientId}
+                purposeText={paypalPurposeText}
+              />
             )}
           </IfFeatureEnabled>
         </div>
