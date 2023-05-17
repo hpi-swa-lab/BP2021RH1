@@ -102,6 +102,7 @@ const StartView = () => {
 
         <ShowStats>
           <OverviewContainer
+            defaultValue={1}
             tabs={[
               {
                 title: t('discover.latest-pictures'),
