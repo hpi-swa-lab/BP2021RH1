@@ -213,7 +213,7 @@
         "login": "Sich anmelden"
       },
       "preset": {
-        "public": "Öffentlicher Nutzer"
+        "public": "Allgemeiner Nutzer"
       }
     }
   },
