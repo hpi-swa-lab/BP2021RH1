@@ -15,6 +15,7 @@ const OverviewContainer = ({
         {titles && <h2 className='overview-selection-title'>{titles[tabIndex]}</h2>}
         <Tabs
           variant='scrollable'
+          allowScrollButtonsMobile
           value={tabIndex}
           onChange={(_, value) => {
             setTabIndex(value as number);
