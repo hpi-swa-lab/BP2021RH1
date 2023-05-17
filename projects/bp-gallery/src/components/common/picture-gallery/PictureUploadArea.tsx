@@ -13,11 +13,14 @@ import { cloneDeep, sortBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { useCreatePictureMutation } from '../../../graphql/APIConnector';
-import { useAuth } from '../../../hooks/context-hooks';
+import {
+  useCanRunMultipleCreatePictureMutations,
+  useCreatePictureMutation,
+  useGetAllArchiveTagsQuery,
+} from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useObjectIds } from '../../../hooks/object-ids.hook';
-import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole } from '../../provider/AuthProvider';
+import { FlatArchiveTag, FlatPicture } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import SortableItem from '../SortableItem';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
@@ -60,7 +63,6 @@ const PictureUploadArea = ({
     })
   );
   const { t } = useTranslation();
-  const { role } = useAuth();
   const dialog = useDialog();
   const { getObjectId } = useObjectIds<NewFile>();
 
@@ -69,6 +71,21 @@ const PictureUploadArea = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const [createPicture] = useCreatePictureMutation();
+
+  const { data: archivesData } = useGetAllArchiveTagsQuery();
+  const archives: FlatArchiveTag[] | undefined =
+    useSimplifiedQueryResponseData(archivesData)?.archiveTags;
+
+  const { canRunMultiple: canCreatePicturePerArchive } = useCanRunMultipleCreatePictureMutations({
+    variableSets:
+      archives?.map(archive => ({
+        data: {
+          archive_tag: archive.id,
+        },
+      })) ?? [],
+  });
+
+  const canCreatePicture = canCreatePicturePerArchive.some(can => can);
 
   const asFlatPicture = (file: File): FlatPicture => {
     return {
@@ -140,7 +157,7 @@ const PictureUploadArea = ({
   }
 
   // Do we really want to allow uploading only when preprocessing is enabled?
-  if (role < AuthRole.CURATOR || !preprocessPictures) {
+  if (!canCreatePicture || !preprocessPictures) {
     return null;
   }
 
