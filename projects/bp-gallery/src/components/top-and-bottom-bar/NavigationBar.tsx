@@ -26,14 +26,16 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
 
   const [openLogin, setOpenLogin] = useState<boolean>(false);
 
-  const { role, logout } = useAuth();
+  const { role, loggedIn, logout } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // When a user successfully logs in, the Dialog closes
   useEffect(() => {
+    if (loggedIn) {
     setOpenLogin(false);
-  }, [role]);
+    }
+  }, [loggedIn]);
 
   const curatorItems = useMemo(() => {
     return [
@@ -85,13 +87,10 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
           {isMobile && <ImportContacts />}
           <span className='nav-element-title'>Stöbern</span>
         </NavLink>
-        <div
-          className='nav-element'
-          onClick={role === AuthRole.PUBLIC ? () => setOpenLogin(true) : logout}
-        >
-          {isMobile && (role === AuthRole.PUBLIC ? <Login /> : <Logout />)}
+        <div className='nav-element' onClick={loggedIn ? logout : () => setOpenLogin(true)}>
+          {isMobile && (loggedIn ? <Logout /> : <Login />)}
           <span className='nav-element-title'>
-            {role === AuthRole.PUBLIC ? t('login.title') : t('login.logout')}
+            {loggedIn ? t('login.logout') : t('login.title')}
           </span>
         </div>
         {role === AuthRole.CURATOR && (

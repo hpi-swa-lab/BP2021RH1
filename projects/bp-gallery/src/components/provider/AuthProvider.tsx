@@ -36,6 +36,7 @@ export interface AuthFields {
   role: AuthRole;
   username?: string;
   email?: string;
+  loggedIn: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
@@ -43,6 +44,7 @@ export interface AuthFields {
 
 export const AuthContext = createContext<AuthFields>({
   role: AuthRole.PUBLIC,
+  loggedIn: false,
   login: async () => {},
   logout: () => {},
   loading: false,
@@ -131,7 +133,17 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   }, [apolloClient, displaySuccess, t, openAlert]);
 
   return (
-    <AuthContext.Provider value={{ role, username, email, login, logout, loading: authLoading }}>
+    <AuthContext.Provider
+      value={{
+        role,
+        username,
+        email,
+        loggedIn: username !== undefined,
+        login,
+        logout,
+        loading: authLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
