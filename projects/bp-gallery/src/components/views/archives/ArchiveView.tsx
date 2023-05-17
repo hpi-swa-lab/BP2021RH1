@@ -108,23 +108,34 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
       </div>
       <ShowStats>
         <OverviewContainer
-          titles={['Unsere Bilder', t('discover.most-liked')]}
-          icons={[<AccessTime key='0' />, <ThumbUp key='1' />]}
-        >
-          <PictureOverview
-            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {
-              visit('/archives/' + archiveId + '/show-more/pictures');
-            }}
-          />
-          <PictureOverview
-            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {
-              visit('/archives/' + archiveId + '/show-more/most-liked');
-            }}
-            sortBy={['likes:asc']}
-          />
-        </OverviewContainer>
+          tabs={[
+            {
+              title: t('discover.our-pictures'),
+              icon: <AccessTime key='0' />,
+              content: (
+                <PictureOverview
+                  queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+                  onClick={() => {
+                    visit('/archives/' + archiveId + '/show-more/pictures');
+                  }}
+                />
+              ),
+            },
+            {
+              title: t('discover.most-liked'),
+              icon: <ThumbUp key='1' />,
+              content: (
+                <PictureOverview
+                  queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+                  onClick={() => {
+                    visit('/archives/' + archiveId + '/show-more/most-liked');
+                  }}
+                  sortBy={['likes:asc']}
+                />
+              ),
+            },
+          ]}
+        />
       </ShowStats>
 
       <TagOverview

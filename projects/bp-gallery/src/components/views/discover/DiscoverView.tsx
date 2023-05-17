@@ -16,23 +16,35 @@ const DiscoverView = () => {
     <div className='discover-container'>
       <ShowStats>
         <OverviewContainer
-          titles={[t('discover.latest-pictures'), t('discover.most-liked')]}
-          icons={[<AccessTime key='0' />, <ThumbUp key='1' />]}
-        >
-          <PictureOverview
-            queryParams={{}}
-            onClick={() => {
-              visit('/show-more/latest');
-            }}
-          />
-          <PictureOverview
-            queryParams={{}}
-            onClick={() => {
-              visit('/show-more/most-liked');
-            }}
-            sortBy={['likes:asc']}
-          />
-        </OverviewContainer>
+          tabs={[
+            {
+              title: t('discover.latest-pictures'),
+              icon: <AccessTime key='0' />,
+              content: (
+                <PictureOverview
+                  queryParams={{}}
+                  onClick={() => {
+                    visit('/show-more/latest');
+                  }}
+                />
+              ),
+            },
+            {
+              title: t('discover.most-liked'),
+              icon: <ThumbUp key='1' />,
+              content: (
+                <PictureOverview
+                  queryParams={{}}
+                  onClick={() => {
+                    visit('/show-more/most-liked');
+                  }}
+                  sortBy={['likes:asc']}
+                />
+              ),
+            },
+          ]}
+        />
+
         <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}

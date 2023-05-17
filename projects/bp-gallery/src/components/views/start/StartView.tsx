@@ -102,23 +102,34 @@ const StartView = () => {
 
         <ShowStats>
           <OverviewContainer
-            titles={[t('discover.latest-pictures'), t('discover.most-liked')]}
-            icons={[<AccessTime key='0' />, <ThumbUp key='1' />]}
-          >
-            <PictureOverview
-              queryParams={{}}
-              onClick={() => {
-                visit('/show-more/latest');
-              }}
-            />
-            <PictureOverview
-              queryParams={{}}
-              onClick={() => {
-                visit('/show-more/most-liked');
-              }}
-              sortBy={['likes:asc']}
-            />
-          </OverviewContainer>
+            tabs={[
+              {
+                title: t('discover.latest-pictures'),
+                icon: <AccessTime key='0' />,
+                content: (
+                  <PictureOverview
+                    queryParams={{}}
+                    onClick={() => {
+                      visit('/show-more/latest');
+                    }}
+                  />
+                ),
+              },
+              {
+                title: t('discover.most-liked'),
+                icon: <ThumbUp key='1' />,
+                content: (
+                  <PictureOverview
+                    queryParams={{}}
+                    onClick={() => {
+                      visit('/show-more/most-liked');
+                    }}
+                    sortBy={['likes:asc']}
+                  />
+                ),
+              },
+            ]}
+          />
         </ShowStats>
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>
