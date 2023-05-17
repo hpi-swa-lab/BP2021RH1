@@ -69,9 +69,9 @@ const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <AlertProvider>
-        <AuthProvider>
-          <DialogProvider>
-            <StorageProvider>
+        <StorageProvider>
+          <AuthProvider>
+            <DialogProvider>
               <MobileProvider>
                 <div className='App'>
                   <ClipboardEditorProvider>
@@ -85,9 +85,9 @@ const App = () => {
                   </ClipboardEditorProvider>
                 </div>
               </MobileProvider>
-            </StorageProvider>
-          </DialogProvider>
-        </AuthProvider>
+            </DialogProvider>
+          </AuthProvider>
+        </StorageProvider>
       </AlertProvider>
     </ApolloProvider>
   );
