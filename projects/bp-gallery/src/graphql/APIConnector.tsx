@@ -3430,6 +3430,31 @@ export type CreateArchiveTagMutation = {
   createArchiveTag?: { data?: { id?: string | null } | null } | null;
 };
 
+export type CreateExhibitionMutationVariables = Exact<{
+  title: Scalars['String'];
+  sectionId: Scalars['ID'];
+}>;
+
+export type CreateExhibitionMutation = {
+  createExhibition?: { data?: { id?: string | null } | null } | null;
+};
+
+export type CreateExhibitionSectionMutationVariables = Exact<{
+  title: Scalars['String'];
+}>;
+
+export type CreateExhibitionSectionMutation = {
+  createExhibitionSection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type CreateExhibitionSourceMutationVariables = Exact<{
+  source: Scalars['String'];
+}>;
+
+export type CreateExhibitionSourceMutation = {
+  createExhibitionSource?: { data?: { id?: string | null } | null } | null;
+};
+
 export type CreateFaceTagMutationVariables = Exact<{
   pictureId: Scalars['ID'];
   personTagId: Scalars['ID'];
@@ -3671,6 +3696,45 @@ export type UpdateCollectionMutationVariables = Exact<{
 
 export type UpdateCollectionMutation = {
   updateCollection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateExhibitionMutationVariables = Exact<{
+  id: Scalars['ID'];
+  data: ExhibitionInput;
+}>;
+
+export type UpdateExhibitionMutation = {
+  updateExhibition?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateExhibitionPictureMutationVariables = Exact<{
+  id: Scalars['ID'];
+  subtitle: Scalars['String'];
+  order: Scalars['Int'];
+}>;
+
+export type UpdateExhibitionPictureMutation = {
+  updateExhibitionPicture?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateExhibitionSectionMutationVariables = Exact<{
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  text: Scalars['String'];
+  exhibitionPictureIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+export type UpdateExhibitionSectionMutation = {
+  updateExhibitionSection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateExhibitionSourceMutationVariables = Exact<{
+  id: Scalars['ID'];
+  source: Scalars['String'];
+}>;
+
+export type UpdateExhibitionSourceMutation = {
+  updateExhibitionSource?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateKeywordNameMutationVariables = Exact<{
@@ -6597,6 +6661,175 @@ export type CreateArchiveTagMutationOptions = Apollo.BaseMutationOptions<
   CreateArchiveTagMutationVariables
 >;
 
+export const CreateExhibitionDocument = gql`
+  mutation createExhibition($title: String!, $sectionId: ID!) {
+    createExhibition(data: { title: $title, exhibition_sections: [$sectionId] }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateExhibitionMutationFn = Apollo.MutationFunction<
+  CreateExhibitionMutation,
+  CreateExhibitionMutationVariables
+>;
+
+/**
+ * __useCreateExhibitionMutation__
+ *
+ * To run a mutation, you first call `useCreateExhibitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExhibitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExhibitionMutation, { data, loading, error }] = useCreateExhibitionMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      sectionId: // value for 'sectionId'
+ *   },
+ * });
+ */
+export function useCreateExhibitionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExhibitionMutation,
+    CreateExhibitionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateExhibitionMutation, CreateExhibitionMutationVariables>(
+    CreateExhibitionDocument,
+    options
+  );
+}
+
+export type CreateExhibitionMutationHookResult = ReturnType<typeof useCreateExhibitionMutation>;
+
+export type CreateExhibitionMutationResult = Apollo.MutationResult<CreateExhibitionMutation>;
+
+export type CreateExhibitionMutationOptions = Apollo.BaseMutationOptions<
+  CreateExhibitionMutation,
+  CreateExhibitionMutationVariables
+>;
+
+export const CreateExhibitionSectionDocument = gql`
+  mutation createExhibitionSection($title: String!) {
+    createExhibitionSection(data: { title: $title }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateExhibitionSectionMutationFn = Apollo.MutationFunction<
+  CreateExhibitionSectionMutation,
+  CreateExhibitionSectionMutationVariables
+>;
+
+/**
+ * __useCreateExhibitionSectionMutation__
+ *
+ * To run a mutation, you first call `useCreateExhibitionSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExhibitionSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExhibitionSectionMutation, { data, loading, error }] = useCreateExhibitionSectionMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useCreateExhibitionSectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExhibitionSectionMutation,
+    CreateExhibitionSectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateExhibitionSectionMutation,
+    CreateExhibitionSectionMutationVariables
+  >(CreateExhibitionSectionDocument, options);
+}
+
+export type CreateExhibitionSectionMutationHookResult = ReturnType<
+  typeof useCreateExhibitionSectionMutation
+>;
+
+export type CreateExhibitionSectionMutationResult =
+  Apollo.MutationResult<CreateExhibitionSectionMutation>;
+
+export type CreateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
+  CreateExhibitionSectionMutation,
+  CreateExhibitionSectionMutationVariables
+>;
+
+export const CreateExhibitionSourceDocument = gql`
+  mutation createExhibitionSource($source: String!) {
+    createExhibitionSource(data: { source: $source }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateExhibitionSourceMutationFn = Apollo.MutationFunction<
+  CreateExhibitionSourceMutation,
+  CreateExhibitionSourceMutationVariables
+>;
+
+/**
+ * __useCreateExhibitionSourceMutation__
+ *
+ * To run a mutation, you first call `useCreateExhibitionSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExhibitionSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExhibitionSourceMutation, { data, loading, error }] = useCreateExhibitionSourceMutation({
+ *   variables: {
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useCreateExhibitionSourceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExhibitionSourceMutation,
+    CreateExhibitionSourceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateExhibitionSourceMutation,
+    CreateExhibitionSourceMutationVariables
+  >(CreateExhibitionSourceDocument, options);
+}
+
+export type CreateExhibitionSourceMutationHookResult = ReturnType<
+  typeof useCreateExhibitionSourceMutation
+>;
+
+export type CreateExhibitionSourceMutationResult =
+  Apollo.MutationResult<CreateExhibitionSourceMutation>;
+
+export type CreateExhibitionSourceMutationOptions = Apollo.BaseMutationOptions<
+  CreateExhibitionSourceMutation,
+  CreateExhibitionSourceMutationVariables
+>;
+
 export const CreateFaceTagDocument = gql`
   mutation createFaceTag($pictureId: ID!, $personTagId: ID!, $x: Float, $y: Float) {
     createFaceTag(data: { picture: $pictureId, person_tag: $personTagId, x: $x, y: $y }) {
@@ -8186,6 +8419,246 @@ export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollect
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
+>;
+
+export const UpdateExhibitionDocument = gql`
+  mutation updateExhibition($id: ID!, $data: ExhibitionInput!) {
+    updateExhibition(id: $id, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateExhibitionMutationFn = Apollo.MutationFunction<
+  UpdateExhibitionMutation,
+  UpdateExhibitionMutationVariables
+>;
+
+/**
+ * __useUpdateExhibitionMutation__
+ *
+ * To run a mutation, you first call `useUpdateExhibitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExhibitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExhibitionMutation, { data, loading, error }] = useUpdateExhibitionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateExhibitionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateExhibitionMutation,
+    UpdateExhibitionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateExhibitionMutation, UpdateExhibitionMutationVariables>(
+    UpdateExhibitionDocument,
+    options
+  );
+}
+
+export type UpdateExhibitionMutationHookResult = ReturnType<typeof useUpdateExhibitionMutation>;
+
+export type UpdateExhibitionMutationResult = Apollo.MutationResult<UpdateExhibitionMutation>;
+
+export type UpdateExhibitionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateExhibitionMutation,
+  UpdateExhibitionMutationVariables
+>;
+
+export const UpdateExhibitionPictureDocument = gql`
+  mutation updateExhibitionPicture($id: ID!, $subtitle: String!, $order: Int!) {
+    updateExhibitionPicture(id: $id, data: { subtitle: $subtitle, order: $order }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateExhibitionPictureMutationFn = Apollo.MutationFunction<
+  UpdateExhibitionPictureMutation,
+  UpdateExhibitionPictureMutationVariables
+>;
+
+/**
+ * __useUpdateExhibitionPictureMutation__
+ *
+ * To run a mutation, you first call `useUpdateExhibitionPictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExhibitionPictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExhibitionPictureMutation, { data, loading, error }] = useUpdateExhibitionPictureMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      subtitle: // value for 'subtitle'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useUpdateExhibitionPictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateExhibitionPictureMutation,
+    UpdateExhibitionPictureMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateExhibitionPictureMutation,
+    UpdateExhibitionPictureMutationVariables
+  >(UpdateExhibitionPictureDocument, options);
+}
+
+export type UpdateExhibitionPictureMutationHookResult = ReturnType<
+  typeof useUpdateExhibitionPictureMutation
+>;
+
+export type UpdateExhibitionPictureMutationResult =
+  Apollo.MutationResult<UpdateExhibitionPictureMutation>;
+
+export type UpdateExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
+  UpdateExhibitionPictureMutation,
+  UpdateExhibitionPictureMutationVariables
+>;
+
+export const UpdateExhibitionSectionDocument = gql`
+  mutation updateExhibitionSection(
+    $id: ID!
+    $title: String!
+    $text: String!
+    $exhibitionPictureIds: [ID!]
+  ) {
+    updateExhibitionSection(
+      id: $id
+      data: { title: $title, text: $text, exhibition_pictures: $exhibitionPictureIds }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateExhibitionSectionMutationFn = Apollo.MutationFunction<
+  UpdateExhibitionSectionMutation,
+  UpdateExhibitionSectionMutationVariables
+>;
+
+/**
+ * __useUpdateExhibitionSectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateExhibitionSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExhibitionSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExhibitionSectionMutation, { data, loading, error }] = useUpdateExhibitionSectionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *      text: // value for 'text'
+ *      exhibitionPictureIds: // value for 'exhibitionPictureIds'
+ *   },
+ * });
+ */
+export function useUpdateExhibitionSectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateExhibitionSectionMutation,
+    UpdateExhibitionSectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateExhibitionSectionMutation,
+    UpdateExhibitionSectionMutationVariables
+  >(UpdateExhibitionSectionDocument, options);
+}
+
+export type UpdateExhibitionSectionMutationHookResult = ReturnType<
+  typeof useUpdateExhibitionSectionMutation
+>;
+
+export type UpdateExhibitionSectionMutationResult =
+  Apollo.MutationResult<UpdateExhibitionSectionMutation>;
+
+export type UpdateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateExhibitionSectionMutation,
+  UpdateExhibitionSectionMutationVariables
+>;
+
+export const UpdateExhibitionSourceDocument = gql`
+  mutation updateExhibitionSource($id: ID!, $source: String!) {
+    updateExhibitionSource(id: $id, data: { source: $source }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateExhibitionSourceMutationFn = Apollo.MutationFunction<
+  UpdateExhibitionSourceMutation,
+  UpdateExhibitionSourceMutationVariables
+>;
+
+/**
+ * __useUpdateExhibitionSourceMutation__
+ *
+ * To run a mutation, you first call `useUpdateExhibitionSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExhibitionSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExhibitionSourceMutation, { data, loading, error }] = useUpdateExhibitionSourceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useUpdateExhibitionSourceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateExhibitionSourceMutation,
+    UpdateExhibitionSourceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateExhibitionSourceMutation,
+    UpdateExhibitionSourceMutationVariables
+  >(UpdateExhibitionSourceDocument, options);
+}
+
+export type UpdateExhibitionSourceMutationHookResult = ReturnType<
+  typeof useUpdateExhibitionSourceMutation
+>;
+
+export type UpdateExhibitionSourceMutationResult =
+  Apollo.MutationResult<UpdateExhibitionSourceMutation>;
+
+export type UpdateExhibitionSourceMutationOptions = Apollo.BaseMutationOptions<
+  UpdateExhibitionSourceMutation,
+  UpdateExhibitionSourceMutationVariables
 >;
 
 export const UpdateKeywordNameDocument = gql`
