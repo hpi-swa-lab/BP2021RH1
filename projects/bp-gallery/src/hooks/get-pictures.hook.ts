@@ -44,6 +44,7 @@ const useGetPictures = (
       : (queryParams as PictureFiltersInput);
   }, [filterOutTexts, queryParams]);
   const queryResult = useGetPicturesQuery({
+    fetchPolicy: 'no-cache',
     variables: {
       filters,
       pagination: {

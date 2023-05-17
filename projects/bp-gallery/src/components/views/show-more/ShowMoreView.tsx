@@ -79,12 +79,16 @@ const ShowMoreView = ({
             sortBy={
               categoryType !== 'pictures' && categoryId
                 ? ['time_range_tag.start:asc']
+                : categoryType === 'most-liked'
+                ? ['likes:asc']
                 : ['createdAt:desc']
             }
             hashbase={'show-more'}
             extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
             bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
-            maxNumPictures={categoryType === 'latest' ? 500 : undefined}
+            maxNumPictures={
+              categoryType === 'latest' || categoryType === 'most-liked' ? 500 : undefined
+            }
           />
         </ShowStats>
       </div>

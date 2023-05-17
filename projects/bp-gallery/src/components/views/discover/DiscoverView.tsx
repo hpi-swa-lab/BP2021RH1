@@ -5,6 +5,8 @@ import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import './DiscoverView.scss';
+import OverviewContainer from '../../common/OverviewContainer';
+import { AccessTime, ThumbUp } from '@mui/icons-material';
 
 const DiscoverView = () => {
   const { visit } = useVisit();
@@ -13,13 +15,24 @@ const DiscoverView = () => {
   return (
     <div className='discover-container'>
       <ShowStats>
-        <PictureOverview
-          title={t('discover.latest-pictures')}
-          queryParams={{}}
-          onClick={() => {
-            visit('/show-more/latest');
-          }}
-        />
+        <OverviewContainer
+          titles={[t('discover.latest-pictures'), t('discover.most-liked')]}
+          icons={[<AccessTime key='0' />, <ThumbUp key='1' />]}
+        >
+          <PictureOverview
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/latest');
+            }}
+          />
+          <PictureOverview
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/most-liked');
+            }}
+            sortBy={['likes:asc']}
+          />
+        </OverviewContainer>
         <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}

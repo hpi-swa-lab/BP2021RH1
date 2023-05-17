@@ -1,4 +1,4 @@
-import { Edit, Link } from '@mui/icons-material';
+import { AccessTime, Edit, Link, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
@@ -16,6 +16,7 @@ import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
 import DonateButton from '../../common/DonateButton';
 import { useTranslation } from 'react-i18next';
+import OverviewContainer from '../../common/OverviewContainer';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -106,13 +107,24 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </div>
       <ShowStats>
-        <PictureOverview
-          title='Unsere Bilder'
-          queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-          onClick={() => {
-            visit('/archives/' + archiveId + '/show-more/pictures');
-          }}
-        />
+        <OverviewContainer
+          titles={['Unsere Bilder', t('discover.most-liked')]}
+          icons={[<AccessTime key='0' />, <ThumbUp key='1' />]}
+        >
+          <PictureOverview
+            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            onClick={() => {
+              visit('/archives/' + archiveId + '/show-more/pictures');
+            }}
+          />
+          <PictureOverview
+            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            onClick={() => {
+              visit('/archives/' + archiveId + '/show-more/most-liked');
+            }}
+            sortBy={['likes:asc']}
+          />
+        </OverviewContainer>
       </ShowStats>
 
       <TagOverview

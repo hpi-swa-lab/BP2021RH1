@@ -373,7 +373,9 @@
     "person-title": "Personen",
     "person-text": "Hier finden Sie alle Personen unseres Archiv",
     "location-title": "Orte",
-    "location-text": "Hier finden Sie alle Orte unseres Archivs"
+    "location-text": "Hier finden Sie alle Orte unseres Archivs",
+    "most-liked-title": "Bestbewertete Bilder",
+    "most-liked-text": "Hier finden sie die 500 bestbewerteten Bilder der Fotoarchive. Wer einen Überblick haben will, welche Bilder anderen Nutzern gefallen ist hier richtig."
   },
   "discover": {
     "discover-button": "Stöbere in allen Archiven",
@@ -381,6 +383,7 @@
     "decades": "Jahrzehnte",
     "locations": "Orte",
     "more-info": "Wissen Sie mehr über diese Bilder?",
-    "our-categories": "Unsere Kategorien"
+    "our-categories": "Unsere Kategorien",
+    "most-liked": "Bestbewertete Bilder"
   }
 }

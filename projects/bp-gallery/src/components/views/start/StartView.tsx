@@ -18,6 +18,8 @@ import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
+import { AccessTime, ThumbUp } from '@mui/icons-material';
+import OverviewContainer from '../../common/OverviewContainer';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -99,11 +101,24 @@ const StartView = () => {
         </div>
 
         <ShowStats>
-          <PictureOverview
-            title={t('discover.latest-pictures')}
-            queryParams={{}}
-            onClick={() => visit('/show-more/latest')}
-          />
+          <OverviewContainer
+            titles={[t('discover.latest-pictures'), t('discover.most-liked')]}
+            icons={[<AccessTime key='0' />, <ThumbUp key='1' />]}
+          >
+            <PictureOverview
+              queryParams={{}}
+              onClick={() => {
+                visit('/show-more/latest');
+              }}
+            />
+            <PictureOverview
+              queryParams={{}}
+              onClick={() => {
+                visit('/show-more/most-liked');
+              }}
+              sortBy={['likes:asc']}
+            />
+          </OverviewContainer>
         </ShowStats>
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>
