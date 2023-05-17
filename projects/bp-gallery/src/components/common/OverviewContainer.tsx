@@ -1,4 +1,4 @@
-import { IconProps, Tab, Tabs } from '@mui/material';
+import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
 import { Children, PropsWithChildren, ReactElement, useState } from 'react';
 
 const OverviewContainer = ({
@@ -21,7 +21,9 @@ const OverviewContainer = ({
           }}
         >
           {icons.map((icon, index) => (
-            <Tab icon={icon} key={index} />
+            <Tooltip key={index} title={titles && titles.length > index ? titles[index] : ''}>
+              <Tab icon={icon} />
+            </Tooltip>
           ))}
         </Tabs>
       </div>
