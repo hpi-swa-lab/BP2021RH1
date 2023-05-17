@@ -474,6 +474,7 @@ export type ExhibitionPicture = {
   createdAt?: Maybe<Scalars['DateTime']>;
   exhibition_idealot?: Maybe<ExhibitionEntityResponse>;
   exhibition_section?: Maybe<ExhibitionSectionEntityResponse>;
+  order?: Maybe<Scalars['Int']>;
   picture?: Maybe<PictureEntityResponse>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   subtitle?: Maybe<Scalars['String']>;
@@ -502,6 +503,7 @@ export type ExhibitionPictureFiltersInput = {
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<ExhibitionPictureFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ExhibitionPictureFiltersInput>>>;
+  order?: InputMaybe<IntFilterInput>;
   picture?: InputMaybe<PictureFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   subtitle?: InputMaybe<StringFilterInput>;
@@ -511,6 +513,7 @@ export type ExhibitionPictureFiltersInput = {
 export type ExhibitionPictureInput = {
   exhibition_idealot?: InputMaybe<Scalars['ID']>;
   exhibition_section?: InputMaybe<Scalars['ID']>;
+  order?: InputMaybe<Scalars['Int']>;
   picture?: InputMaybe<Scalars['ID']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   subtitle?: InputMaybe<Scalars['String']>;
@@ -2823,6 +2826,7 @@ export type GetExhibitionQuery = {
                 data: Array<{
                   id?: string | null;
                   attributes?: {
+                    order?: number | null;
                     subtitle?: string | null;
                     picture?: {
                       data?: {
@@ -4781,10 +4785,11 @@ export const GetExhibitionDocument = gql`
               attributes {
                 title
                 text
-                exhibition_pictures {
+                exhibition_pictures(sort: "order:asc") {
                   data {
                     id
                     attributes {
+                      order
                       subtitle
                       picture {
                         data {

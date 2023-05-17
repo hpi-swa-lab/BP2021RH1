@@ -71,10 +71,11 @@ export default {
                 attributes {
                   title
                   text
-                  exhibition_pictures {
+                  exhibition_pictures(sort: "order:asc") {
                     data {
                       id
                       attributes {
+                        order
                         subtitle
                         picture {
                           data {
