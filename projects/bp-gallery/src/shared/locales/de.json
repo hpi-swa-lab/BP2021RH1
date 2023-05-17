@@ -205,6 +205,7 @@
         "getAllArchiveTags": "Liste aller Archive ansehen",
         "getArchive": "Archiv ansehen",
         "geo": "GeoQuiz spielen",
+        "canRunOperation": "Recht abfragen",
         "createParameterizedPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
         "deleteParameterizedPermission": "Recht entziehen",
