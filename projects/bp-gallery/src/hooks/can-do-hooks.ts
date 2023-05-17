@@ -1,5 +1,8 @@
 import {
   useCanRunCreateArchiveTagMutation,
+  useCanRunGetAllKeywordTagsQuery,
+  useCanRunGetAllLocationTagsQuery,
+  useCanRunGetAllPersonTagsQuery,
   useCanRunMultipleCreatePictureMutations,
   useCanRunUpdateArchiveMutation,
   useGetAllArchiveTagsQuery,
@@ -49,4 +52,18 @@ export const useCanUseUploadsView = () => {
     canUploadPicture,
     canUploadPictureLoading,
   };
+};
+
+// in the TagTableView hooks, don't rename canRun since they are used in useGenericTagEndpoints
+
+export const useCanUsePersonTagTableView = () => {
+  return useCanRunGetAllPersonTagsQuery();
+};
+
+export const useCanUseLocationTagTableView = () => {
+  return useCanRunGetAllLocationTagsQuery();
+};
+
+export const useCanUseKeywordTagTableView = () => {
+  return useCanRunGetAllKeywordTagsQuery();
 };
