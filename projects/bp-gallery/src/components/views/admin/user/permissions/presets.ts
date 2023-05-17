@@ -19,6 +19,7 @@ export const presets: Preset[] = [
       'getTagThumbnails',
       'getAllArchiveTags',
       'geo',
+      'canRunOperation',
       'login',
     ],
   },
