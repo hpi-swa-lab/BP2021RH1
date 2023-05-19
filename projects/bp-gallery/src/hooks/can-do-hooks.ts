@@ -1,8 +1,10 @@
 import {
+  useCanRunBulkEditMutation,
   useCanRunCreateArchiveTagMutation,
   useCanRunGetAllKeywordTagsQuery,
   useCanRunGetAllLocationTagsQuery,
   useCanRunGetAllPersonTagsQuery,
+  useCanRunGetMultiplePictureInfoQuery,
   useCanRunGetUnverifiedCommentsQuery,
   useCanRunMultipleCreatePictureMutations,
   useCanRunUpdateArchiveMutation,
@@ -74,5 +76,23 @@ export const useCanUseUnverifiedCommentsView = () => {
   return {
     canUseUnverifiedCommentsView,
     loading,
+  };
+};
+
+export const useCanUseBulkEditView = (pictureIds: string[]) => {
+  const { canRun: canRunGetMultiplePictureInfo, loading: canRunGetMultiplePictureInfoLoading } =
+    useCanRunGetMultiplePictureInfoQuery({
+      variables: {
+        pictureIds,
+      },
+    });
+  const { canRun: canRunBulkEdit, loading: canRunBulkEditLoading } = useCanRunBulkEditMutation({
+    variables: {
+      pictureIds,
+    },
+  });
+  return {
+    canUseBulkEditView: canRunGetMultiplePictureInfo && canRunBulkEdit,
+    loading: canRunGetMultiplePictureInfoLoading || canRunBulkEditLoading,
   };
 };

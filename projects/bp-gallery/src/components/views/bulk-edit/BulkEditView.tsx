@@ -8,8 +8,10 @@ import {
   useGetMultiplePictureInfoQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useCanUseBulkEditView } from '../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { HideStats } from '../../provider/ShowStatsProvider';
@@ -96,62 +98,72 @@ const BulkEditView = ({
     [bulkEditResponse, t]
   );
 
-  if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
-    return <Loading />;
-  } else if (pictures) {
-    const combinedPicture = combinePictures(pictures);
-    const onSave = (field: Field) => {
-      const combinedPictureAsField = {
-        ...combinedPicture,
-        archive_tag: combinedPicture.archive_tag?.id,
-      };
-      const diff = computePictureDiff(combinedPictureAsField, field);
-      save(diff);
-    };
-    const hasHiddenLinks =
-      (combinedPicture.linked_pictures?.length ?? 0) === 0 &&
-      (combinedPicture.linked_texts?.length ?? 0) === 0 &&
-      pictures.some(
-        picture =>
-          (picture.linked_pictures?.length ?? 0) > 0 || (picture.linked_texts?.length ?? 0) > 0
-      );
-    return (
-      <div className='bulk-edit'>
-        <div className='bulk-edit-grid-wrapper'>
-          <div className='grid-ui'>
-            <PictureToolbar calledViaLink={!onBack} />
-          </div>
-          <div className='bulk-edit-picture-grid'>
-            <HideStats>
-              <PictureScrollGrid
-                queryParams={getPictureFilters(pictureIds)}
-                hashbase={'A'}
-                showDefaultAdornments={false}
-                allowClicks={false}
-              />
-            </HideStats>
-          </div>
-        </div>
-        <div className='bulk-edit-picture-info'>
-          <PictureInfo
-            picture={combinedPicture}
-            pictureIds={pictureIds}
-            hasHiddenLinks={hasHiddenLinks}
-            onSave={onSave}
-            topInfo={(anyFieldTouched, isSaving) => (
-              <div className='curator-ops'>
-                <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
+  const { canUseBulkEditView, loading: canUseBulkEditViewLoading } =
+    useCanUseBulkEditView(pictureIds);
+
+  return (
+    <ProtectedRoute canUse={canUseBulkEditView} canUseLoading={canUseBulkEditViewLoading}>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else if (pictures) {
+          const combinedPicture = combinePictures(pictures);
+          const onSave = (field: Field) => {
+            const combinedPictureAsField = {
+              ...combinedPicture,
+              archive_tag: combinedPicture.archive_tag?.id,
+            };
+            const diff = computePictureDiff(combinedPictureAsField, field);
+            save(diff);
+          };
+          const hasHiddenLinks =
+            (combinedPicture.linked_pictures?.length ?? 0) === 0 &&
+            (combinedPicture.linked_texts?.length ?? 0) === 0 &&
+            pictures.some(
+              picture =>
+                (picture.linked_pictures?.length ?? 0) > 0 ||
+                (picture.linked_texts?.length ?? 0) > 0
+            );
+          return (
+            <div className='bulk-edit'>
+              <div className='bulk-edit-grid-wrapper'>
+                <div className='grid-ui'>
+                  <PictureToolbar calledViaLink={!onBack} />
+                </div>
+                <div className='bulk-edit-picture-grid'>
+                  <HideStats>
+                    <PictureScrollGrid
+                      queryParams={getPictureFilters(pictureIds)}
+                      hashbase={'A'}
+                      showDefaultAdornments={false}
+                      allowClicks={false}
+                    />
+                  </HideStats>
+                </div>
               </div>
-            )}
-          />
-        </div>
-      </div>
-    );
-  } else {
-    return <div> {t('common.no-picture')} </div>;
-  }
+              <div className='bulk-edit-picture-info'>
+                <PictureInfo
+                  picture={combinedPicture}
+                  pictureIds={pictureIds}
+                  hasHiddenLinks={hasHiddenLinks}
+                  onSave={onSave}
+                  topInfo={(anyFieldTouched, isSaving) => (
+                    <div className='curator-ops'>
+                      <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
+                    </div>
+                  )}
+                />
+              </div>
+            </div>
+          );
+        } else {
+          return <div> {t('common.no-picture')} </div>;
+        }
+      }}
+    </ProtectedRoute>
+  );
 };
 
 export default BulkEditView;
