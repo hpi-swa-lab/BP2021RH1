@@ -3,7 +3,6 @@ import { Redirect } from 'react-router-dom';
 import Demo from '../prototypes/demo';
 import TimeLineDemo from '../prototypes/timeline-demo';
 import { TagType } from '../types/additionalFlatTypes';
-import ProtectedRoute from './common/ProtectedRoute';
 import PermissionsView from './views/admin/user/PermissionsView';
 import ArchiveEditView from './views/archives/ArchiveEditView';
 import ArchiveView from './views/archives/ArchiveView';
@@ -78,11 +77,7 @@ const routes: RouteConfig[] = [
   {
     path: '/bulk-edit/:ids',
     render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
-      return (
-        <ProtectedRoute>
-          <BulkEditView pictureIds={match.params.ids.split(',')} />
-        </ProtectedRoute>
-      );
+      return <BulkEditView pictureIds={match.params.ids.split(',')} />;
     },
   },
   {
