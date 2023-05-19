@@ -4,10 +4,9 @@ import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useAcceptCommentMutation,
-  useCanRunAcceptCommentMutation,
-  useCanRunDeclineCommentMutation,
   useDeclineCommentMutation,
 } from '../../../../../graphql/APIConnector';
+import { useCanAcceptOrDeclineComment } from '../../../../../hooks/can-do-hooks';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import './CommentVerification.scss';
@@ -28,22 +27,12 @@ const CommentVerification = ({
       'getPicturesByAllSearch',
     ],
   });
-  const { canRun: canAcceptComment } = useCanRunAcceptCommentMutation({
-    variables: {
-      commentId: comment.id,
-    },
-  });
 
   const [declineComment] = useDeclineCommentMutation({
     variables: {
       commentId: comment.id,
     },
     refetchQueries: ['getPictureInfo'],
-  });
-  const { canRun: canDeclineComment } = useCanRunDeclineCommentMutation({
-    variables: {
-      commentId: comment.id,
-    },
   });
 
   const onDecline = async () => {
@@ -56,15 +45,16 @@ const CommentVerification = ({
     await declineComment();
   };
 
-  const canAcceptOrDecline = canAcceptComment || canDeclineComment;
+  const { canAcceptOrDeclineComment, canAcceptComment, canDeclineComment } =
+    useCanAcceptOrDeclineComment(comment.id);
 
-  if (!comment.publishedAt && !canAcceptOrDecline) {
+  if (!comment.publishedAt && !canAcceptOrDeclineComment) {
     return null;
   } else {
     return (
       <div
         className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}${
-          !canAcceptOrDecline ? ' unstyled' : ''
+          !canAcceptOrDeclineComment ? ' unstyled' : ''
         }`}
       >
         {children}

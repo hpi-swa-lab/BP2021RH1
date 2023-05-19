@@ -2,6 +2,8 @@ import { ExpandMore, QuestionAnswer } from '@mui/icons-material';
 import { Badge } from '@mui/material';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCanAcceptOrDeclineComment } from '../../../../../hooks/can-do-hooks';
+import { useAuth } from '../../../../../hooks/context-hooks';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import { AuthRole } from '../../../../provider/AuthProvider';
 import LikeButton from '../LikeButton';
@@ -9,7 +11,6 @@ import CommentVerification from './CommentVerification';
 import './CommentsContainer.scss';
 import FormattedComment from './FormattedComment';
 import NewCommentForm from './NewCommentForm';
-import { useAuth } from '../../../../../hooks/context-hooks';
 
 const CommentsContainer = memo(function CommentsContainer({
   pictureId,
@@ -49,11 +50,16 @@ const CommentsContainer = memo(function CommentsContainer({
     );
   };
 
-  const badgeNumber = (() => {
-    return role < AuthRole.CURATOR
+  // use the first comment (if it exists) as a standin for all,
+  // since the premission is bound to an archive and all comments
+  // belong to the same picture (and therefore to the same archive)
+  const { canAcceptOrDeclineComment } = useCanAcceptOrDeclineComment(comments?.[0]?.id);
+
+  const badgeNumber = useMemo(() => {
+    return !canAcceptOrDeclineComment
       ? comments?.filter(elem => elem.publishedAt).length
       : comments?.length;
-  })();
+  }, [canAcceptOrDeclineComment, comments]);
 
   return (
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>

@@ -1,7 +1,9 @@
 import {
+  useCanRunAcceptCommentMutation,
   useCanRunBulkEditMutation,
   useCanRunCreateArchiveTagMutation,
   useCanRunCreateSubCollectionMutation,
+  useCanRunDeclineCommentMutation,
   useCanRunDeleteCollectionMutation,
   useCanRunGetAllKeywordTagsQuery,
   useCanRunGetAllLocationTagsQuery,
@@ -130,5 +132,28 @@ export const useCanUseCollectionCuratingView = () => {
       canDeleteCollectionLoading ||
       canMergeCollectionsLoading ||
       canCreateSubCollectionLoading,
+  };
+};
+
+export const useCanAcceptOrDeclineComment = (commentId: string | undefined) => {
+  const { canRun: canAcceptComment, loading: canAcceptCommentLoading } =
+    useCanRunAcceptCommentMutation({
+      variables: {
+        commentId: commentId,
+      },
+    });
+  const { canRun: canDeclineComment, loading: canDeclineCommentLoading } =
+    useCanRunDeclineCommentMutation({
+      variables: {
+        commentId: commentId,
+      },
+    });
+  return {
+    canAcceptOrDeclineComment: canAcceptComment || canDeclineComment,
+    loading: canAcceptCommentLoading || canDeclineCommentLoading,
+    canAcceptComment,
+    canAcceptCommentLoading,
+    canDeclineComment,
+    canDeclineCommentLoading,
   };
 };
