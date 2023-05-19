@@ -4,11 +4,11 @@ import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useAcceptCommentMutation,
+  useCanRunAcceptCommentMutation,
+  useCanRunDeclineCommentMutation,
   useDeclineCommentMutation,
 } from '../../../../../graphql/APIConnector';
-import { useAuth } from '../../../../../hooks/context-hooks';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { AuthRole } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import './CommentVerification.scss';
 
@@ -18,7 +18,6 @@ const CommentVerification = ({
 }: PropsWithChildren<{ comment: FlatComment }>) => {
   const dialog = useDialog();
   const { t } = useTranslation();
-  const { role } = useAuth();
 
   const [acceptComment] = useAcceptCommentMutation({
     variables: { commentId: comment.id, currentTime: new Date().toISOString() },
@@ -29,11 +28,22 @@ const CommentVerification = ({
       'getPicturesByAllSearch',
     ],
   });
+  const { canRun: canAcceptComment } = useCanRunAcceptCommentMutation({
+    variables: {
+      commentId: comment.id,
+    },
+  });
+
   const [declineComment] = useDeclineCommentMutation({
     variables: {
       commentId: comment.id,
     },
     refetchQueries: ['getPictureInfo'],
+  });
+  const { canRun: canDeclineComment } = useCanRunDeclineCommentMutation({
+    variables: {
+      commentId: comment.id,
+    },
   });
 
   const onDecline = async () => {
@@ -46,24 +56,30 @@ const CommentVerification = ({
     await declineComment();
   };
 
-  if (role < AuthRole.CURATOR && !comment.publishedAt) {
+  const canAcceptOrDecline = canAcceptComment || canDeclineComment;
+
+  if (!comment.publishedAt && !canAcceptOrDecline) {
     return null;
   } else {
     return (
       <div
         className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}${
-          role < AuthRole.CURATOR ? ' unstyled' : ''
+          !canAcceptOrDecline ? ' unstyled' : ''
         }`}
       >
         {children}
         {!comment.publishedAt && (
           <>
-            <Button startIcon={<Close />} onClick={onDecline}>
-              {t('common.decline')}
-            </Button>
-            <Button startIcon={<Done />} onClick={() => acceptComment()} variant='contained'>
-              {t('common.accept')}
-            </Button>
+            {canDeclineComment && (
+              <Button startIcon={<Close />} onClick={onDecline}>
+                {t('common.decline')}
+              </Button>
+            )}
+            {canAcceptComment && (
+              <Button startIcon={<Done />} onClick={() => acceptComment()} variant='contained'>
+                {t('common.accept')}
+              </Button>
+            )}
           </>
         )}
       </div>
