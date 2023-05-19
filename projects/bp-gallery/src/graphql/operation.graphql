@@ -65,8 +65,8 @@ mutation unpublishPicture($id: ID!) { updatePicture(id: $id data: { publishedAt:
 mutation updateArchive($archiveId: ID! $data: ArchiveTagInput!) { updateArchiveTag(id: $archiveId data: $data) { data { id } } }
 mutation updateCollection($collectionId: ID! $data: CollectionInput!) { updateCollection(id: $collectionId data: $data) { data { id } } }
 mutation updateExhibition($id: ID! $data: ExhibitionInput!) { updateExhibition(id: $id data: $data) { data { id } } }
-mutation updateExhibitionPicture($id: ID! $subtitle: String! $order: Int!) { updateExhibitionPicture(id: $id data: { subtitle: $subtitle order: $order }) { data { id } } }
-mutation updateExhibitionSection( $id: ID! $title: String! $text: String! $exhibitionPictureIds: [ID!] ) { updateExhibitionSection( id: $id data: { title: $title text: $text exhibition_pictures: $exhibitionPictureIds } ) { data { id } } }
+mutation updateExhibitionPicture($id: ID! $subtitle: String $order: Int!) { updateExhibitionPicture(id: $id data: { subtitle: $subtitle order: $order }) { data { id } } }
+mutation updateExhibitionSection( $id: ID! $title: String $text: String $exhibitionPictureIds: [ID] ) { updateExhibitionSection( id: $id data: { title: $title text: $text exhibition_pictures: $exhibitionPictureIds } ) { data { id } } }
 mutation updateExhibitionSource($id: ID! $source: String!) { updateExhibitionSource(id: $id data: { source: $source }) { data { id } } }
 mutation updateKeywordName($tagId: ID! $name: String!) { updateKeywordTag(id: $tagId data: { name: $name }) { data { id } } }
 mutation updateKeywordSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updateKeywordTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }

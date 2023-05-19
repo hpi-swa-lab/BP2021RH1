@@ -4,9 +4,9 @@ export default {
   document: graphql`
     mutation updateExhibitionSection(
       $id: ID!
-      $title: String!
-      $text: String!
-      $exhibitionPictureIds: [ID!]
+      $title: String
+      $text: String
+      $exhibitionPictureIds: [ID]
     ) {
       updateExhibitionSection(
         id: $id

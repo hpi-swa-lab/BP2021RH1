@@ -273,7 +273,10 @@ interface DropzoneContent {
 }
 
 const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
-  const { data: exhibitionData } = useGetExhibitionQuery({ variables: { exhibitionId } });
+  const { data: exhibitionData } = useGetExhibitionQuery({
+    variables: { exhibitionId },
+  });
+  console.log(exhibitionData);
   const exhibition: FlatExhibition | undefined =
     useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
   return (

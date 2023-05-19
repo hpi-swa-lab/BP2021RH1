@@ -16,6 +16,11 @@ import {
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import {
+  useUpdateExhibitionMutation,
+  useUpdateExhibitionPictureMutation,
+  useUpdateExhibitionSectionMutation,
+} from '../../../graphql/APIConnector';
 
 interface ExhibitionText {
   title: string;
@@ -250,7 +255,30 @@ export const ExhibitionStateManager = ({
 
   const [isSorting, setIsSorting] = useState(false);
 
+  const [updateExhibitionPicture] = useUpdateExhibitionPictureMutation();
+
+  const [updateExhibitionSection] = useUpdateExhibitionSectionMutation();
+
+  const [updateExhibition] = useUpdateExhibitionMutation();
+
   const addToSection = (dragElement: DragElement, sectionId: string) => {
+    const section = sections.find(section => section.id === sectionId);
+    const exhibitionPictureIds = section?.dragElements
+      .map(dragElem => dragElem.id)
+      .flat()
+      .concat(dragElement.id);
+    section &&
+      exhibitionPictureIds &&
+      updateExhibitionSection({
+        variables: {
+          id: sectionId,
+          title: section.title,
+          text: section.text,
+          exhibitionPictureIds: exhibitionPictureIds,
+        },
+      });
+
+    // set GUI
     setSections(
       sections.map(section =>
         section.id === sectionId
@@ -266,6 +294,25 @@ export const ExhibitionStateManager = ({
   };
 
   const removeFromSection = (dragElement: DragElement) => {
+    const section = sections.find(section =>
+      section.dragElements.some(elem => elem === dragElement)
+    );
+    const exhibitionPictureIds = section?.dragElements
+      .map(dragElem => dragElem.id)
+      .flat()
+      .filter(id => id !== dragElement.id);
+    section &&
+      exhibitionPictureIds &&
+      updateExhibitionSection({
+        variables: {
+          id: section.id,
+          title: section.title,
+          text: section.text,
+          exhibitionPictureIds: exhibitionPictureIds,
+        },
+      });
+
+    //Set GUI
     setSections(
       sections.map(section =>
         section.dragElements.some(elem => elem === dragElement)
@@ -299,40 +346,91 @@ export const ExhibitionStateManager = ({
     if (isTitle) {
       if (idealot && titlePicture) setIdealot([...idealot, titlePicture]);
       setTitlePicture(dragElement);
+      let ideaLotPictureIds = idealot?.map(elem => elem.id).flat();
+      if (titlePicture) {
+        ideaLotPictureIds = ideaLotPictureIds?.concat(titlePicture.id);
+      }
+      updateExhibition({
+        variables: {
+          id: exhibition.id,
+          data: {
+            title_picture: dragElement.id,
+            idealot_pictures: ideaLotPictureIds,
+          },
+        },
+      });
+      return;
     }
-    if (isIdeaLot && idealot) return setIdealot([...idealot, dragElement]);
+    if (isIdeaLot && idealot) {
+      const ideaLotPictureIds = idealot
+        .map(elem => elem.id)
+        .flat()
+        .concat(dragElement.id);
+      updateExhibition({
+        variables: {
+          id: exhibition.id,
+          data: {
+            idealot_pictures: ideaLotPictureIds,
+          },
+        },
+      });
+      return setIdealot([...idealot, dragElement]);
+    }
   };
 
+  //TODO: remove from idealot doesnt work
   const removeDraggable = (dragElement: DragElement) => {
-    if (titlePicture === dragElement) return setTitlePicture(undefined);
+    console.log(dragElement.id + ' ' + titlePicture?.id);
+    if (titlePicture && titlePicture.id === dragElement.id) {
+      updateExhibition({
+        variables: {
+          id: exhibition.id,
+          data: {
+            title_picture: null,
+          },
+        },
+      });
+      setTitlePicture(undefined);
+    }
     removeFromSection(dragElement);
+    const idealotPictureIds = idealot
+      ?.filter(elem => elem.id !== dragElement.id)
+      .map(elem => elem.id);
+    updateExhibition({
+      variables: {
+        id: exhibition.id,
+        data: {
+          idealot_pictures: idealotPictureIds,
+        },
+      },
+    });
     setIdealot(idealot?.filter(elem => elem !== dragElement));
   };
 
   const swapSectionDraggables = (oldIndex: number, newIndex: number, sectionId: string) => {
-    setSections(
-      sections.map(section =>
-        section.id === sectionId
-          ? ({
-              id: section.id,
-              text: section.text,
-              dragElements: section.dragElements.map((elem, index) => {
-                if (index === oldIndex)
-                  return {
-                    ...section.dragElements[newIndex],
-                    order: section.dragElements[newIndex].order,
-                  };
-                if (index === newIndex)
-                  return {
-                    ...section.dragElements[oldIndex],
-                    order: section.dragElements[oldIndex].order,
-                  };
-                return elem;
-              }),
-            } as SectionState)
-          : section
-      )
-    );
+    const currentDragElement = sections.find(section => section.id === sectionId)?.dragElements[
+      oldIndex
+    ];
+    const otherDragElement = sections.find(section => section.id === sectionId)?.dragElements[
+      newIndex
+    ];
+    currentDragElement &&
+      updateExhibitionPicture({
+        variables: {
+          id: currentDragElement.id,
+          order: newIndex,
+          subtitle: currentDragElement.subtitle,
+        },
+      });
+    otherDragElement &&
+      updateExhibitionPicture({
+        variables: {
+          id: otherDragElement.id,
+          order: oldIndex,
+          subtitle: otherDragElement.subtitle,
+        },
+      });
+    setSections(buildSectionState(exhibition.exhibition_sections));
   };
 
   const getSection = (sectionId: string) => {
@@ -486,7 +584,6 @@ const DragNDropHandler = ({
   const dragHandleEnd = (event: DragEndEvent) => {
     const { over, active } = event;
     if (!activeDraggable) return;
-    console.log(active.id);
     removeDraggable(activeDraggable);
     if (over) {
       if (over.id === 'titleDropzone') {

@@ -3709,7 +3709,7 @@ export type UpdateExhibitionMutation = {
 
 export type UpdateExhibitionPictureMutationVariables = Exact<{
   id: Scalars['ID'];
-  subtitle: Scalars['String'];
+  subtitle?: InputMaybe<Scalars['String']>;
   order: Scalars['Int'];
 }>;
 
@@ -3719,9 +3719,9 @@ export type UpdateExhibitionPictureMutation = {
 
 export type UpdateExhibitionSectionMutationVariables = Exact<{
   id: Scalars['ID'];
-  title: Scalars['String'];
-  text: Scalars['String'];
-  exhibitionPictureIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+  exhibitionPictureIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>>;
 }>;
 
 export type UpdateExhibitionSectionMutation = {
@@ -8477,7 +8477,7 @@ export type UpdateExhibitionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const UpdateExhibitionPictureDocument = gql`
-  mutation updateExhibitionPicture($id: ID!, $subtitle: String!, $order: Int!) {
+  mutation updateExhibitionPicture($id: ID!, $subtitle: String, $order: Int!) {
     updateExhibitionPicture(id: $id, data: { subtitle: $subtitle, order: $order }) {
       data {
         id
@@ -8538,9 +8538,9 @@ export type UpdateExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
 export const UpdateExhibitionSectionDocument = gql`
   mutation updateExhibitionSection(
     $id: ID!
-    $title: String!
-    $text: String!
-    $exhibitionPictureIds: [ID!]
+    $title: String
+    $text: String
+    $exhibitionPictureIds: [ID]
   ) {
     updateExhibitionSection(
       id: $id
