@@ -11,6 +11,8 @@ import {
   useState,
 } from 'react';
 import {
+  useCanRunCreateFaceTagMutation,
+  useCanRunMultipleDeleteFaceTagMutations,
   useCreateFaceTagMutation,
   useDeleteFaceTagMutation,
   useGetFaceTagsQuery,
@@ -25,6 +27,8 @@ import { useImageRect } from '../views/picture/face-tagging/helpers/image-rect';
 import { PictureViewContext } from '../views/picture/PictureView';
 
 export type FaceTagging = {
+  canFaceTag: boolean;
+  canCreateTag: boolean;
   activeTagId: string | null;
   setActiveTagId: Dispatch<SetStateAction<string | null>>;
   tags: FaceTagData[];
@@ -98,6 +102,12 @@ export const FaceTaggingProvider = ({
     refetchQueries: ['getFaceTags'],
   });
 
+  const { canRun: canCreateTag } = useCanRunCreateFaceTagMutation({
+    variables: {
+      pictureId,
+    },
+  });
+
   // used to remove the position dependency from placeTag,
   // which prevents the events-useEffect from firing on position changes
   const positionRef = useRef(position);
@@ -124,6 +134,15 @@ export const FaceTaggingProvider = ({
     refetchQueries: ['getFaceTags'],
     awaitRefetchQueries: true,
   });
+  const { canRunMultiple: canDeleteTags } = useCanRunMultipleDeleteFaceTagMutations({
+    variableSets:
+      faceTags?.map(tag => ({
+        id: tag.id,
+      })) ?? [],
+  });
+  const canDeleteSomeTag = useMemo(() => canDeleteTags.some(can => can), [canDeleteTags]);
+
+  const canFaceTag = canCreateTag || canDeleteSomeTag;
 
   const removeTag = useCallback(
     async (id: string) => {
@@ -186,6 +205,8 @@ export const FaceTaggingProvider = ({
     () =>
       tags
         ? {
+            canFaceTag,
+            canCreateTag,
             activeTagId,
             setActiveTagId,
             tags:
@@ -202,15 +223,17 @@ export const FaceTaggingProvider = ({
           }
         : null,
     [
+      tags,
+      canFaceTag,
+      canCreateTag,
       activeTagId,
       setActiveTagId,
-      tags,
+      imageRect,
       activeTagData,
       hideTags,
       removeTag,
       isFaceTagging,
       setIsFaceTagging,
-      imageRect,
     ]
   );
 

@@ -1,8 +1,8 @@
 import { Cancel, OpenWith } from '@mui/icons-material';
 import { CSSProperties, useContext, useMemo } from 'react';
-import { useAuth, useFaceTagging } from '../../../../hooks/context-hooks';
+import { useCanRunDeleteFaceTagMutation } from '../../../../graphql/APIConnector';
+import { useFaceTagging } from '../../../../hooks/context-hooks';
 import '../../../../shared/style.scss';
-import { AuthRole } from '../../../provider/AuthProvider';
 import { PictureViewContext } from '../PictureView';
 import { useImageRect } from './helpers/image-rect';
 
@@ -24,15 +24,21 @@ export const FaceTag = ({
 }: {
   data: FaceTagData;
 }) => {
-  const { role } = useAuth();
   const context = useFaceTagging();
   const isFaceTagging = context?.isFaceTagging;
+
   const handleDelete = async () => {
     if (id === undefined) {
       return;
     }
     await context?.removeTag(id);
   };
+
+  const { canRun: canDelete } = useCanRunDeleteFaceTagMutation({
+    variables: {
+      id,
+    },
+  });
 
   const handleMove = async () => {
     if (personTagId === undefined) {
@@ -41,6 +47,8 @@ export const FaceTag = ({
     await handleDelete();
     context?.setActiveTagId(personTagId);
   };
+
+  const canMove = (canDelete && context?.canCreateTag) ?? false;
 
   const { img } = useContext(PictureViewContext);
   const imageRect = useImageRect(img);
@@ -131,10 +139,10 @@ export const FaceTag = ({
       </svg>
       <div className='flex flex-row items-center space-x-1 bg-[#404173bb] p-2 rounded-md text-white'>
         <span>{name}</span>
-        {role >= AuthRole.CURATOR && id !== undefined && isFaceTagging && (
+        {id !== undefined && isFaceTagging && (
           <>
-            <OpenWith className='hover:text-[#00000066]' onClick={handleMove} />
-            <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
+            {canMove && <OpenWith className='hover:text-[#00000066]' onClick={handleMove} />}
+            {canDelete && <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />}
           </>
         )}
       </div>
