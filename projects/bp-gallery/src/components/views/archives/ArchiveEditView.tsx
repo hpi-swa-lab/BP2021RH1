@@ -3,11 +3,11 @@ import { Button } from '@mui/material';
 import { Jodit } from 'jodit-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useCanEditArchive } from '../../../hooks/can-do-hooks';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import TextEditor from '../../common/editors/TextEditor';
 import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -166,80 +166,84 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
 
   const { canEditArchive, loading: canEditArchiveLoading } = useCanEditArchive(archiveId);
 
-  if (!canEditArchive && !canEditArchiveLoading) {
-    return <Redirect to={`/archives/${archiveId}`} />;
-  }
+  return (
+    <ProtectedRoute
+      canUse={canEditArchive}
+      canUseLoading={canEditArchiveLoading}
+      redirectPath={`/archives/${archiveId}`}
+    >
+      {archive ? (
+        <div className='archive-edit-container'>
+          <div className='archive-navigation'>
+            <Button
+              className='button-filled button-close'
+              startIcon={<Close />}
+              onClick={async () => {
+                if (form.dirty) {
+                  const confirm = await dialog({
+                    title: t('archives.edit.confirm.title'),
+                    content: t('archives.edit.confirm.content'),
+                    preset: DialogPreset.CONFIRM,
+                  });
+                  if (!confirm) return;
+                }
+                visit(`/archives/${archiveId}`);
+              }}
+            >
+              {t('archives.edit.back')}
+            </Button>
+            <Button
+              className='button-filled button-save'
+              startIcon={form.dirty ? <Save /> : <Check />}
+              onClick={handleSubmit}
+              disabled={!form.dirty || updateMutationResponse.loading || form.invalid}
+            >
+              {updateMutationResponse.loading
+                ? t('archives.edit.saving')
+                : form.dirty
+                ? t('archives.edit.save')
+                : t('archives.edit.saved')}
+            </Button>
+          </div>
 
-  return archive ? (
-    <div className='archive-edit-container'>
-      <div className='archive-navigation'>
-        <Button
-          className='button-filled button-close'
-          startIcon={<Close />}
-          onClick={async () => {
-            if (form.dirty) {
-              const confirm = await dialog({
-                title: t('archives.edit.confirm.title'),
-                content: t('archives.edit.confirm.content'),
-                preset: DialogPreset.CONFIRM,
-              });
-              if (!confirm) return;
-            }
-            visit(`/archives/${archiveId}`);
-          }}
-        >
-          {t('archives.edit.back')}
-        </Button>
-        <Button
-          className='button-filled button-save'
-          startIcon={form.dirty ? <Save /> : <Check />}
-          onClick={handleSubmit}
-          disabled={!form.dirty || updateMutationResponse.loading || form.invalid}
-        >
-          {updateMutationResponse.loading
-            ? t('archives.edit.saving')
-            : form.dirty
-            ? t('archives.edit.save')
-            : t('archives.edit.saved')}
-        </Button>
-      </div>
+          <h1>{archive.name}</h1>
 
-      <h1>{archive.name}</h1>
-
-      <form className='archive-form'>
-        <ArchiveInputField
-          label={t('archives.edit.nameLabel')}
-          id='name'
-          defaultValue={archive.name}
-          onBlur={value => updateForm({ name: value, dirty: true })}
-        />
-        <ArchiveInputField
-          label={t('archives.edit.shortDescription.label')}
-          id='shortdescription'
-          defaultValue={archive.shortDescription ?? ''}
-          onBlur={value => updateForm({ shortDescription: value, dirty: true })}
-          helperText={t('archives.edit.shortDescription.helperText')}
-        />
-        <div className='archive-form-div'>
-          <label className='archive-form-label' htmlFor='archive-form-long-description'>
-            {t('archives.edit.longDescriptionLabel')}
-          </label>
-          <TextEditor
-            value={archive.longDescription ?? ''}
-            onChange={() => {}}
-            onBlur={value => updateForm({ longDescription: value, dirty: true })}
-            extraOptions={extraOptions}
-          />
+          <form className='archive-form'>
+            <ArchiveInputField
+              label={t('archives.edit.nameLabel')}
+              id='name'
+              defaultValue={archive.name}
+              onBlur={value => updateForm({ name: value, dirty: true })}
+            />
+            <ArchiveInputField
+              label={t('archives.edit.shortDescription.label')}
+              id='shortdescription'
+              defaultValue={archive.shortDescription ?? ''}
+              onBlur={value => updateForm({ shortDescription: value, dirty: true })}
+              helperText={t('archives.edit.shortDescription.helperText')}
+            />
+            <div className='archive-form-div'>
+              <label className='archive-form-label' htmlFor='archive-form-long-description'>
+                {t('archives.edit.longDescriptionLabel')}
+              </label>
+              <TextEditor
+                value={archive.longDescription ?? ''}
+                onChange={() => {}}
+                onBlur={value => updateForm({ longDescription: value, dirty: true })}
+                extraOptions={extraOptions}
+              />
+            </div>
+            <ArchiveLogoInput
+              defaultUrl={logoSrc}
+              onChange={file => updateForm({ logo: file, dirty: true })}
+            />
+            <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
+          </form>
         </div>
-        <ArchiveLogoInput
-          defaultUrl={logoSrc}
-          onChange={file => updateForm({ logo: file, dirty: true })}
-        />
-        <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
-      </form>
-    </div>
-  ) : (
-    <></>
+      ) : (
+        <></>
+      )}
+    </ProtectedRoute>
   );
 };
 

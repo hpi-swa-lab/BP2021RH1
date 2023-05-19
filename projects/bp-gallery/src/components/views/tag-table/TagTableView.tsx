@@ -10,7 +10,6 @@ import {
 } from '@mui/x-data-grid';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect } from 'react-router-dom';
 import {
   ComponentCommonSynonyms,
   ComponentCommonSynonymsInput,
@@ -19,10 +18,10 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
-import { FALLBACK_PATH } from '../../routes';
 import './TagTableView.scss';
 
 interface TagRow {
@@ -321,55 +320,59 @@ const TagTableView = ({ type }: { type: TagType }) => {
   const { canRun: canUseTagTableView, loading: canUseTagTableViewLoading } =
     canUseTagTableViewQuery();
 
-  if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
-    return <Loading />;
-  } else if (Object.values(tags).length && canUseTagTableView) {
-    return (
-      <div className='tag-grid'>
-        {canMergeTags && (
-          <Button onClick={mergeTags} className='merge-button'>
-            {t('curator.mergeTag')}
-          </Button>
-        )}
-        {canUpdateVisibility && (type === TagType.LOCATION || type === TagType.KEYWORD) && (
-          <>
-            <Button onClick={() => setVisible(true)} className='merge-button'>
-              {t(`curator.show${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
-            </Button>
-            <Button onClick={() => setVisible(false)} className='merge-button'>
-              {t(`curator.hide${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
-            </Button>
-          </>
-        )}
+  return (
+    <ProtectedRoute canUse={canUseTagTableView} canUseLoading={canUseTagTableViewLoading}>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else if (Object.values(tags).length) {
+          return (
+            <div className='tag-grid'>
+              {canMergeTags && (
+                <Button onClick={mergeTags} className='merge-button'>
+                  {t('curator.mergeTag')}
+                </Button>
+              )}
+              {canUpdateVisibility && (type === TagType.LOCATION || type === TagType.KEYWORD) && (
+                <>
+                  <Button onClick={() => setVisible(true)} className='merge-button'>
+                    {t(`curator.show${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
+                  </Button>
+                  <Button onClick={() => setVisible(false)} className='merge-button'>
+                    {t(`curator.hide${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
+                  </Button>
+                </>
+              )}
 
-        <DataGrid
-          className='table'
-          rows={rows}
-          columns={columns}
-          experimentalFeatures={{ newEditingApi: true }}
-          processRowUpdate={processRowUpdate}
-          onProcessRowUpdateError={error => {
-            openAlert({
-              alertType: AlertType.ERROR,
-              message: error.message,
-            });
-          }}
-          checkboxSelection={true}
-          selectionModel={selectedRowIds}
-          onSelectionModelChange={newSelectionModel => {
-            setSelectedRowIds(newSelectionModel as string[]);
-          }}
-          disableSelectionOnClick={true}
-        />
-      </div>
-    );
-  } else if (!canUseTagTableView && !canUseTagTableViewLoading) {
-    return <Redirect to={FALLBACK_PATH} />;
-  } else {
-    return null;
-  }
+              <DataGrid
+                className='table'
+                rows={rows}
+                columns={columns}
+                experimentalFeatures={{ newEditingApi: true }}
+                processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={error => {
+                  openAlert({
+                    alertType: AlertType.ERROR,
+                    message: error.message,
+                  });
+                }}
+                checkboxSelection={true}
+                selectionModel={selectedRowIds}
+                onSelectionModelChange={newSelectionModel => {
+                  setSelectedRowIds(newSelectionModel as string[]);
+                }}
+                disableSelectionOnClick={true}
+              />
+            </div>
+          );
+        } else {
+          return null;
+        }
+      }}
+    </ProtectedRoute>
+  );
 };
 
 export default TagTableView;

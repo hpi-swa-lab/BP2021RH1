@@ -2,18 +2,16 @@ import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect } from 'react-router-dom';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { useCanUseUploadsView } from '../../../hooks/can-do-hooks';
 import { useAuth } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import Loading from '../../common/Loading';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { AuthRole } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
-import { FALLBACK_PATH } from '../../routes';
 import './UploadsView.scss';
 
 const UploadsView = () => {
@@ -49,32 +47,31 @@ const UploadsView = () => {
     }
   }, [createArchiveTagMutation, dialog, t]);
 
-  const { canUseUploadsView, loading, canCreateArchive } = useCanUseUploadsView();
-
-  if (!canUseUploadsView) {
-    if (!loading) {
-      return <Redirect to={FALLBACK_PATH} />;
-    }
-    return <Loading />;
-  }
+  const {
+    canUseUploadsView,
+    loading: canUseUploadsViewLoading,
+    canCreateArchive,
+  } = useCanUseUploadsView();
 
   return (
-    <div className='uploads-overview'>
-      {canCreateArchive && (
-        <Button onClick={createArchive}>
-          <Add />
-          {t('curator.createArchive')}
-        </Button>
-      )}
-      <HideStats>
-        <PictureScrollGrid
-          queryParams={{ collections: { id: { null: true } } }}
-          hashbase={'uploads'}
-          uploadAreaProps={uploadAreaProps}
-          bulkOperations={[moveToCollection, bulkEdit]}
-        />
-      </HideStats>
-    </div>
+    <ProtectedRoute canUse={canUseUploadsView} canUseLoading={canUseUploadsViewLoading}>
+      <div className='uploads-overview'>
+        {canCreateArchive && (
+          <Button onClick={createArchive}>
+            <Add />
+            {t('curator.createArchive')}
+          </Button>
+        )}
+        <HideStats>
+          <PictureScrollGrid
+            queryParams={{ collections: { id: { null: true } } }}
+            hashbase={'uploads'}
+            uploadAreaProps={uploadAreaProps}
+            bulkOperations={[moveToCollection, bulkEdit]}
+          />
+        </HideStats>
+      </div>
+    </ProtectedRoute>
   );
 };
 export default UploadsView;
