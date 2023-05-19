@@ -16,8 +16,8 @@ export const FaceTaggingUI = ({
 }: {
   tags: FlatPersonTagWithoutRelations[];
   allTags: FlatPersonTagWithoutRelations[];
-  onChange: (tags: FlatPersonTagWithoutRelations[]) => void;
-  createMutation: (attr: any) => Promise<any>;
+  onChange?: (tags: FlatPersonTagWithoutRelations[]) => void;
+  createMutation?: (attr: any) => Promise<any>;
 }) => {
   const { t } = useTranslation();
 

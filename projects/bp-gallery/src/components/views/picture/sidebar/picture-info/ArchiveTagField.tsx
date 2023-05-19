@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../../../../hooks/context-hooks';
 import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
-import { AuthRole } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 import { SearchType } from '../../../search/helpers/search-filters';
@@ -12,11 +10,10 @@ const ArchiveTagField = ({
   archiveTag,
   onChange,
 }: {
-  onChange: (archiveTag: FlatArchiveTag) => void;
+  onChange?: (archiveTag: FlatArchiveTag) => void;
   archiveTag?: FlatArchiveTag;
 }) => {
   const dialog = useDialog();
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const [selectedTag, setSelectedTag] = useState<FlatArchiveTag | undefined>(archiveTag);
@@ -31,7 +28,7 @@ const ArchiveTagField = ({
     });
     if (newTag && newTag.id !== selectedTag?.id) {
       setSelectedTag(newTag);
-      onChange(newTag);
+      onChange?.(newTag);
     }
   }, [dialog, onChange, selectedTag, setSelectedTag]);
 
@@ -47,7 +44,7 @@ const ArchiveTagField = ({
   }, [selectedTag]);
 
   return (
-    <div onClick={role >= AuthRole.CURATOR ? selectNewTag : searchForCurrentTag}>
+    <div onClick={onChange ? selectNewTag : searchForCurrentTag}>
       {selectedTag?.name ?? t('curator.noArchive')}
     </div>
   );

@@ -5,11 +5,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { TagType } from '../../../../../types/additionalFlatTypes';
-import { AuthRole } from '../../../../provider/AuthProvider';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 import { SearchType } from '../../../search/helpers/search-filters';
 import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
-import { useAuth } from '../../../../../hooks/context-hooks';
 
 interface TagFields {
   name: string;
@@ -39,7 +37,6 @@ const TagSelectionField = <T extends TagFields>({
   noContentText: string;
   type: TagType;
 }) => {
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const [tagList, setTagList] = useState<T[]>(allTags);
@@ -66,7 +63,7 @@ const TagSelectionField = <T extends TagFields>({
     [onChange]
   );
 
-  if (role >= AuthRole.CURATOR) {
+  if (onChange) {
     return (
       <div className='tag-selection'>
         <Autocomplete<T, true>
@@ -105,7 +102,6 @@ const TagSelectionField = <T extends TagFields>({
             return filtered;
           }}
           onChange={async (_, newValue) => {
-            if (!onChange) return;
             // newValue is an array, but we are sure that only one element can be created at a time
             if (createMutation) {
               const addTag = newValue.find(val => val.createValue);
