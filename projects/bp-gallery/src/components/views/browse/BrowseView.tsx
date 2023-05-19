@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   PictureFiltersInput,
   PublicationState,
+  useCanRunCreateSubCollectionMutation,
   useCreateSubCollectionMutation,
   useGetCollectionInfoByNameQuery,
   useGetRootCollectionQuery,
@@ -44,7 +45,9 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useDialog();
+
   const [addSubCollection] = useCreateSubCollectionMutation();
+  const { canRun: canAddSubCollection } = useCanRunCreateSubCollectionMutation();
 
   // Query collection info
   const rootCollectionResult = useGetRootCollectionQuery({
@@ -89,20 +92,17 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
   }, [collections, addSubCollection, dialog, t]);
 
   const uploadAreaProps = useCallback(
-    (collection: FlatCollection): Partial<PictureUploadAreaProps> | undefined => {
-      return role >= AuthRole.CURATOR
-        ? {
-            preprocessPictures: (pictures: FlatPicture[]) => {
-              return pictures.map(picture => ({
-                ...picture,
-                collections: [collection.id as any],
-              }));
-            },
-            folderName: collection.name,
-          }
-        : undefined;
-    },
-    [role]
+    (collection: FlatCollection): Partial<PictureUploadAreaProps> | undefined => ({
+      // whether the user actually can upload the picture is handled in PictureUploadArea
+      preprocessPictures: (pictures: FlatPicture[]) => {
+        return pictures.map(picture => ({
+          ...picture,
+          collections: [collection.id as any],
+        }));
+      },
+      folderName: collection.name,
+    }),
+    []
   );
 
   if (error) {
@@ -125,7 +125,7 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
           {childCount > 0 && (
             <SubCollections childCollections={collection.child_collections ?? []} path={path} />
           )}
-          {role >= AuthRole.CURATOR && (
+          {canAddSubCollection && (
             <Button startIcon={<Add />} onClick={addCollection}>
               {t('curator.createCollection')}
             </Button>
