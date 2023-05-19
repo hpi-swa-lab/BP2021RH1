@@ -1,13 +1,19 @@
 import {
   useCanRunBulkEditMutation,
   useCanRunCreateArchiveTagMutation,
+  useCanRunCreateSubCollectionMutation,
+  useCanRunDeleteCollectionMutation,
   useCanRunGetAllKeywordTagsQuery,
   useCanRunGetAllLocationTagsQuery,
   useCanRunGetAllPersonTagsQuery,
+  useCanRunGetCollectionInfoByIdQuery,
   useCanRunGetMultiplePictureInfoQuery,
+  useCanRunGetRootCollectionQuery,
   useCanRunGetUnverifiedCommentsQuery,
+  useCanRunMergeCollectionsMutation,
   useCanRunMultipleCreatePictureMutations,
   useCanRunUpdateArchiveMutation,
+  useCanRunUpdateCollectionMutation,
   useGetAllArchiveTagsQuery,
 } from '../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../graphql/queryUtils';
@@ -94,5 +100,35 @@ export const useCanUseBulkEditView = (pictureIds: string[]) => {
   return {
     canUseBulkEditView: canRunGetMultiplePictureInfo && canRunBulkEdit,
     loading: canRunGetMultiplePictureInfoLoading || canRunBulkEditLoading,
+  };
+};
+
+export const useCanUseCollectionCuratingView = () => {
+  const { canRun: canGetRootCollection, loading: canGetRootCollectionLoading } =
+    useCanRunGetRootCollectionQuery();
+  const { canRun: canGetCollectionInfoById, loading: canGetCollectionInfoByIdLoading } =
+    useCanRunGetCollectionInfoByIdQuery();
+
+  const { canRun: canUpdateCollection, loading: canUpdateCollectionLoading } =
+    useCanRunUpdateCollectionMutation();
+  const { canRun: canDeleteCollection, loading: canDeleteCollectionLoading } =
+    useCanRunDeleteCollectionMutation();
+  const { canRun: canMergeCollections, loading: canMergeCollectionsLoading } =
+    useCanRunMergeCollectionsMutation();
+  const { canRun: canCreateSubCollection, loading: canCreateSubCollectionLoading } =
+    useCanRunCreateSubCollectionMutation();
+
+  return {
+    canUseCollectionCuratingView:
+      canGetRootCollection &&
+      canGetCollectionInfoById &&
+      (canUpdateCollection || canDeleteCollection || canMergeCollections || canCreateSubCollection),
+    loading:
+      canGetRootCollectionLoading ||
+      canGetCollectionInfoByIdLoading ||
+      canUpdateCollectionLoading ||
+      canDeleteCollectionLoading ||
+      canMergeCollectionsLoading ||
+      canCreateSubCollectionLoading,
   };
 };

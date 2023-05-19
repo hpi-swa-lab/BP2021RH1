@@ -1,6 +1,8 @@
 import { cloneDeep } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useGetRootCollectionQuery } from '../../../graphql/APIConnector';
+import { useCanUseCollectionCuratingView } from '../../../hooks/can-do-hooks';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import './CollectionCuratingView.scss';
 import CollectionsPanel from './CollectionsPanel';
 
@@ -17,26 +19,34 @@ const CollectionCuratingView = () => {
     }
   }, [rootCollection]);
 
+  const { canUseCollectionCuratingView, loading: canUseCollectionCuratingViewLoading } =
+    useCanUseCollectionCuratingView();
+
   return (
-    <div className='panel-container'>
-      {Object.values(panels).map((collectionId, index) => (
-        <CollectionsPanel
-          key={index}
-          parentId={collectionId}
-          onSelectChild={child => {
-            setPanels(oldPanels => {
-              if (index + 1 >= oldPanels.length) {
-                oldPanels.push(child.id);
-              } else {
-                oldPanels[index + 1] = child.id;
-              }
-              oldPanels = oldPanels.slice(0, index + 2);
-              return cloneDeep(oldPanels);
-            });
-          }}
-        />
-      ))}
-    </div>
+    <ProtectedRoute
+      canUse={canUseCollectionCuratingView}
+      canUseLoading={canUseCollectionCuratingViewLoading}
+    >
+      <div className='panel-container'>
+        {Object.values(panels).map((collectionId, index) => (
+          <CollectionsPanel
+            key={index}
+            parentId={collectionId}
+            onSelectChild={child => {
+              setPanels(oldPanels => {
+                if (index + 1 >= oldPanels.length) {
+                  oldPanels.push(child.id);
+                } else {
+                  oldPanels[index + 1] = child.id;
+                }
+                oldPanels = oldPanels.slice(0, index + 2);
+                return cloneDeep(oldPanels);
+              });
+            }}
+          />
+        ))}
+      </div>
+    </ProtectedRoute>
   );
 };
 
