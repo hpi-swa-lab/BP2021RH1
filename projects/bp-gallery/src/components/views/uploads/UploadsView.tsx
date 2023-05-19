@@ -5,17 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { useCanUseUploadsView } from '../../../hooks/can-do-hooks';
-import { useAuth } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import { AuthRole } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
 import './UploadsView.scss';
 
 const UploadsView = () => {
-  const { role } = useAuth();
   const { t } = useTranslation();
   const dialog = useDialog();
 
@@ -23,15 +20,15 @@ const UploadsView = () => {
 
   const { moveToCollection, bulkEdit } = useBulkOperations();
 
-  const uploadAreaProps = useMemo(() => {
-    return role >= AuthRole.CURATOR
-      ? {
-          // No additional information added to the pictures in this view here.
-          preprocessPictures: (pictures: FlatPicture[]) => pictures,
-          folderName: t('curator.uploads'),
-        }
-      : undefined;
-  }, [role, t]);
+  const uploadAreaProps = useMemo(
+    () => ({
+      // whether the user actually can upload the picture is handled in PictureUploadArea
+      // No additional information added to the pictures in this view here.
+      preprocessPictures: (pictures: FlatPicture[]) => pictures,
+      folderName: t('curator.uploads'),
+    }),
+    [t]
+  );
 
   const createArchive = useCallback(async () => {
     const archiveName = await dialog({
