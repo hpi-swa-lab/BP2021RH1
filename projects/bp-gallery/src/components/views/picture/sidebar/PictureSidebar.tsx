@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import { Crop } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useCanRunUpdatePictureMutation,
@@ -30,7 +30,7 @@ const PictureSidebar = ({
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
-  const { sideBarOpen } = useContext(PictureViewContext);
+  const { sideBarOpen, setSideBarOpen } = useContext(PictureViewContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
     refetchQueries: ['getPictureInfo'],
@@ -41,6 +41,12 @@ const PictureSidebar = ({
       pictureId: picture?.id,
     },
   });
+
+  useEffect(() => {
+    if (canUpdatePicture) {
+      setSideBarOpen?.(true);
+    }
+  }, [canUpdatePicture, setSideBarOpen]);
 
   const onSave = useCallback(
     (field: Field) => {

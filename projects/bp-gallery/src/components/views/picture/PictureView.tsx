@@ -14,12 +14,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { replaceHistoryWithoutRouter } from '../../../helpers/history';
-import { useAuth } from '../../../hooks/context-hooks';
 import { getPictureLinkFromFlatPicture } from '../../../hooks/get-pictureLink.hook';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole } from '../../provider/AuthProvider';
 import { FaceTaggingProvider } from '../../provider/FaceTaggingProvider';
 import { FaceTags } from './face-tagging/FaceTags';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
@@ -56,15 +54,15 @@ const PictureView = ({
   const history: History = useHistory();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const { role } = useAuth();
 
   const [pictureId, setPictureId] = useState<string>(initialPictureId);
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
 
-  // Open the sidebar per default if logged in as a curators
   useEffect(() => {
-    setSideBarOpen(role >= AuthRole.CURATOR || window.innerWidth > MOBILE_BREAKPOINT);
-  }, [role]);
+    if (window.innerWidth > MOBILE_BREAKPOINT) {
+      setSideBarOpen(true);
+    }
+  }, []);
 
   const search = window.location.search;
   const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {

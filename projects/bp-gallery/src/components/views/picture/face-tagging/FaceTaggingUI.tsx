@@ -1,10 +1,11 @@
 import { Person } from '@mui/icons-material';
 import { Button, Chip } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useCallback } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFaceTagging } from '../../../../hooks/context-hooks';
 import { FlatPersonTagWithoutRelations, TagType } from '../../../../types/additionalFlatTypes';
+import { PictureViewContext } from '../PictureView';
 import PictureInfoField from '../sidebar/picture-info/PictureInfoField';
 import TagSelectionField from '../sidebar/picture-info/TagSelectionField';
 
@@ -37,6 +38,14 @@ export const FaceTaggingUI = ({
   const toggleHideTags = useCallback(() => {
     context?.setHideTags(is => !is);
   }, [context]);
+
+  const { setSideBarOpen } = useContext(PictureViewContext);
+
+  useEffect(() => {
+    if (context?.canFaceTag) {
+      setSideBarOpen?.(true);
+    }
+  }, [context?.canFaceTag, setSideBarOpen]);
 
   return (
     <>
