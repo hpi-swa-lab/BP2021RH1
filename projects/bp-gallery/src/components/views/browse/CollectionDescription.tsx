@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
+import {
+  useCanRunUpdateCollectionMutation,
+  useUpdateCollectionMutation,
+} from '../../../graphql/APIConnector';
 import { getIsLong } from '../../../helpers/get-linebreaks';
-import { useAuth } from '../../../hooks/context-hooks';
 import CollapsibleContainer from '../../common/CollapsibleContainer';
 import RichText from '../../common/RichText';
 import TextEditor from '../../common/editors/TextEditor';
-import { AuthRole } from '../../provider/AuthProvider';
 import './CollectionDescription.scss';
 
 const CollectionDescription = ({
@@ -21,8 +22,9 @@ const CollectionDescription = ({
   const [open, setOpen] = useState(false);
   const [long, setLong] = useState(false);
 
-  const { role } = useAuth();
   const textRef = useRef<HTMLDivElement>(null);
+
+  const { canRun: canEditCollectionDescription } = useCanRunUpdateCollectionMutation();
 
   useEffect(() => {
     setLong(getIsLong(textRef.current, description, 4));
@@ -31,7 +33,7 @@ const CollectionDescription = ({
   return (
     <div className='collection-container mb-2'>
       <h2>{name}</h2>
-      {role >= AuthRole.CURATOR ? (
+      {canEditCollectionDescription ? (
         <EditableCollectionDescription initialDescription={description} collectionId={id} />
       ) : (
         <>
