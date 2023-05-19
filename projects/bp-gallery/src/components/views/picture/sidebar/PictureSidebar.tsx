@@ -3,7 +3,10 @@ import { Crop } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useUpdatePictureMutation } from '../../../../graphql/APIConnector';
+import {
+  useCanRunUpdatePictureMutation,
+  useUpdatePictureMutation,
+} from '../../../../graphql/APIConnector';
 import { useAuth } from '../../../../hooks/context-hooks';
 import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
@@ -32,6 +35,11 @@ const PictureSidebar = ({
   const [updatePicture, updateMutationResponse] = useUpdatePictureMutation({
     refetchQueries: ['getPictureInfo'],
     awaitRefetchQueries: true,
+  });
+  const { canRun: canUpdatePicture } = useCanRunUpdatePictureMutation({
+    variables: {
+      pictureId: picture?.id,
+    },
   });
 
   const onSave = useCallback(
@@ -98,7 +106,7 @@ const PictureSidebar = ({
             picture={picture}
             pictureIds={pictureIds}
             hasHiddenLinks={false}
-            onSave={onSave}
+            onSave={canUpdatePicture ? onSave : undefined}
             topInfo={(anyFieldTouched, isSaving) =>
               role >= AuthRole.CURATOR && (
                 <div className='curator-ops'>
