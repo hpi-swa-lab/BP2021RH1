@@ -3,6 +3,7 @@ import {
   useCanRunGetAllKeywordTagsQuery,
   useCanRunGetAllLocationTagsQuery,
   useCanRunGetAllPersonTagsQuery,
+  useCanRunGetUnverifiedCommentsQuery,
   useCanRunMultipleCreatePictureMutations,
   useCanRunUpdateArchiveMutation,
   useGetAllArchiveTagsQuery,
@@ -66,4 +67,12 @@ export const useCanUseLocationTagTableView = () => {
 
 export const useCanUseKeywordTagTableView = () => {
   return useCanRunGetAllKeywordTagsQuery();
+};
+
+export const useCanUseUnverifiedCommentsView = () => {
+  const { canRun: canUseUnverifiedCommentsView, loading } = useCanRunGetUnverifiedCommentsQuery();
+  return {
+    canUseUnverifiedCommentsView,
+    loading,
+  };
 };
