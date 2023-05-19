@@ -40,17 +40,7 @@ const getPictureFilters = (collectionId: string) => {
   return filters;
 };
 
-const BrowseView = ({
-  path,
-  startpage,
-  parentScrollPos,
-  parentScrollHeight,
-}: {
-  path?: string[];
-  startpage?: boolean;
-  parentScrollPos?: number;
-  parentScrollHeight?: number;
-}) => {
+const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean }) => {
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useDialog();
