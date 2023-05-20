@@ -50,7 +50,7 @@ const CommentsContainer = memo(function CommentsContainer({
     );
   };
 
-  // use the first comment (if it exists) as a standin for all,
+  // use the first comment (if it exists) as a representative for all,
   // since the premission is bound to an archive and all comments
   // belong to the same picture (and therefore to the same archive)
   const { canAcceptOrDeclineComment } = useCanAcceptOrDeclineComment(comments?.[0]?.id);

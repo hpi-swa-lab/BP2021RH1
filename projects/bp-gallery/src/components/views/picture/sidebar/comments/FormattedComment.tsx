@@ -99,7 +99,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
   });
   const { canRun: canDeleteComment } = useCanRunDeclineCommentMutation({
     variables: {
-      // use the current comment as a stand-in for all the children,
+      // use the current comment as a representative for all the children,
       // since the premission is bound to an archive and all
       // child comments belong to the same archive
       commentId: comment.id,
