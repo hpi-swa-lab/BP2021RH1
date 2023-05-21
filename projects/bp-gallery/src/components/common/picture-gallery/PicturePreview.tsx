@@ -13,10 +13,22 @@ export enum PictureOrigin {
 
 export type PicturePreviewAdornment =
   | DefaultPicturePreviewAdornmentConfig
-  | CustomPicturePreviewAdornmentComponent;
+  // any, because sadly, the type is invariant in it's parameter (see below),
+  // so neither unknown nor never works here (and TypeScript doesn't
+  // have existential types yet: https://github.com/Microsoft/TypeScript/issues/14466)
+  | CustomPicturePreviewAdornmentConfig<any>;
 
-export type CustomPicturePreviewAdornmentComponent = FunctionComponent<{
+export type CustomPicturePreviewAdornmentConfig<T> = {
+  // this type is invariant in T, since
+  // - `component` forces it to be contravariant in T
+  // - `extraProps` forces it to be covariant in T
+  component: CustomPicturePreviewAdornmentComponent<T>;
+  extraProps: T;
+};
+
+export type CustomPicturePreviewAdornmentComponent<T> = FunctionComponent<{
   context: PicturePreviewAdornmentContext;
+  extraProps: T;
 }>;
 
 export interface PicturePreviewAdornmentContext {
@@ -87,18 +99,18 @@ const PicturePreview = ({
           }
         />
         <div className='adornments'>
-          {/* adornment is capitalized here because it's used as a component below
-              and components need to be capitalized, otherwise they are treated
-              as HTML elements, i. e. <adornment ... /> would mean the HTML element
-              named "adornment" (which isn't what we want and which doesn't exist anyway) */}
-          {adornments?.map((Adornment, index) =>
-            isFunction(Adornment) ? (
-              // Adornment is a CustomPicturePreviewAdornmentComponent
-              <Adornment key={index} context={adornmentContext} />
+          {adornments?.map((adornment, index) =>
+            'component' in adornment ? (
+              // adornment is a CustomPicturePreviewAdornmentConfig
+              <adornment.component
+                key={index}
+                context={adornmentContext}
+                extraProps={adornment.extraProps}
+              />
             ) : (
               <DefaultPicturePreviewAdornment
                 key={index}
-                config={Adornment}
+                config={adornment}
                 context={adornmentContext}
               />
             )
