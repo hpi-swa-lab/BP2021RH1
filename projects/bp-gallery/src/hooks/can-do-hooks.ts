@@ -1,3 +1,5 @@
+import { OperationName } from 'bp-graphql/build';
+import { useMemo } from 'react';
 import {
   useCanRunAcceptCommentMutation,
   useCanRunBulkEditMutation,
@@ -17,9 +19,36 @@ import {
   useCanRunUpdateArchiveMutation,
   useCanRunUpdateCollectionMutation,
   useGetAllArchiveTagsQuery,
+  useGetParameterizedPermissionsQuery,
 } from '../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../graphql/queryUtils';
-import { FlatArchiveTag } from '../types/additionalFlatTypes';
+import { FlatArchiveTag, FlatParameterizedPermission } from '../types/additionalFlatTypes';
+import { useAuth } from './context-hooks';
+
+export const useHasPermissions = (permissionNames: OperationName[]) => {
+  const { userId } = useAuth();
+  const { data } = useGetParameterizedPermissionsQuery({
+    variables: {
+      userId: userId ?? null,
+    },
+  });
+  const permissions: FlatParameterizedPermission[] | undefined =
+    useSimplifiedQueryResponseData(data)?.parameterizedPermissions;
+  const permissionsSet = useMemo(
+    () =>
+      new Set(
+        permissions
+          ?.map(permission => permission.operation_name)
+          .filter((name): name is string => !!name) ?? []
+      ),
+    [permissions]
+  );
+  const hasPermissions = useMemo(
+    () => permissionNames.every(name => permissionsSet.has(name)),
+    [permissionNames, permissionsSet]
+  );
+  return hasPermissions;
+};
 
 export const useCanCreateArchive = () => {
   const { canRun, loading } = useCanRunCreateArchiveTagMutation();
