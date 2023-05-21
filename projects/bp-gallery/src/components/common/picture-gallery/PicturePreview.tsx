@@ -1,22 +1,27 @@
 import { isFunction } from 'lodash';
-import { MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
+import { FunctionComponent, MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
 import { asApiPath } from '../../../helpers/app-helpers';
 import { useStats } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PicturePreview.scss';
 import PictureStats from './PictureStats';
 
-export interface PicturePreviewAdornment {
-  position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-  onClick: (picture: FlatPicture, event: MouseEvent<HTMLElement>) => void;
-  icon: ((picture: FlatPicture) => JSX.Element) | JSX.Element;
-  title?: string;
-  onlyShowOnHover?: boolean;
-}
-
 export enum PictureOrigin {
   LOCAL,
   REMOTE,
+}
+
+export type PicturePreviewAdornment =
+  | DefaultPicturePreviewAdornmentConfig
+  | CustomPicturePreviewAdornmentComponent;
+
+export type CustomPicturePreviewAdornmentComponent = FunctionComponent<{
+  context: PicturePreviewAdornmentContext;
+}>;
+
+export interface PicturePreviewAdornmentContext {
+  picture: FlatPicture;
+  hovered: boolean;
 }
 
 const PicturePreview = ({
@@ -44,6 +49,14 @@ const PicturePreview = ({
       '';
     return highQuality ? picture.media?.url ?? defaultUrl : defaultUrl;
   }, [picture, highQuality]);
+
+  const adornmentContext: PicturePreviewAdornmentContext = useMemo(
+    () => ({
+      picture,
+      hovered,
+    }),
+    [picture, hovered]
+  );
 
   return (
     <div
@@ -74,24 +87,22 @@ const PicturePreview = ({
           }
         />
         <div className='adornments'>
-          {adornments?.map((adornment, index) => (
-            <div
-              className={`adornment ${adornment.position} ${
-                adornment.onlyShowOnHover
-                  ? `transition-opacity ${hovered ? 'opacity-100' : 'opacity-0'}`
-                  : ''
-              }`}
-              key={index}
-              title={adornment.title}
-              onClick={event => {
-                event.preventDefault();
-                event.stopPropagation();
-                adornment.onClick(picture, event);
-              }}
-            >
-              {isFunction(adornment.icon) ? <>{adornment.icon(picture)}</> : <>{adornment.icon}</>}
-            </div>
-          ))}
+          {/* adornment is capitalized here because it's used as a component below
+              and components need to be capitalized, otherwise they are treated
+              as HTML elements, i. e. <adornment ... /> would mean the HTML element
+              named "adornment" (which isn't what we want and which doesn't exist anyway) */}
+          {adornments?.map((Adornment, index) =>
+            isFunction(Adornment) ? (
+              // Adornment is a CustomPicturePreviewAdornmentComponent
+              <Adornment key={index} context={adornmentContext} />
+            ) : (
+              <DefaultPicturePreviewAdornment
+                key={index}
+                config={Adornment}
+                context={adornmentContext}
+              />
+            )
+          )}
         </div>
         <PictureStats picture={picture} hovered={hovered} />
       </div>
@@ -100,3 +111,37 @@ const PicturePreview = ({
 };
 
 export default PicturePreview;
+
+export interface DefaultPicturePreviewAdornmentConfig {
+  position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+  onClick: (picture: FlatPicture, event: MouseEvent<HTMLElement>) => void;
+  icon: ((picture: FlatPicture) => JSX.Element) | JSX.Element;
+  title?: string;
+  onlyShowOnHover?: boolean;
+}
+
+export const DefaultPicturePreviewAdornment = ({
+  config,
+  context,
+}: {
+  config: DefaultPicturePreviewAdornmentConfig;
+  context: PicturePreviewAdornmentContext;
+}) => {
+  return (
+    <div
+      className={`adornment ${config.position} ${
+        config.onlyShowOnHover
+          ? `transition-opacity ${context.hovered ? 'opacity-100' : 'opacity-0'}`
+          : ''
+      }`}
+      title={config.title}
+      onClick={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        config.onClick(context.picture, event);
+      }}
+    >
+      {isFunction(config.icon) ? <>{config.icon(context.picture)}</> : <>{config.icon}</>}
+    </div>
+  );
+};
