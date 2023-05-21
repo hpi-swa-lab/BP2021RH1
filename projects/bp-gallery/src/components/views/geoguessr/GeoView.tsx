@@ -74,7 +74,7 @@ const GeoView = () => {
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
   const geoCollectionId = useVariant({ id: 'geopictures_collection_id', fallback: '' });
-  const isGeoCollectionPictures = geoCollectionId !== ''; //&& import.meta.env.MODE === 'production';
+  const isGeoCollectionPictures = geoCollectionId !== '' && import.meta.env.MODE === 'production';
   const { data: geoCollectionPictureData } = useGetPicturesForCollectionQuery({
     variables: { collectionId: geoCollectionId },
   });
