@@ -134,6 +134,10 @@ export const useCanUseBulkEditView = (pictureIds: string[]) => {
   };
 };
 
+export const useCanBulkEditSomePictures = () => {
+  return useHasPermissions(['getMultiplePictureInfo', 'bulkEdit']);
+};
+
 export const useCanUseCollectionCuratingView = () => {
   const { canRun: canGetRootCollection, loading: canGetRootCollectionLoading } =
     useCanRunGetRootCollectionQuery();
