@@ -9690,7 +9690,7 @@ export function useCanRunMultipleMeQueries(
 
 export function useCanRunAcceptCommentMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<AcceptCommentMutationVariables>;
@@ -9709,7 +9709,7 @@ export function useCanRunAcceptCommentMutation(
 
 export function useCanRunMultipleAcceptCommentMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<AcceptCommentMutationVariables>[];
@@ -9732,7 +9732,7 @@ export function useCanRunMultipleAcceptCommentMutations(
 
 export function useCanRunBulkEditMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<BulkEditMutationVariables>;
@@ -9751,7 +9751,7 @@ export function useCanRunBulkEditMutation(
 
 export function useCanRunMultipleBulkEditMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<BulkEditMutationVariables>[];
@@ -9774,7 +9774,7 @@ export function useCanRunMultipleBulkEditMutations(
 
 export function useCanRunCreateArchiveTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreateArchiveTagMutationVariables>;
@@ -9793,7 +9793,7 @@ export function useCanRunCreateArchiveTagMutation(
 
 export function useCanRunMultipleCreateArchiveTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreateArchiveTagMutationVariables>[];
@@ -9816,7 +9816,7 @@ export function useCanRunMultipleCreateArchiveTagMutations(
 
 export function useCanRunCreateFaceTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreateFaceTagMutationVariables>;
@@ -9835,7 +9835,7 @@ export function useCanRunCreateFaceTagMutation(
 
 export function useCanRunMultipleCreateFaceTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreateFaceTagMutationVariables>[];
@@ -9858,7 +9858,7 @@ export function useCanRunMultipleCreateFaceTagMutations(
 
 export function useCanRunCreateKeywordTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreateKeywordTagMutationVariables>;
@@ -9877,7 +9877,7 @@ export function useCanRunCreateKeywordTagMutation(
 
 export function useCanRunMultipleCreateKeywordTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreateKeywordTagMutationVariables>[];
@@ -9900,7 +9900,7 @@ export function useCanRunMultipleCreateKeywordTagMutations(
 
 export function useCanRunCreateLinkMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreateLinkMutationVariables>;
@@ -9919,7 +9919,7 @@ export function useCanRunCreateLinkMutation(
 
 export function useCanRunMultipleCreateLinkMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreateLinkMutationVariables>[];
@@ -9942,7 +9942,7 @@ export function useCanRunMultipleCreateLinkMutations(
 
 export function useCanRunCreateLocationTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreateLocationTagMutationVariables>;
@@ -9961,7 +9961,7 @@ export function useCanRunCreateLocationTagMutation(
 
 export function useCanRunMultipleCreateLocationTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreateLocationTagMutationVariables>[];
@@ -9984,7 +9984,7 @@ export function useCanRunMultipleCreateLocationTagMutations(
 
 export function useCanRunCreateParameterizedPermissionMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreateParameterizedPermissionMutationVariables>;
@@ -10003,7 +10003,7 @@ export function useCanRunCreateParameterizedPermissionMutation(
 
 export function useCanRunMultipleCreateParameterizedPermissionMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreateParameterizedPermissionMutationVariables>[];
@@ -10026,7 +10026,7 @@ export function useCanRunMultipleCreateParameterizedPermissionMutations(
 
 export function useCanRunCreatePersonTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreatePersonTagMutationVariables>;
@@ -10045,7 +10045,7 @@ export function useCanRunCreatePersonTagMutation(
 
 export function useCanRunMultipleCreatePersonTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreatePersonTagMutationVariables>[];
@@ -10068,7 +10068,7 @@ export function useCanRunMultipleCreatePersonTagMutations(
 
 export function useCanRunCreatePictureMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreatePictureMutationVariables>;
@@ -10087,7 +10087,7 @@ export function useCanRunCreatePictureMutation(
 
 export function useCanRunMultipleCreatePictureMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreatePictureMutationVariables>[];
@@ -10110,7 +10110,7 @@ export function useCanRunMultipleCreatePictureMutations(
 
 export function useCanRunCreatePictureGeoInfoMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreatePictureGeoInfoMutationVariables>;
@@ -10129,7 +10129,7 @@ export function useCanRunCreatePictureGeoInfoMutation(
 
 export function useCanRunMultipleCreatePictureGeoInfoMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreatePictureGeoInfoMutationVariables>[];
@@ -10152,7 +10152,7 @@ export function useCanRunMultipleCreatePictureGeoInfoMutations(
 
 export function useCanRunCreateSubCollectionMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<CreateSubCollectionMutationVariables>;
@@ -10171,7 +10171,7 @@ export function useCanRunCreateSubCollectionMutation(
 
 export function useCanRunMultipleCreateSubCollectionMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<CreateSubCollectionMutationVariables>[];
@@ -10194,7 +10194,7 @@ export function useCanRunMultipleCreateSubCollectionMutations(
 
 export function useCanRunDeclineCommentMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<DeclineCommentMutationVariables>;
@@ -10213,7 +10213,7 @@ export function useCanRunDeclineCommentMutation(
 
 export function useCanRunMultipleDeclineCommentMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<DeclineCommentMutationVariables>[];
@@ -10236,7 +10236,7 @@ export function useCanRunMultipleDeclineCommentMutations(
 
 export function useCanRunDeleteCollectionMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<DeleteCollectionMutationVariables>;
@@ -10255,7 +10255,7 @@ export function useCanRunDeleteCollectionMutation(
 
 export function useCanRunMultipleDeleteCollectionMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<DeleteCollectionMutationVariables>[];
@@ -10278,7 +10278,7 @@ export function useCanRunMultipleDeleteCollectionMutations(
 
 export function useCanRunDeleteFaceTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<DeleteFaceTagMutationVariables>;
@@ -10297,7 +10297,7 @@ export function useCanRunDeleteFaceTagMutation(
 
 export function useCanRunMultipleDeleteFaceTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<DeleteFaceTagMutationVariables>[];
@@ -10320,7 +10320,7 @@ export function useCanRunMultipleDeleteFaceTagMutations(
 
 export function useCanRunDeleteKeywordTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<DeleteKeywordTagMutationVariables>;
@@ -10339,7 +10339,7 @@ export function useCanRunDeleteKeywordTagMutation(
 
 export function useCanRunMultipleDeleteKeywordTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<DeleteKeywordTagMutationVariables>[];
@@ -10362,7 +10362,7 @@ export function useCanRunMultipleDeleteKeywordTagMutations(
 
 export function useCanRunDeleteLinkMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<DeleteLinkMutationVariables>;
@@ -10381,7 +10381,7 @@ export function useCanRunDeleteLinkMutation(
 
 export function useCanRunMultipleDeleteLinkMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<DeleteLinkMutationVariables>[];
@@ -10404,7 +10404,7 @@ export function useCanRunMultipleDeleteLinkMutations(
 
 export function useCanRunDeleteLocationTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<DeleteLocationTagMutationVariables>;
@@ -10423,7 +10423,7 @@ export function useCanRunDeleteLocationTagMutation(
 
 export function useCanRunMultipleDeleteLocationTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<DeleteLocationTagMutationVariables>[];
@@ -10446,7 +10446,7 @@ export function useCanRunMultipleDeleteLocationTagMutations(
 
 export function useCanRunDeleteParameterizedPermissionMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<DeleteParameterizedPermissionMutationVariables>;
@@ -10465,7 +10465,7 @@ export function useCanRunDeleteParameterizedPermissionMutation(
 
 export function useCanRunMultipleDeleteParameterizedPermissionMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<DeleteParameterizedPermissionMutationVariables>[];
@@ -10488,7 +10488,7 @@ export function useCanRunMultipleDeleteParameterizedPermissionMutations(
 
 export function useCanRunDeletePersonTagMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<DeletePersonTagMutationVariables>;
@@ -10507,7 +10507,7 @@ export function useCanRunDeletePersonTagMutation(
 
 export function useCanRunMultipleDeletePersonTagMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<DeletePersonTagMutationVariables>[];
@@ -10530,7 +10530,7 @@ export function useCanRunMultipleDeletePersonTagMutations(
 
 export function useCanRunFixCommentTextMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<FixCommentTextMutationVariables>;
@@ -10549,7 +10549,7 @@ export function useCanRunFixCommentTextMutation(
 
 export function useCanRunMultipleFixCommentTextMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<FixCommentTextMutationVariables>[];
@@ -10572,7 +10572,7 @@ export function useCanRunMultipleFixCommentTextMutations(
 
 export function useCanRunIncreaseNotAPlaceCountMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<IncreaseNotAPlaceCountMutationVariables>;
@@ -10591,7 +10591,7 @@ export function useCanRunIncreaseNotAPlaceCountMutation(
 
 export function useCanRunMultipleIncreaseNotAPlaceCountMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<IncreaseNotAPlaceCountMutationVariables>[];
@@ -10614,7 +10614,7 @@ export function useCanRunMultipleIncreaseNotAPlaceCountMutations(
 
 export function useCanRunLikeMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<LikeMutationVariables>;
@@ -10633,7 +10633,7 @@ export function useCanRunLikeMutation(
 
 export function useCanRunMultipleLikeMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<LikeMutationVariables>[];
@@ -10656,7 +10656,7 @@ export function useCanRunMultipleLikeMutations(
 
 export function useCanRunLoginMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<LoginMutationVariables>;
@@ -10675,7 +10675,7 @@ export function useCanRunLoginMutation(
 
 export function useCanRunMultipleLoginMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<LoginMutationVariables>[];
@@ -10698,7 +10698,7 @@ export function useCanRunMultipleLoginMutations(
 
 export function useCanRunMergeCollectionsMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<MergeCollectionsMutationVariables>;
@@ -10717,7 +10717,7 @@ export function useCanRunMergeCollectionsMutation(
 
 export function useCanRunMultipleMergeCollectionsMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<MergeCollectionsMutationVariables>[];
@@ -10740,7 +10740,7 @@ export function useCanRunMultipleMergeCollectionsMutations(
 
 export function useCanRunMergeKeywordTagsMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<MergeKeywordTagsMutationVariables>;
@@ -10759,7 +10759,7 @@ export function useCanRunMergeKeywordTagsMutation(
 
 export function useCanRunMultipleMergeKeywordTagsMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<MergeKeywordTagsMutationVariables>[];
@@ -10782,7 +10782,7 @@ export function useCanRunMultipleMergeKeywordTagsMutations(
 
 export function useCanRunMergeLocationTagsMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<MergeLocationTagsMutationVariables>;
@@ -10801,7 +10801,7 @@ export function useCanRunMergeLocationTagsMutation(
 
 export function useCanRunMultipleMergeLocationTagsMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<MergeLocationTagsMutationVariables>[];
@@ -10824,7 +10824,7 @@ export function useCanRunMultipleMergeLocationTagsMutations(
 
 export function useCanRunMergePersonTagsMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<MergePersonTagsMutationVariables>;
@@ -10843,7 +10843,7 @@ export function useCanRunMergePersonTagsMutation(
 
 export function useCanRunMultipleMergePersonTagsMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<MergePersonTagsMutationVariables>[];
@@ -10866,7 +10866,7 @@ export function useCanRunMultipleMergePersonTagsMutations(
 
 export function useCanRunPinCommentMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<PinCommentMutationVariables>;
@@ -10885,7 +10885,7 @@ export function useCanRunPinCommentMutation(
 
 export function useCanRunMultiplePinCommentMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<PinCommentMutationVariables>[];
@@ -10908,7 +10908,7 @@ export function useCanRunMultiplePinCommentMutations(
 
 export function useCanRunPostCommentMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<PostCommentMutationVariables>;
@@ -10927,7 +10927,7 @@ export function useCanRunPostCommentMutation(
 
 export function useCanRunMultiplePostCommentMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<PostCommentMutationVariables>[];
@@ -10950,7 +10950,7 @@ export function useCanRunMultiplePostCommentMutations(
 
 export function useCanRunSetPicturesForCollectionMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<SetPicturesForCollectionMutationVariables>;
@@ -10969,7 +10969,7 @@ export function useCanRunSetPicturesForCollectionMutation(
 
 export function useCanRunMultipleSetPicturesForCollectionMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<SetPicturesForCollectionMutationVariables>[];
@@ -10992,7 +10992,7 @@ export function useCanRunMultipleSetPicturesForCollectionMutations(
 
 export function useCanRunUnpinCommentMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UnpinCommentMutationVariables>;
@@ -11011,7 +11011,7 @@ export function useCanRunUnpinCommentMutation(
 
 export function useCanRunMultipleUnpinCommentMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UnpinCommentMutationVariables>[];
@@ -11034,7 +11034,7 @@ export function useCanRunMultipleUnpinCommentMutations(
 
 export function useCanRunUnpublishPictureMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UnpublishPictureMutationVariables>;
@@ -11053,7 +11053,7 @@ export function useCanRunUnpublishPictureMutation(
 
 export function useCanRunMultipleUnpublishPictureMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UnpublishPictureMutationVariables>[];
@@ -11076,7 +11076,7 @@ export function useCanRunMultipleUnpublishPictureMutations(
 
 export function useCanRunUpdateArchiveMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateArchiveMutationVariables>;
@@ -11095,7 +11095,7 @@ export function useCanRunUpdateArchiveMutation(
 
 export function useCanRunMultipleUpdateArchiveMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateArchiveMutationVariables>[];
@@ -11118,7 +11118,7 @@ export function useCanRunMultipleUpdateArchiveMutations(
 
 export function useCanRunUpdateCollectionMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateCollectionMutationVariables>;
@@ -11137,7 +11137,7 @@ export function useCanRunUpdateCollectionMutation(
 
 export function useCanRunMultipleUpdateCollectionMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateCollectionMutationVariables>[];
@@ -11160,7 +11160,7 @@ export function useCanRunMultipleUpdateCollectionMutations(
 
 export function useCanRunUpdateKeywordNameMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateKeywordNameMutationVariables>;
@@ -11179,7 +11179,7 @@ export function useCanRunUpdateKeywordNameMutation(
 
 export function useCanRunMultipleUpdateKeywordNameMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateKeywordNameMutationVariables>[];
@@ -11202,7 +11202,7 @@ export function useCanRunMultipleUpdateKeywordNameMutations(
 
 export function useCanRunUpdateKeywordSynonymsMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateKeywordSynonymsMutationVariables>;
@@ -11221,7 +11221,7 @@ export function useCanRunUpdateKeywordSynonymsMutation(
 
 export function useCanRunMultipleUpdateKeywordSynonymsMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateKeywordSynonymsMutationVariables>[];
@@ -11244,7 +11244,7 @@ export function useCanRunMultipleUpdateKeywordSynonymsMutations(
 
 export function useCanRunUpdateKeywordVisibilityMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateKeywordVisibilityMutationVariables>;
@@ -11263,7 +11263,7 @@ export function useCanRunUpdateKeywordVisibilityMutation(
 
 export function useCanRunMultipleUpdateKeywordVisibilityMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateKeywordVisibilityMutationVariables>[];
@@ -11286,7 +11286,7 @@ export function useCanRunMultipleUpdateKeywordVisibilityMutations(
 
 export function useCanRunUpdateLinkMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateLinkMutationVariables>;
@@ -11305,7 +11305,7 @@ export function useCanRunUpdateLinkMutation(
 
 export function useCanRunMultipleUpdateLinkMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateLinkMutationVariables>[];
@@ -11328,7 +11328,7 @@ export function useCanRunMultipleUpdateLinkMutations(
 
 export function useCanRunUpdateLocationNameMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateLocationNameMutationVariables>;
@@ -11347,7 +11347,7 @@ export function useCanRunUpdateLocationNameMutation(
 
 export function useCanRunMultipleUpdateLocationNameMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateLocationNameMutationVariables>[];
@@ -11370,7 +11370,7 @@ export function useCanRunMultipleUpdateLocationNameMutations(
 
 export function useCanRunUpdateLocationSynonymsMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateLocationSynonymsMutationVariables>;
@@ -11389,7 +11389,7 @@ export function useCanRunUpdateLocationSynonymsMutation(
 
 export function useCanRunMultipleUpdateLocationSynonymsMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateLocationSynonymsMutationVariables>[];
@@ -11412,7 +11412,7 @@ export function useCanRunMultipleUpdateLocationSynonymsMutations(
 
 export function useCanRunUpdateLocationVisibilityMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdateLocationVisibilityMutationVariables>;
@@ -11431,7 +11431,7 @@ export function useCanRunUpdateLocationVisibilityMutation(
 
 export function useCanRunMultipleUpdateLocationVisibilityMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdateLocationVisibilityMutationVariables>[];
@@ -11454,7 +11454,7 @@ export function useCanRunMultipleUpdateLocationVisibilityMutations(
 
 export function useCanRunUpdatePersonNameMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdatePersonNameMutationVariables>;
@@ -11473,7 +11473,7 @@ export function useCanRunUpdatePersonNameMutation(
 
 export function useCanRunMultipleUpdatePersonNameMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdatePersonNameMutationVariables>[];
@@ -11496,7 +11496,7 @@ export function useCanRunMultipleUpdatePersonNameMutations(
 
 export function useCanRunUpdatePersonSynonymsMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdatePersonSynonymsMutationVariables>;
@@ -11515,7 +11515,7 @@ export function useCanRunUpdatePersonSynonymsMutation(
 
 export function useCanRunMultipleUpdatePersonSynonymsMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdatePersonSynonymsMutationVariables>[];
@@ -11538,7 +11538,7 @@ export function useCanRunMultipleUpdatePersonSynonymsMutations(
 
 export function useCanRunUpdatePictureMutation(
   options?: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variables?: Partial<UpdatePictureMutationVariables>;
@@ -11557,7 +11557,7 @@ export function useCanRunUpdatePictureMutation(
 
 export function useCanRunMultipleUpdatePictureMutations(
   options: Omit<
-    Apollo.MutationHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
     variableSets: Partial<UpdatePictureMutationVariables>[];

@@ -76,7 +76,7 @@ class Visitor extends ClientSideBaseVisitor<
       this.generatedHooks.push(`
         export function useCanRun${name}(
           options${optionsAreOptional ? '?' : ''}: Omit<
-            Apollo.${operationType}HookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+            Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
             'variables'
           > & {
             ${variablesType};
