@@ -1,13 +1,13 @@
 import { Comment, FaceTag, Link, ParameterizedPermission, Picture } from './db-types';
 
 type Query<T> = {
-  findOne(params: any): Promise<T>;
+  findOne(params: any): Promise<T | null>;
 };
 
 export type ID = number | undefined;
 
 export class Loader<T> {
-  private cache: Map<ID, T> = new Map();
+  private cache: Map<ID, T | null> = new Map();
 
   public constructor(private query: Query<T>, private populate: any = undefined) {}
 
@@ -18,7 +18,8 @@ export class Loader<T> {
     }
     const queried = await this.query.findOne({
       where: {
-        id,
+        // prevent `Undefined binding(s)` errors
+        id: id ?? -1,
       },
       populate: this.populate,
     });
@@ -52,11 +53,11 @@ export class DB {
   }
 
   public async pictureToArchive(pictureId: ID) {
-    return (await this.pictureLoader.load(pictureId)).archive_tag?.id;
+    return (await this.pictureLoader.load(pictureId))?.archive_tag?.id;
   }
 
   public async commentToPicture(commentId: ID) {
-    return (await this.commentLoader.load(commentId)).picture?.id;
+    return (await this.commentLoader.load(commentId))?.picture?.id;
   }
 
   public async commentToArchive(commentId: ID) {
@@ -64,7 +65,7 @@ export class DB {
   }
 
   public async faceTagToPicture(faceTagId: ID) {
-    return (await this.faceTagLoader.load(faceTagId)).picture?.id;
+    return (await this.faceTagLoader.load(faceTagId))?.picture?.id;
   }
 
   public async faceTagToArchive(faceTagId: ID) {
@@ -72,7 +73,7 @@ export class DB {
   }
 
   public async linkToArchive(linkId: ID) {
-    return (await this.linkLoader.load(linkId)).archive_tag?.id;
+    return (await this.linkLoader.load(linkId))?.archive_tag?.id;
   }
 
   public async loadPermission(permissionId: ID) {

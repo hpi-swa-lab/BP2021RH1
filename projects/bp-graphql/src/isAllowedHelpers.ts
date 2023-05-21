@@ -4,7 +4,8 @@ import { Maybe, ParameterizedPermission } from './db-types';
 
 export const always: IsAllowed = async () => true;
 
-export const archiveId = (parameters: ParameterizedPermission) => parameters.archive_tag?.id;
+export const archiveId = (parameters: ParameterizedPermission | null) =>
+  parameters?.archive_tag?.id;
 
 export type KeysWithValue<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T];
 
