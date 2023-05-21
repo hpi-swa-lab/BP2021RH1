@@ -11,6 +11,7 @@ export { default as getPictures } from './groups/getPictures.js';
 export { default as getTagThumbnails } from './groups/getTagThumbnails.js';
 export { default as login } from './groups/login.js';
 export { default as mergeTags } from './groups/mergeTags.js';
+export { default as setPicturesForCollection } from './groups/setPicturesForCollection.js';
 export { default as updateTagName } from './groups/updateTagName.js';
 export { default as updateTagSynonyms } from './groups/updateTagSynonyms.js';
 export { default as updateTagVisibility } from './groups/updateTagVisibility.js';
