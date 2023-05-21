@@ -223,7 +223,7 @@ const PictureInfo = ({
         picture={picture}
         pictureIds={pictureIds}
         hasHiddenLinks={hasHiddenLinks}
-        savePictureInfo={onSave ? savePictureInfo : undefined}
+        savePictureInfo={savePictureInfo}
       />
       {savePictureInfo && (
         <PictureInfoField
