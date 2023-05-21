@@ -138,6 +138,10 @@ export const useCanBulkEditSomePictures = () => {
   return useHasPermissions(['getMultiplePictureInfo', 'bulkEdit']);
 };
 
+export const useCanEditSomePictures = () => {
+  return useHasPermissions(['updatePicture']);
+};
+
 export const useCanUseCollectionCuratingView = () => {
   const { canRun: canGetRootCollection, loading: canGetRootCollectionLoading } =
     useCanRunGetRootCollectionQuery();
@@ -189,4 +193,12 @@ export const useCanAcceptOrDeclineComment = (commentId: string | undefined) => {
     canDeclineComment,
     canDeclineCommentLoading,
   };
+};
+
+export const useNeedsClipboard = () => {
+  // for LinkedInfoField
+  const canEditSomePictures = useCanEditSomePictures();
+  const canBulkEditSomePictures = useCanBulkEditSomePictures();
+
+  return canEditSomePictures || canBulkEditSomePictures;
 };

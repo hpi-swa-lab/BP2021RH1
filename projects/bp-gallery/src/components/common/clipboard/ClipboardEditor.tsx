@@ -3,9 +3,9 @@ import { Badge, Button } from '@mui/material';
 import { difference } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth, useClipboard, useClipboardEditorButtons } from '../../../hooks/context-hooks';
+import { useNeedsClipboard } from '../../../hooks/can-do-hooks';
+import { useClipboard, useClipboardEditorButtons } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole } from '../../provider/AuthProvider';
 import { ScrollProvider } from '../../provider/ScrollProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
 import ScrollContainer from '../ScrollContainer';
@@ -18,7 +18,6 @@ export const ClipboardEditor = () => {
 
   const [open, setOpen] = useState(false);
 
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const clear = useCallback(() => {
@@ -41,7 +40,9 @@ export const ClipboardEditor = () => {
 
   const clipboardButtons = useClipboardEditorButtons();
 
-  if (role < AuthRole.CURATOR) {
+  const needsClipboard = useNeedsClipboard();
+
+  if (!needsClipboard) {
     return null;
   }
 
