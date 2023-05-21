@@ -8,6 +8,7 @@ import hashCode from '../../../helpers/hash-code';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { useAuth } from '../../../hooks/context-hooks';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
+import { useCanUseBulkEditView } from '../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole } from '../../provider/AuthProvider';
 import BulkEditView from '../../views/bulk-edit/BulkEditView';
@@ -163,6 +164,8 @@ const PictureGrid = ({
     pushHistoryWithoutRouter(`/bulk-edit/${selectedPictureIds.join(',')}`);
   }, [setBulkEditPictureIds, selectedPictureIds]);
 
+  const { canUseBulkEditView: canBulkEdit } = useCanUseBulkEditView(selectedPictureIds);
+
   const defaultAdornments =
     role >= AuthRole.CURATOR && showDefaultAdornments
       ? [
@@ -217,6 +220,7 @@ const PictureGrid = ({
           operations={bulkOperations}
           selectedPictures={selectedPictures}
           onBulkEdit={navigateToBulkEdit}
+          canBulkEdit={canBulkEdit}
         />
       )}
       {defaultAdornments && (

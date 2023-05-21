@@ -1,16 +1,17 @@
+import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
-import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
-import useManageCollectionPictures from './manage-collection-pictures.hook';
-import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
+import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
+import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
+import useManageCollectionPictures from './manage-collection-pictures.hook';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
   const dialog = useDialog();
 
-  const { addPicturesToCollection, removePicturesFromCollection } = useManageCollectionPictures();
+  const { addPicturesToCollection, removePicturesFromCollection, canManageCollectionPictures } =
+    useManageCollectionPictures();
 
   const selectCollection = useCallback(() => {
     return dialog({
@@ -34,6 +35,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           );
         });
       },
+      canRun: canManageCollectionPictures,
     },
     removeFromCollection: {
       name: t('curator.removeFromCollection'),
@@ -47,6 +49,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           selectedPictures.map(p => p.id)
         );
       },
+      canRun: canManageCollectionPictures && parentCollection !== undefined,
     },
     moveToCollection: {
       name: t('curator.moveToCollection'),
@@ -68,6 +71,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           }
         });
       },
+      canRun: canManageCollectionPictures,
     },
     bulkEdit: {
       name: t('curator.bulkEdit'),
@@ -75,6 +79,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       action: (_selectedPictures: FlatPicture[], onBulkEdit: () => void) => {
         onBulkEdit();
       },
+      canRun: canBulkEdit => canBulkEdit,
     },
   } satisfies Record<string, BulkOperation>;
 };
