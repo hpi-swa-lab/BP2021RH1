@@ -34,6 +34,7 @@ const asAuthRole = (roleName: string) => {
 
 export interface AuthFields {
   role: AuthRole;
+  userId?: string;
   username?: string;
   email?: string;
   loggedIn: boolean;
@@ -52,6 +53,7 @@ export const AuthContext = createContext<AuthFields>({
 
 const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);
 
@@ -87,6 +89,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     if (!called || loading || error) return;
 
     setRole(asAuthRole(data?.me?.role?.name ?? ''));
+    setUserId(data?.me?.id);
     setUsername(data?.me?.username);
     setEmail(data?.me?.email ?? undefined);
     setAuthLoading(false);
@@ -127,6 +130,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     apolloClient.setLink(buildHttpLink(null, openAlert));
     sessionStorage.removeItem('jwt');
     setRole(AuthRole.PUBLIC);
+    setUserId(undefined);
     setUsername(undefined);
     setEmail(undefined);
     displaySuccess(t('login.successful-logout'));
@@ -136,6 +140,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     <AuthContext.Provider
       value={{
         role,
+        userId,
         username,
         email,
         loggedIn: username !== undefined,

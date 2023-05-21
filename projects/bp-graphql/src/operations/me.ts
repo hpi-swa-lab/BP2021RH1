@@ -7,6 +7,7 @@ export default {
   document: graphql`
     query me {
       me {
+        id
         role {
           name
         }
