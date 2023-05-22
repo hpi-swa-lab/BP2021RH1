@@ -1,7 +1,7 @@
 import { createHttpLink, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { Maybe } from 'graphql/jsutils/Maybe';
-import { isEmpty, unionWith } from 'lodash';
+import { intersectionBy, isEmpty, unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
 
@@ -91,8 +91,15 @@ export const buildHttpLink = (
 type Ref = { __ref: string };
 type MergeInput = { __typename: string; data: Ref[] };
 
-export const mergeByRef = (existing: Ref[] | undefined = undefined, incoming: Ref[]): Ref[] =>
-  unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
+export const mergeByRef = (existing: Ref[] | undefined = undefined, incoming: Ref[]): Ref[] => {
+  const intersection = intersectionBy<Ref>(incoming, existing ?? [], '__ref');
+  const mergedExisting = unionWith<Ref>(
+    intersection,
+    existing ?? [],
+    (a, b) => a.__ref === b.__ref
+  );
+  return unionWith<Ref>(mergedExisting, incoming, (a, b) => a.__ref === b.__ref);
+};
 
 export const mergeByRefWrappedInData = (
   existing: MergeInput | undefined = undefined,

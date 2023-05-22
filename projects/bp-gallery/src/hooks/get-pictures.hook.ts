@@ -6,6 +6,7 @@ import {
   useGetPicturesByAllSearchQuery,
   useGetPicturesQuery,
 } from '../graphql/APIConnector';
+import { WatchQueryFetchPolicy } from '@apollo/client';
 
 export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
@@ -14,7 +15,8 @@ const useGetPictures = (
   isAllSearchActive: boolean,
   sortBy?: string[],
   filterOutTextsForNonCurators = true,
-  limit: number = NUMBER_OF_PICTURES_LOADED_PER_FETCH
+  limit: number = NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+  fetchPolicy?: WatchQueryFetchPolicy
 ) => {
   const { role } = useAuth();
 
@@ -52,6 +54,7 @@ const useGetPictures = (
       },
       sortBy,
     },
+    fetchPolicy,
     notifyOnNetworkStatusChange: true,
     skip: isAllSearchActive,
   });

@@ -51,7 +51,6 @@ const PictureOverview = ({
                 },
               ],
             },
-            {} as PictureFiltersInput,
             queryParams as PictureFiltersInput,
           ],
         }
