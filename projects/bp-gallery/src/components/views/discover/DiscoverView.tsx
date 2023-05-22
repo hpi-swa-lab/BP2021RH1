@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useVisit } from '../../../helpers/history';
-import { TagType } from '../../../types/additionalFlatTypes';
+import { PictureOverviewType, TagType } from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import { ShowStats } from '../../provider/ShowStatsProvider';
@@ -26,7 +26,6 @@ const DiscoverView = () => {
                   onClick={() => {
                     visit('/show-more/latest');
                   }}
-                  sortBy={['createdAt:desc']}
                 />
               ),
             },
@@ -35,11 +34,11 @@ const DiscoverView = () => {
               icon: <ThumbUp key='1' />,
               content: (
                 <PictureOverview
-                  queryParams={{ likes: { ne: null } }}
+                  type={PictureOverviewType.MOST_LIKED}
+                  queryParams={{}}
                   onClick={() => {
                     visit('/show-more/most-liked');
                   }}
-                  sortBy={['likes:desc']}
                 />
               ),
             },

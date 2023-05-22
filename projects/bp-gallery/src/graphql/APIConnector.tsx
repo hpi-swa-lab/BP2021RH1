@@ -2499,6 +2499,37 @@ export type GetLocationTagsWithThumbnailQuery = {
   } | null;
 };
 
+export type GetMostLikedPicturesQueryVariables = Exact<{
+  filters: PictureFiltersInput;
+  pagination: PaginationArg;
+}>;
+
+export type GetMostLikedPicturesQuery = {
+  pictures?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        is_text?: boolean | null;
+        likes?: number | null;
+        comments?: { data: Array<{ id?: string | null }> } | null;
+        media: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              width?: number | null;
+              height?: number | null;
+              formats?: any | null;
+              url: string;
+              updatedAt?: any | null;
+              provider: string;
+            } | null;
+          } | null;
+        };
+      } | null;
+    }>;
+  } | null;
+};
+
 export type GetMultiplePictureInfoQueryVariables = Exact<{
   pictureIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
@@ -4544,6 +4575,96 @@ export type GetLocationTagsWithThumbnailLazyQueryHookResult = ReturnType<
 export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetLocationTagsWithThumbnailQuery,
   GetLocationTagsWithThumbnailQueryVariables
+>;
+
+export const GetMostLikedPicturesDocument = gql`
+  query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+    pictures(
+      filters: { and: [{ likes: { ne: null } }, $filters] }
+      pagination: $pagination
+      sort: ["likes:desc"]
+    ) {
+      data {
+        id
+        attributes {
+          is_text
+          comments {
+            data {
+              id
+            }
+          }
+          likes
+          media {
+            data {
+              id
+              attributes {
+                width
+                height
+                formats
+                url
+                updatedAt
+                provider
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetMostLikedPicturesQuery__
+ *
+ * To run a query within a React component, call `useGetMostLikedPicturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostLikedPicturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMostLikedPicturesQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetMostLikedPicturesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetMostLikedPicturesQuery,
+    GetMostLikedPicturesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetMostLikedPicturesQuery, GetMostLikedPicturesQueryVariables>(
+    GetMostLikedPicturesDocument,
+    options
+  );
+}
+
+export function useGetMostLikedPicturesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMostLikedPicturesQuery,
+    GetMostLikedPicturesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetMostLikedPicturesQuery, GetMostLikedPicturesQueryVariables>(
+    GetMostLikedPicturesDocument,
+    options
+  );
+}
+
+export type GetMostLikedPicturesQueryHookResult = ReturnType<typeof useGetMostLikedPicturesQuery>;
+
+export type GetMostLikedPicturesLazyQueryHookResult = ReturnType<
+  typeof useGetMostLikedPicturesLazyQuery
+>;
+
+export type GetMostLikedPicturesQueryResult = Apollo.QueryResult<
+  GetMostLikedPicturesQuery,
+  GetMostLikedPicturesQueryVariables
 >;
 
 export const GetMultiplePictureInfoDocument = gql`

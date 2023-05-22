@@ -4,7 +4,12 @@ import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
-import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
+import {
+  FlatArchiveTag,
+  FlatPicture,
+  PictureOverviewType,
+  TagType,
+} from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
@@ -118,7 +123,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                   onClick={() => {
                     visit('/archives/' + archiveId + '/show-more/pictures');
                   }}
-                  sortBy={['createdAt:desc']}
                 />
               ),
             },
@@ -127,11 +131,13 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               icon: <ThumbUp key='1' />,
               content: (
                 <PictureOverview
-                  queryParams={{ archive_tag: { id: { eq: archiveId } }, likes: { ne: null } }}
+                  type={PictureOverviewType.MOST_LIKED}
+                  queryParams={{
+                    archive_tag: { id: { eq: archiveId } },
+                  }}
                   onClick={() => {
                     visit('/archives/' + archiveId + '/show-more/most-liked');
                   }}
-                  sortBy={['likes:desc']}
                 />
               ),
             },

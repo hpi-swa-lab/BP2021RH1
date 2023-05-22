@@ -26,7 +26,7 @@ const useLike = (pictureId: string, likeCount: number) => {
 
   const [likeMutation] = useLikeMutation({
     variables: { pictureId: pictureId },
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getPictureInfo', 'getMostLikedPictures'],
   });
 
   const like = useCallback(

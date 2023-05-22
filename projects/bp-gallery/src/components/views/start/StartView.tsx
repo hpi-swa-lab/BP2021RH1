@@ -7,7 +7,7 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVariant } from '../../../helpers/growthbook';
 import { useMobile } from '../../../hooks/context-hooks';
-import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
 import { IfFlagEnabled } from '../../common/IfFlagEnabled';
 import PictureOverview from '../../common/PictureOverview';
@@ -113,7 +113,6 @@ const StartView = () => {
                     onClick={() => {
                       visit('/show-more/latest');
                     }}
-                    sortBy={['createdAt:desc']}
                   />
                 ),
               },
@@ -122,11 +121,11 @@ const StartView = () => {
                 icon: <ThumbUp key='1' />,
                 content: (
                   <PictureOverview
-                    queryParams={{ likes: { ne: null } }}
+                    type={PictureOverviewType.MOST_LIKED}
+                    queryParams={{}}
                     onClick={() => {
                       visit('/show-more/most-liked');
                     }}
-                    sortBy={['likes:desc']}
                   />
                 ),
               },

@@ -92,7 +92,7 @@ type Ref = { __ref: string };
 type MergeInput = { __typename: string; data: Ref[] };
 
 export const mergeByRef = (existing: Ref[] | undefined = undefined, incoming: Ref[]): Ref[] =>
-  unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
+  unionWith<Ref>(incoming, existing ?? [], (a, b) => a.__ref === b.__ref);
 
 export const mergeByRefWrappedInData = (
   existing: MergeInput | undefined = undefined,

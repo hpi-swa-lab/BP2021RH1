@@ -1,12 +1,12 @@
 import React, { MouseEventHandler } from 'react';
 import './PictureOverview.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
-import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { PictureFiltersInput } from '../../graphql/APIConnector';
-import { FlatPicture } from '../../types/additionalFlatTypes';
+import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
 import { useTranslation } from 'react-i18next';
-import useGetPictures from '../../hooks/get-pictures.hook';
 import PrimaryButton from './PrimaryButton';
+import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
+import useGenericPictureEndpoints from '../../hooks/generic-picture-endpoints';
 
 interface PictureOverviewProps {
   title?: string;
@@ -14,6 +14,7 @@ interface PictureOverviewProps {
   onClick: MouseEventHandler<HTMLButtonElement>;
   sortBy?: string[];
   rows?: number;
+  type?: PictureOverviewType;
 }
 
 const ABSOLUTE_MAX_PICTURES_PER_ROW = 6;
@@ -24,18 +25,45 @@ const PictureOverview = ({
   onClick,
   sortBy,
   rows = 2,
+  type = PictureOverviewType.CUSTOM,
 }: PictureOverviewProps) => {
   const { t } = useTranslation();
 
-  const { data, loading, refetch } = useGetPictures(
-    queryParams,
-    false,
-    sortBy,
-    true,
-    ABSOLUTE_MAX_PICTURES_PER_ROW * rows
-  );
+  const { getPicturesQuery } = useGenericPictureEndpoints(type);
 
-  const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+  const { data, loading, refetch } = getPicturesQuery({
+    variables: {
+      filters: {
+        and: [
+          {
+            or: [
+              {
+                is_text: {
+                  eq: false,
+                },
+              },
+              {
+                is_text: {
+                  null: true,
+                },
+              },
+            ],
+          },
+          queryParams as PictureFiltersInput,
+        ],
+      },
+      pagination: {
+        start: 0,
+        limit: ABSOLUTE_MAX_PICTURES_PER_ROW * rows,
+      },
+      sortBy,
+    },
+    fetchPolicy: 'network-only',
+  });
+
+  const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
+    data as { [key: string]: any } | undefined
+  )?.pictures;
 
   return (
     <div className='overview-container'>
