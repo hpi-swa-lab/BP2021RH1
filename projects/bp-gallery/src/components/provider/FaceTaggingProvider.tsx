@@ -236,9 +236,9 @@ export const FaceTaggingProvider = ({
       x,
       y,
       noPointerEvents: true,
-      tagDirection: TagDirection.DEFAULT,
+      tagDirection: activeTagDirection ? activeTagDirection : TagDirection.DEFAULT,
     };
-  }, [position, activeTagName, activeTagId]);
+  }, [position, activeTagName, activeTagId, activeTagDirection]);
 
   const value = useMemo<FaceTagging | null>(
     () =>
