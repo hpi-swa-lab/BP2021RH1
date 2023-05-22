@@ -1,19 +1,20 @@
 "use strict";
 
-import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
+import { Strapi } from "@strapi/strapi";
+import { getArchivePictureCountsType } from "./api/archive-tag/content-types/archive-tag/custom-type";
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } from "./api/collection/services/custom-resolver";
+import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
 import {
-  findPicturesByAllSearch,
-  updatePictureWithTagCleanup,
   bulkEdit,
+  findPicturesByAllSearch,
   like,
+  updatePictureWithTagCleanup,
 } from "./api/picture/services/custom-resolver";
-import { Strapi } from "@strapi/strapi";
+import { incNotAPlaceCount } from "./api/picture/services/custom-update";
 import { GqlExtension } from "./types";
-import {incNotAPlaceCount} from "./api/picture/services/custom-update";
 
 export default {
   /**
@@ -25,7 +26,8 @@ export default {
   register({ strapi }: { strapi: Strapi }) {
     const gqlExtensionService = strapi.plugin("graphql").service("extension");
     const gqlExtension = (extensionArgs: GqlExtension) => {
-      const { list, mutationField, queryField } = extensionArgs.nexus;
+      const { list, mutationField, queryField, objectType } =
+        extensionArgs.nexus;
       return {
         types: [
           mutationField("mergeKeywordTags", {
@@ -120,6 +122,24 @@ export default {
               );
             },
           }),
+          queryField("getArchivePictureCounts", {
+            type: getArchivePictureCountsType(extensionArgs.nexus),
+            async resolve(_) {
+              const knexEngine = extensionArgs.strapi.db.connection;
+              const res = await knexEngine("pictures_archive_tag_links")
+                .select("archive_tag_id as id")
+                .count("picture_id")
+                .groupBy("archive_tag_id")
+                .orderBy("id", "asc");
+              const gqlRes = {
+                data: res.map((archive) => ({
+                  id: archive.id,
+                  attributes: { count: archive.count },
+                })),
+              };
+              return gqlRes;
+            },
+          }),
           mutationField("doBulkEdit", {
             type: "Int",
             args: {
@@ -137,7 +157,8 @@ export default {
               pictureId: "ID",
               dislike: "Boolean",
             },
-            async resolve(_, { pictureId, dislike }) {
+            async resolve(_, { pictureId, dislike }, ctx) {
+              console.log(ctx.state);
               const knexEngine = extensionArgs.strapi.db.connection;
               return like(knexEngine, pictureId, dislike);
             },
@@ -151,7 +172,7 @@ export default {
               const knexEngine = extensionArgs.strapi.db.connection;
               return incNotAPlaceCount(knexEngine, id);
             },
-          })
+          }),
         ],
         resolversConfig: {
           Query: {
@@ -159,6 +180,9 @@ export default {
               auth: {
                 scope: ["api::picture.picture.find"],
               },
+            },
+            getArchivePictureCounts: {
+              auth: false,
             },
           },
           Mutation: {
@@ -200,8 +224,8 @@ export default {
             increaseNotAPlaceCount: {
               auth: {
                 scope: ["api::picture.picture.find"],
-              }, 
-            } 
+              },
+            },
           },
           Collection: {
             thumbnail: {

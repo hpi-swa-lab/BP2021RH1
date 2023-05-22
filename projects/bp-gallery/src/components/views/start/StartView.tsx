@@ -1,6 +1,9 @@
 import { IfFeatureEnabled } from '@growthbook/growthbook-react';
 import { useTranslation } from 'react-i18next';
-import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
+import {
+  useGetAllArchiveTagsQuery,
+  useGetArchivePictureCountsQuery,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVariant } from '../../../helpers/growthbook';
 import { useMobile } from '../../../hooks/context-hooks';
@@ -22,6 +25,10 @@ const StartView = () => {
   const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
+  const { data: countData } = useGetArchivePictureCountsQuery();
+  const pictureCounts: { id: string; count: number }[] =
+    useSimplifiedQueryResponseData(countData)?.getArchivePictureCounts;
+
   const {
     clientId: paypalClientId,
     donationText: paypalDonationText,
@@ -31,11 +38,12 @@ const StartView = () => {
     fallback: { clientId: '', donationText: '', purposeText: '' },
   });
 
-  const archiveCards = archives?.map(archive => {
+  const archiveCards = archives?.map((archive, i) => {
     const sharedProps = {
       archiveName: archive.name,
       archiveDescription: archive.shortDescription ?? '',
       archiveId: archive.id,
+      archivePictureCount: pictureCounts[i].count,
     };
 
     return (
