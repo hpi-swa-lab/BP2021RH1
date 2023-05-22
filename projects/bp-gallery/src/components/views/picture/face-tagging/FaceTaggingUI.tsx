@@ -83,7 +83,7 @@ export const FaceTaggingUI = ({
           />
         )}
 
-        {context && context.canFaceTag && (tags.length > 0 || isFaceTagging) && (
+        {context?.canFaceTag && (tags.length > 0 || isFaceTagging) && (
           <Button
             variant='contained'
             className='!mt-5 w-full !bg-[#7e241d]'

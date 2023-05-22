@@ -59,7 +59,7 @@ const UnverifiedCommentsView = () => {
   return (
     <ProtectedRoute
       canUse={canUseUnverifiedCommentsView}
-      canUseLoading={canUseUnverifiedCommentsView}
+      canUseLoading={canUseUnverifiedCommentsViewLoading}
     >
       {() => {
         if (error) {

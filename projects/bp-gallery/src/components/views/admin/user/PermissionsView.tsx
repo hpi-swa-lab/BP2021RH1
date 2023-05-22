@@ -30,9 +30,10 @@ import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
 import { equalOrBothNullish } from './helper';
-import { Coverage, CoverageCheckbox, combineCoverages } from './permissions/Coverage';
+import { Coverage, CoverageCheckbox } from './permissions/Coverage';
 import { GroupStructure, SectionStructure, sections } from './permissions/operations';
 import { presets } from './permissions/presets';
+import { combineCoverages } from './permissions/combineCoverages';
 
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
