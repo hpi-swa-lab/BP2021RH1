@@ -78,7 +78,9 @@ describe('Archives View', () => {
   });
 
   it('successfully sets an image as showcase picture when pressing on the star button via "Unsere Bilder"', () => {
-    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen').click();
+    cy.get('.overview-selection-container:contains(Unsere Bilder)')
+      .contains('Mehr anzeigen')
+      .click();
     cy.get(`[data-testid="StarIcon"]:first`).click();
     cy.contains('Zurück').click();
     cy.get('.archive-showcase #picture-preview-for-5').should('exist');
@@ -98,7 +100,7 @@ describe('Archives View', () => {
 
   it('shows "Unsere Bilder" picture overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen');
+    cy.get('.overview-selection-container:contains(Unsere Bilder)').contains('Mehr anzeigen');
 
     // check if it contains rows with images
     cy.get(

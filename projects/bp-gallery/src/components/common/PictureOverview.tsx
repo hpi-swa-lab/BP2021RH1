@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react';
+import React, { MouseEventHandler, useMemo } from 'react';
 import './PictureOverview.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
 import { PictureFiltersInput } from '../../graphql/APIConnector';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import PrimaryButton from './PrimaryButton';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGenericPictureEndpoints from '../../hooks/generic-picture-endpoints';
+import { AuthRole, useAuth } from '../provider/AuthProvider';
 
 interface PictureOverviewProps {
   title?: string;
@@ -28,30 +29,38 @@ const PictureOverview = ({
   type = PictureOverviewType.CUSTOM,
 }: PictureOverviewProps) => {
   const { t } = useTranslation();
+  const { role } = useAuth();
 
   const { getPicturesQuery } = useGenericPictureEndpoints(type);
 
+  const textFilter = useMemo(() => {
+    return role < AuthRole.CURATOR
+      ? {
+          and: [
+            {
+              or: [
+                {
+                  is_text: {
+                    eq: false,
+                  },
+                },
+                {
+                  is_text: {
+                    null: true,
+                  },
+                },
+              ],
+            },
+            {} as PictureFiltersInput,
+            queryParams as PictureFiltersInput,
+          ],
+        }
+      : queryParams;
+  }, [queryParams, role]);
+
   const { data, loading, refetch } = getPicturesQuery({
     variables: {
-      filters: {
-        and: [
-          {
-            or: [
-              {
-                is_text: {
-                  eq: false,
-                },
-              },
-              {
-                is_text: {
-                  null: true,
-                },
-              },
-            ],
-          },
-          queryParams as PictureFiltersInput,
-        ],
-      },
+      filters: textFilter as PictureFiltersInput,
       pagination: {
         start: 0,
         limit: ABSOLUTE_MAX_PICTURES_PER_ROW * rows,

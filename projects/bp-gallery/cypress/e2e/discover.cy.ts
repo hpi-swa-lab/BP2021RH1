@@ -9,7 +9,7 @@ describe('Discover View', () => {
 
   it('shows "Neuzugänge" picture overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.overview-container:first')
+    cy.get('.overview-selection-container:first')
       .children()
       .should('contain.text', 'Neuzugänge')
       .and('contain.text', 'Mehr anzeigen');
