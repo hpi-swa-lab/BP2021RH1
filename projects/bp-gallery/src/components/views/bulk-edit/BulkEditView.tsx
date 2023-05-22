@@ -9,6 +9,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useCanUseBulkEditView } from '../../../hooks/can-do-hooks';
+import { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import ProtectedRoute from '../../common/ProtectedRoute';
@@ -139,6 +140,7 @@ const BulkEditView = ({
                       hashbase={'A'}
                       showDefaultAdornments={false}
                       allowClicks={false}
+                      textFilter={TextFilter.PICTURES_AND_TEXTS}
                     />
                   </HideStats>
                 </div>

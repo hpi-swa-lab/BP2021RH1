@@ -9,6 +9,7 @@ import {
 } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { useClipboard, useSetClipboardEditorButtons } from '../../../../../hooks/context-hooks';
+import { TextFilter } from '../../../../../hooks/get-pictures.hook';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
@@ -229,7 +230,7 @@ const LinkedInfoField = ({
                   showCount={false}
                   showDefaultAdornments={false}
                   extraAdornments={adornments}
-                  filterOutTextsForNonCurators={false}
+                  textFilter={TextFilter.PICTURES_AND_TEXTS}
                 />
               </ScrollContainer>
             </ScrollProvider>

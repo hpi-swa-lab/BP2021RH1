@@ -136,6 +136,7 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
               hashbase={collection.name}
               uploadAreaProps={uploadAreaProps(collection)}
               bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+              textFilter={null}
             />
           </ShowStats>
         </div>

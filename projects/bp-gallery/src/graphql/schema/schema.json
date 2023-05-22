@@ -14348,11 +14348,11 @@
                 "defaultValue": null
               },
               {
-                "name": "filterOutTexts",
+                "name": "textFilter",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Boolean",
+                  "name": "String",
                   "ofType": null
                 },
                 "defaultValue": null

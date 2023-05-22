@@ -85,6 +85,7 @@ const ShowMoreView = ({
             extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
             bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
             maxNumPictures={categoryType === 'latest' ? 500 : undefined}
+            textFilter={null}
           />
         </ShowStats>
       </div>

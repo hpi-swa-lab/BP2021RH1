@@ -106,19 +106,19 @@ export default {
               searchTerms: list("String"),
               // Additional search-time tuples (plain search term, parsed start, parsed end)
               searchTimes: list(list("String")),
-              filterOutTexts: "Boolean",
+              textFilter: "String",
               pagination: "PaginationArg",
             },
             async resolve(
               _,
-              { searchTerms, searchTimes, filterOutTexts, pagination }
+              { searchTerms, searchTimes, textFilter, pagination }
             ) {
               const knexEngine = extensionArgs.strapi.db.connection;
               return findPicturesByAllSearch(
                 knexEngine,
                 searchTerms,
                 searchTimes,
-                filterOutTexts,
+                textFilter,
                 pagination
               );
             },

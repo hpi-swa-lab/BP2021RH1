@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNeedsClipboard } from '../../../hooks/can-do-hooks';
 import { useClipboard, useClipboardEditorButtons } from '../../../hooks/context-hooks';
+import { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { ScrollProvider } from '../../provider/ScrollProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
@@ -72,6 +73,7 @@ export const ClipboardEditor = () => {
                     showCount={false}
                     showDefaultAdornments={false}
                     extraAdornments={[remove]}
+                    textFilter={TextFilter.PICTURES_AND_TEXTS}
                   />
                 </HideStats>
               </ScrollContainer>

@@ -1,6 +1,14 @@
 "use strict";
 import { bulkEdit, like, updatePictureWithTagCleanup } from "./custom-update";
 const { plural, table } = require("../../helper");
+
+// should match the enum in projects/bp-gallery/src/hooks/get-pictures.hook.ts
+export enum TextFilter {
+  ONLY_PICTURES = "ONLY_PICTURES",
+  PICTURES_AND_TEXTS = "PICTURES_AND_TEXTS",
+  ONLY_TEXTS = "ONLY_TEXTS",
+}
+
 /**
  * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
  * in both a verified and an unverified relation.
@@ -141,7 +149,12 @@ const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
   return knexEngine;
 };
 
-const buildWhere = (knexEngine, searchTerms, searchTimes, filterOutTexts) => {
+const buildWhere = (
+  knexEngine,
+  searchTerms,
+  searchTimes,
+  textFilter: TextFilter
+) => {
   for (const searchObject of [...searchTerms, ...searchTimes]) {
     // Function syntax for where in order to use correct bracing in the query
     knexEngine = knexEngine.where((qb) => {
@@ -172,11 +185,19 @@ const buildWhere = (knexEngine, searchTerms, searchTimes, filterOutTexts) => {
   // Only retrieve published pictures
   knexEngine = knexEngine.whereNotNull("pictures.published_at");
 
-  if (filterOutTexts) {
-    knexEngine = knexEngine.where((qb) => {
-      qb.where("pictures.is_text", false);
-      qb.orWhereNull("pictures.is_text");
-    });
+  switch (textFilter) {
+    case TextFilter.ONLY_PICTURES:
+      knexEngine = knexEngine.where((qb) => {
+        qb.where("pictures.is_text", false);
+        qb.orWhereNull("pictures.is_text");
+      });
+      break;
+    case TextFilter.ONLY_TEXTS:
+      knexEngine = knexEngine.where("pictures.is_text", true);
+      break;
+    case TextFilter.PICTURES_AND_TEXTS:
+      // no extra conditions
+      break;
   }
 
   return knexEngine;
@@ -190,19 +211,14 @@ const buildQueryForAllSearch = (
   knexEngine,
   searchTerms,
   searchTimes,
-  filterOutTexts,
+  textFilter: TextFilter,
   pagination = { start: 0, limit: 100 }
 ) => {
   const withSelect = knexEngine.distinct("pictures.*").from(table("pictures"));
 
   const withJoins = buildJoins(withSelect);
 
-  const withWhere = buildWhere(
-    withJoins,
-    searchTerms,
-    searchTimes,
-    filterOutTexts
-  );
+  const withWhere = buildWhere(withJoins, searchTerms, searchTimes, textFilter);
 
   const withOrder = withWhere.orderBy("pictures.published_at", "asc");
 
@@ -219,14 +235,16 @@ const findPicturesByAllSearch = async (
   knexEngine,
   searchTerms,
   searchTimes,
-  filterOutTexts,
+  textFilter: string,
   pagination
 ) => {
   const matchingPictures = await buildQueryForAllSearch(
     knexEngine,
     searchTerms,
     searchTimes,
-    filterOutTexts,
+    textFilter in TextFilter
+      ? (textFilter as TextFilter)
+      : TextFilter.ONLY_PICTURES,
     pagination
   );
   return matchingPictures.map((picture) => ({

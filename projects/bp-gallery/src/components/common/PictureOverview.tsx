@@ -1,12 +1,12 @@
-import React, { MouseEventHandler } from 'react';
-import './PictureOverview.scss';
-import PictureGrid from './picture-gallery/PictureGrid';
-import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
-import { PictureFiltersInput } from '../../graphql/APIConnector';
-import { FlatPicture } from '../../types/additionalFlatTypes';
+import { MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
-import useGetPictures from '../../hooks/get-pictures.hook';
+import { PictureFiltersInput } from '../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
+import useGetPictures, { TextFilter } from '../../hooks/get-pictures.hook';
+import { FlatPicture } from '../../types/additionalFlatTypes';
+import './PictureOverview.scss';
 import PrimaryButton from './PrimaryButton';
+import PictureGrid from './picture-gallery/PictureGrid';
 
 interface PictureOverviewProps {
   title: string;
@@ -31,7 +31,7 @@ const PictureOverview = ({
     queryParams,
     false,
     sortBy,
-    true,
+    TextFilter.ONLY_PICTURES,
     ABSOLUTE_MAX_PICTURES_PER_ROW * rows
   );
 

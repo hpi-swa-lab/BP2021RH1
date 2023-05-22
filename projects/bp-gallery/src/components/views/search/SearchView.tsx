@@ -93,6 +93,7 @@ const SearchView = () => {
             resultPictureCallback={(pictures: number) => {
               setAreResultsEmpty(pictures <= 0);
             }}
+            textFilter={null}
           />
         </ShowStats>
       )}

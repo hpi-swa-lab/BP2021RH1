@@ -83,6 +83,11 @@
     "pictureCount_other": "{{count, number}} Bilder",
     "moreThanPictureCount_one": "Mehr als 1 Bild",
     "moreThanPictureCount_other": "Mehr als {{count, number}} Bilder",
+    "textFilter": {
+      "onlyPictures": "Nur Bilder anzeigen",
+      "picturesAndTexts": "Bilder und Texte anzeigen",
+      "onlyTexts": "Nur Texte anzeigen"
+    },
     "and": "und",
     "and-alternative": "sowie",
     "login": "Login",

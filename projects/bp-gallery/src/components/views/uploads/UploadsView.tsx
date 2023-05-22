@@ -65,6 +65,7 @@ const UploadsView = () => {
             hashbase={'uploads'}
             uploadAreaProps={uploadAreaProps}
             bulkOperations={[moveToCollection, bulkEdit]}
+            textFilter={null}
           />
         </HideStats>
       </div>
