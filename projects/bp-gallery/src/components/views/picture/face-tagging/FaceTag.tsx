@@ -1,4 +1,4 @@
-import { Cancel, Label, OpenWith } from '@mui/icons-material';
+import { Autorenew, Cancel, OpenWith } from '@mui/icons-material';
 import { CSSProperties, useMemo } from 'react';
 import { useFaceTagging } from '../../../../hooks/context-hooks';
 import '../../../../shared/style.scss';
@@ -140,7 +140,7 @@ export const FaceTag = ({
         {role >= AuthRole.CURATOR && id !== undefined && isFaceTagging && (
           <>
             <OpenWith className='hover:text-[#00000066]' onClick={handleMove} />
-            <Label
+            <Autorenew
               className={
                 id === context.tagDirectionReferenceTagId
                   ? 'text-[#00000066]'
