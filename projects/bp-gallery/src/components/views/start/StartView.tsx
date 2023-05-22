@@ -26,8 +26,8 @@ const StartView = () => {
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
   const { data: countData } = useGetArchivePictureCountsQuery();
-  const pictureCounts: { id: string; count: number }[] =
-    useSimplifiedQueryResponseData(countData)?.getArchivePictureCounts;
+  const pictureCounts: { id: string; count: number }[] | undefined =
+    useSimplifiedQueryResponseData(countData)?.archivePictureCounts;
 
   const {
     clientId: paypalClientId,
@@ -43,7 +43,7 @@ const StartView = () => {
       archiveName: archive.name,
       archiveDescription: archive.shortDescription ?? '',
       archiveId: archive.id,
-      archivePictureCount: pictureCounts[i].count,
+      archivePictureCount: pictureCounts?.[i].count,
     };
 
     return (

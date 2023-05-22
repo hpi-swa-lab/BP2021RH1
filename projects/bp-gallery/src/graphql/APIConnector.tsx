@@ -29,11 +29,21 @@ export type Scalars = {
 
 export type ArchivePictureCount = {
   attributes?: Maybe<ArchivePictureCountAttributes>;
+  count?: Maybe<Scalars['Int']>;
   id?: Maybe<Scalars['ID']>;
 };
 
 export type ArchivePictureCountAttributes = {
   count?: Maybe<Scalars['Int']>;
+};
+
+export type ArchivePictureCountEntity = {
+  attributes?: Maybe<ArchivePictureCount>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ArchivePictureCountEntityResponseCollection = {
+  data?: Maybe<Array<Maybe<ArchivePictureCountEntity>>>;
 };
 
 export type ArchivePictureCountResponseCollection = {
@@ -1479,6 +1489,7 @@ export enum PublicationState {
 }
 
 export type Query = {
+  archivePictureCounts?: Maybe<ArchivePictureCountEntityResponseCollection>;
   archiveTag?: Maybe<ArchiveTagEntityResponse>;
   archiveTags?: Maybe<ArchiveTagEntityResponseCollection>;
   browseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -2277,7 +2288,7 @@ export type GetArchiveQuery = {
 export type GetArchivePictureCountsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetArchivePictureCountsQuery = {
-  getArchivePictureCounts?: {
+  archivePictureCounts?: {
     data?: Array<{
       id?: string | null;
       attributes?: { count?: number | null } | null;
@@ -3823,7 +3834,7 @@ export type GetArchiveQueryResult = Apollo.QueryResult<GetArchiveQuery, GetArchi
 
 export const GetArchivePictureCountsDocument = gql`
   query getArchivePictureCounts {
-    getArchivePictureCounts {
+    archivePictureCounts {
       data {
         id
         attributes {

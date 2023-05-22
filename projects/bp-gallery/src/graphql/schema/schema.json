@@ -12804,7 +12804,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "ArchivePictureCountResponseCollection",
+        "name": "ArchivePictureCountEntityResponseCollection",
         "description": null,
         "fields": [
           {
@@ -12816,7 +12816,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "ArchivePictureCount",
+                "name": "ArchivePictureCountEntity",
                 "ofType": null
               }
             },
@@ -12831,7 +12831,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "ArchivePictureCount",
+        "name": "ArchivePictureCountEntity",
         "description": null,
         "fields": [
           {
@@ -12852,7 +12852,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "ArchivePictureCountAttributes",
+              "name": "ArchivePictureCount",
               "ofType": null
             },
             "isDeprecated": false,
@@ -12866,7 +12866,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "ArchivePictureCountAttributes",
+        "name": "ArchivePictureCount",
         "description": null,
         "fields": [
           {
@@ -14157,12 +14157,12 @@
             "deprecationReason": null
           },
           {
-            "name": "getArchivePictureCounts",
+            "name": "archivePictureCounts",
             "description": null,
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "ArchivePictureCountResponseCollection",
+              "name": "ArchivePictureCountEntityResponseCollection",
               "ofType": null
             },
             "isDeprecated": false,

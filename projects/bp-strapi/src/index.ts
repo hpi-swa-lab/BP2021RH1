@@ -1,7 +1,7 @@
 "use strict";
 
 import { Strapi } from "@strapi/strapi";
-import { getArchivePictureCountsType } from "./api/archive-tag/content-types/archive-tag/custom-type";
+import { getArchivePictureCountsType as archivePictureCountsType } from "./api/archive-tag/content-types/archive-tag/custom-type";
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
@@ -122,8 +122,8 @@ export default {
               );
             },
           }),
-          queryField("getArchivePictureCounts", {
-            type: getArchivePictureCountsType(extensionArgs.nexus),
+          queryField("archivePictureCounts", {
+            type: archivePictureCountsType(extensionArgs.nexus),
             async resolve(_) {
               const knexEngine = extensionArgs.strapi.db.connection;
               const res = await knexEngine("pictures_archive_tag_links")
@@ -181,8 +181,10 @@ export default {
                 scope: ["api::picture.picture.find"],
               },
             },
-            getArchivePictureCounts: {
-              auth: false,
+            archivePictureCounts: {
+              auth: {
+                scope: ["api::picture.picture.find"],
+              },
             },
           },
           Mutation: {
