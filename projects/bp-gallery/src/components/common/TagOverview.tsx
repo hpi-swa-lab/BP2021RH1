@@ -34,7 +34,7 @@ const TagOverview = ({
   archiveId,
 }: TagOverviewProps) => {
   const { t } = useTranslation();
-  const ref = useRef<any>();
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const basePath = archiveId
     ? '/archives/' + archiveId + '/show-more/' + type + '/'
@@ -49,16 +49,16 @@ const TagOverview = ({
   }, []);
 
   const [rowLength, setRowLength] = useState(() => {
-    return calculateMaxCategoriesPerRow((ref.current?.clientWidth ?? 0) as number);
+    return calculateMaxCategoriesPerRow(ref.current?.clientWidth ?? 0);
   });
 
   const onResize = useCallback(() => {
-    setRowLength(calculateMaxCategoriesPerRow((ref.current?.clientWidth ?? 0) as number));
+    setRowLength(calculateMaxCategoriesPerRow(ref.current?.clientWidth ?? 0));
   }, [calculateMaxCategoriesPerRow]);
 
   //ensure correct set up of
   useEffect(() => {
-    setRowLength(calculateMaxCategoriesPerRow((ref.current?.clientWidth ?? 0) as number));
+    setRowLength(calculateMaxCategoriesPerRow(ref.current?.clientWidth ?? 0));
   }, [ref.current?.clientWidth, calculateMaxCategoriesPerRow]);
 
   // Set up eventListener on mount and cleanup on unmount
