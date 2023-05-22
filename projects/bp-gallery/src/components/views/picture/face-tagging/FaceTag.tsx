@@ -18,6 +18,10 @@ export const FaceTag = ({
   const context = useFaceTagging();
   const isFaceTagging = context?.isFaceTagging;
 
+  if (context?.activeTagId && context.activeTagDirection) {
+    tagDirection = context.activeTagDirection;
+  }
+
   const handleDelete = async () => {
     if (id === undefined) {
       return;
@@ -29,6 +33,7 @@ export const FaceTag = ({
     if (personTagId === undefined) {
       return;
     }
+    context?.setActiveTagDirection(tagDirection);
     await handleDelete();
     context?.setActiveTagId(personTagId);
   };

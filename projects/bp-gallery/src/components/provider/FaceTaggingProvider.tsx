@@ -32,6 +32,7 @@ export const FaceTaggingProvider = ({
   const [isFaceTagging, setIsFaceTagging] = useState(false);
   const [tagDirectionReferenceTagId, setTagDirectionReferenceTagId] = useState<string | null>(null);
   const isSettingTagDirection = tagDirectionReferenceTagId !== null;
+  const [activeTagDirection, setActiveTagDirection] = useState<TagDirection | null>(null);
 
   useEffect(() => {
     setActiveTagId(null);
@@ -140,13 +141,14 @@ export const FaceTaggingProvider = ({
       variables: {
         x,
         y,
-        tag_direction: TagDirection.DEFAULT,
+        tag_direction: activeTagDirection ? activeTagDirection : TagDirection.DEFAULT,
         personTagId: activeTagId,
         pictureId,
       },
     });
     setActiveTagId(null);
-  }, [createTag, positionRef, activeTagId, pictureId]);
+    setActiveTagDirection(null);
+  }, [createTag, positionRef, activeTagId, pictureId, activeTagDirection]);
 
   const [deleteTag] = useDeleteFaceTagMutation({
     refetchQueries: ['getFaceTags'],
@@ -257,6 +259,8 @@ export const FaceTaggingProvider = ({
             setIsFaceTagging,
             tagDirectionReferenceTagId,
             setTagDirectionReferenceTagId,
+            activeTagDirection,
+            setActiveTagDirection,
             imageRect,
           }
         : null,
@@ -271,6 +275,8 @@ export const FaceTaggingProvider = ({
       setIsFaceTagging,
       tagDirectionReferenceTagId,
       setTagDirectionReferenceTagId,
+      activeTagDirection,
+      setActiveTagDirection,
       imageRect,
     ]
   );
