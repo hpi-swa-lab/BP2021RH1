@@ -9144,6 +9144,16 @@
             "defaultValue": null
           },
           {
+            "name": "see_unpublished_collections",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "BooleanFilterInput",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -9241,6 +9251,16 @@
               "ofType": null
             },
             "defaultValue": null
+          },
+          {
+            "name": "see_unpublished_collections",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
           }
         ],
         "interfaces": null,
@@ -9283,6 +9303,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "ArchiveTagEntityResponse",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "see_unpublished_collections",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,

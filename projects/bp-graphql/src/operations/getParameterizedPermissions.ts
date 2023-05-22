@@ -18,6 +18,7 @@ export default {
                 id
               }
             }
+            see_unpublished_collections
           }
         }
       }

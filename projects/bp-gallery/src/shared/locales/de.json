@@ -217,6 +217,12 @@
         "getUsersPermissionsUser": "Nutzer-Daten ansehen",
         "login": "Sich anmelden"
       },
+      "parameter": {
+        "see_unpublished_collections": {
+          "onlyPublished": "Nur sichtbare Collections",
+          "all": "Alle Collections"
+        }
+      },
       "preset": {
         "public": "Allgemeiner Nutzer"
       }

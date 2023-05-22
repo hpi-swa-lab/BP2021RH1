@@ -20,8 +20,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -1167,6 +1170,7 @@ export type ParameterizedPermission = {
   archive_tag?: Maybe<ArchiveTagEntityResponse>;
   createdAt?: Maybe<Scalars['DateTime']>;
   operation_name?: Maybe<Scalars['String']>;
+  see_unpublished_collections?: Maybe<Scalars['Boolean']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   users_permissions_user?: Maybe<UsersPermissionsUserEntityResponse>;
 };
@@ -1193,6 +1197,7 @@ export type ParameterizedPermissionFiltersInput = {
   not?: InputMaybe<ParameterizedPermissionFiltersInput>;
   operation_name?: InputMaybe<StringFilterInput>;
   or?: InputMaybe<Array<InputMaybe<ParameterizedPermissionFiltersInput>>>;
+  see_unpublished_collections?: InputMaybe<BooleanFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   users_permissions_user?: InputMaybe<UsersPermissionsUserFiltersInput>;
 };
@@ -1200,6 +1205,7 @@ export type ParameterizedPermissionFiltersInput = {
 export type ParameterizedPermissionInput = {
   archive_tag?: InputMaybe<Scalars['ID']>;
   operation_name?: InputMaybe<Scalars['String']>;
+  see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
   users_permissions_user?: InputMaybe<Scalars['ID']>;
 };
 
@@ -2656,6 +2662,7 @@ export type GetParameterizedPermissionsQuery = {
       id?: string | null;
       attributes?: {
         operation_name?: string | null;
+        see_unpublished_collections?: boolean | null;
         archive_tag?: { data?: { id?: string | null } | null } | null;
       } | null;
     }>;
@@ -3066,7 +3073,8 @@ export type CreateLocationTagMutation = {
 export type CreateParameterizedPermissionMutationVariables = Exact<{
   userId?: InputMaybe<Scalars['ID']>;
   operationName: Scalars['String'];
-  archiveId?: InputMaybe<Scalars['ID']>;
+  archive_tag?: InputMaybe<Scalars['ID']>;
+  see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CreateParameterizedPermissionMutation = {
@@ -4870,6 +4878,7 @@ export const GetParameterizedPermissionsDocument = gql`
               id
             }
           }
+          see_unpublished_collections
         }
       }
     }
@@ -6379,12 +6388,18 @@ export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateParameterizedPermissionDocument = gql`
-  mutation createParameterizedPermission($userId: ID, $operationName: String!, $archiveId: ID) {
+  mutation createParameterizedPermission(
+    $userId: ID
+    $operationName: String!
+    $archive_tag: ID
+    $see_unpublished_collections: Boolean
+  ) {
     createParameterizedPermission(
       data: {
         users_permissions_user: $userId
         operation_name: $operationName
-        archive_tag: $archiveId
+        archive_tag: $archive_tag
+        see_unpublished_collections: $see_unpublished_collections
       }
     ) {
       data {
@@ -6414,7 +6429,8 @@ export type CreateParameterizedPermissionMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      userId: // value for 'userId'
  *      operationName: // value for 'operationName'
- *      archiveId: // value for 'archiveId'
+ *      archive_tag: // value for 'archive_tag'
+ *      see_unpublished_collections: // value for 'see_unpublished_collections'
  *   },
  * });
  */

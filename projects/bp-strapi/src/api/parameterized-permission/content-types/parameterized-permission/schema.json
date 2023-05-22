@@ -23,6 +23,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::archive-tag.archive-tag"
+    },
+    "see_unpublished_collections": {
+      "type": "boolean"
     }
   }
 }

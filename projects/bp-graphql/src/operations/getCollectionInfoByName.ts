@@ -1,9 +1,11 @@
 import { Operation, graphql } from '../Operation.js';
-import { always } from '../isAllowedHelpers.js';
 
 export default {
   group: 'viewCollection',
-  isAllowed: always,
+  isAllowed: async ({ parameters, variables }) =>
+    variables.publicationState === 'PREVIEW'
+      ? parameters.see_unpublished_collections ?? false
+      : true,
   document: graphql`
     query getCollectionInfoByName(
       $collectionName: String

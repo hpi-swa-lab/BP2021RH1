@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Operation } from 'bp-graphql/build';
+import { Operation, Parameter } from 'bp-graphql/build';
 import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
@@ -31,9 +31,12 @@ import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
 import { equalOrBothNullish } from './helper';
 import { Coverage, CoverageCheckbox } from './permissions/Coverage';
-import { GroupStructure, SectionStructure, sections } from './permissions/operations';
-import { presets } from './permissions/presets';
+import { SeeUnpublishedCollectionsParameter } from './permissions/SeeUnpublishedCollectionsParameter';
 import { combineCoverages } from './permissions/combineCoverages';
+import { GroupStructure, SectionStructure, sections } from './permissions/operations';
+import { ParametersWithoutArchive, presets } from './permissions/presets';
+
+export type Parameters = Pick<FlatParameterizedPermission, Parameter>;
 
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
@@ -117,35 +120,29 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const dialog = useDialog();
 
   const addPermission = useCallback(
-    (operation: Operation, archive: FlatArchiveTag | null) => {
+    (operation: Operation, { archive_tag, see_unpublished_collections }: Parameters) => {
       createPermission({
         variables: {
           operationName: operation.document.name,
           userId: parsedUserId,
-          archiveId: archive?.id,
+          archive_tag: archive_tag?.id,
+          see_unpublished_collections,
         },
       });
     },
     [createPermission, parsedUserId]
   );
 
-  const addPermissionIfMissing = useCallback(
-    (operation: Operation, archive: FlatArchiveTag | null) => {
-      if (findPermission(operation, archive)) {
-        return;
-      }
-      addPermission(operation, archive);
-    },
-    [findPermission, addPermission]
-  );
-
-  const addPermissionsIfMissing = useCallback(
-    (operations: Operation[], archive: FlatArchiveTag | null) => {
-      for (const operation of operations) {
-        addPermissionIfMissing(operation, archive);
+  const addPreset = useCallback(
+    (
+      operations: { operation: Operation; parameters: ParametersWithoutArchive }[],
+      archive: FlatArchiveTag | null
+    ) => {
+      for (const { operation, parameters } of operations) {
+        addPermission(operation, { archive_tag: archive ?? undefined, ...parameters });
       }
     },
-    [addPermissionIfMissing]
+    [addPermission]
   );
 
   const toggleOperations = useCallback(
@@ -183,7 +180,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         }
       } else {
         for (const operation of operations) {
-          addPermission(operation, archive);
+          addPermission(operation, { archive_tag: archive ?? undefined });
         }
       }
     },
@@ -216,9 +213,19 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         .map(preset => ({
           ...preset,
           operations: sectionsWithCoverages.flatMap(section =>
-            section.groups
-              .filter(group => preset.permissions.includes(group.name))
-              .flatMap(group => group.operations)
+            section.groups.flatMap(group => {
+              const permission = preset.permissions.find(permission => {
+                const name = typeof permission === 'string' ? permission : permission.name;
+                return group.name === name;
+              });
+              if (!permission) {
+                return [];
+              }
+              return group.operations.map(operation => ({
+                operation,
+                parameters: typeof permission === 'string' ? {} : permission.parameters,
+              }));
+            })
           ),
         }));
       return (
@@ -248,7 +255,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                   key={preset.name}
                   color='info'
                   variant='outlined'
-                  onClick={() => addPermissionsIfMissing(preset.operations, archive)}
+                  onClick={() => addPreset(preset.operations, archive)}
                 >
                   {t(`admin.permissions.preset.${preset.name}`)}
                 </Button>
@@ -281,6 +288,42 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                             label={name}
                             toggleOperations={toggleOperations}
                           />
+                          {group.needsParameters.map(parameter => {
+                            switch (parameter) {
+                              case 'see_unpublished_collections':
+                                return (
+                                  <SeeUnpublishedCollectionsParameter
+                                    value={group.operations.reduce(
+                                      (seeUnpublishedCollections, operation) =>
+                                        seeUnpublishedCollections &&
+                                        (findPermission(operation, archive)
+                                          ?.see_unpublished_collections ??
+                                          false),
+                                      true
+                                    )}
+                                    onChange={async see_unpublished_collections => {
+                                      group.operations.forEach(async operation => {
+                                        const permission = findPermission(operation, archive);
+                                        if (permission) {
+                                          await deletePermission({
+                                            variables: {
+                                              id: permission.id,
+                                            },
+                                          });
+                                        }
+                                        addPermission(operation, {
+                                          archive_tag: archive ?? undefined,
+                                          ...permission,
+                                          see_unpublished_collections,
+                                        });
+                                      });
+                                    }}
+                                  />
+                                );
+                              case 'archive_tag':
+                                return null;
+                            }
+                          })}
                         </div>
                       ))}
                   </AccordionDetails>
@@ -291,7 +334,16 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         </Accordion>
       );
     },
-    [filter, groupCoverage, addPermissionsIfMissing, toggleOperations, t]
+    [
+      filter,
+      toggleOperations,
+      groupCoverage,
+      t,
+      addPreset,
+      findPermission,
+      addPermission,
+      deletePermission,
+    ]
   );
 
   if (error) {

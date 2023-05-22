@@ -13,6 +13,7 @@ export type UsersPermissionsUser = ID & {
 
 export type ParameterizedPermission = ID & {
   archive_tag: Maybe<ArchiveTag>;
+  see_unpublished_collections: Maybe<boolean>;
   operation_name: Maybe<string>;
   users_permissions_user: Maybe<UsersPermissionsUser>;
 };

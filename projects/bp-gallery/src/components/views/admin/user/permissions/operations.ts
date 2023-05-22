@@ -2,6 +2,7 @@ import {
   GroupName,
   GroupSettings,
   OperationWithoutGroupName,
+  Parameter,
   PermissionName,
   groups as groupsMap,
   operations as operationsMap,
@@ -22,6 +23,7 @@ export type SectionStructure = {
 export type GroupStructure = {
   name: PermissionName;
   operations: Operation[];
+  needsParameters: Parameter[];
 };
 
 export const generateOperationsStructure = (): OperationsStructure => {
@@ -35,7 +37,10 @@ export const generateOperationsStructure = (): OperationsStructure => {
   }));
 
   const groups: Record<string, GroupStructure> = Object.fromEntries(
-    Object.keys(groupsMap).map(name => [name, { name: name as GroupName, operations: [] }])
+    Object.entries(groupsMap).map(([name, group]) => [
+      name,
+      { name: name as GroupName, operations: [], needsParameters: group.needsParameters },
+    ])
   );
 
   const isArchiveSpecificGroup = (settings: GroupSettings) =>
@@ -62,6 +67,7 @@ export const generateOperationsStructure = (): OperationsStructure => {
       section.groups.push({
         name: operation.document.name as OperationWithoutGroupName,
         operations: [operation],
+        needsParameters: operation.needsParameters,
       });
     }
   }
