@@ -1,11 +1,9 @@
 import { ExpandMore, QuestionAnswer } from '@mui/icons-material';
 import { Badge } from '@mui/material';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCanAcceptOrDeclineComment } from '../../../../../hooks/can-do-hooks';
-import { useAuth } from '../../../../../hooks/context-hooks';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { AuthRole } from '../../../../provider/AuthProvider';
 import LikeButton from '../LikeButton';
 import CommentVerification from './CommentVerification';
 import './CommentsContainer.scss';
@@ -22,13 +20,8 @@ const CommentsContainer = memo(function CommentsContainer({
   likeCount: number;
 }) {
   const { t } = useTranslation();
-  const { role } = useAuth();
 
-  const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
-
-  useEffect(() => {
-    setIsOpen(role < AuthRole.CURATOR);
-  }, [role]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const commentTree = useMemo(() => {
     if (!comments) return;
