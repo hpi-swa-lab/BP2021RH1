@@ -1,13 +1,14 @@
 "use strict";
 
 import { Strapi } from "@strapi/strapi";
-import { getArchivePictureCountsType as archivePictureCountsType } from "./api/archive-tag/content-types/archive-tag/custom-type";
+import { archivePictureCountsType } from "./api/archive-tag/content-types/archive-tag/custom-type";
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } from "./api/collection/services/custom-resolver";
 import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
 import {
+  archivePictureCounts,
   bulkEdit,
   findPicturesByAllSearch,
   like,
@@ -126,18 +127,7 @@ export default {
             type: archivePictureCountsType(extensionArgs.nexus),
             async resolve(_) {
               const knexEngine = extensionArgs.strapi.db.connection;
-              const res = await knexEngine("pictures_archive_tag_links")
-                .select("archive_tag_id as id")
-                .count("picture_id")
-                .groupBy("archive_tag_id")
-                .orderBy("id", "asc");
-              const gqlRes = {
-                data: res.map((archive) => ({
-                  id: archive.id,
-                  attributes: { count: archive.count },
-                })),
-              };
-              return gqlRes;
+              return archivePictureCounts(knexEngine);
             },
           }),
           mutationField("doBulkEdit", {

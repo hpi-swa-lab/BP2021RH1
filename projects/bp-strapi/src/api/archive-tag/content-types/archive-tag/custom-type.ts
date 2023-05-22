@@ -1,6 +1,6 @@
 import type * as Nexus from "nexus";
 
-export const getArchivePictureCountsType = (nexus: typeof Nexus) => {
+export const archivePictureCountsType = (nexus: typeof Nexus) => {
   const { objectType } = nexus;
 
   return objectType({
