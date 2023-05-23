@@ -105,33 +105,28 @@ export const getCategoryQueryParams = (archiveId: string | undefined) => {
       };
 };
 
-export const getChildTagQueryParams = (
+export const getChildLocationsQueryParams = (
   archiveId: string | undefined,
   categoryId: string,
   categoryType: string
 ) => {
-  switch (categoryType) {
-    case TagType.LOCATION:
-    default: {
-      return !archiveId
-        ? {
-            and: [
-              { verified_pictures: { id: { not: { eq: '-1' } } } },
-              { parent_tags: { id: { eq: categoryId } } },
-              { id: { not: { eq: '-1' } } },
+  return !archiveId
+    ? {
+        and: [
+          { verified_pictures: { id: { not: { eq: '-1' } } } },
+          { parent_tags: { id: { eq: categoryId } } },
+          { id: { not: { eq: '-1' } } },
+        ],
+      }
+    : {
+        and: [
+          { parent_tags: { id: { eq: categoryId } } },
+          {
+            or: [
+              { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
+              { pictures: { archive_tag: { id: { eq: archiveId } } } },
             ],
-          }
-        : {
-            and: [
-              { parent_tags: { id: { eq: categoryId } } },
-              {
-                or: [
-                  { verified_pictures: { archive_tag: { id: { eq: archiveId } } } },
-                  { pictures: { archive_tag: { id: { eq: archiveId } } } },
-                ],
-              },
-            ],
-          };
-    }
-  }
+          },
+        ],
+      };
 };
