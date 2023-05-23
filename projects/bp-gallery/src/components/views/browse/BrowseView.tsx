@@ -6,20 +6,19 @@ import {
   PictureFiltersInput,
   PublicationState,
   useCanRunCreateSubCollectionMutation,
+  useCanRunGetCollectionInfoByNameQuery,
   useCreateSubCollectionMutation,
   useGetCollectionInfoByNameQuery,
   useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { useAuth } from '../../../hooks/context-hooks';
 import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Footer from '../../common/footer/Footer';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
-import { AuthRole } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import './BrowseView.scss';
@@ -43,7 +42,6 @@ const getPictureFilters = (collectionId: string) => {
 
 const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean }) => {
   const { t } = useTranslation();
-  const { role } = useAuth();
   const dialog = useDialog();
 
   const [addSubCollection] = useCreateSubCollectionMutation();
@@ -56,11 +54,19 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
   const rootCollectionName = useSimplifiedQueryResponseData(rootCollectionResult.data)
     ?.browseRootCollection.current.name;
 
+  const { canRun: canSeeUnpublishedColletions } = useCanRunGetCollectionInfoByNameQuery({
+    variables: {
+      publicationState: PublicationState.Preview,
+    },
+  });
+
   const collectionQueryVariables = {
     collectionName: path?.length
       ? decodeBrowsePathComponent(path[path.length - 1])
       : rootCollectionName,
-    publicationState: role >= AuthRole.CURATOR ? PublicationState.Preview : PublicationState.Live,
+    publicationState: canSeeUnpublishedColletions
+      ? PublicationState.Preview
+      : PublicationState.Live,
   };
   const { data, loading, error } = useGetCollectionInfoByNameQuery({
     variables: collectionQueryVariables,
