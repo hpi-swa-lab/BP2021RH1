@@ -255,7 +255,7 @@ const LocationManagementDialogPreset = ({
                         setParentTag(locationTag);
                         setLocationTagID(id);
                       }}
-                      createChildMutation={newLocationTagMutation}
+                      allowCreateChild={true}
                     />
                   </PictureInfoField>
                 </div>
@@ -294,9 +294,10 @@ const LocationManagementDialogPreset = ({
               <div className='location-management-map'></div>
               <div className='location-management-actions'>
                 <div className='location-management-picture-count'>
-                  {t('tag-panel.location-pictures', {
-                    amount: flattenedPictures?.locationTag.pictures.length,
-                  })}
+                  {flattenedPictures &&
+                    t('tag-panel.location-pictures', {
+                      count: flattenedPictures.locationTag.pictures.length,
+                    })}
                 </div>
                 <Button
                   className='location-management-show-pictures-button'
