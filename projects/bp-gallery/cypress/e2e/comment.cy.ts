@@ -1,20 +1,20 @@
+// const postComment = (name: string, comment: string) => {
+//   cy.get('input#name').scrollIntoView();
+//   cy.get('input#name').clear();
+//   cy.get('input#name').type(name);
+//   cy.get('textarea#text').clear();
+//   cy.get('textarea#text').type(comment);
+//   cy.get('.MuiButton-root').contains('Absenden').click();
+// };
 
-const postComment = (name: string, comment: string) => {
-  cy.get('input#name').scrollIntoView();
-  cy.get('input#name').clear();
-  cy.get('input#name').type(name);
-  cy.get('textarea#text').clear();
-  cy.get('textarea#text').type(comment);
-  cy.get('.MuiButton-root').contains('Absenden').click();
-};
-
-const closeModal = (text: string, buttonText: string) => {
-  cy.get('.MuiDialog-container').contains(text).should('be.visible');
-  cy.get('.MuiButton-root').contains(buttonText).should('be.visible').click();
-};
+// const closeModal = (text: string, buttonText: string) => {
+//   cy.get('.MuiDialog-container').contains(text).should('be.visible');
+//   cy.get('.MuiButton-root').contains(buttonText).should('be.visible').click();
+// };
 describe ('Comment', () => {
   it('is very flaky so this is an empty test', () => {
-expect(true).to.equal(true);}
+    expect(true).to.equal(true);
+  }
 )});
 // describe('Comment', () => {
 //   before(() => {
