@@ -13,7 +13,7 @@ import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import {
-  useCreateParameterizedPermissionMutation,
+  useAddPermissionMutation,
   useDeleteParameterizedPermissionMutation,
   useGetAllArchiveTagsQuery,
   useGetParameterizedPermissionsQuery,
@@ -107,7 +107,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(archivesData)?.archiveTags;
 
-  const [createPermission] = useCreateParameterizedPermissionMutation({
+  const [createPermission] = useAddPermissionMutation({
     refetchQueries: ['getParameterizedPermissions'],
   });
   const [deletePermission] = useDeleteParameterizedPermissionMutation({

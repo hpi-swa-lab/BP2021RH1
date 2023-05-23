@@ -7,6 +7,7 @@ import {
   resolveCollectionThumbnail,
 } from './api/collection/services/custom-resolver';
 import { mergeSourceTagIntoTargetTag } from './api/custom-tag-resolver';
+import { addPermission } from './api/parameterized-permission/services/custom-update';
 import {
   bulkEdit,
   findPicturesByAllSearch,
@@ -169,6 +170,18 @@ export default {
             async resolve(_, { id }) {
               const knexEngine = extensionArgs.strapi.db.connection;
               return incNotAPlaceCount(knexEngine, id);
+            },
+          }),
+          mutationField('addPermission', {
+            type: 'Int',
+            args: {
+              userId: 'ID',
+              operationName: 'String',
+              archive_tag: 'ID',
+              see_unpublished_collections: 'Boolean',
+            },
+            async resolve(_, args) {
+              return addPermission(args);
             },
           }),
         ],

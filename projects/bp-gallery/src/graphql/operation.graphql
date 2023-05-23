@@ -30,13 +30,13 @@ query getUnverifiedComments { comments(filters: { publishedAt: { null: true } } 
 query getUsersPermissionsUser($id: ID!) { usersPermissionsUser(id: $id) { data { id attributes { username } } } }
 query me { me { id role { name } username email } }
 mutation acceptComment($commentId: ID! $currentTime: DateTime!) { updateComment(id: $commentId data: { publishedAt: $currentTime }) { data { id } } }
+mutation addPermission( $userId: ID $operationName: String $archive_tag: ID $see_unpublished_collections: Boolean ) { addPermission( userId: $userId operationName: $operationName archive_tag: $archive_tag see_unpublished_collections: $see_unpublished_collections ) }
 mutation bulkEdit($pictureIds: [ID!]! $data: JSON!) { doBulkEdit(ids: $pictureIds data: $data) }
 mutation createArchiveTag($name: String!) { createArchiveTag(data: { name: $name }) { data { id } } }
 mutation createFaceTag($pictureId: ID! $personTagId: ID! $x: Float $y: Float) { createFaceTag(data: { picture: $pictureId person_tag: $personTagId x: $x y: $y }) { data { id } } }
 mutation createKeywordTag($name: String!) { createKeywordTag(data: { name: $name }) { data { id } } }
 mutation createLink($title: String! $url: String! $archive_tag: ID!) { createLink(data: { title: $title url: $url archive_tag: $archive_tag }) { data { id } } }
 mutation createLocationTag($name: String!) { createLocationTag(data: { name: $name }) { data { id } } }
-mutation createParameterizedPermission( $userId: ID $operationName: String! $archive_tag: ID $see_unpublished_collections: Boolean ) { createParameterizedPermission( data: { users_permissions_user: $userId operation_name: $operationName archive_tag: $archive_tag see_unpublished_collections: $see_unpublished_collections } ) { data { id } } }
 mutation createPersonTag($name: String!) { createPersonTag(data: { name: $name }) { data { id } } }
 mutation createPicture($data: PictureInput!) { createPicture(data: $data) { data { id } } }
 mutation createPictureGeoInfo($data: PictureGeoInfoInput!) { createPictureGeoInfo(data: $data) { data { id } } }

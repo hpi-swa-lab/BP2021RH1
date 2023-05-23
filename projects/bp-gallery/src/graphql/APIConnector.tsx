@@ -752,6 +752,7 @@ export type LocationTagRelationResponseCollection = {
 };
 
 export type Mutation = {
+  addPermission?: Maybe<Scalars['Int']>;
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>;
   createArchiveTag?: Maybe<ArchiveTagEntityResponse>;
@@ -834,6 +835,13 @@ export type Mutation = {
   /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
+};
+
+export type MutationAddPermissionArgs = {
+  archive_tag?: InputMaybe<Scalars['ID']>;
+  operationName?: InputMaybe<Scalars['String']>;
+  see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
+  userId?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationChangePasswordArgs = {
@@ -3020,6 +3028,15 @@ export type AcceptCommentMutation = {
   updateComment?: { data?: { id?: string | null } | null } | null;
 };
 
+export type AddPermissionMutationVariables = Exact<{
+  userId?: InputMaybe<Scalars['ID']>;
+  operationName?: InputMaybe<Scalars['String']>;
+  archive_tag?: InputMaybe<Scalars['ID']>;
+  see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type AddPermissionMutation = { addPermission?: number | null };
+
 export type BulkEditMutationVariables = Exact<{
   pictureIds: Array<Scalars['ID']> | Scalars['ID'];
   data: Scalars['JSON'];
@@ -3068,17 +3085,6 @@ export type CreateLocationTagMutationVariables = Exact<{
 
 export type CreateLocationTagMutation = {
   createLocationTag?: { data?: { id?: string | null } | null } | null;
-};
-
-export type CreateParameterizedPermissionMutationVariables = Exact<{
-  userId?: InputMaybe<Scalars['ID']>;
-  operationName: Scalars['String'];
-  archive_tag?: InputMaybe<Scalars['ID']>;
-  see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-export type CreateParameterizedPermissionMutation = {
-  createParameterizedPermission?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreatePersonTagMutationVariables = Exact<{
@@ -6073,6 +6079,66 @@ export type AcceptCommentMutationOptions = Apollo.BaseMutationOptions<
   AcceptCommentMutationVariables
 >;
 
+export const AddPermissionDocument = gql`
+  mutation addPermission(
+    $userId: ID
+    $operationName: String
+    $archive_tag: ID
+    $see_unpublished_collections: Boolean
+  ) {
+    addPermission(
+      userId: $userId
+      operationName: $operationName
+      archive_tag: $archive_tag
+      see_unpublished_collections: $see_unpublished_collections
+    )
+  }
+`;
+
+export type AddPermissionMutationFn = Apollo.MutationFunction<
+  AddPermissionMutation,
+  AddPermissionMutationVariables
+>;
+
+/**
+ * __useAddPermissionMutation__
+ *
+ * To run a mutation, you first call `useAddPermissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPermissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPermissionMutation, { data, loading, error }] = useAddPermissionMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      operationName: // value for 'operationName'
+ *      archive_tag: // value for 'archive_tag'
+ *      see_unpublished_collections: // value for 'see_unpublished_collections'
+ *   },
+ * });
+ */
+export function useAddPermissionMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddPermissionMutation, AddPermissionMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddPermissionMutation, AddPermissionMutationVariables>(
+    AddPermissionDocument,
+    options
+  );
+}
+
+export type AddPermissionMutationHookResult = ReturnType<typeof useAddPermissionMutation>;
+
+export type AddPermissionMutationResult = Apollo.MutationResult<AddPermissionMutation>;
+
+export type AddPermissionMutationOptions = Apollo.BaseMutationOptions<
+  AddPermissionMutation,
+  AddPermissionMutationVariables
+>;
+
 export const BulkEditDocument = gql`
   mutation bulkEdit($pictureIds: [ID!]!, $data: JSON!) {
     doBulkEdit(ids: $pictureIds, data: $data)
@@ -6385,78 +6451,6 @@ export type CreateLocationTagMutationResult = Apollo.MutationResult<CreateLocati
 export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationTagMutation,
   CreateLocationTagMutationVariables
->;
-
-export const CreateParameterizedPermissionDocument = gql`
-  mutation createParameterizedPermission(
-    $userId: ID
-    $operationName: String!
-    $archive_tag: ID
-    $see_unpublished_collections: Boolean
-  ) {
-    createParameterizedPermission(
-      data: {
-        users_permissions_user: $userId
-        operation_name: $operationName
-        archive_tag: $archive_tag
-        see_unpublished_collections: $see_unpublished_collections
-      }
-    ) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type CreateParameterizedPermissionMutationFn = Apollo.MutationFunction<
-  CreateParameterizedPermissionMutation,
-  CreateParameterizedPermissionMutationVariables
->;
-
-/**
- * __useCreateParameterizedPermissionMutation__
- *
- * To run a mutation, you first call `useCreateParameterizedPermissionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateParameterizedPermissionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createParameterizedPermissionMutation, { data, loading, error }] = useCreateParameterizedPermissionMutation({
- *   variables: {
- *      userId: // value for 'userId'
- *      operationName: // value for 'operationName'
- *      archive_tag: // value for 'archive_tag'
- *      see_unpublished_collections: // value for 'see_unpublished_collections'
- *   },
- * });
- */
-export function useCreateParameterizedPermissionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateParameterizedPermissionMutation,
-    CreateParameterizedPermissionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateParameterizedPermissionMutation,
-    CreateParameterizedPermissionMutationVariables
-  >(CreateParameterizedPermissionDocument, options);
-}
-
-export type CreateParameterizedPermissionMutationHookResult = ReturnType<
-  typeof useCreateParameterizedPermissionMutation
->;
-
-export type CreateParameterizedPermissionMutationResult =
-  Apollo.MutationResult<CreateParameterizedPermissionMutation>;
-
-export type CreateParameterizedPermissionMutationOptions = Apollo.BaseMutationOptions<
-  CreateParameterizedPermissionMutation,
-  CreateParameterizedPermissionMutationVariables
 >;
 
 export const CreatePersonTagDocument = gql`
@@ -9749,6 +9743,48 @@ export function useCanRunMultipleAcceptCommentMutations(
   };
 }
 
+export function useCanRunAddPermissionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<AddPermissionMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: AddPermissionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleAddPermissionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<AddPermissionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: AddPermissionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunBulkEditMutation(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -9990,48 +10026,6 @@ export function useCanRunMultipleCreateLocationTagMutations(
     ...options,
     variables: {
       operation: CreateLocationTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
-  });
-  useAuthChangeEffect(refetch);
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
-}
-
-export function useCanRunCreateParameterizedPermissionMutation(
-  options?: Omit<
-    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-    'variables'
-  > & {
-    variables?: Partial<CreateParameterizedPermissionMutationVariables>;
-  }
-) {
-  const { data, loading, refetch } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateParameterizedPermissionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-    },
-  });
-  useAuthChangeEffect(refetch);
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
-}
-
-export function useCanRunMultipleCreateParameterizedPermissionMutations(
-  options: Omit<
-    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-    'variables'
-  > & {
-    variableSets: Partial<CreateParameterizedPermissionMutationVariables>[];
-  }
-) {
-  const { data, loading, refetch } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateParameterizedPermissionDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
