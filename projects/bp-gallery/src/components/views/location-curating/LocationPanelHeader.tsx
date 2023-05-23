@@ -10,7 +10,6 @@ const LocationPanelHeader = () => {
         <div className='location-header-name'>{t('common.name')}</div>
         <div className='location-header-synonyms'>{t('curator.synonyms')}</div>
       </div>
-      <hr />
     </>
   );
 };

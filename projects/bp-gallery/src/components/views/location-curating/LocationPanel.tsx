@@ -62,7 +62,6 @@ const LocationPanel = () => {
           <Add className='add-tag-icon' />
           <div className='add-tag-text'>{t(`tag-panel.add-location`)}</div>
         </div>
-        <hr />
       </div>
     </div>
   );

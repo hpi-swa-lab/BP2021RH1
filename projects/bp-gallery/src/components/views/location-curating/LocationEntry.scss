@@ -1,24 +1,6 @@
 @import 'src/shared/style';
 
-hr {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.location-column-110 {
-  min-width: 110px;
-}
-
-.location-column-250 {
-  min-width: 250px;
-}
-
-.location-column-750 {
-  width: 750px;
-}
-
 .location-not-accepted {
-  //background-color: darkgray;
   color: gray;
 }
 
@@ -26,6 +8,7 @@ hr {
   display: flex;
   flex-direction: row;
   height: 40px;
+  border-bottom: 2px solid gray;
 
   .location-header-name {
     margin-top: auto;
