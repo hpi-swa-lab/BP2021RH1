@@ -23,6 +23,7 @@ import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
+import { pick } from 'lodash';
 
 export type Field = Pick<
   FlatPicture,
@@ -151,13 +152,13 @@ const PictureInfo = ({
           onChange={locations => {
             savePictureInfo({
               location_tags: locations.map(location => {
-                return (({ name, id, visible }) => ({ name, id, visible }))(location);
+                return pick(location, ['name', 'id', 'visible']);
               }),
             });
           }}
           noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
-          createChildMutation={newLocationTagMutation}
+          allowCreateChild={true}
         />
       </PictureInfoField>
       {(role >= AuthRole.CURATOR || Boolean(picture.keyword_tags?.length)) && (

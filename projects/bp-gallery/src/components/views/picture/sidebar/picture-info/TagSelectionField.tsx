@@ -40,7 +40,7 @@ const TagSelectionField = <T extends TagFields>({
   allTags,
   onChange,
   createMutation,
-  createChildMutation,
+  allowCreateChild,
   createParentMutation,
   nonVerifiable = false,
   noContentText,
@@ -53,7 +53,7 @@ const TagSelectionField = <T extends TagFields>({
   allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
-  createChildMutation?: (attr: any) => Promise<any>;
+  allowCreateChild?: boolean;
   createParentMutation?: (attr: any) => Promise<any>;
   nonVerifiable?: boolean;
   noContentText: string;
@@ -253,7 +253,7 @@ const TagSelectionField = <T extends TagFields>({
       newValue = filteredNewValues;
     } else {
       // if not create a new tag in the corresponding position
-      const { data } = await createChildMutation!({
+      const { data } = await createMutation!({
         variables: { name: addTag.createValue, parentIDs: [lastAddedTag!.id] },
       });
       handleAfterCreate(addTag, data);
@@ -275,7 +275,7 @@ const TagSelectionField = <T extends TagFields>({
       newValue = filteredNewValues;
     } else if (lastAddedTag!.name !== addTag.name) {
       // if not create a new tag
-      const { data } = await createChildMutation!({
+      const { data } = await createMutation!({
         variables: {
           name: addTag.createValue,
           parentIDs:
@@ -374,7 +374,7 @@ const TagSelectionField = <T extends TagFields>({
             }
             // option to add a child tag for a fixed parent
             if (
-              createChildMutation &&
+              allowCreateChild &&
               fixedParentTag &&
               inputValue !== '' &&
               !tags.some(tag => tag.name === inputValue)
@@ -406,7 +406,7 @@ const TagSelectionField = <T extends TagFields>({
             const addTag = newValue.find(val => val.createValue);
             if (addTag && createMutation) {
               // create new tag relative to lastAddedTag
-              if (createChildMutation && lastAddedTag) {
+              if (allowCreateChild && lastAddedTag) {
                 const createOption = await prompt({
                   preset: DialogPreset.SELECT_PATH_POSITION,
                   title: t('tag-panel.select-position', { name: addTag.name }),
@@ -435,8 +435,8 @@ const TagSelectionField = <T extends TagFields>({
               }
             }
 
-            if (addTag && createChildMutation && fixedParentTag) {
-              const { data } = await createChildMutation({
+            if (addTag && allowCreateChild && fixedParentTag) {
+              const { data } = await createMutation!({
                 variables: {
                   name: addTag.createValue,
                   parentIDs: [fixedParentTag.id],
