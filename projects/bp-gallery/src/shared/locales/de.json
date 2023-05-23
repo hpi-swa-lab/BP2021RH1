@@ -192,6 +192,11 @@
     "collections": "Collections",
     "around": "etwa "
   },
+  "facetag": {
+    "move": "Einmal klicken um das Namensschild bewegbar zu machen. Diese kann dann mit der Maus an eine neue Position bewegt und mit einem weiteren Klick platziert werden",
+    "rotate": "Einmal klicken um die Namensschild drehbar zu machen. Die Namensschild kann dann durch Bewegen der Maus gedreht werden. Sobald die Namensschild korrekt ausgerichtet ist, kann die neue Ausrichtung per Mausklick festgehalten werden",
+    "delete": "Klicken um die Namensschild zu löschen"
+  },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "scan": "Direkt vom Scanner einlesen",

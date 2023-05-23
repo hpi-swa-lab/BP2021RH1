@@ -9,7 +9,7 @@ import useGetPictures from '../../hooks/get-pictures.hook';
 import PrimaryButton from './PrimaryButton';
 
 interface PictureOverviewProps {
-  title: string;
+  title?: string;
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   onClick: MouseEventHandler<HTMLButtonElement>;
   sortBy?: string[];
@@ -39,7 +39,7 @@ const PictureOverview = ({
 
   return (
     <div className='overview-container'>
-      <h2 className='overview-title'>{title}</h2>
+      {title && <h2 className='overview-title'>{title}</h2>}
       {pictures && (
         <div className='overview-picture-grid-container'>
           <PictureGrid
