@@ -147,8 +147,7 @@ export default {
               pictureId: "ID",
               dislike: "Boolean",
             },
-            async resolve(_, { pictureId, dislike }, ctx) {
-              console.log(ctx.state);
+            async resolve(_, { pictureId, dislike }) {
               const knexEngine = extensionArgs.strapi.db.connection;
               return like(knexEngine, pictureId, dislike);
             },
