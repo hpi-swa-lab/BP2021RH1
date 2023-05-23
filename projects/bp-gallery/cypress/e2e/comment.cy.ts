@@ -11,11 +11,11 @@
 //   cy.get('.MuiDialog-container').contains(text).should('be.visible');
 //   cy.get('.MuiButton-root').contains(buttonText).should('be.visible').click();
 // };
-describe ('Comment', () => {
+describe('Comment', () => {
   it('is very flaky so this is an empty test', () => {
     expect(true).to.equal(true);
-  }
-)});
+  });
+});
 // describe('Comment', () => {
 //   before(() => {
 //     cy.visit('/picture/1');
