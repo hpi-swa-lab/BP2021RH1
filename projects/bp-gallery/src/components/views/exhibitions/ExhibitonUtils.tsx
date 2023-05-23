@@ -17,16 +17,24 @@ import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import {
+  useCreateExhibitionSectionMutation,
+  useCreateExhibitionSourceMutation,
   useUpdateExhibitionMutation,
   useUpdateExhibitionPictureMutation,
   useUpdateExhibitionSectionMutation,
+  useUpdateExhibitionSourceMutation,
 } from '../../../graphql/APIConnector';
+
+interface ExhibitionSource {
+  id: string;
+  source: string;
+}
 
 interface ExhibitionText {
   title: string;
   introduction: string;
   epilog: string;
-  sources: string[];
+  sources: ExhibitionSource[];
   isPublished: boolean;
 }
 
@@ -67,10 +75,11 @@ export const ExhibitionTextContext = createContext<{
   setSectionTitle: (sectionId: string, title: string) => void;
   getSectionText: (sectionId: string) => string | undefined;
   setSectionText: (sectionId: string, text: string) => void;
-  getEpilog: () => string;
+  getEpilog: () => string | undefined;
   setEpilog: (epilog: string) => void;
-  getSources: () => string[];
-  setSources: (sources: string[]) => void;
+  getSources: () => ExhibitionSource[] | undefined;
+  setSource: (source: string, sourceId: string) => void;
+  addSource: () => void;
   getIsPublished: () => boolean;
   setIsPublished: (isPublished: boolean) => void;
 }>({
@@ -85,7 +94,8 @@ export const ExhibitionTextContext = createContext<{
   getEpilog: () => '',
   setEpilog: () => {},
   getSources: () => [],
-  setSources: () => {},
+  setSource: () => {},
+  addSource: () => {},
   getIsPublished: () => false,
   setIsPublished: () => {},
 });
@@ -231,7 +241,9 @@ const buildExhibitionTextState = (exhibition: FlatExhibition) => {
     title: exhibition.title,
     introduction: exhibition.introduction,
     epilog: exhibition.epilog,
-    sources: exhibition.exhibition_sources?.map(source => source.source),
+    sources: exhibition.exhibition_sources?.map(source => {
+      return { id: source.id, source: source.source } as ExhibitionSource;
+    }) as ExhibitionSource[],
     isPublished: exhibition.is_published,
   } as ExhibitionText;
 };
@@ -259,7 +271,13 @@ export const ExhibitionStateManager = ({
 
   const [updateExhibitionSection] = useUpdateExhibitionSectionMutation();
 
+  const [updateExhibitionSource] = useUpdateExhibitionSourceMutation();
+
   const [updateExhibition] = useUpdateExhibitionMutation();
+
+  const [createSource] = useCreateExhibitionSourceMutation();
+
+  const [createSection] = useCreateExhibitionSectionMutation();
 
   const addToSection = (dragElement: DragElement, sectionId: string) => {
     const section = sections.find(section => section.id === sectionId);
@@ -455,6 +473,12 @@ export const ExhibitionStateManager = ({
     const sectionWithoutSection = sections.filter(section => section.id !== sectionId);
     const section = sections.find(section => section.id === sectionId);
     if (!section) return;
+    updateExhibitionSection({
+      variables: {
+        id: section.id,
+        text: text,
+      },
+    });
     section.text = text;
     setSections([...sectionWithoutSection, section]);
   };
@@ -463,8 +487,30 @@ export const ExhibitionStateManager = ({
     const sectionWithoutSection = sections.filter(section => section.id !== sectionId);
     const section = sections.find(section => section.id === sectionId);
     if (!section) return;
+    updateExhibitionSection({
+      variables: {
+        id: section.id,
+        title: title,
+      },
+    });
     section.title = title;
     setSections([...sectionWithoutSection, section]);
+  };
+
+  const addSection = async () => {
+    const result = await createSection({ variables: { exhibitionId: exhibition.id } });
+    const id = result.data?.createExhibitionSection?.data?.id;
+    id &&
+      setSections([
+        ...sections,
+        {
+          id: id,
+          title: '',
+          text: '',
+          nextOrder: sections.reduce((max, value) => Math.max(max, value.nextOrder), 0),
+          dragElements: [],
+        } as SectionState,
+      ]);
   };
 
   const getIdealot = () => {
@@ -488,6 +534,14 @@ export const ExhibitionStateManager = ({
   };
 
   const setTitle = (title: string) => {
+    updateExhibition({
+      variables: {
+        id: exhibition.id,
+        data: {
+          title: title,
+        },
+      },
+    });
     setTextExhibition({ ...exhibitionText, title: title });
   };
 
@@ -497,6 +551,14 @@ export const ExhibitionStateManager = ({
   };
 
   const setIntroduction = (introduction: string) => {
+    updateExhibition({
+      variables: {
+        id: exhibition.id,
+        data: {
+          introduction: introduction,
+        },
+      },
+    });
     setTextExhibition({ ...exhibitionText, introduction: introduction });
   };
 
@@ -506,6 +568,14 @@ export const ExhibitionStateManager = ({
   };
 
   const setEpilog = (epilog: string) => {
+    updateExhibition({
+      variables: {
+        id: exhibition.id,
+        data: {
+          epilog: epilog,
+        },
+      },
+    });
     setTextExhibition({ ...exhibitionText, epilog: epilog });
   };
 
@@ -514,8 +584,24 @@ export const ExhibitionStateManager = ({
     return exhibitionText.sources;
   };
 
-  const setSources = (sources: string[]) => {
-    setTextExhibition({ ...exhibitionText, sources: sources });
+  const setSource = (source: string, sourceId: string) => {
+    updateExhibitionSource({ variables: { id: sourceId, source: source } });
+    setTextExhibition({
+      ...exhibitionText,
+      sources: exhibitionText.sources.map(s =>
+        s.id === sourceId ? { id: s.id, source: source } : s
+      ),
+    });
+  };
+
+  const addSource = async () => {
+    const result = await createSource({ variables: { exhibitionId: exhibition.id } });
+    const id = result.data?.createExhibitionSource?.data?.id;
+    id &&
+      setTextExhibition({
+        ...exhibitionText,
+        sources: [...exhibitionText.sources.concat({ id: id, source: '' })],
+      });
   };
 
   return (
@@ -538,7 +624,8 @@ export const ExhibitionStateManager = ({
           getEpilog,
           setEpilog,
           getSources,
-          setSources,
+          setSource,
+          addSource,
         }}
       >
         <ExhibitionTitlePictureContext.Provider value={getTitlePicture}>
