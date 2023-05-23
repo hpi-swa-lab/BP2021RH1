@@ -1,4 +1,4 @@
-import { ApolloServerPlugin } from "apollo-server-plugin-base";
+import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 
 export const apolloPlugin: ApolloServerPlugin = {
   async requestDidStart() {

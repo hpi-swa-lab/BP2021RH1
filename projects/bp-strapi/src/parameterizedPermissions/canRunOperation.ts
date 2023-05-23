@@ -1,14 +1,11 @@
-import type { Variables } from "bp-graphql";
-import type {
-  ParameterizedPermission,
-  UsersPermissionsUser,
-} from "bp-graphql/build/db-types";
-import { OperationDefinitionNode } from "graphql/language/ast";
-import { checkAllowed } from "./checkAllowed";
-import { getUserPermissions } from "./getUserPermissions";
-import { isIntrospectionQuery } from "./isIntrospectionQuery";
-import { getUserTryingToLogin, isLoginOperation } from "./loginOperation";
-import { verifyOperation } from "./verifyOperation";
+import type { Variables } from 'bp-graphql';
+import type { ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
+import { OperationDefinitionNode } from 'graphql/language/ast';
+import { checkAllowed } from './checkAllowed';
+import { getUserPermissions } from './getUserPermissions';
+import { isIntrospectionQuery } from './isIntrospectionQuery';
+import { getUserTryingToLogin, isLoginOperation } from './loginOperation';
+import { verifyOperation } from './verifyOperation';
 
 export const canRunOperation = async (
   auth: {
@@ -50,7 +47,7 @@ export const canRunOperation = async (
 
   const operationName = operation.name.value;
   const authorizingPermissions = permissions.filter(
-    (permission) => permission.operation_name === operationName
+    permission => permission.operation_name === operationName
   );
   if (authorizingPermissions.length === 0) {
     return false;
@@ -60,11 +57,5 @@ export const canRunOperation = async (
     return false;
   }
 
-  return await checkAllowed(
-    operationName,
-    authorizingPermissions,
-    permissions,
-    variables,
-    user
-  );
+  return await checkAllowed(operationName, authorizingPermissions, permissions, variables, user);
 };

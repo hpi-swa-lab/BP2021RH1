@@ -1,10 +1,10 @@
-import { errors } from "@strapi/utils";
-import type { Variables } from "bp-graphql";
-import type { UsersPermissionsUser } from "bp-graphql/build/db-types";
-import { OperationDefinitionNode } from "graphql/language/ast";
-import { canRunOperation } from "./canRunOperation";
-import { getUserPermissions } from "./getUserPermissions";
-import { getJwtService, getUserService } from "./userService";
+import { errors } from '@strapi/utils';
+import type { Variables } from 'bp-graphql';
+import type { UsersPermissionsUser } from 'bp-graphql/build/db-types';
+import { OperationDefinitionNode } from 'graphql/language/ast';
+import { canRunOperation } from './canRunOperation';
+import { getUserPermissions } from './getUserPermissions';
+import { getJwtService, getUserService } from './userService';
 
 const { UnauthorizedError } = errors;
 
@@ -16,7 +16,7 @@ const getToken = async (ctx): Promise<{ id: string | undefined } | null> => {
   }
 };
 
-const authenticate = async (ctx) => {
+const authenticate = async ctx => {
   let token = await getToken(ctx);
 
   let user: UsersPermissionsUser | null = null;
@@ -33,12 +33,12 @@ const authenticate = async (ctx) => {
 
     // No user associated to the token
     if (!user) {
-      return { error: "Invalid credentials" };
+      return { error: 'Invalid credentials' };
     }
 
     // User blocked
     if (user.blocked) {
-      return { error: "Invalid credentials" };
+      return { error: 'Invalid credentials' };
     }
 
     ctx.state.user = user;
@@ -54,11 +54,9 @@ const authenticate = async (ctx) => {
 };
 
 const verify = async (auth, config) => {
-  if ("operation" in config) {
-    const {
-      operation,
-      variables,
-    }: { operation: OperationDefinitionNode; variables: Variables } = config;
+  if ('operation' in config) {
+    const { operation, variables }: { operation: OperationDefinitionNode; variables: Variables } =
+      config;
 
     if (!(await canRunOperation(auth, operation, variables))) {
       throw new UnauthorizedError();
@@ -69,7 +67,7 @@ const verify = async (auth, config) => {
 };
 
 export const authStrategy = {
-  name: "parameterizedPermissions",
+  name: 'parameterizedPermissions',
   authenticate,
   verify,
 };

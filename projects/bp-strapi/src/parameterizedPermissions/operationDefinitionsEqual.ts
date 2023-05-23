@@ -4,7 +4,7 @@ import {
   SelectionNode,
   SelectionSetNode,
   isNode,
-} from "graphql/language/ast";
+} from 'graphql/language/ast';
 
 const objectsEqual = (a: unknown, b: unknown): boolean => {
   if (a instanceof Array && b instanceof Array) {
@@ -18,27 +18,23 @@ const objectsEqual = (a: unknown, b: unknown): boolean => {
 
 const ignoreTypenameFields = (selections: readonly SelectionNode[]) => {
   return selections.filter(
-    (selection) =>
-      !(selection.kind === "Field" && selection.name.value === "__typename")
+    selection => !(selection.kind === 'Field' && selection.name.value === '__typename')
   );
 };
 
 const selectionSetsEqual = (a: SelectionSetNode, b: SelectionSetNode) => {
-  return arraysEqual(
-    ignoreTypenameFields(a.selections),
-    ignoreTypenameFields(b.selections)
-  );
+  return arraysEqual(ignoreTypenameFields(a.selections), ignoreTypenameFields(b.selections));
 };
 
 const nodesEqual = (a: ASTNode, b: ASTNode) => {
-  if (a.kind === "SelectionSet" && b.kind === "SelectionSet") {
+  if (a.kind === 'SelectionSet' && b.kind === 'SelectionSet') {
     return selectionSetsEqual(a, b);
   }
   if (a.kind !== b.kind) {
     return false;
   }
   return Object.entries(a).every(([key, aValue]) => {
-    if (key === "loc") {
+    if (key === 'loc') {
       // ignore location differences
       return true;
     }
@@ -47,17 +43,9 @@ const nodesEqual = (a: ASTNode, b: ASTNode) => {
   });
 };
 
-const arraysEqual = (
-  as: readonly ASTNode[],
-  bs: readonly ASTNode[]
-): boolean => {
-  return (
-    as.length === bs.length &&
-    as.every((a, index) => objectsEqual(a, bs[index]))
-  );
+const arraysEqual = (as: readonly ASTNode[], bs: readonly ASTNode[]): boolean => {
+  return as.length === bs.length && as.every((a, index) => objectsEqual(a, bs[index]));
 };
 
-export const operationDefinitionsEqual = (
-  a: OperationDefinitionNode,
-  b: OperationDefinitionNode
-) => nodesEqual(a, b);
+export const operationDefinitionsEqual = (a: OperationDefinitionNode, b: OperationDefinitionNode) =>
+  nodesEqual(a, b);

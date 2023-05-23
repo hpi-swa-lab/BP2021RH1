@@ -1,9 +1,9 @@
-import { Variables, loginOperation } from "bp-graphql";
-import { UsersPermissionsUser } from "bp-graphql/build/db-types";
-import { OperationDefinitionNode } from "graphql/language/ast";
-import { operationDefinitionsEqual } from "./operationDefinitionsEqual";
-import { parseOperation } from "./parseOperation";
-import { getUserService } from "./userService";
+import { Variables, loginOperation } from 'bp-graphql';
+import { UsersPermissionsUser } from 'bp-graphql/build/db-types';
+import { OperationDefinitionNode } from 'graphql/language/ast';
+import { operationDefinitionsEqual } from './operationDefinitionsEqual';
+import { parseOperation } from './parseOperation';
+import { getUserService } from './userService';
 
 const { default: login, usernameVariableName } = loginOperation;
 
@@ -22,7 +22,7 @@ export const getUserTryingToLogin = async (
     },
   });
   if (users.length > 1) {
-    throw new Error("multiple users with the same name");
+    throw new Error('multiple users with the same name');
   }
   return users[0] ?? null;
 };

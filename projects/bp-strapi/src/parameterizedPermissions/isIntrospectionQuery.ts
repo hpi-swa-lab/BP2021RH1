@@ -1,5 +1,5 @@
-import { getIntrospectionQuery } from "graphql";
-import { OperationDefinitionNode } from "graphql/language/ast";
+import { getIntrospectionQuery } from 'graphql';
+import { OperationDefinitionNode } from 'graphql/language/ast';
 
 const introspectionQuery = getIntrospectionQuery();
 
