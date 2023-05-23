@@ -29,6 +29,7 @@ export const FaceTag = ({
     if (personTagId === undefined) {
       return;
     }
+    context?.setActiveTagDirection(tagDirection);
     await handleDelete();
     context?.setActiveTagId(personTagId);
   };
