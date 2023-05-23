@@ -2,8 +2,8 @@ import { Operation, graphql } from '../Operation.js';
 
 export default {
   document: graphql`
-    mutation createExhibitionSource($source: String!) {
-      createExhibitionSource(data: { source: $source }) {
+    mutation createExhibitionSource($exhibitionId: ID!) {
+      createExhibitionSource(data: { exhibition: $exhibitionId }) {
         data {
           id
         }

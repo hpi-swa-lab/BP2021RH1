@@ -384,7 +384,8 @@
       "epilog": {
         "title": "Epilog",
         "text-placeholder": "Epilogtext",
-        "sources": "Quellen"
+        "sources": "Quellen",
+        "add-source": "Quelle hinzufügen"
       }
     }
   }

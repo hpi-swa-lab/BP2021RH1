@@ -232,7 +232,8 @@ const Section = ({ id }: { id: string }) => {
 
 const EndCard = () => {
   const { t } = useTranslation();
-  const { getEpilog, setEpilog, getSources, setSources } = useContext(ExhibitionTextContext);
+  const { getEpilog, setEpilog, getSources, setSource, addSource } =
+    useContext(ExhibitionTextContext);
 
   const extraOptions = {
     height: 300,
@@ -249,20 +250,20 @@ const EndCard = () => {
     <div className='flex flex-col gap-2'>
       <label className='text-xl'>{t('exhibition.manipulator.epilog.title')}</label>
       <TextEditor
-        value={getEpilog()}
+        value={getEpilog() ?? ''}
         extraOptions={extraOptions}
         onBlur={text => setEpilog(text)}
       />
       <label className='text-xl'>{t('exhibition.manipulator.epilog.sources')}</label>
-      {getSources().map((source, index) => (
+      {getSources()?.map((source, index) => (
         <TextField
           key={index}
-          value={source}
-          onChange={event =>
-            setSources(getSources().map((text, i) => (i === index ? event.target.value : text)))
-          }
+          defaultValue={source.source}
+          onChange={event => event.target.value}
+          onBlur={event => setSource(event.target.value, source.id)}
         />
       ))}
+      <Button onClick={addSource}>{t('exhibition.manipulator.epilog.add-source')}</Button>
     </div>
   );
 };

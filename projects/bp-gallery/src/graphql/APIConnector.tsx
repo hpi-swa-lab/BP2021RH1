@@ -3440,7 +3440,7 @@ export type CreateExhibitionMutation = {
 };
 
 export type CreateExhibitionSectionMutationVariables = Exact<{
-  title: Scalars['String'];
+  exhibitionId: Scalars['ID'];
 }>;
 
 export type CreateExhibitionSectionMutation = {
@@ -3448,7 +3448,7 @@ export type CreateExhibitionSectionMutation = {
 };
 
 export type CreateExhibitionSourceMutationVariables = Exact<{
-  source: Scalars['String'];
+  exhibitionId: Scalars['ID'];
 }>;
 
 export type CreateExhibitionSourceMutation = {
@@ -6717,8 +6717,8 @@ export type CreateExhibitionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionSectionDocument = gql`
-  mutation createExhibitionSection($title: String!) {
-    createExhibitionSection(data: { title: $title }) {
+  mutation createExhibitionSection($exhibitionId: ID!) {
+    createExhibitionSection(data: { exhibition: $exhibitionId }) {
       data {
         id
       }
@@ -6744,7 +6744,7 @@ export type CreateExhibitionSectionMutationFn = Apollo.MutationFunction<
  * @example
  * const [createExhibitionSectionMutation, { data, loading, error }] = useCreateExhibitionSectionMutation({
  *   variables: {
- *      title: // value for 'title'
+ *      exhibitionId: // value for 'exhibitionId'
  *   },
  * });
  */
@@ -6774,8 +6774,8 @@ export type CreateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionSourceDocument = gql`
-  mutation createExhibitionSource($source: String!) {
-    createExhibitionSource(data: { source: $source }) {
+  mutation createExhibitionSource($exhibitionId: ID!) {
+    createExhibitionSource(data: { exhibition: $exhibitionId }) {
       data {
         id
       }
@@ -6801,7 +6801,7 @@ export type CreateExhibitionSourceMutationFn = Apollo.MutationFunction<
  * @example
  * const [createExhibitionSourceMutation, { data, loading, error }] = useCreateExhibitionSourceMutation({
  *   variables: {
- *      source: // value for 'source'
+ *      exhibitionId: // value for 'exhibitionId'
  *   },
  * });
  */
