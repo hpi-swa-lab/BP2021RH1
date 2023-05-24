@@ -8,7 +8,10 @@ import {
   resolveCollectionThumbnail,
 } from './api/collection/services/custom-resolver';
 import { mergeSourceTagIntoTargetTag } from './api/custom-tag-resolver';
-import { addPermission } from './api/parameterized-permission/services/custom-update';
+import {
+  addPermission,
+  preventPublicUserFromCreatingArchive,
+} from './api/parameterized-permission/services/custom-update';
 import {
   bulkEdit,
   findPicturesByAllSearch,
@@ -181,7 +184,7 @@ export default {
             async resolve(_, { name }, context) {
               const user = context.state.auth.credentials;
               if (!user) {
-                throw new Error('Unangemeldete Nutzer können keine Archive erstellen');
+                preventPublicUserFromCreatingArchive();
               }
               return addArchiveTag(user, name);
             },

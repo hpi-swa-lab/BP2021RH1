@@ -34,12 +34,23 @@ const mergePermissions = (permissions: ParameterizedPermission[]) => {
   );
 };
 
+export const preventPublicUserFromCreatingArchive = () => {
+  throw new Error('Unangemeldete Nutzer können keine Archive erstellen');
+};
+
+const checkNonsensicalPermissions = ({ userId, operationName }: AddPermissionArgs) => {
+  if (operationName === 'addArchiveTag' && !userId) {
+    preventPublicUserFromCreatingArchive();
+  }
+};
+
 export const addPermission = async ({
   userId,
   operationName,
   archive_tag,
   ...inidividualParameters
 }: AddPermissionArgs) => {
+  checkNonsensicalPermissions({ userId, operationName, archive_tag, ...inidividualParameters });
   const permissionQuery = strapi.db.query('api::parameterized-permission.parameterized-permission');
   const existingPermissions = await permissionQuery.findMany({
     where: {
