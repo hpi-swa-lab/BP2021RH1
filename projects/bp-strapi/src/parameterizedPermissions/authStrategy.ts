@@ -61,8 +61,10 @@ const verify = async (auth, config) => {
     if (!(await canRunOperation(auth, operation, variables))) {
       throw new UnauthorizedError();
     }
+  } else if (auth.isExecutingVerifiedOperation) {
+    // see apolloServerPlugin.ts, let this pass through unchecked
   } else {
-    // regular graphql verify call, let it pass through unchecked
+    throw new UnauthorizedError();
   }
 };
 
