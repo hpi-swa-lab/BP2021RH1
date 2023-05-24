@@ -752,6 +752,7 @@ export type LocationTagRelationResponseCollection = {
 };
 
 export type Mutation = {
+  addArchiveTag?: Maybe<Scalars['Int']>;
   addPermission?: Maybe<Scalars['Int']>;
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>;
@@ -835,6 +836,10 @@ export type Mutation = {
   /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
+};
+
+export type MutationAddArchiveTagArgs = {
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationAddPermissionArgs = {
@@ -3028,6 +3033,12 @@ export type AcceptCommentMutation = {
   updateComment?: { data?: { id?: string | null } | null } | null;
 };
 
+export type AddArchiveTagMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+export type AddArchiveTagMutation = { addArchiveTag?: number | null };
+
 export type AddPermissionMutationVariables = Exact<{
   userId?: InputMaybe<Scalars['ID']>;
   operationName?: InputMaybe<Scalars['String']>;
@@ -3043,14 +3054,6 @@ export type BulkEditMutationVariables = Exact<{
 }>;
 
 export type BulkEditMutation = { doBulkEdit?: number | null };
-
-export type CreateArchiveTagMutationVariables = Exact<{
-  name: Scalars['String'];
-}>;
-
-export type CreateArchiveTagMutation = {
-  createArchiveTag?: { data?: { id?: string | null } | null } | null;
-};
 
 export type CreateFaceTagMutationVariables = Exact<{
   pictureId: Scalars['ID'];
@@ -6079,6 +6082,53 @@ export type AcceptCommentMutationOptions = Apollo.BaseMutationOptions<
   AcceptCommentMutationVariables
 >;
 
+export const AddArchiveTagDocument = gql`
+  mutation addArchiveTag($name: String!) {
+    addArchiveTag(name: $name)
+  }
+`;
+
+export type AddArchiveTagMutationFn = Apollo.MutationFunction<
+  AddArchiveTagMutation,
+  AddArchiveTagMutationVariables
+>;
+
+/**
+ * __useAddArchiveTagMutation__
+ *
+ * To run a mutation, you first call `useAddArchiveTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddArchiveTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addArchiveTagMutation, { data, loading, error }] = useAddArchiveTagMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useAddArchiveTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddArchiveTagMutation, AddArchiveTagMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddArchiveTagMutation, AddArchiveTagMutationVariables>(
+    AddArchiveTagDocument,
+    options
+  );
+}
+
+export type AddArchiveTagMutationHookResult = ReturnType<typeof useAddArchiveTagMutation>;
+
+export type AddArchiveTagMutationResult = Apollo.MutationResult<AddArchiveTagMutation>;
+
+export type AddArchiveTagMutationOptions = Apollo.BaseMutationOptions<
+  AddArchiveTagMutation,
+  AddArchiveTagMutationVariables
+>;
+
 export const AddPermissionDocument = gql`
   mutation addPermission(
     $userId: ID
@@ -6182,60 +6232,6 @@ export type BulkEditMutationResult = Apollo.MutationResult<BulkEditMutation>;
 export type BulkEditMutationOptions = Apollo.BaseMutationOptions<
   BulkEditMutation,
   BulkEditMutationVariables
->;
-
-export const CreateArchiveTagDocument = gql`
-  mutation createArchiveTag($name: String!) {
-    createArchiveTag(data: { name: $name }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export type CreateArchiveTagMutationFn = Apollo.MutationFunction<
-  CreateArchiveTagMutation,
-  CreateArchiveTagMutationVariables
->;
-
-/**
- * __useCreateArchiveTagMutation__
- *
- * To run a mutation, you first call `useCreateArchiveTagMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateArchiveTagMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createArchiveTagMutation, { data, loading, error }] = useCreateArchiveTagMutation({
- *   variables: {
- *      name: // value for 'name'
- *   },
- * });
- */
-export function useCreateArchiveTagMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateArchiveTagMutation,
-    CreateArchiveTagMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateArchiveTagMutation, CreateArchiveTagMutationVariables>(
-    CreateArchiveTagDocument,
-    options
-  );
-}
-
-export type CreateArchiveTagMutationHookResult = ReturnType<typeof useCreateArchiveTagMutation>;
-
-export type CreateArchiveTagMutationResult = Apollo.MutationResult<CreateArchiveTagMutation>;
-
-export type CreateArchiveTagMutationOptions = Apollo.BaseMutationOptions<
-  CreateArchiveTagMutation,
-  CreateArchiveTagMutationVariables
 >;
 
 export const CreateFaceTagDocument = gql`
@@ -9743,6 +9739,48 @@ export function useCanRunMultipleAcceptCommentMutations(
   };
 }
 
+export function useCanRunAddArchiveTagMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<AddArchiveTagMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: AddArchiveTagDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleAddArchiveTagMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<AddArchiveTagMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: AddArchiveTagDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunAddPermissionMutation(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -9816,48 +9854,6 @@ export function useCanRunMultipleBulkEditMutations(
     ...options,
     variables: {
       operation: BulkEditDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
-  });
-  useAuthChangeEffect(refetch);
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
-}
-
-export function useCanRunCreateArchiveTagMutation(
-  options?: Omit<
-    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-    'variables'
-  > & {
-    variables?: Partial<CreateArchiveTagMutationVariables>;
-  }
-) {
-  const { data, loading, refetch } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateArchiveTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-    },
-  });
-  useAuthChangeEffect(refetch);
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
-}
-
-export function useCanRunMultipleCreateArchiveTagMutations(
-  options: Omit<
-    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-    'variables'
-  > & {
-    variableSets: Partial<CreateArchiveTagMutationVariables>[];
-  }
-) {
-  const { data, loading, refetch } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateArchiveTagDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

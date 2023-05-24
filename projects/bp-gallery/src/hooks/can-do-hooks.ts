@@ -2,8 +2,8 @@ import { OperationName } from 'bp-graphql/build';
 import { useMemo } from 'react';
 import {
   useCanRunAcceptCommentMutation,
+  useCanRunAddArchiveTagMutation,
   useCanRunBulkEditMutation,
-  useCanRunCreateArchiveTagMutation,
   useCanRunCreateSubCollectionMutation,
   useCanRunDeclineCommentMutation,
   useCanRunDeleteCollectionMutation,
@@ -50,9 +50,9 @@ export const useHasPermissions = (permissionNames: OperationName[]) => {
   return hasPermissions;
 };
 
-export const useCanCreateArchive = () => {
-  const { canRun, loading } = useCanRunCreateArchiveTagMutation();
-  return { canCreateArchive: canRun, loading };
+export const useCanAddArchive = () => {
+  const { canRun, loading } = useCanRunAddArchiveTagMutation();
+  return { canAddArchive: canRun, loading };
 };
 
 export const useCanEditArchive = (id: string) => {
@@ -82,13 +82,13 @@ export const useCanUploadPicture = () => {
 };
 
 export const useCanUseUploadsView = () => {
-  const { canCreateArchive, loading: canCreateArchiveLoading } = useCanCreateArchive();
+  const { canAddArchive, loading: canAddArchiveLoading } = useCanAddArchive();
   const { canUploadPicture, loading: canUploadPictureLoading } = useCanUploadPicture();
   return {
-    canUseUploadsView: canCreateArchive || canUploadPicture,
-    loading: canCreateArchiveLoading || canUploadPictureLoading,
-    canCreateArchive,
-    canCreateArchiveLoading,
+    canUseUploadsView: canAddArchive || canUploadPicture,
+    loading: canAddArchiveLoading || canUploadPictureLoading,
+    canAddArchive,
+    canAddArchiveLoading,
     canUploadPicture,
     canUploadPictureLoading,
   };

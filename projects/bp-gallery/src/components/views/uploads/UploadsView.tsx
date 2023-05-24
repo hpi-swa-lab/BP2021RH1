@@ -2,7 +2,7 @@ import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
+import { useAddArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { useCanUseUploadsView } from '../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -16,7 +16,7 @@ const UploadsView = () => {
   const { t } = useTranslation();
   const dialog = useDialog();
 
-  const [createArchiveTagMutation] = useCreateArchiveTagMutation();
+  const [addArchiveTagMutation] = useAddArchiveTagMutation();
 
   const { moveToCollection, bulkEdit } = useBulkOperations();
 
@@ -36,24 +36,24 @@ const UploadsView = () => {
       preset: DialogPreset.INPUT_FIELD,
     });
     if (archiveName?.length) {
-      createArchiveTagMutation({
+      addArchiveTagMutation({
         variables: {
           name: archiveName,
         },
       });
     }
-  }, [createArchiveTagMutation, dialog, t]);
+  }, [addArchiveTagMutation, dialog, t]);
 
   const {
     canUseUploadsView,
     loading: canUseUploadsViewLoading,
-    canCreateArchive,
+    canAddArchive,
   } = useCanUseUploadsView();
 
   return (
     <ProtectedRoute canUse={canUseUploadsView} canUseLoading={canUseUploadsViewLoading}>
       <div className='uploads-overview'>
-        {canCreateArchive && (
+        {canAddArchive && (
           <Button onClick={createArchive}>
             <Add />
             {t('curator.createArchive')}

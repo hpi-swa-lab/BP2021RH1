@@ -205,7 +205,7 @@
         "pinComment": "Kommentar anpinnen",
         "postComment": "Kommentar erstellen",
         "unpinComment": "Kommentar loslösen",
-        "createArchiveTag": "Archiv anlegen",
+        "addArchiveTag": "Archiv anlegen",
         "editArchive": "Archiv-Eigenschaften bearbeiten",
         "getAllArchiveTags": "Liste aller Archive ansehen",
         "getArchive": "Archiv ansehen",

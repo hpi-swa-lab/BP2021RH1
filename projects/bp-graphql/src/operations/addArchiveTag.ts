@@ -6,12 +6,8 @@ export default {
   needsParameters: [],
   isAllowed: always,
   document: graphql`
-    mutation createArchiveTag($name: String!) {
-      createArchiveTag(data: { name: $name }) {
-        data {
-          id
-        }
-      }
+    mutation addArchiveTag($name: String!) {
+      addArchiveTag(name: $name)
     }
   `,
 } satisfies Operation;

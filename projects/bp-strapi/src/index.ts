@@ -2,6 +2,7 @@
 
 import { Strapi } from '@strapi/strapi';
 import { Variables } from 'bp-graphql/build';
+import { addArchiveTag } from './api/archive-tag/services/custom-update';
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
@@ -170,6 +171,19 @@ export default {
             async resolve(_, { id }) {
               const knexEngine = extensionArgs.strapi.db.connection;
               return incNotAPlaceCount(knexEngine, id);
+            },
+          }),
+          mutationField('addArchiveTag', {
+            type: 'Int',
+            args: {
+              name: 'String',
+            },
+            async resolve(_, { name }, context) {
+              const user = context.state.auth.credentials;
+              if (!user) {
+                throw new Error('Unangemeldete Nutzer können keine Archive erstellen');
+              }
+              return addArchiveTag(user, name);
             },
           }),
           mutationField('addPermission', {
