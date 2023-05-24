@@ -139,12 +139,6 @@ export default {
             },
             async resolve(_, { pictureId, dislike }, ctx) {
               const knexEngine = extensionArgs.strapi.db.connection;
-
-              ctx.state.withGrowthBook(ctx, (growthbook) => {
-                if (growthbook.isOn("like_resolve_test")) {
-                  console.log("Feature Enabled");
-                }
-              });
               return like(knexEngine, pictureId, dislike);
             },
           }),
