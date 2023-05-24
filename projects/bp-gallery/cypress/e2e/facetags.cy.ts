@@ -113,19 +113,19 @@ describe('face tagging', () => {
     //overlapping with the picture causing the tests to fail
     //don't ask me why click('left') has worked before, it didn't work in this section of the test
 
-    cy.contains('.facetag', 'TestPerson').find('[data-testid="LabelIcon"]').click();
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="AutorenewIcon"]').click();
     cy.get('.picture').click('top', { force: true });
     cy.contains('.facetag', 'TestPerson').find('[data-testid="tag direction: up"]');
 
-    cy.contains('.facetag', 'TestPerson').find('[data-testid="LabelIcon"]').click();
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="AutorenewIcon"]').click();
     cy.get('.picture').click('right', { force: true });
     cy.contains('.facetag', 'TestPerson').find('[data-testid="tag direction: right"]');
 
-    cy.contains('.facetag', 'TestPerson').find('[data-testid="LabelIcon"]').click();
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="AutorenewIcon"]').click();
     cy.get('.picture').click('bottom', { force: true });
     cy.contains('.facetag', 'TestPerson').find('[data-testid="tag direction: down"]');
 
-    cy.contains('.facetag', 'TestPerson').find('[data-testid="LabelIcon"]').click();
+    cy.contains('.facetag', 'TestPerson').find('[data-testid="AutorenewIcon"]').click();
     cy.get('.picture').click('left', { force: true });
     cy.contains('.facetag', 'TestPerson').find('[data-testid="tag direction: left"]');
 
