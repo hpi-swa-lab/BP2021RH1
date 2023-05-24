@@ -89,15 +89,6 @@ export const buildHttpLink = (
     });
   });
 
-  //
-
-  //     experimentData?.map(experiment => {
-  //
-  //
-  //       }
-  //       return response;
-  //     })
-
   httpLink = from([growthbookLink, httpLink]);
 
   if (openAlert) {
