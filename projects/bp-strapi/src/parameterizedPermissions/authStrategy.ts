@@ -1,3 +1,7 @@
+import {
+  authenticate as usersPermissionsPluginAuthenticate,
+  verify as usersPermissionsPluginVerify,
+} from '@strapi/plugin-users-permissions/server/strategies/users-permissions.js';
 import { errors } from '@strapi/utils';
 import type { Variables } from 'bp-graphql';
 import type { UsersPermissionsUser } from 'bp-graphql/build/db-types';
@@ -46,10 +50,15 @@ const authenticate = async ctx => {
 
   const permissions = await getUserPermissions(user);
 
+  const usersPermissionsPluginAuth = await usersPermissionsPluginAuthenticate(ctx);
+
   return {
     authenticated: true,
     credentials: user,
-    ability: permissions,
+    ability: {
+      permissions,
+      usersPermissionsPluginAuth,
+    },
   };
 };
 
@@ -64,7 +73,7 @@ const verify = async (auth, config) => {
   } else if (auth.isExecutingVerifiedOperation) {
     // see apolloServerPlugin.ts, let this pass through unchecked
   } else {
-    throw new UnauthorizedError();
+    await usersPermissionsPluginVerify(auth.ability.usersPermissionsPluginAuth, config);
   }
 };
 
