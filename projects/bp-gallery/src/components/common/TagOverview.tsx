@@ -69,13 +69,14 @@ const TagOverview = ({
     };
   }, [onResize]);
 
+  // check if there is a tag
   const { data } = useGetTagsWithThumbnail(
     queryParams,
     thumbnailQueryParams,
-    false,
     type,
     ['name:asc'],
-    1
+    1,
+    'no-cache'
   );
 
   const flattened = useSimplifiedQueryResponseData(data);

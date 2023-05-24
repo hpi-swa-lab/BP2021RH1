@@ -2428,8 +2428,7 @@ export type GetFaceTagsQuery = {
 export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<KeywordTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -2465,8 +2464,7 @@ export type GetKeywordTagsWithThumbnailQuery = {
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<LocationTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -2633,8 +2631,7 @@ export type GetPersonTagQuery = {
 export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<PersonTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -4363,11 +4360,10 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
   query getKeywordTagsWithThumbnail(
     $filters: KeywordTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    keywordTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4423,14 +4419,13 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetKeywordTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetKeywordTagsWithThumbnailQuery,
     GetKeywordTagsWithThumbnailQueryVariables
   >
@@ -4472,11 +4467,10 @@ export const GetLocationTagsWithThumbnailDocument = gql`
   query getLocationTagsWithThumbnail(
     $filters: LocationTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    locationTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    locationTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4532,14 +4526,13 @@ export const GetLocationTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetLocationTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetLocationTagsWithThumbnailQuery,
     GetLocationTagsWithThumbnailQueryVariables
   >
@@ -4926,11 +4919,10 @@ export const GetPersonTagsWithThumbnailDocument = gql`
   query getPersonTagsWithThumbnail(
     $filters: PersonTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    personTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    personTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4988,14 +4980,13 @@ export const GetPersonTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetPersonTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetPersonTagsWithThumbnailQuery,
     GetPersonTagsWithThumbnailQueryVariables
   >

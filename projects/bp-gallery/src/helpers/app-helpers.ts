@@ -96,7 +96,7 @@ export const mergeByRef = (
   incoming: Ref[],
   args: any
 ): Ref[] => {
-  if (args.pagination.start === 0) {
+  if (args?.pagination?.start === 0) {
     return incoming;
   }
   return unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);

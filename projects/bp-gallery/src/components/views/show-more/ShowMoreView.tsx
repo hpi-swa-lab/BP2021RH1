@@ -46,8 +46,12 @@ const ShowMoreView = ({
                 id: { eq: categoryId },
               }
           : { id: { eq: '-1' } },
-      limit: 1,
+      pagination: {
+        start: 0,
+        limit: 1,
+      },
     },
+    fetchPolicy: 'no-cache',
   });
 
   const flattened = useSimplifiedQueryResponseData(tagInfo.data);
