@@ -33,3 +33,6 @@ cypress/screenshots
 
 #swc
 .swc
+/test-results/
+/playwright-report/
+/playwright/.cache/

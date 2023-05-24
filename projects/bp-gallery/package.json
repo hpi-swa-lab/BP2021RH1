@@ -50,6 +50,7 @@
     "@graphql-codegen/typescript": "2.4.1",
     "@graphql-codegen/typescript-operations": "2.2.1",
     "@graphql-codegen/typescript-react-apollo": "3.2.2",
+    "@playwright/test": "^1.34.2",
     "@swc/plugin-transform-imports": "^1.5.41",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.13",
