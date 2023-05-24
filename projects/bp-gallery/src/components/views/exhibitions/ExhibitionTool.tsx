@@ -7,11 +7,10 @@ import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import TextEditor from '../../common/editors/TextEditor';
 import { useTranslation } from 'react-i18next';
 import {
-  ExhibitionIdealotContext,
-  ExhibitionSectionsContext,
+  ExhibitionGetContext,
+  ExhibitionSectionUtilsContext,
+  ExhibitionSetContext,
   ExhibitionStateManager,
-  ExhibitionTextContext,
-  ExhibitionTitlePictureContext,
 } from './ExhibitonUtils';
 import {
   DndContext,
@@ -24,7 +23,7 @@ import {
 import { SortableContext } from '@dnd-kit/sortable';
 
 const IdeaLot = () => {
-  const idealot = useContext(ExhibitionIdealotContext)();
+  const idealot = useContext(ExhibitionGetContext).getIdealot();
 
   return (
     <div className='flex flex-col items-stretch h-full w-full relative'>
@@ -41,13 +40,15 @@ const IdeaLot = () => {
 const DropZone = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { setNodeRef } = useDroppable({ id });
-  const swapDropzoneContent = useContext(ExhibitionSectionsContext).swapSectionDraggables;
-  const section = useContext(ExhibitionSectionsContext).getSection(id);
-  const { getSorting, setSorting } = useContext(ExhibitionSectionsContext);
+  const section = useContext(ExhibitionGetContext).getSection(id);
+  const { getSorting, setSorting, swapSectionDraggables } = useContext(
+    ExhibitionSectionUtilsContext
+  );
   const itemIds = section?.dragElements.map(elem => elem.id);
   const dragItems = section?.dragElements;
   const [activeId, setActiveId] = useState<UniqueIdentifier | undefined>(undefined);
   const activeSortable = section?.dragElements.find(elem => elem.id === activeId)?.sortableElement;
+
   const dragHandleEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return setActiveId(undefined);
@@ -55,7 +56,7 @@ const DropZone = ({ id }: { id: string }) => {
       const oldIndex = section?.dragElements.findIndex(x => x.id === active.id);
       const newIndex = section?.dragElements.findIndex(x => x.id === over.id);
       if (oldIndex !== undefined && newIndex !== undefined)
-        swapDropzoneContent(oldIndex, newIndex, id);
+        swapSectionDraggables(oldIndex, newIndex, id);
       setActiveId(undefined);
     }
   };
@@ -105,20 +106,20 @@ const DropZone = ({ id }: { id: string }) => {
 };
 
 const TitleDropzone = () => {
-  const titlePicture = useContext(ExhibitionTitlePictureContext);
+  const titlePicture = useContext(ExhibitionGetContext).getTitlePicture();
   const { setNodeRef } = useDroppable({ id: 'titleDropzone' });
   return (
     <div
       ref={setNodeRef}
       className='h-[10rem] overflow-hidden w-[12rem] border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200'
     >
-      {titlePicture()?.element}
+      {titlePicture?.element}
     </div>
   );
 };
 
 const ExhibitionManipulator = () => {
-  const sections = useContext(ExhibitionSectionsContext).getAllSections();
+  const sections = useContext(ExhibitionGetContext).getAllSections();
   const scroll = useRef(0);
   const scrollDivRef = useRef<HTMLDivElement | null>(null);
 
@@ -149,8 +150,9 @@ const ExhibitionManipulator = () => {
 
 const Introduction = () => {
   const { t } = useTranslation();
-  const { getTitle, setTitle, getIntroduction, setIntroduction } =
-    useContext(ExhibitionTextContext);
+  const { getTitle, getIntroduction } = useContext(ExhibitionGetContext);
+
+  const { setTitle, setIntroduction } = useContext(ExhibitionSetContext);
 
   const extraOptions = {
     height: 300,
@@ -188,9 +190,10 @@ const Introduction = () => {
 const Section = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(true);
-  const section = useContext(ExhibitionSectionsContext).getSection(id);
-  const { getSectionTitle, setSectionTitle, getSectionText, setSectionText } =
-    useContext(ExhibitionTextContext);
+  const section = useContext(ExhibitionGetContext).getSection(id);
+  const { getSectionTitle, getSectionText } = useContext(ExhibitionGetContext);
+
+  const { setSectionTitle, setSectionText } = useContext(ExhibitionSetContext);
 
   const extraOptions = {
     preset: undefined,
@@ -232,8 +235,9 @@ const Section = ({ id }: { id: string }) => {
 
 const EndCard = () => {
   const { t } = useTranslation();
-  const { getEpilog, setEpilog, getSources, setSource, addSource } =
-    useContext(ExhibitionTextContext);
+  const { getEpilog, getSources } = useContext(ExhibitionGetContext);
+
+  const { setEpilog, setSource, addSource } = useContext(ExhibitionSetContext);
 
   const extraOptions = {
     height: 300,
@@ -277,7 +281,6 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
   const { data: exhibitionData } = useGetExhibitionQuery({
     variables: { exhibitionId },
   });
-  console.log(exhibitionData);
   const exhibition: FlatExhibition | undefined =
     useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
   return (

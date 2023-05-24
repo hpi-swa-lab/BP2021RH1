@@ -3709,8 +3709,7 @@ export type UpdateExhibitionMutation = {
 
 export type UpdateExhibitionPictureMutationVariables = Exact<{
   id: Scalars['ID'];
-  subtitle?: InputMaybe<Scalars['String']>;
-  order: Scalars['Int'];
+  data: ExhibitionPictureInput;
 }>;
 
 export type UpdateExhibitionPictureMutation = {
@@ -8477,8 +8476,8 @@ export type UpdateExhibitionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const UpdateExhibitionPictureDocument = gql`
-  mutation updateExhibitionPicture($id: ID!, $subtitle: String, $order: Int!) {
-    updateExhibitionPicture(id: $id, data: { subtitle: $subtitle, order: $order }) {
+  mutation updateExhibitionPicture($id: ID!, $data: ExhibitionPictureInput!) {
+    updateExhibitionPicture(id: $id, data: $data) {
       data {
         id
       }
@@ -8505,8 +8504,7 @@ export type UpdateExhibitionPictureMutationFn = Apollo.MutationFunction<
  * const [updateExhibitionPictureMutation, { data, loading, error }] = useUpdateExhibitionPictureMutation({
  *   variables: {
  *      id: // value for 'id'
- *      subtitle: // value for 'subtitle'
- *      order: // value for 'order'
+ *      data: // value for 'data'
  *   },
  * });
  */
