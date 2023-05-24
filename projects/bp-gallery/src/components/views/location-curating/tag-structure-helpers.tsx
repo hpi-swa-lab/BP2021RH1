@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 
 export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
-  const tagTree = useMemo(() => {
-    if (!flattenedTags) return;
+  const { tagTree, tagChildTags } = useMemo(() => {
+    if (!flattenedTags) return { tagTree: undefined, tagChildTags: undefined };
 
     const tagsById = Object.fromEntries(
       flattenedTags.map(tag => [
@@ -25,56 +25,26 @@ export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
       .filter(tag => !tag.parent_tags?.length || tag.root)
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    const queue: FlatTag[] = [];
-    sortedTagTree.forEach(tag => {
-      queue.push(tag);
-    });
-    // set parent tags for each tag in tree
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-      if (nextTag) {
-        nextTag.child_tags?.forEach(child => {
-          child.parent_tags = child.parent_tags?.filter(tag => tag.id !== nextTag.id);
-          child.parent_tags?.push(nextTag);
-          queue.push(child);
-        });
+    //replace stubs with complete parent tags
+    for (const flatTag of flattenedTags) {
+      if (!(flatTag.id in tagsById)) {
+        continue;
       }
+      const tag = tagsById[flatTag.id];
+      tag.parent_tags = tag.parent_tags
+        ?.map(parentTag => tagsById[parentTag.id])
+        .filter(parentTag => !!parentTag);
     }
 
-    return sortedTagTree;
+    return {
+      tagTree: sortedTagTree,
+      tagChildTags: Object.fromEntries(
+        flattenedTags.map(tag => [tag.id, tagsById[tag.id].child_tags])
+      ),
+    };
   }, [flattenedTags]);
 
-  return tagTree;
-};
-
-export const useGetTagChildren = (
-  tagTree: FlatTag[] | undefined,
-  flattenedTags: FlatTag[] | undefined
-) => {
-  const tagChildTags = useMemo(() => {
-    if (!flattenedTags) return;
-
-    const tagChildren = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-      if (nextTag?.child_tags) {
-        tagChildren[nextTag.id] = nextTag.child_tags;
-      }
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
-    }
-
-    return tagChildren;
-  }, [flattenedTags, tagTree]);
-
-  return tagChildTags;
+  return { tagTree, tagChildTags };
 };
 
 export const useGetTagSiblings = (

@@ -22,7 +22,7 @@ const TagSelectDialogPreset = ({
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const tagTree = useGetTagTree(flattenedTags);
+  const { tagTree } = useGetTagTree(flattenedTags);
 
   const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
 

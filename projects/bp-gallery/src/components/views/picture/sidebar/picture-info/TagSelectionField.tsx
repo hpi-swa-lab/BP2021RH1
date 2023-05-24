@@ -16,7 +16,6 @@ import SingleTagElement from './SingleTagElement';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import {
   useGetBreadthFirstOrder,
-  useGetTagChildren,
   useGetTagSiblings,
   useGetTagSupertagList,
   useGetTagTree,
@@ -79,12 +78,7 @@ const TagSelectionField = <T extends TagFields>({
   const flattenedTags: FlatTag[] | undefined =
     flattened && type !== TagType.COLLECTION ? Object.values(flattened)[0] : undefined;
 
-  const tagTree = useGetTagTree(flattenedTags);
-  const tagChildTags = useGetTagChildren(tagTree, flattenedTags) as
-    | {
-        [k: string]: T[];
-      }
-    | undefined;
+  const { tagTree, tagChildTags } = useGetTagTree(flattenedTags);
   const tagSiblingTags = useGetTagSiblings(
     tagTree,
     flattenedTags,
@@ -228,7 +222,7 @@ const TagSelectionField = <T extends TagFields>({
                 tag => !selectedSiblingChildren.some(t => t.id === tag.id)
               )
             : ([] as T[]);
-        selectedSiblingChildren.push(...siblingChildren);
+        selectedSiblingChildren.push(...(siblingChildren as T[]));
       });
     }
     selectedSiblingChildren = selectedSiblingChildren.filter(
@@ -469,16 +463,19 @@ const TagSelectionField = <T extends TagFields>({
 
               if (type === TagType.LOCATION) {
                 const children = getTagChildrenRecommendations(tag, newValue);
-                const siblings = getTagSiblingRecommendations(tag, [...newValue, ...children]);
+                const siblings = getTagSiblingRecommendations(tag, [
+                  ...newValue,
+                  ...(children as T[]),
+                ]);
                 const selectedSiblings = getTagSelectedSiblings(tag, newValue);
                 const selectedSiblingsChildren = getSelectedSiblingsChildren(selectedSiblings, [
                   ...newValue,
-                  ...children,
-                  ...siblings,
+                  ...(children as T[]),
+                  ...(siblings as T[]),
                 ]);
 
-                const sortedChildren = customSortTags(children);
-                const sortedSiblings = customSortTags(siblings);
+                const sortedChildren = customSortTags(children as T[]);
+                const sortedSiblings = customSortTags(siblings as T[]);
                 const sortedSelectedSiblingsChildren = customSortTags(selectedSiblingsChildren);
                 const sortedNewValues = customSortTags(newValue);
 
