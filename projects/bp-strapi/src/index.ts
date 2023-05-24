@@ -1,19 +1,21 @@
 "use strict";
 
-import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
+import { Strapi } from "@strapi/strapi";
+import { archivePictureCountsType } from "./api/archive-tag/content-types/archive-tag/custom-type";
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } from "./api/collection/services/custom-resolver";
+import { mergeSourceTagIntoTargetTag } from "./api/custom-tag-resolver";
 import {
-  findPicturesByAllSearch,
-  updatePictureWithTagCleanup,
+  archivePictureCounts,
   bulkEdit,
+  findPicturesByAllSearch,
   like,
+  updatePictureWithTagCleanup,
 } from "./api/picture/services/custom-resolver";
-import { Strapi } from "@strapi/strapi";
+import { incNotAPlaceCount } from "./api/picture/services/custom-update";
 import { GqlExtension } from "./types";
-import {incNotAPlaceCount} from "./api/picture/services/custom-update";
 
 export default {
   /**
@@ -25,7 +27,8 @@ export default {
   register({ strapi }: { strapi: Strapi }) {
     const gqlExtensionService = strapi.plugin("graphql").service("extension");
     const gqlExtension = (extensionArgs: GqlExtension) => {
-      const { list, mutationField, queryField } = extensionArgs.nexus;
+      const { list, mutationField, queryField, objectType } =
+        extensionArgs.nexus;
       return {
         types: [
           mutationField("mergeKeywordTags", {
@@ -120,6 +123,13 @@ export default {
               );
             },
           }),
+          queryField("archivePictureCounts", {
+            type: archivePictureCountsType(extensionArgs.nexus),
+            async resolve(_) {
+              const knexEngine = extensionArgs.strapi.db.connection;
+              return archivePictureCounts(knexEngine);
+            },
+          }),
           mutationField("doBulkEdit", {
             type: "Int",
             args: {
@@ -151,11 +161,16 @@ export default {
               const knexEngine = extensionArgs.strapi.db.connection;
               return incNotAPlaceCount(knexEngine, id);
             },
-          })
+          }),
         ],
         resolversConfig: {
           Query: {
             findPicturesByAllSearch: {
+              auth: {
+                scope: ["api::picture.picture.find"],
+              },
+            },
+            archivePictureCounts: {
               auth: {
                 scope: ["api::picture.picture.find"],
               },
@@ -200,8 +215,8 @@ export default {
             increaseNotAPlaceCount: {
               auth: {
                 scope: ["api::picture.picture.find"],
-              }, 
-            } 
+              },
+            },
           },
           Collection: {
             thumbnail: {
