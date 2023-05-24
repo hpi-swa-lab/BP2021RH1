@@ -30,12 +30,12 @@ export default (_, { strapi }: { strapi: Strapi }) => {
         variationId: "v" + String(result.variationId),
       });
       response.set("x-growthbook", JSON.stringify(growthbookEvents));
+      response.append("Access-Control-Expose-Headers", "x-growthbook");
     },
   });
   // Add your own logic here.
   return async (ctx, next) => {
     ctx.state.withGrowthBook = (theCtx, f) => {
-      debugger;
       currentCtx = theCtx;
       f(growthbook);
     };
