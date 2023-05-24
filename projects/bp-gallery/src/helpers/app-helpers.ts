@@ -1,4 +1,5 @@
-import { createHttpLink, from } from '@apollo/client';
+import { ApolloLink, from } from '@apollo/client';
+import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { isEmpty, unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
@@ -25,11 +26,12 @@ export const buildHttpLink = (
   token: string | null,
   openAlert?: (alertOptions: AlertOptions) => void
 ) => {
-  let httpLink = createHttpLink({
+  let httpLink: ApolloLink = new BatchHttpLink({
     uri: `${apiBase}/graphql`,
     headers: {
       authorization: token ? `Bearer ${token}` : '',
     },
+    batchMax: 50,
   });
 
   if (openAlert) {
