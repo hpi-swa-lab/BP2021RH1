@@ -1,8 +1,13 @@
 import { useMemo } from 'react';
 import { FlatTag } from '../../../types/additionalFlatTypes';
+import { uniqBy } from 'lodash';
 
-export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
-  const { tagTree, tagChildTags } = useMemo(() => {
+export const useGetTagTree = (
+  flattenedTags: FlatTag[] | undefined,
+  currentParentTag?: FlatTag,
+  currentIsRoot?: boolean
+) => {
+  const { tagTree, tagChildTags, tagSiblingTags } = useMemo(() => {
     if (!flattenedTags) return { tagTree: undefined, tagChildTags: undefined };
 
     const tagsById = Object.fromEntries(
@@ -36,65 +41,40 @@ export const useGetTagTree = (flattenedTags: FlatTag[] | undefined) => {
         .filter(parentTag => !!parentTag);
     }
 
+    //set sibling tags for tags
+    const tagSiblings = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
+    const rootTags = flattenedTags.filter(tag => tag.root || !tag.parent_tags?.length);
+
+    for (const flatTag of flattenedTags) {
+      if (!(flatTag.id in tagsById)) {
+        continue;
+      }
+      const tag = tagsById[flatTag.id];
+      tagSiblings[flatTag.id] = uniqBy(
+        tag.parent_tags?.length
+          ? tag.parent_tags.flatMap(parent => {
+              if (currentIsRoot) {
+                return rootTags.map(rootTag => tagsById[rootTag.id]);
+              }
+              return !currentParentTag || currentParentTag.id === parent.id
+                ? parent.child_tags ?? []
+                : [];
+            })
+          : rootTags.map(rootTag => tagsById[rootTag.id]),
+        a => a.id
+      ).filter(siblingTag => siblingTag.id !== tag.id);
+    }
+
     return {
       tagTree: sortedTagTree,
       tagChildTags: Object.fromEntries(
         flattenedTags.map(tag => [tag.id, tagsById[tag.id].child_tags])
       ),
+      tagSiblingTags: tagSiblings,
     };
-  }, [flattenedTags]);
+  }, [flattenedTags, currentIsRoot, currentParentTag]);
 
-  return { tagTree, tagChildTags };
-};
-
-export const useGetTagSiblings = (
-  tagTree: FlatTag[] | undefined,
-  flattenedTags: FlatTag[] | undefined,
-  tagChildTags:
-    | {
-        [k: string]: FlatTag[];
-      }
-    | undefined,
-  parentTag?: FlatTag,
-  isRoot?: boolean
-) => {
-  const tagSiblings = useMemo(() => {
-    if (!flattenedTags || !tagChildTags) return;
-
-    const tagSiblings = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
-      nextTag?.parent_tags?.forEach(parent => {
-        if (!parentTag || parent.id === parentTag.id) {
-          tagSiblings[nextTag.id].push(
-            ...tagChildTags[parent.id].filter(
-              tag =>
-                tag.id !== nextTag.id &&
-                !tagSiblings[nextTag.id].some(sibling => sibling.id === tag.id)
-            )
-          );
-        }
-      });
-      if (nextTag && (isRoot || !nextTag.parent_tags?.length)) {
-        tagSiblings[nextTag.id] = flattenedTags.filter(
-          tag => (!tag.parent_tags?.length || tag.root) && tag.id !== nextTag.id
-        );
-      }
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
-    }
-
-    return tagSiblings;
-  }, [flattenedTags, tagTree, tagChildTags, parentTag, isRoot]);
-
-  return tagSiblings;
+  return { tagTree, tagChildTags, tagSiblingTags };
 };
 
 export const useGetTagSupertagList = (
