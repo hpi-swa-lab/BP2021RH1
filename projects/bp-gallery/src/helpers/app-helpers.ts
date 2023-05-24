@@ -31,7 +31,7 @@ export const buildHttpLink = (
     headers: {
       authorization: token ? `Bearer ${token}` : '',
     },
-    batchMax: 50,
+    batchMax: 1,
   });
 
   if (openAlert) {
