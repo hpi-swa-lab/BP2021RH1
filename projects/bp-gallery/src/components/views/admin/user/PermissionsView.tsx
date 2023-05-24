@@ -288,42 +288,13 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                             label={name}
                             toggleOperations={toggleOperations}
                           />
-                          {group.needsParameters.map(parameter => {
-                            switch (parameter) {
-                              case 'see_unpublished_collections':
-                                return (
-                                  <SeeUnpublishedCollectionsParameter
-                                    value={group.operations.reduce(
-                                      (seeUnpublishedCollections, operation) =>
-                                        seeUnpublishedCollections &&
-                                        (findPermission(operation, archive)
-                                          ?.see_unpublished_collections ??
-                                          false),
-                                      true
-                                    )}
-                                    onChange={async see_unpublished_collections => {
-                                      group.operations.forEach(async operation => {
-                                        const permission = findPermission(operation, archive);
-                                        if (permission) {
-                                          await deletePermission({
-                                            variables: {
-                                              id: permission.id,
-                                            },
-                                          });
-                                        }
-                                        addPermission(operation, {
-                                          archive_tag: archive ?? undefined,
-                                          ...permission,
-                                          see_unpublished_collections,
-                                        });
-                                      });
-                                    }}
-                                  />
-                                );
-                              case 'archive_tag':
-                                return null;
-                            }
-                          })}
+                          <ParameterInputs
+                            group={group}
+                            findPermission={findPermission}
+                            archive={archive}
+                            deletePermission={deletePermission}
+                            addPermission={addPermission}
+                          />
                         </div>
                       ))}
                   </AccordionDetails>
@@ -376,3 +347,63 @@ const PermissionsView = ({ userId }: { userId: string }) => {
 };
 
 export default PermissionsView;
+
+const ParameterInputs = ({
+  group,
+  findPermission,
+  archive,
+  deletePermission,
+  addPermission,
+}: {
+  group: GroupStructure;
+  findPermission: (
+    operation: Operation,
+    archive: FlatArchiveTag | null
+  ) => FlatParameterizedPermission | null;
+  archive: FlatArchiveTag | null;
+  deletePermission: (parameters: { variables: { id: string } }) => Promise<unknown>;
+  addPermission: (
+    operation: Operation,
+    { archive_tag, see_unpublished_collections }: Parameters
+  ) => void;
+}) => {
+  return (
+    <>
+      {group.needsParameters.map(parameter => {
+        switch (parameter) {
+          case 'see_unpublished_collections':
+            return (
+              <SeeUnpublishedCollectionsParameter
+                key={parameter}
+                value={group.operations.reduce(
+                  (seeUnpublishedCollections, operation) =>
+                    seeUnpublishedCollections &&
+                    (findPermission(operation, archive)?.see_unpublished_collections ?? false),
+                  true
+                )}
+                onChange={async see_unpublished_collections => {
+                  group.operations.forEach(async operation => {
+                    const permission = findPermission(operation, archive);
+                    if (permission) {
+                      await deletePermission({
+                        variables: {
+                          id: permission.id,
+                        },
+                      });
+                    }
+                    addPermission(operation, {
+                      archive_tag: archive ?? undefined,
+                      ...permission,
+                      see_unpublished_collections,
+                    });
+                  });
+                }}
+              />
+            );
+          case 'archive_tag':
+            return null;
+        }
+      })}
+    </>
+  );
+};
