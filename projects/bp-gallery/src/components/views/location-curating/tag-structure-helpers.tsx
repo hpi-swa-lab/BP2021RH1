@@ -82,42 +82,35 @@ export const useGetTagSupertagList = (
   flattenedTags: FlatTag[] | undefined
 ) => {
   const tagSupertagList = useMemo(() => {
-    if (!flattenedTags) return;
+    if (!flattenedTags || !tagTree) return;
 
-    const tagSupertags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[][]]));
-    // setup queue
-    const queue: FlatTag[] = [];
-    tagTree?.forEach(tag => {
-      queue.push(tag);
-    });
-    while (queue.length > 0) {
-      const nextTag = queue.shift();
+    const paths = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[][]]));
 
-      // override if clone was filled already to avoid duplicates
-      if (nextTag && tagSupertags[nextTag.id].length > 0) {
-        tagSupertags[nextTag.id] = [];
+    const visit = (tag: FlatTag) => {
+      if (!tag.child_tags) {
+        return;
       }
-
-      if (nextTag && nextTag.root) {
-        tagSupertags[nextTag.id].push([]);
+      for (const child of tag.child_tags) {
+        const childPaths = paths[tag.id].map(path => [...path, tag]);
+        paths[child.id].push(...childPaths);
       }
+    };
 
-      nextTag?.parent_tags?.forEach(parent => {
-        tagSupertags[parent.id].forEach(parentParents => {
-          tagSupertags[nextTag.id].push([...parentParents, parent]);
-        });
-
-        // because roots do not have parents
-        if (tagSupertags[parent.id].length === 0) {
-          tagSupertags[nextTag.id].push([parent]);
-        }
-      });
-      nextTag?.child_tags?.forEach(tag => {
-        queue.push(tag);
-      });
+    const queue: FlatTag[] = tagTree.map(tag => tag);
+    // setup paths for root tags
+    for (const tag of tagTree) {
+      paths[tag.id] = [[]];
     }
 
-    return tagSupertags;
+    while (queue.length) {
+      const tag = queue.shift();
+      if (!tag) {
+        continue;
+      }
+      visit(tag);
+    }
+
+    return paths;
   }, [flattenedTags, tagTree]);
 
   return tagSupertagList;
