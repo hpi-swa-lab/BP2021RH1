@@ -1,7 +1,7 @@
 import { createHttpLink, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { Maybe } from 'graphql/jsutils/Maybe';
-import { intersectionBy, isEmpty, unionWith } from 'lodash';
+import { isEmpty, unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
 
@@ -91,20 +91,22 @@ export const buildHttpLink = (
 type Ref = { __ref: string };
 type MergeInput = { __typename: string; data: Ref[] };
 
-export const mergeByRef = (existing: Ref[] | undefined = undefined, incoming: Ref[]): Ref[] => {
-  const intersection = intersectionBy<Ref>(incoming, existing ?? [], '__ref');
-  const mergedExisting = unionWith<Ref>(
-    intersection,
-    existing ?? [],
-    (a, b) => a.__ref === b.__ref
-  );
-  return unionWith<Ref>(mergedExisting, incoming, (a, b) => a.__ref === b.__ref);
+export const mergeByRef = (
+  existing: Ref[] | undefined = undefined,
+  incoming: Ref[],
+  args: any
+): Ref[] => {
+  if (args.pagination.start === 0) {
+    return incoming;
+  }
+  return unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
 };
 
 export const mergeByRefWrappedInData = (
   existing: MergeInput | undefined = undefined,
-  incoming: MergeInput
+  incoming: MergeInput,
+  { args }: any
 ): MergeInput => ({
   ...incoming,
-  data: mergeByRef(existing?.data, incoming.data),
+  data: mergeByRef(existing?.data, incoming.data, args),
 });

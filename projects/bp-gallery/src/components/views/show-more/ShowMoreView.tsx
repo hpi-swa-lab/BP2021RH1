@@ -89,7 +89,7 @@ const ShowMoreView = ({
             maxNumPictures={
               categoryType === 'latest' || categoryType === 'most-liked' ? 500 : undefined
             }
-            fetchPolicy='network-only'
+            fetchPolicy='cache-and-network'
           />
         </ShowStats>
       </div>
