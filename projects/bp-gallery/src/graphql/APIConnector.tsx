@@ -27,6 +27,29 @@ export type Scalars = {
   Upload: any;
 };
 
+export type ArchivePictureCount = {
+  attributes?: Maybe<ArchivePictureCountAttributes>;
+  count?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ArchivePictureCountAttributes = {
+  count?: Maybe<Scalars['Int']>;
+};
+
+export type ArchivePictureCountEntity = {
+  attributes?: Maybe<ArchivePictureCount>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ArchivePictureCountEntityResponseCollection = {
+  data?: Maybe<Array<Maybe<ArchivePictureCountEntity>>>;
+};
+
+export type ArchivePictureCountResponseCollection = {
+  data?: Maybe<Array<Maybe<ArchivePictureCount>>>;
+};
+
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   links?: Maybe<LinkRelationResponseCollection>;
@@ -1466,6 +1489,7 @@ export enum PublicationState {
 }
 
 export type Query = {
+  archivePictureCounts?: Maybe<ArchivePictureCountEntityResponseCollection>;
   archiveTag?: Maybe<ArchiveTagEntityResponse>;
   archiveTags?: Maybe<ArchiveTagEntityResponseCollection>;
   browseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -1478,6 +1502,7 @@ export type Query = {
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
+  getArchivePictureCounts?: Maybe<ArchivePictureCountResponseCollection>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -2257,6 +2282,17 @@ export type GetArchiveQuery = {
         } | null;
       } | null;
     } | null;
+  } | null;
+};
+
+export type GetArchivePictureCountsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetArchivePictureCountsQuery = {
+  archivePictureCounts?: {
+    data?: Array<{
+      id?: string | null;
+      attributes?: { count?: number | null } | null;
+    } | null> | null;
   } | null;
 };
 
@@ -3823,6 +3859,73 @@ export type GetArchiveQueryHookResult = ReturnType<typeof useGetArchiveQuery>;
 export type GetArchiveLazyQueryHookResult = ReturnType<typeof useGetArchiveLazyQuery>;
 
 export type GetArchiveQueryResult = Apollo.QueryResult<GetArchiveQuery, GetArchiveQueryVariables>;
+
+export const GetArchivePictureCountsDocument = gql`
+  query getArchivePictureCounts {
+    archivePictureCounts {
+      data {
+        id
+        attributes {
+          count
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetArchivePictureCountsQuery__
+ *
+ * To run a query within a React component, call `useGetArchivePictureCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivePictureCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivePictureCountsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetArchivePictureCountsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetArchivePictureCountsQuery,
+    GetArchivePictureCountsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetArchivePictureCountsQuery, GetArchivePictureCountsQueryVariables>(
+    GetArchivePictureCountsDocument,
+    options
+  );
+}
+
+export function useGetArchivePictureCountsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetArchivePictureCountsQuery,
+    GetArchivePictureCountsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetArchivePictureCountsQuery, GetArchivePictureCountsQueryVariables>(
+    GetArchivePictureCountsDocument,
+    options
+  );
+}
+
+export type GetArchivePictureCountsQueryHookResult = ReturnType<
+  typeof useGetArchivePictureCountsQuery
+>;
+
+export type GetArchivePictureCountsLazyQueryHookResult = ReturnType<
+  typeof useGetArchivePictureCountsLazyQuery
+>;
+
+export type GetArchivePictureCountsQueryResult = Apollo.QueryResult<
+  GetArchivePictureCountsQuery,
+  GetArchivePictureCountsQueryVariables
+>;
 
 export const GetCollectionInfoByIdDocument = gql`
   query getCollectionInfoById($collectionId: ID!) {

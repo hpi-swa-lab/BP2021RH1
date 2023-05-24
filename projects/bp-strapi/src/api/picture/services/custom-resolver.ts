@@ -252,4 +252,33 @@ const findPicturesByAllSearch = async (
   }));
 };
 
-export { findPicturesByAllSearch, updatePictureWithTagCleanup, bulkEdit, like };
+const archivePictureCounts = async (knexEngine: KnexEngine) => {
+  const pictureArchiveLinksTable = "pictures_archive_tag_links";
+  const pictureTable = "pictures";
+  const archivePictureCounts = await knexEngine(pictureArchiveLinksTable)
+    //necessary to sort out unpublished pictures
+    .join(
+      pictureTable,
+      `${pictureArchiveLinksTable}.picture_id`,
+      `${pictureTable}.id`
+    )
+    .select("archive_tag_id as id")
+    .whereNotNull("published_at")
+    .count("picture_id")
+    .groupBy("archive_tag_id")
+    .orderBy("id", "asc");
+  return {
+    data: archivePictureCounts.map((archive) => ({
+      id: archive.id,
+      attributes: { count: archive.count },
+    })),
+  };
+};
+
+export {
+  findPicturesByAllSearch,
+  updatePictureWithTagCleanup,
+  bulkEdit,
+  like,
+  archivePictureCounts,
+};
