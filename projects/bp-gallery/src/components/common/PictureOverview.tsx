@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useMemo } from 'react';
+import React, { MouseEventHandler } from 'react';
 import './PictureOverview.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
 import { PictureFiltersInput } from '../../graphql/APIConnector';
@@ -6,8 +6,7 @@ import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatType
 import { useTranslation } from 'react-i18next';
 import PrimaryButton from './PrimaryButton';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
-import useGenericPictureEndpoints from '../../hooks/generic-picture-endpoints';
-import { AuthRole, useAuth } from '../provider/AuthProvider';
+import useGetPictures from '../../hooks/get-pictures.hook';
 
 interface PictureOverviewProps {
   title?: string;
@@ -29,45 +28,16 @@ const PictureOverview = ({
   type = PictureOverviewType.CUSTOM,
 }: PictureOverviewProps) => {
   const { t } = useTranslation();
-  const { role } = useAuth();
 
-  const { getPicturesQuery } = useGenericPictureEndpoints(type);
-
-  const textFilter = useMemo(() => {
-    return role < AuthRole.CURATOR
-      ? {
-          and: [
-            {
-              or: [
-                {
-                  is_text: {
-                    eq: false,
-                  },
-                },
-                {
-                  is_text: {
-                    null: true,
-                  },
-                },
-              ],
-            },
-            queryParams as PictureFiltersInput,
-          ],
-        }
-      : queryParams;
-  }, [queryParams, role]);
-
-  const { data, loading, refetch } = getPicturesQuery({
-    variables: {
-      filters: textFilter as PictureFiltersInput,
-      pagination: {
-        start: 0,
-        limit: ABSOLUTE_MAX_PICTURES_PER_ROW * rows,
-      },
-      sortBy,
-    },
-    fetchPolicy: 'network-only',
-  });
+  const { data, loading, refetch } = useGetPictures(
+    queryParams,
+    false,
+    sortBy,
+    true,
+    ABSOLUTE_MAX_PICTURES_PER_ROW * rows,
+    'cache-and-network',
+    type
+  );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
     data as { [key: string]: any } | undefined

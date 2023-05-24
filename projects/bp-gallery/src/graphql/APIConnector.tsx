@@ -4580,7 +4580,7 @@ export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
 export const GetMostLikedPicturesDocument = gql`
   query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
     pictures(
-      filters: { and: [{ likes: { ne: null } }, $filters] }
+      filters: { and: [{ likes: { gt: 0 } }, $filters] }
       pagination: $pagination
       sort: ["likes:desc"]
     ) {

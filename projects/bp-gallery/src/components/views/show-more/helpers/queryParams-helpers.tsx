@@ -76,8 +76,8 @@ export const getPictureQueryParams = (
     }
   } else if (categoryType === 'most-liked') {
     return !archiveId
-      ? { likes: { ne: null }, id: { not: { eq: '-1' } } }
-      : { archive_tag: { id: { eq: archiveId } }, likes: { ne: null }, id: { not: { eq: '-1' } } };
+      ? { likes: { gt: 0 }, id: { not: { eq: '-1' } } }
+      : { archive_tag: { id: { eq: archiveId } }, likes: { gt: 0 }, id: { not: { eq: '-1' } } };
   } else if (categoryId) {
     return categoryQueryParams(categoryType, categoryId, archiveId);
   } else {
