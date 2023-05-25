@@ -1,6 +1,8 @@
 import { ApolloLink, from } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { onError as createErrorLink } from '@apollo/client/link/error';
+import { createUploadLink } from 'apollo-upload-client';
+import { extractFiles } from 'extract-files';
 import { isEmpty, unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 
@@ -26,13 +28,20 @@ export const buildHttpLink = (
   token: string | null,
   openAlert?: (alertOptions: AlertOptions) => void
 ) => {
-  let httpLink: ApolloLink = new BatchHttpLink({
+  const options = {
     uri: `${apiBase}/graphql`,
     headers: {
       authorization: token ? `Bearer ${token}` : '',
     },
-    batchMax: 1,
-  });
+  };
+  let httpLink = ApolloLink.split(
+    operation => extractFiles(operation).files.size > 0,
+    createUploadLink(options),
+    new BatchHttpLink({
+      ...options,
+      batchMax: 1,
+    })
+  );
 
   if (openAlert) {
     const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
