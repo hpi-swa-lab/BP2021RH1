@@ -18,8 +18,4 @@ const table = (name) => {
   return DATABASE_SCHEMA + "." + name;
 };
 
-module.exports = {
-  singular,
-  plural,
-  table,
-};
+export { singular, plural, table };

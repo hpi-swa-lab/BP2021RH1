@@ -38,12 +38,13 @@ const StartView = () => {
     fallback: { clientId: '', donationText: '', purposeText: '' },
   });
 
-  const archiveCards = archives?.map((archive, i) => {
+  const archiveCards = archives?.map(archive => {
     const sharedProps = {
       archiveName: archive.name,
       archiveDescription: archive.shortDescription ?? '',
       archiveId: archive.id,
-      archivePictureCount: pictureCounts?.[i].count,
+      archivePictureCount: pictureCounts?.find(pictureCount => pictureCount.id === archive.id)
+        ?.count,
     };
 
     return (
