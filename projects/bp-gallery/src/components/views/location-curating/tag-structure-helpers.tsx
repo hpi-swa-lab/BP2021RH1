@@ -132,6 +132,7 @@ export const useGetBreadthFirstOrder = (
 ) => {
   const tagOrder = useMemo(() => {
     const order: FlatTag[] = [];
+    const alreadySeenTags = new Set();
 
     const queue: FlatTag[] = [];
     tagTree?.forEach(tag => {
@@ -141,12 +142,14 @@ export const useGetBreadthFirstOrder = (
     while (queue.length > 0) {
       const nextTag = queue.shift();
       if (nextTag) {
-        if (!order.some(tag => tag.id === nextTag.id)) {
+        const lengthOfSet = alreadySeenTags.size;
+        if (lengthOfSet !== alreadySeenTags.add(nextTag).size) {
+          console.log(nextTag.name);
           order.push(nextTag);
+          nextTag.child_tags?.forEach(child => {
+            queue.push(child);
+          });
         }
-        nextTag.child_tags?.forEach(child => {
-          queue.push(child);
-        });
       }
     }
 
