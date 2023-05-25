@@ -6,11 +6,17 @@ export default {
       $id: ID!
       $title: String
       $text: String
+      $order: Int
       $exhibitionPictureIds: [ID]
     ) {
       updateExhibitionSection(
         id: $id
-        data: { title: $title, text: $text, exhibition_pictures: $exhibitionPictureIds }
+        data: {
+          title: $title
+          text: $text
+          exhibition_pictures: $exhibitionPictureIds
+          order: $order
+        }
       ) {
         data {
           id

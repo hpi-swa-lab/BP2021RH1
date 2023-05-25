@@ -65,12 +65,13 @@ export default {
                 }
               }
             }
-            exhibition_sections {
+            exhibition_sections(sort: "order:asc") {
               data {
                 id
                 attributes {
                   title
                   text
+                  order
                   exhibition_pictures(sort: "order:asc") {
                     data {
                       id

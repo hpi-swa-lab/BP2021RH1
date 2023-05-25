@@ -51,6 +51,7 @@ interface SectionState {
   id: string;
   title: string;
   text: string;
+  order: number;
   nextOrder: number;
   dragElements: DragElement[];
 }
@@ -227,6 +228,7 @@ const buildSectionState = (sections: FlatExhibitionSection[] | undefined) => {
     return {
       id: section.id,
       title: section.title,
+      order: section.order,
       nextOrder: section.exhibition_pictures?.length ?? 0,
       text: section.text,
       dragElements: buildDragElements(section.exhibition_pictures),
@@ -345,21 +347,17 @@ export const ExhibitionStateChanger = ({
   databaseSaver: any; //welcher typ ist das?
 }>) => {
   const setSectionText = (sectionId: string, text: string) => {
-    const sectionWithoutSection = sections.filter(section => section.id !== sectionId);
-    const section = sections.find(section => section.id === sectionId);
-    if (!section) return;
     databaseSaver.setSectionText(sectionId, text);
-    section.text = text;
-    setSections([...sectionWithoutSection, section]);
+    setSections(
+      sections.map(section => (section.id === sectionId ? { ...section, text: text } : section))
+    );
   };
 
   const setSectionTitle = (sectionId: string, title: string) => {
-    const sectionWithoutSection = sections.filter(section => section.id !== sectionId);
-    const section = sections.find(section => section.id === sectionId);
-    if (!section) return;
     databaseSaver.setSectionTitle(sectionId, title);
-    section.title = title;
-    setSections([...sectionWithoutSection, section]);
+    setSections(
+      sections.map(section => (section.id === sectionId ? { ...section, title: title } : section))
+    );
   };
 
   const setTitle = (title: string) => {
@@ -541,7 +539,8 @@ const ExhibitionDragNDrop = ({
   };
 
   const addSection = async () => {
-    const id = await databaseSaver.createNewSection(exhibitionId);
+    const order = sections.reduce((max, value) => Math.max(max, value.order), 0);
+    const id = await databaseSaver.createNewSection(exhibitionId, order + 1);
     id &&
       setSections([
         ...sections,
@@ -549,6 +548,7 @@ const ExhibitionDragNDrop = ({
           id: id,
           title: '',
           text: '',
+          order: order + 1,
           nextOrder: sections.reduce((max, value) => Math.max(max, value.nextOrder), 0),
           dragElements: [],
         } as SectionState,
@@ -720,9 +720,13 @@ const ExhibitionDatabaseSaver = (
       });
     },
 
-    createNewSection: async (exhibitionId: string) => {
+    createNewSection: async (exhibitionId: string, order: number) => {
       const result = await createSection({
-        variables: { exhibitionId: exhibitionId, publishedAt: new Date().toISOString() },
+        variables: {
+          exhibitionId: exhibitionId,
+          order: order,
+          publishedAt: new Date().toISOString(),
+        },
       });
       const id = result.data?.createExhibitionSection?.data?.id;
       return id;

@@ -2,8 +2,10 @@ import { Operation, graphql } from '../Operation.js';
 
 export default {
   document: graphql`
-    mutation createExhibitionSection($exhibitionId: ID!, $publishedAt: DateTime!) {
-      createExhibitionSection(data: { exhibition: $exhibitionId, publishedAt: $publishedAt }) {
+    mutation createExhibitionSection($exhibitionId: ID!, $order: Int, $publishedAt: DateTime!) {
+      createExhibitionSection(
+        data: { exhibition: $exhibitionId, order: $order, publishedAt: $publishedAt }
+      ) {
         data {
           id
         }

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "exhibition-section",
     "pluralName": "exhibition-sections",
-    "displayName": "Exhibition_Section"
+    "displayName": "Exhibition_Section",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -27,6 +28,9 @@
       "relation": "manyToOne",
       "target": "api::exhibition.exhibition",
       "inversedBy": "exhibition_sections"
+    },
+    "order": {
+      "type": "integer"
     }
   }
 }

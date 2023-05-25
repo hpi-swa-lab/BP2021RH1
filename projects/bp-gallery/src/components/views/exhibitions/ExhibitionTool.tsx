@@ -218,8 +218,8 @@ const Section = ({ id }: { id: string }) => {
             className='flex-1'
             placeholder={t('exhibition.manipulator.section.title-placeholder')}
             variant='standard'
-            value={getSectionTitle(id)}
-            onChange={event => setSectionTitle(id, event.target.value)}
+            defaultValue={getSectionTitle(id)}
+            onBlur={event => setSectionTitle(id, event.target.value)}
           />
           <IconButton onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <ExpandLess /> : <ExpandMore />}

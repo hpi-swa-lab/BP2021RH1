@@ -527,6 +527,7 @@ export type ExhibitionSection = {
   createdAt?: Maybe<Scalars['DateTime']>;
   exhibition?: Maybe<ExhibitionEntityResponse>;
   exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
+  order?: Maybe<Scalars['Int']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   text?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
@@ -562,6 +563,7 @@ export type ExhibitionSectionFiltersInput = {
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<ExhibitionSectionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ExhibitionSectionFiltersInput>>>;
+  order?: InputMaybe<IntFilterInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   text?: InputMaybe<StringFilterInput>;
   title?: InputMaybe<StringFilterInput>;
@@ -571,6 +573,7 @@ export type ExhibitionSectionFiltersInput = {
 export type ExhibitionSectionInput = {
   exhibition?: InputMaybe<Scalars['ID']>;
   exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  order?: InputMaybe<Scalars['Int']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
@@ -2822,6 +2825,7 @@ export type GetExhibitionQuery = {
             attributes?: {
               title?: string | null;
               text?: string | null;
+              order?: number | null;
               exhibition_pictures?: {
                 data: Array<{
                   id?: string | null;
@@ -3441,6 +3445,7 @@ export type CreateExhibitionMutation = {
 
 export type CreateExhibitionSectionMutationVariables = Exact<{
   exhibitionId: Scalars['ID'];
+  order?: InputMaybe<Scalars['Int']>;
   publishedAt: Scalars['DateTime'];
 }>;
 
@@ -3722,6 +3727,7 @@ export type UpdateExhibitionSectionMutationVariables = Exact<{
   id: Scalars['ID'];
   title?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Scalars['Int']>;
   exhibitionPictureIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>>;
 }>;
 
@@ -4844,12 +4850,13 @@ export const GetExhibitionDocument = gql`
               }
             }
           }
-          exhibition_sections {
+          exhibition_sections(sort: "order:asc") {
             data {
               id
               attributes {
                 title
                 text
+                order
                 exhibition_pictures(sort: "order:asc") {
                   data {
                     id
@@ -6718,8 +6725,10 @@ export type CreateExhibitionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionSectionDocument = gql`
-  mutation createExhibitionSection($exhibitionId: ID!, $publishedAt: DateTime!) {
-    createExhibitionSection(data: { exhibition: $exhibitionId, publishedAt: $publishedAt }) {
+  mutation createExhibitionSection($exhibitionId: ID!, $order: Int, $publishedAt: DateTime!) {
+    createExhibitionSection(
+      data: { exhibition: $exhibitionId, order: $order, publishedAt: $publishedAt }
+    ) {
       data {
         id
       }
@@ -6746,6 +6755,7 @@ export type CreateExhibitionSectionMutationFn = Apollo.MutationFunction<
  * const [createExhibitionSectionMutation, { data, loading, error }] = useCreateExhibitionSectionMutation({
  *   variables: {
  *      exhibitionId: // value for 'exhibitionId'
+ *      order: // value for 'order'
  *      publishedAt: // value for 'publishedAt'
  *   },
  * });
@@ -8542,11 +8552,17 @@ export const UpdateExhibitionSectionDocument = gql`
     $id: ID!
     $title: String
     $text: String
+    $order: Int
     $exhibitionPictureIds: [ID]
   ) {
     updateExhibitionSection(
       id: $id
-      data: { title: $title, text: $text, exhibition_pictures: $exhibitionPictureIds }
+      data: {
+        title: $title
+        text: $text
+        exhibition_pictures: $exhibitionPictureIds
+        order: $order
+      }
     ) {
       data {
         id
@@ -8576,6 +8592,7 @@ export type UpdateExhibitionSectionMutationFn = Apollo.MutationFunction<
  *      id: // value for 'id'
  *      title: // value for 'title'
  *      text: // value for 'text'
+ *      order: // value for 'order'
  *      exhibitionPictureIds: // value for 'exhibitionPictureIds'
  *   },
  * });
