@@ -1,5 +1,5 @@
-const { plural, singular, table } = require("../../helper");
 import type { KnexEngine } from "../../../types";
+import { plural, singular, table } from "../../helper";
 
 const { ApplicationError } = require("@strapi/utils").errors;
 
@@ -914,9 +914,12 @@ const like = async (
   );
 };
 
-const incNotAPlaceCount = async (knexEngine:KnexEngine, pictureId:number) => {
-  const pictureResult = knexEngine(table(PICTURES_KEY)).where("id", pictureId)
-  await pictureResult.update("is_not_a_place_count", knexEngine.raw("COALESCE(is_not_a_place_count, 0) + 1"))
-}
+const incNotAPlaceCount = async (knexEngine: KnexEngine, pictureId: number) => {
+  const pictureResult = knexEngine(table(PICTURES_KEY)).where("id", pictureId);
+  await pictureResult.update(
+    "is_not_a_place_count",
+    knexEngine.raw("COALESCE(is_not_a_place_count, 0) + 1")
+  );
+};
 
-export { updatePictureWithTagCleanup, bulkEdit, like, incNotAPlaceCount};
+export { updatePictureWithTagCleanup, bulkEdit, like, incNotAPlaceCount };
