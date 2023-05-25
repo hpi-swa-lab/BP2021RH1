@@ -211,7 +211,7 @@
         "getArchive": "Archiv ansehen",
         "geo": "GeoQuiz spielen",
         "canRunOperation": "Recht abfragen",
-        "createParameterizedPermission": "Recht vergeben",
+        "addPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
         "deleteParameterizedPermission": "Recht entziehen",
         "getUsersPermissionsUser": "Nutzer-Daten ansehen",
