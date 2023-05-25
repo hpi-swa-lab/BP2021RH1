@@ -16,8 +16,8 @@ import SingleTagElement from './SingleTagElement';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import {
   useGetBreadthFirstOrder,
+  useGetTagStructures,
   useGetTagSupertagList,
-  useGetTagTree,
 } from '../../../location-curating/tag-structure-helpers';
 
 interface TagFields {
@@ -77,7 +77,7 @@ const TagSelectionField = <T extends TagFields>({
   const flattenedTags: FlatTag[] | undefined =
     flattened && type !== TagType.COLLECTION ? Object.values(flattened)[0] : undefined;
 
-  const { tagTree, tagChildTags, tagSiblingTags } = useGetTagTree(flattenedTags);
+  const { tagTree, tagChildTags, tagSiblingTags } = useGetTagStructures(flattenedTags);
   const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
   const tagOrder = useGetBreadthFirstOrder(tagTree, prioritizedOptions as FlatTag[]) as T[];
 

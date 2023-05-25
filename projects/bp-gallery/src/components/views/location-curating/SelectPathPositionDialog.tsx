@@ -14,7 +14,7 @@ import {
   TextField,
 } from '@mui/material';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagSupertagList, useGetTagTree } from './tag-structure-helpers';
+import { useGetTagStructures, useGetTagSupertagList } from './tag-structure-helpers';
 
 const PathPositionSelectDialogPreset = ({
   handleClose,
@@ -30,7 +30,7 @@ const PathPositionSelectDialogPreset = ({
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const { tagTree } = useGetTagTree(flattenedTags);
+  const { tagTree } = useGetTagStructures(flattenedTags);
   const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
 
   const newTag: FlatTag = dialogProps.content.newTag;

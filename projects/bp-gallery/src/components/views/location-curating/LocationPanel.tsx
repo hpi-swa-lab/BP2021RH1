@@ -6,7 +6,7 @@ import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
-import { useGetTagTree } from './tag-structure-helpers';
+import { useGetTagStructures } from './tag-structure-helpers';
 import { useCreateNewTag } from './location-management-helpers';
 
 const setUnacceptedSubtagsCount = (tag: FlatTag) => {
@@ -32,7 +32,7 @@ const LocationPanel = () => {
 
   const { createNewTag } = useCreateNewTag(refetch);
 
-  const tagTreeResult = useGetTagTree(flattenedTags);
+  const tagTreeResult = useGetTagStructures(flattenedTags);
 
   const tagTree = useMemo(() => {
     if (!tagTreeResult.tagTree) return;

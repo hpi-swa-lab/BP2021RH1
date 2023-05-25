@@ -27,7 +27,7 @@ import Loading from '../../common/Loading';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagSupertagList, useGetTagTree } from './tag-structure-helpers';
+import { useGetTagStructures, useGetTagSupertagList } from './tag-structure-helpers';
 import {
   useAcceptTag,
   useAddSynonym,
@@ -72,7 +72,7 @@ const LocationManagementDialogPreset = ({
   const tagPicturesQueryResponse = tagPictures({ variables: { tagID: locationTag.id } });
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
 
-  const { tagTree, tagSiblingTags } = useGetTagTree(
+  const { tagTree, tagSiblingTags } = useGetTagStructures(
     flattenedTags,
     parentTag as FlatTag | undefined,
     !parentTag

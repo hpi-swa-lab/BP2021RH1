@@ -6,7 +6,7 @@ import SelectDialogPreset from '../../provider/dialog-presets/SelectDialogPreset
 import { DialogProps } from '../../provider/DialogProvider';
 import { useEffect, useState } from 'react';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagSupertagList, useGetTagTree } from './tag-structure-helpers';
+import { useGetTagStructures, useGetTagSupertagList } from './tag-structure-helpers';
 
 const TagSelectDialogPreset = ({
   handleClose,
@@ -22,7 +22,7 @@ const TagSelectDialogPreset = ({
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const { tagTree } = useGetTagTree(flattenedTags);
+  const { tagTree } = useGetTagStructures(flattenedTags);
 
   const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
 

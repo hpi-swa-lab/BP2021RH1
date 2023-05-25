@@ -2,20 +2,24 @@ import { useMemo } from 'react';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import { uniqBy } from 'lodash';
 
-export const useGetTagTree = (
+export const useGetTagStructures = (
   flattenedTags: FlatTag[] | undefined,
   currentParentTag?: FlatTag,
   currentIsRoot?: boolean
 ) => {
-  const { tagTree, tagChildTags, tagSiblingTags } = useMemo(() => {
-    if (!flattenedTags) return { tagTree: undefined, tagChildTags: undefined };
-
-    const tagsById = Object.fromEntries(
+  const tagsById = useMemo(() => {
+    if (!flattenedTags) return;
+    return Object.fromEntries(
       flattenedTags.map(tag => [
         tag.id,
         { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
       ])
     );
+  }, [flattenedTags]);
+
+  const tagTree = useMemo(() => {
+    if (!flattenedTags || !tagsById) return undefined;
+
     // set child tags for each tag in tree
     for (const tag of Object.values(tagsById)) {
       tag.parent_tags?.forEach(parentTag => {
@@ -41,6 +45,11 @@ export const useGetTagTree = (
         .filter(parentTag => !!parentTag);
     }
 
+    return sortedTagTree;
+  }, [flattenedTags, tagsById]);
+
+  const tagSiblingTags = useMemo(() => {
+    if (!flattenedTags || !tagsById) return undefined;
     //set sibling tags for tags
     const tagSiblings = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
     const rootTags = flattenedTags.filter(tag => tag.root || !tag.parent_tags?.length);
@@ -65,16 +74,17 @@ export const useGetTagTree = (
       ).filter(siblingTag => siblingTag.id !== tag.id);
     }
 
-    return {
-      tagTree: sortedTagTree,
-      tagChildTags: Object.fromEntries(
-        flattenedTags.map(tag => [tag.id, tagsById[tag.id].child_tags])
-      ),
-      tagSiblingTags: tagSiblings,
-    };
-  }, [flattenedTags, currentIsRoot, currentParentTag]);
+    return tagSiblings;
+  }, [flattenedTags, currentIsRoot, currentParentTag, tagsById]);
 
-  return { tagTree, tagChildTags, tagSiblingTags };
+  return {
+    tagTree: tagTree,
+    tagChildTags:
+      flattenedTags && tagsById
+        ? Object.fromEntries(flattenedTags.map(tag => [tag.id, tagsById[tag.id].child_tags]))
+        : undefined,
+    tagSiblingTags: tagSiblingTags,
+  };
 };
 
 export const useGetTagSupertagList = (
