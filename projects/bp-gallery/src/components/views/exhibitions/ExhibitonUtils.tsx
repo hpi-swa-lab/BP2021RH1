@@ -24,6 +24,7 @@ import {
   useUpdateExhibitionSectionMutation,
   useUpdateExhibitionSourceMutation,
 } from '../../../graphql/APIConnector';
+import { MutationFunction } from '../../../types/helper';
 
 interface ExhibitionSource {
   id: string;
@@ -344,7 +345,7 @@ export const ExhibitionStateChanger = ({
   setExhibitionText: Dispatch<SetStateAction<ExhibitionText>>;
   sections: SectionState[];
   setSections: Dispatch<SetStateAction<SectionState[]>>;
-  databaseSaver: any; //welcher typ ist das?
+  databaseSaver: ReturnType<typeof ExhibitionDatabaseSaver>;
 }>) => {
   const setSectionText = (sectionId: string, text: string) => {
     databaseSaver.setSectionText(sectionId, text);
@@ -433,7 +434,7 @@ const ExhibitionDragNDrop = ({
   setIdealot: Dispatch<SetStateAction<DragElement[] | undefined>>;
   sections: SectionState[];
   setSections: Dispatch<SetStateAction<SectionState[]>>;
-  databaseSaver: any; //welcher typ ist das?
+  databaseSaver: ReturnType<typeof ExhibitionDatabaseSaver>;
   exhibitionId: string;
 }>) => {
   const [isSorting, setIsSorting] = useState(false);
@@ -485,7 +486,7 @@ const ExhibitionDragNDrop = ({
       if (idealot && titlePicture) setIdealot([...idealot, titlePicture]);
       setTitlePicture(dragElement);
       if (titlePicture) {
-        databaseSaver.setIdealot(exhibitionId, idealot, dragElement.id);
+        databaseSaver.addToIdealot(exhibitionId, idealot, dragElement.id);
       }
       databaseSaver.setTitlePicture(exhibitionId, dragElement.id);
       return;
@@ -502,8 +503,9 @@ const ExhibitionDragNDrop = ({
       setTitlePicture(undefined);
     }
     removeFromSection(dragElement);
+    if (!idealot) return;
     databaseSaver.removeFromIdealot(exhibitionId, idealot, dragElement.id);
-    setIdealot(idealot?.filter(elem => elem !== dragElement));
+    setIdealot(idealot.filter(elem => elem !== dragElement));
   };
 
   const addToSection = (dragElement: DragElement, sectionId: string) => {
@@ -578,12 +580,12 @@ const ExhibitionDragNDrop = ({
 };
 
 const ExhibitionDatabaseSaver = (
-  updateExhibitionSection,
-  updateExhibitionPicture,
-  updateExhibitionSource,
-  updateExhibition,
-  createSection,
-  createSource
+  updateExhibitionSection: MutationFunction<typeof useUpdateExhibitionSectionMutation>,
+  updateExhibitionPicture: MutationFunction<typeof useUpdateExhibitionPictureMutation>,
+  updateExhibitionSource: MutationFunction<typeof useUpdateExhibitionSourceMutation>,
+  updateExhibition: MutationFunction<typeof useUpdateExhibitionMutation>,
+  createSection: MutationFunction<typeof useCreateExhibitionSectionMutation>,
+  createSource: MutationFunction<typeof useCreateExhibitionSourceMutation>
 ) => {
   return {
     setSectionText: (id: string, text: string) => {

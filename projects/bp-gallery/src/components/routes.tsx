@@ -76,7 +76,7 @@ const routes: RouteConfig[] = [
     },
   },
   {
-    path: '/exhibition/:id',
+    path: '/exhibitiontool/:id',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
       return <ExhibitionTool exhibitionId={match.params.id} />;
     },
