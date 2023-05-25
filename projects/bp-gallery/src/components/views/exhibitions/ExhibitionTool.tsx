@@ -119,7 +119,9 @@ const TitleDropzone = () => {
 };
 
 const ExhibitionManipulator = () => {
+  const { t } = useTranslation();
   const sections = useContext(ExhibitionGetContext).getAllSections();
+  const addSection = useContext(ExhibitionSectionUtilsContext).addSection;
   const scroll = useRef(0);
   const scrollDivRef = useRef<HTMLDivElement | null>(null);
 
@@ -142,6 +144,11 @@ const ExhibitionManipulator = () => {
         {sections?.map(section => (
           <Section key={section.id} id={section.id} />
         ))}
+        <div className='grid place-content-center'>
+          <Button onClick={addSection} variant='outlined'>
+            {t('exhibition.manipulator.section.add-section')}
+          </Button>
+        </div>
         <EndCard />
       </div>
     </div>
@@ -267,7 +274,11 @@ const EndCard = () => {
           onBlur={event => setSource(event.target.value, source.id)}
         />
       ))}
-      <Button onClick={addSource}>{t('exhibition.manipulator.epilog.add-source')}</Button>
+      <div className='grid place-content-center'>
+        <Button onClick={addSource} variant='outlined'>
+          {t('exhibition.manipulator.epilog.add-source')}
+        </Button>
+      </div>
     </div>
   );
 };
@@ -276,6 +287,17 @@ interface DropzoneContent {
   id: string;
   dragIds: string[];
 }
+
+const PublishButton = () => {
+  const { t } = useTranslation();
+  const { getIsPublished } = useContext(ExhibitionGetContext);
+  const { toggleIsPublished } = useContext(ExhibitionSetContext);
+  return (
+    <Button variant='contained' onClick={() => toggleIsPublished()}>
+      {!getIsPublished() ? t('exhibition.buttons.publish') : t('exhibition.buttons.unPublish')}
+    </Button>
+  );
+};
 
 const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
   const { data: exhibitionData } = useGetExhibitionQuery({
@@ -287,15 +309,15 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
     <>
       {exhibition && (
         <>
-          <div className='absolute z-[999] right-7 top-[6rem]'>
-            <Button variant='contained'>Veröffentlichen</Button>
-          </div>
-          <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
-            <ExhibitionStateManager exhibition={exhibition}>
+          <ExhibitionStateManager exhibition={exhibition}>
+            <div className='absolute z-[999] right-7 top-[6rem]'>
+              <PublishButton />
+            </div>
+            <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
               <IdeaLot />
               <ExhibitionManipulator />
-            </ExhibitionStateManager>
-          </div>
+            </div>
+          </ExhibitionStateManager>
         </>
       )}
     </>

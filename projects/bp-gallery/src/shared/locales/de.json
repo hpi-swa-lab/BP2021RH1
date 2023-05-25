@@ -370,6 +370,10 @@
     "our-categories": "Unsere Kategorien"
   },
   "exhibition": {
+    "buttons": {
+      "publish": "Veröffentlichen",
+      "unPublish": "Privat stellen"
+    },
     "manipulator": {
       "intro": {
         "title-placeholder": "Ausstellungstitel",
@@ -379,7 +383,8 @@
         "text-placeholder": "Abschnittstext",
         "title-placeholder": "Abschnittstitel",
         "sort": "Sortieren",
-        "exit-sort": "Fertig sortiert"
+        "exit-sort": "Fertig sortiert",
+        "add-section": "Neuer Abschnitt"
       },
       "epilog": {
         "title": "Epilog",

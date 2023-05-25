@@ -100,7 +100,7 @@ export const ExhibitionSetContext = createContext<{
   setEpilog: (epilog: string) => void;
   setSource: (source: string, sourceId: string) => void;
   addSource: () => void;
-  setIsPublished: (isPublished: boolean) => void;
+  toggleIsPublished: () => void;
 }>({
   setTitle: () => {},
   setIntroduction: () => {},
@@ -109,7 +109,7 @@ export const ExhibitionSetContext = createContext<{
   setEpilog: () => {},
   setSource: () => {},
   addSource: () => {},
-  setIsPublished: () => {},
+  toggleIsPublished: () => {},
 });
 
 export const ExhibitionSectionUtilsContext = createContext<{
@@ -303,6 +303,10 @@ export const ExhibitionStateGetter = ({
     return exhibitionText.sources;
   };
 
+  const getIsPublished = () => {
+    return exhibitionText.isPublished;
+  };
+
   return (
     <ExhibitionGetContext.Provider
       value={{
@@ -316,6 +320,7 @@ export const ExhibitionStateGetter = ({
         getAllSections,
         getIdealot,
         getTitlePicture,
+        getIsPublished,
       }}
     >
       {children}
@@ -390,6 +395,11 @@ export const ExhibitionStateChanger = ({
       });
   };
 
+  const toggleIsPublished = () => {
+    databaseSaver.setIsPublished(!exhibitionText.isPublished, exhibitionId);
+    setExhibitionText({ ...exhibitionText, isPublished: !exhibitionText.isPublished });
+  };
+
   return (
     <ExhibitionSetContext.Provider
       value={{
@@ -400,6 +410,7 @@ export const ExhibitionStateChanger = ({
         setEpilog,
         setSource,
         addSource,
+        toggleIsPublished,
       }}
     >
       {children}
@@ -710,7 +721,9 @@ const ExhibitionDatabaseSaver = (
     },
 
     createNewSection: async (exhibitionId: string) => {
-      const result = await createSection({ variables: { exhibitionId: exhibitionId } });
+      const result = await createSection({
+        variables: { exhibitionId: exhibitionId, publishedAt: new Date().toISOString() },
+      });
       const id = result.data?.createExhibitionSection?.data?.id;
       return id;
     },
@@ -753,9 +766,21 @@ const ExhibitionDatabaseSaver = (
     },
 
     addSource: async (exhibitionId: string) => {
-      const result = await createSource({ variables: { exhibitionId: exhibitionId } });
+      const result = await createSource({
+        variables: { exhibitionId: exhibitionId, publishedAt: new Date().toISOString() },
+      });
       const id = result.data?.createExhibitionSource?.data?.id;
       return id;
+    },
+    setIsPublished: (isPublished: boolean, exhibitionId: string) => {
+      updateExhibition({
+        variables: {
+          id: exhibitionId,
+          data: {
+            is_published: isPublished,
+          },
+        },
+      });
     },
   };
 };

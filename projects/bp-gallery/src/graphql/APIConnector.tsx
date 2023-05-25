@@ -3441,6 +3441,7 @@ export type CreateExhibitionMutation = {
 
 export type CreateExhibitionSectionMutationVariables = Exact<{
   exhibitionId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreateExhibitionSectionMutation = {
@@ -3449,6 +3450,7 @@ export type CreateExhibitionSectionMutation = {
 
 export type CreateExhibitionSourceMutationVariables = Exact<{
   exhibitionId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreateExhibitionSourceMutation = {
@@ -6716,8 +6718,8 @@ export type CreateExhibitionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionSectionDocument = gql`
-  mutation createExhibitionSection($exhibitionId: ID!) {
-    createExhibitionSection(data: { exhibition: $exhibitionId }) {
+  mutation createExhibitionSection($exhibitionId: ID!, $publishedAt: DateTime!) {
+    createExhibitionSection(data: { exhibition: $exhibitionId, publishedAt: $publishedAt }) {
       data {
         id
       }
@@ -6744,6 +6746,7 @@ export type CreateExhibitionSectionMutationFn = Apollo.MutationFunction<
  * const [createExhibitionSectionMutation, { data, loading, error }] = useCreateExhibitionSectionMutation({
  *   variables: {
  *      exhibitionId: // value for 'exhibitionId'
+ *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
@@ -6773,8 +6776,8 @@ export type CreateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionSourceDocument = gql`
-  mutation createExhibitionSource($exhibitionId: ID!) {
-    createExhibitionSource(data: { exhibition: $exhibitionId }) {
+  mutation createExhibitionSource($exhibitionId: ID!, $publishedAt: DateTime!) {
+    createExhibitionSource(data: { exhibition: $exhibitionId, publishedAt: $publishedAt }) {
       data {
         id
       }
@@ -6801,6 +6804,7 @@ export type CreateExhibitionSourceMutationFn = Apollo.MutationFunction<
  * const [createExhibitionSourceMutation, { data, loading, error }] = useCreateExhibitionSourceMutation({
  *   variables: {
  *      exhibitionId: // value for 'exhibitionId'
+ *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
