@@ -144,7 +144,6 @@ export const useGetBreadthFirstOrder = (
       if (nextTag) {
         const lengthOfSet = alreadySeenTags.size;
         if (lengthOfSet !== alreadySeenTags.add(nextTag).size) {
-          console.log(nextTag.name);
           order.push(nextTag);
           nextTag.child_tags?.forEach(child => {
             queue.push(child);
