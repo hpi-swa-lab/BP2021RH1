@@ -4,7 +4,6 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 import { isEmpty, unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
-import { PaginationArg } from '../graphql/APIConnector';
 
 const OPERATIONS_WITH_OWN_ERROR_HANDLING = ['login'];
 
@@ -91,12 +90,11 @@ export const buildHttpLink = (
 
 type Ref = { __ref: string };
 type MergeInput = { __typename: string; data: Ref[] };
-type Args = { pagination?: PaginationArg } | null;
 
 export const mergeByRef = (
   existing: Ref[] | undefined = undefined,
   incoming: Ref[],
-  args: Args
+  args: any
 ): Ref[] => {
   if (args?.pagination?.start === 0) {
     return incoming;
@@ -107,7 +105,7 @@ export const mergeByRef = (
 export const mergeByRefWrappedInData = (
   existing: MergeInput | undefined = undefined,
   incoming: MergeInput,
-  { args }: { args: Args }
+  { args }: any
 ): MergeInput => ({
   ...incoming,
   data: mergeByRef(existing?.data, incoming.data, args),
