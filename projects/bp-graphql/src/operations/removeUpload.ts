@@ -1,9 +1,9 @@
 import { Operation, graphql } from '../Operation.js';
-import { always } from '../isAllowedHelpers.js';
+import { checkUpload } from '../isAllowedHelpers.js';
 
 export default {
   group: 'createPicture',
-  isAllowed: always,
+  isAllowed: checkUpload('id'),
   document: graphql`
     mutation removeUpload($id: ID!) {
       removeFile(id: $id) {

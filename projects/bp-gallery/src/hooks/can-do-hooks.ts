@@ -90,7 +90,7 @@ export const useCanUploadPicture = () => {
   };
 };
 
-export const useCanEditPicture = (pictureId: string) => {
+export const useCanEditPicture = (pictureId: string, mediaId: string) => {
   const { canRun: canUpload, loading: canUploadLoading } = useCanRunMultipleUploadMutation();
   const { canRun: canUpdatePicture, loading: canUpdatePictureLoading } =
     useCanRunUpdatePictureMutation({
@@ -99,7 +99,11 @@ export const useCanEditPicture = (pictureId: string) => {
       },
     });
   const { canRun: canRemoveUpload, loading: canRemoveUploadLoading } =
-    useCanRunRemoveUploadMutation();
+    useCanRunRemoveUploadMutation({
+      variables: {
+        id: mediaId,
+      },
+    });
   return {
     canEditPicture: canUpload && canUpdatePicture && canRemoveUpload,
     loading: canUploadLoading || canUpdatePictureLoading || canRemoveUploadLoading,

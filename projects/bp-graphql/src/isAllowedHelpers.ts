@@ -1,5 +1,5 @@
 import { DB, ID } from './DB';
-import { IsAllowed, Variables } from './Operation';
+import { IsAllowed, IsAllowedContext, Variables } from './Operation';
 import { Maybe, ParameterizedPermission } from './db-types';
 
 export const always: IsAllowed = async () => true;
@@ -73,21 +73,29 @@ const createCheckEntityFactory =
     archiveId(parameters) ===
     (await db[entityToArchiveDBMethodName](toId(getIDLikeVariable(variables, variable))));
 
+const checkMultipleArchives = (
+  { parameters, permissions }: IsAllowedContext,
+  requestedArchives: (number | undefined)[]
+) => {
+  const currentOperationName = parameters.operation_name;
+  const permissionsForSameOperation = permissions.filter(
+    permission => permission.operation_name === currentOperationName
+  );
+  const allowedArchives = permissionsForSameOperation.map(permission => archiveId(permission));
+  return requestedArchives.every(archive => allowedArchives.includes(archive));
+};
+
 const createCheckMultipleEntitiesFactory =
   (entityToArchiveDBMethodName: EntityToArchiveDBMethodName) =>
   (variable: VariableGetter<IDLike[]>): IsAllowed =>
-  async ({ variables, parameters, db, permissions }) => {
-    const currentOperationName = parameters.operation_name;
-    const permissionsForSameOperation = permissions.filter(
-      permission => permission.operation_name === currentOperationName
-    );
-    const allowedArchives = permissionsForSameOperation.map(permission => archiveId(permission));
+  async context => {
+    const { variables, db } = context;
     const requestedArchives = await Promise.all(
       getIDLikeArrayVariable(variables, variable).map(id =>
         db[entityToArchiveDBMethodName](toId(id))
       )
     );
-    return requestedArchives.every(archive => allowedArchives.includes(archive));
+    return checkMultipleArchives(context, requestedArchives);
   };
 
 const createCheckEntityFactories = (entityToArchiveDBMethodName: EntityToArchiveDBMethodName) =>
@@ -116,3 +124,18 @@ export const hasPermission = (
       equalOrBothNullish(permission.operation_name, variables.operationName) &&
       equalOrBothNullish(archiveId(permission), toId(variables.archiveId))
   ) !== undefined;
+
+export const checkUpload =
+  (variable: VariableGetter<IDLike>): IsAllowed =>
+  async context => {
+    const { variables, db } = context;
+    const pictures = await db.mediaToPictures(toId(getIDLikeVariable(variables, variable)));
+    if (!pictures) {
+      return false;
+    }
+    const requestedArchives = await Promise.all(
+      pictures.map(picture => db.pictureToArchive(picture))
+    );
+    const requestedArchivesDeduped = Array.from(new Set(requestedArchives));
+    return checkMultipleArchives(context, requestedArchivesDeduped);
+  };

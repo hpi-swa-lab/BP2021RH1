@@ -96,7 +96,7 @@ const PictureSidebar = ({
   const pictureIds = useMemo(() => (picture ? [picture.id] : []), [picture]);
   const onDialogClose = useCallback(() => setEditDialogOpen(false), []);
 
-  const { canEditPicture } = useCanEditPicture(picture?.id ?? '-1');
+  const { canEditPicture } = useCanEditPicture(picture?.id ?? '-1', picture?.media?.id ?? '-1');
 
   return (
     <div

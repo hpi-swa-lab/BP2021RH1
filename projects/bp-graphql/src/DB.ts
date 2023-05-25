@@ -2,6 +2,7 @@ import { Comment, FaceTag, Link, ParameterizedPermission, Picture } from './db-t
 
 type Query<T> = {
   findOne(params: any): Promise<T | null>;
+  findMany(params: { where: any }): Promise<T[] | null>;
 };
 
 export type ID = number | undefined;
@@ -25,6 +26,12 @@ export class Loader<T> {
     });
     this.cache.set(id, queried);
     return queried;
+  }
+
+  public async where(filters: any) {
+    return await this.query.findMany({
+      where: filters,
+    });
   }
 }
 
@@ -74,6 +81,18 @@ export class DB {
 
   public async linkToArchive(linkId: ID) {
     return (await this.linkLoader.load(linkId))?.archive_tag?.id;
+  }
+
+  public async mediaToPictures(mediaId: ID) {
+    return (
+      await this.pictureLoader.where({
+        media: {
+          id: {
+            $eq: mediaId,
+          },
+        },
+      })
+    )?.map(picture => picture.id);
   }
 
   public async loadPermission(permissionId: ID) {
