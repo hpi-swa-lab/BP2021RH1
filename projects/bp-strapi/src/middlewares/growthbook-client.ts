@@ -17,8 +17,8 @@ export default (_, { strapi }: { strapi: Strapi }) => {
 
   // Create a GrowthBook Context
   const growthbook = new GrowthBook({
-    apiHost: "https://growthbook.harz-history.de/proxy",
-    clientKey: "sdk-g7fN7JoMErl22b8e",
+    apiHost: process.env.GROWTHBOOK_APIHOST,
+    clientKey: process.env.GROWTHBOOK_CLIENTKEY,
     enableDevMode: true,
     trackingCallback: (experiment, result) => {
       const response = currentCtx.koaContext.response;

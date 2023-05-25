@@ -44,5 +44,7 @@ module.exports = ({ env }) => [
   "strapi::body",
   "strapi::favicon",
   "strapi::public",
-  "global::growthbook-client",
+  env("GROWTHBOOK_APIHOST") && env("GROWTHBOOK_CLIENTKEY")
+    ? "global::growthbook-client"
+    : undefined,
 ];
