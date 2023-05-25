@@ -13,7 +13,7 @@ import { cloneDeep, sortBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { useCreatePictureMutation } from '../../../graphql/APIConnector';
+import { useCreatePictureMutation, useMultipleUploadMutation } from '../../../graphql/APIConnector';
 import { useCanUploadPicture } from '../../../hooks/can-do-hooks';
 import { useObjectIds } from '../../../hooks/object-ids.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -22,7 +22,6 @@ import SortableItem from '../SortableItem';
 import PicturePreview, { PictureOrigin } from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
-import uploadMediaFiles from './helpers/upload-media-files';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
@@ -90,6 +89,8 @@ const PictureUploadArea = ({
     setNewFiles(fileList => [...fileList, ...sortedFiles]);
   }, [acceptedFiles]);
 
+  const [multipleUpload] = useMultipleUploadMutation();
+
   const uploadPictures = useCallback(async () => {
     if (!preprocessPictures) {
       return;
@@ -102,7 +103,7 @@ const PictureUploadArea = ({
       return;
     }
 
-    const initializePictureFromFile = (fileId: any) =>
+    const initializePictureFromFile = (fileId: string | null | undefined) =>
       ({
         media: fileId,
         publishedAt: new Date().toISOString(),
@@ -110,23 +111,32 @@ const PictureUploadArea = ({
       } as unknown as FlatPicture);
 
     setLoading(true);
-    uploadMediaFiles(newFiles.map(f => f.file)).then(async fileIds => {
-      const initialPictures = fileIds.map(initializePictureFromFile);
-      const pictures = preprocessPictures(initialPictures);
-      for (const picture of pictures) {
+    const uploadedPictures = (
+      (
+        await multipleUpload({
+          variables: {
+            files: newFiles.map(f => f.file),
+          },
+        })
+      ).data?.multipleUpload ?? []
+    )
+      .map(upload => upload?.data?.id)
+      .map(initializePictureFromFile);
+    await Promise.all(
+      preprocessPictures(uploadedPictures).map(async picture => {
         await createPicture({
           variables: {
             data: picture as any,
           },
         });
-      }
-      setNewFiles([]);
-      if (onUploaded) {
-        onUploaded();
-      }
-      setLoading(false);
-    });
-  }, [preprocessPictures, dialog, newFiles, onUploaded, createPicture]);
+      })
+    );
+    setNewFiles([]);
+    if (onUploaded) {
+      onUploaded();
+    }
+    setLoading(false);
+  }, [multipleUpload, preprocessPictures, dialog, newFiles, onUploaded, createPicture]);
 
   const onScan = useCallback((file: File) => {
     setNewFiles(fileList => [...fileList, { file, preview: asFlatPicture(file) }]);

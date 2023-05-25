@@ -7,11 +7,10 @@ import {
   useCanRunUpdatePictureMutation,
   useUpdatePictureMutation,
 } from '../../../../graphql/APIConnector';
-import { useAuth } from '../../../../hooks/context-hooks';
+import { useCanEditPicture } from '../../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
-import { AuthRole } from '../../../provider/AuthProvider';
 import { PictureViewContext } from '../PictureView';
 import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import './PictureSidebar.scss';
@@ -28,7 +27,6 @@ const PictureSidebar = ({
   loading?: boolean;
   error?: ApolloError;
 }) => {
-  const { role } = useAuth();
   const { t } = useTranslation();
   const { sideBarOpen, setSideBarOpen } = useContext(PictureViewContext);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -98,6 +96,8 @@ const PictureSidebar = ({
   const pictureIds = useMemo(() => (picture ? [picture.id] : []), [picture]);
   const onDialogClose = useCallback(() => setEditDialogOpen(false), []);
 
+  const { canEditPicture } = useCanEditPicture(picture?.id ?? '-1');
+
   return (
     <div
       className={`picture-sidebar${!sideBarOpen ? ' closed' : ''}`}
@@ -114,7 +114,7 @@ const PictureSidebar = ({
             hasHiddenLinks={false}
             onSave={canUpdatePicture ? onSave : undefined}
             topInfo={(anyFieldTouched, isSaving) =>
-              role >= AuthRole.CURATOR && (
+              canEditPicture && (
                 <div className='curator-ops'>
                   <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
                     {t('curator.editPicture')}

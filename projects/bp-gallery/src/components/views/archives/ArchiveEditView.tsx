@@ -3,13 +3,17 @@ import { Button } from '@mui/material';
 import { Jodit } from 'jodit-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
+import {
+  useCanRunMultipleUploadMutation,
+  useGetArchiveQuery,
+  useMultipleUploadMutation,
+  useUpdateArchiveMutation,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useCanEditArchive } from '../../../hooks/can-do-hooks';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import TextEditor from '../../common/editors/TextEditor';
-import uploadMediaFiles from '../../common/picture-gallery/helpers/upload-media-files';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { useVisit } from './../../../helpers/history';
 import './ArchiveEditView.scss';
@@ -132,11 +136,20 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     });
   };
 
+  const [multipleUpload] = useMultipleUploadMutation();
+
+  const { canRun: canUpload } = useCanRunMultipleUploadMutation();
+
   const handleSubmit = () => {
     if (form.invalid) return;
     handleLinks();
     if (form.logo) {
-      uploadMediaFiles([form.logo]).then(ids => {
+      multipleUpload({
+        variables: {
+          files: [form.logo],
+        },
+      }).then(response => {
+        const logo = response.data?.multipleUpload[0]?.data?.id ?? undefined;
         updateArchive({
           variables: {
             archiveId,
@@ -144,7 +157,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               name: form.name,
               shortDescription: form.shortDescription,
               longDescription: form.longDescription,
-              logo: ids[0],
+              logo,
             },
           },
         });
@@ -233,10 +246,12 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
                 extraOptions={extraOptions}
               />
             </div>
-            <ArchiveLogoInput
-              defaultUrl={logoSrc}
-              onChange={file => updateForm({ logo: file, dirty: true })}
-            />
+            {canUpload && (
+              <ArchiveLogoInput
+                defaultUrl={logoSrc}
+                onChange={file => updateForm({ logo: file, dirty: true })}
+              />
+            )}
             <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
           </form>
         </div>

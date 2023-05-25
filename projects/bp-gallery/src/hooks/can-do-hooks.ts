@@ -16,8 +16,11 @@ import {
   useCanRunGetUnverifiedCommentsQuery,
   useCanRunMergeCollectionsMutation,
   useCanRunMultipleCreatePictureMutations,
+  useCanRunMultipleUploadMutation,
+  useCanRunRemoveUploadMutation,
   useCanRunUpdateArchiveMutation,
   useCanRunUpdateCollectionMutation,
+  useCanRunUpdatePictureMutation,
   useGetAllArchiveTagsQuery,
   useGetParameterizedPermissionsQuery,
 } from '../graphql/APIConnector';
@@ -65,20 +68,42 @@ export const useCanEditArchive = (id: string) => {
 };
 
 export const useCanUploadPicture = () => {
-  const { data: archivesData, loading } = useGetAllArchiveTagsQuery();
+  const { data: archivesData, loading: archivesLoading } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(archivesData)?.archiveTags;
 
-  const { canRunMultiple: canCreatePicturePerArchive } = useCanRunMultipleCreatePictureMutations({
-    variableSets:
-      archives?.map(archive => ({
-        data: {
-          archive_tag: archive.id,
-        },
-      })) ?? [],
-  });
+  const { canRun: canUpload, loading: canUploadLoading } = useCanRunMultipleUploadMutation();
 
-  return { canUploadPicture: canCreatePicturePerArchive.some(can => can), loading };
+  const { canRunMultiple: canCreatePicturePerArchive, loading: canCreatePicturePerArchiveLoading } =
+    useCanRunMultipleCreatePictureMutations({
+      variableSets:
+        archives?.map(archive => ({
+          data: {
+            archive_tag: archive.id,
+          },
+        })) ?? [],
+    });
+
+  return {
+    canUploadPicture: canUpload && canCreatePicturePerArchive.some(can => can),
+    loading: archivesLoading || canUploadLoading || canCreatePicturePerArchiveLoading,
+  };
+};
+
+export const useCanEditPicture = (pictureId: string) => {
+  const { canRun: canUpload, loading: canUploadLoading } = useCanRunMultipleUploadMutation();
+  const { canRun: canUpdatePicture, loading: canUpdatePictureLoading } =
+    useCanRunUpdatePictureMutation({
+      variables: {
+        pictureId,
+      },
+    });
+  const { canRun: canRemoveUpload, loading: canRemoveUploadLoading } =
+    useCanRunRemoveUploadMutation();
+  return {
+    canEditPicture: canUpload && canUpdatePicture && canRemoveUpload,
+    loading: canUploadLoading || canUpdatePictureLoading || canRemoveUploadLoading,
+  };
 };
 
 export const useCanUseUploadsView = () => {
