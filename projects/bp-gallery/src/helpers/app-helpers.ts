@@ -70,12 +70,10 @@ export const buildHttpLink = (
 
   const growthbookLink = new ApolloLink((operation, forward) => {
     return forward(operation).map(response => {
-      const experimentData = JSON.parse(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
-        operation.getContext().response.headers.get('x-growthbook')
+      const experimentData: { experimentId: string; variationId: string }[] | null = JSON.parse(
+        (operation.getContext().response as Response).headers.get('x-growthbook') ?? 'null'
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      experimentData?.forEach((experiment: { experimentId: string; variationId: string }) => {
+      experimentData?.forEach(experiment => {
         const w: any = window;
         const _paq: Array<any> = (w._paq = w._paq || []);
         _paq.push([
