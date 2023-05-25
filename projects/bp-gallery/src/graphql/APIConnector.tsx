@@ -3243,6 +3243,14 @@ export type MergePersonTagsMutationVariables = Exact<{
 
 export type MergePersonTagsMutation = { mergePersonTags?: string | null };
 
+export type MultipleUploadMutationVariables = Exact<{
+  files: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+export type MultipleUploadMutation = {
+  multipleUpload: Array<{ data?: { id?: string | null } | null } | null>;
+};
+
 export type PinCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
 }>;
@@ -3262,6 +3270,12 @@ export type PostCommentMutationVariables = Exact<{
 export type PostCommentMutation = {
   createComment?: { data?: { attributes?: { text: string } | null } | null } | null;
 };
+
+export type RemoveUploadMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type RemoveUploadMutation = { removeFile?: { data?: { id?: string | null } | null } | null };
 
 export type SetPicturesForCollectionMutationVariables = Exact<{
   pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
@@ -7489,6 +7503,57 @@ export type MergePersonTagsMutationOptions = Apollo.BaseMutationOptions<
   MergePersonTagsMutationVariables
 >;
 
+export const MultipleUploadDocument = gql`
+  mutation multipleUpload($files: [Upload!]!) {
+    multipleUpload(files: $files) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type MultipleUploadMutationFn = Apollo.MutationFunction<
+  MultipleUploadMutation,
+  MultipleUploadMutationVariables
+>;
+
+/**
+ * __useMultipleUploadMutation__
+ *
+ * To run a mutation, you first call `useMultipleUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMultipleUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [multipleUploadMutation, { data, loading, error }] = useMultipleUploadMutation({
+ *   variables: {
+ *      files: // value for 'files'
+ *   },
+ * });
+ */
+export function useMultipleUploadMutation(
+  baseOptions?: Apollo.MutationHookOptions<MultipleUploadMutation, MultipleUploadMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<MultipleUploadMutation, MultipleUploadMutationVariables>(
+    MultipleUploadDocument,
+    options
+  );
+}
+
+export type MultipleUploadMutationHookResult = ReturnType<typeof useMultipleUploadMutation>;
+
+export type MultipleUploadMutationResult = Apollo.MutationResult<MultipleUploadMutation>;
+
+export type MultipleUploadMutationOptions = Apollo.BaseMutationOptions<
+  MultipleUploadMutation,
+  MultipleUploadMutationVariables
+>;
+
 export const PinCommentDocument = gql`
   mutation pinComment($commentId: ID!) {
     updateComment(id: $commentId, data: { pinned: true }) {
@@ -7610,6 +7675,57 @@ export type PostCommentMutationResult = Apollo.MutationResult<PostCommentMutatio
 export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
   PostCommentMutation,
   PostCommentMutationVariables
+>;
+
+export const RemoveUploadDocument = gql`
+  mutation removeUpload($id: ID!) {
+    removeFile(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type RemoveUploadMutationFn = Apollo.MutationFunction<
+  RemoveUploadMutation,
+  RemoveUploadMutationVariables
+>;
+
+/**
+ * __useRemoveUploadMutation__
+ *
+ * To run a mutation, you first call `useRemoveUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeUploadMutation, { data, loading, error }] = useRemoveUploadMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveUploadMutation(
+  baseOptions?: Apollo.MutationHookOptions<RemoveUploadMutation, RemoveUploadMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveUploadMutation, RemoveUploadMutationVariables>(
+    RemoveUploadDocument,
+    options
+  );
+}
+
+export type RemoveUploadMutationHookResult = ReturnType<typeof useRemoveUploadMutation>;
+
+export type RemoveUploadMutationResult = Apollo.MutationResult<RemoveUploadMutation>;
+
+export type RemoveUploadMutationOptions = Apollo.BaseMutationOptions<
+  RemoveUploadMutation,
+  RemoveUploadMutationVariables
 >;
 
 export const SetPicturesForCollectionDocument = gql`
@@ -10873,6 +10989,48 @@ export function useCanRunMultipleMergePersonTagsMutations(
   };
 }
 
+export function useCanRunMultipleUploadMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<MultipleUploadMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: MultipleUploadDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleMultipleUploadMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<MultipleUploadMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: MultipleUploadDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunPinCommentMutation(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -10946,6 +11104,48 @@ export function useCanRunMultiplePostCommentMutations(
     ...options,
     variables: {
       operation: PostCommentDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunRemoveUploadMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<RemoveUploadMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: RemoveUploadDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleRemoveUploadMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<RemoveUploadMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: RemoveUploadDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
