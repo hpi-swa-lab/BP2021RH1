@@ -1,7 +1,7 @@
 "use strict";
 import { KnexEngine } from "../../../types";
+import { plural, table } from "../../helper";
 import { bulkEdit, like, updatePictureWithTagCleanup } from "./custom-update";
-const { plural, table } = require("../../helper");
 /**
  * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
  * in both a verified and an unverified relation.
@@ -253,14 +253,13 @@ const findPicturesByAllSearch = async (
 };
 
 const archivePictureCounts = async (knexEngine: KnexEngine) => {
-  const pictureArchiveLinksTable = "pictures_archive_tag_links";
-  const pictureTable = "pictures";
-  const archivePictureCounts = await knexEngine(pictureArchiveLinksTable)
+  const archivePictures = table("pictures_archive_tag_links");
+  const archivePictureCounts = await knexEngine(archivePictures)
     //necessary to sort out unpublished pictures
     .join(
-      pictureTable,
-      `${pictureArchiveLinksTable}.picture_id`,
-      `${pictureTable}.id`
+      table("pictures"),
+      `${archivePictures}.picture_id`,
+      `${table("pictures")}.id`
     )
     .select("archive_tag_id as id")
     .whereNotNull("published_at")
