@@ -77,9 +77,9 @@ const ArchiveCardWithoutPicture = ({
   archiveId,
   archivePictureCount,
 }: {
+  archiveId: string;
   archiveName: string;
   archiveDescription: string;
-  archiveId: string;
   archivePictureCount: number | undefined;
 }) => {
   return (

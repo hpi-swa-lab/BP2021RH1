@@ -2,7 +2,7 @@ import { IfFeatureEnabled } from '@growthbook/growthbook-react';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllArchiveTagsQuery,
-  useGetAllPicturesByArchiveQuery,
+  useGetArchivePictureCountsQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVariant } from '../../../helpers/growthbook';
@@ -25,20 +25,25 @@ const StartView = () => {
   const { isMobile } = useMobile();
   const { data } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
-  const { clientId: paypalClientId, donationText: paypalDonationText } = useVariant({
-    id: 'paypal_mainpage',
-    fallback: { clientId: '', donationText: '' },
-  });
-  const { data: picturesData } = useGetAllPicturesByArchiveQuery();
-  const archivePictures: FlatArchiveTag[] | undefined =
-    useSimplifiedQueryResponseData(picturesData)?.archiveTags;
+  const { data: countData } = useGetArchivePictureCountsQuery();
+  const pictureCounts: { id: string; count: number }[] | undefined =
+    useSimplifiedQueryResponseData(countData)?.archivePictureCounts;
 
-  const archiveCards = archives?.map(archive => {
+  const {
+    clientId: paypalClientId,
+    donationText: paypalDonationText,
+    purposeText: paypalPurposeText,
+  } = useVariant({
+    id: 'paypal_mainpage',
+    fallback: { clientId: '', donationText: '', purposeText: '' },
+  });
+
+  const archiveCards = archives?.map((archive, i) => {
     const sharedProps = {
       archiveName: archive.name,
       archiveDescription: archive.shortDescription ?? '',
       archiveId: archive.id,
-      archivePictureCount: archivePictures?.find(a => a.id === archive.id)?.pictures?.length,
+      archivePictureCount: pictureCounts?.[i].count,
     };
 
     return (
@@ -85,7 +90,11 @@ const StartView = () => {
           <div className='flex basis-full' />
           <IfFeatureEnabled feature='paypal_mainpage'>
             {paypalClientId !== '' && (
-              <DonateButton donationText={paypalDonationText} clientId={paypalClientId} />
+              <DonateButton
+                donationText={paypalDonationText}
+                clientId={paypalClientId}
+                purposeText={paypalPurposeText}
+              />
             )}
           </IfFeatureEnabled>
         </div>
