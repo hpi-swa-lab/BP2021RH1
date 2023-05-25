@@ -1,30 +1,28 @@
 import { expect, test } from '@playwright/test';
 import { PlaywrightUtils } from './utils/playwright-utils';
 
-test.beforeEach(async ({page}) => {
-    await page.goto("/")
-})
-
 test.describe('Comment', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/picture/1');
   });
 
-  test.afterEach(async ({ page }) => {
+  // test.afterAll( ({}) => {
+    // const utils = new PlaywrightUtils(page);
     // await page.goto('/');
-    // await login();
+    // await utils.login();
     // await page.goto('/picture/1');
+    // await page.click('#comments');
     // await expect(page.locator('.comment-container')).toContainText('Testkommentar');
     // await page.click('.comment-container:has-text("Testkommentar") button:has-text("Löschen")');
     // await page.click('button:has-text("Bestätigen")');
-    // await expect(page).not.toContainText('Testkommentar');
+    // await expect(page.locator('Testkommentar')).toHaveCount(0);
     // await page.goto('/');
-    // await logout();
-  });
+    // await utils.logout();
+  // });
 
   test('adds a comment to picture 1', async ({ page }) => {
-    const utils = new PlaywrightUtils(page);
-    await expect(page.locator('input#name')).toBeVisible();
+    await page.waitForSelector('input#name');
+    // await expect(page.locator('input#name')).toBeVisible();
     await page.fill('input#name', 'Hans Hansen');
     await expect(page.locator('textarea#text')).toBeVisible();
     await page.fill('textarea#text', 'Testkommentar1');
@@ -43,33 +41,42 @@ test.describe('Comment', () => {
     await page.getByText("O.K.").click();
   });
 
-//   test('log in as curator and curate the new comments', async ({ page }) => {
-//     await page.click('.picture-toolbar [data-testid="ArrowBackIcon"]');
-//     await login();
-//     await page.click('.nav-bar:has-text("Mehr...")');
-//     await page.click('.MuiPaper-root:has-text("Kommentare")');
+  test('log in as curator and curate the new comments', async ({ page }) => {
+    const utils = new PlaywrightUtils(page);
+    await page.click('.picture-toolbar [data-testid="ArrowBackIcon"]');
+    await utils.login();
+    await page.goto("/");
+    await page.locator(".nav-element:has-text('Mehr...')").click();
+    await Promise.all([
+      page.locator('.MuiButtonBase-root:has-text("Kommentare")').click(),
+      page.waitForEvent("framenavigated")
+    ]);
+    await page.waitForURL("/comment-overview");
+    await expect(page.locator('.comment-preview:has-text("Testkommentar1")')).toHaveCount(1);
+    await page.locator('.comment-preview:has-text("Testkommentar2")').scrollIntoViewIfNeeded();
+    await expect(page.locator('.comment-preview:has-text("Testkommentar2")')).toBeVisible();
+    await page.click('.comment-preview:has-text("Testkommentar2")');
+    await page.click('#comments');
 
-//     await expect(page.locator('.comment-preview')).toContainText('Testkommentar1');
-//     await page.scrollIntoView('.comment-preview:has-text("Testkommentar2")');
-//     await expect(page.locator('.comment-preview:has-text("Testkommentar2")')).toBeVisible();
-//     await page.click('.comment-preview:has-text("Testkommentar2")');
-//     await page.click('#comments');
+    await expect(page.locator('.comment-verification-container:has-text("Testkommentar1")')).toBeVisible();
+    await page.click('.comment-verification-container:has-text("Testkommentar1") button:has-text("Ablehnen")');
+    await page.click('button:has-text("Bestätigen")');
 
-//     await expect(page.locator('.comment-verification-container')).toContainText('Testkommentar1');
-//     await page.click('.comment-verification-container:has-text("Testkommentar1") button:has-text("Ablehnen")');
-//     await page.click('button:has-text("Bestätigen")');
+    await expect(page.locator('.comment-verification-container:has-text("Testkommentar2AblehnenAkzeptieren")')).toBeVisible();
+    await page.click('.comment-verification-container:has-text("Testkommentar2") button:has-text("Akzeptieren")');
 
-//     await expect(page.locator('.comment-verification-container')).toContainText('Testkommentar2');
-//     await page.click('.comment-verification-container:has-text("Testkommentar2") button:has-text("Akzeptieren")');
+    // navigate again to close the CommentsVerificationView in the background
+    await page.goto("/");
+    await page.getByText("Logout").click();
+    await expect(page.getByText("Erfolgreich ausgeloggt")).toBeVisible();
+    // new PlaywrightUtils(page).logout();
+    await page.goto('/picture/1');
+    await expect(page.getByText('Testkommentar1')).toHaveCount(0);
+    await expect(page.getByText('Testkommentar2')).not.toHaveCount(0);
+    await expect(page.locator('button:has-text("Akzeptieren")')).not.toBeVisible();
+    await expect(page.locator('button:has-text("Bestätigen")')).not.toBeVisible();
 
-//     // navigate again to close the CommentsVerificationView in the background
-//     await page.goto('/picture/1');
-
-//     await expect(page).not.toContainText('Testkommentar1');
-//     await expect(page).toContainText('Testkommentar2');
-//     await expect(page.locator('button:has-text("Akzeptieren")')).not.toBeVisible();
-//     await expect(page.locator('button:has-text("Bestätigen")')).not.toBeVisible();
-//   });
+  });
 
 //   test('is possible to to freely nest comments', async ({ page }) => {
 //     await page.click('#comments');

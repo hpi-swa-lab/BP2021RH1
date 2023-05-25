@@ -18,7 +18,7 @@ export class PlaywrightUtils {
 
     async logout() {
         await this.page.goto("/");
-        await this.page.getByLabel("Logout").click();
+        await this.page.getByText("Logout").click();
         await expect(this.page.getByText("Erfolgreich ausgeloggt")).toHaveCount(1);
     };
     
