@@ -51,7 +51,6 @@ const ShowMoreView = ({
         limit: 1,
       },
     },
-    fetchPolicy: 'no-cache',
   });
 
   const flattened = useSimplifiedQueryResponseData(tagInfo.data);

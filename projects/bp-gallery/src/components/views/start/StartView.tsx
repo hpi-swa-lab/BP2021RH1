@@ -19,7 +19,8 @@ import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
 import { AccessTime, ThumbUp } from '@mui/icons-material';
-import OverviewContainer from '../../common/OverviewContainer';
+import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
+import { useMemo } from 'react';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -57,6 +58,36 @@ const StartView = () => {
       </div>
     );
   });
+
+  const tabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.latest-pictures'),
+        icon: <AccessTime key='0' />,
+        content: (
+          <PictureOverview
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/latest');
+            }}
+          />
+        ),
+      },
+      {
+        title: t('discover.most-liked'),
+        icon: <ThumbUp key='1' />,
+        content: (
+          <PictureOverview
+            type={PictureOverviewType.MOST_LIKED}
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/most-liked');
+            }}
+          />
+        ),
+      },
+    ];
+  }, [t, visit]);
 
   return (
     <div className='main-start-view'>
@@ -101,36 +132,7 @@ const StartView = () => {
         </div>
 
         <ShowStats>
-          <OverviewContainer
-            defaultValue={1}
-            tabs={[
-              {
-                title: t('discover.latest-pictures'),
-                icon: <AccessTime key='0' />,
-                content: (
-                  <PictureOverview
-                    queryParams={{}}
-                    onClick={() => {
-                      visit('/show-more/latest');
-                    }}
-                  />
-                ),
-              },
-              {
-                title: t('discover.most-liked'),
-                icon: <ThumbUp key='1' />,
-                content: (
-                  <PictureOverview
-                    type={PictureOverviewType.MOST_LIKED}
-                    queryParams={{}}
-                    onClick={() => {
-                      visit('/show-more/most-liked');
-                    }}
-                  />
-                ),
-              },
-            ]}
-          />
+          <OverviewContainer defaultValue={1} tabs={tabs} />
         </ShowStats>
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>

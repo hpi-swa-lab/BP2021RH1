@@ -14,7 +14,7 @@ import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
 import PrimaryButton from './PrimaryButton';
 
-export const MAX_TAGS_PER_ROW = 3;
+const MAX_TAGS_PER_ROW = 3;
 
 interface TagOverviewProps {
   title?: string;

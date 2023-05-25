@@ -39,9 +39,7 @@ const PictureOverview = ({
     type
   );
 
-  const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
-    data as { [key: string]: any } | undefined
-  )?.pictures;
+  const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   return (
     <div className='overview-container'>

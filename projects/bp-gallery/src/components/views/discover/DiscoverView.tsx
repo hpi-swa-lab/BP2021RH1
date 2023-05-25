@@ -5,45 +5,48 @@ import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import './DiscoverView.scss';
-import OverviewContainer from '../../common/OverviewContainer';
+import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
 import { AccessTime, ThumbUp } from '@mui/icons-material';
+import { useMemo } from 'react';
 
 const DiscoverView = () => {
   const { visit } = useVisit();
   const { t } = useTranslation();
 
+  const tabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.latest-pictures'),
+        icon: <AccessTime key='0' />,
+        content: (
+          <PictureOverview
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/latest');
+            }}
+          />
+        ),
+      },
+      {
+        title: t('discover.most-liked'),
+        icon: <ThumbUp key='1' />,
+        content: (
+          <PictureOverview
+            type={PictureOverviewType.MOST_LIKED}
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/most-liked');
+            }}
+          />
+        ),
+      },
+    ];
+  }, [t, visit]);
+
   return (
     <div className='discover-container'>
       <ShowStats>
-        <OverviewContainer
-          tabs={[
-            {
-              title: t('discover.latest-pictures'),
-              icon: <AccessTime key='0' />,
-              content: (
-                <PictureOverview
-                  queryParams={{}}
-                  onClick={() => {
-                    visit('/show-more/latest');
-                  }}
-                />
-              ),
-            },
-            {
-              title: t('discover.most-liked'),
-              icon: <ThumbUp key='1' />,
-              content: (
-                <PictureOverview
-                  type={PictureOverviewType.MOST_LIKED}
-                  queryParams={{}}
-                  onClick={() => {
-                    visit('/show-more/most-liked');
-                  }}
-                />
-              ),
-            },
-          ]}
-        />
+        <OverviewContainer tabs={tabs} />
 
         <PictureOverview
           title={t('discover.more-info')}

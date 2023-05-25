@@ -22,6 +22,8 @@ import './ArchiveView.scss';
 import DonateButton from '../../common/DonateButton';
 import { useTranslation } from 'react-i18next';
 import OverviewContainer from '../../common/OverviewContainer';
+import { useMemo } from 'react';
+import { OverviewContainerTab } from '../../common/OverviewContainer';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -43,6 +45,38 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
+
+  const tabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.our-pictures'),
+        icon: <AccessTime key='0' />,
+        content: (
+          <PictureOverview
+            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            onClick={() => {
+              visit('/archives/' + archiveId + '/show-more/pictures');
+            }}
+          />
+        ),
+      },
+      {
+        title: t('discover.most-liked'),
+        icon: <ThumbUp key='1' />,
+        content: (
+          <PictureOverview
+            type={PictureOverviewType.MOST_LIKED}
+            queryParams={{
+              archive_tag: { id: { eq: archiveId } },
+            }}
+            onClick={() => {
+              visit('/archives/' + archiveId + '/show-more/most-liked');
+            }}
+          />
+        ),
+      },
+    ];
+  }, [archiveId, t, visit]);
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -112,37 +146,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </div>
       <ShowStats>
-        <OverviewContainer
-          tabs={[
-            {
-              title: t('discover.our-pictures'),
-              icon: <AccessTime key='0' />,
-              content: (
-                <PictureOverview
-                  queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-                  onClick={() => {
-                    visit('/archives/' + archiveId + '/show-more/pictures');
-                  }}
-                />
-              ),
-            },
-            {
-              title: t('discover.most-liked'),
-              icon: <ThumbUp key='1' />,
-              content: (
-                <PictureOverview
-                  type={PictureOverviewType.MOST_LIKED}
-                  queryParams={{
-                    archive_tag: { id: { eq: archiveId } },
-                  }}
-                  onClick={() => {
-                    visit('/archives/' + archiveId + '/show-more/most-liked');
-                  }}
-                />
-              ),
-            },
-          ]}
-        />
+        <OverviewContainer tabs={tabs} />
       </ShowStats>
 
       <TagOverview
