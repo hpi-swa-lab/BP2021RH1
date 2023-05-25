@@ -33,7 +33,6 @@ export default (_, { strapi }: { strapi: Strapi }) => {
       response.append("Access-Control-Expose-Headers", "x-growthbook");
     },
   });
-  // Add your own logic here.
   return async (ctx, next) => {
     ctx.state.withGrowthBook = (theCtx, f) => {
       currentCtx = theCtx;

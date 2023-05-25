@@ -75,7 +75,7 @@ export const buildHttpLink = (
         operation.getContext().response.headers.get('x-growthbook')
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      experimentData?.map((experiment: { experimentId: string; variationId: string }) => {
+      experimentData?.forEach((experiment: { experimentId: string; variationId: string }) => {
         const w: any = window;
         const _paq: Array<any> = (w._paq = w._paq || []);
         _paq.push([
