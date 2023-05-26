@@ -28,6 +28,7 @@ export { default as getAllLocationTags } from './operations/getAllLocationTags.j
 export { default as getAllPersonTags } from './operations/getAllPersonTags.js';
 export { default as getAllPicturesByArchive } from './operations/getAllPicturesByArchive.js';
 export { default as getArchive } from './operations/getArchive.js';
+export { default as getArchivePictureCounts } from './operations/getArchivePictureCounts.js';
 export { default as getCollectionInfoById } from './operations/getCollectionInfoById.js';
 export { default as getCollectionInfoByName } from './operations/getCollectionInfoByName.js';
 export { default as getDailyPictureInfo } from './operations/getDailyPictureInfo.js';
@@ -35,6 +36,7 @@ export { default as getDecadePreviewThumbnails } from './operations/getDecadePre
 export { default as getFaceTags } from './operations/getFaceTags.js';
 export { default as getKeywordTagsWithThumbnail } from './operations/getKeywordTagsWithThumbnail.js';
 export { default as getLocationTagsWithThumbnail } from './operations/getLocationTagsWithThumbnail.js';
+export { default as getMostLikedPictures } from './operations/getMostLikedPictures.js';
 export { default as getMultiplePictureInfo } from './operations/getMultiplePictureInfo.js';
 export { default as getParameterizedPermissions } from './operations/getParameterizedPermissions.js';
 export { default as getPersonTag } from './operations/getPersonTag.js';
@@ -66,6 +68,7 @@ export { default as unpinComment } from './operations/unpinComment.js';
 export { default as unpublishPicture } from './operations/unpublishPicture.js';
 export { default as updateArchive } from './operations/updateArchive.js';
 export { default as updateCollection } from './operations/updateCollection.js';
+export { default as updateFaceTagDirection } from './operations/updateFaceTagDirection.js';
 export { default as updateKeywordName } from './operations/updateKeywordName.js';
 export { default as updateKeywordSynonyms } from './operations/updateKeywordSynonyms.js';
 export { default as updateKeywordVisibility } from './operations/updateKeywordVisibility.js';

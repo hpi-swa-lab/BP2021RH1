@@ -1,22 +1,15 @@
 import { useGetPictureInfoQuery } from '../graphql/APIConnector';
-import { FlatPicture } from '../types/additionalFlatTypes';
 import { useSimplifiedQueryResponseData } from '../graphql/queryUtils';
-import { asApiPath } from '../helpers/app-helpers';
+import { asUploadPath } from '../helpers/app-helpers';
+import { FlatPicture } from '../types/additionalFlatTypes';
 
-const useGetPictureLink = (pictureId: string) => {
+const useGetPictureLink = (pictureId: string | null | undefined) => {
   const { data: pictureData } = useGetPictureInfoQuery({
-    variables: { pictureId: pictureId },
+    variables: { pictureId: pictureId ?? '' },
+    skip: typeof pictureId !== 'string',
   });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(pictureData)?.picture;
-  return getPictureLinkFromFlatPicture(picture);
+  return asUploadPath(picture?.media);
 };
-
-const getPictureLinkFromFlatPicture = (picture: FlatPicture | undefined) => {
-  return picture?.media?.url
-    ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
-    : '';
-};
-
-export { getPictureLinkFromFlatPicture };
 
 export default useGetPictureLink;

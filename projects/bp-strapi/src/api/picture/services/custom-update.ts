@@ -1,5 +1,5 @@
-const { plural, singular, table } = require('../../helper');
 import type { KnexEngine } from '../../../types';
+import { plural, singular, table } from '../../helper';
 
 const { ApplicationError } = require('@strapi/utils').errors;
 

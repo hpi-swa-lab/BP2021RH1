@@ -28,12 +28,28 @@ export type Scalars = {
   Upload: any;
 };
 
+export type ArchivePictureCount = {
+  count?: Maybe<Scalars['Int']>;
+};
+
+export type ArchivePictureCountEntity = {
+  attributes?: Maybe<ArchivePictureCount>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ArchivePictureCountEntityResponseCollection = {
+  data?: Maybe<Array<Maybe<ArchivePictureCountEntity>>>;
+};
+
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   links?: Maybe<LinkRelationResponseCollection>;
   logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  paypalClient?: Maybe<Scalars['String']>;
+  paypalDonationText?: Maybe<Scalars['String']>;
+  paypalPurpose?: Maybe<Scalars['String']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
@@ -76,6 +92,9 @@ export type ArchiveTagFiltersInput = {
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ArchiveTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
+  paypalClient?: InputMaybe<StringFilterInput>;
+  paypalDonationText?: InputMaybe<StringFilterInput>;
+  paypalPurpose?: InputMaybe<StringFilterInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
   shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
@@ -87,6 +106,9 @@ export type ArchiveTagInput = {
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  paypalClient?: InputMaybe<Scalars['String']>;
+  paypalDonationText?: InputMaybe<Scalars['String']>;
+  paypalPurpose?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
@@ -396,6 +418,7 @@ export type FaceTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   person_tag?: Maybe<PersonTagEntityResponse>;
   picture?: Maybe<PictureEntityResponse>;
+  tag_direction?: Maybe<Scalars['Int']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   x?: Maybe<Scalars['Float']>;
   y?: Maybe<Scalars['Float']>;
@@ -423,6 +446,7 @@ export type FaceTagFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<FaceTagFiltersInput>>>;
   person_tag?: InputMaybe<PersonTagFiltersInput>;
   picture?: InputMaybe<PictureFiltersInput>;
+  tag_direction?: InputMaybe<IntFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   x?: InputMaybe<FloatFilterInput>;
   y?: InputMaybe<FloatFilterInput>;
@@ -431,6 +455,7 @@ export type FaceTagFiltersInput = {
 export type FaceTagInput = {
   person_tag?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
+  tag_direction?: InputMaybe<Scalars['Int']>;
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
 };
@@ -1528,6 +1553,7 @@ export enum PublicationState {
 }
 
 export type Query = {
+  archivePictureCounts?: Maybe<ArchivePictureCountEntityResponseCollection>;
   archiveTag?: Maybe<ArchiveTagEntityResponse>;
   archiveTags?: Maybe<ArchiveTagEntityResponseCollection>;
   browseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
@@ -2212,7 +2238,9 @@ export type GetAllArchiveTagsQuery = {
             id?: string | null;
             attributes?: {
               media: {
-                data?: { attributes?: { url: string; updatedAt?: any | null } | null } | null;
+                data?: {
+                  attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
+                } | null;
               };
             } | null;
           } | null;
@@ -2302,6 +2330,9 @@ export type GetArchiveQuery = {
         name: string;
         shortDescription?: string | null;
         longDescription?: string | null;
+        paypalClient?: string | null;
+        paypalDonationText?: string | null;
+        paypalPurpose?: string | null;
         logo?: {
           data?: {
             id?: string | null;
@@ -2310,6 +2341,7 @@ export type GetArchiveQuery = {
               height?: number | null;
               formats?: any | null;
               updatedAt?: any | null;
+              provider: string;
             } | null;
           } | null;
         } | null;
@@ -2326,6 +2358,7 @@ export type GetArchiveQuery = {
                     formats?: any | null;
                     url: string;
                     updatedAt?: any | null;
+                    provider: string;
                   } | null;
                 } | null;
               };
@@ -2340,6 +2373,17 @@ export type GetArchiveQuery = {
         } | null;
       } | null;
     } | null;
+  } | null;
+};
+
+export type GetArchivePictureCountsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetArchivePictureCountsQuery = {
+  archivePictureCounts?: {
+    data?: Array<{
+      id?: string | null;
+      attributes?: { count?: number | null } | null;
+    } | null> | null;
   } | null;
 };
 
@@ -2423,7 +2467,7 @@ export type GetDailyPictureInfoQuery = {
         media: {
           data?: {
             id?: string | null;
-            attributes?: { url: string; updatedAt?: any | null } | null;
+            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
           } | null;
         };
         archive_tag?: {
@@ -2447,42 +2491,42 @@ export type GetDecadePreviewThumbnailsQuery = {
   decade40s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade50s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade60s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade70s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade80s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade90s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
@@ -2499,6 +2543,7 @@ export type GetFaceTagsQuery = {
       attributes?: {
         x?: number | null;
         y?: number | null;
+        tag_direction?: number | null;
         person_tag?: {
           data?: { id?: string | null; attributes?: { name: string } | null } | null;
         } | null;
@@ -2510,8 +2555,7 @@ export type GetFaceTagsQuery = {
 export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<KeywordTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -2524,14 +2568,18 @@ export type GetKeywordTagsWithThumbnailQuery = {
         thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
             } | null;
           }>;
         } | null;
         verified_thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
             } | null;
           }>;
         } | null;
@@ -2543,8 +2591,7 @@ export type GetKeywordTagsWithThumbnailQuery = {
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<LocationTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -2557,17 +2604,52 @@ export type GetLocationTagsWithThumbnailQuery = {
         thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
             } | null;
           }>;
         } | null;
         verified_thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+              };
             } | null;
           }>;
         } | null;
+      } | null;
+    }>;
+  } | null;
+};
+
+export type GetMostLikedPicturesQueryVariables = Exact<{
+  filters: PictureFiltersInput;
+  pagination: PaginationArg;
+}>;
+
+export type GetMostLikedPicturesQuery = {
+  pictures?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        is_text?: boolean | null;
+        likes?: number | null;
+        comments?: { data: Array<{ id?: string | null }> } | null;
+        media: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              width?: number | null;
+              height?: number | null;
+              formats?: any | null;
+              url: string;
+              updatedAt?: any | null;
+              provider: string;
+            } | null;
+          } | null;
+        };
       } | null;
     }>;
   } | null;
@@ -2640,7 +2722,7 @@ export type GetMultiplePictureInfoQuery = {
         media: {
           data?: {
             id?: string | null;
-            attributes?: { url: string; updatedAt?: any | null } | null;
+            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
           } | null;
         };
         comments?: {
@@ -2693,8 +2775,7 @@ export type GetPersonTagQuery = {
 export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<PersonTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -2707,14 +2788,22 @@ export type GetPersonTagsWithThumbnailQuery = {
         thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: {
+                  attributes?: { formats?: any | null; url: string; provider: string } | null;
+                } | null;
+              };
             } | null;
           }>;
         } | null;
         verified_thumbnail?: {
           data: Array<{
             attributes?: {
-              media: { data?: { attributes?: { formats?: any | null } | null } | null };
+              media: {
+                data?: {
+                  attributes?: { formats?: any | null; url: string; provider: string } | null;
+                } | null;
+              };
             } | null;
           }>;
         } | null;
@@ -2829,6 +2918,7 @@ export type GetPictureInfoQuery = {
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
+              provider: string;
             } | null;
           } | null;
         };
@@ -2860,6 +2950,7 @@ export type GetPictureMediaInfoQuery = {
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
+              provider: string;
             } | null;
           } | null;
         };
@@ -2891,6 +2982,7 @@ export type GetPicturesQuery = {
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
+              provider: string;
             } | null;
           } | null;
         };
@@ -2924,6 +3016,7 @@ export type GetPicturesByAllSearchQuery = {
             formats?: any | null;
             url: string;
             updatedAt?: any | null;
+            provider: string;
           } | null;
         } | null;
       };
@@ -2992,6 +3085,7 @@ export type GetUnverifiedCommentsQuery = {
                     height?: number | null;
                     formats?: any | null;
                     updatedAt?: any | null;
+                    provider: string;
                   } | null;
                 } | null;
               };
@@ -3060,6 +3154,7 @@ export type CreateFaceTagMutationVariables = Exact<{
   personTagId: Scalars['ID'];
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
+  tag_direction?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type CreateFaceTagMutation = {
@@ -3320,6 +3415,15 @@ export type UpdateCollectionMutation = {
   updateCollection?: { data?: { id?: string | null } | null } | null;
 };
 
+export type UpdateFaceTagDirectionMutationVariables = Exact<{
+  faceTagId: Scalars['ID'];
+  tag_direction?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdateFaceTagDirectionMutation = {
+  updateFaceTag?: { data?: { id?: string | null } | null } | null;
+};
+
 export type UpdateKeywordNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
   name: Scalars['String'];
@@ -3481,6 +3585,7 @@ export const GetAllArchiveTagsDocument = gql`
                     attributes {
                       url
                       updatedAt
+                      provider
                     }
                   }
                 }
@@ -3870,6 +3975,9 @@ export const GetArchiveDocument = gql`
           name
           shortDescription
           longDescription
+          paypalClient
+          paypalDonationText
+          paypalPurpose
           logo {
             data {
               id
@@ -3878,6 +3986,7 @@ export const GetArchiveDocument = gql`
                 height
                 formats
                 updatedAt
+                provider
               }
             }
           }
@@ -3894,6 +4003,7 @@ export const GetArchiveDocument = gql`
                       formats
                       url
                       updatedAt
+                      provider
                     }
                   }
                 }
@@ -3953,6 +4063,73 @@ export type GetArchiveQueryHookResult = ReturnType<typeof useGetArchiveQuery>;
 export type GetArchiveLazyQueryHookResult = ReturnType<typeof useGetArchiveLazyQuery>;
 
 export type GetArchiveQueryResult = Apollo.QueryResult<GetArchiveQuery, GetArchiveQueryVariables>;
+
+export const GetArchivePictureCountsDocument = gql`
+  query getArchivePictureCounts {
+    archivePictureCounts {
+      data {
+        id
+        attributes {
+          count
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetArchivePictureCountsQuery__
+ *
+ * To run a query within a React component, call `useGetArchivePictureCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivePictureCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivePictureCountsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetArchivePictureCountsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetArchivePictureCountsQuery,
+    GetArchivePictureCountsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetArchivePictureCountsQuery, GetArchivePictureCountsQueryVariables>(
+    GetArchivePictureCountsDocument,
+    options
+  );
+}
+
+export function useGetArchivePictureCountsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetArchivePictureCountsQuery,
+    GetArchivePictureCountsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetArchivePictureCountsQuery, GetArchivePictureCountsQueryVariables>(
+    GetArchivePictureCountsDocument,
+    options
+  );
+}
+
+export type GetArchivePictureCountsQueryHookResult = ReturnType<
+  typeof useGetArchivePictureCountsQuery
+>;
+
+export type GetArchivePictureCountsLazyQueryHookResult = ReturnType<
+  typeof useGetArchivePictureCountsLazyQuery
+>;
+
+export type GetArchivePictureCountsQueryResult = Apollo.QueryResult<
+  GetArchivePictureCountsQuery,
+  GetArchivePictureCountsQueryVariables
+>;
 
 export const GetCollectionInfoByIdDocument = gql`
   query getCollectionInfoById($collectionId: ID!) {
@@ -4167,6 +4344,7 @@ export const GetDailyPictureInfoDocument = gql`
               attributes {
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -4255,6 +4433,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4273,6 +4452,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4291,6 +4471,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4309,6 +4490,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4327,6 +4509,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4345,6 +4528,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
             data {
               attributes {
                 formats
+                provider
               }
             }
           }
@@ -4422,6 +4606,7 @@ export const GetFaceTagsDocument = gql`
         attributes {
           x
           y
+          tag_direction
           person_tag {
             data {
               id
@@ -4482,11 +4667,10 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
   query getKeywordTagsWithThumbnail(
     $filters: KeywordTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    keywordTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4498,6 +4682,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -4514,6 +4699,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -4540,14 +4726,13 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetKeywordTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetKeywordTagsWithThumbnailQuery,
     GetKeywordTagsWithThumbnailQueryVariables
   >
@@ -4589,11 +4774,10 @@ export const GetLocationTagsWithThumbnailDocument = gql`
   query getLocationTagsWithThumbnail(
     $filters: LocationTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    locationTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    locationTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4605,6 +4789,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -4621,6 +4806,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      provider
                     }
                   }
                 }
@@ -4647,14 +4833,13 @@ export const GetLocationTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetLocationTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetLocationTagsWithThumbnailQuery,
     GetLocationTagsWithThumbnailQueryVariables
   >
@@ -4690,6 +4875,96 @@ export type GetLocationTagsWithThumbnailLazyQueryHookResult = ReturnType<
 export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetLocationTagsWithThumbnailQuery,
   GetLocationTagsWithThumbnailQueryVariables
+>;
+
+export const GetMostLikedPicturesDocument = gql`
+  query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+    pictures(
+      filters: { and: [{ likes: { gt: 0 } }, $filters] }
+      pagination: $pagination
+      sort: ["likes:desc"]
+    ) {
+      data {
+        id
+        attributes {
+          is_text
+          comments {
+            data {
+              id
+            }
+          }
+          likes
+          media {
+            data {
+              id
+              attributes {
+                width
+                height
+                formats
+                url
+                updatedAt
+                provider
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetMostLikedPicturesQuery__
+ *
+ * To run a query within a React component, call `useGetMostLikedPicturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostLikedPicturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMostLikedPicturesQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetMostLikedPicturesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetMostLikedPicturesQuery,
+    GetMostLikedPicturesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetMostLikedPicturesQuery, GetMostLikedPicturesQueryVariables>(
+    GetMostLikedPicturesDocument,
+    options
+  );
+}
+
+export function useGetMostLikedPicturesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMostLikedPicturesQuery,
+    GetMostLikedPicturesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetMostLikedPicturesQuery, GetMostLikedPicturesQueryVariables>(
+    GetMostLikedPicturesDocument,
+    options
+  );
+}
+
+export type GetMostLikedPicturesQueryHookResult = ReturnType<typeof useGetMostLikedPicturesQuery>;
+
+export type GetMostLikedPicturesLazyQueryHookResult = ReturnType<
+  typeof useGetMostLikedPicturesLazyQuery
+>;
+
+export type GetMostLikedPicturesQueryResult = Apollo.QueryResult<
+  GetMostLikedPicturesQuery,
+  GetMostLikedPicturesQueryVariables
 >;
 
 export const GetMultiplePictureInfoDocument = gql`
@@ -4794,6 +5069,7 @@ export const GetMultiplePictureInfoDocument = gql`
               attributes {
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -5024,11 +5300,10 @@ export const GetPersonTagsWithThumbnailDocument = gql`
   query getPersonTagsWithThumbnail(
     $filters: PersonTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    personTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    personTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -5040,6 +5315,8 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      url
+                      provider
                     }
                   }
                 }
@@ -5056,6 +5333,8 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                   data {
                     attributes {
                       formats
+                      url
+                      provider
                     }
                   }
                 }
@@ -5082,14 +5361,13 @@ export const GetPersonTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetPersonTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetPersonTagsWithThumbnailQuery,
     GetPersonTagsWithThumbnailQueryVariables
   >
@@ -5323,6 +5601,7 @@ export const GetPictureInfoDocument = gql`
                 formats
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -5412,6 +5691,7 @@ export const GetPictureMediaInfoDocument = gql`
                 formats
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -5497,6 +5777,7 @@ export const GetPicturesDocument = gql`
                 formats
                 url
                 updatedAt
+                provider
               }
             }
           }
@@ -5581,6 +5862,7 @@ export const GetPicturesByAllSearchDocument = gql`
               formats
               url
               updatedAt
+              provider
             }
           }
         }
@@ -5864,6 +6146,7 @@ export const GetUnverifiedCommentsDocument = gql`
                       height
                       formats
                       updatedAt
+                      provider
                     }
                   }
                 }
@@ -6249,8 +6532,22 @@ export type BulkEditMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateFaceTagDocument = gql`
-  mutation createFaceTag($pictureId: ID!, $personTagId: ID!, $x: Float, $y: Float) {
-    createFaceTag(data: { picture: $pictureId, person_tag: $personTagId, x: $x, y: $y }) {
+  mutation createFaceTag(
+    $pictureId: ID!
+    $personTagId: ID!
+    $x: Float
+    $y: Float
+    $tag_direction: Int
+  ) {
+    createFaceTag(
+      data: {
+        picture: $pictureId
+        person_tag: $personTagId
+        x: $x
+        y: $y
+        tag_direction: $tag_direction
+      }
+    ) {
       data {
         id
       }
@@ -6280,6 +6577,7 @@ export type CreateFaceTagMutationFn = Apollo.MutationFunction<
  *      personTagId: // value for 'personTagId'
  *      x: // value for 'x'
  *      y: // value for 'y'
+ *      tag_direction: // value for 'tag_direction'
  *   },
  * });
  */
@@ -7998,6 +8296,64 @@ export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutationVariables
 >;
 
+export const UpdateFaceTagDirectionDocument = gql`
+  mutation updateFaceTagDirection($faceTagId: ID!, $tag_direction: Int) {
+    updateFaceTag(id: $faceTagId, data: { tag_direction: $tag_direction }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateFaceTagDirectionMutationFn = Apollo.MutationFunction<
+  UpdateFaceTagDirectionMutation,
+  UpdateFaceTagDirectionMutationVariables
+>;
+
+/**
+ * __useUpdateFaceTagDirectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateFaceTagDirectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFaceTagDirectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFaceTagDirectionMutation, { data, loading, error }] = useUpdateFaceTagDirectionMutation({
+ *   variables: {
+ *      faceTagId: // value for 'faceTagId'
+ *      tag_direction: // value for 'tag_direction'
+ *   },
+ * });
+ */
+export function useUpdateFaceTagDirectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateFaceTagDirectionMutation,
+    UpdateFaceTagDirectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateFaceTagDirectionMutation,
+    UpdateFaceTagDirectionMutationVariables
+  >(UpdateFaceTagDirectionDocument, options);
+}
+
+export type UpdateFaceTagDirectionMutationHookResult = ReturnType<
+  typeof useUpdateFaceTagDirectionMutation
+>;
+
+export type UpdateFaceTagDirectionMutationResult =
+  Apollo.MutationResult<UpdateFaceTagDirectionMutation>;
+
+export type UpdateFaceTagDirectionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateFaceTagDirectionMutation,
+  UpdateFaceTagDirectionMutationVariables
+>;
+
 export const UpdateKeywordNameDocument = gql`
   mutation updateKeywordName($tagId: ID!, $name: String!) {
     updateKeywordTag(id: $tagId, data: { name: $name }) {
@@ -8889,6 +9245,48 @@ export function useCanRunMultipleGetArchiveQueries(
   };
 }
 
+export function useCanRunGetArchivePictureCountsQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetArchivePictureCountsQueryVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetArchivePictureCountsDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetArchivePictureCountsQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetArchivePictureCountsQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetArchivePictureCountsDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunGetCollectionInfoByIdQuery(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -9172,6 +9570,48 @@ export function useCanRunMultipleGetLocationTagsWithThumbnailQueries(
     ...options,
     variables: {
       operation: GetLocationTagsWithThumbnailDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunGetMostLikedPicturesQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetMostLikedPicturesQueryVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetMostLikedPicturesDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetMostLikedPicturesQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetMostLikedPicturesQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetMostLikedPicturesDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
@@ -11356,6 +11796,48 @@ export function useCanRunMultipleUpdateCollectionMutations(
     ...options,
     variables: {
       operation: UpdateCollectionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateFaceTagDirectionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateFaceTagDirectionMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateFaceTagDirectionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateFaceTagDirectionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateFaceTagDirectionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateFaceTagDirectionDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

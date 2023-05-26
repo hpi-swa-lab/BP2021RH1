@@ -1,3 +1,4 @@
+import { WatchQueryFetchPolicy } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
@@ -31,6 +32,7 @@ const PictureScrollGrid = ({
   showDefaultAdornments = true,
   allowClicks = true,
   textFilter,
+  fetchPolicy,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   hashbase: string;
@@ -45,6 +47,7 @@ const PictureScrollGrid = ({
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
   textFilter: TextFilter | null;
+  fetchPolicy?: WatchQueryFetchPolicy;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -58,7 +61,9 @@ const PictureScrollGrid = ({
     queryParams,
     isAllSearchActive,
     sortBy,
-    selectedTextFilter
+    selectedTextFilter,
+    NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+    fetchPolicy
   );
 
   useEffect(() => {

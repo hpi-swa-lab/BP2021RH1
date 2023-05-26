@@ -14,6 +14,9 @@ export default {
             name
             shortDescription
             longDescription
+            paypalClient
+            paypalDonationText
+            paypalPurpose
             logo {
               data {
                 id
@@ -22,6 +25,7 @@ export default {
                   height
                   formats
                   updatedAt
+                  provider
                 }
               }
             }
@@ -38,6 +42,7 @@ export default {
                         formats
                         url
                         updatedAt
+                        provider
                       }
                     }
                   }

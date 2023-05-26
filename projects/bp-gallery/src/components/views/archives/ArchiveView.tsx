@@ -1,11 +1,20 @@
-import { Edit, Link } from '@mui/icons-material';
+import { AccessTime, Edit, Link, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { useCanEditArchive } from '../../../hooks/can-do-hooks';
-import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
+import {
+  FlatArchiveTag,
+  FlatPicture,
+  PictureOverviewType,
+  TagType,
+} from '../../../types/additionalFlatTypes';
+import DonateButton from '../../common/DonateButton';
+import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
@@ -28,12 +37,44 @@ const addUrlProtocol = (url: string) => {
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { visit, history } = useVisit();
+  const { t } = useTranslation();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
-  const src = archive?.logo?.formats?.thumbnail.url ?? '';
+
+  const tabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.our-pictures'),
+        icon: <AccessTime key='0' />,
+        content: (
+          <PictureOverview
+            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            onClick={() => {
+              visit('/archives/' + archiveId + '/show-more/pictures');
+            }}
+          />
+        ),
+      },
+      {
+        title: t('discover.most-liked'),
+        icon: <ThumbUp key='1' />,
+        content: (
+          <PictureOverview
+            type={PictureOverviewType.MOST_LIKED}
+            queryParams={{
+              archive_tag: { id: { eq: archiveId } },
+            }}
+            onClick={() => {
+              visit('/archives/' + archiveId + '/show-more/most-liked');
+            }}
+          />
+        ),
+      },
+    ];
+  }, [archiveId, t, visit]);
 
   const { canEditArchive } = useCanEditArchive(archiveId);
 
@@ -64,15 +105,13 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
       <div className='archive-data'>
         <div className='archive-info'>
           <ArchiveDescription description={archive.longDescription} />
+
           <div className='archive-socials'>
             {archive.logo && (
               <div className='archive-logo-container'>
                 <img
                   className='archive-logo'
-                  src={asApiPath(
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    `/${src as string}?updatedAt=${(archive.logo.updatedAt ?? 'unknown') as string}`
-                  )}
+                  src={asUploadPath(archive.logo, { highQuality: false })}
                 />
               </div>
             )}
@@ -83,6 +122,15 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                   <a href={addUrlProtocol(link.url)}>{link.title ? link.title : link.url}</a>
                 </div>
               ))}
+              {archive.paypalClient && archive.paypalClient !== '' && (
+                <DonateButton
+                  clientId={archive.paypalClient}
+                  donationText={
+                    archive.paypalDonationText ?? t('archives.edit.paypal.donation-default')
+                  }
+                  purposeText={archive.paypalPurpose ?? ''}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -98,13 +146,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </div>
       <ShowStats>
-        <PictureOverview
-          title='Unsere Bilder'
-          queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-          onClick={() => {
-            visit('/archives/' + archiveId + '/show-more/pictures');
-          }}
-        />
+        <OverviewContainer tabs={tabs} />
       </ShowStats>
 
       <TagOverview

@@ -10,7 +10,7 @@ import {
   useRemoveUploadMutation,
   useUpdatePictureMutation,
 } from '../../../../../graphql/APIConnector';
-import { asApiPath } from '../../../../../helpers/app-helpers';
+import { asUploadPath } from '../../../../../helpers/app-helpers';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import { PictureViewContext } from '../../PictureView';
 import ImageEditor from './../../../../common/editors/ImageEditor';
@@ -137,7 +137,7 @@ const PictureEditDialog = memo(function PictureEditDialog({
             usageStatistics: false,
             includeUI: {
               loadImage: {
-                path: asApiPath(picture.media.url),
+                path: asUploadPath(picture.media),
                 name: 'SampleImage',
               },
               initMenu: 'crop',

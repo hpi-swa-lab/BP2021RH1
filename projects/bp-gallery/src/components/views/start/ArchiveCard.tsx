@@ -1,6 +1,6 @@
 import { Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { asUploadPath } from '../../../helpers/app-helpers';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { useVisit } from './../../../helpers/history';
 import './ArchiveCard.scss';
@@ -18,9 +18,7 @@ const ArchiveCard = ({
   archiveId: string;
   archivePictureCount: number | undefined;
 }) => {
-  const pictureLink = picture.media?.url
-    ? asApiPath(`${picture.media.url}?updatedAt=${picture.media.updatedAt as string}`)
-    : '/bad-harzburg-stiftung-logo.png';
+  const pictureLink = asUploadPath(picture.media, { fallback: '/bad-harzburg-stiftung-logo.png' });
 
   return (
     <CardLayout
@@ -79,9 +77,9 @@ const ArchiveCardWithoutPicture = ({
   archiveId,
   archivePictureCount,
 }: {
+  archiveId: string;
   archiveName: string;
   archiveDescription: string;
-  archiveId: string;
   archivePictureCount: number | undefined;
 }) => {
   return (

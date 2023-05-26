@@ -1,15 +1,22 @@
 import { Info } from '@mui/icons-material';
 import { Box, Button, Modal, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStorageState } from 'react-use-storage-state';
 import {
   useGetAllPicturesByArchiveQuery,
   useGetPictureGeoInfoQuery,
+  useGetPicturesForCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useVariant } from '../../../helpers/growthbook';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
-import { FlatArchiveTag, FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
+import {
+  FlatArchiveTag,
+  FlatCollection,
+  FlatPictureGeoInfo,
+} from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
 
@@ -31,6 +38,9 @@ const shufflePictureIds = (pictureIds: string[], seed: number) => {
 };
 
 const getTodaysPictureQueue = (pictureIds: string[]) => {
+  if (pictureIds.length === 0) {
+    return [];
+  }
   const pictureNumber = 10;
   const currentDate = new Date();
   const startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -45,7 +55,6 @@ const getTodaysPictureQueue = (pictureIds: string[]) => {
 
 const GeoView = () => {
   const { t } = useTranslation();
-  const fallbackPictureId = '3';
   const pictureQueue = useRef(['']);
   const seed = 42;
 
@@ -54,44 +63,66 @@ const GeoView = () => {
     false
   );
   const [modalOpen, setModalOpen] = useState(!hasReadInstructions);
-  const dontShowAgain = () => {
-    setHasReadInstructions(true);
-    setModalOpen(false);
-  };
+  const [pictureId, setPictureId] = useState<string | null>(null);
+  const [gameOver, setGameOver] = useState(false);
+  const [needsExplanation, setNeedsExplanation] = useState(false);
+  const [isSet, setIsSet] = useState(false);
+  const pictureLink = useGetPictureLink(pictureId);
 
   const { data: picturesData } = useGetAllPicturesByArchiveQuery();
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(picturesData)?.archiveTags;
 
+  const geoCollectionId = useVariant({ id: 'geopictures_collection_id', fallback: '' });
+  const isGeoCollectionPictures = geoCollectionId !== '' && import.meta.env.MODE === 'production';
+  const { data: geoCollectionPictureData } = useGetPicturesForCollectionQuery({
+    variables: { collectionId: geoCollectionId },
+  });
+
+  const geoCollection: FlatCollection | undefined =
+    useSimplifiedQueryResponseData(geoCollectionPictureData)?.collection;
+  const geoCollectionPictureIds: string[] | undefined = geoCollection?.pictures?.map(
+    picture => picture.id
+  );
+
+  const getNextPicture = useCallback(() => {
+    return pictureQueue.current.shift() ?? null;
+  }, []);
+
+  const onNextPicture = useCallback(() => {
+    const nextPicture = getNextPicture();
+    setPictureId(nextPicture);
+    if (!nextPicture) {
+      setGameOver(true);
+    }
+  }, [getNextPicture]);
+
   useEffect(() => {
-    if (!archives) {
+    if (!archives || isSet) {
       return;
     }
-    const allPictureIds = getAllPictureIds(archives);
+    const allPictureIds = isGeoCollectionPictures
+      ? geoCollectionPictureIds ?? []
+      : getAllPictureIds(archives);
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
-    setPictureId(getNextPicture());
-  }, [archives]);
+    onNextPicture();
+    setIsSet(true);
+  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures, isSet, onNextPicture]);
 
-  const getNextPicture = () => {
-    return pictureQueue.current.shift() ?? fallbackPictureId;
+  const dontShowAgain = () => {
+    setHasReadInstructions(true);
+    setModalOpen(false);
   };
 
-  const [pictureId, setPictureId] = useState<string>(fallbackPictureId);
-  const [gameOver, setGameOver] = useState(false);
-  const [needsExplanation, setNeedsExplanation] = useState(false);
-  const pictureLink = useGetPictureLink(pictureId);
-
-  const onNextPicture = () => {
-    const nextPicture = getNextPicture();
-    nextPicture ? setPictureId(nextPicture) : setGameOver(true);
-  };
-
-  const { data: geoData } = useGetPictureGeoInfoQuery({ variables: { pictureId } });
+  const { data: geoData } = useGetPictureGeoInfoQuery({
+    variables: { pictureId: pictureId ?? '' },
+    skip: !pictureId,
+  });
   const allGuesses: FlatPictureGeoInfo[] | undefined =
     useSimplifiedQueryResponseData(geoData)?.pictureGeoInfos;
   return (
-    <div>
+    <div className='h-full'>
       <Modal
         open={modalOpen}
         onClose={() => {
@@ -110,7 +141,7 @@ const GeoView = () => {
           </Button>
         </Box>
       </Modal>
-      {!gameOver && (
+      {pictureId ? (
         <div className='guess-picture-view bg-black h-main'>
           <ZoomWrapper className='h-full' blockScroll={true} pictureId={pictureId}>
             <div className='picture-wrapper w-full'>
@@ -144,12 +175,13 @@ const GeoView = () => {
             }}
           />
         </div>
-      )}
-      {gameOver && (
+      ) : gameOver ? (
         <div className='flex h-full justify-center items-center flex-col gap-4'>
           <div className='font-bold text-5xl'>{t('geo.end')}</div>
           <div className='text-xl'>{t('geo.end-sub')}</div>
         </div>
+      ) : (
+        <Loading />
       )}
     </div>
   );

@@ -32,7 +32,7 @@ type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
 type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
-type FlatUploadFile = ID & UploadFile;
+export type FlatUploadFile = ID & UploadFile;
 
 type FlatPictureWithoutRelations = ID &
   Omit<
@@ -123,7 +123,7 @@ export type FlatArchiveTag = FlatArchiveTagWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
   links?: FlatLinkWithoutRelations[];
   showcasePicture?: FlatPictureWithoutRelations;
-  logo?: UploadFile;
+  logo?: FlatUploadFile;
 };
 
 export type FlatPicture = FlatPictureWithoutRelations & {
@@ -185,4 +185,9 @@ export enum TagType {
   COLLECTION = 'collection',
   TIME_RANGE = 'date',
   ARCHIVE = 'archive',
+}
+
+export enum PictureOverviewType {
+  MOST_LIKED = 'most-liked',
+  CUSTOM = 'custom',
 }

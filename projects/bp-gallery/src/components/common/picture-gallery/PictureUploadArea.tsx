@@ -14,12 +14,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { useCreatePictureMutation, useMultipleUploadMutation } from '../../../graphql/APIConnector';
+import { PictureOrigin } from '../../../helpers/app-helpers';
 import { useCanUploadPicture } from '../../../hooks/can-do-hooks';
 import { useObjectIds } from '../../../hooks/object-ids.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import SortableItem from '../SortableItem';
-import PicturePreview, { PictureOrigin } from './PicturePreview';
+import PicturePreview from './PicturePreview';
 import './PictureUploadArea.scss';
 import ScannerInput from './ScannerInput';
 

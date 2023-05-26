@@ -5,6 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/projects/bp-gallery"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "attach",
+            "name": "Attach to browser",
+            "port": 9222
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Debug strapi",

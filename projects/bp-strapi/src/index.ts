@@ -2,6 +2,7 @@
 
 import { Strapi } from '@strapi/strapi';
 import { Variables } from 'bp-graphql/build';
+import { archivePictureCountsType } from './api/archive-tag/content-types/archive-tag/custom-type';
 import { addArchiveTag } from './api/archive-tag/services/custom-update';
 import {
   mergeSourceCollectionIntoTargetCollection,
@@ -13,6 +14,7 @@ import {
   preventPublicUserFromCreatingArchive,
 } from './api/parameterized-permission/services/custom-update';
 import {
+  archivePictureCounts,
   bulkEdit,
   findPicturesByAllSearch,
   like,
@@ -33,7 +35,7 @@ export default {
   register({ strapi }: { strapi: Strapi }) {
     const gqlExtensionService = strapi.plugin('graphql').service('extension');
     const gqlExtension = (extensionArgs: GqlExtension) => {
-      const { list, mutationField, queryField } = extensionArgs.nexus;
+      const { list, mutationField, queryField, objectType } = extensionArgs.nexus;
       return {
         types: [
           mutationField('mergeKeywordTags', {
@@ -125,6 +127,13 @@ export default {
               );
             },
           }),
+          queryField('archivePictureCounts', {
+            type: archivePictureCountsType(extensionArgs.nexus),
+            async resolve(_) {
+              const knexEngine = extensionArgs.strapi.db.connection;
+              return archivePictureCounts(knexEngine);
+            },
+          }),
           queryField('canRunOperation', {
             type: list('Boolean'),
             args: {
@@ -205,6 +214,11 @@ export default {
         resolversConfig: {
           Query: {
             findPicturesByAllSearch: {
+              auth: {
+                scope: ['api::picture.picture.find'],
+              },
+            },
+            archivePictureCounts: {
               auth: {
                 scope: ['api::picture.picture.find'],
               },

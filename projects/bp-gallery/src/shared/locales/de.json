@@ -178,7 +178,7 @@
         "getPictures": "Bilder-Übersichten sehen",
         "editFaceTags": "Personen markieren",
         "editPicture": "Bild bearbeiten",
-        "getAllPicturesByArchive": "Bilderanzahl je Archiv sehen",
+        "getArchivePictureCounts": "Bilderanzahl je Archiv sehen",
         "getDailyPictureInfo": "Bild des Tages sehen",
         "like": "Mag ich klicken",
         "unpublishPicture": "Bild löschen",
@@ -269,6 +269,11 @@
     "noCollections": "Keine Collections",
     "collections": "Collections",
     "around": "etwa "
+  },
+  "facetag": {
+    "move": "Einmal klicken um das Namensschild bewegbar zu machen. Diese kann dann mit der Maus an eine neue Position bewegt und mit einem weiteren Klick platziert werden",
+    "rotate": "Einmal klicken um die Namensschild drehbar zu machen. Die Namensschild kann dann durch Bewegen der Maus gedreht werden. Sobald die Namensschild korrekt ausgerichtet ist, kann die neue Ausrichtung per Mausklick festgehalten werden",
+    "delete": "Klicken um die Namensschild zu löschen"
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
@@ -373,6 +378,20 @@
           "helperTextInvalid": "Bitte geben sie eine gültige URL an."
         },
         "addLink": "Link hinzufügen"
+      },
+      "paypal": {
+        "client-label": "Paypal-Spenden",
+        "client-placeholder": "Gib deine Paypal-Client-Id an",
+        "client-error": "Dies ist keine valide Paypal Client-Id",
+        "currency-label": "Spendenbetrag",
+        "donation-label": "Spendentext",
+        "donation-default": "Spenden",
+        "donation-edit": "Anpassen",
+        "donation-placeholder": "Gib an, für was du Spenden sammelst",
+        "purpose-label": "Verwendungszweck",
+        "purpose-placeholder": "Gib an, welchen Verwendungszweck die Spende auf Paypal haben soll",
+        "thankyou-label": "Vielen Dank für Ihre Spende von {{amount}}€",
+        "error-label": "Es ist ein Fehler aufgetreten. Es wurde nichts von ihrem Konto abgebucht, bitte versuchen Sie es erneut."
       }
     }
   },
@@ -437,7 +456,9 @@
     "person-title": "Personen",
     "person-text": "Hier finden Sie alle Personen unseres Archiv",
     "location-title": "Orte",
-    "location-text": "Hier finden Sie alle Orte unseres Archivs"
+    "location-text": "Hier finden Sie alle Orte unseres Archivs",
+    "most-liked-title": "Bestbewertete Bilder",
+    "most-liked-text": "Hier finden sie die 500 bestbewerteten Bilder. Wer einen Überblick haben will, welche Bilder anderen Nutzern besonders gut gefallen ist hier richtig."
   },
   "discover": {
     "discover-button": "Stöbere in allen Archiven",
@@ -445,6 +466,8 @@
     "decades": "Jahrzehnte",
     "locations": "Orte",
     "more-info": "Wissen Sie mehr über diese Bilder?",
-    "our-categories": "Unsere Kategorien"
+    "our-categories": "Unsere Kategorien",
+    "most-liked": "Bestbewertete Bilder",
+    "our-pictures": "Unsere Bilder"
   }
 }

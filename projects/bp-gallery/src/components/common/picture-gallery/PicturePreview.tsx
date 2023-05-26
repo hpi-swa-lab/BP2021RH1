@@ -1,15 +1,10 @@
 import { isFunction } from 'lodash';
 import { FunctionComponent, MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
-import { asApiPath } from '../../../helpers/app-helpers';
+import { PictureOrigin, asUploadPath } from '../../../helpers/app-helpers';
 import { useStats } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PicturePreview.scss';
 import PictureStats from './PictureStats';
-
-export enum PictureOrigin {
-  LOCAL,
-  REMOTE,
-}
 
 export type PicturePreviewAdornment =
   | DefaultPicturePreviewAdornmentConfig
@@ -55,13 +50,6 @@ const PicturePreview = ({
   const [hovered, setHovered] = useState(false);
   const showStats = useStats();
 
-  const thumbnailUrl = useMemo((): string => {
-    const defaultUrl =
-      (picture.media?.formats?.small || picture.media?.formats?.thumbnail || picture.media)?.url ||
-      '';
-    return highQuality ? picture.media?.url ?? defaultUrl : defaultUrl;
-  }, [picture, highQuality]);
-
   const adornmentContext: PicturePreviewAdornmentContext = useMemo(
     () => ({
       picture,
@@ -90,13 +78,7 @@ const PicturePreview = ({
           className={
             showStats ? `transition-filter duration-200 ${hovered ? 'brightness-75' : ''}` : ''
           }
-          src={
-            pictureOrigin === PictureOrigin.REMOTE
-              ? asApiPath(
-                  `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
-                )
-              : thumbnailUrl
-          }
+          src={asUploadPath(picture.media, { highQuality: highQuality ?? false, pictureOrigin })}
         />
         <div className='adornments'>
           {adornments?.map((adornment, index) =>

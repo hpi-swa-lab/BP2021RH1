@@ -1,7 +1,7 @@
 import { CheckBox, CheckBoxOutlineBlank, Delete, DoneAll, RemoveDone } from '@mui/icons-material';
 import { Button, Portal } from '@mui/material';
 import { isFunction, union } from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
@@ -45,12 +45,17 @@ const PictureGrid = ({
   allowClicks = true,
   rows,
 }: PictureGridProps) => {
-  const calculateMaxPicturesPerRow = () =>
-    Math.max(2, Math.round(Math.min(window.innerWidth, 1200) / 200));
+  const ref = useRef<any>();
+
+  const calculateMaxPicturesPerRow = useCallback((width: number) => {
+    return Math.max(2, Math.round(Math.min(width, 1200) / 200));
+  }, []);
 
   const { t } = useTranslation();
 
-  const [maxRowLength, setMaxRowLength] = useState<number>(calculateMaxPicturesPerRow());
+  const [maxRowLength, setMaxRowLength] = useState<number>(
+    calculateMaxPicturesPerRow((ref.current?.clientWidth ?? window.innerWidth) as number)
+  );
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [bulkEditPictureIds, setBulkEditPictureIds] = useState<string[] | undefined>(undefined);
@@ -86,11 +91,20 @@ const PictureGrid = ({
   }, [rows, pictures.length, calculatePicturesPerRow]);
 
   const onResize = useCallback(() => {
-    const newMaxRowLength = calculateMaxPicturesPerRow();
+    const newMaxRowLength = calculateMaxPicturesPerRow(
+      (ref.current?.clientWidth ?? window.innerWidth) as number
+    );
     if (newMaxRowLength !== maxRowLength) {
       setMaxRowLength(newMaxRowLength);
     }
-  }, [maxRowLength]);
+  }, [maxRowLength, calculateMaxPicturesPerRow]);
+
+  //ensure correct set up of
+  useEffect(() => {
+    setMaxRowLength(
+      calculateMaxPicturesPerRow((ref.current?.clientWidth ?? window.innerWidth) as number)
+    );
+  }, [ref.current?.clientWidth, calculateMaxPicturesPerRow]);
 
   // Set up eventListener on mount and cleanup on unmount
   useEffect(() => {
@@ -251,7 +265,7 @@ const PictureGrid = ({
   );
 
   return (
-    <div className={`${transitioning ? 'transitioning' : ''}`}>
+    <div className={`${transitioning ? 'transitioning' : ''}`} ref={ref}>
       {Boolean(selectedPictures.length) && bulkOperations && (
         <BulkOperationsPanel
           operations={bulkOperations}

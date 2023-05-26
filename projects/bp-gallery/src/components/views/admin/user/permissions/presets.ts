@@ -20,7 +20,7 @@ export const presets: Preset[] = [
     name: 'public',
     permissions: [
       'getPictures',
-      'getAllPicturesByArchive',
+      'getArchivePictureCounts',
       {
         name: 'viewCollection',
         parameters: {

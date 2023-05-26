@@ -8,11 +8,10 @@ export default {
     query getPersonTagsWithThumbnail(
       $filters: PersonTagFiltersInput = {}
       $thumbnailFilters: PictureFiltersInput = {}
-      $start: Int
-      $limit: Int
+      $pagination: PaginationArg!
       $sortBy: [String]
     ) {
-      personTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+      personTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
         data {
           id
           attributes {
@@ -24,6 +23,8 @@ export default {
                     data {
                       attributes {
                         formats
+                        url
+                        provider
                       }
                     }
                   }
@@ -40,6 +41,8 @@ export default {
                     data {
                       attributes {
                         formats
+                        url
+                        provider
                       }
                     }
                   }

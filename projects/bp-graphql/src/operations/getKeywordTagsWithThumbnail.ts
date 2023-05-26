@@ -8,11 +8,10 @@ export default {
     query getKeywordTagsWithThumbnail(
       $filters: KeywordTagFiltersInput = {}
       $thumbnailFilters: PictureFiltersInput = {}
-      $start: Int
-      $limit: Int
+      $pagination: PaginationArg!
       $sortBy: [String]
     ) {
-      keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+      keywordTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
         data {
           id
           attributes {
@@ -24,6 +23,7 @@ export default {
                     data {
                       attributes {
                         formats
+                        provider
                       }
                     }
                   }
@@ -40,6 +40,7 @@ export default {
                     data {
                       attributes {
                         formats
+                        provider
                       }
                     }
                   }
