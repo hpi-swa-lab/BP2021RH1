@@ -2,7 +2,7 @@ import { Operation, graphql } from '../Operation.js';
 import { always } from '../isAllowedHelpers.js';
 
 export default {
-  group: 'setPicturesForCollection',
+  group: 'viewCollection',
   isAllowed: always,
   document: graphql`
     query getPicturesForCollection($collectionId: ID!) {
