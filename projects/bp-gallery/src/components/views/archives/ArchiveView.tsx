@@ -1,10 +1,15 @@
-import { Edit, Link } from '@mui/icons-material';
+import { AccessTime, Edit, Link, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
-import { FlatArchiveTag, FlatPicture, TagType } from '../../../types/additionalFlatTypes';
+import {
+  FlatArchiveTag,
+  FlatPicture,
+  PictureOverviewType,
+  TagType,
+} from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
@@ -16,6 +21,9 @@ import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
 import DonateButton from '../../common/DonateButton';
 import { useTranslation } from 'react-i18next';
+import OverviewContainer from '../../common/OverviewContainer';
+import { useMemo } from 'react';
+import { OverviewContainerTab } from '../../common/OverviewContainer';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -37,6 +45,38 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const showcasePicture: FlatPicture | undefined = archive?.showcasePicture;
+
+  const tabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.our-pictures'),
+        icon: <AccessTime key='0' />,
+        content: (
+          <PictureOverview
+            queryParams={{ archive_tag: { id: { eq: archiveId } } }}
+            onClick={() => {
+              visit('/archives/' + archiveId + '/show-more/pictures');
+            }}
+          />
+        ),
+      },
+      {
+        title: t('discover.most-liked'),
+        icon: <ThumbUp key='1' />,
+        content: (
+          <PictureOverview
+            type={PictureOverviewType.MOST_LIKED}
+            queryParams={{
+              archive_tag: { id: { eq: archiveId } },
+            }}
+            onClick={() => {
+              visit('/archives/' + archiveId + '/show-more/most-liked');
+            }}
+          />
+        ),
+      },
+    ];
+  }, [archiveId, t, visit]);
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -106,13 +146,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </div>
       <ShowStats>
-        <PictureOverview
-          title='Unsere Bilder'
-          queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-          onClick={() => {
-            visit('/archives/' + archiveId + '/show-more/pictures');
-          }}
-        />
+        <OverviewContainer tabs={tabs} />
       </ShowStats>
 
       <TagOverview

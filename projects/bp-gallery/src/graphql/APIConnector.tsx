@@ -2464,8 +2464,7 @@ export type GetFaceTagsQuery = {
 export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<KeywordTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -2501,8 +2500,7 @@ export type GetKeywordTagsWithThumbnailQuery = {
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<LocationTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -2530,6 +2528,37 @@ export type GetLocationTagsWithThumbnailQuery = {
             } | null;
           }>;
         } | null;
+      } | null;
+    }>;
+  } | null;
+};
+
+export type GetMostLikedPicturesQueryVariables = Exact<{
+  filters: PictureFiltersInput;
+  pagination: PaginationArg;
+}>;
+
+export type GetMostLikedPicturesQuery = {
+  pictures?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        is_text?: boolean | null;
+        likes?: number | null;
+        comments?: { data: Array<{ id?: string | null }> } | null;
+        media: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              width?: number | null;
+              height?: number | null;
+              formats?: any | null;
+              url: string;
+              updatedAt?: any | null;
+              provider: string;
+            } | null;
+          } | null;
+        };
       } | null;
     }>;
   } | null;
@@ -2638,8 +2667,7 @@ export type GetPersonTagQuery = {
 export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<PersonTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
-  start?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  pagination: PaginationArg;
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
@@ -4435,11 +4463,10 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
   query getKeywordTagsWithThumbnail(
     $filters: KeywordTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    keywordTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    keywordTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4495,14 +4522,13 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetKeywordTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetKeywordTagsWithThumbnailQuery,
     GetKeywordTagsWithThumbnailQueryVariables
   >
@@ -4544,11 +4570,10 @@ export const GetLocationTagsWithThumbnailDocument = gql`
   query getLocationTagsWithThumbnail(
     $filters: LocationTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    locationTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    locationTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4604,14 +4629,13 @@ export const GetLocationTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetLocationTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetLocationTagsWithThumbnailQuery,
     GetLocationTagsWithThumbnailQueryVariables
   >
@@ -4647,6 +4671,96 @@ export type GetLocationTagsWithThumbnailLazyQueryHookResult = ReturnType<
 export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetLocationTagsWithThumbnailQuery,
   GetLocationTagsWithThumbnailQueryVariables
+>;
+
+export const GetMostLikedPicturesDocument = gql`
+  query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
+    pictures(
+      filters: { and: [{ likes: { gt: 0 } }, $filters] }
+      pagination: $pagination
+      sort: ["likes:desc"]
+    ) {
+      data {
+        id
+        attributes {
+          is_text
+          comments {
+            data {
+              id
+            }
+          }
+          likes
+          media {
+            data {
+              id
+              attributes {
+                width
+                height
+                formats
+                url
+                updatedAt
+                provider
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetMostLikedPicturesQuery__
+ *
+ * To run a query within a React component, call `useGetMostLikedPicturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostLikedPicturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMostLikedPicturesQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetMostLikedPicturesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetMostLikedPicturesQuery,
+    GetMostLikedPicturesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetMostLikedPicturesQuery, GetMostLikedPicturesQueryVariables>(
+    GetMostLikedPicturesDocument,
+    options
+  );
+}
+
+export function useGetMostLikedPicturesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMostLikedPicturesQuery,
+    GetMostLikedPicturesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetMostLikedPicturesQuery, GetMostLikedPicturesQueryVariables>(
+    GetMostLikedPicturesDocument,
+    options
+  );
+}
+
+export type GetMostLikedPicturesQueryHookResult = ReturnType<typeof useGetMostLikedPicturesQuery>;
+
+export type GetMostLikedPicturesLazyQueryHookResult = ReturnType<
+  typeof useGetMostLikedPicturesLazyQuery
+>;
+
+export type GetMostLikedPicturesQueryResult = Apollo.QueryResult<
+  GetMostLikedPicturesQuery,
+  GetMostLikedPicturesQueryVariables
 >;
 
 export const GetMultiplePictureInfoDocument = gql`
@@ -4908,11 +5022,10 @@ export const GetPersonTagsWithThumbnailDocument = gql`
   query getPersonTagsWithThumbnail(
     $filters: PersonTagFiltersInput = {}
     $thumbnailFilters: PictureFiltersInput = {}
-    $start: Int
-    $limit: Int
+    $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    personTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+    personTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
@@ -4970,14 +5083,13 @@ export const GetPersonTagsWithThumbnailDocument = gql`
  *   variables: {
  *      filters: // value for 'filters'
  *      thumbnailFilters: // value for 'thumbnailFilters'
- *      start: // value for 'start'
- *      limit: // value for 'limit'
+ *      pagination: // value for 'pagination'
  *      sortBy: // value for 'sortBy'
  *   },
  * });
  */
 export function useGetPersonTagsWithThumbnailQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetPersonTagsWithThumbnailQuery,
     GetPersonTagsWithThumbnailQueryVariables
   >
