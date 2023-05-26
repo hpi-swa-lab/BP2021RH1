@@ -32,6 +32,7 @@ mutation acceptComment($commentId: ID! $currentTime: DateTime!) { updateComment(
 mutation bulkEdit($pictureIds: [ID!]! $data: JSON!) { doBulkEdit(ids: $pictureIds data: $data) }
 mutation createArchiveTag($name: String!) { createArchiveTag(data: { name: $name }) { data { id } } }
 mutation createExhibition($title: String! $sectionId: ID!) { createExhibition(data: { title: $title exhibition_sections: [$sectionId] }) { data { id } } }
+mutation createExhibitionPicture( $exhibitionIdealotId: ID! $pictureId: ID! $publishedAt: DateTime! ) { createExhibitionPicture( data: { exhibition_idealot: $exhibitionIdealotId picture: $pictureId publishedAt: $publishedAt } ) { data { id } } }
 mutation createExhibitionSection($exhibitionId: ID! $order: Int $publishedAt: DateTime!) { createExhibitionSection( data: { exhibition: $exhibitionId order: $order publishedAt: $publishedAt } ) { data { id } } }
 mutation createExhibitionSource($exhibitionId: ID! $publishedAt: DateTime!) { createExhibitionSource(data: { exhibition: $exhibitionId publishedAt: $publishedAt }) { data { id } } }
 mutation createFaceTag($pictureId: ID! $personTagId: ID! $x: Float $y: Float) { createFaceTag(data: { picture: $pictureId person_tag: $personTagId x: $x y: $y }) { data { id } } }

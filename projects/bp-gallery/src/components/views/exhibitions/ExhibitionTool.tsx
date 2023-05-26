@@ -21,13 +21,16 @@ import {
   useDroppable,
 } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
+import { channelFactory } from '../../../helpers/channel-helpers';
 
 const IdeaLot = () => {
   const idealot = useContext(ExhibitionGetContext).getIdealot();
 
   return (
     <div className='flex flex-col items-stretch h-full w-full relative'>
-      <AddPicturesButton />
+      <div className='absolute z-[999] right-0 top-[-1rem]'>
+        <AddPicturesButton />
+      </div>
       <div className='text-xl'>Ideenparkplatz</div>
       <div className='border-solid overflow-auto flex-1 h-full'>
         <div className='flex gap-2 flex-wrap items-start'>
@@ -135,6 +138,9 @@ const ExhibitionManipulator = () => {
   useEffect(() => scrollDivRef.current?.scrollTo(0, scroll.current));
   return (
     <div className='flex flex-col items-stretch h-full w-full'>
+      <div className='absolute z-[999] right-7 top-[6rem]'>
+        <PublishButton />
+      </div>
       <div className='text-xl'>Ausstellungstool</div>
       <div
         className='border-solid flex-1 p-2 overflow-y-auto'
@@ -304,6 +310,7 @@ const AddPicturesButton = () => {
   const { getExhibitionId } = useContext(ExhibitionGetContext);
   return (
     <Button
+      variant='contained'
       onClick={() => {
         localStorage.setItem('currentExhibition', getExhibitionId());
         window.open(`/search?exhibitionId=${getExhibitionId()}`, '_blank');
@@ -315,20 +322,23 @@ const AddPicturesButton = () => {
 };
 
 const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
-  const { data: exhibitionData } = useGetExhibitionQuery({
+  const { data: exhibitionData, refetch } = useGetExhibitionQuery({
     variables: { exhibitionId },
   });
   const exhibition: FlatExhibition | undefined =
     useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
+
+  const exhibitionChannel = channelFactory(`exhibition-${exhibition?.id ?? ''}`);
+
+  exhibitionChannel.onmessage = async () => {
+    refetch();
+  };
 
   return (
     <>
       {exhibition && (
         <>
           <ExhibitionStateManager exhibition={exhibition}>
-            <div className='absolute z-[999] right-7 top-[6rem]'>
-              <PublishButton />
-            </div>
             <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
               <IdeaLot />
               <ExhibitionManipulator />

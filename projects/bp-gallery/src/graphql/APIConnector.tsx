@@ -3443,6 +3443,16 @@ export type CreateExhibitionMutation = {
   createExhibition?: { data?: { id?: string | null } | null } | null;
 };
 
+export type CreateExhibitionPictureMutationVariables = Exact<{
+  exhibitionIdealotId: Scalars['ID'];
+  pictureId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
+}>;
+
+export type CreateExhibitionPictureMutation = {
+  createExhibitionPicture?: { data?: { id?: string | null } | null } | null;
+};
+
 export type CreateExhibitionSectionMutationVariables = Exact<{
   exhibitionId: Scalars['ID'];
   order?: InputMaybe<Scalars['Int']>;
@@ -6722,6 +6732,75 @@ export type CreateExhibitionMutationResult = Apollo.MutationResult<CreateExhibit
 export type CreateExhibitionMutationOptions = Apollo.BaseMutationOptions<
   CreateExhibitionMutation,
   CreateExhibitionMutationVariables
+>;
+
+export const CreateExhibitionPictureDocument = gql`
+  mutation createExhibitionPicture(
+    $exhibitionIdealotId: ID!
+    $pictureId: ID!
+    $publishedAt: DateTime!
+  ) {
+    createExhibitionPicture(
+      data: {
+        exhibition_idealot: $exhibitionIdealotId
+        picture: $pictureId
+        publishedAt: $publishedAt
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateExhibitionPictureMutationFn = Apollo.MutationFunction<
+  CreateExhibitionPictureMutation,
+  CreateExhibitionPictureMutationVariables
+>;
+
+/**
+ * __useCreateExhibitionPictureMutation__
+ *
+ * To run a mutation, you first call `useCreateExhibitionPictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExhibitionPictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExhibitionPictureMutation, { data, loading, error }] = useCreateExhibitionPictureMutation({
+ *   variables: {
+ *      exhibitionIdealotId: // value for 'exhibitionIdealotId'
+ *      pictureId: // value for 'pictureId'
+ *      publishedAt: // value for 'publishedAt'
+ *   },
+ * });
+ */
+export function useCreateExhibitionPictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExhibitionPictureMutation,
+    CreateExhibitionPictureMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateExhibitionPictureMutation,
+    CreateExhibitionPictureMutationVariables
+  >(CreateExhibitionPictureDocument, options);
+}
+
+export type CreateExhibitionPictureMutationHookResult = ReturnType<
+  typeof useCreateExhibitionPictureMutation
+>;
+
+export type CreateExhibitionPictureMutationResult =
+  Apollo.MutationResult<CreateExhibitionPictureMutation>;
+
+export type CreateExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
+  CreateExhibitionPictureMutation,
+  CreateExhibitionPictureMutationVariables
 >;
 
 export const CreateExhibitionSectionDocument = gql`

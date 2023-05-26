@@ -1,10 +1,13 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
 import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
+import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
+import { useCreateExhibitionPictureMutation } from '../graphql/APIConnector';
+import { channelFactory } from '../helpers/channel-helpers';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -19,7 +22,21 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     });
   }, [dialog]);
 
-  const exhibitionBroadcast = new BroadcastChannel('exhibition');
+  const exhibitionId = useContext(ExhibitionIdContext);
+  const exhibitionBroadcast = channelFactory(`exhibition-${exhibitionId ?? ''}`);
+  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
+
+  const addExhibitionPicture = async (pictureId: string) => {
+    if (!exhibitionId) return;
+    const result = await createExhibitionPicture({
+      variables: {
+        exhibitionIdealotId: exhibitionId,
+        pictureId: pictureId,
+        publishedAt: new Date().toISOString(),
+      },
+    });
+    return result;
+  };
 
   return {
     linkToCollection: {
@@ -81,9 +98,12 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     addToExhibition: {
       name: t('curator.addToExhibition'),
       icon: <Add />,
-      action: (selectedPictures: FlatPicture[]) => {
-        exhibitionBroadcast.postMessage(selectedPictures);
-      }, //TODO: add functionality to add to exhibition
+      action: async (selectedPictures: FlatPicture[]) => {
+        for (let i = 0; i < selectedPictures.length; i++) {
+          await addExhibitionPicture(selectedPictures[i].id);
+        }
+        exhibitionBroadcast.postMessage(true);
+      },
     },
   } satisfies Record<string, BulkOperation>;
 };

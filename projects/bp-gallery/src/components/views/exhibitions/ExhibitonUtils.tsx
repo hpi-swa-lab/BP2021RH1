@@ -1,4 +1,11 @@
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useState } from 'react';
+import {
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
   FlatExhibition,
   FlatExhibitionPicture,
@@ -17,6 +24,7 @@ import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import {
+  useCreateExhibitionPictureMutation,
   useCreateExhibitionSectionMutation,
   useCreateExhibitionSourceMutation,
   useUpdateExhibitionMutation,
@@ -439,7 +447,7 @@ const ExhibitionDragNDrop = ({
   titlePicture: DragElement | undefined;
   setTitlePicture: Dispatch<SetStateAction<DragElement | undefined>>;
   idealot: DragElement[] | undefined;
-  setIdealot: Dispatch<SetStateAction<DragElement[] | undefined>>;
+  setIdealot: Dispatch<SetStateAction<DragElement[]>>;
   sections: SectionState[];
   setSections: Dispatch<SetStateAction<SectionState[]>>;
   databaseSaver: ReturnType<typeof ExhibitionDatabaseSaver>;
@@ -593,7 +601,8 @@ export const ExhibitionDatabaseSaver = (
   updateExhibitionSource: MutationFunction<typeof useUpdateExhibitionSourceMutation>,
   updateExhibition: MutationFunction<typeof useUpdateExhibitionMutation>,
   createSection: MutationFunction<typeof useCreateExhibitionSectionMutation>,
-  createSource: MutationFunction<typeof useCreateExhibitionSourceMutation>
+  createSource: MutationFunction<typeof useCreateExhibitionSourceMutation>,
+  createExhibitionPicture: MutationFunction<typeof useCreateExhibitionPictureMutation>
 ) => {
   return {
     setSectionText: (id: string, text: string) => {
@@ -796,6 +805,16 @@ export const ExhibitionDatabaseSaver = (
         },
       });
     },
+    addExhibitionPicture: async (exhibitionId: string, pictureId: string) => {
+      await createExhibitionPicture({
+        variables: {
+          exhibitionIdealotId: exhibitionId,
+          pictureId: pictureId,
+          publishedAt: new Date().toISOString(),
+        },
+        refetchQueries: ['getExhibition'],
+      });
+    },
   };
 };
 
@@ -809,13 +828,16 @@ export const ExhibitionStateManager = ({
   const [titlePicture, setTitlePicture] = useState<DragElement | undefined>(
     buildDragElement(exhibition.title_picture)
   );
-  const [idealot, setIdealot] = useState<DragElement[] | undefined>(
+  const [idealot, setIdealot] = useState<DragElement[]>(
     buildDragElements(exhibition.idealot_pictures)
   );
   const [sections, setSections] = useState<SectionState[]>(
     buildSectionState(exhibition.exhibition_sections)
   );
 
+  useEffect(() => {
+    setIdealot(buildDragElements(exhibition.idealot_pictures));
+  }, [setIdealot, exhibition]);
   const [updateExhibitionPicture] = useUpdateExhibitionPictureMutation();
 
   const [updateExhibitionSection] = useUpdateExhibitionSectionMutation();
@@ -828,19 +850,17 @@ export const ExhibitionStateManager = ({
 
   const [createSection] = useCreateExhibitionSectionMutation();
 
+  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
+
   const databaseSaver = ExhibitionDatabaseSaver(
     updateExhibitionSection,
     updateExhibitionPicture,
     updateExhibitionSource,
     updateExhibition,
     createSection,
-    createSource
+    createSource,
+    createExhibitionPicture
   );
-
-  const exhibitionChannel = new BroadcastChannel('exhibition');
-  exhibitionChannel.addEventListener('message', e => {
-    console.log(e.data);
-  });
 
   return (
     <ExhibitionStateGetter

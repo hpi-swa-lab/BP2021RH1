@@ -58,13 +58,22 @@ export const buildHttpLink = (
 type Ref = { __ref: string };
 type MergeInput = { __typename: string; data: Ref[] };
 
-export const mergeByRef = (existing: Ref[] | undefined = undefined, incoming: Ref[]): Ref[] =>
-  unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
+export const mergeByRef = (
+  existing: Ref[] | undefined = undefined,
+  incoming: Ref[],
+  args: any
+): Ref[] => {
+  if (args?.pagination?.start === 0) {
+    return incoming;
+  }
+  return unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
+};
 
 export const mergeByRefWrappedInData = (
   existing: MergeInput | undefined = undefined,
-  incoming: MergeInput
+  incoming: MergeInput,
+  { args }: any
 ): MergeInput => ({
   ...incoming,
-  data: mergeByRef(existing?.data, incoming.data),
+  data: mergeByRef(existing?.data, incoming.data, args),
 });
