@@ -14,6 +14,8 @@ import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
 import PrimaryButton from './PrimaryButton';
 
+const MAX_TAGS_PER_ROW = 3;
+
 interface TagOverviewProps {
   title?: string;
   type: TagType;
@@ -43,9 +45,9 @@ const TagOverview = ({
   const calculateMaxCategoriesPerRow = useCallback((width: number) => {
     const tempRowLength = Math.max(1, Math.floor(Math.min(width, 1200) / 260));
     if (Math.min(width, 1200) >= tempRowLength * 260 + (tempRowLength - 1) * 8) {
-      return tempRowLength;
+      return Math.min(tempRowLength, MAX_TAGS_PER_ROW);
     }
-    return Math.max(1, tempRowLength - 1);
+    return Math.min(Math.max(1, tempRowLength - 1), MAX_TAGS_PER_ROW);
   }, []);
 
   const [rowLength, setRowLength] = useState(() => {
@@ -69,13 +71,14 @@ const TagOverview = ({
     };
   }, [onResize]);
 
+  // check if there is a tag
   const { data } = useGetTagsWithThumbnail(
     queryParams,
     thumbnailQueryParams,
-    false,
     type,
     ['name:asc'],
-    1
+    1,
+    'no-cache'
   );
 
   const flattened = useSimplifiedQueryResponseData(data);

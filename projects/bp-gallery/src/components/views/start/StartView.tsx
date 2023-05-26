@@ -7,7 +7,7 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVariant } from '../../../helpers/growthbook';
 import { useMobile } from '../../../hooks/context-hooks';
-import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
+import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
 import { IfFlagEnabled } from '../../common/IfFlagEnabled';
 import PictureOverview from '../../common/PictureOverview';
@@ -18,6 +18,9 @@ import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
+import { AccessTime, ThumbUp } from '@mui/icons-material';
+import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
+import { useMemo } from 'react';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -57,6 +60,36 @@ const StartView = () => {
       </div>
     );
   });
+
+  const tabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.latest-pictures'),
+        icon: <AccessTime key='0' />,
+        content: (
+          <PictureOverview
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/latest');
+            }}
+          />
+        ),
+      },
+      {
+        title: t('discover.most-liked'),
+        icon: <ThumbUp key='1' />,
+        content: (
+          <PictureOverview
+            type={PictureOverviewType.MOST_LIKED}
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/most-liked');
+            }}
+          />
+        ),
+      },
+    ];
+  }, [t, visit]);
 
   return (
     <div className='main-start-view'>
@@ -101,11 +134,7 @@ const StartView = () => {
         </div>
 
         <ShowStats>
-          <PictureOverview
-            title={t('discover.latest-pictures')}
-            queryParams={{}}
-            onClick={() => visit('/show-more/latest')}
-          />
+          <OverviewContainer defaultValue={1} tabs={tabs} />
         </ShowStats>
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>

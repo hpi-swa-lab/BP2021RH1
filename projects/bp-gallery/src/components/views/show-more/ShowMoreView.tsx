@@ -46,7 +46,10 @@ const ShowMoreView = ({
                 id: { eq: categoryId },
               }
           : { id: { eq: '-1' } },
-      limit: 1,
+      pagination: {
+        start: 0,
+        limit: 1,
+      },
     },
   });
 
@@ -79,12 +82,17 @@ const ShowMoreView = ({
             sortBy={
               categoryType !== 'pictures' && categoryId
                 ? ['time_range_tag.start:asc']
+                : categoryType === 'most-liked'
+                ? ['likes:desc']
                 : ['createdAt:desc']
             }
             hashbase={'show-more'}
             extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
             bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
-            maxNumPictures={categoryType === 'latest' ? 500 : undefined}
+            maxNumPictures={
+              categoryType === 'latest' || categoryType === 'most-liked' ? 500 : undefined
+            }
+            fetchPolicy='cache-and-network'
           />
         </ShowStats>
       </div>

@@ -1,12 +1,12 @@
 import React, { MouseEventHandler } from 'react';
 import './PictureOverview.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
-import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { PictureFiltersInput } from '../../graphql/APIConnector';
-import { FlatPicture } from '../../types/additionalFlatTypes';
+import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
 import { useTranslation } from 'react-i18next';
-import useGetPictures from '../../hooks/get-pictures.hook';
 import PrimaryButton from './PrimaryButton';
+import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
+import useGetPictures from '../../hooks/get-pictures.hook';
 
 interface PictureOverviewProps {
   title?: string;
@@ -14,6 +14,7 @@ interface PictureOverviewProps {
   onClick: MouseEventHandler<HTMLButtonElement>;
   sortBy?: string[];
   rows?: number;
+  type?: PictureOverviewType;
 }
 
 const ABSOLUTE_MAX_PICTURES_PER_ROW = 6;
@@ -24,6 +25,7 @@ const PictureOverview = ({
   onClick,
   sortBy,
   rows = 2,
+  type = PictureOverviewType.CUSTOM,
 }: PictureOverviewProps) => {
   const { t } = useTranslation();
 
@@ -32,7 +34,9 @@ const PictureOverview = ({
     false,
     sortBy,
     true,
-    ABSOLUTE_MAX_PICTURES_PER_ROW * rows
+    ABSOLUTE_MAX_PICTURES_PER_ROW * rows,
+    'cache-and-network',
+    type
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;

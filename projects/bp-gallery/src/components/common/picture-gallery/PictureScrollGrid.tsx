@@ -14,6 +14,7 @@ import PictureGrid from './PictureGrid';
 import { PicturePreviewAdornment } from './PicturePreview';
 import './PictureScrollGrid.scss';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
+import { WatchQueryFetchPolicy } from '@apollo/client';
 
 const PictureScrollGrid = ({
   queryParams,
@@ -29,6 +30,7 @@ const PictureScrollGrid = ({
   showDefaultAdornments = true,
   allowClicks = true,
   filterOutTextsForNonCurators = true,
+  fetchPolicy,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   hashbase: string;
@@ -43,6 +45,7 @@ const PictureScrollGrid = ({
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
   filterOutTextsForNonCurators?: boolean;
+  fetchPolicy?: WatchQueryFetchPolicy;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -52,7 +55,9 @@ const PictureScrollGrid = ({
     queryParams,
     isAllSearchActive,
     sortBy,
-    filterOutTextsForNonCurators
+    filterOutTextsForNonCurators,
+    NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+    fetchPolicy
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
