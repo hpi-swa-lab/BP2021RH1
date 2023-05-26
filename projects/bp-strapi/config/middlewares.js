@@ -26,11 +26,25 @@ module.exports = ({ env }) => [
       },
     },
   },
-  "strapi::cors",
+  {
+    name: "strapi::cors",
+    config: {
+      headers: [
+        "Content-Type",
+        "Authorization",
+        "Origin",
+        "Accept",
+        "anonymousId",
+      ],
+    },
+  },
   "strapi::poweredBy",
   "strapi::logger",
   "strapi::query",
   "strapi::body",
   "strapi::favicon",
   "strapi::public",
+  ...(env("GROWTHBOOK_APIHOST") && env("GROWTHBOOK_CLIENTKEY")
+    ? ["global::growthbook-client"]
+    : []),
 ];
