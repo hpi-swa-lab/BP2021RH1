@@ -1,7 +1,10 @@
 import { Autorenew, Cancel, OpenWith } from '@mui/icons-material';
 import { CSSProperties, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCanRunDeleteFaceTagMutation } from '../../../../graphql/APIConnector';
+import {
+  useCanRunDeleteFaceTagMutation,
+  useCanRunUpdateFaceTagDirectionMutation,
+} from '../../../../graphql/APIConnector';
 import { useFaceTagging } from '../../../../hooks/context-hooks';
 import '../../../../shared/style.scss';
 import { FaceTagData, TagDirection } from './FaceTagTypes';
@@ -139,6 +142,12 @@ export const FaceTag = ({
     };
   }, [x, y, position, noPointerEvents, tagDirection]);
 
+  const { canRun: canUpdateDirection } = useCanRunUpdateFaceTagDirectionMutation({
+    variables: {
+      faceTagId: id,
+    },
+  });
+
   return (
     <div className='fixed z-[999] hover:z-[9999] flex items-center facetag' style={style}>
       <svg width={triangle.width} height={triangle.height} data-testid={triangle.testid}>
@@ -155,15 +164,17 @@ export const FaceTag = ({
                 onClick={handleMove}
               />
             )}
-            <Autorenew
-              titleAccess={t('facetag.rotate')}
-              className={
-                id === context.tagDirectionReferenceTagId
-                  ? 'text-[#00000066]'
-                  : 'hover:text-[#00000066]'
-              }
-              onClick={toggleSetDirectionMode}
-            />
+            {canUpdateDirection && (
+              <Autorenew
+                titleAccess={t('facetag.rotate')}
+                className={
+                  id === context.tagDirectionReferenceTagId
+                    ? 'text-[#00000066]'
+                    : 'hover:text-[#00000066]'
+                }
+                onClick={toggleSetDirectionMode}
+              />
+            )}
             {canDelete && (
               <Cancel
                 titleAccess={t('facetag.delete')}
