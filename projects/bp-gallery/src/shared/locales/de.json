@@ -193,6 +193,7 @@
     "around": "etwa "
   },
   "curator": {
+    "addToExhibition": "Zur Ausstellung hinzufügen",
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "scan": "Direkt vom Scanner einlesen",
     "addPictures": "Bilder hinzufügen",

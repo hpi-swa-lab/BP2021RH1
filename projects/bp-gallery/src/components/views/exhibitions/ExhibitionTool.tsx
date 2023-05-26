@@ -27,6 +27,7 @@ const IdeaLot = () => {
 
   return (
     <div className='flex flex-col items-stretch h-full w-full relative'>
+      <AddPicturesButton />
       <div className='text-xl'>Ideenparkplatz</div>
       <div className='border-solid overflow-auto flex-1 h-full'>
         <div className='flex gap-2 flex-wrap items-start'>
@@ -125,7 +126,7 @@ const ExhibitionManipulator = () => {
   const scroll = useRef(0);
   const scrollDivRef = useRef<HTMLDivElement | null>(null);
 
-  //TODO: add type
+  //TODO
   //@ts-ignore
   const handleScroll = e => {
     if (e.target.scrollTop !== 0) scroll.current = Number(e.target.scrollTop);
@@ -299,12 +300,27 @@ const PublishButton = () => {
   );
 };
 
+const AddPicturesButton = () => {
+  const { getExhibitionId } = useContext(ExhibitionGetContext);
+  return (
+    <Button
+      onClick={() => {
+        localStorage.setItem('currentExhibition', getExhibitionId());
+        window.open(`/search?exhibitionId=${getExhibitionId()}`, '_blank');
+      }}
+    >
+      Add Pictures
+    </Button>
+  );
+};
+
 const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
   const { data: exhibitionData } = useGetExhibitionQuery({
     variables: { exhibitionId },
   });
   const exhibition: FlatExhibition | undefined =
     useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
+
   return (
     <>
       {exhibition && (

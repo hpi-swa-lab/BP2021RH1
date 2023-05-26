@@ -69,6 +69,7 @@ interface ExhibitionState {
 }
 
 export const ExhibitionGetContext = createContext<{
+  getExhibitionId: () => string;
   getTitle: () => string;
   getIntroduction: () => string;
   getSectionTitle: (sectionId: string) => string | undefined;
@@ -81,6 +82,7 @@ export const ExhibitionGetContext = createContext<{
   getIdealot: () => DragElement[] | undefined;
   getTitlePicture: () => DragElement | undefined;
 }>({
+  getExhibitionId: () => '',
   getTitle: () => '',
   getIntroduction: () => '',
   getSectionTitle: () => '',
@@ -250,17 +252,22 @@ const buildExhibitionTextState = (exhibition: FlatExhibition) => {
 };
 
 export const ExhibitionStateGetter = ({
+  exhibitionId,
   exhibitionText,
   titlePicture,
   idealot,
   sections,
   children,
 }: PropsWithChildren<{
+  exhibitionId: string;
   exhibitionText: ExhibitionText;
   titlePicture: DragElement | undefined;
   idealot: DragElement[] | undefined;
   sections: SectionState[];
 }>) => {
+  const getExhibitionId = () => {
+    return exhibitionId;
+  };
   const getSection = (sectionId: string) => {
     return sections.find(section => section.id === sectionId);
   };
@@ -313,6 +320,7 @@ export const ExhibitionStateGetter = ({
   return (
     <ExhibitionGetContext.Provider
       value={{
+        getExhibitionId,
         getTitle,
         getIntroduction,
         getSectionTitle,
@@ -579,7 +587,7 @@ const ExhibitionDragNDrop = ({
   );
 };
 
-const ExhibitionDatabaseSaver = (
+export const ExhibitionDatabaseSaver = (
   updateExhibitionSection: MutationFunction<typeof useUpdateExhibitionSectionMutation>,
   updateExhibitionPicture: MutationFunction<typeof useUpdateExhibitionPictureMutation>,
   updateExhibitionSource: MutationFunction<typeof useUpdateExhibitionSourceMutation>,
@@ -828,8 +836,15 @@ export const ExhibitionStateManager = ({
     createSection,
     createSource
   );
+
+  const exhibitionChannel = new BroadcastChannel('exhibition');
+  exhibitionChannel.addEventListener('message', e => {
+    console.log(e.data);
+  });
+
   return (
     <ExhibitionStateGetter
+      exhibitionId={exhibition.id}
       exhibitionText={exhibitionText}
       titlePicture={titlePicture}
       idealot={idealot}

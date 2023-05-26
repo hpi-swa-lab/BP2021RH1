@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useGetCollectionInfoByNameQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
@@ -10,6 +11,7 @@ import { getPictureQueryParams } from './helpers/queryParams-helpers';
 import { useGetShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 import './ShowMoreView.scss';
 import ShowMoreViewHeader from './ShowMoreViewHeader';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 
 const ShowMoreView = ({
   archiveId,
@@ -20,8 +22,10 @@ const ShowMoreView = ({
   categoryType: string;
   categoryId?: string;
 }) => {
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } =
+  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit, addToExhibition } =
     useBulkOperations();
+
+  const exhibitionId = useContext(ExhibitionIdContext);
 
   const showcaseAdornment = useGetShowcaseAdornments(archiveId);
 
@@ -83,7 +87,17 @@ const ShowMoreView = ({
             }
             hashbase={'show-more'}
             extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
-            bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+            bulkOperations={
+              exhibitionId
+                ? [
+                    removeFromCollection,
+                    linkToCollection,
+                    moveToCollection,
+                    bulkEdit,
+                    addToExhibition,
+                  ]
+                : [removeFromCollection, linkToCollection, moveToCollection, bulkEdit]
+            }
             maxNumPictures={categoryType === 'latest' ? 500 : undefined}
           />
         </ShowStats>

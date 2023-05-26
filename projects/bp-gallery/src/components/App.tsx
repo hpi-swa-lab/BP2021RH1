@@ -15,6 +15,7 @@ import StorageProvider from './provider/StorageProvider';
 import routes from './routes';
 import BottomBar from './top-and-bottom-bar/BottomBar';
 import TopBar from './top-and-bottom-bar/TopBar';
+import ExhibitionProvider from './provider/ExhibitionProvider';
 
 const apolloClient = new ApolloClient({
   link: buildHttpLink(sessionStorage.getItem('jwt')),
@@ -77,9 +78,11 @@ const App = () => {
                   <ClipboardEditorProvider>
                     <GrowthBookProvider>
                       <ScrollProvider useWindow>
-                        <TopBar />
-                        <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
-                        <BottomBar />
+                        <ExhibitionProvider>
+                          <TopBar />
+                          <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                          <BottomBar />
+                        </ExhibitionProvider>
                       </ScrollProvider>
                     </GrowthBookProvider>
                   </ClipboardEditorProvider>

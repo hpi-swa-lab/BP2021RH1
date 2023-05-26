@@ -1,5 +1,5 @@
 import { Location } from 'history';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
@@ -18,6 +18,7 @@ import {
   paramToTime,
 } from './helpers/search-filters';
 import { toURLSearchParam } from './helpers/url-search-params';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'
@@ -66,7 +67,9 @@ const SearchView = () => {
     return convertSearchParamsToPictureFilters(searchParams);
   }, [isAllSearchActive, searchParams]);
 
-  const { linkToCollection, bulkEdit } = useBulkOperations();
+  const { linkToCollection, bulkEdit, addToExhibition } = useBulkOperations();
+
+  const exhibitionId = useContext(ExhibitionIdContext);
 
   return (
     <div className='search-content'>
@@ -89,7 +92,11 @@ const SearchView = () => {
             queryParams={queryParams}
             isAllSearchActive={isAllSearchActive}
             hashbase={search}
-            bulkOperations={[linkToCollection, bulkEdit]}
+            bulkOperations={
+              exhibitionId
+                ? [linkToCollection, bulkEdit, addToExhibition]
+                : [linkToCollection, bulkEdit]
+            }
             resultPictureCallback={(pictures: number) => {
               setAreResultsEmpty(pictures <= 0);
             }}

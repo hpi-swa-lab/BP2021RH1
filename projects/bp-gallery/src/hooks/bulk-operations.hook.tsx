@@ -19,6 +19,8 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     });
   }, [dialog]);
 
+  const exhibitionBroadcast = new BroadcastChannel('exhibition');
+
   return {
     linkToCollection: {
       name: t('curator.addToCollection'),
@@ -75,6 +77,13 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       action: (_selectedPictures: FlatPicture[], onBulkEdit: () => void) => {
         onBulkEdit();
       },
+    },
+    addToExhibition: {
+      name: t('curator.addToExhibition'),
+      icon: <Add />,
+      action: (selectedPictures: FlatPicture[]) => {
+        exhibitionBroadcast.postMessage(selectedPictures);
+      }, //TODO: add functionality to add to exhibition
     },
   } satisfies Record<string, BulkOperation>;
 };

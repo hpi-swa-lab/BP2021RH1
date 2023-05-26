@@ -1,6 +1,6 @@
 import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   PictureFiltersInput,
@@ -24,6 +24,7 @@ import './BrowseView.scss';
 import CollectionDescription from './CollectionDescription';
 import SubCollections from './SubCollections';
 import { decodeBrowsePathComponent } from './helpers/format-browse-path';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 
 const getPictureFilters = (collectionId: string) => {
   const filters: PictureFiltersInput = { and: [] };
@@ -75,10 +76,10 @@ const BrowseView = ({
   const collections: FlatCollection[] | undefined =
     useSimplifiedQueryResponseData(data)?.collections;
 
+  const exhibitionId = useContext(ExhibitionIdContext);
   //Curator functionality
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } = useBulkOperations(
-    collections?.[0]
-  );
+  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit, addToExhibition } =
+    useBulkOperations(collections?.[0]);
 
   const addCollection = useCallback(async () => {
     const collectionName = await dialog({
@@ -144,7 +145,17 @@ const BrowseView = ({
               queryParams={getPictureFilters(collection.id)}
               hashbase={collection.name}
               uploadAreaProps={uploadAreaProps(collection)}
-              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+              bulkOperations={
+                exhibitionId
+                  ? [
+                      removeFromCollection,
+                      linkToCollection,
+                      moveToCollection,
+                      bulkEdit,
+                      addToExhibition,
+                    ]
+                  : [removeFromCollection, linkToCollection, moveToCollection, bulkEdit]
+              }
             />
           </ShowStats>
         </div>
