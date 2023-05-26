@@ -4,6 +4,7 @@ export { default as addArchiveTag } from './operations/addArchiveTag.js';
 export { default as addPermission } from './operations/addPermission.js';
 export { default as bulkEdit } from './operations/bulkEdit.js';
 export { default as canRunOperation } from './operations/canRunOperation.js';
+export { default as contact } from './operations/contact.js';
 export { default as createFaceTag } from './operations/createFaceTag.js';
 export { default as createKeywordTag } from './operations/createKeywordTag.js';
 export { default as createLink } from './operations/createLink.js';

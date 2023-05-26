@@ -8,6 +8,7 @@ import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
 } from './api/collection/services/custom-resolver';
+import { contact } from './api/contact/services/contact';
 import { mergeSourceTagIntoTargetTag } from './api/custom-tag-resolver';
 import {
   addPermission,
@@ -208,6 +209,19 @@ export default {
             },
             async resolve(_, args) {
               return addPermission(args);
+            },
+          }),
+          mutationField('contact', {
+            type: 'Int',
+            args: {
+              recipient: 'String',
+              sender_name: 'String',
+              reply_email: 'String',
+              subject: 'String',
+              message: 'String',
+            },
+            async resolve(_, args) {
+              return contact(args);
             },
           }),
         ],

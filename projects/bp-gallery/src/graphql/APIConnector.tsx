@@ -781,6 +781,7 @@ export type Mutation = {
   addPermission?: Maybe<Scalars['Int']>;
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>;
+  contact?: Maybe<Scalars['Int']>;
   createArchiveTag?: Maybe<ArchiveTagEntityResponse>;
   createCollection?: Maybe<CollectionEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
@@ -878,6 +879,14 @@ export type MutationChangePasswordArgs = {
   currentPassword: Scalars['String'];
   password: Scalars['String'];
   passwordConfirmation: Scalars['String'];
+};
+
+export type MutationContactArgs = {
+  message?: InputMaybe<Scalars['String']>;
+  recipient?: InputMaybe<Scalars['String']>;
+  reply_email?: InputMaybe<Scalars['String']>;
+  sender_name?: InputMaybe<Scalars['String']>;
+  subject?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationCreateArchiveTagArgs = {
@@ -3148,6 +3157,16 @@ export type BulkEditMutationVariables = Exact<{
 }>;
 
 export type BulkEditMutation = { doBulkEdit?: number | null };
+
+export type ContactMutationVariables = Exact<{
+  recipient: Scalars['String'];
+  sender_name: Scalars['String'];
+  reply_email: Scalars['String'];
+  subject: Scalars['String'];
+  message: Scalars['String'];
+}>;
+
+export type ContactMutation = { contact?: number | null };
 
 export type CreateFaceTagMutationVariables = Exact<{
   pictureId: Scalars['ID'];
@@ -6529,6 +6548,63 @@ export type BulkEditMutationResult = Apollo.MutationResult<BulkEditMutation>;
 export type BulkEditMutationOptions = Apollo.BaseMutationOptions<
   BulkEditMutation,
   BulkEditMutationVariables
+>;
+
+export const ContactDocument = gql`
+  mutation contact(
+    $recipient: String!
+    $sender_name: String!
+    $reply_email: String!
+    $subject: String!
+    $message: String!
+  ) {
+    contact(
+      recipient: $recipient
+      sender_name: $sender_name
+      reply_email: $reply_email
+      subject: $subject
+      message: $message
+    )
+  }
+`;
+
+export type ContactMutationFn = Apollo.MutationFunction<ContactMutation, ContactMutationVariables>;
+
+/**
+ * __useContactMutation__
+ *
+ * To run a mutation, you first call `useContactMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useContactMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [contactMutation, { data, loading, error }] = useContactMutation({
+ *   variables: {
+ *      recipient: // value for 'recipient'
+ *      sender_name: // value for 'sender_name'
+ *      reply_email: // value for 'reply_email'
+ *      subject: // value for 'subject'
+ *      message: // value for 'message'
+ *   },
+ * });
+ */
+export function useContactMutation(
+  baseOptions?: Apollo.MutationHookOptions<ContactMutation, ContactMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ContactMutation, ContactMutationVariables>(ContactDocument, options);
+}
+
+export type ContactMutationHookResult = ReturnType<typeof useContactMutation>;
+
+export type ContactMutationResult = Apollo.MutationResult<ContactMutation>;
+
+export type ContactMutationOptions = Apollo.BaseMutationOptions<
+  ContactMutation,
+  ContactMutationVariables
 >;
 
 export const CreateFaceTagDocument = gql`
@@ -10410,6 +10486,48 @@ export function useCanRunMultipleBulkEditMutations(
     ...options,
     variables: {
       operation: BulkEditDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunContactMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<ContactMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: ContactDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleContactMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<ContactMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: ContactDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

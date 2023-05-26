@@ -206,6 +206,7 @@
         "postComment": "Kommentar erstellen",
         "unpinComment": "Kommentar loslösen",
         "addArchiveTag": "Archiv anlegen",
+        "contact": "Kontakt-Formular nutzen",
         "editArchive": "Archiv-Eigenschaften bearbeiten",
         "getAllArchiveTags": "Liste aller Archive ansehen",
         "getArchive": "Archiv ansehen",
@@ -436,6 +437,7 @@
   },
   "contact-form": {
     "title": "Kontakt",
+    "success": "Ihre Nachricht ist eingegangen.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
     "name-label": "Name",
     "email-label": "E-Mail",
