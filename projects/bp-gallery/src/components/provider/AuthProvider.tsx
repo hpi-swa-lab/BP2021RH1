@@ -10,6 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
 import { buildHttpLink } from '../../helpers/app-helpers';
+import { useStorage } from '../../hooks/context-hooks';
 import { AlertContext, AlertType } from './AlertProvider';
 
 export enum AuthRole {
@@ -68,13 +69,14 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const apolloClient = useApolloClient();
   const openAlert = useContext(AlertContext);
+  const anonymousId = useStorage().anonymousId[0];
 
   // Fetch userInfo on mount
   useEffect(() => {
     if (called) return;
 
     const token = sessionStorage.getItem('jwt');
-    apolloClient.setLink(buildHttpLink(token, openAlert));
+    apolloClient.setLink(buildHttpLink(token, openAlert, anonymousId));
 
     if (token) {
       getUserInfo();
@@ -82,7 +84,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       // we won't call getUserInfo, because token won't change
       setAuthLoading(false);
     }
-  }, [apolloClient, called, getUserInfo, openAlert]);
+  }, [apolloClient, called, getUserInfo, openAlert, anonymousId]);
 
   // Save fetched userInfo in state
   useEffect(() => {
@@ -112,7 +114,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
             const token = data?.login.jwt;
             if (token) {
               sessionStorage.setItem('jwt', token);
-              apolloClient.setLink(buildHttpLink(token, openAlert));
+              apolloClient.setLink(buildHttpLink(token, openAlert, anonymousId));
               getUserInfo();
               displaySuccess(t('login.successful-login'));
               resolve();
@@ -123,18 +125,18 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
         });
       });
     },
-    [loginMutation, apolloClient, getUserInfo, displaySuccess, t, openAlert]
+    [loginMutation, apolloClient, getUserInfo, displaySuccess, t, openAlert, anonymousId]
   );
 
   const logout = useCallback(() => {
-    apolloClient.setLink(buildHttpLink(null, openAlert));
+    apolloClient.setLink(buildHttpLink(null, openAlert, anonymousId));
     sessionStorage.removeItem('jwt');
     setRole(AuthRole.PUBLIC);
     setUserId(undefined);
     setUsername(undefined);
     setEmail(undefined);
     displaySuccess(t('login.successful-logout'));
-  }, [apolloClient, displaySuccess, t, openAlert]);
+  }, [apolloClient, displaySuccess, t, openAlert, anonymousId]);
 
   return (
     <AuthContext.Provider

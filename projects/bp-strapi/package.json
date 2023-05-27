@@ -17,6 +17,7 @@
     "better-sqlite3": "^7.4.6"
   },
   "dependencies": {
+    "@growthbook/growthbook": "^0.26.0",
     "@strapi/plugin-graphql": "4.4.5",
     "@strapi/plugin-i18n": "4.4.5",
     "@strapi/plugin-sentry": "4.4.5",
@@ -25,6 +26,8 @@
     "@strapi/strapi": "4.4.5",
     "bp-graphql": "../bp-graphql",
     "cross-env": "^7.0.3",
+    "cross-fetch": "^3.1.6",
+    "eventsource": "^2.0.2",
     "pg": "8.6.0",
     "pm2": "^5.2.0",
     "sendmail": "^1.6.1",

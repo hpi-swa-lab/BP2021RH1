@@ -59,12 +59,15 @@ export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadO
  */
 export const buildHttpLink = (
   token: string | null,
-  openAlert?: (alertOptions: AlertOptions) => void
+  openAlert?: (alertOptions: AlertOptions) => void,
+  anonymousId?: string | null
 ) => {
   const options = {
     uri: `${apiBase}/graphql`,
     headers: {
+      'Access-Control-Request-Headers': 'anonymousId',
       authorization: token ? `Bearer ${token}` : '',
+      anonymousId: anonymousId,
     },
   };
   let httpLink = ApolloLink.split(
@@ -75,6 +78,27 @@ export const buildHttpLink = (
       batchMax: 1,
     })
   );
+
+  const growthbookLink = new ApolloLink((operation, forward) => {
+    return forward(operation).map(response => {
+      const experimentData: { experimentId: string; variationId: string }[] | null = JSON.parse(
+        (operation.getContext().response as Response).headers.get('x-growthbook') ?? 'null'
+      );
+      experimentData?.forEach(experiment => {
+        const w: any = window;
+        const _paq: Array<any> = (w._paq = w._paq || []);
+        _paq.push([
+          'trackEvent',
+          'ExperimentViewed',
+          experiment.experimentId,
+          experiment.variationId,
+        ]);
+      });
+      return response;
+    });
+  });
+
+  httpLink = from([growthbookLink, httpLink]);
 
   if (openAlert) {
     const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
