@@ -1,5 +1,13 @@
 import { nanoid } from 'nanoid';
-import { createContext, Dispatch, PropsWithChildren, SetStateAction } from 'react';
+import {
+  createContext,
+  Dispatch,
+  MutableRefObject,
+  PropsWithChildren,
+  SetStateAction,
+  useEffect,
+  useRef,
+} from 'react';
 import useStorageState from '../../hooks/storage-state.hook';
 
 type ClipboardData = {
@@ -22,6 +30,8 @@ type StorageData = {
 
 export const StorageContext = createContext<null | StorageData>(null);
 
+export const StorageRefContext = createContext<MutableRefObject<StorageData> | null>(null);
+
 const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
   const clipboardState = useStorageState<ClipboardData>(
     { pictureIds: [] },
@@ -38,9 +48,16 @@ const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
   );
 
   const anonymousId = useStorageState<string>(() => nanoid(), 'anonymous_id', sessionStorage);
+
+  const storageRef = useRef({ clipboardState, likedState, selectedTabsState, anonymousId });
+
+  useEffect(() => {
+    storageRef.current = { clipboardState, likedState, selectedTabsState, anonymousId };
+  }, [clipboardState, likedState, selectedTabsState, anonymousId]);
+
   return (
     <StorageContext.Provider value={{ clipboardState, likedState, selectedTabsState, anonymousId }}>
-      {children}
+      <StorageRefContext.Provider value={storageRef}>{children}</StorageRefContext.Provider>
     </StorageContext.Provider>
   );
 };
