@@ -21,7 +21,7 @@ import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
 import DonateButton from '../../common/DonateButton';
 import { useTranslation } from 'react-i18next';
-import OverviewContainer from '../../common/OverviewContainer';
+import OverviewContainer, { OverviewContainerPosition } from '../../common/OverviewContainer';
 import { useMemo } from 'react';
 import { OverviewContainerTab } from '../../common/OverviewContainer';
 
@@ -146,7 +146,11 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </div>
       <ShowStats>
-        <OverviewContainer tabs={tabs} />
+        <OverviewContainer
+          tabs={tabs}
+          overviewPosition={OverviewContainerPosition.ARCHIVE_VIEW}
+          archiveID={archiveId}
+        />
       </ShowStats>
 
       <TagOverview

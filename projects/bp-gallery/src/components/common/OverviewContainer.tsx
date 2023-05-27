@@ -1,5 +1,6 @@
 import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
 import { ReactElement, useState } from 'react';
+import { useStorage } from '../../hooks/context-hooks';
 
 export interface OverviewContainerTab {
   title: string;
@@ -7,14 +8,32 @@ export interface OverviewContainerTab {
   content: ReactElement;
 }
 
+export enum OverviewContainerPosition {
+  START_VIEW = 'start',
+  DISCOVER_VIEW = 'discover',
+  ARCHIVE_VIEW = 'archives',
+}
+
 const OverviewContainer = ({
   tabs,
   defaultValue = 0,
+  overviewPosition,
+  archiveID,
 }: {
   tabs: OverviewContainerTab[];
   defaultValue?: number;
+  overviewPosition: OverviewContainerPosition;
+  archiveID?: string;
 }) => {
-  const [tabIndex, setTabIndex] = useState<number>(defaultValue);
+  const [selectedTabs, setSelectedTabs] = useStorage().selectedTabsState;
+  const [tabIndex, setTabIndex] = useState<number>(
+    overviewPosition === OverviewContainerPosition.ARCHIVE_VIEW
+      ? archiveID
+        ? (selectedTabs[overviewPosition] ?? { [archiveID]: defaultValue })[archiveID] ??
+          defaultValue
+        : defaultValue
+      : selectedTabs[overviewPosition] ?? defaultValue
+  );
 
   return (
     <div className='overview-selection-container'>
@@ -25,6 +44,19 @@ const OverviewContainer = ({
           allowScrollButtonsMobile
           value={tabIndex}
           onChange={(_, value) => {
+            if (overviewPosition === OverviewContainerPosition.ARCHIVE_VIEW) {
+              if (archiveID) {
+                setSelectedTabs({
+                  ...selectedTabs,
+                  [overviewPosition]: {
+                    ...selectedTabs[overviewPosition],
+                    [archiveID]: value as number,
+                  },
+                });
+              }
+            } else {
+              setSelectedTabs({ ...selectedTabs, [overviewPosition]: value as number });
+            }
             setTabIndex(value as number);
           }}
         >

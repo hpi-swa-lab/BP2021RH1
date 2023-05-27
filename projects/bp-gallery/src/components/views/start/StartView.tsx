@@ -19,7 +19,10 @@ import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
 import { AccessTime, ThumbUp } from '@mui/icons-material';
-import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import { useMemo } from 'react';
 
 const StartView = () => {
@@ -134,7 +137,11 @@ const StartView = () => {
         </div>
 
         <ShowStats>
-          <OverviewContainer defaultValue={1} tabs={tabs} />
+          <OverviewContainer
+            defaultValue={1}
+            tabs={tabs}
+            overviewPosition={OverviewContainerPosition.START_VIEW}
+          />
         </ShowStats>
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>
