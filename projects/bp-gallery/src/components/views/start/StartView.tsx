@@ -1,4 +1,4 @@
-import { IfFeatureEnabled } from '@growthbook/growthbook-react';
+import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllArchiveTagsQuery,
@@ -94,6 +94,8 @@ const StartView = () => {
     ];
   }, [t, visit]);
 
+  const tabMode = useFeatureValue('start_view_tab_mode', 0);
+
   return (
     <div className='main-start-view'>
       <div className='welcome-container'>
@@ -138,7 +140,7 @@ const StartView = () => {
 
         <ShowStats>
           <OverviewContainer
-            defaultValue={1}
+            defaultValue={tabs.length > tabMode ? tabMode : 0}
             tabs={tabs}
             overviewPosition={OverviewContainerPosition.START_VIEW}
           />
