@@ -1,6 +1,6 @@
 import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
 import { ReactElement, useEffect, useState } from 'react';
-import { useStorageRef } from '../../hooks/context-hooks';
+import { useStorage } from '../../hooks/context-hooks';
 
 export interface OverviewContainerTab {
   title: string;
@@ -25,7 +25,7 @@ const OverviewContainer = ({
   overviewPosition: OverviewContainerPosition;
   archiveID?: string;
 }) => {
-  const [selectedTabs, setSelectedTabs] = useStorageRef().current.selectedTabsState;
+  const [selectedTabs, setSelectedTabs] = useStorage().selectedTabsState;
   const [tabIndex, setTabIndex] = useState<number>(0);
 
   useEffect(() => {

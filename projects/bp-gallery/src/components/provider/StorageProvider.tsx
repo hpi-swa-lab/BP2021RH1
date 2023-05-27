@@ -30,7 +30,7 @@ type StorageData = {
 
 export const StorageContext = createContext<null | StorageData>(null);
 
-export const StorageRefContext = createContext<MutableRefObject<StorageData> | null>(null);
+export const AnonymousIdRefContext = createContext<MutableRefObject<string> | null>(null);
 
 const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
   const clipboardState = useStorageState<ClipboardData>(
@@ -49,15 +49,16 @@ const StorageProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const anonymousId = useStorageState<string>(() => nanoid(), 'anonymous_id', sessionStorage);
 
-  const storageRef = useRef({ clipboardState, likedState, selectedTabsState, anonymousId });
+  const anonymousIdRef = useRef(anonymousId[0]);
 
   useEffect(() => {
-    storageRef.current = { clipboardState, likedState, selectedTabsState, anonymousId };
-  }, [clipboardState, likedState, selectedTabsState, anonymousId]);
-
+    anonymousIdRef.current = anonymousId[0];
+  }, [anonymousId]);
   return (
     <StorageContext.Provider value={{ clipboardState, likedState, selectedTabsState, anonymousId }}>
-      <StorageRefContext.Provider value={storageRef}>{children}</StorageRefContext.Provider>
+      <AnonymousIdRefContext.Provider value={anonymousIdRef}>
+        {children}
+      </AnonymousIdRefContext.Provider>
     </StorageContext.Provider>
   );
 };
