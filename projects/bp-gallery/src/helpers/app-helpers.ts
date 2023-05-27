@@ -67,7 +67,11 @@ export const buildHttpLink = (
     headers: {
       'Access-Control-Request-Headers': 'anonymousId',
       authorization: token ? `Bearer ${token}` : '',
-      anonymousId: anonymousId,
+      ...(typeof anonymousId === 'string'
+        ? {
+            anonymousId,
+          }
+        : {}),
     },
   };
   let httpLink = ApolloLink.split(
