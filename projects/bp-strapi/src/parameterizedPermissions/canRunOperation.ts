@@ -9,18 +9,13 @@ import { verifyOperation } from './verifyOperation';
 
 export const canRunOperation = async (
   auth: {
-    ability: {
-      permissions: ParameterizedPermission[];
-    };
+    ability: ParameterizedPermission[];
     credentials: UsersPermissionsUser | null;
   },
   operation: OperationDefinitionNode,
   variables: Variables
 ) => {
-  let {
-    ability: { permissions },
-    credentials: user,
-  } = auth;
+  let { ability: permissions, credentials: user } = auth;
 
   if (isIntrospectionQuery(operation)) {
     // allow

@@ -1,7 +1,3 @@
-import {
-  authenticate as usersPermissionsPluginAuthenticate,
-  verify as usersPermissionsPluginVerify,
-} from '@strapi/plugin-users-permissions/server/strategies/users-permissions.js';
 import { errors } from '@strapi/utils';
 import type { Variables } from 'bp-graphql';
 import type { UsersPermissionsUser } from 'bp-graphql/build/db-types';
@@ -50,15 +46,10 @@ const authenticate = async ctx => {
 
   const permissions = await getUserPermissions(user);
 
-  const usersPermissionsPluginAuth = await usersPermissionsPluginAuthenticate(ctx);
-
   return {
     authenticated: true,
     credentials: user,
-    ability: {
-      permissions,
-      usersPermissionsPluginAuth,
-    },
+    ability: permissions,
   };
 };
 
@@ -70,11 +61,27 @@ const verify = async (auth, config) => {
     if (!(await canRunOperation(auth, operation, variables))) {
       throw new UnauthorizedError();
     }
-  } else if (auth.isExecutingVerifiedOperation) {
-    // see apolloServerPlugin.ts, let this pass through unchecked
+  } else if (isGraphQLRequest()) {
+    // this is a verify call in a field resolver,
+    // that can only happen after we checked
+    // the operation before (see apolloServerPlugin.ts)
   } else {
-    await usersPermissionsPluginVerify(auth.ability.usersPermissionsPluginAuth, config);
+    throw new UnauthorizedError();
   }
+};
+
+declare module '@strapi/strapi' {
+  export interface Strapi {
+    requestContext: {
+      get(): { url: string };
+    };
+  }
+}
+
+const isGraphQLRequest = () => {
+  const request = strapi.requestContext.get();
+  const graphqlEndpoint = strapi.plugin('graphql').config('endpoint');
+  return request.url === graphqlEndpoint;
 };
 
 export const authStrategy = {

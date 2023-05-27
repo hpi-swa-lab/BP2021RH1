@@ -9,15 +9,6 @@ export const apolloPlugin: ApolloServerPlugin = {
           variables: resolveContext.request.variables,
         });
       },
-      async executionDidStart(requestContext) {
-        const auth = requestContext.context.state.auth;
-        auth.isExecutingVerifiedOperation = true;
-        return {
-          async executionDidEnd() {
-            auth.isExecutingVerifiedOperation = false;
-          },
-        };
-      },
     };
   },
 };
