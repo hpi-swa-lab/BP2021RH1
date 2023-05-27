@@ -1,8 +1,9 @@
 import { Description, Event, Folder, FolderSpecial, Place, Sell } from '@mui/icons-material';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
+  useCreateExhibitionPictureMutation,
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
@@ -23,6 +24,9 @@ import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
 import { useFaceTagging } from '../../../../../hooks/context-hooks';
+import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
+import { Button } from '@mui/material';
+import { addExhibitionPicture } from '../../../exhibitions/exhibition-helper';
 
 export type Field = Pick<
   FlatPicture,
@@ -99,9 +103,24 @@ const PictureInfo = ({
     }
   }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
 
+  const exhibitionId = useContext(ExhibitionIdContext);
+  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
+
   return (
     <div className='picture-info'>
       {topInfo?.(anyFieldTouched, isSaving)}
+      {exhibitionId && (
+        <div className='m-2 grid place-content-stretch'>
+          <Button
+            variant='contained'
+            onClick={() => {
+              addExhibitionPicture(createExhibitionPicture, exhibitionId, [picture]);
+            }}
+          >
+            {t('curator.addToExhibition')}
+          </Button>
+        </div>
+      )}
       <PictureInfoField title={t('pictureFields.time')} icon={<Event />} type='date'>
         <DateRangeSelectionField
           timeRangeTag={picture.time_range_tag}

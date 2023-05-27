@@ -373,7 +373,8 @@
   "exhibition": {
     "buttons": {
       "publish": "Veröffentlichen",
-      "unPublish": "Privat stellen"
+      "unPublish": "Privat stellen",
+      "addPictures": "Bilder hinzufügen"
     },
     "manipulator": {
       "intro": {

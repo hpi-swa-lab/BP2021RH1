@@ -307,6 +307,7 @@ const PublishButton = () => {
 };
 
 const AddPicturesButton = () => {
+  const { t } = useTranslation();
   const { getExhibitionId } = useContext(ExhibitionGetContext);
   return (
     <Button
@@ -316,7 +317,7 @@ const AddPicturesButton = () => {
         window.open(`/search?exhibitionId=${getExhibitionId()}`, '_blank');
       }}
     >
-      Add Pictures
+      {t('exhibition.buttons.addPictures')}
     </Button>
   );
 };

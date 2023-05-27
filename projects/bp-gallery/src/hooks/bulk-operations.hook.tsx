@@ -7,7 +7,7 @@ import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
 import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
 import { useCreateExhibitionPictureMutation } from '../graphql/APIConnector';
-import { channelFactory } from '../helpers/channel-helpers';
+import { addExhibitionPicture } from '../components/views/exhibitions/exhibition-helper';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -23,20 +23,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
   }, [dialog]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
-  const exhibitionBroadcast = channelFactory(`exhibition-${exhibitionId ?? ''}`);
   const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
-
-  const addExhibitionPicture = async (pictureId: string) => {
-    if (!exhibitionId) return;
-    const result = await createExhibitionPicture({
-      variables: {
-        exhibitionIdealotId: exhibitionId,
-        pictureId: pictureId,
-        publishedAt: new Date().toISOString(),
-      },
-    });
-    return result;
-  };
 
   return {
     linkToCollection: {
@@ -99,10 +86,8 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       name: t('curator.addToExhibition'),
       icon: <Add />,
       action: async (selectedPictures: FlatPicture[]) => {
-        for (let i = 0; i < selectedPictures.length; i++) {
-          await addExhibitionPicture(selectedPictures[i].id);
-        }
-        exhibitionBroadcast.postMessage(true);
+        exhibitionId &&
+          addExhibitionPicture(createExhibitionPicture, exhibitionId, selectedPictures);
       },
     },
   } satisfies Record<string, BulkOperation>;
