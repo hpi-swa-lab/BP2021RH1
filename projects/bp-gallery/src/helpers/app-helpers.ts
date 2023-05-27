@@ -79,7 +79,7 @@ export const buildHttpLink = (
     createUploadLink(options),
     new BatchHttpLink({
       ...options,
-      batchMax: 1,
+      batchMax: 50,
     })
   );
 
