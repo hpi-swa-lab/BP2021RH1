@@ -1,5 +1,5 @@
 import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useMemo } from 'react';
 import { useStorage } from '../../hooks/context-hooks';
 
 export interface OverviewContainerTab {
@@ -26,18 +26,36 @@ const OverviewContainer = ({
   archiveID?: string;
 }) => {
   const [selectedTabs, setSelectedTabs] = useStorage().selectedTabsState;
-  const [tabIndex, setTabIndex] = useState<number>(0);
 
-  useEffect(() => {
-    setTabIndex(
+  const tabIndex = useMemo(
+    () =>
       overviewPosition === OverviewContainerPosition.ARCHIVE_VIEW
         ? archiveID
           ? (selectedTabs[overviewPosition] ?? { [archiveID]: defaultTabIndex })[archiveID] ??
             defaultTabIndex
           : defaultTabIndex
-        : selectedTabs[overviewPosition] ?? defaultTabIndex
-    );
-  }, [overviewPosition, archiveID, selectedTabs, defaultTabIndex]);
+        : selectedTabs[overviewPosition] ?? defaultTabIndex,
+    [overviewPosition, archiveID, selectedTabs, defaultTabIndex]
+  );
+
+  const setTabIndex = useCallback(
+    (tabIndex: number) => {
+      if (overviewPosition !== OverviewContainerPosition.ARCHIVE_VIEW) {
+        setSelectedTabs(selectedTabs => ({ ...selectedTabs, [overviewPosition]: tabIndex }));
+        return;
+      }
+      if (archiveID) {
+        setSelectedTabs(selectedTabs => ({
+          ...selectedTabs,
+          [overviewPosition]: {
+            ...selectedTabs[overviewPosition],
+            [archiveID]: tabIndex,
+          },
+        }));
+      }
+    },
+    [overviewPosition, archiveID, setSelectedTabs]
+  );
 
   return (
     <div className='overview-selection-container'>
@@ -49,19 +67,6 @@ const OverviewContainer = ({
           value={tabIndex}
           onChange={(_, value) => {
             setTabIndex(value as number);
-            if (overviewPosition !== OverviewContainerPosition.ARCHIVE_VIEW) {
-              setSelectedTabs({ ...selectedTabs, [overviewPosition]: value as number });
-              return;
-            }
-            if (archiveID) {
-              setSelectedTabs({
-                ...selectedTabs,
-                [overviewPosition]: {
-                  ...selectedTabs[overviewPosition],
-                  [archiveID]: value as number,
-                },
-              });
-            }
           }}
         >
           {tabs.map((tab, index) => (
