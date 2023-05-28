@@ -239,6 +239,11 @@
     "users": {
       "title": "Nutzerverwaltung",
       "add": "Nutzer erstellen"
+    },
+    "archives": {
+      "title": "Archivverwaltung",
+      "add": "Archiv erstellen",
+      "add-content": "Name des neuen Archivs:"
     }
   },
   "pictureFields": {
@@ -313,7 +318,6 @@
     "addedPicturesToCollection": "Bilder erfolgreich zur Collection hinzugefügt",
     "removedPicturesFromCollection": "Bilder erfolgreich aus der Collection entfernt",
     "addCollection": "Collection hinzufügen",
-    "createArchive": "Neues Archiv erstellen",
     "createCollection": "Neue Collection erstellen",
     "linkCollection": "Bestehende Collection verlinken",
     "moveCollection": "Bestehende Collection hierher verschieben",

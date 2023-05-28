@@ -111,13 +111,10 @@ export const useCanEditPicture = (pictureId: string, mediaId: string) => {
 };
 
 export const useCanUseUploadsView = () => {
-  const { canAddArchive, loading: canAddArchiveLoading } = useCanAddArchive();
   const { canUploadPicture, loading: canUploadPictureLoading } = useCanUploadPicture();
   return {
-    canUseUploadsView: canAddArchive || canUploadPicture,
-    loading: canAddArchiveLoading || canUploadPictureLoading,
-    canAddArchive,
-    canAddArchiveLoading,
+    canUseUploadsView: canUploadPicture,
+    loading: canUploadPictureLoading,
     canUploadPicture,
     canUploadPictureLoading,
   };

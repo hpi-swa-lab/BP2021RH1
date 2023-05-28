@@ -1,22 +1,16 @@
-import { Add } from '@mui/icons-material';
-import { Button } from '@mui/material';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAddArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { useCanUseUploadsView } from '../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
+import { AddArchiveButton } from '../admin/archive/AddArchiveButton';
 import './UploadsView.scss';
 
 const UploadsView = () => {
   const { t } = useTranslation();
-  const dialog = useDialog();
-
-  const [addArchiveTagMutation] = useAddArchiveTagMutation();
 
   const { moveToCollection, bulkEdit } = useBulkOperations();
 
@@ -30,35 +24,12 @@ const UploadsView = () => {
     [t]
   );
 
-  const createArchive = useCallback(async () => {
-    const archiveName = await dialog({
-      title: t('curator.createArchive'),
-      preset: DialogPreset.INPUT_FIELD,
-    });
-    if (archiveName?.length) {
-      addArchiveTagMutation({
-        variables: {
-          name: archiveName,
-        },
-      });
-    }
-  }, [addArchiveTagMutation, dialog, t]);
-
-  const {
-    canUseUploadsView,
-    loading: canUseUploadsViewLoading,
-    canAddArchive,
-  } = useCanUseUploadsView();
+  const { canUseUploadsView, loading: canUseUploadsViewLoading } = useCanUseUploadsView();
 
   return (
     <ProtectedRoute canUse={canUseUploadsView} canUseLoading={canUseUploadsViewLoading}>
       <div className='uploads-overview'>
-        {canAddArchive && (
-          <Button onClick={createArchive}>
-            <Add />
-            {t('curator.createArchive')}
-          </Button>
-        )}
+        <AddArchiveButton />
         <HideStats>
           <PictureScrollGrid
             queryParams={{ collections: { id: { null: true } } }}
