@@ -3,7 +3,6 @@ import { ClipboardEditorContext } from '../components/provider/ClipboardEditorPr
 import { FaceTaggingContext } from '../components/provider/FaceTaggingContext';
 import { MobileContext } from '../components/provider/MobileProvider';
 import { ShowStatsContext } from '../components/provider/ShowStatsProvider';
-import { AnonymousIdRefContext, StorageContext } from '../components/provider/StorageProvider';
 import { ScrollContext, ScrollRefContext } from '../components/provider/contexts';
 
 const useErrorContext = <T>(context: Context<T>, title: string) => {
@@ -12,15 +11,9 @@ const useErrorContext = <T>(context: Context<T>, title: string) => {
   return value;
 };
 
-export const useStorage = () => useErrorContext(StorageContext, 'storage');
-
-export const useClipboard = () => useErrorContext(StorageContext, 'clipboard').clipboardState;
-
 export const useScroll = () => useErrorContext(ScrollContext, 'scroll');
 
 export const useScrollRef = () => useErrorContext(ScrollRefContext, 'scroll ref');
-
-export const useAnonymousIdRef = () => useErrorContext(AnonymousIdRefContext, 'anonymous id ref');
 
 export const useStats = () => {
   return useContext(ShowStatsContext);

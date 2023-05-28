@@ -11,7 +11,6 @@ import DialogProvider from './provider/DialogProvider';
 import { GrowthBookProvider } from './provider/GrowthBookProvider';
 import { MobileProvider } from './provider/MobileProvider';
 import { ScrollProvider } from './provider/ScrollProvider';
-import StorageProvider from './provider/StorageProvider';
 import routes from './routes';
 import BottomBar from './top-and-bottom-bar/BottomBar';
 import TopBar from './top-and-bottom-bar/TopBar';
@@ -69,25 +68,23 @@ const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <AlertProvider>
-        <StorageProvider>
-          <AuthProvider>
-            <DialogProvider>
-              <MobileProvider>
-                <div className='App'>
-                  <ClipboardEditorProvider>
-                    <GrowthBookProvider>
-                      <ScrollProvider useWindow>
-                        <TopBar />
-                        <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
-                        <BottomBar />
-                      </ScrollProvider>
-                    </GrowthBookProvider>
-                  </ClipboardEditorProvider>
-                </div>
-              </MobileProvider>
-            </DialogProvider>
-          </AuthProvider>
-        </StorageProvider>
+        <AuthProvider>
+          <DialogProvider>
+            <MobileProvider>
+              <div className='App'>
+                <ClipboardEditorProvider>
+                  <GrowthBookProvider>
+                    <ScrollProvider useWindow>
+                      <TopBar />
+                      <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                      <BottomBar />
+                    </ScrollProvider>
+                  </GrowthBookProvider>
+                </ClipboardEditorProvider>
+              </div>
+            </MobileProvider>
+          </DialogProvider>
+        </AuthProvider>
       </AlertProvider>
     </ApolloProvider>
   );

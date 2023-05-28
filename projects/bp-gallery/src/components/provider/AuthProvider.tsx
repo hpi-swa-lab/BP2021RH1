@@ -10,7 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
 import { buildHttpLink } from '../../helpers/app-helpers';
-import { useStorage } from '../../hooks/context-hooks';
+import { useAnonymousId } from '../../hooks/anonymous-id.hook';
 import { AlertContext, AlertType } from './AlertProvider';
 
 export enum AuthRole {
@@ -70,7 +70,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const apolloClient = useApolloClient();
   const openAlert = useContext(AlertContext);
-  const anonymousId = useStorage().anonymousId[0];
+  const anonymousId = useAnonymousId();
 
   // Fetch userInfo on mount
   useEffect(() => {

@@ -1,10 +1,10 @@
 import { GrowthBookProvider as _GrowthBookProvider } from '@growthbook/growthbook-react';
 import { PropsWithChildren, useEffect } from 'react';
 import { growthbook } from '../../helpers/growthbook';
-import { useAnonymousIdRef } from '../../hooks/context-hooks';
+import { useAnonymousId } from '../../hooks/anonymous-id.hook';
 
 export const GrowthBookProvider = ({ children }: PropsWithChildren<{}>) => {
-  const anonymousId = useAnonymousIdRef().current;
+  const anonymousId = useAnonymousId();
 
   useEffect(() => {
     growthbook?.loadFeatures({ autoRefresh: true });
