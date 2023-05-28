@@ -216,6 +216,7 @@
         "getParameterizedPermissions": "Rechte ansehen",
         "deleteParameterizedPermission": "Recht entziehen",
         "getUsersPermissionsUser": "Nutzer-Daten ansehen",
+        "getUsersPermissionsUsers": "Liste aller Nutzer sehen",
         "login": "Sich anmelden"
       },
       "parameter": {
@@ -234,6 +235,10 @@
       "name": "Name",
       "email": "E-Mail",
       "permissions": "Rechteverwaltung"
+    },
+    "users": {
+      "title": "Nutzerverwaltung",
+      "add": "Nutzer erstellen"
     }
   },
   "pictureFields": {

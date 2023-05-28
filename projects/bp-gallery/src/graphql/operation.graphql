@@ -30,6 +30,7 @@ query getPicturesGeoInfo($pictureIds: [ID]!) { pictureGeoInfos(filters: { pictur
 query getRootCollection { browseRootCollection { data { attributes { current { data { id attributes { name } } } } } } }
 query getUnverifiedComments { comments(filters: { publishedAt: { null: true } } publicationState: PREVIEW) { data { id attributes { picture { data { id attributes { media { data { id attributes { width height formats updatedAt provider } } } } } } text author } } } }
 query getUsersPermissionsUser($id: ID!) { usersPermissionsUser(id: $id) { data { id attributes { username email } } } }
+query getUsersPermissionsUsers { usersPermissionsUsers { data { id attributes { username } } } }
 query me { me { id role { name } username email } }
 mutation acceptComment($commentId: ID! $currentTime: DateTime!) { updateComment(id: $commentId data: { publishedAt: $currentTime }) { data { id } } }
 mutation addArchiveTag($name: String!) { addArchiveTag(name: $name) }

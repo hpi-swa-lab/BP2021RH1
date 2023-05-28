@@ -3116,6 +3116,14 @@ export type GetUsersPermissionsUserQuery = {
   } | null;
 };
 
+export type GetUsersPermissionsUsersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetUsersPermissionsUsersQuery = {
+  usersPermissionsUsers?: {
+    data: Array<{ id?: string | null; attributes?: { username: string } | null }>;
+  } | null;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -6299,6 +6307,73 @@ export type GetUsersPermissionsUserLazyQueryHookResult = ReturnType<
 export type GetUsersPermissionsUserQueryResult = Apollo.QueryResult<
   GetUsersPermissionsUserQuery,
   GetUsersPermissionsUserQueryVariables
+>;
+
+export const GetUsersPermissionsUsersDocument = gql`
+  query getUsersPermissionsUsers {
+    usersPermissionsUsers {
+      data {
+        id
+        attributes {
+          username
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUsersPermissionsUsersQuery__
+ *
+ * To run a query within a React component, call `useGetUsersPermissionsUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersPermissionsUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersPermissionsUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUsersPermissionsUsersQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetUsersPermissionsUsersQuery,
+    GetUsersPermissionsUsersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUsersPermissionsUsersQuery, GetUsersPermissionsUsersQueryVariables>(
+    GetUsersPermissionsUsersDocument,
+    options
+  );
+}
+
+export function useGetUsersPermissionsUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUsersPermissionsUsersQuery,
+    GetUsersPermissionsUsersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUsersPermissionsUsersQuery, GetUsersPermissionsUsersQueryVariables>(
+    GetUsersPermissionsUsersDocument,
+    options
+  );
+}
+
+export type GetUsersPermissionsUsersQueryHookResult = ReturnType<
+  typeof useGetUsersPermissionsUsersQuery
+>;
+
+export type GetUsersPermissionsUsersLazyQueryHookResult = ReturnType<
+  typeof useGetUsersPermissionsUsersLazyQuery
+>;
+
+export type GetUsersPermissionsUsersQueryResult = Apollo.QueryResult<
+  GetUsersPermissionsUsersQuery,
+  GetUsersPermissionsUsersQueryVariables
 >;
 
 export const MeDocument = gql`
@@ -10277,6 +10352,48 @@ export function useCanRunMultipleGetUsersPermissionsUserQueries(
     ...options,
     variables: {
       operation: GetUsersPermissionsUserDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunGetUsersPermissionsUsersQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetUsersPermissionsUsersQueryVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetUsersPermissionsUsersDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetUsersPermissionsUsersQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetUsersPermissionsUsersQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetUsersPermissionsUsersDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
