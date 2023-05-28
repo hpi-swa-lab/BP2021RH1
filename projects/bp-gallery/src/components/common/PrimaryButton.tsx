@@ -5,18 +5,18 @@ import './PrimaryButton.scss';
 
 const PrimaryButton = ({
   children,
-  onClickFn,
-  isShowMore,
+  onClick,
+  withRightArrow,
 }: PropsWithChildren<{
-  onClickFn: MouseEventHandler;
-  isShowMore?: boolean;
+  onClick: MouseEventHandler;
+  withRightArrow?: boolean;
 }>) => {
   return (
     <Button
       variant='contained'
-      onClick={onClickFn}
+      onClick={onClick}
       className='primary-button'
-      endIcon={isShowMore && <ArrowForwardIos />}
+      endIcon={withRightArrow && <ArrowForwardIos />}
     >
       {children}
     </Button>

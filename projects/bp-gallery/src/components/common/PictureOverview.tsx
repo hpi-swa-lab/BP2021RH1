@@ -56,7 +56,7 @@ const PictureOverview = ({
           />
         </div>
       )}
-      <PrimaryButton onClickFn={onClick} isShowMore={true}>
+      <PrimaryButton onClick={onClick} withRightArrow>
         {t('common.showMore')}
       </PrimaryButton>
     </div>
