@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import Demo from '../prototypes/demo';
 import TimeLineDemo from '../prototypes/timeline-demo';
 import { TagType } from '../types/additionalFlatTypes';
+import { AdminView } from './views/admin/AdminView';
 import { ArchivesView } from './views/admin/archive/ArchivesView';
 import PermissionsView from './views/admin/user/PermissionsView';
 import { UserView } from './views/admin/user/UserView';
@@ -143,6 +144,13 @@ const routes: RouteConfig[] = [
       return <ArchivesView />;
     },
   },
+  {
+    path: '/admin',
+    render: () => {
+      return <AdminView />;
+    },
+  },
+  {
     path: '/prototypes/demo',
     component: Demo,
   },

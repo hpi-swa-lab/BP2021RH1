@@ -198,6 +198,10 @@ export const useCanUseCollectionCuratingView = () => {
   };
 };
 
+export const useCanUseAdminView = () => {
+  return { canUseAdminView: true, loading: false };
+};
+
 export const useCanAcceptOrDeclineComment = (commentId: string | undefined) => {
   const { canRun: canAcceptComment, loading: canAcceptCommentLoading } =
     useCanRunAcceptCommentMutation({

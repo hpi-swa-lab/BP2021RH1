@@ -156,6 +156,7 @@
     "successful-logout": "Erfolgreich ausgeloggt"
   },
   "admin": {
+    "title": "Administration",
     "permissions": {
       "title": "Rechte des Nutzers {{userName}}",
       "publicTitle": "Rechte eines unangemeldeten Nutzers",

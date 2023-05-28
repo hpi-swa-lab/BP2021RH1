@@ -1,4 +1,5 @@
 import {
+  AdminPanelSettings,
   Book,
   Chat,
   Folder,
@@ -17,6 +18,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import {
+  useCanUseAdminView,
   useCanUseCollectionCuratingView,
   useCanUseKeywordTagTableView,
   useCanUseLocationTagTableView,
@@ -50,6 +52,7 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { canRun: canUsePersonTagTableView } = useCanUsePersonTagTableView();
   const { canUseUnverifiedCommentsView } = useCanUseUnverifiedCommentsView();
   const { canUseCollectionCuratingView } = useCanUseCollectionCuratingView();
+  const { canUseAdminView } = useCanUseAdminView();
 
   const moreMenuItems = useMemo(() => {
     return [
@@ -89,6 +92,12 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
         title: t('pictureFields.collections'),
         active: canUseCollectionCuratingView,
       },
+      {
+        to: '/admin',
+        icon: <AdminPanelSettings />,
+        title: t('admin.title'),
+        active: canUseAdminView,
+      },
     ].filter(item => item.active);
   }, [
     t,
@@ -98,6 +107,7 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
     canUsePersonTagTableView,
     canUseUnverifiedCommentsView,
     canUseCollectionCuratingView,
+    canUseAdminView,
   ]);
 
   return (
