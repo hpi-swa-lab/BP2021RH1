@@ -836,6 +836,7 @@ export type Mutation = {
   multipleUpload: Array<Maybe<UploadFileEntityResponse>>;
   /** Register a user */
   register: UsersPermissionsLoginPayload;
+  removeArchiveTag?: Maybe<Scalars['Int']>;
   removeFile?: Maybe<UploadFileEntityResponse>;
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
@@ -1080,6 +1081,10 @@ export type MutationMultipleUploadArgs = {
 
 export type MutationRegisterArgs = {
   input: UsersPermissionsRegisterInput;
+};
+
+export type MutationRemoveArchiveTagArgs = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationRemoveFileArgs = {
@@ -3392,6 +3397,12 @@ export type PostCommentMutationVariables = Exact<{
 export type PostCommentMutation = {
   createComment?: { data?: { attributes?: { text: string } | null } | null } | null;
 };
+
+export type RemoveArchiveTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type RemoveArchiveTagMutation = { removeArchiveTag?: number | null };
 
 export type RemoveUploadMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -8127,6 +8138,56 @@ export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
   PostCommentMutationVariables
 >;
 
+export const RemoveArchiveTagDocument = gql`
+  mutation removeArchiveTag($id: ID!) {
+    removeArchiveTag(id: $id)
+  }
+`;
+
+export type RemoveArchiveTagMutationFn = Apollo.MutationFunction<
+  RemoveArchiveTagMutation,
+  RemoveArchiveTagMutationVariables
+>;
+
+/**
+ * __useRemoveArchiveTagMutation__
+ *
+ * To run a mutation, you first call `useRemoveArchiveTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveArchiveTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeArchiveTagMutation, { data, loading, error }] = useRemoveArchiveTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveArchiveTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveArchiveTagMutation,
+    RemoveArchiveTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveArchiveTagMutation, RemoveArchiveTagMutationVariables>(
+    RemoveArchiveTagDocument,
+    options
+  );
+}
+
+export type RemoveArchiveTagMutationHookResult = ReturnType<typeof useRemoveArchiveTagMutation>;
+
+export type RemoveArchiveTagMutationResult = Apollo.MutationResult<RemoveArchiveTagMutation>;
+
+export type RemoveArchiveTagMutationOptions = Apollo.BaseMutationOptions<
+  RemoveArchiveTagMutation,
+  RemoveArchiveTagMutationVariables
+>;
+
 export const RemoveUploadDocument = gql`
   mutation removeUpload($id: ID!) {
     removeFile(id: $id) {
@@ -11780,6 +11841,48 @@ export function useCanRunMultiplePostCommentMutations(
     ...options,
     variables: {
       operation: PostCommentDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunRemoveArchiveTagMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<RemoveArchiveTagMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: RemoveArchiveTagDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleRemoveArchiveTagMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<RemoveArchiveTagMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: RemoveArchiveTagDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

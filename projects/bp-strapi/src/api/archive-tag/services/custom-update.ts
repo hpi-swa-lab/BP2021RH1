@@ -28,3 +28,42 @@ export const addArchiveTag = async (owningUser: UsersPermissionsUser, name: stri
 
   return newArchive.id;
 };
+
+export const removeArchiveTag = async (id: string) => {
+  const archiveQuery = strapi.db.query('api::archive-tag.archive-tag');
+  const exists = archiveQuery.findOne({
+    where: {
+      id,
+    },
+  });
+  if (!exists) {
+    return;
+  }
+  await archiveQuery.delete({
+    where: {
+      id,
+    },
+  });
+
+  const permissionQuery = strapi.db.query('api::parameterized-permission.parameterized-permission');
+  // deleteMany currently doesn't support relational filters:
+  // https://github.com/strapi/strapi/issues/11998
+  const permissionsToDelete = await permissionQuery.findMany({
+    where: {
+      archive_tag: {
+        id,
+      },
+    },
+  });
+  await Promise.all(
+    permissionsToDelete.map(permission => {
+      permissionQuery.delete({
+        where: {
+          id: permission.id,
+        },
+      });
+    })
+  );
+
+  return 1;
+};

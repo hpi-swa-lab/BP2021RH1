@@ -211,6 +211,7 @@
         "editArchive": "Archiv-Eigenschaften bearbeiten",
         "getAllArchiveTags": "Liste aller Archive ansehen",
         "getArchive": "Archiv ansehen",
+        "removeArchiveTag": "Archiv löschen",
         "geo": "GeoQuiz spielen",
         "canRunOperation": "Recht abfragen",
         "addPermission": "Recht vergeben",
@@ -244,7 +245,15 @@
     "archives": {
       "title": "Archivverwaltung",
       "add": "Archiv erstellen",
-      "add-content": "Name des neuen Archivs:"
+      "add-content": "Name des neuen Archivs:",
+      "dangerZone": "Gefahrenzone",
+      "remove": {
+        "button": "Archiv unwiederruflich löschen",
+        "title": "Archiv {{name}} wirklich löschen?",
+        "content": "Diese Aktion kann nicht rückgängig gemacht werden. Um zu bestätigen, dass Sie wirklich das Archiv {{name}} löschen möchten, geben Sie hier den Namen des Archivs ein:",
+        "success": "Archiv erfolgreich gelöscht",
+        "aborted": "Aktion abgebrochen: Das Archiv wurde nicht gelöscht"
+      }
     }
   },
   "pictureFields": {

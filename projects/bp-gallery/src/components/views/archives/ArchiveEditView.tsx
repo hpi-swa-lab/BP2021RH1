@@ -18,6 +18,7 @@ import ProtectedRoute from '../../common/ProtectedRoute';
 import { isValidClientId } from '../../common/checkPaypalClientId';
 import TextEditor from '../../common/editors/TextEditor';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { RemoveArchiveButton } from '../admin/archive/RemoveArchiveButton';
 import { useVisit } from './../../../helpers/history';
 import './ArchiveEditView.scss';
 import ArchiveInputField from './ArchiveInputField';
@@ -306,6 +307,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               onBlur={value => updateForm({ paypalPurpose: value, dirty: true })}
               placeholder={t('archives.edit.paypal.purpose-placeholder')}
             />
+            <RemoveArchiveButton id={archiveId} />
           </form>
         </div>
       ) : (

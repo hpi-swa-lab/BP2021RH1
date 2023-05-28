@@ -3,7 +3,7 @@
 import { Strapi } from '@strapi/strapi';
 import { Variables } from 'bp-graphql/build';
 import { archivePictureCountsType } from './api/archive-tag/content-types/archive-tag/custom-type';
-import { addArchiveTag } from './api/archive-tag/services/custom-update';
+import { addArchiveTag, removeArchiveTag } from './api/archive-tag/services/custom-update';
 import {
   mergeSourceCollectionIntoTargetCollection,
   resolveCollectionThumbnail,
@@ -197,6 +197,15 @@ export default {
                 preventPublicUserFromCreatingArchive();
               }
               return addArchiveTag(user, name);
+            },
+          }),
+          mutationField('removeArchiveTag', {
+            type: 'Int',
+            args: {
+              id: 'ID',
+            },
+            async resolve(_, { id }) {
+              return removeArchiveTag(id);
             },
           }),
           mutationField('addPermission', {

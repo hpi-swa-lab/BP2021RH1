@@ -64,6 +64,7 @@ export { default as mergePersonTags } from './operations/mergePersonTags.js';
 export { default as multipleUpload } from './operations/multipleUpload.js';
 export { default as pinComment } from './operations/pinComment.js';
 export { default as postComment } from './operations/postComment.js';
+export { default as removeArchiveTag } from './operations/removeArchiveTag.js';
 export { default as removeUpload } from './operations/removeUpload.js';
 export { default as setPicturesForCollection } from './operations/setPicturesForCollection.js';
 export { default as unpinComment } from './operations/unpinComment.js';
