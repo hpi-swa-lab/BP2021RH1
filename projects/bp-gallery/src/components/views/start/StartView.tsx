@@ -94,7 +94,7 @@ const StartView = () => {
     ];
   }, [t, visit]);
 
-  const tabMode = useFeatureValue('start_view_tab_mode', 0);
+  const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
 
   return (
     <div className='main-start-view'>
@@ -140,7 +140,7 @@ const StartView = () => {
 
         <ShowStats>
           <OverviewContainer
-            defaultValue={tabs.length > tabMode ? tabMode : 0}
+            defaultTabIndex={defaultTabIndex < tabs.length ? defaultTabIndex : 0}
             tabs={tabs}
             overviewPosition={OverviewContainerPosition.START_VIEW}
           />

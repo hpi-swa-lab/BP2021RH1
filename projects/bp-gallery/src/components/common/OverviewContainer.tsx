@@ -16,12 +16,12 @@ export enum OverviewContainerPosition {
 
 const OverviewContainer = ({
   tabs,
-  defaultValue = 0,
+  defaultTabIndex = 0,
   overviewPosition,
   archiveID,
 }: {
   tabs: OverviewContainerTab[];
-  defaultValue?: number;
+  defaultTabIndex?: number;
   overviewPosition: OverviewContainerPosition;
   archiveID?: string;
 }) => {
@@ -32,12 +32,12 @@ const OverviewContainer = ({
     setTabIndex(
       overviewPosition === OverviewContainerPosition.ARCHIVE_VIEW
         ? archiveID
-          ? (selectedTabs[overviewPosition] ?? { [archiveID]: defaultValue })[archiveID] ??
-            defaultValue
-          : defaultValue
-        : selectedTabs[overviewPosition] ?? defaultValue
+          ? (selectedTabs[overviewPosition] ?? { [archiveID]: defaultTabIndex })[archiveID] ??
+            defaultTabIndex
+          : defaultTabIndex
+        : selectedTabs[overviewPosition] ?? defaultTabIndex
     );
-  }, [overviewPosition, archiveID, selectedTabs, defaultValue]);
+  }, [overviewPosition, archiveID, selectedTabs, defaultTabIndex]);
 
   return (
     <div className='overview-selection-container'>
@@ -48,20 +48,20 @@ const OverviewContainer = ({
           allowScrollButtonsMobile
           value={tabIndex}
           onChange={(_, value) => {
-            if (overviewPosition === OverviewContainerPosition.ARCHIVE_VIEW) {
-              if (archiveID) {
-                setSelectedTabs({
-                  ...selectedTabs,
-                  [overviewPosition]: {
-                    ...selectedTabs[overviewPosition],
-                    [archiveID]: value as number,
-                  },
-                });
-              }
-            } else {
-              setSelectedTabs({ ...selectedTabs, [overviewPosition]: value as number });
-            }
             setTabIndex(value as number);
+            if (overviewPosition !== OverviewContainerPosition.ARCHIVE_VIEW) {
+              setSelectedTabs({ ...selectedTabs, [overviewPosition]: value as number });
+              return;
+            }
+            if (archiveID) {
+              setSelectedTabs({
+                ...selectedTabs,
+                [overviewPosition]: {
+                  ...selectedTabs[overviewPosition],
+                  [archiveID]: value as number,
+                },
+              });
+            }
           }}
         >
           {tabs.map((tab, index) => (
