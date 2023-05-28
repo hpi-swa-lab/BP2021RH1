@@ -40,7 +40,7 @@ const useStorageState = <T extends object | string | number>(
   );
 
   useEffect(() => {
-    window.addEventListener('storage', event => {
+    const listener = (event: StorageEvent) => {
       if (event.storageArea !== storage || event.key !== key) {
         return;
       }
@@ -55,7 +55,11 @@ const useStorageState = <T extends object | string | number>(
         // to notify others again - they receive the current event, too
         rawSetValue(JSON.parse(event.newValue) as T);
       }
-    });
+    };
+    window.addEventListener('storage', listener);
+    return () => {
+      window.removeEventListener('storage', listener);
+    };
   }, [storage, key, value]);
 
   return [value, setValue] as const;
