@@ -29,7 +29,8 @@ import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
-import { equalOrBothNullish } from './helper';
+import { CenteredContainer } from '../CenteredContainer';
+import { equalOrBothNullish, parseUserId } from './helper';
 import { Coverage, CoverageCheckbox } from './permissions/Coverage';
 import { SeeUnpublishedCollectionsParameter } from './permissions/SeeUnpublishedCollectionsParameter';
 import { combineCoverages } from './permissions/combineCoverages';
@@ -41,8 +42,7 @@ export type Parameters = Pick<FlatParameterizedPermission, Parameter>;
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
 
-  const isPublic = userId === 'public';
-  const parsedUserId = isPublic ? null : userId;
+  const { parsedUserId, isPublic } = parseUserId(userId);
 
   const {
     data: userData,
@@ -323,12 +323,13 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     return <Loading />;
   } else if (permissionLookup && archives) {
     return (
-      <div className='w-[800px] mx-auto mt-4'>
-        <h1>
-          {isPublic
+      <CenteredContainer
+        title={
+          isPublic
             ? t('admin.permissions.publicTitle')
-            : t('admin.permissions.title', { userName: user?.username })}
-        </h1>
+            : t('admin.permissions.title', { userName: user?.username })
+        }
+      >
         <div className='mb-2'>
           <Input
             fullWidth
@@ -339,7 +340,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         </div>
         {renderSections(t('admin.permissions.systemPermissions'), sections.system, null)}
         {archives.map(archive => renderSections(archive.name, sections.perArchive, archive))}
-      </div>
+      </CenteredContainer>
     );
   } else {
     return <Redirect to={FALLBACK_PATH} />;
