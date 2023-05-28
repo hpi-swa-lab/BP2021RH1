@@ -227,6 +227,13 @@
       "preset": {
         "public": "Allgemeiner Nutzer"
       }
+    },
+    "user": {
+      "title": "Nutzer {{userName}}",
+      "publicTitle": "Unangemeldeter Nutzer",
+      "name": "Name",
+      "email": "E-Mail",
+      "permissions": "Rechteverwaltung"
     }
   },
   "pictureFields": {

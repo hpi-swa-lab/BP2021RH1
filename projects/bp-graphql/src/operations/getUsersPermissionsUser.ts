@@ -13,6 +13,7 @@ export default {
           id
           attributes {
             username
+            email
           }
         }
       }

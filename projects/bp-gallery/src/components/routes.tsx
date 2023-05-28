@@ -4,6 +4,7 @@ import Demo from '../prototypes/demo';
 import TimeLineDemo from '../prototypes/timeline-demo';
 import { TagType } from '../types/additionalFlatTypes';
 import PermissionsView from './views/admin/user/PermissionsView';
+import { UserView } from './views/admin/user/UserView';
 import ArchiveEditView from './views/archives/ArchiveEditView';
 import ArchiveView from './views/archives/ArchiveView';
 import BrowseView from './views/browse/BrowseView';
@@ -123,6 +124,11 @@ const routes: RouteConfig[] = [
     },
   },
   {
+    path: '/admin/user/:id',
+    render({ match }: RouteConfigComponentProps<{ id: '' }>) {
+      return <UserView id={match.params.id} />;
+    },
+  },
     path: '/prototypes/demo',
     component: Demo,
   },

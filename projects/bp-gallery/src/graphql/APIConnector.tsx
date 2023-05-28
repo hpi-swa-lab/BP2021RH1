@@ -3112,7 +3112,7 @@ export type GetUsersPermissionsUserQueryVariables = Exact<{
 
 export type GetUsersPermissionsUserQuery = {
   usersPermissionsUser?: {
-    data?: { id?: string | null; attributes?: { username: string } | null } | null;
+    data?: { id?: string | null; attributes?: { username: string; email: string } | null } | null;
   } | null;
 };
 
@@ -6239,6 +6239,7 @@ export const GetUsersPermissionsUserDocument = gql`
         id
         attributes {
           username
+          email
         }
       }
     }
