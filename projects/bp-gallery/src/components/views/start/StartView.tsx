@@ -1,4 +1,4 @@
-import { IfFeatureEnabled } from '@growthbook/growthbook-react';
+import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllArchiveTagsQuery,
@@ -19,7 +19,10 @@ import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
 import { AccessTime, ThumbUp } from '@mui/icons-material';
-import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import { useMemo } from 'react';
 
 const StartView = () => {
@@ -91,6 +94,8 @@ const StartView = () => {
     ];
   }, [t, visit]);
 
+  const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
+
   return (
     <div className='main-start-view'>
       <div className='welcome-container'>
@@ -134,7 +139,11 @@ const StartView = () => {
         </div>
 
         <ShowStats>
-          <OverviewContainer defaultValue={1} tabs={tabs} />
+          <OverviewContainer
+            defaultTabIndex={defaultTabIndex < tabs.length ? defaultTabIndex : 0}
+            tabs={tabs}
+            overviewPosition={OverviewContainerPosition.START_VIEW}
+          />
         </ShowStats>
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>

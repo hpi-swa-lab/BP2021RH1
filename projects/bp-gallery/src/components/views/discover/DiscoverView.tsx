@@ -5,7 +5,10 @@ import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import './DiscoverView.scss';
-import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import { AccessTime, ThumbUp } from '@mui/icons-material';
 import { useMemo } from 'react';
 
@@ -46,7 +49,7 @@ const DiscoverView = () => {
   return (
     <div className='discover-container'>
       <ShowStats>
-        <OverviewContainer tabs={tabs} />
+        <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
 
         <PictureOverview
           title={t('discover.more-info')}
