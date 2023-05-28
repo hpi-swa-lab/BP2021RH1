@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+// changing `key` or `storage` is not supported
 const useStorageState = <T extends object | string | number>(
   initialValue: T | (() => T),
   key: string,
@@ -46,6 +47,7 @@ const useStorageState = <T extends object | string | number>(
       }
       const stringifiedValue = JSON.stringify(value);
       if (event.newValue === null) {
+        // prevent deltion of the item
         storage.setItem(key, stringifiedValue);
       } else {
         if (event.newValue === stringifiedValue) {
