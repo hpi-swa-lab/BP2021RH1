@@ -158,6 +158,7 @@
   },
   "admin": {
     "title": "Administration",
+    "dangerZone": "Gefahrenzone",
     "permissions": {
       "title": "Rechte des Nutzers {{userName}}",
       "publicTitle": "Rechte eines unangemeldeten Nutzers",
@@ -250,7 +251,6 @@
       "title": "Archivverwaltung",
       "add": "Archiv erstellen",
       "add-content": "Name des neuen Archivs:",
-      "dangerZone": "Gefahrenzone",
       "remove": {
         "button": "Archiv unwiederruflich löschen",
         "title": "Archiv {{name}} wirklich löschen?",
