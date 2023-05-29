@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetUsersPermissionsUserQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useVisit } from '../../../../helpers/history';
+import { useAuth } from '../../../../hooks/context-hooks';
 import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import PrimaryButton from '../../../common/PrimaryButton';
@@ -15,6 +16,8 @@ import { parseUserId } from './helper';
 export const UserView = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { visit } = useVisit();
+
+  const { userId: loggedInUserId } = useAuth();
 
   const { parsedUserId, isPublic } = parseUserId(id);
 
@@ -45,6 +48,11 @@ export const UserView = ({ id }: { id: string }) => {
               <Stack gap={4}>
                 {user && <TextField label={t('admin.user.name')} value={user.username}></TextField>}
                 {user && <TextField label={t('admin.user.email')} value={user.email}></TextField>}
+                {user && user.id === loggedInUserId && (
+                  <PrimaryButton onClick={() => visit('/change-password')} withRightArrow>
+                    {t('admin.changePassword.title')}
+                  </PrimaryButton>
+                )}
                 <PrimaryButton
                   onClick={() => visit(`/admin/user/${id}/permissions`)}
                   withRightArrow

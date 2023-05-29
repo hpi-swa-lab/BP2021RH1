@@ -217,6 +217,7 @@
         "geo": "GeoQuiz spielen",
         "addUser": "Nutzer erstellen",
         "canRunOperation": "Recht abfragen",
+        "changePassword": "Passwort ändern",
         "resetPassword": "Passwort setzen/zurücksetzen",
         "addPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
@@ -272,6 +273,13 @@
       "title": "Passwort setzen/zurücksetzen",
       "password": "Neues Passwort",
       "passwordConfirmation": "Neues Passwort wiederholen"
+    },
+    "changePassword": {
+      "title": "Passwort ändern",
+      "currentPassword": "Aktuelles Passwort",
+      "password": "Neues Passwort",
+      "passwordConfirmation": "Neues Passwort wiederholen",
+      "success": "Passwort erfolgreich geändert"
     }
   },
   "pictureFields": {

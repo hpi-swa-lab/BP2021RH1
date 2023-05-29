@@ -5,6 +5,7 @@ export { default as addPermission } from './operations/addPermission.js';
 export { default as addUser } from './operations/addUser.js';
 export { default as bulkEdit } from './operations/bulkEdit.js';
 export { default as canRunOperation } from './operations/canRunOperation.js';
+export { default as changePassword } from './operations/changePassword.js';
 export { default as contact } from './operations/contact.js';
 export { default as createFaceTag } from './operations/createFaceTag.js';
 export { default as createKeywordTag } from './operations/createKeywordTag.js';

@@ -37,6 +37,7 @@ mutation addArchiveTag($name: String!) { addArchiveTag(name: $name) }
 mutation addPermission( $userId: ID $operationName: String $archive_tag: ID $see_unpublished_collections: Boolean ) { addPermission( userId: $userId operationName: $operationName archive_tag: $archive_tag see_unpublished_collections: $see_unpublished_collections ) }
 mutation addUser($username: String! $email: String!) { addUser(username: $username email: $email) }
 mutation bulkEdit($pictureIds: [ID!]! $data: JSON!) { doBulkEdit(ids: $pictureIds data: $data) }
+mutation changePassword( $currentPassword: String! $password: String! $passwordConfirmation: String! ) { changePassword( currentPassword: $currentPassword password: $password passwordConfirmation: $passwordConfirmation ) { jwt } }
 mutation contact( $recipient: String! $sender_name: String! $reply_email: String! $subject: String! $message: String! ) { contact( recipient: $recipient sender_name: $sender_name reply_email: $reply_email subject: $subject message: $message ) }
 mutation createFaceTag( $pictureId: ID! $personTagId: ID! $x: Float $y: Float $tag_direction: Int ) { createFaceTag( data: { picture: $pictureId person_tag: $personTagId x: $x y: $y tag_direction: $tag_direction } ) { data { id } } }
 mutation createKeywordTag($name: String!) { createKeywordTag(data: { name: $name }) { data { id } } }

@@ -34,6 +34,7 @@ export const presets: Preset[] = [
       'canRunOperation',
       'login',
       'resetPassword',
+      'changePassword',
     ],
   },
   {
