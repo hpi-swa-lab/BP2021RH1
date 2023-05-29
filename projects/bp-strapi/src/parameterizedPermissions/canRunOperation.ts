@@ -7,13 +7,15 @@ import { isIntrospectionQuery } from './isIntrospectionQuery';
 import { getUserTryingToLogin, isLoginOperation } from './loginOperation';
 import { verifyOperation } from './verifyOperation';
 
+export const canRunWithSomeVariables = Symbol('canRunWithSomeVariables');
+
 export const canRunOperation = async (
   auth: {
     ability: ParameterizedPermission[];
     credentials: UsersPermissionsUser | null;
   },
   operation: OperationDefinitionNode,
-  variables: Variables
+  variables: Variables | typeof canRunWithSomeVariables
 ) => {
   let { ability: permissions, credentials: user } = auth;
 
@@ -22,7 +24,7 @@ export const canRunOperation = async (
     return true;
   }
 
-  if (isLoginOperation(operation)) {
+  if (variables !== canRunWithSomeVariables && isLoginOperation(operation)) {
     // Act as if the (currently not logged in) user has the permissions
     // of the user as which they are trying to login.
     // With this code, only users who have the permission to run the login
@@ -49,6 +51,9 @@ export const canRunOperation = async (
   const authorizingPermissions = permissions.filter(
     permission => permission.operation_name === operationName
   );
+  if (variables === canRunWithSomeVariables) {
+    return authorizingPermissions.length >= 1;
+  }
   if (authorizingPermissions.length === 0) {
     return false;
   }

@@ -20,8 +20,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -1633,6 +1636,7 @@ export type QueryBrowseRootCollectionArgs = {
 export type QueryCanRunOperationArgs = {
   operation?: InputMaybe<Scalars['String']>;
   variableSets?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  withSomeVariables?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryCollectionArgs = {
@@ -2239,7 +2243,8 @@ export type UsersPermissionsUserRelationResponseCollection = {
 
 export type CanRunOperationQueryVariables = Exact<{
   operation: Scalars['String'];
-  variableSets: Array<Scalars['JSON']> | Scalars['JSON'];
+  variableSets?: InputMaybe<Array<Scalars['JSON']> | Scalars['JSON']>;
+  withSomeVariables?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CanRunOperationQuery = { canRunOperation?: Array<boolean | null> | null };
@@ -3602,8 +3607,12 @@ export type UpdateUsersPermissionsUserMutation = {
 };
 
 export const CanRunOperationDocument = gql`
-  query canRunOperation($operation: String!, $variableSets: [JSON!]!) {
-    canRunOperation(operation: $operation, variableSets: $variableSets)
+  query canRunOperation($operation: String!, $variableSets: [JSON!], $withSomeVariables: Boolean) {
+    canRunOperation(
+      operation: $operation
+      variableSets: $variableSets
+      withSomeVariables: $withSomeVariables
+    )
   }
 `;
 
@@ -3621,6 +3630,7 @@ export const CanRunOperationDocument = gql`
  *   variables: {
  *      operation: // value for 'operation'
  *      variableSets: // value for 'variableSets'
+ *      withSomeVariables: // value for 'withSomeVariables'
  *   },
  * });
  */
@@ -9433,6 +9443,7 @@ export function useCanRunCanRunOperationQuery(
     'variables'
   > & {
     variables?: Partial<CanRunOperationQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9440,6 +9451,7 @@ export function useCanRunCanRunOperationQuery(
     variables: {
       operation: CanRunOperationDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9475,6 +9487,7 @@ export function useCanRunGetAllArchiveTagsQuery(
     'variables'
   > & {
     variables?: Partial<GetAllArchiveTagsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9482,6 +9495,7 @@ export function useCanRunGetAllArchiveTagsQuery(
     variables: {
       operation: GetAllArchiveTagsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9517,6 +9531,7 @@ export function useCanRunGetAllCollectionsQuery(
     'variables'
   > & {
     variables?: Partial<GetAllCollectionsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9524,6 +9539,7 @@ export function useCanRunGetAllCollectionsQuery(
     variables: {
       operation: GetAllCollectionsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9559,6 +9575,7 @@ export function useCanRunGetAllKeywordTagsQuery(
     'variables'
   > & {
     variables?: Partial<GetAllKeywordTagsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9566,6 +9583,7 @@ export function useCanRunGetAllKeywordTagsQuery(
     variables: {
       operation: GetAllKeywordTagsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9601,6 +9619,7 @@ export function useCanRunGetAllLocationTagsQuery(
     'variables'
   > & {
     variables?: Partial<GetAllLocationTagsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9608,6 +9627,7 @@ export function useCanRunGetAllLocationTagsQuery(
     variables: {
       operation: GetAllLocationTagsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9643,6 +9663,7 @@ export function useCanRunGetAllPersonTagsQuery(
     'variables'
   > & {
     variables?: Partial<GetAllPersonTagsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9650,6 +9671,7 @@ export function useCanRunGetAllPersonTagsQuery(
     variables: {
       operation: GetAllPersonTagsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9685,6 +9707,7 @@ export function useCanRunGetAllPicturesByArchiveQuery(
     'variables'
   > & {
     variables?: Partial<GetAllPicturesByArchiveQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9692,6 +9715,7 @@ export function useCanRunGetAllPicturesByArchiveQuery(
     variables: {
       operation: GetAllPicturesByArchiveDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9727,6 +9751,7 @@ export function useCanRunGetArchiveQuery(
     'variables'
   > & {
     variables?: Partial<GetArchiveQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9734,6 +9759,7 @@ export function useCanRunGetArchiveQuery(
     variables: {
       operation: GetArchiveDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9769,6 +9795,7 @@ export function useCanRunGetArchivePictureCountsQuery(
     'variables'
   > & {
     variables?: Partial<GetArchivePictureCountsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9776,6 +9803,7 @@ export function useCanRunGetArchivePictureCountsQuery(
     variables: {
       operation: GetArchivePictureCountsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9811,6 +9839,7 @@ export function useCanRunGetCollectionInfoByIdQuery(
     'variables'
   > & {
     variables?: Partial<GetCollectionInfoByIdQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9818,6 +9847,7 @@ export function useCanRunGetCollectionInfoByIdQuery(
     variables: {
       operation: GetCollectionInfoByIdDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9853,6 +9883,7 @@ export function useCanRunGetCollectionInfoByNameQuery(
     'variables'
   > & {
     variables?: Partial<GetCollectionInfoByNameQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9860,6 +9891,7 @@ export function useCanRunGetCollectionInfoByNameQuery(
     variables: {
       operation: GetCollectionInfoByNameDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9895,6 +9927,7 @@ export function useCanRunGetDailyPictureInfoQuery(
     'variables'
   > & {
     variables?: Partial<GetDailyPictureInfoQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9902,6 +9935,7 @@ export function useCanRunGetDailyPictureInfoQuery(
     variables: {
       operation: GetDailyPictureInfoDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9937,6 +9971,7 @@ export function useCanRunGetDecadePreviewThumbnailsQuery(
     'variables'
   > & {
     variables?: Partial<GetDecadePreviewThumbnailsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9944,6 +9979,7 @@ export function useCanRunGetDecadePreviewThumbnailsQuery(
     variables: {
       operation: GetDecadePreviewThumbnailsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -9979,6 +10015,7 @@ export function useCanRunGetFaceTagsQuery(
     'variables'
   > & {
     variables?: Partial<GetFaceTagsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -9986,6 +10023,7 @@ export function useCanRunGetFaceTagsQuery(
     variables: {
       operation: GetFaceTagsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10021,6 +10059,7 @@ export function useCanRunGetKeywordTagsWithThumbnailQuery(
     'variables'
   > & {
     variables?: Partial<GetKeywordTagsWithThumbnailQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10028,6 +10067,7 @@ export function useCanRunGetKeywordTagsWithThumbnailQuery(
     variables: {
       operation: GetKeywordTagsWithThumbnailDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10063,6 +10103,7 @@ export function useCanRunGetLocationTagsWithThumbnailQuery(
     'variables'
   > & {
     variables?: Partial<GetLocationTagsWithThumbnailQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10070,6 +10111,7 @@ export function useCanRunGetLocationTagsWithThumbnailQuery(
     variables: {
       operation: GetLocationTagsWithThumbnailDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10105,6 +10147,7 @@ export function useCanRunGetMostLikedPicturesQuery(
     'variables'
   > & {
     variables?: Partial<GetMostLikedPicturesQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10112,6 +10155,7 @@ export function useCanRunGetMostLikedPicturesQuery(
     variables: {
       operation: GetMostLikedPicturesDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10147,6 +10191,7 @@ export function useCanRunGetMultiplePictureInfoQuery(
     'variables'
   > & {
     variables?: Partial<GetMultiplePictureInfoQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10154,6 +10199,7 @@ export function useCanRunGetMultiplePictureInfoQuery(
     variables: {
       operation: GetMultiplePictureInfoDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10189,6 +10235,7 @@ export function useCanRunGetParameterizedPermissionsQuery(
     'variables'
   > & {
     variables?: Partial<GetParameterizedPermissionsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10196,6 +10243,7 @@ export function useCanRunGetParameterizedPermissionsQuery(
     variables: {
       operation: GetParameterizedPermissionsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10231,6 +10279,7 @@ export function useCanRunGetPersonTagQuery(
     'variables'
   > & {
     variables?: Partial<GetPersonTagQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10238,6 +10287,7 @@ export function useCanRunGetPersonTagQuery(
     variables: {
       operation: GetPersonTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10273,6 +10323,7 @@ export function useCanRunGetPersonTagsWithThumbnailQuery(
     'variables'
   > & {
     variables?: Partial<GetPersonTagsWithThumbnailQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10280,6 +10331,7 @@ export function useCanRunGetPersonTagsWithThumbnailQuery(
     variables: {
       operation: GetPersonTagsWithThumbnailDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10315,6 +10367,7 @@ export function useCanRunGetPictureGeoInfoQuery(
     'variables'
   > & {
     variables?: Partial<GetPictureGeoInfoQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10322,6 +10375,7 @@ export function useCanRunGetPictureGeoInfoQuery(
     variables: {
       operation: GetPictureGeoInfoDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10357,6 +10411,7 @@ export function useCanRunGetPictureInfoQuery(
     'variables'
   > & {
     variables?: Partial<GetPictureInfoQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10364,6 +10419,7 @@ export function useCanRunGetPictureInfoQuery(
     variables: {
       operation: GetPictureInfoDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10399,6 +10455,7 @@ export function useCanRunGetPictureMediaInfoQuery(
     'variables'
   > & {
     variables?: Partial<GetPictureMediaInfoQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10406,6 +10463,7 @@ export function useCanRunGetPictureMediaInfoQuery(
     variables: {
       operation: GetPictureMediaInfoDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10441,6 +10499,7 @@ export function useCanRunGetPicturesQuery(
     'variables'
   > & {
     variables?: Partial<GetPicturesQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10448,6 +10507,7 @@ export function useCanRunGetPicturesQuery(
     variables: {
       operation: GetPicturesDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10483,6 +10543,7 @@ export function useCanRunGetPicturesByAllSearchQuery(
     'variables'
   > & {
     variables?: Partial<GetPicturesByAllSearchQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10490,6 +10551,7 @@ export function useCanRunGetPicturesByAllSearchQuery(
     variables: {
       operation: GetPicturesByAllSearchDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10525,6 +10587,7 @@ export function useCanRunGetPicturesForCollectionQuery(
     'variables'
   > & {
     variables?: Partial<GetPicturesForCollectionQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10532,6 +10595,7 @@ export function useCanRunGetPicturesForCollectionQuery(
     variables: {
       operation: GetPicturesForCollectionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10567,6 +10631,7 @@ export function useCanRunGetPicturesGeoInfoQuery(
     'variables'
   > & {
     variables?: Partial<GetPicturesGeoInfoQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10574,6 +10639,7 @@ export function useCanRunGetPicturesGeoInfoQuery(
     variables: {
       operation: GetPicturesGeoInfoDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10609,6 +10675,7 @@ export function useCanRunGetRootCollectionQuery(
     'variables'
   > & {
     variables?: Partial<GetRootCollectionQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10616,6 +10683,7 @@ export function useCanRunGetRootCollectionQuery(
     variables: {
       operation: GetRootCollectionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10651,6 +10719,7 @@ export function useCanRunGetUnverifiedCommentsQuery(
     'variables'
   > & {
     variables?: Partial<GetUnverifiedCommentsQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10658,6 +10727,7 @@ export function useCanRunGetUnverifiedCommentsQuery(
     variables: {
       operation: GetUnverifiedCommentsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10693,6 +10763,7 @@ export function useCanRunGetUsersPermissionsUserQuery(
     'variables'
   > & {
     variables?: Partial<GetUsersPermissionsUserQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10700,6 +10771,7 @@ export function useCanRunGetUsersPermissionsUserQuery(
     variables: {
       operation: GetUsersPermissionsUserDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10735,6 +10807,7 @@ export function useCanRunGetUsersPermissionsUsersQuery(
     'variables'
   > & {
     variables?: Partial<GetUsersPermissionsUsersQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10742,6 +10815,7 @@ export function useCanRunGetUsersPermissionsUsersQuery(
     variables: {
       operation: GetUsersPermissionsUsersDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10777,6 +10851,7 @@ export function useCanRunMeQuery(
     'variables'
   > & {
     variables?: Partial<MeQueryVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10784,6 +10859,7 @@ export function useCanRunMeQuery(
     variables: {
       operation: MeDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10819,6 +10895,7 @@ export function useCanRunAcceptCommentMutation(
     'variables'
   > & {
     variables?: Partial<AcceptCommentMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10826,6 +10903,7 @@ export function useCanRunAcceptCommentMutation(
     variables: {
       operation: AcceptCommentDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10861,6 +10939,7 @@ export function useCanRunAddArchiveTagMutation(
     'variables'
   > & {
     variables?: Partial<AddArchiveTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10868,6 +10947,7 @@ export function useCanRunAddArchiveTagMutation(
     variables: {
       operation: AddArchiveTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10903,6 +10983,7 @@ export function useCanRunAddPermissionMutation(
     'variables'
   > & {
     variables?: Partial<AddPermissionMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10910,6 +10991,7 @@ export function useCanRunAddPermissionMutation(
     variables: {
       operation: AddPermissionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10945,6 +11027,7 @@ export function useCanRunAddUserMutation(
     'variables'
   > & {
     variables?: Partial<AddUserMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10952,6 +11035,7 @@ export function useCanRunAddUserMutation(
     variables: {
       operation: AddUserDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -10987,6 +11071,7 @@ export function useCanRunBulkEditMutation(
     'variables'
   > & {
     variables?: Partial<BulkEditMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -10994,6 +11079,7 @@ export function useCanRunBulkEditMutation(
     variables: {
       operation: BulkEditDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11029,6 +11115,7 @@ export function useCanRunChangePasswordMutation(
     'variables'
   > & {
     variables?: Partial<ChangePasswordMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11036,6 +11123,7 @@ export function useCanRunChangePasswordMutation(
     variables: {
       operation: ChangePasswordDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11071,6 +11159,7 @@ export function useCanRunContactMutation(
     'variables'
   > & {
     variables?: Partial<ContactMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11078,6 +11167,7 @@ export function useCanRunContactMutation(
     variables: {
       operation: ContactDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11113,6 +11203,7 @@ export function useCanRunCreateFaceTagMutation(
     'variables'
   > & {
     variables?: Partial<CreateFaceTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11120,6 +11211,7 @@ export function useCanRunCreateFaceTagMutation(
     variables: {
       operation: CreateFaceTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11155,6 +11247,7 @@ export function useCanRunCreateKeywordTagMutation(
     'variables'
   > & {
     variables?: Partial<CreateKeywordTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11162,6 +11255,7 @@ export function useCanRunCreateKeywordTagMutation(
     variables: {
       operation: CreateKeywordTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11197,6 +11291,7 @@ export function useCanRunCreateLinkMutation(
     'variables'
   > & {
     variables?: Partial<CreateLinkMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11204,6 +11299,7 @@ export function useCanRunCreateLinkMutation(
     variables: {
       operation: CreateLinkDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11239,6 +11335,7 @@ export function useCanRunCreateLocationTagMutation(
     'variables'
   > & {
     variables?: Partial<CreateLocationTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11246,6 +11343,7 @@ export function useCanRunCreateLocationTagMutation(
     variables: {
       operation: CreateLocationTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11281,6 +11379,7 @@ export function useCanRunCreatePersonTagMutation(
     'variables'
   > & {
     variables?: Partial<CreatePersonTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11288,6 +11387,7 @@ export function useCanRunCreatePersonTagMutation(
     variables: {
       operation: CreatePersonTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11323,6 +11423,7 @@ export function useCanRunCreatePictureMutation(
     'variables'
   > & {
     variables?: Partial<CreatePictureMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11330,6 +11431,7 @@ export function useCanRunCreatePictureMutation(
     variables: {
       operation: CreatePictureDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11365,6 +11467,7 @@ export function useCanRunCreatePictureGeoInfoMutation(
     'variables'
   > & {
     variables?: Partial<CreatePictureGeoInfoMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11372,6 +11475,7 @@ export function useCanRunCreatePictureGeoInfoMutation(
     variables: {
       operation: CreatePictureGeoInfoDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11407,6 +11511,7 @@ export function useCanRunCreateSubCollectionMutation(
     'variables'
   > & {
     variables?: Partial<CreateSubCollectionMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11414,6 +11519,7 @@ export function useCanRunCreateSubCollectionMutation(
     variables: {
       operation: CreateSubCollectionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11449,6 +11555,7 @@ export function useCanRunDeclineCommentMutation(
     'variables'
   > & {
     variables?: Partial<DeclineCommentMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11456,6 +11563,7 @@ export function useCanRunDeclineCommentMutation(
     variables: {
       operation: DeclineCommentDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11491,6 +11599,7 @@ export function useCanRunDeleteCollectionMutation(
     'variables'
   > & {
     variables?: Partial<DeleteCollectionMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11498,6 +11607,7 @@ export function useCanRunDeleteCollectionMutation(
     variables: {
       operation: DeleteCollectionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11533,6 +11643,7 @@ export function useCanRunDeleteFaceTagMutation(
     'variables'
   > & {
     variables?: Partial<DeleteFaceTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11540,6 +11651,7 @@ export function useCanRunDeleteFaceTagMutation(
     variables: {
       operation: DeleteFaceTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11575,6 +11687,7 @@ export function useCanRunDeleteKeywordTagMutation(
     'variables'
   > & {
     variables?: Partial<DeleteKeywordTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11582,6 +11695,7 @@ export function useCanRunDeleteKeywordTagMutation(
     variables: {
       operation: DeleteKeywordTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11617,6 +11731,7 @@ export function useCanRunDeleteLinkMutation(
     'variables'
   > & {
     variables?: Partial<DeleteLinkMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11624,6 +11739,7 @@ export function useCanRunDeleteLinkMutation(
     variables: {
       operation: DeleteLinkDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11659,6 +11775,7 @@ export function useCanRunDeleteLocationTagMutation(
     'variables'
   > & {
     variables?: Partial<DeleteLocationTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11666,6 +11783,7 @@ export function useCanRunDeleteLocationTagMutation(
     variables: {
       operation: DeleteLocationTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11701,6 +11819,7 @@ export function useCanRunDeleteParameterizedPermissionMutation(
     'variables'
   > & {
     variables?: Partial<DeleteParameterizedPermissionMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11708,6 +11827,7 @@ export function useCanRunDeleteParameterizedPermissionMutation(
     variables: {
       operation: DeleteParameterizedPermissionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11743,6 +11863,7 @@ export function useCanRunDeletePersonTagMutation(
     'variables'
   > & {
     variables?: Partial<DeletePersonTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11750,6 +11871,7 @@ export function useCanRunDeletePersonTagMutation(
     variables: {
       operation: DeletePersonTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11785,6 +11907,7 @@ export function useCanRunFixCommentTextMutation(
     'variables'
   > & {
     variables?: Partial<FixCommentTextMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11792,6 +11915,7 @@ export function useCanRunFixCommentTextMutation(
     variables: {
       operation: FixCommentTextDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11827,6 +11951,7 @@ export function useCanRunIncreaseNotAPlaceCountMutation(
     'variables'
   > & {
     variables?: Partial<IncreaseNotAPlaceCountMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11834,6 +11959,7 @@ export function useCanRunIncreaseNotAPlaceCountMutation(
     variables: {
       operation: IncreaseNotAPlaceCountDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11869,6 +11995,7 @@ export function useCanRunLikeMutation(
     'variables'
   > & {
     variables?: Partial<LikeMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11876,6 +12003,7 @@ export function useCanRunLikeMutation(
     variables: {
       operation: LikeDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11911,6 +12039,7 @@ export function useCanRunLoginMutation(
     'variables'
   > & {
     variables?: Partial<LoginMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11918,6 +12047,7 @@ export function useCanRunLoginMutation(
     variables: {
       operation: LoginDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11953,6 +12083,7 @@ export function useCanRunMergeCollectionsMutation(
     'variables'
   > & {
     variables?: Partial<MergeCollectionsMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -11960,6 +12091,7 @@ export function useCanRunMergeCollectionsMutation(
     variables: {
       operation: MergeCollectionsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -11995,6 +12127,7 @@ export function useCanRunMergeKeywordTagsMutation(
     'variables'
   > & {
     variables?: Partial<MergeKeywordTagsMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12002,6 +12135,7 @@ export function useCanRunMergeKeywordTagsMutation(
     variables: {
       operation: MergeKeywordTagsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12037,6 +12171,7 @@ export function useCanRunMergeLocationTagsMutation(
     'variables'
   > & {
     variables?: Partial<MergeLocationTagsMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12044,6 +12179,7 @@ export function useCanRunMergeLocationTagsMutation(
     variables: {
       operation: MergeLocationTagsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12079,6 +12215,7 @@ export function useCanRunMergePersonTagsMutation(
     'variables'
   > & {
     variables?: Partial<MergePersonTagsMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12086,6 +12223,7 @@ export function useCanRunMergePersonTagsMutation(
     variables: {
       operation: MergePersonTagsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12121,6 +12259,7 @@ export function useCanRunMultipleUploadMutation(
     'variables'
   > & {
     variables?: Partial<MultipleUploadMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12128,6 +12267,7 @@ export function useCanRunMultipleUploadMutation(
     variables: {
       operation: MultipleUploadDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12163,6 +12303,7 @@ export function useCanRunPinCommentMutation(
     'variables'
   > & {
     variables?: Partial<PinCommentMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12170,6 +12311,7 @@ export function useCanRunPinCommentMutation(
     variables: {
       operation: PinCommentDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12205,6 +12347,7 @@ export function useCanRunPostCommentMutation(
     'variables'
   > & {
     variables?: Partial<PostCommentMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12212,6 +12355,7 @@ export function useCanRunPostCommentMutation(
     variables: {
       operation: PostCommentDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12247,6 +12391,7 @@ export function useCanRunRemoveArchiveTagMutation(
     'variables'
   > & {
     variables?: Partial<RemoveArchiveTagMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12254,6 +12399,7 @@ export function useCanRunRemoveArchiveTagMutation(
     variables: {
       operation: RemoveArchiveTagDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12289,6 +12435,7 @@ export function useCanRunRemoveUploadMutation(
     'variables'
   > & {
     variables?: Partial<RemoveUploadMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12296,6 +12443,7 @@ export function useCanRunRemoveUploadMutation(
     variables: {
       operation: RemoveUploadDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12331,6 +12479,7 @@ export function useCanRunRemoveUserMutation(
     'variables'
   > & {
     variables?: Partial<RemoveUserMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12338,6 +12487,7 @@ export function useCanRunRemoveUserMutation(
     variables: {
       operation: RemoveUserDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12373,6 +12523,7 @@ export function useCanRunResetPasswordMutation(
     'variables'
   > & {
     variables?: Partial<ResetPasswordMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12380,6 +12531,7 @@ export function useCanRunResetPasswordMutation(
     variables: {
       operation: ResetPasswordDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12415,6 +12567,7 @@ export function useCanRunSetPicturesForCollectionMutation(
     'variables'
   > & {
     variables?: Partial<SetPicturesForCollectionMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12422,6 +12575,7 @@ export function useCanRunSetPicturesForCollectionMutation(
     variables: {
       operation: SetPicturesForCollectionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12457,6 +12611,7 @@ export function useCanRunUnpinCommentMutation(
     'variables'
   > & {
     variables?: Partial<UnpinCommentMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12464,6 +12619,7 @@ export function useCanRunUnpinCommentMutation(
     variables: {
       operation: UnpinCommentDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12499,6 +12655,7 @@ export function useCanRunUnpublishPictureMutation(
     'variables'
   > & {
     variables?: Partial<UnpublishPictureMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12506,6 +12663,7 @@ export function useCanRunUnpublishPictureMutation(
     variables: {
       operation: UnpublishPictureDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12541,6 +12699,7 @@ export function useCanRunUpdateArchiveMutation(
     'variables'
   > & {
     variables?: Partial<UpdateArchiveMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12548,6 +12707,7 @@ export function useCanRunUpdateArchiveMutation(
     variables: {
       operation: UpdateArchiveDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12583,6 +12743,7 @@ export function useCanRunUpdateCollectionMutation(
     'variables'
   > & {
     variables?: Partial<UpdateCollectionMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12590,6 +12751,7 @@ export function useCanRunUpdateCollectionMutation(
     variables: {
       operation: UpdateCollectionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12625,6 +12787,7 @@ export function useCanRunUpdateFaceTagDirectionMutation(
     'variables'
   > & {
     variables?: Partial<UpdateFaceTagDirectionMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12632,6 +12795,7 @@ export function useCanRunUpdateFaceTagDirectionMutation(
     variables: {
       operation: UpdateFaceTagDirectionDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12667,6 +12831,7 @@ export function useCanRunUpdateKeywordNameMutation(
     'variables'
   > & {
     variables?: Partial<UpdateKeywordNameMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12674,6 +12839,7 @@ export function useCanRunUpdateKeywordNameMutation(
     variables: {
       operation: UpdateKeywordNameDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12709,6 +12875,7 @@ export function useCanRunUpdateKeywordSynonymsMutation(
     'variables'
   > & {
     variables?: Partial<UpdateKeywordSynonymsMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12716,6 +12883,7 @@ export function useCanRunUpdateKeywordSynonymsMutation(
     variables: {
       operation: UpdateKeywordSynonymsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12751,6 +12919,7 @@ export function useCanRunUpdateKeywordVisibilityMutation(
     'variables'
   > & {
     variables?: Partial<UpdateKeywordVisibilityMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12758,6 +12927,7 @@ export function useCanRunUpdateKeywordVisibilityMutation(
     variables: {
       operation: UpdateKeywordVisibilityDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12793,6 +12963,7 @@ export function useCanRunUpdateLinkMutation(
     'variables'
   > & {
     variables?: Partial<UpdateLinkMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12800,6 +12971,7 @@ export function useCanRunUpdateLinkMutation(
     variables: {
       operation: UpdateLinkDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12835,6 +13007,7 @@ export function useCanRunUpdateLocationNameMutation(
     'variables'
   > & {
     variables?: Partial<UpdateLocationNameMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12842,6 +13015,7 @@ export function useCanRunUpdateLocationNameMutation(
     variables: {
       operation: UpdateLocationNameDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12877,6 +13051,7 @@ export function useCanRunUpdateLocationSynonymsMutation(
     'variables'
   > & {
     variables?: Partial<UpdateLocationSynonymsMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12884,6 +13059,7 @@ export function useCanRunUpdateLocationSynonymsMutation(
     variables: {
       operation: UpdateLocationSynonymsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12919,6 +13095,7 @@ export function useCanRunUpdateLocationVisibilityMutation(
     'variables'
   > & {
     variables?: Partial<UpdateLocationVisibilityMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12926,6 +13103,7 @@ export function useCanRunUpdateLocationVisibilityMutation(
     variables: {
       operation: UpdateLocationVisibilityDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -12961,6 +13139,7 @@ export function useCanRunUpdatePersonNameMutation(
     'variables'
   > & {
     variables?: Partial<UpdatePersonNameMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -12968,6 +13147,7 @@ export function useCanRunUpdatePersonNameMutation(
     variables: {
       operation: UpdatePersonNameDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -13003,6 +13183,7 @@ export function useCanRunUpdatePersonSynonymsMutation(
     'variables'
   > & {
     variables?: Partial<UpdatePersonSynonymsMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -13010,6 +13191,7 @@ export function useCanRunUpdatePersonSynonymsMutation(
     variables: {
       operation: UpdatePersonSynonymsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -13045,6 +13227,7 @@ export function useCanRunUpdatePictureMutation(
     'variables'
   > & {
     variables?: Partial<UpdatePictureMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -13052,6 +13235,7 @@ export function useCanRunUpdatePictureMutation(
     variables: {
       operation: UpdatePictureDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);
@@ -13087,6 +13271,7 @@ export function useCanRunUpdateUsersPermissionsUserMutation(
     'variables'
   > & {
     variables?: Partial<UpdateUsersPermissionsUserMutationVariables>;
+    withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
@@ -13094,6 +13279,7 @@ export function useCanRunUpdateUsersPermissionsUserMutation(
     variables: {
       operation: UpdateUsersPermissionsUserDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
     },
   });
   useAuthChangeEffect(refetch);

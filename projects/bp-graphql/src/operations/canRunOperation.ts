@@ -6,8 +6,16 @@ export default {
   needsParameters: [],
   isAllowed: always,
   document: graphql`
-    query canRunOperation($operation: String!, $variableSets: [JSON!]!) {
-      canRunOperation(operation: $operation, variableSets: $variableSets)
+    query canRunOperation(
+      $operation: String!
+      $variableSets: [JSON!]
+      $withSomeVariables: Boolean
+    ) {
+      canRunOperation(
+        operation: $operation
+        variableSets: $variableSets
+        withSomeVariables: $withSomeVariables
+      )
     }
   `,
 } satisfies Operation;

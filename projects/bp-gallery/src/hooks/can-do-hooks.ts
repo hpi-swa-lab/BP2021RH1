@@ -1,15 +1,15 @@
-import { OperationName } from 'bp-graphql/build';
-import { useMemo } from 'react';
 import { parseUserId } from '../components/views/admin/user/helper';
 import {
   useCanRunAcceptCommentMutation,
   useCanRunAddArchiveTagMutation,
+  useCanRunAddPermissionMutation,
   useCanRunAddUserMutation,
   useCanRunBulkEditMutation,
   useCanRunChangePasswordMutation,
   useCanRunCreateSubCollectionMutation,
   useCanRunDeclineCommentMutation,
   useCanRunDeleteCollectionMutation,
+  useCanRunDeleteParameterizedPermissionMutation,
   useCanRunGetAllArchiveTagsQuery,
   useCanRunGetAllKeywordTagsQuery,
   useCanRunGetAllLocationTagsQuery,
@@ -32,37 +32,10 @@ import {
   useCanRunUpdatePictureMutation,
   useCanRunUpdateUsersPermissionsUserMutation,
   useGetAllArchiveTagsQuery,
-  useGetParameterizedPermissionsQuery,
 } from '../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../graphql/queryUtils';
-import { FlatArchiveTag, FlatParameterizedPermission } from '../types/additionalFlatTypes';
+import { FlatArchiveTag } from '../types/additionalFlatTypes';
 import { useAuth } from './context-hooks';
-
-export const useHasPermissions = (permissionNames: OperationName[]) => {
-  const { userId } = useAuth();
-
-  const { data, loading } = useGetParameterizedPermissionsQuery({
-    variables: {
-      userId: userId ?? null,
-    },
-  });
-  const permissions: FlatParameterizedPermission[] | undefined =
-    useSimplifiedQueryResponseData(data)?.parameterizedPermissions;
-  const permissionsSet = useMemo(
-    () =>
-      new Set(
-        permissions
-          ?.map(permission => permission.operation_name)
-          .filter((name): name is string => !!name) ?? []
-      ),
-    [permissions]
-  );
-  const hasPermissions = useMemo(
-    () => permissionNames.every(name => permissionsSet.has(name)),
-    [permissionNames, permissionsSet]
-  );
-  return { hasPermissions, loading };
-};
 
 export const useCanAddArchive = () => {
   const { canRun: canAddArchive, loading } = useCanRunAddArchiveTagMutation();
@@ -94,10 +67,14 @@ export const useCanUseEditArchiveView = (id: string) => {
 };
 
 export const useCanUseSomeEditArchiveView = () => {
-  const { hasPermissions: canEditSomeArchive, loading: canEditSomeArchiveLoading } =
-    useHasPermissions(['updateArchive']);
-  const { hasPermissions: canRemoveSomeArchive, loading: canRemoveSomeArchiveLoading } =
-    useHasPermissions(['removeArchiveTag']);
+  const { canRun: canEditSomeArchive, loading: canEditSomeArchiveLoading } =
+    useCanRunUpdateArchiveMutation({
+      withSomeVariables: true,
+    });
+  const { canRun: canRemoveSomeArchive, loading: canRemoveSomeArchiveLoading } =
+    useCanRunRemoveArchiveTagMutation({
+      withSomeVariables: true,
+    });
   return {
     canUseSomeEditArchiveView: canEditSomeArchive || canRemoveSomeArchive,
     loading: canEditSomeArchiveLoading || canRemoveSomeArchiveLoading,
@@ -199,15 +176,24 @@ export const useCanUseBulkEditView = (pictureIds: string[]) => {
 };
 
 export const useCanBulkEditSomePictures = () => {
-  const { hasPermissions: canBulkEditSomePictures, loading } = useHasPermissions([
-    'getMultiplePictureInfo',
-    'bulkEdit',
-  ]);
-  return { canBulkEditSomePictures, loading };
+  const { canRun: canGetSomeMultiplePictures, loading: canGetSomeMultiplePicturesLoading } =
+    useCanRunGetMultiplePictureInfoQuery({
+      withSomeVariables: true,
+    });
+  const { canRun: canBulkEditSomePictures, loading: canBulkEditSomePicturesLoading } =
+    useCanRunBulkEditMutation({
+      withSomeVariables: true,
+    });
+  return {
+    canBulkEditSomePictures: canGetSomeMultiplePictures && canBulkEditSomePictures,
+    loading: canGetSomeMultiplePicturesLoading || canBulkEditSomePicturesLoading,
+  };
 };
 
 export const useCanEditSomePictures = () => {
-  const { hasPermissions: canEditSomePictures, loading } = useHasPermissions(['updatePicture']);
+  const { canRun: canEditSomePictures, loading } = useCanRunUpdatePictureMutation({
+    withSomeVariables: true,
+  });
   return { canEditSomePictures, loading };
 };
 
@@ -292,11 +278,14 @@ export const useCanUsePermissionsView = (userId: string) => {
     });
   const { canRun: canGetAllArchiveTags, loading: canGetAllArchiveTagsLoading } =
     useCanRunGetAllArchiveTagsQuery();
-  const { hasPermissions: canAddPermission, loading: canAddPermissionLoading } = useHasPermissions([
-    'addPermission',
-  ]);
-  const { hasPermissions: canDeletePermission, loading: canDeletePermissionLoading } =
-    useHasPermissions(['deleteParameterizedPermission']);
+  const { canRun: canAddPermission, loading: canAddPermissionLoading } =
+    useCanRunAddPermissionMutation({
+      withSomeVariables: true,
+    });
+  const { canRun: canDeletePermission, loading: canDeletePermissionLoading } =
+    useCanRunDeleteParameterizedPermissionMutation({
+      withSomeVariables: true,
+    });
   return {
     canUsePermissionsView:
       (isPublic || canGetUsersPermissionsUser) &&

@@ -97,8 +97,10 @@ class Visitor extends ClientSideBaseVisitor<
     generateHook(
       singleName,
       true,
-      `variables?: Partial<${operationVariablesTypes}>`,
-      `[options?.variables ?? {}]`,
+      `variables?: Partial<${operationVariablesTypes}>,
+       withSomeVariables?: boolean`,
+      `[options?.variables ?? {}],
+       withSomeVariables: options?.withSomeVariables`,
       `return { canRun: data?.canRunOperation?.[0] ?? (${fallbackCanRun}), loading };`
     );
     generateHook(

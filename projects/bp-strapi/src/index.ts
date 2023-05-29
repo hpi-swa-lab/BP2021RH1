@@ -24,7 +24,10 @@ import {
   updatePictureWithTagCleanup,
 } from './api/picture/services/custom-resolver';
 import { incNotAPlaceCount } from './api/picture/services/custom-update';
-import { canRunOperation } from './parameterizedPermissions/canRunOperation';
+import {
+  canRunOperation,
+  canRunWithSomeVariables,
+} from './parameterizedPermissions/canRunOperation';
 import { initializeEmailSettings } from './parameterizedPermissions/initializeUsersPermissionsSettings';
 import { parseOperationSource } from './parameterizedPermissions/parseOperation';
 import { GqlExtension } from './types';
@@ -143,13 +146,27 @@ export default {
             args: {
               operation: 'String',
               variableSets: list('JSON'),
+              withSomeVariables: 'Boolean',
             },
             async resolve(
               _,
-              { operation, variableSets }: { operation: string; variableSets: Variables[] },
+              {
+                operation,
+                variableSets,
+                withSomeVariables,
+              }: { operation: string; variableSets: Variables[]; withSomeVariables: true },
               context
             ) {
               const parsedOperation = parseOperationSource(operation, 'unknown');
+              if (withSomeVariables) {
+                return [
+                  await canRunOperation(
+                    context.state.auth,
+                    parsedOperation,
+                    canRunWithSomeVariables
+                  ),
+                ];
+              }
               return Promise.all(
                 variableSets.map(variables =>
                   canRunOperation(context.state.auth, parsedOperation, variables)
