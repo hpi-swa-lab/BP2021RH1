@@ -36,14 +36,16 @@ export const UsersView = () => {
             <CenteredContainer title={t('admin.users.title')}>
               <AddUserButton />
               <List>
-                {users.map(user => (
-                  <ListItemButton key={user.id} onClick={() => visit(`/admin/user/${user.id}`)}>
-                    <ListItemText primary={user.username} />
-                    <ListItemIcon>
-                      <Edit />
-                    </ListItemIcon>
-                  </ListItemButton>
-                ))}
+                {[{ id: 'public', username: t('admin.users.publicUsername') }, ...users].map(
+                  user => (
+                    <ListItemButton key={user.id} onClick={() => visit(`/admin/user/${user.id}`)}>
+                      <ListItemText primary={user.username} />
+                      <ListItemIcon>
+                        <Edit />
+                      </ListItemIcon>
+                    </ListItemButton>
+                  )
+                )}
               </List>
             </CenteredContainer>
           );

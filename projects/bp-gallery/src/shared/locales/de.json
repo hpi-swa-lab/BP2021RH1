@@ -253,7 +253,8 @@
     "users": {
       "title": "Nutzerverwaltung",
       "add": "Nutzer erstellen",
-      "add-content": "An die angegebene E-Mail wird ein Link zum Passwortsetzen verschickt."
+      "add-content": "An die angegebene E-Mail wird ein Link zum Passwortsetzen verschickt.",
+      "publicUsername": "Unangemeldeter Nutzer"
     },
     "archives": {
       "title": "Archivverwaltung",
