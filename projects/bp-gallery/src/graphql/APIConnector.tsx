@@ -3591,6 +3591,16 @@ export type UpdatePictureMutationVariables = Exact<{
 
 export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null };
 
+export type UpdateUsersPermissionsUserMutationVariables = Exact<{
+  id: Scalars['ID'];
+  username?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+}>;
+
+export type UpdateUsersPermissionsUserMutation = {
+  updateUsersPermissionsUser: { data?: { id?: string | null } | null };
+};
+
 export const CanRunOperationDocument = gql`
   query canRunOperation($operation: String!, $variableSets: [JSON!]!) {
     canRunOperation(operation: $operation, variableSets: $variableSets)
@@ -9358,6 +9368,65 @@ export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
   UpdatePictureMutationVariables
 >;
 
+export const UpdateUsersPermissionsUserDocument = gql`
+  mutation updateUsersPermissionsUser($id: ID!, $username: String, $email: String) {
+    updateUsersPermissionsUser(id: $id, data: { username: $username, email: $email }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateUsersPermissionsUserMutationFn = Apollo.MutationFunction<
+  UpdateUsersPermissionsUserMutation,
+  UpdateUsersPermissionsUserMutationVariables
+>;
+
+/**
+ * __useUpdateUsersPermissionsUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUsersPermissionsUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUsersPermissionsUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUsersPermissionsUserMutation, { data, loading, error }] = useUpdateUsersPermissionsUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      username: // value for 'username'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useUpdateUsersPermissionsUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateUsersPermissionsUserMutation,
+    UpdateUsersPermissionsUserMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateUsersPermissionsUserMutation,
+    UpdateUsersPermissionsUserMutationVariables
+  >(UpdateUsersPermissionsUserDocument, options);
+}
+
+export type UpdateUsersPermissionsUserMutationHookResult = ReturnType<
+  typeof useUpdateUsersPermissionsUserMutation
+>;
+
+export type UpdateUsersPermissionsUserMutationResult =
+  Apollo.MutationResult<UpdateUsersPermissionsUserMutation>;
+
+export type UpdateUsersPermissionsUserMutationOptions = Apollo.BaseMutationOptions<
+  UpdateUsersPermissionsUserMutation,
+  UpdateUsersPermissionsUserMutationVariables
+>;
+
 export function useCanRunCanRunOperationQuery(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -13001,6 +13070,48 @@ export function useCanRunMultipleUpdatePictureMutations(
     ...options,
     variables: {
       operation: UpdatePictureDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateUsersPermissionsUserMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateUsersPermissionsUserMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateUsersPermissionsUserDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateUsersPermissionsUserMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateUsersPermissionsUserMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateUsersPermissionsUserDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

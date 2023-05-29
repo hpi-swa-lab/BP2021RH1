@@ -86,3 +86,4 @@ export { default as updateLocationVisibility } from './operations/updateLocation
 export { default as updatePersonName } from './operations/updatePersonName.js';
 export { default as updatePersonSynonyms } from './operations/updatePersonSynonyms.js';
 export { default as updatePicture } from './operations/updatePicture.js';
+export { default as updateUsersPermissionsUser } from './operations/updateUsersPermissionsUser.js';

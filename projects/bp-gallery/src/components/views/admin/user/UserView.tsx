@@ -1,6 +1,10 @@
 import { Stack, TextField } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetUsersPermissionsUserQuery } from '../../../../graphql/APIConnector';
+import {
+  useGetUsersPermissionsUserQuery,
+  useUpdateUsersPermissionsUserMutation,
+} from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useVisit } from '../../../../helpers/history';
 import { useAuth } from '../../../../hooks/context-hooks';
@@ -29,6 +33,31 @@ export const UserView = ({ id }: { id: string }) => {
   const user: FlatUsersPermissionsUser | undefined =
     useSimplifiedQueryResponseData(data)?.usersPermissionsUser;
 
+  const [updateUsersPermissionsUser] = useUpdateUsersPermissionsUserMutation({
+    refetchQueries: ['getUsersPermissionsUser'],
+  });
+
+  const [username, setUsername] = useState(user?.username ?? '');
+  const [email, setEmail] = useState(user?.email ?? '');
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+      setEmail(user.email);
+    }
+  }, [user]);
+
+  const onSave = useCallback(() => {
+    updateUsersPermissionsUser({
+      variables: {
+        id,
+        username,
+        email,
+      },
+    });
+  }, [updateUsersPermissionsUser, id, username, email]);
+
+  const savePending = user && (username !== user.username || email !== user.email);
   return (
     <ProtectedRoute canUse={true} canUseLoading={false}>
       {() => {
@@ -46,8 +75,21 @@ export const UserView = ({ id }: { id: string }) => {
               }
             >
               <Stack gap={4}>
-                {user && <TextField label={t('admin.user.name')} value={user.username}></TextField>}
-                {user && <TextField label={t('admin.user.email')} value={user.email}></TextField>}
+                {user && (
+                  <TextField
+                    label={t('admin.user.name')}
+                    value={username}
+                    onChange={event => setUsername(event.target.value)}
+                  />
+                )}
+                {user && (
+                  <TextField
+                    label={t('admin.user.email')}
+                    value={email}
+                    onChange={event => setEmail(event.target.value)}
+                  />
+                )}
+                {savePending && <PrimaryButton onClick={onSave}>{t('curator.save')}</PrimaryButton>}
                 {user && user.id === loggedInUserId && (
                   <PrimaryButton onClick={() => visit('/change-password')} withRightArrow>
                     {t('admin.changePassword.title')}

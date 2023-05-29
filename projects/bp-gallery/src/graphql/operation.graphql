@@ -86,3 +86,4 @@ mutation updateLocationVisibility($tagId: ID! $visible: Boolean!) { updateLocati
 mutation updatePersonName($tagId: ID! $name: String!) { updatePersonTag(id: $tagId data: { name: $name }) { data { id } } }
 mutation updatePersonSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updatePersonTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updatePicture($pictureId: ID! $data: JSON!) { updatePictureWithTagCleanup(id: $pictureId data: $data) }
+mutation updateUsersPermissionsUser($id: ID! $username: String $email: String) { updateUsersPermissionsUser(id: $id data: { username: $username email: $email }) { data { id } } }

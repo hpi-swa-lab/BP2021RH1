@@ -223,6 +223,7 @@
         "getParameterizedPermissions": "Rechte ansehen",
         "deleteParameterizedPermission": "Recht entziehen",
         "getUsersPermissionsUser": "Nutzer-Daten ansehen",
+        "updateUsersPermissionsUser": "Nutzer-Daten bearbeiten",
         "getUsersPermissionsUsers": "Liste aller Nutzer sehen",
         "login": "Sich anmelden",
         "removeUser": "Nutzer löschen"
