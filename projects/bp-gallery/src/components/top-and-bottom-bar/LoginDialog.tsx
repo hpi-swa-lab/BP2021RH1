@@ -42,9 +42,12 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
     login(username, password)
       .then(close)
       .catch((err: string) => {
-        if (err === 'Invalid identifier or password')
-          setErrorMessage(t('login.invalid-credentials'));
-        else setErrorMessage(err);
+        setErrorMessage(
+          {
+            'Invalid identifier or password': t('login.invalid-credentials'),
+            Unauthorized: t('login.unauthorized'),
+          }[err] ?? err
+        );
       });
   };
 

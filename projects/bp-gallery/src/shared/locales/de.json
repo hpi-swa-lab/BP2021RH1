@@ -152,6 +152,7 @@
     "username": "Nutzername",
     "password": "Passwort",
     "invalid-credentials": "Benutzername oder Passwort sind falsch",
+    "unauthorized": "Sie dürfen sich nicht anmelden",
     "successful-login": "Erfolgreich eingeloggt",
     "successful-logout": "Erfolgreich ausgeloggt"
   },
