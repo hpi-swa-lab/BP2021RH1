@@ -100,10 +100,7 @@ const DropZone = ({ id }: { id: string }) => {
           </SortableContext>
         </DndContext>
       ) : (
-        <>
-          {dragItems?.map(item => item.element)}
-          <div className='w-full' />
-        </>
+        <>{dragItems?.map(item => item.element)}</>
       )}
     </div>
   );

@@ -895,6 +895,30 @@ export const ExhibitionStateManager = ({
   );
 };
 
+export const ExhibitionStateViewer = ({
+  exhibition,
+  children,
+}: PropsWithChildren<{ exhibition: FlatExhibition }>) => {
+  const exhibitionText = buildExhibitionTextState(exhibition);
+  const titlePicture = buildDragElement(exhibition.title_picture);
+
+  const idealot = buildDragElements(exhibition.idealot_pictures);
+
+  const sections = buildSectionState(exhibition.exhibition_sections);
+
+  return (
+    <ExhibitionStateGetter
+      exhibitionId={exhibition.id}
+      exhibitionText={exhibitionText}
+      sections={sections}
+      idealot={idealot}
+      titlePicture={titlePicture}
+    >
+      {children}
+    </ExhibitionStateGetter>
+  );
+};
+
 const DragNDropHandler = ({
   getDraggable,
   addDraggable,
