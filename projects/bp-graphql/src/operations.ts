@@ -24,6 +24,7 @@ export { default as deleteLocationTag } from './operations/deleteLocationTag.js'
 export { default as deleteParameterizedPermission } from './operations/deleteParameterizedPermission.js';
 export { default as deletePersonTag } from './operations/deletePersonTag.js';
 export { default as fixCommentText } from './operations/fixCommentText.js';
+export { default as forgotPassword } from './operations/forgotPassword.js';
 export { default as getAllArchiveTags } from './operations/getAllArchiveTags.js';
 export { default as getAllCollections } from './operations/getAllCollections.js';
 export { default as getAllKeywordTags } from './operations/getAllKeywordTags.js';

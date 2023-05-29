@@ -35,6 +35,7 @@ export const presets: Preset[] = [
       'login',
       'resetPassword',
       'changePassword',
+      'forgotPassword',
     ],
   },
   {

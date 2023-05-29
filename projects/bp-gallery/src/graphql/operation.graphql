@@ -56,6 +56,7 @@ mutation deleteLocationTag($id: ID!) { deleteLocationTag(id: $id) { data { id } 
 mutation deleteParameterizedPermission($id: ID!) { deleteParameterizedPermission(id: $id) { data { id } } }
 mutation deletePersonTag($id: ID!) { deletePersonTag(id: $id) { data { id } } }
 mutation fixCommentText($commentId: ID! $text: String!) { updateComment(id: $commentId data: { text: $text }) { data { id } } }
+mutation forgotPassword($email: String!) { forgotPassword(email: $email) { ok } }
 mutation increaseNotAPlaceCount($pictureId: ID!) { increaseNotAPlaceCount(id: $pictureId) }
 mutation like($pictureId: ID! $dislike: Boolean) { doLike(pictureId: $pictureId dislike: $dislike) }
 mutation login($username: String! $password: String!) { login(input: { identifier: $username password: $password }) { jwt } }

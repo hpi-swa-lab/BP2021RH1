@@ -218,6 +218,7 @@
         "addUser": "Nutzer erstellen",
         "canRunOperation": "Recht abfragen",
         "changePassword": "Passwort ändern",
+        "forgotPassword": "Passwort-vergessen-Funktion nutzen",
         "resetPassword": "Passwort setzen/zurücksetzen",
         "addPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
@@ -269,6 +270,13 @@
         "success": "Archiv erfolgreich gelöscht",
         "aborted": "Aktion abgebrochen: Das Archiv wurde nicht gelöscht"
       }
+    },
+    "forgotPassword": {
+      "title": "Passwort vergessen",
+      "question": "Passwort vergessen?",
+      "explanation": "Geben Sie die E-Mail ein, mit der sie sich auf der Seite registriert haben. Ihnen wird dann per Mail ein Link zugeschickt, über den Sie Ihr Passwort zurücksetzen können.",
+      "email": "E-Mail",
+      "success": "E-Mail versendet"
     },
     "resetPassword": {
       "title": "Passwort setzen/zurücksetzen",

@@ -11,11 +11,14 @@ import {
 } from '@mui/material';
 import { FormEvent, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useVisit } from '../../helpers/history';
+import { useCanUseForgotPasswordView } from '../../hooks/can-do-hooks';
 import { useAuth } from '../../hooks/context-hooks';
 import './LoginDialog.scss';
 
 const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
   const { t } = useTranslation();
+  const { visit } = useVisit();
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -51,6 +54,8 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
       });
   };
 
+  const { canUseForgotPasswordView } = useCanUseForgotPasswordView();
+
   return (
     <Dialog open={open} fullWidth={false} onClose={close} className='login-screen'>
       <form onSubmit={submitForm}>
@@ -81,6 +86,16 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
               {passwordShown ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </div>
+          {canUseForgotPasswordView && (
+            <Button
+              onClick={() => {
+                onClose();
+                visit('/forgot-password');
+              }}
+            >
+              {t('admin.forgotPassword.question')}
+            </Button>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={close} color='primary'>

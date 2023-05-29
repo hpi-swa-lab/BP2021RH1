@@ -10,6 +10,7 @@ import {
   useCanRunDeclineCommentMutation,
   useCanRunDeleteCollectionMutation,
   useCanRunDeleteParameterizedPermissionMutation,
+  useCanRunForgotPasswordMutation,
   useCanRunGetAllArchiveTagsQuery,
   useCanRunGetAllKeywordTagsQuery,
   useCanRunGetAllLocationTagsQuery,
@@ -244,6 +245,11 @@ export const useCanUpdateUsersPermissionsUser = (id: string | null | undefined) 
       },
     });
   return { canUpdateUsersPermissionsUser, loading };
+};
+
+export const useCanUseForgotPasswordView = () => {
+  const { canRun: canUseForgotPasswordView, loading } = useCanRunForgotPasswordMutation();
+  return { canUseForgotPasswordView, loading };
 };
 
 export const useCanChangePassword = () => {
