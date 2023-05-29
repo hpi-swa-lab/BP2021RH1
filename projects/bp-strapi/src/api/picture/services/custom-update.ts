@@ -1,3 +1,4 @@
+import { pick } from 'lodash';
 import type { KnexEngine } from '../../../types';
 import { plural, singular, table } from '../../helper';
 
@@ -471,17 +472,6 @@ const updatePictureWithTagCleanup = async (id: string, data) => {
   });
 
   return id;
-};
-
-// return a new object, only keeping the specified keys from the original object
-const pick = (original, keys) => {
-  const picked = {};
-  for (const key of keys) {
-    if (key in original) {
-      picked[key] = original[key];
-    }
-  }
-  return picked;
 };
 
 const knexIdArray = (knexEngine: KnexEngine, ids, name) => {
