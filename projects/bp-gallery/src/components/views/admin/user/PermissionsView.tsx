@@ -20,12 +20,14 @@ import {
   useGetUsersPermissionsUserQuery,
 } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
+import { useCanUsePermissionsView } from '../../../../hooks/can-do-hooks';
 import {
   FlatArchiveTag,
   FlatParameterizedPermission,
   FlatUsersPermissionsUser,
 } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
+import ProtectedRoute from '../../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
@@ -317,34 +319,43 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     ]
   );
 
-  if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
-    return <Loading />;
-  } else if (permissionLookup && archives) {
-    return (
-      <CenteredContainer
-        title={
-          isPublic
-            ? t('admin.permissions.publicTitle')
-            : t('admin.permissions.title', { userName: user?.username })
+  const { canUsePermissionsView, loading: canUsePermissionsViewLoading } =
+    useCanUsePermissionsView(userId);
+
+  return (
+    <ProtectedRoute canUse={canUsePermissionsView} canUseLoading={canUsePermissionsViewLoading}>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else if (permissionLookup && archives) {
+          return (
+            <CenteredContainer
+              title={
+                isPublic
+                  ? t('admin.permissions.publicTitle')
+                  : t('admin.permissions.title', { userName: user?.username })
+              }
+            >
+              <div className='mb-2'>
+                <Input
+                  fullWidth
+                  value={filter}
+                  onChange={onFilterChange}
+                  placeholder={t('admin.permissions.filterPlaceholder')}
+                />
+              </div>
+              {renderSections(t('admin.permissions.systemPermissions'), sections.system, null)}
+              {archives.map(archive => renderSections(archive.name, sections.perArchive, archive))}
+            </CenteredContainer>
+          );
+        } else {
+          return <Redirect to={FALLBACK_PATH} />;
         }
-      >
-        <div className='mb-2'>
-          <Input
-            fullWidth
-            value={filter}
-            onChange={onFilterChange}
-            placeholder={t('admin.permissions.filterPlaceholder')}
-          />
-        </div>
-        {renderSections(t('admin.permissions.systemPermissions'), sections.system, null)}
-        {archives.map(archive => renderSections(archive.name, sections.perArchive, archive))}
-      </CenteredContainer>
-    );
-  } else {
-    return <Redirect to={FALLBACK_PATH} />;
-  }
+      }}
+    </ProtectedRoute>
+  );
 };
 
 export default PermissionsView;

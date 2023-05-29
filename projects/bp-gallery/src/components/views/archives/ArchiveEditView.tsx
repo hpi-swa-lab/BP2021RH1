@@ -12,7 +12,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
-import { useCanEditArchive } from '../../../hooks/can-do-hooks';
+import { useCanUseEditArchiveView } from '../../../hooks/can-do-hooks';
 import { FlatArchiveTag, FlatLinkWithoutRelations } from '../../../types/additionalFlatTypes';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import { isValidClientId } from '../../common/checkPaypalClientId';
@@ -197,12 +197,13 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     updateForm({ dirty: false });
   };
 
-  const { canEditArchive, loading: canEditArchiveLoading } = useCanEditArchive(archiveId);
+  const { canUseEditArchiveView, loading: canUseEditArchiveViewLoading } =
+    useCanUseEditArchiveView(archiveId);
 
   return (
     <ProtectedRoute
-      canUse={canEditArchive}
-      canUseLoading={canEditArchiveLoading}
+      canUse={canUseEditArchiveView}
+      canUseLoading={canUseEditArchiveViewLoading}
       redirectPath={`/archives/${archiveId}`}
     >
       {archive ? (

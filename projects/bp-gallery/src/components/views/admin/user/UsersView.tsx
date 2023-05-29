@@ -1,12 +1,10 @@
 import { Edit } from '@mui/icons-material';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import {
-  useCanRunGetUsersPermissionsUsersQuery,
-  useGetUsersPermissionsUsersQuery,
-} from '../../../../graphql/APIConnector';
+import { useGetUsersPermissionsUsersQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useVisit } from '../../../../helpers/history';
+import { useCanUseUsersView } from '../../../../hooks/can-do-hooks';
 import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import ProtectedRoute from '../../../common/ProtectedRoute';
@@ -22,10 +20,10 @@ export const UsersView = () => {
   const users: FlatUsersPermissionsUser[] | undefined =
     useSimplifiedQueryResponseData(data)?.usersPermissionsUsers;
 
-  const { canRun: canUse, loading: canUseLoading } = useCanRunGetUsersPermissionsUsersQuery();
+  const { canUseUsersView, loading: canUseUsersViewLoading } = useCanUseUsersView();
 
   return (
-    <ProtectedRoute canUse={canUse} canUseLoading={canUseLoading}>
+    <ProtectedRoute canUse={canUseUsersView} canUseLoading={canUseUsersViewLoading}>
       {() => {
         if (error) {
           return <QueryErrorDisplay error={error} />;

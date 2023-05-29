@@ -41,7 +41,7 @@ export const ClipboardEditor = () => {
 
   const clipboardButtons = useClipboardEditorButtons();
 
-  const needsClipboard = useNeedsClipboard();
+  const { needsClipboard } = useNeedsClipboard();
 
   if (!needsClipboard) {
     return null;

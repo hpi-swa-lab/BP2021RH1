@@ -181,7 +181,7 @@ const PictureGrid = ({
 
   const { canUseBulkEditView: canBulkEdit } = useCanUseBulkEditView(selectedPictureIds);
 
-  const canBulkEditSomePictures = useCanBulkEditSomePictures();
+  const { canBulkEditSomePictures } = useCanBulkEditSomePictures();
 
   const canSelect = useMemo(
     () =>

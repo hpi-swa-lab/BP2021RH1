@@ -1,26 +1,36 @@
 import { OperationName } from 'bp-graphql/build';
 import { useMemo } from 'react';
+import { parseUserId } from '../components/views/admin/user/helper';
 import {
   useCanRunAcceptCommentMutation,
   useCanRunAddArchiveTagMutation,
+  useCanRunAddUserMutation,
   useCanRunBulkEditMutation,
+  useCanRunChangePasswordMutation,
   useCanRunCreateSubCollectionMutation,
   useCanRunDeclineCommentMutation,
   useCanRunDeleteCollectionMutation,
+  useCanRunGetAllArchiveTagsQuery,
   useCanRunGetAllKeywordTagsQuery,
   useCanRunGetAllLocationTagsQuery,
   useCanRunGetAllPersonTagsQuery,
   useCanRunGetCollectionInfoByIdQuery,
   useCanRunGetMultiplePictureInfoQuery,
+  useCanRunGetParameterizedPermissionsQuery,
   useCanRunGetRootCollectionQuery,
   useCanRunGetUnverifiedCommentsQuery,
+  useCanRunGetUsersPermissionsUserQuery,
+  useCanRunGetUsersPermissionsUsersQuery,
   useCanRunMergeCollectionsMutation,
   useCanRunMultipleCreatePictureMutations,
   useCanRunMultipleUploadMutation,
+  useCanRunRemoveArchiveTagMutation,
   useCanRunRemoveUploadMutation,
+  useCanRunRemoveUserMutation,
   useCanRunUpdateArchiveMutation,
   useCanRunUpdateCollectionMutation,
   useCanRunUpdatePictureMutation,
+  useCanRunUpdateUsersPermissionsUserMutation,
   useGetAllArchiveTagsQuery,
   useGetParameterizedPermissionsQuery,
 } from '../graphql/APIConnector';
@@ -30,7 +40,8 @@ import { useAuth } from './context-hooks';
 
 export const useHasPermissions = (permissionNames: OperationName[]) => {
   const { userId } = useAuth();
-  const { data } = useGetParameterizedPermissionsQuery({
+
+  const { data, loading } = useGetParameterizedPermissionsQuery({
     variables: {
       userId: userId ?? null,
     },
@@ -50,21 +61,47 @@ export const useHasPermissions = (permissionNames: OperationName[]) => {
     () => permissionNames.every(name => permissionsSet.has(name)),
     [permissionNames, permissionsSet]
   );
-  return hasPermissions;
+  return { hasPermissions, loading };
 };
 
 export const useCanAddArchive = () => {
-  const { canRun, loading } = useCanRunAddArchiveTagMutation();
-  return { canAddArchive: canRun, loading };
+  const { canRun: canAddArchive, loading } = useCanRunAddArchiveTagMutation();
+  return { canAddArchive, loading };
 };
 
-export const useCanEditArchive = (id: string) => {
-  const { canRun: canEditArchive, loading } = useCanRunUpdateArchiveMutation({
+export const useCanRemoveArchive = (id: string) => {
+  const { canRun: canRemoveArchive, loading } = useCanRunRemoveArchiveTagMutation({
     variables: {
-      archiveId: id,
+      id,
     },
   });
-  return { canEditArchive, loading };
+  return { canRemoveArchive, loading };
+};
+
+export const useCanUseEditArchiveView = (id: string) => {
+  const { canRun: canEditArchive, loading: canEditArchiveLoading } = useCanRunUpdateArchiveMutation(
+    {
+      variables: {
+        archiveId: id,
+      },
+    }
+  );
+  const { canRemoveArchive, loading: canRemoveArchiveLoading } = useCanRemoveArchive(id);
+  return {
+    canUseEditArchiveView: canEditArchive || canRemoveArchive,
+    loading: canEditArchiveLoading || canRemoveArchiveLoading,
+  };
+};
+
+export const useCanUseSomeEditArchiveView = () => {
+  const { hasPermissions: canEditSomeArchive, loading: canEditSomeArchiveLoading } =
+    useHasPermissions(['updateArchive']);
+  const { hasPermissions: canRemoveSomeArchive, loading: canRemoveSomeArchiveLoading } =
+    useHasPermissions(['removeArchiveTag']);
+  return {
+    canUseSomeEditArchiveView: canEditSomeArchive || canRemoveSomeArchive,
+    loading: canEditSomeArchiveLoading || canRemoveSomeArchiveLoading,
+  };
 };
 
 export const useCanUploadPicture = () => {
@@ -112,9 +149,10 @@ export const useCanEditPicture = (pictureId: string, mediaId: string) => {
 
 export const useCanUseUploadsView = () => {
   const { canUploadPicture, loading: canUploadPictureLoading } = useCanUploadPicture();
+  const { canAddArchive, loading: canAddArchiveLoading } = useCanAddArchive();
   return {
-    canUseUploadsView: canUploadPicture,
-    loading: canUploadPictureLoading,
+    canUseUploadsView: canUploadPicture || canAddArchive,
+    loading: canUploadPictureLoading || canAddArchiveLoading,
     canUploadPicture,
     canUploadPictureLoading,
   };
@@ -161,11 +199,16 @@ export const useCanUseBulkEditView = (pictureIds: string[]) => {
 };
 
 export const useCanBulkEditSomePictures = () => {
-  return useHasPermissions(['getMultiplePictureInfo', 'bulkEdit']);
+  const { hasPermissions: canBulkEditSomePictures, loading } = useHasPermissions([
+    'getMultiplePictureInfo',
+    'bulkEdit',
+  ]);
+  return { canBulkEditSomePictures, loading };
 };
 
 export const useCanEditSomePictures = () => {
-  return useHasPermissions(['updatePicture']);
+  const { hasPermissions: canEditSomePictures, loading } = useHasPermissions(['updatePicture']);
+  return { canEditSomePictures, loading };
 };
 
 export const useCanUseCollectionCuratingView = () => {
@@ -198,8 +241,132 @@ export const useCanUseCollectionCuratingView = () => {
   };
 };
 
+export const useCanRemoveUser = (id: string | null | undefined) => {
+  const { canRun: canRemoveUser, loading } = useCanRunRemoveUserMutation({
+    variables: {
+      id: id ?? undefined,
+    },
+  });
+  return { canRemoveUser, loading };
+};
+
+export const useCanUpdateUsersPermissionsUser = (id: string | null | undefined) => {
+  const { canRun: canUpdateUsersPermissionsUser, loading } =
+    useCanRunUpdateUsersPermissionsUserMutation({
+      variables: {
+        id: id ?? undefined,
+      },
+    });
+  return { canUpdateUsersPermissionsUser, loading };
+};
+
+export const useCanChangePassword = () => {
+  const { canRun: canChangePassword, loading } = useCanRunChangePasswordMutation();
+  return { canChangePassword, loading };
+};
+
+export const useCanChangePasswordForUser = (userId: string) => {
+  const { isPublic, parsedUserId } = parseUserId(userId);
+  const { userId: loggedInUserId, loading: authLoading } = useAuth();
+  const { canChangePassword, loading: canChangePasswordLoading } = useCanChangePassword();
+  return {
+    canChangePassword: !isPublic && parsedUserId === loggedInUserId && canChangePassword,
+    loading: authLoading || canChangePasswordLoading,
+  };
+};
+
+export const useCanUsePermissionsView = (userId: string) => {
+  const { parsedUserId, isPublic } = parseUserId(userId);
+
+  const { canRun: canGetUsersPermissionsUser, loading: canGetUsersPermissionsUserLoading } =
+    useCanRunGetUsersPermissionsUserQuery({
+      variables: {
+        id: parsedUserId ?? undefined,
+      },
+    });
+  const { canRun: canGetParameterizedPermissions, loading: canGetParameterizedPermissionsLoading } =
+    useCanRunGetParameterizedPermissionsQuery({
+      variables: {
+        userId,
+      },
+    });
+  const { canRun: canGetAllArchiveTags, loading: canGetAllArchiveTagsLoading } =
+    useCanRunGetAllArchiveTagsQuery();
+  const { hasPermissions: canAddPermission, loading: canAddPermissionLoading } = useHasPermissions([
+    'addPermission',
+  ]);
+  const { hasPermissions: canDeletePermission, loading: canDeletePermissionLoading } =
+    useHasPermissions(['deleteParameterizedPermission']);
+  return {
+    canUsePermissionsView:
+      (isPublic || canGetUsersPermissionsUser) &&
+      canGetParameterizedPermissions &&
+      canGetAllArchiveTags &&
+      (canAddPermission || canDeletePermission),
+    loading:
+      canGetUsersPermissionsUserLoading ||
+      canGetParameterizedPermissionsLoading ||
+      canGetAllArchiveTagsLoading ||
+      canAddPermissionLoading ||
+      canDeletePermissionLoading,
+  };
+};
+
+export const useCanUseUserView = (userId: string) => {
+  const { parsedUserId, isPublic } = parseUserId(userId);
+
+  const { canRun: canGetUsersPermissionsUser, loading: canGetUsersPermissionsUserLoading } =
+    useCanRunGetUsersPermissionsUserQuery({
+      variables: {
+        id: parsedUserId ?? undefined,
+      },
+    });
+
+  return {
+    canUseUserView: isPublic || canGetUsersPermissionsUser,
+    loading: canGetUsersPermissionsUserLoading,
+  };
+};
+
+export const useCanAddUser = () => {
+  const { canRun: canAddUser, loading } = useCanRunAddUserMutation();
+  return { canAddUser, loading };
+};
+
+export const useCanUseUsersView = () => {
+  const { canRun: canGetUsersPermissionsUsers, loading: canGetUsersPermissionsUsersLoading } =
+    useCanRunGetUsersPermissionsUsersQuery();
+  return {
+    canUseUsersView: canGetUsersPermissionsUsers,
+    loading: canGetUsersPermissionsUsersLoading,
+  };
+};
+
+export const useCanUseArchivesView = () => {
+  const { canRun: canGetAllArchiveTags, loading: canGetAllArchiveTagsLoading } =
+    useCanRunGetAllArchiveTagsQuery();
+  const { canUseSomeEditArchiveView, loading: canUseSomeEditArchiveViewLoading } =
+    useCanUseSomeEditArchiveView();
+  const { canAddArchive, loading: canAddArchiveLoading } = useCanAddArchive();
+
+  return {
+    canUseArchivesView: canGetAllArchiveTags && (canUseSomeEditArchiveView || canAddArchive),
+    loading:
+      canGetAllArchiveTagsLoading || canUseSomeEditArchiveViewLoading || canAddArchiveLoading,
+  };
+};
+
 export const useCanUseAdminView = () => {
-  return { canUseAdminView: true, loading: false };
+  const { canUseUsersView, loading: canUseUsersViewLoading } = useCanUseUsersView();
+  const { canUseArchivesView, loading: canUseArchivesViewLoading } = useCanUseArchivesView();
+  return {
+    canUseAdminView: canUseUsersView || canUseArchivesView,
+    loading: canUseUsersViewLoading || canUseArchivesViewLoading,
+    canUseUsersView,
+    canUseUsersViewLoading,
+    canUseArchivesView,
+    canUseArchivesViewLoading,
+  };
 };
 
 export const useCanAcceptOrDeclineComment = (commentId: string | undefined) => {
@@ -227,8 +394,12 @@ export const useCanAcceptOrDeclineComment = (commentId: string | undefined) => {
 
 export const useNeedsClipboard = () => {
   // for LinkedInfoField
-  const canEditSomePictures = useCanEditSomePictures();
-  const canBulkEditSomePictures = useCanBulkEditSomePictures();
+  const { canEditSomePictures, loading: canEditSomePicturesLoading } = useCanEditSomePictures();
+  const { canBulkEditSomePictures, loading: canBulkEditSomePicturesLoading } =
+    useCanBulkEditSomePictures();
 
-  return canEditSomePictures || canBulkEditSomePictures;
+  return {
+    needsClipboard: canEditSomePictures || canBulkEditSomePictures,
+    loading: canEditSomePicturesLoading || canBulkEditSomePicturesLoading,
+  };
 };

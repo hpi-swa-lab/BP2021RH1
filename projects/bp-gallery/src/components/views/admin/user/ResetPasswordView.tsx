@@ -2,9 +2,11 @@ import { Stack, TextField } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
+import { useCanRunResetPasswordMutation } from '../../../../graphql/APIConnector';
 import { useVisit } from '../../../../helpers/history';
 import { useAuth } from '../../../../hooks/context-hooks';
 import PrimaryButton from '../../../common/PrimaryButton';
+import ProtectedRoute from '../../../common/ProtectedRoute';
 import { FALLBACK_PATH } from '../../../routes';
 import { CenteredContainer } from '../CenteredContainer';
 
@@ -27,27 +29,36 @@ export const ResetPasswordView = () => {
     visit(FALLBACK_PATH);
   }, [token, resetPassword, password, passwordConfirmation, visit]);
 
+  const { canRun: canResetPassword, loading: canResetPasswordLoading } =
+    useCanRunResetPasswordMutation({
+      variables: {
+        token: token ?? '',
+      },
+    });
+
   if (!token) {
     return <Redirect to={FALLBACK_PATH} />;
   }
 
   return (
-    <CenteredContainer title={t('admin.resetPassword.title')}>
-      <Stack gap={4}>
-        <TextField
-          label={t('admin.resetPassword.password')}
-          type='password'
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-        />
-        <TextField
-          label={t('admin.resetPassword.passwordConfirmation')}
-          type='password'
-          value={passwordConfirmation}
-          onChange={event => setPasswordConfirmation(event.target.value)}
-        />
-        <PrimaryButton onClick={doResetPassword}>{t('common.confirm')}</PrimaryButton>
-      </Stack>
-    </CenteredContainer>
+    <ProtectedRoute canUse={canResetPassword} canUseLoading={canResetPasswordLoading}>
+      <CenteredContainer title={t('admin.resetPassword.title')}>
+        <Stack gap={4}>
+          <TextField
+            label={t('admin.resetPassword.password')}
+            type='password'
+            value={password}
+            onChange={event => setPassword(event.target.value)}
+          />
+          <TextField
+            label={t('admin.resetPassword.passwordConfirmation')}
+            type='password'
+            value={passwordConfirmation}
+            onChange={event => setPasswordConfirmation(event.target.value)}
+          />
+          <PrimaryButton onClick={doResetPassword}>{t('common.confirm')}</PrimaryButton>
+        </Stack>
+      </CenteredContainer>
+    </ProtectedRoute>
   );
 };

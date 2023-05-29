@@ -7,7 +7,12 @@ import {
 } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useVisit } from '../../../../helpers/history';
-import { useAuth } from '../../../../hooks/context-hooks';
+import {
+  useCanChangePasswordForUser,
+  useCanUpdateUsersPermissionsUser,
+  useCanUsePermissionsView,
+  useCanUseUserView,
+} from '../../../../hooks/can-do-hooks';
 import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import PrimaryButton from '../../../common/PrimaryButton';
@@ -20,8 +25,6 @@ import { parseUserId } from './helper';
 export const UserView = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { visit } = useVisit();
-
-  const { userId: loggedInUserId } = useAuth();
 
   const { parsedUserId, isPublic } = parseUserId(id);
 
@@ -58,8 +61,14 @@ export const UserView = ({ id }: { id: string }) => {
   }, [updateUsersPermissionsUser, id, username, email]);
 
   const savePending = user && (username !== user.username || email !== user.email);
+
+  const { canUseUserView, loading: canUseUserViewLoading } = useCanUseUserView(id);
+  const { canUpdateUsersPermissionsUser } = useCanUpdateUsersPermissionsUser(id);
+  const { canUsePermissionsView } = useCanUsePermissionsView(id);
+  const { canChangePassword } = useCanChangePasswordForUser(id);
+
   return (
-    <ProtectedRoute canUse={true} canUseLoading={false}>
+    <ProtectedRoute canUse={canUseUserView} canUseLoading={canUseUserViewLoading}>
       {() => {
         if (error) {
           return <QueryErrorDisplay error={error} />;
@@ -80,6 +89,7 @@ export const UserView = ({ id }: { id: string }) => {
                     label={t('admin.user.name')}
                     value={username}
                     onChange={event => setUsername(event.target.value)}
+                    disabled={!canUpdateUsersPermissionsUser}
                   />
                 )}
                 {user && (
@@ -87,20 +97,23 @@ export const UserView = ({ id }: { id: string }) => {
                     label={t('admin.user.email')}
                     value={email}
                     onChange={event => setEmail(event.target.value)}
+                    disabled={!canUpdateUsersPermissionsUser}
                   />
                 )}
                 {savePending && <PrimaryButton onClick={onSave}>{t('curator.save')}</PrimaryButton>}
-                {user && user.id === loggedInUserId && (
+                {canChangePassword && (
                   <PrimaryButton onClick={() => visit('/change-password')} withRightArrow>
                     {t('admin.changePassword.title')}
                   </PrimaryButton>
                 )}
-                <PrimaryButton
-                  onClick={() => visit(`/admin/user/${id}/permissions`)}
-                  withRightArrow
-                >
-                  {t('admin.user.permissions')}
-                </PrimaryButton>
+                {canUsePermissionsView && (
+                  <PrimaryButton
+                    onClick={() => visit(`/admin/user/${id}/permissions`)}
+                    withRightArrow
+                  >
+                    {t('admin.user.permissions')}
+                  </PrimaryButton>
+                )}
                 <RemoveUserButton id={parsedUserId ?? undefined} />
               </Stack>
             </CenteredContainer>

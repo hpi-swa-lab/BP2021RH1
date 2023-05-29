@@ -2,8 +2,9 @@ import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAddUserMutation, useCanRunAddUserMutation } from '../../../../graphql/APIConnector';
+import { useAddUserMutation } from '../../../../graphql/APIConnector';
 import { useVisit } from '../../../../helpers/history';
+import { useCanAddUser } from '../../../../hooks/can-do-hooks';
 import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 
 export const AddUserButton = () => {
@@ -36,7 +37,7 @@ export const AddUserButton = () => {
     visit(`/admin/user/${id}`);
   }, [dialog, t, addUser, visit]);
 
-  const { canRun: canAddUser } = useCanRunAddUserMutation();
+  const { canAddUser } = useCanAddUser();
 
   if (!canAddUser) {
     return null;

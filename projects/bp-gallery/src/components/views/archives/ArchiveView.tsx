@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
-import { useCanEditArchive } from '../../../hooks/can-do-hooks';
+import { useCanUseEditArchiveView } from '../../../hooks/can-do-hooks';
 import {
   FlatArchiveTag,
   FlatPicture,
@@ -76,7 +76,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
     ];
   }, [archiveId, t, visit]);
 
-  const { canEditArchive } = useCanEditArchive(archiveId);
+  const { canUseEditArchiveView } = useCanUseEditArchiveView(archiveId);
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -84,7 +84,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
 
   return (
     <div className='archive-container'>
-      {canEditArchive && (
+      {canUseEditArchiveView && (
         <p className='edit-button-wrapper'>
           <Button
             className='archive-edit-button'

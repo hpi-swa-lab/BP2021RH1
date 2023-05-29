@@ -10,7 +10,12 @@ export const AdminView = () => {
   const { t } = useTranslation();
   const { visit } = useVisit();
 
-  const { canUseAdminView, loading: canUseAdminViewLoading } = useCanUseAdminView();
+  const {
+    canUseAdminView,
+    loading: canUseAdminViewLoading,
+    canUseUsersView,
+    canUseArchivesView,
+  } = useCanUseAdminView();
 
   return (
     <ProtectedRoute canUse={canUseAdminView} canUseLoading={canUseAdminViewLoading}>
@@ -20,19 +25,23 @@ export const AdminView = () => {
             {
               title: t('admin.users.title'),
               path: '/admin/users',
+              canUse: canUseUsersView,
             },
             {
               title: t('admin.archives.title'),
               path: '/admin/archives',
+              canUse: canUseArchivesView,
             },
-          ].map(({ title, path }) => (
-            <ListItemButton key={path} onClick={() => visit(path)}>
-              <ListItemText primary={<h3>{title}</h3>} />
-              <ListItemIcon>
-                <ChevronRight />
-              </ListItemIcon>
-            </ListItemButton>
-          ))}
+          ]
+            .filter(({ canUse }) => canUse)
+            .map(({ title, path }) => (
+              <ListItemButton key={path} onClick={() => visit(path)}>
+                <ListItemText primary={<h3>{title}</h3>} />
+                <ListItemIcon>
+                  <ChevronRight />
+                </ListItemIcon>
+              </ListItemButton>
+            ))}
         </List>
       </CenteredContainer>
     </ProtectedRoute>

@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import {
-  useCanRunRemoveUserMutation,
   useGetUsersPermissionsUserQuery,
   useRemoveUserMutation,
 } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
+import { useCanRemoveUser } from '../../../../hooks/can-do-hooks';
 import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
 import { DangerousRemoveButton } from '../DangerousRemoveButton';
 
@@ -19,11 +19,7 @@ export const RemoveUserButton = ({ id }: { id: string | undefined }) => {
 
   const [removeUserMutation] = useRemoveUserMutation();
 
-  const { canRun: canRemoveUser } = useCanRunRemoveUserMutation({
-    variables: {
-      id,
-    },
-  });
+  const { canRemoveUser } = useCanRemoveUser(id);
 
   const entity = useMemo(
     () =>
