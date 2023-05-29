@@ -271,6 +271,9 @@
         "aborted": "Aktion abgebrochen: Das Archiv wurde nicht gelöscht"
       }
     },
+    "myAccount": {
+      "title": "Mein Profil"
+    },
     "forgotPassword": {
       "title": "Passwort vergessen",
       "question": "Passwort vergessen?",

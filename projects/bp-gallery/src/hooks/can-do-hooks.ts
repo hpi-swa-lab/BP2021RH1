@@ -323,6 +323,15 @@ export const useCanUseUserView = (userId: string) => {
   };
 };
 
+export const useCanUseMyAccountView = () => {
+  const { userId } = useAuth();
+  const { canUseUserView, loading } = useCanUseUserView(userId ?? '');
+  return {
+    canUseMyAccountView: !!userId && canUseUserView,
+    loading,
+  };
+};
+
 export const useCanAddUser = () => {
   const { canRun: canAddUser, loading } = useCanRunAddUserMutation();
   return { canAddUser, loading };

@@ -7,6 +7,7 @@ import { AdminView } from './views/admin/AdminView';
 import { ArchivesView } from './views/admin/archive/ArchivesView';
 import { ChangePasswordView } from './views/admin/user/ChangePasswordView';
 import { ForgotPasswordView } from './views/admin/user/ForgotPasswordView';
+import { MyAccountView } from './views/admin/user/MyAccountView';
 import PermissionsView from './views/admin/user/PermissionsView';
 import { ResetPasswordView } from './views/admin/user/ResetPasswordView';
 import { UserView } from './views/admin/user/UserView';
@@ -121,6 +122,12 @@ const routes: RouteConfig[] = [
     path: '/contact',
     render: () => {
       return <ContactFormView />;
+    },
+  },
+  {
+    path: '/my-account',
+    render: () => {
+      return <MyAccountView />;
     },
   },
   {

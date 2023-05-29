@@ -2,6 +2,7 @@ import {
   AdminPanelSettings,
   Book,
   Chat,
+  ContactMail,
   Folder,
   ImportContacts,
   Login,
@@ -22,6 +23,7 @@ import {
   useCanUseCollectionCuratingView,
   useCanUseKeywordTagTableView,
   useCanUseLocationTagTableView,
+  useCanUseMyAccountView,
   useCanUsePersonTagTableView,
   useCanUseUnverifiedCommentsView,
   useCanUseUploadsView,
@@ -53,6 +55,7 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
   const { canUseUnverifiedCommentsView } = useCanUseUnverifiedCommentsView();
   const { canUseCollectionCuratingView } = useCanUseCollectionCuratingView();
   const { canUseAdminView } = useCanUseAdminView();
+  const { canUseMyAccountView } = useCanUseMyAccountView();
 
   const moreMenuItems = useMemo(() => {
     return [
@@ -98,6 +101,12 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
         title: t('admin.title'),
         active: canUseAdminView,
       },
+      {
+        to: '/my-account',
+        icon: <ContactMail />,
+        title: t('admin.myAccount.title'),
+        active: canUseMyAccountView,
+      },
     ].filter(item => item.active);
   }, [
     t,
@@ -108,6 +117,7 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
     canUseUnverifiedCommentsView,
     canUseCollectionCuratingView,
     canUseAdminView,
+    canUseMyAccountView,
   ]);
 
   return (
