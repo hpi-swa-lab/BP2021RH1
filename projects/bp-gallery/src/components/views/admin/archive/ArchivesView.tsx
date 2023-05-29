@@ -1,5 +1,6 @@
 import { Edit } from '@mui/icons-material';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useCanRunGetUsersPermissionsUsersQuery,
@@ -21,6 +22,11 @@ export const ArchivesView = () => {
   const { data, error, loading } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
 
+  const sortedArchives = useMemo(
+    () => (archives ? archives.slice().sort((a, b) => a.name.localeCompare(b.name)) : undefined),
+    [archives]
+  );
+
   const { canRun: canUse, loading: canUseLoading } = useCanRunGetUsersPermissionsUsersQuery();
 
   return (
@@ -30,12 +36,12 @@ export const ArchivesView = () => {
           return <QueryErrorDisplay error={error} />;
         } else if (loading) {
           return <Loading />;
-        } else if (archives) {
+        } else if (sortedArchives) {
           return (
             <CenteredContainer title={t('admin.archives.title')}>
               <AddArchiveButton onCreated={id => id !== null && visit(`/archives/${id}/edit`)} />
               <List>
-                {archives.map(archive => (
+                {sortedArchives.map(archive => (
                   <ListItemButton
                     key={archive.id}
                     onClick={() => visit(`/archives/${archive.id}/edit`)}

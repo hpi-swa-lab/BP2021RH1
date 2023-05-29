@@ -1,5 +1,6 @@
 import { Edit } from '@mui/icons-material';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetUsersPermissionsUsersQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
@@ -20,6 +21,11 @@ export const UsersView = () => {
   const users: FlatUsersPermissionsUser[] | undefined =
     useSimplifiedQueryResponseData(data)?.usersPermissionsUsers;
 
+  const sortedUsers = useMemo(
+    () => (users ? users.slice().sort((a, b) => a.username.localeCompare(b.username)) : undefined),
+    [users]
+  );
+
   const { canUseUsersView, loading: canUseUsersViewLoading } = useCanUseUsersView();
 
   return (
@@ -29,12 +35,12 @@ export const UsersView = () => {
           return <QueryErrorDisplay error={error} />;
         } else if (loading) {
           return <Loading />;
-        } else if (users) {
+        } else if (sortedUsers) {
           return (
             <CenteredContainer title={t('admin.users.title')}>
               <AddUserButton />
               <List>
-                {[{ id: 'public', username: t('admin.users.publicUsername') }, ...users].map(
+                {[{ id: 'public', username: t('admin.users.publicUsername') }, ...sortedUsers].map(
                   user => (
                     <ListItemButton key={user.id} onClick={() => visit(`/admin/user/${user.id}`)}>
                       <ListItemText primary={user.username} />
