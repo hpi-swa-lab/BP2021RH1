@@ -6,6 +6,7 @@ import { TagType } from '../types/additionalFlatTypes';
 import { AdminView } from './views/admin/AdminView';
 import { ArchivesView } from './views/admin/archive/ArchivesView';
 import PermissionsView from './views/admin/user/PermissionsView';
+import { ResetPasswordView } from './views/admin/user/ResetPasswordView';
 import { UserView } from './views/admin/user/UserView';
 import { UsersView } from './views/admin/user/UsersView';
 import ArchiveEditView from './views/archives/ArchiveEditView';
@@ -148,6 +149,12 @@ const routes: RouteConfig[] = [
     path: '/admin',
     render: () => {
       return <AdminView />;
+    },
+  },
+  {
+    path: '/reset-password',
+    render: () => {
+      return <ResetPasswordView />;
     },
   },
   {

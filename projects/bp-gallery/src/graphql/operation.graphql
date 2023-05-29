@@ -67,6 +67,7 @@ mutation pinComment($commentId: ID!) { updateComment(id: $commentId data: { pinn
 mutation postComment( $id: ID! $author: String! $text: String! $date: DateTime! $parentCommentId: ID ) { createComment( data: { author: $author text: $text date: $date picture: $id publishedAt: null parentComment: $parentCommentId } ) { data { attributes { text } } } }
 mutation removeArchiveTag($id: ID!) { removeArchiveTag(id: $id) }
 mutation removeUpload($id: ID!) { removeFile(id: $id) { data { id } } }
+mutation resetPassword($token: String! $password: String! $passwordConfirmation: String!) { resetPassword( code: $token password: $password passwordConfirmation: $passwordConfirmation ) { jwt } }
 mutation setPicturesForCollection($pictureIds: [ID]! $collectionId: ID!) { updateCollection(id: $collectionId data: { pictures: $pictureIds }) { data { id } } }
 mutation unpinComment($commentId: ID!) { updateComment(id: $commentId data: { pinned: false }) { data { id } } }
 mutation unpublishPicture($id: ID!) { updatePicture(id: $id data: { publishedAt: null }) { data { id } } }

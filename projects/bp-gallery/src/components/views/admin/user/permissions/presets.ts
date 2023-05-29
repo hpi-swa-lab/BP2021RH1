@@ -33,6 +33,7 @@ export const presets: Preset[] = [
       'geo',
       'canRunOperation',
       'login',
+      'resetPassword',
     ],
   },
   {

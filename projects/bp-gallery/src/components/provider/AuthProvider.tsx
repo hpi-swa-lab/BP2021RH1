@@ -8,7 +8,11 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
+import {
+  useLoginMutation,
+  useMeLazyQuery,
+  useResetPasswordMutation,
+} from '../../graphql/APIConnector';
 import { buildHttpLink } from '../../helpers/app-helpers';
 import { useStorage } from '../../hooks/context-hooks';
 import { AlertContext, AlertType } from './AlertProvider';
@@ -41,6 +45,7 @@ export interface AuthFields {
   loggedIn: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  resetPassword: (token: string, password: string, passwordConfirmation: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -49,6 +54,7 @@ export const AuthContext = createContext<AuthFields>({
   loggedIn: false,
   login: async () => {},
   logout: () => {},
+  resetPassword: async () => {},
   loading: false,
 });
 
@@ -66,6 +72,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     fetchPolicy: 'network-only',
   });
   const [loginMutation] = useLoginMutation();
+  const [resetPasswordMutation] = useResetPasswordMutation();
 
   const apolloClient = useApolloClient();
   const openAlert = useContext(AlertContext);
@@ -104,28 +111,49 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     [openAlert]
   );
 
-  const login = useCallback(
-    (username: string, password: string) => {
+  const afterLogin = useCallback(
+    (errors?: readonly Error[], token?: string | null) => {
       return new Promise<void>((resolve, reject) => {
-        loginMutation({ variables: { username, password } }).then(({ data, errors }) => {
-          if (errors) {
-            reject(errors.map(error => error.message).join('\n'));
+        if (errors) {
+          reject(errors.map(error => error.message).join('\n'));
+        } else {
+          if (token) {
+            sessionStorage.setItem('jwt', token);
+            apolloClient.setLink(buildHttpLink(token, openAlert, anonymousId));
+            getUserInfo();
+            displaySuccess(t('login.successful-login'));
+            resolve();
           } else {
-            const token = data?.login.jwt;
-            if (token) {
-              sessionStorage.setItem('jwt', token);
-              apolloClient.setLink(buildHttpLink(token, openAlert, anonymousId));
-              getUserInfo();
-              displaySuccess(t('login.successful-login'));
-              resolve();
-            } else {
-              reject('The Login-Mutation did not return a token');
-            }
+            reject('The Login-Mutation did not return a token');
           }
-        });
+        }
       });
     },
-    [loginMutation, apolloClient, getUserInfo, displaySuccess, t, openAlert, anonymousId]
+    [apolloClient, getUserInfo, displaySuccess, t, openAlert, anonymousId]
+  );
+
+  const login = useCallback(
+    async (username: string, password: string) => {
+      const { errors, data } = await loginMutation({ variables: { username, password } });
+      const token = data?.login.jwt;
+      await afterLogin(errors, token);
+    },
+    [loginMutation, afterLogin]
+  );
+
+  const resetPassword = useCallback(
+    async (token: string, password: string, passwordConfirmation: string) => {
+      const { errors, data } = await resetPasswordMutation({
+        variables: {
+          token,
+          password,
+          passwordConfirmation,
+        },
+      });
+      const jwtToken = data?.resetPassword?.jwt;
+      await afterLogin(errors, jwtToken);
+    },
+    [resetPasswordMutation, afterLogin]
   );
 
   const logout = useCallback(() => {
@@ -148,6 +176,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
         loggedIn: username !== undefined,
         login,
         logout,
+        resetPassword,
         loading: authLoading,
       }}
     >

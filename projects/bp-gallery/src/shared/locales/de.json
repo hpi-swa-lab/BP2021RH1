@@ -215,6 +215,7 @@
         "geo": "GeoQuiz spielen",
         "addUser": "Nutzer erstellen",
         "canRunOperation": "Recht abfragen",
+        "resetPassword": "Passwort setzen/zurücksetzen",
         "addPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
         "deleteParameterizedPermission": "Recht entziehen",
@@ -256,6 +257,11 @@
         "success": "Archiv erfolgreich gelöscht",
         "aborted": "Aktion abgebrochen: Das Archiv wurde nicht gelöscht"
       }
+    },
+    "resetPassword": {
+      "title": "Passwort setzen/zurücksetzen",
+      "password": "Neues Passwort",
+      "passwordConfirmation": "Neues Passwort wiederholen"
     }
   },
   "pictureFields": {
