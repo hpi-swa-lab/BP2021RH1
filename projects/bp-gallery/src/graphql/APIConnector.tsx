@@ -779,6 +779,7 @@ export type LocationTagRelationResponseCollection = {
 export type Mutation = {
   addArchiveTag?: Maybe<Scalars['Int']>;
   addPermission?: Maybe<Scalars['Int']>;
+  addUser?: Maybe<Scalars['Int']>;
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>;
   contact?: Maybe<Scalars['Int']>;
@@ -874,6 +875,11 @@ export type MutationAddPermissionArgs = {
   operationName?: InputMaybe<Scalars['String']>;
   see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
   userId?: InputMaybe<Scalars['ID']>;
+};
+
+export type MutationAddUserArgs = {
+  email?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationChangePasswordArgs = {
@@ -3163,6 +3169,13 @@ export type AddPermissionMutationVariables = Exact<{
 }>;
 
 export type AddPermissionMutation = { addPermission?: number | null };
+
+export type AddUserMutationVariables = Exact<{
+  username: Scalars['String'];
+  email: Scalars['String'];
+}>;
+
+export type AddUserMutation = { addUser?: number | null };
 
 export type BulkEditMutationVariables = Exact<{
   pictureIds: Array<Scalars['ID']> | Scalars['ID'];
@@ -6590,6 +6603,48 @@ export type AddPermissionMutationResult = Apollo.MutationResult<AddPermissionMut
 export type AddPermissionMutationOptions = Apollo.BaseMutationOptions<
   AddPermissionMutation,
   AddPermissionMutationVariables
+>;
+
+export const AddUserDocument = gql`
+  mutation addUser($username: String!, $email: String!) {
+    addUser(username: $username, email: $email)
+  }
+`;
+
+export type AddUserMutationFn = Apollo.MutationFunction<AddUserMutation, AddUserMutationVariables>;
+
+/**
+ * __useAddUserMutation__
+ *
+ * To run a mutation, you first call `useAddUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addUserMutation, { data, loading, error }] = useAddUserMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useAddUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddUserMutation, AddUserMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddUserMutation, AddUserMutationVariables>(AddUserDocument, options);
+}
+
+export type AddUserMutationHookResult = ReturnType<typeof useAddUserMutation>;
+
+export type AddUserMutationResult = Apollo.MutationResult<AddUserMutation>;
+
+export type AddUserMutationOptions = Apollo.BaseMutationOptions<
+  AddUserMutation,
+  AddUserMutationVariables
 >;
 
 export const BulkEditDocument = gql`
@@ -10623,6 +10678,48 @@ export function useCanRunMultipleAddPermissionMutations(
     ...options,
     variables: {
       operation: AddPermissionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunAddUserMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<AddUserMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: AddUserDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleAddUserMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<AddUserMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: AddUserDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

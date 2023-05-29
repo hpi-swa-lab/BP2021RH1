@@ -1,5 +1,5 @@
-import { Add, Edit } from '@mui/icons-material';
-import { Button, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Edit } from '@mui/icons-material';
+import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
   useCanRunGetUsersPermissionsUsersQuery,
@@ -12,6 +12,7 @@ import Loading from '../../../common/Loading';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { CenteredContainer } from '../CenteredContainer';
+import { AddUserButton } from './AddUserButton';
 
 export const UsersView = () => {
   const { t } = useTranslation();
@@ -33,7 +34,7 @@ export const UsersView = () => {
         } else if (users) {
           return (
             <CenteredContainer title={t('admin.users.title')}>
-              <Button startIcon={<Add />}>{t('admin.users.add')}</Button>
+              <AddUserButton />
               <List>
                 {users.map(user => (
                   <ListItemButton key={user.id} onClick={() => visit(`/admin/user/${user.id}`)}>

@@ -2,6 +2,7 @@
 export { default as acceptComment } from './operations/acceptComment.js';
 export { default as addArchiveTag } from './operations/addArchiveTag.js';
 export { default as addPermission } from './operations/addPermission.js';
+export { default as addUser } from './operations/addUser.js';
 export { default as bulkEdit } from './operations/bulkEdit.js';
 export { default as canRunOperation } from './operations/canRunOperation.js';
 export { default as contact } from './operations/contact.js';

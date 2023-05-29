@@ -213,6 +213,7 @@
         "getArchive": "Archiv ansehen",
         "removeArchiveTag": "Archiv löschen",
         "geo": "GeoQuiz spielen",
+        "addUser": "Nutzer erstellen",
         "canRunOperation": "Recht abfragen",
         "addPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
@@ -240,7 +241,8 @@
     },
     "users": {
       "title": "Nutzerverwaltung",
-      "add": "Nutzer erstellen"
+      "add": "Nutzer erstellen",
+      "add-content": "An die angegebene E-Mail wird ein Link zum Passwortsetzen verschickt."
     },
     "archives": {
       "title": "Archivverwaltung",

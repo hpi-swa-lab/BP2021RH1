@@ -12,6 +12,7 @@ import { contact } from './api/contact/services/contact';
 import { mergeSourceTagIntoTargetTag } from './api/custom-tag-resolver';
 import {
   addPermission,
+  addUser,
   preventPublicUserFromCreatingArchive,
 } from './api/parameterized-permission/services/custom-update';
 import {
@@ -23,6 +24,7 @@ import {
 } from './api/picture/services/custom-resolver';
 import { incNotAPlaceCount } from './api/picture/services/custom-update';
 import { canRunOperation } from './parameterizedPermissions/canRunOperation';
+import { initializeEmailSettings } from './parameterizedPermissions/initializeUsersPermissionsSettings';
 import { parseOperationSource } from './parameterizedPermissions/parseOperation';
 import { GqlExtension } from './types';
 
@@ -208,6 +210,16 @@ export default {
               return removeArchiveTag(id);
             },
           }),
+          mutationField('addUser', {
+            type: 'Int',
+            args: {
+              username: 'String',
+              email: 'String',
+            },
+            async resolve(_, { username, email }, context) {
+              return addUser(context, username, email);
+            },
+          }),
           mutationField('addPermission', {
             type: 'Int',
             args: {
@@ -323,5 +335,7 @@ export default {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap(/*{ strapi }*/) {},
+  async bootstrap(args) {
+    await initializeEmailSettings(args);
+  },
 };

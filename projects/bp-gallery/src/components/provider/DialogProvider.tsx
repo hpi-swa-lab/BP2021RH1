@@ -1,7 +1,8 @@
 import { Close, Done } from '@mui/icons-material';
 import { Dialog } from '@mui/material';
-import { createContext, PropsWithChildren, useContext, useRef, useState } from 'react';
+import { PropsWithChildren, createContext, useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import AddUserDialogPreset from './dialog-presets/AddUserDialogPreset';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
@@ -20,6 +21,7 @@ export enum DialogPreset {
   SELECT_COLLECTION,
   SELECT_ARCHIVE_TAG,
   INPUT_FIELD,
+  ADD_USER,
 }
 
 export interface DialogProps {
@@ -119,6 +121,9 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         )}
         {dialogState?.preset === DialogPreset.INPUT_FIELD && (
           <InputFieldDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.ADD_USER && (
+          <AddUserDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
       </Dialog>
     </DialogContext.Provider>

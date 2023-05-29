@@ -1,4 +1,6 @@
 import { Maybe, ParameterizedPermission } from 'bp-graphql/build/db-types';
+import crypto from 'crypto';
+import { omit } from 'lodash';
 
 type AddPermissionArgs = {
   userId: Maybe<string>;
@@ -90,4 +92,94 @@ export const addPermission = async ({
     },
   });
   return created.id;
+};
+
+export const addUser = async (
+  context: { koaContext: { state: { auth: unknown } } },
+  username: string | undefined,
+  email: string | undefined
+) => {
+  if (!username || !email) {
+    throw new Error('Ungültiger Name oder ungültige E-Mail');
+  }
+
+  const usersPermissionsAuthController = strapi.plugin('users-permissions').controllers.auth;
+
+  // fake a koaContext to prevent the controller from sending an answer
+  // to the user, instead, capture the answer
+  let response = undefined;
+  const fakeKoaContextWithParameters = <T>(params: T) => ({
+    request: {
+      body: params,
+    },
+    state: {
+      auth: context.koaContext.state.auth,
+    },
+    send(something) {
+      response = something;
+    },
+  });
+
+  // register won't work without a password, so we use a random temporary one
+  // to prevent the unlikely event of anyone trying to log in between register
+  // and the update-password-to-null below
+  const temporaryPassword = crypto.randomBytes(64).toString('hex');
+
+  await usersPermissionsAuthController.register(
+    fakeKoaContextWithParameters({
+      username,
+      email,
+      password: temporaryPassword,
+    })
+  );
+  if (!response.user) {
+    throw new Error('User creation failed');
+  }
+  const { user } = response;
+
+  const userQuery = strapi.db.query('plugin::users-permissions.user');
+  // remove the temporaryPassword, to disallow a login until the user
+  // has set their own password through the resetPasswordToken below
+  await userQuery.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      password: null,
+    },
+  });
+
+  // grant the new user the same permissions the public user has
+  const permissionQuery = strapi.db.query('api::parameterized-permission.parameterized-permission');
+  const publicPermissions = await permissionQuery.findMany({
+    where: {
+      users_permissions_user: {
+        id: {
+          $null: true,
+        },
+      },
+    },
+    populate: ['archive_tag'],
+  });
+  // createMany currently doesn't insert relational data:
+  // https://github.com/strapi/strapi/issues/15340#issuecomment-1385499102
+  await Promise.all(
+    publicPermissions.map(permission =>
+      permissionQuery.create({
+        data: {
+          ...omit(permission, ['id']),
+          users_permissions_user: user.id,
+        },
+      })
+    )
+  );
+
+  // generate a resetPasswordToken and send an email to the user
+  await usersPermissionsAuthController.forgotPassword(
+    fakeKoaContextWithParameters({
+      email,
+    })
+  );
+
+  return user.id;
 };
