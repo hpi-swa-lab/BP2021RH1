@@ -37,6 +37,7 @@ const AddUserDialogPreset = ({
           />
           <TextField
             label={t('admin.user.email')}
+            type='email'
             value={email}
             onChange={event => setEmail(event.target.value)}
           />

@@ -95,6 +95,7 @@ export const UserView = ({ id }: { id: string }) => {
                 {user && (
                   <TextField
                     label={t('admin.user.email')}
+                    type='email'
                     value={email}
                     onChange={event => setEmail(event.target.value)}
                     disabled={!canUpdateUsersPermissionsUser}
