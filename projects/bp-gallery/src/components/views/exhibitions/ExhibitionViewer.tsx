@@ -1,11 +1,15 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import { ExhibitionGetContext, ExhibitionStateViewer } from './ExhibitonUtils';
 import { getPictureLinkFromFlatPicture } from '../../../hooks/get-pictureLink.hook';
 import RichText from '../../common/RichText';
-import PictureGrid from '../../common/picture-gallery/PictureGrid';
+import { root } from '../../../helpers/app-helpers';
+import { Portal } from '@mui/material';
+import PictureView from '../picture/PictureView';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import PicturePreview from '../../common/picture-gallery/PicturePreview';
 
 const Title = () => {
   const { getTitlePicture, getTitle, getIntroduction } = useContext(ExhibitionGetContext);
@@ -29,30 +33,59 @@ const Title = () => {
 const Section = ({ sectionId }: { sectionId: string }) => {
   const { getSection } = useContext(ExhibitionGetContext);
   const mySection = getSection(sectionId);
+  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
+
   return (
     <>
+      {focusedPicture && (
+        <Portal container={root}>
+          <PictureView
+            initialPictureId={focusedPicture}
+            siblingIds={mySection?.dragElements
+              .map(drag => drag.picture.id)
+              .filter((value, index, self) => self.indexOf(value) === index)}
+            onBack={() => setFocusedPicture(undefined)}
+          />
+        </Portal>
+      )}
       {mySection && (
-        <div className='flex flex-col gap-4 p-11 box-border'>
+        <div className='flex flex-col gap-4'>
           <div className='text-4xl font-semibold'>{mySection.title}</div>
           <RichText value={mySection.text} />
           <div className='flex flex-row gap-4 flex-wrap justify-center'>
-            {/* {mySection.dragElements.map((drag, index) => (
+            {mySection.dragElements.map((drag, index) => (
               <div key={index} className='w-max'>
-                <PicturePreview picture={drag.picture} height='15rem' onClick={() => {}} />
+                <PicturePreview
+                  picture={drag.picture}
+                  height='15rem'
+                  onClick={() => {
+                    setFocusedPicture(drag.picture.id);
+                    pushHistoryWithoutRouter(`/picture/${drag.picture.id}`);
+                  }}
+                />
               </div>
-            ))} */}
-            {
-              <PictureGrid
-                pictures={mySection.dragElements.map(drag => drag.picture)}
-                hashBase='249'
-                loading={false}
-                refetch={() => {}}
-              />
-            }
+            ))}
           </div>
         </div>
       )}
     </>
+  );
+};
+
+const EndCard = () => {
+  const { getEpilog, getSources } = useContext(ExhibitionGetContext);
+  return (
+    <div className='p-11 box-border'>
+      {getEpilog() && (
+        <div className='flex flex-col gap-4'>
+          <div className='text-4xl font-semibold'>Epilog</div>
+          <RichText value={getEpilog() ?? ''} />
+        </div>
+      )}
+      <ul>
+        {getSources()?.map((source, key) => source.source && <li key={key}>{source.source}</li>)}
+      </ul>
+    </div>
   );
 };
 
@@ -64,7 +97,7 @@ const MainPart = () => {
   const sections = sectionsWithContent?.map((section, index) => (
     <Section key={index} sectionId={section.id} />
   ));
-  return <>{sections}</>;
+  return <div className='p-11 box-border flex flex-col gap-16'>{sections}</div>;
 };
 
 const ExhibitionViewer = ({ exhibitionId }: { exhibitionId: string }) => {
@@ -79,9 +112,10 @@ const ExhibitionViewer = ({ exhibitionId }: { exhibitionId: string }) => {
     exhibition.is_published && (
       <ExhibitionStateViewer exhibition={exhibition}>
         <div className='flex justify-center'>
-          <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700'>
+          <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700 text-xl'>
             <Title />
             <MainPart />
+            <EndCard />
           </div>
         </div>
       </ExhibitionStateViewer>
