@@ -14,6 +14,7 @@ import {
   addPermission,
   addUser,
   preventPublicUserFromCreatingArchive,
+  removeUser,
 } from './api/parameterized-permission/services/custom-update';
 import {
   archivePictureCounts,
@@ -218,6 +219,15 @@ export default {
             },
             async resolve(_, { username, email }, context) {
               return addUser(context, username, email);
+            },
+          }),
+          mutationField('removeUser', {
+            type: 'Int',
+            args: {
+              id: 'ID',
+            },
+            async resolve(_, { id }) {
+              return removeUser(id);
             },
           }),
           mutationField('addPermission', {

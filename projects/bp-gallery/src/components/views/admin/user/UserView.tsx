@@ -9,6 +9,7 @@ import PrimaryButton from '../../../common/PrimaryButton';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { CenteredContainer } from '../CenteredContainer';
+import { RemoveUserButton } from './RemoveUserButton';
 import { parseUserId } from './helper';
 
 export const UserView = ({ id }: { id: string }) => {
@@ -50,6 +51,7 @@ export const UserView = ({ id }: { id: string }) => {
                 >
                   {t('admin.user.permissions')}
                 </PrimaryButton>
+                <RemoveUserButton id={parsedUserId ?? undefined} />
               </Stack>
             </CenteredContainer>
           );

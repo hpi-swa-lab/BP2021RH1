@@ -839,6 +839,7 @@ export type Mutation = {
   register: UsersPermissionsLoginPayload;
   removeArchiveTag?: Maybe<Scalars['Int']>;
   removeFile?: Maybe<UploadFileEntityResponse>;
+  removeUser?: Maybe<Scalars['Int']>;
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateArchiveTag?: Maybe<ArchiveTagEntityResponse>;
@@ -1095,6 +1096,10 @@ export type MutationRemoveArchiveTagArgs = {
 
 export type MutationRemoveFileArgs = {
   id: Scalars['ID'];
+};
+
+export type MutationRemoveUserArgs = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationResetPasswordArgs = {
@@ -3422,6 +3427,20 @@ export type RemoveUploadMutationVariables = Exact<{
 }>;
 
 export type RemoveUploadMutation = { removeFile?: { data?: { id?: string | null } | null } | null };
+
+export type RemoveUserMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type RemoveUserMutation = { removeUser?: number | null };
+
+export type ResetPasswordMutationVariables = Exact<{
+  token: Scalars['String'];
+  password: Scalars['String'];
+  passwordConfirmation: Scalars['String'];
+}>;
+
+export type ResetPasswordMutation = { resetPassword?: { jwt?: string | null } | null };
 
 export type SetPicturesForCollectionMutationVariables = Exact<{
   pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
@@ -8294,6 +8313,104 @@ export type RemoveUploadMutationOptions = Apollo.BaseMutationOptions<
   RemoveUploadMutationVariables
 >;
 
+export const RemoveUserDocument = gql`
+  mutation removeUser($id: ID!) {
+    removeUser(id: $id)
+  }
+`;
+
+export type RemoveUserMutationFn = Apollo.MutationFunction<
+  RemoveUserMutation,
+  RemoveUserMutationVariables
+>;
+
+/**
+ * __useRemoveUserMutation__
+ *
+ * To run a mutation, you first call `useRemoveUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeUserMutation, { data, loading, error }] = useRemoveUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<RemoveUserMutation, RemoveUserMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveUserMutation, RemoveUserMutationVariables>(
+    RemoveUserDocument,
+    options
+  );
+}
+
+export type RemoveUserMutationHookResult = ReturnType<typeof useRemoveUserMutation>;
+
+export type RemoveUserMutationResult = Apollo.MutationResult<RemoveUserMutation>;
+
+export type RemoveUserMutationOptions = Apollo.BaseMutationOptions<
+  RemoveUserMutation,
+  RemoveUserMutationVariables
+>;
+
+export const ResetPasswordDocument = gql`
+  mutation resetPassword($token: String!, $password: String!, $passwordConfirmation: String!) {
+    resetPassword(code: $token, password: $password, passwordConfirmation: $passwordConfirmation) {
+      jwt
+    }
+  }
+`;
+
+export type ResetPasswordMutationFn = Apollo.MutationFunction<
+  ResetPasswordMutation,
+  ResetPasswordMutationVariables
+>;
+
+/**
+ * __useResetPasswordMutation__
+ *
+ * To run a mutation, you first call `useResetPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetPasswordMutation, { data, loading, error }] = useResetPasswordMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *      password: // value for 'password'
+ *      passwordConfirmation: // value for 'passwordConfirmation'
+ *   },
+ * });
+ */
+export function useResetPasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(
+    ResetPasswordDocument,
+    options
+  );
+}
+
+export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
+
+export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
+
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<
+  ResetPasswordMutation,
+  ResetPasswordMutationVariables
+>;
+
 export const SetPicturesForCollectionDocument = gql`
   mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
     updateCollection(id: $collectionId, data: { pictures: $pictureIds }) {
@@ -12022,6 +12139,90 @@ export function useCanRunMultipleRemoveUploadMutations(
     ...options,
     variables: {
       operation: RemoveUploadDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunRemoveUserMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<RemoveUserMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: RemoveUserDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleRemoveUserMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<RemoveUserMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: RemoveUserDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunResetPasswordMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<ResetPasswordMutationVariables>;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: ResetPasswordDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleResetPasswordMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<ResetPasswordMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: ResetPasswordDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

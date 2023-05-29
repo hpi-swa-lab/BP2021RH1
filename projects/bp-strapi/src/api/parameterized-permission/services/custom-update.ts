@@ -183,3 +183,47 @@ export const addUser = async (
 
   return user.id;
 };
+
+export const removeUser = async (id: string) => {
+  if (!id) {
+    return;
+  }
+
+  const userQuery = strapi.db.query('plugin::users-permissions.user');
+  const exists = userQuery.findOne({
+    where: {
+      id,
+    },
+  });
+  if (!exists) {
+    return;
+  }
+
+  await userQuery.delete({
+    where: {
+      id,
+    },
+  });
+
+  const permissionQuery = strapi.db.query('api::parameterized-permission.parameterized-permission');
+  // deleteMany currently doesn't support relational filters:
+  // https://github.com/strapi/strapi/issues/11998
+  const permissionsToDelete = await permissionQuery.findMany({
+    where: {
+      users_permissions_user: {
+        id,
+      },
+    },
+  });
+  await Promise.all(
+    permissionsToDelete.map(permission => {
+      permissionQuery.delete({
+        where: {
+          id: permission.id,
+        },
+      });
+    })
+  );
+
+  return 1;
+};

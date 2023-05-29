@@ -223,7 +223,8 @@
         "deleteParameterizedPermission": "Recht entziehen",
         "getUsersPermissionsUser": "Nutzer-Daten ansehen",
         "getUsersPermissionsUsers": "Liste aller Nutzer sehen",
-        "login": "Sich anmelden"
+        "login": "Sich anmelden",
+        "removeUser": "Nutzer löschen"
       },
       "parameter": {
         "see_unpublished_collections": {
@@ -240,7 +241,14 @@
       "publicTitle": "Unangemeldeter Nutzer",
       "name": "Name",
       "email": "E-Mail",
-      "permissions": "Rechteverwaltung"
+      "permissions": "Rechteverwaltung",
+      "remove": {
+        "button": "Nutzer unwiederruflich löschen",
+        "title": "Nutzer {{name}} wirklich löschen?",
+        "content": "Diese Aktion kann nicht rückgängig gemacht werden. Um zu bestätigen, dass Sie wirklich den Nutzer {{name}} löschen möchten, geben Sie hier den Namen des Nutzers ein:",
+        "success": "Nutzer erfolgreich gelöscht",
+        "aborted": "Aktion abgebrochen: Der Nutzer wurde nicht gelöscht"
+      }
     },
     "users": {
       "title": "Nutzerverwaltung",
