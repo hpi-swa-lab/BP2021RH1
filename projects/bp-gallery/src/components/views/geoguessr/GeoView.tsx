@@ -9,7 +9,6 @@ import {
   useGetPicturesForCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { useVariant } from '../../../helpers/growthbook';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 import {
   FlatArchiveTag,
@@ -19,6 +18,7 @@ import {
 import Loading from '../../common/Loading';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
+import { useVariant } from '../../../helpers/growthbook';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const allPictureIds: string[] = archives
@@ -45,7 +45,7 @@ const getTodaysPictureQueue = (pictureIds: string[]) => {
   const currentDate = new Date();
   const startDate = new Date(currentDate.getFullYear(), 0, 1);
   const days = Math.floor((currentDate.valueOf() - startDate.valueOf()) / (24 * 60 * 60 * 1000));
-  const resultIndex = pictureIds.length % days;
+  const resultIndex = pictureIds.length % (days * pictureNumber);
   const list = [];
   for (let i = 0; i < pictureNumber; i++) {
     list.push(pictureIds[(resultIndex + i) % pictureIds.length]);
