@@ -1,6 +1,6 @@
 import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
 import { ReactElement, useCallback, useMemo } from 'react';
-import { useStorage } from '../../hooks/context-hooks';
+import useStorageState from '../../hooks/storage-state.hook';
 
 export interface OverviewContainerTab {
   title: string;
@@ -14,6 +14,12 @@ export enum OverviewContainerPosition {
   ARCHIVE_VIEW = 'archives',
 }
 
+type SelectedTabsData = {
+  start?: number;
+  discover?: number;
+  archives?: { [archiveID: string]: number | undefined };
+};
+
 const OverviewContainer = ({
   tabs,
   defaultTabIndex = 0,
@@ -25,7 +31,11 @@ const OverviewContainer = ({
   overviewPosition: OverviewContainerPosition;
   archiveID?: string;
 }) => {
-  const [selectedTabs, setSelectedTabs] = useStorage().selectedTabsState;
+  const [selectedTabs, setSelectedTabs] = useStorageState<SelectedTabsData>(
+    { start: undefined, discover: undefined, archives: undefined },
+    'selected_tabs',
+    localStorage
+  );
 
   const tabIndex = useMemo(
     () =>
