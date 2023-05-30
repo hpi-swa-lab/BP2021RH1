@@ -10,6 +10,7 @@ import { Portal } from '@mui/material';
 import PictureView from '../picture/PictureView';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import { useTranslation } from 'react-i18next';
 
 const Title = () => {
   const { getTitlePicture, getTitle, getIntroduction } = useContext(ExhibitionGetContext);
@@ -73,18 +74,26 @@ const Section = ({ sectionId }: { sectionId: string }) => {
 };
 
 const EndCard = () => {
+  const { t } = useTranslation();
   const { getEpilog, getSources } = useContext(ExhibitionGetContext);
   return (
-    <div className='p-11 box-border'>
+    <div className='p-11 box-border gap-4 flex flex-col'>
       {getEpilog() && (
         <div className='flex flex-col gap-4'>
-          <div className='text-4xl font-semibold'>Epilog</div>
+          <div className='text-4xl font-semibold'>{t('exhibition.viewer.epilog')}</div>
           <RichText value={getEpilog() ?? ''} />
         </div>
       )}
-      <ul>
-        {getSources()?.map((source, key) => source.source && <li key={key}>{source.source}</li>)}
-      </ul>
+      {getSources() && (
+        <div>
+          <div className='text-4xl font-semibold'>{t('exhibition.viewer.sources')}</div>
+          <ul>
+            {getSources()?.map(
+              (source, key) => source.source && <li key={key}>{source.source}</li>
+            )}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

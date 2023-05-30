@@ -371,6 +371,10 @@
     "our-categories": "Unsere Kategorien"
   },
   "exhibition": {
+    "viewer": {
+      "epilog": "Resümé",
+      "sources": "Weiterführende Quellen"
+    },
     "buttons": {
       "publish": "Veröffentlichen",
       "unPublish": "Privat stellen",
