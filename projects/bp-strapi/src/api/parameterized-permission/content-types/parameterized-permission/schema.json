@@ -26,6 +26,9 @@
     },
     "see_unpublished_collections": {
       "type": "boolean"
+    },
+    "on_other_users": {
+      "type": "boolean"
     }
   }
 }

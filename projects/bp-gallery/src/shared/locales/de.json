@@ -233,6 +233,24 @@
         "see_unpublished_collections": {
           "onlyPublished": "Nur sichtbare Collections",
           "all": "Alle Collections"
+        },
+        "on_other_users": {
+          "removeUser": {
+            "onlyOwn": "Nur sich selbst",
+            "onOtherUsers": "Alle Nutzer"
+          },
+          "getUsersPermissionsUser": {
+            "onlyOwn": "Nur eigene",
+            "onOtherUsers": "Von allen Nutzern"
+          },
+          "updateUsersPermissionsUser": {
+            "onlyOwn": "Nur eigene",
+            "onOtherUsers": "Von allen Nutzern"
+          },
+          "getParameterizedPermissions": {
+            "onlyOwn": "Nur eigene",
+            "onOtherUsers": "Von allen Nutzern"
+          }
         }
       },
       "preset": {

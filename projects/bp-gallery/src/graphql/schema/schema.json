@@ -9282,6 +9282,16 @@
             "defaultValue": null
           },
           {
+            "name": "on_other_users",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "BooleanFilterInput",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -9389,6 +9399,16 @@
               "ofType": null
             },
             "defaultValue": null
+          },
+          {
+            "name": "on_other_users",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
           }
         ],
         "interfaces": null,
@@ -9438,6 +9458,18 @@
           },
           {
             "name": "see_unpublished_collections",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "on_other_users",
             "description": null,
             "args": [],
             "type": {
@@ -17195,6 +17227,16 @@
               },
               {
                 "name": "see_unpublished_collections",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "on_other_users",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",

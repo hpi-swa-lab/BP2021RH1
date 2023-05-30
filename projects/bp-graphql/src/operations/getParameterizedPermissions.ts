@@ -1,11 +1,10 @@
 import { Operation, graphql } from '../Operation.js';
-import { always } from '../isAllowedHelpers.js';
+import { checkOnOtherUsers } from '../isAllowedHelpers.js';
 
 export default {
   section: 'user',
-  // TODO
-  needsParameters: [],
-  isAllowed: always,
+  needsParameters: ['on_other_users'],
+  isAllowed: checkOnOtherUsers('userId'),
   document: graphql`
     query getParameterizedPermissions($userId: ID) {
       parameterizedPermissions(filters: { users_permissions_user: { id: { eq: $userId } } }) {
@@ -19,6 +18,7 @@ export default {
               }
             }
             see_unpublished_collections
+            on_other_users
           }
         }
       }

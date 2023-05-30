@@ -139,3 +139,9 @@ export const checkUpload =
     const requestedArchivesDeduped = Array.from(new Set(requestedArchives));
     return checkMultipleArchives(context, requestedArchivesDeduped);
   };
+
+export const checkOnOtherUsers =
+  (variable: VariableGetter<IDLike>): IsAllowed =>
+  async ({ variables, user, parameters }) =>
+    !!user &&
+    (parameters.on_other_users || toId(getIDLikeVariable(variables, variable)) === user.id);

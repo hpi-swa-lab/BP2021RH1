@@ -7,6 +7,7 @@ type AddPermissionArgs = {
   operationName: Maybe<string>;
   archive_tag: Maybe<string>;
   see_unpublished_collections: Maybe<boolean>;
+  on_other_users: Maybe<boolean>;
 };
 
 const whereNullable = <T>(value: T | null | undefined) =>
@@ -31,6 +32,7 @@ const mergePermissions = (permissions: ParameterizedPermission[]) => {
       // merge individual parameters
       see_unpublished_collections:
         (merged.see_unpublished_collections || permission.see_unpublished_collections) ?? false,
+      on_other_users: (merged.on_other_users || permission.on_other_users) ?? false,
     }),
     permissions[0]
   );

@@ -1,10 +1,10 @@
 import { Operation, graphql } from '../Operation.js';
-import { always } from '../isAllowedHelpers.js';
+import { checkOnOtherUsers } from '../isAllowedHelpers.js';
 
 export default {
   section: 'user',
-  needsParameters: [],
-  isAllowed: always,
+  needsParameters: ['on_other_users'],
+  isAllowed: checkOnOtherUsers('id'),
   document: graphql`
     mutation removeUser($id: ID!) {
       removeUser(id: $id)

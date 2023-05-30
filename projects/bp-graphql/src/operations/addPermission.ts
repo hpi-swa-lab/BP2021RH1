@@ -15,12 +15,14 @@ export default {
       $operationName: String
       $archive_tag: ID
       $see_unpublished_collections: Boolean
+      $on_other_users: Boolean
     ) {
       addPermission(
         userId: $userId
         operationName: $operationName
         archive_tag: $archive_tag
         see_unpublished_collections: $see_unpublished_collections
+        on_other_users: $on_other_users
       )
     }
   `,

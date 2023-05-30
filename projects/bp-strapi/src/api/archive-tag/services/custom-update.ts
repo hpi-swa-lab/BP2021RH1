@@ -22,6 +22,7 @@ export const addArchiveTag = async (owningUser: UsersPermissionsUser, name: stri
           archive_tag: newArchive.id.toString(),
           operationName: operation.document.name,
           see_unpublished_collections: undefined,
+          on_other_users: undefined,
         });
       })
   );

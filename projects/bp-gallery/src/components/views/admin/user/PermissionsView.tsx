@@ -33,8 +33,8 @@ import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
 import { CenteredContainer } from '../CenteredContainer';
 import { equalOrBothNullish, parseUserId } from './helper';
+import { BooleanParameter } from './permissions/BooleanParamater';
 import { Coverage, CoverageCheckbox } from './permissions/Coverage';
-import { SeeUnpublishedCollectionsParameter } from './permissions/SeeUnpublishedCollectionsParameter';
 import { combineCoverages } from './permissions/combineCoverages';
 import { GroupStructure, SectionStructure, sections } from './permissions/operations';
 import { ParametersWithoutArchive, presets } from './permissions/presets';
@@ -122,13 +122,13 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const dialog = useDialog();
 
   const addPermission = useCallback(
-    (operation: Operation, { archive_tag, see_unpublished_collections }: Parameters) => {
+    (operation: Operation, { archive_tag, ...parameters }: Parameters) => {
       createPermission({
         variables: {
           operationName: operation.document.name,
           userId: parsedUserId,
           archive_tag: archive_tag?.id,
-          see_unpublished_collections,
+          ...parameters,
         },
       });
     },
@@ -374,42 +374,44 @@ const ParameterInputs = ({
   ) => FlatParameterizedPermission | null;
   archive: FlatArchiveTag | null;
   deletePermission: (parameters: { variables: { id: string } }) => Promise<unknown>;
-  addPermission: (
-    operation: Operation,
-    { archive_tag, see_unpublished_collections }: Parameters
-  ) => void;
+  addPermission: (operation: Operation, parameters: Parameters) => void;
 }) => {
+  const { t } = useTranslation();
+
+  const sharedProps = {
+    operations: group.operations,
+    findPermission,
+    addPermission,
+    deletePermission,
+    archive,
+  };
+
   return (
     <>
       {group.needsParameters.map(parameter => {
         switch (parameter) {
           case 'see_unpublished_collections':
             return (
-              <SeeUnpublishedCollectionsParameter
+              <BooleanParameter
                 key={parameter}
-                value={group.operations.reduce(
-                  (seeUnpublishedCollections, operation) =>
-                    seeUnpublishedCollections &&
-                    (findPermission(operation, archive)?.see_unpublished_collections ?? false),
-                  true
+                parameter={'see_unpublished_collections'}
+                falseTitle={t(
+                  'admin.permissions.parameter.see_unpublished_collections.onlyPublished'
                 )}
-                onChange={async see_unpublished_collections => {
-                  group.operations.forEach(async operation => {
-                    const permission = findPermission(operation, archive);
-                    if (permission) {
-                      await deletePermission({
-                        variables: {
-                          id: permission.id,
-                        },
-                      });
-                    }
-                    addPermission(operation, {
-                      archive_tag: archive ?? undefined,
-                      ...permission,
-                      see_unpublished_collections,
-                    });
-                  });
-                }}
+                trueTitle={t('admin.permissions.parameter.see_unpublished_collections.all')}
+                {...sharedProps}
+              />
+            );
+          case 'on_other_users':
+            return (
+              <BooleanParameter
+                key={parameter}
+                parameter={'on_other_users'}
+                falseTitle={t(`admin.permissions.parameter.on_other_users.${group.name}.onlyOwn`)}
+                trueTitle={t(
+                  `admin.permissions.parameter.on_other_users.${group.name}.onOtherUsers`
+                )}
+                {...sharedProps}
               />
             );
           case 'archive_tag':
