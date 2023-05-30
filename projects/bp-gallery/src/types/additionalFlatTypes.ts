@@ -80,7 +80,7 @@ export type FlatUsersPermissionsRoleWithoutRelations = ID &
 
 export type FlatUsersPermissionsUserWithoutRelations = ID & Omit<UsersPermissionsUser, 'role'>;
 
-export type FlatParamaterizedPermissionWithoutRelations = ID &
+export type FlatParameterizedPermissionWithoutRelations = ID &
   Omit<ParameterizedPermission, 'users_permissions_user' | 'archive_tag'>;
 
 export type FlatComment = FlatCommentWithoutRelations & {
@@ -153,7 +153,7 @@ export type FlatUsersPermissionsUser = FlatUsersPermissionsUserWithoutRelations 
   role?: FlatUsersPermissionsRole;
 };
 
-export type FlatParameterizedPermission = FlatParamaterizedPermissionWithoutRelations & {
+export type FlatParameterizedPermission = FlatParameterizedPermissionWithoutRelations & {
   users_permissions_user?: FlatUsersPermissionsUser;
   archive_tag?: FlatArchiveTag;
 };
