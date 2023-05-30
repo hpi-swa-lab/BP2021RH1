@@ -79,7 +79,7 @@ export type IsAllowedContext = {
   variables: Variables;
   db: DB;
   permissions: ParameterizedPermission[];
-  user: UsersPermissionsUser;
+  user: UsersPermissionsUser | null;
 };
 
 export type IsAllowed = (context: IsAllowedContext) => Promise<boolean>;

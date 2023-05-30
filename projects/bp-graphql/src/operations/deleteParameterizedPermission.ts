@@ -6,7 +6,7 @@ export default {
   needsParameters: [],
   isAllowed: async ({ variables, permissions, db, user }) => {
     const permission = await db.loadPermission(toId(validate(variables.id, isIDLike, 'id')));
-    if (permission?.users_permissions_user?.id === user.id) {
+    if (permission?.users_permissions_user?.id === user?.id) {
       // don't let users take permissions from themselves
       return false;
     }
