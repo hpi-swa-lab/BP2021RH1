@@ -2,12 +2,10 @@ import { Edit } from '@mui/icons-material';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  useCanRunGetUsersPermissionsUsersQuery,
-  useGetAllArchiveTagsQuery,
-} from '../../../../graphql/APIConnector';
+import { useGetAllArchiveTagsQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useVisit } from '../../../../helpers/history';
+import { useCanUseArchivesView } from '../../../../hooks/can-do-hooks';
 import { FlatArchiveTag } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import ProtectedRoute from '../../../common/ProtectedRoute';
@@ -27,10 +25,10 @@ export const ArchivesView = () => {
     [archives]
   );
 
-  const { canRun: canUse, loading: canUseLoading } = useCanRunGetUsersPermissionsUsersQuery();
+  const { canUseArchivesView, loading: canUseArchivesViewLoading } = useCanUseArchivesView();
 
   return (
-    <ProtectedRoute canUse={canUse} canUseLoading={canUseLoading}>
+    <ProtectedRoute canUse={canUseArchivesView} canUseLoading={canUseArchivesViewLoading}>
       {() => {
         if (error) {
           return <QueryErrorDisplay error={error} />;
