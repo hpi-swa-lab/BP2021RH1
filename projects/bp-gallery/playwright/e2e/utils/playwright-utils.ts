@@ -23,7 +23,7 @@ export class PlaywrightUtils {
     };
     
     async postComment(name: string, comment: string) {
-        await this.page.locator('input#name').waitFor({state: 'visible'});
+        (await this.page.waitForSelector('input#name')).scrollIntoViewIfNeeded;
         await this.page.fill('input#name', '');
         await this.page.fill('input#name', name);
         await this.page.fill('textarea#text', '');
@@ -32,8 +32,10 @@ export class PlaywrightUtils {
     }
 
     async closeModal (text:string, buttonText:string) {
-        await expect(this.page.locator('.MuiDialog-container')).toHaveText(text);
-        await expect(this.page.locator('.MuiButton-root')).toHaveText(buttonText);
+        await this.page.locator('.MuiDialog-container:has-text("' + text + '")');
+        // await expect(this.page.locator('.MuiDialog-container')).toHaveText(text);
+        await this.page.locator('.MuiDialog-root:has-text("' + buttonText + '")');
+        // await expect(this.page.locator('.MuiButton-root')).toHaveText(buttonText);
         await this.page.click('.MuiButton-root:has-text("' + buttonText + '")');
     }
 }

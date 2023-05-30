@@ -6,20 +6,6 @@ test.describe('Comment', () => {
     await page.goto('/picture/1');
   });
 
-  // test.afterAll( ({}) => {
-    // const utils = new PlaywrightUtils(page);
-    // await page.goto('/');
-    // await utils.login();
-    // await page.goto('/picture/1');
-    // await page.click('#comments');
-    // await expect(page.locator('.comment-container')).toContainText('Testkommentar');
-    // await page.click('.comment-container:has-text("Testkommentar") button:has-text("Löschen")');
-    // await page.click('button:has-text("Bestätigen")');
-    // await expect(page.locator('Testkommentar')).toHaveCount(0);
-    // await page.goto('/');
-    // await utils.logout();
-  // });
-
   test('adds a comment to picture 1', async ({ page }) => {
     await page.waitForSelector('input#name');
     // await expect(page.locator('input#name')).toBeVisible();
@@ -78,24 +64,30 @@ test.describe('Comment', () => {
 
   });
 
-//   test('is possible to to freely nest comments', async ({ page }) => {
-//     await page.click('#comments');
-//     await postComment('Olaf Ober', 'Oberkommentar1');
-//     await closeModal('Danke für Ihren Kommentar!', 'Verstanden');
-//     await expect(page.locator('.comment-verification-container')).toContainText('Oberkommentar1');
-//     await page.click('.comment-verification-container:has-text("Oberkommentar1") button:has-text("Akzeptieren")');
-//     await page.click('.comment:has-text("Oberkommentar1") button:has-text("Antworten")');
-//     await postComment('Hans Unter', 'Unterkommentar1');
-//     await expect(page.locator('.comment')).toContainText('Unterkommentar1');
-//     await expect(page.locator('.comment-verification-container')).toContainText('Unterkommentar1');
-//     await page.click('.comment-verification-container:has-text("Unterkommentar1") button:has-text("Akzeptieren")');
-//     await page.click('.comment:has-text("Unterkommentar1") button:has-text("Antworten")');
-//     await postComment('Hans Unter', 'Unterkommentar2');
-//     await expect(page.locator('.comment')).toContainText('Unterkommentar2');
-//     await page.click('.comment:has-text("Unterkommentar1") button:has-text("Antworten")');
-//     await postComment('Hans Unter', 'UnterUnterkommentar1');
-//     await expect(page.locator('.comment')).toContainText('UnterUnterkommentar1');
-//   });
+  test('is possible to to freely nest comments', async ({ page }) => {
+    const utils = new PlaywrightUtils(page);
+    await page.click('#comments');
+    // await postComment(page, 'Olaf Ober', 'Oberkommentar1');
+    await utils.postComment('Olaf Ober', 'Oberkommentar1');
+    // await closeModal(page, 'Danke für Ihren Kommentar!', 'Verstanden');
+    await utils.closeModal('Danke für Ihren Kommentar!', 'Verstanden');
+    await utils.login();
+    await page.goto('/picture/1');
+    await page.click('#comments');
+    await expect(page.locator('.comment-verification-container:has-text("Oberkommentar1")')).not.toHaveCount(0);
+    await page.click('.comment-verification-container:has-text("Oberkommentar1") button:has-text("Akzeptieren")');
+    await page.click('.comment:has-text("Oberkommentar1") button:has-text("Antworten")');
+    await utils.postComment('Hans Unter', 'Unterkommentar1');
+    await expect(page.locator('.comment:has-text("Unterkommentar1")')).not.toHaveCount(0);
+    await expect(page.locator('.comment-verification-container:has-text("Unterkommentar1")')).not.toHaveCount(0);
+    await page.click('.comment-verification-container:has-text("Unterkommentar1") button:has-text("Akzeptieren")');
+    await page.click('.comment:has-text("Unterkommentar1") button:has-text("Antworten")');
+    await utils.postComment('Hans Unter', 'Unterkommentar2');
+    await expect(page.locator('.comment:has-text("Unterkommentar2")')).not.toHaveCount(0);
+    await page.click('.comment:has-text("Unterkommentar1") button:has-text("Antworten")');
+    await utils.postComment('Hans Unter', 'UnterUnterkommentar1');
+    await expect(page.locator('.comment:has-text("UnterUnterkommentar1")')).not.toHaveCount(0);
+  });
 
 //   test('deletes all descendants when deleting a comment and shows a warning', async ({ page }) => {
 //     await expect(page.locator('.comment')).toContainText('Oberkommentar1');
