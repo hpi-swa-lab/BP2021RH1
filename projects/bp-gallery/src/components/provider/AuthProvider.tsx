@@ -83,7 +83,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     if (called) return;
 
     const token = sessionStorage.getItem('jwt');
-    apolloClient.setLink(buildHttpLink(token, openAlert, anonymousId));
+    apolloClient.setLink(buildHttpLink(token, { openAlert, t }, anonymousId));
 
     if (token) {
       getUserInfo();
@@ -91,7 +91,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       // we won't call getUserInfo, because token won't change
       setAuthLoading(false);
     }
-  }, [apolloClient, called, getUserInfo, openAlert, anonymousId]);
+  }, [apolloClient, called, getUserInfo, openAlert, t, anonymousId]);
 
   // Save fetched userInfo in state
   useEffect(() => {
@@ -119,7 +119,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
         } else {
           if (token) {
             sessionStorage.setItem('jwt', token);
-            apolloClient.setLink(buildHttpLink(token, openAlert, anonymousId));
+            apolloClient.setLink(buildHttpLink(token, { openAlert, t }, anonymousId));
             getUserInfo();
             displaySuccess(t('login.successful-login'));
             resolve();
@@ -157,7 +157,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   );
 
   const logout = useCallback(() => {
-    apolloClient.setLink(buildHttpLink(null, openAlert, anonymousId));
+    apolloClient.setLink(buildHttpLink(null, { openAlert, t }, anonymousId));
     sessionStorage.removeItem('jwt');
     setRole(AuthRole.PUBLIC);
     setUserId(undefined);

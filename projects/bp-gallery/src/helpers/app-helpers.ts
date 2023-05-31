@@ -4,8 +4,10 @@ import { onError as createErrorLink } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
 import { extractFiles } from 'extract-files';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { TFunction } from 'i18next';
 import { isEmpty, unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
+import { translateErrorMessage } from '../i18n';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
 
 const OPERATIONS_WITH_OWN_ERROR_HANDLING = ['login'];
@@ -59,7 +61,10 @@ export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadO
  */
 export const buildHttpLink = (
   token: string | null,
-  openAlert?: (alertOptions: AlertOptions) => void,
+  alert?: {
+    openAlert: (alertOptions: AlertOptions) => void;
+    t: TFunction;
+  },
   anonymousId?: string | null
 ) => {
   const options = {
@@ -104,19 +109,20 @@ export const buildHttpLink = (
 
   httpLink = from([growthbookLink, httpLink]);
 
-  if (openAlert) {
+  if (alert) {
+    const { openAlert, t } = alert;
     const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
       if (OPERATIONS_WITH_OWN_ERROR_HANDLING.includes(operation.operationName)) return;
 
       const errorMessages = [];
-      if (networkError) errorMessages.push(networkError);
+      if (networkError) errorMessages.push(networkError.message);
       if (graphQLErrors) graphQLErrors.forEach(({ message }) => errorMessages.push(message));
 
       if (isEmpty(errorMessages)) return;
 
       openAlert({
         alertType: AlertType.ERROR,
-        message: errorMessages.join('\n'),
+        message: errorMessages.map(message => translateErrorMessage(message, t)).join('\n'),
         duration: 5000,
       });
     });

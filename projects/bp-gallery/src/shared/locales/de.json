@@ -96,6 +96,25 @@
     "daily-picture": "Bild des Tages",
     "description": "Beschreibung"
   },
+  "error": {
+    "Invalid identifier or password": "Benutzername oder Passwort sind falsch",
+    "Unauthorized": "Sie dürfen diese Aktion nicht ausführen",
+    "Unauthorized_login": "Sie dürfen sich nicht anmelden",
+    "Your account email is not confirmed": "Sie haben Ihre E-Mail noch nicht bestätigt",
+    "Your account has been blocked by an administrator": "Ihr Profil wurde von einem Administrator geblockt",
+    "User blocked": "Ihr Profil wurde von einem Administrator geblockt",
+    "You must be authenticated to reset your password": "Sie müssen angemeldet sein, um ihr Passwort zu ändern",
+    "The provided current password is invalid": "Das aktuelle Passwort ist falsch",
+    "Your new password must be different than your current password": "Ihr neues Passwort muss anders als ihr aktuelles Passwort sein",
+    "Passwords do not match": "Das neue Passwort und dessen Wiederholung stimmen nicht überein",
+    "Incorrect code provided": "Dieser Link ist ungültig",
+    "Invalid token": "Dieser Link ist ungültig",
+    "Email or Username are already taken": "Die E-Mail oder der Nutzername ist bereits vergeben",
+    "Username already taken": "Der Nutzername ist bereits vergeben",
+    "Email already taken": "Die E-Mail ist bereits vergeben",
+    "email must be a valid email": "Die E-Mail ist keine gültige E-Mail",
+    "password must be at least 6 characters": "Das Passwort muss mindestens 6 Zeichen lang sein"
+  },
   "comment": {
     "name": "Name",
     "submit": "Absenden",
@@ -151,8 +170,6 @@
     "logout": "Logout",
     "username": "Nutzername",
     "password": "Passwort",
-    "invalid-credentials": "Benutzername oder Passwort sind falsch",
-    "unauthorized": "Sie dürfen sich nicht anmelden",
     "successful-login": "Erfolgreich eingeloggt",
     "successful-logout": "Erfolgreich ausgeloggt"
   },

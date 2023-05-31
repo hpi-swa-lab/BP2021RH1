@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { useVisit } from '../../helpers/history';
 import { useCanUseForgotPasswordView } from '../../hooks/can-do-hooks';
 import { useAuth } from '../../hooks/context-hooks';
+import { translateErrorMessage } from '../../i18n';
 import './LoginDialog.scss';
 
 const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
@@ -45,12 +46,7 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
     login(username, password)
       .then(close)
       .catch((err: string) => {
-        setErrorMessage(
-          {
-            'Invalid identifier or password': t('login.invalid-credentials'),
-            Unauthorized: t('login.unauthorized'),
-          }[err] ?? err
-        );
+        setErrorMessage(translateErrorMessage(err, t, 'login'));
       });
   };
 
