@@ -8,7 +8,8 @@ import {
   useGetMultiplePictureInfoLazyQuery,
 } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
-import { useClipboard, useSetClipboardEditorButtons } from '../../../../../hooks/context-hooks';
+import { useClipboard } from '../../../../../hooks/clipboard.hook';
+import { useSetClipboardEditorButtons } from '../../../../../hooks/context-hooks';
 import { TextFilter } from '../../../../../hooks/get-pictures.hook';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';

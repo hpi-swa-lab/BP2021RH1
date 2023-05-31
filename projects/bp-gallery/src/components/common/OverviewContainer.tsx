@@ -1,5 +1,6 @@
 import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
-import { ReactElement, useState } from 'react';
+import { ReactElement, useCallback, useMemo } from 'react';
+import useStorageState from '../../hooks/storage-state.hook';
 
 export interface OverviewContainerTab {
   title: string;
@@ -7,14 +8,64 @@ export interface OverviewContainerTab {
   content: ReactElement;
 }
 
+export enum OverviewContainerPosition {
+  START_VIEW = 'start',
+  DISCOVER_VIEW = 'discover',
+  ARCHIVE_VIEW = 'archives',
+}
+
+type SelectedTabsData = {
+  start?: number;
+  discover?: number;
+  archives?: { [archiveID: string]: number | undefined };
+};
+
 const OverviewContainer = ({
   tabs,
-  defaultValue = 0,
+  defaultTabIndex = 0,
+  overviewPosition,
+  archiveID,
 }: {
   tabs: OverviewContainerTab[];
-  defaultValue?: number;
+  defaultTabIndex?: number;
+  overviewPosition: OverviewContainerPosition;
+  archiveID?: string;
 }) => {
-  const [tabIndex, setTabIndex] = useState<number>(defaultValue);
+  const [selectedTabs, setSelectedTabs] = useStorageState<SelectedTabsData>(
+    { start: undefined, discover: undefined, archives: undefined },
+    'selected_tabs',
+    localStorage
+  );
+
+  const tabIndex = useMemo(
+    () =>
+      overviewPosition === OverviewContainerPosition.ARCHIVE_VIEW
+        ? archiveID
+          ? (selectedTabs[overviewPosition] ?? { [archiveID]: defaultTabIndex })[archiveID] ??
+            defaultTabIndex
+          : defaultTabIndex
+        : selectedTabs[overviewPosition] ?? defaultTabIndex,
+    [overviewPosition, archiveID, selectedTabs, defaultTabIndex]
+  );
+
+  const setTabIndex = useCallback(
+    (tabIndex: number) => {
+      if (overviewPosition !== OverviewContainerPosition.ARCHIVE_VIEW) {
+        setSelectedTabs(selectedTabs => ({ ...selectedTabs, [overviewPosition]: tabIndex }));
+        return;
+      }
+      if (archiveID) {
+        setSelectedTabs(selectedTabs => ({
+          ...selectedTabs,
+          [overviewPosition]: {
+            ...selectedTabs[overviewPosition],
+            [archiveID]: tabIndex,
+          },
+        }));
+      }
+    },
+    [overviewPosition, archiveID, setSelectedTabs]
+  );
 
   return (
     <div className='overview-selection-container'>

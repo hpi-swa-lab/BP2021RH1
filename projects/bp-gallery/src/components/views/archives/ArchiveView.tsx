@@ -14,7 +14,10 @@ import {
   TagType,
 } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
-import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
@@ -146,7 +149,11 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </div>
       <ShowStats>
-        <OverviewContainer tabs={tabs} />
+        <OverviewContainer
+          tabs={tabs}
+          overviewPosition={OverviewContainerPosition.ARCHIVE_VIEW}
+          archiveID={archiveId}
+        />
       </ShowStats>
 
       <TagOverview

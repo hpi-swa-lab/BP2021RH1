@@ -1,4 +1,4 @@
-import { IfFeatureEnabled } from '@growthbook/growthbook-react';
+import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
 import { AccessTime, ThumbUp } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,10 @@ import { useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
 import { IfFlagEnabled } from '../../common/IfFlagEnabled';
-import OverviewContainer, { OverviewContainerTab } from '../../common/OverviewContainer';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import PrimaryButton from '../../common/PrimaryButton';
 import BrowseView from '../browse/BrowseView';
@@ -91,6 +94,8 @@ const StartView = () => {
     ];
   }, [t, visit]);
 
+  const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
+
   return (
     <div className='main-start-view'>
       <div className='welcome-container'>
@@ -134,7 +139,11 @@ const StartView = () => {
         </div>
 
         <ShowStats>
-          <OverviewContainer defaultValue={1} tabs={tabs} />
+          <OverviewContainer
+            defaultTabIndex={defaultTabIndex < tabs.length ? defaultTabIndex : 0}
+            tabs={tabs}
+            overviewPosition={OverviewContainerPosition.START_VIEW}
+          />
         </ShowStats>
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>

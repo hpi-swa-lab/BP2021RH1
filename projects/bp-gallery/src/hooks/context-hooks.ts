@@ -4,7 +4,6 @@ import { ClipboardEditorContext } from '../components/provider/ClipboardEditorPr
 import { FaceTaggingContext } from '../components/provider/FaceTaggingContext';
 import { MobileContext } from '../components/provider/MobileProvider';
 import { ShowStatsContext } from '../components/provider/ShowStatsProvider';
-import { StorageContext } from '../components/provider/StorageProvider';
 import { ScrollContext, ScrollRefContext } from '../components/provider/contexts';
 
 const useErrorContext = <T>(context: Context<T>, title: string) => {
@@ -12,10 +11,6 @@ const useErrorContext = <T>(context: Context<T>, title: string) => {
   if (!value) throw new Error(`missing ${title} context`);
   return value;
 };
-
-export const useStorage = () => useErrorContext(StorageContext, 'storage');
-
-export const useClipboard = () => useErrorContext(StorageContext, 'clipboard').clipboardState;
 
 export const useScroll = () => useErrorContext(ScrollContext, 'scroll');
 
