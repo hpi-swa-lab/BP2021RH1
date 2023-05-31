@@ -1,12 +1,31 @@
-import { expect, test } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { PlaywrightUtils } from './utils/playwright-utils';
 
+
+
 test.describe('Comment', () => {
-  test.beforeEach(async ({ page }) => {
+  let page: Page;
+  let utils: PlaywrightUtils;
+
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
+    utils = new PlaywrightUtils(page);
+  });
+
+  test.beforeEach(async () => {
     await page.goto('/picture/1');
   });
 
-  test('adds a comment to picture 1', async ({ page }) => {
+  test.afterAll(async () => {
+    await utils.login();
+    await page.goto('/picture/1');
+    await page.click("#comments");
+    await page.click('.comment:has-text("Testkommentar") button:has-text("Löschen")');
+    await utils.closeModal('Soll', 'Bestätigen');
+    await expect(page.getByText("Testkommentar")).toHaveCount(0);
+  });
+
+  test('adds a comment to picture 1', async () => {
     await page.waitForSelector('input#name');
     // await expect(page.locator('input#name')).toBeVisible();
     await page.fill('input#name', 'Hans Hansen');
@@ -27,8 +46,7 @@ test.describe('Comment', () => {
     await page.getByText("O.K.").click();
   });
 
-  test('log in as curator and curate the new comments', async ({ page }) => {
-    const utils = new PlaywrightUtils(page);
+  test('log in as curator and curate the new comments', async () => {
     await page.click('.picture-toolbar [data-testid="ArrowBackIcon"]');
     await utils.login();
     await page.goto("/");
@@ -52,9 +70,7 @@ test.describe('Comment', () => {
     await page.click('.comment-verification-container:has-text("Testkommentar2") button:has-text("Akzeptieren")');
 
     // navigate again to close the CommentsVerificationView in the background
-    await page.goto("/");
-    await page.getByText("Logout").click();
-    await expect(page.getByText("Erfolgreich ausgeloggt")).toBeVisible();
+    await utils.logout();
     // new PlaywrightUtils(page).logout();
     await page.goto('/picture/1');
     await expect(page.getByText('Testkommentar1')).toHaveCount(0);
@@ -64,8 +80,7 @@ test.describe('Comment', () => {
 
   });
 
-  test('is possible to to freely nest comments', async ({ page }) => {
-    const utils = new PlaywrightUtils(page);
+  test('is possible to to freely nest comments', async () => {
     await page.click('#comments');
     // await postComment(page, 'Olaf Ober', 'Oberkommentar1');
     await utils.postComment('Olaf Ober', 'Oberkommentar1');
@@ -89,33 +104,38 @@ test.describe('Comment', () => {
     await expect(page.locator('.comment:has-text("UnterUnterkommentar1")')).not.toHaveCount(0);
   });
 
-//   test('deletes all descendants when deleting a comment and shows a warning', async ({ page }) => {
-//     await expect(page.locator('.comment')).toContainText('Oberkommentar1');
-//     await page.click('.comment:has-text("Oberkommentar1") button:has-text("Löschen")');
-//     await closeModal('Warnung', 'Bestätigen');
-//     await expect(page).not.toContainText('Oberkommentar1');
-//     await expect(page).not.toContainText('Unterkommentar1');
-//     await expect(page).not.toContainText('Unterkommentar2');
-//     await expect(page).not.toContainText('UnterUnterkommentar1');
-//   });
+  test('deletes all descendants when deleting a comment and shows a warning', async () => {
+    await page.goto('/picture/1');
+    await page.click('#comments');
+    await expect(page.locator('.comment:has-text("Oberkommentar1")')).not.toHaveCount(0);
+    await page.click('.comment:has-text("Oberkommentar1") button:has-text("Löschen")');
+    await utils.closeModal('Warnung', 'Bestätigen');
+    await expect(page.locator('Oberkommentar1')).toHaveCount(0);
+    await expect(page.locator('Unterkommentar1')).toHaveCount(0);
+    await expect(page.locator('Unterkommentar2')).toHaveCount(0);
+    await expect(page.locator('UnterUnterkommentar1')).toHaveCount(0);
+  });
 
-//   test('is possible to edit a comment when logged in', async ({ page }) => {
-//     await expect(page.locator('.comment')).toContainText('Testkommentar2');
-//     await page.click('.comment:has-text("Testkommentar2") button:has-text("Editieren")');
-//     await page.fill('.jodit-react-container', '');
-//     await page.click('button:has-text("Editieren")');
-//     await expect(page).not.toContainText('Testkommentar2');
-//     await expect(page).toContainText('Testkommentar');
-//   });
+  test('is possible to edit a comment when logged in', async () => {
+    await page.goto('/picture/1');
+    await page.click('#comments');
+    await expect(page.locator('.comment:has-text("Testkommentar2")')).not.toHaveCount(0);
+    await page.locator('.comment:has-text("Testkommentar2") button:has-text("Editieren")').click();
+    await page.locator('.jodit-wysiwyg:has-text("Testkommentar2")').click();
+    await page.keyboard.press('Backspace');
+    await page.locator('.comment:has(.jodit-wysiwyg) button:has-text("Editieren")').click();
+    await expect(page.locator("Testkommentar2")).toHaveCount(0);
+    await expect(page.getByText('Testkommentar')).not.toHaveCount(0);
+  });
 
-//   test('doesnt show an edit or reply button to unauthorized users', async ({ page }) => {
-//     await page.goto('/');
-//     await logout();
-//     await page.goto('/picture/1');
-//     await expect(page).not.toContainText('Testkommentar1');
-//     await expect(page).toContainText('Testkommentar');
-//     await expect(page.locator('button:has-text("Antworten")')).toBeVisible();
-//     await expect(page.locator('button:has-text("Editieren")')).not.toBeVisible();
-//     await expect(page.locator('button:has-text("Löschen")')).not.toBeVisible();
-//   });
+  test('doesnt show an edit or reply button to unauthorized users', async () => {
+    await utils.logout();
+    await page.goto('/picture/1');
+    await page.click('#comments');
+    await expect(page.getByText("Testkommentar1")).toHaveCount(0);
+    await expect(page.getByText("Testkommentar")).not.toHaveCount(0);
+    await expect(page.locator('button:has-text("Antworten")')).toBeVisible();
+    await expect(page.locator('button:has-text("Editieren")')).not.toBeVisible();
+    await expect(page.locator('button:has-text("Löschen")')).not.toBeVisible();
+  });
 });
