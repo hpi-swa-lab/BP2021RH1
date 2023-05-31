@@ -3149,14 +3149,7 @@ export type GetUsersPermissionsUsersQuery = {
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type MeQuery = {
-  me?: {
-    id: string;
-    username: string;
-    email?: string | null;
-    role?: { name: string } | null;
-  } | null;
-};
+export type MeQuery = { me?: { id: string; username: string; email?: string | null } | null };
 
 export type AcceptCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
@@ -6461,9 +6454,6 @@ export const MeDocument = gql`
   query me {
     me {
       id
-      role {
-        name
-      }
       username
       email
     }

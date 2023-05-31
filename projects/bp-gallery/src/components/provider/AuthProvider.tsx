@@ -17,28 +17,7 @@ import { buildHttpLink } from '../../helpers/app-helpers';
 import { useAnonymousId } from '../../hooks/anonymous-id.hook';
 import { AlertContext, AlertType } from './AlertProvider';
 
-export enum AuthRole {
-  PUBLIC,
-  AUTHENTICATED,
-  MODERATOR,
-  CURATOR,
-}
-
-const asAuthRole = (roleName: string) => {
-  switch (roleName) {
-    case 'Curator':
-      return AuthRole.CURATOR;
-    case 'Moderator':
-      return AuthRole.MODERATOR;
-    case 'Authenticated':
-      return AuthRole.AUTHENTICATED;
-    default:
-      return AuthRole.PUBLIC;
-  }
-};
-
 export interface AuthFields {
-  role: AuthRole;
   userId?: string;
   username?: string;
   email?: string;
@@ -50,7 +29,6 @@ export interface AuthFields {
 }
 
 export const AuthContext = createContext<AuthFields>({
-  role: AuthRole.PUBLIC,
   loggedIn: false,
   login: async () => {},
   logout: () => {},
@@ -59,7 +37,6 @@ export const AuthContext = createContext<AuthFields>({
 });
 
 const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
-  const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);
   const [userId, setUserId] = useState<string | undefined>(undefined);
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);
@@ -97,7 +74,6 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
     if (!called || loading || error) return;
 
-    setRole(asAuthRole(data?.me?.role?.name ?? ''));
     setUserId(data?.me?.id);
     setUsername(data?.me?.username);
     setEmail(data?.me?.email ?? undefined);
@@ -159,7 +135,6 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   const logout = useCallback(() => {
     apolloClient.setLink(buildHttpLink(null, { openAlert, t }, anonymousId));
     sessionStorage.removeItem('jwt');
-    setRole(AuthRole.PUBLIC);
     setUserId(undefined);
     setUsername(undefined);
     setEmail(undefined);
@@ -169,7 +144,6 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   return (
     <AuthContext.Provider
       value={{
-        role,
         userId,
         username,
         email,

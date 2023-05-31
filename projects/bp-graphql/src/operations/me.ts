@@ -8,9 +8,6 @@ export default {
     query me {
       me {
         id
-        role {
-          name
-        }
         username
         email
       }
