@@ -10,7 +10,9 @@ export const AddArchiveButton = ({ onCreated }: { onCreated?: (id: string | null
   const { t } = useTranslation();
   const dialog = useDialog();
 
-  const [addArchiveTagMutation] = useAddArchiveTagMutation();
+  const [addArchiveTagMutation] = useAddArchiveTagMutation({
+    refetchQueries: ['getAllArchiveTags'],
+  });
 
   const createArchive = useCallback(async () => {
     const archiveName = await dialog({
