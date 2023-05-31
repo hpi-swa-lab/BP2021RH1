@@ -1,6 +1,6 @@
 const {
   apolloPlugin: apolloParameterizedPermissionsPlugin,
-} = require("../src/parameterizedPermissions/apolloServerPlugin");
+} = require('../src/parameterizedPermissions/apolloServerPlugin');
 
 /* eslint-disable no-unused-vars */
 module.exports = ({ env }) => ({
@@ -10,7 +10,7 @@ module.exports = ({ env }) => ({
   graphql: {
     enabled: true,
     config: {
-      endpoint: "/graphql",
+      endpoint: '/graphql',
       shadowCRUD: true,
       playgroundAlways: false,
       defaultLimit: -1,
@@ -23,53 +23,57 @@ module.exports = ({ env }) => ({
       },
     },
   },
-  "bulk-import": {
+  'bulk-import': {
     enabled: true,
-    resolve: "./src/plugins/bulk-import",
+    resolve: './src/plugins/bulk-import',
   },
-  "users-permissions": {
+  'users-permissions': {
     config: {
-      jwtSecret: env("JWT_SECRET"),
+      jwtSecret: env('JWT_SECRET'),
+      resetPasswordTokenExpirationTimeMilliseconds:
+        Number(env('RESET_PASSWORD_TOKEN_EXPIRATION_TIME_MILLISECONDS')) ||
+        // default: 1 day
+        24 * 60 * 60 * 1000,
     },
   },
   sentry: {
-    enabled: !!env("SENTRY_DSN"),
+    enabled: !!env('SENTRY_DSN'),
     config: {
-      dsn: env("SENTRY_DSN"),
+      dsn: env('SENTRY_DSN'),
     },
   },
   email: {
     config: {
-      provider: env("EMAIL_PROVIDER"),
+      provider: env('EMAIL_PROVIDER'),
       providerOptions: {
-        host: env("EMAIL_SMTP_HOST"),
-        port: env("EMAIL_SMTP_PORT"),
+        host: env('EMAIL_SMTP_HOST'),
+        port: env('EMAIL_SMTP_PORT'),
         auth: {
-          user: env("EMAIL_SMTP_USER"),
-          pass: env("EMAIL_SMTP_PASS"),
+          user: env('EMAIL_SMTP_USER'),
+          pass: env('EMAIL_SMTP_PASS'),
         },
       },
       settings: {
-        defaultFrom: env("EMAIL_ADDRESS_FROM"),
-        defaultReplyTo: env("EMAIL_ADDRESS_REPLY"),
-        testAddress: env("TEST_ADDRESS"),
+        defaultFrom: env('EMAIL_ADDRESS_FROM'),
+        defaultReplyTo: env('EMAIL_ADDRESS_REPLY'),
+        testAddress: env('TEST_ADDRESS'),
       },
     },
   },
   upload:
-    env("AWS_ENABLED", "false") === "true"
+    env('AWS_ENABLED', 'false') === 'true'
       ? {
           config: {
-            provider: "strapi-provider-upload-aws-s3-advanced",
+            provider: 'strapi-provider-upload-aws-s3-advanced',
             providerOptions: {
-              accessKeyId: env("AWS_ACCESS_KEY_ID"),
-              secretAccessKey: env("AWS_ACCESS_SECRET"),
-              region: env("AWS_REGION"),
+              accessKeyId: env('AWS_ACCESS_KEY_ID'),
+              secretAccessKey: env('AWS_ACCESS_SECRET'),
+              region: env('AWS_REGION'),
               params: {
-                bucket: env("AWS_BUCKET_NAME"),
+                bucket: env('AWS_BUCKET_NAME'),
               },
-              baseUrl: env("CDN_BASE_URL"), // e.g. "https://cdn.example.com", this is stored in strapi's database to point to the file
-              prefix: env("BUCKET_PREFIX"), // e.g. "strapi-assets". If BUCKET_PREFIX contains leading or trailing slashes, they are removed internally to construct the URL safely
+              baseUrl: env('CDN_BASE_URL'), // e.g. "https://cdn.example.com", this is stored in strapi's database to point to the file
+              prefix: env('BUCKET_PREFIX'), // e.g. "strapi-assets". If BUCKET_PREFIX contains leading or trailing slashes, they are removed internally to construct the URL safely
             },
           },
         }

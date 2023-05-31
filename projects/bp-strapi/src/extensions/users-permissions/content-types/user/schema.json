@@ -66,6 +66,9 @@
     "isSuperUser": {
       "type": "boolean",
       "default": false
+    },
+    "resetPasswordTokenCreatedAt": {
+      "type": "datetime"
     }
   }
 }
