@@ -1,4 +1,13 @@
-import { Button, Card, CardActionArea, CardContent, CardMedia, IconButton } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  IconButton,
+  Modal,
+} from '@mui/material';
 import {
   useCreateExhibitionMutation,
   useDeleteExhibitionMutation,
@@ -12,7 +21,6 @@ import { useVisit } from '../../../helpers/history';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useState } from 'react';
 import { Delete } from '@mui/icons-material';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const ExhibitionCard = ({
   exhibition,
@@ -31,9 +39,10 @@ const ExhibitionCard = ({
   const link = `/exhibition/${exhibition.id}`;
   const editLink = `/exhibitiontool/${exhibition.id}`;
   const [deleteExhibition] = useDeleteExhibitionMutation();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const deleteThisExhibition = () => {
-    deleteExhibition({ variables: { id: exhibition.id } });
+  const deleteThisExhibition = async () => {
+    await deleteExhibition({ variables: { id: exhibition.id } });
     refetch();
   };
 
@@ -82,12 +91,28 @@ const ExhibitionCard = ({
         </CardActionArea>
         {isCurator && (
           <div className='absolute top-2 right-2 bg-white rounded-full'>
-            <IconButton onClick={deleteThisExhibition}>
+            <IconButton onClick={() => setIsPopupOpen(true)}>
               <Delete />
             </IconButton>
           </div>
         )}
       </Card>
+      <Modal open={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
+        <Box className='absolute w-[50vw] bg-white top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-8 flex flex-col items-center'>
+          <h3>Do you really want to delete exhibition {exhibition.title}?</h3>
+          <div className='flex gap-2'>
+            <Button
+              onClick={() => {
+                deleteThisExhibition();
+                setIsPopupOpen(false);
+              }}
+            >
+              Yes
+            </Button>
+            <Button onClick={() => setIsPopupOpen(false)}>No</Button>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };
