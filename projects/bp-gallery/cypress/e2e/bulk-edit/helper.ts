@@ -6,5 +6,5 @@ export const selectPictures = (...ids: string[]) => {
 
 export const visitArchive1Pictures = () => {
   cy.visit('/archives/1');
-  cy.contains('.overview-container', 'Unsere Bilder').contains('Mehr anzeigen').click();
+  cy.contains('.overview-selection-container', 'Unsere Bilder').contains('Mehr anzeigen').click();
 };

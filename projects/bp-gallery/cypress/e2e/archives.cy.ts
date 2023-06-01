@@ -47,6 +47,7 @@ describe('Archives View', () => {
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 2');
     cy.get('#archive-form-url').should('be.visible').type('test2.de').blur();
     cy.get('.archive-link-entry').first().find('[data-testid="EditIcon"]').click();
+    cy.get('#archive-form-title').scrollIntoView();
     cy.get('#archive-form-title').should('be.visible').type(' Edit').blur();
     cy.contains('Link hinzufügen').click();
     cy.get('#archive-form-title').should('be.visible').type('Test-Link 3');
@@ -77,7 +78,9 @@ describe('Archives View', () => {
   });
 
   it('successfully sets an image as showcase picture when pressing on the star button via "Unsere Bilder"', () => {
-    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen').click();
+    cy.get('.overview-selection-container:contains(Unsere Bilder)')
+      .contains('Mehr anzeigen')
+      .click();
     cy.get(`[data-testid="StarIcon"]:first`).click();
     cy.contains('Zurück').click();
     cy.get('.archive-showcase #picture-preview-for-5').should('exist');
@@ -97,7 +100,7 @@ describe('Archives View', () => {
 
   it('shows "Unsere Bilder" picture overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen');
+    cy.get('.overview-selection-container:contains(Unsere Bilder)').contains('Mehr anzeigen');
 
     // check if it contains rows with images
     cy.get(

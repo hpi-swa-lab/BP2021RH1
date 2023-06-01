@@ -193,3 +193,8 @@ export enum TagType {
   TIME_RANGE = 'date',
   ARCHIVE = 'archive',
 }
+
+export enum PictureOverviewType {
+  MOST_LIKED = 'most-liked',
+  CUSTOM = 'custom',
+}

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 import './PictureOverview.scss';
 import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import {
@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
 import PrimaryButton from './PrimaryButton';
+
+const MAX_TAGS_PER_ROW = 3;
 
 interface TagOverviewProps {
   title?: string;
@@ -34,27 +36,32 @@ const TagOverview = ({
   archiveId,
 }: TagOverviewProps) => {
   const { t } = useTranslation();
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const basePath = archiveId
     ? '/archives/' + archiveId + '/show-more/' + type + '/'
     : '/show-more/' + type + '/';
 
-  const calculateMaxCategoriesPerRow = () => {
-    const tempRowLength = Math.max(1, Math.floor(Math.min(window.innerWidth - 64, 1200) / 300));
-    if (Math.min(window.innerWidth - 64, 1200) >= tempRowLength * 300 + (tempRowLength - 1) * 8) {
-      return tempRowLength;
+  const calculateMaxCategoriesPerRow = useCallback((width: number) => {
+    const tempRowLength = Math.max(1, Math.floor(Math.min(width, 1200) / 260));
+    if (Math.min(width, 1200) >= tempRowLength * 260 + (tempRowLength - 1) * 8) {
+      return Math.min(tempRowLength, MAX_TAGS_PER_ROW);
     }
-    return Math.max(1, tempRowLength - 1);
-  };
+    return Math.min(Math.max(1, tempRowLength - 1), MAX_TAGS_PER_ROW);
+  }, []);
 
   const [rowLength, setRowLength] = useState(() => {
-    const initialState = calculateMaxCategoriesPerRow();
-    return initialState;
+    return calculateMaxCategoriesPerRow(ref.current?.clientWidth ?? 0);
   });
 
   const onResize = useCallback(() => {
-    setRowLength(calculateMaxCategoriesPerRow());
-  }, []);
+    setRowLength(calculateMaxCategoriesPerRow(ref.current?.clientWidth ?? 0));
+  }, [calculateMaxCategoriesPerRow]);
+
+  //ensure correct set up of
+  useEffect(() => {
+    setRowLength(calculateMaxCategoriesPerRow(ref.current?.clientWidth ?? 0));
+  }, [ref.current?.clientWidth, calculateMaxCategoriesPerRow]);
 
   // Set up eventListener on mount and cleanup on unmount
   useEffect(() => {
@@ -64,13 +71,14 @@ const TagOverview = ({
     };
   }, [onResize]);
 
+  // check if there is a tag
   const { data } = useGetTagsWithThumbnail(
     queryParams,
     thumbnailQueryParams,
-    false,
     type,
     ['name:asc'],
-    1
+    1,
+    'no-cache'
   );
 
   const flattened = useSimplifiedQueryResponseData(data);
@@ -82,7 +90,7 @@ const TagOverview = ({
     return <div></div>;
   } else {
     return (
-      <div className='overview-container'>
+      <div className='overview-container' ref={ref}>
         {title && <h2 className='overview-title'>{title}</h2>}
         <div className='overview-collection-grid-container'>
           {type !== TagType.TIME_RANGE ? (

@@ -1,16 +1,24 @@
+import type { WidenPrimitives } from '@growthbook/growthbook';
 import {
   GrowthBook,
   useGrowthBook as _useGrowthBook,
   useFeatureIsOn,
-  useFeatureValue,
 } from '@growthbook/growthbook-react';
 
-const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
-const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
+export const growthbookApiHost = import.meta.env.VITE_REACT_APP_GROWTHBOOK_APIHOST;
+
+export const growthbookClientKey = import.meta.env.VITE_REACT_APP_GROWTHBOOK_CLIENTKEY;
 
 export type AppFeatures = {
   test_button: boolean;
   dummy_experiment: boolean;
+  paypal_mainpage: {
+    clientId: string;
+    donationText: string;
+    purposeText: string;
+  };
+  geopictures_collection_id: string;
+  start_view_default_tab_index: number;
 };
 
 export type FeatureId = keyof AppFeatures;
@@ -38,7 +46,7 @@ export const growthbook =
             'trackEvent',
             'FeatureViewed' + '_' + String(result.source),
             featureKey,
-            'v' + String(result.value),
+            String(result.value),
             Number(result.experimentResult?.variationId),
           ]);
         },
@@ -55,5 +63,15 @@ export const useFlag = (id: FeatureId): boolean => {
   return true;
 };
 
-export const useVariant = ({ id, fallback }: { id: FeatureId; fallback: string }): string =>
-  useFeatureValue(id, fallback);
+export const useVariant = <Id extends FeatureId>({
+  id,
+  fallback,
+}: {
+  id: Id;
+  fallback: AppFeatures[Id];
+}): WidenPrimitives<AppFeatures[Id]> => {
+  const growthbook = useGrowthBook();
+  return growthbook
+    ? growthbook.getFeatureValue(id, fallback)
+    : (fallback as WidenPrimitives<AppFeatures[Id]>);
+};
