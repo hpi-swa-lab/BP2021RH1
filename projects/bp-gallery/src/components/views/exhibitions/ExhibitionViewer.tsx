@@ -124,18 +124,19 @@ const ExhibitionViewer = ({ exhibitionId }: { exhibitionId: string }) => {
     useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
 
   return (
-    exhibition &&
-    exhibition.is_published && (
-      <ExhibitionStateViewer exhibition={exhibition}>
-        <div className='flex justify-center'>
-          <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700 text-xl'>
-            <Title />
-            <MainPart />
-            <EndCard />
+    <>
+      {exhibition?.is_published && (
+        <ExhibitionStateViewer exhibition={exhibition}>
+          <div className='flex justify-center'>
+            <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700 text-xl'>
+              <Title />
+              <MainPart />
+              <EndCard />
+            </div>
           </div>
-        </div>
-      </ExhibitionStateViewer>
-    )
+        </ExhibitionStateViewer>
+      )}
+    </>
   );
 };
 

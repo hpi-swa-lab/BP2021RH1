@@ -23,6 +23,7 @@ import DiscoverView from './views/discover/DiscoverView';
 import GeoView from './views/geoguessr/GeoView';
 import ExhibitionTool from './views/exhibitions/ExhibitionTool';
 import ExhibitionViewer from './views/exhibitions/ExhibitionViewer';
+import ExhibitionFullOverview from './views/exhibitions/ExhibitionOverview';
 
 export const FALLBACK_PATH = '/start';
 
@@ -80,6 +81,18 @@ const routes: RouteConfig[] = [
     path: '/exhibitiontool/:id',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
       return <ExhibitionTool exhibitionId={match.params.id} />;
+    },
+  },
+  {
+    path: '/exhibitionOverview/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ExhibitionFullOverview archiveId={match.params.id} />;
+    },
+  },
+  {
+    path: '/exhibitionOverview',
+    render: () => {
+      return <ExhibitionFullOverview archiveId={undefined} />;
     },
   },
   {

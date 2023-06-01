@@ -8,6 +8,7 @@ export default {
           id
           attributes {
             title
+            introduction
             is_published
             archive_tag {
               data {

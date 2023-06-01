@@ -24,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 import OverviewContainer, { OverviewContainerPosition } from '../../common/OverviewContainer';
 import { useMemo } from 'react';
 import { OverviewContainerTab } from '../../common/OverviewContainer';
-import ExhibitionOverview from '../exhibitions/ExhibitionOverview';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 
 interface ArchiveViewProps {
   archiveId: string;
