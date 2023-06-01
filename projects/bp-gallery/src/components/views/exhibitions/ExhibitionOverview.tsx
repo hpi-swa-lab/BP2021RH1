@@ -21,6 +21,7 @@ import { useVisit } from '../../../helpers/history';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useState } from 'react';
 import { Delete } from '@mui/icons-material';
+import { t } from 'i18next';
 
 const ExhibitionCard = ({
   exhibition,
@@ -99,7 +100,7 @@ const ExhibitionCard = ({
       </Card>
       <Modal open={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
         <Box className='absolute w-[50vw] bg-white top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-8 flex flex-col items-center'>
-          <h3>Do you really want to delete exhibition {exhibition.title}?</h3>
+          <h3>{t('exhibition.overview.delete-title', { exhibitionName: exhibition.title })}</h3>
           <div className='flex gap-2'>
             <Button
               onClick={() => {
@@ -107,9 +108,9 @@ const ExhibitionCard = ({
                 setIsPopupOpen(false);
               }}
             >
-              Yes
+              {t('common.yes')}
             </Button>
-            <Button onClick={() => setIsPopupOpen(false)}>No</Button>
+            <Button onClick={() => setIsPopupOpen(false)}>{t('common.no')}</Button>
           </div>
         </Box>
       </Modal>
@@ -176,10 +177,10 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
           </div>
           {showMore ? (
             <div className='grid place-content-center gap-2 p-8'>
-              <Button variant='outlined'>more</Button>
+              <Button variant='outlined'>{t('common.more')}</Button>
               {isCurator && archiveId && (
                 <Button variant='contained' onClick={newExhibition}>
-                  new exhibition
+                  {t('exhibition.overview.new-exhibition')}
                 </Button>
               )}
             </div>
@@ -187,7 +188,7 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
             <div className='grid place-content-center p-8'>
               {isCurator && archiveId && (
                 <Button variant='contained' onClick={newExhibition}>
-                  new exhibition
+                  {t('exhibition.overview.new-exhibition')}
                 </Button>
               )}
             </div>
@@ -197,5 +198,7 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
     </>
   );
 };
+
+const ExhibitionFullOverview = ({ archiveId }: { archiveId: string }) => {};
 
 export default ExhibitionOverview;
