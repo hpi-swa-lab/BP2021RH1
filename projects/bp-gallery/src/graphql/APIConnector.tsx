@@ -19,21 +19,12 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
 export type ArchivePictureCount = {
-  attributes?: Maybe<ArchivePictureCountAttributes>;
-  count?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type ArchivePictureCountAttributes = {
   count?: Maybe<Scalars['Int']>;
 };
 
@@ -44,10 +35,6 @@ export type ArchivePictureCountEntity = {
 
 export type ArchivePictureCountEntityResponseCollection = {
   data?: Maybe<Array<Maybe<ArchivePictureCountEntity>>>;
-};
-
-export type ArchivePictureCountResponseCollection = {
-  data?: Maybe<Array<Maybe<ArchivePictureCount>>>;
 };
 
 export type ArchiveTag = {
@@ -1841,7 +1828,6 @@ export type Query = {
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
-  getArchivePictureCounts?: Maybe<ArchivePictureCountResponseCollection>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -2783,42 +2769,42 @@ export type GetDecadePreviewThumbnailsQuery = {
   decade40s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade50s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade60s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade70s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade80s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
   decade90s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null } | null } | null };
+        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
       } | null;
     }>;
   } | null;
@@ -2992,6 +2978,7 @@ export type GetFaceTagsQuery = {
       attributes?: {
         x?: number | null;
         y?: number | null;
+        tag_direction?: number | null;
         person_tag?: {
           data?: { id?: string | null; attributes?: { name: string } | null } | null;
         } | null;
@@ -3926,6 +3913,15 @@ export type UpdateExhibitionSourceMutationVariables = Exact<{
 
 export type UpdateExhibitionSourceMutation = {
   updateExhibitionSource?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateFaceTagDirectionMutationVariables = Exact<{
+  faceTagId: Scalars['ID'];
+  tag_direction?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdateFaceTagDirectionMutation = {
+  updateFaceTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateKeywordNameMutationVariables = Exact<{
@@ -9270,6 +9266,64 @@ export type UpdateExhibitionSourceMutationResult =
 export type UpdateExhibitionSourceMutationOptions = Apollo.BaseMutationOptions<
   UpdateExhibitionSourceMutation,
   UpdateExhibitionSourceMutationVariables
+>;
+
+export const UpdateFaceTagDirectionDocument = gql`
+  mutation updateFaceTagDirection($faceTagId: ID!, $tag_direction: Int) {
+    updateFaceTag(id: $faceTagId, data: { tag_direction: $tag_direction }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateFaceTagDirectionMutationFn = Apollo.MutationFunction<
+  UpdateFaceTagDirectionMutation,
+  UpdateFaceTagDirectionMutationVariables
+>;
+
+/**
+ * __useUpdateFaceTagDirectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateFaceTagDirectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFaceTagDirectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFaceTagDirectionMutation, { data, loading, error }] = useUpdateFaceTagDirectionMutation({
+ *   variables: {
+ *      faceTagId: // value for 'faceTagId'
+ *      tag_direction: // value for 'tag_direction'
+ *   },
+ * });
+ */
+export function useUpdateFaceTagDirectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateFaceTagDirectionMutation,
+    UpdateFaceTagDirectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateFaceTagDirectionMutation,
+    UpdateFaceTagDirectionMutationVariables
+  >(UpdateFaceTagDirectionDocument, options);
+}
+
+export type UpdateFaceTagDirectionMutationHookResult = ReturnType<
+  typeof useUpdateFaceTagDirectionMutation
+>;
+
+export type UpdateFaceTagDirectionMutationResult =
+  Apollo.MutationResult<UpdateFaceTagDirectionMutation>;
+
+export type UpdateFaceTagDirectionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateFaceTagDirectionMutation,
+  UpdateFaceTagDirectionMutationVariables
 >;
 
 export const UpdateKeywordNameDocument = gql`
