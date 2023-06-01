@@ -18,14 +18,22 @@ const Title = () => {
   const titlePictureLink = getPictureLinkFromFlatPicture(titlePicture);
   return (
     <div className='flex-1'>
-      <div
-        style={{ backgroundImage: `url(${titlePictureLink})` }}
-        className='h-[40rem] bg-cover bg-center relative'
-      >
-        <div className='absolute bottom-0 w-full bg-white/60 shadow-inner dropbackdrop-contrast-125 flex flex-col gap-4 p-11 box-border'>
-          <div className='text-6xl font-bold'>{getTitle()}</div>
-          <RichText value={getIntroduction()} />
+      {titlePicture ? (
+        <div
+          style={{ backgroundImage: `url(${titlePictureLink})` }}
+          className='relative h-[40rem] bg-cover bg-center'
+        >
+          <div
+            className={`absolute z-[999] bottom-0 w-full bg-white/60 shadow-inner dropbackdrop-contrast-122 flex flex-col gap-4 p-11 box-border`}
+          >
+            <div className='text-6xl font-bold'>{getTitle()}</div>
+          </div>
         </div>
+      ) : (
+        <div className='p-11 text-6xl font-bold'>{getTitle()}</div>
+      )}
+      <div className='p-11'>
+        <RichText value={getIntroduction()} />
       </div>
     </div>
   );
@@ -76,21 +84,21 @@ const Section = ({ sectionId }: { sectionId: string }) => {
 const EndCard = () => {
   const { t } = useTranslation();
   const { getEpilog, getSources } = useContext(ExhibitionGetContext);
+  const epilog = getEpilog();
+  const sources = getSources();
   return (
     <div className='p-11 box-border gap-4 flex flex-col'>
-      {getEpilog() && (
+      {epilog && (
         <div className='flex flex-col gap-4'>
           <div className='text-4xl font-semibold'>{t('exhibition.viewer.epilog')}</div>
-          <RichText value={getEpilog() ?? ''} />
+          <RichText value={epilog} />
         </div>
       )}
-      {getSources() && (
+      {sources && sources.length > 0 && (
         <div>
           <div className='text-4xl font-semibold'>{t('exhibition.viewer.sources')}</div>
           <ul>
-            {getSources()?.map(
-              (source, key) => source.source && <li key={key}>{source.source}</li>
-            )}
+            {sources.map((source, key) => source.source && <li key={key}>{source.source}</li>)}
           </ul>
         </div>
       )}
