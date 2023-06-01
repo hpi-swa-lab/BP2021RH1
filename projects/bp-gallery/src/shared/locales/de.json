@@ -20,6 +20,8 @@
     "keywords": "Schlagworte",
     "persons": "Personen",
     "edit": "Bearbeiten",
+    "yes": "Ja",
+    "no": "Nein",
     "clipboard": {
       "name": "Kopierte Links",
       "clear": "Ablage leeren",
@@ -374,7 +376,9 @@
   "exhibition": {
     "overview": {
       "to-exhibition": "Zur Ausstellung",
-      "our-exhibitions": "Unsere Ausstellungen"
+      "our-exhibitions": "Unsere Ausstellungen",
+      "delete-title": "Möchten Sie wirklich die Ausstellung \"{{exhibitionName}}\" löschen?",
+      "new-exhibition": "Neue Ausstellung"
     },
     "viewer": {
       "epilog": "Resümé",
