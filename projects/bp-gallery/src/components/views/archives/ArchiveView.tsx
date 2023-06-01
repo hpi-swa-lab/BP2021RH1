@@ -14,6 +14,7 @@ import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
+import ExhibitionOverview from '../exhibitions/ExhibitionOverview';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -96,6 +97,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           </div>
         )}
       </div>
+      <ExhibitionOverview archiveId={archive.id} />
       <ShowStats>
         <PictureOverview
           title='Unsere Bilder'

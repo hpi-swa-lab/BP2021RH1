@@ -6,12 +6,15 @@ module.exports = {
   },
   theme: {
     extend: {
+      gridTemplateColumns: {
+        'autofit-card': 'repeat(auto-fit, minmax(20rem, 1fr))',
+      },
       height: {
         '50vh': '50vh',
-        'main': 'calc(100vh - 5rem)',
+        main: 'calc(100vh - 5rem)',
       },
       colors: {
-        primary: '#7e241d'
+        primary: '#7e241d',
       },
     },
     fontFamily: {

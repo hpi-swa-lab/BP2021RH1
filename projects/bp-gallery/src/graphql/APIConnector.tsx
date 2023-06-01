@@ -29,6 +29,7 @@ export type Scalars = {
 
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
+  exhibitions?: Maybe<ExhibitionRelationResponseCollection>;
   links?: Maybe<LinkRelationResponseCollection>;
   logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
@@ -37,6 +38,13 @@ export type ArchiveTag = {
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ArchiveTagExhibitionsArgs = {
+  filters?: InputMaybe<ExhibitionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ArchiveTagLinksArgs = {
@@ -69,6 +77,7 @@ export type ArchiveTagEntityResponseCollection = {
 export type ArchiveTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  exhibitions?: InputMaybe<ExhibitionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   links?: InputMaybe<LinkFiltersInput>;
   longDescription?: InputMaybe<StringFilterInput>;
@@ -82,6 +91,7 @@ export type ArchiveTagFiltersInput = {
 };
 
 export type ArchiveTagInput = {
+  exhibitions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
@@ -392,6 +402,7 @@ export type DescriptionRelationResponseCollection = {
 };
 
 export type Exhibition = {
+  archive_tag?: Maybe<ArchiveTagEntityResponse>;
   createdAt?: Maybe<Scalars['DateTime']>;
   epilog?: Maybe<Scalars['String']>;
   exhibition_sections?: Maybe<ExhibitionSectionRelationResponseCollection>;
@@ -442,6 +453,7 @@ export type ExhibitionEntityResponseCollection = {
 
 export type ExhibitionFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ExhibitionFiltersInput>>>;
+  archive_tag?: InputMaybe<ArchiveTagFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   epilog?: InputMaybe<StringFilterInput>;
   exhibition_sections?: InputMaybe<ExhibitionSectionFiltersInput>;
@@ -459,6 +471,7 @@ export type ExhibitionFiltersInput = {
 };
 
 export type ExhibitionInput = {
+  archive_tag?: InputMaybe<Scalars['ID']>;
   epilog?: InputMaybe<Scalars['String']>;
   exhibition_sections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   exhibition_sources?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -521,6 +534,10 @@ export type ExhibitionPictureInput = {
 
 export type ExhibitionPictureRelationResponseCollection = {
   data: Array<ExhibitionPictureEntity>;
+};
+
+export type ExhibitionRelationResponseCollection = {
+  data: Array<ExhibitionEntity>;
 };
 
 export type ExhibitionSection = {
@@ -2865,6 +2882,50 @@ export type GetExhibitionQuery = {
   } | null;
 };
 
+export type GetExhibitionsQueryVariables = Exact<{
+  archiveId?: InputMaybe<Scalars['ID']>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+}>;
+
+export type GetExhibitionsQuery = {
+  exhibitions?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        title?: string | null;
+        is_published?: boolean | null;
+        archive_tag?: { data?: { id?: string | null } | null } | null;
+        title_picture?: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              picture?: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    media: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          width?: number | null;
+                          height?: number | null;
+                          formats?: any | null;
+                          url: string;
+                          updatedAt?: any | null;
+                        } | null;
+                      } | null;
+                    };
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+          } | null;
+        } | null;
+      } | null;
+    }>;
+  } | null;
+};
+
 export type GetFaceTagsQueryVariables = Exact<{
   pictureId: Scalars['ID'];
 }>;
@@ -3435,8 +3496,8 @@ export type CreateArchiveTagMutation = {
 };
 
 export type CreateExhibitionMutationVariables = Exact<{
-  title: Scalars['String'];
-  sectionId: Scalars['ID'];
+  archiveId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreateExhibitionMutation = {
@@ -3555,6 +3616,14 @@ export type DeleteCollectionMutationVariables = Exact<{
 
 export type DeleteCollectionMutation = {
   deleteCollection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type DeleteExhibitionMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteExhibitionMutation = {
+  deleteExhibition?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeleteFaceTagMutationVariables = Exact<{
@@ -4955,6 +5024,97 @@ export type GetExhibitionLazyQueryHookResult = ReturnType<typeof useGetExhibitio
 export type GetExhibitionQueryResult = Apollo.QueryResult<
   GetExhibitionQuery,
   GetExhibitionQueryVariables
+>;
+
+export const GetExhibitionsDocument = gql`
+  query getExhibitions($archiveId: ID, $sortBy: [String] = ["createdAt:desc"]) {
+    exhibitions(filters: { archive_tag: { id: { eq: $archiveId } } }, sort: $sortBy) {
+      data {
+        id
+        attributes {
+          title
+          is_published
+          archive_tag {
+            data {
+              id
+            }
+          }
+          title_picture {
+            data {
+              id
+              attributes {
+                picture {
+                  data {
+                    id
+                    attributes {
+                      media {
+                        data {
+                          id
+                          attributes {
+                            width
+                            height
+                            formats
+                            url
+                            updatedAt
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetExhibitionsQuery__
+ *
+ * To run a query within a React component, call `useGetExhibitionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExhibitionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExhibitionsQuery({
+ *   variables: {
+ *      archiveId: // value for 'archiveId'
+ *      sortBy: // value for 'sortBy'
+ *   },
+ * });
+ */
+export function useGetExhibitionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetExhibitionsQuery, GetExhibitionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetExhibitionsQuery, GetExhibitionsQueryVariables>(
+    GetExhibitionsDocument,
+    options
+  );
+}
+
+export function useGetExhibitionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetExhibitionsQuery, GetExhibitionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetExhibitionsQuery, GetExhibitionsQueryVariables>(
+    GetExhibitionsDocument,
+    options
+  );
+}
+
+export type GetExhibitionsQueryHookResult = ReturnType<typeof useGetExhibitionsQuery>;
+
+export type GetExhibitionsLazyQueryHookResult = ReturnType<typeof useGetExhibitionsLazyQuery>;
+
+export type GetExhibitionsQueryResult = Apollo.QueryResult<
+  GetExhibitionsQuery,
+  GetExhibitionsQueryVariables
 >;
 
 export const GetFaceTagsDocument = gql`
@@ -6680,8 +6840,8 @@ export type CreateArchiveTagMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionDocument = gql`
-  mutation createExhibition($title: String!, $sectionId: ID!) {
-    createExhibition(data: { title: $title, exhibition_sections: [$sectionId] }) {
+  mutation createExhibition($archiveId: ID!, $publishedAt: DateTime!) {
+    createExhibition(data: { archive_tag: $archiveId, publishedAt: $publishedAt }) {
       data {
         id
       }
@@ -6707,8 +6867,8 @@ export type CreateExhibitionMutationFn = Apollo.MutationFunction<
  * @example
  * const [createExhibitionMutation, { data, loading, error }] = useCreateExhibitionMutation({
  *   variables: {
- *      title: // value for 'title'
- *      sectionId: // value for 'sectionId'
+ *      archiveId: // value for 'archiveId'
+ *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
@@ -7462,6 +7622,60 @@ export type DeleteCollectionMutationResult = Apollo.MutationResult<DeleteCollect
 export type DeleteCollectionMutationOptions = Apollo.BaseMutationOptions<
   DeleteCollectionMutation,
   DeleteCollectionMutationVariables
+>;
+
+export const DeleteExhibitionDocument = gql`
+  mutation deleteExhibition($id: ID!) {
+    deleteExhibition(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteExhibitionMutationFn = Apollo.MutationFunction<
+  DeleteExhibitionMutation,
+  DeleteExhibitionMutationVariables
+>;
+
+/**
+ * __useDeleteExhibitionMutation__
+ *
+ * To run a mutation, you first call `useDeleteExhibitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteExhibitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteExhibitionMutation, { data, loading, error }] = useDeleteExhibitionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteExhibitionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteExhibitionMutation,
+    DeleteExhibitionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteExhibitionMutation, DeleteExhibitionMutationVariables>(
+    DeleteExhibitionDocument,
+    options
+  );
+}
+
+export type DeleteExhibitionMutationHookResult = ReturnType<typeof useDeleteExhibitionMutation>;
+
+export type DeleteExhibitionMutationResult = Apollo.MutationResult<DeleteExhibitionMutation>;
+
+export type DeleteExhibitionMutationOptions = Apollo.BaseMutationOptions<
+  DeleteExhibitionMutation,
+  DeleteExhibitionMutationVariables
 >;
 
 export const DeleteFaceTagDocument = gql`

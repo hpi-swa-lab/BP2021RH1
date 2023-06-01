@@ -46,6 +46,12 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "exhibitions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition.exhibition",
+      "mappedBy": "archive_tag"
     }
   }
 }

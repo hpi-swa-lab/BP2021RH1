@@ -45,6 +45,12 @@
     },
     "is_published": {
       "type": "boolean"
+    },
+    "archive_tag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::archive-tag.archive-tag",
+      "inversedBy": "exhibitions"
     }
   }
 }

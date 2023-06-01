@@ -19,6 +19,7 @@
     "suggestions": "Vorschläge",
     "keywords": "Schlagworte",
     "persons": "Personen",
+    "edit": "Bearbeiten",
     "clipboard": {
       "name": "Kopierte Links",
       "clear": "Ablage leeren",
@@ -371,6 +372,10 @@
     "our-categories": "Unsere Kategorien"
   },
   "exhibition": {
+    "overview": {
+      "to-exhibition": "Zur Ausstellung",
+      "our-exhibitions": "Unsere Ausstellungen"
+    },
     "viewer": {
       "epilog": "Resümé",
       "sources": "Weiterführende Quellen"
