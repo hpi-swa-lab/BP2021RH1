@@ -14,7 +14,6 @@ import {
   useGetExhibitionsQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { getPictureLinkFromFlatPicture } from '../../../hooks/get-pictureLink.hook';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useVisit } from '../../../helpers/history';
@@ -22,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { useCallback, useState } from 'react';
 import { Delete } from '@mui/icons-material';
 import { t } from 'i18next';
+import { asUploadPath } from '../../../helpers/app-helpers';
 
 const ExhibitionCard = ({
   exhibition,
@@ -35,7 +35,7 @@ const ExhibitionCard = ({
   const { t } = useTranslation();
   const { visit } = useVisit();
   const titlePictureLink = exhibition.title_picture
-    ? getPictureLinkFromFlatPicture(exhibition.title_picture.picture)
+    ? asUploadPath(exhibition.title_picture.picture?.media)
     : '/bad-harzburg-stiftung-logo.png';
   const link = `/exhibition/${exhibition.id}`;
   const editLink = `/exhibitiontool/${exhibition.id}`;

@@ -3,9 +3,8 @@ import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import { ExhibitionGetContext, ExhibitionStateViewer } from './ExhibitonUtils';
-import { getPictureLinkFromFlatPicture } from '../../../hooks/get-pictureLink.hook';
 import RichText from '../../common/RichText';
-import { root } from '../../../helpers/app-helpers';
+import { asUploadPath, root } from '../../../helpers/app-helpers';
 import { Portal } from '@mui/material';
 import PictureView from '../picture/PictureView';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
@@ -15,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 const Title = () => {
   const { getTitlePicture, getTitle, getIntroduction } = useContext(ExhibitionGetContext);
   const titlePicture = getTitlePicture()?.picture;
-  const titlePictureLink = getPictureLinkFromFlatPicture(titlePicture);
+  const titlePictureLink = asUploadPath(titlePicture?.media);
   return (
     <div className='flex-1'>
       {titlePicture ? (

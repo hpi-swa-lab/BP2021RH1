@@ -56,13 +56,6 @@ const PicturePreview = ({
             showStats ? `transition-filter duration-200 ${hovered ? 'brightness-75' : ''}` : ''
           }
           src={asUploadPath(picture.media, { highQuality: highQuality ?? false, pictureOrigin })}
-          src={
-            pictureOrigin === PictureOrigin.REMOTE
-              ? asApiPath(
-                  `/${thumbnailUrl}?updatedAt=${(picture.media?.updatedAt ?? 'unknown') as string}`
-                )
-              : thumbnailUrl
-          }
           style={height ? { height: height } : {}}
         />
         <div className='adornments'>
