@@ -43,10 +43,16 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "type": "media",
-      "multiple": false,
-      "required": false,
       "allowedTypes": ["images"]
+    },
+    "paypalClient": {
+      "type": "string"
+    },
+    "paypalDonationText": {
+      "type": "string"
+    },
+    "paypalPurpose": {
+      "type": "string"
     },
     "exhibitions": {
       "type": "relation",
