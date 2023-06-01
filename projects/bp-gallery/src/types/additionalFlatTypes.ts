@@ -32,7 +32,7 @@ type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 
 type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
-type FlatUploadFile = ID & UploadFile;
+export type FlatUploadFile = ID & UploadFile;
 
 type FlatExhibitionPictureWithoutRelations = ID &
   Omit<ExhibitionPicture, 'picture' | 'exhibition_section' | 'exhibition_idealot'>;
@@ -148,7 +148,7 @@ export type FlatArchiveTag = FlatArchiveTagWithoutRelations & {
   pictures?: FlatPictureWithoutRelations[];
   links?: FlatLinkWithoutRelations[];
   showcasePicture?: FlatPictureWithoutRelations;
-  logo?: UploadFile;
+  logo?: FlatUploadFile;
 };
 
 export type FlatPicture = FlatPictureWithoutRelations & {
