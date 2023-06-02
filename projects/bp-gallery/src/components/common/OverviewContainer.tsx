@@ -1,10 +1,12 @@
 import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
-import { ReactElement, useCallback, useMemo } from 'react';
+import { ReactElement, useCallback, useContext, useMemo } from 'react';
 import useStorageState from '../../hooks/storage-state.hook';
+import { MobileContext } from '../provider/MobileProvider';
 
 export interface OverviewContainerTab {
   title: string;
   icon: ReactElement<IconProps>;
+  desktopText?: string;
   content: ReactElement;
 }
 
@@ -31,6 +33,7 @@ const OverviewContainer = ({
   overviewPosition: OverviewContainerPosition;
   archiveID?: string;
 }) => {
+  const { isMobile } = useContext(MobileContext);
   const [selectedTabs, setSelectedTabs] = useStorageState<SelectedTabsData>(
     { start: undefined, discover: undefined, archives: undefined },
     'selected_tabs',
@@ -73,7 +76,6 @@ const OverviewContainer = ({
         <h2 className='overview-selection-title'>{tabs[tabIndex].title}</h2>
         <Tabs
           variant='scrollable'
-          allowScrollButtonsMobile
           value={tabIndex}
           onChange={(_, value) => {
             setTabIndex(value as number);
@@ -81,7 +83,7 @@ const OverviewContainer = ({
         >
           {tabs.map((tab, index) => (
             <Tooltip key={index} title={tab.title}>
-              <Tab icon={tab.icon} />
+              <Tab icon={isMobile ? tab.icon : tab.desktopText ?? tab.title} />
             </Tooltip>
           ))}
         </Tabs>

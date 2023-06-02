@@ -18,12 +18,13 @@ import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
-import { AccessTime, ThumbUp } from '@mui/icons-material';
+import { AccessTime, AutoStories, ThumbUp } from '@mui/icons-material';
 import OverviewContainer, {
   OverviewContainerPosition,
   OverviewContainerTab,
 } from '../../common/OverviewContainer';
 import { useMemo } from 'react';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -90,6 +91,11 @@ const StartView = () => {
             }}
           />
         ),
+      },
+      {
+        title: t('exhibition.overview.our-exhibitions'),
+        icon: <AutoStories key='2' />,
+        content: <ExhibitionOverview archiveId={undefined} />,
       },
     ];
   }, [t, visit]);

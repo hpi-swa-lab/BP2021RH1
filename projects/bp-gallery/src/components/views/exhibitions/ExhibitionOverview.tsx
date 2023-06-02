@@ -18,11 +18,12 @@ import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { useVisit } from '../../../helpers/history';
 import { useTranslation } from 'react-i18next';
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useContext, useState } from 'react';
 import { Delete } from '@mui/icons-material';
 import { t } from 'i18next';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import RichText from '../../common/RichText';
+import { MobileContext } from '../../provider/MobileProvider';
 
 const ExhibitionCard = ({
   exhibition,
@@ -157,8 +158,9 @@ const ExhibitionSmallCard = ({
 }) => {
   const { t } = useTranslation();
   const { visit } = useVisit();
+  const { isMobile } = useContext(MobileContext);
   return (
-    <div className='w-[20rem] p-4'>
+    <div className={`${isMobile ? 'w-full' : 'w-[20rem] p-4'}`}>
       <Card
         className='relative'
         onClick={() => {
@@ -255,8 +257,9 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
   });
   const exhibitions: FlatExhibition[] | undefined =
     useSimplifiedQueryResponseData(exhibitionsData)?.exhibitions;
-  const { visit } = useVisit();
   const { role } = useAuth();
+  const { visit } = useVisit();
+  const { isMobile } = useContext(MobileContext);
   const isCurator = role >= AuthRole.CURATOR;
   const [showMore, setShowMore] = useState(false);
   const isOverflow = e => {
@@ -267,9 +270,9 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
   const handleDiv = useCallback(
     (node: HTMLDivElement) => {
       isCurator;
-      setShowMore(isOverflow(node));
+      setShowMore(isOverflow(node) && (exhibitions?.length ?? 0) > 1);
     },
-    [setShowMore, isCurator]
+    [setShowMore, isCurator, exhibitions]
   );
 
   const [createExhibition] = useCreateExhibitionMutation();
@@ -285,54 +288,51 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
   return (
     <>
       {exhibitions && (
-        <div className='flex flex-col'>
-          <h2 className='m-2'>{t('exhibition.overview.our-exhibitions')}</h2>
-          <div className='flex'>
-            <div className='relative overflow-hidden'>
-              <div
-                ref={handleDiv}
-                className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
-              >
-                {exhibitions
-                  .filter(exhibition => isCurator || exhibition.is_published)
-                  .map((exhibition, index) => (
-                    <ExhibitionCard
-                      isBig={false}
-                      key={index}
-                      exhibition={exhibition}
-                      isCurator={isCurator}
-                      refetch={refetch}
-                    />
-                  ))}
-              </div>
-              {showMore && (
-                <div className='absolute bg-gradient-to-r from-transparent from-10% to-white to-90% w-[10rem] top-0 right-0 h-[20rem]' />
-              )}
+        <div className={`flex bg-white ${isMobile ? 'flex-col' : ''}`}>
+          <div className='relative overflow-hidden'>
+            <div
+              ref={handleDiv}
+              className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
+            >
+              {exhibitions
+                .filter(exhibition => isCurator || exhibition.is_published)
+                .map((exhibition, index) => (
+                  <ExhibitionCard
+                    isBig={false}
+                    key={index}
+                    exhibition={exhibition}
+                    isCurator={isCurator && !isMobile}
+                    refetch={refetch}
+                  />
+                ))}
             </div>
-            {showMore ? (
-              <div className='grid place-content-center gap-2 p-8'>
-                <Button
-                  variant='outlined'
-                  onClick={() => visit(`/exhibitionOverview/${archiveId ?? ''}`)}
-                >
-                  {t('common.more')}
-                </Button>
-                {isCurator && archiveId && (
-                  <Button variant='contained' onClick={newExhibition}>
-                    {t('exhibition.overview.new-exhibition')}
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div className='grid place-content-center p-8'>
-                {isCurator && archiveId && (
-                  <Button variant='contained' onClick={newExhibition}>
-                    {t('exhibition.overview.new-exhibition')}
-                  </Button>
-                )}
-              </div>
+            {showMore && !isMobile && (
+              <div className='absolute bg-gradient-to-r from-transparent from-10% to-white to-90% w-[10rem] top-0 right-0 h-[20rem]' />
             )}
           </div>
+          {showMore ? (
+            <div className='grid place-content-center gap-2 p-8'>
+              <Button
+                variant='outlined'
+                onClick={() => visit(`/exhibitionOverview/${archiveId ?? ''}`)}
+              >
+                {t('common.more')}
+              </Button>
+              {isCurator && archiveId && !isMobile && (
+                <Button variant='contained' onClick={newExhibition}>
+                  {t('exhibition.overview.new-exhibition')}
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className='grid place-content-center p-8'>
+              {isCurator && archiveId && (
+                <Button variant='contained' onClick={newExhibition}>
+                  {t('exhibition.overview.new-exhibition')}
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </>
@@ -348,19 +348,20 @@ const ExhibitionFullOverview = ({ archiveId }: { archiveId: string | undefined }
     useSimplifiedQueryResponseData(exhibitionsData)?.exhibitions;
   const { role } = useAuth();
   const isCurator = role >= AuthRole.CURATOR;
+  const { isMobile } = useContext(MobileContext);
   return (
     <div className='max-w-[1200px] bg-white m-auto min-h-main'>
       <div className='text-4xl p-4 font-bold'>{t('exhibition.overview.our-exhibitions')}</div>
       {exhibitions && (
-        <div className='flex flex-col divide-y-1 divide-x-0 divide-solid divide-slate-300'>
+        <div className='flex flex-col divide-y-1 divide-x-0 divide-solid divide-slate-300 p-2'>
           {exhibitions
             .filter(exhibition => isCurator || exhibition.is_published)
             .map((exhibition, index) => (
               <ExhibitionCard
                 key={index}
-                isBig={true}
+                isBig={!isMobile}
                 exhibition={exhibition}
-                isCurator={isCurator}
+                isCurator={isCurator && !isMobile}
                 refetch={refetch}
               />
             ))}

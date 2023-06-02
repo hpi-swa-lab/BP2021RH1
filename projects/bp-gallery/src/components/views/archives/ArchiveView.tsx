@@ -146,7 +146,10 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           </div>
         )}
       </div>
-      <ExhibitionOverview archiveId={archive.id} />
+      <div className='flex flex-col'>
+        <h2 className='m-2'>{t('exhibition.overview.our-exhibitions')}</h2>
+        <ExhibitionOverview archiveId={archive.id} />
+      </div>
       <ShowStats>
         <OverviewContainer
           tabs={tabs}

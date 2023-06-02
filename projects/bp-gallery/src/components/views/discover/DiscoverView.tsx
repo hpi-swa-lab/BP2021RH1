@@ -11,6 +11,7 @@ import OverviewContainer, {
 } from '../../common/OverviewContainer';
 import { AccessTime, ThumbUp } from '@mui/icons-material';
 import { useMemo } from 'react';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 
 const DiscoverView = () => {
   const { visit } = useVisit();
@@ -50,7 +51,10 @@ const DiscoverView = () => {
     <div className='discover-container'>
       <ShowStats>
         <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
-
+        <div className='flex flex-col my-4'>
+          <h2 className='m-2'>{t('exhibition.overview.our-exhibitions')}</h2>
+          <ExhibitionOverview archiveId={undefined} />
+        </div>
         <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
