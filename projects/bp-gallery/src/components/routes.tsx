@@ -84,15 +84,9 @@ const routes: RouteConfig[] = [
     },
   },
   {
-    path: '/exhibitionOverview/:id',
+    path: '/exhibitionOverview/:id?',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
       return <ExhibitionFullOverview archiveId={match.params.id} />;
-    },
-  },
-  {
-    path: '/exhibitionOverview',
-    render: () => {
-      return <ExhibitionFullOverview archiveId={undefined} />;
     },
   },
   {

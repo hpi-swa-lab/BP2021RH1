@@ -32,7 +32,6 @@ import {
   useUpdateExhibitionSectionMutation,
   useUpdateExhibitionSourceMutation,
 } from '../../../graphql/APIConnector';
-import { MutationFunction } from '../../../types/helper';
 
 interface ExhibitionSource {
   id: string;
@@ -197,7 +196,7 @@ const buildDragElement = (exhibitionPicture: FlatExhibitionPicture | undefined) 
   return exhibitionPicture
     ? {
         id: exhibitionPicture.id,
-        picture: exhibitionPicture.picture ?? {},
+        picture: exhibitionPicture.picture ?? { id: '0' },
         order: exhibitionPicture.order ?? 0,
         subtitle: exhibitionPicture.subtitle ?? '',
         element: (
@@ -241,9 +240,10 @@ const buildExhibitionTextState = (exhibition: FlatExhibition) => {
     title: exhibition.title ?? '',
     introduction: exhibition.introduction ?? '',
     epilog: exhibition.epilog ?? '',
-    sources: exhibition.exhibition_sources?.map(source => {
-      return { id: source.id, source: source.source ?? '' } as ExhibitionSource;
-    }),
+    sources:
+      exhibition.exhibition_sources?.map(source => {
+        return { id: source.id, source: source.source ?? '' } as ExhibitionSource;
+      }) ?? [],
     isPublished: exhibition.is_published ?? false,
   };
 };
@@ -584,15 +584,20 @@ const ExhibitionDragNDrop = ({
   );
 };
 
-export const ExhibitionDatabaseSaver = (
-  updateExhibitionSection: MutationFunction<typeof useUpdateExhibitionSectionMutation>,
-  updateExhibitionPicture: MutationFunction<typeof useUpdateExhibitionPictureMutation>,
-  updateExhibitionSource: MutationFunction<typeof useUpdateExhibitionSourceMutation>,
-  updateExhibition: MutationFunction<typeof useUpdateExhibitionMutation>,
-  createSection: MutationFunction<typeof useCreateExhibitionSectionMutation>,
-  createSource: MutationFunction<typeof useCreateExhibitionSourceMutation>,
-  createExhibitionPicture: MutationFunction<typeof useCreateExhibitionPictureMutation>
-) => {
+export const ExhibitionDatabaseSaver = () => {
+  const [updateExhibitionPicture] = useUpdateExhibitionPictureMutation();
+
+  const [updateExhibitionSection] = useUpdateExhibitionSectionMutation();
+
+  const [updateExhibitionSource] = useUpdateExhibitionSourceMutation();
+
+  const [updateExhibition] = useUpdateExhibitionMutation();
+
+  const [createSource] = useCreateExhibitionSourceMutation();
+
+  const [createSection] = useCreateExhibitionSectionMutation();
+
+  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
   return {
     setSectionText: (id: string, text: string) => {
       updateExhibitionSection({
@@ -827,29 +832,8 @@ export const ExhibitionStateManager = ({
   useEffect(() => {
     setIdealot(buildDragElements(exhibition.idealot_pictures));
   }, [setIdealot, exhibition]);
-  const [updateExhibitionPicture] = useUpdateExhibitionPictureMutation();
 
-  const [updateExhibitionSection] = useUpdateExhibitionSectionMutation();
-
-  const [updateExhibitionSource] = useUpdateExhibitionSourceMutation();
-
-  const [updateExhibition] = useUpdateExhibitionMutation();
-
-  const [createSource] = useCreateExhibitionSourceMutation();
-
-  const [createSection] = useCreateExhibitionSectionMutation();
-
-  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
-
-  const databaseSaver = ExhibitionDatabaseSaver(
-    updateExhibitionSection,
-    updateExhibitionPicture,
-    updateExhibitionSource,
-    updateExhibition,
-    createSection,
-    createSource,
-    createExhibitionPicture
-  );
+  const databaseSaver = ExhibitionDatabaseSaver();
 
   return (
     <ExhibitionStateGetter
