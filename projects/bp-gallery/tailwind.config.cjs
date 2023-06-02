@@ -13,6 +13,9 @@ module.exports = {
         '50vh': '50vh',
         main: 'calc(100vh - 5rem)',
       },
+      minHeight: {
+        main: 'calc(100vh - 5rem)',
+      },
       colors: {
         primary: '#7e241d',
       },

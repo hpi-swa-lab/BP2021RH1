@@ -95,7 +95,13 @@ const ExhibitionBigCard = ({
   const { visit } = useVisit();
   return (
     <div className='relative flex gap-4 p-4'>
-      <img height='200' src={titlePictureLink} alt='exhibition picture' />
+      <img
+        height='200'
+        width='250'
+        style={{ objectFit: 'cover' }}
+        src={titlePictureLink}
+        alt='exhibition picture'
+      />
       <div className='flex flex-col justify-between'>
         <div className='flex flex-col gap-2'>
           <div className='text-xl font-bold'>{exhibitionTitle}</div>
@@ -167,11 +173,10 @@ const ExhibitionSmallCard = ({
             alt='exhibition picture'
           />
           <CardContent
-            style={{
-              height: 'auto',
-            }}
+            sx={{ height: isCurator ? '4rem !important' : '2rem !important' }}
+            className='flex flex-col justify-between'
           >
-            <div className='text-xl font-bold'>{exhibitionTitle}</div>
+            <div className='text-xl font-bold line-clamp-1'>{exhibitionTitle}</div>
             {isCurator && (
               <div className='flex gap-2 flex-row-reverse'>
                 <Button
@@ -280,51 +285,54 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
   return (
     <>
       {exhibitions && (
-        <div className='flex'>
-          <div className='relative overflow-hidden'>
-            <div
-              ref={handleDiv}
-              className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
-            >
-              {exhibitions
-                .filter(exhibition => isCurator || exhibition.is_published)
-                .map((exhibition, index) => (
-                  <ExhibitionCard
-                    isBig={false}
-                    key={index}
-                    exhibition={exhibition}
-                    isCurator={isCurator}
-                    refetch={refetch}
-                  />
-                ))}
+        <div className='flex flex-col'>
+          <h2 className='m-2'>{t('exhibition.overview.our-exhibitions')}</h2>
+          <div className='flex'>
+            <div className='relative overflow-hidden'>
+              <div
+                ref={handleDiv}
+                className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
+              >
+                {exhibitions
+                  .filter(exhibition => isCurator || exhibition.is_published)
+                  .map((exhibition, index) => (
+                    <ExhibitionCard
+                      isBig={false}
+                      key={index}
+                      exhibition={exhibition}
+                      isCurator={isCurator}
+                      refetch={refetch}
+                    />
+                  ))}
+              </div>
+              {showMore && (
+                <div className='absolute bg-gradient-to-r from-transparent from-10% to-white to-90% w-[10rem] top-0 right-0 h-[20rem]' />
+              )}
             </div>
-            {showMore && (
-              <div className='absolute bg-gradient-to-r from-transparent from-10% to-white to-90% w-[10rem] top-0 right-0 h-[20rem]' />
+            {showMore ? (
+              <div className='grid place-content-center gap-2 p-8'>
+                <Button
+                  variant='outlined'
+                  onClick={() => visit(`/exhibitionOverview/${archiveId ?? ''}`)}
+                >
+                  {t('common.more')}
+                </Button>
+                {isCurator && archiveId && (
+                  <Button variant='contained' onClick={newExhibition}>
+                    {t('exhibition.overview.new-exhibition')}
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className='grid place-content-center p-8'>
+                {isCurator && archiveId && (
+                  <Button variant='contained' onClick={newExhibition}>
+                    {t('exhibition.overview.new-exhibition')}
+                  </Button>
+                )}
+              </div>
             )}
           </div>
-          {showMore ? (
-            <div className='grid place-content-center gap-2 p-8'>
-              <Button
-                variant='outlined'
-                onClick={() => visit(`/exhibitionOverview/${archiveId ?? ''}`)}
-              >
-                {t('common.more')}
-              </Button>
-              {isCurator && archiveId && (
-                <Button variant='contained' onClick={newExhibition}>
-                  {t('exhibition.overview.new-exhibition')}
-                </Button>
-              )}
-            </div>
-          ) : (
-            <div className='grid place-content-center p-8'>
-              {isCurator && archiveId && (
-                <Button variant='contained' onClick={newExhibition}>
-                  {t('exhibition.overview.new-exhibition')}
-                </Button>
-              )}
-            </div>
-          )}
         </div>
       )}
     </>
@@ -332,6 +340,7 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
 };
 
 const ExhibitionFullOverview = ({ archiveId }: { archiveId: string | undefined }) => {
+  const { t } = useTranslation();
   const { data: exhibitionsData, refetch } = useGetExhibitionsQuery({
     variables: archiveId ? { archiveId } : undefined,
   });
@@ -340,15 +349,16 @@ const ExhibitionFullOverview = ({ archiveId }: { archiveId: string | undefined }
   const { role } = useAuth();
   const isCurator = role >= AuthRole.CURATOR;
   return (
-    <>
+    <div className='max-w-[1200px] bg-white m-auto min-h-main'>
+      <div className='text-4xl p-4 font-bold'>{t('exhibition.overview.our-exhibitions')}</div>
       {exhibitions && (
-        <div className='flex flex-col'>
+        <div className='flex flex-col divide-y-1 divide-x-0 divide-solid divide-slate-300'>
           {exhibitions
             .filter(exhibition => isCurator || exhibition.is_published)
             .map((exhibition, index) => (
               <ExhibitionCard
-                isBig={true}
                 key={index}
+                isBig={true}
                 exhibition={exhibition}
                 isCurator={isCurator}
                 refetch={refetch}
@@ -356,7 +366,7 @@ const ExhibitionFullOverview = ({ archiveId }: { archiveId: string | undefined }
             ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
