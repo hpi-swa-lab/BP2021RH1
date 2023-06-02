@@ -251,7 +251,17 @@ const DeleteModal = ({
   );
 };
 
-const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) => {
+const ExhibitionOverview = ({
+  archiveId,
+  showTitle,
+  margin,
+  backgroundColor,
+}: {
+  archiveId?: string;
+  showTitle?: boolean;
+  margin?: boolean;
+  backgroundColor?: string;
+}) => {
   const { data: exhibitionsData, refetch } = useGetExhibitionsQuery({
     variables: archiveId ? { archiveId } : undefined,
   });
@@ -259,6 +269,7 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
     useSimplifiedQueryResponseData(exhibitionsData)?.exhibitions;
   const { role } = useAuth();
   const { visit } = useVisit();
+  const { t } = useTranslation();
   const { isMobile } = useContext(MobileContext);
   const isCurator = role >= AuthRole.CURATOR;
   const [showMore, setShowMore] = useState(false);
@@ -285,18 +296,24 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
     id && visit(`/exhibitiontool/${id}`);
   };
 
+  const filteredExhibitions = exhibitions?.filter(
+    exhibition => isCurator || exhibition.is_published
+  );
+
   return (
     <>
       {exhibitions && (
-        <div className={`flex bg-white ${isMobile ? 'flex-col' : ''}`}>
-          <div className='relative overflow-hidden'>
-            <div
-              ref={handleDiv}
-              className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
-            >
-              {exhibitions
-                .filter(exhibition => isCurator || exhibition.is_published)
-                .map((exhibition, index) => (
+        <div className={margin ? 'mt-8' : ''}>
+          {showTitle && (filteredExhibitions?.length ?? 0) > 0 && (
+            <h2 className='m-2'>{t('exhibition.overview.our-exhibitions')}</h2>
+          )}
+          <div className={`flex ${isMobile ? 'flex-col' : ''}`}>
+            <div className='relative overflow-hidden'>
+              <div
+                ref={handleDiv}
+                className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
+              >
+                {filteredExhibitions?.map((exhibition, index) => (
                   <ExhibitionCard
                     isBig={false}
                     key={index}
@@ -305,34 +322,39 @@ const ExhibitionOverview = ({ archiveId }: { archiveId: string | undefined }) =>
                     refetch={refetch}
                   />
                 ))}
+              </div>
+              {showMore && !isMobile && (
+                <div
+                  className={`absolute bg-gradient-to-r from-transparent from-10% to-${
+                    backgroundColor ? `[${backgroundColor}]` : 'white'
+                  } to-90% w-[10rem] top-0 right-0 h-[20rem]`}
+                />
+              )}
             </div>
-            {showMore && !isMobile && (
-              <div className='absolute bg-gradient-to-r from-transparent from-10% to-white to-90% w-[10rem] top-0 right-0 h-[20rem]' />
+            {showMore ? (
+              <div className='grid place-content-center gap-2 p-8'>
+                <Button
+                  variant='outlined'
+                  onClick={() => visit(`/exhibitionOverview/${archiveId ?? ''}`)}
+                >
+                  {t('common.more')}
+                </Button>
+                {isCurator && archiveId && !isMobile && (
+                  <Button variant='contained' onClick={newExhibition}>
+                    {t('exhibition.overview.new-exhibition')}
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className='grid place-content-center p-8'>
+                {isCurator && archiveId && (
+                  <Button variant='contained' onClick={newExhibition}>
+                    {t('exhibition.overview.new-exhibition')}
+                  </Button>
+                )}
+              </div>
             )}
           </div>
-          {showMore ? (
-            <div className='grid place-content-center gap-2 p-8'>
-              <Button
-                variant='outlined'
-                onClick={() => visit(`/exhibitionOverview/${archiveId ?? ''}`)}
-              >
-                {t('common.more')}
-              </Button>
-              {isCurator && archiveId && !isMobile && (
-                <Button variant='contained' onClick={newExhibition}>
-                  {t('exhibition.overview.new-exhibition')}
-                </Button>
-              )}
-            </div>
-          ) : (
-            <div className='grid place-content-center p-8'>
-              {isCurator && archiveId && (
-                <Button variant='contained' onClick={newExhibition}>
-                  {t('exhibition.overview.new-exhibition')}
-                </Button>
-              )}
-            </div>
-          )}
         </div>
       )}
     </>
