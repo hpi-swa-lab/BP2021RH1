@@ -398,10 +398,10 @@
   },
   "exhibition": {
     "overview": {
-      "to-exhibition": "Zur Ausstellung",
-      "our-exhibitions": "Unsere Ausstellungen",
-      "delete-title": "Möchten Sie wirklich die Ausstellung \"{{exhibitionName}}\" löschen?",
-      "new-exhibition": "Neue Ausstellung"
+      "to-exhibition": "Zur Geschichte",
+      "our-exhibitions": "Unsere Geschichten",
+      "delete-title": "Möchten Sie wirklich die Geschichte \"{{exhibitionName}}\" löschen?",
+      "new-exhibition": "Neue Geschichte"
     },
     "viewer": {
       "epilog": "Resümé",
