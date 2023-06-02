@@ -65,17 +65,6 @@ interface SectionState {
   dragElements: DragElement[];
 }
 
-interface ExhibitionState {
-  title: string;
-  introduction: string;
-  titlePicture: DragElement;
-  ideaPictures: DragElement[];
-  sections: SectionState[];
-  epilog: string;
-  sources: string[];
-  isPublished: boolean;
-}
-
 export const ExhibitionGetContext = createContext<{
   getExhibitionId: () => string;
   getTitle: () => string;
@@ -145,7 +134,7 @@ const DraggablePicture = ({
   id: string;
   exhibitionPicture: FlatExhibitionPicture;
 }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef } = useDraggable({
     id: id,
     data: {
       type: 'draggable',
@@ -168,7 +157,7 @@ const SortablePicture = ({
   id: string;
   exhibitionPicture: FlatExhibitionPicture;
 }) => {
-  const { attributes, listeners, setNodeRef, transform } = useSortable({
+  const { attributes, listeners, setNodeRef } = useSortable({
     id: id,
     data: {
       type: 'sortable',
@@ -206,11 +195,11 @@ const ExhibitionPicture = ({
 
 const buildDragElement = (exhibitionPicture: FlatExhibitionPicture | undefined) => {
   return exhibitionPicture
-    ? ({
+    ? {
         id: exhibitionPicture.id,
-        picture: exhibitionPicture.picture,
-        order: exhibitionPicture.order,
-        subtitle: exhibitionPicture.subtitle,
+        picture: exhibitionPicture.picture ?? {},
+        order: exhibitionPicture.order ?? 0,
+        subtitle: exhibitionPicture.subtitle ?? '',
         element: (
           <DraggablePicture
             id={exhibitionPicture.id}
@@ -225,7 +214,7 @@ const buildDragElement = (exhibitionPicture: FlatExhibitionPicture | undefined) 
             key={exhibitionPicture.id}
           />
         ),
-      } as DragElement)
+      }
     : undefined;
 };
 const buildDragElements = (exhibitionPictures: FlatExhibitionPicture[] | undefined) => {
@@ -238,25 +227,25 @@ const buildSectionState = (sections: FlatExhibitionSection[] | undefined) => {
   return sections?.map(section => {
     return {
       id: section.id,
-      title: section.title,
-      order: section.order,
+      title: section.title ?? '',
+      order: section.order ?? 0,
       nextOrder: section.exhibition_pictures?.length ?? 0,
-      text: section.text,
+      text: section.text ?? '',
       dragElements: buildDragElements(section.exhibition_pictures),
-    } as SectionState;
+    };
   }) as SectionState[];
 };
 
 const buildExhibitionTextState = (exhibition: FlatExhibition) => {
   return {
-    title: exhibition.title,
-    introduction: exhibition.introduction,
-    epilog: exhibition.epilog,
+    title: exhibition.title ?? '',
+    introduction: exhibition.introduction ?? '',
+    epilog: exhibition.epilog ?? '',
     sources: exhibition.exhibition_sources?.map(source => {
-      return { id: source.id, source: source.source } as ExhibitionSource;
-    }) as ExhibitionSource[],
-    isPublished: exhibition.is_published,
-  } as ExhibitionText;
+      return { id: source.id, source: source.source ?? '' } as ExhibitionSource;
+    }),
+    isPublished: exhibition.is_published ?? false,
+  };
 };
 
 export const ExhibitionStateGetter = ({
@@ -484,7 +473,7 @@ const ExhibitionDragNDrop = ({
 
   const getDraggable = (dragElementId: string) => {
     if (titlePicture?.id === dragElementId) return titlePicture;
-    if (idealot && idealot.some(elem => elem.id === dragElementId))
+    if (idealot?.some(elem => elem.id === dragElementId))
       return idealot.find(elem => elem.id === dragElementId);
     return sections
       .find(section => section.dragElements.some(elem => elem.id === dragElementId))
@@ -939,7 +928,7 @@ const DragNDropHandler = ({
   const [activeDraggable, setActiveDraggable] = useState<DragElement | undefined>(undefined);
 
   const dragHandleEnd = (event: DragEndEvent) => {
-    const { over, active } = event;
+    const { over } = event;
     if (!activeDraggable) return;
     removeDraggable(activeDraggable);
     if (over) {
@@ -967,7 +956,7 @@ const DragNDropHandler = ({
       onDragEnd={!isSorting ? dragHandleEnd : () => {}}
       onDragStart={!isSorting ? dragHandleStart : () => {}}
     >
-      <DragOverlay>{activeDraggable && activeDraggable.element}</DragOverlay>
+      <DragOverlay>{activeDraggable?.element}</DragOverlay>
       {children}
     </DndContext>
   );
