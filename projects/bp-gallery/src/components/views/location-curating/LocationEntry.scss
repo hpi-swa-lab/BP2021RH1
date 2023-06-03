@@ -32,6 +32,7 @@
 }
 
 .location-entry-container {
+  cursor: pointer;
   :hover {
     background-color: lightgray;
     transition: 0.5s;

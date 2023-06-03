@@ -59,13 +59,18 @@
         flex-direction: column;
         width: 100%;
 
-        .location-management-synonyms-grid {
-          margin-bottom: auto;
-          margin-top: 0;
-          overflow: scroll;
+        .MuiInputBase-root {
+          display: flex;
+          flex-wrap: wrap;
 
           .location-management-synonym {
-            margin: 1px 2px 1px 2px;
+            margin: 3px 3px 4px 3px;
+          }
+
+          .MuiInputBase-input {
+            width: 0;
+            min-width: 100px;
+            flex-grow: 1;
           }
         }
       }

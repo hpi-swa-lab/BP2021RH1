@@ -10,7 +10,7 @@ import {
   Visibility,
   VisibilityOff,
 } from '@mui/icons-material';
-import { Button, Chip, DialogContent, Grid, IconButton, TextField } from '@mui/material';
+import { Button, Chip, DialogContent, IconButton, TextField } from '@mui/material';
 import { History } from 'history';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -124,7 +124,7 @@ const LocationManagementDialogPreset = ({
                   defaultValue={title}
                   onBlur={event => {
                     updateName(event.target.value);
-                    setEditName(!editName);
+                    setEditName(editName => !editName);
                   }}
                   onChange={event => {
                     setTitle(event.target.value);
@@ -178,23 +178,6 @@ const LocationManagementDialogPreset = ({
                   type='location'
                 >
                   <div className='location-management-synonyms'>
-                    <Grid
-                      className='location-management-synonyms-grid'
-                      container
-                      rowSpacing={0}
-                      columnSpacing={0}
-                    >
-                      {locationTag.synonyms?.map((synonym, index) => (
-                        <div key={index}>
-                          <Chip
-                            key={synonym!.name}
-                            label={synonym!.name}
-                            className='location-management-synonym'
-                            onDelete={() => deleteSynonym(synonym!.name)}
-                          />
-                        </div>
-                      ))}
-                    </Grid>
                     <TextField
                       className='location-management-synonyms-input'
                       variant='standard'
@@ -204,6 +187,25 @@ const LocationManagementDialogPreset = ({
                           addSynonym(event.target.value as string);
                           event.target.value = '';
                         }
+                      }}
+                      onBlur={(event: any) => {
+                        event.target.value = '';
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <>
+                            {locationTag.synonyms?.map(synonym =>
+                              synonym ? (
+                                <Chip
+                                  key={synonym.name}
+                                  label={synonym.name}
+                                  className='location-management-synonym'
+                                  onDelete={() => deleteSynonym(synonym.name)}
+                                />
+                              ) : undefined
+                            )}
+                          </>
+                        ),
                       }}
                     />
                   </div>
@@ -229,7 +231,7 @@ const LocationManagementDialogPreset = ({
                       setParentTag(locationTag);
                       setLocationTagID(id);
                     }}
-                    allowCreateChild={true}
+                    createChildMutation={newLocationTagMutation}
                   />
                 </PictureInfoField>
               </div>
@@ -265,7 +267,9 @@ const LocationManagementDialogPreset = ({
             </div>
           </div>
           <div className='location-management-right'>
-            <div className='location-management-map'></div>
+            <div className='location-management-map'>
+              Work in Progress/Hier wird noch dran gearbeitet
+            </div>
             <div className='location-management-actions'>
               <div className='location-management-picture-count'>
                 {flattenedPictures &&
@@ -285,60 +289,40 @@ const LocationManagementDialogPreset = ({
               >
                 {t('common.show-pictures')}
               </Button>
-              {localVisibility ? (
-                <Button
-                  className='location-management-show-button'
-                  onClick={() => {
-                    setVisible(false);
-                    setLocalVisibility(false);
-                  }}
-                  endIcon={<Visibility />}
-                >
-                  {t('common.visible')}
-                </Button>
-              ) : (
-                <Button
-                  className='location-management-not-show-button'
-                  onClick={() => {
-                    setVisible(true);
-                    setLocalVisibility(true);
-                  }}
-                  endIcon={<VisibilityOff />}
-                >
-                  {t('common.invisible')}
-                </Button>
-              )}
-              {isRoot ? (
-                <Button
-                  className='location-management-root-button'
-                  onClick={() => {
-                    if (locationTag.parent_tags?.length) {
-                      setTagAsRoot(false);
-                      setIsRoot(false);
-                    }
-                  }}
-                  endIcon={<AccountTree />}
-                >
-                  {t('common.root')}
-                </Button>
-              ) : (
-                <Button
-                  className='location-management-not-root-button'
-                  onClick={() => {
-                    setTagAsRoot(true);
-                    setIsRoot(true);
-                  }}
-                  endIcon={<AccountTree />}
-                >
-                  {t('common.no-root')}
-                </Button>
-              )}
+              <Button
+                className={
+                  localVisibility
+                    ? 'location-management-show-button'
+                    : 'location-management-not-show-button'
+                }
+                onClick={() => {
+                  setVisible(!localVisibility);
+                  setLocalVisibility(localVisibility => !localVisibility);
+                }}
+                endIcon={localVisibility ? <Visibility /> : <VisibilityOff />}
+              >
+                {localVisibility ? t('common.visible') : t('common.invisible')}
+              </Button>
+              <Button
+                className={
+                  isRoot ? 'location-management-root-button' : 'location-management-not-root-button'
+                }
+                onClick={() => {
+                  if (locationTag.parent_tags?.length) {
+                    setTagAsRoot(!isRoot);
+                    setIsRoot(isRoot => !isRoot);
+                  }
+                }}
+                endIcon={<AccountTree />}
+              >
+                {isRoot ? t('common.root') : t('common.no-root')}
+              </Button>
             </div>
           </div>
         </div>
       </DialogContent>
       <div className='location-management-navigation'>
-        {currentIndex && currentIndex > 0 ? (
+        {currentIndex > 0 ? (
           <Button
             className='location-management-previous-button'
             onClick={() => {
@@ -352,7 +336,7 @@ const LocationManagementDialogPreset = ({
         ) : (
           <div></div>
         )}
-        {typeof currentIndex !== 'undefined' && currentIndex < currentSiblings.length - 1 ? (
+        {currentIndex < currentSiblings.length - 1 ? (
           <Button
             className='location-management-next-button'
             onClick={() => {
