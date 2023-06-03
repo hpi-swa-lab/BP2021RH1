@@ -150,6 +150,7 @@ export interface FlatTag {
   unacceptedSubtags?: number;
   markedTemporary?: boolean;
   markedPermanent?: boolean;
+  isNew?: boolean;
 }
 
 export enum TagType {

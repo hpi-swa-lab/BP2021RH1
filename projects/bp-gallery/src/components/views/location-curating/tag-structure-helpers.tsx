@@ -147,6 +147,7 @@ export const useGetTagStructures = (
 
   return {
     tagTree: tagTree,
+    flattenedTagTree: tagsById,
     tagChildTags: tagChildTags,
     tagSiblingTags: tagSiblingTags,
     tagSupertagList: tagSupertagList,
