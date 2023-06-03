@@ -413,7 +413,7 @@
     "keyword": "Schlagwort",
     "multiple-paths": "Mehrere Pfade",
     "select-position": "An welcher Position möchten Sie {{ name }} hinzufügen?",
-    "location-already-exists": "Es existiert bereits ein Ort mit dem Namen {{ name }} an der Stelle, wo sie en Ort einfügen wollen. Diese Operation wird deswegen nicht ausgeführt.",
+    "location-already-exists": "Es existiert bereits ein Ort mit dem Namen {{ name }} an der Stelle, wo sie den Ort einfügen wollen. Diese Operation wird deswegen nicht ausgeführt.",
     "delete-elsewhere": "Der Ort {{ name }} besitzt eine Kopie an anderer Stelle. Soll diese auch gelöscht werden?",
     "only-delete-here": "Nur hier löschen.",
     "delete-everywhere": "Überall löschen.",

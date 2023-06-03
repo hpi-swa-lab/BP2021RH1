@@ -8,6 +8,14 @@ import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { useDeleteSingleTag, useDeleteTagAndChildren } from './delete-tag-helpers';
 
+const enum deleteOptions {
+  ABORT = 0,
+  DELETE_SINGLE_TAG = 1,
+  DELETE_TAG_AND_CHILDREN = 2,
+  DELETE_IN_SINGLE_LOCATION = 1,
+  DELETE_EVERYWHERE = 2,
+}
+
 const useClosesLoop = () => {
   const openAlert = useContext(AlertContext);
   const { t } = useTranslation();
@@ -46,8 +54,11 @@ export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
   });
 
   const setParentTags = (parentTags: FlatTag[]) => {
-    const newParentTag = parentTags.filter(tag => tag.isNew);
-    if (newParentTag.length && closesLoop(locationTag, newParentTag[0])) {
+    const newParentTags = parentTags.filter(tag => tag.isNew);
+    if (
+      newParentTags.length &&
+      newParentTags.some(newParentTag => closesLoop(locationTag, newParentTag))
+    ) {
       return;
     }
 
@@ -70,8 +81,11 @@ export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
   });
 
   const setChildTags = (childTags: FlatTag[]) => {
-    const newChildTag = childTags.filter(tag => tag.isNew);
-    if (newChildTag.length && closesLoop(newChildTag[0], locationTag)) {
+    const newChildTags = childTags.filter(tag => tag.isNew);
+    if (
+      newChildTags.length &&
+      newChildTags.some(newChildTag => closesLoop(newChildTag, locationTag))
+    ) {
       return;
     }
 
@@ -144,8 +158,13 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
       if (selectedTag.child_tags.some((tag: any) => tag.name === locationTag.name)) {
         if (!selectedTag.child_tags.some((tag: any) => tag.id === locationTag.id)) {
           prompt({
-            preset: DialogPreset.CONFIRM,
             title: t('tag-panel.location-already-exists', { name: locationTag.name }),
+            options: [
+              {
+                name: t('common.ok'),
+                value: null,
+              },
+            ],
           });
         }
       } else {
@@ -193,12 +212,9 @@ export const useDetachTag = (locationTag: FlatTag, refetch: () => void, parentTa
   });
   const detachTag = async () => {
     const reallyDetach = await prompt({
+      preset: DialogPreset.CONFIRM,
       title: t(`tag-panel.detach-${TagType.LOCATION}`),
       content: locationTag.name,
-      options: [
-        { name: t('common.abort'), icon: <Close />, value: false },
-        { name: t('common.confirm'), icon: <Done />, value: true },
-      ],
     });
     const filteredParents = locationTag.parent_tags?.filter(
       tag => !parentTag || tag.id !== parentTag.id
@@ -247,8 +263,13 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
       if (selectedTag.child_tags.some((tag: any) => tag.name === locationTag.name)) {
         if (!selectedTag.child_tags.some((tag: any) => tag.id === locationTag.id)) {
           prompt({
-            preset: DialogPreset.CONFIRM,
             title: t('tag-panel.location-already-exists', { name: locationTag.name }),
+            options: [
+              {
+                name: t('common.ok'),
+                value: null,
+              },
+            ],
           });
         }
       } else {
@@ -335,12 +356,21 @@ export const useAddSynonym = (locationTag: FlatTag, refetch: () => void) => {
   return { addSynonym };
 };
 
-const useDeleteLocalTagClone = (locationTag: FlatTag, refetch: () => void, parentTag?: FlatTag) => {
-  const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+const useDeleteLocalTagCloneAnMoveUpChildren = (
+  locationTag: FlatTag,
+  refetch: () => void,
+  parentTag?: FlatTag
+) => {
+  const { updateTagParentMutationSource, updateRootMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
   const [updateTagParentMutation] = updateTagParentMutationSource({
     onCompleted: refetch,
   });
-  const deleteLocalTagClone = () => {
+  const [updateRootMutation] = updateRootMutationSource({
+    onCompleted: refetch,
+  });
+  const deleteLocalTagCloneAnMoveUpChildren = () => {
     locationTag.child_tags?.forEach(tag => {
       updateTagParentMutation({
         variables: {
@@ -351,61 +381,112 @@ const useDeleteLocalTagClone = (locationTag: FlatTag, refetch: () => void, paren
         },
       });
     });
-    updateTagParentMutation({
-      variables: {
-        tagID: locationTag.id,
-        parentIDs: parentTag
-          ? locationTag.parent_tags?.map(t => t.id).filter(t => t !== parentTag.id)
-          : [],
-      },
-    });
+    if (parentTag) {
+      updateTagParentMutation({
+        variables: {
+          tagID: locationTag.id,
+          parentIDs: locationTag.parent_tags?.map(t => t.id).filter(t => t !== parentTag.id),
+        },
+      });
+    } else {
+      updateRootMutation({
+        variables: {
+          tagId: locationTag.id,
+          root: false,
+        },
+      });
+    }
   };
 
-  return { deleteLocalTagClone };
+  return { deleteLocalTagCloneAnMoveUpChildren };
 };
 
-const useDeleteLocalTagClones = (
+const useDeleteLocalTagCloneAndChildren = (
   locationTag: FlatTag,
   refetch: () => void,
   parentTag?: FlatTag
 ) => {
-  const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateTagParentMutationSource, updateRootMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
   const [updateTagParentMutation] = updateTagParentMutationSource({
     onCompleted: refetch,
   });
-  const deleteLocalTagClones = () => {
-    updateTagParentMutation({
-      variables: {
-        tagID: locationTag.id,
-        parentIDs: parentTag
-          ? (locationTag.parent_tags?.map(t => t.id) ?? []).filter(t => t !== parentTag.id)
-          : [],
-      },
-    });
+  const [updateRootMutation] = updateRootMutationSource({
+    onCompleted: refetch,
+  });
+  const deleteLocalTagCloneAndChildren = () => {
+    if (parentTag) {
+      updateTagParentMutation({
+        variables: {
+          tagID: locationTag.id,
+          parentIDs: (locationTag.parent_tags?.map(t => t.id) ?? []).filter(
+            t => t !== parentTag.id
+          ),
+        },
+      });
+    } else {
+      updateRootMutation({
+        variables: {
+          tagId: locationTag.id,
+          root: false,
+        },
+      });
+    }
   };
 
-  return { deleteLocalTagClones };
+  return { deleteLocalTagCloneAndChildren };
 };
 
-export const useDeleteTag = (locationTag: FlatTag, refetch: () => void, parentTag?: FlatTag) => {
+export const useDeleteTag = (
+  locationTag: FlatTag,
+  refetch: () => void,
+  parentTag?: FlatTag,
+  isRoot?: boolean
+) => {
   const prompt = useDialog();
   const { t } = useTranslation();
 
   const { deleteTags } = useDeleteTagAndChildren(refetch, TagType.LOCATION);
   const { deleteSingleTag } = useDeleteSingleTag(refetch, TagType.LOCATION);
-  const { deleteLocalTagClone } = useDeleteLocalTagClone(locationTag, refetch, parentTag);
-  const { deleteLocalTagClones } = useDeleteLocalTagClones(locationTag, refetch, parentTag);
+  const { deleteLocalTagCloneAnMoveUpChildren } = useDeleteLocalTagCloneAnMoveUpChildren(
+    locationTag,
+    refetch,
+    parentTag
+  );
+  const { deleteLocalTagCloneAndChildren } = useDeleteLocalTagCloneAndChildren(
+    locationTag,
+    refetch,
+    parentTag
+  );
   const deleteTag = async () => {
     const deleteOption = await prompt({
       title: t(`tag-panel.should-delete-${TagType.LOCATION}`),
       content: locationTag.name,
-      options: [
-        { name: t('common.abort'), icon: <Close />, value: 0 },
-        { name: t(`tag-panel.just-delete-single-${TagType.LOCATION}`), icon: <Done />, value: 1 },
-        { name: t('common.confirm'), icon: <Done />, value: 2 },
-      ],
+      options: locationTag.child_tags?.length
+        ? [
+            { name: t('common.abort'), icon: <Close />, value: deleteOptions.ABORT },
+            {
+              name: t(`tag-panel.just-delete-single-${TagType.LOCATION}`),
+              icon: <Done />,
+              value: deleteOptions.DELETE_SINGLE_TAG,
+            },
+            {
+              name: t('common.confirm'),
+              icon: <Done />,
+              value: deleteOptions.DELETE_TAG_AND_CHILDREN,
+            },
+          ]
+        : [
+            { name: t('common.abort'), icon: <Close />, value: deleteOptions.ABORT },
+            {
+              name: t('common.confirm'),
+              icon: <Done />,
+              value: deleteOptions.DELETE_TAG_AND_CHILDREN,
+            },
+          ],
     });
-    if (deleteOption === 0) return;
+    if (deleteOption === deleteOptions.ABORT) return;
     let deleteClones = -1;
     if (
       locationTag.parent_tags &&
@@ -416,25 +497,33 @@ export const useDeleteTag = (locationTag: FlatTag, refetch: () => void, parentTa
         title: t('tag-panel.delete-elsewhere', { name: locationTag.name }),
         content: locationTag.name,
         options: [
-          { name: t('common.abort'), icon: <Close />, value: 0 },
-          { name: t('tag-panel.only-delete-here'), icon: <Done />, value: 1 },
-          { name: t('tag-panel.delete-everywhere'), icon: <Done />, value: 2 },
+          { name: t('common.abort'), icon: <Close />, value: deleteOptions.ABORT },
+          {
+            name: t('tag-panel.only-delete-here'),
+            icon: <Done />,
+            value: deleteOptions.DELETE_IN_SINGLE_LOCATION,
+          },
+          {
+            name: t('tag-panel.delete-everywhere'),
+            icon: <Done />,
+            value: deleteOptions.DELETE_EVERYWHERE,
+          },
         ],
       });
     }
     if (deleteClones === 0) return;
     switch (deleteOption) {
-      case 1: {
-        if (deleteClones === 1) {
-          deleteLocalTagClone();
+      case deleteOptions.DELETE_SINGLE_TAG: {
+        if (deleteClones === deleteOptions.DELETE_IN_SINGLE_LOCATION) {
+          deleteLocalTagCloneAnMoveUpChildren();
         } else {
           deleteSingleTag(locationTag);
         }
         break;
       }
-      case 2: {
-        if (deleteClones === 1) {
-          deleteLocalTagClones();
+      case deleteOptions.DELETE_TAG_AND_CHILDREN: {
+        if (deleteClones === deleteOptions.DELETE_IN_SINGLE_LOCATION) {
+          deleteLocalTagCloneAndChildren();
         } else {
           deleteTags(locationTag);
         }
