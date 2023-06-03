@@ -148,6 +148,8 @@ export interface FlatTag {
   accepted?: boolean;
   root?: boolean;
   unacceptedSubtags?: number;
+  markedTemporary?: boolean;
+  markedPermanent?: boolean;
 }
 
 export enum TagType {

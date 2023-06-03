@@ -1,6 +1,43 @@
+import { uniqBy } from 'lodash';
 import { useMemo } from 'react';
 import { FlatTag } from '../../../types/additionalFlatTypes';
-import { uniqBy } from 'lodash';
+
+const useGetTopologicalOrder = (tagsById: { [k: string]: FlatTag } | undefined) => {
+  return useMemo(() => {
+    if (!tagsById) {
+      return;
+    }
+
+    const orderedTags: FlatTag[] = [];
+    let unorderedTags = Object.values(tagsById);
+
+    const visit = (tag: FlatTag) => {
+      if (tag.markedPermanent) {
+        return;
+      }
+      if (tag.markedTemporary) {
+        stop;
+      }
+
+      tag.markedTemporary = true;
+
+      tag.child_tags?.forEach(child => {
+        visit(child);
+      });
+
+      tag.markedTemporary = false;
+      tag.markedPermanent = true;
+      orderedTags.unshift(tag);
+      unorderedTags = unorderedTags.filter(unorderedTag => unorderedTag.id !== tag.id);
+    };
+
+    while (unorderedTags.length) {
+      visit(unorderedTags[0]);
+    }
+
+    return orderedTags;
+  }, [tagsById]);
+};
 
 export const useGetTagStructures = (
   flattenedTags: FlatTag[] | undefined,
@@ -48,6 +85,12 @@ export const useGetTagStructures = (
     return sortedTagTree;
   }, [flattenedTags, tagsById]);
 
+  const tagChildTags = useMemo(() => {
+    return flattenedTags && tagsById
+      ? Object.fromEntries(flattenedTags.map(tag => [tag.id, tagsById[tag.id].child_tags]))
+      : undefined;
+  }, [flattenedTags, tagsById]);
+
   const tagSiblingTags = useMemo(() => {
     if (!flattenedTags || !tagsById) return undefined;
     //set sibling tags for tags
@@ -60,11 +103,8 @@ export const useGetTagStructures = (
       }
       const tag = tagsById[flatTag.id];
       tagSiblings[flatTag.id] = uniqBy(
-        tag.parent_tags?.length
+        tag.parent_tags?.length && !currentIsRoot
           ? tag.parent_tags.flatMap(parent => {
-              if (currentIsRoot) {
-                return rootTags.map(rootTag => tagsById[rootTag.id]);
-              }
               return !currentParentTag || currentParentTag.id === parent.id
                 ? parent.child_tags ?? []
                 : [];
@@ -77,24 +117,11 @@ export const useGetTagStructures = (
     return tagSiblings;
   }, [flattenedTags, currentIsRoot, currentParentTag, tagsById]);
 
-  return {
-    tagTree: tagTree,
-    tagChildTags:
-      flattenedTags && tagsById
-        ? Object.fromEntries(flattenedTags.map(tag => [tag.id, tagsById[tag.id].child_tags]))
-        : undefined,
-    tagSiblingTags: tagSiblingTags,
-  };
-};
-
-export const useGetTagSupertagList = (
-  tagTree: FlatTag[] | undefined,
-  flattenedTags: FlatTag[] | undefined
-) => {
+  const topologicalOrder = useGetTopologicalOrder(tagsById);
   const tagSupertagList = useMemo(() => {
-    if (!flattenedTags || !tagTree) return;
+    if (!tagTree || !topologicalOrder) return;
 
-    const paths = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[][]]));
+    const paths = Object.fromEntries(topologicalOrder.map(tag => [tag.id, [] as FlatTag[][]]));
 
     const visit = (tag: FlatTag) => {
       if (!tag.child_tags) {
@@ -106,24 +133,24 @@ export const useGetTagSupertagList = (
       }
     };
 
-    const queue: FlatTag[] = tagTree.map(tag => tag);
     // setup paths for root tags
     for (const tag of tagTree) {
       paths[tag.id] = [[]];
     }
 
-    while (queue.length) {
-      const tag = queue.shift();
-      if (!tag) {
-        continue;
-      }
+    for (const tag of topologicalOrder) {
       visit(tag);
     }
 
     return paths;
-  }, [flattenedTags, tagTree]);
+  }, [tagTree, topologicalOrder]);
 
-  return tagSupertagList;
+  return {
+    tagTree: tagTree,
+    tagChildTags: tagChildTags,
+    tagSiblingTags: tagSiblingTags,
+    tagSupertagList: tagSupertagList,
+  };
 };
 
 export const useGetBreadthFirstOrder = (

@@ -1,4 +1,4 @@
-import { Help, Add } from '@mui/icons-material';
+import { Add, Help } from '@mui/icons-material';
 import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
 import { useCallback, useEffect, useState } from 'react';
@@ -8,17 +8,16 @@ import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtil
 import useGenericTagEndpoints from '../../../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
-import { SearchType } from '../../../search/helpers/search-filters';
-import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
-import './TagSelection.scss';
-import SingleTagElement from './SingleTagElement';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import {
   useGetBreadthFirstOrder,
   useGetTagStructures,
-  useGetTagSupertagList,
 } from '../../../location-curating/tag-structure-helpers';
+import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
+import { SearchType } from '../../../search/helpers/search-filters';
+import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import SingleTagElement from './SingleTagElement';
+import './TagSelection.scss';
 
 interface TagFields {
   name: string;
@@ -77,8 +76,8 @@ const TagSelectionField = <T extends TagFields>({
   const flattenedTags: FlatTag[] | undefined =
     flattened && type !== TagType.COLLECTION ? Object.values(flattened)[0] : undefined;
 
-  const { tagTree, tagChildTags, tagSiblingTags } = useGetTagStructures(flattenedTags);
-  const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
+  const { tagTree, tagChildTags, tagSiblingTags, tagSupertagList } =
+    useGetTagStructures(flattenedTags);
   const tagOrder = useGetBreadthFirstOrder(tagTree, prioritizedOptions as FlatTag[]) as T[];
 
   const customSortTags = useCallback(

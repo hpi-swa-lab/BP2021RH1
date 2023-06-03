@@ -1,12 +1,12 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
-import SelectDialogPreset from '../../provider/dialog-presets/SelectDialogPreset';
 import { DialogProps } from '../../provider/DialogProvider';
-import { useEffect, useState } from 'react';
+import SelectDialogPreset from '../../provider/dialog-presets/SelectDialogPreset';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagStructures, useGetTagSupertagList } from './tag-structure-helpers';
+import { useGetTagStructures } from './tag-structure-helpers';
 
 const TagSelectDialogPreset = ({
   handleClose,
@@ -22,9 +22,7 @@ const TagSelectDialogPreset = ({
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const { tagTree } = useGetTagStructures(flattenedTags);
-
-  const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
+  const { tagSupertagList } = useGetTagStructures(flattenedTags);
 
   const [tagList, setTagList] = useState<FlatTag[]>();
 

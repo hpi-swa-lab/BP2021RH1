@@ -11,23 +11,23 @@ import {
   VisibilityOff,
 } from '@mui/icons-material';
 import { Button, Chip, DialogContent, Grid, IconButton, TextField } from '@mui/material';
-import { DialogProps } from '../../provider/DialogProvider';
-import './LocationManagementDialog.scss';
-import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
-import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
+import { History } from 'history';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import {
   useCreateLocationTagMutation,
   useGetLocationTagByIdQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
-import TagSelectionField from '../picture/sidebar/picture-info/TagSelectionField';
-import { useEffect, useRef, useState } from 'react';
+import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
+import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
-import { History } from 'history';
-import { useHistory } from 'react-router-dom';
+import { DialogProps } from '../../provider/DialogProvider';
+import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagStructures, useGetTagSupertagList } from './tag-structure-helpers';
+import TagSelectionField from '../picture/sidebar/picture-info/TagSelectionField';
+import './LocationManagementDialog.scss';
 import {
   useAcceptTag,
   useAddSynonym,
@@ -38,7 +38,7 @@ import {
   useSetVisible,
   useUpdateName,
 } from './location-management-helpers';
-import { useTranslation } from 'react-i18next';
+import { useGetTagStructures } from './tag-structure-helpers';
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -72,12 +72,11 @@ const LocationManagementDialogPreset = ({
   const tagPicturesQueryResponse = tagPictures({ variables: { tagID: locationTag.id } });
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
 
-  const { tagTree, tagSiblingTags } = useGetTagStructures(
+  const { tagSiblingTags, tagSupertagList } = useGetTagStructures(
     flattenedTags,
     parentTag as FlatTag | undefined,
     !parentTag
   );
-  const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
   const currentSiblings = [
     ...(tagSiblingTags && locationTag.id in tagSiblingTags ? tagSiblingTags[locationTag.id] : []),
     locationTag,

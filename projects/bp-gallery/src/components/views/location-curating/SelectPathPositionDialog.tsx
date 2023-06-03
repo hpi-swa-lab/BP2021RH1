@@ -1,20 +1,20 @@
+import { Close, Done } from '@mui/icons-material';
+import {
+  Autocomplete,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
-import { DialogProps } from '../../provider/DialogProvider';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
-import { TagType, FlatTag } from '../../../types/additionalFlatTypes';
-import { Close, Done } from '@mui/icons-material';
-import {
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Autocomplete,
-  TextField,
-} from '@mui/material';
+import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import { DialogProps } from '../../provider/DialogProvider';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
-import { useGetTagStructures, useGetTagSupertagList } from './tag-structure-helpers';
+import { useGetTagStructures } from './tag-structure-helpers';
 
 const PathPositionSelectDialogPreset = ({
   handleClose,
@@ -30,8 +30,7 @@ const PathPositionSelectDialogPreset = ({
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const { tagTree } = useGetTagStructures(flattenedTags);
-  const tagSupertagList = useGetTagSupertagList(tagTree, flattenedTags);
+  const { tagSupertagList } = useGetTagStructures(flattenedTags);
 
   const newTag: FlatTag = dialogProps.content.newTag;
   const lastTag: FlatTag = dialogProps.content.lastTag;
