@@ -1,13 +1,13 @@
-import { Add } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import AddLocationEntry from './AddLocationEntry';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
-import { useGetTagStructures } from './tag-structure-helpers';
 import { useCreateNewTag } from './location-management-helpers';
+import { useGetTagStructures } from './tag-structure-helpers';
 
 const setUnacceptedSubtagsCount = (tag: FlatTag) => {
   if (!tag.child_tags?.length) {
@@ -38,7 +38,7 @@ const LocationPanel = () => {
     if (!tagTreeResult.tagTree) return;
 
     tagTreeResult.tagTree.forEach(tag => {
-      tag.name, setUnacceptedSubtagsCount(tag);
+      setUnacceptedSubtagsCount(tag);
     });
 
     return tagTreeResult.tagTree;
@@ -53,15 +53,12 @@ const LocationPanel = () => {
         {tagTree?.map(tag => (
           <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
         ))}
-        <div
-          className='add-tag-container'
+        <AddLocationEntry
+          text={t(`tag-panel.add-location`)}
           onClick={() => {
             createNewTag(tagTree);
           }}
-        >
-          <Add className='add-tag-icon' />
-          <div className='add-tag-text'>{t(`tag-panel.add-location`)}</div>
-        </div>
+        />
       </div>
     </div>
   );

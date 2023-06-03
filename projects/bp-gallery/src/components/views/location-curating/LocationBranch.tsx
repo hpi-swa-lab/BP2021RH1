@@ -1,7 +1,7 @@
-import { Add } from '@mui/icons-material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatTag } from '../../../types/additionalFlatTypes';
+import AddLocationEntry from './AddLocationEntry';
 import LocationEntry from './LocationEntry';
 import './LocationEntry.scss';
 import { useCreateNewTag } from './location-management-helpers';
@@ -49,17 +49,12 @@ const LocationBranch = ({
       {showMore && (
         <div className='sub-location-container'>
           {renderSubBranches()}
-          <div
-            className='add-tag-container'
+          <AddLocationEntry
+            text={t(`tag-panel.add-sub-location`, { parent: locationTag.name })}
             onClick={() => {
               createNewTag(locationTag.child_tags as FlatTag[], locationTag);
             }}
-          >
-            <Add className='add-tag-icon' />
-            <div className='add-tag-text'>
-              {t(`tag-panel.add-sub-location`, { parent: locationTag.name })}
-            </div>
-          </div>
+          />
         </div>
       )}
     </div>
