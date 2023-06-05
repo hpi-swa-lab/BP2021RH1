@@ -3,8 +3,8 @@ import { Badge, Chip, IconButton } from '@mui/material';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import './LocationEntry.scss';
-import { useAcceptTag, useDeleteSynonym } from './location-management-helpers';
 import LocationEntryActions from './LocationEntryActions';
+import { useAcceptTag, useDeleteSynonym } from './location-management-helpers';
 
 const LocationEntry = ({
   locationTag,
@@ -28,7 +28,7 @@ const LocationEntry = ({
     prompt({
       preset: DialogPreset.LOCATION_MANAGEMENT,
       title: locationTag.name,
-      content: { locationTag: locationTag, parentTag: parentTag, refetch: refetch },
+      content: { locationTag, parentTag, refetch },
       maxWidth: false,
     });
   };
@@ -72,8 +72,8 @@ const LocationEntry = ({
               )}
             </div>
             <div className='location-synonyms'>
-              {locationTag.synonyms?.map((synonym, index) => (
-                <div key={index} className='location-synonym'>
+              {locationTag.synonyms?.map(synonym => (
+                <div key={synonym?.id} className='location-synonym'>
                   <Chip
                     key={synonym!.name}
                     label={synonym!.name}
