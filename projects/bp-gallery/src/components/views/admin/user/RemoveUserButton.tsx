@@ -1,15 +1,12 @@
 import { useMemo } from 'react';
-import {
-  useGetUsersPermissionsUserQuery,
-  useRemoveUserMutation,
-} from '../../../../graphql/APIConnector';
+import { useGetUserQuery, useRemoveUserMutation } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useCanRemoveUser } from '../../../../hooks/can-do-hooks';
 import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
 import { DangerousRemoveButton } from '../DangerousRemoveButton';
 
 export const RemoveUserButton = ({ id }: { id: string | undefined }) => {
-  const { data } = useGetUsersPermissionsUserQuery({
+  const { data } = useGetUserQuery({
     variables: {
       id: id ?? '-1',
     },

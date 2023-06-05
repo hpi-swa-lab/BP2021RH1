@@ -20,8 +20,8 @@ import {
   useCanRunGetParameterizedPermissionsQuery,
   useCanRunGetRootCollectionQuery,
   useCanRunGetUnverifiedCommentsQuery,
-  useCanRunGetUsersPermissionsUserQuery,
-  useCanRunGetUsersPermissionsUsersQuery,
+  useCanRunGetUserQuery,
+  useCanRunGetUsersQuery,
   useCanRunMergeCollectionsMutation,
   useCanRunMultipleCreatePictureMutations,
   useCanRunMultipleUploadMutation,
@@ -31,7 +31,7 @@ import {
   useCanRunUpdateArchiveMutation,
   useCanRunUpdateCollectionMutation,
   useCanRunUpdatePictureMutation,
-  useCanRunUpdateUsersPermissionsUserMutation,
+  useCanRunUpdateUserMutation,
   useGetAllArchiveTagsQuery,
 } from '../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../graphql/queryUtils';
@@ -237,14 +237,13 @@ export const useCanRemoveUser = (id: string | null | undefined) => {
   return { canRemoveUser, loading };
 };
 
-export const useCanUpdateUsersPermissionsUser = (id: string | null | undefined) => {
-  const { canRun: canUpdateUsersPermissionsUser, loading } =
-    useCanRunUpdateUsersPermissionsUserMutation({
-      variables: {
-        id: id ?? undefined,
-      },
-    });
-  return { canUpdateUsersPermissionsUser, loading };
+export const useCanUpdateUser = (id: string | null | undefined) => {
+  const { canRun: canUpdateUser, loading } = useCanRunUpdateUserMutation({
+    variables: {
+      id: id ?? undefined,
+    },
+  });
+  return { canUpdateUser, loading };
 };
 
 export const useCanUseForgotPasswordView = () => {
@@ -270,12 +269,11 @@ export const useCanChangePasswordForUser = (userId: string) => {
 export const useCanUsePermissionsView = (userId: string) => {
   const { parsedUserId, isPublic } = parseUserId(userId);
 
-  const { canRun: canGetUsersPermissionsUser, loading: canGetUsersPermissionsUserLoading } =
-    useCanRunGetUsersPermissionsUserQuery({
-      variables: {
-        id: parsedUserId ?? undefined,
-      },
-    });
+  const { canRun: canGetUser, loading: canGetUserLoading } = useCanRunGetUserQuery({
+    variables: {
+      id: parsedUserId ?? undefined,
+    },
+  });
   const { canRun: canGetParameterizedPermissions, loading: canGetParameterizedPermissionsLoading } =
     useCanRunGetParameterizedPermissionsQuery({
       variables: {
@@ -294,12 +292,12 @@ export const useCanUsePermissionsView = (userId: string) => {
     });
   return {
     canUsePermissionsView:
-      (isPublic || canGetUsersPermissionsUser) &&
+      (isPublic || canGetUser) &&
       canGetParameterizedPermissions &&
       canGetAllArchiveTags &&
       (canAddPermission || canDeletePermission),
     loading:
-      canGetUsersPermissionsUserLoading ||
+      canGetUserLoading ||
       canGetParameterizedPermissionsLoading ||
       canGetAllArchiveTagsLoading ||
       canAddPermissionLoading ||
@@ -310,16 +308,15 @@ export const useCanUsePermissionsView = (userId: string) => {
 export const useCanUseUserView = (userId: string) => {
   const { parsedUserId, isPublic } = parseUserId(userId);
 
-  const { canRun: canGetUsersPermissionsUser, loading: canGetUsersPermissionsUserLoading } =
-    useCanRunGetUsersPermissionsUserQuery({
-      variables: {
-        id: parsedUserId ?? undefined,
-      },
-    });
+  const { canRun: canGetUser, loading: canGetUsersLoading } = useCanRunGetUserQuery({
+    variables: {
+      id: parsedUserId ?? undefined,
+    },
+  });
 
   return {
-    canUseUserView: isPublic || canGetUsersPermissionsUser,
-    loading: canGetUsersPermissionsUserLoading,
+    canUseUserView: isPublic || canGetUser,
+    loading: canGetUsersLoading,
   };
 };
 
@@ -338,11 +335,10 @@ export const useCanAddUser = () => {
 };
 
 export const useCanUseUsersView = () => {
-  const { canRun: canGetUsersPermissionsUsers, loading: canGetUsersPermissionsUsersLoading } =
-    useCanRunGetUsersPermissionsUsersQuery();
+  const { canRun: canGetUsers, loading: canGetLoading } = useCanRunGetUsersQuery();
   return {
-    canUseUsersView: canGetUsersPermissionsUsers,
-    loading: canGetUsersPermissionsUsersLoading,
+    canUseUsersView: canGetUsers,
+    loading: canGetLoading,
   };
 };
 

@@ -3132,19 +3132,19 @@ export type GetUnverifiedCommentsQuery = {
   } | null;
 };
 
-export type GetUsersPermissionsUserQueryVariables = Exact<{
+export type GetUserQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type GetUsersPermissionsUserQuery = {
+export type GetUserQuery = {
   usersPermissionsUser?: {
     data?: { id?: string | null; attributes?: { username: string; email: string } | null } | null;
   } | null;
 };
 
-export type GetUsersPermissionsUsersQueryVariables = Exact<{ [key: string]: never }>;
+export type GetUsersQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetUsersPermissionsUsersQuery = {
+export type GetUsersQuery = {
   usersPermissionsUsers?: {
     data: Array<{ id?: string | null; attributes?: { username: string } | null }>;
   } | null;
@@ -3604,13 +3604,13 @@ export type UpdatePictureMutationVariables = Exact<{
 
 export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null };
 
-export type UpdateUsersPermissionsUserMutationVariables = Exact<{
+export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];
   username?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
 }>;
 
-export type UpdateUsersPermissionsUserMutation = {
+export type UpdateUserMutation = {
   updateUsersPermissionsUser: { data?: { id?: string | null } | null };
 };
 
@@ -6317,8 +6317,8 @@ export type GetUnverifiedCommentsQueryResult = Apollo.QueryResult<
   GetUnverifiedCommentsQueryVariables
 >;
 
-export const GetUsersPermissionsUserDocument = gql`
-  query getUsersPermissionsUser($id: ID!) {
+export const GetUserDocument = gql`
+  query getUser($id: ID!) {
     usersPermissionsUser(id: $id) {
       data {
         id
@@ -6332,62 +6332,43 @@ export const GetUsersPermissionsUserDocument = gql`
 `;
 
 /**
- * __useGetUsersPermissionsUserQuery__
+ * __useGetUserQuery__
  *
- * To run a query within a React component, call `useGetUsersPermissionsUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUsersPermissionsUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUsersPermissionsUserQuery({
+ * const { data, loading, error } = useGetUserQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetUsersPermissionsUserQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetUsersPermissionsUserQuery,
-    GetUsersPermissionsUserQueryVariables
-  >
+export function useGetUserQuery(
+  baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetUsersPermissionsUserQuery, GetUsersPermissionsUserQueryVariables>(
-    GetUsersPermissionsUserDocument,
-    options
-  );
+  return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
 }
 
-export function useGetUsersPermissionsUserLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUsersPermissionsUserQuery,
-    GetUsersPermissionsUserQueryVariables
-  >
+export function useGetUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetUsersPermissionsUserQuery, GetUsersPermissionsUserQueryVariables>(
-    GetUsersPermissionsUserDocument,
-    options
-  );
+  return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
 }
 
-export type GetUsersPermissionsUserQueryHookResult = ReturnType<
-  typeof useGetUsersPermissionsUserQuery
->;
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 
-export type GetUsersPermissionsUserLazyQueryHookResult = ReturnType<
-  typeof useGetUsersPermissionsUserLazyQuery
->;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 
-export type GetUsersPermissionsUserQueryResult = Apollo.QueryResult<
-  GetUsersPermissionsUserQuery,
-  GetUsersPermissionsUserQueryVariables
->;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
 
-export const GetUsersPermissionsUsersDocument = gql`
-  query getUsersPermissionsUsers {
+export const GetUsersDocument = gql`
+  query getUsers {
     usersPermissionsUsers {
       data {
         id
@@ -6400,58 +6381,39 @@ export const GetUsersPermissionsUsersDocument = gql`
 `;
 
 /**
- * __useGetUsersPermissionsUsersQuery__
+ * __useGetUsersQuery__
  *
- * To run a query within a React component, call `useGetUsersPermissionsUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUsersPermissionsUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUsersPermissionsUsersQuery({
+ * const { data, loading, error } = useGetUsersQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetUsersPermissionsUsersQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetUsersPermissionsUsersQuery,
-    GetUsersPermissionsUsersQueryVariables
-  >
+export function useGetUsersQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetUsersPermissionsUsersQuery, GetUsersPermissionsUsersQueryVariables>(
-    GetUsersPermissionsUsersDocument,
-    options
-  );
+  return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
 }
 
-export function useGetUsersPermissionsUsersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUsersPermissionsUsersQuery,
-    GetUsersPermissionsUsersQueryVariables
-  >
+export function useGetUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetUsersPermissionsUsersQuery, GetUsersPermissionsUsersQueryVariables>(
-    GetUsersPermissionsUsersDocument,
-    options
-  );
+  return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
 }
 
-export type GetUsersPermissionsUsersQueryHookResult = ReturnType<
-  typeof useGetUsersPermissionsUsersQuery
->;
+export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 
-export type GetUsersPermissionsUsersLazyQueryHookResult = ReturnType<
-  typeof useGetUsersPermissionsUsersLazyQuery
->;
+export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 
-export type GetUsersPermissionsUsersQueryResult = Apollo.QueryResult<
-  GetUsersPermissionsUsersQuery,
-  GetUsersPermissionsUsersQueryVariables
->;
+export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
 
 export const MeDocument = gql`
   query me {
@@ -9436,8 +9398,8 @@ export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
   UpdatePictureMutationVariables
 >;
 
-export const UpdateUsersPermissionsUserDocument = gql`
-  mutation updateUsersPermissionsUser($id: ID!, $username: String, $email: String) {
+export const UpdateUserDocument = gql`
+  mutation updateUser($id: ID!, $username: String, $email: String) {
     updateUsersPermissionsUser(id: $id, data: { username: $username, email: $email }) {
       data {
         id
@@ -9446,23 +9408,23 @@ export const UpdateUsersPermissionsUserDocument = gql`
   }
 `;
 
-export type UpdateUsersPermissionsUserMutationFn = Apollo.MutationFunction<
-  UpdateUsersPermissionsUserMutation,
-  UpdateUsersPermissionsUserMutationVariables
+export type UpdateUserMutationFn = Apollo.MutationFunction<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
 >;
 
 /**
- * __useUpdateUsersPermissionsUserMutation__
+ * __useUpdateUserMutation__
  *
- * To run a mutation, you first call `useUpdateUsersPermissionsUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUsersPermissionsUserMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateUsersPermissionsUserMutation, { data, loading, error }] = useUpdateUsersPermissionsUserMutation({
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
  *   variables: {
  *      id: // value for 'id'
  *      username: // value for 'username'
@@ -9470,29 +9432,23 @@ export type UpdateUsersPermissionsUserMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useUpdateUsersPermissionsUserMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateUsersPermissionsUserMutation,
-    UpdateUsersPermissionsUserMutationVariables
-  >
+export function useUpdateUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateUsersPermissionsUserMutation,
-    UpdateUsersPermissionsUserMutationVariables
-  >(UpdateUsersPermissionsUserDocument, options);
+  return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    UpdateUserDocument,
+    options
+  );
 }
 
-export type UpdateUsersPermissionsUserMutationHookResult = ReturnType<
-  typeof useUpdateUsersPermissionsUserMutation
->;
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 
-export type UpdateUsersPermissionsUserMutationResult =
-  Apollo.MutationResult<UpdateUsersPermissionsUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 
-export type UpdateUsersPermissionsUserMutationOptions = Apollo.BaseMutationOptions<
-  UpdateUsersPermissionsUserMutation,
-  UpdateUsersPermissionsUserMutationVariables
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
 >;
 
 export function useCanRunCanRunOperationQuery(
@@ -10815,19 +10771,19 @@ export function useCanRunMultipleGetUnverifiedCommentsQueries(
   };
 }
 
-export function useCanRunGetUsersPermissionsUserQuery(
+export function useCanRunGetUserQuery(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
-    variables?: Partial<GetUsersPermissionsUserQueryVariables>;
+    variables?: Partial<GetUserQueryVariables>;
     withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
     ...options,
     variables: {
-      operation: GetUsersPermissionsUserDocument.loc?.source.body ?? '',
+      operation: GetUserDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
       withSomeVariables: options?.withSomeVariables,
     },
@@ -10836,18 +10792,18 @@ export function useCanRunGetUsersPermissionsUserQuery(
   return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
 }
 
-export function useCanRunMultipleGetUsersPermissionsUserQueries(
+export function useCanRunMultipleGetUserQueries(
   options: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
-    variableSets: Partial<GetUsersPermissionsUserQueryVariables>[];
+    variableSets: Partial<GetUserQueryVariables>[];
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
     ...options,
     variables: {
-      operation: GetUsersPermissionsUserDocument.loc?.source.body ?? '',
+      operation: GetUserDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
@@ -10859,19 +10815,19 @@ export function useCanRunMultipleGetUsersPermissionsUserQueries(
   };
 }
 
-export function useCanRunGetUsersPermissionsUsersQuery(
+export function useCanRunGetUsersQuery(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
-    variables?: Partial<GetUsersPermissionsUsersQueryVariables>;
+    variables?: Partial<GetUsersQueryVariables>;
     withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
     ...options,
     variables: {
-      operation: GetUsersPermissionsUsersDocument.loc?.source.body ?? '',
+      operation: GetUsersDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
       withSomeVariables: options?.withSomeVariables,
     },
@@ -10880,18 +10836,18 @@ export function useCanRunGetUsersPermissionsUsersQuery(
   return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
 }
 
-export function useCanRunMultipleGetUsersPermissionsUsersQueries(
+export function useCanRunMultipleGetUsersQueries(
   options: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
-    variableSets: Partial<GetUsersPermissionsUsersQueryVariables>[];
+    variableSets: Partial<GetUsersQueryVariables>[];
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
     ...options,
     variables: {
-      operation: GetUsersPermissionsUsersDocument.loc?.source.body ?? '',
+      operation: GetUsersDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
@@ -13367,19 +13323,19 @@ export function useCanRunMultipleUpdatePictureMutations(
   };
 }
 
-export function useCanRunUpdateUsersPermissionsUserMutation(
+export function useCanRunUpdateUserMutation(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
-    variables?: Partial<UpdateUsersPermissionsUserMutationVariables>;
+    variables?: Partial<UpdateUserMutationVariables>;
     withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
     ...options,
     variables: {
-      operation: UpdateUsersPermissionsUserDocument.loc?.source.body ?? '',
+      operation: UpdateUserDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
       withSomeVariables: options?.withSomeVariables,
     },
@@ -13388,18 +13344,18 @@ export function useCanRunUpdateUsersPermissionsUserMutation(
   return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
 }
 
-export function useCanRunMultipleUpdateUsersPermissionsUserMutations(
+export function useCanRunMultipleUpdateUserMutations(
   options: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
-    variableSets: Partial<UpdateUsersPermissionsUserMutationVariables>[];
+    variableSets: Partial<UpdateUserMutationVariables>[];
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
     ...options,
     variables: {
-      operation: UpdateUsersPermissionsUserDocument.loc?.source.body ?? '',
+      operation: UpdateUserDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

@@ -1,15 +1,12 @@
 import { Stack, TextField } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  useGetUsersPermissionsUserQuery,
-  useUpdateUsersPermissionsUserMutation,
-} from '../../../../graphql/APIConnector';
+import { useGetUserQuery, useUpdateUserMutation } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useVisit } from '../../../../helpers/history';
 import {
   useCanChangePasswordForUser,
-  useCanUpdateUsersPermissionsUser,
+  useCanUpdateUser,
   useCanUsePermissionsView,
   useCanUseUserView,
 } from '../../../../hooks/can-do-hooks';
@@ -28,7 +25,7 @@ export const UserView = ({ id }: { id: string }) => {
 
   const { parsedUserId, isPublic } = parseUserId(id);
 
-  const { data, error, loading } = useGetUsersPermissionsUserQuery({
+  const { data, error, loading } = useGetUserQuery({
     variables: {
       id: parsedUserId ?? '-1',
     },
@@ -36,8 +33,8 @@ export const UserView = ({ id }: { id: string }) => {
   const user: FlatUsersPermissionsUser | undefined =
     useSimplifiedQueryResponseData(data)?.usersPermissionsUser;
 
-  const [updateUsersPermissionsUser] = useUpdateUsersPermissionsUserMutation({
-    refetchQueries: ['getUsersPermissionsUser'],
+  const [updateUser] = useUpdateUserMutation({
+    refetchQueries: ['getUser'],
   });
 
   const [username, setUsername] = useState(user?.username ?? '');
@@ -51,19 +48,19 @@ export const UserView = ({ id }: { id: string }) => {
   }, [user]);
 
   const onSave = useCallback(() => {
-    updateUsersPermissionsUser({
+    updateUser({
       variables: {
         id,
         username,
         email,
       },
     });
-  }, [updateUsersPermissionsUser, id, username, email]);
+  }, [updateUser, id, username, email]);
 
   const savePending = user && (username !== user.username || email !== user.email);
 
   const { canUseUserView, loading: canUseUserViewLoading } = useCanUseUserView(id);
-  const { canUpdateUsersPermissionsUser } = useCanUpdateUsersPermissionsUser(id);
+  const { canUpdateUser } = useCanUpdateUser(id);
   const { canUsePermissionsView } = useCanUsePermissionsView(id);
   const { canChangePassword } = useCanChangePasswordForUser(id);
 
@@ -89,7 +86,7 @@ export const UserView = ({ id }: { id: string }) => {
                     label={t('admin.user.name')}
                     value={username}
                     onChange={event => setUsername(event.target.value)}
-                    disabled={!canUpdateUsersPermissionsUser}
+                    disabled={!canUpdateUser}
                   />
                 )}
                 {user && (
@@ -98,7 +95,7 @@ export const UserView = ({ id }: { id: string }) => {
                     type='email'
                     value={email}
                     onChange={event => setEmail(event.target.value)}
-                    disabled={!canUpdateUsersPermissionsUser}
+                    disabled={!canUpdateUser}
                   />
                 )}
                 {savePending && <PrimaryButton onClick={onSave}>{t('curator.save')}</PrimaryButton>}

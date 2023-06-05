@@ -6,7 +6,7 @@ export default {
   needsParameters: ['on_other_users'],
   isAllowed: checkOnOtherUsers('id'),
   document: graphql`
-    query getUsersPermissionsUser($id: ID!) {
+    query getUser($id: ID!) {
       usersPermissionsUser(id: $id) {
         data {
           id

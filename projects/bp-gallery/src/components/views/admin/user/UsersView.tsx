@@ -2,7 +2,7 @@ import { Edit } from '@mui/icons-material';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetUsersPermissionsUsersQuery } from '../../../../graphql/APIConnector';
+import { useGetUsersQuery } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useVisit } from '../../../../helpers/history';
 import { useCanUseUsersView } from '../../../../hooks/can-do-hooks';
@@ -17,7 +17,7 @@ export const UsersView = () => {
   const { t } = useTranslation();
   const { visit } = useVisit();
 
-  const { data, error, loading } = useGetUsersPermissionsUsersQuery();
+  const { data, error, loading } = useGetUsersQuery();
   const users: FlatUsersPermissionsUser[] | undefined =
     useSimplifiedQueryResponseData(data)?.usersPermissionsUsers;
 

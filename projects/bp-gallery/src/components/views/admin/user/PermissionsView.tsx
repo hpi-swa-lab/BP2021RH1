@@ -17,7 +17,7 @@ import {
   useDeleteParameterizedPermissionMutation,
   useGetAllArchiveTagsQuery,
   useGetParameterizedPermissionsQuery,
-  useGetUsersPermissionsUserQuery,
+  useGetUserQuery,
 } from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useCanUsePermissionsView } from '../../../../hooks/can-do-hooks';
@@ -50,7 +50,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     data: userData,
     loading: userLoading,
     error: userError,
-  } = useGetUsersPermissionsUserQuery({
+  } = useGetUserQuery({
     variables: {
       id: parsedUserId ?? '',
     },

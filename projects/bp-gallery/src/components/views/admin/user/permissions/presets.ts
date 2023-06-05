@@ -37,13 +37,13 @@ export const presets: Preset[] = [
       'changePassword',
       'forgotPassword',
       {
-        name: 'getUsersPermissionsUser',
+        name: 'getUser',
         parameters: {
           on_other_users: false,
         },
       },
       {
-        name: 'updateUsersPermissionsUser',
+        name: 'updateUser',
         parameters: {
           on_other_users: false,
         },

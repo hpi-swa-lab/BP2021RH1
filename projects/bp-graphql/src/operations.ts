@@ -54,8 +54,8 @@ export { default as getPicturesForCollection } from './operations/getPicturesFor
 export { default as getPicturesGeoInfo } from './operations/getPicturesGeoInfo.js';
 export { default as getRootCollection } from './operations/getRootCollection.js';
 export { default as getUnverifiedComments } from './operations/getUnverifiedComments.js';
-export { default as getUsersPermissionsUser } from './operations/getUsersPermissionsUser.js';
-export { default as getUsersPermissionsUsers } from './operations/getUsersPermissionsUsers.js';
+export { default as getUser } from './operations/getUser.js';
+export { default as getUsers } from './operations/getUsers.js';
 export { default as increaseNotAPlaceCount } from './operations/increaseNotAPlaceCount.js';
 export { default as like } from './operations/like.js';
 export { default as login } from './operations/login.js';
@@ -87,4 +87,4 @@ export { default as updateLocationVisibility } from './operations/updateLocation
 export { default as updatePersonName } from './operations/updatePersonName.js';
 export { default as updatePersonSynonyms } from './operations/updatePersonSynonyms.js';
 export { default as updatePicture } from './operations/updatePicture.js';
-export { default as updateUsersPermissionsUser } from './operations/updateUsersPermissionsUser.js';
+export { default as updateUser } from './operations/updateUser.js';

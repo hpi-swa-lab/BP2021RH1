@@ -29,8 +29,8 @@ query getPicturesForCollection($collectionId: ID!) { collection(id: $collectionI
 query getPicturesGeoInfo($pictureIds: [ID]!) { pictureGeoInfos(filters: { picture: { id: { in: $pictureIds } } }) { data { id attributes { latitude longitude } } } }
 query getRootCollection { browseRootCollection { data { attributes { current { data { id attributes { name } } } } } } }
 query getUnverifiedComments { comments(filters: { publishedAt: { null: true } } publicationState: PREVIEW) { data { id attributes { picture { data { id attributes { media { data { id attributes { width height formats updatedAt provider } } } } } } text author } } } }
-query getUsersPermissionsUser($id: ID!) { usersPermissionsUser(id: $id) { data { id attributes { username email } } } }
-query getUsersPermissionsUsers { usersPermissionsUsers { data { id attributes { username } } } }
+query getUser($id: ID!) { usersPermissionsUser(id: $id) { data { id attributes { username email } } } }
+query getUsers { usersPermissionsUsers { data { id attributes { username } } } }
 query me { me { id username email } }
 mutation acceptComment($commentId: ID! $currentTime: DateTime!) { updateComment(id: $commentId data: { publishedAt: $currentTime }) { data { id } } }
 mutation addArchiveTag($name: String!) { addArchiveTag(name: $name) }
@@ -87,4 +87,4 @@ mutation updateLocationVisibility($tagId: ID! $visible: Boolean!) { updateLocati
 mutation updatePersonName($tagId: ID! $name: String!) { updatePersonTag(id: $tagId data: { name: $name }) { data { id } } }
 mutation updatePersonSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updatePersonTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updatePicture($pictureId: ID! $data: JSON!) { updatePictureWithTagCleanup(id: $pictureId data: $data) }
-mutation updateUsersPermissionsUser($id: ID! $username: String $email: String) { updateUsersPermissionsUser(id: $id data: { username: $username email: $email }) { data { id } } }
+mutation updateUser($id: ID! $username: String $email: String) { updateUsersPermissionsUser(id: $id data: { username: $username email: $email }) { data { id } } }

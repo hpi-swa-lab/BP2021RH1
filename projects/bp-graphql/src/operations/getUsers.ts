@@ -6,7 +6,7 @@ export default {
   needsParameters: [],
   isAllowed: always,
   document: graphql`
-    query getUsersPermissionsUsers {
+    query getUsers {
       usersPermissionsUsers {
         data {
           id
