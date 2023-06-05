@@ -347,6 +347,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                 />
               </div>
               {renderSections(t('admin.permissions.systemPermissions'), sections.system, null)}
+              {renderSections(t('admin.permissions.withoutArchive'), sections.perArchive, null)}
               {archives.map(archive => renderSections(archive.name, sections.perArchive, archive))}
             </CenteredContainer>
           );

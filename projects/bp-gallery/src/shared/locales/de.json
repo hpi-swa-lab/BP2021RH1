@@ -182,6 +182,7 @@
       "publicTitle": "Rechte eines unangemeldeten Nutzers",
       "filterPlaceholder": "Archive filtern",
       "systemPermissions": "System-Rechte",
+      "withoutArchive": "Ohne Archiv",
       "reallyGrantAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" vergeben?",
       "reallyRemoveAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" entziehen?",
       "reallyEditAllPermissionsContent": "Sie können dies nicht rückgängig machen, sondern müssen den vorigen Stand manuell wiederherstellen.",
