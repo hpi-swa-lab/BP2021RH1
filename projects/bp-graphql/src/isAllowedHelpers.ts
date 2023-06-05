@@ -116,13 +116,21 @@ const equalOrBothNullish = <T>(a: Maybe<T> | undefined, b: Maybe<T> | undefined)
   (a ?? null) === (b ?? null);
 
 export const hasPermission = (
-  variables: { operationName: Maybe<string> | undefined; archiveId: IDLike },
+  variables: Omit<
+    Partial<ParameterizedPermission>,
+    'users_permissions_user' | 'id' | 'archive_tag'
+  > & {
+    archive_tag?: IDLike;
+  },
   permissions: ParameterizedPermission[]
 ) =>
   permissions.find(
     permission =>
-      equalOrBothNullish(permission.operation_name, variables.operationName) &&
-      equalOrBothNullish(archiveId(permission), toId(variables.archiveId))
+      equalOrBothNullish(permission.operation_name, variables.operation_name) &&
+      equalOrBothNullish(archiveId(permission), toId(variables.archive_tag)) &&
+      Boolean(permission.see_unpublished_collections) >=
+        Boolean(variables.see_unpublished_collections) &&
+      Boolean(permission.on_other_users) >= Boolean(variables.on_other_users)
   ) !== undefined;
 
 export const checkUpload =

@@ -17196,7 +17196,7 @@
             "description": null,
             "args": [
               {
-                "name": "userId",
+                "name": "user_id",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -17206,7 +17206,7 @@
                 "defaultValue": null
               },
               {
-                "name": "operationName",
+                "name": "operation_name",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",

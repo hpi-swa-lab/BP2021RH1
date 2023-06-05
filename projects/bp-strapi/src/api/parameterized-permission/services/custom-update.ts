@@ -3,8 +3,8 @@ import crypto from 'crypto';
 import { omit } from 'lodash';
 
 type AddPermissionArgs = {
-  userId: Maybe<string>;
-  operationName: Maybe<string>;
+  user_id: Maybe<string>;
+  operation_name: Maybe<string>;
   archive_tag: Maybe<string>;
   see_unpublished_collections: Maybe<boolean>;
   on_other_users: Maybe<boolean>;
@@ -42,28 +42,26 @@ export const preventPublicUserFromCreatingArchive = () => {
   throw new Error('Unangemeldete Nutzer können keine Archive erstellen');
 };
 
-const checkNonsensicalPermissions = ({ userId, operationName }: AddPermissionArgs) => {
-  if (operationName === 'addArchiveTag' && !userId) {
+const checkNonsensicalPermissions = ({ user_id, operation_name }: AddPermissionArgs) => {
+  if (operation_name === 'addArchiveTag' && !user_id) {
     preventPublicUserFromCreatingArchive();
   }
 };
 
 export const addPermission = async ({
-  userId,
-  operationName,
+  user_id,
+  operation_name,
   archive_tag,
   ...inidividualParameters
 }: AddPermissionArgs) => {
-  checkNonsensicalPermissions({ userId, operationName, archive_tag, ...inidividualParameters });
+  checkNonsensicalPermissions({ user_id, operation_name, archive_tag, ...inidividualParameters });
   const permissionQuery = strapi.db.query('api::parameterized-permission.parameterized-permission');
   const existingPermissions = await permissionQuery.findMany({
     where: {
       users_permissions_user: {
-        id: whereNullable(userId),
+        id: whereNullable(user_id),
       },
-      operation_name: {
-        $eq: operationName,
-      },
+      operation_name,
       archive_tag: {
         id: whereNullable(archive_tag),
       },
@@ -82,8 +80,8 @@ export const addPermission = async ({
   const mergedPermission = mergePermissions([
     ...existingPermissions,
     {
-      users_permissions_user: userId,
-      operation_name: operationName,
+      users_permissions_user: user_id,
+      operation_name,
       archive_tag,
       ...inidividualParameters,
     },

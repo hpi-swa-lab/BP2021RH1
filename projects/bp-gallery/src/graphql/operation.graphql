@@ -34,7 +34,7 @@ query getUsersPermissionsUsers { usersPermissionsUsers { data { id attributes { 
 query me { me { id username email } }
 mutation acceptComment($commentId: ID! $currentTime: DateTime!) { updateComment(id: $commentId data: { publishedAt: $currentTime }) { data { id } } }
 mutation addArchiveTag($name: String!) { addArchiveTag(name: $name) }
-mutation addPermission( $userId: ID $operationName: String $archive_tag: ID $see_unpublished_collections: Boolean $on_other_users: Boolean ) { addPermission( userId: $userId operationName: $operationName archive_tag: $archive_tag see_unpublished_collections: $see_unpublished_collections on_other_users: $on_other_users ) }
+mutation addPermission( $user_id: ID $operation_name: String $archive_tag: ID $see_unpublished_collections: Boolean $on_other_users: Boolean ) { addPermission( user_id: $user_id operation_name: $operation_name archive_tag: $archive_tag see_unpublished_collections: $see_unpublished_collections on_other_users: $on_other_users ) }
 mutation addUser($username: String! $email: String!) { addUser(username: $username email: $email) }
 mutation bulkEdit($pictureIds: [ID!]! $data: JSON!) { doBulkEdit(ids: $pictureIds data: $data) }
 mutation changePassword( $currentPassword: String! $password: String! $passwordConfirmation: String! ) { changePassword( currentPassword: $currentPassword password: $password passwordConfirmation: $passwordConfirmation ) { jwt } }

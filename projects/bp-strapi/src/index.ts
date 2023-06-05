@@ -250,8 +250,8 @@ export default {
           mutationField('addPermission', {
             type: 'Int',
             args: {
-              userId: 'ID',
-              operationName: 'String',
+              user_id: 'ID',
+              operation_name: 'String',
               archive_tag: 'ID',
               see_unpublished_collections: 'Boolean',
               on_other_users: 'Boolean',

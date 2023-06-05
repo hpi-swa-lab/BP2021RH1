@@ -12,8 +12,8 @@ export default {
     }
     return hasPermission(
       {
-        archiveId: archiveId(permission),
-        operationName: permission?.operation_name,
+        ...permission,
+        archive_tag: archiveId(permission),
       },
       permissions
     );

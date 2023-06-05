@@ -125,8 +125,8 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     (operation: Operation, { archive_tag, ...parameters }: Parameters) => {
       createPermission({
         variables: {
-          operationName: operation.document.name,
-          userId: parsedUserId,
+          operation_name: operation.document.name,
+          user_id: parsedUserId,
           archive_tag: archive_tag?.id,
           ...parameters,
         },

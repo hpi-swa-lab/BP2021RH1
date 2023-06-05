@@ -874,9 +874,9 @@ export type MutationAddArchiveTagArgs = {
 export type MutationAddPermissionArgs = {
   archive_tag?: InputMaybe<Scalars['ID']>;
   on_other_users?: InputMaybe<Scalars['Boolean']>;
-  operationName?: InputMaybe<Scalars['String']>;
+  operation_name?: InputMaybe<Scalars['String']>;
   see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
-  userId?: InputMaybe<Scalars['ID']>;
+  user_id?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationAddUserArgs = {
@@ -3167,8 +3167,8 @@ export type AddArchiveTagMutationVariables = Exact<{
 export type AddArchiveTagMutation = { addArchiveTag?: number | null };
 
 export type AddPermissionMutationVariables = Exact<{
-  userId?: InputMaybe<Scalars['ID']>;
-  operationName?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['ID']>;
+  operation_name?: InputMaybe<Scalars['String']>;
   archive_tag?: InputMaybe<Scalars['ID']>;
   see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
   on_other_users?: InputMaybe<Scalars['Boolean']>;
@@ -6594,15 +6594,15 @@ export type AddArchiveTagMutationOptions = Apollo.BaseMutationOptions<
 
 export const AddPermissionDocument = gql`
   mutation addPermission(
-    $userId: ID
-    $operationName: String
+    $user_id: ID
+    $operation_name: String
     $archive_tag: ID
     $see_unpublished_collections: Boolean
     $on_other_users: Boolean
   ) {
     addPermission(
-      userId: $userId
-      operationName: $operationName
+      user_id: $user_id
+      operation_name: $operation_name
       archive_tag: $archive_tag
       see_unpublished_collections: $see_unpublished_collections
       on_other_users: $on_other_users
@@ -6628,8 +6628,8 @@ export type AddPermissionMutationFn = Apollo.MutationFunction<
  * @example
  * const [addPermissionMutation, { data, loading, error }] = useAddPermissionMutation({
  *   variables: {
- *      userId: // value for 'userId'
- *      operationName: // value for 'operationName'
+ *      user_id: // value for 'user_id'
+ *      operation_name: // value for 'operation_name'
  *      archive_tag: // value for 'archive_tag'
  *      see_unpublished_collections: // value for 'see_unpublished_collections'
  *      on_other_users: // value for 'on_other_users'
