@@ -22,6 +22,7 @@
     "@strapi/plugin-i18n": "4.4.5",
     "@strapi/plugin-sentry": "4.4.5",
     "@strapi/plugin-users-permissions": "4.4.5",
+    "@strapi/provider-email-amazon-ses": "^4.10.6",
     "@strapi/provider-email-nodemailer": "^4.5.6",
     "@strapi/strapi": "4.4.5",
     "cross-env": "^7.0.3",
