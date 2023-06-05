@@ -82,7 +82,8 @@ const checkMultipleArchives = (
     permission => permission.operation_name === currentOperationName
   );
   const allowedArchives = permissionsForSameOperation.map(permission => archiveId(permission));
-  return requestedArchives.every(archive => allowedArchives.includes(archive));
+  const requestedArchivesDeduped = Array.from(new Set(requestedArchives));
+  return requestedArchivesDeduped.every(archive => allowedArchives.includes(archive));
 };
 
 const createCheckMultipleEntitiesFactory =
@@ -144,8 +145,7 @@ export const checkUpload =
     const requestedArchives = await Promise.all(
       pictures.map(picture => db.pictureToArchive(picture))
     );
-    const requestedArchivesDeduped = Array.from(new Set(requestedArchives));
-    return checkMultipleArchives(context, requestedArchivesDeduped);
+    return checkMultipleArchives(context, requestedArchives);
   };
 
 export const checkOnOtherUsers =
