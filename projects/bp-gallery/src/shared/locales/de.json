@@ -113,6 +113,7 @@
     "Username already taken": "Der Nutzername ist bereits vergeben",
     "Email already taken": "Die E-Mail ist bereits vergeben",
     "email must be a valid email": "Die E-Mail ist keine gültige E-Mail",
+    "password must be at least 12 characters long and must contain at least a small letter, a capital letter, a number and a special characeter": "Das Passwort muss mindestens 12 Zeichen lang sein und muss mindestens einen Kleinbuchstaben, einen Großbuchstaben, eine Ziffer und ein Sonderzeichen enthalten",
     "password must be at least 6 characters": "Das Passwort muss mindestens 6 Zeichen lang sein"
   },
   "comment": {
