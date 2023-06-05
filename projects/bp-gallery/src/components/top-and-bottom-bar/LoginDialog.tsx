@@ -1,4 +1,3 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Alert,
   Button,
@@ -6,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   TextField,
 } from '@mui/material';
 import { FormEvent, useCallback, useState } from 'react';
@@ -15,6 +13,7 @@ import { useVisit } from '../../helpers/history';
 import { useCanUseForgotPasswordView } from '../../hooks/can-do-hooks';
 import { useAuth } from '../../hooks/context-hooks';
 import { translateErrorMessage } from '../../i18n';
+import { PasswordInput } from '../common/PasswordInput';
 import './LoginDialog.scss';
 
 const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
@@ -24,11 +23,6 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
-  const [passwordShown, setPasswordShown] = useState(false);
-
-  const togglePassword = () => {
-    setPasswordShown(!passwordShown);
-  };
 
   const { login } = useAuth();
 
@@ -67,21 +61,15 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
             value={username}
             onChange={event => setUsername(event.target.value)}
           />
-          <div className='input-with-icon'>
-            <TextField
-              error={errorMessage !== undefined}
-              className='input-field'
-              type={passwordShown ? 'text' : 'password'}
-              id='password'
-              label={t('login.password')}
-              variant='outlined'
-              value={password}
-              onChange={event => setPassword(event.target.value)}
-            />
-            <IconButton id='toggleButton' onClick={togglePassword}>
-              {passwordShown ? <Visibility /> : <VisibilityOff />}
-            </IconButton>
-          </div>
+          <PasswordInput
+            error={errorMessage !== undefined}
+            className='input-field'
+            id='password'
+            label={t('login.password')}
+            variant='outlined'
+            value={password}
+            onChange={event => setPassword(event.target.value)}
+          />
           {canUseForgotPasswordView && (
             <Button
               onClick={() => {
