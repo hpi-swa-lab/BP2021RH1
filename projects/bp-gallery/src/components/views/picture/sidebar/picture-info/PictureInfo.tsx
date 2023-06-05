@@ -1,4 +1,5 @@
 import { Description, Event, Folder, FolderSpecial, Place, Sell } from '@mui/icons-material';
+import { pick } from 'lodash';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -23,7 +24,6 @@ import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
-import { pick } from 'lodash';
 
 export type Field = Pick<
   FlatPicture,
@@ -158,7 +158,7 @@ const PictureInfo = ({
           }}
           noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
-          allowCreateChild={true}
+          createChildMutation={newLocationTagMutation}
         />
       </PictureInfoField>
       {(role >= AuthRole.CURATOR || Boolean(picture.keyword_tags?.length)) && (

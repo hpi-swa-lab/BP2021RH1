@@ -9,6 +9,7 @@ import useGenericTagEndpoints from '../../../../../hooks/generic-endpoints.hook'
 import { FlatTag, TagType } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
+import { RelativeTagPosition } from '../../../location-curating/SelectPathPositionDialog';
 import {
   useGetBreadthFirstOrder,
   useGetTagStructures,
@@ -397,15 +398,15 @@ const TagSelectionField = <T extends TagFields>({
                 });
                 if (!createOption) return;
                 switch (createOption.id) {
-                  case '1': {
+                  case RelativeTagPosition.CHILD: {
                     await addNewChildTag(addTag, newValue);
                     break;
                   }
-                  case '2': {
+                  case RelativeTagPosition.SIBLING: {
                     await addNewSiblingTag(addTag, newValue);
                     break;
                   }
-                  case '0': {
+                  case RelativeTagPosition.ROOT: {
                     await addNewRootTag(addTag, newValue);
                     break;
                   }

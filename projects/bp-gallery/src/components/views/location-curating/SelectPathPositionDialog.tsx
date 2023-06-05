@@ -16,6 +16,12 @@ import { DialogProps } from '../../provider/DialogProvider';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
 import { useGetTagStructures } from './tag-structure-helpers';
 
+export enum RelativeTagPosition {
+  ROOT = '0',
+  CHILD = '1',
+  SIBLING = '2',
+}
+
 const PathPositionSelectDialogPreset = ({
   handleClose,
   dialogProps,
@@ -36,29 +42,13 @@ const PathPositionSelectDialogPreset = ({
   const lastTag: FlatTag = dialogProps.content.lastTag;
 
   const customOptions = useMemo(() => {
-    return [
-      {
+    return [RelativeTagPosition.ROOT, RelativeTagPosition.CHILD, RelativeTagPosition.SIBLING].map(
+      id => ({
         ...newTag,
         icon: undefined,
-        id: '0',
-        position: 'root',
-        name: newTag.name,
-      },
-      {
-        ...newTag,
-        icon: undefined,
-        id: '1',
-        position: 'child',
-        name: newTag.name,
-      },
-      {
-        ...newTag,
-        icon: undefined,
-        id: '2',
-        position: 'sibling',
-        name: newTag.name,
-      },
-    ];
+        id,
+      })
+    );
   }, [newTag]);
 
   const customSupertagList = useMemo(() => {
@@ -121,18 +111,18 @@ const PathPositionSelectDialogPreset = ({
           getOptionLabel={(option: any) => {
             let pathString = '';
             if (option.id in customSupertagList && customSupertagList[option.id].length > 1) {
-              pathString = 'Mehrere Pfade';
+              pathString = t('tag-panel.multiple-paths') + ' ▸ ';
             } else if (
               option.id in customSupertagList &&
               customSupertagList[option.id].length === 1
             ) {
               customSupertagList[option.id][0].forEach((supertag: any) => {
-                pathString += (supertag.name as string) + ' ';
+                pathString += (supertag.name as string) + ' ▸ ';
               });
             }
 
             return pathString !== ''
-              ? (option.name as string) + ' ( ' + pathString + ')'
+              ? (option.name as string) + ' ( ' + pathString + (option.name as string) + ' )'
               : option.name;
           }}
           renderInput={params => {
