@@ -94,8 +94,7 @@
         margin-top: 8px;
       }
 
-      .location-management-show-pictures-button {
-        background-color: $primaryColor;
+      .location-management-button {
         color: #ffffff;
         margin-top: 0.5rem;
         width: 100%;
@@ -103,40 +102,12 @@
         align-self: center;
       }
 
-      .location-management-show-button {
+      .location-management-primary {
         background-color: $primaryColor;
-        color: #ffffff;
-        margin-top: 0.5rem;
-        width: 100%;
-        padding-inline: 1rem;
-        align-self: center;
       }
 
-      .location-management-not-show-button {
+      .location-management-gray {
         background-color: lightgray;
-        color: #ffffff;
-        margin-top: 0.5rem;
-        width: 100%;
-        padding-inline: 1rem;
-        align-self: center;
-      }
-
-      .location-management-root-button {
-        background-color: $primaryColor;
-        color: #ffffff;
-        margin-top: 0.5rem;
-        width: 100%;
-        padding-inline: 1rem;
-        align-self: center;
-      }
-
-      .location-management-not-root-button {
-        background-color: lightgray;
-        color: #ffffff;
-        margin-top: 0.5rem;
-        width: 100%;
-        padding-inline: 1rem;
-        align-self: center;
       }
     }
   }

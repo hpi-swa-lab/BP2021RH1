@@ -278,7 +278,7 @@ const LocationManagementDialogPreset = ({
                   })}
               </div>
               <Button
-                className='location-management-show-pictures-button'
+                className='location-management-button location-management-primary'
                 onClick={() => {
                   handleClose(undefined);
                   history.push(`/show-more/location/${locationTag.id}`, {
@@ -290,11 +290,9 @@ const LocationManagementDialogPreset = ({
                 {t('common.show-pictures')}
               </Button>
               <Button
-                className={
-                  localVisibility
-                    ? 'location-management-show-button'
-                    : 'location-management-not-show-button'
-                }
+                className={`${
+                  localVisibility ? 'location-management-primary' : 'location-management-gray'
+                } location-management-button`}
                 onClick={() => {
                   setVisible(!localVisibility);
                   setLocalVisibility(localVisibility => !localVisibility);
@@ -304,9 +302,9 @@ const LocationManagementDialogPreset = ({
                 {localVisibility ? t('common.visible') : t('common.invisible')}
               </Button>
               <Button
-                className={
-                  isRoot ? 'location-management-root-button' : 'location-management-not-root-button'
-                }
+                className={`${
+                  isRoot ? 'location-management-primary' : 'location-management-gray'
+                } location-management-button`}
                 onClick={() => {
                   if (locationTag.parent_tags?.length) {
                     setTagAsRoot(!isRoot);

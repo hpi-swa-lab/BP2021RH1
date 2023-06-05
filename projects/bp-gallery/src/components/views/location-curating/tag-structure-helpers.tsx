@@ -95,7 +95,7 @@ export const useGetTagStructures = (
     if (!flattenedTags || !tagsById) return undefined;
     //set sibling tags for tags
     const tagSiblings = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
-    const rootTags = flattenedTags.filter(tag => tag.root || !tag.parent_tags?.length);
+    const rootTags = flattenedTags.filter(tag => tag.root ?? !tag.parent_tags?.length);
 
     for (const flatTag of flattenedTags) {
       if (!(flatTag.id in tagsById)) {
