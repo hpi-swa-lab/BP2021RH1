@@ -2190,6 +2190,7 @@ export type UsersPermissionsUser = {
   email: Scalars['String'];
   isSuperUser?: Maybe<Scalars['Boolean']>;
   provider?: Maybe<Scalars['String']>;
+  resetPasswordTokenCreatedAt?: Maybe<Scalars['DateTime']>;
   role?: Maybe<UsersPermissionsRoleEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   username: Scalars['String'];
@@ -2223,6 +2224,7 @@ export type UsersPermissionsUserFiltersInput = {
   password?: InputMaybe<StringFilterInput>;
   provider?: InputMaybe<StringFilterInput>;
   resetPasswordToken?: InputMaybe<StringFilterInput>;
+  resetPasswordTokenCreatedAt?: InputMaybe<DateTimeFilterInput>;
   role?: InputMaybe<UsersPermissionsRoleFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   username?: InputMaybe<StringFilterInput>;
@@ -2237,6 +2239,7 @@ export type UsersPermissionsUserInput = {
   password?: InputMaybe<Scalars['String']>;
   provider?: InputMaybe<Scalars['String']>;
   resetPasswordToken?: InputMaybe<Scalars['String']>;
+  resetPasswordTokenCreatedAt?: InputMaybe<Scalars['DateTime']>;
   role?: InputMaybe<Scalars['ID']>;
   username?: InputMaybe<Scalars['String']>;
 };
