@@ -5,17 +5,10 @@ export default {
   group: 'geo',
   isAllowed: always,
   document: graphql`
-    query getAllPicturesByArchive {
-      archiveTags {
+    query getAllPictureIds {
+      pictures {
         data {
           id
-          attributes {
-            pictures {
-              data {
-                id
-              }
-            }
-          }
         }
       }
     }

@@ -2341,16 +2341,9 @@ export type GetAllPersonTagsQuery = {
   } | null;
 };
 
-export type GetAllPicturesByArchiveQueryVariables = Exact<{ [key: string]: never }>;
+export type GetAllPictureIdsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllPicturesByArchiveQuery = {
-  archiveTags?: {
-    data: Array<{
-      id?: string | null;
-      attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
-    }>;
-  } | null;
-};
+export type GetAllPictureIdsQuery = { pictures?: { data: Array<{ id?: string | null }> } | null };
 
 export type GetArchiveQueryVariables = Exact<{
   archiveId: Scalars['ID'];
@@ -3998,75 +3991,58 @@ export type GetAllPersonTagsQueryResult = Apollo.QueryResult<
   GetAllPersonTagsQueryVariables
 >;
 
-export const GetAllPicturesByArchiveDocument = gql`
-  query getAllPicturesByArchive {
-    archiveTags {
+export const GetAllPictureIdsDocument = gql`
+  query getAllPictureIds {
+    pictures {
       data {
         id
-        attributes {
-          pictures {
-            data {
-              id
-            }
-          }
-        }
       }
     }
   }
 `;
 
 /**
- * __useGetAllPicturesByArchiveQuery__
+ * __useGetAllPictureIdsQuery__
  *
- * To run a query within a React component, call `useGetAllPicturesByArchiveQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllPicturesByArchiveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllPictureIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPictureIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllPicturesByArchiveQuery({
+ * const { data, loading, error } = useGetAllPictureIdsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetAllPicturesByArchiveQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetAllPicturesByArchiveQuery,
-    GetAllPicturesByArchiveQueryVariables
-  >
+export function useGetAllPictureIdsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAllPictureIdsQuery, GetAllPictureIdsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetAllPicturesByArchiveQuery, GetAllPicturesByArchiveQueryVariables>(
-    GetAllPicturesByArchiveDocument,
+  return Apollo.useQuery<GetAllPictureIdsQuery, GetAllPictureIdsQueryVariables>(
+    GetAllPictureIdsDocument,
     options
   );
 }
 
-export function useGetAllPicturesByArchiveLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAllPicturesByArchiveQuery,
-    GetAllPicturesByArchiveQueryVariables
-  >
+export function useGetAllPictureIdsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAllPictureIdsQuery, GetAllPictureIdsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetAllPicturesByArchiveQuery, GetAllPicturesByArchiveQueryVariables>(
-    GetAllPicturesByArchiveDocument,
+  return Apollo.useLazyQuery<GetAllPictureIdsQuery, GetAllPictureIdsQueryVariables>(
+    GetAllPictureIdsDocument,
     options
   );
 }
 
-export type GetAllPicturesByArchiveQueryHookResult = ReturnType<
-  typeof useGetAllPicturesByArchiveQuery
->;
+export type GetAllPictureIdsQueryHookResult = ReturnType<typeof useGetAllPictureIdsQuery>;
 
-export type GetAllPicturesByArchiveLazyQueryHookResult = ReturnType<
-  typeof useGetAllPicturesByArchiveLazyQuery
->;
+export type GetAllPictureIdsLazyQueryHookResult = ReturnType<typeof useGetAllPictureIdsLazyQuery>;
 
-export type GetAllPicturesByArchiveQueryResult = Apollo.QueryResult<
-  GetAllPicturesByArchiveQuery,
-  GetAllPicturesByArchiveQueryVariables
+export type GetAllPictureIdsQueryResult = Apollo.QueryResult<
+  GetAllPictureIdsQuery,
+  GetAllPictureIdsQueryVariables
 >;
 
 export const GetArchiveDocument = gql`
@@ -9715,19 +9691,19 @@ export function useCanRunMultipleGetAllPersonTagsQueries(
   };
 }
 
-export function useCanRunGetAllPicturesByArchiveQuery(
+export function useCanRunGetAllPictureIdsQuery(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
-    variables?: Partial<GetAllPicturesByArchiveQueryVariables>;
+    variables?: Partial<GetAllPictureIdsQueryVariables>;
     withSomeVariables?: boolean;
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
     ...options,
     variables: {
-      operation: GetAllPicturesByArchiveDocument.loc?.source.body ?? '',
+      operation: GetAllPictureIdsDocument.loc?.source.body ?? '',
       variableSets: [options?.variables ?? {}],
       withSomeVariables: options?.withSomeVariables,
     },
@@ -9736,18 +9712,18 @@ export function useCanRunGetAllPicturesByArchiveQuery(
   return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
 }
 
-export function useCanRunMultipleGetAllPicturesByArchiveQueries(
+export function useCanRunMultipleGetAllPictureIdsQueries(
   options: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
     'variables'
   > & {
-    variableSets: Partial<GetAllPicturesByArchiveQueryVariables>[];
+    variableSets: Partial<GetAllPictureIdsQueryVariables>[];
   }
 ) {
   const { data, loading, refetch } = useCanRunOperationQuery({
     ...options,
     variables: {
-      operation: GetAllPicturesByArchiveDocument.loc?.source.body ?? '',
+      operation: GetAllPictureIdsDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

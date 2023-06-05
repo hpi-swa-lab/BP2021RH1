@@ -30,7 +30,7 @@ export { default as getAllCollections } from './operations/getAllCollections.js'
 export { default as getAllKeywordTags } from './operations/getAllKeywordTags.js';
 export { default as getAllLocationTags } from './operations/getAllLocationTags.js';
 export { default as getAllPersonTags } from './operations/getAllPersonTags.js';
-export { default as getAllPicturesByArchive } from './operations/getAllPicturesByArchive.js';
+export { default as getAllPictureIds } from './operations/getAllPictureIds.js';
 export { default as getArchive } from './operations/getArchive.js';
 export { default as getArchivePictureCounts } from './operations/getArchivePictureCounts.js';
 export { default as getCollectionInfoById } from './operations/getCollectionInfoById.js';
