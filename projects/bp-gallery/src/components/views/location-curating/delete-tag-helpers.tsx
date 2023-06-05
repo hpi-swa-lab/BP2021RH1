@@ -5,15 +5,11 @@ export const useDeleteSingleTag = (refetch: () => void, type: TagType) => {
   const { deleteTagMutationSource, updateTagParentMutationSource } = useGenericTagEndpoints(type);
 
   const [deleteTagMutation] = deleteTagMutationSource({
-    onCompleted: _ => {
-      refetch();
-    },
+    onCompleted: refetch,
   });
 
   const [updateTagParentMutation] = updateTagParentMutationSource({
-    onCompleted: (_: any) => {
-      refetch();
-    },
+    onCompleted: refetch,
   });
 
   const deleteSingleTag = (tag: FlatTag) => {
@@ -46,9 +42,7 @@ export const useDeleteTagAndChildren = (refetch: () => void, type: TagType) => {
   };
 
   const [deleteTagMutation] = deleteTagMutationSource({
-    onCompleted: _ => {
-      refetch();
-    },
+    onCompleted: refetch,
   });
 
   const deleteTags = (tag: FlatTag) => {
