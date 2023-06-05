@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode, useRef, useState } from 'react';
+import { Close, Done } from '@mui/icons-material';
 import {
   Autocomplete,
   Button,
@@ -7,10 +7,10 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import { Close, Done } from '@mui/icons-material';
+import { HTMLAttributes, ReactNode, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import './SelectDialogPreset.scss';
 import { DialogProps } from '../DialogProvider';
+import './SelectDialogPreset.scss';
 
 const SelectDialogPreset = ({
   handleClose,
@@ -41,11 +41,9 @@ const SelectDialogPreset = ({
           isOptionEqualToValue={(option, value) => option.id === value.id}
           renderInput={params => <TextField {...params} label={inputLabel} />}
           renderOption={(props, option) => {
-            return renderOption ? (
-              renderOption(props, option, highlight)
-            ) : (
+            return (
               <li {...props} key={option.id}>
-                {option.name}
+                {renderOption ? renderOption(props, option, highlight) : option.name}
               </li>
             );
           }}

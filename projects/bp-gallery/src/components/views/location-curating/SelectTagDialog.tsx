@@ -40,14 +40,12 @@ const TagSelectDialogPreset = ({
       allOptions={tagList ?? []}
       renderOption={(props, option: FlatTag, highlight?: any) => {
         return (
-          <li {...props} key={option.id}>
-            <SingleTagElement
-              tagSupertagList={tagSupertagList}
-              option={option}
-              label={option.name}
-              highlighted={highlight && highlight.id === option.id ? true : false}
-            />
-          </li>
+          <SingleTagElement
+            tagSupertagList={tagSupertagList}
+            option={option}
+            label={option.name}
+            highlighted={highlight && highlight.id === option.id ? true : false}
+          />
         );
       }}
       inputLabel={t(`tag-panel.location`)}
