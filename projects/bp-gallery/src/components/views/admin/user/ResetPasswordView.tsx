@@ -1,10 +1,11 @@
-import { Stack, TextField } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import { useCanRunResetPasswordMutation } from '../../../../graphql/APIConnector';
 import { useVisit } from '../../../../helpers/history';
 import { useAuth } from '../../../../hooks/context-hooks';
+import { PasswordInput } from '../../../common/PasswordInput';
 import PrimaryButton from '../../../common/PrimaryButton';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import { FALLBACK_PATH } from '../../../routes';
@@ -44,15 +45,13 @@ export const ResetPasswordView = () => {
     <ProtectedRoute canUse={canResetPassword} canUseLoading={canResetPasswordLoading}>
       <CenteredContainer title={t('admin.resetPassword.title')}>
         <Stack gap={4}>
-          <TextField
+          <PasswordInput
             label={t('admin.resetPassword.password')}
-            type='password'
             value={password}
             onChange={event => setPassword(event.target.value)}
           />
-          <TextField
+          <PasswordInput
             label={t('admin.resetPassword.passwordConfirmation')}
-            type='password'
             value={passwordConfirmation}
             onChange={event => setPasswordConfirmation(event.target.value)}
           />
