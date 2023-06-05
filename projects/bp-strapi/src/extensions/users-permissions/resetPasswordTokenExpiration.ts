@@ -2,14 +2,14 @@ import {
   validateForgotPasswordBody,
   validateResetPasswordBody,
 } from '@strapi/plugin-users-permissions/server/controllers/validation/auth';
+import { getAuthController, wrap } from './helper';
 
 export const enablePasswordTokenExpiration = (config: {
   resetPasswordTokenExpirationTimeMilliseconds: number;
 }) => {
-  const authController = strapi.plugin('users-permissions').controllers.auth;
+  const authController = getAuthController();
 
-  const innerResetPassword = authController.resetPassword;
-  authController.resetPassword = async ctx => {
+  wrap(authController, 'resetPassword', async (inner, ctx) => {
     const { code } = await validateResetPasswordBody(ctx.request.body);
 
     const userQuery = strapi.query('plugin::users-permissions.user');
@@ -29,14 +29,13 @@ export const enablePasswordTokenExpiration = (config: {
       }
     }
 
-    await innerResetPassword(ctx);
-  };
+    await inner(ctx);
+  });
 
-  const innerForgotPassword = authController.forgotPassword;
-  authController.forgotPassword = async ctx => {
+  wrap(authController, 'forgotPassword', async (inner, ctx) => {
     const { email } = await validateForgotPasswordBody(ctx.request.body);
 
-    await innerForgotPassword(ctx);
+    await inner(ctx);
 
     const userQuery = strapi.query('plugin::users-permissions.user');
     const user = await userQuery.findOne({ where: { email: email.toLowerCase() } });
@@ -49,5 +48,5 @@ export const enablePasswordTokenExpiration = (config: {
         data: { resetPasswordTokenCreatedAt: new Date() },
       });
     }
-  };
+  });
 };
