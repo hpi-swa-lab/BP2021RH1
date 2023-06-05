@@ -66,10 +66,6 @@ const PictureScrollGrid = ({
     fetchPolicy
   );
 
-  useEffect(() => {
-    refetch();
-  }, [selectedTextFilter, refetch]);
-
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 
   const { scrollPos, scrollHeight } = useScroll();
