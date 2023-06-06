@@ -1,16 +1,17 @@
+import { AccessTime, ThumbUp } from '@mui/icons-material';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVisit } from '../../../helpers/history';
 import { PictureOverviewType, TagType } from '../../../types/additionalFlatTypes';
-import PictureOverview from '../../common/PictureOverview';
-import TagOverview from '../../common/TagOverview';
-import { ShowStats } from '../../provider/ShowStatsProvider';
-import './DiscoverView.scss';
 import OverviewContainer, {
   OverviewContainerPosition,
   OverviewContainerTab,
 } from '../../common/OverviewContainer';
-import { AccessTime, ThumbUp } from '@mui/icons-material';
-import { useMemo } from 'react';
+import PictureOverview from '../../common/PictureOverview';
+import TagOverview from '../../common/TagOverview';
+import HorizontalPictureGrid from '../../common/picture-gallery/HorizontalPictureGrid';
+import { ShowStats } from '../../provider/ShowStatsProvider';
+import './DiscoverView.scss';
 
 const DiscoverView = () => {
   const { visit } = useVisit();
@@ -49,6 +50,8 @@ const DiscoverView = () => {
   return (
     <div className='discover-container'>
       <ShowStats>
+        <HorizontalPictureGrid queryParams={{}} />
+
         <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
 
         <PictureOverview
