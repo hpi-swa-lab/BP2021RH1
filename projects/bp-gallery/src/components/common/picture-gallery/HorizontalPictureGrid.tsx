@@ -1,12 +1,15 @@
+import { Portal } from '@mui/material';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ScrollBar from 'react-perfect-scrollbar';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import useGetPictures from '../../../hooks/get-pictures.hook';
 import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
+import PictureView from '../../views/picture/PictureView';
 import PicturePreview from './PicturePreview';
-import { zoomIntoPicture } from './helpers/picture-animations';
+import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
 const SinglePicture = ({
   picture,
@@ -41,31 +44,19 @@ const PictureWidget = ({
   pictures,
   allowClicks,
   inverse,
+  navigateToPicture,
 }: {
   variant?: string;
   pictures: FlatPicture[];
   allowClicks?: boolean;
   inverse?: boolean;
+  navigateToPicture: (id: string) => void;
 }) => {
-  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
-  const [transitioning, setTransitioning] = useState<boolean>(false);
-
-  const navigateToPicture = useCallback(
-    (id: string) => {
-      setTransitioning(true);
-      setFocusedPicture(id);
-      pushHistoryWithoutRouter(`/picture/${id}`);
-      zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
-        setTransitioning(false);
-      });
-    },
-    [setFocusedPicture]
-  );
-
   return variant === 'var-1' ? (
     <div className={`flex flex-col gap-[10px]`}>
       {pictures.length > 0 ? (
         <SinglePicture
+          key={pictures[0].id}
           picture={pictures[0]}
           size={'big'}
           navigateToPicture={navigateToPicture}
@@ -76,6 +67,7 @@ const PictureWidget = ({
         {[1, 2].map(i => {
           return pictures.length > i ? (
             <SinglePicture
+              key={pictures[i].id}
               picture={pictures[i]}
               size={'small'}
               navigateToPicture={navigateToPicture}
@@ -91,6 +83,7 @@ const PictureWidget = ({
         {[0, 1].map(i => {
           return pictures.length > i ? (
             <SinglePicture
+              key={pictures[i].id}
               picture={pictures[i]}
               size={'small'}
               navigateToPicture={navigateToPicture}
@@ -101,6 +94,7 @@ const PictureWidget = ({
       </div>
       {pictures.length > 2 ? (
         <SinglePicture
+          key={pictures[2].id}
           picture={pictures[2]}
           size={'big'}
           navigateToPicture={navigateToPicture}
@@ -218,16 +212,30 @@ const HorizontalPictureGrid = ({
 
   useEffect(() => {
     const field = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
-    console.log('field: ', field);
     const selectedPicture =
       pictures.length > field * 3 + ((leftPictures?.length ?? 0) % 3) - 1
         ? pictures[field * 3 + ((leftPictures?.length ?? 0) % 3) - 1]
         : undefined;
-    console.log('likes: ', selectedPicture?.likes);
+    console.log(selectedPicture?.time_range_tag);
     if (currentValue !== selectedPicture?.likes) {
       setCurrentValue(selectedPicture?.likes ?? 0);
     }
   }, [currentValue, leftPictures?.length, pictures, scrollBarRef?.scrollLeft]);
+
+  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
+  const [transitioning, setTransitioning] = useState<boolean>(false);
+
+  const navigateToPicture = useCallback(
+    (id: string) => {
+      setTransitioning(true);
+      setFocusedPicture(id);
+      pushHistoryWithoutRouter(`/picture/${id}`);
+      zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
+        setTransitioning(false);
+      });
+    },
+    [setFocusedPicture]
+  );
 
   const content = useMemo(() => {
     return (
@@ -242,6 +250,7 @@ const HorizontalPictureGrid = ({
                   pictures={leftPictures.slice(index, index + 3)}
                   allowClicks={allowClicks}
                   inverse={true}
+                  navigateToPicture={navigateToPicture}
                 />
               );
             } else {
@@ -258,6 +267,7 @@ const HorizontalPictureGrid = ({
                   variant={index % 6 ? 'var-1' : 'var-2'}
                   pictures={rightPictures.slice(index, index + 3)}
                   allowClicks={allowClicks}
+                  navigateToPicture={navigateToPicture}
                 />
               );
             } else {
@@ -267,7 +277,7 @@ const HorizontalPictureGrid = ({
         </div>
       </div>
     );
-  }, [allowClicks, leftPictures, rightPictures]);
+  }, [allowClicks, leftPictures, navigateToPicture, rightPictures]);
 
   return (
     <>
@@ -299,6 +309,21 @@ const HorizontalPictureGrid = ({
           {content}
         </ScrollBar>
       </div>
+      {focusedPicture && !transitioning && (
+        <Portal container={root}>
+          <PictureView
+            initialPictureId={focusedPicture}
+            siblingIds={pictures.map(p => p.id)}
+            onBack={(picid: string) => {
+              setTransitioning(true);
+              zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
+                setTransitioning(false);
+                setFocusedPicture(undefined);
+              });
+            }}
+          />
+        </Portal>
+      )}
     </>
   );
 };
