@@ -1,4 +1,6 @@
+import { Event } from '@mui/icons-material';
 import { Portal } from '@mui/material';
+import { t } from 'i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ScrollBar from 'react-perfect-scrollbar';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
@@ -6,8 +8,14 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import useGetPictures from '../../../hooks/get-pictures.hook';
-import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
+import {
+  FlatPicture,
+  FlatTimeRangeTag,
+  PictureOverviewType,
+} from '../../../types/additionalFlatTypes';
 import PictureView from '../../views/picture/PictureView';
+import DateRangeSelectionField from '../../views/picture/sidebar/picture-info/DateRangeSelectionField';
+import PictureInfoField from '../../views/picture/sidebar/picture-info/PictureInfoField';
 import PicturePreview from './PicturePreview';
 import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
@@ -54,17 +62,17 @@ const PictureWidget = ({
 }) => {
   return variant === 'var-1' ? (
     <div className={`flex flex-col gap-[10px]`}>
-      {pictures.length > 0 ? (
+      {pictures.length > (inverse ? 2 : 0) ? (
         <SinglePicture
-          key={pictures[0].id}
-          picture={pictures[0]}
+          key={pictures[inverse ? 2 : 0].id}
+          picture={pictures[inverse ? 2 : 0]}
           size={'big'}
           navigateToPicture={navigateToPicture}
           allowClicks={allowClicks}
         />
       ) : null}
       <div className={`flex ${inverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
-        {[1, 2].map(i => {
+        {(inverse ? [0, 1] : [1, 2]).map(i => {
           return pictures.length > i ? (
             <SinglePicture
               key={pictures[i].id}
@@ -80,7 +88,7 @@ const PictureWidget = ({
   ) : (
     <div className={`flex flex-col gap-[10px]`}>
       <div className={`flex ${inverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
-        {[0, 1].map(i => {
+        {(inverse ? [1, 2] : [0, 1]).map(i => {
           return pictures.length > i ? (
             <SinglePicture
               key={pictures[i].id}
@@ -92,10 +100,10 @@ const PictureWidget = ({
           ) : null;
         })}
       </div>
-      {pictures.length > 2 ? (
+      {pictures.length > (inverse ? 0 : 2) ? (
         <SinglePicture
-          key={pictures[2].id}
-          picture={pictures[2]}
+          key={pictures[inverse ? 0 : 2].id}
+          picture={pictures[inverse ? 0 : 2]}
           size={'big'}
           navigateToPicture={navigateToPicture}
           allowClicks={allowClicks}
@@ -116,9 +124,11 @@ const HorizontalPictureGrid = ({
   type?: PictureOverviewType;
   allowClicks?: boolean;
 }) => {
+  const [date, setDate] = useState<FlatTimeRangeTag>();
+
   const rightResult = useGetPictures(
     {
-      time_range_tag: { start: { gte: new Date('1990-01-01') } },
+      time_range_tag: { start: { gte: date?.start } },
     },
     false,
     ['time_range_tag.start:asc'],
@@ -129,7 +139,7 @@ const HorizontalPictureGrid = ({
   );
 
   const leftResult = useGetPictures(
-    { time_range_tag: { start: { lt: new Date('1990-01-01') } } },
+    { time_range_tag: { start: { lt: date?.start } } },
     false,
     ['time_range_tag.start:desc'],
     true,
@@ -210,7 +220,7 @@ const HorizontalPictureGrid = ({
     return [...[...(leftPictures ?? [])].reverse(), ...(rightPictures ?? [])];
   }, [leftPictures, rightPictures]);
 
-  const [currentValue, setCurrentValue] = useState<string>();
+  const [currentValue, setCurrentValue] = useState<FlatTimeRangeTag>();
   const [field, setField] = useState<number>(0);
 
   const updateField = useCallback(() => {
@@ -225,8 +235,9 @@ const HorizontalPictureGrid = ({
       pictures.length > field * 3 + ((leftPictures?.length ?? 0) % 3) - 1
         ? pictures[field * 3 + ((leftPictures?.length ?? 0) % 3) - 1]
         : undefined;
-    if (currentValue !== selectedPicture?.time_range_tag?.start) {
-      setCurrentValue(String(selectedPicture?.time_range_tag?.start ?? ''));
+    if (currentValue !== selectedPicture?.time_range_tag) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      setCurrentValue(selectedPicture?.time_range_tag);
     }
   }, [pictures, field, leftPictures?.length, currentValue]);
 
@@ -289,7 +300,18 @@ const HorizontalPictureGrid = ({
 
   return (
     <>
-      <div>{currentValue}</div>
+      <PictureInfoField title={t('pictureFields.time')} icon={<Event />} type='date'>
+        <DateRangeSelectionField
+          timeRangeTag={currentValue}
+          onChange={range => {
+            setDate(range);
+            setPictureLength(0);
+          }}
+          onTouch={() => {}}
+          onResetTouch={() => {}}
+          freeUse={true}
+        />
+      </PictureInfoField>
       <div className='relative'>
         <ScrollBar
           containerRef={ref => {

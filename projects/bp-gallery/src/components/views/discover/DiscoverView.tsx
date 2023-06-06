@@ -17,6 +17,29 @@ const DiscoverView = () => {
   const { visit } = useVisit();
   const { t } = useTranslation();
 
+  const timeTabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: 'Zeitstrahl',
+        icon: <AccessTime key='0' />,
+        content: <HorizontalPictureGrid queryParams={{}} allowClicks={true} />,
+      },
+      {
+        title: t('discover.decades'),
+        icon: <AccessTime key='1' />,
+        content: (
+          <TagOverview
+            type={TagType.TIME_RANGE}
+            onClick={() => {
+              visit('/show-more/date');
+            }}
+            rows={2}
+          />
+        ),
+      },
+    ];
+  }, [t, visit]);
+
   const tabs: OverviewContainerTab[] = useMemo(() => {
     return [
       {
@@ -44,11 +67,6 @@ const DiscoverView = () => {
           />
         ),
       },
-      {
-        title: t('discover.most-liked'),
-        icon: <ThumbUp key='1' />,
-        content: <HorizontalPictureGrid queryParams={{}} allowClicks={true} />,
-      },
     ];
   }, [t, visit]);
 
@@ -65,16 +83,12 @@ const DiscoverView = () => {
           }}
           rows={1}
         />
-      </ShowStats>
 
-      <TagOverview
-        title={t('discover.decades')}
-        type={TagType.TIME_RANGE}
-        onClick={() => {
-          visit('/show-more/date');
-        }}
-        rows={2}
-      />
+        <OverviewContainer
+          tabs={timeTabs}
+          overviewPosition={OverviewContainerPosition.DISCOVER_VIEW}
+        />
+      </ShowStats>
 
       <TagOverview
         title={t('discover.locations')}
