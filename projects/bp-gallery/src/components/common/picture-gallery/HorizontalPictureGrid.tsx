@@ -1,10 +1,15 @@
-import { useCallback, useState } from 'react';
+import { Portal } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
 import ScrollBar from 'react-perfect-scrollbar';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { root } from '../../../helpers/app-helpers';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import useGetPictures from '../../../hooks/get-pictures.hook';
 import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
+import PictureView from '../../views/picture/PictureView';
 import PicturePreview from './PicturePreview';
+import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
 const PictureWidget = ({
   variant,
@@ -15,6 +20,21 @@ const PictureWidget = ({
   pictures: FlatPicture[];
   allowClicks?: boolean;
 }) => {
+  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
+  const [transitioning, setTransitioning] = useState<boolean>(false);
+
+  const navigateToPicture = useCallback(
+    (id: string) => {
+      setTransitioning(true);
+      setFocusedPicture(id);
+      pushHistoryWithoutRouter(`/picture/${id}`);
+      zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
+        setTransitioning(false);
+      });
+    },
+    [setFocusedPicture]
+  );
+
   if (variant === 'var-1') {
     return (
       <div className={`flex flex-col gap-[10px]`}>
@@ -25,7 +45,10 @@ const PictureWidget = ({
               picture={pictures[0]}
               adornments={[]}
               allowClicks={allowClicks}
-              onClick={() => {}}
+              onClick={() => {
+                if (!allowClicks) return;
+                navigateToPicture(pictures[0].id);
+              }}
               inverse={true}
             />
           ) : null}
@@ -38,7 +61,10 @@ const PictureWidget = ({
                 picture={pictures[1]}
                 adornments={[]}
                 allowClicks={allowClicks}
-                onClick={() => {}}
+                onClick={() => {
+                  if (!allowClicks) return;
+                  navigateToPicture(pictures[1].id);
+                }}
                 inverse={true}
               />
             ) : null}
@@ -50,12 +76,30 @@ const PictureWidget = ({
                 picture={pictures[2]}
                 adornments={[]}
                 allowClicks={allowClicks}
-                onClick={() => {}}
+                onClick={() => {
+                  if (!allowClicks) return;
+                  navigateToPicture(pictures[2].id);
+                }}
                 inverse={true}
               />
             ) : null}
           </div>
         </div>
+        {focusedPicture && !transitioning && (
+          <Portal container={root}>
+            <PictureView
+              initialPictureId={focusedPicture}
+              siblingIds={pictures.map(p => p.id)}
+              onBack={(picid: string) => {
+                setTransitioning(true);
+                zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
+                  setTransitioning(false);
+                  setFocusedPicture(undefined);
+                });
+              }}
+            />
+          </Portal>
+        )}
       </div>
     );
   } else {
@@ -69,7 +113,10 @@ const PictureWidget = ({
                 picture={pictures[0]}
                 adornments={[]}
                 allowClicks={allowClicks}
-                onClick={() => {}}
+                onClick={() => {
+                  if (!allowClicks) return;
+                  navigateToPicture(pictures[0].id);
+                }}
                 inverse={true}
               />
             ) : null}
@@ -81,7 +128,10 @@ const PictureWidget = ({
                 picture={pictures[1]}
                 adornments={[]}
                 allowClicks={allowClicks}
-                onClick={() => {}}
+                onClick={() => {
+                  if (!allowClicks) return;
+                  navigateToPicture(pictures[1].id);
+                }}
                 inverse={true}
               />
             ) : null}
@@ -94,11 +144,29 @@ const PictureWidget = ({
               picture={pictures[2]}
               adornments={[]}
               allowClicks={allowClicks}
-              onClick={() => {}}
+              onClick={() => {
+                if (!allowClicks) return;
+                navigateToPicture(pictures[2].id);
+              }}
               inverse={true}
             />
           ) : null}
         </div>
+        {focusedPicture && !transitioning && (
+          <Portal container={root}>
+            <PictureView
+              initialPictureId={focusedPicture}
+              siblingIds={pictures.map(p => p.id)}
+              onBack={(picid: string) => {
+                setTransitioning(true);
+                zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
+                  setTransitioning(false);
+                  setFocusedPicture(undefined);
+                });
+              }}
+            />
+          </Portal>
+        )}
       </div>
     );
   }
@@ -108,12 +176,14 @@ const HorizontalPictureGrid = ({
   queryParams,
   sortBy,
   type = PictureOverviewType.CUSTOM,
+  allowClicks,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   sortBy?: string[];
   type?: PictureOverviewType;
+  allowClicks?: boolean;
 }) => {
-  const { data, loading, refetch, fetchMore } = useGetPictures(
+  const { data, fetchMore } = useGetPictures(
     queryParams,
     false,
     sortBy,
@@ -129,7 +199,6 @@ const HorizontalPictureGrid = ({
   const [showLeftButton, setShowLeftButton] = useState<boolean>(false);
   const [showRightButton, setShowRightButton] = useState<boolean>(true);
   const [lastScrollPos, setLastScrollPos] = useState<number>(0);
-  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const fetchMoreOnScroll = useCallback(
     (count: number) => {
@@ -162,7 +231,11 @@ const HorizontalPictureGrid = ({
     }
   };
 
-  console.log(scrollBarRef?.scrollLeft);
+  useEffect(() => {
+    if ((pictures?.length ?? 0) < 100) {
+      fetchMoreOnScroll(100);
+    }
+  }, [fetchMoreOnScroll, pictures]);
 
   return (
     <div className='relative'>
@@ -193,6 +266,7 @@ const HorizontalPictureGrid = ({
                   key={index}
                   variant={index % 6 ? 'var-1' : 'var-2'}
                   pictures={pictures.slice(index, index + 3)}
+                  allowClicks={allowClicks}
                 />
               );
             } else {

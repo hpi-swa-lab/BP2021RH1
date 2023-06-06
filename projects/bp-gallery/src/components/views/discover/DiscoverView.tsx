@@ -50,7 +50,7 @@ const DiscoverView = () => {
   return (
     <div className='discover-container'>
       <ShowStats>
-        <HorizontalPictureGrid queryParams={{}} />
+        <HorizontalPictureGrid queryParams={{}} allowClicks={true} />
 
         <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
 
