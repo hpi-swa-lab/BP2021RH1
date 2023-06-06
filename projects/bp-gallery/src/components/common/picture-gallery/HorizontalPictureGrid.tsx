@@ -1,24 +1,51 @@
-import { Portal } from '@mui/material';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ScrollBar from 'react-perfect-scrollbar';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import useGetPictures from '../../../hooks/get-pictures.hook';
 import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
-import PictureView from '../../views/picture/PictureView';
 import PicturePreview from './PicturePreview';
-import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
+import { zoomIntoPicture } from './helpers/picture-animations';
+
+const SinglePicture = ({
+  picture,
+  size,
+  allowClicks,
+  navigateToPicture,
+}: {
+  picture: FlatPicture;
+  size: string;
+  allowClicks?: boolean;
+  navigateToPicture: (id: string) => void;
+}) => {
+  return (
+    <div className={`${size === 'small' ? 'w-[125px] h-[100px]' : 'w-[260px] h-[200px]'}`}>
+      <PicturePreview
+        key={`${picture.id}`}
+        picture={picture}
+        adornments={[]}
+        allowClicks={allowClicks}
+        onClick={() => {
+          if (!allowClicks) return;
+          navigateToPicture(picture.id);
+        }}
+        inverse={true}
+      />
+    </div>
+  );
+};
 
 const PictureWidget = ({
   variant,
   pictures,
   allowClicks,
+  inverse,
 }: {
   variant?: string;
   pictures: FlatPicture[];
   allowClicks?: boolean;
+  inverse?: boolean;
 }) => {
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
@@ -35,141 +62,53 @@ const PictureWidget = ({
     [setFocusedPicture]
   );
 
-  if (variant === 'var-1') {
-    return (
-      <div className={`flex flex-col gap-[10px]`}>
-        <div className={`w-[260px] h-[200px]`}>
-          {pictures.length > 0 ? (
-            <PicturePreview
-              key={`${pictures[0].id}`}
-              picture={pictures[0]}
-              adornments={[]}
+  return variant === 'var-1' ? (
+    <div className={`flex flex-col gap-[10px]`}>
+      {pictures.length > 0 ? (
+        <SinglePicture
+          picture={pictures[0]}
+          size={'big'}
+          navigateToPicture={navigateToPicture}
+          allowClicks={allowClicks}
+        />
+      ) : null}
+      <div className={`flex ${inverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
+        {[1, 2].map(i => {
+          return pictures.length > i ? (
+            <SinglePicture
+              picture={pictures[i]}
+              size={'small'}
+              navigateToPicture={navigateToPicture}
               allowClicks={allowClicks}
-              onClick={() => {
-                if (!allowClicks) return;
-                navigateToPicture(pictures[0].id);
-              }}
-              inverse={true}
             />
-          ) : null}
-        </div>
-        <div className='flex flex-row gap-[10px]'>
-          <div className={`w-[125px] h-[100px]`}>
-            {pictures.length > 1 ? (
-              <PicturePreview
-                key={`${pictures[1].id}`}
-                picture={pictures[1]}
-                adornments={[]}
-                allowClicks={allowClicks}
-                onClick={() => {
-                  if (!allowClicks) return;
-                  navigateToPicture(pictures[1].id);
-                }}
-                inverse={true}
-              />
-            ) : null}
-          </div>
-          <div className={`w-[125px] h-[100px]`}>
-            {pictures.length > 2 ? (
-              <PicturePreview
-                key={`${pictures[2].id}`}
-                picture={pictures[2]}
-                adornments={[]}
-                allowClicks={allowClicks}
-                onClick={() => {
-                  if (!allowClicks) return;
-                  navigateToPicture(pictures[2].id);
-                }}
-                inverse={true}
-              />
-            ) : null}
-          </div>
-        </div>
-        {focusedPicture && !transitioning && (
-          <Portal container={root}>
-            <PictureView
-              initialPictureId={focusedPicture}
-              siblingIds={pictures.map(p => p.id)}
-              onBack={(picid: string) => {
-                setTransitioning(true);
-                zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
-                  setTransitioning(false);
-                  setFocusedPicture(undefined);
-                });
-              }}
-            />
-          </Portal>
-        )}
+          ) : null;
+        })}
       </div>
-    );
-  } else {
-    return (
-      <div className={`flex flex-col gap-[10px]`}>
-        <div className='flex flex-row gap-[10px]'>
-          <div className={`w-[125px] h-[100px]`}>
-            {pictures.length > 0 ? (
-              <PicturePreview
-                key={`${pictures[0].id}`}
-                picture={pictures[0]}
-                adornments={[]}
-                allowClicks={allowClicks}
-                onClick={() => {
-                  if (!allowClicks) return;
-                  navigateToPicture(pictures[0].id);
-                }}
-                inverse={true}
-              />
-            ) : null}
-          </div>
-          <div className={`w-[125px] h-[100px]`}>
-            {pictures.length > 1 ? (
-              <PicturePreview
-                key={`${pictures[1].id}`}
-                picture={pictures[1]}
-                adornments={[]}
-                allowClicks={allowClicks}
-                onClick={() => {
-                  if (!allowClicks) return;
-                  navigateToPicture(pictures[1].id);
-                }}
-                inverse={true}
-              />
-            ) : null}
-          </div>
-        </div>
-        <div className={`w-[260px] h-[200px]`}>
-          {pictures.length > 2 ? (
-            <PicturePreview
-              key={`${pictures[2].id}`}
-              picture={pictures[2]}
-              adornments={[]}
+    </div>
+  ) : (
+    <div className={`flex flex-col gap-[10px]`}>
+      <div className={`flex ${inverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
+        {[0, 1].map(i => {
+          return pictures.length > i ? (
+            <SinglePicture
+              picture={pictures[i]}
+              size={'small'}
+              navigateToPicture={navigateToPicture}
               allowClicks={allowClicks}
-              onClick={() => {
-                if (!allowClicks) return;
-                navigateToPicture(pictures[2].id);
-              }}
-              inverse={true}
             />
-          ) : null}
-        </div>
-        {focusedPicture && !transitioning && (
-          <Portal container={root}>
-            <PictureView
-              initialPictureId={focusedPicture}
-              siblingIds={pictures.map(p => p.id)}
-              onBack={(picid: string) => {
-                setTransitioning(true);
-                zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
-                  setTransitioning(false);
-                  setFocusedPicture(undefined);
-                });
-              }}
-            />
-          </Portal>
-        )}
+          ) : null;
+        })}
       </div>
-    );
-  }
+      {pictures.length > 2 ? (
+        <SinglePicture
+          picture={pictures[2]}
+          size={'big'}
+          navigateToPicture={navigateToPicture}
+          allowClicks={allowClicks}
+        />
+      ) : null}
+    </div>
+  );
 };
 
 const HorizontalPictureGrid = ({
@@ -188,7 +127,7 @@ const HorizontalPictureGrid = ({
     false,
     ['likes:asc'],
     true,
-    30,
+    50,
     'cache-and-network',
     type
   );
@@ -198,13 +137,12 @@ const HorizontalPictureGrid = ({
     false,
     ['likes:desc'],
     true,
-    30,
+    50,
     'cache-and-network',
     type
   );
 
   const [pictureLength, setPictureLength] = useState<number>(0);
-  const [difference, setDifference] = useState<number>(0);
 
   const rightPictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
     rightResult.data
@@ -251,8 +189,8 @@ const HorizontalPictureGrid = ({
   );
 
   useEffect(() => {
-    if ((rightPictures?.length ?? 0) < 30) {
-      fetchMoreOnScrollRight(30);
+    if ((rightPictures?.length ?? 0) < 50) {
+      fetchMoreOnScrollRight(50);
     }
   }, [fetchMoreOnScrollRight, rightPictures?.length]);
 
@@ -272,6 +210,25 @@ const HorizontalPictureGrid = ({
     }
   }, [leftPictures?.length, pictureLength, scrollBarRef]);
 
+  const pictures = useMemo(() => {
+    return [...[...(leftPictures ?? [])].reverse(), ...(rightPictures ?? [])];
+  }, [leftPictures, rightPictures]);
+
+  const [currentValue, setCurrentValue] = useState<number>();
+
+  useEffect(() => {
+    const field = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
+    console.log('field: ', field);
+    const selectedPicture =
+      pictures.length > field * 3 + ((leftPictures?.length ?? 0) % 3) - 1
+        ? pictures[field * 3 + ((leftPictures?.length ?? 0) % 3) - 1]
+        : undefined;
+    console.log('likes: ', selectedPicture?.likes);
+    if (currentValue !== selectedPicture?.likes) {
+      setCurrentValue(selectedPicture?.likes ?? 0);
+    }
+  }, [currentValue, leftPictures?.length, pictures, scrollBarRef?.scrollLeft]);
+
   const content = useMemo(() => {
     return (
       <div className='flex gap-[10px]'>
@@ -284,6 +241,7 @@ const HorizontalPictureGrid = ({
                   variant={index % 6 ? 'var-2' : 'var-1'}
                   pictures={leftPictures.slice(index, index + 3)}
                   allowClicks={allowClicks}
+                  inverse={true}
                 />
               );
             } else {
@@ -312,33 +270,36 @@ const HorizontalPictureGrid = ({
   }, [allowClicks, leftPictures, rightPictures]);
 
   return (
-    <div className='relative'>
-      <ScrollBar
-        containerRef={ref => {
-          setScrollBarRef(ref);
-        }}
-        onScrollX={() => {
-          setShowLeftButton(true);
-          setShowRightButton(true);
-        }}
-        onXReachStart={ref => {
-          setShowLeftButton(false);
-          if (ref.scrollLeft !== lastScrollPos) {
-            fetchMoreOnScrollLeft(30);
-            setLastScrollPos(ref.scrollLeft);
-          }
-        }}
-        onXReachEnd={ref => {
-          setShowRightButton(false);
-          if (ref.scrollLeft !== lastScrollPos) {
-            fetchMoreOnScrollRight(30);
-            setLastScrollPos(ref.scrollLeft);
-          }
-        }}
-      >
-        {content}
-      </ScrollBar>
-    </div>
+    <>
+      <div>{currentValue}</div>
+      <div className='relative'>
+        <ScrollBar
+          containerRef={ref => {
+            setScrollBarRef(ref);
+          }}
+          onScrollX={() => {
+            setShowLeftButton(true);
+            setShowRightButton(true);
+          }}
+          onXReachStart={ref => {
+            setShowLeftButton(false);
+            if (ref.scrollLeft !== lastScrollPos) {
+              fetchMoreOnScrollLeft(99);
+              setLastScrollPos(ref.scrollLeft);
+            }
+          }}
+          onXReachEnd={ref => {
+            setShowRightButton(false);
+            if (ref.scrollLeft !== lastScrollPos) {
+              fetchMoreOnScrollRight(99);
+              setLastScrollPos(ref.scrollLeft);
+            }
+          }}
+        >
+          {content}
+        </ScrollBar>
+      </div>
+    </>
   );
 };
 
