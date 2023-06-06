@@ -44,14 +44,17 @@ const DiscoverView = () => {
           />
         ),
       },
+      {
+        title: t('discover.most-liked'),
+        icon: <ThumbUp key='1' />,
+        content: <HorizontalPictureGrid queryParams={{}} allowClicks={true} />,
+      },
     ];
   }, [t, visit]);
 
   return (
     <div className='discover-container'>
       <ShowStats>
-        <HorizontalPictureGrid queryParams={{}} allowClicks={true} />
-
         <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
 
         <PictureOverview
