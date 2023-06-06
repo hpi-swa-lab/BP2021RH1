@@ -358,6 +358,7 @@
   },
   "contact-form": {
     "title": "Kontakt",
+    "success": "Ihre Nachricht ist eingegangen.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
     "name-label": "Name",
     "email-label": "E-Mail",

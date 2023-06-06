@@ -1,28 +1,63 @@
 import { Button } from '@mui/material';
-import React from 'react';
+import { FormEvent, useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { asApiPath } from '../../../helpers/app-helpers';
+import { useOnChangeSetter } from '../../../hooks/onchange-setter.hook';
+import { AlertContext, AlertType } from '../../provider/AlertProvider';
 
 const ContactFormView = () => {
   const { t } = useTranslation();
-  const apiPath: string = asApiPath('/api/contact');
+
+  const [recipient, setRecipient] = useState('Herbert-Ahrens-Archiv');
+  const [senderName, setSenderName] = useState('');
+  const [replyEmail, setReplyEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+
+  const openAlert = useContext(AlertContext);
+
+  const onSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const formData = new FormData();
+      formData.append('recipient', recipient);
+      formData.append('sender_name', senderName);
+      formData.append('reply_email', replyEmail);
+      formData.append('subject', subject);
+      formData.append('message', message);
+
+      try {
+        await fetch(asApiPath('/api/contact'), { method: 'post', body: formData });
+        openAlert({
+          alertType: AlertType.SUCCESS,
+          message: t('contact-form.success'),
+        });
+        setSubject('');
+        setMessage('');
+      } catch (error) {
+        openAlert({
+          alertType: AlertType.ERROR,
+          message: error as string,
+        });
+      }
+    },
+    [recipient, senderName, replyEmail, subject, message, openAlert, t]
+  );
 
   return (
     <div className='contact-form-container flex flex-col flex-nowrap items-center m-auto p-4'>
       <h1 className='pt-8'>{t('contact-form.title')}</h1>
-      <form
-        action={apiPath}
-        method='post'
-        encType='multipart/form-data'
-        target=''
-        className='contact-form w-fit h-fit'
-      >
+      <form onSubmit={onSubmit} className='contact-form w-fit h-fit'>
         <div className='form-contents'>
           <p>
             <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.choose-archive-label')}
-              <select className='max-w h-6' name='recipient'>
-                {/*    <option value='Test'>Test</option> */}
+              <select
+                onChange={useOnChangeSetter(setRecipient)}
+                value={recipient}
+                className='max-w h-6'
+              >
+                <option value='Test'>Test</option>
                 <option value='Herbert-Ahrens-Archiv'>Herbert-Ahrens-Archiv</option>
               </select>
             </label>
@@ -30,25 +65,43 @@ const ContactFormView = () => {
           <p>
             <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.name-label')}
-              <input name='sender_name' className='form-input h-5 w-80 name-input' type='text' />
+              <input
+                onChange={useOnChangeSetter(setSenderName)}
+                value={senderName}
+                className='form-input h-5 w-80 name-input'
+                type='text'
+              />
             </label>
           </p>
           <p>
             <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.email-label')}
-              <input name='email' className='form-input h-5 w-80 email-input' type='email' />
+              <input
+                onChange={useOnChangeSetter(setReplyEmail)}
+                value={replyEmail}
+                className='form-input h-5 w-80 email-input'
+                type='email'
+              />
             </label>
           </p>
           <p>
             <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.subject-label')}
-              <input name='subject' className='form-input h-5 w-80 subject-input' />
+              <input
+                onChange={useOnChangeSetter(setSubject)}
+                value={subject}
+                className='form-input h-5 w-80 subject-input'
+              />
             </label>
           </p>
           <p>
             <label className='flex flex-col flex-nowrap text-xl p-0'>
               {t('contact-form.message-label')}
-              <textarea name='message' className='form-input max-w message-input h-20' />
+              <textarea
+                onChange={useOnChangeSetter(setMessage)}
+                value={message}
+                className='form-input max-w message-input h-20'
+              />
             </label>
           </p>
           <div className='submit-button-container '></div>
