@@ -117,9 +117,11 @@ const HorizontalPictureGrid = ({
   allowClicks?: boolean;
 }) => {
   const rightResult = useGetPictures(
-    { likes: { gte: 2 } },
+    {
+      time_range_tag: { start: { gte: new Date('1990-01-01') } },
+    },
     false,
-    ['likes:asc'],
+    ['time_range_tag.start:asc'],
     true,
     50,
     'cache-and-network',
@@ -127,9 +129,9 @@ const HorizontalPictureGrid = ({
   );
 
   const leftResult = useGetPictures(
-    { likes: { lt: 2 } },
+    { time_range_tag: { start: { lt: new Date('1990-01-01') } } },
     false,
-    ['likes:desc'],
+    ['time_range_tag.start:desc'],
     true,
     50,
     'cache-and-network',
@@ -208,19 +210,25 @@ const HorizontalPictureGrid = ({
     return [...[...(leftPictures ?? [])].reverse(), ...(rightPictures ?? [])];
   }, [leftPictures, rightPictures]);
 
-  const [currentValue, setCurrentValue] = useState<number>();
+  const [currentValue, setCurrentValue] = useState<string>();
+  const [field, setField] = useState<number>(0);
+
+  const updateField = useCallback(() => {
+    const tempField = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
+    if (tempField !== field) {
+      setField(tempField);
+    }
+  }, [field, scrollBarRef?.scrollLeft]);
 
   useEffect(() => {
-    const field = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
     const selectedPicture =
       pictures.length > field * 3 + ((leftPictures?.length ?? 0) % 3) - 1
         ? pictures[field * 3 + ((leftPictures?.length ?? 0) % 3) - 1]
         : undefined;
-    console.log(selectedPicture?.time_range_tag);
-    if (currentValue !== selectedPicture?.likes) {
-      setCurrentValue(selectedPicture?.likes ?? 0);
+    if (currentValue !== selectedPicture?.time_range_tag?.start) {
+      setCurrentValue(String(selectedPicture?.time_range_tag?.start ?? ''));
     }
-  }, [currentValue, leftPictures?.length, pictures, scrollBarRef?.scrollLeft]);
+  }, [pictures, field, leftPictures?.length, currentValue]);
 
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
@@ -287,9 +295,10 @@ const HorizontalPictureGrid = ({
           containerRef={ref => {
             setScrollBarRef(ref);
           }}
-          onScrollX={() => {
+          onScrollX={ref => {
             setShowLeftButton(true);
             setShowRightButton(true);
+            updateField();
           }}
           onXReachStart={ref => {
             setShowLeftButton(false);

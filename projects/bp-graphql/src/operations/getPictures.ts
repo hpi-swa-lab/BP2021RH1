@@ -17,6 +17,16 @@ export default {
                 id
               }
             }
+            time_range_tag {
+              data {
+                id
+                attributes {
+                  start
+                  end
+                  isEstimate
+                }
+              }
+            }
             likes
             media {
               data {

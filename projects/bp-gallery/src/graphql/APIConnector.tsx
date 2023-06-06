@@ -19,21 +19,12 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
 export type ArchivePictureCount = {
-  attributes?: Maybe<ArchivePictureCountAttributes>;
-  count?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type ArchivePictureCountAttributes = {
   count?: Maybe<Scalars['Int']>;
 };
 
@@ -44,10 +35,6 @@ export type ArchivePictureCountEntity = {
 
 export type ArchivePictureCountEntityResponseCollection = {
   data?: Maybe<Array<Maybe<ArchivePictureCountEntity>>>;
-};
-
-export type ArchivePictureCountResponseCollection = {
-  data?: Maybe<Array<Maybe<ArchivePictureCount>>>;
 };
 
 export type ArchiveTag = {
@@ -1502,7 +1489,6 @@ export type Query = {
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
-  getArchivePictureCounts?: Maybe<ArchivePictureCountResponseCollection>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -2865,6 +2851,12 @@ export type GetPicturesQuery = {
         is_text?: boolean | null;
         likes?: number | null;
         comments?: { data: Array<{ id?: string | null }> } | null;
+        time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
         media: {
           data?: {
             id?: string | null;
@@ -5487,6 +5479,16 @@ export const GetPicturesDocument = gql`
           comments {
             data {
               id
+            }
+          }
+          time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+                isEstimate
+              }
             }
           }
           likes
