@@ -1,4 +1,10 @@
 /* eslint-disable no-unused-vars */
+
+const dateToTimeStamp = (date) => {
+  const dateInstance = new Date(date);
+  return dateInstance.getTime();
+};
+
 module.exports = ({ env }) => ({
   // disable i18n (all content is explicitly german as it's a german photo archive)
   i18n: false,
@@ -51,6 +57,92 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  meilisearch:
+    env("MEILISEARCH_ENABLED", "false") === "true"
+      ? {
+          config: {
+            host: "localhost:7700",
+            apiKey: "",
+            picture: {
+              transformEntry({ entry }) {
+                const transformedEntry = {
+                  id: entry.id,
+                  likes: entry.likes,
+                  descriptions: entry.descriptions.map(
+                    (description) => description.text
+                  ),
+                  comments: entry.comments.map((comment) => comment.text),
+                  keyword_tags: entry.keyword_tags
+                    .map((tag) => tag.name)
+                    .concat(entry.verified_keyword_tags.map((tag) => tag.name)),
+                  person_tags: entry.person_tags
+                    .map((tag) => tag.name)
+                    .concat(entry.verified_person_tags.map((tag) => tag.name)),
+                  location_tags: entry.location_tags
+                    .map((tag) => tag.name)
+                    .concat(
+                      entry.verified_location_tags.map((tag) => tag.name)
+                    ),
+                  face_tags: entry.face_tags.map((tag) => tag.name),
+                  collections: entry.collections.map((tag) => tag.name),
+                  archive_tag: entry.archive_tag,
+                  time_range_tag_start: entry?.time_range_tag
+                    ? dateToTimeStamp(entry.time_range_tag.start)
+                    : entry.verified_time_range_tag
+                    ? dateToTimeStamp(entry.verified_time_range_tag.start)
+                    : null,
+                  time_range_tag_end: entry?.time_range_tag
+                    ? dateToTimeStamp(entry.time_range_tag.end)
+                    : entry.verified_time_range_tag
+                    ? dateToTimeStamp(entry.verified_time_range_tag.end)
+                    : null,
+                };
+
+                return transformedEntry;
+              },
+              settings: {
+                filterableAttributes: [
+                  "keyword_tags",
+                  "location_tags",
+                  "time_range_tag_start",
+                  "time_range_tag_end",
+                  "face_tags",
+                  "person_tags",
+                  "descriptions",
+                  "comments",
+                  "collections",
+                  "archive_tag",
+                  "is_text",
+                ],
+                sortableAttributes: [
+                  "time_range_tag_start",
+                  "time_range_tag_end",
+                  "likes",
+                ],
+                displayedAttributes: ["id"],
+                searchableAttributes: [
+                  "keyword_tags",
+                  "location_tags",
+                  "time_range_tag_start",
+                  "time_range_tag_end",
+                  "face_tags",
+                  "person_tags",
+                  "descriptions",
+                  "comments",
+                  "collections",
+                  "archive_tag",
+                ],
+                typoTolerance: {
+                  enabled: true,
+                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
+                  diableOnWords: [],
+                  disableOnAttributes: [],
+                },
+              },
+            },
+          },
+        }
+      : null,
   upload:
     env("AWS_ENABLED", "false") === "true"
       ? {
