@@ -82,6 +82,7 @@ export { default as updateLink } from './operations/updateLink.js';
 export { default as updateLocationName } from './operations/updateLocationName.js';
 export { default as updateLocationSynonyms } from './operations/updateLocationSynonyms.js';
 export { default as updateLocationVisibility } from './operations/updateLocationVisibility.js';
+export { default as updateMe } from './operations/updateMe.js';
 export { default as updatePersonName } from './operations/updatePersonName.js';
 export { default as updatePersonSynonyms } from './operations/updatePersonSynonyms.js';
 export { default as updatePicture } from './operations/updatePicture.js';

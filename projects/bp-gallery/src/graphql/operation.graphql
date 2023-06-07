@@ -82,6 +82,7 @@ mutation updateLink($id: ID! $data: LinkInput!) { updateLink(id: $id data: $data
 mutation updateLocationName($tagId: ID! $name: String!) { updateLocationTag(id: $tagId data: { name: $name }) { data { id } } }
 mutation updateLocationSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updateLocationTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updateLocationVisibility($tagId: ID! $visible: Boolean!) { updateLocationTag(id: $tagId data: { visible: $visible }) { data { id } } }
+mutation updateMe($username: String $email: String) { updateMe(username: $username email: $email) }
 mutation updatePersonName($tagId: ID! $name: String!) { updatePersonTag(id: $tagId data: { name: $name }) { data { id } } }
 mutation updatePersonSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updatePersonTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updatePicture($pictureId: ID! $data: JSON!) { updatePictureWithTagCleanup(id: $pictureId data: $data) }

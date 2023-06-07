@@ -24,6 +24,7 @@ import {
   updatePictureWithTagCleanup,
 } from './api/picture/services/custom-resolver';
 import { incNotAPlaceCount } from './api/picture/services/custom-update';
+import { updateMe } from './extensions/users-permissions/content-types/user/custom-update';
 import {
   canRunOperation,
   canRunWithSomeVariables,
@@ -226,6 +227,17 @@ export default {
             },
             async resolve(_, { id }) {
               return removeArchiveTag(id);
+            },
+          }),
+          mutationField('updateMe', {
+            type: 'Int',
+            args: {
+              username: 'String',
+              email: 'String',
+            },
+            async resolve(_, { username, email }, context) {
+              const user = context.state.auth.credentials;
+              return updateMe(user, username, email);
             },
           }),
           mutationField('addUser', {

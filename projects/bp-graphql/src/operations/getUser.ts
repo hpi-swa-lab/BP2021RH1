@@ -1,10 +1,10 @@
 import { Operation, graphql } from '../Operation.js';
-import { checkOnOtherUsers } from '../isAllowedHelpers.js';
+import { always } from '../isAllowedHelpers.js';
 
 export default {
   section: 'user',
-  needsParameters: ['on_other_users'],
-  isAllowed: checkOnOtherUsers('id'),
+  needsParameters: [],
+  isAllowed: always,
   document: graphql`
     query getUser($id: ID!) {
       usersPermissionsUser(id: $id) {

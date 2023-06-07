@@ -305,7 +305,7 @@ export const useCanUsePermissionsView = (userId: string) => {
   };
 };
 
-export const useCanUseUserView = (userId: string) => {
+export const useCanUseUserByIdView = (userId: string) => {
   const { parsedUserId, isPublic } = parseUserId(userId);
 
   const { canRun: canGetUser, loading: canGetUsersLoading } = useCanRunGetUserQuery({
@@ -321,10 +321,9 @@ export const useCanUseUserView = (userId: string) => {
 };
 
 export const useCanUseMyAccountView = () => {
-  const { userId } = useAuth();
-  const { canUseUserView, loading } = useCanUseUserView(userId ?? '');
+  const { userId, loading } = useAuth();
   return {
-    canUseMyAccountView: !!userId && canUseUserView,
+    canUseMyAccountView: !!userId,
     loading,
   };
 };

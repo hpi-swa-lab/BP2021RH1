@@ -6,12 +6,8 @@ export default {
   needsParameters: [],
   isAllowed: always,
   document: graphql`
-    mutation updateUser($id: ID!, $username: String, $email: String) {
-      updateUsersPermissionsUser(id: $id, data: { username: $username, email: $email }) {
-        data {
-          id
-        }
-      }
+    mutation updateMe($username: String, $email: String) {
+      updateMe(username: $username, email: $email)
     }
   `,
 } satisfies Operation;

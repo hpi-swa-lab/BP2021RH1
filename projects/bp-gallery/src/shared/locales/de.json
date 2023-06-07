@@ -258,14 +258,6 @@
             "onlyOwn": "Nur sich selbst",
             "onOtherUsers": "Alle Nutzer"
           },
-          "getUser": {
-            "onlyOwn": "Nur eigene",
-            "onOtherUsers": "Von allen Nutzern"
-          },
-          "updateUser": {
-            "onlyOwn": "Nur eigene",
-            "onOtherUsers": "Von allen Nutzern"
-          },
           "getParameterizedPermissions": {
             "onlyOwn": "Nur eigene",
             "onOtherUsers": "Von allen Nutzern"

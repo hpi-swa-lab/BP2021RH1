@@ -10,7 +10,7 @@ import { ForgotPasswordView } from './views/admin/user/ForgotPasswordView';
 import { MyAccountView } from './views/admin/user/MyAccountView';
 import PermissionsView from './views/admin/user/PermissionsView';
 import { ResetPasswordView } from './views/admin/user/ResetPasswordView';
-import { UserView } from './views/admin/user/UserView';
+import { UserByIdView } from './views/admin/user/UserByIdView';
 import { UsersView } from './views/admin/user/UsersView';
 import ArchiveEditView from './views/archives/ArchiveEditView';
 import ArchiveView from './views/archives/ArchiveView';
@@ -139,7 +139,7 @@ const routes: RouteConfig[] = [
   {
     path: '/admin/user/:id',
     render({ match }: RouteConfigComponentProps<{ id: '' }>) {
-      return <UserView id={match.params.id} />;
+      return <UserByIdView id={match.params.id} />;
     },
   },
   {

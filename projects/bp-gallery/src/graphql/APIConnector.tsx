@@ -852,6 +852,7 @@ export type Mutation = {
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
   updateLink?: Maybe<LinkEntityResponse>;
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
+  updateMe?: Maybe<Scalars['Int']>;
   updateParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
@@ -1156,6 +1157,11 @@ export type MutationUpdateLinkArgs = {
 export type MutationUpdateLocationTagArgs = {
   data: LocationTagInput;
   id: Scalars['ID'];
+};
+
+export type MutationUpdateMeArgs = {
+  email?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateParameterizedPermissionArgs = {
@@ -3529,6 +3535,13 @@ export type UpdateLocationVisibilityMutationVariables = Exact<{
 export type UpdateLocationVisibilityMutation = {
   updateLocationTag?: { data?: { id?: string | null } | null } | null;
 };
+
+export type UpdateMeMutationVariables = Exact<{
+  username?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+}>;
+
+export type UpdateMeMutation = { updateMe?: number | null };
 
 export type UpdatePersonNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
@@ -9034,6 +9047,51 @@ export type UpdateLocationVisibilityMutationOptions = Apollo.BaseMutationOptions
   UpdateLocationVisibilityMutationVariables
 >;
 
+export const UpdateMeDocument = gql`
+  mutation updateMe($username: String, $email: String) {
+    updateMe(username: $username, email: $email)
+  }
+`;
+
+export type UpdateMeMutationFn = Apollo.MutationFunction<
+  UpdateMeMutation,
+  UpdateMeMutationVariables
+>;
+
+/**
+ * __useUpdateMeMutation__
+ *
+ * To run a mutation, you first call `useUpdateMeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMeMutation, { data, loading, error }] = useUpdateMeMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useUpdateMeMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateMeMutation, UpdateMeMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateMeMutation, UpdateMeMutationVariables>(UpdateMeDocument, options);
+}
+
+export type UpdateMeMutationHookResult = ReturnType<typeof useUpdateMeMutation>;
+
+export type UpdateMeMutationResult = Apollo.MutationResult<UpdateMeMutation>;
+
+export type UpdateMeMutationOptions = Apollo.BaseMutationOptions<
+  UpdateMeMutation,
+  UpdateMeMutationVariables
+>;
+
 export const UpdatePersonNameDocument = gql`
   mutation updatePersonName($tagId: ID!, $name: String!) {
     updatePersonTag(id: $tagId, data: { name: $name }) {
@@ -12889,6 +12947,50 @@ export function useCanRunMultipleUpdateLocationVisibilityMutations(
     ...options,
     variables: {
       operation: UpdateLocationVisibilityDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateMeMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateMeMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateMeDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateMeMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateMeMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateMeDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
