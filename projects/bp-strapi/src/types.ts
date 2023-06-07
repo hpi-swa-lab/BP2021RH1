@@ -4,6 +4,8 @@ import type * as Nexus from "nexus";
 
 export type KnexEngine = typeof knex & ReturnType<typeof knex>;
 
+export type QueryBuilder = ReturnType<KnexEngine["select"]>;
+
 export type GqlExtension = {
   strapi: StrapiExtended;
   nexus: typeof Nexus;

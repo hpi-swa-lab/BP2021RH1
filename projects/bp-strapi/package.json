@@ -11,7 +11,8 @@
     "build:prod": "cross-env ENV_PATH=./config/env/production/.env strapi build",
     "test-db": "docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=bpgallery postgres",
     "strapi": "strapi",
-    "debug": "cross-env ENV_PATH=./config/env/development/.env node --inspect debug.js"
+    "debug": "cross-env ENV_PATH=./config/env/development/.env node --inspect debug.js",
+    "generate": "strapi ts:generate-types --verbose"
   },
   "devDependencies": {
     "better-sqlite3": "^7.4.6"
