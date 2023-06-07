@@ -28,6 +28,7 @@
     "cross-env": "^7.0.3",
     "cross-fetch": "^3.1.6",
     "eventsource": "^2.0.2",
+    "isomorphic-dompurify": "^1.6.0",
     "pg": "8.6.0",
     "pm2": "^5.2.0",
     "sendmail": "^1.6.1",
