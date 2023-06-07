@@ -41,7 +41,7 @@ module.exports = ({ env }) => ({
           ? {
               key: env("AWS_SES_ACCESS_KEY_ID"),
               secret: env("AWS_SES_ACCESS_SECRET"),
-              amazon: "https://email.eu-central-1.amazonaws.com",
+              amazon: env("AWS_SES_REGION_URL"),
             }
           : {
               host: env("EMAIL_SMTP_HOST"),
