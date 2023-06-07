@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 const dateToTimeStamp = (date) => {
-  const dateInstance = new Date(date);
-  return dateInstance.getTime();
+  return Date.parse(date) / 1000;
 };
 
 module.exports = ({ env }) => ({
@@ -120,6 +119,8 @@ module.exports = ({ env }) => ({
                   "likes",
                 ],
                 displayedAttributes: ["id"],
+                // the order of the attributes in searchableAttributes determines the priotization
+                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
                 searchableAttributes: [
                   "keyword_tags",
                   "location_tags",
@@ -135,7 +136,7 @@ module.exports = ({ env }) => ({
                 typoTolerance: {
                   enabled: true,
                   minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
-                  diableOnWords: [],
+                  disableOnWords: [],
                   disableOnAttributes: [],
                 },
               },
