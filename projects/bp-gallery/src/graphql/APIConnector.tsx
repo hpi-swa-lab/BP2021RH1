@@ -2960,33 +2960,6 @@ export type GetPictureInfoQuery = {
   } | null;
 };
 
-export type GetPictureMediaInfoQueryVariables = Exact<{
-  pictureId: Scalars['ID'];
-}>;
-
-export type GetPictureMediaInfoQuery = {
-  picture?: {
-    data?: {
-      id?: string | null;
-      attributes?: {
-        media: {
-          data?: {
-            id?: string | null;
-            attributes?: {
-              width?: number | null;
-              height?: number | null;
-              formats?: any | null;
-              url: string;
-              updatedAt?: any | null;
-              provider: string;
-            } | null;
-          } | null;
-        };
-      } | null;
-    } | null;
-  } | null;
-};
-
 export type GetPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
   pagination: PaginationArg;
@@ -3062,19 +3035,6 @@ export type GetPicturesForCollectionQuery = {
       id?: string | null;
       attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
     } | null;
-  } | null;
-};
-
-export type GetPicturesGeoInfoQueryVariables = Exact<{
-  pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
-}>;
-
-export type GetPicturesGeoInfoQuery = {
-  pictureGeoInfos?: {
-    data: Array<{
-      id?: string | null;
-      attributes?: { latitude?: number | null; longitude?: number | null } | null;
-    }>;
   } | null;
 };
 
@@ -5756,81 +5716,6 @@ export type GetPictureInfoQueryResult = Apollo.QueryResult<
   GetPictureInfoQueryVariables
 >;
 
-export const GetPictureMediaInfoDocument = gql`
-  query getPictureMediaInfo($pictureId: ID!) {
-    picture(id: $pictureId) {
-      data {
-        id
-        attributes {
-          media {
-            data {
-              id
-              attributes {
-                width
-                height
-                formats
-                url
-                updatedAt
-                provider
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-/**
- * __useGetPictureMediaInfoQuery__
- *
- * To run a query within a React component, call `useGetPictureMediaInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPictureMediaInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPictureMediaInfoQuery({
- *   variables: {
- *      pictureId: // value for 'pictureId'
- *   },
- * });
- */
-export function useGetPictureMediaInfoQuery(
-  baseOptions: Apollo.QueryHookOptions<GetPictureMediaInfoQuery, GetPictureMediaInfoQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetPictureMediaInfoQuery, GetPictureMediaInfoQueryVariables>(
-    GetPictureMediaInfoDocument,
-    options
-  );
-}
-
-export function useGetPictureMediaInfoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetPictureMediaInfoQuery,
-    GetPictureMediaInfoQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetPictureMediaInfoQuery, GetPictureMediaInfoQueryVariables>(
-    GetPictureMediaInfoDocument,
-    options
-  );
-}
-
-export type GetPictureMediaInfoQueryHookResult = ReturnType<typeof useGetPictureMediaInfoQuery>;
-
-export type GetPictureMediaInfoLazyQueryHookResult = ReturnType<
-  typeof useGetPictureMediaInfoLazyQuery
->;
-
-export type GetPictureMediaInfoQueryResult = Apollo.QueryResult<
-  GetPictureMediaInfoQuery,
-  GetPictureMediaInfoQueryVariables
->;
-
 export const GetPicturesDocument = gql`
   query getPictures(
     $filters: PictureFiltersInput!
@@ -6079,70 +5964,6 @@ export type GetPicturesForCollectionLazyQueryHookResult = ReturnType<
 export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
   GetPicturesForCollectionQuery,
   GetPicturesForCollectionQueryVariables
->;
-
-export const GetPicturesGeoInfoDocument = gql`
-  query getPicturesGeoInfo($pictureIds: [ID]!) {
-    pictureGeoInfos(filters: { picture: { id: { in: $pictureIds } } }) {
-      data {
-        id
-        attributes {
-          latitude
-          longitude
-        }
-      }
-    }
-  }
-`;
-
-/**
- * __useGetPicturesGeoInfoQuery__
- *
- * To run a query within a React component, call `useGetPicturesGeoInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPicturesGeoInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPicturesGeoInfoQuery({
- *   variables: {
- *      pictureIds: // value for 'pictureIds'
- *   },
- * });
- */
-export function useGetPicturesGeoInfoQuery(
-  baseOptions: Apollo.QueryHookOptions<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>(
-    GetPicturesGeoInfoDocument,
-    options
-  );
-}
-
-export function useGetPicturesGeoInfoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetPicturesGeoInfoQuery,
-    GetPicturesGeoInfoQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetPicturesGeoInfoQuery, GetPicturesGeoInfoQueryVariables>(
-    GetPicturesGeoInfoDocument,
-    options
-  );
-}
-
-export type GetPicturesGeoInfoQueryHookResult = ReturnType<typeof useGetPicturesGeoInfoQuery>;
-
-export type GetPicturesGeoInfoLazyQueryHookResult = ReturnType<
-  typeof useGetPicturesGeoInfoLazyQuery
->;
-
-export type GetPicturesGeoInfoQueryResult = Apollo.QueryResult<
-  GetPicturesGeoInfoQuery,
-  GetPicturesGeoInfoQueryVariables
 >;
 
 export const GetRootCollectionDocument = gql`
@@ -10439,50 +10260,6 @@ export function useCanRunMultipleGetPictureInfoQueries(
   };
 }
 
-export function useCanRunGetPictureMediaInfoQuery(
-  options?: Omit<
-    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-    'variables'
-  > & {
-    variables?: Partial<GetPictureMediaInfoQueryVariables>;
-    withSomeVariables?: boolean;
-  }
-) {
-  const { data, loading, refetch } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPictureMediaInfoDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
-  });
-  useAuthChangeEffect(refetch);
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
-}
-
-export function useCanRunMultipleGetPictureMediaInfoQueries(
-  options: Omit<
-    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-    'variables'
-  > & {
-    variableSets: Partial<GetPictureMediaInfoQueryVariables>[];
-  }
-) {
-  const { data, loading, refetch } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPictureMediaInfoDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
-  });
-  useAuthChangeEffect(refetch);
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
-}
-
 export function useCanRunGetPicturesQuery(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -10604,50 +10381,6 @@ export function useCanRunMultipleGetPicturesForCollectionQueries(
     ...options,
     variables: {
       operation: GetPicturesForCollectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
-  });
-  useAuthChangeEffect(refetch);
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
-}
-
-export function useCanRunGetPicturesGeoInfoQuery(
-  options?: Omit<
-    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-    'variables'
-  > & {
-    variables?: Partial<GetPicturesGeoInfoQueryVariables>;
-    withSomeVariables?: boolean;
-  }
-) {
-  const { data, loading, refetch } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesGeoInfoDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
-  });
-  useAuthChangeEffect(refetch);
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
-}
-
-export function useCanRunMultipleGetPicturesGeoInfoQueries(
-  options: Omit<
-    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-    'variables'
-  > & {
-    variableSets: Partial<GetPicturesGeoInfoQueryVariables>[];
-  }
-) {
-  const { data, loading, refetch } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesGeoInfoDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
