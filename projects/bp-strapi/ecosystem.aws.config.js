@@ -6,7 +6,9 @@ module.exports = {
       append_env_to_name: true,
       instances: 1,
       autorestart: true,
-      max_restarts: 50,
+      max_restarts: 10,
+      restart_delay: 5000,
+      min_uptime: 15000,
     },
   ],
   deploy: {
