@@ -75,9 +75,15 @@ export type PermissionName = GroupName | OperationWithoutGroupName;
 export type Variables = Record<string, unknown>;
 
 export type IsAllowedContext = {
+  /**
+   * the permission object that is currently checked
+   */
   parameters: ParameterizedPermission;
   variables: Variables;
   db: DB;
+  /**
+   * all permissions the user has
+   */
   permissions: ParameterizedPermission[];
   user: UsersPermissionsUser | null;
 };
@@ -91,6 +97,14 @@ export type Parameter = Exclude<
 
 export type Operation = {
   document: GraphQLDocument;
+  /**
+   * This function is executed only after it was checked that the user has
+   * at least one permission to run the operation. The function is called
+   * with each permission (see `IsAllowedContext.parameters`). It is intended
+   * as a means to check whether the variables match the parameters,
+   * the user has some other permission or to check other conditions in addition
+   * to the initial check.
+   */
   isAllowed: IsAllowed;
 } & (
   | {
