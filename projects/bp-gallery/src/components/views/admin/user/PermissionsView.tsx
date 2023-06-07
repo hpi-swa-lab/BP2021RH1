@@ -36,8 +36,8 @@ import { equalOrBothNullish, parseUserId } from './helper';
 import { BooleanParameter } from './permissions/BooleanParamater';
 import { Coverage, CoverageCheckbox } from './permissions/Coverage';
 import { combineCoverages } from './permissions/combineCoverages';
-import { GroupStructure, SectionStructure, sections } from './permissions/operations';
-import { ParametersWithoutArchive, presets } from './permissions/presets';
+import { GroupStructure, sections } from './permissions/operations';
+import { ParametersWithoutArchive, PresetType, presets } from './permissions/presets';
 
 export type Parameters = Pick<FlatParameterizedPermission, Parameter>;
 
@@ -199,11 +199,19 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   );
 
   const renderSections = useCallback(
-    (summary: string, sections: SectionStructure[], archive: FlatArchiveTag | null) => {
+    (type: PresetType, archive: FlatArchiveTag | null = null) => {
+      const summary =
+        type === 'system'
+          ? t('admin.permissions.systemPermissions')
+          : archive
+          ? archive.name
+          : t('admin.permissions.withoutArchive');
       if (!summary.toLocaleLowerCase().includes(filter.toLocaleLowerCase())) {
         return null;
       }
-      const sectionsWithCoverages = sections.map(section => ({
+
+      const sectionsForType = type === 'system' ? sections.system : sections.perArchive;
+      const sectionsWithCoverages = sectionsForType.map(section => ({
         ...section,
         groups: section.groups.map(group => ({
           ...group,
@@ -211,7 +219,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         })),
       }));
       const relevantPresets = presets
-        .filter(preset => preset.type === (archive === null ? 'system' : 'archive'))
+        .filter(preset => preset.type === type)
         .map(preset => ({
           ...preset,
           operations: sectionsWithCoverages.flatMap(section =>
@@ -251,18 +259,20 @@ const PermissionsView = ({ userId }: { userId: string }) => {
             </Typography>
           </AccordionSummary>
           <div className='m-4'>
-            <Stack direction='row' spacing={1}>
-              {relevantPresets.map(preset => (
-                <Button
-                  key={preset.name}
-                  color='info'
-                  variant='outlined'
-                  onClick={() => addPreset(preset.operations, archive)}
-                >
-                  {t(`admin.permissions.preset.${preset.name}`)}
-                </Button>
-              ))}
-            </Stack>
+            {relevantPresets.length > 0 && (
+              <Stack direction='row' spacing={1}>
+                {relevantPresets.map(preset => (
+                  <Button
+                    key={preset.name}
+                    color='info'
+                    variant='outlined'
+                    onClick={() => addPreset(preset.operations, archive)}
+                  >
+                    {t(`admin.permissions.preset.${preset.name}`)}
+                  </Button>
+                ))}
+              </Stack>
+            )}
             <div className='mt-2'>
               {sectionsWithCoverages.map(section => (
                 <Accordion key={section.name}>
@@ -346,9 +356,9 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                   placeholder={t('admin.permissions.filterPlaceholder')}
                 />
               </div>
-              {renderSections(t('admin.permissions.systemPermissions'), sections.system, null)}
-              {renderSections(t('admin.permissions.withoutArchive'), sections.perArchive, null)}
-              {archives.map(archive => renderSections(archive.name, sections.perArchive, archive))}
+              {renderSections('system')}
+              {renderSections('archive', null)}
+              {archives.map(archive => renderSections('archive', archive))}
             </CenteredContainer>
           );
         } else {

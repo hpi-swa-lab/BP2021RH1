@@ -1,7 +1,7 @@
 import { PermissionName } from 'bp-graphql/build';
 import { Parameters } from '../PermissionsView';
 
-type PresetType = 'system' | 'archive';
+export type PresetType = 'system' | 'archive';
 
 export type ParametersWithoutArchive = Omit<Parameters, 'archive'>;
 
