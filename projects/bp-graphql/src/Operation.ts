@@ -63,14 +63,14 @@ export type Operations = typeof operations;
 
 export type OperationName = keyof Operations;
 
-export type OperationWithoutGroupName = Exclude<
+export type OperationWithGroupSettings = Extract<
   {
     [Name in OperationName]: [Name, Operations[Name]];
   }[OperationName],
-  [string, { group: unknown }]
+  [string, GroupSettings]
 >[0];
 
-export type PermissionName = GroupName | OperationWithoutGroupName;
+export type PermissionName = GroupName | OperationWithGroupSettings;
 
 export type Variables = Record<string, unknown>;
 
@@ -97,18 +97,28 @@ export type Parameter = Exclude<
 
 export type Operation = {
   document: GraphQLDocument;
-  /**
-   * This function is executed only after it was checked that the user has
-   * at least one permission to run the operation. The function is called
-   * with each permission (see `IsAllowedContext.parameters`). It is intended
-   * as a means to check whether the variables match the parameters,
-   * the user has some other permission or to check other conditions in addition
-   * to the initial check.
-   */
-  isAllowed: IsAllowed;
 } & (
   | {
-      group: GroupName;
+      /**
+       * Indicates that all users should be able to run this operation,
+       * no permissions are needed or should be granted for this operation.
+       */
+      isEssential: true;
     }
-  | GroupSettings
+  | ({
+      /**
+       * This function is executed only after it is validated that the user has
+       * at least one permission to run the operation. The function is called
+       * with each permission (see `IsAllowedContext.parameters`). It is intended
+       * as a means of checking whether the variables match the parameters,
+       * the user has some other permission or to check other conditions in addition
+       * to the initial check.
+       */
+      isAllowed: IsAllowed;
+    } & (
+      | {
+          group: GroupName;
+        }
+      | GroupSettings
+    ))
 );

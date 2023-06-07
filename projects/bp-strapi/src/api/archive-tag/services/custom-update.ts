@@ -13,6 +13,9 @@ export const addArchiveTag = async (owningUser: UsersPermissionsUser, name: stri
   await Promise.all(
     Object.values(operations)
       .filter(operation => {
+        if ('isEssential' in operation) {
+          return false;
+        }
         const { needsParameters } = 'group' in operation ? groups[operation.group] : operation;
         return (needsParameters as Parameter[]).includes('archive_tag');
       })

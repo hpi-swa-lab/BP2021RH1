@@ -1,7 +1,7 @@
 import {
   GroupName,
   GroupSettings,
-  OperationWithoutGroupName,
+  OperationWithGroupSettings,
   Parameter,
   PermissionName,
   groups as groupsMap,
@@ -54,6 +54,9 @@ export const generateOperationsStructure = (): OperationsStructure => {
       ?.groups.push(groups[name as GroupName]);
   }
   for (const operation of Object.values(operationsMap)) {
+    if ('isEssential' in operation) {
+      continue;
+    }
     if ('group' in operation) {
       groups[operation.group].operations.push(operation);
     } else {
@@ -65,7 +68,7 @@ export const generateOperationsStructure = (): OperationsStructure => {
         continue;
       }
       section.groups.push({
-        name: operation.document.name as OperationWithoutGroupName,
+        name: operation.document.name as OperationWithGroupSettings,
         operations: [operation],
         needsParameters: operation.needsParameters,
       });

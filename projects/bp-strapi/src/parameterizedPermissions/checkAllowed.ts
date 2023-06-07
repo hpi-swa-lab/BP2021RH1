@@ -17,6 +17,10 @@ export const checkAllowed = async (
   });
   const operation: Operation = operations[operationName];
 
+  if ('isEssential' in operation) {
+    return operation.isEssential;
+  }
+
   for (const permission of authorizingPermissions) {
     const isAllowed = await operation.isAllowed({
       parameters: permission,
