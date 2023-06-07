@@ -151,5 +151,4 @@ export const checkUpload =
 export const checkOnOtherUsers =
   (variable: VariableGetter<IDLike>): IsAllowed =>
   async ({ variables, user, parameters }) =>
-    !!user &&
-    (parameters.on_other_users || toId(getIDLikeVariable(variables, variable)) === user.id);
+    parameters.on_other_users || toId(getIDLikeVariable(variables, variable)) === user?.id;
