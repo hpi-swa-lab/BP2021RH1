@@ -2231,6 +2231,7 @@ export type GetArchiveQuery = {
         name: string;
         shortDescription?: string | null;
         longDescription?: string | null;
+        email?: string | null;
         paypalClient?: string | null;
         paypalDonationText?: string | null;
         paypalPurpose?: string | null;
@@ -3774,6 +3775,7 @@ export const GetArchiveDocument = gql`
           name
           shortDescription
           longDescription
+          email
           paypalClient
           paypalDonationText
           paypalPurpose
