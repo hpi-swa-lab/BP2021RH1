@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  IconButton,
-  Modal,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, IconButton, Modal } from '@mui/material';
 import {
   useCreateExhibitionMutation,
   useDeleteExhibitionMutation,
@@ -28,12 +19,10 @@ import { MobileContext } from '../../provider/MobileProvider';
 const ExhibitionCard = ({
   exhibition,
   isCurator,
-  refetch,
   isBig,
 }: {
   exhibition: FlatExhibition;
   isCurator: boolean;
-  refetch: any;
   isBig: boolean;
 }) => {
   const titlePictureLink = exhibition.title_picture
@@ -69,7 +58,6 @@ const ExhibitionCard = ({
         setIsPopupOpen={setIsPopupOpen}
         exhibitionTitle={exhibition.title ?? ''}
         exhibitionId={exhibition.id}
-        refetch={refetch}
       />
     </>
   );
@@ -162,45 +150,38 @@ const ExhibitionSmallCard = ({
   return (
     <div className={`${isMobile ? 'w-full' : 'w-[20rem] p-4'}`}>
       <Card
-        className='relative'
+        className='relative cursor-pointer'
         onClick={() => {
           !isCurator && visit(link);
         }}
       >
-        <CardActionArea disableRipple={isCurator}>
-          <CardMedia
-            component='img'
-            height='200'
-            image={titlePictureLink}
-            alt='exhibition picture'
-          />
-          <CardContent
-            sx={{ height: isCurator ? '4rem !important' : '2rem !important' }}
-            className='flex flex-col justify-between'
-          >
-            <div className='text-xl font-bold line-clamp-1'>{exhibitionTitle}</div>
-            {isCurator && (
-              <div className='flex gap-2 flex-row-reverse'>
-                <Button
-                  onClick={e => {
-                    e.stopPropagation();
-                    visit(link);
-                  }}
-                >
-                  {t('exhibition.overview.to-exhibition')}
-                </Button>
-                <Button
-                  onClick={e => {
-                    e.stopPropagation();
-                    visit(editLink);
-                  }}
-                >
-                  {t('common.edit')}
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </CardActionArea>
+        <CardMedia component='img' height='200' image={titlePictureLink} alt='exhibition picture' />
+        <CardContent
+          sx={{ height: isCurator ? '4rem !important' : '2rem !important' }}
+          className='flex flex-col justify-between'
+        >
+          <div className='text-xl font-bold line-clamp-1'>{exhibitionTitle}</div>
+          {isCurator && (
+            <div className='flex gap-2 flex-row-reverse'>
+              <Button
+                onClick={e => {
+                  e.stopPropagation();
+                  visit(link);
+                }}
+              >
+                {t('exhibition.overview.to-exhibition')}
+              </Button>
+              <Button
+                onClick={e => {
+                  e.stopPropagation();
+                  visit(editLink);
+                }}
+              >
+                {t('common.edit')}
+              </Button>
+            </div>
+          )}
+        </CardContent>
         {isCurator && (
           <div className='absolute top-2 right-2 bg-white rounded-full'>
             <IconButton onClick={() => setIsPopupOpen(true)}>
@@ -218,18 +199,15 @@ const DeleteModal = ({
   setIsPopupOpen,
   exhibitionTitle,
   exhibitionId,
-  refetch,
 }: {
   isPopupOpen: boolean;
   setIsPopupOpen: Dispatch<SetStateAction<boolean>>;
   exhibitionTitle: string;
   exhibitionId: string;
-  refetch: any;
 }) => {
   const [deleteExhibition] = useDeleteExhibitionMutation();
   const deleteThisExhibition = async () => {
-    await deleteExhibition({ variables: { id: exhibitionId } });
-    refetch();
+    await deleteExhibition({ variables: { id: exhibitionId }, refetchQueries: ['getExhibitions'] });
   };
   return (
     <Modal open={isPopupOpen} onClose={() => setIsPopupOpen(false)}>
@@ -273,13 +251,13 @@ const ExhibitionOverview = ({
   const { isMobile } = useContext(MobileContext);
   const isCurator = role >= AuthRole.CURATOR;
   const [showMore, setShowMore] = useState(false);
-  const isOverflow = e => {
-    if (!e) return false;
-    return e.offsetWidth < e.scrollWidth;
+  const isOverflow = (node: HTMLDivElement | null) => {
+    if (!node) return false;
+    return node.offsetWidth < node.scrollWidth;
   };
 
   const handleDiv = useCallback(
-    (node: HTMLDivElement) => {
+    (node: HTMLDivElement | null) => {
       isCurator;
       setShowMore(isOverflow(node) && (exhibitions?.length ?? 0) > 1);
     },
@@ -319,7 +297,6 @@ const ExhibitionOverview = ({
                     key={index}
                     exhibition={exhibition}
                     isCurator={isCurator && !isMobile}
-                    refetch={refetch}
                   />
                 ))}
               </div>
@@ -384,7 +361,6 @@ const ExhibitionFullOverview = ({ archiveId }: { archiveId: string | undefined }
                 isBig={!isMobile}
                 exhibition={exhibition}
                 isCurator={isCurator && !isMobile}
-                refetch={refetch}
               />
             ))}
         </div>
