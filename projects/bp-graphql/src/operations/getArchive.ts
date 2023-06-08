@@ -14,6 +14,7 @@ export default {
             paypalClient
             paypalDonationText
             paypalPurpose
+            restrictImageDownloading
             logo {
               data {
                 id

@@ -47,6 +47,7 @@ export default {
                 id
                 attributes {
                   name
+                  restrictImageDownloading
                 }
               }
             }

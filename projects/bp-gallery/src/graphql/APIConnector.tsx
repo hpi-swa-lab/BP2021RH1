@@ -51,6 +51,8 @@ export type ArchiveTag = {
   paypalDonationText?: Maybe<Scalars['String']>;
   paypalPurpose?: Maybe<Scalars['String']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  restrictImageDownloading?: Maybe<Scalars['Boolean']>;
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -96,6 +98,8 @@ export type ArchiveTagFiltersInput = {
   paypalDonationText?: InputMaybe<StringFilterInput>;
   paypalPurpose?: InputMaybe<StringFilterInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  restrictImageDownloading?: InputMaybe<BooleanFilterInput>;
   shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -110,6 +114,8 @@ export type ArchiveTagInput = {
   paypalDonationText?: InputMaybe<Scalars['String']>;
   paypalPurpose?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  restrictImageDownloading?: InputMaybe<Scalars['Boolean']>;
   shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
 };
@@ -1632,6 +1638,7 @@ export type QueryArchiveTagArgs = {
 export type QueryArchiveTagsArgs = {
   filters?: InputMaybe<ArchiveTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2362,6 +2369,7 @@ export type GetArchiveQuery = {
         paypalClient?: string | null;
         paypalDonationText?: string | null;
         paypalPurpose?: string | null;
+        restrictImageDownloading?: boolean | null;
         logo?: {
           data?: {
             id?: string | null;
@@ -2499,7 +2507,10 @@ export type GetDailyPictureInfoQuery = {
           } | null;
         };
         archive_tag?: {
-          data?: { id?: string | null; attributes?: { name: string } | null } | null;
+          data?: {
+            id?: string | null;
+            attributes?: { name: string; restrictImageDownloading?: boolean | null } | null;
+          } | null;
         } | null;
       } | null;
     } | null;
@@ -2953,7 +2964,10 @@ export type GetPictureInfoQuery = {
         linked_pictures?: { data: Array<{ id?: string | null }> } | null;
         linked_texts?: { data: Array<{ id?: string | null }> } | null;
         archive_tag?: {
-          data?: { id?: string | null; attributes?: { name: string } | null } | null;
+          data?: {
+            id?: string | null;
+            attributes?: { name: string; restrictImageDownloading?: boolean | null } | null;
+          } | null;
         } | null;
       } | null;
     } | null;
@@ -4049,6 +4063,7 @@ export const GetArchiveDocument = gql`
           paypalClient
           paypalDonationText
           paypalPurpose
+          restrictImageDownloading
           logo {
             data {
               id
@@ -4420,6 +4435,7 @@ export const GetDailyPictureInfoDocument = gql`
               id
               attributes {
                 name
+                restrictImageDownloading
               }
             }
           }
@@ -5688,6 +5704,7 @@ export const GetPictureInfoDocument = gql`
               id
               attributes {
                 name
+                restrictImageDownloading
               }
             }
           }

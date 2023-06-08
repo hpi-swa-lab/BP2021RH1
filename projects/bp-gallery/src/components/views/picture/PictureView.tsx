@@ -15,6 +15,7 @@ import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { replaceHistoryWithoutRouter } from '../../../helpers/history';
+import { useBlockImageContextMenuByPictureId } from '../../../hooks/block-image-context-menu.hook';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -136,6 +137,8 @@ const PictureView = ({
     };
   }, [history, pictureId, onBack]);
 
+  const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureId);
+
   return (
     <div className='picture-view-container'>
       <PictureViewContext.Provider value={contextValue}>
@@ -150,6 +153,7 @@ const PictureView = ({
                       ref={setImg}
                       src={pictureLink}
                       alt={pictureLink}
+                      onContextMenu={onImageContextMenu}
                     />
                     <FaceTags />
                   </div>

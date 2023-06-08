@@ -26,6 +26,7 @@ import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
+import { useBlockImageContextMenu } from '../../../hooks/block-image-context-menu.hook';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -79,6 +80,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
     ];
   }, [archiveId, t, visit]);
 
+  const onLogoContextMenu = useBlockImageContextMenu(archive?.restrictImageDownloading);
+
   const { canUseEditArchiveView } = useCanUseEditArchiveView(archiveId);
 
   if (!archive) {
@@ -115,6 +118,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 <img
                   className='archive-logo'
                   src={asUploadPath(archive.logo, { highQuality: false })}
+                  onContextMenu={onLogoContextMenu}
                 />
               </div>
             )}

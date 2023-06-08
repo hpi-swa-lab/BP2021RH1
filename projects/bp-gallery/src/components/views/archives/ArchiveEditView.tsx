@@ -20,6 +20,7 @@ import TextEditor from '../../common/editors/TextEditor';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { RemoveArchiveButton } from '../admin/archive/RemoveArchiveButton';
 import { useVisit } from './../../../helpers/history';
+import ArchiveCheckboxField from './ArchiveCheckboxField';
 import './ArchiveEditView.scss';
 import ArchiveInputField from './ArchiveInputField';
 import ArchiveLinkForm from './ArchiveLinkForm';
@@ -38,6 +39,7 @@ interface ArchiveForm {
   paypalPurpose: string;
   logo?: File;
   links: LinkInfo[];
+  restrictImageDownloading: boolean;
   dirty: boolean;
   invalid?: boolean;
 }
@@ -78,6 +80,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     paypalDonationText: '',
     paypalPurpose: '',
     links: [],
+    restrictImageDownloading: false,
     dirty: false,
   });
 
@@ -91,6 +94,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       paypalDonationText: archive?.paypalDonationText ?? '',
       paypalPurpose: archive?.paypalPurpose ?? '',
       links: archive?.links ?? [],
+      restrictImageDownloading: archive?.restrictImageDownloading ?? false,
     });
   }, [archive]);
 
@@ -171,6 +175,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
                 'paypalClient',
                 'paypalDonationText',
                 'paypalPurpose',
+                'restrictImageDownloading',
               ]),
               logo,
             },
@@ -189,6 +194,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               'paypalClient',
               'paypalDonationText',
               'paypalPurpose',
+              'restrictImageDownloading',
             ]),
           },
         },
@@ -307,6 +313,12 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               id='purpose'
               onBlur={value => updateForm({ paypalPurpose: value, dirty: true })}
               placeholder={t('archives.edit.paypal.purpose-placeholder')}
+            />
+            <ArchiveCheckboxField
+              defaultValue={archive.restrictImageDownloading ?? false}
+              label={t('archives.edit.restrictImageDownloading')}
+              id='restrictImageDownloading'
+              onChange={value => updateForm({ restrictImageDownloading: value, dirty: true })}
             />
             <RemoveArchiveButton id={archiveId} />
           </form>

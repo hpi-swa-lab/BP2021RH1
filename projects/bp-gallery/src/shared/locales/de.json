@@ -468,7 +468,8 @@
         "purpose-placeholder": "Gib an, welchen Verwendungszweck die Spende auf Paypal haben soll",
         "thankyou-label": "Vielen Dank für Ihre Spende von {{amount}}€",
         "error-label": "Es ist ein Fehler aufgetreten. Es wurde nichts von ihrem Konto abgebucht, bitte versuchen Sie es erneut."
-      }
+      },
+      "restrictImageDownloading": "Herunterladen von Bildern einschränken"
     }
   },
   "startpage": {

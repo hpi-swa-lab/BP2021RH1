@@ -10,6 +10,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVariant } from '../../../helpers/growthbook';
+import { useBlockImageContextMenuByPictureId } from '../../../hooks/block-image-context-menu.hook';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 import {
   FlatCollection,
@@ -113,6 +114,9 @@ const GeoView = () => {
   });
   const allGuesses: FlatPictureGeoInfo[] | undefined =
     useSimplifiedQueryResponseData(geoData)?.pictureGeoInfos;
+
+  const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureId);
+
   return (
     <div className='h-full'>
       <Modal
@@ -143,6 +147,7 @@ const GeoView = () => {
                   data-testid='geo-image'
                   src={pictureLink}
                   alt={pictureLink}
+                  onContextMenu={onImageContextMenu}
                 />
               </div>
             </div>
