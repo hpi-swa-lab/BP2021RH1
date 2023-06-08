@@ -34,7 +34,7 @@ export const addArchiveTag = async (owningUser: UsersPermissionsUser, name: stri
 
 export const removeArchiveTag = async (id: string) => {
   const archiveQuery = strapi.db.query('api::archive-tag.archive-tag');
-  const exists = archiveQuery.findOne({
+  const exists = await archiveQuery.findOne({
     where: {
       id,
     },
@@ -59,13 +59,13 @@ export const removeArchiveTag = async (id: string) => {
     },
   });
   await Promise.all(
-    permissionsToDelete.map(permission => {
+    permissionsToDelete.map(permission =>
       permissionQuery.delete({
         where: {
           id: permission.id,
         },
-      });
     })
+    )
   );
 
   return 1;
