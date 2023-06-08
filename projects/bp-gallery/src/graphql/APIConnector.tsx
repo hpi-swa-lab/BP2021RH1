@@ -876,7 +876,6 @@ export type MutationAddPermissionArgs = {
   archive_tag?: InputMaybe<Scalars['ID']>;
   on_other_users?: InputMaybe<Scalars['Boolean']>;
   operation_name?: InputMaybe<Scalars['String']>;
-  see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
   user_id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -1241,7 +1240,6 @@ export type ParameterizedPermission = {
   createdAt?: Maybe<Scalars['DateTime']>;
   on_other_users?: Maybe<Scalars['Boolean']>;
   operation_name?: Maybe<Scalars['String']>;
-  see_unpublished_collections?: Maybe<Scalars['Boolean']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   users_permissions_user?: Maybe<UsersPermissionsUserEntityResponse>;
 };
@@ -1269,7 +1267,6 @@ export type ParameterizedPermissionFiltersInput = {
   on_other_users?: InputMaybe<BooleanFilterInput>;
   operation_name?: InputMaybe<StringFilterInput>;
   or?: InputMaybe<Array<InputMaybe<ParameterizedPermissionFiltersInput>>>;
-  see_unpublished_collections?: InputMaybe<BooleanFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   users_permissions_user?: InputMaybe<UsersPermissionsUserFiltersInput>;
 };
@@ -1278,7 +1275,6 @@ export type ParameterizedPermissionInput = {
   archive_tag?: InputMaybe<Scalars['ID']>;
   on_other_users?: InputMaybe<Scalars['Boolean']>;
   operation_name?: InputMaybe<Scalars['String']>;
-  see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
   users_permissions_user?: InputMaybe<Scalars['ID']>;
 };
 
@@ -2789,7 +2785,6 @@ export type GetParameterizedPermissionsQuery = {
       id?: string | null;
       attributes?: {
         operation_name?: string | null;
-        see_unpublished_collections?: boolean | null;
         on_other_users?: boolean | null;
         archive_tag?: { data?: { id?: string | null } | null } | null;
       } | null;
@@ -3157,7 +3152,6 @@ export type AddPermissionMutationVariables = Exact<{
   user_id?: InputMaybe<Scalars['ID']>;
   operation_name?: InputMaybe<Scalars['String']>;
   archive_tag?: InputMaybe<Scalars['ID']>;
-  see_unpublished_collections?: InputMaybe<Scalars['Boolean']>;
   on_other_users?: InputMaybe<Scalars['Boolean']>;
 }>;
 
@@ -5250,7 +5244,6 @@ export const GetParameterizedPermissionsDocument = gql`
               id
             }
           }
-          see_unpublished_collections
           on_other_users
         }
       }
@@ -6472,14 +6465,12 @@ export const AddPermissionDocument = gql`
     $user_id: ID
     $operation_name: String
     $archive_tag: ID
-    $see_unpublished_collections: Boolean
     $on_other_users: Boolean
   ) {
     addPermission(
       user_id: $user_id
       operation_name: $operation_name
       archive_tag: $archive_tag
-      see_unpublished_collections: $see_unpublished_collections
       on_other_users: $on_other_users
     )
   }
@@ -6506,7 +6497,6 @@ export type AddPermissionMutationFn = Apollo.MutationFunction<
  *      user_id: // value for 'user_id'
  *      operation_name: // value for 'operation_name'
  *      archive_tag: // value for 'archive_tag'
- *      see_unpublished_collections: // value for 'see_unpublished_collections'
  *      on_other_users: // value for 'on_other_users'
  *   },
  * });

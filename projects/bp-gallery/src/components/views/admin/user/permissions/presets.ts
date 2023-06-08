@@ -21,12 +21,7 @@ export const presets: Preset[] = [
     permissions: [
       'getPictures',
       'getArchivePictureCounts',
-      {
-        name: 'viewCollection',
-        parameters: {
-          see_unpublished_collections: false,
-        },
-      },
+      'viewCollection',
       'getTagThumbnails',
       'getAllArchiveTags',
       'contact',

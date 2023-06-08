@@ -249,10 +249,6 @@
         "removeUser": "Nutzer löschen"
       },
       "parameter": {
-        "see_unpublished_collections": {
-          "onlyPublished": "Nur sichtbare Collections",
-          "all": "Alle Collections"
-        },
         "on_other_users": {
           "removeUser": {
             "onlyOwn": "Nur sich selbst",

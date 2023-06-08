@@ -401,18 +401,6 @@ const ParameterInputs = ({
     <>
       {group.needsParameters.map(parameter => {
         switch (parameter) {
-          case 'see_unpublished_collections':
-            return (
-              <BooleanParameter
-                key={parameter}
-                parameter={'see_unpublished_collections'}
-                falseTitle={t(
-                  'admin.permissions.parameter.see_unpublished_collections.onlyPublished'
-                )}
-                trueTitle={t('admin.permissions.parameter.see_unpublished_collections.all')}
-                {...sharedProps}
-              />
-            );
           case 'on_other_users':
             return (
               <BooleanParameter

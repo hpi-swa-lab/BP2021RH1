@@ -6,7 +6,6 @@ type AddPermissionArgs = {
   user_id: Maybe<string>;
   operation_name: Maybe<string>;
   archive_tag: Maybe<string>;
-  see_unpublished_collections: Maybe<boolean>;
   on_other_users: Maybe<boolean>;
 };
 
@@ -30,8 +29,6 @@ const mergePermissions = (permissions: ParameterizedPermission[]) => {
       archive_tag: merged.archive_tag,
       operation_name: merged.operation_name,
       // merge individual parameters
-      see_unpublished_collections:
-        (merged.see_unpublished_collections || permission.see_unpublished_collections) ?? false,
       on_other_users: (merged.on_other_users || permission.on_other_users) ?? false,
     }),
     permissions[0]

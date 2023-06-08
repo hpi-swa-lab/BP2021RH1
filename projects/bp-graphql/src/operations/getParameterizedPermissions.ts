@@ -17,7 +17,6 @@ export default {
                 id
               }
             }
-            see_unpublished_collections
             on_other_users
           }
         }

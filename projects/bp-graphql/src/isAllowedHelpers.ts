@@ -129,8 +129,6 @@ export const hasPermission = (
     permission =>
       equalOrBothNullish(permission.operation_name, variables.operation_name) &&
       equalOrBothNullish(archiveId(permission), toId(variables.archive_tag)) &&
-      Boolean(permission.see_unpublished_collections) >=
-        Boolean(variables.see_unpublished_collections) &&
       Boolean(permission.on_other_users) >= Boolean(variables.on_other_users)
   ) !== undefined;
 
