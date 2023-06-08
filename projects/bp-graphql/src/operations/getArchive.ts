@@ -1,10 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
-import { checkArchive } from '../isAllowedHelpers.js';
 
 export default {
-  section: 'archive',
-  needsParameters: ['archive_tag'],
-  isAllowed: checkArchive('archiveId'),
+  isEssential: true,
   document: graphql`
     query getArchive($archiveId: ID!) {
       archiveTag(id: $archiveId) {

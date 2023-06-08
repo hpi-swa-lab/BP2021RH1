@@ -1,10 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
-import { checkPicture } from '../isAllowedHelpers.js';
 
 export default {
-  section: 'picture',
-  needsParameters: ['archive_tag'],
-  isAllowed: checkPicture('pictureId'),
+  isEssential: true,
   document: graphql`
     query getDailyPictureInfo($pictureId: ID!) {
       picture(id: $pictureId) {

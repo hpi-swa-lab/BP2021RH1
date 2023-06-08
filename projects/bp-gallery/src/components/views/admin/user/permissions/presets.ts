@@ -18,36 +18,6 @@ export const presets: Preset[] = [
   {
     type: 'system',
     name: 'public',
-    permissions: [
-      'getPictures',
-      'getArchivePictureCounts',
-      'viewCollection',
-      'getTagThumbnails',
-      'getAllArchiveTags',
-      'contact',
-      'geo',
-      'canRunOperation',
-      'login',
-      'resetPassword',
-      'changePassword',
-      'forgotPassword',
-      {
-        name: 'getUser',
-        parameters: {
-          on_other_users: false,
-        },
-      },
-      {
-        name: 'updateUser',
-        parameters: {
-          on_other_users: false,
-        },
-      },
-    ],
-  },
-  {
-    type: 'archive',
-    name: 'public',
-    permissions: ['viewPicture', 'getDailyPictureInfo', 'like', 'postComment', 'getArchive'],
+    permissions: ['login'],
   },
 ];

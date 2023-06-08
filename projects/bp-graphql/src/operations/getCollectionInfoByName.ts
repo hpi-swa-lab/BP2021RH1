@@ -2,7 +2,8 @@ import { Operation, graphql } from '../Operation.js';
 import { always } from '../isAllowedHelpers.js';
 
 export default {
-  group: 'viewCollection',
+  section: 'collection',
+  needsParameters: [],
   isAllowed: always,
   document: graphql`
     query getCollectionInfoByName($collectionName: String) {

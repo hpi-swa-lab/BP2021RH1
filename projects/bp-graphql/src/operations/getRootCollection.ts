@@ -1,9 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
-import { always } from '../isAllowedHelpers.js';
 
 export default {
-  group: 'viewCollection',
-  isAllowed: always,
+  isEssential: true,
   document: graphql`
     query getRootCollection {
       browseRootCollection {

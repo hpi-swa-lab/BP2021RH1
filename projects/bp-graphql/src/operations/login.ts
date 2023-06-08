@@ -5,7 +5,8 @@ import { always } from '../isAllowedHelpers.js';
 export const usernameVariableName = 'username';
 
 export default {
-  group: 'login',
+  section: 'user',
+  needsParameters: [],
   isAllowed: always,
   document: graphql`
     mutation login($username: String!, $password: String!) {

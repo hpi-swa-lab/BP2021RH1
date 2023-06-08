@@ -1,9 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
-import { always } from '../isAllowedHelpers.js';
 
 export default {
-  group: 'geo',
-  isAllowed: always, // geo picks pictures across all archives
+  isEssential: true,
   document: graphql`
     mutation createPictureGeoInfo($data: PictureGeoInfoInput!) {
       createPictureGeoInfo(data: $data) {

@@ -1,9 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
-import { always } from '../isAllowedHelpers.js';
 
 export default {
-  group: 'getTagThumbnails',
-  isAllowed: always,
+  isEssential: true,
   document: graphql`
     query getDecadePreviewThumbnails(
       $filter40s: PictureFiltersInput!

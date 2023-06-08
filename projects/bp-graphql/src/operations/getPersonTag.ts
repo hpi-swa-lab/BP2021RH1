@@ -1,9 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
-import { always } from '../isAllowedHelpers.js';
 
 export default {
-  group: 'viewPicture',
-  isAllowed: always,
+  isEssential: true,
   document: graphql`
     query getPersonTag($id: ID!) {
       personTag(id: $id) {
