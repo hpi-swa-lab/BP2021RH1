@@ -110,13 +110,13 @@ describe('picture uploading and tagging', () => {
 
     cy.get('.picture-preview:last').click();
 
-    cy.get('.picture-info-field').contains('1000').should('exist');
-    cy.get('.picture-info-field').contains('TestBeschreibung').should('exist');
-    cy.get('.picture-info-field').contains('TestPerson').should('exist');
-    cy.get('.picture-info-field').contains('TestOrt').should('exist');
-    cy.get('.picture-info-field').contains('TestSchlagwort').should('exist');
-    cy.get('.picture-info-field').contains('TestCollection').should('exist');
-    cy.get('.picture-info-field').contains('Herbert-Ahrens-Bilderarchiv').should('exist');
+    cy.contains('.picture-info-field', '1000').should('exist');
+    cy.contains('.picture-info-field', 'TestBeschreibung').should('exist');
+    cy.contains('.picture-info-field', 'TestPerson').should('exist');
+    cy.contains('.picture-info-field', 'TestOrt').should('exist');
+    cy.contains('.picture-info-field', 'TestSchlagwort').should('exist');
+    cy.contains('.picture-info-field', 'TestCollection').should('exist');
+    cy.contains('.picture-info-field', 'Herbert-Ahrens-Bilderarchiv').should('exist');
   });
 
   it('deleting picture', () => {
