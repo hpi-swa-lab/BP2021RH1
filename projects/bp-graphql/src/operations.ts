@@ -50,6 +50,7 @@ export { default as getPictureInfo } from './operations/getPictureInfo.js';
 export { default as getPictures } from './operations/getPictures.js';
 export { default as getPicturesByAllSearch } from './operations/getPicturesByAllSearch.js';
 export { default as getPicturesForCollection } from './operations/getPicturesForCollection.js';
+export { default as getPublishedCollectionInfoByName } from './operations/getPublishedCollectionInfoByName.js';
 export { default as getRootCollection } from './operations/getRootCollection.js';
 export { default as getUnverifiedComments } from './operations/getUnverifiedComments.js';
 export { default as getUser } from './operations/getUser.js';

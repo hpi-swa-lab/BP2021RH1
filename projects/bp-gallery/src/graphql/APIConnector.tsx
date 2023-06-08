@@ -2452,7 +2452,6 @@ export type GetCollectionInfoByIdQuery = {
 
 export type GetCollectionInfoByNameQueryVariables = Exact<{
   collectionName?: InputMaybe<Scalars['String']>;
-  publicationState?: InputMaybe<PublicationState>;
 }>;
 
 export type GetCollectionInfoByNameQuery = {
@@ -3041,6 +3040,32 @@ export type GetPicturesForCollectionQuery = {
       id?: string | null;
       attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
     } | null;
+  } | null;
+};
+
+export type GetPublishedCollectionInfoByNameQueryVariables = Exact<{
+  collectionName?: InputMaybe<Scalars['String']>;
+}>;
+
+export type GetPublishedCollectionInfoByNameQuery = {
+  collections?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        name: string;
+        description?: string | null;
+        child_collections?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              name: string;
+              thumbnail?: string | null;
+              publishedAt?: any | null;
+            } | null;
+          }>;
+        } | null;
+      } | null;
+    }>;
   } | null;
 };
 
@@ -4278,17 +4303,14 @@ export type GetCollectionInfoByIdQueryResult = Apollo.QueryResult<
 >;
 
 export const GetCollectionInfoByNameDocument = gql`
-  query getCollectionInfoByName(
-    $collectionName: String
-    $publicationState: PublicationState = LIVE
-  ) {
-    collections(filters: { name: { eq: $collectionName } }, publicationState: $publicationState) {
+  query getCollectionInfoByName($collectionName: String) {
+    collections(filters: { name: { eq: $collectionName } }, publicationState: PREVIEW) {
       data {
         id
         attributes {
           name
           description
-          child_collections(sort: "name:asc", publicationState: $publicationState) {
+          child_collections(sort: "name:asc", publicationState: PREVIEW) {
             data {
               id
               attributes {
@@ -4317,7 +4339,6 @@ export const GetCollectionInfoByNameDocument = gql`
  * const { data, loading, error } = useGetCollectionInfoByNameQuery({
  *   variables: {
  *      collectionName: // value for 'collectionName'
- *      publicationState: // value for 'publicationState'
  *   },
  * });
  */
@@ -5977,6 +5998,85 @@ export type GetPicturesForCollectionLazyQueryHookResult = ReturnType<
 export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
   GetPicturesForCollectionQuery,
   GetPicturesForCollectionQueryVariables
+>;
+
+export const GetPublishedCollectionInfoByNameDocument = gql`
+  query getPublishedCollectionInfoByName($collectionName: String) {
+    collections(filters: { name: { eq: $collectionName } }) {
+      data {
+        id
+        attributes {
+          name
+          description
+          child_collections(sort: "name:asc") {
+            data {
+              id
+              attributes {
+                name
+                thumbnail
+                publishedAt
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPublishedCollectionInfoByNameQuery__
+ *
+ * To run a query within a React component, call `useGetPublishedCollectionInfoByNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublishedCollectionInfoByNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublishedCollectionInfoByNameQuery({
+ *   variables: {
+ *      collectionName: // value for 'collectionName'
+ *   },
+ * });
+ */
+export function useGetPublishedCollectionInfoByNameQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetPublishedCollectionInfoByNameQuery,
+    GetPublishedCollectionInfoByNameQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetPublishedCollectionInfoByNameQuery,
+    GetPublishedCollectionInfoByNameQueryVariables
+  >(GetPublishedCollectionInfoByNameDocument, options);
+}
+
+export function useGetPublishedCollectionInfoByNameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPublishedCollectionInfoByNameQuery,
+    GetPublishedCollectionInfoByNameQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetPublishedCollectionInfoByNameQuery,
+    GetPublishedCollectionInfoByNameQueryVariables
+  >(GetPublishedCollectionInfoByNameDocument, options);
+}
+
+export type GetPublishedCollectionInfoByNameQueryHookResult = ReturnType<
+  typeof useGetPublishedCollectionInfoByNameQuery
+>;
+
+export type GetPublishedCollectionInfoByNameLazyQueryHookResult = ReturnType<
+  typeof useGetPublishedCollectionInfoByNameLazyQuery
+>;
+
+export type GetPublishedCollectionInfoByNameQueryResult = Apollo.QueryResult<
+  GetPublishedCollectionInfoByNameQuery,
+  GetPublishedCollectionInfoByNameQueryVariables
 >;
 
 export const GetRootCollectionDocument = gql`
@@ -10439,6 +10539,50 @@ export function useCanRunMultipleGetPicturesForCollectionQueries(
     ...options,
     variables: {
       operation: GetPicturesForCollectionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunGetPublishedCollectionInfoByNameQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetPublishedCollectionInfoByNameQueryVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetPublishedCollectionInfoByNameDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetPublishedCollectionInfoByNameQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetPublishedCollectionInfoByNameQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetPublishedCollectionInfoByNameDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

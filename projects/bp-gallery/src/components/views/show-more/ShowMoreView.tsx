@@ -1,4 +1,4 @@
-import { useGetCollectionInfoByNameQuery } from '../../../graphql/APIConnector';
+import { useGetPublishedCollectionInfoByNameQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
@@ -25,7 +25,7 @@ const ShowMoreView = ({
 
   const showcaseAdornment = useGetShowcaseAdornments(archiveId);
 
-  const { data, error } = useGetCollectionInfoByNameQuery({
+  const { data, error } = useGetPublishedCollectionInfoByNameQuery({
     variables: {
       collectionName: categoryId ? categoryId : '',
     },

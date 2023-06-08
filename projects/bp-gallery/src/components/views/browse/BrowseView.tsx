@@ -4,11 +4,11 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   PictureFiltersInput,
-  PublicationState,
   useCanRunCreateSubCollectionMutation,
   useCanRunGetCollectionInfoByNameQuery,
   useCreateSubCollectionMutation,
   useGetCollectionInfoByNameQuery,
+  useGetPublishedCollectionInfoByNameQuery,
   useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -54,24 +54,33 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
   const rootCollectionName = useSimplifiedQueryResponseData(rootCollectionResult.data)
     ?.browseRootCollection.current.name;
 
-  const { canRun: canSeeUnpublishedColletions } = useCanRunGetCollectionInfoByNameQuery({
-    variables: {
-      publicationState: PublicationState.Preview,
-    },
-  });
+  const { canRun: canSeeUnpublishedColletions } = useCanRunGetCollectionInfoByNameQuery();
 
   const collectionQueryVariables = {
     collectionName: path?.length
       ? decodeBrowsePathComponent(path[path.length - 1])
       : rootCollectionName,
-    publicationState: canSeeUnpublishedColletions
-      ? PublicationState.Preview
-      : PublicationState.Live,
   };
-  const { data, loading, error } = useGetCollectionInfoByNameQuery({
+  const {
+    data: unpublishedData,
+    loading: unpublishedLoading,
+    error: unpublishedError,
+  } = useGetCollectionInfoByNameQuery({
     variables: collectionQueryVariables,
-    skip: !!rootCollectionResult.loading,
+    skip: !!rootCollectionResult.loading || !canSeeUnpublishedColletions,
   });
+  const {
+    data: publishedData,
+    loading: publishedLoading,
+    error: publishedError,
+  } = useGetPublishedCollectionInfoByNameQuery({
+    variables: collectionQueryVariables,
+    skip: !!rootCollectionResult.loading || canSeeUnpublishedColletions,
+  });
+  const data = unpublishedData ?? publishedData;
+  const loading = unpublishedLoading || publishedLoading;
+  const error = unpublishedError ?? publishedError;
+
   const collections: FlatCollection[] | undefined =
     useSimplifiedQueryResponseData(data)?.collections;
 

@@ -68,7 +68,7 @@ const EditableCollectionDescription = ({
   const description = useRef<string>(initialDescription);
 
   const [updateCollection] = useUpdateCollectionMutation({
-    refetchQueries: ['getCollectionInfoByName'],
+    refetchQueries: ['getCollectionInfoByName', 'getPublishedCollectionInfoByName'],
   });
   const { t } = useTranslation();
 
