@@ -145,6 +145,7 @@ const GeoView = () => {
                 <img
                   className='h-full'
                   data-testid='geo-image'
+                  data-pictureId={pictureId}
                   src={pictureLink}
                   alt={pictureLink}
                   onContextMenu={onImageContextMenu}
