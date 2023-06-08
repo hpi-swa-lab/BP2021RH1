@@ -414,6 +414,7 @@
     },
     "idealot": "Ausstellungsparkplatz",
     "tool": "Ausstellungstool",
+    "add-picture-to-collection-success": "Ausgewählte Bilder wurden zur Ausstellung hinzugefügt",
     "manipulator": {
       "intro": {
         "title-placeholder": "Ausstellungstitel",

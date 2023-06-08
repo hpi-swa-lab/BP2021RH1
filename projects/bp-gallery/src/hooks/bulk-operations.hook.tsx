@@ -6,8 +6,8 @@ import useManageCollectionPictures from './manage-collection-pictures.hook';
 import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
 import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
-import { useCreateExhibitionPictureMutation } from '../graphql/APIConnector';
-import { addExhibitionPicture } from '../components/views/exhibitions/exhibition-helper';
+import { AddExhibitionPicture } from '../components/views/exhibitions/ExhibitionHelper';
+import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
   }, [dialog]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
-  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
+  const openAlert = useContext(AlertContext);
 
   return {
     linkToCollection: {
@@ -86,8 +86,11 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       name: t('curator.addToExhibition'),
       icon: <Add />,
       action: async (selectedPictures: FlatPicture[]) => {
-        exhibitionId &&
-          addExhibitionPicture(createExhibitionPicture, exhibitionId, selectedPictures);
+        exhibitionId && (await AddExhibitionPicture(exhibitionId, selectedPictures));
+        openAlert({
+          alertType: AlertType.SUCCESS,
+          message: t('exhibition.add-picture-to-collection-success'),
+        });
       },
     },
   } satisfies Record<string, BulkOperation>;

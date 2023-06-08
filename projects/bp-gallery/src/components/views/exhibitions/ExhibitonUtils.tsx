@@ -350,7 +350,7 @@ export const ExhibitionStateChanger = ({
   setExhibitionText: Dispatch<SetStateAction<ExhibitionText>>;
   sections: SectionState[];
   setSections: Dispatch<SetStateAction<SectionState[]>>;
-  databaseSaver: ReturnType<typeof ExhibitionDatabaseSaver>;
+  databaseSaver: ReturnType<typeof useExhibitionDatabaseSaver>;
 }>) => {
   const setSectionText = (sectionId: string, text: string) => {
     databaseSaver.setSectionText(sectionId, text);
@@ -439,7 +439,7 @@ const ExhibitionDragNDrop = ({
   setIdealot: Dispatch<SetStateAction<DragElement[]>>;
   sections: SectionState[];
   setSections: Dispatch<SetStateAction<SectionState[]>>;
-  databaseSaver: ReturnType<typeof ExhibitionDatabaseSaver>;
+  databaseSaver: ReturnType<typeof useExhibitionDatabaseSaver>;
   exhibitionId: string;
 }>) => {
   const [isSorting, setIsSorting] = useState(false);
@@ -584,7 +584,7 @@ const ExhibitionDragNDrop = ({
   );
 };
 
-export const ExhibitionDatabaseSaver = () => {
+const useExhibitionDatabaseSaver = () => {
   const [updateExhibitionPicture] = useUpdateExhibitionPictureMutation();
 
   const [updateExhibitionSection] = useUpdateExhibitionSectionMutation();
@@ -833,7 +833,7 @@ export const ExhibitionStateManager = ({
     setIdealot(buildDragElements(exhibition.idealot_pictures));
   }, [setIdealot, exhibition]);
 
-  const databaseSaver = ExhibitionDatabaseSaver();
+  const databaseSaver = useExhibitionDatabaseSaver();
 
   return (
     <ExhibitionStateGetter

@@ -3,7 +3,6 @@ import { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
-  useCreateExhibitionPictureMutation,
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
@@ -26,7 +25,7 @@ import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
 import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
 import { Button } from '@mui/material';
-import { addExhibitionPicture } from '../../../exhibitions/exhibition-helper';
+import { AddExhibitionPicture } from '../../../exhibitions/ExhibitionHelper';
 
 export type Field = Pick<
   FlatPicture,
@@ -104,8 +103,6 @@ const PictureInfo = ({
   }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
-  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
-
   return (
     <div className='picture-info'>
       {topInfo?.(anyFieldTouched, isSaving)}
@@ -114,7 +111,7 @@ const PictureInfo = ({
           <Button
             variant='contained'
             onClick={() => {
-              addExhibitionPicture(createExhibitionPicture, exhibitionId, [picture]);
+              AddExhibitionPicture(exhibitionId, [picture]);
             }}
           >
             {t('curator.addToExhibition')}

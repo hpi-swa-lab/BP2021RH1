@@ -10,6 +10,7 @@ import PictureView from '../picture/PictureView';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { useTranslation } from 'react-i18next';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 
 const Title = () => {
   const { getTitlePicture, getTitle, getIntroduction } = useContext(ExhibitionGetContext);
@@ -41,7 +42,7 @@ const Title = () => {
 const Section = ({ sectionId }: { sectionId: string }) => {
   const { getSection } = useContext(ExhibitionGetContext);
   const mySection = getSection(sectionId);
-  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
+  const [focusedPicture, setFocusedPicture] = useState<string>();
 
   return (
     <>
@@ -123,9 +124,11 @@ const ExhibitionViewer = ({ exhibitionId }: { exhibitionId: string }) => {
   const exhibition: FlatExhibition | undefined =
     useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
 
+  const { role } = useAuth();
+  const isCurator = role >= AuthRole.CURATOR;
   return (
     <>
-      {exhibition?.is_published && (
+      {exhibition && (exhibition.is_published || isCurator) && (
         <ExhibitionStateViewer exhibition={exhibition}>
           <div className='flex justify-center'>
             <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700 text-xl'>
