@@ -1,6 +1,6 @@
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Button, IconButton, Paper, TextField } from '@mui/material';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { UIEventHandler, useContext, useEffect, useRef, useState } from 'react';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
@@ -23,7 +23,8 @@ import {
 import { SortableContext } from '@dnd-kit/sortable';
 import { channelFactory } from '../../../helpers/channel-helpers';
 
-const IdeaLot = () => {
+const Idealot = () => {
+  const { t } = useTranslation();
   const idealot = useContext(ExhibitionGetContext).getIdealot();
 
   return (
@@ -31,7 +32,7 @@ const IdeaLot = () => {
       <div className='absolute z-[999] right-0 top-[-1rem]'>
         <AddPicturesButton />
       </div>
-      <div className='text-xl'>Ideenparkplatz</div>
+      <div className='text-xl'>{t('exhibition.idealot')}</div>
       <div className='border-solid overflow-auto flex-1 h-full'>
         <div className='flex gap-2 flex-wrap items-start'>
           {idealot?.map(picture => picture.element)}
@@ -126,10 +127,8 @@ const ExhibitionManipulator = () => {
   const scroll = useRef(0);
   const scrollDivRef = useRef<HTMLDivElement | null>(null);
 
-  //TODO
-  //@ts-ignore
-  const handleScroll = e => {
-    if (e.target.scrollTop !== 0) scroll.current = Number(e.target.scrollTop);
+  const handleScroll: UIEventHandler<HTMLDivElement> = node => {
+    if (node.currentTarget.scrollTop !== 0) scroll.current = Number(node.currentTarget.scrollTop);
   };
 
   useEffect(() => scrollDivRef.current?.scrollTo(0, scroll.current));
@@ -138,7 +137,7 @@ const ExhibitionManipulator = () => {
       <div className='absolute z-[999] right-7 top-[6rem]'>
         <PublishButton />
       </div>
-      <div className='text-xl'>Ausstellungstool</div>
+      <div className='text-xl'>{t('exhibition.tool')}</div>
       <div
         className='border-solid flex-1 p-2 overflow-y-auto'
         ref={scrollDivRef}
@@ -181,8 +180,8 @@ const Introduction = () => {
         className='flex-1'
         variant='standard'
         placeholder={t('exhibition.manipulator.intro.title-placeholder')}
-        value={getTitle()}
-        onChange={event => setTitle(event.target.value)}
+        defaultValue={getTitle()}
+        onBlur={event => setTitle(event.target.value)}
       />
       <div className='flex gap-2'>
         <div className='flex-1'>
@@ -287,11 +286,6 @@ const EndCard = () => {
   );
 };
 
-interface DropzoneContent {
-  id: string;
-  dragIds: string[];
-}
-
 const PublishButton = () => {
   const { t } = useTranslation();
   const { getIsPublished } = useContext(ExhibitionGetContext);
@@ -338,7 +332,7 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
         <>
           <ExhibitionStateManager exhibition={exhibition}>
             <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
-              <IdeaLot />
+              <Idealot />
               <ExhibitionManipulator />
             </div>
           </ExhibitionStateManager>

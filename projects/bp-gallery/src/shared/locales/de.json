@@ -412,6 +412,8 @@
       "unPublish": "Privat stellen",
       "addPictures": "Bilder hinzufügen"
     },
+    "idealot": "Ausstellungsparkplatz",
+    "tool": "Ausstellungstool",
     "manipulator": {
       "intro": {
         "title-placeholder": "Ausstellungstitel",

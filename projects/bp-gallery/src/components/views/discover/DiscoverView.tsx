@@ -51,7 +51,7 @@ const DiscoverView = () => {
     <div className='discover-container'>
       <ShowStats>
         <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
-        <ExhibitionOverview archiveId={undefined} showTitle margin />
+        <ExhibitionOverview showTitle margin />
         <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
