@@ -43,7 +43,7 @@ const apolloClient = new ApolloClient({
             merge: mergeByRefWrappedInData,
           },
           findPicturesByAllSearch: {
-            keyArgs: ['searchTerms', 'searchTimes', 'filterOutTexts'],
+            keyArgs: ['searchTerms', 'searchTimes', 'textFilter'],
             merge: mergeByRef,
           },
           keywordTags: {
