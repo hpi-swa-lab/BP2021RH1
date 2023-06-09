@@ -1,4 +1,9 @@
-import { Attribute, DefaultOption, Strapi } from "@strapi/strapi";
+import {
+  Attribute,
+  GetAttributeValue,
+  GetAttributes,
+  Strapi,
+} from "@strapi/strapi";
 import { knex } from "knex";
 import type * as Nexus from "nexus";
 
@@ -16,48 +21,48 @@ export type StrapiExtended = Omit<Strapi, "entityService"> & {
   entityService: EntityService;
 };
 
-type FilterParameters = Partial<{
-  $and: any;
-  $or: any;
-  $not: any;
-  $eq: any;
-  $eqi: any;
-  $ne: any;
-  $in: any;
-  $notIn: any;
-  $lt: any;
-  $lte: any;
-  $gt: any;
-  $gte: any;
-  $between: any;
-  $contains: any;
-  $notContains: any;
-  $containsi: any;
-  $notContainsi: any;
-  $startsWith: any;
-  $endsWith: any;
-  $null: any;
-  $notNull: any;
-}>;
+type FilterParameters = Partial<
+  Record<
+    | "$and"
+    | "$or"
+    | "$not"
+    | "$eq"
+    | "$eqi"
+    | "$ne"
+    | "$in"
+    | "$notIn"
+    | "$lt"
+    | "$lte"
+    | "$gt"
+    | "$gte"
+    | "$between"
+    | "$contains"
+    | "$notContains"
+    | "$containsi"
+    | "$notContainsi"
+    | "$startsWith"
+    | "$endsWith"
+    | "$null"
+    | "$notNull",
+    any
+  >
+>;
 
 type OrderByParameter =
   | string
   | { [key: string]: string }
   | { [key: string]: string }[];
 
-type TypeAttributes<T extends Strapi.ContentTypeUIDs> =
-  Strapi.Schemas[T]["attributes"];
-
 type ResponseAttributes<T extends Strapi.ContentTypeUIDs> =
   | null
   | (Partial<{
-      [K in keyof TypeAttributes<T>]: DefaultType<T, K>;
+      [K in keyof GetAttributes<T>]: DefaultType<T, K>;
     }> & { id: number });
 
 type PopulateType<T extends Strapi.ContentTypeUIDs> = {
-  [K in keyof TypeAttributes<T> as TypeAttributes<T>[K] extends Attribute<"relation">
+  [K in keyof GetAttributes<T> as GetAttributes<T>[K] extends Attribute<"relation">
     ? K
-    : never]: TypeAttributes<T>[K];
+    : never]: GetAttributes<T>[K];
 };
 
 type PopulateParameter<T extends Strapi.ContentTypeUIDs> =
@@ -76,7 +81,7 @@ type PopulateParameter<T extends Strapi.ContentTypeUIDs> =
 type PublicationStateParameter = "live" | "preview";
 
 type Params<T extends Strapi.ContentTypeUIDs> = Partial<{
-  fields: (keyof TypeAttributes<T>)[];
+  fields: (keyof GetAttributes<T>)[];
   populate: PopulateParameter<T>;
 }>;
 
@@ -92,13 +97,15 @@ type FindManyParams<T extends Strapi.ContentTypeUIDs> = Partial<
 
 type DefaultType<
   T extends Strapi.ContentTypeUIDs,
-  L extends keyof TypeAttributes<T>
-> = TypeAttributes<T>[L] extends DefaultOption<any>
-  ? TypeAttributes<T>[L]["default"]
-  : TypeAttributes<T>[L];
+  L extends keyof GetAttributes<T>
+> = GetAttributes<T>[L] extends Attribute
+  ? GetAttributeValue<GetAttributes<T>[L]> extends boolean
+    ? boolean
+    : GetAttributeValue<GetAttributes<T>[L]>
+  : any;
 
 type MutateParams<T extends Strapi.ContentTypeUIDs> = Params<T> & {
-  data: Partial<{ [K in keyof TypeAttributes<T>]: DefaultType<T, K> }>;
+  data: Partial<{ [K in keyof GetAttributes<T>]: DefaultType<T, K> }>;
 };
 
 export interface EntityService {
