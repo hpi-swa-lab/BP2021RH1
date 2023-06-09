@@ -1,4 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
+import { waitForCuratorPictureInfo } from '../helper';
 import { selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit dates', () => {
@@ -29,11 +30,13 @@ describe('bulk edit dates', () => {
     visitArchive1Pictures();
     selectPictures('1', '5');
     cy.contains('Mehrere Bilder editieren').click();
+    waitForCuratorPictureInfo();
     cy.contains('Keine Zeit bekannt').click();
     cy.get('.rdrDateInput').eq(0).clear();
     cy.get('.rdrDateInput').eq(0).type('20.04.1969{enter}{esc}');
     cy.contains('.save-state', 'Gespeichert.');
     cy.visit('/picture/5');
+    waitForCuratorPictureInfo();
     cy.contains('20.04.1969').click();
     // cleanup
     cy.get('.rdrDateInput').eq(0).clear();
@@ -42,6 +45,7 @@ describe('bulk edit dates', () => {
     cy.contains('01.04.1970');
 
     cy.visit('/picture/1');
+    waitForCuratorPictureInfo();
     cy.contains('20.04.1969').click();
     // cleanup
     cy.get('.rdrDateInput').eq(0).clear();
