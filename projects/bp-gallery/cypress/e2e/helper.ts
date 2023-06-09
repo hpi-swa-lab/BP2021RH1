@@ -5,3 +5,7 @@ export const waitForAllImagesLoaded = () => {
     }
   });
 };
+
+export const waitForCuratorPictureInfo = () => {
+  cy.get('.save-state');
+};

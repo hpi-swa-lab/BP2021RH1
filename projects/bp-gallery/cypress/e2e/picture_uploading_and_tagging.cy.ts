@@ -1,4 +1,5 @@
 import { login, logout } from '../utils/login-utils';
+import { waitForCuratorPictureInfo } from './helper';
 
 describe('picture uploading and tagging', () => {
   before(() => {
@@ -51,6 +52,7 @@ describe('picture uploading and tagging', () => {
   it('tagging picture with year', () => {
     cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-grid .picture-preview:last').click();
+    waitForCuratorPictureInfo();
     cy.get('.date-indicator').click();
     cy.contains('.rdrInputRange', 'Jahr').find('input').clear();
     cy.contains('.rdrInputRange', 'Jahr').find('input').type('1000{esc}');
