@@ -1,21 +1,13 @@
-import { Event } from '@mui/icons-material';
 import { Portal } from '@mui/material';
-import { t } from 'i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { throttle } from 'lodash';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ScrollBar from 'react-perfect-scrollbar';
-import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import useGetPictures from '../../../hooks/get-pictures.hook';
-import {
-  FlatPicture,
-  FlatTimeRangeTag,
-  PictureOverviewType,
-} from '../../../types/additionalFlatTypes';
+import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import PictureView from '../../views/picture/PictureView';
-import DateRangeSelectionField from '../../views/picture/sidebar/picture-info/DateRangeSelectionField';
-import PictureInfoField from '../../views/picture/sidebar/picture-info/PictureInfoField';
 import PicturePreview from './PicturePreview';
 import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
@@ -114,41 +106,43 @@ const PictureWidget = ({
 };
 
 const HorizontalPictureGrid = ({
-  queryParams,
-  sortBy,
-  type = PictureOverviewType.CUSTOM,
+  date,
   allowClicks,
+  setDate,
 }: {
-  queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
-  sortBy?: string[];
-  type?: PictureOverviewType;
+  date: number;
   allowClicks?: boolean;
+  setDate: Dispatch<SetStateAction<number>>;
 }) => {
-  const [date, setDate] = useState<FlatTimeRangeTag>();
+  const pictureLength = useRef<number>(0);
+  const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
+
+  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
+  const [transitioning, setTransitioning] = useState<boolean>(false);
+
+  const [filterDate, setFilterDate] = useState<number>(date);
 
   const rightResult = useGetPictures(
     {
-      time_range_tag: { start: { gte: date?.start } },
+      time_range_tag: { start: { gte: new Date(`${filterDate}-01-01`) } },
     },
     false,
     ['time_range_tag.start:asc'],
     true,
     50,
     'cache-and-network',
-    type
+    PictureOverviewType.CUSTOM
   );
 
   const leftResult = useGetPictures(
-    { time_range_tag: { start: { lt: date?.start } } },
+    { time_range_tag: { start: { lt: new Date(`${filterDate}-01-01`) } } },
     false,
     ['time_range_tag.start:desc'],
     true,
-    50,
+    3,
     'cache-and-network',
-    type
+    PictureOverviewType.CUSTOM
   );
-
-  const [pictureLength, setPictureLength] = useState<number>(0);
 
   const rightPictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(
     rightResult.data
@@ -157,10 +151,41 @@ const HorizontalPictureGrid = ({
     leftResult.data
   )?.pictures;
 
-  const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
-  const [showLeftButton, setShowLeftButton] = useState<boolean>(false);
-  const [showRightButton, setShowRightButton] = useState<boolean>(true);
-  const [lastScrollPos, setLastScrollPos] = useState<number>(0);
+  const pictures = useMemo(() => {
+    return [...[...(leftPictures ?? [])].reverse(), ...(rightPictures ?? [])];
+  }, [leftPictures, rightPictures]);
+
+  useEffect(() => {
+    if (leftResult.loading || rightResult.loading) {
+      return;
+    }
+    const lowerBorder = pictures.length
+      ? new Date(pictures[0]?.time_range_tag?.start as Date).getFullYear()
+      : undefined;
+    const upperBorder = pictures.length
+      ? new Date(pictures[pictures.length - 1]?.time_range_tag?.start as Date).getFullYear()
+      : undefined;
+    if (!lowerBorder || !upperBorder || !(lowerBorder <= date && date <= upperBorder)) {
+      setFilterDate(date);
+    } else {
+      const field = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
+      const index = field * 3 + ((leftPictures?.length ?? 0) % 3);
+      const selectedPicture = pictures[index];
+      if (new Date(selectedPicture.time_range_tag?.start as Date).getFullYear() !== date) {
+        if (!scrollBarRef) {
+          return;
+        }
+        const lastIndex = pictures.findLastIndex(
+          value =>
+            value.time_range_tag?.start &&
+            new Date(value.time_range_tag?.start as Date).getFullYear() < date
+        );
+        const lastField = Math.floor(lastIndex / 3) + (leftPictures?.length ?? 0 ? 1 : 0);
+        scrollBarRef.scrollLeft = lastField * 270;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
 
   const fetchMoreOnScrollRight = useCallback(
     (count: number) => {
@@ -193,56 +218,6 @@ const HorizontalPictureGrid = ({
     },
     [leftPictures?.length, leftResult]
   );
-
-  useEffect(() => {
-    if ((rightPictures?.length ?? 0) < 50) {
-      fetchMoreOnScrollRight(50);
-    }
-  }, [fetchMoreOnScrollRight, rightPictures?.length]);
-
-  useEffect(() => {
-    if (scrollBarRef) {
-      scrollBarRef.scroll({
-        top: 0,
-        left:
-          scrollBarRef.scrollLeft +
-          270 *
-            (Math.ceil(((leftPictures?.length ?? 0) - pictureLength) / 3.0) -
-              (pictureLength % 3 ? 1 : 0)),
-        behavior: 'auto',
-      });
-      setPictureLength(leftPictures?.length ?? 0);
-      setLastScrollPos(scrollBarRef.scrollLeft);
-    }
-  }, [leftPictures?.length, pictureLength, scrollBarRef]);
-
-  const pictures = useMemo(() => {
-    return [...[...(leftPictures ?? [])].reverse(), ...(rightPictures ?? [])];
-  }, [leftPictures, rightPictures]);
-
-  const [currentValue, setCurrentValue] = useState<FlatTimeRangeTag>();
-  const [field, setField] = useState<number>(0);
-
-  const updateField = useCallback(() => {
-    const tempField = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
-    if (tempField !== field) {
-      setField(tempField);
-    }
-  }, [field, scrollBarRef?.scrollLeft]);
-
-  useEffect(() => {
-    const selectedPicture =
-      pictures.length > field * 3 + ((leftPictures?.length ?? 0) % 3) - 1
-        ? pictures[field * 3 + ((leftPictures?.length ?? 0) % 3) - 1]
-        : undefined;
-    if (currentValue !== selectedPicture?.time_range_tag) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      setCurrentValue(selectedPicture?.time_range_tag);
-    }
-  }, [pictures, field, leftPictures?.length, currentValue]);
-
-  const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
-  const [transitioning, setTransitioning] = useState<boolean>(false);
 
   const navigateToPicture = useCallback(
     (id: string) => {
@@ -298,42 +273,66 @@ const HorizontalPictureGrid = ({
     );
   }, [allowClicks, leftPictures, navigateToPicture, rightPictures]);
 
+  useEffect(() => {
+    if (!scrollBarRef || leftResult.loading) {
+      return;
+    }
+    if ((leftPictures?.length ?? 0) <= 3) {
+      scrollBarRef.scrollLeft = 270;
+    } else {
+      const oldLength = Math.ceil(pictureLength.current / 3);
+      const newLength = Math.ceil((leftPictures?.length ?? 0) / 3);
+      console.log(oldLength, newLength);
+      scrollBarRef.scrollLeft += (newLength - oldLength) * 270;
+    }
+    pictureLength.current = leftPictures?.length ?? 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leftPictures?.length, leftResult.loading]);
+
+  const updateCurrentValue = useCallback(() => {
+    const field = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
+    const index = field * 3 + ((leftPictures?.length ?? 0) % 3);
+    const selectedPicture = pictures[index];
+    const year = new Date(selectedPicture.time_range_tag?.start as Date).getFullYear();
+    if (leftResult.loading || rightResult.loading) {
+      return;
+    }
+    const lowerBorder = pictures.length
+      ? new Date(pictures[0]?.time_range_tag?.start as Date).getFullYear()
+      : undefined;
+    const upperBorder = pictures.length
+      ? new Date(pictures[pictures.length - 1]?.time_range_tag?.start as Date).getFullYear()
+      : undefined;
+    if (!lowerBorder || !upperBorder || (lowerBorder <= year && year <= upperBorder)) {
+      setDate(year);
+    }
+  }, [
+    leftPictures?.length,
+    leftResult.loading,
+    pictures,
+    rightResult.loading,
+    scrollBarRef?.scrollLeft,
+    setDate,
+  ]);
+
+  const updateOnScrollX = useMemo(() => throttle(updateCurrentValue, 500), [updateCurrentValue]);
+
   return (
     <>
-      <PictureInfoField title={t('pictureFields.time')} icon={<Event />} type='date'>
-        <DateRangeSelectionField
-          timeRangeTag={currentValue}
-          onChange={range => {
-            setDate(range);
-            setPictureLength(0);
-          }}
-          onTouch={() => {}}
-          onResetTouch={() => {}}
-          freeUse={true}
-        />
-      </PictureInfoField>
       <div className='relative'>
         <ScrollBar
           containerRef={ref => {
             setScrollBarRef(ref);
           }}
-          onScrollX={ref => {
-            setShowLeftButton(true);
-            setShowRightButton(true);
-            updateField();
-          }}
+          onScrollX={updateOnScrollX}
           onXReachStart={ref => {
-            setShowLeftButton(false);
-            if (ref.scrollLeft !== lastScrollPos) {
+            if (!leftResult.loading) {
               fetchMoreOnScrollLeft(99);
-              setLastScrollPos(ref.scrollLeft);
             }
           }}
           onXReachEnd={ref => {
-            setShowRightButton(false);
-            if (ref.scrollLeft !== lastScrollPos) {
+            if (!rightResult.loading) {
               fetchMoreOnScrollRight(99);
-              setLastScrollPos(ref.scrollLeft);
             }
           }}
         >

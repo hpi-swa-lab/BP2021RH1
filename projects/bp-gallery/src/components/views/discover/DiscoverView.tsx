@@ -9,7 +9,7 @@ import OverviewContainer, {
 } from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
-import HorizontalPictureGrid from '../../common/picture-gallery/HorizontalPictureGrid';
+import TimelineComponent from '../../common/picture-gallery/TimelineComponent';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import './DiscoverView.scss';
 
@@ -22,7 +22,7 @@ const DiscoverView = () => {
       {
         title: 'Zeitstrahl',
         icon: <AccessTime key='0' />,
-        content: <HorizontalPictureGrid queryParams={{}} allowClicks={true} />,
+        content: <TimelineComponent />,
       },
       {
         title: t('discover.decades'),
