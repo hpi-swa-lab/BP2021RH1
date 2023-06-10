@@ -18,7 +18,9 @@ ${replyTo ? `<b>E-Mail-Adresse:</b> ${replyTo}<br>` : ""}
 <br>
 <div style='white-space: pre-wrap;'>${message}</div>
 <br>
-Wir möchten Sie darauf hinweisen, dass diese Nachricht automatisch generiert wurde. Bitte antworten Sie deshalb nicht direkt auf diese E-Mail, sondern wenden Sie sich falls gegeben an die E-Mail-Adresse des Absenders. Sie erhalten diese E-Mail, da Ihre E-Mail-Adresse für das Archiv "${archiveName}" auf ${websiteUrl} eingetragen wurde.<br>
+Wir möchten Sie darauf hinweisen, dass diese Nachricht automatisch generiert wurde. Bitte antworten Sie deshalb nicht direkt auf diese E-Mail, sondern wenden Sie sich falls gegeben an die E-Mail-Adresse des Absenders.
+<br>
+Sie erhalten diese E-Mail, da Ihre E-Mail-Adresse für das Archiv "${archiveName}" auf ${websiteUrl} eingetragen wurde.<br>
 <br>
 Mit freundlichen Grüßen<br>
 <br>
