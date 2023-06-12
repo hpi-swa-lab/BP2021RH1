@@ -155,7 +155,7 @@ const LocationManagementDialogPreset = ({
               <div className='location-management-edit-location'>
                 <IconButton
                   onClick={() => {
-                    setEditName(!editName);
+                    setEditName(editName => !editName);
                   }}
                 >
                   {editName ? <Check /> : <Edit />}

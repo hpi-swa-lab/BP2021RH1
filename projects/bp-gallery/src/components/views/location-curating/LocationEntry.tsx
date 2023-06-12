@@ -72,8 +72,8 @@ const LocationEntry = ({
               )}
             </div>
             <div className='location-synonyms'>
-              {locationTag.synonyms?.map(synonym => (
-                <div key={synonym?.id} className='location-synonym'>
+              {locationTag.synonyms?.map((synonym, index) => (
+                <div key={index} className='location-synonym'>
                   <Chip
                     key={synonym!.name}
                     label={synonym!.name}

@@ -55,22 +55,26 @@ const PathPositionSelectDialogPreset = ({
     const customSupertags = Object.fromEntries(
       customOptions.map(tag => [tag.id, [] as FlatTag[][]])
     );
-    customSupertags[0] = [];
+    customSupertags[RelativeTagPosition.ROOT] = [];
     // children
-    customSupertags[1] = (tagSupertagList ? tagSupertagList[lastTag.id] : []).map(path => {
+    customSupertags[RelativeTagPosition.CHILD] = (
+      tagSupertagList ? tagSupertagList[lastTag.id] : []
+    ).map(path => {
       return path.map(tag => {
         return tag;
       });
     });
-    for (let i = 0; i < customSupertags[1].length; i++) {
-      customSupertags[1][i].push(lastTag);
+    for (let i = 0; i < customSupertags[RelativeTagPosition.CHILD].length; i++) {
+      customSupertags[RelativeTagPosition.CHILD][i].push(lastTag);
     }
-    if (!customSupertags[1].length) {
-      customSupertags[1].push([lastTag]);
+    if (!customSupertags[RelativeTagPosition.CHILD].length) {
+      customSupertags[RelativeTagPosition.CHILD].push([lastTag]);
     }
 
     // siblings
-    customSupertags[2] = (tagSupertagList ? tagSupertagList[lastTag.id] : []).map(path => {
+    customSupertags[RelativeTagPosition.SIBLING] = (
+      tagSupertagList ? tagSupertagList[lastTag.id] : []
+    ).map(path => {
       return path.map(tag => {
         return tag;
       });

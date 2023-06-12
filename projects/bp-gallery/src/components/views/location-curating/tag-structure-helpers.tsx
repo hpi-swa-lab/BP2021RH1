@@ -16,7 +16,7 @@ const useGetTopologicalOrder = (tagsById: { [k: string]: FlatTag } | undefined) 
         return;
       }
       if (tag.markedTemporary) {
-        stop;
+        return;
       }
 
       tag.markedTemporary = true;
@@ -146,11 +146,11 @@ export const useGetTagStructures = (
   }, [tagTree, topologicalOrder]);
 
   return {
-    tagTree: tagTree,
+    tagTree,
     flattenedTagTree: tagsById,
-    tagChildTags: tagChildTags,
-    tagSiblingTags: tagSiblingTags,
-    tagSupertagList: tagSupertagList,
+    tagChildTags,
+    tagSiblingTags,
+    tagSupertagList,
   };
 };
 

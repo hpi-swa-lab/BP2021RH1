@@ -2494,31 +2494,6 @@ export type GetKeywordTagsWithThumbnailQuery = {
   } | null;
 };
 
-export type GetLocationTagByIdQueryVariables = Exact<{
-  locationID: Scalars['ID'];
-}>;
-
-export type GetLocationTagByIdQuery = {
-  locationTag?: {
-    data?: {
-      id?: string | null;
-      attributes?: {
-        name: string;
-        visible?: boolean | null;
-        root?: boolean | null;
-        accepted?: boolean | null;
-        synonyms?: Array<{ name: string } | null> | null;
-        child_tags?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
-        parent_tags?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
-      } | null;
-    } | null;
-  } | null;
-};
-
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<LocationTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
@@ -4566,91 +4541,6 @@ export type GetKeywordTagsWithThumbnailLazyQueryHookResult = ReturnType<
 export type GetKeywordTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetKeywordTagsWithThumbnailQuery,
   GetKeywordTagsWithThumbnailQueryVariables
->;
-
-export const GetLocationTagByIdDocument = gql`
-  query getLocationTagById($locationID: ID!) {
-    locationTag(id: $locationID) {
-      data {
-        id
-        attributes {
-          name
-          visible
-          root
-          accepted
-          synonyms {
-            name
-          }
-          child_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          parent_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-/**
- * __useGetLocationTagByIdQuery__
- *
- * To run a query within a React component, call `useGetLocationTagByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLocationTagByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetLocationTagByIdQuery({
- *   variables: {
- *      locationID: // value for 'locationID'
- *   },
- * });
- */
-export function useGetLocationTagByIdQuery(
-  baseOptions: Apollo.QueryHookOptions<GetLocationTagByIdQuery, GetLocationTagByIdQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetLocationTagByIdQuery, GetLocationTagByIdQueryVariables>(
-    GetLocationTagByIdDocument,
-    options
-  );
-}
-
-export function useGetLocationTagByIdLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetLocationTagByIdQuery,
-    GetLocationTagByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetLocationTagByIdQuery, GetLocationTagByIdQueryVariables>(
-    GetLocationTagByIdDocument,
-    options
-  );
-}
-
-export type GetLocationTagByIdQueryHookResult = ReturnType<typeof useGetLocationTagByIdQuery>;
-
-export type GetLocationTagByIdLazyQueryHookResult = ReturnType<
-  typeof useGetLocationTagByIdLazyQuery
->;
-
-export type GetLocationTagByIdQueryResult = Apollo.QueryResult<
-  GetLocationTagByIdQuery,
-  GetLocationTagByIdQueryVariables
 >;
 
 export const GetLocationTagsWithThumbnailDocument = gql`
