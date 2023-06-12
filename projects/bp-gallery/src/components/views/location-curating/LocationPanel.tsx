@@ -46,9 +46,7 @@ const LocationPanel = () => {
 
   return (
     <div>
-      <div className='location-panel-header'>
-        <LocationPanelHeader />
-      </div>
+      <LocationPanelHeader />
       <div className='location-panel-content'>
         {tagTree?.map(tag => (
           <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />

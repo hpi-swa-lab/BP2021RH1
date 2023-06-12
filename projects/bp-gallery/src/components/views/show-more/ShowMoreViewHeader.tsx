@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
 import TagOverview from '../../common/TagOverview';
@@ -61,8 +60,8 @@ const ShowMoreViewHeader = ({
         )}
         {categoryType === 'location' && (
           <TagOverview
-            type={categoryType as TagType}
-            queryParams={getChildLocationsQueryParams(archiveId, categoryId, categoryType)}
+            type={TagType.LOCATION}
+            queryParams={getChildLocationsQueryParams(archiveId, categoryId)}
             archiveId={archiveId}
           />
         )}

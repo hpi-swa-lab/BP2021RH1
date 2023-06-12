@@ -105,11 +105,7 @@ export const getCategoryQueryParams = (archiveId: string | undefined) => {
       };
 };
 
-export const getChildLocationsQueryParams = (
-  archiveId: string | undefined,
-  categoryId: string,
-  categoryType: string
-) => {
+export const getChildLocationsQueryParams = (archiveId: string | undefined, categoryId: string) => {
   return !archiveId
     ? {
         and: [

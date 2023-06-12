@@ -38,7 +38,7 @@ const TagSelectDialogPreset = ({
         title: t(`tag-panel.relocate-location`),
       }}
       allOptions={tagList ?? []}
-      renderOption={(props, option: FlatTag, highlight?: any) => {
+      renderOption={(_, option, highlight) => {
         return (
           <SingleTagElement
             tagSupertags={tagSupertagList ? tagSupertagList[option.id] : []}

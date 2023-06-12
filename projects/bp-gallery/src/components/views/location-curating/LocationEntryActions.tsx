@@ -39,7 +39,7 @@ const LocationEntryActions = ({
     <div className='location-action-buttons-container'>
       <IconButtonWithTooltip
         title={t('tooltips.detach-location')}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
+        onClick={e => {
           e.stopPropagation();
           detachTag();
         }}
@@ -47,7 +47,7 @@ const LocationEntryActions = ({
       />
       <IconButtonWithTooltip
         title={t('tooltips.relocate-location')}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
+        onClick={e => {
           e.stopPropagation();
           relocateTag();
         }}
@@ -55,7 +55,7 @@ const LocationEntryActions = ({
       />
       <IconButtonWithTooltip
         title={t('tooltips.copy-location')}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
+        onClick={e => {
           e.stopPropagation();
           if (!locationTag.parent_tags?.length) {
             setTagAsRoot(true);
@@ -66,7 +66,7 @@ const LocationEntryActions = ({
       />
       <IconButtonWithTooltip
         title={locationTag.visible ? t('tooltips.hide-location') : t('tooltips.show-location')}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
+        onClick={e => {
           e.stopPropagation();
           setVisible(!locationTag.visible);
         }}
@@ -74,7 +74,7 @@ const LocationEntryActions = ({
       />
       <IconButtonWithTooltip
         title={t('tooltips.delete-location')}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
+        onClick={e => {
           e.stopPropagation();
           deleteTag();
         }}

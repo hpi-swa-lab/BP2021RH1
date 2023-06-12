@@ -9,10 +9,11 @@ import {
 } from '@mui/material';
 import { HTMLAttributes, ReactNode, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TagOption } from '../../views/picture/sidebar/picture-info/SingleTagElement';
 import { DialogProps } from '../DialogProvider';
 import './SelectDialogPreset.scss';
 
-const SelectDialogPreset = ({
+const SelectDialogPreset = <T extends TagOption>({
   handleClose,
   dialogProps,
   allOptions,
@@ -21,21 +22,25 @@ const SelectDialogPreset = ({
 }: {
   handleClose: (value: any) => void;
   dialogProps: DialogProps;
-  allOptions: any[];
+  allOptions: T[];
   inputLabel: string;
-  renderOption?: (props: HTMLAttributes<HTMLLIElement>, option: any, highlight?: any) => ReactNode;
+  renderOption?: (
+    props: HTMLAttributes<HTMLLIElement>,
+    option: T,
+    highlight?: T | null
+  ) => ReactNode;
 }) => {
   const { t } = useTranslation();
 
-  const [highlight, setHighlight] = useState<any>();
-  const selectedOption = useRef<any | undefined>(undefined);
+  const [highlight, setHighlight] = useState<T | null>();
+  const selectedOption = useRef<T | undefined>(undefined);
 
   return (
     <>
       <DialogTitle>{dialogProps.title ?? t('curator.selectOption')}</DialogTitle>
       <DialogContent>
         {dialogProps.content}
-        <Autocomplete
+        <Autocomplete<T>
           disablePortal
           options={allOptions}
           isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -47,11 +52,11 @@ const SelectDialogPreset = ({
               </li>
             );
           }}
-          getOptionLabel={(option: any) => option.name}
-          onChange={(_, value: any | null) => {
+          getOptionLabel={option => option.name}
+          onChange={(_, value) => {
             selectedOption.current = value ?? undefined;
           }}
-          onHighlightChange={(event, option, reason) => {
+          onHighlightChange={(_, option) => {
             setHighlight(option);
           }}
         />

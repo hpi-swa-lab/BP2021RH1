@@ -3,7 +3,7 @@ import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatTag } from '../../../../../types/additionalFlatTypes';
 
-type TagOption = {
+export type TagOption = {
   id?: string;
   name: string;
   icon?: ReactNode;
