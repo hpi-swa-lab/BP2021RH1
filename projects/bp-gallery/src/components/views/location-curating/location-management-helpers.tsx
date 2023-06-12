@@ -53,22 +53,25 @@ export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
     onCompleted: refetch,
   });
 
-  const setParentTags = (parentTags: FlatTag[]) => {
-    const newParentTags = parentTags.filter(tag => tag.isNew);
-    if (
-      newParentTags.length &&
-      newParentTags.some(newParentTag => closesLoop(locationTag, newParentTag))
-    ) {
-      return;
-    }
+  const setParentTags = useCallback(
+    (parentTags: FlatTag[]) => {
+      const newParentTags = parentTags.filter(tag => tag.isNew);
+      if (
+        newParentTags.length &&
+        newParentTags.some(newParentTag => closesLoop(locationTag, newParentTag))
+      ) {
+        return;
+      }
 
-    updateTagParentMutation({
-      variables: {
-        tagID: locationTag.id,
-        parentIDs: parentTags.map(parent => parent.id),
-      },
-    });
-  };
+      updateTagParentMutation({
+        variables: {
+          tagID: locationTag.id,
+          parentIDs: parentTags.map(parent => parent.id),
+        },
+      });
+    },
+    [closesLoop, locationTag, updateTagParentMutation]
+  );
 
   return { setParentTags };
 };
@@ -80,22 +83,25 @@ export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
     onCompleted: refetch,
   });
 
-  const setChildTags = (childTags: FlatTag[]) => {
-    const newChildTags = childTags.filter(tag => tag.isNew);
-    if (
-      newChildTags.length &&
-      newChildTags.some(newChildTag => closesLoop(newChildTag, locationTag))
-    ) {
-      return;
-    }
+  const setChildTags = useCallback(
+    (childTags: FlatTag[]) => {
+      const newChildTags = childTags.filter(tag => tag.isNew);
+      if (
+        newChildTags.length &&
+        newChildTags.some(newChildTag => closesLoop(newChildTag, locationTag))
+      ) {
+        return;
+      }
 
-    updateTagChildMutation({
-      variables: {
-        tagID: locationTag.id,
-        childIDs: childTags.map(child => child.id),
-      },
-    });
-  };
+      updateTagChildMutation({
+        variables: {
+          tagID: locationTag.id,
+          childIDs: childTags.map(child => child.id),
+        },
+      });
+    },
+    [closesLoop, locationTag, updateTagChildMutation]
+  );
 
   return { setChildTags };
 };
@@ -105,14 +111,17 @@ export const useSetVisible = (locationTag: FlatTag, refetch: () => void) => {
   const [updateVisibilityMutation] = updateVisibilityMutationSource({
     onCompleted: refetch,
   });
-  const setVisible = (value: boolean) => {
-    updateVisibilityMutation({
-      variables: {
-        tagId: locationTag.id,
-        visible: value,
-      },
-    });
-  };
+  const setVisible = useCallback(
+    (value: boolean) => {
+      updateVisibilityMutation({
+        variables: {
+          tagId: locationTag.id,
+          visible: value,
+        },
+      });
+    },
+    [locationTag.id, updateVisibilityMutation]
+  );
 
   return { setVisible };
 };
@@ -123,14 +132,17 @@ export const useSetRoot = (locationTag: FlatTag, refetch: () => void) => {
     onCompleted: refetch,
   });
 
-  const setTagAsRoot = async (isRoot: boolean) => {
-    updateRootMutation({
-      variables: {
-        tagId: locationTag.id,
-        root: isRoot,
-      },
-    });
-  };
+  const setTagAsRoot = useCallback(
+    async (isRoot: boolean) => {
+      updateRootMutation({
+        variables: {
+          tagId: locationTag.id,
+          root: isRoot,
+        },
+      });
+    },
+    [locationTag.id, updateRootMutation]
+  );
 
   return { setTagAsRoot };
 };
@@ -149,7 +161,7 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const relocateTag = async () => {
+  const relocateTag = useCallback(async () => {
     const selectedTag = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
       content: locationTag.name,
@@ -192,7 +204,7 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
         }
       }
     }
-  };
+  }, [closesLoop, locationTag, parentTag, prompt, t, updateRootMutation, updateTagParentMutation]);
 
   return { relocateTag };
 };
@@ -210,7 +222,7 @@ export const useDetachTag = (locationTag: FlatTag, refetch: () => void, parentTa
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const detachTag = async () => {
+  const detachTag = useCallback(async () => {
     const reallyDetach = await prompt({
       preset: DialogPreset.CONFIRM,
       title: t(`tag-panel.detach-${TagType.LOCATION}`),
@@ -235,7 +247,16 @@ export const useDetachTag = (locationTag: FlatTag, refetch: () => void, parentTa
         });
       }
     }
-  };
+  }, [
+    locationTag.id,
+    locationTag.name,
+    locationTag.parent_tags,
+    parentTag,
+    prompt,
+    t,
+    updateRootMutation,
+    updateTagParentMutation,
+  ]);
 
   return { detachTag };
 };
@@ -254,7 +275,7 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const copyTag = async () => {
+  const copyTag = useCallback(async () => {
     const selectedTag = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
       content: locationTag.name,
@@ -292,7 +313,7 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
         });
       }
     }
-  };
+  }, [closesLoop, locationTag, prompt, t, updateRootMutation, updateTagParentMutation]);
 
   return { copyTag };
 };
@@ -302,14 +323,14 @@ export const useAcceptTag = (locationTag: FlatTag, refetch: () => void) => {
   const [updateAcceptedMutation] = updateTagAcceptanceMutationSource({
     onCompleted: refetch,
   });
-  const acceptTag = () => {
+  const acceptTag = useCallback(() => {
     updateAcceptedMutation({
       variables: {
         tagId: locationTag.id,
         accepted: true,
       },
     });
-  };
+  }, [locationTag.id, updateAcceptedMutation]);
 
   return { acceptTag };
 };
@@ -319,16 +340,19 @@ export const useDeleteSynonym = (locationTag: FlatTag, refetch: () => void) => {
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: refetch,
   });
-  const deleteSynonym = (synonymName: string) => {
-    updateSynonymsMutation({
-      variables: {
-        tagId: locationTag.id,
-        synonyms:
-          locationTag.synonyms?.filter(s => s?.name !== '' && s?.name !== synonymName) ??
-          ([] as any),
-      },
-    });
-  };
+  const deleteSynonym = useCallback(
+    (synonymName: string) => {
+      updateSynonymsMutation({
+        variables: {
+          tagId: locationTag.id,
+          synonyms:
+            locationTag.synonyms?.filter(s => s?.name !== '' && s?.name !== synonymName) ??
+            ([] as any),
+        },
+      });
+    },
+    [locationTag.id, locationTag.synonyms, updateSynonymsMutation]
+  );
 
   return { deleteSynonym };
 };
@@ -338,25 +362,28 @@ export const useAddSynonym = (locationTag: FlatTag, refetch: () => void) => {
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: refetch,
   });
-  const addSynonym = (synonymName: string) => {
-    if (synonymName.length) {
-      const synonyms: ComponentCommonSynonymsInput[] =
-        locationTag.synonyms
-          ?.filter(s => s?.name !== '' && s?.name !== synonymName)
-          .map(s => ({ name: s?.name })) ?? [];
-      synonyms.push({ name: synonymName });
-      updateSynonymsMutation({
-        variables: {
-          tagId: locationTag.id,
-          synonyms,
-        },
-      });
-    }
-  };
+  const addSynonym = useCallback(
+    (synonymName: string) => {
+      if (synonymName.length) {
+        const synonyms: ComponentCommonSynonymsInput[] =
+          locationTag.synonyms
+            ?.filter(s => s?.name !== '' && s?.name !== synonymName)
+            .map(s => ({ name: s?.name })) ?? [];
+        synonyms.push({ name: synonymName });
+        updateSynonymsMutation({
+          variables: {
+            tagId: locationTag.id,
+            synonyms,
+          },
+        });
+      }
+    },
+    [locationTag.id, locationTag.synonyms, updateSynonymsMutation]
+  );
   return { addSynonym };
 };
 
-const useDeleteLocalTagCloneAnMoveUpChildren = (
+const useDeleteLocalTagCloneAndMoveUpChildren = (
   locationTag: FlatTag,
   refetch: () => void,
   parentTag?: FlatTag
@@ -370,7 +397,7 @@ const useDeleteLocalTagCloneAnMoveUpChildren = (
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const deleteLocalTagCloneAnMoveUpChildren = () => {
+  const deleteLocalTagCloneAndMoveUpChildren = useCallback(() => {
     locationTag.child_tags?.forEach(tag => {
       updateTagParentMutation({
         variables: {
@@ -396,9 +423,16 @@ const useDeleteLocalTagCloneAnMoveUpChildren = (
         },
       });
     }
-  };
+  }, [
+    locationTag.child_tags,
+    locationTag.id,
+    locationTag.parent_tags,
+    parentTag,
+    updateRootMutation,
+    updateTagParentMutation,
+  ]);
 
-  return { deleteLocalTagCloneAnMoveUpChildren };
+  return { deleteLocalTagCloneAndMoveUpChildren };
 };
 
 const useDeleteLocalTagCloneAndChildren = (
@@ -415,7 +449,7 @@ const useDeleteLocalTagCloneAndChildren = (
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const deleteLocalTagCloneAndChildren = () => {
+  const deleteLocalTagCloneAndChildren = useCallback(() => {
     if (parentTag) {
       updateTagParentMutation({
         variables: {
@@ -433,7 +467,13 @@ const useDeleteLocalTagCloneAndChildren = (
         },
       });
     }
-  };
+  }, [
+    locationTag.id,
+    locationTag.parent_tags,
+    parentTag,
+    updateRootMutation,
+    updateTagParentMutation,
+  ]);
 
   return { deleteLocalTagCloneAndChildren };
 };
@@ -449,7 +489,7 @@ export const useDeleteTag = (
 
   const { deleteTags } = useDeleteTagAndChildren(refetch, TagType.LOCATION);
   const { deleteSingleTag } = useDeleteSingleTag(refetch, TagType.LOCATION);
-  const { deleteLocalTagCloneAnMoveUpChildren } = useDeleteLocalTagCloneAnMoveUpChildren(
+  const { deleteLocalTagCloneAndMoveUpChildren } = useDeleteLocalTagCloneAndMoveUpChildren(
     locationTag,
     refetch,
     parentTag
@@ -459,32 +499,27 @@ export const useDeleteTag = (
     refetch,
     parentTag
   );
-  const deleteTag = async () => {
+  const deleteTag = useCallback(async () => {
     const deleteOption = await prompt({
       title: t(`tag-panel.should-delete-${TagType.LOCATION}`),
       content: locationTag.name,
-      options: locationTag.child_tags?.length
-        ? [
-            { name: t('common.abort'), icon: <Close />, value: deleteOptions.ABORT },
-            {
-              name: t(`tag-panel.just-delete-single-${TagType.LOCATION}`),
-              icon: <Done />,
-              value: deleteOptions.DELETE_SINGLE_TAG,
-            },
-            {
-              name: t('common.confirm'),
-              icon: <Done />,
-              value: deleteOptions.DELETE_TAG_AND_CHILDREN,
-            },
-          ]
-        : [
-            { name: t('common.abort'), icon: <Close />, value: deleteOptions.ABORT },
-            {
-              name: t('common.confirm'),
-              icon: <Done />,
-              value: deleteOptions.DELETE_TAG_AND_CHILDREN,
-            },
-          ],
+      options: [
+        { name: t('common.abort'), icon: <Close />, value: deleteOptions.ABORT },
+        ...(locationTag.child_tags?.length
+          ? [
+              {
+                name: t(`tag-panel.just-delete-single-${TagType.LOCATION}`),
+                icon: <Done />,
+                value: deleteOptions.DELETE_SINGLE_TAG,
+              },
+            ]
+          : []),
+        {
+          name: t('common.confirm'),
+          icon: <Done />,
+          value: deleteOptions.DELETE_TAG_AND_CHILDREN,
+        },
+      ],
     });
     if (deleteOption === deleteOptions.ABORT) return;
     let deleteClones = -1;
@@ -511,11 +546,11 @@ export const useDeleteTag = (
         ],
       });
     }
-    if (deleteClones === 0) return;
+    if (deleteClones === deleteOptions.ABORT) return;
     switch (deleteOption) {
       case deleteOptions.DELETE_SINGLE_TAG: {
         if (deleteClones === deleteOptions.DELETE_IN_SINGLE_LOCATION) {
-          deleteLocalTagCloneAnMoveUpChildren();
+          deleteLocalTagCloneAndMoveUpChildren();
         } else {
           deleteSingleTag(locationTag);
         }
@@ -530,7 +565,15 @@ export const useDeleteTag = (
         break;
       }
     }
-  };
+  }, [
+    deleteLocalTagCloneAndChildren,
+    deleteLocalTagCloneAndMoveUpChildren,
+    deleteSingleTag,
+    deleteTags,
+    locationTag,
+    prompt,
+    t,
+  ]);
 
   return { deleteTag };
 };
@@ -541,14 +584,17 @@ export const useUpdateName = (locationTag: FlatTag, refetch: () => void) => {
     onCompleted: refetch,
   });
 
-  const updateName = (newName: string = '') => {
-    updateTagNameMutation({
-      variables: {
-        name: newName,
-        tagId: locationTag.id,
-      },
-    });
-  };
+  const updateName = useCallback(
+    (newName: string = '') => {
+      updateTagNameMutation({
+        variables: {
+          name: newName,
+          tagId: locationTag.id,
+        },
+      });
+    },
+    [locationTag.id, updateTagNameMutation]
+  );
 
   return { updateName };
 };
@@ -561,23 +607,26 @@ export const useCreateNewTag = (refetch: () => void) => {
     onCompleted: refetch,
   });
 
-  const createNewTag = async (potentialSiblings?: FlatTag[], parent?: FlatTag) => {
-    const tagName = await dialog({
-      preset: DialogPreset.INPUT_FIELD,
-      title: parent
-        ? t(`tag-panel.name-of-sub-${TagType.LOCATION}`, { parent: parent.name })
-        : t(`tag-panel.name-of-${TagType.LOCATION}`),
-    });
-    if (tagName?.length && !potentialSiblings?.some(tag => tag.name === tagName)) {
-      createTagMutation({
-        variables: {
-          name: tagName,
-          parentIDs: parent ? [parent.id] : [],
-          accepted: true,
-        },
+  const createNewTag = useCallback(
+    async (potentialSiblings?: FlatTag[], parent?: FlatTag) => {
+      const tagName = await dialog({
+        preset: DialogPreset.INPUT_FIELD,
+        title: parent
+          ? t(`tag-panel.name-of-sub-${TagType.LOCATION}`, { parent: parent.name })
+          : t(`tag-panel.name-of-${TagType.LOCATION}`),
       });
-    }
-  };
+      if (tagName?.length && !potentialSiblings?.some(tag => tag.name === tagName)) {
+        createTagMutation({
+          variables: {
+            name: tagName,
+            parentIDs: parent ? [parent.id] : [],
+            accepted: true,
+          },
+        });
+      }
+    },
+    [createTagMutation, dialog, t]
+  );
 
   return { createNewTag };
 };
