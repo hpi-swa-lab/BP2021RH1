@@ -166,7 +166,7 @@ const LocationManagementDialogPreset = ({
               <SingleTagElement
                 option={locationTag}
                 label={locationTag.name}
-                tagSupertagList={tagSupertagList}
+                tagSupertags={tagSupertagList ? tagSupertagList[locationTag.id] : []}
               />
             </div>
             <div className='location-management-left-content'>

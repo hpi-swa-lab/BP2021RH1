@@ -41,7 +41,7 @@ const TagSelectDialogPreset = ({
       renderOption={(props, option: FlatTag, highlight?: any) => {
         return (
           <SingleTagElement
-            tagSupertagList={tagSupertagList}
+            tagSupertags={tagSupertagList ? tagSupertagList[option.id] : []}
             option={option}
             label={option.name}
             highlighted={highlight && highlight.id === option.id ? true : false}

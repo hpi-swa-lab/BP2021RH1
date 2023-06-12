@@ -104,7 +104,7 @@ const PathPositionSelectDialogPreset = ({
             return (
               <li {...props} key={option.id}>
                 <SingleTagElement
-                  tagSupertagList={customSupertagList}
+                  tagSupertags={customSupertagList[option.id]}
                   option={option}
                   label={option.name}
                   highlighted={highlight && highlight.id === option.id ? true : false}

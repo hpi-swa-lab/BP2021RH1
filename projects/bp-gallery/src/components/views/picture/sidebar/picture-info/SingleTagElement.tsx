@@ -19,35 +19,35 @@ const RootTagElement = ({ option, label }: { option: TagOption; label: string })
 };
 
 const SinglePathTagElement = ({
-  tagSupertagList,
+  tagSupertags,
   option,
   label,
 }: {
-  tagSupertagList: { [k: string]: FlatTag[][] };
+  tagSupertags: FlatTag[][];
   option: TagOption;
   label: string;
 }) => {
   return (
     <div className='recommendation-item-parents'>
-      {tagSupertagList[option.id!][0].map((tag, index) => (
+      {tagSupertags[0].map((tag, index) => (
         <div key={index} className='recommendation-item'>
           {index >= 1 && <ArrowRight />}
           <div className='recommendation-item-name'>{tag.name}</div>
         </div>
       ))}
       {option.icon}
-      {tagSupertagList[option.id!][0].length ? <ArrowRight /> : null}
+      {tagSupertags[0].length ? <ArrowRight /> : null}
       <div className='recommendation-item-name'>{label}</div>
     </div>
   );
 };
 
 const MultiPathTagElement = ({
-  tagSupertagList,
+  tagSupertags,
   option,
   highlighted,
 }: {
-  tagSupertagList: { [k: string]: FlatTag[][] };
+  tagSupertags: FlatTag[][];
   option: TagOption;
   highlighted?: boolean;
 }) => {
@@ -72,7 +72,7 @@ const MultiPathTagElement = ({
       <ArrowRight />
       <div className='recommendation-item-name'>{option.name}</div>
       {(highlighted || (typeof highlighted === 'undefined' && isHover)) &&
-        tagSupertagList[option.id!].map((path, i) => (
+        tagSupertags.map((path, i) => (
           <div className='recommendation-item-parents' key={i}>
             <div className='recommendation-item-separator'></div>
             {path.map((tag, j) => (
@@ -90,12 +90,12 @@ const MultiPathTagElement = ({
 };
 
 const SingleTagElement = ({
-  tagSupertagList,
+  tagSupertags,
   option,
   label,
   highlighted,
 }: {
-  tagSupertagList?: { [k: string]: FlatTag[][] };
+  tagSupertags?: FlatTag[][];
   option: TagOption;
   label: string;
   highlighted?: boolean;
@@ -103,22 +103,16 @@ const SingleTagElement = ({
   return (
     <div className='recommendation-item-container'>
       <div className='recommendation-item-content'>
-        {tagSupertagList &&
-        typeof option.id === 'string' &&
-        tagSupertagList[option.id].length > 0 ? (
+        {tagSupertags && typeof option.id === 'string' && tagSupertags.length > 0 ? (
           <>
-            {tagSupertagList[option.id].length > 1 ? (
+            {tagSupertags.length > 1 ? (
               <MultiPathTagElement
-                tagSupertagList={tagSupertagList}
+                tagSupertags={tagSupertags}
                 option={option}
                 highlighted={highlighted}
               />
             ) : (
-              <SinglePathTagElement
-                tagSupertagList={tagSupertagList}
-                option={option}
-                label={label}
-              />
+              <SinglePathTagElement tagSupertags={tagSupertags} option={option} label={label} />
             )}
           </>
         ) : (

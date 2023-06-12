@@ -502,7 +502,7 @@ const TagSelectionField = <T extends TagFields>({
             return (
               <li {...props} key={option.id}>
                 <SingleTagElement
-                  tagSupertagList={tagSupertagList}
+                  tagSupertags={tagSupertagList ? tagSupertagList[option.id] : []}
                   option={option}
                   label={label}
                   highlighted={highlight && highlight.id === option.id ? true : false}
