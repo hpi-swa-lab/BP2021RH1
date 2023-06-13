@@ -320,11 +320,14 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
   const exhibition: FlatExhibition | undefined =
     useSimplifiedQueryResponseData(exhibitionData)?.exhibition;
 
-  const exhibitionChannel = channelFactory(`exhibition-${exhibition?.id ?? ''}`);
+  useEffect(() => {
+    const exhibitionChannel = channelFactory(`exhibition-${exhibition?.id ?? ''}`);
+    exhibitionChannel.onmessage = async () => {
+      refetch();
+    };
 
-  exhibitionChannel.onmessage = async () => {
-    refetch();
-  };
+    return () => exhibitionChannel.close();
+  });
 
   return (
     <>

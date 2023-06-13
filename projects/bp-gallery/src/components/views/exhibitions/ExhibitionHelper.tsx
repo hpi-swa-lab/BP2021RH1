@@ -1,15 +1,12 @@
-import { useCreateExhibitionPictureMutation } from '../../../graphql/APIConnector';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { channelFactory } from '../../../helpers/channel-helpers';
 
 export const AddExhibitionPicture = async (
   exhibitionId: string,
-  selectedPictures: FlatPicture[]
+  selectedPictures: FlatPicture[],
+  createExhibitionPicture: any
 ) => {
-  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
-  if (!exhibitionId) return;
   const exhibitionBroadcast = channelFactory(`exhibition-${exhibitionId}`);
-
   const addExhibitionPicture = async (pictureId: string) => {
     const result = await createExhibitionPicture({
       variables: {
@@ -25,4 +22,5 @@ export const AddExhibitionPicture = async (
     await addExhibitionPicture(selectedPictures[i].id);
   }
   exhibitionBroadcast.postMessage(true);
+  exhibitionBroadcast.close();
 };

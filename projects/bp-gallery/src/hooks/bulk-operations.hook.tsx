@@ -8,6 +8,7 @@ import { BulkOperation } from '../components/common/picture-gallery/BulkOperatio
 import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
 import { AddExhibitionPicture } from '../components/views/exhibitions/ExhibitionHelper';
 import { AlertContext, AlertType } from '../components/provider/AlertProvider';
+import { useCreateExhibitionPictureMutation } from '../graphql/APIConnector';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
   }, [dialog]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
+  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
   const openAlert = useContext(AlertContext);
 
   return {
@@ -86,10 +88,12 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       name: t('curator.addToExhibition'),
       icon: <Add />,
       action: async (selectedPictures: FlatPicture[]) => {
-        exhibitionId && (await AddExhibitionPicture(exhibitionId, selectedPictures));
+        exhibitionId &&
+          (await AddExhibitionPicture(exhibitionId, selectedPictures, createExhibitionPicture));
         openAlert({
           alertType: AlertType.SUCCESS,
-          message: t('exhibition.add-picture-to-collection-success'),
+          message: t('exhibition.add-pictures-to-collection-success'),
+          duration: 2000,
         });
       },
     },

@@ -3,6 +3,7 @@ import { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
+  useCreateExhibitionPictureMutation,
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
@@ -26,6 +27,7 @@ import TagSelectionField from './TagSelectionField';
 import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
 import { Button } from '@mui/material';
 import { AddExhibitionPicture } from '../../../exhibitions/ExhibitionHelper';
+import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 
 export type Field = Pick<
   FlatPicture,
@@ -70,6 +72,9 @@ const PictureInfo = ({
   const [getAllPeople, peopleResponse] = useGetAllPersonTagsLazyQuery();
   const [getAllCollections, collectionsResponse] = useGetAllCollectionsLazyQuery();
 
+  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
+  const openAlert = useContext(AlertContext);
+
   const allKeywords = useSimplifiedQueryResponseData(keywordsResponse.data)?.keywordTags;
   const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.locationTags;
   const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
@@ -111,7 +116,13 @@ const PictureInfo = ({
           <Button
             variant='contained'
             onClick={() => {
-              AddExhibitionPicture(exhibitionId, [picture]);
+              if (!exhibitionId) return;
+              AddExhibitionPicture(exhibitionId, [picture], createExhibitionPicture);
+              openAlert({
+                alertType: AlertType.SUCCESS,
+                message: t('exhibition.add-picture-to-collection-success'),
+                duration: 2000,
+              });
             }}
           >
             {t('curator.addToExhibition')}
