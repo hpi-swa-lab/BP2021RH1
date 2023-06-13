@@ -18,10 +18,10 @@
       "inversedBy": "picture_geo_infos"
     },
     "latitude": {
-      "type": "decimal"
+      "type": "float"
     },
     "longitude": {
-      "type": "decimal"
+      "type": "float"
     },
     "radius": {
       "type": "decimal"

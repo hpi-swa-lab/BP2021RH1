@@ -95,7 +95,7 @@ const StartView = () => {
       {
         title: t('exhibition.overview.our-exhibitions'),
         icon: <AutoStories key='2' />,
-        content: <ExhibitionOverview archiveId={undefined} backgroundColor='#efeae5' />,
+        content: <ExhibitionOverview backgroundColor='#efeae5' />,
       },
     ];
   }, [t, visit]);
