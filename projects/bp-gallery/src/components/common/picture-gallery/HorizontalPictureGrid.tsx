@@ -115,6 +115,7 @@ const HorizontalPictureGrid = ({
   setDate: Dispatch<SetStateAction<number>>;
 }) => {
   const pictureLength = useRef<number>(0);
+  const allowDateUpdate = useRef<boolean>(true);
   const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
 
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
@@ -139,7 +140,7 @@ const HorizontalPictureGrid = ({
     false,
     ['time_range_tag.start:desc'],
     true,
-    3,
+    2,
     'cache-and-network',
     PictureOverviewType.CUSTOM
   );
@@ -181,6 +182,7 @@ const HorizontalPictureGrid = ({
             new Date(value.time_range_tag?.start as Date).getFullYear() < date
         );
         const lastField = Math.floor(lastIndex / 3) + (leftPictures?.length ?? 0 ? 1 : 0);
+        allowDateUpdate.current = false;
         scrollBarRef.scrollLeft = lastField * 270;
       }
     }
@@ -231,47 +233,59 @@ const HorizontalPictureGrid = ({
     [setFocusedPicture]
   );
 
+  const contentLeft = useMemo(() => {
+    return (
+      <div className='flex flex-row-reverse gap-[10px] py-[8px]'>
+        {leftPictures?.map((_, index) => {
+          if (!(index % 3)) {
+            return (
+              <PictureWidget
+                key={index}
+                variant={index % 6 ? 'var-2' : 'var-1'}
+                pictures={leftPictures.slice(index, index + 3)}
+                allowClicks={allowClicks}
+                inverse={true}
+                navigateToPicture={navigateToPicture}
+              />
+            );
+          } else {
+            return null;
+          }
+        })}
+      </div>
+    );
+  }, [allowClicks, leftPictures, navigateToPicture]);
+
+  const contentRight = useMemo(() => {
+    return (
+      <div className='flex gap-[10px] py-[8px]'>
+        {rightPictures?.map((_, index) => {
+          if (!(index % 3)) {
+            return (
+              <PictureWidget
+                key={index}
+                variant={index % 6 ? 'var-1' : 'var-2'}
+                pictures={rightPictures.slice(index, index + 3)}
+                allowClicks={allowClicks}
+                navigateToPicture={navigateToPicture}
+              />
+            );
+          } else {
+            return null;
+          }
+        })}
+      </div>
+    );
+  }, [allowClicks, navigateToPicture, rightPictures]);
+
   const content = useMemo(() => {
     return (
       <div className='flex gap-[10px]'>
-        <div className='flex flex-row-reverse gap-[10px] py-[8px]'>
-          {leftPictures?.map((_, index) => {
-            if (!(index % 3)) {
-              return (
-                <PictureWidget
-                  key={index}
-                  variant={index % 6 ? 'var-2' : 'var-1'}
-                  pictures={leftPictures.slice(index, index + 3)}
-                  allowClicks={allowClicks}
-                  inverse={true}
-                  navigateToPicture={navigateToPicture}
-                />
-              );
-            } else {
-              return null;
-            }
-          })}
-        </div>
-        <div className='flex gap-[10px] py-[8px]'>
-          {rightPictures?.map((_, index) => {
-            if (!(index % 3)) {
-              return (
-                <PictureWidget
-                  key={index}
-                  variant={index % 6 ? 'var-1' : 'var-2'}
-                  pictures={rightPictures.slice(index, index + 3)}
-                  allowClicks={allowClicks}
-                  navigateToPicture={navigateToPicture}
-                />
-              );
-            } else {
-              return null;
-            }
-          })}
-        </div>
+        {contentLeft}
+        {contentRight}
       </div>
     );
-  }, [allowClicks, leftPictures, navigateToPicture, rightPictures]);
+  }, [contentLeft, contentRight]);
 
   useEffect(() => {
     if (!scrollBarRef || leftResult.loading) {
@@ -282,7 +296,6 @@ const HorizontalPictureGrid = ({
     } else {
       const oldLength = Math.ceil(pictureLength.current / 3);
       const newLength = Math.ceil((leftPictures?.length ?? 0) / 3);
-      console.log(oldLength, newLength);
       scrollBarRef.scrollLeft += (newLength - oldLength) * 270;
     }
     pictureLength.current = leftPictures?.length ?? 0;
@@ -303,17 +316,17 @@ const HorizontalPictureGrid = ({
     const upperBorder = pictures.length
       ? new Date(pictures[pictures.length - 1]?.time_range_tag?.start as Date).getFullYear()
       : undefined;
-    if (!lowerBorder || !upperBorder || (lowerBorder <= year && year <= upperBorder)) {
+    if (
+      (!lowerBorder || !upperBorder || (lowerBorder <= year && year <= upperBorder)) &&
+      allowDateUpdate.current
+    ) {
       setDate(year);
+    } else if (!allowDateUpdate.current) {
+      allowDateUpdate.current = true;
     }
-  }, [
-    leftPictures?.length,
-    leftResult.loading,
-    pictures,
-    rightResult.loading,
-    scrollBarRef?.scrollLeft,
-    setDate,
-  ]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pictures]);
 
   const updateOnScrollX = useMemo(() => throttle(updateCurrentValue, 500), [updateCurrentValue]);
 

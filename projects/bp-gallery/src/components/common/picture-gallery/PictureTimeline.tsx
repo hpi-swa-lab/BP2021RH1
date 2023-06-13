@@ -72,7 +72,7 @@ const PictureTimeline = ({
           onScrollX={updateOnScrollX}
         >
           <div className='flex'>
-            <ul className='py-[16px] px-[50%] mt-0'>{listItems}</ul>
+            <ul className='py-[16px] px-[50%] mt-0 whitespace-nowrap'>{listItems}</ul>
           </div>
         </ScrollBar>
       </div>
