@@ -1,3 +1,4 @@
+import { getDescendants } from '../../../helpers/tree-helpers';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 
@@ -34,19 +35,12 @@ export const useDeleteSingleTag = (refetch: () => void, type: TagType) => {
 export const useDeleteTagAndChildren = (refetch: () => void, type: TagType) => {
   const { deleteTagMutationSource } = useGenericTagEndpoints(type);
 
-  const getDescendants = (tag: FlatTag, descendants: string[] = []): string[] => {
-    if (!tag.child_tags) return [];
-    descendants.push(...tag.child_tags.map(childTag => childTag.id));
-    tag.child_tags.forEach(childTag => getDescendants(childTag, descendants));
-    return descendants;
-  };
-
   const [deleteTagMutation] = deleteTagMutationSource({
     onCompleted: refetch,
   });
 
   const deleteTags = (tag: FlatTag) => {
-    getDescendants(tag).forEach(childTagId => {
+    getDescendants(tag, 'child_tags').forEach(childTagId => {
       deleteTagMutation({
         variables: {
           id: childTagId,
