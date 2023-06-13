@@ -1,14 +1,15 @@
 import { Close, Done } from '@mui/icons-material';
 import { Breakpoint, Dialog } from '@mui/material';
-import { createContext, PropsWithChildren, useContext, useRef, useState } from 'react';
+import { PropsWithChildren, createContext, useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import LocationManagementDialogPreset from '../views/location-curating/LocationManagementDialog';
+import PathPositionSelectDialogPreset from '../views/location-curating/SelectPathPositionDialog';
+import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
+import { ScrollProvider } from './ScrollProvider';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
-import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
 import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
-import PathPositionSelectDialogPreset from '../views/location-curating/SelectPathPositionDialog';
-import LocationManagementDialogPreset from '../views/location-curating/LocationManagementDialog';
 
 export interface DialogOption {
   name: string;
@@ -136,7 +137,9 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
           <PathPositionSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
         {dialogState?.preset === DialogPreset.LOCATION_MANAGEMENT && (
-          <LocationManagementDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+          <ScrollProvider>
+            <LocationManagementDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+          </ScrollProvider>
         )}
       </Dialog>
     </DialogContext.Provider>

@@ -1,7 +1,8 @@
 import { Add, Help } from '@mui/icons-material';
 import { Autocomplete, Chip, Stack, TextField } from '@mui/material';
 import Fuse from 'fuse.js';
-import { useCallback, useEffect, useState } from 'react';
+import { unionWith } from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
@@ -295,6 +296,11 @@ const TagSelectionField = <T extends TagFields>({
     }
   };
 
+  const unitedOptions = useMemo(
+    () => unionWith(options, tags, (a, b) => a.id === b.id),
+    [options, tags]
+  );
+
   if (role >= AuthRole.CURATOR) {
     return (
       <div className='tag-selection'>
@@ -302,7 +308,7 @@ const TagSelectionField = <T extends TagFields>({
           multiple
           autoHighlight
           isOptionEqualToValue={(option, value) => option.id === value.id}
-          options={options}
+          options={unitedOptions}
           filterOptions={(options, { inputValue }) => {
             let filtered = options;
             // avoid tags with the same name in the same position in path

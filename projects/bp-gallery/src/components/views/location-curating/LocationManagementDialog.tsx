@@ -11,12 +11,11 @@ import {
   VisibilityOff,
 } from '@mui/icons-material';
 import { Button, Chip, DialogContent, IconButton, TextField } from '@mui/material';
-import { History } from 'history';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { useCreateLocationTagMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useVisit } from '../../../helpers/history';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { DialogProps } from '../../provider/DialogProvider';
@@ -44,7 +43,7 @@ const LocationManagementDialogPreset = ({
   dialogProps: DialogProps;
 }) => {
   const { t } = useTranslation();
-  const history: History = useHistory();
+  const { visit } = useVisit();
   const { allTagsQuery, tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
 
   const refetch: () => void = dialogProps.content.refetch;
@@ -281,9 +280,7 @@ const LocationManagementDialogPreset = ({
                 className='location-management-button location-management-primary'
                 onClick={() => {
                   handleClose(undefined);
-                  history.push(`/show-more/location/${locationTag.id}`, {
-                    showBack: true,
-                  });
+                  visit(`/show-more/location/${locationTag.id}`);
                 }}
                 endIcon={<ArrowForwardIos />}
               >

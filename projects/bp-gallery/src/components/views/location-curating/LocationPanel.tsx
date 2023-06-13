@@ -32,17 +32,17 @@ const LocationPanel = () => {
 
   const { createNewTag } = useCreateNewTag(refetch);
 
-  const tagTreeResult = useGetTagStructures(flattenedTags);
+  const { tagTree: sortedTagTree } = useGetTagStructures(flattenedTags);
 
   const tagTree = useMemo(() => {
-    if (!tagTreeResult.tagTree) return;
+    if (!sortedTagTree) return;
 
-    tagTreeResult.tagTree.forEach(tag => {
+    sortedTagTree.forEach(tag => {
       setUnacceptedSubtagsCount(tag);
     });
 
-    return tagTreeResult.tagTree;
-  }, [tagTreeResult.tagTree]);
+    return sortedTagTree;
+  }, [sortedTagTree]);
 
   return (
     <div>
