@@ -15,6 +15,7 @@ import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { replaceHistoryWithoutRouter } from '../../../helpers/history';
+import { useMouseIsIdle } from '../../../hooks/mouse-position.hook';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -33,6 +34,7 @@ export interface PictureViewContextFields {
   hasNext?: boolean;
   hasPrevious?: boolean;
   sideBarOpen?: boolean;
+  noDistractionMode?: boolean;
   setSideBarOpen?: Dispatch<SetStateAction<boolean>>;
   calledViaLink?: boolean;
   img: HTMLImageElement | null;
@@ -112,12 +114,17 @@ const PictureView = ({
 
   const [img, setImg] = useState<HTMLImageElement | null>(null);
 
+  const minMouseIdleMillisecondsForNoDistractionMode = 3000;
+  const mouseIsIdle = useMouseIsIdle(minMouseIdleMillisecondsForNoDistractionMode);
+  const noDistractionMode = !sideBarOpen && mouseIsIdle;
+
   // Wrap all context information in this variable
   const contextValue: PictureViewContextFields = {
     navigatePicture,
     hasNext,
     hasPrevious,
     sideBarOpen,
+    noDistractionMode,
     setSideBarOpen,
     calledViaLink: !onBack,
     img,
@@ -138,7 +145,7 @@ const PictureView = ({
   }, [history, pictureId, onBack]);
 
   return (
-    <div className='picture-view-container'>
+    <div className={`picture-view-container ${noDistractionMode ? 'cursor-none' : ''}`}>
       <PictureViewContext.Provider value={contextValue}>
         <FaceTaggingProvider pictureId={pictureId}>
           <div className={`picture-view`} ref={containerRef}>
