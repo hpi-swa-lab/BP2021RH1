@@ -1,3 +1,4 @@
+import { noop } from 'lodash';
 import { useMemo } from 'react';
 import {
   useCreateKeywordTagMutation,
@@ -31,6 +32,10 @@ import {
 } from '../graphql/APIConnector';
 import { TagType } from '../types/additionalFlatTypes';
 
+const dummy = (_?: unknown) => {
+  return [noop];
+};
+
 const useGenericTagEndpoints = (type: TagType) => {
   return useMemo(() => {
     switch (type) {
@@ -59,21 +64,11 @@ const useGenericTagEndpoints = (type: TagType) => {
           },
           updateTagNameMutationSource: useUpdatePersonNameMutation,
           updateSynonymsMutationSource: useUpdatePersonSynonymsMutation,
-          updateVisibilityMutationSource: (dummy: any) => {
-            return [dummy];
-          },
-          updateTagParentMutationSource: (dummy: any) => {
-            return [dummy];
-          },
-          updateTagAcceptanceMutationSource: (dummy: any) => {
-            return [dummy];
-          },
-          updateTagChildMutationSource: (dummy: any) => {
-            return [dummy];
-          },
-          updateRootMutationSource: (dummy: any) => {
-            return [dummy];
-          },
+          updateVisibilityMutationSource: dummy,
+          updateTagParentMutationSource: dummy,
+          updateTagAcceptanceMutationSource: dummy,
+          updateTagChildMutationSource: dummy,
+          updateRootMutationSource: dummy,
           mergeTagsMutationSource: useMergePersonTagsMutation,
           deleteTagMutationSource: useDeletePersonTagMutation,
           createTagMutationSource: useCreatePersonTagMutation,
@@ -89,18 +84,10 @@ const useGenericTagEndpoints = (type: TagType) => {
           updateTagNameMutationSource: useUpdateKeywordNameMutation,
           updateSynonymsMutationSource: useUpdateKeywordSynonymsMutation,
           updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
-          updateTagParentMutationSource: (dummy: any) => {
-            return [dummy];
-          },
-          updateTagAcceptanceMutationSource: (dummy: any) => {
-            return [dummy];
-          },
-          updateTagChildMutationSource: (dummy: any) => {
-            return [dummy];
-          },
-          updateRootMutationSource: (dummy: any) => {
-            return [dummy];
-          },
+          updateTagParentMutationSource: dummy,
+          updateTagAcceptanceMutationSource: dummy,
+          updateTagChildMutationSource: dummy,
+          updateRootMutationSource: dummy,
           mergeTagsMutationSource: useMergeKeywordTagsMutation,
           deleteTagMutationSource: useDeleteKeywordTagMutation,
           createTagMutationSource: useCreateKeywordTagMutation,

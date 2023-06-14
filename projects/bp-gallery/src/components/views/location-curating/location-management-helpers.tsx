@@ -1,7 +1,10 @@
 import { Close, Done } from '@mui/icons-material';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ComponentCommonSynonymsInput } from '../../../graphql/APIConnector';
+import {
+  ComponentCommonSynonyms,
+  ComponentCommonSynonymsInput,
+} from '../../../graphql/APIConnector';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
@@ -162,13 +165,13 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
     onCompleted: refetch,
   });
   const relocateTag = useCallback(async () => {
-    const selectedTag = await prompt({
+    const selectedTag: FlatTag | undefined = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
       content: locationTag.name,
     });
     if (selectedTag) {
-      if (selectedTag.child_tags.some((tag: any) => tag.name === locationTag.name)) {
-        if (!selectedTag.child_tags.some((tag: any) => tag.id === locationTag.id)) {
+      if (selectedTag.child_tags?.some(tag => tag.name === locationTag.name)) {
+        if (!selectedTag.child_tags.some(tag => tag.id === locationTag.id)) {
           prompt({
             title: t('tag-panel.location-already-exists', { name: locationTag.name }),
             options: [
@@ -180,7 +183,7 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
           });
         }
       } else {
-        if (closesLoop(locationTag, selectedTag as FlatTag)) return;
+        if (closesLoop(locationTag, selectedTag)) return;
 
         updateTagParentMutation({
           variables: {
@@ -276,13 +279,13 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
     onCompleted: refetch,
   });
   const copyTag = useCallback(async () => {
-    const selectedTag = await prompt({
+    const selectedTag: FlatTag | undefined = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
       content: locationTag.name,
     });
     if (selectedTag) {
-      if (selectedTag.child_tags.some((tag: any) => tag.name === locationTag.name)) {
-        if (!selectedTag.child_tags.some((tag: any) => tag.id === locationTag.id)) {
+      if (selectedTag.child_tags?.some(tag => tag.name === locationTag.name)) {
+        if (!selectedTag.child_tags.some(tag => tag.id === locationTag.id)) {
           prompt({
             title: t('tag-panel.location-already-exists', { name: locationTag.name }),
             options: [
@@ -294,7 +297,7 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
           });
         }
       } else {
-        if (closesLoop(locationTag, selectedTag as FlatTag)) return;
+        if (closesLoop(locationTag, selectedTag)) return;
 
         if (!locationTag.parent_tags?.length) {
           updateRootMutation({
@@ -346,8 +349,9 @@ export const useDeleteSynonym = (locationTag: FlatTag, refetch: () => void) => {
         variables: {
           tagId: locationTag.id,
           synonyms:
-            locationTag.synonyms?.filter(s => s?.name !== '' && s?.name !== synonymName) ??
-            ([] as any),
+            locationTag.synonyms?.filter(
+              (s): s is ComponentCommonSynonyms => !!s && s.name !== '' && s.name !== synonymName
+            ) ?? [],
         },
       });
     },
