@@ -1,4 +1,4 @@
-import { AccessTime, ThumbUp } from '@mui/icons-material';
+import { AccessTime, ThumbUp, Widgets } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVisit } from '../../../helpers/history';
@@ -20,13 +20,13 @@ const DiscoverView = () => {
   const timeTabs: OverviewContainerTab[] = useMemo(() => {
     return [
       {
-        title: 'Zeitstrahl',
+        title: t('discover.timeline'),
         icon: <AccessTime key='0' />,
-        content: <TimelineComponent />,
+        content: <TimelineComponent defaultValue={1950} />,
       },
       {
         title: t('discover.decades'),
-        icon: <AccessTime key='1' />,
+        icon: <Widgets key='1' />,
         content: (
           <TagOverview
             type={TagType.TIME_RANGE}

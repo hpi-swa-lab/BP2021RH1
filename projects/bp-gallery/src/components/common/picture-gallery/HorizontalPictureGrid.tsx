@@ -16,91 +16,97 @@ const SinglePicture = ({
   size,
   allowClicks,
   navigateToPicture,
+  loading,
 }: {
-  picture: FlatPicture;
+  picture?: FlatPicture;
   size: string;
   allowClicks?: boolean;
   navigateToPicture: (id: string) => void;
+  loading: boolean;
 }) => {
   return (
     <div className={`${size === 'small' ? 'w-[125px] h-[100px]' : 'w-[260px] h-[200px]'}`}>
-      <PicturePreview
-        key={`${picture.id}`}
-        picture={picture}
-        adornments={[]}
-        allowClicks={allowClicks}
-        onClick={() => {
-          if (!allowClicks) return;
-          navigateToPicture(picture.id);
-        }}
-        inverse={true}
-      />
+      {picture ? (
+        <PicturePreview
+          picture={picture}
+          adornments={[]}
+          allowClicks={allowClicks}
+          onClick={() => {
+            if (!allowClicks) return;
+            navigateToPicture(picture.id);
+          }}
+          inverse={true}
+        />
+      ) : (
+        <div
+          className='horizontal-picture-placeholder w-full h-full'
+          style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
+        />
+      )}
     </div>
   );
 };
 
-const PictureWidget = ({
+const PicturesWidget = ({
   variant,
   pictures,
   allowClicks,
   inverse,
   navigateToPicture,
+  loading,
 }: {
   variant?: string;
   pictures: FlatPicture[];
   allowClicks?: boolean;
   inverse?: boolean;
   navigateToPicture: (id: string) => void;
+  loading: boolean;
 }) => {
   return variant === 'var-1' ? (
     <div className={`flex flex-col gap-[10px]`}>
-      {pictures.length > (inverse ? 2 : 0) ? (
-        <SinglePicture
-          key={pictures[inverse ? 2 : 0].id}
-          picture={pictures[inverse ? 2 : 0]}
-          size={'big'}
-          navigateToPicture={navigateToPicture}
-          allowClicks={allowClicks}
-        />
-      ) : null}
+      <SinglePicture
+        key={inverse ? 2 : 0}
+        picture={pictures.length > (inverse ? 2 : 0) ? pictures[inverse ? 2 : 0] : undefined}
+        size={'big'}
+        navigateToPicture={navigateToPicture}
+        allowClicks={allowClicks}
+        loading={loading}
+      />
       <div className={`flex ${inverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
-        {(inverse ? [0, 1] : [1, 2]).map(i => {
-          return pictures.length > i ? (
-            <SinglePicture
-              key={pictures[i].id}
-              picture={pictures[i]}
-              size={'small'}
-              navigateToPicture={navigateToPicture}
-              allowClicks={allowClicks}
-            />
-          ) : null;
-        })}
+        {(inverse ? [0, 1] : [1, 2]).map(i => (
+          <SinglePicture
+            key={i}
+            picture={pictures.length > i ? pictures[i] : undefined}
+            size={'small'}
+            navigateToPicture={navigateToPicture}
+            allowClicks={allowClicks}
+            loading={loading}
+          />
+        ))}
       </div>
     </div>
   ) : (
     <div className={`flex flex-col gap-[10px]`}>
       <div className={`flex ${inverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
-        {(inverse ? [1, 2] : [0, 1]).map(i => {
-          return pictures.length > i ? (
-            <SinglePicture
-              key={pictures[i].id}
-              picture={pictures[i]}
-              size={'small'}
-              navigateToPicture={navigateToPicture}
-              allowClicks={allowClicks}
-            />
-          ) : null;
-        })}
+        {(inverse ? [1, 2] : [0, 1]).map(i => (
+          <SinglePicture
+            key={i}
+            picture={pictures.length > i ? pictures[i] : undefined}
+            size={'small'}
+            navigateToPicture={navigateToPicture}
+            allowClicks={allowClicks}
+            loading={loading}
+          />
+        ))}
       </div>
-      {pictures.length > (inverse ? 0 : 2) ? (
-        <SinglePicture
-          key={pictures[inverse ? 0 : 2].id}
-          picture={pictures[inverse ? 0 : 2]}
-          size={'big'}
-          navigateToPicture={navigateToPicture}
-          allowClicks={allowClicks}
-        />
-      ) : null}
+      <SinglePicture
+        key={inverse ? 0 : 2}
+        picture={pictures.length > (inverse ? 0 : 2) ? pictures[inverse ? 0 : 2] : undefined}
+        size={'big'}
+        navigateToPicture={navigateToPicture}
+        allowClicks={allowClicks}
+        loading={loading}
+      />
     </div>
   );
 };
@@ -122,6 +128,7 @@ const HorizontalPictureGrid = ({
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
   const [filterDate, setFilterDate] = useState<number>(date);
+  const [allowFetchMoreLeft, setAllowFetchMoreLeft] = useState<boolean>(true);
 
   const rightResult = useGetPictures(
     {
@@ -239,13 +246,14 @@ const HorizontalPictureGrid = ({
         {leftPictures?.map((_, index) => {
           if (!(index % 3)) {
             return (
-              <PictureWidget
+              <PicturesWidget
                 key={index}
                 variant={index % 6 ? 'var-2' : 'var-1'}
                 pictures={leftPictures.slice(index, index + 3)}
                 allowClicks={allowClicks}
                 inverse={true}
                 navigateToPicture={navigateToPicture}
+                loading={leftResult.loading}
               />
             );
           } else {
@@ -254,7 +262,7 @@ const HorizontalPictureGrid = ({
         })}
       </div>
     );
-  }, [allowClicks, leftPictures, navigateToPicture]);
+  }, [allowClicks, leftPictures, leftResult.loading, navigateToPicture]);
 
   const contentRight = useMemo(() => {
     return (
@@ -262,12 +270,13 @@ const HorizontalPictureGrid = ({
         {rightPictures?.map((_, index) => {
           if (!(index % 3)) {
             return (
-              <PictureWidget
+              <PicturesWidget
                 key={index}
                 variant={index % 6 ? 'var-1' : 'var-2'}
                 pictures={rightPictures.slice(index, index + 3)}
                 allowClicks={allowClicks}
                 navigateToPicture={navigateToPicture}
+                loading={rightResult.loading}
               />
             );
           } else {
@@ -276,7 +285,7 @@ const HorizontalPictureGrid = ({
         })}
       </div>
     );
-  }, [allowClicks, navigateToPicture, rightPictures]);
+  }, [allowClicks, navigateToPicture, rightPictures, rightResult.loading]);
 
   const content = useMemo(() => {
     return (
@@ -293,10 +302,12 @@ const HorizontalPictureGrid = ({
     }
     if ((leftPictures?.length ?? 0) <= 3) {
       scrollBarRef.scrollLeft = 270;
+      setAllowFetchMoreLeft(true);
     } else {
       const oldLength = Math.ceil(pictureLength.current / 3);
       const newLength = Math.ceil((leftPictures?.length ?? 0) / 3);
       scrollBarRef.scrollLeft += (newLength - oldLength) * 270;
+      setAllowFetchMoreLeft(true);
     }
     pictureLength.current = leftPictures?.length ?? 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -328,7 +339,7 @@ const HorizontalPictureGrid = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pictures]);
 
-  const updateOnScrollX = useMemo(() => throttle(updateCurrentValue, 500), [updateCurrentValue]);
+  const updateOnScrollX = useMemo(() => throttle(updateCurrentValue, 0), [updateCurrentValue]);
 
   return (
     <>
@@ -339,8 +350,9 @@ const HorizontalPictureGrid = ({
           }}
           onScrollX={updateOnScrollX}
           onXReachStart={ref => {
-            if (!leftResult.loading) {
+            if (!leftResult.loading && allowFetchMoreLeft) {
               fetchMoreOnScrollLeft(99);
+              setAllowFetchMoreLeft(false);
             }
           }}
           onXReachEnd={ref => {
