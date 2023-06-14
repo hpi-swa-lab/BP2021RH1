@@ -76,9 +76,8 @@ const BrowseView = ({
     useSimplifiedQueryResponseData(data)?.collections;
 
   //Curator functionality
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } = useBulkOperations(
-    collections?.[0]
-  );
+  const { linkToCollection, moveToCollection, removeFromCollection, createSequence, bulkEdit } =
+    useBulkOperations(collections?.[0]);
 
   const addCollection = useCallback(async () => {
     const collectionName = await dialog({
@@ -144,7 +143,13 @@ const BrowseView = ({
               queryParams={getPictureFilters(collection.id)}
               hashbase={collection.name}
               uploadAreaProps={uploadAreaProps(collection)}
-              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+              bulkOperations={[
+                removeFromCollection,
+                linkToCollection,
+                moveToCollection,
+                createSequence,
+                bulkEdit,
+              ]}
             />
           </ShowStats>
         </div>

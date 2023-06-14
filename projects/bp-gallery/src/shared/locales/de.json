@@ -216,6 +216,11 @@
     "addToCollection": "In eine Collection kopieren",
     "moveToCollection": "In eine Collection verschieben",
     "removeFromCollection": "Aus dieser Collection entfernen",
+    "createSequence": "Neue Serie erstellen",
+    "alreadyInSequence": {
+      "title": "Manche Bilder sind bereits Teil von Serien",
+      "content": "Wenn Sie fortfahren, werden sie aus den bestehenden Serien entfernt und zu der neuen Serie hinzugefügt."
+    },
     "bulkEdit": "Mehrere Bilder editieren",
     "moveFromAll": "Aus allen Collections hierher verschieben?",
     "moveFromHere": "Die ausgewählte Collection befindet sich noch in den folgenden anderen Collections: [{{parents}}].\nBeim Verschieben würde diese Collection aus all diesen anderen Collections hierher verschoben werden.",

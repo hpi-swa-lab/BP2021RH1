@@ -3148,6 +3148,14 @@ export type CreatePictureGeoInfoMutation = {
   createPictureGeoInfo?: { data?: { id?: string | null } | null } | null;
 };
 
+export type CreatePictureSequenceMutationVariables = Exact<{
+  pictures: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+export type CreatePictureSequenceMutation = {
+  createPictureSequence?: { data?: { id?: string | null } | null } | null;
+};
+
 export type CreateSubCollectionMutationVariables = Exact<{
   name: Scalars['String'];
   parentId: Scalars['ID'];
@@ -6590,6 +6598,63 @@ export type CreatePictureGeoInfoMutationResult =
 export type CreatePictureGeoInfoMutationOptions = Apollo.BaseMutationOptions<
   CreatePictureGeoInfoMutation,
   CreatePictureGeoInfoMutationVariables
+>;
+
+export const CreatePictureSequenceDocument = gql`
+  mutation createPictureSequence($pictures: [ID!]!) {
+    createPictureSequence(data: { pictures: $pictures }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePictureSequenceMutationFn = Apollo.MutationFunction<
+  CreatePictureSequenceMutation,
+  CreatePictureSequenceMutationVariables
+>;
+
+/**
+ * __useCreatePictureSequenceMutation__
+ *
+ * To run a mutation, you first call `useCreatePictureSequenceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePictureSequenceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPictureSequenceMutation, { data, loading, error }] = useCreatePictureSequenceMutation({
+ *   variables: {
+ *      pictures: // value for 'pictures'
+ *   },
+ * });
+ */
+export function useCreatePictureSequenceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePictureSequenceMutation,
+    CreatePictureSequenceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePictureSequenceMutation, CreatePictureSequenceMutationVariables>(
+    CreatePictureSequenceDocument,
+    options
+  );
+}
+
+export type CreatePictureSequenceMutationHookResult = ReturnType<
+  typeof useCreatePictureSequenceMutation
+>;
+
+export type CreatePictureSequenceMutationResult =
+  Apollo.MutationResult<CreatePictureSequenceMutation>;
+
+export type CreatePictureSequenceMutationOptions = Apollo.BaseMutationOptions<
+  CreatePictureSequenceMutation,
+  CreatePictureSequenceMutationVariables
 >;
 
 export const CreateSubCollectionDocument = gql`

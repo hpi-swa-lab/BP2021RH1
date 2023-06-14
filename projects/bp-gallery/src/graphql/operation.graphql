@@ -38,6 +38,7 @@ mutation createLocationTag($name: String!) { createLocationTag(data: { name: $na
 mutation createPersonTag($name: String!) { createPersonTag(data: { name: $name }) { data { id } } }
 mutation createPicture($data: PictureInput!) { createPicture(data: $data) { data { id } } }
 mutation createPictureGeoInfo($data: PictureGeoInfoInput!) { createPictureGeoInfo(data: $data) { data { id } } }
+mutation createPictureSequence($pictures: [ID!]!) { createPictureSequence(data: { pictures: $pictures }) { data { id } } }
 mutation createSubCollection($name: String! $parentId: ID! $publishedAt: DateTime!) { createCollection( data: { name: $name parent_collections: [$parentId] publishedAt: $publishedAt } ) { data { id } } }
 mutation declineComment($commentId: ID!) { deleteComment(id: $commentId) { data { id } } }
 mutation deleteCollection($collectionId: ID!) { deleteCollection(id: $collectionId) { data { id } } }

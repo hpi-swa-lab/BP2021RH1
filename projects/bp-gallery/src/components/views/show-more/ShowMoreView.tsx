@@ -20,7 +20,7 @@ const ShowMoreView = ({
   categoryType: string;
   categoryId?: string;
 }) => {
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } =
+  const { linkToCollection, moveToCollection, removeFromCollection, createSequence, bulkEdit } =
     useBulkOperations();
 
   const showcaseAdornment = useGetShowcaseAdornments(archiveId);
@@ -88,7 +88,13 @@ const ShowMoreView = ({
             }
             hashbase={'show-more'}
             extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
-            bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+            bulkOperations={[
+              removeFromCollection,
+              linkToCollection,
+              moveToCollection,
+              createSequence,
+              bulkEdit,
+            ]}
             maxNumPictures={
               categoryType === 'latest' || categoryType === 'most-liked' ? 500 : undefined
             }

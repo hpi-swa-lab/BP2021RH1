@@ -1,10 +1,11 @@
+import { Add, Close, DriveFileMove, Edit, Filter } from '@mui/icons-material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
-import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
-import useManageCollectionPictures from './manage-collection-pictures.hook';
-import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
+import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
+import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
+import useManageCollectionPictures from './manage-collection-pictures.hook';
+import { useCreateSequence } from './sequences.hook';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -18,6 +19,8 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       preset: DialogPreset.SELECT_COLLECTION,
     });
   }, [dialog]);
+
+  const createSequence = useCreateSequence();
 
   return {
     linkToCollection: {
@@ -67,6 +70,13 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
             );
           }
         });
+      },
+    },
+    createSequence: {
+      name: t('curator.createSequence'),
+      icon: <Filter />,
+      action: (selectedPictures: FlatPicture[]) => {
+        createSequence(selectedPictures);
       },
     },
     bulkEdit: {
