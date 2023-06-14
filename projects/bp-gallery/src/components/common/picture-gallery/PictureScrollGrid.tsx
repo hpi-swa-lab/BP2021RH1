@@ -31,6 +31,7 @@ const PictureScrollGrid = ({
   showDefaultAdornments = true,
   allowClicks = true,
   filterOutTextsForNonCurators = true,
+  collapseSequences = true,
   fetchPolicy,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
@@ -46,6 +47,7 @@ const PictureScrollGrid = ({
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
   filterOutTextsForNonCurators?: boolean;
+  collapseSequences?: boolean;
   fetchPolicy?: WatchQueryFetchPolicy;
 }) => {
   const { t } = useTranslation();
@@ -62,7 +64,7 @@ const PictureScrollGrid = ({
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
-  const collapsedPictures = useCollapseSequences(pictures);
+  const collapsedPictures = useCollapseSequences(pictures, collapseSequences);
 
   const { scrollPos, scrollHeight } = useScroll();
 

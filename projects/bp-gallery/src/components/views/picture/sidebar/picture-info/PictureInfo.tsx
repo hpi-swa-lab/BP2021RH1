@@ -22,6 +22,7 @@ import DescriptionsEditField from './DescriptionsEditField';
 import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
+import PictureSequenceInfoField from './PictureSequenceInfoField';
 import TagSelectionField from './TagSelectionField';
 
 export type Field = Pick<
@@ -131,7 +132,7 @@ const PictureInfo = ({
         onChange={people => {
           savePictureInfo({ person_tags: people });
           /*unfortunately I did not find a way to get the id of a person tag that is being deleted, so i had to go
-           through all facetags and all persontags, every time something about the persontag collection is changed, 
+           through all facetags and all persontags, every time something about the persontag collection is changed,
            to find out wether a facetag needs to be deleted */
           {
             faceTaggingContext?.tags.forEach(ftag => {
@@ -175,6 +176,7 @@ const PictureInfo = ({
         hasHiddenLinks={hasHiddenLinks}
         savePictureInfo={savePictureInfo}
       />
+      <PictureSequenceInfoField picture={picture} />
       {role >= AuthRole.CURATOR && (
         <PictureInfoField
           title={t('pictureFields.collections')}

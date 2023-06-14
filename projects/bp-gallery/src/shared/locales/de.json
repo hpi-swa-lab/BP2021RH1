@@ -182,6 +182,9 @@
         "really-prompt": "Wollen Sie wirklich alle Links entfernen?"
       }
     },
+    "sequence": {
+      "label": "Serie"
+    },
     "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",
     "noLocations": "Keine Orte bekannt",
