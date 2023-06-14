@@ -28,12 +28,6 @@ export type Scalars = {
 };
 
 export type ArchivePictureCount = {
-  attributes?: Maybe<ArchivePictureCountAttributes>;
-  count?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type ArchivePictureCountAttributes = {
   count?: Maybe<Scalars['Int']>;
 };
 
@@ -44,10 +38,6 @@ export type ArchivePictureCountEntity = {
 
 export type ArchivePictureCountEntityResponseCollection = {
   data?: Maybe<Array<Maybe<ArchivePictureCountEntity>>>;
-};
-
-export type ArchivePictureCountResponseCollection = {
-  data?: Maybe<Array<Maybe<ArchivePictureCount>>>;
 };
 
 export type ArchiveTag = {
@@ -518,6 +508,7 @@ export type GenericMorph =
   | PersonTag
   | Picture
   | PictureGeoInfo
+  | PictureSequence
   | TimeRangeTag
   | UploadFile
   | UploadFolder
@@ -798,6 +789,7 @@ export type Mutation = {
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
   createPictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  createPictureSequence?: Maybe<PictureSequenceEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   createUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -817,6 +809,7 @@ export type Mutation = {
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
   deletePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  deletePictureSequence?: Maybe<PictureSequenceEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -855,6 +848,7 @@ export type Mutation = {
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updatePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  updatePictureSequence?: Maybe<PictureSequenceEntityResponse>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -914,6 +908,10 @@ export type MutationCreatePictureArgs = {
 
 export type MutationCreatePictureGeoInfoArgs = {
   data: PictureGeoInfoInput;
+};
+
+export type MutationCreatePictureSequenceArgs = {
+  data: PictureSequenceInput;
 };
 
 export type MutationCreateTimeRangeTagArgs = {
@@ -977,6 +975,10 @@ export type MutationDeletePictureArgs = {
 };
 
 export type MutationDeletePictureGeoInfoArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeletePictureSequenceArgs = {
   id: Scalars['ID'];
 };
 
@@ -1131,6 +1133,11 @@ export type MutationUpdatePictureGeoInfoArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationUpdatePictureSequenceArgs = {
+  data: PictureSequenceInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdatePictureWithTagCleanupArgs = {
   data?: InputMaybe<Scalars['JSON']>;
   id?: InputMaybe<Scalars['ID']>;
@@ -1268,6 +1275,8 @@ export type Picture = {
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
   picture_geo_infos?: Maybe<PictureGeoInfoRelationResponseCollection>;
+  picture_sequence?: Maybe<PictureSequenceEntityResponse>;
+  picture_sequence_order?: Maybe<Scalars['Int']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1396,6 +1405,8 @@ export type PictureFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   person_tags?: InputMaybe<PersonTagFiltersInput>;
   picture_geo_infos?: InputMaybe<PictureGeoInfoFiltersInput>;
+  picture_sequence?: InputMaybe<PictureSequenceFiltersInput>;
+  picture_sequence_order?: InputMaybe<IntFilterInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -1470,6 +1481,8 @@ export type PictureInput = {
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   picture_geo_infos?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  picture_sequence?: InputMaybe<Scalars['ID']>;
+  picture_sequence_order?: InputMaybe<Scalars['Int']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1481,6 +1494,50 @@ export type PictureInput = {
 
 export type PictureRelationResponseCollection = {
   data: Array<PictureEntity>;
+};
+
+export type PictureSequence = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PictureSequencePicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureSequenceEntity = {
+  attributes?: Maybe<PictureSequence>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PictureSequenceEntityResponse = {
+  data?: Maybe<PictureSequenceEntity>;
+};
+
+export type PictureSequenceEntityResponseCollection = {
+  data: Array<PictureSequenceEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type PictureSequenceFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<PictureSequenceFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type PictureSequenceInput = {
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export enum PublicationState {
@@ -1502,7 +1559,6 @@ export type Query = {
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
-  getArchivePictureCounts?: Maybe<ArchivePictureCountResponseCollection>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -1515,6 +1571,8 @@ export type Query = {
   picture?: Maybe<PictureEntityResponse>;
   pictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   pictureGeoInfos?: Maybe<PictureGeoInfoEntityResponseCollection>;
+  pictureSequence?: Maybe<PictureSequenceEntityResponse>;
+  pictureSequences?: Maybe<PictureSequenceEntityResponseCollection>;
   pictures?: Maybe<PictureEntityResponseCollection>;
   timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
@@ -1643,6 +1701,17 @@ export type QueryPictureGeoInfoArgs = {
 export type QueryPictureGeoInfosArgs = {
   filters?: InputMaybe<PictureGeoInfoFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryPictureSequenceArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPictureSequencesArgs = {
+  filters?: InputMaybe<PictureSequenceFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
