@@ -225,7 +225,7 @@ const PictureGrid = ({
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`} ref={ref}>
-      <div className='sticky top-[-1.5rem] z-10 bg-[#ffffffaa] p-2'>
+      <div className='sticky top-[-1rem] z-10 bg-[#ffffffaa] p-2'>
         {Boolean(selectedPictures.length) && bulkOperations && (
           <BulkOperationsPanel
             operations={bulkOperations}
