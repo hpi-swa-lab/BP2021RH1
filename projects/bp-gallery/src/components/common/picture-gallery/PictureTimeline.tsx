@@ -54,7 +54,7 @@ const PictureTimeline = ({
   }, [scrollTo, setDate, singleElementWidth, start]);
 
   const listItems = [];
-  for (let year = start; year < end; year++) {
+  for (let year = start; year <= end; year++) {
     listItems.push(
       <li
         key={year}
@@ -70,7 +70,13 @@ const PictureTimeline = ({
       >
         <div className='relative inline w-full'>
           <hr className='absolute left-0 top-0 h-[16px]' />
-          <span className='absolute -left-[18px] -top-4 select-none'>{year}</span>
+          <span
+            className={`absolute -left-[18px] -top-4 select-none ${
+              date === year || date === year - 1 ? 'text-black' : 'text-slate-500'
+            }`}
+          >
+            {year}
+          </span>
         </div>
       </li>
     );
