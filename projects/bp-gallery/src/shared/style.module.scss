@@ -15,23 +15,25 @@ $collectionColor: #a053a7;
 $archiveColor: #446ab7;
 $titleColor: #5f5e5e;
 $allSearchColor: #84b0c4;
+$likeColor: rgb(96 165 250); // blue-400 from tailwind
 
 :export {
-    primaryColor: $primaryColor;
-    secondaryColor: $secondaryColor;
-    backgroundColor: $backgroundColor;
-    textColor: $textColor;
-    decadeColor: $decadeColor;
-    descriptionColor: $descriptionColor;
-    personColor: $personColor;
-    locationColor: $locationColor;
-    keywordColor: $keywordColor;
-    markAsTextColor: $markAsTextColor;
-    linkColor: $linkColor;
-    collectionColor: $collectionColor;
-    archiveColor: $archiveColor;
-    titleColor: $titleColor;
-    allSearchColor: $allSearchColor;
+  primaryColor: $primaryColor;
+  secondaryColor: $secondaryColor;
+  backgroundColor: $backgroundColor;
+  textColor: $textColor;
+  decadeColor: $decadeColor;
+  descriptionColor: $descriptionColor;
+  personColor: $personColor;
+  locationColor: $locationColor;
+  keywordColor: $keywordColor;
+  markAsTextColor: $markAsTextColor;
+  linkColor: $linkColor;
+  collectionColor: $collectionColor;
+  archiveColor: $archiveColor;
+  titleColor: $titleColor;
+  allSearchColor: $allSearchColor;
+  likeColor: $likeColor;
 }
 
 $mobile-breakpoint: 750px;

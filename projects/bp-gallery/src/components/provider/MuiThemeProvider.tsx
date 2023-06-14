@@ -17,7 +17,8 @@ type ColorsType = Record<
   | 'collectionColor'
   | 'archiveColor'
   | 'titleColor'
-  | 'allSearchColor',
+  | 'allSearchColor'
+  | 'likeColor',
   string
 >;
 
