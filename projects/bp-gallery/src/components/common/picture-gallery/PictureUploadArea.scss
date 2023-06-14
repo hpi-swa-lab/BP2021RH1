@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .add-pictures {
   display: flex;
@@ -40,9 +40,11 @@
     padding-bottom: 40px;
     justify-content: center;
     cursor: pointer;
+
     &:hover {
       background: rgba(255, 255, 255, 0.1);
     }
+
     p {
       display: flex;
       align-items: center;
@@ -74,11 +76,13 @@
     }
   }
 }
+
 .uploaded-pictures {
   display: flex;
   flex-direction: row;
   gap: 10px;
   margin: 1rem 0;
+
   .preview-container {
     flex: 1 1 0 !important;
     max-width: 160px;
