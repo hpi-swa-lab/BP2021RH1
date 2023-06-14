@@ -3,9 +3,9 @@
  */
 
 import { GrowthBook, setPolyfills } from "@growthbook/growthbook";
-import { Strapi } from "@strapi/strapi";
+import { StrapiExtended } from "../types";
 
-export default (_, { strapi }: { strapi: Strapi }) => {
+export default (_: any, { strapi }: { strapi: StrapiExtended }) => {
   setPolyfills({
     // Required for Node 17 or earlier
     fetch: require("cross-fetch"),
@@ -13,7 +13,7 @@ export default (_, { strapi }: { strapi: Strapi }) => {
     EventSource: require("eventsource"),
   });
 
-  let currentCtx = null;
+  let currentCtx: any = null;
 
   // Create a GrowthBook Context
   const growthbook = new GrowthBook({
@@ -33,8 +33,17 @@ export default (_, { strapi }: { strapi: Strapi }) => {
       response.append("Access-Control-Expose-Headers", "x-growthbook");
     },
   });
-  return async (ctx, next) => {
-    ctx.state.withGrowthBook = (theCtx, f) => {
+  return async (
+    ctx: {
+      state: { withGrowthBook: (theCtx: any, f: any) => void };
+      req: { headers: { anonymousid: any } };
+    },
+    next: () => any
+  ) => {
+    ctx.state.withGrowthBook = (
+      theCtx: any,
+      f: (arg0: GrowthBook<Record<string, any>>) => void
+    ) => {
       currentCtx = theCtx;
       f(growthbook);
     };
