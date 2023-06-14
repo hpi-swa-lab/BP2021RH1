@@ -12,9 +12,9 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import BulkEditView from '../../views/bulk-edit/BulkEditView';
 import PictureView from '../../views/picture/PictureView';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
-import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 import './PictureGrid.scss';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
+import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -225,23 +225,25 @@ const PictureGrid = ({
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`} ref={ref}>
-      {Boolean(selectedPictures.length) && bulkOperations && (
-        <BulkOperationsPanel
-          operations={bulkOperations}
-          selectedPictures={selectedPictures}
-          onBulkEdit={navigateToBulkEdit}
-        />
-      )}
-      {defaultAdornments && (
-        <div className='selection-buttons'>
-          <Button onClick={selectAll} startIcon={<DoneAll />} variant='contained'>
-            {t('curator.selectAll')}
-          </Button>
-          <Button onClick={selectNone} startIcon={<RemoveDone />} variant='contained'>
-            {t('curator.selectNone')}
-          </Button>
-        </div>
-      )}
+      <div className='sticky top-[-1.5rem] z-10 bg-[#ffffffaa] p-2'>
+        {Boolean(selectedPictures.length) && bulkOperations && (
+          <BulkOperationsPanel
+            operations={bulkOperations}
+            selectedPictures={selectedPictures}
+            onBulkEdit={navigateToBulkEdit}
+          />
+        )}
+        {defaultAdornments && (
+          <div className='selection-buttons'>
+            <Button onClick={selectAll} startIcon={<DoneAll />} variant='contained'>
+              {t('curator.selectAll')}
+            </Button>
+            <Button onClick={selectNone} startIcon={<RemoveDone />} variant='contained'>
+              {t('curator.selectNone')}
+            </Button>
+          </div>
+        )}
+      </div>
       <div className='picture-grid'>
         {table.map((row, rowindex) => {
           return (
