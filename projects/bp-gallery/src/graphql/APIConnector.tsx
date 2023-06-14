@@ -2628,6 +2628,12 @@ export type GetMostLikedPicturesQuery = {
             } | null;
           } | null;
         };
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
       } | null;
     }>;
   } | null;
@@ -2885,6 +2891,12 @@ export type GetPictureInfoQuery = {
         };
         linked_pictures?: { data: Array<{ id?: string | null }> } | null;
         linked_texts?: { data: Array<{ id?: string | null }> } | null;
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
         archive_tag?: {
           data?: { id?: string | null; attributes?: { name: string } | null } | null;
         } | null;
@@ -2947,6 +2959,12 @@ export type GetPicturesQuery = {
             } | null;
           } | null;
         };
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
       } | null;
     }>;
   } | null;
@@ -4780,6 +4798,18 @@ export const GetMostLikedPicturesDocument = gql`
               }
             }
           }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -5415,6 +5445,18 @@ export const GetPictureInfoDocument = gql`
               id
             }
           }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
           archive_tag {
             data {
               id
@@ -5577,6 +5619,18 @@ export const GetPicturesDocument = gql`
                 url
                 updatedAt
                 provider
+              }
+            }
+          }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
               }
             }
           }

@@ -1,3 +1,4 @@
+import { WatchQueryFetchPolicy } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
@@ -6,6 +7,7 @@ import { useScroll } from '../../../hooks/context-hooks';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
 } from '../../../hooks/get-pictures.hook';
+import { useCollapseSequences } from '../../../hooks/sequences.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../Loading';
 import QueryErrorDisplay from '../QueryErrorDisplay';
@@ -14,7 +16,6 @@ import PictureGrid from './PictureGrid';
 import { PicturePreviewAdornment } from './PicturePreview';
 import './PictureScrollGrid.scss';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
-import { WatchQueryFetchPolicy } from '@apollo/client';
 
 const PictureScrollGrid = ({
   queryParams,
@@ -61,6 +62,7 @@ const PictureScrollGrid = ({
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+  const collapsedPictures = useCollapseSequences(pictures);
 
   const { scrollPos, scrollHeight } = useScroll();
 
@@ -113,7 +115,7 @@ const PictureScrollGrid = ({
     return <QueryErrorDisplay error={error} />;
   } else if (loading && !pictures) {
     return <Loading />;
-  } else if (pictures) {
+  } else if (pictures && collapsedPictures) {
     const possiblyMorePictures: boolean =
       pictures.length > 0 && pictures.length % NUMBER_OF_PICTURES_LOADED_PER_FETCH === 0;
 
@@ -137,7 +139,7 @@ const PictureScrollGrid = ({
         )}
         <PictureGrid
           refetch={refetch}
-          pictures={pictures}
+          pictures={collapsedPictures}
           hashBase={hashbase}
           loading={isFetching}
           bulkOperations={bulkOperations}

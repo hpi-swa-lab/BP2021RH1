@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useStats } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import useLike from '../../views/picture/sidebar/like-hooks';
+import { SequenceCount } from './SequenceCount';
 
 type PictureStatsProps = {
   picture: FlatPicture;
@@ -14,6 +15,7 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
   const { t } = useTranslation();
   const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
   const commentsCount = picture.comments?.length ?? 0;
+  const picturesInSequenceCount = picture.picture_sequence?.pictures?.length ?? 0;
 
   return showStats ? (
     <div
@@ -34,19 +36,25 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
             like(isLiked);
           }}
         >
-          {isLiked ? (
-            <ThumbUpAlt
-              fontSize='inherit'
-              className='text-blue-400 cursor-pointer !transition-transform !duration-100 hover:scale-110 scale-105'
-            />
+          {picturesInSequenceCount > 1 ? (
+            <SequenceCount count={picturesInSequenceCount} />
           ) : (
-            <ThumbUpAltOutlined
-              fontSize='inherit'
-              className='cursor-pointer !transition-transform !duration-100 hover:scale-110'
-            />
+            <>
+              {isLiked ? (
+                <ThumbUpAlt
+                  fontSize='inherit'
+                  className='text-blue-400 cursor-pointer !transition-transform !duration-100 hover:scale-110 scale-105'
+                />
+              ) : (
+                <ThumbUpAltOutlined
+                  fontSize='inherit'
+                  className='cursor-pointer !transition-transform !duration-100 hover:scale-110'
+                />
+              )}
+              &nbsp;
+              {likeCount}
+            </>
           )}
-          &nbsp;
-          {likeCount}
         </div>
 
         {commentsCount > 0 && (

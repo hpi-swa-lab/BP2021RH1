@@ -1,12 +1,13 @@
-import React, { MouseEventHandler } from 'react';
-import './PictureOverview.scss';
-import PictureGrid from './picture-gallery/PictureGrid';
-import { PictureFiltersInput } from '../../graphql/APIConnector';
-import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
+import { MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
-import PrimaryButton from './PrimaryButton';
+import { PictureFiltersInput } from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGetPictures from '../../hooks/get-pictures.hook';
+import { useCollapseSequences } from '../../hooks/sequences.hook';
+import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
+import './PictureOverview.scss';
+import PrimaryButton from './PrimaryButton';
+import PictureGrid from './picture-gallery/PictureGrid';
 
 interface PictureOverviewProps {
   title?: string;
@@ -40,14 +41,15 @@ const PictureOverview = ({
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+  const collapsedPictures = useCollapseSequences(pictures);
 
   return (
     <div className='overview-container'>
       {title && <h2 className='overview-title'>{title}</h2>}
-      {pictures && (
+      {collapsedPictures && (
         <div className='overview-picture-grid-container'>
           <PictureGrid
-            pictures={pictures}
+            pictures={collapsedPictures}
             hashBase={'overview'}
             loading={loading}
             refetch={refetch}

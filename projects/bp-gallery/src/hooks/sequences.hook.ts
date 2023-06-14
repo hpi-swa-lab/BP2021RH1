@@ -1,4 +1,5 @@
-import { useCallback } from 'react';
+import { unionWith } from 'lodash';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
 import {
@@ -54,3 +55,16 @@ export const useCreateSequence = () => {
 
   return createSequence;
 };
+
+export const collapseSequences = (pictures: FlatPicture[] | undefined) => {
+  if (!pictures) {
+    return undefined;
+  }
+  return unionWith(
+    pictures,
+    (a, b) => !!a.picture_sequence && a.picture_sequence.id === b.picture_sequence?.id
+  );
+};
+
+export const useCollapseSequences = (pictures: FlatPicture[] | undefined, enable = true) =>
+  useMemo(() => (enable ? collapseSequences(pictures) : pictures), [pictures, enable]);

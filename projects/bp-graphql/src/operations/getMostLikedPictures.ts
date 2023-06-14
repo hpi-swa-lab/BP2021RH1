@@ -31,6 +31,18 @@ export default {
                 }
               }
             }
+            picture_sequence {
+              data {
+                id
+                attributes {
+                  pictures(sort: "picture_sequence_order:asc") {
+                    data {
+                      id
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
