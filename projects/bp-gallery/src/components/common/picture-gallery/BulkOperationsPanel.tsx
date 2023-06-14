@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './BulkOperationsPanel.scss';
 
@@ -18,19 +18,18 @@ const BulkOperationsPanel = ({
   onBulkEdit: () => void;
 }) => {
   return (
-    <div className='bulk-operations'>
+    <>
       {operations.map((operation, index) => (
-        <Button
+        <IconButton
           key={index}
           onClick={() => operation.action(selectedPictures, onBulkEdit)}
-          className='operation'
-          startIcon={operation.icon}
-          variant='contained'
+          color='primary'
+          title={operation.name}
         >
-          {operation.name}
-        </Button>
+          {operation.icon}
+        </IconButton>
       ))}
-    </div>
+    </>
   );
 };
 
