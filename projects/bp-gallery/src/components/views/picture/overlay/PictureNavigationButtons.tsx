@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { PictureViewContext } from '../PictureView';
+import { useNoDistractionModeStyle } from '../helpers/no-distraction-mode-style';
 
 export enum PictureNavigationTarget {
   NEXT,
@@ -25,8 +26,10 @@ const PictureNavigationButtons = () => {
     };
   }, [hasNext, hasPrevious, navigatePicture]);
 
+  const noDistractionModeStyle = useNoDistractionModeStyle();
+
   return (
-    <div className='picture-navigation-buttons'>
+    <div className={`picture-navigation-buttons ${noDistractionModeStyle}`}>
       <IconButton
         style={{ visibility: hasPrevious ? 'visible' : 'hidden' }}
         onClick={

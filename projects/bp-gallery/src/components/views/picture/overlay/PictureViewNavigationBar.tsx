@@ -3,18 +3,21 @@ import { Button } from '@mui/material';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureViewContext } from '../PictureView';
+import { useNoDistractionModeStyle } from '../helpers/no-distraction-mode-style';
 
 const PictureViewNavigationBar = () => {
   const { t } = useTranslation();
 
   const { setSideBarOpen, sideBarOpen } = useContext(PictureViewContext);
 
+  const noDistractionModeStyle = useNoDistractionModeStyle();
+
   if (!setSideBarOpen) {
     return <div></div>;
   }
 
   return (
-    <div className='quick-access-buttons'>
+    <div className={`quick-access-buttons ${noDistractionModeStyle}`}>
       <Button
         className={sideBarOpen ? 'selected' : ''}
         onClick={() => setSideBarOpen(!sideBarOpen)}
