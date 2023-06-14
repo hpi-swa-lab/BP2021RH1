@@ -65,7 +65,6 @@
     "latest-pictures-info": "In diese Kollektion fließen die jüngsten 500 „Neuzugänge“ der Fotoarchive ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
     "create": "{{value}} hinzufügen",
     "presentationMode": "Präsentationsmodus",
-    "or": "oder",
     "confirm": "Bestätigen",
     "abort": "Abbrechen",
     "0s": "0er",
@@ -199,7 +198,6 @@
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
-    "scan": "Direkt vom Scanner einlesen",
     "addPictures": "Bilder hinzufügen",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
     "reallyDeletePicture": "Bild wirklich löschen?",
@@ -209,7 +207,6 @@
     "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch einen Unterkommentar, der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
     "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count, number}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
     "reallyDeleteCollection": "Collection wirklich löschen?",
-    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
     "synonyms": "Synonyme",
     "add": "Hinzufügen",
@@ -259,7 +256,6 @@
     "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
     "renameCollection": "Collection umbenennen",
     "nameOfNewCollection": "Name der neuen Collection:",
-    "autoCrop": "Automatisch Zuschneiden",
     "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
   },
   "pictureAdornments": {

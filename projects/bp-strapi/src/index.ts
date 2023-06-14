@@ -1,6 +1,5 @@
 "use strict";
 
-import { Strapi } from "@strapi/strapi";
 import { archivePictureCountsType } from "./api/archive-tag/content-types/archive-tag/custom-type";
 import {
   mergeSourceCollectionIntoTargetCollection,
@@ -15,7 +14,7 @@ import {
   updatePictureWithTagCleanup,
 } from "./api/picture/services/custom-resolver";
 import { incNotAPlaceCount } from "./api/picture/services/custom-update";
-import { GqlExtension } from "./types";
+import { GqlExtension, StrapiExtended } from "./types";
 
 export default {
   /**
@@ -24,7 +23,7 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register({ strapi }: { strapi: Strapi }) {
+  register({ strapi }: { strapi: StrapiExtended }) {
     const gqlExtensionService = strapi.plugin("graphql").service("extension");
     const gqlExtension = (extensionArgs: GqlExtension) => {
       const { list, mutationField, queryField, objectType } =
@@ -221,7 +220,7 @@ export default {
           Collection: {
             thumbnail: {
               middlewares: [
-                async (_, parent) => {
+                async (_: any, parent: any) => {
                   // The parent here is the actual collection, of which the thumbnail was requested.
                   // More on the arguments of a resolver can be found for example on:
                   // https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-arguments
