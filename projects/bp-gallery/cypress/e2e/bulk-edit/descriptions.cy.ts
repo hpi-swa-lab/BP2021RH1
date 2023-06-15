@@ -1,5 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures, visitArchive1Pictures } from './helper';
+import { bulkEdit, selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit descriptions', () => {
   before(() => {
@@ -18,7 +18,7 @@ describe('bulk edit descriptions', () => {
     cy.contains('Yet another description');
     visitArchive1Pictures();
     selectPictures('4', '5');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Yet another description');
   });
 
@@ -30,7 +30,7 @@ describe('bulk edit descriptions', () => {
     cy.contains('Keine Beschreibung vorhanden');
     visitArchive1Pictures();
     selectPictures('2', '3');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Keine Zeit bekannt').should('not.exist');
     cy.contains('Keine Beschreibung vorhanden');
   });
@@ -44,7 +44,7 @@ describe('bulk edit descriptions', () => {
     cy.contains('This is a description!').should('not.exist');
     visitArchive1Pictures();
     selectPictures('1', '2');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Yet another description');
     cy.contains('This is a description!').should('not.exist');
   });
@@ -60,7 +60,7 @@ describe('bulk edit descriptions', () => {
     cy.contains('Irgendwas cooles').should('not.exist');
     visitArchive1Pictures();
     selectPictures('1', '2');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.picture-info-field', 'Beschreibungen')
       .find('.MuiIconButton-root [data-testid="AddIcon"]')
       .click();
@@ -82,7 +82,7 @@ describe('bulk edit descriptions', () => {
 
     visitArchive1Pictures();
     selectPictures('1', '2');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.description-wrapper', 'Irgendwas cooles')
       .find('.MuiIconButton-root [data-testid="DeleteIcon"]')
       .click();
