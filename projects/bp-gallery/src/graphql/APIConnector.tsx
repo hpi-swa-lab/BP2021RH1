@@ -39,6 +39,7 @@ export type ArchivePictureCountEntityResponseCollection = {
 
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
+  email?: Maybe<Scalars['String']>;
   exhibitions?: Maybe<ExhibitionRelationResponseCollection>;
   links?: Maybe<LinkRelationResponseCollection>;
   logo?: Maybe<UploadFileEntityResponse>;
@@ -90,6 +91,7 @@ export type ArchiveTagEntityResponseCollection = {
 export type ArchiveTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  email?: InputMaybe<StringFilterInput>;
   exhibitions?: InputMaybe<ExhibitionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   links?: InputMaybe<LinkFiltersInput>;
@@ -107,6 +109,7 @@ export type ArchiveTagFiltersInput = {
 };
 
 export type ArchiveTagInput = {
+  email?: InputMaybe<Scalars['String']>;
   exhibitions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   logo?: InputMaybe<Scalars['ID']>;
