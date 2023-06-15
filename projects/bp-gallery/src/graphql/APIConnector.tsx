@@ -705,14 +705,30 @@ export type LinkRelationResponseCollection = {
 };
 
 export type LocationTag = {
+  accepted?: Maybe<Scalars['Boolean']>;
+  child_tags?: Maybe<LocationTagRelationResponseCollection>;
   coordinates?: Maybe<ComponentLocationCoordinates>;
   createdAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
+  parent_tags?: Maybe<LocationTagRelationResponseCollection>;
   pictures?: Maybe<PictureRelationResponseCollection>;
+  root?: Maybe<Scalars['Boolean']>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_pictures?: Maybe<PictureRelationResponseCollection>;
   visible?: Maybe<Scalars['Boolean']>;
+};
+
+export type LocationTagChild_TagsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type LocationTagParent_TagsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type LocationTagPicturesArgs = {
@@ -750,14 +766,18 @@ export type LocationTagEntityResponseCollection = {
 };
 
 export type LocationTagFiltersInput = {
+  accepted?: InputMaybe<BooleanFilterInput>;
   and?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  child_tags?: InputMaybe<LocationTagFiltersInput>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<LocationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
+  parent_tags?: InputMaybe<LocationTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  root?: InputMaybe<BooleanFilterInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
@@ -765,9 +785,13 @@ export type LocationTagFiltersInput = {
 };
 
 export type LocationTagInput = {
+  accepted?: InputMaybe<Scalars['Boolean']>;
+  child_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
   name?: InputMaybe<Scalars['String']>;
+  parent_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  root?: InputMaybe<Scalars['Boolean']>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   visible?: InputMaybe<Scalars['Boolean']>;
@@ -2191,7 +2215,15 @@ export type GetAllLocationTagsQuery = {
       attributes?: {
         name: string;
         visible?: boolean | null;
+        root?: boolean | null;
+        accepted?: boolean | null;
         synonyms?: Array<{ name: string } | null> | null;
+        child_tags?: {
+          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
+        } | null;
+        parent_tags?: {
+          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
+        } | null;
       } | null;
     }>;
   } | null;
@@ -2933,6 +2965,22 @@ export type GetPicturesForCollectionQuery = {
   } | null;
 };
 
+export type GetPicturesForLocationQueryVariables = Exact<{
+  tagID: Scalars['ID'];
+}>;
+
+export type GetPicturesForLocationQuery = {
+  locationTag?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        pictures?: { data: Array<{ id?: string | null }> } | null;
+        verified_pictures?: { data: Array<{ id?: string | null }> } | null;
+      } | null;
+    } | null;
+  } | null;
+};
+
 export type GetPicturesGeoInfoQueryVariables = Exact<{
   pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
 }>;
@@ -3053,6 +3101,10 @@ export type CreateLinkMutation = { createLink?: { data?: { id?: string | null } 
 
 export type CreateLocationTagMutationVariables = Exact<{
   name: Scalars['String'];
+  parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  accepted?: InputMaybe<Scalars['Boolean']>;
+  root?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CreateLocationTagMutation = {
@@ -3312,12 +3364,48 @@ export type UpdateLinkMutationVariables = Exact<{
 
 export type UpdateLinkMutation = { updateLink?: { data?: { id?: string | null } | null } | null };
 
+export type UpdateLocationAcceptanceMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  accepted?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type UpdateLocationAcceptanceMutation = {
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateLocationChildMutationVariables = Exact<{
+  tagID: Scalars['ID'];
+  childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+export type UpdateLocationChildMutation = {
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+};
+
 export type UpdateLocationNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
   name: Scalars['String'];
 }>;
 
 export type UpdateLocationNameMutation = {
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateLocationParentMutationVariables = Exact<{
+  tagID: Scalars['ID'];
+  parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+export type UpdateLocationParentMutation = {
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateLocationRootMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  root: Scalars['Boolean'];
+}>;
+
+export type UpdateLocationRootMutation = {
   updateLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
@@ -3515,10 +3603,10 @@ export const GetAllKeywordTagsDocument = gql`
         id
         attributes {
           name
+          visible
           synonyms {
             name
           }
-          visible
         }
       }
     }
@@ -3577,8 +3665,26 @@ export const GetAllLocationTagsDocument = gql`
         attributes {
           name
           visible
+          root
+          accepted
           synonyms {
             name
+          }
+          child_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          parent_tags {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
           }
         }
       }
@@ -5790,6 +5896,83 @@ export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
   GetPicturesForCollectionQueryVariables
 >;
 
+export const GetPicturesForLocationDocument = gql`
+  query getPicturesForLocation($tagID: ID!) {
+    locationTag(id: $tagID) {
+      data {
+        id
+        attributes {
+          pictures {
+            data {
+              id
+            }
+          }
+          verified_pictures {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPicturesForLocationQuery__
+ *
+ * To run a query within a React component, call `useGetPicturesForLocationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPicturesForLocationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPicturesForLocationQuery({
+ *   variables: {
+ *      tagID: // value for 'tagID'
+ *   },
+ * });
+ */
+export function useGetPicturesForLocationQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPicturesForLocationQuery,
+    GetPicturesForLocationQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPicturesForLocationQuery, GetPicturesForLocationQueryVariables>(
+    GetPicturesForLocationDocument,
+    options
+  );
+}
+
+export function useGetPicturesForLocationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPicturesForLocationQuery,
+    GetPicturesForLocationQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPicturesForLocationQuery, GetPicturesForLocationQueryVariables>(
+    GetPicturesForLocationDocument,
+    options
+  );
+}
+
+export type GetPicturesForLocationQueryHookResult = ReturnType<
+  typeof useGetPicturesForLocationQuery
+>;
+
+export type GetPicturesForLocationLazyQueryHookResult = ReturnType<
+  typeof useGetPicturesForLocationLazyQuery
+>;
+
+export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
+  GetPicturesForLocationQuery,
+  GetPicturesForLocationQueryVariables
+>;
+
 export const GetPicturesGeoInfoDocument = gql`
   query getPicturesGeoInfo($pictureIds: [ID]!) {
     pictureGeoInfos(filters: { picture: { id: { in: $pictureIds } } }) {
@@ -6375,8 +6558,22 @@ export type CreateLinkMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateLocationTagDocument = gql`
-  mutation createLocationTag($name: String!) {
-    createLocationTag(data: { name: $name }) {
+  mutation createLocationTag(
+    $name: String!
+    $parentIDs: [ID!]
+    $childIDs: [ID!]
+    $accepted: Boolean
+    $root: Boolean
+  ) {
+    createLocationTag(
+      data: {
+        name: $name
+        parent_tags: $parentIDs
+        child_tags: $childIDs
+        accepted: $accepted
+        root: $root
+      }
+    ) {
       data {
         id
       }
@@ -6403,6 +6600,10 @@ export type CreateLocationTagMutationFn = Apollo.MutationFunction<
  * const [createLocationTagMutation, { data, loading, error }] = useCreateLocationTagMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      parentIDs: // value for 'parentIDs'
+ *      childIDs: // value for 'childIDs'
+ *      accepted: // value for 'accepted'
+ *      root: // value for 'root'
  *   },
  * });
  */
@@ -8085,6 +8286,121 @@ export type UpdateLinkMutationOptions = Apollo.BaseMutationOptions<
   UpdateLinkMutationVariables
 >;
 
+export const UpdateLocationAcceptanceDocument = gql`
+  mutation updateLocationAcceptance($tagId: ID!, $accepted: Boolean) {
+    updateLocationTag(id: $tagId, data: { accepted: $accepted }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationAcceptanceMutationFn = Apollo.MutationFunction<
+  UpdateLocationAcceptanceMutation,
+  UpdateLocationAcceptanceMutationVariables
+>;
+
+/**
+ * __useUpdateLocationAcceptanceMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationAcceptanceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationAcceptanceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationAcceptanceMutation, { data, loading, error }] = useUpdateLocationAcceptanceMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      accepted: // value for 'accepted'
+ *   },
+ * });
+ */
+export function useUpdateLocationAcceptanceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationAcceptanceMutation,
+    UpdateLocationAcceptanceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateLocationAcceptanceMutation,
+    UpdateLocationAcceptanceMutationVariables
+  >(UpdateLocationAcceptanceDocument, options);
+}
+
+export type UpdateLocationAcceptanceMutationHookResult = ReturnType<
+  typeof useUpdateLocationAcceptanceMutation
+>;
+
+export type UpdateLocationAcceptanceMutationResult =
+  Apollo.MutationResult<UpdateLocationAcceptanceMutation>;
+
+export type UpdateLocationAcceptanceMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationAcceptanceMutation,
+  UpdateLocationAcceptanceMutationVariables
+>;
+
+export const UpdateLocationChildDocument = gql`
+  mutation updateLocationChild($tagID: ID!, $childIDs: [ID!]) {
+    updateLocationTag(id: $tagID, data: { child_tags: $childIDs }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationChildMutationFn = Apollo.MutationFunction<
+  UpdateLocationChildMutation,
+  UpdateLocationChildMutationVariables
+>;
+
+/**
+ * __useUpdateLocationChildMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationChildMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationChildMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationChildMutation, { data, loading, error }] = useUpdateLocationChildMutation({
+ *   variables: {
+ *      tagID: // value for 'tagID'
+ *      childIDs: // value for 'childIDs'
+ *   },
+ * });
+ */
+export function useUpdateLocationChildMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationChildMutation,
+    UpdateLocationChildMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLocationChildMutation, UpdateLocationChildMutationVariables>(
+    UpdateLocationChildDocument,
+    options
+  );
+}
+
+export type UpdateLocationChildMutationHookResult = ReturnType<
+  typeof useUpdateLocationChildMutation
+>;
+
+export type UpdateLocationChildMutationResult = Apollo.MutationResult<UpdateLocationChildMutation>;
+
+export type UpdateLocationChildMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationChildMutation,
+  UpdateLocationChildMutationVariables
+>;
+
 export const UpdateLocationNameDocument = gql`
   mutation updateLocationName($tagId: ID!, $name: String!) {
     updateLocationTag(id: $tagId, data: { name: $name }) {
@@ -8138,6 +8454,119 @@ export type UpdateLocationNameMutationResult = Apollo.MutationResult<UpdateLocat
 export type UpdateLocationNameMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationNameMutation,
   UpdateLocationNameMutationVariables
+>;
+
+export const UpdateLocationParentDocument = gql`
+  mutation updateLocationParent($tagID: ID!, $parentIDs: [ID!]) {
+    updateLocationTag(id: $tagID, data: { parent_tags: $parentIDs }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationParentMutationFn = Apollo.MutationFunction<
+  UpdateLocationParentMutation,
+  UpdateLocationParentMutationVariables
+>;
+
+/**
+ * __useUpdateLocationParentMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationParentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationParentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationParentMutation, { data, loading, error }] = useUpdateLocationParentMutation({
+ *   variables: {
+ *      tagID: // value for 'tagID'
+ *      parentIDs: // value for 'parentIDs'
+ *   },
+ * });
+ */
+export function useUpdateLocationParentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationParentMutation,
+    UpdateLocationParentMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLocationParentMutation, UpdateLocationParentMutationVariables>(
+    UpdateLocationParentDocument,
+    options
+  );
+}
+
+export type UpdateLocationParentMutationHookResult = ReturnType<
+  typeof useUpdateLocationParentMutation
+>;
+
+export type UpdateLocationParentMutationResult =
+  Apollo.MutationResult<UpdateLocationParentMutation>;
+
+export type UpdateLocationParentMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationParentMutation,
+  UpdateLocationParentMutationVariables
+>;
+
+export const UpdateLocationRootDocument = gql`
+  mutation updateLocationRoot($tagId: ID!, $root: Boolean!) {
+    updateLocationTag(id: $tagId, data: { root: $root }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationRootMutationFn = Apollo.MutationFunction<
+  UpdateLocationRootMutation,
+  UpdateLocationRootMutationVariables
+>;
+
+/**
+ * __useUpdateLocationRootMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationRootMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationRootMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationRootMutation, { data, loading, error }] = useUpdateLocationRootMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      root: // value for 'root'
+ *   },
+ * });
+ */
+export function useUpdateLocationRootMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationRootMutation,
+    UpdateLocationRootMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateLocationRootMutation, UpdateLocationRootMutationVariables>(
+    UpdateLocationRootDocument,
+    options
+  );
+}
+
+export type UpdateLocationRootMutationHookResult = ReturnType<typeof useUpdateLocationRootMutation>;
+
+export type UpdateLocationRootMutationResult = Apollo.MutationResult<UpdateLocationRootMutation>;
+
+export type UpdateLocationRootMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationRootMutation,
+  UpdateLocationRootMutationVariables
 >;
 
 export const UpdateLocationSynonymsDocument = gql`
