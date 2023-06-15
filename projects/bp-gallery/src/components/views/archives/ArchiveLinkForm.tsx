@@ -32,7 +32,7 @@ const ArchiveLinkForm = ({ links: defaultLinks, onChange }: LinkFormProps) => {
 
   return (
     <div className='archive-form-div'>
-      <label className='archive-form-label'>{t('archives.edit.links.label')}</label>
+      <label className='archive-form-label'>{t('archives.edit.links.label')}:</label>
       <div className='archive-form-input archive-form-link-input'>
         {links.map(
           link =>

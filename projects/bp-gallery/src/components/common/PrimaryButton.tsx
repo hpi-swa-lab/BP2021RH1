@@ -7,16 +7,21 @@ const PrimaryButton = ({
   children,
   onClickFn,
   isShowMore,
+  type,
+  className,
 }: PropsWithChildren<{
-  onClickFn: MouseEventHandler;
+  onClickFn?: MouseEventHandler;
   isShowMore?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  className?: string;
 }>) => {
   return (
     <Button
       variant='contained'
       onClick={onClickFn}
-      className='primary-button'
+      className={`primary-button ${className ?? ''}`}
       endIcon={isShowMore && <ArrowForwardIos />}
+      type={type}
     >
       {children}
     </Button>

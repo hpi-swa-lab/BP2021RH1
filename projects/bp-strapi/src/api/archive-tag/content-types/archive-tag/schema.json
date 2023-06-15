@@ -54,6 +54,9 @@
     "paypalPurpose": {
       "type": "string"
     },
+    "email": {
+      "type": "email"
+    },
     "exhibitions": {
       "type": "relation",
       "relation": "oneToMany",

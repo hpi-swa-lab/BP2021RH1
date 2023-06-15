@@ -2608,6 +2608,7 @@ export type GetArchiveQuery = {
         name: string;
         shortDescription?: string | null;
         longDescription?: string | null;
+        email?: string | null;
         paypalClient?: string | null;
         paypalDonationText?: string | null;
         paypalPurpose?: string | null;
@@ -2651,6 +2652,17 @@ export type GetArchiveQuery = {
         } | null;
       } | null;
     } | null;
+  } | null;
+};
+
+export type GetArchiveNamesQueryVariables = Exact<{
+  filters?: InputMaybe<ArchiveTagFiltersInput>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+}>;
+
+export type GetArchiveNamesQuery = {
+  archiveTags?: {
+    data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
   } | null;
 };
 
@@ -4429,6 +4441,7 @@ export const GetArchiveDocument = gql`
           name
           shortDescription
           longDescription
+          email
           paypalClient
           paypalDonationText
           paypalPurpose
@@ -4517,6 +4530,68 @@ export type GetArchiveQueryHookResult = ReturnType<typeof useGetArchiveQuery>;
 export type GetArchiveLazyQueryHookResult = ReturnType<typeof useGetArchiveLazyQuery>;
 
 export type GetArchiveQueryResult = Apollo.QueryResult<GetArchiveQuery, GetArchiveQueryVariables>;
+
+export const GetArchiveNamesDocument = gql`
+  query getArchiveNames(
+    $filters: ArchiveTagFiltersInput = {}
+    $sortBy: [String] = ["createdAt:asc"]
+  ) {
+    archiveTags(filters: $filters, sort: $sortBy) {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetArchiveNamesQuery__
+ *
+ * To run a query within a React component, call `useGetArchiveNamesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchiveNamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchiveNamesQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *      sortBy: // value for 'sortBy'
+ *   },
+ * });
+ */
+export function useGetArchiveNamesQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetArchiveNamesQuery, GetArchiveNamesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetArchiveNamesQuery, GetArchiveNamesQueryVariables>(
+    GetArchiveNamesDocument,
+    options
+  );
+}
+
+export function useGetArchiveNamesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetArchiveNamesQuery, GetArchiveNamesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetArchiveNamesQuery, GetArchiveNamesQueryVariables>(
+    GetArchiveNamesDocument,
+    options
+  );
+}
+
+export type GetArchiveNamesQueryHookResult = ReturnType<typeof useGetArchiveNamesQuery>;
+
+export type GetArchiveNamesLazyQueryHookResult = ReturnType<typeof useGetArchiveNamesLazyQuery>;
+
+export type GetArchiveNamesQueryResult = Apollo.QueryResult<
+  GetArchiveNamesQuery,
+  GetArchiveNamesQueryVariables
+>;
 
 export const GetArchivePictureCountsDocument = gql`
   query getArchivePictureCounts {

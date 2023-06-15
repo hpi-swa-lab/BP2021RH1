@@ -4894,6 +4894,16 @@
             "defaultValue": null
           },
           {
+            "name": "email",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilterInput",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "exhibitions",
             "description": null,
             "type": {
@@ -5072,6 +5082,16 @@
           },
           {
             "name": "paypalPurpose",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "email",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -5298,6 +5318,18 @@
           },
           {
             "name": "paypalPurpose",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "email",
             "description": null,
             "args": [],
             "type": {
