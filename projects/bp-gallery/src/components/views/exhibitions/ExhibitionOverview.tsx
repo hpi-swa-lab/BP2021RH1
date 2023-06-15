@@ -240,7 +240,7 @@ const ExhibitionOverview = ({
   margin?: boolean;
   backgroundColor?: string;
 }) => {
-  const { data: exhibitionsData, refetch } = useGetExhibitionsQuery({
+  const { data: exhibitionsData } = useGetExhibitionsQuery({
     variables: archiveId ? { archiveId } : undefined,
   });
   const exhibitions: FlatExhibition[] | undefined =
@@ -258,9 +258,9 @@ const ExhibitionOverview = ({
 
   const handleDiv = useCallback(
     (node: HTMLDivElement | null) => {
-      isCurator;
       setShowMore(isOverflow(node) && (exhibitions?.length ?? 0) > 1);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setShowMore, isCurator, exhibitions]
   );
 
@@ -340,7 +340,7 @@ const ExhibitionOverview = ({
 
 const ExhibitionFullOverview = ({ archiveId }: { archiveId: string | undefined }) => {
   const { t } = useTranslation();
-  const { data: exhibitionsData, refetch } = useGetExhibitionsQuery({
+  const { data: exhibitionsData } = useGetExhibitionsQuery({
     variables: archiveId ? { archiveId } : undefined,
   });
   const exhibitions: FlatExhibition[] | undefined =

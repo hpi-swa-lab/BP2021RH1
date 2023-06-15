@@ -585,19 +585,27 @@ const ExhibitionDragNDrop = ({
 };
 
 const useExhibitionDatabaseSaver = () => {
-  const [updateExhibitionPicture] = useUpdateExhibitionPictureMutation();
+  const [updateExhibitionPicture] = useUpdateExhibitionPictureMutation({
+    refetchQueries: ['getExhibition'],
+  });
 
-  const [updateExhibitionSection] = useUpdateExhibitionSectionMutation();
+  const [updateExhibitionSection] = useUpdateExhibitionSectionMutation({
+    refetchQueries: ['getExhibition'],
+  });
 
-  const [updateExhibitionSource] = useUpdateExhibitionSourceMutation();
+  const [updateExhibitionSource] = useUpdateExhibitionSourceMutation({
+    refetchQueries: ['getExhibition'],
+  });
 
-  const [updateExhibition] = useUpdateExhibitionMutation();
+  const [updateExhibition] = useUpdateExhibitionMutation({ refetchQueries: ['getExhibition'] });
 
-  const [createSource] = useCreateExhibitionSourceMutation();
+  const [createSource] = useCreateExhibitionSourceMutation({ refetchQueries: ['getExhibition'] });
 
-  const [createSection] = useCreateExhibitionSectionMutation();
+  const [createSection] = useCreateExhibitionSectionMutation({ refetchQueries: ['getExhibition'] });
 
-  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
+  const [createExhibitionPicture] = useCreateExhibitionPictureMutation({
+    refetchQueries: ['getExhibition'],
+  });
   return {
     setSectionText: (id: string, text: string) => {
       updateExhibitionSection({
