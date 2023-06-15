@@ -1,7 +1,7 @@
-import { Operation, operations } from 'bp-graphql';
+import { OperationName, operations } from 'bp-graphql';
 
-export const isEssential = (operationName: string) => {
-  const operation = operations[operationName] as Operation;
+export const isEssential = (operationName: OperationName) => {
+  const operation = operations[operationName];
   if ('isEssential' in operation) {
     return operation.isEssential;
   } else {

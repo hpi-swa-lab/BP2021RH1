@@ -8,7 +8,10 @@ const parsedAllowedOperations = Object.fromEntries(
 );
 
 export const verifyOperation = (operation: OperationDefinitionNode) => {
-  const name = operation.name.value;
+  const name = operation.name?.value;
+  if (!name) {
+    return;
+  }
   if (!(name in parsedAllowedOperations)) {
     return false;
   }

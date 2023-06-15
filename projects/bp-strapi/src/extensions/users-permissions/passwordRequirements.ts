@@ -3,6 +3,7 @@ import {
   validateRegisterBody,
   validateResetPasswordBody,
 } from '@strapi/plugin-users-permissions/server/controllers/validation/auth';
+import { StrapiContext } from '../../types';
 import { getAuthController, wrap } from './helper';
 
 const minimumPasswordLength = 12;
@@ -30,19 +31,19 @@ export const enforcePasswordRequirements = (password: string) => {
 export const enablePasswordRequirements = () => {
   const authController = getAuthController();
 
-  wrap(authController, 'register', async (inner, ctx) => {
+  wrap<[StrapiContext], 'register'>(authController, 'register', async (inner, ctx) => {
     const { password } = await validateRegisterBody(ctx.request.body);
     enforcePasswordRequirements(password);
     await inner(ctx);
   });
 
-  wrap(authController, 'changePassword', async (inner, ctx) => {
+  wrap<[StrapiContext], 'changePassword'>(authController, 'changePassword', async (inner, ctx) => {
     const { password } = await validateChangePasswordBody(ctx.request.body);
     enforcePasswordRequirements(password);
     await inner(ctx);
   });
 
-  wrap(authController, 'resetPassword', async (inner, ctx) => {
+  wrap<[StrapiContext], 'resetPassword'>(authController, 'resetPassword', async (inner, ctx) => {
     const { password } = await validateResetPasswordBody(ctx.request.body);
     enforcePasswordRequirements(password);
     await inner(ctx);

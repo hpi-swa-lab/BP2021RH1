@@ -373,7 +373,7 @@ export default {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  async bootstrap(args) {
+  async bootstrap(args: { strapi: StrapiExtended }) {
     await initializeEmailSettings(args);
   },
 };

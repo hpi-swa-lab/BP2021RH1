@@ -2,13 +2,14 @@ import { errors } from '@strapi/utils';
 import type { Variables } from 'bp-graphql';
 import type { UsersPermissionsUser } from 'bp-graphql/build/db-types';
 import { OperationDefinitionNode } from 'graphql/language/ast';
+import { ParameterizedPermissionsAuth, StrapiContext } from '../types';
 import { canRunOperation } from './canRunOperation';
 import { getUserPermissions } from './getUserPermissions';
 import { getJwtService, getUserService } from './userService';
 
 const { UnauthorizedError } = errors;
 
-const getToken = async (ctx): Promise<{ id: string | undefined } | null> => {
+const getToken = async (ctx: StrapiContext): Promise<{ id: string | undefined } | null> => {
   try {
     return await getJwtService().getToken(ctx);
   } catch {
@@ -16,7 +17,7 @@ const getToken = async (ctx): Promise<{ id: string | undefined } | null> => {
   }
 };
 
-const authenticate = async ctx => {
+const authenticate = async (ctx: StrapiContext) => {
   let token = await getToken(ctx);
 
   let user: UsersPermissionsUser | null = null;
@@ -53,10 +54,12 @@ const authenticate = async ctx => {
   };
 };
 
-const verify = async (auth, config) => {
+const verify = async (
+  auth: ParameterizedPermissionsAuth,
+  config: { operation: OperationDefinitionNode; variables: Variables } | Record<never, never>
+) => {
   if ('operation' in config) {
-    const { operation, variables }: { operation: OperationDefinitionNode; variables: Variables } =
-      config;
+    const { operation, variables } = config;
 
     if (!(await canRunOperation(auth, operation, variables))) {
       throw new UnauthorizedError();
@@ -69,14 +72,6 @@ const verify = async (auth, config) => {
     throw new UnauthorizedError();
   }
 };
-
-declare module '@strapi/strapi' {
-  export interface Strapi {
-    requestContext: {
-      get(): { url: string };
-    };
-  }
-}
 
 const isGraphQLRequest = () => {
   const request = strapi.requestContext.get();

@@ -1,4 +1,4 @@
-import { Maybe, ParameterizedPermission } from 'bp-graphql/build/db-types';
+import { Maybe, ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
 import crypto from 'crypto';
 import { omit } from 'lodash';
 
@@ -31,7 +31,7 @@ const mergePermissions = (permissions: ParameterizedPermission[]) => {
       // merge individual parameters
       on_other_users: (merged.on_other_users || permission.on_other_users) ?? false,
     }),
-    permissions[0]
+    omit(permissions[0], ['id'])
   );
 };
 
@@ -104,7 +104,7 @@ export const addUser = async (
 
   // fake a koaContext to prevent the controller from sending an answer
   // to the user, instead, capture the answer
-  let response = undefined;
+  let response = undefined as { user: UsersPermissionsUser | undefined } | undefined;
   const fakeKoaContextWithParameters = <T>(params: T) => ({
     request: {
       body: params,
@@ -112,7 +112,7 @@ export const addUser = async (
     state: {
       auth: context.koaContext.state.auth,
     },
-    send(something) {
+    send(something: { user: UsersPermissionsUser | undefined }) {
       response = something;
     },
   });
@@ -129,7 +129,7 @@ export const addUser = async (
       password: temporaryPassword,
     })
   );
-  if (!response.user) {
+  if (!response?.user) {
     throw new Error('User creation failed');
   }
   const { user } = response;

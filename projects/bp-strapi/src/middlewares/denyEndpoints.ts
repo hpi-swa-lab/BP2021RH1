@@ -1,9 +1,10 @@
 import { authenticate as adminAuthenticate } from '@strapi/admin/server/strategies/admin';
 import { errors } from '@strapi/utils';
+import { StrapiContext, StrapiExtended } from '../types';
 
 const { UnauthorizedError } = errors;
 
-export default (_config, { strapi }) => {
+export default (_config: unknown, { strapi }: { strapi: StrapiExtended }) => {
   const graphQLEndpoint: string = strapi.plugin('graphql').config('endpoint');
   const serverStatusEndpoint = '/';
   const adminPanelPrefix = strapi.config.admin.path;
@@ -41,7 +42,7 @@ export default (_config, { strapi }) => {
     }
   };
 
-  return async (context, next) => {
+  return async (context: StrapiContext, next: () => Promise<unknown>) => {
     if (await isAdminUser(context)) {
       return next();
     }
@@ -54,7 +55,7 @@ export default (_config, { strapi }) => {
   };
 };
 
-const isAdminUser = async context => {
+const isAdminUser = async (context: StrapiContext) => {
   const { authenticated = false } = await adminAuthenticate(context);
   return authenticated;
 };

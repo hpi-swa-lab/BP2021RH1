@@ -1,9 +1,9 @@
 import { noop } from 'lodash';
 
-export const wrap = <Args extends never[], Key extends keyof any>(
+export const wrap = <Args extends unknown[], Key extends keyof any>(
   object: { [K in Key]: (...args: Args) => Promise<void> },
   key: Key,
-  wrapper
+  wrapper: (inner: (...args: Args) => Promise<void>, ...args: Args) => Promise<void>
 ) => {
   const inner = object[key];
   object[key] = async (...args: Args) => {

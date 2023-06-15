@@ -38,7 +38,7 @@ const nodesEqual = (a: ASTNode, b: ASTNode) => {
       // ignore location differences
       return true;
     }
-    const bValue = b[key];
+    const bValue = b[key as keyof ASTNode];
     return objectsEqual(aValue, bValue);
   });
 };

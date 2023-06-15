@@ -529,7 +529,7 @@ const bulkEditTimeRangeTag = async (
   // Check whether we actually need to update stuff for that tag type.
   if (!data[TIME_RANGE_TAG_KEY]) return 0;
 
-  const timeRangeTagData = pick(data, [TIME_RANGE_TAG_KEY]);
+  const timeRangeTagData = pick(data, [TIME_RANGE_TAG_KEY, withVerifiedPrefix(TIME_RANGE_TAG_KEY)]);
   await processUpdatesForTimeRangeTag(pictureQuery, timeRangeTagData);
   const unverifiedLinksTable = table(`${PICTURES_KEY}_${TIME_RANGE_TAG_KEY}_links`);
   const verifiedLinksTable = table(

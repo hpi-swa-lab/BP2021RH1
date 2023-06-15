@@ -1,8 +1,8 @@
-import { DB, Operation, operations, Variables } from 'bp-graphql';
+import { DB, OperationName, operations, Variables } from 'bp-graphql';
 import type { ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
 
 export const checkAllowed = async (
-  operationName: string,
+  operationName: OperationName,
   authorizingPermissions: ParameterizedPermission[],
   permissions: ParameterizedPermission[],
   variables: Variables,
@@ -15,7 +15,7 @@ export const checkAllowed = async (
     link: strapi.db.query('api::link.link'),
     permission: strapi.db.query('api::parameterized-permission.parameterized-permission'),
   });
-  const operation: Operation = operations[operationName];
+  const operation = operations[operationName];
 
   if ('isEssential' in operation) {
     return operation.isEssential;

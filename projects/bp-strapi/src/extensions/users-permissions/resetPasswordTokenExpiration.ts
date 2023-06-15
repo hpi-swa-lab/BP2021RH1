@@ -2,6 +2,7 @@ import {
   validateForgotPasswordBody,
   validateResetPasswordBody,
 } from '@strapi/plugin-users-permissions/server/controllers/validation/auth';
+import { StrapiContext } from '../../types';
 import { getAuthController, wrap } from './helper';
 
 export const enablePasswordTokenExpiration = (config: {
@@ -9,7 +10,7 @@ export const enablePasswordTokenExpiration = (config: {
 }) => {
   const authController = getAuthController();
 
-  wrap(authController, 'resetPassword', async (inner, ctx) => {
+  wrap<[StrapiContext], 'resetPassword'>(authController, 'resetPassword', async (inner, ctx) => {
     const { code } = await validateResetPasswordBody(ctx.request.body);
 
     const userQuery = strapi.query('plugin::users-permissions.user');
@@ -32,7 +33,7 @@ export const enablePasswordTokenExpiration = (config: {
     await inner(ctx);
   });
 
-  wrap(authController, 'forgotPassword', async (inner, ctx) => {
+  wrap<[StrapiContext], 'forgotPassword'>(authController, 'forgotPassword', async (inner, ctx) => {
     const { email } = await validateForgotPasswordBody(ctx.request.body);
 
     await inner(ctx);

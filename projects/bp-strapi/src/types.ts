@@ -1,4 +1,5 @@
 import type { Attribute, GetAttributeValue, GetAttributes, Strapi } from '@strapi/strapi';
+import { ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
 import type { knex } from 'knex';
 import type { ParameterizedContext } from 'koa';
 import type * as Nexus from 'nexus';
@@ -13,6 +14,7 @@ export type GqlExtension = {
 };
 
 type ContextState = {
+  user: UsersPermissionsUser;
   withGrowthBook?: (theCtx: StrapiGqlContext, f: any) => void;
 };
 
@@ -20,6 +22,7 @@ type ContextState = {
 type Context = {
   send: (statusCode: number, body: string | Object) => StrapiContext;
   req?: { headers?: { anonymousid?: string } };
+  request: { body: unknown };
 } & Record<
   | 'created'
   | 'noContent'
@@ -44,6 +47,14 @@ export type StrapiExtended = Omit<Strapi, 'entityService'> & {
   db: { connection: KnexEngine };
   entityService: EntityService;
 };
+
+declare module '@strapi/strapi' {
+  export interface Strapi {
+    requestContext: {
+      get(): { url: string };
+    };
+  }
+}
 
 type FilterParameters = Partial<
   Record<
@@ -153,3 +164,8 @@ export interface EntityService {
     parameters: Params<T>
   ) => Promise<Object>;
 }
+
+export type ParameterizedPermissionsAuth = {
+  ability: ParameterizedPermission[];
+  credentials: UsersPermissionsUser | null;
+};

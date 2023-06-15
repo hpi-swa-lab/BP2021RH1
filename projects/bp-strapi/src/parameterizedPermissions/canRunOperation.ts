@@ -1,6 +1,6 @@
-import { Variables } from 'bp-graphql';
-import type { ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
+import { OperationName, Variables } from 'bp-graphql';
 import { OperationDefinitionNode } from 'graphql/language/ast';
+import { ParameterizedPermissionsAuth } from '../types';
 import { checkAllowed } from './checkAllowed';
 import { getUserPermissions } from './getUserPermissions';
 import { isEssential } from './isEssential';
@@ -11,10 +11,7 @@ import { verifyOperation } from './verifyOperation';
 export const canRunWithSomeVariables = Symbol('canRunWithSomeVariables');
 
 export const canRunOperation = async (
-  auth: {
-    ability: ParameterizedPermission[];
-    credentials: UsersPermissionsUser | null;
-  },
+  auth: ParameterizedPermissionsAuth,
   operation: OperationDefinitionNode,
   variables: Variables | typeof canRunWithSomeVariables
 ) => {
@@ -52,7 +49,7 @@ export const canRunOperation = async (
     return false;
   }
 
-  const operationName = operation.name.value;
+  const operationName = operation.name!.value as OperationName;
 
   if (isEssential(operationName)) {
     return true;
