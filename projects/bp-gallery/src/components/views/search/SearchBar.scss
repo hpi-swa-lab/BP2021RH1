@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .search-bar-wrapper {
   display: flex;
@@ -21,18 +21,22 @@
 .top-bar-search {
   .MuiInputBase-root {
     background-color: white !important;
+
     input {
       padding: 0.5rem !important;
     }
   }
+
   .searchbutton {
     .search-icon-container {
       display: flex;
+
       .MuiSvgIcon-root {
         align-self: center;
       }
     }
   }
+
   .MuiOutlinedInput-root {
     padding-right: 0rem;
   }
@@ -45,6 +49,7 @@
 
   @media only screen and (max-width: $mobile-breakpoint) {
     box-shadow: none;
+
     .MuiInputBase-root {
       flex-wrap: wrap;
 
@@ -83,6 +88,7 @@
     text-align: center;
 
     flex-direction: 'column';
+
     .searchbutton-label {
       font-size: 15px;
       color: black;

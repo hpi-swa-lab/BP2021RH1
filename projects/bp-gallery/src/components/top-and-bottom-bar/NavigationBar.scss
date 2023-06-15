@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .nav-bar {
   display: flex;
@@ -46,6 +46,7 @@
 
     @media only screen and (max-width: $mobile-breakpoint) {
       flex-direction: column;
+
       // color: #5a5a5a !important;
       &.active {
         background: white;
