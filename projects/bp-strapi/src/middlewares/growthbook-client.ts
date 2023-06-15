@@ -3,7 +3,7 @@
  */
 
 import { GrowthBook, setPolyfills } from "@growthbook/growthbook";
-import { StrapiExtended } from "../types";
+import { StrapiContext, StrapiExtended, StrapiGqlContext } from "../types";
 
 export default (_: any, { strapi }: { strapi: StrapiExtended }) => {
   setPolyfills({
@@ -13,7 +13,7 @@ export default (_: any, { strapi }: { strapi: StrapiExtended }) => {
     EventSource: require("eventsource"),
   });
 
-  let currentCtx: any = null;
+  let currentCtx: StrapiGqlContext | null = null;
 
   // Create a GrowthBook Context
   const growthbook = new GrowthBook({
@@ -21,6 +21,13 @@ export default (_: any, { strapi }: { strapi: StrapiExtended }) => {
     clientKey: process.env.GROWTHBOOK_CLIENTKEY,
     enableDevMode: true,
     trackingCallback: (experiment, result) => {
+      if (!currentCtx) {
+        strapi.log.warn(
+          "No valid context found. Growthbook couldn't set the response header."
+        );
+        return;
+      }
+
       const response = currentCtx.koaContext.response;
       let growthbookHeader = response.get("x-growthbook");
       growthbookHeader ||= "[]";
@@ -33,19 +40,13 @@ export default (_: any, { strapi }: { strapi: StrapiExtended }) => {
       response.append("Access-Control-Expose-Headers", "x-growthbook");
     },
   });
-  return async (
-    ctx: {
-      state: { withGrowthBook: (theCtx: any, f: any) => void };
-      req: { headers: { anonymousid: any } };
-    },
-    next: () => any
-  ) => {
+  return async (ctx: StrapiContext, next: () => any) => {
     ctx.state.withGrowthBook = (
-      theCtx: any,
-      f: (arg0: GrowthBook<Record<string, any>>) => void
+      ctx: StrapiGqlContext,
+      func: (growthbook: GrowthBook) => void
     ) => {
-      currentCtx = theCtx;
-      f(growthbook);
+      currentCtx = ctx;
+      func(growthbook);
     };
     // Wait for features to load (will be cached in-memory for future requests)
     growthbook.setAttributes({
