@@ -32,6 +32,7 @@ export { default as getAllLocationTags } from './operations/getAllLocationTags.j
 export { default as getAllPersonTags } from './operations/getAllPersonTags.js';
 export { default as getAllPictureIds } from './operations/getAllPictureIds.js';
 export { default as getArchive } from './operations/getArchive.js';
+export { default as getArchiveNames } from './operations/getArchiveNames.js';
 export { default as getArchivePictureCounts } from './operations/getArchivePictureCounts.js';
 export { default as getCollectionInfoById } from './operations/getCollectionInfoById.js';
 export { default as getCollectionInfoByName } from './operations/getCollectionInfoByName.js';

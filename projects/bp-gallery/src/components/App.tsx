@@ -10,6 +10,7 @@ import ClipboardEditorProvider from './provider/ClipboardEditorProvider';
 import DialogProvider from './provider/DialogProvider';
 import { GrowthBookProvider } from './provider/GrowthBookProvider';
 import { MobileProvider } from './provider/MobileProvider';
+import { MuiThemeProvider } from './provider/MuiThemeProvider';
 import { ScrollProvider } from './provider/ScrollProvider';
 import routes from './routes';
 import BottomBar from './top-and-bottom-bar/BottomBar';
@@ -67,25 +68,27 @@ const apolloClient = new ApolloClient({
 const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
-      <AlertProvider>
-        <AuthProvider>
-          <DialogProvider>
-            <MobileProvider>
-              <div className='App'>
-                <ClipboardEditorProvider>
-                  <GrowthBookProvider>
-                    <ScrollProvider useWindow>
-                      <TopBar />
-                      <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
-                      <BottomBar />
-                    </ScrollProvider>
-                  </GrowthBookProvider>
-                </ClipboardEditorProvider>
-              </div>
-            </MobileProvider>
-          </DialogProvider>
-        </AuthProvider>
-      </AlertProvider>
+      <MuiThemeProvider>
+        <AlertProvider>
+          <AuthProvider>
+            <DialogProvider>
+              <MobileProvider>
+                <div className='App'>
+                  <ClipboardEditorProvider>
+                    <GrowthBookProvider>
+                      <ScrollProvider useWindow>
+                        <TopBar />
+                        <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                        <BottomBar />
+                      </ScrollProvider>
+                    </GrowthBookProvider>
+                  </ClipboardEditorProvider>
+                </div>
+              </MobileProvider>
+            </DialogProvider>
+          </AuthProvider>
+        </AlertProvider>
+      </MuiThemeProvider>
     </ApolloProvider>
   );
 };

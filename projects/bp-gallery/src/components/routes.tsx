@@ -1,7 +1,5 @@
 import { RouteConfig, RouteConfigComponentProps } from 'react-router-config';
 import { Redirect } from 'react-router-dom';
-import Demo from '../prototypes/demo';
-import TimeLineDemo from '../prototypes/timeline-demo';
 import { TagType } from '../types/additionalFlatTypes';
 import { AdminView } from './views/admin/AdminView';
 import { ArchivesView } from './views/admin/archive/ArchivesView';
@@ -177,14 +175,6 @@ const routes: RouteConfig[] = [
     render: () => {
       return <ChangePasswordView />;
     },
-  },
-  {
-    path: '/prototypes/demo',
-    component: Demo,
-  },
-  {
-    path: '/prototypes/timeline-demo',
-    component: TimeLineDemo,
   },
   {
     path: '/archives/:id/edit',

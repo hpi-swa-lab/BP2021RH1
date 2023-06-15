@@ -11,6 +11,7 @@ export default {
             name
             shortDescription
             longDescription
+            email
             paypalClient
             paypalDonationText
             paypalPurpose

@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 h1 {
   width: fit-content;
@@ -21,6 +21,7 @@ h1 {
 
   .edit-button-wrapper {
     display: flex;
+
     .archive-edit-button {
       background: $primaryColor !important;
       color: white !important;
@@ -30,24 +31,31 @@ h1 {
       margin-bottom: 1rem;
     }
   }
+
   .archive-data {
     display: flex;
     width: 100%;
+
     @media (max-width: $mobile-breakpoint) {
       flex-direction: column-reverse;
     }
+
     .archive-info {
       display: flex;
       flex-direction: column;
       width: 57.5%;
+
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
+
       .archive-socials {
         display: flex;
+
         @media (max-width: $mobile-breakpoint) {
           flex-direction: column;
         }
+
         .archive-logo-container {
           overflow: hidden;
           display: flex;
@@ -58,29 +66,34 @@ h1 {
           max-height: 150px;
           min-width: 130px;
           max-width: 150px;
+
           .archive-logo {
             margin-bottom: auto;
             margin-left: auto;
             margin-right: auto;
           }
         }
+
         .archive-links {
           overflow: hidden;
           display: flex;
           padding-right: 0rem;
           padding-top: 0rem;
           flex-direction: column;
+
           .archive-link {
             display: flex;
             align-items: center;
             margin-top: 0.1rem;
             margin-bottom: 0.1rem;
+
             a {
               margin-left: 0.5rem;
             }
           }
         }
       }
+
       .archive-info-container {
         margin-bottom: 1rem;
         min-height: 200px;
@@ -102,9 +115,11 @@ h1 {
         }
       }
     }
+
     .archive-showcase {
       width: 42.5%;
       margin-left: 30px;
+
       @media (max-width: $mobile-breakpoint) {
         margin-left: 0px;
         margin-bottom: 2rem;
@@ -117,6 +132,7 @@ h1 {
 .archive-link-entry {
   display: flex;
   align-items: center;
+
   a {
     font-size: larger;
   }

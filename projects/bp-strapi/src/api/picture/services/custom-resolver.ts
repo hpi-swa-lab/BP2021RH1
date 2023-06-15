@@ -1,5 +1,5 @@
 'use strict';
-import { KnexEngine } from '../../../types';
+import { KnexEngine, QueryBuilder } from '../../../types';
 import { plural, table } from '../../helper';
 import { bulkEdit, like, updatePictureWithTagCleanup } from './custom-update';
 
@@ -23,10 +23,10 @@ const manyToManyWithVerified = ['keyword_tag', 'location_tag', 'person_tag'];
 const manyToManyWithoutVerified = ['description', 'collection'];
 
 const buildJoinsForTableWithVerifiedHandling = (
-  knexEngine,
-  singularTableName,
-  verifiedLinkTable,
-  unverifiedLinkTable
+  knexEngine: QueryBuilder,
+  singularTableName: string,
+  verifiedLinkTable: string,
+  unverifiedLinkTable: string
 ) => {
   knexEngine = knexEngine.leftJoin(
     unverifiedLinkTable,
@@ -55,7 +55,11 @@ const buildJoinsForTableWithVerifiedHandling = (
   return knexEngine;
 };
 
-const buildJoinsForTableWithoutVerifiedHandling = (knexEngine, singularTableName, linkTable) => {
+const buildJoinsForTableWithoutVerifiedHandling = (
+  knexEngine: QueryBuilder,
+  singularTableName: string,
+  linkTable: string
+) => {
   knexEngine = knexEngine.leftJoin(linkTable, 'pictures.id', `${linkTable}.picture_id`);
   knexEngine = knexEngine.leftJoin(
     table(plural(singularTableName)),
@@ -65,7 +69,7 @@ const buildJoinsForTableWithoutVerifiedHandling = (knexEngine, singularTableName
   return knexEngine;
 };
 
-const buildJoins = knexEngine => {
+const buildJoins = (knexEngine: QueryBuilder) => {
   for (const singularTableName of manyToManyWithVerified) {
     const verifiedLinkTable = table(`pictures_verified_${plural(singularTableName)}_links`);
     const unverifiedLinkTable = table(`pictures_${plural(singularTableName)}_links`);
@@ -108,7 +112,7 @@ const buildJoins = knexEngine => {
   return knexEngine;
 };
 
-const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
+const buildLikeWhereForSearchTerm = (knexEngine: QueryBuilder, searchTerm: string) => {
   const searchTermForLikeQuery = `%${searchTerm}%`;
   for (const singularTableName of manyToManyWithVerified) {
     knexEngine = knexEngine.orWhereILike(
@@ -125,15 +129,15 @@ const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
 };
 
 const buildWhere = (
-  queryBuilder,
-  searchTerms,
-  searchTimes,
+  queryBuilder: QueryBuilder,
+  searchTerms: any,
+  searchTimes: any,
   textFilter: TextFilter,
   knexEngine: KnexEngine
 ) => {
   for (const searchObject of [...searchTerms, ...searchTimes]) {
     // Function syntax for where in order to use correct bracing in the query
-    queryBuilder = queryBuilder.where(qb => {
+    queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
       if (typeof searchObject === 'string') {
         qb = buildLikeWhereForSearchTerm(qb, searchObject);
       } else if (Array.isArray(searchObject)) {
@@ -148,7 +152,7 @@ const buildWhere = (
         // If the search object is an array, it must be our custom format for search times
         // e.g. ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
         qb = buildLikeWhereForSearchTerm(qb, searchObject[0]);
-        qb = qb.orWhere(timeRangeQb => {
+        qb = qb.orWhere((timeRangeQb: QueryBuilder) => {
           timeRangeQb = timeRangeQb.where(
             knexEngine.raw("time_range_tags.start + interval '1 hour'"),
             '>=',
@@ -171,7 +175,7 @@ const buildWhere = (
 
   switch (textFilter) {
     case TextFilter.ONLY_PICTURES:
-      queryBuilder = queryBuilder.where(qb => {
+      queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
         qb.where('pictures.is_text', false);
         qb.orWhereNull('pictures.is_text');
       });
@@ -192,9 +196,9 @@ const buildWhere = (
  * for the given search terms, time-related search input and the given pagination arguments.
  */
 const buildQueryForAllSearch = (
-  knexEngine,
-  searchTerms,
-  searchTimes,
+  knexEngine: KnexEngine,
+  searchTerms: any,
+  searchTimes: any,
   textFilter: TextFilter,
   pagination = { start: 0, limit: 100 }
 ) => {
@@ -216,11 +220,11 @@ const buildQueryForAllSearch = (
  * in order to execute the associated SQL queries on the underlying database.
  */
 const findPicturesByAllSearch = async (
-  knexEngine,
-  searchTerms,
-  searchTimes,
+  knexEngine: KnexEngine,
+  searchTerms: any,
+  searchTimes: any,
   textFilter: string,
-  pagination
+  pagination: { start: number; limit: number } | undefined
 ) => {
   const matchingPictures = await buildQueryForAllSearch(
     knexEngine,
@@ -229,7 +233,7 @@ const findPicturesByAllSearch = async (
     textFilter in TextFilter ? (textFilter as TextFilter) : TextFilter.ONLY_PICTURES,
     pagination
   );
-  return matchingPictures.map(picture => ({
+  return matchingPictures.map((picture: { id: number; is_text: boolean; likes: number }) => ({
     id: picture.id,
     is_text: picture.is_text,
     likes: picture.likes,

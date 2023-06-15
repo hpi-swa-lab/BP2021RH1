@@ -65,7 +65,6 @@
     "latest-pictures-info": "In diese Kollektion fließen die jüngsten 500 „Neuzugänge“ der Fotoarchive ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
     "create": "{{value}} hinzufügen",
     "presentationMode": "Präsentationsmodus",
-    "or": "oder",
     "confirm": "Bestätigen",
     "abort": "Abbrechen",
     "0s": "0er",
@@ -354,7 +353,6 @@
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
-    "scan": "Direkt vom Scanner einlesen",
     "addPictures": "Bilder hinzufügen",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
     "reallyDeletePicture": "Bild wirklich löschen?",
@@ -364,7 +362,6 @@
     "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch einen Unterkommentar, der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
     "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count, number}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
     "reallyDeleteCollection": "Collection wirklich löschen?",
-    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
     "synonyms": "Synonyme",
     "add": "Hinzufügen",
@@ -413,7 +410,6 @@
     "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
     "renameCollection": "Collection umbenennen",
     "nameOfNewCollection": "Name der neuen Collection:",
-    "autoCrop": "Automatisch Zuschneiden",
     "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
   },
   "pictureAdornments": {
@@ -429,21 +425,25 @@
         "title": "Möchtest du die Seite wirklich verlassen?",
         "content": "Du hast noch ungespeicherte Änderungen."
       },
+      "email": {
+        "label": "E-Mail-Adresse",
+        "helperText": "Diese E-Mail-Adresse wird für das Kontaktformular benutzt. Wenn du nicht möchtest, dass dich jemand über das Kontaktformular kontaktieren kann, kannst du dieses Feld einfach freilassen."
+      },
       "save": "Änderungen speichern",
       "saving": "Änderungen speichern...",
       "saved": "Änderungen gespeichert",
-      "nameLabel": "Archiv-Name:",
+      "nameLabel": "Archiv-Name",
       "shortDescription": {
-        "label": "Kurzbeschreibung:",
+        "label": "Kurzbeschreibung",
         "helperText": "Diese Beschreibung ist nur in der Archivübersicht sichtbar"
       },
       "longDescriptionLabel": "Archiv-Beschreibung",
       "logo": {
-        "label": "Logo:",
-        "preview": "Vorschau:"
+        "label": "Logo",
+        "preview": "Vorschau"
       },
       "links": {
-        "label": "Links:",
+        "label": "Links",
         "title": {
           "placeholder": "Meine Homepage",
           "helperText": "Titel (optional)"
@@ -516,7 +516,7 @@
     "success": "Ihre Nachricht ist eingegangen.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
     "name-label": "Name",
-    "email-label": "E-Mail",
+    "email-label": "Ihre E-Mail (optional)",
     "subject-label": "Betreff",
     "message-label": "Nachricht",
     "submit-button-label": "Anfrage versenden"
