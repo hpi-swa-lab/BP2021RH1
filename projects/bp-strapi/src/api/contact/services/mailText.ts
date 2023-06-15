@@ -10,7 +10,7 @@ const mailText = (
   sanitize(
     `Liebes Team des Archivs <b>${archiveName}</b>,<br>
 <br>
-Wir möchten Sie über eine Nachricht informieren, die über das Kontaktformular auf unserer Website harz-history.de eingegangen ist. Die Details der Nachricht lauten wie folgt:<br>
+Wir möchten Sie über eine Nachricht informieren, die über das Kontaktformular auf unserer Website ${websiteUrl} eingegangen ist. Die Details der Nachricht lauten wie folgt:<br>
 <br>
 <b>Absender:</b> ${senderName || "anonym"}<br>
 ${replyTo ? `<b>E-Mail-Adresse:</b> ${replyTo}<br>` : ""}

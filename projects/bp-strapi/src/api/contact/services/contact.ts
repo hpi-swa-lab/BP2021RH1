@@ -56,7 +56,7 @@ export const contact = async ({
         archive?.name ?? "",
         sender_name,
         reply_email,
-        "harz-history.de",
+        process.env.WEBSITE_URL ?? "harz-history.de",
         message
       ),
     };
