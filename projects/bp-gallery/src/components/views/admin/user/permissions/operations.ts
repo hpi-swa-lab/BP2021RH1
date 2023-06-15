@@ -9,6 +9,7 @@ import {
   sections as sectionNames,
 } from 'bp-graphql';
 import { Operation } from 'bp-graphql/build';
+import { cloneDeep } from 'lodash';
 
 export type OperationsStructure = {
   system: SectionStructure[];
@@ -31,10 +32,7 @@ export const generateOperationsStructure = (): OperationsStructure => {
     name,
     groups: [],
   }));
-  const perArchiveSections: SectionStructure[] = sectionNames.map(name => ({
-    name,
-    groups: [],
-  }));
+  const perArchiveSections = cloneDeep(systemSections);
 
   const groups: Record<string, GroupStructure> = Object.fromEntries(
     Object.entries(groupsMap).map(([name, group]) => [
