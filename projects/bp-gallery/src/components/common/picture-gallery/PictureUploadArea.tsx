@@ -22,7 +22,6 @@ import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import SortableItem from '../SortableItem';
 import PicturePreview from './PicturePreview';
 import './PictureUploadArea.scss';
-import ScannerInput from './ScannerInput';
 import uploadMediaFiles from './helpers/upload-media-files';
 
 export interface PictureUploadAreaProps {
@@ -128,10 +127,6 @@ const PictureUploadArea = ({
     });
   }, [preprocessPictures, dialog, newFiles, onUploaded, createPicture]);
 
-  const onScan = useCallback((file: File) => {
-    setNewFiles(fileList => [...fileList, { file, preview: asFlatPicture(file) }]);
-  }, []);
-
   function onDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
@@ -154,8 +149,6 @@ const PictureUploadArea = ({
             {t('curator.uploadHere', { folderName })}
           </p>
         </div>
-        <span className='or-label'>{t('common.or')}</span>
-        <ScannerInput onScan={onScan} />
       </div>
       <div className='uploaded-pictures'>
         <DndContext onDragEnd={onDragEnd} sensors={sensors}>

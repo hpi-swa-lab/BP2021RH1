@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .compact {
   display: flex;
@@ -22,7 +22,7 @@
 
 .large {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(260px, 100%/4), 1fr));
   grid-gap: 0.5rem;
   padding-bottom: 6px;
 }

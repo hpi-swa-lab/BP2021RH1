@@ -1,25 +1,56 @@
 import { useTranslation } from 'react-i18next';
 import { useVisit } from '../../../helpers/history';
-import { TagType } from '../../../types/additionalFlatTypes';
+import { PictureOverviewType, TagType } from '../../../types/additionalFlatTypes';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import './DiscoverView.scss';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
+import { AccessTime, ThumbUp } from '@mui/icons-material';
+import { useMemo } from 'react';
 
 const DiscoverView = () => {
   const { visit } = useVisit();
   const { t } = useTranslation();
 
+  const tabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.latest-pictures'),
+        icon: <AccessTime key='0' />,
+        content: (
+          <PictureOverview
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/latest');
+            }}
+          />
+        ),
+      },
+      {
+        title: t('discover.most-liked'),
+        icon: <ThumbUp key='1' />,
+        content: (
+          <PictureOverview
+            type={PictureOverviewType.MOST_LIKED}
+            queryParams={{}}
+            onClick={() => {
+              visit('/show-more/most-liked');
+            }}
+          />
+        ),
+      },
+    ];
+  }, [t, visit]);
+
   return (
     <div className='discover-container'>
       <ShowStats>
-        <PictureOverview
-          title={t('discover.latest-pictures')}
-          queryParams={{}}
-          onClick={() => {
-            visit('/show-more/latest');
-          }}
-        />
+        <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
+
         <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}

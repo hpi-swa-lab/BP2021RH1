@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client';
 import { Close, Save } from '@mui/icons-material';
 import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { memo, useCallback, useContext, useRef } from 'react';
+import { memo, useCallback, useContext, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type TuiImageEditor from 'tui-image-editor';
 import { asUploadPath } from '../../../../../helpers/app-helpers';
@@ -29,6 +29,22 @@ const PictureEditDialog = memo(function PictureEditDialog({
   const editorRef = useRef<TuiImageEditor | null>(null);
   const apolloClient = useApolloClient();
   const { calledViaLink } = useContext(PictureViewContext);
+
+  const editorOptions = useMemo(
+    () => ({
+      usageStatistics: false,
+      includeUI: {
+        loadImage: {
+          path: asUploadPath(picture.media),
+          name: 'SampleImage',
+        },
+        initMenu: 'crop',
+        menu: ['crop', 'rotate', 'flip', 'filter'],
+        menuBarPosition: 'right',
+      },
+    }),
+    [picture.media]
+  );
 
   const save = useCallback(async () => {
     if (!picture.media?.id || !editorRef.current) {
@@ -89,21 +105,7 @@ const PictureEditDialog = memo(function PictureEditDialog({
         </Toolbar>
       </AppBar>
       <DialogContent>
-        <ImageEditor
-          editorRef={editorRef}
-          options={{
-            usageStatistics: false,
-            includeUI: {
-              loadImage: {
-                path: asUploadPath(picture.media),
-                name: 'SampleImage',
-              },
-              initMenu: 'crop',
-              menu: ['crop', 'rotate', 'flip', 'filter'],
-              menuBarPosition: 'right',
-            },
-          }}
-        />
+        <ImageEditor editorRef={editorRef} options={editorOptions} />
       </DialogContent>
     </Dialog>
   );

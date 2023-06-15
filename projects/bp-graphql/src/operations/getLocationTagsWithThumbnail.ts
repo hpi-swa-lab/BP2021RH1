@@ -5,11 +5,10 @@ export default {
     query getLocationTagsWithThumbnail(
       $filters: LocationTagFiltersInput = {}
       $thumbnailFilters: PictureFiltersInput = {}
-      $start: Int
-      $limit: Int
+      $pagination: PaginationArg!
       $sortBy: [String]
     ) {
-      locationTags(filters: $filters, pagination: { start: $start, limit: $limit }, sort: $sortBy) {
+      locationTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
         data {
           id
           attributes {

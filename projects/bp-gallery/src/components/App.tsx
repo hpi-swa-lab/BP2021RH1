@@ -10,8 +10,8 @@ import ClipboardEditorProvider from './provider/ClipboardEditorProvider';
 import DialogProvider from './provider/DialogProvider';
 import { GrowthBookProvider } from './provider/GrowthBookProvider';
 import { MobileProvider } from './provider/MobileProvider';
+import { MuiThemeProvider } from './provider/MuiThemeProvider';
 import { ScrollProvider } from './provider/ScrollProvider';
-import StorageProvider from './provider/StorageProvider';
 import routes from './routes';
 import BottomBar from './top-and-bottom-bar/BottomBar';
 import TopBar from './top-and-bottom-bar/TopBar';
@@ -68,10 +68,10 @@ const apolloClient = new ApolloClient({
 const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
-      <AlertProvider>
-        <AuthProvider>
-          <DialogProvider>
-            <StorageProvider>
+      <MuiThemeProvider>
+        <AlertProvider>
+          <AuthProvider>
+            <DialogProvider>
               <MobileProvider>
                 <div className='App'>
                   <ClipboardEditorProvider>
@@ -85,10 +85,10 @@ const App = () => {
                   </ClipboardEditorProvider>
                 </div>
               </MobileProvider>
-            </StorageProvider>
-          </DialogProvider>
-        </AuthProvider>
-      </AlertProvider>
+            </DialogProvider>
+          </AuthProvider>
+        </AlertProvider>
+      </MuiThemeProvider>
     </ApolloProvider>
   );
 };

@@ -21,6 +21,11 @@ describe('Start view', () => {
     cy.get('.collection-picture-display .item').should('exist');
   });
 
+  it('should have selectable custom overview', () => {
+    cy.get('.overview-selection-container');
+    cy.get('[data-testid="AccessTimeIcon"]').click();
+  });
+
   it('should show a picture preview', () => {
     cy.get('.picture-grid').find('img').first().should('exist');
   });

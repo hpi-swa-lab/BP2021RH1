@@ -48,7 +48,6 @@ const TagList = ({
   const { data, loading, error, fetchMore } = useGetTagsWithThumbnail(
     queryParams,
     thumbnailQueryParams,
-    false,
     type,
     ['name:asc'],
     currentItemAmount ?? (scroll ? 30 : undefined)

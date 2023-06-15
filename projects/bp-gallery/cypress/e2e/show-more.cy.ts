@@ -6,7 +6,7 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for "Neuzugänge"', () => {
-    cy.get('.overview-container:contains(Neuzugänge)').contains('Mehr anzeigen').click();
+    cy.get('.overview-selection-container:contains(Neuzugänge)').contains('Mehr anzeigen').click();
     urlIs('/show-more/latest');
   });
 
@@ -76,7 +76,9 @@ describe('Navigation to Show More View from Archive View', () => {
   });
 
   it('works for "Unsere Bilder"', () => {
-    cy.get('.overview-container:contains(Unsere Bilder)').contains('Mehr anzeigen').click();
+    cy.get('.overview-selection-container:contains(Unsere Bilder)')
+      .contains('Mehr anzeigen')
+      .click();
     urlIs('/archives/1/show-more/pictures');
   });
 

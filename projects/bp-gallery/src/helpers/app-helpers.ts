@@ -1,4 +1,4 @@
-import { createHttpLink, from } from '@apollo/client';
+import { ApolloLink, createHttpLink, from } from '@apollo/client';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { isEmpty, unionWith } from 'lodash';
@@ -56,14 +56,38 @@ export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadO
  */
 export const buildHttpLink = (
   token: string | null,
-  openAlert?: (alertOptions: AlertOptions) => void
+  openAlert?: (alertOptions: AlertOptions) => void,
+  anonymousId?: string | null
 ) => {
   let httpLink = createHttpLink({
     uri: `${apiBase}/graphql`,
     headers: {
+      'Access-Control-Request-Headers': 'anonymousId',
       authorization: token ? `Bearer ${token}` : '',
+      anonymousId: anonymousId,
     },
   });
+
+  const growthbookLink = new ApolloLink((operation, forward) => {
+    return forward(operation).map(response => {
+      const experimentData: { experimentId: string; variationId: string }[] | null = JSON.parse(
+        (operation.getContext().response as Response).headers.get('x-growthbook') ?? 'null'
+      );
+      experimentData?.forEach(experiment => {
+        const w: any = window;
+        const _paq: Array<any> = (w._paq = w._paq || []);
+        _paq.push([
+          'trackEvent',
+          'ExperimentViewed',
+          experiment.experimentId,
+          experiment.variationId,
+        ]);
+      });
+      return response;
+    });
+  });
+
+  httpLink = from([growthbookLink, httpLink]);
 
   if (openAlert) {
     const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
@@ -91,13 +115,22 @@ export const buildHttpLink = (
 type Ref = { __ref: string };
 type MergeInput = { __typename: string; data: Ref[] };
 
-export const mergeByRef = (existing: Ref[] | undefined = undefined, incoming: Ref[]): Ref[] =>
-  unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
+export const mergeByRef = (
+  existing: Ref[] | undefined = undefined,
+  incoming: Ref[],
+  args: any
+): Ref[] => {
+  if (args?.pagination?.start === 0) {
+    return incoming;
+  }
+  return unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);
+};
 
 export const mergeByRefWrappedInData = (
   existing: MergeInput | undefined = undefined,
-  incoming: MergeInput
+  incoming: MergeInput,
+  { args }: any
 ): MergeInput => ({
   ...incoming,
-  data: mergeByRef(existing?.data, incoming.data),
+  data: mergeByRef(existing?.data, incoming.data, args),
 });

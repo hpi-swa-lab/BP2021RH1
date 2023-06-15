@@ -1,7 +1,9 @@
-import { Cancel, Label, OpenWith } from '@mui/icons-material';
+import { Autorenew, Cancel, OpenWith } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import { CSSProperties, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFaceTagging } from '../../../../hooks/context-hooks';
-import '../../../../shared/style.scss';
+import '../../../../shared/style.module.scss';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import { FaceTagData, TagDirection } from './FaceTagTypes';
 
@@ -14,6 +16,7 @@ export const FaceTag = ({
 }: {
   data: FaceTagData;
 }) => {
+  const { t } = useTranslation();
   const { role } = useAuth();
   const context = useFaceTagging();
   const isFaceTagging = context?.isFaceTagging;
@@ -29,6 +32,7 @@ export const FaceTag = ({
     if (personTagId === undefined) {
       return;
     }
+    context?.setActiveTagDirection(tagDirection);
     await handleDelete();
     context?.setActiveTagId(personTagId);
   };
@@ -129,17 +133,34 @@ export const FaceTag = ({
     };
   }, [x, y, position, noPointerEvents, tagDirection]);
 
+  const {
+    palette: {
+      person: { main: personColor },
+    },
+  } = useTheme();
+  const transparentPersonColor = personColor + 'bb';
+
   return (
     <div className='fixed z-[999] hover:z-[9999] flex items-center facetag' style={style}>
       <svg width={triangle.width} height={triangle.height} data-testid={triangle.testid}>
-        <polygon fill='#404173bb' points={triangle.points} />
+        <polygon fill={transparentPersonColor} points={triangle.points} />
       </svg>
-      <div className='flex flex-row items-center space-x-1 bg-[#404173bb] p-2 rounded-md text-white'>
+      <div
+        className='flex flex-row items-center space-x-1 p-2 rounded-md text-white'
+        style={{
+          background: transparentPersonColor,
+        }}
+      >
         <span>{name}</span>
         {role >= AuthRole.CURATOR && id !== undefined && isFaceTagging && (
           <>
-            <OpenWith className='hover:text-[#00000066]' onClick={handleMove} />
-            <Label
+            <OpenWith
+              titleAccess={t('facetag.move')}
+              className='hover:text-[#00000066]'
+              onClick={handleMove}
+            />
+            <Autorenew
+              titleAccess={t('facetag.rotate')}
               className={
                 id === context.tagDirectionReferenceTagId
                   ? 'text-[#00000066]'
@@ -147,7 +168,11 @@ export const FaceTag = ({
               }
               onClick={toggleSetDirectionMode}
             />
-            <Cancel className='hover:text-[#00000066]' onClick={handleDelete} />
+            <Cancel
+              titleAccess={t('facetag.delete')}
+              className='hover:text-[#00000066]'
+              onClick={handleDelete}
+            />
           </>
         )}
       </div>

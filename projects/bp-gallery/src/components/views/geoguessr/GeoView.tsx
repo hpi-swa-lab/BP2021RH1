@@ -15,10 +15,10 @@ import {
   FlatCollection,
   FlatPictureGeoInfo,
 } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
 import { useVariant } from '../../../helpers/growthbook';
-import Loading from '../../common/Loading';
 
 const getAllPictureIds = (archives: FlatArchiveTag[]) => {
   const allPictureIds: string[] = archives
@@ -45,7 +45,7 @@ const getTodaysPictureQueue = (pictureIds: string[]) => {
   const currentDate = new Date();
   const startDate = new Date(currentDate.getFullYear(), 0, 1);
   const days = Math.floor((currentDate.valueOf() - startDate.valueOf()) / (24 * 60 * 60 * 1000));
-  const resultIndex = pictureIds.length % days;
+  const resultIndex = pictureIds.length % (days * pictureNumber);
   const list = [];
   for (let i = 0; i < pictureNumber; i++) {
     list.push(pictureIds[(resultIndex + i) % pictureIds.length]);
@@ -66,6 +66,7 @@ const GeoView = () => {
   const [pictureId, setPictureId] = useState<string | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [needsExplanation, setNeedsExplanation] = useState(false);
+  const [isSet, setIsSet] = useState(false);
   const pictureLink = useGetPictureLink(pictureId);
 
   const { data: picturesData } = useGetAllPicturesByArchiveQuery();
@@ -90,11 +91,14 @@ const GeoView = () => {
 
   const onNextPicture = useCallback(() => {
     const nextPicture = getNextPicture();
-    nextPicture ? setPictureId(nextPicture) : setGameOver(true);
+    setPictureId(nextPicture);
+    if (!nextPicture) {
+      setGameOver(true);
+    }
   }, [getNextPicture]);
 
   useEffect(() => {
-    if (!archives) {
+    if (!archives || isSet) {
       return;
     }
     const allPictureIds = isGeoCollectionPictures
@@ -103,7 +107,8 @@ const GeoView = () => {
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
     onNextPicture();
-  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures, onNextPicture]);
+    setIsSet(true);
+  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures, isSet, onNextPicture]);
 
   const dontShowAgain = () => {
     setHasReadInstructions(true);

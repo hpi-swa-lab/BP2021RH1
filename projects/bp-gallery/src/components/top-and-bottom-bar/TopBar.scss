@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .top-bar {
   background: $primaryColor;
@@ -19,9 +19,11 @@
     max-width: 800px;
     margin-right: 2vw;
   }
+
   .action-wrapper {
     margin: 0 2rem;
   }
+
   .bh-logo {
     img {
       width: 75px;
@@ -43,6 +45,7 @@
     .search-div {
       margin-right: 4rem;
     }
+
     .action-wrapper {
       margin: 0 2rem;
     }

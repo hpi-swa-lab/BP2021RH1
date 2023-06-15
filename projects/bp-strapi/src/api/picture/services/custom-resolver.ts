@@ -1,7 +1,7 @@
 "use strict";
-import { KnexEngine } from "../../../types";
+import { KnexEngine, QueryBuilder } from "../../../types";
+import { plural, table } from "../../helper";
 import { bulkEdit, like, updatePictureWithTagCleanup } from "./custom-update";
-const { plural, table } = require("../../helper");
 /**
  * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
  * in both a verified and an unverified relation.
@@ -15,10 +15,10 @@ const manyToManyWithVerified = ["keyword_tag", "location_tag", "person_tag"];
 const manyToManyWithoutVerified = ["description", "collection"];
 
 const buildJoinsForTableWithVerifiedHandling = (
-  knexEngine,
-  singularTableName,
-  verifiedLinkTable,
-  unverifiedLinkTable
+  knexEngine: QueryBuilder,
+  singularTableName: string,
+  verifiedLinkTable: string,
+  unverifiedLinkTable: string
 ) => {
   knexEngine = knexEngine.leftJoin(
     unverifiedLinkTable,
@@ -51,9 +51,9 @@ const buildJoinsForTableWithVerifiedHandling = (
 };
 
 const buildJoinsForTableWithoutVerifiedHandling = (
-  knexEngine,
-  singularTableName,
-  linkTable
+  knexEngine: QueryBuilder,
+  singularTableName: string,
+  linkTable: string
 ) => {
   knexEngine = knexEngine.leftJoin(
     linkTable,
@@ -68,7 +68,7 @@ const buildJoinsForTableWithoutVerifiedHandling = (
   return knexEngine;
 };
 
-const buildJoins = (knexEngine) => {
+const buildJoins = (knexEngine: QueryBuilder) => {
   for (const singularTableName of manyToManyWithVerified) {
     const verifiedLinkTable = table(
       `pictures_verified_${plural(singularTableName)}_links`
@@ -117,7 +117,10 @@ const buildJoins = (knexEngine) => {
   return knexEngine;
 };
 
-const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
+const buildLikeWhereForSearchTerm = (
+  knexEngine: QueryBuilder,
+  searchTerm: string
+) => {
   const searchTermForLikeQuery = `%${searchTerm}%`;
   for (const singularTableName of manyToManyWithVerified) {
     knexEngine = knexEngine.orWhereILike(
@@ -143,15 +146,15 @@ const buildLikeWhereForSearchTerm = (knexEngine, searchTerm) => {
 };
 
 const buildWhere = (
-  queryBuilder,
-  searchTerms,
-  searchTimes,
-  filterOutTexts,
+  queryBuilder: QueryBuilder,
+  searchTerms: any,
+  searchTimes: any,
+  filterOutTexts: any,
   knexEngine: KnexEngine
 ) => {
   for (const searchObject of [...searchTerms, ...searchTimes]) {
     // Function syntax for where in order to use correct bracing in the query
-    queryBuilder = queryBuilder.where((qb) => {
+    queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
       if (typeof searchObject === "string") {
         qb = buildLikeWhereForSearchTerm(qb, searchObject);
       } else if (Array.isArray(searchObject)) {
@@ -166,7 +169,7 @@ const buildWhere = (
         // If the search object is an array, it must be our custom format for search times
         // e.g. ["1954", "1954-01-01T00:00:00.000Z", "1954-12-31T23:59:59.000Z"].
         qb = buildLikeWhereForSearchTerm(qb, searchObject[0]);
-        qb = qb.orWhere((timeRangeQb) => {
+        qb = qb.orWhere((timeRangeQb: QueryBuilder) => {
           timeRangeQb = timeRangeQb.where(
             knexEngine.raw("time_range_tags.start + interval '1 hour'"),
             ">=",
@@ -188,7 +191,7 @@ const buildWhere = (
   queryBuilder = queryBuilder.whereNotNull("pictures.published_at");
 
   if (filterOutTexts) {
-    queryBuilder = queryBuilder.where((qb) => {
+    queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
       qb.where("pictures.is_text", false);
       qb.orWhereNull("pictures.is_text");
     });
@@ -202,10 +205,10 @@ const buildWhere = (
  * for the given search terms, time-related search input and the given pagination arguments.
  */
 const buildQueryForAllSearch = (
-  knexEngine,
-  searchTerms,
-  searchTimes,
-  filterOutTexts,
+  knexEngine: KnexEngine,
+  searchTerms: any,
+  searchTimes: any,
+  filterOutTexts: any,
   pagination = { start: 0, limit: 100 }
 ) => {
   const withSelect = knexEngine.distinct("pictures.*").from(table("pictures"));
@@ -232,11 +235,11 @@ const buildQueryForAllSearch = (
  * in order to execute the associated SQL queries on the underlying database.
  */
 const findPicturesByAllSearch = async (
-  knexEngine,
-  searchTerms,
-  searchTimes,
-  filterOutTexts,
-  pagination
+  knexEngine: KnexEngine,
+  searchTerms: any,
+  searchTimes: any,
+  filterOutTexts: any,
+  pagination: { start: number; limit: number } | undefined
 ) => {
   const matchingPictures = await buildQueryForAllSearch(
     knexEngine,
@@ -245,11 +248,41 @@ const findPicturesByAllSearch = async (
     filterOutTexts,
     pagination
   );
-  return matchingPictures.map((picture) => ({
-    id: picture.id,
-    is_text: picture.is_text,
-    likes: picture.likes,
-  }));
+  return matchingPictures.map(
+    (picture: { id: number; is_text: boolean; likes: number }) => ({
+      id: picture.id,
+      is_text: picture.is_text,
+      likes: picture.likes,
+    })
+  );
 };
 
-export { findPicturesByAllSearch, updatePictureWithTagCleanup, bulkEdit, like };
+const archivePictureCounts = async (knexEngine: KnexEngine) => {
+  const archivePictures = table("pictures_archive_tag_links");
+  const archivePictureCounts = await knexEngine(archivePictures)
+    //necessary to sort out unpublished pictures
+    .join(
+      table("pictures"),
+      `${archivePictures}.picture_id`,
+      `${table("pictures")}.id`
+    )
+    .select("archive_tag_id as id")
+    .whereNotNull("published_at")
+    .count("picture_id")
+    .groupBy("archive_tag_id")
+    .orderBy("id", "asc");
+  return {
+    data: archivePictureCounts.map((archive) => ({
+      id: archive.id,
+      attributes: { count: archive.count },
+    })),
+  };
+};
+
+export {
+  findPicturesByAllSearch,
+  updatePictureWithTagCleanup,
+  bulkEdit,
+  like,
+  archivePictureCounts,
+};

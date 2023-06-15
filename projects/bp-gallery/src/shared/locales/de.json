@@ -72,7 +72,6 @@
     "latest-pictures-info": "In diese Kollektion fließen die jüngsten 500 „Neuzugänge“ der Fotoarchive ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
     "create": "{{value}} hinzufügen",
     "presentationMode": "Präsentationsmodus",
-    "or": "oder",
     "confirm": "Bestätigen",
     "abort": "Abbrechen",
     "0s": "0er",
@@ -199,9 +198,13 @@
     "collections": "Collections",
     "around": "etwa "
   },
+  "facetag": {
+    "move": "Einmal klicken um das Namensschild bewegbar zu machen. Diese kann dann mit der Maus an eine neue Position bewegt und mit einem weiteren Klick platziert werden",
+    "rotate": "Einmal klicken um die Namensschild drehbar zu machen. Die Namensschild kann dann durch Bewegen der Maus gedreht werden. Sobald die Namensschild korrekt ausgerichtet ist, kann die neue Ausrichtung per Mausklick festgehalten werden",
+    "delete": "Klicken um die Namensschild zu löschen"
+  },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
-    "scan": "Direkt vom Scanner einlesen",
     "addPictures": "Bilder hinzufügen",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
     "reallyDeletePicture": "Bild wirklich löschen?",
@@ -211,7 +214,6 @@
     "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch einen Unterkommentar, der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
     "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count, number}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
     "reallyDeleteCollection": "Collection wirklich löschen?",
-    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
     "synonyms": "Synonyme",
     "add": "Hinzufügen",
@@ -261,7 +263,6 @@
     "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
     "renameCollection": "Collection umbenennen",
     "nameOfNewCollection": "Name der neuen Collection:",
-    "autoCrop": "Automatisch Zuschneiden",
     "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
   },
   "pictureAdornments": {
@@ -277,21 +278,25 @@
         "title": "Möchtest du die Seite wirklich verlassen?",
         "content": "Du hast noch ungespeicherte Änderungen."
       },
+      "email": {
+        "label": "E-Mail-Adresse",
+        "helperText": "Diese E-Mail-Adresse wird für das Kontaktformular benutzt. Wenn du nicht möchtest, dass dich jemand über das Kontaktformular kontaktieren kann, kannst du dieses Feld einfach freilassen."
+      },
       "save": "Änderungen speichern",
       "saving": "Änderungen speichern...",
       "saved": "Änderungen gespeichert",
-      "nameLabel": "Archiv-Name:",
+      "nameLabel": "Archiv-Name",
       "shortDescription": {
-        "label": "Kurzbeschreibung:",
+        "label": "Kurzbeschreibung",
         "helperText": "Diese Beschreibung ist nur in der Archivübersicht sichtbar"
       },
       "longDescriptionLabel": "Archiv-Beschreibung",
       "logo": {
-        "label": "Logo:",
-        "preview": "Vorschau:"
+        "label": "Logo",
+        "preview": "Vorschau"
       },
       "links": {
-        "label": "Links:",
+        "label": "Links",
         "title": {
           "placeholder": "Meine Homepage",
           "helperText": "Titel (optional)"
@@ -360,9 +365,11 @@
   },
   "contact-form": {
     "title": "Kontakt",
+    "success": "Ihre Nachricht ist eingegangen.",
+    "error": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
     "name-label": "Name",
-    "email-label": "E-Mail",
+    "email-label": "Ihre E-Mail (optional)",
     "subject-label": "Betreff",
     "message-label": "Nachricht",
     "submit-button-label": "Anfrage versenden"
@@ -380,7 +387,9 @@
     "person-title": "Personen",
     "person-text": "Hier finden Sie alle Personen unseres Archiv",
     "location-title": "Orte",
-    "location-text": "Hier finden Sie alle Orte unseres Archivs"
+    "location-text": "Hier finden Sie alle Orte unseres Archivs",
+    "most-liked-title": "Bestbewertete Bilder",
+    "most-liked-text": "Hier finden sie die 500 bestbewerteten Bilder. Wer einen Überblick haben will, welche Bilder anderen Nutzern besonders gut gefallen ist hier richtig."
   },
   "discover": {
     "discover-button": "Stöbere in allen Archiven",
@@ -388,7 +397,9 @@
     "decades": "Jahrzehnte",
     "locations": "Orte",
     "more-info": "Wissen Sie mehr über diese Bilder?",
-    "our-categories": "Unsere Kategorien"
+    "our-categories": "Unsere Kategorien",
+    "most-liked": "Bestbewertete Bilder",
+    "our-pictures": "Unsere Bilder"
   },
   "tag-panel": {
     "name-of-sub-keyword": "Name des neuen Unterschlagworts für {{ parent }}:",

@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 type Position = [number, number];
@@ -45,4 +45,24 @@ export const useMousePosition = () => {
   }, [listener]);
 
   return mousePosition;
+};
+
+export const useMouseIsIdle = (minIdleMilliseconds: number) => {
+  const [mouseIsIdle, setMouseIsIdle] = useState(false);
+
+  const mousePosition = useMousePosition();
+
+  useEffect(() => {
+    setMouseIsIdle(false);
+
+    const timeout = setTimeout(() => {
+      setMouseIsIdle(true);
+    }, minIdleMilliseconds);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [mousePosition, minIdleMilliseconds]);
+
+  return mouseIsIdle;
 };

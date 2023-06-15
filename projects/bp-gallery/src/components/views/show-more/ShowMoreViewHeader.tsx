@@ -29,7 +29,7 @@ const ShowMoreViewHeader = ({
   const getShowMoreHeader = () => t(`show-more.${categoryType}-title`);
   const getShowMoreText = () => t(`show-more.${categoryType}-text`);
 
-  if (categoryType === 'pictures' || categoryType === 'latest') {
+  if (categoryType === 'pictures' || categoryType === 'latest' || categoryType === 'most-liked') {
     if (categoryId && collectionsInfo && collectionsInfo.collections.length > 0) {
       return (
         <CollectionDescription
