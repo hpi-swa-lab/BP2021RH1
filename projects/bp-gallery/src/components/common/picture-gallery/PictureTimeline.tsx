@@ -68,12 +68,16 @@ const PictureTimeline = ({
           }px 20px ${TEXT_OVERFLOW_WIDTH}px`,
         }}
       >
-        <div className='relative inline w-full'>
-          <hr className='absolute left-0 top-0 h-[16px]' />
+        <div className='relative inline w-full bottom-0'>
+          <hr
+            className={`absolute left-0 ${
+              date === year || date === year - 1 ? '-top-1' : 'top-0'
+            } ${date === year || date === year - 1 ? 'h-[20px]' : 'h-[16px]'}`}
+          />
           <span
-            className={`absolute -left-[18px] -top-4 select-none ${
-              date === year || date === year - 1 ? 'text-black' : 'text-slate-500'
-            }`}
+            className={`absolute -left-[18px] ${
+              date === year || date === year - 1 ? '-top-5' : '-top-4'
+            } select-none ${date === year || date === year - 1 ? 'text-black' : 'text-slate-500'}`}
           >
             {year}
           </span>

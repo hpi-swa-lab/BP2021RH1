@@ -121,6 +121,7 @@ const HorizontalPictureGrid = ({
   setDate: Dispatch<SetStateAction<number>>;
 }) => {
   const pictureLength = useRef<number>(0);
+  const lastScrollPos = useRef<number>(-1);
   const allowDateUpdate = useRef<boolean>(true);
   const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
 
@@ -128,7 +129,6 @@ const HorizontalPictureGrid = ({
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
   const [filterDate, setFilterDate] = useState<number>(date);
-  const [allowFetchMoreLeft, setAllowFetchMoreLeft] = useState<boolean>(true);
 
   const rightResult = useGetPictures(
     {
@@ -302,12 +302,12 @@ const HorizontalPictureGrid = ({
     }
     if ((leftPictures?.length ?? 0) <= 3) {
       scrollBarRef.scrollLeft = 270;
-      setAllowFetchMoreLeft(true);
+      lastScrollPos.current = scrollBarRef.scrollLeft;
     } else {
       const oldLength = Math.ceil(pictureLength.current / 3);
       const newLength = Math.ceil((leftPictures?.length ?? 0) / 3);
       scrollBarRef.scrollLeft += (newLength - oldLength) * 270;
-      setAllowFetchMoreLeft(true);
+      lastScrollPos.current = scrollBarRef.scrollLeft;
     }
     pictureLength.current = leftPictures?.length ?? 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -350,13 +350,14 @@ const HorizontalPictureGrid = ({
           }}
           onScrollX={updateOnScrollX}
           onXReachStart={ref => {
-            if (!leftResult.loading && allowFetchMoreLeft) {
+            if (!leftResult.loading && lastScrollPos.current !== ref.scrollLeft) {
               fetchMoreOnScrollLeft(99);
-              setAllowFetchMoreLeft(false);
+              lastScrollPos.current = ref.scrollLeft;
             }
           }}
           onXReachEnd={ref => {
-            if (!rightResult.loading) {
+            if (!rightResult.loading && lastScrollPos.current !== ref.scrollLeft) {
+              lastScrollPos.current = ref.scrollLeft;
               fetchMoreOnScrollRight(99);
             }
           }}
