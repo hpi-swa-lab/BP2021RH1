@@ -2841,6 +2841,7 @@ export type GetExhibitionQuery = {
                           formats?: any | null;
                           url: string;
                           updatedAt?: any | null;
+                          provider: string;
                         } | null;
                       } | null;
                     };
@@ -2868,6 +2869,7 @@ export type GetExhibitionQuery = {
                           formats?: any | null;
                           url: string;
                           updatedAt?: any | null;
+                          provider: string;
                         } | null;
                       } | null;
                     };
@@ -2955,6 +2957,7 @@ export type GetExhibitionsQuery = {
                           formats?: any | null;
                           url: string;
                           updatedAt?: any | null;
+                          provider: string;
                         } | null;
                       } | null;
                     };
@@ -3016,6 +3019,7 @@ export type GetIdeaLotContentQuery = {
                           formats?: any | null;
                           url: string;
                           updatedAt?: any | null;
+                          provider: string;
                         } | null;
                       } | null;
                     };
@@ -5076,6 +5080,7 @@ export const GetExhibitionDocument = gql`
                             formats
                             url
                             updatedAt
+                            provider
                           }
                         }
                       }
@@ -5103,6 +5108,7 @@ export const GetExhibitionDocument = gql`
                             formats
                             url
                             updatedAt
+                            provider
                           }
                         }
                       }
@@ -5241,6 +5247,7 @@ export const GetExhibitionsDocument = gql`
                             formats
                             url
                             updatedAt
+                            provider
                           }
                         }
                       }
@@ -5391,6 +5398,7 @@ export const GetIdeaLotContentDocument = gql`
                             formats
                             url
                             updatedAt
+                            provider
                           }
                         }
                       }

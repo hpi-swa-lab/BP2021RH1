@@ -29,6 +29,7 @@ export default {
                               formats
                               url
                               updatedAt
+                              provider
                             }
                           }
                         }
@@ -56,6 +57,7 @@ export default {
                               formats
                               url
                               updatedAt
+                              provider
                             }
                           }
                         }
