@@ -3,7 +3,7 @@ import { Parameters } from '../PermissionsView';
 
 export type PresetType = 'system' | 'archive';
 
-export type ParametersWithoutArchive = Omit<Parameters, 'archive'>;
+export type ParametersWithoutArchive = Omit<Parameters, 'archive_tag'>;
 
 export type Preset = {
   type: PresetType;
