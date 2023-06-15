@@ -1,7 +1,6 @@
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { isFunction } from 'lodash';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import './BulkOperationsPanel.scss';
 
 export interface BulkOperation {
   icon: JSX.Element;
@@ -28,19 +27,18 @@ const BulkOperationsPanel = ({
     return null;
   }
   return (
-    <div className='bulk-operations'>
+    <>
       {runnableOperations.map((operation, index) => (
-        <Button
+        <IconButton
           key={index}
           onClick={() => operation.action(selectedPictures, onBulkEdit)}
-          className='operation'
-          startIcon={operation.icon}
-          variant='contained'
+          color='primary'
+          title={operation.name}
         >
-          {operation.name}
-        </Button>
+          {operation.icon}
+        </IconButton>
       ))}
-    </div>
+    </>
   );
 };
 

@@ -9,3 +9,7 @@ export const waitForAllImagesLoaded = () => {
 export const waitForCuratorPictureInfo = () => {
   cy.get('.save-state');
 };
+
+export const clickBulkOperation = (name: string) => {
+  cy.get(`[title="${name}"]`).click();
+};

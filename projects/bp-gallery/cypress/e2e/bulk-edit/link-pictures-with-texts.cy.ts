@@ -2,7 +2,7 @@
 /*
 
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures } from './helper';
+import { bulkEdit, selectPictures } from './helper';
 
 const textsForSinglePictureToMultipleTexts = ['30', '31', '32'];
 const textForSingleTextToMultiplePictures = '33';
@@ -32,7 +32,7 @@ describe('bulk edit link pictures with texts', () => {
   it('marks multiple pictures as texts', () => {
     cy.visit('/start');
     selectPictures(...allTexts);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Verlinkte Texte');
     cy.contains('button', 'Als Text markieren').find('[data-testid="CheckBoxOutlineBlankIcon"]');
     cy.contains('Als Text markieren').click();
@@ -56,7 +56,7 @@ describe('bulk edit link pictures with texts', () => {
     const texts = textsForSinglePictureToMultipleTexts;
     cy.visit('/start');
     selectPictures(...texts);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains(
       '.picture-info-field[data-type="links"] button',
       `Ein kopiertes Bild einfügen`
@@ -95,7 +95,7 @@ describe('bulk edit link pictures with texts', () => {
     const pictures = picturesForSingleTextToMultiplePictures;
     cy.visit('/start');
     selectPictures(...pictures);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains(
       '.picture-info-field[data-type="links"] button',
       'Einen kopierten Text einfügen'
@@ -126,7 +126,7 @@ describe('bulk edit link pictures with texts', () => {
     const texts = textsForMultipleTextsToMultiplePictures;
     cy.visit('/start');
     selectPictures(...texts);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.get('.clipboard-editor-open').click();
     cy.contains('.clipboard-editor', 'Keine Bilder');
     cy.contains('.clipboard-editor button', 'Aktuelle Texte kopieren').click();
@@ -138,7 +138,7 @@ describe('bulk edit link pictures with texts', () => {
     const pictures = picturesForMultipleTextsToMultiplePictures;
     cy.visit('/start');
     selectPictures(...pictures);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains(
       '.picture-info-field[data-type="links"] button',
       `${texts.length} kopierte Texte einfügen`
@@ -175,7 +175,7 @@ describe('bulk edit link pictures with texts', () => {
     const pictures = picturesForMultiplePicturesToMultipleTexts;
     cy.visit('/start');
     selectPictures(...pictures);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.get('.clipboard-editor-open').click();
     cy.contains('.clipboard-editor', 'Keine Bilder');
     cy.contains('.clipboard-editor button', 'Aktuelle Bilder kopieren').click();
@@ -187,7 +187,7 @@ describe('bulk edit link pictures with texts', () => {
     const texts = textsForMultiplePicturesToMultipleTexts;
     cy.visit('/start');
     selectPictures(...texts);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains(
       '.picture-info-field[data-type="links"] button',
       `${pictures.length} kopierte Bilder einfügen`
@@ -223,7 +223,7 @@ describe('bulk edit link pictures with texts', () => {
   it('prevents marking texts as pictures when links are present', () => {
     cy.visit('/start');
     selectPictures(...allTexts);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Verlinkte Bilder');
     cy.contains('button', 'Als Text markieren').find('[data-testid="CheckBoxIcon"]');
     cy.contains('Als Text markieren').click();
@@ -236,7 +236,7 @@ describe('bulk edit link pictures with texts', () => {
     const pictures = picturesForSingleTextToMultiplePictures;
     cy.visit('/start');
     selectPictures(...pictures);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Lädt...').should('not.exist');
     const text = textForSingleTextToMultiplePictures;
     cy.get(`#picture-preview-for-${text} [data-testid="LinkOffIcon"]`).click();
@@ -258,7 +258,7 @@ describe('bulk edit link pictures with texts', () => {
     const texts = textsForSinglePictureToMultipleTexts;
     cy.visit('/start');
     selectPictures(...texts);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Lädt...').should('not.exist');
     const picture = pictureForSinglePictureToMultipleTexts;
     cy.get(`#picture-preview-for-${picture} [data-testid="LinkOffIcon"]`).click();
@@ -280,7 +280,7 @@ describe('bulk edit link pictures with texts', () => {
     const pictures = picturesForMultipleTextsToMultiplePictures;
     cy.visit('/start');
     selectPictures(...pictures);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Lädt...').should('not.exist');
     cy.contains('Alle Links entfernen').click();
     cy.contains('Bestätigen').click();
@@ -305,7 +305,7 @@ describe('bulk edit link pictures with texts', () => {
     const texts = textsForMultiplePicturesToMultipleTexts;
     cy.visit('/start');
     selectPictures(...texts);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Lädt...').should('not.exist');
     cy.contains('Alle Links entfernen').click();
     cy.contains('Bestätigen').click();
@@ -329,7 +329,7 @@ describe('bulk edit link pictures with texts', () => {
   it('marks multiple texts as pictures', () => {
     cy.visit('/start');
     selectPictures(...allTexts);
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Verlinkte Bilder');
     cy.contains('button', 'Als Text markieren').find('[data-testid="CheckBoxIcon"]');
     cy.contains('Als Text markieren').click();

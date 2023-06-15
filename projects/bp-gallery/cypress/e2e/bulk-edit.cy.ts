@@ -1,4 +1,5 @@
 import { login, logout } from '../utils/login-utils';
+import { bulkEdit } from './bulk-edit/helper';
 
 describe('bulk edit', () => {
   before(() => {
@@ -12,7 +13,7 @@ describe('bulk edit', () => {
   it('deselect all if and only if something was changed', () => {
     cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(0).click();
     cy.get('.picture-preview .adornment[title="Bild auswählen"]').eq(1).click();
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Zurück').click();
     cy.get('.picture-preview .adornment[title="Bild auswählen"]')
       .eq(0)
@@ -20,7 +21,7 @@ describe('bulk edit', () => {
     cy.get('.picture-preview .adornment[title="Bild auswählen"]')
       .eq(1)
       .find('[data-testid="CheckBoxIcon"]');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.picture-info-field', 'Personen').find('input').type('Simon');
     cy.contains('Simon Heraldson').click();
     cy.contains('.save-state', 'Gespeichert');
