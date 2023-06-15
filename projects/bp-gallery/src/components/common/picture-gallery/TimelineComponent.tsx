@@ -37,7 +37,7 @@ const TimelineComponent = ({
   const lowerBound =
     oldestPictures && oldestPictures.length > 0
       ? new Date(oldestPictures[0].time_range_tag?.start as Date).getFullYear()
-      : 1900;
+      : defaultValue;
   const upperBound = new Date(Date.now()).getFullYear();
 
   return (

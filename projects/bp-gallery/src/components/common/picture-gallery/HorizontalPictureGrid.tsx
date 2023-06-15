@@ -132,7 +132,7 @@ const HorizontalPictureGrid = ({
 
   const rightResult = useGetPictures(
     {
-      time_range_tag: { start: { gte: new Date(`${filterDate}-01-01`) } },
+      time_range_tag: { start: { gte: new Date(`${filterDate - 1}-12-31`) } },
     },
     false,
     ['time_range_tag.start:asc'],
@@ -143,7 +143,7 @@ const HorizontalPictureGrid = ({
   );
 
   const leftResult = useGetPictures(
-    { time_range_tag: { start: { lt: new Date(`${filterDate}-01-01`) } } },
+    { time_range_tag: { start: { lt: new Date(`${filterDate - 1}-12-31`) } } },
     false,
     ['time_range_tag.start:desc'],
     true,
