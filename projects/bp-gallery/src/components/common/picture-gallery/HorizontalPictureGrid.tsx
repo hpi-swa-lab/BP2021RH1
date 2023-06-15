@@ -186,7 +186,7 @@ const HorizontalPictureGrid = ({
         const lastIndex = pictures.findLastIndex(
           value =>
             value.time_range_tag?.start &&
-            new Date(value.time_range_tag?.start as Date).getFullYear() < date
+            new Date(value.time_range_tag.start as Date).getFullYear() < date
         );
         const lastField = Math.floor(lastIndex / 3) + (leftPictures?.length ?? 0 ? 1 : 0);
         allowDateUpdate.current = false;
