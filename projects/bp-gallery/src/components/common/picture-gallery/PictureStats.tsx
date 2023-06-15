@@ -37,7 +37,8 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
           {isLiked ? (
             <ThumbUpAlt
               fontSize='inherit'
-              className='text-blue-400 cursor-pointer !transition-transform !duration-100 hover:scale-110 scale-105'
+              color='like'
+              className='cursor-pointer !transition-transform !duration-100 hover:scale-110 scale-105'
             />
           ) : (
             <ThumbUpAltOutlined

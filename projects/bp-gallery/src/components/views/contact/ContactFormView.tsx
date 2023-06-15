@@ -1,5 +1,4 @@
 import { Button } from '@mui/material';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { asApiPath } from '../../../helpers/app-helpers';
 
@@ -52,11 +51,7 @@ const ContactFormView = () => {
             </label>
           </p>
           <div className='submit-button-container '></div>
-          <Button
-            className='submit-input'
-            sx={{ 'background-color': '#7e241d', color: 'white' }}
-            type='submit'
-          >
+          <Button className='submit-input' variant='contained' color='primary' type='submit'>
             {t('contact-form.submit-button-label').toString()}
           </Button>
         </div>
