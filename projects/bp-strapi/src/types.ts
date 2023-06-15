@@ -1,10 +1,11 @@
-import {
+import type {
   Attribute,
   GetAttributeValue,
   GetAttributes,
   Strapi,
 } from "@strapi/strapi";
-import { knex } from "knex";
+import type { knex } from "knex";
+import type { ParameterizedContext } from "koa";
 import type * as Nexus from "nexus";
 
 export type KnexEngine = typeof knex & ReturnType<typeof knex>;
@@ -14,6 +15,34 @@ export type QueryBuilder = ReturnType<KnexEngine["select"]>;
 export type GqlExtension = {
   strapi: StrapiExtended;
   nexus: typeof Nexus;
+};
+
+type ContextState = {
+  withGrowthBook?: (theCtx: StrapiGqlContext, f: any) => void;
+};
+
+// See https://koajs.com/#context and https://github.com/jeffijoe/koa-respond
+type Context = {
+  send: (statusCode: number, body: string | Object) => StrapiContext;
+  req?: { headers?: { anonymousid?: string } };
+} & Record<
+  | "created"
+  | "noContent"
+  | "badRequest"
+  | "unauthorized"
+  | "forbidden"
+  | "notFound"
+  | "locked"
+  | "internalServerError"
+  | "notImplemented",
+  (body: string | Object) => StrapiContext
+>;
+
+export type StrapiContext = ParameterizedContext<ContextState, Context>;
+
+export type StrapiGqlContext = {
+  state: ContextState;
+  koaContext: StrapiContext;
 };
 
 export type StrapiExtended = Omit<Strapi, "entityService"> & {

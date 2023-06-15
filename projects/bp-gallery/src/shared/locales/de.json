@@ -271,21 +271,25 @@
         "title": "Möchtest du die Seite wirklich verlassen?",
         "content": "Du hast noch ungespeicherte Änderungen."
       },
+      "email": {
+        "label": "E-Mail-Adresse",
+        "helperText": "Diese E-Mail-Adresse wird für das Kontaktformular benutzt. Wenn du nicht möchtest, dass dich jemand über das Kontaktformular kontaktieren kann, kannst du dieses Feld einfach freilassen."
+      },
       "save": "Änderungen speichern",
       "saving": "Änderungen speichern...",
       "saved": "Änderungen gespeichert",
-      "nameLabel": "Archiv-Name:",
+      "nameLabel": "Archiv-Name",
       "shortDescription": {
-        "label": "Kurzbeschreibung:",
+        "label": "Kurzbeschreibung",
         "helperText": "Diese Beschreibung ist nur in der Archivübersicht sichtbar"
       },
       "longDescriptionLabel": "Archiv-Beschreibung",
       "logo": {
-        "label": "Logo:",
-        "preview": "Vorschau:"
+        "label": "Logo",
+        "preview": "Vorschau"
       },
       "links": {
-        "label": "Links:",
+        "label": "Links",
         "title": {
           "placeholder": "Meine Homepage",
           "helperText": "Titel (optional)"
@@ -354,9 +358,11 @@
   },
   "contact-form": {
     "title": "Kontakt",
+    "success": "Ihre Nachricht ist eingegangen.",
+    "error": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
     "name-label": "Name",
-    "email-label": "E-Mail",
+    "email-label": "Ihre E-Mail (optional)",
     "subject-label": "Betreff",
     "message-label": "Nachricht",
     "submit-button-label": "Anfrage versenden"

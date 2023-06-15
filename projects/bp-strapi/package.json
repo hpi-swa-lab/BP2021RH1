@@ -15,6 +15,7 @@
     "generate": "strapi ts:generate-types --verbose"
   },
   "devDependencies": {
+    "@types/koa": "^2.13.6",
     "better-sqlite3": "^7.4.6"
   },
   "dependencies": {
@@ -23,11 +24,13 @@
     "@strapi/plugin-i18n": "4.4.5",
     "@strapi/plugin-sentry": "4.4.5",
     "@strapi/plugin-users-permissions": "4.4.5",
+    "@strapi/provider-email-amazon-ses": "^4.10.6",
     "@strapi/provider-email-nodemailer": "^4.5.6",
     "@strapi/strapi": "4.4.5",
     "cross-env": "^7.0.3",
     "cross-fetch": "^3.1.6",
     "eventsource": "^2.0.2",
+    "isomorphic-dompurify": "^1.6.0",
     "pg": "8.6.0",
     "pm2": "^5.2.0",
     "sendmail": "^1.6.1",
