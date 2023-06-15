@@ -1,6 +1,5 @@
 import { IconButton } from '@mui/material';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import './BulkOperationsPanel.scss';
 
 export interface BulkOperation {
   icon: JSX.Element;
