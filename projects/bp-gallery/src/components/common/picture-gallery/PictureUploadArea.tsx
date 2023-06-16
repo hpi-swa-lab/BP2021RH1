@@ -1,11 +1,4 @@
-import {
-  DndContext,
-  DragEndEvent,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { Close, ExpandCircleDown, Upload } from '@mui/icons-material';
 import { Button, CircularProgress } from '@mui/material';
@@ -16,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useCreatePictureMutation } from '../../../graphql/APIConnector';
 import { PictureOrigin } from '../../../helpers/app-helpers';
 import { useObjectIds } from '../../../hooks/object-ids.hook';
+import { useMouseAndTouchSensors } from '../../../hooks/sensors.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -44,21 +38,7 @@ const PictureUploadArea = ({
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: 'image/jpeg,image/png',
   });
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      // Require the mouse to move by 10 pixels before activating
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
-    useSensor(TouchSensor, {
-      // Press delay of 250ms, with tolerance of 5px of movement
-      activationConstraint: {
-        delay: 250,
-        tolerance: 5,
-      },
-    })
-  );
+  const sensors = useMouseAndTouchSensors();
   const { t } = useTranslation();
   const { role } = useAuth();
   const dialog = useDialog();

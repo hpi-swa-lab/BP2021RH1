@@ -36,6 +36,7 @@ const PictureScrollGrid = ({
   collapseSequences = true,
   fetchPolicy,
   cacheOnRefetch = false,
+  onSort,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   hashbase: string;
@@ -54,6 +55,7 @@ const PictureScrollGrid = ({
   collapseSequences?: boolean;
   fetchPolicy?: WatchQueryFetchPolicy;
   cacheOnRefetch?: boolean;
+  onSort?: (newPictures: FlatPicture[]) => void;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -161,6 +163,7 @@ const PictureScrollGrid = ({
           extraAdornments={extraAdornments}
           showDefaultAdornments={showDefaultAdornments}
           allowClicks={allowClicks}
+          onSort={onSort}
         />
       </>
     );
