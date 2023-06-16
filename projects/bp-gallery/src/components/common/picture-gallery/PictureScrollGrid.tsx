@@ -1,5 +1,5 @@
 import { WatchQueryFetchPolicy } from '@apollo/client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -26,6 +26,7 @@ const PictureScrollGrid = ({
   resultPictureCallback,
   bulkOperations,
   sortBy,
+  customSort,
   maxNumPictures,
   showCount = true,
   extraAdornments,
@@ -43,6 +44,7 @@ const PictureScrollGrid = ({
   resultPictureCallback?: (pictures: number) => void;
   bulkOperations?: BulkOperation[];
   sortBy?: string[];
+  customSort?: (pictures: FlatPicture[]) => FlatPicture[];
   maxNumPictures?: number;
   showCount?: boolean;
   extraAdornments?: PicturePreviewAdornment[];
@@ -67,7 +69,11 @@ const PictureScrollGrid = ({
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
-  const collapsedPictures = useCollapseSequences(pictures, collapseSequences);
+  const sortedPictures = useMemo(
+    () => (customSort && pictures ? customSort(pictures) : pictures),
+    [customSort, pictures]
+  );
+  const collapsedPictures = useCollapseSequences(sortedPictures, collapseSequences);
 
   const processedPictures = useCachedOnRefetch(collapsedPictures, cacheOnRefetch);
 
