@@ -111,9 +111,9 @@ module.exports = ({ env }) => ({
                   "time_range_tag_end",
                   "face_tags",
                   "person_tags",
-                  "comments",
                   "collections",
                   "archive_tag",
+                  "comments",
                 ],
                 filterableAttributes: [
                   "keyword_tags",
