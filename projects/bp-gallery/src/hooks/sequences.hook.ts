@@ -12,11 +12,10 @@ export const useCreateSequence = () => {
   const { t } = useTranslation();
   const dialog = useDialog();
 
+  const updatePictureSequenceOrder = useUpdatePictureSequenceOrder();
+
   const [createPictureSequence] = useCreatePictureSequenceMutation({
     refetchQueries: ['getPictureInfo', 'getPictures', 'getMostLikedPictures'],
-  });
-  const [updatePicture] = useUpdatePictureMutation({
-    refetchQueries: ['getPictureInfo'],
   });
 
   const createSequence = useCallback(
@@ -36,6 +35,22 @@ export const useCreateSequence = () => {
           pictures: pictures.map(picture => picture.id),
         },
       });
+      updatePictureSequenceOrder(pictures);
+      return pictureSequence.data?.createPictureSequence?.data?.id;
+    },
+    [dialog, t, createPictureSequence, updatePictureSequenceOrder]
+  );
+
+  return createSequence;
+};
+
+export const useUpdatePictureSequenceOrder = () => {
+  const [updatePicture] = useUpdatePictureMutation({
+    refetchQueries: ['getPictureInfo'],
+  });
+
+  const updatePictureSequenceOrder = useCallback(
+    async (pictures: FlatPicture[]) => {
       await Promise.all(
         pictures.map((picture, index) =>
           updatePicture({
@@ -48,12 +63,11 @@ export const useCreateSequence = () => {
           })
         )
       );
-      return pictureSequence.data?.createPictureSequence?.data?.id;
     },
-    [dialog, t, createPictureSequence, updatePicture]
+    [updatePicture]
   );
 
-  return createSequence;
+  return updatePictureSequenceOrder;
 };
 
 export const collapseSequences = (pictures: FlatPicture[] | undefined) => {
