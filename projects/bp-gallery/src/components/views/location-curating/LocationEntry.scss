@@ -33,10 +33,13 @@
 
 .location-entry-container {
   cursor: pointer;
+  min-height: 42px;
+
   :hover {
     background-color: lightgray;
     transition: 0.5s;
   }
+
   .location-entry-content {
     display: flex;
     flex-direction: row;
