@@ -20,7 +20,8 @@
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": ["./tsconfig.json", "./cypress/tsconfig.json", "./vite.config.ts"]
+    "project": ["./tsconfig.json", "./cypress/tsconfig.json", "./vite.config.ts"],
+    "tsconfigRootDir": "./bp-gallery"
   },
   "plugins": [
     "react",

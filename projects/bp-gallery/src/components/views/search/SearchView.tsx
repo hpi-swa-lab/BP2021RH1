@@ -62,7 +62,8 @@ const SearchView = () => {
     // }
     // return convertSearchParamsToPictureFilters(searchParams);
   }, [/*isAllSearchActive,*/ searchParams]);
-  if (import.meta.env.MODE === 'development') console.log(getSearchResultPictureIds(queryParams, ''));
+  if (import.meta.env.MODE === 'development')
+    console.log(getSearchResultPictureIds(queryParams, ''));
   const { linkToCollection, bulkEdit } = useBulkOperations();
 
   return (
