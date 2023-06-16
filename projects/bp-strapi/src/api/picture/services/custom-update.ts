@@ -1,5 +1,5 @@
 import { QueryFromContentType } from "@strapi/database";
-import type { KnexEngine } from "../../../types";
+import type { KnexEngine, StrapiExtended } from "../../../types";
 import { plural, singular, table } from "../../helper";
 
 const { ApplicationError } = require("@strapi/utils").errors;
@@ -504,6 +504,19 @@ const anyPictureHasLinks = async (
   return false;
 };
 
+const removeUnusedPictureSequences = async (strapi: StrapiExtended) => {
+  const knexEngine = strapi.db.connection;
+  const sequencesTable = table("picture_sequences");
+  const linksTable = table("pictures_picture_sequence_links");
+  await knexEngine(sequencesTable)
+    .whereNotExists(
+      knexEngine(linksTable).whereRaw(
+        `${linksTable}.picture_sequence_id = ${sequencesTable}.id`
+      )
+    )
+    .del();
+};
+
 const updatePictureWithTagCleanup = async (id: string, data: any) => {
   // No special handling needed if no data is passed.
   if (!data) return;
@@ -521,6 +534,8 @@ const updatePictureWithTagCleanup = async (id: string, data: any) => {
     where: { id },
     data,
   });
+
+  await removeUnusedPictureSequences(strapi as StrapiExtended);
 
   return id;
 };
