@@ -60,8 +60,8 @@ module.exports = ({ env }) => ({
     env("MEILISEARCH_ENABLED", "false") === "true"
       ? {
           config: {
-            host: "localhost:7700",
-            apiKey: "",
+            host: env("MEILISEARCH_HOST"),
+            apiKey: env("MEILISEARCH_API_KEY"),
             picture: {
               transformEntry({ entry }) {
                 const transformedEntry = {
@@ -100,6 +100,21 @@ module.exports = ({ env }) => ({
                 return transformedEntry;
               },
               settings: {
+                displayedAttributes: ["id"],
+                // the order of the attributes in searchableAttributes determines the priorization
+                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
+                searchableAttributes: [
+                  "descriptions",
+                  "keyword_tags",
+                  "location_tags",
+                  "time_range_tag_start",
+                  "time_range_tag_end",
+                  "face_tags",
+                  "person_tags",
+                  "comments",
+                  "collections",
+                  "archive_tag",
+                ],
                 filterableAttributes: [
                   "keyword_tags",
                   "location_tags",
@@ -118,26 +133,37 @@ module.exports = ({ env }) => ({
                   "time_range_tag_end",
                   "likes",
                 ],
-                displayedAttributes: ["id"],
-                // the order of the attributes in searchableAttributes determines the priotization
-                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
-                searchableAttributes: [
-                  "keyword_tags",
-                  "location_tags",
-                  "time_range_tag_start",
-                  "time_range_tag_end",
-                  "face_tags",
-                  "person_tags",
-                  "descriptions",
-                  "comments",
-                  "collections",
-                  "archive_tag",
+                rankingRules: [
+                  "words",
+                  "typo",
+                  "proximity",
+                  "attribute",
+                  "sort",
+                  "exactness",
                 ],
+                // words that are ignored during searches, useful for common words
+                //  that do not carry a meaning on their own like articles, pronomina etc.
+                // we do not use this setting, since our data on user searchers suggests, that
+                // users only search for proper names, people, locations and nouns in general
+                stopWords: [],
+                synonyms: {},
+                // returned documents will always be unigue in this attribute
+                distinctAttribute: null,
                 typoTolerance: {
                   enabled: true,
                   minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
                   disableOnWords: [],
                   disableOnAttributes: [],
+                },
+                // faceting is currently not in use
+                faceting: {
+                  maxValuesPerFacet: 100,
+                },
+                // maxtotalHits determines the maximal possible amount
+                // of search results and overrides any other settings
+                // like the result_limit of the search settings in this regard
+                pagination: {
+                  maxTotalHits: 1000,
                 },
               },
             },
