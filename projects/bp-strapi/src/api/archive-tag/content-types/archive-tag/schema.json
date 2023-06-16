@@ -55,6 +55,9 @@
     },
     "paypalPurpose": {
       "type": "string"
+    },
+    "email": {
+      "type": "email"
     }
   }
 }

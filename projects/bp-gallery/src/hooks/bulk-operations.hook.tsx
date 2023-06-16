@@ -1,4 +1,4 @@
-import { Add, Close, DriveFileMove, Edit, Filter } from '@mui/icons-material';
+import { CreateNewFolder, DriveFileMove, Edit, Filter, FolderDelete } from '@mui/icons-material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
@@ -25,7 +25,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
   return {
     linkToCollection: {
       name: t('curator.addToCollection'),
-      icon: <Add />,
+      icon: <CreateNewFolder />,
       action: (selectedPictures: FlatPicture[]) => {
         selectCollection().then((selectedCollection: FlatCollection | undefined) => {
           if (!selectedCollection?.id) {
@@ -40,7 +40,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     },
     removeFromCollection: {
       name: t('curator.removeFromCollection'),
-      icon: <Close />,
+      icon: <FolderDelete />,
       action: (selectedPictures: FlatPicture[]) => {
         if (!parentCollection?.id) {
           return;

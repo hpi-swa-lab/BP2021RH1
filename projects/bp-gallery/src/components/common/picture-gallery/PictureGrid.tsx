@@ -1,7 +1,7 @@
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { CheckBox, CheckBoxOutlineBlank, Delete, DoneAll, RemoveDone } from '@mui/icons-material';
-import { Button, Portal } from '@mui/material';
+import { IconButton, Portal } from '@mui/material';
 import { union } from 'lodash';
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -290,23 +290,25 @@ const PictureGrid = ({
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`} ref={ref}>
-      {Boolean(selectedPictures.length) && bulkOperations && (
-        <BulkOperationsPanel
-          operations={bulkOperations}
-          selectedPictures={selectedPictures}
-          onBulkEdit={navigateToBulkEdit}
-        />
-      )}
-      {defaultAdornments && (
-        <div className='selection-buttons'>
-          <Button onClick={selectAll} startIcon={<DoneAll />} variant='contained'>
-            {t('curator.selectAll')}
-          </Button>
-          <Button onClick={selectNone} startIcon={<RemoveDone />} variant='contained'>
-            {t('curator.selectNone')}
-          </Button>
-        </div>
-      )}
+      <div className='empty:hidden sticky top-2 z-10 bg-[#ccccccee] p-2 mt-8 rounded-md [&>.MuiIconButton-root>svg]:!text-[28px]'>
+        {Boolean(selectedPictures.length) && bulkOperations && (
+          <BulkOperationsPanel
+            operations={bulkOperations}
+            selectedPictures={selectedPictures}
+            onBulkEdit={navigateToBulkEdit}
+          />
+        )}
+        {defaultAdornments && (
+          <>
+            <IconButton onClick={selectAll} color='primary' title={t('curator.selectAll')}>
+              <DoneAll />
+            </IconButton>
+            <IconButton onClick={selectNone} color='primary' title={t('curator.selectNone')}>
+              <RemoveDone />
+            </IconButton>
+          </>
+        )}
+      </div>
       <div className='picture-grid'>
         {onSort ? (
           <DndContext onDragEnd={onDragEnd} sensors={sensors}>

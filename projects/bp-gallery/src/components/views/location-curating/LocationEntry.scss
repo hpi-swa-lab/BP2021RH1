@@ -1,0 +1,114 @@
+@import 'src/shared/style.module';
+
+.location-not-accepted {
+  color: gray;
+}
+
+.location-header-container {
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  border-bottom: 2px solid gray;
+
+  .location-header-name {
+    margin-top: auto;
+    margin-bottom: auto;
+    border-left: 2px solid darkgrey;
+    margin-left: 40px;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    width: 25%;
+  }
+
+  .location-header-synonyms {
+    margin-top: auto;
+    margin-bottom: auto;
+    border-left: 2px solid darkgrey;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+}
+
+.location-entry-container {
+  cursor: pointer;
+  :hover {
+    background-color: lightgray;
+    transition: 0.5s;
+  }
+  .location-entry-content {
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-left: 1px solid gray;
+    margin-top: -1px;
+
+    .location-entry-inner-content-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      .location-entry-inner-content {
+        display: flex;
+        flex-direction: row;
+
+        .location-action-buttons-container {
+          margin-right: 0px;
+          margin-left: auto;
+          display: flex;
+        }
+
+        .location-name {
+          margin: auto 0 auto 8px;
+          width: 25%;
+        }
+
+        .location-synonyms {
+          display: flex;
+          flex-direction: row;
+          overflow: scroll;
+
+          .location-synonym {
+            margin: auto 4px auto 4px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.add-tag-container {
+  display: flex;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  border-bottom: 1px solid gray;
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+  margin-top: -1px;
+  cursor: pointer;
+
+  .add-tag-icon {
+    color: $archiveColor;
+  }
+
+  .add-tag-text {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 16px;
+    color: $archiveColor;
+  }
+}
+
+.location-branch-container {
+  .sub-location-container {
+    margin-left: 20px;
+  }
+}
+
+.add-tag-container:hover {
+  background-color: lightgray;
+  transition: 0.5s;
+}

@@ -9,8 +9,26 @@ export default {
           attributes {
             name
             visible
+            root
+            accepted
             synonyms {
               name
+            }
+            child_tags {
+              data {
+                id
+                attributes {
+                  name
+                }
+              }
+            }
+            parent_tags {
+              data {
+                id
+                attributes {
+                  name
+                }
+              }
             }
           }
         }

@@ -2,7 +2,7 @@ import { Check, Close, Save } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { Jodit } from 'jodit-react';
 import { pick } from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -26,6 +26,7 @@ interface ArchiveForm {
   name: string;
   shortDescription: string;
   longDescription: string;
+  email: string | null;
   paypalClient: string;
   paypalDonationText: string;
   paypalPurpose: string;
@@ -58,7 +59,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
 
   const [updateArchive, updateMutationResponse] = useUpdateArchiveMutation({
-    refetchQueries: ['getArchive'],
+    refetchQueries: ['getArchive', 'getArchiveNames'],
     awaitRefetchQueries: true,
   });
   const { createLink, updateLink, deleteLink } = useLinks(archiveId);
@@ -67,6 +68,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     name: '',
     shortDescription: '',
     longDescription: '',
+    email: null,
     paypalClient: '',
     paypalDonationText: '',
     paypalPurpose: '',
@@ -80,6 +82,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       name: archive?.name ?? '',
       shortDescription: archive?.shortDescription ?? '',
       longDescription: archive?.longDescription ?? '',
+      email: archive?.email ?? null,
       paypalClient: archive?.paypalClient ?? '',
       paypalDonationText: archive?.paypalDonationText ?? '',
       paypalPurpose: archive?.paypalPurpose ?? '',
@@ -139,7 +142,8 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (form.invalid) return;
     handleLinks();
     if (form.logo) {
@@ -152,6 +156,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
                 'name',
                 'shortDescription',
                 'longDescription',
+                'email',
                 'paypalClient',
                 'paypalDonationText',
                 'paypalPurpose',
@@ -170,6 +175,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               'name',
               'shortDescription',
               'longDescription',
+              'email',
               'paypalClient',
               'paypalDonationText',
               'paypalPurpose',
@@ -204,8 +210,9 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         <Button
           className='button-filled button-save'
           startIcon={form.dirty ? <Save /> : <Check />}
-          onClick={handleSubmit}
           disabled={!form.dirty || updateMutationResponse.loading || form.invalid}
+          type='submit'
+          form='archive-form'
         >
           {updateMutationResponse.loading
             ? t('archives.edit.saving')
@@ -217,7 +224,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
 
       <h1>{archive.name}</h1>
 
-      <form className='archive-form'>
+      <form id='archive-form' className='archive-form' onSubmit={handleSubmit}>
         <ArchiveInputField
           label={t('archives.edit.nameLabel')}
           id='name'
@@ -233,7 +240,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
         />
         <div className='archive-form-div'>
           <label className='archive-form-label' htmlFor='archive-form-long-description'>
-            {t('archives.edit.longDescriptionLabel')}
+            {t('archives.edit.longDescriptionLabel')}:
           </label>
           <TextEditor
             value={archive.longDescription ?? ''}
@@ -246,7 +253,17 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           defaultUrl={asUploadPath(archive.logo, { highQuality: false })}
           onChange={file => updateForm({ logo: file, dirty: true })}
         />
+        <ArchiveInputField
+          defaultValue={archive.email ?? ''}
+          label={t('archives.edit.email.label')}
+          id='email'
+          type='email'
+          onBlur={value => updateForm({ email: value || null, dirty: true })}
+          helperText={t('archives.edit.email.helperText')}
+        />
+
         <ArchiveLinkForm links={archive.links} onChange={handleLinkChange} />
+
         <ArchiveInputField
           label={t('archives.edit.paypal.client-label')}
           defaultValue={archive.paypalClient ?? ''}
