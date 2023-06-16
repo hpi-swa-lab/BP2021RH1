@@ -16,7 +16,7 @@ const ArchiveLogoInput = ({ defaultUrl, onChange }: ArchiveLogoInputProps) => {
   return (
     <div className='archive-form-div'>
       <label className='archive-form-label' htmlFor='archive-form-logo'>
-        {t('archives.edit.logo.label')}
+        {t('archives.edit.logo.label')}:
       </label>
       <div>
         <OutlinedInput

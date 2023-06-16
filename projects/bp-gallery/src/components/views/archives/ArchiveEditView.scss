@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .archive-form {
   width: 100%;
@@ -19,22 +19,27 @@
   background: white;
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
   min-height: calc(100vh - 14rem);
+
   .archive-navigation {
     display: flex;
     width: 100%;
     margin-bottom: 2rem;
+
     .button-save {
       margin-left: auto;
       padding-inline: 1rem;
+
       &:disabled {
         opacity: 0.5;
       }
     }
+
     .button-close {
       margin-right: 1rem;
       padding-inline: 1rem;
     }
   }
+
   h1 {
     width: fit-content;
     margin: auto;
@@ -48,7 +53,6 @@
   display: flex;
   flex-direction: row;
   margin: 2rem 0;
-  flex-wrap: wrap;
   @media (max-width: 1250px) {
     flex-direction: column;
     margin: 1rem 0;
@@ -56,11 +60,13 @@
 
   .archive-form-label {
     margin-top: 1rem;
+    flex-shrink: 0;
     width: 20%;
     display: flex;
     align-items: flex-start;
     font-size: larger;
     font-weight: bold;
+
     @media (max-width: 1250px) {
       width: 100%;
       margin-top: 0rem;
@@ -74,6 +80,7 @@
     width: 80%;
     flex-wrap: wrap;
     display: flex;
+
     @media (max-width: 1250px) {
       width: 100%;
     }
@@ -83,6 +90,7 @@
 .archive-logo-container {
   overflow: hidden;
   height: 130px;
+
   .archive-logo {
     height: auto;
     max-width: 100%;
@@ -104,30 +112,37 @@
   .archive-form-div {
     .archive-form-link-input {
       width: 80%;
+
       @media (max-width: 1250px) {
         width: 100%;
         padding-top: 0.25rem;
       }
+
       .archive-link-entry {
         border: 1px solid #bbbbbb;
         border-radius: 4px;
         margin: 0 0 0.5rem 0;
+
         a {
           padding: 0.5rem 0 0.5rem 1rem;
           margin-right: auto;
         }
+
         .archive-link-entry-form {
           margin-right: auto;
           width: 100%;
           padding: 1rem 0 0.5rem 0.5rem;
+
           .MuiFormControl-root {
             width: 50%;
+
             @media (max-width: 1250px) {
               width: 100%;
             }
           }
         }
       }
+
       .MuiButton-root {
         padding-inline: 1rem;
       }

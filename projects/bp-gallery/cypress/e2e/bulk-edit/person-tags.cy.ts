@@ -1,5 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures, visitArchive1Pictures } from './helper';
+import { bulkEdit, selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit person tags', () => {
   before(() => {
@@ -20,7 +20,7 @@ describe('bulk edit person tags', () => {
     cy.contains('Katharina Schmunk').should('not.exist');
     visitArchive1Pictures();
     selectPictures('2', '3');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Simon Heraldson');
     cy.contains('Katharina Schmunk').should('not.exist');
   });
@@ -34,7 +34,7 @@ describe('bulk edit person tags', () => {
     cy.contains('Katharina Schmunk');
     visitArchive1Pictures();
     selectPictures('1', '2');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.picture-info-field', 'Personen').find('input');
     cy.contains('.picture-info-field', 'Personen').find('.MuiChip-root').should('not.exist');
   });
@@ -48,7 +48,7 @@ describe('bulk edit person tags', () => {
     cy.contains('Katharina Schmunk').should('not.exist');
     visitArchive1Pictures();
     selectPictures('1', '3');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.picture-info-field', 'Personen').find('input').type('Katharina{enter}');
     cy.contains('.save-state', 'Gespeichert');
     cy.contains('Katharina Schmunk');
@@ -63,7 +63,7 @@ describe('bulk edit person tags', () => {
   it('removes tags while keeping untouched ones', () => {
     visitArchive1Pictures();
     selectPictures('1', '3');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.MuiChip-root', 'Katharina Schmunk').find('[data-testid="CancelIcon"]').click();
     cy.contains('.save-state', 'Gespeichert');
     cy.contains('Simon Heraldson').should('not.exist');
@@ -85,7 +85,7 @@ describe('bulk edit person tags', () => {
     cy.contains('Katharina Schmunk').should('not.exist');
     visitArchive1Pictures();
     selectPictures('2', '3');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.picture-info-field', 'Personen').find('input').type('Katharina{enter}');
     cy.contains('.save-state', 'Gespeichert');
     cy.contains('Simon Heraldson');

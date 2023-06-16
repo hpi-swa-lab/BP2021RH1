@@ -41,14 +41,21 @@ module.exports = ({ env }) => ({
   email: {
     config: {
       provider: env("EMAIL_PROVIDER"),
-      providerOptions: {
-        host: env("EMAIL_SMTP_HOST"),
-        port: env("EMAIL_SMTP_PORT"),
-        auth: {
-          user: env("EMAIL_SMTP_USER"),
-          pass: env("EMAIL_SMTP_PASS"),
-        },
-      },
+      providerOptions:
+        env("EMAIL_PROVIDER") === "amazon-ses"
+          ? {
+              key: env("AWS_SES_ACCESS_KEY_ID"),
+              secret: env("AWS_SES_ACCESS_SECRET"),
+              amazon: env("AWS_SES_REGION_URL"),
+            }
+          : {
+              host: env("EMAIL_SMTP_HOST"),
+              port: env("EMAIL_SMTP_PORT"),
+              auth: {
+                user: env("EMAIL_SMTP_USER"),
+                pass: env("EMAIL_SMTP_PASS"),
+              },
+            },
       settings: {
         defaultFrom: env("EMAIL_ADDRESS_FROM"),
         defaultReplyTo: env("EMAIL_ADDRESS_REPLY"),

@@ -79,7 +79,9 @@ export const FaceTaggingUI = ({
         {context && role >= AuthRole.CURATOR && (tags.length > 0 || isFaceTagging) && (
           <Button
             variant='contained'
-            className='!mt-5 w-full !bg-[#7e241d]'
+            color='primary'
+            fullWidth
+            className='!mt-5'
             onClick={toggleFaceTagging}
           >
             {isFaceTagging ? t('pictureFields.edit-faces') : t('pictureFields.tag-faces')}
@@ -88,7 +90,9 @@ export const FaceTaggingUI = ({
         {faceTags !== undefined && faceTags.length > 0 && !isFaceTagging && (
           <Button
             variant='contained'
-            className='!mt-5 w-full !bg-[#7e241d]'
+            color='primary'
+            fullWidth
+            className='!mt-5'
             onClick={toggleHideTags}
           >
             {context?.hideTags

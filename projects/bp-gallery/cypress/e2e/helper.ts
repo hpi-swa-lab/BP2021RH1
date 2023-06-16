@@ -5,3 +5,7 @@ export const waitForAllImagesLoaded = () => {
     }
   });
 };
+
+export const clickBulkOperation = (name: string) => {
+  cy.get(`[title="${name}"]`).click();
+};

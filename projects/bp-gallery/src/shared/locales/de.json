@@ -1,11 +1,18 @@
 {
   "common": {
+    "sublocations": "Unterorte",
+    "superlocations": "Oberorte",
     "start": "Start",
     "search": "Suchen",
     "browse": "Stöbern",
     "menu": "Menü",
     "picture": "Bild",
     "pictures": "Bilder",
+    "show-pictures": "Bilder Anzeigen",
+    "visible": "Sichtbar",
+    "invisible": "Unsichtbar",
+    "root": "Wurzel",
+    "no-root": "Keine Wurzel",
     "details": "Details",
     "comments": "Kommentare",
     "contact": "Kontakt",
@@ -65,7 +72,6 @@
     "latest-pictures-info": "In diese Kollektion fließen die jüngsten 500 „Neuzugänge“ der Fotoarchive ein. Wer den schnellen Überblick haben möchte, welche Bilder aktuell gescannt und eingearbeitet wurden, ist hier richtig.",
     "create": "{{value}} hinzufügen",
     "presentationMode": "Präsentationsmodus",
-    "or": "oder",
     "confirm": "Bestätigen",
     "abort": "Abbrechen",
     "0s": "0er",
@@ -199,7 +205,6 @@
   },
   "curator": {
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
-    "scan": "Direkt vom Scanner einlesen",
     "addPictures": "Bilder hinzufügen",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
     "reallyDeletePicture": "Bild wirklich löschen?",
@@ -209,7 +214,6 @@
     "really-decline-comment-descendants_one": "Warnung: Dieser Kommentar besitzt noch einen Unterkommentar, der beim Löschen dieses Kommentares auch gelöscht werden würde. Bist du wirklich damit einverstanden?",
     "really-decline-comment-descendants_other": "Warnung: Dieser Kommentar besitzt noch {{count, number}} Unterkommentare, die beim Löschen dieses Kommentares auch gelöscht werden würden. Bist du wirklich damit einverstanden?",
     "reallyDeleteCollection": "Collection wirklich löschen?",
-    "noScannerFound": "Kein Scanner gefunden.\nLäuft der Scan-Service?",
     "synonymAlreadyExists": "Dieses Synonym existiert bereits.",
     "synonyms": "Synonyme",
     "add": "Hinzufügen",
@@ -259,7 +263,6 @@
     "chooseSelectionToMerge": "Collection auswählen, in die die Inhalte von Collection \"{{name}}\" verschoben werden sollen",
     "renameCollection": "Collection umbenennen",
     "nameOfNewCollection": "Name der neuen Collection:",
-    "autoCrop": "Automatisch Zuschneiden",
     "noArchive": "Dieses Bild ist keinem Archiv zugeordnet"
   },
   "pictureAdornments": {
@@ -275,21 +278,25 @@
         "title": "Möchtest du die Seite wirklich verlassen?",
         "content": "Du hast noch ungespeicherte Änderungen."
       },
+      "email": {
+        "label": "E-Mail-Adresse",
+        "helperText": "Diese E-Mail-Adresse wird für das Kontaktformular benutzt. Wenn du nicht möchtest, dass dich jemand über das Kontaktformular kontaktieren kann, kannst du dieses Feld einfach freilassen."
+      },
       "save": "Änderungen speichern",
       "saving": "Änderungen speichern...",
       "saved": "Änderungen gespeichert",
-      "nameLabel": "Archiv-Name:",
+      "nameLabel": "Archiv-Name",
       "shortDescription": {
-        "label": "Kurzbeschreibung:",
+        "label": "Kurzbeschreibung",
         "helperText": "Diese Beschreibung ist nur in der Archivübersicht sichtbar"
       },
       "longDescriptionLabel": "Archiv-Beschreibung",
       "logo": {
-        "label": "Logo:",
-        "preview": "Vorschau:"
+        "label": "Logo",
+        "preview": "Vorschau"
       },
       "links": {
-        "label": "Links:",
+        "label": "Links",
         "title": {
           "placeholder": "Meine Homepage",
           "helperText": "Titel (optional)"
@@ -358,9 +365,11 @@
   },
   "contact-form": {
     "title": "Kontakt",
+    "success": "Ihre Nachricht ist eingegangen.",
+    "error": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
     "name-label": "Name",
-    "email-label": "E-Mail",
+    "email-label": "Ihre E-Mail (optional)",
     "subject-label": "Betreff",
     "message-label": "Nachricht",
     "submit-button-label": "Anfrage versenden"
@@ -391,5 +400,44 @@
     "our-categories": "Unsere Kategorien",
     "most-liked": "Bestbewertete Bilder",
     "our-pictures": "Unsere Bilder"
+  },
+  "tag-panel": {
+    "name-of-sub-keyword": "Name des neuen Unterschlagworts für {{ parent }}:",
+    "name-of-sub-location": "Name des neuen Unterorts für {{ parent }}:",
+    "name-of-keyword": "Name des neuen Schlagworts:",
+    "name-of-location": "Name des neuen Orts:",
+    "add-sub-keyword": "Unterschlagwort für {{ parent }} hinzufügen.",
+    "add-sub-location": "Unterort für {{ parent }} hinzufügen.",
+    "add-location": "Ort hinzufügen.",
+    "add-keyword": "Schlagwort hinzufügen.",
+    "new-location-name": "Neuer Name des Ortes {{ tag_name }}:",
+    "new-keyword-name": "Neuer Name des Schalgworts {{ tag_name }}:",
+    "detach-location": "Diesen Ort aus der Hierarchie lösen?",
+    "detach-keyword": "Dieses Schalgwort aus der Hierarchie lösen?",
+    "should-delete-location": "Soll folgender Ort und alle seine Unterorte gelöscht werden?",
+    "should-delete-keyword": "Soll folgendes Schlagwort und alle seine Unterschlagworte gelöscht werden?",
+    "just-delete-single-location": "Nur diesen Ort löschen",
+    "just-delete-single-keyword": "Nur dieses Schalgwort löschen",
+    "relocate-location": "Welchem Ort wollen Sie folgenden Ort unterordnen?",
+    "relocate-keyword": "Welchem Schlagwort wollen Sie folgendes Schlagwort unterordnen?",
+    "location": "Ort",
+    "keyword": "Schlagwort",
+    "multiple-paths": "Mehrere Pfade",
+    "select-position": "An welcher Position möchten Sie {{ name }} hinzufügen?",
+    "location-already-exists": "Es existiert bereits ein Ort mit dem Namen {{ name }} an der Stelle, wo sie den Ort einfügen wollen. Diese Operation wird deswegen nicht ausgeführt.",
+    "delete-elsewhere": "Der Ort {{ name }} besitzt eine Kopie an anderer Stelle. Soll diese auch gelöscht werden?",
+    "only-delete-here": "Nur hier löschen.",
+    "delete-everywhere": "Überall löschen.",
+    "loop-error": "Diese Aktion würde einen Kreisschluss der Orte zur Folge haben und wird deswegen nicht ausgeführt.",
+    "location-pictures_one": "{{ count }} Bild in diesem Ort",
+    "location-pictures_other": "{{ count }} Bilder in diesem Ort"
+  },
+  "tooltips": {
+    "detach-location": "Ort aus der Hierarchie lösen.",
+    "relocate-location": "Ort unterordnen.",
+    "copy-location": "Ort kopieren.",
+    "show-location": "Ort anzeigen.",
+    "hide-location": "Ort verstecken.",
+    "delete-location": "Ort löschen."
   }
 }

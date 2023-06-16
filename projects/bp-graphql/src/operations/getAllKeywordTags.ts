@@ -8,10 +8,10 @@ export default {
           id
           attributes {
             name
+            visible
             synonyms {
               name
             }
-            visible
           }
         }
       }

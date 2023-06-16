@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .new-comment-form {
   margin-right: 1rem;
@@ -13,6 +13,7 @@
     width: 100%;
     background-color: $primaryColor;
   }
+
   .MuiButton-root:hover {
     background-color: $primaryColor;
     opacity: 0.8;

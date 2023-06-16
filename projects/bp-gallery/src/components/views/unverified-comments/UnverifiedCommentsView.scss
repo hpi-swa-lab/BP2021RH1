@@ -1,8 +1,9 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .comments-table {
   table {
     width: 100%;
+
     thead {
       th:nth-child(n + 2) {
         background-color: $primaryColor;
@@ -20,6 +21,7 @@
     tbody {
       tr {
         cursor: pointer;
+
         &:nth-child(2n) {
           background: #eaeaea;
         }
@@ -58,6 +60,7 @@
             left: 0;
             transform: translateX(-0.5rem);
           }
+
           .name {
             font-weight: 700;
             margin-right: 0.5rem;

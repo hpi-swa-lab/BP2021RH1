@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 h2 {
   width: fit-content;
@@ -26,6 +26,7 @@ h2 {
 .collection-description {
   max-width: 900px;
   text-align: center;
+
   a {
     color: $primaryColor;
   }
