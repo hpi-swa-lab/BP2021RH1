@@ -63,7 +63,7 @@ const SearchView = () => {
     // return convertSearchParamsToPictureFilters(searchParams);
   }, [/*isAllSearchActive,*/ searchParams]);
   if (import.meta.env.MODE === 'development')
-    getSearchResultPictureIds(queryParams, '').then(res => console.log(res));
+    getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
   const { linkToCollection, bulkEdit } = useBulkOperations();
 
   return (
