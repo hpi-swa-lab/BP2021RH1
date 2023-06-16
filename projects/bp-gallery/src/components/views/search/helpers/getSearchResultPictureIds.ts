@@ -5,10 +5,7 @@ const dateToTimeStamp = (date: string) => {
 };
 
 const getSearchResultPictureIds = async (
-  searchparams: {
-    searchTerms: string[];
-    searchTimes: string[][];
-  },
+  { searchTerms, searchTimes }: { searchTerms: string[]; searchTimes: string[][] },
   filter: string
 ) => {
   const client = new MeiliSearch({
@@ -16,9 +13,6 @@ const getSearchResultPictureIds = async (
     apiKey: '',
   });
   const index = client.index('picture');
-
-  const searchTerms = searchparams.searchTerms;
-  const searchTimes = searchparams.searchTimes;
 
   const TIME_RANGE_START = 'time_range_tag_start';
   const TIME_RANGE_END = 'time_range_tag_end';
@@ -46,15 +40,9 @@ const getSearchResultPictureIds = async (
     matchingStrategy: MATCHING_STRATEGY,
     filter: filter,
   };
-
-  if (searchTerms.length !== 0) {
-    const query = searchTerms.join(' ');
-    const searchResult = await index.search(query, settings).then(value => value.hits);
-    return searchResult;
-  } else {
-    const searchResultForEmptySearch = await index.search('', settings).then(value => value.hits);
-    return searchResultForEmptySearch;
-  }
+  const query = searchTerms.length !== 0 ? searchTerms.join(' ') : '';
+  const searchResult = await index.search(query, settings);
+  return searchResult.hits;
 };
 
 export default getSearchResultPictureIds;
