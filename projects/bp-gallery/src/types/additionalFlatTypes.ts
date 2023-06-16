@@ -49,6 +49,7 @@ type FlatPictureWithoutRelations = ID &
     | 'linked_pictures'
     | 'linked_texts'
     | 'archive_tag'
+    | 'picture_sequence'
   >;
 
 export type FlatPictureSequenceWithoutRelations = ID & Omit<PictureSequence, 'pictures'>;
@@ -127,7 +128,6 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   linked_texts?: FlatPictureWithoutRelations[];
   archive_tag?: FlatArchiveTagWithoutRelations;
   picture_sequence?: FlatPictureSequence;
-  picture_sequence_order?: number;
 };
 
 export type FlatPictureSequence = FlatPictureSequenceWithoutRelations & {
