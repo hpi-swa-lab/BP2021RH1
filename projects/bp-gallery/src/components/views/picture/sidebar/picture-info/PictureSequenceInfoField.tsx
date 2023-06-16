@@ -10,20 +10,31 @@ import PictureInfoField from './PictureInfoField';
 
 const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
   const { t } = useTranslation();
-  const sequencePictures = picture.picture_sequence?.pictures;
+  const sequencePictureIds = useMemo(
+    () => picture.picture_sequence?.pictures?.map(picture => picture.id),
+    [picture]
+  );
 
-  return sequencePictures?.length ? (
+  const customSort = useCallback(
+    (pictures: FlatPicture[]) =>
+      sortBy(pictures, picture => sequencePictureIds?.indexOf(picture.id)),
+    [sequencePictureIds]
+  );
+
+
+  return sequencePictureIds?.length ? (
     <PictureInfoField title={t(`pictureFields.sequence.label`)} icon={<Filter />} type='sequence'>
       <HideStats>
         <ScrollProvider>
           <ScrollContainer>
             <PictureScrollGrid
-              queryParams={{ id: { in: sequencePictures.map(picture => picture.id) } }}
+              queryParams={{ id: { in: sequencePictureIds } }}
               hashbase={'sequence'}
               showCount={false}
               showDefaultAdornments={false}
               filterOutTextsForNonCurators={false}
               collapseSequences={false}
+              customSort={customSort}
             />
           </ScrollContainer>
         </ScrollProvider>
