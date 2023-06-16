@@ -9,6 +9,7 @@ import BulkEditView from './views/bulk-edit/BulkEditView';
 import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
 import ContactFormView from './views/contact/ContactFormView';
 import DiscoverView from './views/discover/DiscoverView';
+import LocationPanel from './views/location-curating/LocationPanel';
 import GeoView from './views/geoguessr/GeoView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 import PictureView from './views/picture/PictureView';
@@ -112,7 +113,11 @@ const routes: RouteConfig[] = [
   {
     path: '/tags/locations',
     render: () => {
-      return <TagTableView type={TagType.LOCATION} />;
+      return (
+        <ProtectedRoute>
+          <LocationPanel />
+        </ProtectedRoute>
+      );
     },
   },
   {

@@ -1,5 +1,9 @@
+import { noop } from 'lodash';
 import { useMemo } from 'react';
 import {
+  useCreateKeywordTagMutation,
+  useCreateLocationTagMutation,
+  useCreatePersonTagMutation,
   useDeleteKeywordTagMutation,
   useDeleteLocationTagMutation,
   useDeletePersonTagMutation,
@@ -9,19 +13,28 @@ import {
   useGetKeywordTagsWithThumbnailQuery,
   useGetLocationTagsWithThumbnailQuery,
   useGetPersonTagsWithThumbnailQuery,
+  useGetPicturesForLocationQuery,
   useMergeKeywordTagsMutation,
   useMergeLocationTagsMutation,
   useMergePersonTagsMutation,
   useUpdateKeywordNameMutation,
   useUpdateKeywordSynonymsMutation,
   useUpdateKeywordVisibilityMutation,
+  useUpdateLocationAcceptanceMutation,
+  useUpdateLocationChildMutation,
   useUpdateLocationNameMutation,
+  useUpdateLocationParentMutation,
+  useUpdateLocationRootMutation,
   useUpdateLocationSynonymsMutation,
   useUpdateLocationVisibilityMutation,
   useUpdatePersonNameMutation,
   useUpdatePersonSynonymsMutation,
 } from '../graphql/APIConnector';
 import { TagType } from '../types/additionalFlatTypes';
+
+const dummy = (_?: unknown) => {
+  return [noop];
+};
 
 const useGenericTagEndpoints = (type: TagType) => {
   return useMemo(() => {
@@ -30,34 +43,54 @@ const useGenericTagEndpoints = (type: TagType) => {
         return {
           allTagsQuery: useGetAllLocationTagsQuery,
           tagsWithThumbnailQuery: useGetLocationTagsWithThumbnailQuery,
+          tagPictures: useGetPicturesForLocationQuery,
           updateTagNameMutationSource: useUpdateLocationNameMutation,
           updateSynonymsMutationSource: useUpdateLocationSynonymsMutation,
+          updateVisibilityMutationSource: useUpdateLocationVisibilityMutation,
+          updateTagParentMutationSource: useUpdateLocationParentMutation,
+          updateTagAcceptanceMutationSource: useUpdateLocationAcceptanceMutation,
+          updateTagChildMutationSource: useUpdateLocationChildMutation,
+          updateRootMutationSource: useUpdateLocationRootMutation,
           mergeTagsMutationSource: useMergeLocationTagsMutation,
           deleteTagMutationSource: useDeleteLocationTagMutation,
-          updateVisibilityMutationSource: useUpdateLocationVisibilityMutation,
+          createTagMutationSource: useCreateLocationTagMutation,
         };
       case TagType.PERSON:
         return {
           allTagsQuery: useGetAllPersonTagsQuery,
           tagsWithThumbnailQuery: useGetPersonTagsWithThumbnailQuery,
+          tagPictures: () => {
+            return { data: undefined };
+          },
           updateTagNameMutationSource: useUpdatePersonNameMutation,
           updateSynonymsMutationSource: useUpdatePersonSynonymsMutation,
+          updateVisibilityMutationSource: dummy,
+          updateTagParentMutationSource: dummy,
+          updateTagAcceptanceMutationSource: dummy,
+          updateTagChildMutationSource: dummy,
+          updateRootMutationSource: dummy,
           mergeTagsMutationSource: useMergePersonTagsMutation,
           deleteTagMutationSource: useDeletePersonTagMutation,
-          updateVisibilityMutationSource: (dummy: any) => {
-            return [dummy];
-          },
+          createTagMutationSource: useCreatePersonTagMutation,
         };
       case TagType.KEYWORD:
       default:
         return {
           allTagsQuery: useGetAllKeywordTagsQuery,
           tagsWithThumbnailQuery: useGetKeywordTagsWithThumbnailQuery,
+          tagPictures: () => {
+            return { data: undefined };
+          },
           updateTagNameMutationSource: useUpdateKeywordNameMutation,
           updateSynonymsMutationSource: useUpdateKeywordSynonymsMutation,
+          updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
+          updateTagParentMutationSource: dummy,
+          updateTagAcceptanceMutationSource: dummy,
+          updateTagChildMutationSource: dummy,
+          updateRootMutationSource: dummy,
           mergeTagsMutationSource: useMergeKeywordTagsMutation,
           deleteTagMutationSource: useDeleteKeywordTagMutation,
-          updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
+          createTagMutationSource: useCreateKeywordTagMutation,
         };
     }
   }, [type]);

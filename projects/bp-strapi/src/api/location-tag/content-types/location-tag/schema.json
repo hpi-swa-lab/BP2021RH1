@@ -40,6 +40,24 @@
     "visible": {
       "type": "boolean",
       "default": false
+    },
+    "parent_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::location-tag.location-tag",
+      "inversedBy": "child_tags"
+    },
+    "child_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::location-tag.location-tag",
+      "mappedBy": "parent_tags"
+    },
+    "accepted": {
+      "type": "boolean"
+    },
+    "root": {
+      "type": "boolean"
     }
   }
 }

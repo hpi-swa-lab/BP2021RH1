@@ -1,5 +1,5 @@
 import { login, logout } from '../../utils/login-utils';
-import { selectPictures, visitArchive1Pictures } from './helper';
+import { bulkEdit, selectPictures, visitArchive1Pictures } from './helper';
 
 describe('bulk edit location tags', () => {
   before(() => {
@@ -20,7 +20,7 @@ describe('bulk edit location tags', () => {
     cy.contains('Market place').should('not.exist');
     visitArchive1Pictures();
     selectPictures('1', '4');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('Testort 1');
     cy.contains('Market place').should('not.exist');
   });
@@ -34,7 +34,7 @@ describe('bulk edit location tags', () => {
     cy.contains('.picture-info-field', 'Orte').find('.MuiChip-root').should('not.exist');
     cy.visit('/start');
     selectPictures('1', '25');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.picture-info-field', 'Orte').find('input');
     cy.contains('.picture-info-field', 'Orte').find('.MuiChip-root').should('not.exist');
   });
@@ -48,7 +48,7 @@ describe('bulk edit location tags', () => {
     cy.contains('Verifizierter Testort 3').should('not.exist');
     cy.visit('/start');
     selectPictures('1', '25');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.picture-info-field', 'Orte').find('input').type('Verifizierter Testort 3{enter}');
     cy.contains('.save-state', 'Gespeichert');
     cy.contains('Verifizierter Testort 3');
@@ -63,7 +63,7 @@ describe('bulk edit location tags', () => {
   it('removes tags while keeping untouched ones', () => {
     cy.visit('/start');
     selectPictures('1', '25');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.MuiChip-root', 'Verifizierter Testort 3')
       .find('[data-testid="CancelIcon"]')
       .click();
@@ -87,7 +87,7 @@ describe('bulk edit location tags', () => {
     cy.contains('Market place').should('not.exist');
     visitArchive1Pictures();
     selectPictures('1', '4');
-    cy.contains('Mehrere Bilder editieren').click();
+    bulkEdit();
     cy.contains('.picture-info-field', 'Orte').find('input').type('Market{enter}');
     cy.contains('.save-state', 'Gespeichert');
     cy.contains('.MuiChip-root', 'Bad Harzburg');
