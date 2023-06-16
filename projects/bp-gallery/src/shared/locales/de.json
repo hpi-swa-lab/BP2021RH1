@@ -183,7 +183,9 @@
       }
     },
     "sequence": {
-      "label": "Serie"
+      "label": "Serie",
+      "remove": "Dieses Bild aus der Serie entfernen",
+      "removeEntire": "Alle Bilder aus der Serie entfernen"
     },
     "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",

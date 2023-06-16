@@ -70,6 +70,29 @@ export const useUpdatePictureSequenceOrder = () => {
   return updatePictureSequenceOrder;
 };
 
+export const useRemovePictureFromSequence = () => {
+  const [updatePicture] = useUpdatePictureMutation({
+    refetchQueries: ['getPictureInfo'],
+  });
+
+  const removePictureFromSequence = useCallback(
+    (picture: FlatPicture) => {
+      updatePicture({
+        variables: {
+          pictureId: picture.id,
+          data: {
+            picture_sequence: null,
+            picture_sequence_order: null,
+          },
+        },
+      });
+    },
+    [updatePicture]
+  );
+
+  return removePictureFromSequence;
+};
+
 export const collapseSequences = (pictures: FlatPicture[] | undefined) => {
   if (!pictures) {
     return undefined;
