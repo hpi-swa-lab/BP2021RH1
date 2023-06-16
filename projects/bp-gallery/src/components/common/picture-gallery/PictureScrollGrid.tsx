@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useCachedOnRefetch } from '../../../hooks/cache-on-refetch.hook';
 import { useScroll } from '../../../hooks/context-hooks';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
@@ -33,6 +34,7 @@ const PictureScrollGrid = ({
   filterOutTextsForNonCurators = true,
   collapseSequences = true,
   fetchPolicy,
+  cacheOnRefetch = false,
 }: {
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
   hashbase: string;
@@ -49,6 +51,7 @@ const PictureScrollGrid = ({
   filterOutTextsForNonCurators?: boolean;
   collapseSequences?: boolean;
   fetchPolicy?: WatchQueryFetchPolicy;
+  cacheOnRefetch?: boolean;
 }) => {
   const { t } = useTranslation();
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
@@ -65,6 +68,8 @@ const PictureScrollGrid = ({
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
   const collapsedPictures = useCollapseSequences(pictures, collapseSequences);
+
+  const processedPictures = useCachedOnRefetch(collapsedPictures, cacheOnRefetch);
 
   const { scrollPos, scrollHeight } = useScroll();
 
@@ -115,11 +120,13 @@ const PictureScrollGrid = ({
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
-  } else if (loading && !pictures) {
+  } else if (loading && !processedPictures) {
     return <Loading />;
-  } else if (pictures && collapsedPictures) {
+  } else if (processedPictures) {
     const possiblyMorePictures: boolean =
-      pictures.length > 0 && pictures.length % NUMBER_OF_PICTURES_LOADED_PER_FETCH === 0;
+      !!pictures &&
+      pictures.length > 0 &&
+      pictures.length % NUMBER_OF_PICTURES_LOADED_PER_FETCH === 0;
 
     return (
       <>
@@ -135,13 +142,13 @@ const PictureScrollGrid = ({
         {showCount && (
           <span className='picture-count'>
             {t(possiblyMorePictures ? 'common.moreThanPictureCount' : 'common.pictureCount', {
-              count: pictures.length,
+              count: processedPictures.length,
             })}
           </span>
         )}
         <PictureGrid
           refetch={refetch}
-          pictures={collapsedPictures}
+          pictures={processedPictures}
           hashBase={hashbase}
           loading={isFetching}
           bulkOperations={bulkOperations}
