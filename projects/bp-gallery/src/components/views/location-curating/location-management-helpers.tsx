@@ -5,6 +5,7 @@ import {
   ComponentCommonSynonyms,
   ComponentCommonSynonymsInput,
 } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
@@ -491,6 +492,7 @@ export const useDeleteTag = (
   const prompt = useDialog();
   const { t } = useTranslation();
 
+  const { tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
   const { deleteTags } = useDeleteTagAndChildren(refetch, TagType.LOCATION);
   const { deleteSingleTag } = useDeleteSingleTag(refetch, TagType.LOCATION);
   const { deleteLocalTagCloneAndMoveUpChildren } = useDeleteLocalTagCloneAndMoveUpChildren(
@@ -503,7 +505,22 @@ export const useDeleteTag = (
     refetch,
     parentTag
   );
+  const tagPicturesQueryResponse = tagPictures({
+    variables: { tagID: locationTag.id },
+    fetchPolicy: 'no-cache',
+  });
+  const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
+
   const deleteTag = useCallback(async () => {
+    if (flattenedPictures && flattenedPictures.locationTag.pictures.length) {
+      await prompt({
+        preset: DialogPreset.CONFIRM,
+        title: t('tag-panel.not-allowed-to-delete', {
+          count: flattenedPictures.locationTag.pictures.length,
+        }),
+      });
+      return;
+    }
     const deleteOption = await prompt({
       title: t(`tag-panel.should-delete-${TagType.LOCATION}`),
       content: locationTag.name,
@@ -574,6 +591,7 @@ export const useDeleteTag = (
     deleteLocalTagCloneAndMoveUpChildren,
     deleteSingleTag,
     deleteTags,
+    flattenedPictures,
     locationTag,
     prompt,
     t,

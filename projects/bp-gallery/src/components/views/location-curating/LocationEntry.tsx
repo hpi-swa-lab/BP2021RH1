@@ -36,7 +36,7 @@ const LocationEntry = ({
   };
 
   const ref = useRef<HTMLDivElement>(null);
-  const isVisible = useElementIsVisible(ref.current, true);
+  const isVisible = useElementIsVisible(ref.current, false);
 
   return (
     <div
