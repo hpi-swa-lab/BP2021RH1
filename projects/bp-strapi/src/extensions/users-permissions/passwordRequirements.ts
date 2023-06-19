@@ -23,7 +23,7 @@ export const enforcePasswordRequirements = (password: string) => {
   if (!fulfillsPasswordRequirements(password)) {
     throw new Error(
       `password must be at least ${minimumPasswordLength} characters long ` +
-        'and must contain at least a small letter, a capital letter, a number and a special characeter'
+        'and must contain at least a small letter, a capital letter, a number and a special character'
     );
   }
 };
