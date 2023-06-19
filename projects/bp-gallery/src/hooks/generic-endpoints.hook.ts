@@ -1,3 +1,4 @@
+import { noop } from 'lodash';
 import { useMemo } from 'react';
 import {
   useCanRunDeleteKeywordTagMutation,
@@ -14,6 +15,9 @@ import {
   useCanRunUpdateLocationVisibilityMutation,
   useCanRunUpdatePersonNameMutation,
   useCanRunUpdatePersonSynonymsMutation,
+  useCreateKeywordTagMutation,
+  useCreateLocationTagMutation,
+  useCreatePersonTagMutation,
   useDeleteKeywordTagMutation,
   useDeleteLocationTagMutation,
   useDeletePersonTagMutation,
@@ -23,13 +27,18 @@ import {
   useGetKeywordTagsWithThumbnailQuery,
   useGetLocationTagsWithThumbnailQuery,
   useGetPersonTagsWithThumbnailQuery,
+  useGetPicturesForLocationQuery,
   useMergeKeywordTagsMutation,
   useMergeLocationTagsMutation,
   useMergePersonTagsMutation,
   useUpdateKeywordNameMutation,
   useUpdateKeywordSynonymsMutation,
   useUpdateKeywordVisibilityMutation,
+  useUpdateLocationAcceptanceMutation,
+  useUpdateLocationChildMutation,
   useUpdateLocationNameMutation,
+  useUpdateLocationParentMutation,
+  useUpdateLocationRootMutation,
   useUpdateLocationSynonymsMutation,
   useUpdateLocationVisibilityMutation,
   useUpdatePersonNameMutation,
@@ -42,6 +51,10 @@ import {
   useCanUsePersonTagTableView,
 } from './can-do-hooks';
 
+const dummy = (_?: unknown) => {
+  return [noop];
+};
+
 const useGenericTagEndpoints = (type: TagType) => {
   return useMemo(() => {
     switch (type) {
@@ -49,11 +62,17 @@ const useGenericTagEndpoints = (type: TagType) => {
         return {
           allTagsQuery: useGetAllLocationTagsQuery,
           tagsWithThumbnailQuery: useGetLocationTagsWithThumbnailQuery,
+          tagPictures: useGetPicturesForLocationQuery,
           updateTagNameMutationSource: useUpdateLocationNameMutation,
           updateSynonymsMutationSource: useUpdateLocationSynonymsMutation,
+          updateVisibilityMutationSource: useUpdateLocationVisibilityMutation,
+          updateTagParentMutationSource: useUpdateLocationParentMutation,
+          updateTagAcceptanceMutationSource: useUpdateLocationAcceptanceMutation,
+          updateTagChildMutationSource: useUpdateLocationChildMutation,
+          updateRootMutationSource: useUpdateLocationRootMutation,
           mergeTagsMutationSource: useMergeLocationTagsMutation,
           deleteTagMutationSource: useDeleteLocationTagMutation,
-          updateVisibilityMutationSource: useUpdateLocationVisibilityMutation,
+          createTagMutationSource: useCreateLocationTagMutation,
           canUseTagTableViewQuery: useCanUseLocationTagTableView,
           canUpdateTagNameQuery: useCanRunUpdateLocationNameMutation,
           canUpdateSynonymsQuery: useCanRunUpdateLocationSynonymsMutation,
@@ -65,13 +84,19 @@ const useGenericTagEndpoints = (type: TagType) => {
         return {
           allTagsQuery: useGetAllPersonTagsQuery,
           tagsWithThumbnailQuery: useGetPersonTagsWithThumbnailQuery,
+          tagPictures: () => {
+            return { data: undefined };
+          },
           updateTagNameMutationSource: useUpdatePersonNameMutation,
           updateSynonymsMutationSource: useUpdatePersonSynonymsMutation,
+          updateVisibilityMutationSource: dummy,
+          updateTagParentMutationSource: dummy,
+          updateTagAcceptanceMutationSource: dummy,
+          updateTagChildMutationSource: dummy,
+          updateRootMutationSource: dummy,
           mergeTagsMutationSource: useMergePersonTagsMutation,
           deleteTagMutationSource: useDeletePersonTagMutation,
-          updateVisibilityMutationSource: (dummy: any) => {
-            return [dummy];
-          },
+          createTagMutationSource: useCreatePersonTagMutation,
           canUseTagTableViewQuery: useCanUsePersonTagTableView,
           canUpdateTagNameQuery: useCanRunUpdatePersonNameMutation,
           canUpdateSynonymsQuery: useCanRunUpdatePersonSynonymsMutation,
@@ -86,11 +111,19 @@ const useGenericTagEndpoints = (type: TagType) => {
         return {
           allTagsQuery: useGetAllKeywordTagsQuery,
           tagsWithThumbnailQuery: useGetKeywordTagsWithThumbnailQuery,
+          tagPictures: () => {
+            return { data: undefined };
+          },
           updateTagNameMutationSource: useUpdateKeywordNameMutation,
           updateSynonymsMutationSource: useUpdateKeywordSynonymsMutation,
+          updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
+          updateTagParentMutationSource: dummy,
+          updateTagAcceptanceMutationSource: dummy,
+          updateTagChildMutationSource: dummy,
+          updateRootMutationSource: dummy,
           mergeTagsMutationSource: useMergeKeywordTagsMutation,
           deleteTagMutationSource: useDeleteKeywordTagMutation,
-          updateVisibilityMutationSource: useUpdateKeywordVisibilityMutation,
+          createTagMutationSource: useCreateKeywordTagMutation,
           canUseTagTableViewQuery: useCanUseKeywordTagTableView,
           canUpdateTagNameQuery: useCanRunUpdateKeywordNameMutation,
           canUpdateSynonymsQuery: useCanRunUpdateKeywordSynonymsMutation,

@@ -20,6 +20,7 @@ import {
   usePinCommentMutation,
   useUnpinCommentMutation,
 } from '../../../../../graphql/APIConnector';
+import { getDescendants } from '../../../../../helpers/tree-helpers';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import CollapsibleContainer from '../../../../common/CollapsibleContainer';
 import RichText from '../../../../common/RichText';
@@ -37,13 +38,6 @@ interface CommentAction {
   hoverText?: string;
   state?: boolean;
 }
-
-const getDescendants = (comment: FlatComment, descendants: string[] = []): string[] => {
-  if (!comment.childComments) return [];
-  descendants.push(...comment.childComments.map(childComment => childComment.id));
-  comment.childComments.forEach(childComment => getDescendants(childComment, descendants));
-  return descendants;
-};
 
 const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?: number }) => {
   const { t } = useTranslation();
@@ -107,7 +101,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
   });
 
   const onDelete = useCallback(async () => {
-    const deletedComments = getDescendants(comment);
+    const deletedComments = getDescendants(comment, 'childComments');
 
     const shouldRemove = await dialog({
       title: t('curator.really-decline-comment'),

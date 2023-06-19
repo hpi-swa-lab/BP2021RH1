@@ -2,8 +2,8 @@
 query canRunOperation( $operation: String! $variableSets: [JSON!] $withSomeVariables: Boolean ) { canRunOperation( operation: $operation variableSets: $variableSets withSomeVariables: $withSomeVariables ) }
 query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) { archiveTags(sort: $sortBy) { data { id attributes { name shortDescription showcasePicture { data { id attributes { media { data { attributes { url updatedAt provider } } } } } } } } } }
 query getAllCollections { collections(publicationState: PREVIEW) { data { id attributes { name parent_collections(publicationState: PREVIEW) { data { id attributes { name } } } } } } }
-query getAllKeywordTags { keywordTags { data { id attributes { name synonyms { name } visible } } } }
-query getAllLocationTags { locationTags { data { id attributes { name visible synonyms { name } } } } }
+query getAllKeywordTags { keywordTags { data { id attributes { name visible synonyms { name } } } } }
+query getAllLocationTags { locationTags { data { id attributes { name visible root accepted synonyms { name } child_tags { data { id attributes { name } } } parent_tags { data { id attributes { name } } } } } } }
 query getAllPersonTags { personTags { data { id attributes { name synonyms { name } } } } }
 query getAllPictureIds { pictures { data { id } } }
 query getArchive($archiveId: ID!) { archiveTag(id: $archiveId) { data { id attributes { name shortDescription longDescription email paypalClient paypalDonationText paypalPurpose restrictImageDownloading logo { data { id attributes { width height formats updatedAt provider } } } showcasePicture { data { id attributes { media { data { id attributes { width height formats url updatedAt provider } } } } } } links { data { id attributes { title url } } } } } } }
@@ -26,6 +26,7 @@ query getPictureInfo($pictureId: ID!) { picture(id: $pictureId) { data { id attr
 query getPictures( $filters: PictureFiltersInput! $pagination: PaginationArg! $sortBy: [String] = ["createdAt:desc"] ) { pictures(filters: $filters pagination: $pagination sort: $sortBy) { data { id attributes { is_text comments { data { id } } likes media { data { id attributes { width height formats url updatedAt provider } } } } } } }
 query getPicturesByAllSearch( $pagination: PaginationArg! $searchTerms: [String]! $searchTimes: [[String]]! $textFilter: String! ) { findPicturesByAllSearch( pagination: $pagination searchTerms: $searchTerms searchTimes: $searchTimes textFilter: $textFilter ) { id attributes { is_text comments { data { id } } likes media { data { id attributes { width height formats url updatedAt provider } } } } } }
 query getPicturesForCollection($collectionId: ID!) { collection(id: $collectionId) { data { id attributes { pictures { data { id } } } } } }
+query getPicturesForLocation($tagID: ID!) { locationTag(id: $tagID) { data { id attributes { pictures { data { id } } verified_pictures { data { id } } } } } }
 query getPublishedCollectionInfoByName($collectionName: String) { collections(filters: { name: { eq: $collectionName } }) { data { id attributes { name description child_collections(sort: "name:asc") { data { id attributes { name thumbnail publishedAt } } } } } } }
 query getRootCollection { browseRootCollection { data { attributes { current { data { id attributes { name } } } } } } }
 query getUnverifiedComments { comments(filters: { publishedAt: { null: true } } publicationState: PREVIEW) { data { id attributes { picture { data { id attributes { media { data { id attributes { width height formats updatedAt provider } } } } } } text author } } } }
@@ -42,7 +43,7 @@ mutation contact( $recipient: String! $sender_name: String! $reply_email: String
 mutation createFaceTag( $pictureId: ID! $personTagId: ID! $x: Float $y: Float $tag_direction: Int ) { createFaceTag( data: { picture: $pictureId person_tag: $personTagId x: $x y: $y tag_direction: $tag_direction } ) { data { id } } }
 mutation createKeywordTag($name: String!) { createKeywordTag(data: { name: $name }) { data { id } } }
 mutation createLink($title: String! $url: String! $archive_tag: ID!) { createLink(data: { title: $title url: $url archive_tag: $archive_tag }) { data { id } } }
-mutation createLocationTag($name: String!) { createLocationTag(data: { name: $name }) { data { id } } }
+mutation createLocationTag( $name: String! $parentIDs: [ID!] $childIDs: [ID!] $accepted: Boolean $root: Boolean ) { createLocationTag( data: { name: $name parent_tags: $parentIDs child_tags: $childIDs accepted: $accepted root: $root } ) { data { id } } }
 mutation createPersonTag($name: String!) { createPersonTag(data: { name: $name }) { data { id } } }
 mutation createPicture($data: PictureInput!) { createPicture(data: $data) { data { id } } }
 mutation createPictureGeoInfo($data: PictureGeoInfoInput!) { createPictureGeoInfo(data: $data) { data { id } } }
@@ -81,7 +82,11 @@ mutation updateKeywordName($tagId: ID! $name: String!) { updateKeywordTag(id: $t
 mutation updateKeywordSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updateKeywordTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updateKeywordVisibility($tagId: ID! $visible: Boolean!) { updateKeywordTag(id: $tagId data: { visible: $visible }) { data { id } } }
 mutation updateLink($id: ID! $data: LinkInput!) { updateLink(id: $id data: $data) { data { id } } }
+mutation updateLocationAcceptance($tagId: ID! $accepted: Boolean) { updateLocationTag(id: $tagId data: { accepted: $accepted }) { data { id } } }
+mutation updateLocationChild($tagID: ID! $childIDs: [ID!]) { updateLocationTag(id: $tagID data: { child_tags: $childIDs }) { data { id } } }
 mutation updateLocationName($tagId: ID! $name: String!) { updateLocationTag(id: $tagId data: { name: $name }) { data { id } } }
+mutation updateLocationParent($tagID: ID! $parentIDs: [ID!]) { updateLocationTag(id: $tagID data: { parent_tags: $parentIDs }) { data { id } } }
+mutation updateLocationRoot($tagId: ID! $root: Boolean!) { updateLocationTag(id: $tagId data: { root: $root }) { data { id } } }
 mutation updateLocationSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updateLocationTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updateLocationVisibility($tagId: ID! $visible: Boolean!) { updateLocationTag(id: $tagId data: { visible: $visible }) { data { id } } }
 mutation updateMe($username: String $email: String) { updateMe(username: $username email: $email) }

@@ -23,7 +23,7 @@ describe('picture uploading and tagging', () => {
 
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Orte').click();
-    cy.contains('.MuiDataGrid-row', 'TestOrt').find('[data-testid="DeleteIcon"]').click();
+    cy.contains('.location-entry-content', 'TestOrt').find('[data-testid="DeleteIcon"]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
 
     cy.get('.nav-bar').contains('Mehr...').click();
