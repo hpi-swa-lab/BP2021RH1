@@ -8,6 +8,7 @@ export { default as editPicture } from './groups/editPicture.js';
 export { default as getAllCollections } from './groups/getAllCollections.js';
 export { default as getAllTags } from './groups/getAllTags.js';
 export { default as mergeTags } from './groups/mergeTags.js';
+export { default as updateLocationHierarchy } from './groups/updateLocationHierarchy.js';
 export { default as updateTagName } from './groups/updateTagName.js';
 export { default as updateTagSynonyms } from './groups/updateTagSynonyms.js';
 export { default as updateTagVisibility } from './groups/updateTagVisibility.js';

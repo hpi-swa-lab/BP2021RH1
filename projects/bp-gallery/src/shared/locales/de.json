@@ -220,6 +220,8 @@
         "updateTagName": "Tag umbenennen",
         "updateTagSynonyms": "Tag-Synonyme verwalten",
         "updateTagVisibility": "Tag-Sichtbarkeit verwalten",
+        "updateLocationAcceptance": "Ort akzeptieren",
+        "updateLocationHierarchy": "Orte-Hierarchie verwalten",
         "acceptComment": "Kommentar akzeptieren",
         "declineComment": "Kommentar ablehnen",
         "fixCommentText": "Kommentar editieren",
