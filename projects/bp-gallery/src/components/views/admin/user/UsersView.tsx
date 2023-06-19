@@ -12,6 +12,7 @@ import ProtectedRoute from '../../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
 import { CenteredContainer } from '../CenteredContainer';
 import { AddUserButton } from './AddUserButton';
+import { PUBLIC_USER_ID } from './helper';
 
 export const UsersView = () => {
   const { t } = useTranslation();
@@ -40,16 +41,17 @@ export const UsersView = () => {
             <CenteredContainer title={t('admin.users.title')}>
               <AddUserButton />
               <List>
-                {[{ id: 'public', username: t('admin.users.publicUsername') }, ...sortedUsers].map(
-                  user => (
-                    <ListItemButton key={user.id} onClick={() => visit(`/admin/user/${user.id}`)}>
-                      <ListItemText primary={user.username} />
-                      <ListItemIcon>
-                        <Edit />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  )
-                )}
+                {[
+                  { id: PUBLIC_USER_ID, username: t('admin.users.publicUsername') },
+                  ...sortedUsers,
+                ].map(user => (
+                  <ListItemButton key={user.id} onClick={() => visit(`/admin/user/${user.id}`)}>
+                    <ListItemText primary={user.username} />
+                    <ListItemIcon>
+                      <Edit />
+                    </ListItemIcon>
+                  </ListItemButton>
+                ))}
               </List>
             </CenteredContainer>
           );

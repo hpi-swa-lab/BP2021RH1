@@ -10,6 +10,7 @@ import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes'
 import PrimaryButton from '../../../common/PrimaryButton';
 import { CenteredContainer } from '../CenteredContainer';
 import { RemoveUserButton } from './RemoveUserButton';
+import { PUBLIC_USER_ID } from './helper';
 
 export const UserView = ({
   user,
@@ -22,7 +23,7 @@ export const UserView = ({
   const { visit } = useVisit();
 
   const isPublic = !user;
-  const id = user?.id ?? 'public';
+  const id = user?.id ?? PUBLIC_USER_ID;
 
   const [username, setUsername] = useState(user?.username ?? '');
   const [email, setEmail] = useState(user?.email ?? '');
