@@ -12,11 +12,8 @@ import SearchBreadcrumbs from './SearchBreadcrumbs';
 import SearchHub from './SearchHub';
 import './SearchView.scss';
 import { isValidYear } from './helpers/addNewParamToSearchPath';
-import {
-  SearchType,
-  convertSearchParamsToPictureFilters,
-  paramToTime,
-} from './helpers/search-filters';
+import getSearchResultPictureIds from './helpers/getSearchResultPictureIds';
+import { SearchType, paramToTime } from './helpers/search-filters';
 import { toURLSearchParam } from './helpers/url-search-params';
 
 const isValidTimeSpecification = (searchRequest: string) => {
@@ -47,25 +44,26 @@ const SearchView = () => {
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
-    if (isAllSearchActive) {
-      const allSearchTerms = searchParams
-        .getAll(toURLSearchParam(SearchType.ALL))
-        .map(decodeURIComponent);
-      const searchTimes: string[][] = [];
-      allSearchTerms.forEach(searchTerm => {
-        if (isValidTimeSpecification(searchTerm)) {
-          const { startTime, endTime } = paramToTime(searchTerm);
-          searchTimes.push([searchTerm, startTime, endTime]);
-        }
-      });
-      return {
-        searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
-        searchTimes,
-      };
-    }
-    return convertSearchParamsToPictureFilters(searchParams);
-  }, [isAllSearchActive, searchParams]);
-
+    // if (isAllSearchActive) {
+    const allSearchTerms = searchParams
+      .getAll(toURLSearchParam(SearchType.ALL))
+      .map(decodeURIComponent);
+    const searchTimes: string[][] = [];
+    allSearchTerms.forEach(searchTerm => {
+      if (isValidTimeSpecification(searchTerm)) {
+        const { startTime, endTime } = paramToTime(searchTerm);
+        searchTimes.push([searchTerm, startTime, endTime]);
+      }
+    });
+    return {
+      searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
+      searchTimes,
+    };
+    // }
+    // return convertSearchParamsToPictureFilters(searchParams);
+  }, [/*isAllSearchActive,*/ searchParams]);
+  if (import.meta.env.MODE === 'development')
+    getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
   const { linkToCollection, bulkEdit } = useBulkOperations();
 
   return (
