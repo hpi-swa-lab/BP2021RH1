@@ -29,8 +29,8 @@ describe('bulk edit dates', () => {
   it('sets the date of different dates to the same, set date', () => {
     visitArchive1Pictures();
     selectPictures('1', '5');
-    waitForCuratorPictureInfo();
     bulkEdit();
+    waitForCuratorPictureInfo();
     cy.contains('Keine Zeit bekannt').click();
     cy.get('.rdrDateInput').eq(0).clear();
     cy.get('.rdrDateInput').eq(0).type('20.04.1969{enter}{esc}');
