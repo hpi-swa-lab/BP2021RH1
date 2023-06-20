@@ -1,5 +1,5 @@
 import { useCallback, useContext } from 'react';
-import { CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
+import { Add, CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
 import { DialogPreset, useDialog } from '../components/provider/DialogProvider';

@@ -444,6 +444,7 @@
         "add-source": "Quelle hinzufügen"
       }
     }
+  },
   "tag-panel": {
     "name-of-sub-keyword": "Name des neuen Unterschlagworts für {{ parent }}:",
     "name-of-sub-location": "Name des neuen Unterorts für {{ parent }}:",
