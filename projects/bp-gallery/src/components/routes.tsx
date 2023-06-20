@@ -17,9 +17,9 @@ import BulkEditView from './views/bulk-edit/BulkEditView';
 import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
 import ContactFormView from './views/contact/ContactFormView';
 import DiscoverView from './views/discover/DiscoverView';
-import LocationPanel from './views/location-curating/LocationPanel';
 import GeoView from './views/geoguessr/GeoView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
+import LocationPanel from './views/location-curating/LocationPanel';
 import PictureView from './views/picture/PictureView';
 import SearchView from './views/search/SearchView';
 import ShowMoreView from './views/show-more/ShowMoreView';
@@ -96,11 +96,7 @@ const routes: RouteConfig[] = [
   {
     path: '/tags/locations',
     render: () => {
-      return (
-        <ProtectedRoute>
-          <LocationPanel />
-        </ProtectedRoute>
-      );
+      return <LocationPanel />;
     },
   },
   {

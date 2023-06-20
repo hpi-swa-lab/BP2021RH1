@@ -1,6 +1,9 @@
 import { noop } from 'lodash';
 import { useMemo } from 'react';
 import {
+  useCanRunCreateKeywordTagMutation,
+  useCanRunCreateLocationTagMutation,
+  useCanRunCreatePersonTagMutation,
   useCanRunDeleteKeywordTagMutation,
   useCanRunDeleteLocationTagMutation,
   useCanRunDeletePersonTagMutation,
@@ -10,7 +13,11 @@ import {
   useCanRunUpdateKeywordNameMutation,
   useCanRunUpdateKeywordSynonymsMutation,
   useCanRunUpdateKeywordVisibilityMutation,
+  useCanRunUpdateLocationAcceptanceMutation,
+  useCanRunUpdateLocationChildMutation,
   useCanRunUpdateLocationNameMutation,
+  useCanRunUpdateLocationParentMutation,
+  useCanRunUpdateLocationRootMutation,
   useCanRunUpdateLocationSynonymsMutation,
   useCanRunUpdateLocationVisibilityMutation,
   useCanRunUpdatePersonNameMutation,
@@ -55,6 +62,10 @@ const dummy = (_?: unknown) => {
   return [noop];
 };
 
+const cantRun = () => {
+  return { canRun: false, loading: false };
+};
+
 const useGenericTagEndpoints = (type: TagType) => {
   return useMemo(() => {
     switch (type) {
@@ -76,9 +87,14 @@ const useGenericTagEndpoints = (type: TagType) => {
           canUseTagTableViewQuery: useCanUseLocationTagTableView,
           canUpdateTagNameQuery: useCanRunUpdateLocationNameMutation,
           canUpdateSynonymsQuery: useCanRunUpdateLocationSynonymsMutation,
+          canUpdateVisibilityQuery: useCanRunUpdateLocationVisibilityMutation,
+          canUpdateTagParentQuery: useCanRunUpdateLocationParentMutation,
+          canUpdateTagAcceptanceQuery: useCanRunUpdateLocationAcceptanceMutation,
+          canUpdateTagChildQuery: useCanRunUpdateLocationChildMutation,
+          canUpdateRootQuery: useCanRunUpdateLocationRootMutation,
           canMergeTagsQuery: useCanRunMergeLocationTagsMutation,
           canDeleteTagQuery: useCanRunDeleteLocationTagMutation,
-          canUpdateVisibilityQuery: useCanRunUpdateLocationVisibilityMutation,
+          canCreateTagQuery: useCanRunCreateLocationTagMutation,
         };
       case TagType.PERSON:
         return {
@@ -100,11 +116,14 @@ const useGenericTagEndpoints = (type: TagType) => {
           canUseTagTableViewQuery: useCanUsePersonTagTableView,
           canUpdateTagNameQuery: useCanRunUpdatePersonNameMutation,
           canUpdateSynonymsQuery: useCanRunUpdatePersonSynonymsMutation,
+          canUpdateVisibilityQuery: cantRun,
+          canUpdateTagParentQuery: cantRun,
+          canUpdateTagAcceptanceQuery: cantRun,
+          canUpdateTagChildQuery: cantRun,
+          canUpdateRootQuery: cantRun,
           canMergeTagsQuery: useCanRunMergePersonTagsMutation,
           canDeleteTagQuery: useCanRunDeletePersonTagMutation,
-          canUpdateVisibilityQuery: () => {
-            return { canRun: false, loading: false };
-          },
+          canCreateTagQuery: useCanRunCreatePersonTagMutation,
         };
       case TagType.KEYWORD:
       default:
@@ -127,9 +146,14 @@ const useGenericTagEndpoints = (type: TagType) => {
           canUseTagTableViewQuery: useCanUseKeywordTagTableView,
           canUpdateTagNameQuery: useCanRunUpdateKeywordNameMutation,
           canUpdateSynonymsQuery: useCanRunUpdateKeywordSynonymsMutation,
+          canUpdateVisibilityQuery: useCanRunUpdateKeywordVisibilityMutation,
+          canUpdateTagParentQuery: cantRun,
+          canUpdateTagAcceptanceQuery: cantRun,
+          canUpdateTagChildQuery: cantRun,
+          canUpdateRootQuery: cantRun,
           canMergeTagsQuery: useCanRunMergeKeywordTagsMutation,
           canDeleteTagQuery: useCanRunDeleteKeywordTagMutation,
-          canUpdateVisibilityQuery: useCanRunUpdateKeywordVisibilityMutation,
+          canCreateTagQuery: useCanRunCreateKeywordTagMutation,
         };
     }
   }, [type]);

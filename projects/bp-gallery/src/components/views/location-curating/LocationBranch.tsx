@@ -33,7 +33,7 @@ const LocationBranch = ({
     }
   };
 
-  const { createNewTag } = useCreateNewTag(refetch);
+  const { createNewTag, canCreateNewTag } = useCreateNewTag(refetch);
 
   return (
     <div className='location-branch-container'>
@@ -49,12 +49,14 @@ const LocationBranch = ({
       {showMore && (
         <div className='sub-location-container'>
           {renderSubBranches()}
-          <AddLocationEntry
-            text={t(`tag-panel.add-sub-location`, { parent: locationTag.name })}
-            onClick={() => {
-              createNewTag(locationTag.child_tags as FlatTag[], locationTag);
-            }}
-          />
+          {canCreateNewTag && (
+            <AddLocationEntry
+              text={t(`tag-panel.add-sub-location`, { parent: locationTag.name })}
+              onClick={() => {
+                createNewTag(locationTag.child_tags as FlatTag[], locationTag);
+              }}
+            />
+          )}
         </div>
       )}
     </div>

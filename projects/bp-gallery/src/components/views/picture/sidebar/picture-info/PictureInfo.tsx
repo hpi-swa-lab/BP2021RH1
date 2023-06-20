@@ -203,8 +203,8 @@ const PictureInfo = ({
               : undefined
           }
           noContentText={t('pictureFields.noLocations')}
-          createMutation={newLocationTagMutation}
-          createChildMutation={newLocationTagMutation}
+          createMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
+          createChildMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
         />
       </PictureInfoField>
       {(savePictureInfo || Boolean(picture.keyword_tags?.length)) && (

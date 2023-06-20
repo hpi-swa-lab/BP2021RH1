@@ -21,8 +21,8 @@ const LocationEntry = ({
 }) => {
   const prompt = useDialog();
 
-  const { acceptTag } = useAcceptTag(locationTag, refetch);
-  const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
+  const { acceptTag, canAcceptTag } = useAcceptTag(locationTag, refetch);
+  const { deleteSynonym, canDeleteSynonym } = useDeleteSynonym(locationTag, refetch);
 
   const openLocationManagementDialog = () => {
     prompt({
@@ -59,7 +59,7 @@ const LocationEntry = ({
           <div className='location-entry-inner-content'>
             <div className='location-name'>
               {locationTag.name}
-              {!locationTag.accepted && (
+              {!locationTag.accepted && canAcceptTag && (
                 <IconButton
                   className='accept-location-name'
                   onClick={e => {
@@ -77,7 +77,7 @@ const LocationEntry = ({
                   <Chip
                     key={synonym!.name}
                     label={synonym!.name}
-                    onDelete={() => deleteSynonym(synonym!.name)}
+                    onDelete={canDeleteSynonym ? () => deleteSynonym(synonym!.name) : undefined}
                   />
                 </div>
               ))}

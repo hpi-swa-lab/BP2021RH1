@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import AddLocationEntry from './AddLocationEntry';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
@@ -24,13 +25,13 @@ const setUnacceptedSubtagsCount = (tag: FlatTag) => {
 const LocationPanel = () => {
   const { t } = useTranslation();
 
-  const { allTagsQuery } = useGenericTagEndpoints(TagType.LOCATION);
+  const { allTagsQuery, canUseTagTableViewQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
   const { data, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const { createNewTag } = useCreateNewTag(refetch);
+  const { createNewTag, canCreateNewTag } = useCreateNewTag(refetch);
 
   const { tagTree: sortedTagTree } = useGetTagStructures(flattenedTags);
 
@@ -44,21 +45,26 @@ const LocationPanel = () => {
     return sortedTagTree;
   }, [sortedTagTree]);
 
+  const { canRun: canUseLocationPanel, loading: canUseLocationPanelLoading } =
+    canUseTagTableViewQuery();
+
   return (
-    <div>
+    <ProtectedRoute canUse={canUseLocationPanel} canUseLoading={canUseLocationPanelLoading}>
       <LocationPanelHeader />
       <div className='location-panel-content'>
         {tagTree?.map(tag => (
           <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
         ))}
-        <AddLocationEntry
-          text={t(`tag-panel.add-location`)}
-          onClick={() => {
-            createNewTag(tagTree);
-          }}
-        />
+        {canCreateNewTag && (
+          <AddLocationEntry
+            text={t(`tag-panel.add-location`)}
+            onClick={() => {
+              createNewTag(tagTree);
+            }}
+          />
+        )}
       </div>
-    </div>
+    </ProtectedRoute>
   );
 };
 
