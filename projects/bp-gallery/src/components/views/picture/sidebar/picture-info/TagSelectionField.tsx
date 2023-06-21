@@ -452,7 +452,9 @@ const TagSelectionField = <T extends TagFields>({
             newlyAddedTags.forEach(tag => {
               setLastAddedTag(tag);
               const allSupertags: T[] = getAllNotSelectedSupertags(tag);
-              newValue = newValue.concat(allSupertags);
+              newValue = newValue.concat(
+                allSupertags.map(superTag => ({ ...superTag, verified: true, isNew: true }))
+              );
 
               if (type === TagType.LOCATION) {
                 const children = getTagChildrenRecommendations(tag, newValue);

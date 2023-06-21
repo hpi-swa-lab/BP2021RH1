@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
 import ProtectedRoute from '../../common/ProtectedRoute';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import AddLocationEntry from './AddLocationEntry';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
@@ -27,7 +29,7 @@ const LocationPanel = () => {
 
   const { allTagsQuery, canUseTagTableViewQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
-  const { data, refetch } = allTagsQuery();
+  const { data, loading, error, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
@@ -50,20 +52,32 @@ const LocationPanel = () => {
 
   return (
     <ProtectedRoute canUse={canUseLocationPanel} canUseLoading={canUseLocationPanelLoading}>
-      <LocationPanelHeader />
-      <div className='location-panel-content'>
-        {tagTree?.map(tag => (
-          <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
-        ))}
-        {canCreateNewTag && (
-          <AddLocationEntry
-            text={t(`tag-panel.add-location`)}
-            onClick={() => {
-              createNewTag(tagTree);
-            }}
-          />
-        )}
-      </div>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else {
+          return (
+            <>
+              <LocationPanelHeader />
+              <div className='location-panel-content'>
+                {tagTree?.map(tag => (
+                  <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
+                ))}
+                {canCreateNewTag && (
+                  <AddLocationEntry
+                    text={t(`tag-panel.add-location`)}
+                    onClick={() => {
+                      createNewTag(tagTree);
+                    }}
+                  />
+                )}
+              </div>
+            </>
+          );
+        }
+      }}
     </ProtectedRoute>
   );
 };

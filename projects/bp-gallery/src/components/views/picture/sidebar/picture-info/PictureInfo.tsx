@@ -21,7 +21,11 @@ import {
 } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { useFaceTagging } from '../../../../../hooks/context-hooks';
-import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
+import {
+  FlatLocationTagWithoutRelations,
+  FlatPicture,
+  TagType,
+} from '../../../../../types/additionalFlatTypes';
 import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
 import ArchiveTagField from './ArchiveTagField';
 import DateRangeSelectionField from './DateRangeSelectionField';
@@ -193,10 +197,10 @@ const PictureInfo = ({
           allTags={allLocations ?? []}
           onChange={
             savePictureInfo
-              ? locations => {
+              ? (locations: (FlatLocationTagWithoutRelations & { verified?: boolean })[]) => {
                   savePictureInfo({
                     location_tags: locations.map(location => {
-                      return pick(location, ['name', 'id', 'visible']);
+                      return pick(location, ['name', 'id', 'visible', 'verified']);
                     }),
                   });
                 }
