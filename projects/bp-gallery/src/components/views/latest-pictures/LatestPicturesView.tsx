@@ -5,7 +5,7 @@ import { ShowStats } from '../../provider/ShowStatsProvider';
 import './LatestPicturesView.scss';
 
 const LatestPicturesView = () => {
-  const { linkToCollection, bulkEdit } = useBulkOperations();
+  const { linkToCollection, createSequence, bulkEdit } = useBulkOperations();
   const { t } = useTranslation();
 
   return (
@@ -15,7 +15,7 @@ const LatestPicturesView = () => {
       <ShowStats>
         <PictureScrollGrid
           hashbase={'latest'}
-          bulkOperations={[linkToCollection, bulkEdit]}
+          bulkOperations={[linkToCollection, createSequence, bulkEdit]}
           queryParams={{}}
           maxNumPictures={500}
           showCount={false}

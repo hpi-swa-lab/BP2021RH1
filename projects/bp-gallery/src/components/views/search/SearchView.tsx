@@ -66,7 +66,7 @@ const SearchView = () => {
     return convertSearchParamsToPictureFilters(searchParams);
   }, [isAllSearchActive, searchParams]);
 
-  const { linkToCollection, bulkEdit } = useBulkOperations();
+  const { linkToCollection, createSequence, bulkEdit } = useBulkOperations();
 
   return (
     <div className='search-content'>
@@ -89,7 +89,7 @@ const SearchView = () => {
             queryParams={queryParams}
             isAllSearchActive={isAllSearchActive}
             hashbase={search}
-            bulkOperations={[linkToCollection, bulkEdit]}
+            bulkOperations={[linkToCollection, createSequence, bulkEdit]}
             resultPictureCallback={(pictures: number) => {
               setAreResultsEmpty(pictures <= 0);
             }}
