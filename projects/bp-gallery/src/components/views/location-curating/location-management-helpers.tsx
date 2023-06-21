@@ -512,7 +512,7 @@ export const useDeleteTag = (
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
 
   const deleteTag = useCallback(async () => {
-    if (flattenedPictures && flattenedPictures.locationTag.pictures.length) {
+    if (flattenedPictures?.locationTag.pictures.length) {
       await prompt({
         preset: DialogPreset.CONFIRM,
         title: t('tag-panel.not-allowed-to-delete', {
