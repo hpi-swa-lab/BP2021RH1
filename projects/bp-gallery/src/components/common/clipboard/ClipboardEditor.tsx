@@ -72,6 +72,7 @@ export const ClipboardEditor = () => {
                     showCount={false}
                     showDefaultAdornments={false}
                     extraAdornments={[remove]}
+                    collapseSequences={false}
                   />
                 </HideStats>
               </ScrollContainer>

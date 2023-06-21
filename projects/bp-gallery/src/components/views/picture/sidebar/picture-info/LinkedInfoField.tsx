@@ -219,6 +219,7 @@ const LinkedInfoField = ({
                   showDefaultAdornments={false}
                   extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
                   filterOutTextsForNonCurators={false}
+                  collapseSequences={false}
                 />
               </ScrollContainer>
             </ScrollProvider>
