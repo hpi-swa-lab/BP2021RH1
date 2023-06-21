@@ -1,6 +1,6 @@
 import { Check, ChevronRight, ExpandMore } from '@mui/icons-material';
 import { Badge, Chip, IconButton, Skeleton } from '@mui/material';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { useElementIsVisible } from '../../../hooks/element-is-visible';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -35,12 +35,12 @@ const LocationEntry = ({
     });
   };
 
-  const ref = useRef<HTMLDivElement>(null);
-  const isVisible = useElementIsVisible(ref.current, false);
+  const [ref, setRef] = useState<HTMLDivElement | null>(null);
+  const isVisible = useElementIsVisible(ref, false);
 
   return (
     <div
-      ref={ref}
+      ref={setRef}
       className={`location-entry-container ${!locationTag.accepted ? 'location-not-accepted' : ''}`}
       onClick={openLocationManagementDialog}
     >
