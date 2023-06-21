@@ -16,7 +16,12 @@ export const useCreateSequence = () => {
   const updatePictureSequenceOrder = useUpdatePictureSequenceOrder();
 
   const [createPictureSequence] = useCreatePictureSequenceMutation({
-    refetchQueries: ['getPictureInfo', 'getPictures', 'getMostLikedPictures'],
+    refetchQueries: [
+      'getPictureInfo',
+      'getPictures',
+      'getMostLikedPictures',
+      'getPicturesByAllSearch',
+    ],
   });
 
   const createSequence = useCallback(
@@ -80,7 +85,12 @@ export const useCreateSequence = () => {
 
 export const useUpdatePictureSequenceOrder = () => {
   const [updatePicture] = useUpdatePictureMutation({
-    refetchQueries: ['getPictureInfo', 'getPictures', 'getMostLikedPictures'],
+    refetchQueries: [
+      'getPictureInfo',
+      'getPictures',
+      'getMostLikedPictures',
+      'getPicturesByAllSearch',
+    ],
   });
 
   const updatePictureSequenceOrder = useCallback(
@@ -107,7 +117,12 @@ export const useUpdatePictureSequenceOrder = () => {
 
 export const useRemovePictureFromSequence = () => {
   const [updatePicture] = useUpdatePictureMutation({
-    refetchQueries: ['getPictureInfo', 'getPictures', 'getMostLikedPictures'],
+    refetchQueries: [
+      'getPictureInfo',
+      'getPictures',
+      'getMostLikedPictures',
+      'getPicturesByAllSearch',
+    ],
   });
 
   const removePictureFromSequence = useCallback(

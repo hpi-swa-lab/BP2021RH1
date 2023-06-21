@@ -3046,6 +3046,12 @@ export type GetPicturesByAllSearchQuery = {
           } | null;
         } | null;
       };
+      picture_sequence?: {
+        data?: {
+          id?: string | null;
+          attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+        } | null;
+      } | null;
     } | null;
   } | null> | null;
 };
@@ -5900,6 +5906,18 @@ export const GetPicturesByAllSearchDocument = gql`
               url
               updatedAt
               provider
+            }
+          }
+        }
+        picture_sequence {
+          data {
+            id
+            attributes {
+              pictures(sort: "picture_sequence_order:asc") {
+                data {
+                  id
+                }
+              }
             }
           }
         }
