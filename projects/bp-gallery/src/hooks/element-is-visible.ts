@@ -11,7 +11,7 @@ const intersectionObserver = new IntersectionObserver(entries => {
       continue;
     }
     for (const listener of entryListeners) {
-      listener(entry.intersectionRatio > 0);
+      listener(entry.isIntersecting);
     }
   }
 });
