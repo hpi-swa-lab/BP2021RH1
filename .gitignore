@@ -3,3 +3,5 @@
 .vscode/**/*
 !.vscode/launch.json
 remote-debug-profile/**
+projects/bp-gallery/vite.config.ts
+projects/bp-gallery/.eslintrc
