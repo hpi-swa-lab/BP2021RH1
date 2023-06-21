@@ -68,7 +68,10 @@ const LocationManagementDialogPreset = ({
     ? flattenedTagTree[locationTagID]
     : (dialogProps.content.locationTag as FlatTag);
 
-  const tagPicturesQueryResponse = tagPictures({ variables: { tagID: locationTag.id } });
+  const tagPicturesQueryResponse = tagPictures({
+    variables: { tagID: locationTag.id },
+    fetchPolicy: 'no-cache',
+  });
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
 
   const currentSiblings = [

@@ -14,7 +14,11 @@ import {
 } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { useFaceTagging } from '../../../../../hooks/context-hooks';
-import { FlatPicture, TagType } from '../../../../../types/additionalFlatTypes';
+import {
+  FlatLocationTagWithoutRelations,
+  FlatPicture,
+  TagType,
+} from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
 import ArchiveTagField from './ArchiveTagField';
@@ -150,10 +154,10 @@ const PictureInfo = ({
           type={TagType.LOCATION}
           tags={picture.location_tags ?? []}
           allTags={allLocations ?? []}
-          onChange={locations => {
+          onChange={(locations: (FlatLocationTagWithoutRelations & { verified?: boolean })[]) => {
             savePictureInfo({
               location_tags: locations.map(location => {
-                return pick(location, ['name', 'id', 'visible']);
+                return pick(location, ['name', 'id', 'visible', 'verified']);
               }),
             });
           }}
