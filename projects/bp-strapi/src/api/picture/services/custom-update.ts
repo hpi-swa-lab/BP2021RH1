@@ -508,6 +508,18 @@ const removeUnusedPictureSequences = async (strapi: StrapiExtended) => {
   const knexEngine = strapi.db.connection;
   const sequencesTable = table("picture_sequences");
   const linksTable = table("pictures_picture_sequence_links");
+  // remove links to sequences of length 1
+  const count = await knexEngine(linksTable)
+    .whereIn(
+      "picture_sequence_id",
+      knexEngine(linksTable)
+        .select("picture_sequence_id")
+        .groupBy("picture_sequence_id")
+        .havingRaw("count(picture_sequence_id) <= 1")
+    )
+    .del();
+  console.log("deleted", count, "links");
+  // remove sequences without links
   await knexEngine(sequencesTable)
     .whereNotExists(
       knexEngine(linksTable).whereRaw(
