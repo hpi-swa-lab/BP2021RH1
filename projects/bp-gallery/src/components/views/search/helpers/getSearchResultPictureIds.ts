@@ -30,13 +30,12 @@ const getSearchResultPictureIds = async (
     filter = filter === '' ? timeFilter : filter.concat(' AND ', timeFilter);
   }
 
+  // for reference: https://www.meilisearch.com/docs/reference/api/search
   const RESULT_LIMIT = 1000;
-  // this makes it so only documents that match all of the query terms are returned
   const MATCHING_STRATEGY = 'all';
 
   const settings = {
     limit: RESULT_LIMIT,
-    showMatchesPosition: true,
     matchingStrategy: MATCHING_STRATEGY,
     filter: filter,
   };

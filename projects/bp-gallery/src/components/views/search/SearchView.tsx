@@ -2,6 +2,9 @@ import { Location } from 'history';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import usePromise from 'react-use-promise';
+import { PictureFiltersInput } from '../../../graphql/APIConnector';
+import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
@@ -44,7 +47,6 @@ const SearchView = () => {
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
-    // if (isAllSearchActive) {
     const allSearchTerms = searchParams
       .getAll(toURLSearchParam(SearchType.ALL))
       .map(decodeURIComponent);
@@ -59,11 +61,32 @@ const SearchView = () => {
       searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
       searchTimes,
     };
-    // }
-    // return convertSearchParamsToPictureFilters(searchParams);
-  }, [/*isAllSearchActive,*/ searchParams]);
-  if (import.meta.env.MODE === 'development')
-    getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
+  }, [searchParams]);
+
+  const [searchResultIds, error, state] = usePromise(
+    async () =>
+      (await getSearchResultPictureIds(queryParams, '')).map(hit => (hit.id as number).toString()),
+    [queryParams]
+  );
+
+  const pictureFilter: PictureFiltersInput = useMemo(() => {
+    if (error) {
+      console.log(error);
+      return {};
+    }
+    return state === 'resolved' ? { id: { in: searchResultIds } } : {};
+  }, [searchResultIds, state, error]);
+  console.log(pictureFilter);
+  const isOldSearchActive = useFlag('old_search');
+
+  if (import.meta.env.MODE === 'development') {
+    // getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
+    console.log('resultids', searchResultIds);
+    console.log(
+      '31149 key:',
+      searchResultIds?.findIndex(element => element === '31149')
+    );
+  }
   const { linkToCollection, bulkEdit } = useBulkOperations();
 
   return (
@@ -84,8 +107,14 @@ const SearchView = () => {
       ) : (
         <ShowStats>
           <PictureScrollGrid
-            queryParams={queryParams}
-            isAllSearchActive={isAllSearchActive}
+            queryParams={isOldSearchActive ? queryParams : pictureFilter}
+            // if allSearch is active the custom resolver for allSearch will be used, which can only
+            // handle simple queryparams in the format {searchTerms:string[], searchTimes:string[][]} which
+            //  leads to erros when we use queryparams of the type PictureFiltersInput,
+            // so isAllSearchactive has to be false if we want to use the Meilisearch results
+            // by ANDing the isAllsearchActive flag with the isOldsearchActive flag we can make sure
+            // the isAllSearchActive property will always be false if we want to use Meilisearch
+            isAllSearchActive={isOldSearchActive && isAllSearchActive}
             hashbase={search}
             bulkOperations={[linkToCollection, bulkEdit]}
             resultPictureCallback={(pictures: number) => {

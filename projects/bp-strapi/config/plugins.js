@@ -107,6 +107,7 @@ module.exports = ({ env }) => ({
                 return transformedEntry;
               },
               settings: {
+                //for reference: https://www.meilisearch.com/docs/reference/api/settings
                 displayedAttributes: ["id"],
                 // the order of the attributes in searchableAttributes determines the priorization
                 // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
