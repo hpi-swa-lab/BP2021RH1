@@ -11,9 +11,17 @@ import {
   VisibilityOff,
 } from '@mui/icons-material';
 import { Button, Chip, DialogContent, IconButton, TextField } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { Icon, LatLng, Map } from 'leaflet';
+import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import { pick } from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCreateLocationTagMutation } from '../../../graphql/APIConnector';
+import { MapContainer, Marker, TileLayer, useMapEvent } from 'react-leaflet';
+import {
+  useCreateLocationTagMutation,
+  useUpdateLocationCoordinatesMutation,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVisit } from '../../../helpers/history';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
@@ -34,6 +42,32 @@ import {
   useUpdateName,
 } from './location-management-helpers';
 import { useGetTagStructures } from './tag-structure-helpers';
+
+const MyMarker = ({
+  position,
+  setPosition,
+}: {
+  position?: LatLng;
+  setPosition: (pos: LatLng) => void;
+}) => {
+  useMapEvent('click', event => {
+    setPosition(event.latlng.clone());
+  });
+
+  const myIcon = new Icon({
+    ...pick(Icon.Default.prototype.options, [
+      'iconSize',
+      'iconAnchor',
+      'popupAnchor',
+      'shadowSize',
+      'shadowAnchor',
+    ]),
+    iconUrl: myMarkerIcon,
+    shadowUrl: markerShadow,
+  });
+
+  return position ? <Marker icon={myIcon} position={position} /> : <div></div>;
+};
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -107,6 +141,43 @@ const LocationManagementDialogPreset = ({
     setIsRoot(locationTag.root ?? !locationTag.parent_tags?.length);
     setTitle(locationTag.name);
   }, [locationTag]);
+
+  const [updateLocationCoordinatesMutation] = useUpdateLocationCoordinatesMutation({
+    onCompleted: refetch,
+  });
+
+  const map = useRef<Map>(null);
+  const [position, setPosition] = useState<LatLng | undefined>(
+    locationTag.coordinates
+      ? new LatLng(locationTag.coordinates.latitude, locationTag.coordinates.longitude)
+      : undefined
+  );
+  const initialMapValues = useMemo(() => {
+    return {
+      center: locationTag.coordinates ? position : new LatLng(51.8392573, 10.5279953),
+      zoom: 10,
+    };
+  }, [locationTag.coordinates, position]);
+
+  useEffect(() => {
+    setPosition(
+      locationTag.coordinates
+        ? new LatLng(locationTag.coordinates.latitude, locationTag.coordinates.longitude)
+        : undefined
+    );
+  }, [locationTag]);
+
+  useEffect(() => {
+    if (position?.lat && position.lng) {
+      updateLocationCoordinatesMutation({
+        variables: {
+          tagId: locationTag.id,
+          lat: position.lat,
+          lng: position.lng,
+        },
+      });
+    }
+  }, [locationTag.id, position, updateLocationCoordinatesMutation]);
 
   return (
     <>
@@ -270,7 +341,20 @@ const LocationManagementDialogPreset = ({
           </div>
           <div className='location-management-right'>
             <div className='location-management-map'>
-              Work in Progress/Hier wird noch dran gearbeitet
+              <MapContainer
+                center={initialMapValues.center}
+                zoom={initialMapValues.zoom}
+                className='map-container w-full h-full mb-1'
+                scrollWheelZoom={true}
+                ref={map}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                />
+
+                <MyMarker position={position} setPosition={setPosition} />
+              </MapContainer>
             </div>
             <div className='location-management-actions'>
               <div className='location-management-picture-count'>

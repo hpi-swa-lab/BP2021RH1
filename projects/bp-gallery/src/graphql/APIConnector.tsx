@@ -2217,6 +2217,7 @@ export type GetAllLocationTagsQuery = {
         visible?: boolean | null;
         root?: boolean | null;
         accepted?: boolean | null;
+        coordinates?: { latitude: number; longitude: number } | null;
         synonyms?: Array<{ name: string } | null> | null;
         child_tags?: {
           data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
@@ -3382,6 +3383,16 @@ export type UpdateLocationChildMutation = {
   updateLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
+export type UpdateLocationCoordinatesMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+}>;
+
+export type UpdateLocationCoordinatesMutation = {
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+};
+
 export type UpdateLocationNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
   name: Scalars['String'];
@@ -3667,6 +3678,10 @@ export const GetAllLocationTagsDocument = gql`
           visible
           root
           accepted
+          coordinates {
+            latitude
+            longitude
+          }
           synonyms {
             name
           }
@@ -8399,6 +8414,65 @@ export type UpdateLocationChildMutationResult = Apollo.MutationResult<UpdateLoca
 export type UpdateLocationChildMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationChildMutation,
   UpdateLocationChildMutationVariables
+>;
+
+export const UpdateLocationCoordinatesDocument = gql`
+  mutation updateLocationCoordinates($tagId: ID!, $lat: Float!, $lng: Float!) {
+    updateLocationTag(id: $tagId, data: { coordinates: { latitude: $lat, longitude: $lng } }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationCoordinatesMutationFn = Apollo.MutationFunction<
+  UpdateLocationCoordinatesMutation,
+  UpdateLocationCoordinatesMutationVariables
+>;
+
+/**
+ * __useUpdateLocationCoordinatesMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationCoordinatesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationCoordinatesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationCoordinatesMutation, { data, loading, error }] = useUpdateLocationCoordinatesMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      lat: // value for 'lat'
+ *      lng: // value for 'lng'
+ *   },
+ * });
+ */
+export function useUpdateLocationCoordinatesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationCoordinatesMutation,
+    UpdateLocationCoordinatesMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateLocationCoordinatesMutation,
+    UpdateLocationCoordinatesMutationVariables
+  >(UpdateLocationCoordinatesDocument, options);
+}
+
+export type UpdateLocationCoordinatesMutationHookResult = ReturnType<
+  typeof useUpdateLocationCoordinatesMutation
+>;
+
+export type UpdateLocationCoordinatesMutationResult =
+  Apollo.MutationResult<UpdateLocationCoordinatesMutation>;
+
+export type UpdateLocationCoordinatesMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationCoordinatesMutation,
+  UpdateLocationCoordinatesMutationVariables
 >;
 
 export const UpdateLocationNameDocument = gql`
