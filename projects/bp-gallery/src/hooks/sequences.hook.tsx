@@ -107,7 +107,7 @@ export const useUpdatePictureSequenceOrder = () => {
 
 export const useRemovePictureFromSequence = () => {
   const [updatePicture] = useUpdatePictureMutation({
-    refetchQueries: ['getPictureInfo'],
+    refetchQueries: ['getPictureInfo', 'getPictures', 'getMostLikedPictures'],
   });
 
   const removePictureFromSequence = useCallback(
