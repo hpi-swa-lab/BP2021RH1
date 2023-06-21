@@ -1,5 +1,5 @@
 import { CheckBox, CheckBoxOutlineBlank, Delete, DoneAll, RemoveDone } from '@mui/icons-material';
-import { Button, Portal } from '@mui/material';
+import { IconButton, Portal } from '@mui/material';
 import { union } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,9 +12,9 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import BulkEditView from '../../views/bulk-edit/BulkEditView';
 import PictureView from '../../views/picture/PictureView';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
-import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 import './PictureGrid.scss';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
+import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
 export type PictureGridProps = {
   pictures: FlatPicture[];
@@ -225,23 +225,25 @@ const PictureGrid = ({
 
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`} ref={ref}>
-      {Boolean(selectedPictures.length) && bulkOperations && (
-        <BulkOperationsPanel
-          operations={bulkOperations}
-          selectedPictures={selectedPictures}
-          onBulkEdit={navigateToBulkEdit}
-        />
-      )}
-      {defaultAdornments && (
-        <div className='selection-buttons'>
-          <Button onClick={selectAll} startIcon={<DoneAll />} variant='contained'>
-            {t('curator.selectAll')}
-          </Button>
-          <Button onClick={selectNone} startIcon={<RemoveDone />} variant='contained'>
-            {t('curator.selectNone')}
-          </Button>
-        </div>
-      )}
+      <div className='empty:hidden sticky top-2 z-10 bg-[#ccccccee] p-2 mt-8 rounded-md [&>.MuiIconButton-root>svg]:!text-[28px]'>
+        {Boolean(selectedPictures.length) && bulkOperations && (
+          <BulkOperationsPanel
+            operations={bulkOperations}
+            selectedPictures={selectedPictures}
+            onBulkEdit={navigateToBulkEdit}
+          />
+        )}
+        {defaultAdornments && (
+          <>
+            <IconButton onClick={selectAll} color='primary' title={t('curator.selectAll')}>
+              <DoneAll />
+            </IconButton>
+            <IconButton onClick={selectNone} color='primary' title={t('curator.selectNone')}>
+              <RemoveDone />
+            </IconButton>
+          </>
+        )}
+      </div>
       <div className='picture-grid'>
         {table.map((row, rowindex) => {
           return (

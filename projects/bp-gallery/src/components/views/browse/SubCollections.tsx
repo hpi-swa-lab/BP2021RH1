@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material/styles';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { asApiPath } from '../../../helpers/app-helpers';
@@ -29,8 +30,15 @@ const SubCollections = ({
     }
   }, []);
 
+  const {
+    palette: {
+      primary: { main: primaryColor },
+      secondary: { main: secondaryColor },
+    },
+  } = useTheme();
+
   const buildItem = (collection: FlatCollectionWithoutRelations, index: number) => {
-    let color = index % 2 === 0 ? '#7E241D' : '#404272';
+    let color = index % 2 === 0 ? primaryColor : secondaryColor;
     if (!collection.publishedAt) {
       color = '#EEEEEE';
     }
@@ -50,7 +58,7 @@ const SubCollections = ({
     items.push({
       name: t('common.latest-pictures'),
       background: DEFAULT_THUMBNAIL_URL,
-      color: '#404272',
+      color: secondaryColor,
       onClick: () => {
         visit('/latest');
       },

@@ -45,7 +45,7 @@ const getTodaysPictureQueue = (pictureIds: string[]) => {
   const currentDate = new Date();
   const startDate = new Date(currentDate.getFullYear(), 0, 1);
   const days = Math.floor((currentDate.valueOf() - startDate.valueOf()) / (24 * 60 * 60 * 1000));
-  const resultIndex = pictureIds.length % (days * pictureNumber);
+  const resultIndex = (days * pictureNumber) % pictureIds.length;
   const list = [];
   for (let i = 0; i < pictureNumber; i++) {
     list.push(pictureIds[(resultIndex + i) % pictureIds.length]);

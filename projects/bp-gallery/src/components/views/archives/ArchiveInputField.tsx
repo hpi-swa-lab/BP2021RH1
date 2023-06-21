@@ -47,7 +47,7 @@ const ArchiveInputField = ({
     <div className='archive-form-div'>
       {label && (
         <label className='archive-form-label' htmlFor={`archive-form-${id}`}>
-          {label}
+          {label}:
         </label>
       )}
       <ArchiveInput

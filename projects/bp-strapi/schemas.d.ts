@@ -1,43 +1,43 @@
 import {
-  CollectionTypeSchema,
-  StringAttribute,
-  RequiredAttribute,
-  SetMinMaxLength,
-  JSONAttribute,
-  DefaultTo,
-  RelationAttribute,
-  DateTimeAttribute,
-  PrivateAttribute,
-  EmailAttribute,
-  UniqueAttribute,
-  PasswordAttribute,
   BooleanAttribute,
-  EnumerationAttribute,
-  IntegerAttribute,
-  DecimalAttribute,
-  SetMinMax,
-  RichTextAttribute,
-  TextAttribute,
-  MediaAttribute,
-  SingleTypeSchema,
+  CollectionTypeSchema,
   ComponentAttribute,
   ComponentSchema,
+  DateTimeAttribute,
+  DecimalAttribute,
+  DefaultTo,
+  EmailAttribute,
+  EnumerationAttribute,
   FloatAttribute,
-} from '@strapi/strapi';
+  IntegerAttribute,
+  JSONAttribute,
+  MediaAttribute,
+  PasswordAttribute,
+  PrivateAttribute,
+  RelationAttribute,
+  RequiredAttribute,
+  RichTextAttribute,
+  SetMinMax,
+  SetMinMaxLength,
+  SingleTypeSchema,
+  StringAttribute,
+  TextAttribute,
+  UniqueAttribute,
+} from "@strapi/strapi";
 
 export interface AdminPermission extends CollectionTypeSchema {
   info: {
-    name: 'Permission';
-    description: '';
-    singularName: 'permission';
-    pluralName: 'permissions';
-    displayName: 'Permission';
+    name: "Permission";
+    description: "";
+    singularName: "permission";
+    pluralName: "permissions";
+    displayName: "Permission";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -53,19 +53,19 @@ export interface AdminPermission extends CollectionTypeSchema {
       }>;
     properties: JSONAttribute & DefaultTo<{}>;
     conditions: JSONAttribute & DefaultTo<[]>;
-    role: RelationAttribute<'admin::permission', 'manyToOne', 'admin::role'>;
+    role: RelationAttribute<"admin::permission", "manyToOne", "admin::role">;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'admin::permission',
-      'oneToOne',
-      'admin::user'
+      "admin::permission",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'admin::permission',
-      'oneToOne',
-      'admin::user'
+      "admin::permission",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -73,17 +73,17 @@ export interface AdminPermission extends CollectionTypeSchema {
 
 export interface AdminUser extends CollectionTypeSchema {
   info: {
-    name: 'User';
-    description: '';
-    singularName: 'user';
-    pluralName: 'users';
-    displayName: 'User';
+    name: "User";
+    description: "";
+    singularName: "user";
+    pluralName: "users";
+    displayName: "User";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -112,32 +112,32 @@ export interface AdminUser extends CollectionTypeSchema {
     resetPasswordToken: StringAttribute & PrivateAttribute;
     registrationToken: StringAttribute & PrivateAttribute;
     isActive: BooleanAttribute & PrivateAttribute & DefaultTo<false>;
-    roles: RelationAttribute<'admin::user', 'manyToMany', 'admin::role'> &
+    roles: RelationAttribute<"admin::user", "manyToMany", "admin::role"> &
       PrivateAttribute;
     blocked: BooleanAttribute & PrivateAttribute & DefaultTo<false>;
     preferedLanguage: StringAttribute;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
-    createdBy: RelationAttribute<'admin::user', 'oneToOne', 'admin::user'> &
+    createdBy: RelationAttribute<"admin::user", "oneToOne", "admin::user"> &
       PrivateAttribute;
-    updatedBy: RelationAttribute<'admin::user', 'oneToOne', 'admin::user'> &
+    updatedBy: RelationAttribute<"admin::user", "oneToOne", "admin::user"> &
       PrivateAttribute;
   };
 }
 
 export interface AdminRole extends CollectionTypeSchema {
   info: {
-    name: 'Role';
-    description: '';
-    singularName: 'role';
-    pluralName: 'roles';
-    displayName: 'Role';
+    name: "Role";
+    description: "";
+    singularName: "role";
+    pluralName: "roles";
+    displayName: "Role";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -155,34 +155,34 @@ export interface AdminRole extends CollectionTypeSchema {
         minLength: 1;
       }>;
     description: StringAttribute;
-    users: RelationAttribute<'admin::role', 'manyToMany', 'admin::user'>;
+    users: RelationAttribute<"admin::role", "manyToMany", "admin::user">;
     permissions: RelationAttribute<
-      'admin::role',
-      'oneToMany',
-      'admin::permission'
+      "admin::role",
+      "oneToMany",
+      "admin::permission"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
-    createdBy: RelationAttribute<'admin::role', 'oneToOne', 'admin::user'> &
+    createdBy: RelationAttribute<"admin::role", "oneToOne", "admin::user"> &
       PrivateAttribute;
-    updatedBy: RelationAttribute<'admin::role', 'oneToOne', 'admin::user'> &
+    updatedBy: RelationAttribute<"admin::role", "oneToOne", "admin::user"> &
       PrivateAttribute;
   };
 }
 
 export interface AdminApiToken extends CollectionTypeSchema {
   info: {
-    name: 'Api Token';
-    singularName: 'api-token';
-    pluralName: 'api-tokens';
-    displayName: 'Api Token';
-    description: '';
+    name: "Api Token";
+    singularName: "api-token";
+    pluralName: "api-tokens";
+    displayName: "Api Token";
+    description: "";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -197,10 +197,10 @@ export interface AdminApiToken extends CollectionTypeSchema {
       SetMinMaxLength<{
         minLength: 1;
       }> &
-      DefaultTo<''>;
-    type: EnumerationAttribute<['read-only', 'full-access', 'custom']> &
+      DefaultTo<"">;
+    type: EnumerationAttribute<["read-only", "full-access", "custom"]> &
       RequiredAttribute &
-      DefaultTo<'read-only'>;
+      DefaultTo<"read-only">;
     accessKey: StringAttribute &
       RequiredAttribute &
       SetMinMaxLength<{
@@ -208,24 +208,24 @@ export interface AdminApiToken extends CollectionTypeSchema {
       }>;
     lastUsedAt: DateTimeAttribute;
     permissions: RelationAttribute<
-      'admin::api-token',
-      'oneToMany',
-      'admin::api-token-permission'
+      "admin::api-token",
+      "oneToMany",
+      "admin::api-token-permission"
     >;
     expiresAt: DateTimeAttribute;
     lifespan: IntegerAttribute;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'admin::api-token',
-      'oneToOne',
-      'admin::user'
+      "admin::api-token",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'admin::api-token',
-      'oneToOne',
-      'admin::user'
+      "admin::api-token",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -233,17 +233,17 @@ export interface AdminApiToken extends CollectionTypeSchema {
 
 export interface AdminApiTokenPermission extends CollectionTypeSchema {
   info: {
-    name: 'API Token Permission';
-    description: '';
-    singularName: 'api-token-permission';
-    pluralName: 'api-token-permissions';
-    displayName: 'API Token Permission';
+    name: "API Token Permission";
+    description: "";
+    singularName: "api-token-permission";
+    pluralName: "api-token-permissions";
+    displayName: "API Token Permission";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -254,22 +254,22 @@ export interface AdminApiTokenPermission extends CollectionTypeSchema {
         minLength: 1;
       }>;
     token: RelationAttribute<
-      'admin::api-token-permission',
-      'manyToOne',
-      'admin::api-token'
+      "admin::api-token-permission",
+      "manyToOne",
+      "admin::api-token"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'admin::api-token-permission',
-      'oneToOne',
-      'admin::user'
+      "admin::api-token-permission",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'admin::api-token-permission',
-      'oneToOne',
-      'admin::user'
+      "admin::api-token-permission",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -277,16 +277,16 @@ export interface AdminApiTokenPermission extends CollectionTypeSchema {
 
 export interface PluginUploadFile extends CollectionTypeSchema {
   info: {
-    singularName: 'file';
-    pluralName: 'files';
-    displayName: 'File';
-    description: '';
+    singularName: "file";
+    pluralName: "files";
+    displayName: "File";
+    description: "";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -305,11 +305,11 @@ export interface PluginUploadFile extends CollectionTypeSchema {
     previewUrl: StringAttribute;
     provider: StringAttribute & RequiredAttribute;
     provider_metadata: JSONAttribute;
-    related: RelationAttribute<'plugin::upload.file', 'morphToMany'>;
+    related: RelationAttribute<"plugin::upload.file", "morphToMany">;
     folder: RelationAttribute<
-      'plugin::upload.file',
-      'manyToOne',
-      'plugin::upload.folder'
+      "plugin::upload.file",
+      "manyToOne",
+      "plugin::upload.folder"
     > &
       PrivateAttribute;
     folderPath: StringAttribute &
@@ -321,15 +321,15 @@ export interface PluginUploadFile extends CollectionTypeSchema {
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'plugin::upload.file',
-      'oneToOne',
-      'admin::user'
+      "plugin::upload.file",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'plugin::upload.file',
-      'oneToOne',
-      'admin::user'
+      "plugin::upload.file",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -337,15 +337,15 @@ export interface PluginUploadFile extends CollectionTypeSchema {
 
 export interface PluginUploadFolder extends CollectionTypeSchema {
   info: {
-    singularName: 'folder';
-    pluralName: 'folders';
-    displayName: 'Folder';
+    singularName: "folder";
+    pluralName: "folders";
+    displayName: "Folder";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -357,19 +357,19 @@ export interface PluginUploadFolder extends CollectionTypeSchema {
       }>;
     pathId: IntegerAttribute & RequiredAttribute & UniqueAttribute;
     parent: RelationAttribute<
-      'plugin::upload.folder',
-      'manyToOne',
-      'plugin::upload.folder'
+      "plugin::upload.folder",
+      "manyToOne",
+      "plugin::upload.folder"
     >;
     children: RelationAttribute<
-      'plugin::upload.folder',
-      'oneToMany',
-      'plugin::upload.folder'
+      "plugin::upload.folder",
+      "oneToMany",
+      "plugin::upload.folder"
     >;
     files: RelationAttribute<
-      'plugin::upload.folder',
-      'oneToMany',
-      'plugin::upload.file'
+      "plugin::upload.folder",
+      "oneToMany",
+      "plugin::upload.file"
     >;
     path: StringAttribute &
       RequiredAttribute &
@@ -379,15 +379,15 @@ export interface PluginUploadFolder extends CollectionTypeSchema {
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'plugin::upload.folder',
-      'oneToOne',
-      'admin::user'
+      "plugin::upload.folder",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'plugin::upload.folder',
-      'oneToOne',
-      'admin::user'
+      "plugin::upload.folder",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -395,39 +395,39 @@ export interface PluginUploadFolder extends CollectionTypeSchema {
 
 export interface PluginUsersPermissionsPermission extends CollectionTypeSchema {
   info: {
-    name: 'permission';
-    description: '';
-    singularName: 'permission';
-    pluralName: 'permissions';
-    displayName: 'Permission';
+    name: "permission";
+    description: "";
+    singularName: "permission";
+    pluralName: "permissions";
+    displayName: "Permission";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
   attributes: {
     action: StringAttribute & RequiredAttribute;
     role: RelationAttribute<
-      'plugin::users-permissions.permission',
-      'manyToOne',
-      'plugin::users-permissions.role'
+      "plugin::users-permissions.permission",
+      "manyToOne",
+      "plugin::users-permissions.role"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'plugin::users-permissions.permission',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.permission",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'plugin::users-permissions.permission',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.permission",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -435,17 +435,17 @@ export interface PluginUsersPermissionsPermission extends CollectionTypeSchema {
 
 export interface PluginUsersPermissionsRole extends CollectionTypeSchema {
   info: {
-    name: 'role';
-    description: '';
-    singularName: 'role';
-    pluralName: 'roles';
-    displayName: 'Role';
+    name: "role";
+    description: "";
+    singularName: "role";
+    pluralName: "roles";
+    displayName: "Role";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -458,27 +458,27 @@ export interface PluginUsersPermissionsRole extends CollectionTypeSchema {
     description: StringAttribute;
     type: StringAttribute & UniqueAttribute;
     permissions: RelationAttribute<
-      'plugin::users-permissions.role',
-      'oneToMany',
-      'plugin::users-permissions.permission'
+      "plugin::users-permissions.role",
+      "oneToMany",
+      "plugin::users-permissions.permission"
     >;
     users: RelationAttribute<
-      'plugin::users-permissions.role',
-      'oneToMany',
-      'plugin::users-permissions.user'
+      "plugin::users-permissions.role",
+      "oneToMany",
+      "plugin::users-permissions.user"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'plugin::users-permissions.role',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.role",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'plugin::users-permissions.role',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.role",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -486,11 +486,11 @@ export interface PluginUsersPermissionsRole extends CollectionTypeSchema {
 
 export interface PluginUsersPermissionsUser extends CollectionTypeSchema {
   info: {
-    name: 'user';
-    description: '';
-    singularName: 'user';
-    pluralName: 'users';
-    displayName: 'User';
+    name: "user";
+    description: "";
+    singularName: "user";
+    pluralName: "users";
+    displayName: "User";
   };
   options: {
     draftAndPublish: false;
@@ -519,22 +519,22 @@ export interface PluginUsersPermissionsUser extends CollectionTypeSchema {
     confirmed: BooleanAttribute & DefaultTo<false>;
     blocked: BooleanAttribute & DefaultTo<false>;
     role: RelationAttribute<
-      'plugin::users-permissions.user',
-      'manyToOne',
-      'plugin::users-permissions.role'
+      "plugin::users-permissions.user",
+      "manyToOne",
+      "plugin::users-permissions.role"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.user",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.user",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -542,10 +542,10 @@ export interface PluginUsersPermissionsUser extends CollectionTypeSchema {
 
 export interface ApiArchiveTagArchiveTag extends CollectionTypeSchema {
   info: {
-    singularName: 'archive-tag';
-    pluralName: 'archive-tags';
-    displayName: 'Archive_Tag';
-    description: '';
+    singularName: "archive-tag";
+    pluralName: "archive-tags";
+    displayName: "Archive_Tag";
+    description: "";
   };
   options: {
     draftAndPublish: false;
@@ -553,35 +553,39 @@ export interface ApiArchiveTagArchiveTag extends CollectionTypeSchema {
   attributes: {
     name: StringAttribute & RequiredAttribute & UniqueAttribute;
     pictures: RelationAttribute<
-      'api::archive-tag.archive-tag',
-      'oneToMany',
-      'api::picture.picture'
+      "api::archive-tag.archive-tag",
+      "oneToMany",
+      "api::picture.picture"
     >;
     longDescription: RichTextAttribute;
     showcasePicture: RelationAttribute<
-      'api::archive-tag.archive-tag',
-      'oneToOne',
-      'api::picture.picture'
+      "api::archive-tag.archive-tag",
+      "oneToOne",
+      "api::picture.picture"
     >;
     links: RelationAttribute<
-      'api::archive-tag.archive-tag',
-      'oneToMany',
-      'api::link.link'
+      "api::archive-tag.archive-tag",
+      "oneToMany",
+      "api::link.link"
     >;
     shortDescription: TextAttribute;
     logo: MediaAttribute;
+    paypalClient: StringAttribute;
+    paypalDonationText: StringAttribute;
+    paypalPurpose: StringAttribute;
+    email: EmailAttribute;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::archive-tag.archive-tag',
-      'oneToOne',
-      'admin::user'
+      "api::archive-tag.archive-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::archive-tag.archive-tag',
-      'oneToOne',
-      'admin::user'
+      "api::archive-tag.archive-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -590,32 +594,32 @@ export interface ApiArchiveTagArchiveTag extends CollectionTypeSchema {
 export interface ApiBrowseRootCollectionBrowseRootCollection
   extends SingleTypeSchema {
   info: {
-    singularName: 'browse-root-collection';
-    pluralName: 'browse-root-collections';
-    displayName: 'Browse root collection';
+    singularName: "browse-root-collection";
+    pluralName: "browse-root-collections";
+    displayName: "Browse root collection";
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
     current: RelationAttribute<
-      'api::browse-root-collection.browse-root-collection',
-      'oneToOne',
-      'api::collection.collection'
+      "api::browse-root-collection.browse-root-collection",
+      "oneToOne",
+      "api::collection.collection"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     publishedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::browse-root-collection.browse-root-collection',
-      'oneToOne',
-      'admin::user'
+      "api::browse-root-collection.browse-root-collection",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::browse-root-collection.browse-root-collection',
-      'oneToOne',
-      'admin::user'
+      "api::browse-root-collection.browse-root-collection",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -623,10 +627,10 @@ export interface ApiBrowseRootCollectionBrowseRootCollection
 
 export interface ApiCollectionCollection extends CollectionTypeSchema {
   info: {
-    singularName: 'collection';
-    pluralName: 'collections';
-    displayName: 'Collection';
-    description: '';
+    singularName: "collection";
+    pluralName: "collections";
+    displayName: "Collection";
+    description: "";
   };
   options: {
     draftAndPublish: true;
@@ -635,34 +639,34 @@ export interface ApiCollectionCollection extends CollectionTypeSchema {
     name: StringAttribute & RequiredAttribute & UniqueAttribute;
     description: RichTextAttribute;
     child_collections: RelationAttribute<
-      'api::collection.collection',
-      'manyToMany',
-      'api::collection.collection'
+      "api::collection.collection",
+      "manyToMany",
+      "api::collection.collection"
     >;
     parent_collections: RelationAttribute<
-      'api::collection.collection',
-      'manyToMany',
-      'api::collection.collection'
+      "api::collection.collection",
+      "manyToMany",
+      "api::collection.collection"
     >;
     pictures: RelationAttribute<
-      'api::collection.collection',
-      'manyToMany',
-      'api::picture.picture'
+      "api::collection.collection",
+      "manyToMany",
+      "api::picture.picture"
     >;
     thumbnail: StringAttribute;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     publishedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::collection.collection',
-      'oneToOne',
-      'admin::user'
+      "api::collection.collection",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::collection.collection',
-      'oneToOne',
-      'admin::user'
+      "api::collection.collection",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -670,10 +674,10 @@ export interface ApiCollectionCollection extends CollectionTypeSchema {
 
 export interface ApiCommentComment extends CollectionTypeSchema {
   info: {
-    singularName: 'comment';
-    pluralName: 'comments';
-    displayName: 'Comment';
-    description: '';
+    singularName: "comment";
+    pluralName: "comments";
+    displayName: "Comment";
+    description: "";
   };
   options: {
     draftAndPublish: true;
@@ -683,24 +687,34 @@ export interface ApiCommentComment extends CollectionTypeSchema {
     text: RichTextAttribute & RequiredAttribute;
     date: DateTimeAttribute & RequiredAttribute;
     picture: RelationAttribute<
-      'api::comment.comment',
-      'manyToOne',
-      'api::picture.picture'
+      "api::comment.comment",
+      "manyToOne",
+      "api::picture.picture"
     >;
     pinned: BooleanAttribute & DefaultTo<false>;
+    childComments: RelationAttribute<
+      "api::comment.comment",
+      "oneToMany",
+      "api::comment.comment"
+    >;
+    parentComment: RelationAttribute<
+      "api::comment.comment",
+      "manyToOne",
+      "api::comment.comment"
+    >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     publishedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::comment.comment',
-      'oneToOne',
-      'admin::user'
+      "api::comment.comment",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::comment.comment',
-      'oneToOne',
-      'admin::user'
+      "api::comment.comment",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -708,9 +722,9 @@ export interface ApiCommentComment extends CollectionTypeSchema {
 
 export interface ApiDescriptionDescription extends CollectionTypeSchema {
   info: {
-    singularName: 'description';
-    pluralName: 'descriptions';
-    displayName: 'Description';
+    singularName: "description";
+    pluralName: "descriptions";
+    displayName: "Description";
   };
   options: {
     draftAndPublish: true;
@@ -718,23 +732,64 @@ export interface ApiDescriptionDescription extends CollectionTypeSchema {
   attributes: {
     text: RichTextAttribute & RequiredAttribute;
     pictures: RelationAttribute<
-      'api::description.description',
-      'manyToMany',
-      'api::picture.picture'
+      "api::description.description",
+      "manyToMany",
+      "api::picture.picture"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     publishedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::description.description',
-      'oneToOne',
-      'admin::user'
+      "api::description.description",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::description.description',
-      'oneToOne',
-      'admin::user'
+      "api::description.description",
+      "oneToOne",
+      "admin::user"
+    > &
+      PrivateAttribute;
+  };
+}
+
+export interface ApiFaceTagFaceTag extends CollectionTypeSchema {
+  info: {
+    singularName: "face-tag";
+    pluralName: "face-tags";
+    displayName: "Face_Tag";
+    description: "";
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    x: FloatAttribute;
+    y: FloatAttribute;
+    person_tag: RelationAttribute<
+      "api::face-tag.face-tag",
+      "oneToOne",
+      "api::person-tag.person-tag"
+    >;
+    picture: RelationAttribute<
+      "api::face-tag.face-tag",
+      "manyToOne",
+      "api::picture.picture"
+    >;
+    tag_direction: IntegerAttribute;
+    createdAt: DateTimeAttribute;
+    updatedAt: DateTimeAttribute;
+    createdBy: RelationAttribute<
+      "api::face-tag.face-tag",
+      "oneToOne",
+      "admin::user"
+    > &
+      PrivateAttribute;
+    updatedBy: RelationAttribute<
+      "api::face-tag.face-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -742,10 +797,10 @@ export interface ApiDescriptionDescription extends CollectionTypeSchema {
 
 export interface ApiKeywordTagKeywordTag extends CollectionTypeSchema {
   info: {
-    singularName: 'keyword-tag';
-    pluralName: 'keyword-tags';
-    displayName: 'Keyword_Tag';
-    description: '';
+    singularName: "keyword-tag";
+    pluralName: "keyword-tags";
+    displayName: "Keyword_Tag";
+    description: "";
   };
   options: {
     draftAndPublish: false;
@@ -753,29 +808,29 @@ export interface ApiKeywordTagKeywordTag extends CollectionTypeSchema {
   attributes: {
     name: StringAttribute & RequiredAttribute & UniqueAttribute;
     pictures: RelationAttribute<
-      'api::keyword-tag.keyword-tag',
-      'manyToMany',
-      'api::picture.picture'
+      "api::keyword-tag.keyword-tag",
+      "manyToMany",
+      "api::picture.picture"
     >;
     verified_pictures: RelationAttribute<
-      'api::keyword-tag.keyword-tag',
-      'manyToMany',
-      'api::picture.picture'
+      "api::keyword-tag.keyword-tag",
+      "manyToMany",
+      "api::picture.picture"
     >;
-    synonyms: ComponentAttribute<'common.synonyms', true>;
+    synonyms: ComponentAttribute<"common.synonyms", true>;
     visible: BooleanAttribute & DefaultTo<false>;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::keyword-tag.keyword-tag',
-      'oneToOne',
-      'admin::user'
+      "api::keyword-tag.keyword-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::keyword-tag.keyword-tag',
-      'oneToOne',
-      'admin::user'
+      "api::keyword-tag.keyword-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -783,10 +838,10 @@ export interface ApiKeywordTagKeywordTag extends CollectionTypeSchema {
 
 export interface ApiLinkLink extends CollectionTypeSchema {
   info: {
-    singularName: 'link';
-    pluralName: 'links';
-    displayName: 'Link';
-    description: '';
+    singularName: "link";
+    pluralName: "links";
+    displayName: "Link";
+    description: "";
   };
   options: {
     draftAndPublish: false;
@@ -795,56 +850,56 @@ export interface ApiLinkLink extends CollectionTypeSchema {
     title: RichTextAttribute;
     url: RichTextAttribute & RequiredAttribute;
     archive_tag: RelationAttribute<
-      'api::link.link',
-      'manyToOne',
-      'api::archive-tag.archive-tag'
+      "api::link.link",
+      "manyToOne",
+      "api::archive-tag.archive-tag"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
-    createdBy: RelationAttribute<'api::link.link', 'oneToOne', 'admin::user'> &
+    createdBy: RelationAttribute<"api::link.link", "oneToOne", "admin::user"> &
       PrivateAttribute;
-    updatedBy: RelationAttribute<'api::link.link', 'oneToOne', 'admin::user'> &
+    updatedBy: RelationAttribute<"api::link.link", "oneToOne", "admin::user"> &
       PrivateAttribute;
   };
 }
 
 export interface ApiLocationTagLocationTag extends CollectionTypeSchema {
   info: {
-    singularName: 'location-tag';
-    pluralName: 'location-tags';
-    displayName: 'Location_Tag';
-    description: '';
+    singularName: "location-tag";
+    pluralName: "location-tags";
+    displayName: "Location_Tag";
+    description: "";
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
     name: StringAttribute & RequiredAttribute;
-    coordinates: ComponentAttribute<'location.coordinates'>;
+    coordinates: ComponentAttribute<"location.coordinates">;
     pictures: RelationAttribute<
-      'api::location-tag.location-tag',
-      'manyToMany',
-      'api::picture.picture'
+      "api::location-tag.location-tag",
+      "manyToMany",
+      "api::picture.picture"
     >;
     verified_pictures: RelationAttribute<
-      'api::location-tag.location-tag',
-      'manyToMany',
-      'api::picture.picture'
+      "api::location-tag.location-tag",
+      "manyToMany",
+      "api::picture.picture"
     >;
-    synonyms: ComponentAttribute<'common.synonyms', true>;
+    synonyms: ComponentAttribute<"common.synonyms", true>;
     visible: BooleanAttribute & DefaultTo<false>;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::location-tag.location-tag',
-      'oneToOne',
-      'admin::user'
+      "api::location-tag.location-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::location-tag.location-tag',
-      'oneToOne',
-      'admin::user'
+      "api::location-tag.location-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -852,10 +907,10 @@ export interface ApiLocationTagLocationTag extends CollectionTypeSchema {
 
 export interface ApiPersonTagPersonTag extends CollectionTypeSchema {
   info: {
-    singularName: 'person-tag';
-    pluralName: 'person-tags';
-    displayName: 'Person_Tag';
-    description: '';
+    singularName: "person-tag";
+    pluralName: "person-tags";
+    displayName: "Person_Tag";
+    description: "";
   };
   options: {
     draftAndPublish: false;
@@ -863,28 +918,28 @@ export interface ApiPersonTagPersonTag extends CollectionTypeSchema {
   attributes: {
     name: StringAttribute & RequiredAttribute & UniqueAttribute;
     pictures: RelationAttribute<
-      'api::person-tag.person-tag',
-      'manyToMany',
-      'api::picture.picture'
+      "api::person-tag.person-tag",
+      "manyToMany",
+      "api::picture.picture"
     >;
     verified_pictures: RelationAttribute<
-      'api::person-tag.person-tag',
-      'manyToMany',
-      'api::picture.picture'
+      "api::person-tag.person-tag",
+      "manyToMany",
+      "api::picture.picture"
     >;
-    synonyms: ComponentAttribute<'common.synonyms', true>;
+    synonyms: ComponentAttribute<"common.synonyms", true>;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::person-tag.person-tag',
-      'oneToOne',
-      'admin::user'
+      "api::person-tag.person-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::person-tag.person-tag',
-      'oneToOne',
-      'admin::user'
+      "api::person-tag.person-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -892,10 +947,10 @@ export interface ApiPersonTagPersonTag extends CollectionTypeSchema {
 
 export interface ApiPicturePicture extends CollectionTypeSchema {
   info: {
-    singularName: 'picture';
-    pluralName: 'pictures';
-    displayName: 'Picture';
-    description: '';
+    singularName: "picture";
+    pluralName: "pictures";
+    displayName: "Picture";
+    description: "";
   };
   options: {
     draftAndPublish: true;
@@ -904,79 +959,138 @@ export interface ApiPicturePicture extends CollectionTypeSchema {
     media: MediaAttribute & RequiredAttribute;
     wordpress_id: IntegerAttribute & UniqueAttribute;
     descriptions: RelationAttribute<
-      'api::picture.picture',
-      'manyToMany',
-      'api::description.description'
+      "api::picture.picture",
+      "manyToMany",
+      "api::description.description"
     >;
     comments: RelationAttribute<
-      'api::picture.picture',
-      'oneToMany',
-      'api::comment.comment'
+      "api::picture.picture",
+      "oneToMany",
+      "api::comment.comment"
     >;
     keyword_tags: RelationAttribute<
-      'api::picture.picture',
-      'manyToMany',
-      'api::keyword-tag.keyword-tag'
+      "api::picture.picture",
+      "manyToMany",
+      "api::keyword-tag.keyword-tag"
     >;
     time_range_tag: RelationAttribute<
-      'api::picture.picture',
-      'manyToOne',
-      'api::time-range-tag.time-range-tag'
+      "api::picture.picture",
+      "manyToOne",
+      "api::time-range-tag.time-range-tag"
     >;
     collections: RelationAttribute<
-      'api::picture.picture',
-      'manyToMany',
-      'api::collection.collection'
+      "api::picture.picture",
+      "manyToMany",
+      "api::collection.collection"
     >;
     person_tags: RelationAttribute<
-      'api::picture.picture',
-      'manyToMany',
-      'api::person-tag.person-tag'
+      "api::picture.picture",
+      "manyToMany",
+      "api::person-tag.person-tag"
     >;
     location_tags: RelationAttribute<
-      'api::picture.picture',
-      'manyToMany',
-      'api::location-tag.location-tag'
+      "api::picture.picture",
+      "manyToMany",
+      "api::location-tag.location-tag"
     >;
     verified_person_tags: RelationAttribute<
-      'api::picture.picture',
-      'manyToMany',
-      'api::person-tag.person-tag'
+      "api::picture.picture",
+      "manyToMany",
+      "api::person-tag.person-tag"
     >;
     verified_location_tags: RelationAttribute<
-      'api::picture.picture',
-      'manyToMany',
-      'api::location-tag.location-tag'
+      "api::picture.picture",
+      "manyToMany",
+      "api::location-tag.location-tag"
     >;
     verified_keyword_tags: RelationAttribute<
-      'api::picture.picture',
-      'manyToMany',
-      'api::keyword-tag.keyword-tag'
+      "api::picture.picture",
+      "manyToMany",
+      "api::keyword-tag.keyword-tag"
     >;
     verified_time_range_tag: RelationAttribute<
-      'api::picture.picture',
-      'manyToOne',
-      'api::time-range-tag.time-range-tag'
+      "api::picture.picture",
+      "manyToOne",
+      "api::time-range-tag.time-range-tag"
     >;
+    is_text: BooleanAttribute & DefaultTo<false>;
     archive_identifier: StringAttribute;
     archive_tag: RelationAttribute<
-      'api::picture.picture',
-      'manyToOne',
-      'api::archive-tag.archive-tag'
+      "api::picture.picture",
+      "manyToOne",
+      "api::archive-tag.archive-tag"
+    >;
+    likes: IntegerAttribute;
+    linked_texts: RelationAttribute<
+      "api::picture.picture",
+      "manyToMany",
+      "api::picture.picture"
+    >;
+    linked_pictures: RelationAttribute<
+      "api::picture.picture",
+      "manyToMany",
+      "api::picture.picture"
+    >;
+    picture_geo_infos: RelationAttribute<
+      "api::picture.picture",
+      "oneToMany",
+      "api::picture-geo-info.picture-geo-info"
+    >;
+    is_not_a_place_count: IntegerAttribute;
+    face_tags: RelationAttribute<
+      "api::picture.picture",
+      "oneToMany",
+      "api::face-tag.face-tag"
     >;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     publishedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::picture.picture',
-      'oneToOne',
-      'admin::user'
+      "api::picture.picture",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::picture.picture',
-      'oneToOne',
-      'admin::user'
+      "api::picture.picture",
+      "oneToOne",
+      "admin::user"
+    > &
+      PrivateAttribute;
+  };
+}
+
+export interface ApiPictureGeoInfoPictureGeoInfo extends CollectionTypeSchema {
+  info: {
+    singularName: "picture-geo-info";
+    pluralName: "picture-geo-infos";
+    displayName: "Picture_Geo_Info";
+    description: "";
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    picture: RelationAttribute<
+      "api::picture-geo-info.picture-geo-info",
+      "manyToOne",
+      "api::picture.picture"
+    >;
+    latitude: DecimalAttribute;
+    longitude: DecimalAttribute;
+    radius: DecimalAttribute;
+    createdAt: DateTimeAttribute;
+    updatedAt: DateTimeAttribute;
+    createdBy: RelationAttribute<
+      "api::picture-geo-info.picture-geo-info",
+      "oneToOne",
+      "admin::user"
+    > &
+      PrivateAttribute;
+    updatedBy: RelationAttribute<
+      "api::picture-geo-info.picture-geo-info",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -984,10 +1098,10 @@ export interface ApiPicturePicture extends CollectionTypeSchema {
 
 export interface ApiTimeRangeTagTimeRangeTag extends CollectionTypeSchema {
   info: {
-    singularName: 'time-range-tag';
-    pluralName: 'time-range-tags';
-    displayName: 'Time_Range_Tag';
-    description: '';
+    singularName: "time-range-tag";
+    pluralName: "time-range-tags";
+    displayName: "Time_Range_Tag";
+    description: "";
   };
   options: {
     draftAndPublish: false;
@@ -996,27 +1110,28 @@ export interface ApiTimeRangeTagTimeRangeTag extends CollectionTypeSchema {
     start: DateTimeAttribute & RequiredAttribute;
     end: DateTimeAttribute & RequiredAttribute;
     pictures: RelationAttribute<
-      'api::time-range-tag.time-range-tag',
-      'oneToMany',
-      'api::picture.picture'
+      "api::time-range-tag.time-range-tag",
+      "oneToMany",
+      "api::picture.picture"
     >;
     verified_pictures: RelationAttribute<
-      'api::time-range-tag.time-range-tag',
-      'oneToMany',
-      'api::picture.picture'
+      "api::time-range-tag.time-range-tag",
+      "oneToMany",
+      "api::picture.picture"
     >;
+    isEstimate: BooleanAttribute;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     createdBy: RelationAttribute<
-      'api::time-range-tag.time-range-tag',
-      'oneToOne',
-      'admin::user'
+      "api::time-range-tag.time-range-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
     updatedBy: RelationAttribute<
-      'api::time-range-tag.time-range-tag',
-      'oneToOne',
-      'admin::user'
+      "api::time-range-tag.time-range-tag",
+      "oneToOne",
+      "admin::user"
     > &
       PrivateAttribute;
   };
@@ -1024,9 +1139,9 @@ export interface ApiTimeRangeTagTimeRangeTag extends CollectionTypeSchema {
 
 export interface CommonSynonyms extends ComponentSchema {
   info: {
-    displayName: 'synonym';
-    icon: 'layer-group';
-    description: '';
+    displayName: "synonym";
+    icon: "layer-group";
+    description: "";
   };
   attributes: {
     name: StringAttribute & RequiredAttribute;
@@ -1035,8 +1150,8 @@ export interface CommonSynonyms extends ComponentSchema {
 
 export interface LocationCoordinates extends ComponentSchema {
   info: {
-    displayName: 'Coordinates';
-    icon: 'map-marked-alt';
+    displayName: "Coordinates";
+    icon: "map-marked-alt";
   };
   attributes: {
     latitude: FloatAttribute &
@@ -1057,29 +1172,31 @@ export interface LocationCoordinates extends ComponentSchema {
 declare global {
   namespace Strapi {
     interface Schemas {
-      'admin::permission': AdminPermission;
-      'admin::user': AdminUser;
-      'admin::role': AdminRole;
-      'admin::api-token': AdminApiToken;
-      'admin::api-token-permission': AdminApiTokenPermission;
-      'plugin::upload.file': PluginUploadFile;
-      'plugin::upload.folder': PluginUploadFolder;
-      'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
-      'plugin::users-permissions.role': PluginUsersPermissionsRole;
-      'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'api::archive-tag.archive-tag': ApiArchiveTagArchiveTag;
-      'api::browse-root-collection.browse-root-collection': ApiBrowseRootCollectionBrowseRootCollection;
-      'api::collection.collection': ApiCollectionCollection;
-      'api::comment.comment': ApiCommentComment;
-      'api::description.description': ApiDescriptionDescription;
-      'api::keyword-tag.keyword-tag': ApiKeywordTagKeywordTag;
-      'api::link.link': ApiLinkLink;
-      'api::location-tag.location-tag': ApiLocationTagLocationTag;
-      'api::person-tag.person-tag': ApiPersonTagPersonTag;
-      'api::picture.picture': ApiPicturePicture;
-      'api::time-range-tag.time-range-tag': ApiTimeRangeTagTimeRangeTag;
-      'common.synonyms': CommonSynonyms;
-      'location.coordinates': LocationCoordinates;
+      "admin::permission": AdminPermission;
+      "admin::user": AdminUser;
+      "admin::role": AdminRole;
+      "admin::api-token": AdminApiToken;
+      "admin::api-token-permission": AdminApiTokenPermission;
+      "plugin::upload.file": PluginUploadFile;
+      "plugin::upload.folder": PluginUploadFolder;
+      "plugin::users-permissions.permission": PluginUsersPermissionsPermission;
+      "plugin::users-permissions.role": PluginUsersPermissionsRole;
+      "plugin::users-permissions.user": PluginUsersPermissionsUser;
+      "api::archive-tag.archive-tag": ApiArchiveTagArchiveTag;
+      "api::browse-root-collection.browse-root-collection": ApiBrowseRootCollectionBrowseRootCollection;
+      "api::collection.collection": ApiCollectionCollection;
+      "api::comment.comment": ApiCommentComment;
+      "api::description.description": ApiDescriptionDescription;
+      "api::face-tag.face-tag": ApiFaceTagFaceTag;
+      "api::keyword-tag.keyword-tag": ApiKeywordTagKeywordTag;
+      "api::link.link": ApiLinkLink;
+      "api::location-tag.location-tag": ApiLocationTagLocationTag;
+      "api::person-tag.person-tag": ApiPersonTagPersonTag;
+      "api::picture.picture": ApiPicturePicture;
+      "api::picture-geo-info.picture-geo-info": ApiPictureGeoInfoPictureGeoInfo;
+      "api::time-range-tag.time-range-tag": ApiTimeRangeTagTimeRangeTag;
+      "common.synonyms": CommonSynonyms;
+      "location.coordinates": LocationCoordinates;
     }
   }
 }

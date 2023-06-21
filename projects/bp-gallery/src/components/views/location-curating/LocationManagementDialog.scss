@@ -1,0 +1,126 @@
+@import 'src/shared/style.module';
+
+.location-management-placeholder {
+  width: 1001px;
+  height: 616.5px;
+}
+
+.location-management-location-name {
+  padding: 0;
+  margin: 0;
+}
+
+.location-management-close-dialog {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.location-management-dialog-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: -20px;
+  margin-bottom: -20px;
+
+  .location-management-left {
+    padding-right: 8px;
+    .location-management-name-container {
+      display: flex;
+
+      .location-management-accept-location {
+        margin: auto auto auto 8px;
+      }
+
+      .location-management-edit-location {
+        margin: auto 0px auto auto;
+      }
+
+      .MuiButtonBase-root {
+        padding: 0;
+        margin-left: auto;
+      }
+    }
+
+    .location-management-location-path {
+      width: 505px;
+    }
+
+    .location-management-left-content {
+      height: 510px;
+      overflow: scroll;
+      padding-right: 16px;
+
+      .location-management-synonyms {
+        max-width: 450px;
+        margin-bottom: 4px;
+        display: flex;
+        flex-direction: row;
+        overflow-wrap: normal;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .MuiInputBase-root {
+          display: flex;
+          flex-wrap: wrap;
+
+          .location-management-synonym {
+            margin: 3px 3px 4px 3px;
+          }
+
+          .MuiInputBase-input {
+            width: 0;
+            min-width: 100px;
+            flex-grow: 1;
+          }
+        }
+      }
+    }
+  }
+
+  .location-management-right {
+    padding-left: 8px;
+    max-width: 400px;
+    .location-management-map {
+      width: 400px;
+      height: 406px;
+      background-color: greenyellow;
+    }
+
+    .location-management-actions {
+      .location-management-picture-count {
+        width: 100%;
+        text-align: center;
+        color: $archiveColor;
+        margin-top: 8px;
+      }
+
+      .location-management-button {
+        color: #ffffff;
+        margin-top: 0.5rem;
+        width: 100%;
+        padding-inline: 1rem;
+        align-self: center;
+      }
+
+      .location-management-primary {
+        background-color: $primaryColor;
+      }
+
+      .location-management-gray {
+        background-color: lightgray;
+      }
+    }
+  }
+}
+
+.location-management-navigation {
+  display: flex;
+  .location-management-previous-button {
+    margin-left: 10px;
+    margin-right: auto;
+  }
+  .location-management-next-button {
+    margin-left: auto;
+    margin-right: 4px;
+  }
+}

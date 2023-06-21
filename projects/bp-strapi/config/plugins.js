@@ -1,4 +1,9 @@
 /* eslint-disable no-unused-vars */
+
+const dateToTimeStamp = (date) => {
+  return Date.parse(date) / 1000;
+};
+
 module.exports = ({ env }) => ({
   // disable i18n (all content is explicitly german as it's a german photo archive)
   i18n: false,
@@ -36,14 +41,21 @@ module.exports = ({ env }) => ({
   email: {
     config: {
       provider: env("EMAIL_PROVIDER"),
-      providerOptions: {
-        host: env("EMAIL_SMTP_HOST"),
-        port: env("EMAIL_SMTP_PORT"),
-        auth: {
-          user: env("EMAIL_SMTP_USER"),
-          pass: env("EMAIL_SMTP_PASS"),
-        },
-      },
+      providerOptions:
+        env("EMAIL_PROVIDER") === "amazon-ses"
+          ? {
+              key: env("AWS_SES_ACCESS_KEY_ID"),
+              secret: env("AWS_SES_ACCESS_SECRET"),
+              amazon: env("AWS_SES_REGION_URL"),
+            }
+          : {
+              host: env("EMAIL_SMTP_HOST"),
+              port: env("EMAIL_SMTP_PORT"),
+              auth: {
+                user: env("EMAIL_SMTP_USER"),
+                pass: env("EMAIL_SMTP_PASS"),
+              },
+            },
       settings: {
         defaultFrom: env("EMAIL_ADDRESS_FROM"),
         defaultReplyTo: env("EMAIL_ADDRESS_REPLY"),
@@ -51,6 +63,120 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  meilisearch:
+    env("MEILISEARCH_ENABLED", "false") === "true"
+      ? {
+          config: {
+            host: env("MEILISEARCH_HOST"),
+            apiKey: env("MEILISEARCH_API_KEY"),
+            picture: {
+              transformEntry({ entry }) {
+                const transformedEntry = {
+                  id: entry.id,
+                  likes: entry.likes,
+                  descriptions: entry.descriptions.map(
+                    (description) => description.text
+                  ),
+                  comments: entry.comments.map((comment) => comment.text),
+                  keyword_tags: entry.keyword_tags
+                    .map((tag) => tag.name)
+                    .concat(entry.verified_keyword_tags.map((tag) => tag.name)),
+                  person_tags: entry.person_tags
+                    .map((tag) => tag.name)
+                    .concat(entry.verified_person_tags.map((tag) => tag.name)),
+                  location_tags: entry.location_tags
+                    .map((tag) => tag.name)
+                    .concat(
+                      entry.verified_location_tags.map((tag) => tag.name)
+                    ),
+                  face_tags: entry.face_tags.map((tag) => tag.name),
+                  collections: entry.collections.map((tag) => tag.name),
+                  archive_tag: entry.archive_tag,
+                  time_range_tag_start: entry?.time_range_tag
+                    ? dateToTimeStamp(entry.time_range_tag.start)
+                    : entry.verified_time_range_tag
+                    ? dateToTimeStamp(entry.verified_time_range_tag.start)
+                    : null,
+                  time_range_tag_end: entry?.time_range_tag
+                    ? dateToTimeStamp(entry.time_range_tag.end)
+                    : entry.verified_time_range_tag
+                    ? dateToTimeStamp(entry.verified_time_range_tag.end)
+                    : null,
+                };
+
+                return transformedEntry;
+              },
+              settings: {
+                displayedAttributes: ["id"],
+                // the order of the attributes in searchableAttributes determines the priorization
+                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
+                searchableAttributes: [
+                  "descriptions",
+                  "keyword_tags",
+                  "location_tags",
+                  "time_range_tag_start",
+                  "time_range_tag_end",
+                  "face_tags",
+                  "person_tags",
+                  "collections",
+                  "archive_tag",
+                  "comments",
+                ],
+                filterableAttributes: [
+                  "keyword_tags",
+                  "location_tags",
+                  "time_range_tag_start",
+                  "time_range_tag_end",
+                  "face_tags",
+                  "person_tags",
+                  "descriptions",
+                  "comments",
+                  "collections",
+                  "archive_tag",
+                  "is_text",
+                ],
+                sortableAttributes: [
+                  "time_range_tag_start",
+                  "time_range_tag_end",
+                  "likes",
+                ],
+                rankingRules: [
+                  "words",
+                  "typo",
+                  "proximity",
+                  "attribute",
+                  "sort",
+                  "exactness",
+                ],
+                // words that are ignored during searches, useful for common words
+                //  that do not carry a meaning on their own like articles, pronomina etc.
+                // we do not use this setting, since our data on user searchers suggests, that
+                // users only search for proper names, people, locations and nouns in general
+                stopWords: [],
+                synonyms: {},
+                // returned documents will always be unigue in this attribute
+                distinctAttribute: null,
+                typoTolerance: {
+                  enabled: true,
+                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
+                  disableOnWords: [],
+                  disableOnAttributes: [],
+                },
+                // faceting is currently not in use
+                faceting: {
+                  maxValuesPerFacet: 100,
+                },
+                // maxtotalHits determines the maximal possible amount
+                // of search results and overrides any other settings
+                // like the result_limit of the search settings in this regard
+                pagination: {
+                  maxTotalHits: 1000,
+                },
+              },
+            },
+          },
+        }
+      : null,
   upload:
     env("AWS_ENABLED", "false") === "true"
       ? {

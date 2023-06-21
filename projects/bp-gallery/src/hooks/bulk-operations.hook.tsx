@@ -1,10 +1,10 @@
+import { CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
-import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
-import useManageCollectionPictures from './manage-collection-pictures.hook';
-import { Add, Close, DriveFileMove, Edit } from '@mui/icons-material';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
+import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
+import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
+import useManageCollectionPictures from './manage-collection-pictures.hook';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -22,7 +22,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
   return {
     linkToCollection: {
       name: t('curator.addToCollection'),
-      icon: <Add />,
+      icon: <CreateNewFolder />,
       action: (selectedPictures: FlatPicture[]) => {
         selectCollection().then((selectedCollection: FlatCollection | undefined) => {
           if (!selectedCollection?.id) {
@@ -37,7 +37,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     },
     removeFromCollection: {
       name: t('curator.removeFromCollection'),
-      icon: <Close />,
+      icon: <FolderDelete />,
       action: (selectedPictures: FlatPicture[]) => {
         if (!parentCollection?.id) {
           return;

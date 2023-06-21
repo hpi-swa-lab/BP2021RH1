@@ -1,8 +1,9 @@
 import { Autorenew, Cancel, OpenWith } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import { CSSProperties, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFaceTagging } from '../../../../hooks/context-hooks';
-import '../../../../shared/style.scss';
+import '../../../../shared/style.module.scss';
 import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import { FaceTagData, TagDirection } from './FaceTagTypes';
 
@@ -132,12 +133,24 @@ export const FaceTag = ({
     };
   }, [x, y, position, noPointerEvents, tagDirection]);
 
+  const {
+    palette: {
+      person: { main: personColor },
+    },
+  } = useTheme();
+  const transparentPersonColor = personColor + 'bb';
+
   return (
     <div className='fixed z-[999] hover:z-[9999] flex items-center facetag' style={style}>
       <svg width={triangle.width} height={triangle.height} data-testid={triangle.testid}>
-        <polygon fill='#404173bb' points={triangle.points} />
+        <polygon fill={transparentPersonColor} points={triangle.points} />
       </svg>
-      <div className='flex flex-row items-center space-x-1 bg-[#404173bb] p-2 rounded-md text-white'>
+      <div
+        className='flex flex-row items-center space-x-1 p-2 rounded-md text-white'
+        style={{
+          background: transparentPersonColor,
+        }}
+      >
         <span>{name}</span>
         {role >= AuthRole.CURATOR && id !== undefined && isFaceTagging && (
           <>

@@ -1,6 +1,7 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNoDistractionModeStyle } from '../helpers/no-distraction-mode-style';
 import './PictureToolbar.scss';
 
 export const PictureToolbar = ({ calledViaLink }: { calledViaLink: boolean }) => {
@@ -10,8 +11,10 @@ export const PictureToolbar = ({ calledViaLink }: { calledViaLink: boolean }) =>
     window.history.back();
   };
 
+  const noDistractionModeStyle = useNoDistractionModeStyle();
+
   return (
-    <div className='picture-toolbar'>
+    <div className={`picture-toolbar ${noDistractionModeStyle}`}>
       <Button onClick={calledViaLink ? () => (location.href = '/browse') : onBack}>
         <ArrowBack />
         {calledViaLink ? t('common.back-to-home') : t('common.back')}

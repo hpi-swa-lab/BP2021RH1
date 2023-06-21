@@ -1,4 +1,4 @@
-@import 'src/shared/style';
+@import 'src/shared/style.module';
 
 .search-breadcrumbs {
   .breadcrumb-chip {
@@ -12,27 +12,35 @@
     &[search-type='keyword'] {
       background: $keywordColor;
     }
+
     &[search-type='all'] {
       background: $allSearchColor;
     }
+
     &[search-type='description'] {
       background: $descriptionColor;
     }
+
     &[search-type='decade'] {
       background: $decadeColor;
     }
+
     &[search-type='date'] {
       background: $decadeColor;
     }
+
     &[search-type='person'] {
       background: $personColor;
     }
+
     &[search-type='location'] {
       background: $locationColor;
     }
+
     &[search-type='collection'] {
       background: $primaryColor;
     }
+
     &[search-type='archive'] {
       background: $primaryColor;
     }

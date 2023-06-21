@@ -1,4 +1,5 @@
 import { login, logout } from '../utils/login-utils';
+import { clickBulkOperation } from './helper';
 
 describe('selection', () => {
   before(() => {
@@ -16,7 +17,7 @@ describe('selection', () => {
     cy.get('.picture-preview').eq(0).find('[data-testid="CheckBoxIcon"]');
     cy.get('.picture-preview').eq(1).find('[data-testid="CheckBoxIcon"]');
     cy.get('.picture-preview').eq(2).find('[data-testid="CheckBoxIcon"]');
-    cy.contains('Keine auswählen').click();
+    clickBulkOperation('Keine auswählen');
     cy.get('.picture-preview .adornment [data-testid="CheckBoxIcon"]').should('not.exist');
   });
 

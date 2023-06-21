@@ -1,4 +1,5 @@
 import { Description, Event, Folder, FolderSpecial, Place, Sell } from '@mui/icons-material';
+import { pick } from 'lodash';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -149,10 +150,15 @@ const PictureInfo = ({
           tags={picture.location_tags ?? []}
           allTags={allLocations ?? []}
           onChange={locations => {
-            savePictureInfo({ location_tags: locations });
+            savePictureInfo({
+              location_tags: locations.map(location => {
+                return pick(location, ['name', 'id', 'visible']);
+              }),
+            });
           }}
           noContentText={t('pictureFields.noLocations')}
           createMutation={newLocationTagMutation}
+          createChildMutation={newLocationTagMutation}
         />
       </PictureInfoField>
       {(role >= AuthRole.CURATOR || Boolean(picture.keyword_tags?.length)) && (

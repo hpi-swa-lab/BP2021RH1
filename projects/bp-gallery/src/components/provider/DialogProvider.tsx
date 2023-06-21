@@ -1,7 +1,11 @@
 import { Close, Done } from '@mui/icons-material';
-import { Dialog } from '@mui/material';
-import { createContext, PropsWithChildren, useContext, useRef, useState } from 'react';
+import { Breakpoint, Dialog } from '@mui/material';
+import { PropsWithChildren, createContext, useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import LocationManagementDialogPreset from '../views/location-curating/LocationManagementDialog';
+import PathPositionSelectDialogPreset from '../views/location-curating/SelectPathPositionDialog';
+import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
+import { ScrollProvider } from './ScrollProvider';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
@@ -19,7 +23,10 @@ export enum DialogPreset {
   CONFIRM,
   SELECT_COLLECTION,
   SELECT_ARCHIVE_TAG,
+  SELECT_LOCATION,
   INPUT_FIELD,
+  SELECT_PATH_POSITION,
+  LOCATION_MANAGEMENT,
 }
 
 export interface DialogProps {
@@ -27,6 +34,7 @@ export interface DialogProps {
   content?: any;
   title?: string;
   options?: DialogOption[];
+  maxWidth?: false | Breakpoint | undefined;
 }
 
 const DialogContext = createContext<(dialogProps: DialogProps) => Promise<any | null>>(
@@ -60,6 +68,7 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
     content,
     title,
     options,
+    maxWidth,
   }: DialogProps): Promise<any> => {
     if (preset === DialogPreset.CONFIRM) {
       options = [
@@ -88,7 +97,7 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         },
       ];
     }
-    setDialogState({ preset, content, title, options });
+    setDialogState({ preset, content, title, options, maxWidth });
     setOpen(true);
     return new Promise<any>(r => {
       // The callback function of this Promise is saved to the ref here
@@ -106,6 +115,7 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
           // as if we didn't choose any of the options - hence null
           handleClose(null);
         }}
+        maxWidth={dialogState?.maxWidth}
       >
         {(dialogState?.preset === DialogPreset.NO_PRESET ||
           dialogState?.preset === DialogPreset.CONFIRM) && (
@@ -114,11 +124,22 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         {dialogState?.preset === DialogPreset.SELECT_COLLECTION && (
           <CollectionSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
+        {dialogState?.preset === DialogPreset.SELECT_LOCATION && (
+          <TagSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+        )}
         {dialogState?.preset === DialogPreset.SELECT_ARCHIVE_TAG && (
           <ArchiveTagSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
         {dialogState?.preset === DialogPreset.INPUT_FIELD && (
           <InputFieldDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.SELECT_PATH_POSITION && (
+          <PathPositionSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.LOCATION_MANAGEMENT && (
+          <ScrollProvider>
+            <LocationManagementDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+          </ScrollProvider>
         )}
       </Dialog>
     </DialogContext.Provider>
