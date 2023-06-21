@@ -4,6 +4,7 @@ import {
   ArrowForwardIos,
   Check,
   Close,
+  Delete,
   Edit,
   Place,
   Subtitles,
@@ -168,15 +169,17 @@ const LocationManagementDialogPreset = ({
   }, [locationTag]);
 
   useEffect(() => {
-    if (position?.lat && position.lng) {
-      updateLocationCoordinatesMutation({
-        variables: {
-          tagId: locationTag.id,
-          lat: position.lat,
-          lng: position.lng,
-        },
-      });
-    }
+    updateLocationCoordinatesMutation({
+      variables: {
+        tagId: locationTag.id,
+        coordinate: position
+          ? {
+              latitude: position.lat,
+              longitude: position.lng,
+            }
+          : null,
+      },
+    });
   }, [locationTag.id, position, updateLocationCoordinatesMutation]);
 
   return (
@@ -352,11 +355,19 @@ const LocationManagementDialogPreset = ({
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
-
                 <MyMarker position={position} setPosition={setPosition} />
               </MapContainer>
             </div>
             <div className='location-management-actions'>
+              <Button
+                className='location-management-button location-management-primary'
+                onClick={() => {
+                  setPosition(undefined);
+                }}
+                endIcon={<Delete />}
+              >
+                {t('tag-panel.delete-coordinate')}
+              </Button>
               <div className='location-management-picture-count'>
                 {flattenedPictures &&
                   t('tag-panel.location-pictures', {

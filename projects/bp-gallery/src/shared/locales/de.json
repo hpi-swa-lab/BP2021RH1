@@ -432,7 +432,8 @@
     "location-pictures_one": "{{ count }} Bild in diesem Ort",
     "location-pictures_other": "{{ count }} Bilder in diesem Ort",
     "not-allowed-to-delete_one": "Für diesen Ort existiert {{ count }} Bild. Er kann erst entfernt werden, wenn es keine Bilder für diesen Ort gibt.",
-    "not-allowed-to-delete_other": "Für diesen Ort existieren {{ count }} Bilder. Er kann erst entfernt werden, wenn es keine Bilder für diesen Ort gibt."
+    "not-allowed-to-delete_other": "Für diesen Ort existieren {{ count }} Bilder. Er kann erst entfernt werden, wenn es keine Bilder für diesen Ort gibt.",
+    "delete-coordinate": "Koordinate löschen"
   },
   "tooltips": {
     "detach-location": "Ort aus der Hierarchie lösen.",

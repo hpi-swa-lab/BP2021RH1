@@ -3385,8 +3385,7 @@ export type UpdateLocationChildMutation = {
 
 export type UpdateLocationCoordinatesMutationVariables = Exact<{
   tagId: Scalars['ID'];
-  lat: Scalars['Float'];
-  lng: Scalars['Float'];
+  coordinate?: InputMaybe<ComponentLocationCoordinatesInput>;
 }>;
 
 export type UpdateLocationCoordinatesMutation = {
@@ -8417,8 +8416,8 @@ export type UpdateLocationChildMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const UpdateLocationCoordinatesDocument = gql`
-  mutation updateLocationCoordinates($tagId: ID!, $lat: Float!, $lng: Float!) {
-    updateLocationTag(id: $tagId, data: { coordinates: { latitude: $lat, longitude: $lng } }) {
+  mutation updateLocationCoordinates($tagId: ID!, $coordinate: ComponentLocationCoordinatesInput) {
+    updateLocationTag(id: $tagId, data: { coordinates: $coordinate }) {
       data {
         id
       }
@@ -8445,8 +8444,7 @@ export type UpdateLocationCoordinatesMutationFn = Apollo.MutationFunction<
  * const [updateLocationCoordinatesMutation, { data, loading, error }] = useUpdateLocationCoordinatesMutation({
  *   variables: {
  *      tagId: // value for 'tagId'
- *      lat: // value for 'lat'
- *      lng: // value for 'lng'
+ *      coordinate: // value for 'coordinate'
  *   },
  * });
  */
