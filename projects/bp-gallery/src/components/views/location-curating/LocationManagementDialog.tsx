@@ -44,7 +44,7 @@ import {
 } from './location-management-helpers';
 import { useGetTagStructures } from './tag-structure-helpers';
 
-const MyMarker = ({
+const LocationMarker = ({
   position,
   setPosition,
 }: {
@@ -355,7 +355,7 @@ const LocationManagementDialogPreset = ({
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
-                <MyMarker position={position} setPosition={setPosition} />
+                <LocationMarker position={position} setPosition={setPosition} />
               </MapContainer>
             </div>
             <div className='location-management-actions'>
