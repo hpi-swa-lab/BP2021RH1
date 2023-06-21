@@ -135,10 +135,10 @@ export const FaceTag = ({
 
   const {
     palette: {
-      person: { main: personColor },
+      faceTag: { main: faceTagColor },
     },
   } = useTheme();
-  const transparentPersonColor = personColor + 'bb';
+  const transparentPersonColor = faceTagColor + 'bb';
 
   return (
     <div className='fixed z-[999] hover:z-[9999] flex items-center facetag' style={style}>
@@ -146,7 +146,7 @@ export const FaceTag = ({
         <polygon fill={transparentPersonColor} points={triangle.points} />
       </svg>
       <div
-        className='flex flex-row items-center space-x-1 p-2 rounded-md text-white'
+        className='flex flex-row items-center space-x-1 p-2 rounded-md text-black'
         style={{
           background: transparentPersonColor,
         }}
