@@ -69,14 +69,14 @@ const OverviewContainer = ({
     },
     [overviewPosition, archiveID, setSelectedTabs]
   );
-
+  const clampedTabIndex = Math.min(tabIndex, tabs.length - 1);
   return (
     <div className='overview-selection-container'>
       <div className='overview-selection-header'>
-        <h2 className='overview-selection-title'>{tabs[tabIndex].title}</h2>
+        <h2 className='overview-selection-title'>{tabs[clampedTabIndex].title}</h2>
         <Tabs
           variant='scrollable'
-          value={tabIndex}
+          value={clampedTabIndex}
           onChange={(_, value) => {
             setTabIndex(value as number);
           }}
@@ -88,7 +88,7 @@ const OverviewContainer = ({
           ))}
         </Tabs>
       </div>
-      {tabs[tabIndex].content}
+      {tabs[clampedTabIndex].content}
     </div>
   );
 };

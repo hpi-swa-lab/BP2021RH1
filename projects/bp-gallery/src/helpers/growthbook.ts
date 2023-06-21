@@ -19,6 +19,7 @@ export type AppFeatures = {
   };
   geopictures_collection_id: string;
   start_view_default_tab_index: number;
+  showstories: boolean;
 };
 
 export type FeatureId = keyof AppFeatures;
