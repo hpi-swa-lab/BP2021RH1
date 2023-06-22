@@ -9,6 +9,7 @@ import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
 import { addExhibitionPicture } from '../components/views/exhibitions/ExhibitionHelper';
 import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 import { useCreateExhibitionPictureMutation } from '../graphql/APIConnector';
+import { Button } from '@mui/material';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -86,7 +87,11 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     },
     addToExhibition: {
       name: t('curator.addToExhibition'),
-      icon: <Add />,
+      icon: (
+        <Button variant='contained'>
+          <Add /> {t('curator.addToExhibition')}
+        </Button>
+      ),
       action: async (selectedPictures: FlatPicture[]) => {
         exhibitionId &&
           (await addExhibitionPicture(exhibitionId, selectedPictures, createExhibitionPicture));
