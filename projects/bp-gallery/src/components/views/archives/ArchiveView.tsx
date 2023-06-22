@@ -1,5 +1,7 @@
-import { AccessTime, Edit, Link, ThumbUp } from '@mui/icons-material';
+import { AccessTime, ContactMail, Edit, Link, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -10,6 +12,11 @@ import {
   PictureOverviewType,
   TagType,
 } from '../../../types/additionalFlatTypes';
+import DonateButton from '../../common/DonateButton';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
@@ -19,11 +26,6 @@ import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
-import DonateButton from '../../common/DonateButton';
-import { useTranslation } from 'react-i18next';
-import OverviewContainer, { OverviewContainerPosition } from '../../common/OverviewContainer';
-import { useMemo } from 'react';
-import { OverviewContainerTab } from '../../common/OverviewContainer';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -85,10 +87,10 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   return (
     <div className='archive-container'>
       {role >= AuthRole.CURATOR && (
-        <p className='edit-button-wrapper'>
+        <div className='flex justify-end mb-4'>
           <Button
-            className='archive-edit-button'
-            startIcon={<Edit />}
+            variant='contained'
+            endIcon={<Edit />}
             onClick={() => {
               visit(
                 `${history.location.pathname}${
@@ -97,9 +99,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               );
             }}
           >
-            Archiv editieren
+            {t('archives.view.edit')}
           </Button>
-        </p>
+        </div>
       )}
       <h1>{archive.name}</h1>
       <div className='archive-data'>
@@ -142,6 +144,19 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               allowClicks={false}
               highQuality={true}
             />
+            {archive.email && (
+              <Button
+                fullWidth
+                className='!mt-2'
+                variant='contained'
+                endIcon={<ContactMail />}
+                onClick={() => {
+                  visit('/contact', { state: { archiveId: archive.id } });
+                }}
+              >
+                {t('archives.view.contact')}
+              </Button>
+            )}
           </div>
         )}
       </div>
