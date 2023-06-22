@@ -49,10 +49,12 @@ const PictureView = ({
   initialPictureId,
   siblingIds,
   onBack,
+  fetchMore,
 }: {
   initialPictureId: string;
   siblingIds?: string[];
   onBack?: (picid: string) => void;
+  fetchMore?: () => void;
 }) => {
   const history: History = useHistory();
 
@@ -66,6 +68,12 @@ const PictureView = ({
   useEffect(() => {
     setSideBarOpen(role >= AuthRole.CURATOR || window.innerWidth > MOBILE_BREAKPOINT);
   }, [role]);
+
+  useEffect(() => {
+    if (fetchMore && siblingIds && siblingIds.indexOf(pictureId) === siblingIds.length - 1) {
+      fetchMore();
+    }
+  }, [fetchMore, siblingIds, pictureId]);
 
   const search = window.location.search;
   const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {

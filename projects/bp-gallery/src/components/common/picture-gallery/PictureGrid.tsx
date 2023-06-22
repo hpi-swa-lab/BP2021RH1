@@ -22,6 +22,7 @@ export type PictureGridProps = {
   loading: boolean;
   bulkOperations?: BulkOperation[];
   refetch: () => void;
+  fetchMore?: () => void;
   extraAdornments?: PicturePreviewAdornment[];
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
@@ -34,6 +35,7 @@ const PictureGrid = ({
   loading,
   bulkOperations,
   refetch,
+  fetchMore,
   extraAdornments,
   showDefaultAdornments = true,
   allowClicks = true,
@@ -288,6 +290,7 @@ const PictureGrid = ({
                 setFocusedPicture(undefined);
               });
             }}
+            fetchMore={fetchMore}
           />
         </Portal>
       )}

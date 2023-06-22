@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { WatchQueryFetchPolicy } from '@apollo/client';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -14,7 +15,6 @@ import PictureGrid from './PictureGrid';
 import { PicturePreviewAdornment } from './PicturePreview';
 import './PictureScrollGrid.scss';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
-import { WatchQueryFetchPolicy } from '@apollo/client';
 
 const PictureScrollGrid = ({
   queryParams,
@@ -70,6 +70,29 @@ const PictureScrollGrid = ({
     }
   }, [pictures, resultPictureCallback, loading]);
 
+  const maybeFetchMore = useCallback(() => {
+    if (loading) {
+      return;
+    }
+    let fetchCount = NUMBER_OF_PICTURES_LOADED_PER_FETCH;
+    if (maxNumPictures && pictures) {
+      fetchCount = Math.min(maxNumPictures - pictures.length, NUMBER_OF_PICTURES_LOADED_PER_FETCH);
+    }
+    if (fetchCount > 0) {
+      setIsFetching(true);
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      fetchMore({
+        variables: {
+          pagination: {
+            start: pictures?.length,
+            limit: fetchCount,
+          },
+        },
+      }).then(() => setIsFetching(false));
+    }
+  }, [fetchMore, loading, maxNumPictures, pictures]);
+
   // Loads the next NUMBER_OF_PICTURES_LOADED_PER_FETCH Pictures when the user scrolled to the bottom
   useEffect(() => {
     if (maxNumPictures && maxNumPictures < NUMBER_OF_PICTURES_LOADED_PER_FETCH) {
@@ -79,35 +102,23 @@ const PictureScrollGrid = ({
     }
 
     if (
-      !loading &&
       scrollPos &&
       scrollHeight &&
       scrollHeight !== lastScrollHeight &&
       scrollPos > scrollHeight - 1.75 * window.innerHeight
     ) {
-      let fetchCount = NUMBER_OF_PICTURES_LOADED_PER_FETCH;
-      if (maxNumPictures && pictures) {
-        fetchCount = Math.min(
-          maxNumPictures - pictures.length,
-          NUMBER_OF_PICTURES_LOADED_PER_FETCH
-        );
-      }
-      if (fetchCount > 0) {
-        setIsFetching(true);
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        fetchMore({
-          variables: {
-            pagination: {
-              start: pictures?.length,
-              limit: fetchCount,
-            },
-          },
-        }).then(() => setIsFetching(false));
-      }
+      maybeFetchMore();
       setLastScrollHeight(scrollHeight);
     }
-  }, [scrollPos, scrollHeight, lastScrollHeight, pictures, loading, fetchMore, maxNumPictures]);
+  }, [
+    scrollPos,
+    scrollHeight,
+    lastScrollHeight,
+    pictures,
+    loading,
+    maxNumPictures,
+    maybeFetchMore,
+  ]);
 
   if (error) {
     return <QueryErrorDisplay error={error} />;
@@ -137,6 +148,7 @@ const PictureScrollGrid = ({
         )}
         <PictureGrid
           refetch={refetch}
+          fetchMore={maybeFetchMore}
           pictures={pictures}
           hashBase={hashbase}
           loading={isFetching}
