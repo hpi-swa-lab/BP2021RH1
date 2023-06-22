@@ -8,6 +8,7 @@ import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatType
 import './PictureOverview.scss';
 import PrimaryButton from './PrimaryButton';
 import PictureGrid from './picture-gallery/PictureGrid';
+import { pictureGridInitialPictureIdUrlParam } from './picture-gallery/helpers/constants';
 
 interface PictureOverviewProps {
   title?: string;
@@ -47,6 +48,13 @@ const PictureOverview = ({
     visit(showMoreUrl);
   }, [visit, showMoreUrl]);
 
+  const navigateToShowMore = useCallback(
+    (initialPictureId: string) => {
+      visit(`${showMoreUrl}?${pictureGridInitialPictureIdUrlParam}=${initialPictureId}`);
+    },
+    [showMoreUrl, visit]
+  );
+
   return (
     <div className='overview-container'>
       {title && <h2 className='overview-title'>{title}</h2>}
@@ -57,6 +65,7 @@ const PictureOverview = ({
             hashBase={'overview'}
             loading={loading}
             refetch={refetch}
+            fetchMore={navigateToShowMore}
             showDefaultAdornments={false}
             rows={rows}
           />

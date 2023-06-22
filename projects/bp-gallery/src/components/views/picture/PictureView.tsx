@@ -54,7 +54,7 @@ const PictureView = ({
   initialPictureId: string;
   siblingIds?: string[];
   onBack?: (picid: string) => void;
-  fetchMore?: () => void;
+  fetchMore?: (currentPictureId: string) => void;
 }) => {
   const history: History = useHistory();
 
@@ -71,7 +71,7 @@ const PictureView = ({
 
   useEffect(() => {
     if (fetchMore && siblingIds && siblingIds.indexOf(pictureId) === siblingIds.length - 1) {
-      fetchMore();
+      fetchMore(pictureId);
     }
   }, [fetchMore, siblingIds, pictureId]);
 

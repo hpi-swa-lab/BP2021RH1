@@ -3,6 +3,7 @@ import { IconButton, Portal } from '@mui/material';
 import { union } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
@@ -14,6 +15,7 @@ import PictureView from '../../views/picture/PictureView';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import './PictureGrid.scss';
 import PicturePreview, { PicturePreviewAdornment } from './PicturePreview';
+import { pictureGridInitialPictureIdUrlParam } from './helpers/constants';
 import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
 export type PictureGridProps = {
@@ -22,7 +24,7 @@ export type PictureGridProps = {
   loading: boolean;
   bulkOperations?: BulkOperation[];
   refetch: () => void;
-  fetchMore?: () => void;
+  fetchMore?: (currentPictureId: string) => void;
   extraAdornments?: PicturePreviewAdornment[];
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
@@ -136,16 +138,29 @@ const PictureGrid = ({
     setTable(buffer);
   }, [pictures, calculatePictureNumber, calculatePicturesPerRow]);
 
-  const navigateToPicture = useCallback(
+  const navigateToPicture = useCallback((id: string) => {
+    setFocusedPicture(id);
+    pushHistoryWithoutRouter(`/picture/${id}`);
+  }, []);
+
+  const location = useLocation();
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search as string);
+    const initialPictureId = urlParams.get(pictureGridInitialPictureIdUrlParam);
+    if (initialPictureId !== null) {
+      navigateToPicture(initialPictureId);
+    }
+  }, [location.search, navigateToPicture]);
+
+  const transitionToPicture = useCallback(
     (id: string) => {
       setTransitioning(true);
-      setFocusedPicture(id);
-      pushHistoryWithoutRouter(`/picture/${id}`);
+      navigateToPicture(id);
       zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
         setTransitioning(false);
       });
     },
-    [setFocusedPicture]
+    [navigateToPicture]
   );
 
   const [selectedPictureIds, setSelectedPictureIds] = useState<string[]>([]);
@@ -266,7 +281,7 @@ const PictureGrid = ({
                       picture={picture}
                       onClick={() => {
                         if (!allowClicks) return;
-                        navigateToPicture(picture.id);
+                        transitionToPicture(picture.id);
                       }}
                       adornments={pictureAdornments}
                       allowClicks={allowClicks}
