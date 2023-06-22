@@ -1,4 +1,6 @@
 import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
+import { AccessTime, ThumbUp } from '@mui/icons-material';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllArchiveTagsQuery,
@@ -10,6 +12,10 @@ import { useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
 import { IfFlagEnabled } from '../../common/IfFlagEnabled';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import PrimaryButton from '../../common/PrimaryButton';
 import BrowseView from '../browse/BrowseView';
@@ -18,12 +24,6 @@ import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
-import { AccessTime, ThumbUp } from '@mui/icons-material';
-import OverviewContainer, {
-  OverviewContainerPosition,
-  OverviewContainerTab,
-} from '../../common/OverviewContainer';
-import { useMemo } from 'react';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -69,14 +69,7 @@ const StartView = () => {
       {
         title: t('discover.latest-pictures'),
         icon: <AccessTime key='0' />,
-        content: (
-          <PictureOverview
-            queryParams={{}}
-            onClick={() => {
-              visit('/show-more/latest');
-            }}
-          />
-        ),
+        content: <PictureOverview queryParams={{}} showMoreUrl='/show-more/latest' />,
       },
       {
         title: t('discover.most-liked'),
@@ -85,14 +78,12 @@ const StartView = () => {
           <PictureOverview
             type={PictureOverviewType.MOST_LIKED}
             queryParams={{}}
-            onClick={() => {
-              visit('/show-more/most-liked');
-            }}
+            showMoreUrl='/show-more/most-liked'
           />
         ),
       },
     ];
-  }, [t, visit]);
+  }, [t]);
 
   const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
 

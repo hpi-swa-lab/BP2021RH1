@@ -1,17 +1,18 @@
-import React, { MouseEventHandler } from 'react';
-import './PictureOverview.scss';
-import PictureGrid from './picture-gallery/PictureGrid';
-import { PictureFiltersInput } from '../../graphql/APIConnector';
-import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import PrimaryButton from './PrimaryButton';
+import { PictureFiltersInput } from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
+import { useVisit } from '../../helpers/history';
 import useGetPictures from '../../hooks/get-pictures.hook';
+import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
+import './PictureOverview.scss';
+import PrimaryButton from './PrimaryButton';
+import PictureGrid from './picture-gallery/PictureGrid';
 
 interface PictureOverviewProps {
   title?: string;
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  showMoreUrl: string;
   sortBy?: string[];
   rows?: number;
   type?: PictureOverviewType;
@@ -22,12 +23,13 @@ const ABSOLUTE_MAX_PICTURES_PER_ROW = 6;
 const PictureOverview = ({
   title,
   queryParams,
-  onClick,
+  showMoreUrl,
   sortBy,
   rows = 2,
   type = PictureOverviewType.CUSTOM,
 }: PictureOverviewProps) => {
   const { t } = useTranslation();
+  const { visit } = useVisit();
 
   const { data, loading, refetch } = useGetPictures(
     queryParams,
@@ -40,6 +42,10 @@ const PictureOverview = ({
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+
+  const onClick = useCallback(() => {
+    visit(showMoreUrl);
+  }, [visit, showMoreUrl]);
 
   return (
     <div className='overview-container'>
