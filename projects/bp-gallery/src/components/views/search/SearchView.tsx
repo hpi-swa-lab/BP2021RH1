@@ -9,6 +9,7 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { ShowStats } from '../../provider/ShowStatsProvider';
+import AdvancedSearch from './AdvancedSearch';
 import NoSearchResultsText from './NoSearchResultsText';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
@@ -91,6 +92,7 @@ const SearchView = () => {
 
   return (
     <div className='search-content'>
+      <AdvancedSearch setFilters={() => {}}></AdvancedSearch>
       <div className='search-bar-container'>
         {' '}
         {(!areResultsEmpty || !search) && (
