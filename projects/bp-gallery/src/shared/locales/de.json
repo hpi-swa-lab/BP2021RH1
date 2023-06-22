@@ -428,14 +428,16 @@
     "manipulator": {
       "intro": {
         "title-placeholder": "Ausstellungstitel",
-        "text-placeholder": "Einführungstext"
+        "text-placeholder": "Einführungstext",
+        "title-picture": "Titelbild"
       },
       "section": {
         "text-placeholder": "Abschnittstext",
         "title-placeholder": "Abschnittstitel",
         "sort": "Sortieren",
         "exit-sort": "Fertig sortiert",
-        "add-section": "Neuer Abschnitt"
+        "add-section": "Neuer Abschnitt",
+        "dropzone": "Ziehe hier Bilder hinein"
       },
       "epilog": {
         "title": "Epilog",

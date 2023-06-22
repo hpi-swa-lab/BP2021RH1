@@ -6,7 +6,7 @@ import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
 import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
-import { AddExhibitionPicture } from '../components/views/exhibitions/ExhibitionHelper';
+import { addExhibitionPicture } from '../components/views/exhibitions/ExhibitionHelper';
 import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 import { useCreateExhibitionPictureMutation } from '../graphql/APIConnector';
 
@@ -89,7 +89,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       icon: <Add />,
       action: async (selectedPictures: FlatPicture[]) => {
         exhibitionId &&
-          (await AddExhibitionPicture(exhibitionId, selectedPictures, createExhibitionPicture));
+          (await addExhibitionPicture(exhibitionId, selectedPictures, createExhibitionPicture));
         openAlert({
           alertType: AlertType.SUCCESS,
           message: t('exhibition.add-pictures-to-collection-success'),

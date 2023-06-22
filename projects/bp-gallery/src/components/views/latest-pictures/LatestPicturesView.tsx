@@ -17,11 +17,7 @@ const LatestPicturesView = () => {
       <ShowStats>
         <PictureScrollGrid
           hashbase={'latest'}
-          bulkOperations={
-            exhibitionId
-              ? [linkToCollection, bulkEdit, addToExhibition]
-              : [linkToCollection, bulkEdit]
-          }
+          bulkOperations={[linkToCollection, bulkEdit, ...(exhibitionId ? [addToExhibition] : [])]}
           queryParams={{}}
           maxNumPictures={500}
           showCount={false}

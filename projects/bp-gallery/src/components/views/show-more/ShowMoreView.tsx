@@ -92,17 +92,13 @@ const ShowMoreView = ({
             }
             hashbase={'show-more'}
             extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
-            bulkOperations={
-              exhibitionId
-                ? [
-                    removeFromCollection,
-                    linkToCollection,
-                    moveToCollection,
-                    bulkEdit,
-                    addToExhibition,
-                  ]
-                : [removeFromCollection, linkToCollection, moveToCollection, bulkEdit]
-            }
+            bulkOperations={[
+              removeFromCollection,
+              linkToCollection,
+              moveToCollection,
+              bulkEdit,
+              ...(exhibitionId ? [addToExhibition] : []),
+            ]}
             maxNumPictures={
               categoryType === 'latest' || categoryType === 'most-liked' ? 500 : undefined
             }

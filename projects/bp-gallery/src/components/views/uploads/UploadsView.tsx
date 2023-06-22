@@ -57,11 +57,7 @@ const UploadsView = () => {
           queryParams={{ collections: { id: { null: true } } }}
           hashbase={'uploads'}
           uploadAreaProps={uploadAreaProps}
-          bulkOperations={
-            exhibitionId
-              ? [moveToCollection, bulkEdit, addToExhibition]
-              : [moveToCollection, bulkEdit]
-          }
+          bulkOperations={[moveToCollection, bulkEdit, ...(exhibitionId ? [addToExhibition] : [])]}
         />
       </HideStats>
     </div>

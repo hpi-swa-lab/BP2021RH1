@@ -3,7 +3,7 @@ import { channelFactory } from '../../../helpers/channel-helpers';
 import { MutationFunction } from '../../../types/helper';
 import { useCreateExhibitionPictureMutation } from '../../../graphql/APIConnector';
 
-export const AddExhibitionPicture = async (
+export const addExhibitionPicture = async (
   exhibitionId: string,
   selectedPictures: FlatPicture[],
   createExhibitionPicture: MutationFunction<typeof useCreateExhibitionPictureMutation>
@@ -20,9 +20,7 @@ export const AddExhibitionPicture = async (
     return result;
   };
 
-  for (let i = 0; i < selectedPictures.length; i++) {
-    await addExhibitionPicture(selectedPictures[i].id);
-  }
+  await Promise.all(selectedPictures.map(pic => addExhibitionPicture(pic.id)));
   exhibitionBroadcast.postMessage(true);
   exhibitionBroadcast.close();
 };

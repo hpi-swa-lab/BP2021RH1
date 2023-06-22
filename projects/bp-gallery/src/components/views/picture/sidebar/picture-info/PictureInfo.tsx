@@ -27,7 +27,7 @@ import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
 import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
 import { Button } from '@mui/material';
-import { AddExhibitionPicture } from '../../../exhibitions/ExhibitionHelper';
+import { addExhibitionPicture } from '../../../exhibitions/ExhibitionHelper';
 import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 
 export type Field = Pick<
@@ -118,7 +118,7 @@ const PictureInfo = ({
             variant='contained'
             onClick={() => {
               if (!exhibitionId) return;
-              AddExhibitionPicture(exhibitionId, [picture], createExhibitionPicture);
+              addExhibitionPicture(exhibitionId, [picture], createExhibitionPicture);
               openAlert({
                 alertType: AlertType.SUCCESS,
                 message: t('exhibition.add-picture-to-collection-success'),

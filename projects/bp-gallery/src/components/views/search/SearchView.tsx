@@ -93,11 +93,11 @@ const SearchView = () => {
             queryParams={queryParams}
             isAllSearchActive={isAllSearchActive}
             hashbase={search}
-            bulkOperations={
-              exhibitionId
-                ? [linkToCollection, bulkEdit, addToExhibition]
-                : [linkToCollection, bulkEdit]
-            }
+            bulkOperations={[
+              linkToCollection,
+              bulkEdit,
+              ...(exhibitionId ? [addToExhibition] : []),
+            ]}
             resultPictureCallback={(pictures: number) => {
               setAreResultsEmpty(pictures <= 0);
             }}

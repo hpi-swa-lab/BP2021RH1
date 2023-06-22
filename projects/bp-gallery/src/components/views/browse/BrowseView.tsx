@@ -145,17 +145,13 @@ const BrowseView = ({
               queryParams={getPictureFilters(collection.id)}
               hashbase={collection.name}
               uploadAreaProps={uploadAreaProps(collection)}
-              bulkOperations={
-                exhibitionId
-                  ? [
-                      removeFromCollection,
-                      linkToCollection,
-                      moveToCollection,
-                      bulkEdit,
-                      addToExhibition,
-                    ]
-                  : [removeFromCollection, linkToCollection, moveToCollection, bulkEdit]
-              }
+              bulkOperations={[
+                removeFromCollection,
+                linkToCollection,
+                moveToCollection,
+                bulkEdit,
+                ...(exhibitionId ? [addToExhibition] : []),
+              ]}
             />
           </ShowStats>
         </div>

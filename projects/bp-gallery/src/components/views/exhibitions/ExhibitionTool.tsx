@@ -74,8 +74,11 @@ const DropZone = ({ id }: { id: string }) => {
   return (
     <div
       ref={setNodeRef}
-      className='min-h-[9rem] border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200'
+      className='min-h-[9rem] border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200 relative'
     >
+      <div className='absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] text-slate-500'>
+        {t('exhibition.manipulator.section.dropzone')}
+      </div>
       <div className='relative w-full'>
         <div className='absolute right-0 z-[2000]'>
           <Button variant='contained' onClick={() => setSorting(!getSorting())}>
@@ -108,13 +111,17 @@ const DropZone = ({ id }: { id: string }) => {
 };
 
 const TitleDropzone = () => {
+  const { t } = useTranslation();
   const titlePicture = useContext(ExhibitionGetContext).getTitlePicture();
   const { setNodeRef } = useDroppable({ id: 'titleDropzone' });
   return (
     <div
       ref={setNodeRef}
-      className='h-[10rem] overflow-hidden w-[12rem] border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200'
+      className='h-[10rem] min-w-[10rem] border-solid rounded-xl p-2 box-border flex flex-wrap gap-2 bg-gray-200 relative'
     >
+      <div className='absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] text-slate-500'>
+        {t('exhibition.manipulator.intro.title-picture')}
+      </div>
       {titlePicture?.element}
     </div>
   );
