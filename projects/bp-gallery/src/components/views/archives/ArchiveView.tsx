@@ -90,6 +90,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         <div className='flex justify-end mb-4'>
           <Button
             variant='contained'
+            data-cy='archive-edit'
             endIcon={<Edit />}
             onClick={() => {
               visit(
