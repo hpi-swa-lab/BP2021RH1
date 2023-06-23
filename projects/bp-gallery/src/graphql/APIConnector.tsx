@@ -2488,6 +2488,12 @@ export type GetDailyPictureInfoQuery = {
             attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
           } | null;
         } | null;
+        verified_time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
         comments?: { data: Array<{ id?: string | null }> } | null;
         media: {
           data?: {
@@ -4404,6 +4410,16 @@ export const GetDailyPictureInfoDocument = gql`
             }
           }
           time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+                isEstimate
+              }
+            }
+          }
+          verified_time_range_tag {
             data {
               id
               attributes {
