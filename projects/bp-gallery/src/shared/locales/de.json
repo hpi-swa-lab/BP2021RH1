@@ -134,7 +134,7 @@
     "location": "Orte",
     "collection": "Sammlungen",
     "archive": "Archive",
-    "time-range": "Zeiträume",
+    "timeRange": "Zeitspannen",
     "default": "Nichts ausgewählt",
     "equal": "enthalten",
     "unequal": "enthalten nicht",

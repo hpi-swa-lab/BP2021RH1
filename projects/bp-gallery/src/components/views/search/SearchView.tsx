@@ -90,11 +90,21 @@ const SearchView = () => {
   }
   const { linkToCollection, bulkEdit } = useBulkOperations();
 
+  const [searchFilters, setSearchFilters] = useState({
+    keywordFilters: [],
+    descriptionFilters: [],
+    commentFilters: [],
+    personFilters: [],
+    faceTagFilters: [],
+    locationFilters: [],
+    collectionFilters: [],
+    archiveFilters: [],
+    timeRangeFilters: [],
+  });
   return (
     <div className='search-content'>
-      <AdvancedSearch setFilters={() => {}}></AdvancedSearch>
+      <AdvancedSearch setFilters={() => {}} searchFilters={searchFilters}></AdvancedSearch>
       <div className='search-bar-container'>
-        {' '}
         {(!areResultsEmpty || !search) && (
           <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
         )}
