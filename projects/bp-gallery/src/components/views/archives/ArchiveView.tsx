@@ -1,4 +1,4 @@
-import { AccessTime, ContactMail, Edit, Link, ThumbUp } from '@mui/icons-material';
+import { AccessTime, Edit, Link, Mail, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -137,29 +137,29 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             </div>
           </div>
         </div>
-        {showcasePicture && (
-          <div className='archive-showcase'>
+        <div className='archive-showcase'>
+          {showcasePicture && (
             <PicturePreview
               picture={showcasePicture}
               onClick={() => {}}
               allowClicks={false}
               highQuality={true}
             />
-            {archive.email && (
-              <Button
-                fullWidth
-                className='!mt-2'
-                variant='contained'
-                endIcon={<ContactMail />}
-                onClick={() => {
-                  visit('/contact', { state: { archiveId: archive.id } });
-                }}
-              >
-                {t('archives.view.contact')}
-              </Button>
-            )}
-          </div>
-        )}
+          )}
+          {archive.email && (
+            <Button
+              fullWidth
+              className='!mt-2'
+              variant='contained'
+              endIcon={<Mail />}
+              onClick={() => {
+                visit('/contact', { state: { archiveId: archive.id } });
+              }}
+            >
+              {t('archives.view.contact')}
+            </Button>
+          )}
+        </div>
       </div>
       <ShowStats>
         <OverviewContainer
