@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
-import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { pushHistoryWithoutRouter, replaceHistoryWithoutRouter } from '../../../helpers/history';
 import useDeletePicture from '../../../hooks/delete-picture.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../provider/AuthProvider';
@@ -138,9 +138,12 @@ const PictureGrid = ({
     setTable(buffer);
   }, [pictures, calculatePictureNumber, calculatePicturesPerRow]);
 
-  const navigateToPicture = useCallback((id: string) => {
+  const navigateToPicture = useCallback((id: string, replaceHistory = false) => {
     setFocusedPicture(id);
-    pushHistoryWithoutRouter(`/picture/${id}`);
+    const changeHistoryWithoutRouter = replaceHistory
+      ? replaceHistoryWithoutRouter
+      : pushHistoryWithoutRouter;
+    changeHistoryWithoutRouter(`/picture/${id}`);
   }, []);
 
   const location = useLocation();
@@ -148,7 +151,7 @@ const PictureGrid = ({
     const urlParams = new URLSearchParams(location.search as string);
     const initialPictureId = urlParams.get(pictureGridInitialPictureIdUrlParam);
     if (initialPictureId !== null) {
-      navigateToPicture(initialPictureId);
+      navigateToPicture(initialPictureId, true);
     }
   }, [location.search, navigateToPicture]);
 
