@@ -93,11 +93,15 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
         </Button>
       ),
       action: async (selectedPictures: FlatPicture[]) => {
-        exhibitionId &&
-          (await addExhibitionPicture(exhibitionId, selectedPictures, createExhibitionPicture));
+        if (!exhibitionId)
+          return openAlert({
+            alertType: AlertType.ERROR,
+            message: t('exhibition.add-picture-to-collection-error'),
+          });
+        await addExhibitionPicture(exhibitionId, selectedPictures, createExhibitionPicture);
         openAlert({
           alertType: AlertType.SUCCESS,
-          message: t('exhibition.add-pictures-to-collection-success'),
+          message: t('exhibition.add-picture-to-collection-success', { count: 2 }),
           duration: 2000,
         });
       },

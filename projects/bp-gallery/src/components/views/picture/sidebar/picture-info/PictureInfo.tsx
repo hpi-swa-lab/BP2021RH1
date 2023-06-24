@@ -121,11 +121,15 @@ const PictureInfo = ({
           <Button
             variant='contained'
             onClick={() => {
-              if (!exhibitionId) return;
+              if (!exhibitionId)
+                return openAlert({
+                  alertType: AlertType.SUCCESS,
+                  message: t('exhibition.add-picture-to-collection-fail'),
+                });
               addExhibitionPicture(exhibitionId, [picture], createExhibitionPicture);
               openAlert({
                 alertType: AlertType.SUCCESS,
-                message: t('exhibition.add-picture-to-collection-success'),
+                message: t('exhibition.add-picture-to-collection-success', { count: 1 }),
                 duration: 2000,
               });
             }}

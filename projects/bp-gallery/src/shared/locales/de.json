@@ -207,7 +207,7 @@
     "delete": "Klicken um die Namensschild zu löschen"
   },
   "curator": {
-    "addToExhibition": "Zur Ausstellung hinzufügen",
+    "addToExhibition": "Zur Geschichte hinzufügen",
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "addPictures": "Bilder hinzufügen",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
@@ -421,13 +421,14 @@
       "unPublish": "Privat stellen",
       "addPictures": "Bilder hinzufügen"
     },
-    "idealot": "Ausstellungsparkplatz",
-    "tool": "Ausstellungstool",
-    "add-picture-to-collection-success": "Ausgewähltes Bild wurde zur Ausstellung hinzugefügt",
-    "add-pictures-to-collection-success": "Ausgewählte Bilder wurden zur Ausstellung hinzugefügt",
+    "idealot": "Ideenparkplatz",
+    "tool": "Geschichte erstellen",
+    "add-picture-to-collection-success_one": "Ausgewähltes Bild wurde zum Ideenparkplatz hinzugefügt",
+    "add-picture-to-collection-success_other": "Ausgewählte Bilder wurden zum Ideenparkplatz hinzugefügt",
+    "add-picture-to-collection-fail": "Fehler. Schließe den Tab und klicke beim Ideenparkplatz nochmals auf \"Bilder hinzufügen\"",
     "manipulator": {
       "intro": {
-        "title-placeholder": "Ausstellungstitel",
+        "title-placeholder": "Titel",
         "text-placeholder": "Einführungstext",
         "title-picture": "Titelbild"
       },

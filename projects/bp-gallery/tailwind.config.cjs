@@ -16,9 +16,6 @@ module.exports = {
       minHeight: {
         main: 'calc(100vh - 5rem)',
       },
-      colors: {
-        primary: '#7e241d',
-      },
       animation: {
         'paypal-open': 'paypal-open 1s',
       },
