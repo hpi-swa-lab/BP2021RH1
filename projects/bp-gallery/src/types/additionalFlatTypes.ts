@@ -4,6 +4,10 @@ import {
   Comment,
   ComponentCommonSynonyms,
   Description,
+  Exhibition,
+  ExhibitionPicture,
+  ExhibitionSection,
+  ExhibitionSource,
   FaceTag,
   KeywordTag,
   Link,
@@ -29,6 +33,20 @@ type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
 export type FlatUploadFile = ID & UploadFile;
+
+type FlatExhibitionPictureWithoutRelations = ID &
+  Omit<ExhibitionPicture, 'picture' | 'exhibition_section' | 'exhibition_idealot'>;
+
+type FlatExhibitionWithoutRelations = ID &
+  Omit<
+    Exhibition,
+    'title_picture' | 'exhibition_sections' | 'exhibition_sources' | 'idealot_pictures'
+  >;
+
+type FlatExhibitionSectionWithoutRelations = ID &
+  Omit<ExhibitionSection, 'exhibition' | 'exhibition_pictures'>;
+
+type FlatExhibitionSourceWithoutRelations = ID & Omit<ExhibitionSource, 'exhibition'>;
 
 type FlatPictureWithoutRelations = ID &
   Omit<
@@ -67,6 +85,28 @@ export type FlatArchiveTagWithoutRelations = ID &
 export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatFaceTagWithoutRelations = ID & Omit<FaceTag, 'person_tag' | 'picture'>;
+
+export type FlatExhibitionSource = FlatExhibitionSourceWithoutRelations & {
+  exhibition?: FlatExhibition;
+};
+
+export type FlatExhibitionSection = FlatExhibitionSectionWithoutRelations & {
+  exhibition_pictures?: FlatExhibitionPicture[];
+  exhibition?: FlatExhibition;
+};
+
+export type FlatExhibitionPicture = FlatExhibitionPictureWithoutRelations & {
+  picture?: FlatPicture;
+  exhibition_section?: FlatExhibitionSection;
+  exhibition_idealot?: FlatExhibition;
+};
+
+export type FlatExhibition = FlatExhibitionWithoutRelations & {
+  title_picture?: FlatExhibitionPicture;
+  exhibition_sections?: FlatExhibitionSection[];
+  exhibition_sources?: FlatExhibitionSource[];
+  idealot_pictures?: FlatExhibitionPicture[];
+};
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;

@@ -1,6 +1,6 @@
 import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCreateArchiveTagMutation } from '../../../graphql/APIConnector';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
@@ -10,6 +10,7 @@ import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
 import './UploadsView.scss';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 
 const UploadsView = () => {
   const { role } = useAuth();
@@ -18,8 +19,8 @@ const UploadsView = () => {
 
   const [createArchiveTagMutation] = useCreateArchiveTagMutation();
 
-  const { moveToCollection, bulkEdit } = useBulkOperations();
-
+  const { moveToCollection, bulkEdit, addToExhibition } = useBulkOperations();
+  const exhibitionId = useContext(ExhibitionIdContext);
   const uploadAreaProps = useMemo(() => {
     return role >= AuthRole.CURATOR
       ? {
@@ -56,7 +57,7 @@ const UploadsView = () => {
           queryParams={{ collections: { id: { null: true } } }}
           hashbase={'uploads'}
           uploadAreaProps={uploadAreaProps}
-          bulkOperations={[moveToCollection, bulkEdit]}
+          bulkOperations={[moveToCollection, bulkEdit, ...(exhibitionId ? [addToExhibition] : [])]}
         />
       </HideStats>
     </div>

@@ -20,6 +20,9 @@ import TagTableView from './views/tag-table/TagTableView';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import UnverifiedCommentsView from './views/unverified-comments/UnverifiedCommentsView';
 import UploadsView from './views/uploads/UploadsView';
+import ExhibitionTool from './views/exhibitions/ExhibitionTool';
+import ExhibitionViewer from './views/exhibitions/ExhibitionViewer';
+import ExhibitionFullOverview from './views/exhibitions/ExhibitionOverview';
 
 export const FALLBACK_PATH = '/start';
 
@@ -71,6 +74,24 @@ const routes: RouteConfig[] = [
     path: '/picture/:id',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
       return <PictureView initialPictureId={match.params.id} />;
+    },
+  },
+  {
+    path: '/exhibitiontool/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ExhibitionTool exhibitionId={match.params.id} />;
+    },
+  },
+  {
+    path: '/exhibitionOverview/:id?',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ExhibitionFullOverview archiveId={match.params.id} />;
+    },
+  },
+  {
+    path: '/exhibition/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ExhibitionViewer exhibitionId={match.params.id} />;
     },
   },
   {

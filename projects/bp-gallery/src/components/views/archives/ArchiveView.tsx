@@ -24,6 +24,8 @@ import { useTranslation } from 'react-i18next';
 import OverviewContainer, { OverviewContainerPosition } from '../../common/OverviewContainer';
 import { useMemo } from 'react';
 import { OverviewContainerTab } from '../../common/OverviewContainer';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
+import { useFlag } from '../../../helpers/growthbook';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -77,7 +79,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
       },
     ];
   }, [archiveId, t, visit]);
-
+  const showStories = useFlag('showstories');
+  const isCurator = role >= AuthRole.CURATOR;
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
   }
@@ -145,6 +148,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           </div>
         )}
       </div>
+
+      {(isCurator || showStories) && <ExhibitionOverview archiveId={archive.id} showTitle />}
       <ShowStats>
         <OverviewContainer
           tabs={tabs}

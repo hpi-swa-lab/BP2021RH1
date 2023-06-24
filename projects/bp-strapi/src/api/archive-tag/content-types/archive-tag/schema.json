@@ -43,9 +43,7 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": [
-        "images"
-      ]
+      "allowedTypes": ["images"]
     },
     "paypalClient": {
       "type": "string"
@@ -58,6 +56,12 @@
     },
     "email": {
       "type": "email"
+    },
+    "exhibitions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition.exhibition",
+      "mappedBy": "archive_tag"
     }
   }
 }

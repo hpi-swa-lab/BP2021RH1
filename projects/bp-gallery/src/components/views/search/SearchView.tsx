@@ -1,5 +1,5 @@
 import { Location } from 'history';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
@@ -12,9 +12,13 @@ import SearchBreadcrumbs from './SearchBreadcrumbs';
 import SearchHub from './SearchHub';
 import './SearchView.scss';
 import { isValidYear } from './helpers/addNewParamToSearchPath';
-import getSearchResultPictureIds from './helpers/getSearchResultPictureIds';
-import { SearchType, paramToTime } from './helpers/search-filters';
+import {
+  SearchType,
+  convertSearchParamsToPictureFilters,
+  paramToTime,
+} from './helpers/search-filters';
 import { toURLSearchParam } from './helpers/url-search-params';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'
@@ -44,27 +48,29 @@ const SearchView = () => {
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
-    // if (isAllSearchActive) {
-    const allSearchTerms = searchParams
-      .getAll(toURLSearchParam(SearchType.ALL))
-      .map(decodeURIComponent);
-    const searchTimes: string[][] = [];
-    allSearchTerms.forEach(searchTerm => {
-      if (isValidTimeSpecification(searchTerm)) {
-        const { startTime, endTime } = paramToTime(searchTerm);
-        searchTimes.push([searchTerm, startTime, endTime]);
-      }
-    });
-    return {
-      searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
-      searchTimes,
-    };
-    // }
-    // return convertSearchParamsToPictureFilters(searchParams);
-  }, [/*isAllSearchActive,*/ searchParams]);
-  if (import.meta.env.MODE === 'development')
-    getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
-  const { linkToCollection, bulkEdit } = useBulkOperations();
+    if (isAllSearchActive) {
+      const allSearchTerms = searchParams
+        .getAll(toURLSearchParam(SearchType.ALL))
+        .map(decodeURIComponent);
+      const searchTimes: string[][] = [];
+      allSearchTerms.forEach(searchTerm => {
+        if (isValidTimeSpecification(searchTerm)) {
+          const { startTime, endTime } = paramToTime(searchTerm);
+          searchTimes.push([searchTerm, startTime, endTime]);
+        }
+      });
+      return {
+        searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
+        searchTimes,
+      };
+    }
+    return convertSearchParamsToPictureFilters(searchParams);
+  }, [isAllSearchActive, searchParams]);
+  // if (import.meta.env.MODE === 'development')
+  //   getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
+  const { linkToCollection, bulkEdit, addToExhibition } = useBulkOperations();
+
+  const exhibitionId = useContext(ExhibitionIdContext);
 
   return (
     <div className='search-content'>
@@ -87,7 +93,11 @@ const SearchView = () => {
             queryParams={queryParams}
             isAllSearchActive={isAllSearchActive}
             hashbase={search}
-            bulkOperations={[linkToCollection, bulkEdit]}
+            bulkOperations={[
+              linkToCollection,
+              bulkEdit,
+              ...(exhibitionId ? [addToExhibition] : []),
+            ]}
             resultPictureCallback={(pictures: number) => {
               setAreResultsEmpty(pictures <= 0);
             }}

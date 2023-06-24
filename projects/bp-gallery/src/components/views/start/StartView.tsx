@@ -5,7 +5,7 @@ import {
   useGetArchivePictureCountsQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { useVariant } from '../../../helpers/growthbook';
+import { useFlag, useVariant } from '../../../helpers/growthbook';
 import { useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
@@ -18,12 +18,13 @@ import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
-import { AccessTime, ThumbUp } from '@mui/icons-material';
+import { AccessTime, AutoStories, ThumbUp } from '@mui/icons-material';
 import OverviewContainer, {
   OverviewContainerPosition,
   OverviewContainerTab,
 } from '../../common/OverviewContainer';
 import { useMemo } from 'react';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -64,6 +65,7 @@ const StartView = () => {
     );
   });
 
+  const showStories = useFlag('showstories');
   const tabs: OverviewContainerTab[] = useMemo(() => {
     return [
       {
@@ -91,8 +93,17 @@ const StartView = () => {
           />
         ),
       },
+      ...(showStories
+        ? [
+            {
+              title: t('exhibition.overview.our-exhibitions'),
+              icon: <AutoStories key='2' />,
+              content: <ExhibitionOverview backgroundColor='#efeae5' />,
+            },
+          ]
+        : []),
     ];
-  }, [t, visit]);
+  }, [t, visit, showStories]);
 
   const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
 
