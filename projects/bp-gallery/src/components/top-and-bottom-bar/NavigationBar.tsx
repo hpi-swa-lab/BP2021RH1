@@ -1,6 +1,7 @@
 import {
   Book,
   Chat,
+  Email,
   Folder,
   ImportContacts,
   Login,
@@ -8,7 +9,6 @@ import {
   Menu as MenuIcon,
   Person,
   Place,
-  Search,
   Sell,
   Upload,
 } from '@mui/icons-material';
@@ -76,13 +76,13 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
           {isMobile && <Book />}
           <span className='nav-element-title'>{t('common.start')}</span>
         </NavLink>
-        <NavLink to='/search' className='nav-element'>
-          {isMobile && <Search />}
-          <span className='nav-element-title'>{t('common.search')}</span>
-        </NavLink>
         <NavLink to='/discover' className='nav-element'>
           {isMobile && <ImportContacts />}
           <span className='nav-element-title'>Stöbern</span>
+        </NavLink>
+        <NavLink to='/contact' className='nav-element'>
+          {isMobile && <Email />}
+          <span className='nav-element-title'>{t('common.contact')}</span>
         </NavLink>
         <div
           className='nav-element'
