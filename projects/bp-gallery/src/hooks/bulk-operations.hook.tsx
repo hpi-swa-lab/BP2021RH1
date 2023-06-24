@@ -1,5 +1,4 @@
-import { Add, CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
-import { Button } from '@mui/material';
+import { ArtTrack, CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
@@ -86,11 +85,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
     },
     addToExhibition: {
       name: t('curator.addToExhibition'),
-      icon: (
-        <Button variant='contained'>
-          <Add /> {t('curator.addToExhibition')}
-        </Button>
-      ),
+      icon: <ArtTrack />,
       action: async (selectedPictures: FlatPicture[]) => {
         if (!exhibitionId)
           return openAlert({
