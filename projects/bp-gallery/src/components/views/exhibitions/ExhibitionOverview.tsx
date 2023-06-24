@@ -1,19 +1,19 @@
+import { Delete } from '@mui/icons-material';
 import { Box, Button, Card, CardContent, CardMedia, IconButton, Modal } from '@mui/material';
+import { t } from 'i18next';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   useCreateExhibitionMutation,
   useDeleteExhibitionMutation,
   useGetExhibitionsQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { FlatExhibition } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
-import { useVisit } from '../../../helpers/history';
-import { useTranslation } from 'react-i18next';
-import { Dispatch, SetStateAction, useCallback, useContext, useState } from 'react';
-import { Delete } from '@mui/icons-material';
-import { t } from 'i18next';
 import { asUploadPath } from '../../../helpers/app-helpers';
+import { useVisit } from '../../../helpers/history';
+import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import RichText from '../../common/RichText';
+import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { MobileContext } from '../../provider/MobileProvider';
 
 const ExhibitionCard = ({
@@ -256,13 +256,17 @@ const ExhibitionOverview = ({
     return node.offsetWidth < node.scrollWidth;
   };
 
-  const handleDiv = useCallback(
-    (node: HTMLDivElement | null) => {
-      setShowMore(isOverflow(node) && (exhibitions?.length ?? 0) > 1);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setShowMore, isCurator, exhibitions]
-  );
+  const [exhibitionsContainer, setExhibitionsContainer] = useState<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!exhibitionsContainer) {
+      return;
+    }
+    setShowMore(isOverflow(exhibitionsContainer) && (exhibitions?.length ?? 0) > 1);
+  }, [
+    exhibitionsContainer,
+    exhibitions,
+    /* content of exhibitionsContainer changes depending on isCurator */ isCurator,
+  ]);
 
   const [createExhibition] = useCreateExhibitionMutation();
 
@@ -288,7 +292,7 @@ const ExhibitionOverview = ({
           <div className={`flex ${isMobile ? 'flex-col' : ''}`}>
             <div className='relative overflow-hidden'>
               <div
-                ref={handleDiv}
+                ref={setExhibitionsContainer}
                 className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
               >
                 {filteredExhibitions?.map((exhibition, index) => (
