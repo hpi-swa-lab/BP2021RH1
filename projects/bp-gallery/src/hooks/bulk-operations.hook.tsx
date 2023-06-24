@@ -1,15 +1,14 @@
-import { useCallback, useContext } from 'react';
 import { Add, CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
+import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
+import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
+import { useAddExhibitionPictures } from '../components/views/exhibitions/add-exhibition-pictures.hook';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
-import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
-import { addExhibitionPicture } from '../components/views/exhibitions/ExhibitionHelper';
-import { AlertContext, AlertType } from '../components/provider/AlertProvider';
-import { useCreateExhibitionPictureMutation } from '../graphql/APIConnector';
-import { Button } from '@mui/material';
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -25,7 +24,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
   }, [dialog]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
-  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
+  const addExhibitionPictures = useAddExhibitionPictures();
   const openAlert = useContext(AlertContext);
 
   return {
@@ -98,7 +97,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
             alertType: AlertType.ERROR,
             message: t('exhibition.add-picture-to-collection-error'),
           });
-        await addExhibitionPicture(exhibitionId, selectedPictures, createExhibitionPicture);
+        await addExhibitionPictures(exhibitionId, selectedPictures);
         openAlert({
           alertType: AlertType.SUCCESS,
           message: t('exhibition.add-picture-to-collection-success', { count: 2 }),

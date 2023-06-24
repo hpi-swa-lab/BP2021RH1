@@ -1,10 +1,10 @@
 import { Description, Event, Folder, FolderSpecial, Place, Sell } from '@mui/icons-material';
-import { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import { Button } from '@mui/material';
 import { pick } from 'lodash';
+import { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
-  useCreateExhibitionPictureMutation,
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
@@ -20,7 +20,10 @@ import {
   FlatPicture,
   TagType,
 } from '../../../../../types/additionalFlatTypes';
+import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
+import { useAddExhibitionPictures } from '../../../exhibitions/add-exhibition-pictures.hook';
 import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
 import ArchiveTagField from './ArchiveTagField';
 import DateRangeSelectionField from './DateRangeSelectionField';
@@ -29,10 +32,6 @@ import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
 import TagSelectionField from './TagSelectionField';
-import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
-import { Button } from '@mui/material';
-import { addExhibitionPicture } from '../../../exhibitions/ExhibitionHelper';
-import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 
 export type Field = Pick<
   FlatPicture,
@@ -77,7 +76,7 @@ const PictureInfo = ({
   const [getAllPeople, peopleResponse] = useGetAllPersonTagsLazyQuery();
   const [getAllCollections, collectionsResponse] = useGetAllCollectionsLazyQuery();
 
-  const [createExhibitionPicture] = useCreateExhibitionPictureMutation();
+  const addExhibitionPictures = useAddExhibitionPictures();
   const openAlert = useContext(AlertContext);
 
   const allKeywords = useSimplifiedQueryResponseData(keywordsResponse.data)?.keywordTags;
@@ -126,7 +125,7 @@ const PictureInfo = ({
                   alertType: AlertType.SUCCESS,
                   message: t('exhibition.add-picture-to-collection-fail'),
                 });
-              addExhibitionPicture(exhibitionId, [picture], createExhibitionPicture);
+              addExhibitionPictures(exhibitionId, [picture]);
               openAlert({
                 alertType: AlertType.SUCCESS,
                 message: t('exhibition.add-picture-to-collection-success', { count: 1 }),
@@ -166,9 +165,9 @@ const PictureInfo = ({
         allTags={allPeople ?? []}
         onChange={people => {
           savePictureInfo({ person_tags: people });
-          /*unfortunately I did not find a way to get the id of a person tag that is being deleted, so i had to go
-           through all facetags and all persontags, every time something about the persontag collection is changed, 
-           to find out wether a facetag needs to be deleted */
+          /* unfortunately I did not find a way to get the id of a person tag that is being deleted, so i had to go
+             through all facetags and all persontags, every time something about the persontag collection is changed,
+             to find out wether a facetag needs to be deleted */
           {
             faceTaggingContext?.tags.forEach(ftag => {
               if (!people.find(person => person.id === ftag.personTagId) && ftag.id) {
