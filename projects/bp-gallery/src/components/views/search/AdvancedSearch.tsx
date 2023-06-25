@@ -2,26 +2,6 @@ import { MenuItem, Select, TextField } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type SearchFilters = {
-  keywordFilters: string[];
-  descriptionFilters: string[];
-  commentFilters: string[];
-  personFilters: string[];
-  faceTagFilters: string[];
-  locationFilters: string[];
-  collectionFilters: string[];
-  archiveFilters: string[];
-  timeRangeFilters: string[];
-};
-
-type FilterProps = {
-  attribute: string;
-  operatorOption: string;
-  firstValue: string;
-  secondValue: string;
-  combinatorOption: string;
-};
-
 const SearchFilterInput = ({ key, attribute }: { key: string; attribute: string }) => {
   const [rowKeys, SetRowKeys] = useState([0]);
   const [filters, SetFilters] = useState(['']);
@@ -57,6 +37,14 @@ const SearchFilterInput = ({ key, attribute }: { key: string; attribute: string 
       ))}
     </>
   );
+};
+
+type FilterProps = {
+  attribute: string;
+  operatorOption: string;
+  firstValue: string;
+  secondValue: string;
+  combinatorOption: string;
 };
 
 const SearchFilterInputItem = ({
@@ -277,13 +265,7 @@ const SearchFilterInputItem = ({
   );
 };
 
-const AdvancedSearch = ({
-  setFilters,
-  searchFilters,
-}: {
-  setFilters: (filters: string) => void;
-  searchFilters: SearchFilters;
-}) => {
+const AdvancedSearch = ({ setFilters }: { setFilters: (filters: string) => void }) => {
   const ATTRIBUTES = [
     'keyword',
     'description',

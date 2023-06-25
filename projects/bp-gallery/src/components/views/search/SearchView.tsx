@@ -103,7 +103,7 @@ const SearchView = () => {
   });
   return (
     <div className='search-content'>
-      <AdvancedSearch setFilters={() => {}} searchFilters={searchFilters}></AdvancedSearch>
+      <AdvancedSearch setFilters={() => {}}></AdvancedSearch>
       <div className='search-bar-container'>
         {(!areResultsEmpty || !search) && (
           <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />

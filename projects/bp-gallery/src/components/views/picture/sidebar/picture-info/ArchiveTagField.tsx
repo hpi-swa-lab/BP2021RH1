@@ -1,11 +1,11 @@
-import { useDialog, DialogPreset } from '../../../../provider/DialogProvider';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
 import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
-import { useTranslation } from 'react-i18next';
-import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 import { SearchType } from '../../../search/helpers/search-filters';
+import useAdvancedSearch from '../../../search/helpers/useDeprecatedAdvancedSearch';
 
 const ArchiveTagField = ({
   archiveTag,
