@@ -1,6 +1,7 @@
 import { Description, Event, Folder, FolderSpecial, Place, Sell } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { pick } from 'lodash';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
@@ -26,6 +27,9 @@ import {
   FlatPicture,
   TagType,
 } from '../../../../../types/additionalFlatTypes';
+import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
+import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
+import { useAddExhibitionPictures } from '../../../exhibitions/add-exhibition-pictures.hook';
 import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
 import ArchiveTagField from './ArchiveTagField';
 import DateRangeSelectionField from './DateRangeSelectionField';
@@ -85,6 +89,9 @@ const PictureInfo = ({
   const { canRun: canGetAllPeople } = useCanRunGetAllPersonTagsQuery();
   const { canRun: canGetAllCollections } = useCanRunGetAllCollectionsQuery();
 
+  const addExhibitionPictures = useAddExhibitionPictures();
+  const openAlert = useContext(AlertContext);
+
   const allKeywords = useSimplifiedQueryResponseData(keywordsResponse.data)?.keywordTags;
   const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.locationTags;
   const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
@@ -134,9 +141,32 @@ const PictureInfo = ({
     }
   }, [canGetAllCollections, getAllCollections]);
 
+  const exhibitionId = useContext(ExhibitionIdContext);
   return (
     <div className='picture-info'>
       {topInfo?.(anyFieldTouched, isSaving)}
+      {exhibitionId && (
+        <div className='m-2 grid place-content-stretch'>
+          <Button
+            variant='contained'
+            onClick={() => {
+              if (!exhibitionId)
+                return openAlert({
+                  alertType: AlertType.SUCCESS,
+                  message: t('exhibition.add-picture-to-collection-fail'),
+                });
+              addExhibitionPictures(exhibitionId, [picture]);
+              openAlert({
+                alertType: AlertType.SUCCESS,
+                message: t('exhibition.add-picture-to-collection-success', { count: 1 }),
+                duration: 2000,
+              });
+            }}
+          >
+            {t('curator.addToExhibition')}
+          </Button>
+        </div>
+      )}
       <PictureInfoField title={t('pictureFields.time')} icon={<Event />} type='date'>
         <DateRangeSelectionField
           timeRangeTag={picture.time_range_tag}

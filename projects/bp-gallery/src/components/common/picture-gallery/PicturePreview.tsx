@@ -37,6 +37,7 @@ const PicturePreview = ({
   pictureOrigin = PictureOrigin.REMOTE,
   adornments,
   allowClicks = true,
+  height,
   highQuality,
 }: {
   picture: FlatPicture;
@@ -45,6 +46,7 @@ const PicturePreview = ({
   adornments?: PicturePreviewAdornment[];
   allowClicks?: boolean;
   highQuality?: boolean;
+  height?: string;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
@@ -79,6 +81,7 @@ const PicturePreview = ({
             showStats ? `transition-filter duration-200 ${hovered ? 'brightness-75' : ''}` : ''
           }
           src={asUploadPath(picture.media, { highQuality: highQuality ?? false, pictureOrigin })}
+          style={height ? { height: height } : {}}
         />
         <div className='adornments'>
           {adornments?.map((adornment, index) =>

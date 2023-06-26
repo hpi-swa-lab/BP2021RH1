@@ -1,0 +1,56 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exhibitions",
+  "info": {
+    "singularName": "exhibition",
+    "pluralName": "exhibitions",
+    "displayName": "Exhibition",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "introduction": {
+      "type": "richtext"
+    },
+    "title_picture": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::exhibition-picture.exhibition-picture"
+    },
+    "exhibition_sections": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition-section.exhibition-section",
+      "mappedBy": "exhibition"
+    },
+    "epilog": {
+      "type": "richtext"
+    },
+    "exhibition_sources": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition-source.exhibition-source",
+      "mappedBy": "exhibition"
+    },
+    "idealot_pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition-picture.exhibition-picture",
+      "mappedBy": "exhibition_idealot"
+    },
+    "is_published": {
+      "type": "boolean"
+    },
+    "archive_tag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::archive-tag.archive-tag",
+      "inversedBy": "exhibitions"
+    }
+  }
+}

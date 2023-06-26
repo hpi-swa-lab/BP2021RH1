@@ -26,6 +26,9 @@
     "suggestions": "Vorschläge",
     "keywords": "Schlagworte",
     "persons": "Personen",
+    "edit": "Bearbeiten",
+    "yes": "Ja",
+    "no": "Nein",
     "clipboard": {
       "name": "Kopierte Links",
       "clear": "Ablage leeren",
@@ -361,6 +364,7 @@
     "delete": "Klicken um die Namensschild zu löschen"
   },
   "curator": {
+    "addToExhibition": "Zur Geschichte hinzufügen",
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "addPictures": "Bilder hinzufügen",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
@@ -556,6 +560,49 @@
     "our-categories": "Unsere Kategorien",
     "most-liked": "Bestbewertete Bilder",
     "our-pictures": "Unsere Bilder"
+  },
+  "exhibition": {
+    "overview": {
+      "to-exhibition": "Zur Geschichte",
+      "our-exhibitions": "Unsere Geschichten",
+      "delete-title": "Möchten Sie wirklich die Geschichte \"{{exhibitionName}}\" löschen?",
+      "new-exhibition": "Neue Geschichte"
+    },
+    "viewer": {
+      "epilog": "Epilog",
+      "sources": "Weiterführende Quellen"
+    },
+    "buttons": {
+      "publish": "Veröffentlichen",
+      "unPublish": "Privat stellen",
+      "addPictures": "Bilder hinzufügen"
+    },
+    "idealot": "Ideenparkplatz",
+    "tool": "Geschichte erstellen",
+    "add-picture-to-collection-success_one": "Ausgewähltes Bild wurde zum Ideenparkplatz hinzugefügt",
+    "add-picture-to-collection-success_other": "Ausgewählte Bilder wurden zum Ideenparkplatz hinzugefügt",
+    "add-picture-to-collection-fail": "Fehler. Schließe den Tab und klicke beim Ideenparkplatz nochmals auf \"Bilder hinzufügen\"",
+    "manipulator": {
+      "intro": {
+        "title-placeholder": "Titel",
+        "text-placeholder": "Einführungstext",
+        "title-picture": "Titelbild"
+      },
+      "section": {
+        "text-placeholder": "Abschnittstext",
+        "title-placeholder": "Abschnittstitel",
+        "sort": "Sortieren",
+        "exit-sort": "Fertig sortiert",
+        "add-section": "Neuer Abschnitt",
+        "dropzone": "Ziehe hier Bilder hinein"
+      },
+      "epilog": {
+        "title": "Epilog",
+        "text-placeholder": "Epilogtext",
+        "sources": "Quellen",
+        "add-source": "Quelle hinzufügen"
+      }
+    }
   },
   "tag-panel": {
     "name-of-sub-keyword": "Name des neuen Unterschlagworts für {{ parent }}:",

@@ -1,8 +1,12 @@
-import { CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
-import { useCallback } from 'react';
+import { Add, CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BulkOperation } from '../components/common/picture-gallery/BulkOperationsPanel';
+import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
+import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
+import { useAddExhibitionPictures } from '../components/views/exhibitions/add-exhibition-pictures.hook';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
 
@@ -19,6 +23,10 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       preset: DialogPreset.SELECT_COLLECTION,
     });
   }, [dialog]);
+
+  const exhibitionId = useContext(ExhibitionIdContext);
+  const addExhibitionPictures = useAddExhibitionPictures();
+  const openAlert = useContext(AlertContext);
 
   return {
     linkToCollection: {
@@ -80,6 +88,27 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
         onBulkEdit();
       },
       canRun: canBulkEdit => canBulkEdit,
+    },
+    addToExhibition: {
+      name: t('curator.addToExhibition'),
+      icon: (
+        <Button variant='contained'>
+          <Add /> {t('curator.addToExhibition')}
+        </Button>
+      ),
+      action: async (selectedPictures: FlatPicture[]) => {
+        if (!exhibitionId)
+          return openAlert({
+            alertType: AlertType.ERROR,
+            message: t('exhibition.add-picture-to-collection-error'),
+          });
+        await addExhibitionPictures(exhibitionId, selectedPictures);
+        openAlert({
+          alertType: AlertType.SUCCESS,
+          message: t('exhibition.add-picture-to-collection-success', { count: 2 }),
+          duration: 2000,
+        });
+      },
     },
   } satisfies Record<string, BulkOperation>;
 };

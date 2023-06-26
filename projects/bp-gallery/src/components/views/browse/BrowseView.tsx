@@ -1,6 +1,6 @@
 import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   PictureFiltersInput,
@@ -20,6 +20,7 @@ import Footer from '../../common/footer/Footer';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import './BrowseView.scss';
 import CollectionDescription from './CollectionDescription';
@@ -84,10 +85,10 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
   const collections: FlatCollection[] | undefined =
     useSimplifiedQueryResponseData(data)?.collections;
 
+  const exhibitionId = useContext(ExhibitionIdContext);
   //Curator functionality
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } = useBulkOperations(
-    collections?.[0]
-  );
+  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit, addToExhibition } =
+    useBulkOperations(collections?.[0]);
 
   const addCollection = useCallback(async () => {
     const collectionName = await dialog({
@@ -150,7 +151,13 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
               queryParams={getPictureFilters(collection.id)}
               hashbase={collection.name}
               uploadAreaProps={uploadAreaProps(collection)}
-              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+              bulkOperations={[
+                removeFromCollection,
+                linkToCollection,
+                moveToCollection,
+                bulkEdit,
+                ...(exhibitionId ? [addToExhibition] : []),
+              ]}
               textFilter={null}
             />
           </ShowStats>

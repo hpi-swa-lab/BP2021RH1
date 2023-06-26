@@ -26,6 +26,16 @@ export default {
                 }
               }
             }
+            verified_time_range_tag {
+              data {
+                id
+                attributes {
+                  start
+                  end
+                  isEstimate
+                }
+              }
+            }
             comments {
               data {
                 id

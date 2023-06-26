@@ -41,6 +41,7 @@ export type ArchivePictureCountEntityResponseCollection = {
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   email?: Maybe<Scalars['String']>;
+  exhibitions?: Maybe<ExhibitionRelationResponseCollection>;
   links?: Maybe<LinkRelationResponseCollection>;
   logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
@@ -54,6 +55,13 @@ export type ArchiveTag = {
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ArchiveTagExhibitionsArgs = {
+  filters?: InputMaybe<ExhibitionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ArchiveTagLinksArgs = {
@@ -87,6 +95,7 @@ export type ArchiveTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   email?: InputMaybe<StringFilterInput>;
+  exhibitions?: InputMaybe<ExhibitionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   links?: InputMaybe<LinkFiltersInput>;
   longDescription?: InputMaybe<StringFilterInput>;
@@ -106,6 +115,7 @@ export type ArchiveTagFiltersInput = {
 
 export type ArchiveTagInput = {
   email?: InputMaybe<Scalars['String']>;
+  exhibitions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
@@ -420,6 +430,249 @@ export type DescriptionRelationResponseCollection = {
   data: Array<DescriptionEntity>;
 };
 
+export type Exhibition = {
+  archive_tag?: Maybe<ArchiveTagEntityResponse>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  epilog?: Maybe<Scalars['String']>;
+  exhibition_sections?: Maybe<ExhibitionSectionRelationResponseCollection>;
+  exhibition_sources?: Maybe<ExhibitionSourceRelationResponseCollection>;
+  idealot_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
+  introduction?: Maybe<Scalars['String']>;
+  is_published?: Maybe<Scalars['Boolean']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  title?: Maybe<Scalars['String']>;
+  title_picture?: Maybe<ExhibitionPictureEntityResponse>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ExhibitionExhibition_SectionsArgs = {
+  filters?: InputMaybe<ExhibitionSectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExhibitionExhibition_SourcesArgs = {
+  filters?: InputMaybe<ExhibitionSourceFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExhibitionIdealot_PicturesArgs = {
+  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExhibitionEntity = {
+  attributes?: Maybe<Exhibition>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ExhibitionEntityResponse = {
+  data?: Maybe<ExhibitionEntity>;
+};
+
+export type ExhibitionEntityResponseCollection = {
+  data: Array<ExhibitionEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ExhibitionFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ExhibitionFiltersInput>>>;
+  archive_tag?: InputMaybe<ArchiveTagFiltersInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  epilog?: InputMaybe<StringFilterInput>;
+  exhibition_sections?: InputMaybe<ExhibitionSectionFiltersInput>;
+  exhibition_sources?: InputMaybe<ExhibitionSourceFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  idealot_pictures?: InputMaybe<ExhibitionPictureFiltersInput>;
+  introduction?: InputMaybe<StringFilterInput>;
+  is_published?: InputMaybe<BooleanFilterInput>;
+  not?: InputMaybe<ExhibitionFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ExhibitionFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  title?: InputMaybe<StringFilterInput>;
+  title_picture?: InputMaybe<ExhibitionPictureFiltersInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ExhibitionInput = {
+  archive_tag?: InputMaybe<Scalars['ID']>;
+  epilog?: InputMaybe<Scalars['String']>;
+  exhibition_sections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  exhibition_sources?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  idealot_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  introduction?: InputMaybe<Scalars['String']>;
+  is_published?: InputMaybe<Scalars['Boolean']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_picture?: InputMaybe<Scalars['ID']>;
+};
+
+export type ExhibitionPicture = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  exhibition_idealot?: Maybe<ExhibitionEntityResponse>;
+  exhibition_section?: Maybe<ExhibitionSectionEntityResponse>;
+  order?: Maybe<Scalars['Int']>;
+  picture?: Maybe<PictureEntityResponse>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  subtitle?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ExhibitionPictureEntity = {
+  attributes?: Maybe<ExhibitionPicture>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ExhibitionPictureEntityResponse = {
+  data?: Maybe<ExhibitionPictureEntity>;
+};
+
+export type ExhibitionPictureEntityResponseCollection = {
+  data: Array<ExhibitionPictureEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ExhibitionPictureFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ExhibitionPictureFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  exhibition_idealot?: InputMaybe<ExhibitionFiltersInput>;
+  exhibition_section?: InputMaybe<ExhibitionSectionFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<ExhibitionPictureFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ExhibitionPictureFiltersInput>>>;
+  order?: InputMaybe<IntFilterInput>;
+  picture?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  subtitle?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ExhibitionPictureInput = {
+  exhibition_idealot?: InputMaybe<Scalars['ID']>;
+  exhibition_section?: InputMaybe<Scalars['ID']>;
+  order?: InputMaybe<Scalars['Int']>;
+  picture?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  subtitle?: InputMaybe<Scalars['String']>;
+};
+
+export type ExhibitionPictureRelationResponseCollection = {
+  data: Array<ExhibitionPictureEntity>;
+};
+
+export type ExhibitionRelationResponseCollection = {
+  data: Array<ExhibitionEntity>;
+};
+
+export type ExhibitionSection = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  exhibition?: Maybe<ExhibitionEntityResponse>;
+  exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
+  order?: Maybe<Scalars['Int']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  text?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ExhibitionSectionExhibition_PicturesArgs = {
+  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExhibitionSectionEntity = {
+  attributes?: Maybe<ExhibitionSection>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ExhibitionSectionEntityResponse = {
+  data?: Maybe<ExhibitionSectionEntity>;
+};
+
+export type ExhibitionSectionEntityResponseCollection = {
+  data: Array<ExhibitionSectionEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ExhibitionSectionFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ExhibitionSectionFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  exhibition?: InputMaybe<ExhibitionFiltersInput>;
+  exhibition_pictures?: InputMaybe<ExhibitionPictureFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<ExhibitionSectionFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ExhibitionSectionFiltersInput>>>;
+  order?: InputMaybe<IntFilterInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  text?: InputMaybe<StringFilterInput>;
+  title?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ExhibitionSectionInput = {
+  exhibition?: InputMaybe<Scalars['ID']>;
+  exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  order?: InputMaybe<Scalars['Int']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  text?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ExhibitionSectionRelationResponseCollection = {
+  data: Array<ExhibitionSectionEntity>;
+};
+
+export type ExhibitionSource = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  exhibition?: Maybe<ExhibitionEntityResponse>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  source?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ExhibitionSourceEntity = {
+  attributes?: Maybe<ExhibitionSource>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ExhibitionSourceEntityResponse = {
+  data?: Maybe<ExhibitionSourceEntity>;
+};
+
+export type ExhibitionSourceEntityResponseCollection = {
+  data: Array<ExhibitionSourceEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ExhibitionSourceFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ExhibitionSourceFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  exhibition?: InputMaybe<ExhibitionFiltersInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<ExhibitionSourceFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ExhibitionSourceFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  source?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ExhibitionSourceInput = {
+  exhibition?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  source?: InputMaybe<Scalars['String']>;
+};
+
+export type ExhibitionSourceRelationResponseCollection = {
+  data: Array<ExhibitionSourceEntity>;
+};
+
 export type FaceTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   person_tag?: Maybe<PersonTagEntityResponse>;
@@ -508,6 +761,10 @@ export type GenericMorph =
   | ComponentCommonSynonyms
   | ComponentLocationCoordinates
   | Description
+  | Exhibition
+  | ExhibitionPicture
+  | ExhibitionSection
+  | ExhibitionSource
   | FaceTag
   | KeywordTag
   | Link
@@ -817,6 +1074,10 @@ export type Mutation = {
   createCollection?: Maybe<CollectionEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
   createDescription?: Maybe<DescriptionEntityResponse>;
+  createExhibition?: Maybe<ExhibitionEntityResponse>;
+  createExhibitionPicture?: Maybe<ExhibitionPictureEntityResponse>;
+  createExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
+  createExhibitionSource?: Maybe<ExhibitionSourceEntityResponse>;
   createFaceTag?: Maybe<FaceTagEntityResponse>;
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
   createLink?: Maybe<LinkEntityResponse>;
@@ -837,6 +1098,10 @@ export type Mutation = {
   deleteCollection?: Maybe<CollectionEntityResponse>;
   deleteComment?: Maybe<CommentEntityResponse>;
   deleteDescription?: Maybe<DescriptionEntityResponse>;
+  deleteExhibition?: Maybe<ExhibitionEntityResponse>;
+  deleteExhibitionPicture?: Maybe<ExhibitionPictureEntityResponse>;
+  deleteExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
+  deleteExhibitionSource?: Maybe<ExhibitionSourceEntityResponse>;
   deleteFaceTag?: Maybe<FaceTagEntityResponse>;
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
   deleteLink?: Maybe<LinkEntityResponse>;
@@ -877,6 +1142,10 @@ export type Mutation = {
   updateCollection?: Maybe<CollectionEntityResponse>;
   updateComment?: Maybe<CommentEntityResponse>;
   updateDescription?: Maybe<DescriptionEntityResponse>;
+  updateExhibition?: Maybe<ExhibitionEntityResponse>;
+  updateExhibitionPicture?: Maybe<ExhibitionPictureEntityResponse>;
+  updateExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
+  updateExhibitionSource?: Maybe<ExhibitionSourceEntityResponse>;
   updateFaceTag?: Maybe<FaceTagEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
   updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
@@ -944,6 +1213,22 @@ export type MutationCreateDescriptionArgs = {
   data: DescriptionInput;
 };
 
+export type MutationCreateExhibitionArgs = {
+  data: ExhibitionInput;
+};
+
+export type MutationCreateExhibitionPictureArgs = {
+  data: ExhibitionPictureInput;
+};
+
+export type MutationCreateExhibitionSectionArgs = {
+  data: ExhibitionSectionInput;
+};
+
+export type MutationCreateExhibitionSourceArgs = {
+  data: ExhibitionSourceInput;
+};
+
 export type MutationCreateFaceTagArgs = {
   data: FaceTagInput;
 };
@@ -1009,6 +1294,22 @@ export type MutationDeleteCommentArgs = {
 };
 
 export type MutationDeleteDescriptionArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteExhibitionArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteExhibitionPictureArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteExhibitionSectionArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteExhibitionSourceArgs = {
   id: Scalars['ID'];
 };
 
@@ -1160,6 +1461,26 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationUpdateDescriptionArgs = {
   data: DescriptionInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateExhibitionArgs = {
+  data: ExhibitionInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateExhibitionPictureArgs = {
+  data: ExhibitionPictureInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateExhibitionSectionArgs = {
+  data: ExhibitionSectionInput;
+  id: Scalars['ID'];
+};
+
+export type MutationUpdateExhibitionSourceArgs = {
+  data: ExhibitionSourceInput;
   id: Scalars['ID'];
 };
 
@@ -1382,6 +1703,7 @@ export type Picture = {
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
+  exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
   face_tags?: Maybe<FaceTagRelationResponseCollection>;
   is_not_a_place_count?: Maybe<Scalars['Int']>;
   is_text?: Maybe<Scalars['Boolean']>;
@@ -1419,6 +1741,13 @@ export type PictureCommentsArgs = {
 
 export type PictureDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureExhibition_PicturesArgs = {
+  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1508,6 +1837,7 @@ export type PictureFiltersInput = {
   comments?: InputMaybe<CommentFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
+  exhibition_pictures?: InputMaybe<ExhibitionPictureFiltersInput>;
   face_tags?: InputMaybe<FaceTagFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   is_not_a_place_count?: InputMaybe<IntFilterInput>;
@@ -1584,6 +1914,7 @@ export type PictureInput = {
   collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   face_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   is_not_a_place_count?: InputMaybe<Scalars['Int']>;
   is_text?: InputMaybe<Scalars['Boolean']>;
@@ -1625,6 +1956,14 @@ export type Query = {
   comments?: Maybe<CommentEntityResponseCollection>;
   description?: Maybe<DescriptionEntityResponse>;
   descriptions?: Maybe<DescriptionEntityResponseCollection>;
+  exhibition?: Maybe<ExhibitionEntityResponse>;
+  exhibitionPicture?: Maybe<ExhibitionPictureEntityResponse>;
+  exhibitionPictures?: Maybe<ExhibitionPictureEntityResponseCollection>;
+  exhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
+  exhibitionSections?: Maybe<ExhibitionSectionEntityResponseCollection>;
+  exhibitionSource?: Maybe<ExhibitionSourceEntityResponse>;
+  exhibitionSources?: Maybe<ExhibitionSourceEntityResponseCollection>;
+  exhibitions?: Maybe<ExhibitionEntityResponseCollection>;
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
@@ -1704,6 +2043,50 @@ export type QueryDescriptionArgs = {
 
 export type QueryDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryExhibitionArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryExhibitionPictureArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryExhibitionPicturesArgs = {
+  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryExhibitionSectionArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryExhibitionSectionsArgs = {
+  filters?: InputMaybe<ExhibitionSectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryExhibitionSourceArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryExhibitionSourcesArgs = {
+  filters?: InputMaybe<ExhibitionSourceFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryExhibitionsArgs = {
+  filters?: InputMaybe<ExhibitionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -2543,6 +2926,12 @@ export type GetDailyPictureInfoQuery = {
             attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
           } | null;
         } | null;
+        verified_time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
         comments?: { data: Array<{ id?: string | null }> } | null;
         media: {
           data?: {
@@ -2615,6 +3004,168 @@ export type GetDecadePreviewThumbnailsQuery = {
   } | null;
 };
 
+export type GetExhibitionQueryVariables = Exact<{
+  exhibitionId: Scalars['ID'];
+}>;
+
+export type GetExhibitionQuery = {
+  exhibition?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        title?: string | null;
+        introduction?: string | null;
+        epilog?: string | null;
+        is_published?: boolean | null;
+        title_picture?: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              subtitle?: string | null;
+              picture?: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    media: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          width?: number | null;
+                          height?: number | null;
+                          formats?: any | null;
+                          url: string;
+                          updatedAt?: any | null;
+                          provider: string;
+                        } | null;
+                      } | null;
+                    };
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+          } | null;
+        } | null;
+        idealot_pictures?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              subtitle?: string | null;
+              picture?: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    media: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          width?: number | null;
+                          height?: number | null;
+                          formats?: any | null;
+                          url: string;
+                          updatedAt?: any | null;
+                          provider: string;
+                        } | null;
+                      } | null;
+                    };
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+          }>;
+        } | null;
+        exhibition_sections?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              title?: string | null;
+              text?: string | null;
+              order?: number | null;
+              exhibition_pictures?: {
+                data: Array<{
+                  id?: string | null;
+                  attributes?: {
+                    order?: number | null;
+                    subtitle?: string | null;
+                    picture?: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          media: {
+                            data?: {
+                              id?: string | null;
+                              attributes?: {
+                                width?: number | null;
+                                height?: number | null;
+                                formats?: any | null;
+                                url: string;
+                                updatedAt?: any | null;
+                                provider: string;
+                              } | null;
+                            } | null;
+                          };
+                        } | null;
+                      } | null;
+                    } | null;
+                  } | null;
+                }>;
+              } | null;
+            } | null;
+          }>;
+        } | null;
+        exhibition_sources?: {
+          data: Array<{ id?: string | null; attributes?: { source?: string | null } | null }>;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
+};
+
+export type GetExhibitionsQueryVariables = Exact<{
+  archiveId?: InputMaybe<Scalars['ID']>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
+}>;
+
+export type GetExhibitionsQuery = {
+  exhibitions?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        title?: string | null;
+        introduction?: string | null;
+        is_published?: boolean | null;
+        archive_tag?: { data?: { id?: string | null } | null } | null;
+        title_picture?: {
+          data?: {
+            id?: string | null;
+            attributes?: {
+              picture?: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    media: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          width?: number | null;
+                          height?: number | null;
+                          formats?: any | null;
+                          url: string;
+                          updatedAt?: any | null;
+                          provider: string;
+                        } | null;
+                      } | null;
+                    };
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+          } | null;
+        } | null;
+      } | null;
+    }>;
+  } | null;
+};
+
 export type GetFaceTagsQueryVariables = Exact<{
   pictureId: Scalars['ID'];
 }>;
@@ -2632,6 +3183,48 @@ export type GetFaceTagsQuery = {
         } | null;
       } | null;
     }>;
+  } | null;
+};
+
+export type GetIdeaLotContentQueryVariables = Exact<{
+  exhibitionId: Scalars['ID'];
+}>;
+
+export type GetIdeaLotContentQuery = {
+  exhibition?: {
+    data?: {
+      id?: string | null;
+      attributes?: {
+        idealot_pictures?: {
+          data: Array<{
+            id?: string | null;
+            attributes?: {
+              subtitle?: string | null;
+              picture?: {
+                data?: {
+                  id?: string | null;
+                  attributes?: {
+                    media: {
+                      data?: {
+                        id?: string | null;
+                        attributes?: {
+                          width?: number | null;
+                          height?: number | null;
+                          formats?: any | null;
+                          url: string;
+                          updatedAt?: any | null;
+                          provider: string;
+                        } | null;
+                      } | null;
+                    };
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+          }>;
+        } | null;
+      } | null;
+    } | null;
   } | null;
 };
 
@@ -3263,6 +3856,44 @@ export type ContactMutationVariables = Exact<{
 
 export type ContactMutation = { contact?: number | null };
 
+export type CreateExhibitionMutationVariables = Exact<{
+  archiveId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
+}>;
+
+export type CreateExhibitionMutation = {
+  createExhibition?: { data?: { id?: string | null } | null } | null;
+};
+
+export type CreateExhibitionPictureMutationVariables = Exact<{
+  exhibitionIdealotId: Scalars['ID'];
+  pictureId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
+}>;
+
+export type CreateExhibitionPictureMutation = {
+  createExhibitionPicture?: { data?: { id?: string | null } | null } | null;
+};
+
+export type CreateExhibitionSectionMutationVariables = Exact<{
+  exhibitionId: Scalars['ID'];
+  order?: InputMaybe<Scalars['Int']>;
+  publishedAt: Scalars['DateTime'];
+}>;
+
+export type CreateExhibitionSectionMutation = {
+  createExhibitionSection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type CreateExhibitionSourceMutationVariables = Exact<{
+  exhibitionId: Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
+}>;
+
+export type CreateExhibitionSourceMutation = {
+  createExhibitionSource?: { data?: { id?: string | null } | null } | null;
+};
+
 export type CreateFaceTagMutationVariables = Exact<{
   pictureId: Scalars['ID'];
   personTagId: Scalars['ID'];
@@ -3351,6 +3982,14 @@ export type DeleteCollectionMutationVariables = Exact<{
 
 export type DeleteCollectionMutation = {
   deleteCollection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type DeleteExhibitionMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteExhibitionMutation = {
+  deleteExhibition?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeleteFaceTagMutationVariables = Exact<{
@@ -3557,6 +4196,45 @@ export type UpdateCollectionMutationVariables = Exact<{
 
 export type UpdateCollectionMutation = {
   updateCollection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateExhibitionMutationVariables = Exact<{
+  id: Scalars['ID'];
+  data: ExhibitionInput;
+}>;
+
+export type UpdateExhibitionMutation = {
+  updateExhibition?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateExhibitionPictureMutationVariables = Exact<{
+  id: Scalars['ID'];
+  data: ExhibitionPictureInput;
+}>;
+
+export type UpdateExhibitionPictureMutation = {
+  updateExhibitionPicture?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateExhibitionSectionMutationVariables = Exact<{
+  id: Scalars['ID'];
+  title?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Scalars['Int']>;
+  exhibitionPictureIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>>;
+}>;
+
+export type UpdateExhibitionSectionMutation = {
+  updateExhibitionSection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateExhibitionSourceMutationVariables = Exact<{
+  id: Scalars['ID'];
+  source: Scalars['String'];
+}>;
+
+export type UpdateExhibitionSourceMutation = {
+  updateExhibitionSource?: { data?: { id?: string | null } | null } | null;
 };
 
 export type UpdateFaceTagDirectionMutationVariables = Exact<{
@@ -4595,6 +5273,16 @@ export const GetDailyPictureInfoDocument = gql`
               }
             }
           }
+          verified_time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+                isEstimate
+              }
+            }
+          }
           comments {
             data {
               id
@@ -4862,6 +5550,263 @@ export type GetDecadePreviewThumbnailsQueryResult = Apollo.QueryResult<
   GetDecadePreviewThumbnailsQueryVariables
 >;
 
+export const GetExhibitionDocument = gql`
+  query getExhibition($exhibitionId: ID!) {
+    exhibition(id: $exhibitionId) {
+      data {
+        id
+        attributes {
+          title
+          introduction
+          epilog
+          is_published
+          title_picture {
+            data {
+              id
+              attributes {
+                subtitle
+                picture {
+                  data {
+                    id
+                    attributes {
+                      media {
+                        data {
+                          id
+                          attributes {
+                            width
+                            height
+                            formats
+                            url
+                            updatedAt
+                            provider
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          idealot_pictures {
+            data {
+              id
+              attributes {
+                subtitle
+                picture {
+                  data {
+                    id
+                    attributes {
+                      media {
+                        data {
+                          id
+                          attributes {
+                            width
+                            height
+                            formats
+                            url
+                            updatedAt
+                            provider
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          exhibition_sections(sort: "order:asc") {
+            data {
+              id
+              attributes {
+                title
+                text
+                order
+                exhibition_pictures(sort: "order:asc") {
+                  data {
+                    id
+                    attributes {
+                      order
+                      subtitle
+                      picture {
+                        data {
+                          id
+                          attributes {
+                            media {
+                              data {
+                                id
+                                attributes {
+                                  width
+                                  height
+                                  formats
+                                  url
+                                  updatedAt
+                                  provider
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          exhibition_sources {
+            data {
+              id
+              attributes {
+                source
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetExhibitionQuery__
+ *
+ * To run a query within a React component, call `useGetExhibitionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExhibitionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExhibitionQuery({
+ *   variables: {
+ *      exhibitionId: // value for 'exhibitionId'
+ *   },
+ * });
+ */
+export function useGetExhibitionQuery(
+  baseOptions: Apollo.QueryHookOptions<GetExhibitionQuery, GetExhibitionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetExhibitionQuery, GetExhibitionQueryVariables>(
+    GetExhibitionDocument,
+    options
+  );
+}
+
+export function useGetExhibitionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetExhibitionQuery, GetExhibitionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetExhibitionQuery, GetExhibitionQueryVariables>(
+    GetExhibitionDocument,
+    options
+  );
+}
+
+export type GetExhibitionQueryHookResult = ReturnType<typeof useGetExhibitionQuery>;
+
+export type GetExhibitionLazyQueryHookResult = ReturnType<typeof useGetExhibitionLazyQuery>;
+
+export type GetExhibitionQueryResult = Apollo.QueryResult<
+  GetExhibitionQuery,
+  GetExhibitionQueryVariables
+>;
+
+export const GetExhibitionsDocument = gql`
+  query getExhibitions($archiveId: ID, $sortBy: [String] = ["createdAt:desc"]) {
+    exhibitions(filters: { archive_tag: { id: { eq: $archiveId } } }, sort: $sortBy) {
+      data {
+        id
+        attributes {
+          title
+          introduction
+          is_published
+          archive_tag {
+            data {
+              id
+            }
+          }
+          title_picture {
+            data {
+              id
+              attributes {
+                picture {
+                  data {
+                    id
+                    attributes {
+                      media {
+                        data {
+                          id
+                          attributes {
+                            width
+                            height
+                            formats
+                            url
+                            updatedAt
+                            provider
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetExhibitionsQuery__
+ *
+ * To run a query within a React component, call `useGetExhibitionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExhibitionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExhibitionsQuery({
+ *   variables: {
+ *      archiveId: // value for 'archiveId'
+ *      sortBy: // value for 'sortBy'
+ *   },
+ * });
+ */
+export function useGetExhibitionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetExhibitionsQuery, GetExhibitionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetExhibitionsQuery, GetExhibitionsQueryVariables>(
+    GetExhibitionsDocument,
+    options
+  );
+}
+
+export function useGetExhibitionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetExhibitionsQuery, GetExhibitionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetExhibitionsQuery, GetExhibitionsQueryVariables>(
+    GetExhibitionsDocument,
+    options
+  );
+}
+
+export type GetExhibitionsQueryHookResult = ReturnType<typeof useGetExhibitionsQuery>;
+
+export type GetExhibitionsLazyQueryHookResult = ReturnType<typeof useGetExhibitionsLazyQuery>;
+
+export type GetExhibitionsQueryResult = Apollo.QueryResult<
+  GetExhibitionsQuery,
+  GetExhibitionsQueryVariables
+>;
+
 export const GetFaceTagsDocument = gql`
   query getFaceTags($pictureId: ID!) {
     faceTags(filters: { picture: { id: { eq: $pictureId } } }) {
@@ -4925,6 +5870,91 @@ export type GetFaceTagsLazyQueryHookResult = ReturnType<typeof useGetFaceTagsLaz
 export type GetFaceTagsQueryResult = Apollo.QueryResult<
   GetFaceTagsQuery,
   GetFaceTagsQueryVariables
+>;
+
+export const GetIdeaLotContentDocument = gql`
+  query getIdeaLotContent($exhibitionId: ID!) {
+    exhibition(id: $exhibitionId) {
+      data {
+        id
+        attributes {
+          idealot_pictures {
+            data {
+              id
+              attributes {
+                subtitle
+                picture {
+                  data {
+                    id
+                    attributes {
+                      media {
+                        data {
+                          id
+                          attributes {
+                            width
+                            height
+                            formats
+                            url
+                            updatedAt
+                            provider
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetIdeaLotContentQuery__
+ *
+ * To run a query within a React component, call `useGetIdeaLotContentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIdeaLotContentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIdeaLotContentQuery({
+ *   variables: {
+ *      exhibitionId: // value for 'exhibitionId'
+ *   },
+ * });
+ */
+export function useGetIdeaLotContentQuery(
+  baseOptions: Apollo.QueryHookOptions<GetIdeaLotContentQuery, GetIdeaLotContentQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetIdeaLotContentQuery, GetIdeaLotContentQueryVariables>(
+    GetIdeaLotContentDocument,
+    options
+  );
+}
+
+export function useGetIdeaLotContentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetIdeaLotContentQuery, GetIdeaLotContentQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetIdeaLotContentQuery, GetIdeaLotContentQueryVariables>(
+    GetIdeaLotContentDocument,
+    options
+  );
+}
+
+export type GetIdeaLotContentQueryHookResult = ReturnType<typeof useGetIdeaLotContentQuery>;
+
+export type GetIdeaLotContentLazyQueryHookResult = ReturnType<typeof useGetIdeaLotContentLazyQuery>;
+
+export type GetIdeaLotContentQueryResult = Apollo.QueryResult<
+  GetIdeaLotContentQuery,
+  GetIdeaLotContentQueryVariables
 >;
 
 export const GetKeywordTagsWithThumbnailDocument = gql`
@@ -6998,6 +8028,249 @@ export type ContactMutationOptions = Apollo.BaseMutationOptions<
   ContactMutationVariables
 >;
 
+export const CreateExhibitionDocument = gql`
+  mutation createExhibition($archiveId: ID!, $publishedAt: DateTime!) {
+    createExhibition(data: { archive_tag: $archiveId, publishedAt: $publishedAt }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateExhibitionMutationFn = Apollo.MutationFunction<
+  CreateExhibitionMutation,
+  CreateExhibitionMutationVariables
+>;
+
+/**
+ * __useCreateExhibitionMutation__
+ *
+ * To run a mutation, you first call `useCreateExhibitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExhibitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExhibitionMutation, { data, loading, error }] = useCreateExhibitionMutation({
+ *   variables: {
+ *      archiveId: // value for 'archiveId'
+ *      publishedAt: // value for 'publishedAt'
+ *   },
+ * });
+ */
+export function useCreateExhibitionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExhibitionMutation,
+    CreateExhibitionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateExhibitionMutation, CreateExhibitionMutationVariables>(
+    CreateExhibitionDocument,
+    options
+  );
+}
+
+export type CreateExhibitionMutationHookResult = ReturnType<typeof useCreateExhibitionMutation>;
+
+export type CreateExhibitionMutationResult = Apollo.MutationResult<CreateExhibitionMutation>;
+
+export type CreateExhibitionMutationOptions = Apollo.BaseMutationOptions<
+  CreateExhibitionMutation,
+  CreateExhibitionMutationVariables
+>;
+
+export const CreateExhibitionPictureDocument = gql`
+  mutation createExhibitionPicture(
+    $exhibitionIdealotId: ID!
+    $pictureId: ID!
+    $publishedAt: DateTime!
+  ) {
+    createExhibitionPicture(
+      data: {
+        exhibition_idealot: $exhibitionIdealotId
+        picture: $pictureId
+        publishedAt: $publishedAt
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateExhibitionPictureMutationFn = Apollo.MutationFunction<
+  CreateExhibitionPictureMutation,
+  CreateExhibitionPictureMutationVariables
+>;
+
+/**
+ * __useCreateExhibitionPictureMutation__
+ *
+ * To run a mutation, you first call `useCreateExhibitionPictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExhibitionPictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExhibitionPictureMutation, { data, loading, error }] = useCreateExhibitionPictureMutation({
+ *   variables: {
+ *      exhibitionIdealotId: // value for 'exhibitionIdealotId'
+ *      pictureId: // value for 'pictureId'
+ *      publishedAt: // value for 'publishedAt'
+ *   },
+ * });
+ */
+export function useCreateExhibitionPictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExhibitionPictureMutation,
+    CreateExhibitionPictureMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateExhibitionPictureMutation,
+    CreateExhibitionPictureMutationVariables
+  >(CreateExhibitionPictureDocument, options);
+}
+
+export type CreateExhibitionPictureMutationHookResult = ReturnType<
+  typeof useCreateExhibitionPictureMutation
+>;
+
+export type CreateExhibitionPictureMutationResult =
+  Apollo.MutationResult<CreateExhibitionPictureMutation>;
+
+export type CreateExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
+  CreateExhibitionPictureMutation,
+  CreateExhibitionPictureMutationVariables
+>;
+
+export const CreateExhibitionSectionDocument = gql`
+  mutation createExhibitionSection($exhibitionId: ID!, $order: Int, $publishedAt: DateTime!) {
+    createExhibitionSection(
+      data: { exhibition: $exhibitionId, order: $order, publishedAt: $publishedAt }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateExhibitionSectionMutationFn = Apollo.MutationFunction<
+  CreateExhibitionSectionMutation,
+  CreateExhibitionSectionMutationVariables
+>;
+
+/**
+ * __useCreateExhibitionSectionMutation__
+ *
+ * To run a mutation, you first call `useCreateExhibitionSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExhibitionSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExhibitionSectionMutation, { data, loading, error }] = useCreateExhibitionSectionMutation({
+ *   variables: {
+ *      exhibitionId: // value for 'exhibitionId'
+ *      order: // value for 'order'
+ *      publishedAt: // value for 'publishedAt'
+ *   },
+ * });
+ */
+export function useCreateExhibitionSectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExhibitionSectionMutation,
+    CreateExhibitionSectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateExhibitionSectionMutation,
+    CreateExhibitionSectionMutationVariables
+  >(CreateExhibitionSectionDocument, options);
+}
+
+export type CreateExhibitionSectionMutationHookResult = ReturnType<
+  typeof useCreateExhibitionSectionMutation
+>;
+
+export type CreateExhibitionSectionMutationResult =
+  Apollo.MutationResult<CreateExhibitionSectionMutation>;
+
+export type CreateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
+  CreateExhibitionSectionMutation,
+  CreateExhibitionSectionMutationVariables
+>;
+
+export const CreateExhibitionSourceDocument = gql`
+  mutation createExhibitionSource($exhibitionId: ID!, $publishedAt: DateTime!) {
+    createExhibitionSource(data: { exhibition: $exhibitionId, publishedAt: $publishedAt }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateExhibitionSourceMutationFn = Apollo.MutationFunction<
+  CreateExhibitionSourceMutation,
+  CreateExhibitionSourceMutationVariables
+>;
+
+/**
+ * __useCreateExhibitionSourceMutation__
+ *
+ * To run a mutation, you first call `useCreateExhibitionSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExhibitionSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExhibitionSourceMutation, { data, loading, error }] = useCreateExhibitionSourceMutation({
+ *   variables: {
+ *      exhibitionId: // value for 'exhibitionId'
+ *      publishedAt: // value for 'publishedAt'
+ *   },
+ * });
+ */
+export function useCreateExhibitionSourceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExhibitionSourceMutation,
+    CreateExhibitionSourceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateExhibitionSourceMutation,
+    CreateExhibitionSourceMutationVariables
+  >(CreateExhibitionSourceDocument, options);
+}
+
+export type CreateExhibitionSourceMutationHookResult = ReturnType<
+  typeof useCreateExhibitionSourceMutation
+>;
+
+export type CreateExhibitionSourceMutationResult =
+  Apollo.MutationResult<CreateExhibitionSourceMutation>;
+
+export type CreateExhibitionSourceMutationOptions = Apollo.BaseMutationOptions<
+  CreateExhibitionSourceMutation,
+  CreateExhibitionSourceMutationVariables
+>;
+
 export const CreateFaceTagDocument = gql`
   mutation createFaceTag(
     $pictureId: ID!
@@ -7571,6 +8844,60 @@ export type DeleteCollectionMutationResult = Apollo.MutationResult<DeleteCollect
 export type DeleteCollectionMutationOptions = Apollo.BaseMutationOptions<
   DeleteCollectionMutation,
   DeleteCollectionMutationVariables
+>;
+
+export const DeleteExhibitionDocument = gql`
+  mutation deleteExhibition($id: ID!) {
+    deleteExhibition(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteExhibitionMutationFn = Apollo.MutationFunction<
+  DeleteExhibitionMutation,
+  DeleteExhibitionMutationVariables
+>;
+
+/**
+ * __useDeleteExhibitionMutation__
+ *
+ * To run a mutation, you first call `useDeleteExhibitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteExhibitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteExhibitionMutation, { data, loading, error }] = useDeleteExhibitionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteExhibitionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteExhibitionMutation,
+    DeleteExhibitionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteExhibitionMutation, DeleteExhibitionMutationVariables>(
+    DeleteExhibitionDocument,
+    options
+  );
+}
+
+export type DeleteExhibitionMutationHookResult = ReturnType<typeof useDeleteExhibitionMutation>;
+
+export type DeleteExhibitionMutationResult = Apollo.MutationResult<DeleteExhibitionMutation>;
+
+export type DeleteExhibitionMutationOptions = Apollo.BaseMutationOptions<
+  DeleteExhibitionMutation,
+  DeleteExhibitionMutationVariables
 >;
 
 export const DeleteFaceTagDocument = gql`
@@ -8976,6 +10303,252 @@ export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollect
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
+>;
+
+export const UpdateExhibitionDocument = gql`
+  mutation updateExhibition($id: ID!, $data: ExhibitionInput!) {
+    updateExhibition(id: $id, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateExhibitionMutationFn = Apollo.MutationFunction<
+  UpdateExhibitionMutation,
+  UpdateExhibitionMutationVariables
+>;
+
+/**
+ * __useUpdateExhibitionMutation__
+ *
+ * To run a mutation, you first call `useUpdateExhibitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExhibitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExhibitionMutation, { data, loading, error }] = useUpdateExhibitionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateExhibitionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateExhibitionMutation,
+    UpdateExhibitionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateExhibitionMutation, UpdateExhibitionMutationVariables>(
+    UpdateExhibitionDocument,
+    options
+  );
+}
+
+export type UpdateExhibitionMutationHookResult = ReturnType<typeof useUpdateExhibitionMutation>;
+
+export type UpdateExhibitionMutationResult = Apollo.MutationResult<UpdateExhibitionMutation>;
+
+export type UpdateExhibitionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateExhibitionMutation,
+  UpdateExhibitionMutationVariables
+>;
+
+export const UpdateExhibitionPictureDocument = gql`
+  mutation updateExhibitionPicture($id: ID!, $data: ExhibitionPictureInput!) {
+    updateExhibitionPicture(id: $id, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateExhibitionPictureMutationFn = Apollo.MutationFunction<
+  UpdateExhibitionPictureMutation,
+  UpdateExhibitionPictureMutationVariables
+>;
+
+/**
+ * __useUpdateExhibitionPictureMutation__
+ *
+ * To run a mutation, you first call `useUpdateExhibitionPictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExhibitionPictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExhibitionPictureMutation, { data, loading, error }] = useUpdateExhibitionPictureMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateExhibitionPictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateExhibitionPictureMutation,
+    UpdateExhibitionPictureMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateExhibitionPictureMutation,
+    UpdateExhibitionPictureMutationVariables
+  >(UpdateExhibitionPictureDocument, options);
+}
+
+export type UpdateExhibitionPictureMutationHookResult = ReturnType<
+  typeof useUpdateExhibitionPictureMutation
+>;
+
+export type UpdateExhibitionPictureMutationResult =
+  Apollo.MutationResult<UpdateExhibitionPictureMutation>;
+
+export type UpdateExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
+  UpdateExhibitionPictureMutation,
+  UpdateExhibitionPictureMutationVariables
+>;
+
+export const UpdateExhibitionSectionDocument = gql`
+  mutation updateExhibitionSection(
+    $id: ID!
+    $title: String
+    $text: String
+    $order: Int
+    $exhibitionPictureIds: [ID]
+  ) {
+    updateExhibitionSection(
+      id: $id
+      data: {
+        title: $title
+        text: $text
+        exhibition_pictures: $exhibitionPictureIds
+        order: $order
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateExhibitionSectionMutationFn = Apollo.MutationFunction<
+  UpdateExhibitionSectionMutation,
+  UpdateExhibitionSectionMutationVariables
+>;
+
+/**
+ * __useUpdateExhibitionSectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateExhibitionSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExhibitionSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExhibitionSectionMutation, { data, loading, error }] = useUpdateExhibitionSectionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *      text: // value for 'text'
+ *      order: // value for 'order'
+ *      exhibitionPictureIds: // value for 'exhibitionPictureIds'
+ *   },
+ * });
+ */
+export function useUpdateExhibitionSectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateExhibitionSectionMutation,
+    UpdateExhibitionSectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateExhibitionSectionMutation,
+    UpdateExhibitionSectionMutationVariables
+  >(UpdateExhibitionSectionDocument, options);
+}
+
+export type UpdateExhibitionSectionMutationHookResult = ReturnType<
+  typeof useUpdateExhibitionSectionMutation
+>;
+
+export type UpdateExhibitionSectionMutationResult =
+  Apollo.MutationResult<UpdateExhibitionSectionMutation>;
+
+export type UpdateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateExhibitionSectionMutation,
+  UpdateExhibitionSectionMutationVariables
+>;
+
+export const UpdateExhibitionSourceDocument = gql`
+  mutation updateExhibitionSource($id: ID!, $source: String!) {
+    updateExhibitionSource(id: $id, data: { source: $source }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateExhibitionSourceMutationFn = Apollo.MutationFunction<
+  UpdateExhibitionSourceMutation,
+  UpdateExhibitionSourceMutationVariables
+>;
+
+/**
+ * __useUpdateExhibitionSourceMutation__
+ *
+ * To run a mutation, you first call `useUpdateExhibitionSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateExhibitionSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateExhibitionSourceMutation, { data, loading, error }] = useUpdateExhibitionSourceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useUpdateExhibitionSourceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateExhibitionSourceMutation,
+    UpdateExhibitionSourceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateExhibitionSourceMutation,
+    UpdateExhibitionSourceMutationVariables
+  >(UpdateExhibitionSourceDocument, options);
+}
+
+export type UpdateExhibitionSourceMutationHookResult = ReturnType<
+  typeof useUpdateExhibitionSourceMutation
+>;
+
+export type UpdateExhibitionSourceMutationResult =
+  Apollo.MutationResult<UpdateExhibitionSourceMutation>;
+
+export type UpdateExhibitionSourceMutationOptions = Apollo.BaseMutationOptions<
+  UpdateExhibitionSourceMutation,
+  UpdateExhibitionSourceMutationVariables
 >;
 
 export const UpdateFaceTagDirectionDocument = gql`

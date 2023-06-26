@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { useCanRunContactMutation } from '../../../graphql/APIConnector';
 import { useVisit } from '../../../helpers/history';
 import './Footer.scss';
 
@@ -7,14 +6,11 @@ const Footer = () => {
   const { t } = useTranslation();
   const { visit } = useVisit();
 
-  const { canRun: canContact } = useCanRunContactMutation();
-
   return (
     <div className='footer'>
       <div className='footer-content'>
         <div className='footer-info'>
           <h3>{t('footer.title')}</h3>
-          {canContact && <p onClick={() => visit('/contact')}>{t('footer.contact')}</p>}
           {/*
           <p>
           {t('footer.privacy')}

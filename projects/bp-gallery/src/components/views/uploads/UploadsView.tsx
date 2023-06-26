@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { useCanUseUploadsView } from '../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
 import { AddArchiveButton } from '../admin/archive/AddArchiveButton';
 import './UploadsView.scss';
@@ -12,7 +13,7 @@ import './UploadsView.scss';
 const UploadsView = () => {
   const { t } = useTranslation();
 
-  const { moveToCollection, bulkEdit } = useBulkOperations();
+  const { moveToCollection, bulkEdit, addToExhibition } = useBulkOperations();
 
   const uploadAreaProps = useMemo(
     () => ({
@@ -23,6 +24,8 @@ const UploadsView = () => {
     }),
     [t]
   );
+
+  const exhibitionId = useContext(ExhibitionIdContext);
 
   const { canUseUploadsView, loading: canUseUploadsViewLoading } = useCanUseUploadsView();
 
@@ -35,7 +38,11 @@ const UploadsView = () => {
             queryParams={{ collections: { id: { null: true } } }}
             hashbase={'uploads'}
             uploadAreaProps={uploadAreaProps}
-            bulkOperations={[moveToCollection, bulkEdit]}
+            bulkOperations={[
+              moveToCollection,
+              bulkEdit,
+              ...(exhibitionId ? [addToExhibition] : []),
+            ]}
             textFilter={null}
           />
         </HideStats>

@@ -6,7 +6,10 @@ import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
+import { useFlag } from '../../../helpers/growthbook';
+import { useBlockImageContextMenu } from '../../../hooks/block-image-context-menu.hook';
 import { useCanUseEditArchiveView } from '../../../hooks/can-do-hooks';
+import { useAuth } from '../../../hooks/context-hooks';
 import {
   FlatArchiveTag,
   FlatPicture,
@@ -22,11 +25,11 @@ import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { ShowStats } from '../../provider/ShowStatsProvider';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
-import { useBlockImageContextMenu } from '../../../hooks/block-image-context-menu.hook';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -42,6 +45,7 @@ const addUrlProtocol = (url: string) => {
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { visit, history } = useVisit();
   const { t } = useTranslation();
+  const { role } = useAuth();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -83,6 +87,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const onLogoContextMenu = useBlockImageContextMenu(archive?.restrictImageDownloading);
 
   const { canUseEditArchiveView } = useCanUseEditArchiveView(archiveId);
+
+  const showStories = useFlag('showstories');
+  const isCurator = role >= AuthRole.CURATOR;
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -152,6 +159,8 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
           </div>
         )}
       </div>
+
+      {(isCurator || showStories) && <ExhibitionOverview archiveId={archive.id} showTitle />}
       <ShowStats>
         <OverviewContainer
           tabs={tabs}

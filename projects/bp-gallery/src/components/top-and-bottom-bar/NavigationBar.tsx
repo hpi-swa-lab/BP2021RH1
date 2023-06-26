@@ -3,6 +3,7 @@ import {
   Book,
   Chat,
   ContactMail,
+  Email,
   Folder,
   ImportContacts,
   Login,
@@ -10,7 +11,6 @@ import {
   Menu as MenuIcon,
   Person,
   Place,
-  Search,
   Sell,
   Upload,
 } from '@mui/icons-material';
@@ -18,6 +18,7 @@ import { Menu, MenuItem } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
+import { useCanRunContactMutation } from '../../graphql/APIConnector';
 import {
   useCanUseAdminView,
   useCanUseCollectionCuratingView,
@@ -120,6 +121,8 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
     canUseMyAccountView,
   ]);
 
+  const { canRun: canContact } = useCanRunContactMutation();
+
   return (
     <>
       <div className='nav-bar'>
@@ -127,14 +130,16 @@ const NavigationBar = ({ isMobile }: { isMobile?: boolean }) => {
           {isMobile && <Book />}
           <span className='nav-element-title'>{t('common.start')}</span>
         </NavLink>
-        <NavLink to='/search' className='nav-element'>
-          {isMobile && <Search />}
-          <span className='nav-element-title'>{t('common.search')}</span>
-        </NavLink>
         <NavLink to='/discover' className='nav-element'>
           {isMobile && <ImportContacts />}
           <span className='nav-element-title'>Stöbern</span>
         </NavLink>
+        {canContact && (
+          <NavLink to='/contact' className='nav-element'>
+            {isMobile && <Email />}
+            <span className='nav-element-title'>{t('common.contact')}</span>
+          </NavLink>
+        )}
         <div className='nav-element' onClick={loggedIn ? logout : () => setOpenLogin(true)}>
           {isMobile && (loggedIn ? <Logout /> : <Login />)}
           <span className='nav-element-title'>
