@@ -13,6 +13,36 @@ export default {
           id
           attributes {
             name
+            coordinates {
+              latitude
+              longitude
+            }
+            child_tags {
+              data {
+                id
+                attributes {
+                  name
+                }
+              }
+            }
+            parent_tags {
+              data {
+                id
+                attributes {
+                  name
+                }
+              }
+            }
+            pictures {
+              data {
+                id
+              }
+            }
+            verified_pictures {
+              data {
+                id
+              }
+            }
             thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
               data {
                 attributes {

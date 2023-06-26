@@ -1,16 +1,17 @@
+import { AccessTime, ThumbUp, Widgets } from '@mui/icons-material';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVisit } from '../../../helpers/history';
 import { PictureOverviewType, TagType } from '../../../types/additionalFlatTypes';
-import PictureOverview from '../../common/PictureOverview';
-import TagOverview from '../../common/TagOverview';
-import { ShowStats } from '../../provider/ShowStatsProvider';
-import './DiscoverView.scss';
 import OverviewContainer, {
   OverviewContainerPosition,
   OverviewContainerTab,
 } from '../../common/OverviewContainer';
-import { AccessTime, ThumbUp } from '@mui/icons-material';
-import { useMemo } from 'react';
+import PictureMap from '../../common/PictureMap';
+import PictureOverview from '../../common/PictureOverview';
+import TagOverview from '../../common/TagOverview';
+import { ShowStats } from '../../provider/ShowStatsProvider';
+import './DiscoverView.scss';
 
 const DiscoverView = () => {
   const { visit } = useVisit();
@@ -46,6 +47,35 @@ const DiscoverView = () => {
     ];
   }, [t, visit]);
 
+  const locationTabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: 'Karte',
+        icon: <AccessTime key='0' />,
+        content: <PictureMap />,
+      },
+      {
+        title: t('discover.locations'),
+        icon: <Widgets key='1' />,
+        content: (
+          <TagOverview
+            type={TagType.LOCATION}
+            queryParams={{
+              and: [
+                { verified_pictures: { id: { not: { eq: '-1' } } } },
+                { visible: { eq: true } },
+              ],
+            }}
+            onClick={() => {
+              visit('/show-more/location');
+            }}
+            rows={2}
+          />
+        ),
+      },
+    ];
+  }, [t, visit]);
+
   return (
     <div className='discover-container'>
       <ShowStats>
@@ -70,16 +100,9 @@ const DiscoverView = () => {
         rows={2}
       />
 
-      <TagOverview
-        title={t('discover.locations')}
-        type={TagType.LOCATION}
-        queryParams={{
-          and: [{ verified_pictures: { id: { not: { eq: '-1' } } } }, { visible: { eq: true } }],
-        }}
-        onClick={() => {
-          visit('/show-more/location');
-        }}
-        rows={2}
+      <OverviewContainer
+        tabs={locationTabs}
+        overviewPosition={OverviewContainerPosition.DISCOVER_VIEW}
       />
 
       <TagOverview

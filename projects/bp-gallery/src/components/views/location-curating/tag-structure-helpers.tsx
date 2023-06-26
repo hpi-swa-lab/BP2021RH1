@@ -192,3 +192,81 @@ export const useGetBreadthFirstOrder = (
 
   return tagOrder;
 };
+
+export const useGetChildMatrix = (flattenedTags: FlatTag[] | undefined) => {
+  const tagsById = useMemo(() => {
+    if (!flattenedTags) return;
+    return Object.fromEntries(
+      flattenedTags.map(tag => [
+        tag.id,
+        { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
+      ])
+    );
+  }, [flattenedTags]);
+
+  const tagTree = useMemo(() => {
+    if (!flattenedTags || !tagsById) return undefined;
+
+    // set child tags for each tag in tree
+    for (const tag of Object.values(tagsById)) {
+      tag.parent_tags?.forEach(parentTag => {
+        tagsById[parentTag.id].child_tags.push(tag);
+      });
+    }
+    for (const tag of Object.values(tagsById)) {
+      tagsById[tag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    // filter for roots of tree
+    const sortedTagTree = Object.values(tagsById)
+      .filter(tag => !tag.parent_tags?.length || tag.root)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    //replace stubs with complete parent tags
+    for (const flatTag of flattenedTags) {
+      if (!(flatTag.id in tagsById)) {
+        continue;
+      }
+      const tag = tagsById[flatTag.id];
+      tag.parent_tags = tag.parent_tags
+        ?.map(parentTag => tagsById[parentTag.id])
+        .filter(parentTag => !!parentTag);
+    }
+
+    return sortedTagTree;
+  }, [flattenedTags, tagsById]);
+
+  const topologicalOrder = useGetTopologicalOrder(tagsById);
+  const childMatrix = useMemo(() => {
+    if (!tagTree || !topologicalOrder || !flattenedTags) return;
+
+    const childrenMatrix = Object.fromEntries(
+      topologicalOrder.map(tag => [
+        tag.id,
+        Object.fromEntries(topologicalOrder.map(otherTag => [otherTag.id, false])),
+      ])
+    );
+
+    const visit = (tag: FlatTag) => {
+      if (!tag.child_tags) {
+        return;
+      }
+      for (const child of tag.child_tags) {
+        flattenedTags.forEach(flatTag => {
+          childrenMatrix[child.id][flatTag.id] =
+            childrenMatrix[child.id][flatTag.id] || childrenMatrix[tag.id][flatTag.id];
+        });
+        childrenMatrix[child.id][tag.id] = true;
+      }
+    };
+
+    for (const tag of topologicalOrder) {
+      visit(tag);
+    }
+
+    return childrenMatrix;
+  }, [flattenedTags, tagTree, topologicalOrder]);
+
+  return {
+    childMatrix,
+  };
+};

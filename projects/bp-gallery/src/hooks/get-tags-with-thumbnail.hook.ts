@@ -1,4 +1,4 @@
-import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from './get-pictures.hook';
+import { WatchQueryFetchPolicy } from '@apollo/client';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
@@ -7,7 +7,7 @@ import {
 } from '../graphql/APIConnector';
 import { TagType } from '../types/additionalFlatTypes';
 import useGenericTagEndpoints from './generic-endpoints.hook';
-import { WatchQueryFetchPolicy } from '@apollo/client';
+import { NUMBER_OF_PICTURES_LOADED_PER_FETCH } from './get-pictures.hook';
 
 const useGetTagsWithThumbnail = (
   queryParams: LocationTagFiltersInput | KeywordTagFiltersInput | PersonTagFiltersInput | undefined,
@@ -15,7 +15,8 @@ const useGetTagsWithThumbnail = (
   type: TagType,
   sortBy: string[] = ['name:asc'],
   limit: number = NUMBER_OF_PICTURES_LOADED_PER_FETCH,
-  fetchPolicy?: WatchQueryFetchPolicy
+  fetchPolicy?: WatchQueryFetchPolicy,
+  noLimit?: boolean
 ) => {
   const { tagsWithThumbnailQuery } = useGenericTagEndpoints(type);
 
@@ -30,7 +31,7 @@ const useGetTagsWithThumbnail = (
       } as PictureFiltersInput,
       pagination: {
         start: 0,
-        limit: limit,
+        limit: noLimit ? undefined : limit,
       },
       sortBy,
     },
