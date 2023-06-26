@@ -239,7 +239,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
           ),
         }));
       return (
-        <Accordion key={archive?.id ?? 'system'} sx={{ backgroundColor: '#e9e9e9' }}>
+        <Accordion key={archive?.id ?? type} sx={{ backgroundColor: '#e9e9e9' }}>
           <AccordionSummary expandIcon={<ExpandMore />}>
             <Typography fontWeight='bold'>
               <CoverageCheckbox

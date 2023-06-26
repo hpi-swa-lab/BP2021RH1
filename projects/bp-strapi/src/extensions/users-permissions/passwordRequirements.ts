@@ -8,6 +8,7 @@ import { getAuthController, wrap } from './helper';
 
 const minimumPasswordLength = 12;
 const minimumCharacterClasses = [/[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/];
+export const minimalPasswordSatisfyingRequirements = 'aA0!'.padEnd(minimumPasswordLength, '-');
 
 const fulfillsPasswordRequirements = (password: string) => {
   if (password.length < minimumPasswordLength) {
