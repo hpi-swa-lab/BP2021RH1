@@ -24,12 +24,14 @@ import {
   useCanRunGetUsersQuery,
   useCanRunMergeCollectionsMutation,
   useCanRunMultipleCreatePictureMutations,
+  useCanRunMultipleUpdateExhibitionMutations,
   useCanRunMultipleUploadMutation,
   useCanRunRemoveArchiveTagMutation,
   useCanRunRemoveUploadMutation,
   useCanRunRemoveUserMutation,
   useCanRunUpdateArchiveMutation,
   useCanRunUpdateCollectionMutation,
+  useCanRunUpdateExhibitionMutation,
   useCanRunUpdatePictureMutation,
   useCanRunUpdateUserMutation,
   useGetAllArchiveTagsQuery,
@@ -225,6 +227,31 @@ export const useCanUseCollectionCuratingView = () => {
       canDeleteCollectionLoading ||
       canMergeCollectionsLoading ||
       canCreateSubCollectionLoading,
+  };
+};
+
+export const useCanEditExhibition = (id: string | null | undefined) => {
+  // Use updateExhibitionMutation as a representative for all mutations
+  // used in exhibition editing, since they all ultimately check the
+  // exhibition that is edited, but take ids for other entities such as
+  // ExhibitionPicture, which aren't available here.
+  const { canRun: canEditExhibition, loading } = useCanRunUpdateExhibitionMutation({
+    variables: {
+      id: id ?? undefined,
+    },
+  });
+  return { canEditExhibition, loading };
+};
+
+export const useCanEditMultipleExhibitions = (ids: (string | null | undefined)[]) => {
+  // same as in useCanEditExhibition
+  const { canRunMultiple: canEditExhibitions, loading } =
+    useCanRunMultipleUpdateExhibitionMutations({
+      variableSets: ids.map(id => ({ id: id ?? undefined })),
+    });
+  return {
+    canEditExhibitions,
+    loading,
   };
 };
 

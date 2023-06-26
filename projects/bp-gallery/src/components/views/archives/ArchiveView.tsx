@@ -9,7 +9,6 @@ import { asUploadPath } from '../../../helpers/app-helpers';
 import { useFlag } from '../../../helpers/growthbook';
 import { useBlockImageContextMenu } from '../../../hooks/block-image-context-menu.hook';
 import { useCanUseEditArchiveView } from '../../../hooks/can-do-hooks';
-import { useAuth } from '../../../hooks/context-hooks';
 import {
   FlatArchiveTag,
   FlatPicture,
@@ -45,7 +44,6 @@ const addUrlProtocol = (url: string) => {
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { visit, history } = useVisit();
   const { t } = useTranslation();
-  const { role } = useAuth();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
   const archive: FlatArchiveTag | undefined = useSimplifiedQueryResponseData(data)?.archiveTag;
@@ -89,7 +87,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { canUseEditArchiveView } = useCanUseEditArchiveView(archiveId);
 
   const showStories = useFlag('showstories');
-  const isCurator = role >= AuthRole.CURATOR;
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -160,7 +157,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         )}
       </div>
 
-      {(isCurator || showStories) && <ExhibitionOverview archiveId={archive.id} showTitle />}
+      {showStories && <ExhibitionOverview archiveId={archive.id} showTitle />}
       <ShowStats>
         <OverviewContainer
           tabs={tabs}

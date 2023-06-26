@@ -1,27 +1,29 @@
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  UniqueIdentifier,
+  useDroppable,
+} from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Button, IconButton, Paper, TextField } from '@mui/material';
 import { UIEventHandler, useContext, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { channelFactory } from '../../../helpers/channel-helpers';
+import { useCanEditExhibition } from '../../../hooks/can-do-hooks';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import TextEditor from '../../common/editors/TextEditor';
-import { useTranslation } from 'react-i18next';
 import {
   ExhibitionGetContext,
   ExhibitionSectionUtilsContext,
   ExhibitionSetContext,
   ExhibitionStateManager,
 } from './ExhibitonUtils';
-import {
-  DndContext,
-  DragOverlay,
-  DragEndEvent,
-  DragStartEvent,
-  UniqueIdentifier,
-  useDroppable,
-} from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
-import { channelFactory } from '../../../helpers/channel-helpers';
 
 const Idealot = () => {
   const { t } = useTranslation();
@@ -336,8 +338,11 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
     return () => exhibitionChannel.close();
   });
 
+  const { canEditExhibition, loading: canEditExhibitionLoading } =
+    useCanEditExhibition(exhibitionId);
+
   return (
-    <>
+    <ProtectedRoute canUse={canEditExhibition} canUseLoading={canEditExhibitionLoading}>
       {exhibition && (
         <>
           <ExhibitionStateManager exhibition={exhibition}>
@@ -348,7 +353,7 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
           </ExhibitionStateManager>
         </>
       )}
-    </>
+    </ProtectedRoute>
   );
 };
 

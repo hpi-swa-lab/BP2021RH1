@@ -4,6 +4,7 @@ import { t } from 'i18next';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  useCanRunCreateExhibitionMutation,
   useCreateExhibitionMutation,
   useDeleteExhibitionMutation,
   useGetExhibitionsQuery,
@@ -11,18 +12,19 @@ import {
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { useVisit } from '../../../helpers/history';
+import { useCanEditMultipleExhibitions } from '../../../hooks/can-do-hooks';
+import { useAuth } from '../../../hooks/context-hooks';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import RichText from '../../common/RichText';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { MobileContext } from '../../provider/MobileProvider';
 
 const ExhibitionCard = ({
   exhibition,
-  isCurator,
+  canEdit,
   isBig,
 }: {
   exhibition: FlatExhibition;
-  isCurator: boolean;
+  canEdit: boolean;
   isBig: boolean;
 }) => {
   const titlePictureLink = exhibition.title_picture
@@ -35,7 +37,7 @@ const ExhibitionCard = ({
     <>
       {isBig ? (
         <ExhibitionBigCard
-          isCurator={isCurator}
+          canEdit={canEdit}
           titlePictureLink={titlePictureLink}
           link={link}
           editLink={editLink}
@@ -45,7 +47,7 @@ const ExhibitionCard = ({
         />
       ) : (
         <ExhibitionSmallCard
-          isCurator={isCurator}
+          canEdit={canEdit}
           titlePictureLink={titlePictureLink}
           link={link}
           editLink={editLink}
@@ -64,7 +66,7 @@ const ExhibitionCard = ({
 };
 
 const ExhibitionBigCard = ({
-  isCurator,
+  canEdit,
   link,
   editLink,
   titlePictureLink,
@@ -72,7 +74,7 @@ const ExhibitionBigCard = ({
   exhibitionIntroduction,
   setIsPopupOpen,
 }: {
-  isCurator: boolean;
+  canEdit: boolean;
   link: string;
   editLink: string;
   titlePictureLink: string;
@@ -106,7 +108,7 @@ const ExhibitionBigCard = ({
           >
             {t('exhibition.overview.to-exhibition')}
           </Button>
-          {isCurator && (
+          {canEdit && (
             <Button
               onClick={e => {
                 e.stopPropagation();
@@ -118,7 +120,7 @@ const ExhibitionBigCard = ({
           )}
         </div>
       </div>
-      {isCurator && (
+      {canEdit && (
         <div className='absolute top-2 right-2 bg-white rounded-full'>
           <IconButton onClick={() => setIsPopupOpen(true)}>
             <Delete />
@@ -130,14 +132,14 @@ const ExhibitionBigCard = ({
 };
 
 const ExhibitionSmallCard = ({
-  isCurator,
+  canEdit,
   link,
   editLink,
   titlePictureLink,
   exhibitionTitle,
   setIsPopupOpen,
 }: {
-  isCurator: boolean;
+  canEdit: boolean;
   link: string;
   editLink: string;
   titlePictureLink: string;
@@ -152,16 +154,16 @@ const ExhibitionSmallCard = ({
       <Card
         className='relative cursor-pointer'
         onClick={() => {
-          !isCurator && visit(link);
+          !canEdit && visit(link);
         }}
       >
         <CardMedia component='img' height='200' image={titlePictureLink} alt='exhibition picture' />
         <CardContent
-          sx={{ height: isCurator ? '4rem !important' : '2rem !important' }}
+          sx={{ height: canEdit ? '4rem !important' : '2rem !important' }}
           className='flex flex-col justify-between'
         >
           <div className='text-xl font-bold line-clamp-1'>{exhibitionTitle}</div>
-          {isCurator && (
+          {canEdit && (
             <div className='flex gap-2 flex-row-reverse'>
               <Button
                 onClick={e => {
@@ -182,7 +184,7 @@ const ExhibitionSmallCard = ({
             </div>
           )}
         </CardContent>
-        {isCurator && (
+        {canEdit && (
           <div className='absolute top-2 right-2 bg-white rounded-full'>
             <IconButton onClick={() => setIsPopupOpen(true)}>
               <Delete />
@@ -245,11 +247,10 @@ const ExhibitionOverview = ({
   });
   const exhibitions: FlatExhibition[] | undefined =
     useSimplifiedQueryResponseData(exhibitionsData)?.exhibitions;
-  const { role } = useAuth();
+  const { userId } = useAuth();
   const { visit } = useVisit();
   const { t } = useTranslation();
   const { isMobile } = useContext(MobileContext);
-  const isCurator = role >= AuthRole.CURATOR;
   const [showMore, setShowMore] = useState(false);
   const isOverflow = (node: HTMLDivElement | null) => {
     if (!node) return false;
@@ -265,10 +266,15 @@ const ExhibitionOverview = ({
   }, [
     exhibitionsContainer,
     exhibitions,
-    /* content of exhibitionsContainer changes depending on isCurator */ isCurator,
+    /* content of exhibitionsContainer changes depending on permissions of user */ userId,
   ]);
 
   const [createExhibition] = useCreateExhibitionMutation();
+  const { canRun: canCreateExhibition } = useCanRunCreateExhibitionMutation({
+    variables: {
+      archiveId,
+    },
+  });
 
   const newExhibition = async () => {
     const result = await createExhibition({
@@ -278,9 +284,12 @@ const ExhibitionOverview = ({
     id && visit(`/exhibitiontool/${id}`);
   };
 
-  const filteredExhibitions = exhibitions?.filter(
-    exhibition => isCurator || exhibition.is_published
+  const { canEditExhibitions } = useCanEditMultipleExhibitions(
+    exhibitions?.map(exhibition => exhibition.id) ?? []
   );
+  const filteredExhibitions = exhibitions
+    ?.map((exhibition, index) => [exhibition, canEditExhibitions[index] ?? false] as const)
+    ?.filter(([exhibition, canEdit]) => canEdit || exhibition.is_published);
 
   return (
     <>
@@ -295,12 +304,12 @@ const ExhibitionOverview = ({
                 ref={setExhibitionsContainer}
                 className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
               >
-                {filteredExhibitions?.map((exhibition, index) => (
+                {filteredExhibitions?.map(([exhibition, canEdit], index) => (
                   <ExhibitionCard
                     isBig={false}
                     key={index}
                     exhibition={exhibition}
-                    isCurator={isCurator && !isMobile}
+                    canEdit={canEdit && !isMobile}
                   />
                 ))}
               </div>
@@ -320,7 +329,7 @@ const ExhibitionOverview = ({
                 >
                   {t('common.more')}
                 </Button>
-                {isCurator && archiveId && !isMobile && (
+                {canCreateExhibition && archiveId && !isMobile && (
                   <Button variant='contained' onClick={newExhibition}>
                     {t('exhibition.overview.new-exhibition')}
                   </Button>
@@ -328,7 +337,7 @@ const ExhibitionOverview = ({
               </div>
             ) : (
               <div className='grid place-content-center p-8'>
-                {isCurator && archiveId && (
+                {canCreateExhibition && archiveId && (
                   <Button variant='contained' onClick={newExhibition}>
                     {t('exhibition.overview.new-exhibition')}
                   </Button>
@@ -349,8 +358,9 @@ const ExhibitionFullOverview = ({ archiveId }: { archiveId: string | undefined }
   });
   const exhibitions: FlatExhibition[] | undefined =
     useSimplifiedQueryResponseData(exhibitionsData)?.exhibitions;
-  const { role } = useAuth();
-  const isCurator = role >= AuthRole.CURATOR;
+  const { canEditExhibitions } = useCanEditMultipleExhibitions(
+    exhibitions?.map(exhibition => exhibition.id) ?? []
+  );
   const { isMobile } = useContext(MobileContext);
   return (
     <div className='max-w-[1200px] bg-white m-auto min-h-main'>
@@ -358,13 +368,14 @@ const ExhibitionFullOverview = ({ archiveId }: { archiveId: string | undefined }
       {exhibitions && (
         <div className='flex flex-col divide-y-1 divide-x-0 divide-solid divide-slate-300 p-2'>
           {exhibitions
-            .filter(exhibition => isCurator || exhibition.is_published)
-            .map((exhibition, index) => (
+            .map((exhibition, index) => [exhibition, canEditExhibitions[index] ?? false] as const)
+            .filter(([exhibition, canEdit]) => canEdit || exhibition.is_published)
+            .map(([exhibition, canEdit], index) => (
               <ExhibitionCard
                 key={index}
                 isBig={!isMobile}
                 exhibition={exhibition}
-                isCurator={isCurator && !isMobile}
+                canEdit={canEdit && !isMobile}
               />
             ))}
         </div>

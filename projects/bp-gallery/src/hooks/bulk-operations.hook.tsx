@@ -7,6 +7,7 @@ import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
 import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
 import { useAddExhibitionPictures } from '../components/views/exhibitions/add-exhibition-pictures.hook';
+import { useCanRunCreateExhibitionPictureMutation } from '../graphql/APIConnector';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
 
@@ -26,6 +27,11 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
 
   const exhibitionId = useContext(ExhibitionIdContext);
   const addExhibitionPictures = useAddExhibitionPictures();
+  const { canRun: canAddExhibitionPictures } = useCanRunCreateExhibitionPictureMutation({
+    variables: {
+      exhibitionIdealotId: exhibitionId,
+    },
+  });
   const openAlert = useContext(AlertContext);
 
   return {
@@ -109,6 +115,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           duration: 2000,
         });
       },
+      canRun: canAddExhibitionPictures,
     },
   } satisfies Record<string, BulkOperation>;
 };
