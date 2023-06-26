@@ -1,6 +1,7 @@
 import { Maybe, ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
 import crypto from 'crypto';
 import { omit } from 'lodash';
+import { minimalPasswordSatisfyingRequirements } from '../../../extensions/users-permissions/passwordRequirements';
 
 type AddPermissionArgs = {
   user_id: Maybe<string>;
@@ -120,7 +121,8 @@ export const addUser = async (
   // register won't work without a password, so we use a random temporary one
   // to prevent the unlikely event of anyone trying to log in between register
   // and the update-password-to-null below
-  const temporaryPassword = crypto.randomBytes(64).toString('hex');
+  const temporaryPassword =
+    minimalPasswordSatisfyingRequirements + crypto.randomBytes(64).toString('hex');
 
   await usersPermissionsAuthController.register(
     fakeKoaContextWithParameters({
