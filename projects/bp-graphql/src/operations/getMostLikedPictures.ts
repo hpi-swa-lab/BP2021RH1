@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
       pictures(

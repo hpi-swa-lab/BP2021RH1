@@ -3,6 +3,8 @@ import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  useCanRunCreateSubCollectionMutation,
+  useCanRunUpdateCollectionMutation,
   useCreateSubCollectionMutation,
   useUpdateCollectionMutation,
 } from '../../../graphql/APIConnector';
@@ -26,9 +28,12 @@ const AddCollectionMenu = ({
   const [updateCollection] = useUpdateCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
+  const { canRun: canUpdateCollection } = useCanRunUpdateCollectionMutation();
+
   const [createSubCollection] = useCreateSubCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
+  const { canRun: canCreateSubCollection } = useCanRunCreateSubCollectionMutation();
 
   const onCreateSubCollection = useCallback(async () => {
     const collectionName = await dialog({
@@ -84,24 +89,30 @@ const AddCollectionMenu = ({
 
   return (
     <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
-      <MenuItem onClick={() => onCreateSubCollection()}>
-        <ListItemIcon>
-          <Add />
-        </ListItemIcon>
-        <ListItemText>{t('curator.createCollection')}</ListItemText>
-      </MenuItem>
-      <MenuItem onClick={() => onLinkOrMoveSubcollection(false)}>
-        <ListItemIcon>
-          <Link />
-        </ListItemIcon>
-        <ListItemText>{t('curator.linkCollection')}</ListItemText>
-      </MenuItem>
-      <MenuItem onClick={() => onLinkOrMoveSubcollection(true)}>
-        <ListItemIcon>
-          <MoveDown />
-        </ListItemIcon>
-        <ListItemText>{t('curator.moveCollection')}</ListItemText>
-      </MenuItem>
+      {canCreateSubCollection && (
+        <MenuItem onClick={() => onCreateSubCollection()}>
+          <ListItemIcon>
+            <Add />
+          </ListItemIcon>
+          <ListItemText>{t('curator.createCollection')}</ListItemText>
+        </MenuItem>
+      )}
+      {canUpdateCollection && (
+        <MenuItem onClick={() => onLinkOrMoveSubcollection(false)}>
+          <ListItemIcon>
+            <Link />
+          </ListItemIcon>
+          <ListItemText>{t('curator.linkCollection')}</ListItemText>
+        </MenuItem>
+      )}
+      {canUpdateCollection && (
+        <MenuItem onClick={() => onLinkOrMoveSubcollection(true)}>
+          <ListItemIcon>
+            <MoveDown />
+          </ListItemIcon>
+          <ListItemText>{t('curator.moveCollection')}</ListItemText>
+        </MenuItem>
+      )}
     </Menu>
   );
 };

@@ -3,16 +3,19 @@ import { Button } from '@mui/material';
 import { differenceWith, isEqual, union, unionWith } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetMultiplePictureInfoLazyQuery } from '../../../../../graphql/APIConnector';
+import {
+  useCanRunGetMultiplePictureInfoQuery,
+  useGetMultiplePictureInfoLazyQuery,
+} from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { useClipboard } from '../../../../../hooks/clipboard.hook';
 import { useSetClipboardEditorButtons } from '../../../../../hooks/context-hooks';
+import { TextFilter } from '../../../../../hooks/get-pictures.hook';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import CheckboxButton from '../../../../common/CheckboxButton';
 import { HelpTooltip } from '../../../../common/HelpTooltip';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { ScrollProvider } from '../../../../provider/ScrollProvider';
 import { HideStats } from '../../../../provider/ShowStatsProvider';
@@ -29,10 +32,9 @@ const LinkedInfoField = ({
   picture: FlatPicture;
   pictureIds: string[];
   hasHiddenLinks: boolean;
-  savePictureInfo: (field: Field) => void;
+  savePictureInfo?: (field: Field) => void;
 }) => {
   const { t } = useTranslation();
-  const { role } = useAuth();
   const dialog = useDialog();
 
   // null means there is nothing in the database
@@ -69,15 +71,21 @@ const LinkedInfoField = ({
     },
   ] = useGetMultiplePictureInfoLazyQuery();
 
+  const { canRun: canGetClipboardPictureInfo } = useCanRunGetMultiplePictureInfoQuery({
+    variables: {
+      pictureIds: clipboardData.pictureIds,
+    },
+  });
+
   useEffect(() => {
-    if (role >= AuthRole.CURATOR) {
+    if (canGetClipboardPictureInfo) {
       getClipboardPictureInfo({
         variables: {
           pictureIds: clipboardData.pictureIds,
         },
       });
     }
-  }, [role, getClipboardPictureInfo, clipboardData.pictureIds]);
+  }, [canGetClipboardPictureInfo, getClipboardPictureInfo, clipboardData.pictureIds]);
 
   const clipboardPictures: FlatPicture[] | undefined =
     useSimplifiedQueryResponseData(clipboardPicturesData)?.pictures;
@@ -108,7 +116,7 @@ const LinkedInfoField = ({
   }, [setClipboardData, pictureIds]);
 
   const pasteFromClipboard = useCallback(() => {
-    savePictureInfo({
+    savePictureInfo?.({
       [linked.collectionName]: unionWith(
         linked.collection ?? [],
         clipboardData.pictureIds.map(id => ({ id })),
@@ -121,7 +129,7 @@ const LinkedInfoField = ({
     () => ({
       position: 'top-right' as const,
       onClick: (link: FlatPicture) => {
-        savePictureInfo({
+        savePictureInfo?.({
           [linked.collectionName]: differenceWith(
             linked.collection ?? [],
             [{ id: link.id }],
@@ -134,8 +142,13 @@ const LinkedInfoField = ({
     }),
     [savePictureInfo, linked, t]
   );
+  const adornments = useMemo(
+    () => (savePictureInfo ? [removeLinkAdornment] : []),
+    [savePictureInfo, removeLinkAdornment]
+  );
+
   const removeAllLinks = useCallback(() => {
-    savePictureInfo({
+    savePictureInfo?.({
       [linked.collectionName]: [],
     });
   }, [savePictureInfo, linked.collectionName]);
@@ -174,7 +187,7 @@ const LinkedInfoField = ({
 
   return (
     <>
-      {role >= AuthRole.CURATOR && isText !== undefined && (
+      {savePictureInfo && isText !== undefined && (
         <div className='links-operations'>
           <CheckboxButton
             checked={isText}
@@ -203,7 +216,7 @@ const LinkedInfoField = ({
           </CheckboxButton>
         </div>
       )}
-      {(role >= AuthRole.CURATOR || Boolean(linked.collection?.length)) && isText !== undefined && (
+      {(savePictureInfo || Boolean(linked.collection?.length)) && isText !== undefined && (
         <PictureInfoField
           title={t(`pictureFields.links.${linked.name}.label`)}
           icon={<Link />}
@@ -217,13 +230,13 @@ const LinkedInfoField = ({
                   hashbase={'links'}
                   showCount={false}
                   showDefaultAdornments={false}
-                  extraAdornments={role >= AuthRole.CURATOR ? [removeLinkAdornment] : []}
-                  filterOutTextsForNonCurators={false}
+                  extraAdornments={adornments}
+                  textFilter={TextFilter.PICTURES_AND_TEXTS}
                 />
               </ScrollContainer>
             </ScrollProvider>
           </HideStats>
-          {role >= AuthRole.CURATOR &&
+          {savePictureInfo &&
             (shouldPaste || isClipboardMixed ? (
               <div className='clipboard-buttons'>
                 <Button
@@ -249,7 +262,7 @@ const LinkedInfoField = ({
             ) : (
               []
             ))}
-          {role >= AuthRole.CURATOR && Boolean(linked.collection?.length) && (
+          {savePictureInfo && Boolean(linked.collection?.length) && (
             <Button
               className='clipboard-button'
               startIcon={<LinkOff />}

@@ -4,6 +4,7 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import AddLocationEntry from './AddLocationEntry';
 import LocationBranch from './LocationBranch';
@@ -26,13 +27,13 @@ const setUnacceptedSubtagsCount = (tag: FlatTag) => {
 const LocationPanel = () => {
   const { t } = useTranslation();
 
-  const { allTagsQuery } = useGenericTagEndpoints(TagType.LOCATION);
+  const { allTagsQuery, canUseTagTableViewQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
   const { data, loading, error, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const { createNewTag } = useCreateNewTag(refetch);
+  const { createNewTag, canCreateNewTag } = useCreateNewTag(refetch);
 
   const { tagTree: sortedTagTree } = useGetTagStructures(flattenedTags);
 
@@ -46,28 +47,39 @@ const LocationPanel = () => {
     return sortedTagTree;
   }, [sortedTagTree]);
 
-  if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
-    return <Loading />;
-  } else {
-    return (
-      <div>
-        <LocationPanelHeader />
-        <div className='location-panel-content'>
-          {tagTree?.map(tag => (
-            <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
-          ))}
-          <AddLocationEntry
-            text={t(`tag-panel.add-location`)}
-            onClick={() => {
-              createNewTag(tagTree);
-            }}
-          />
-        </div>
-      </div>
-    );
-  }
+  const { canRun: canUseLocationPanel, loading: canUseLocationPanelLoading } =
+    canUseTagTableViewQuery();
+
+  return (
+    <ProtectedRoute canUse={canUseLocationPanel} canUseLoading={canUseLocationPanelLoading}>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else {
+          return (
+            <>
+              <LocationPanelHeader />
+              <div className='location-panel-content'>
+                {tagTree?.map(tag => (
+                  <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
+                ))}
+                {canCreateNewTag && (
+                  <AddLocationEntry
+                    text={t(`tag-panel.add-location`)}
+                    onClick={() => {
+                      createNewTag(tagTree);
+                    }}
+                  />
+                )}
+              </div>
+            </>
+          );
+        }
+      }}
+    </ProtectedRoute>
+  );
 };
 
 export default LocationPanel;

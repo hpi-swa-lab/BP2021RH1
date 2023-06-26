@@ -24,6 +24,9 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
+            "outFiles": [
+                "${workspaceFolder}/projects/bp-strapi/**/*.js",
+            ],
             "cwd": "${workspaceFolder}/projects/bp-strapi",
             "runtimeArgs": [
                 "--inspect"

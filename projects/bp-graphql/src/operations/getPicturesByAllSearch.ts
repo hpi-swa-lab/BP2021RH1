@@ -1,18 +1,19 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getPicturesByAllSearch(
       $pagination: PaginationArg!
       $searchTerms: [String]!
       $searchTimes: [[String]]!
-      $filterOutTexts: Boolean!
+      $textFilter: String!
     ) {
       findPicturesByAllSearch(
         pagination: $pagination
         searchTerms: $searchTerms
         searchTimes: $searchTimes
-        filterOutTexts: $filterOutTexts
+        textFilter: $textFilter
       ) {
         id
         attributes {

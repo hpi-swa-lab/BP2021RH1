@@ -1,16 +1,12 @@
-import type {
-  Attribute,
-  GetAttributeValue,
-  GetAttributes,
-  Strapi,
-} from "@strapi/strapi";
-import type { knex } from "knex";
-import type { ParameterizedContext } from "koa";
-import type * as Nexus from "nexus";
+import type { Attribute, GetAttributeValue, GetAttributes, Strapi } from '@strapi/strapi';
+import { ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
+import type { knex } from 'knex';
+import type { ParameterizedContext } from 'koa';
+import type * as Nexus from 'nexus';
 
 export type KnexEngine = typeof knex & ReturnType<typeof knex>;
 
-export type QueryBuilder = ReturnType<KnexEngine["select"]>;
+export type QueryBuilder = ReturnType<KnexEngine['select']>;
 
 export type GqlExtension = {
   strapi: StrapiExtended;
@@ -18,6 +14,7 @@ export type GqlExtension = {
 };
 
 type ContextState = {
+  user: UsersPermissionsUser;
   withGrowthBook?: (theCtx: StrapiGqlContext, f: any) => void;
 };
 
@@ -25,16 +22,17 @@ type ContextState = {
 type Context = {
   send: (statusCode: number, body: string | Object) => StrapiContext;
   req?: { headers?: { anonymousid?: string } };
+  request: { body: unknown };
 } & Record<
-  | "created"
-  | "noContent"
-  | "badRequest"
-  | "unauthorized"
-  | "forbidden"
-  | "notFound"
-  | "locked"
-  | "internalServerError"
-  | "notImplemented",
+  | 'created'
+  | 'noContent'
+  | 'badRequest'
+  | 'unauthorized'
+  | 'forbidden'
+  | 'notFound'
+  | 'locked'
+  | 'internalServerError'
+  | 'notImplemented',
   (body: string | Object) => StrapiContext
 >;
 
@@ -45,42 +43,47 @@ export type StrapiGqlContext = {
   koaContext: StrapiContext;
 };
 
-export type StrapiExtended = Omit<Strapi, "entityService"> & {
+export type StrapiExtended = Omit<Strapi, 'entityService'> & {
   db: { connection: KnexEngine };
   entityService: EntityService;
 };
 
+declare module '@strapi/strapi' {
+  export interface Strapi {
+    requestContext: {
+      get(): { url: string };
+    };
+  }
+}
+
 type FilterParameters = Partial<
   Record<
-    | "$and"
-    | "$or"
-    | "$not"
-    | "$eq"
-    | "$eqi"
-    | "$ne"
-    | "$in"
-    | "$notIn"
-    | "$lt"
-    | "$lte"
-    | "$gt"
-    | "$gte"
-    | "$between"
-    | "$contains"
-    | "$notContains"
-    | "$containsi"
-    | "$notContainsi"
-    | "$startsWith"
-    | "$endsWith"
-    | "$null"
-    | "$notNull",
+    | '$and'
+    | '$or'
+    | '$not'
+    | '$eq'
+    | '$eqi'
+    | '$ne'
+    | '$in'
+    | '$notIn'
+    | '$lt'
+    | '$lte'
+    | '$gt'
+    | '$gte'
+    | '$between'
+    | '$contains'
+    | '$notContains'
+    | '$containsi'
+    | '$notContainsi'
+    | '$startsWith'
+    | '$endsWith'
+    | '$null'
+    | '$notNull',
     any
   >
 >;
 
-type OrderByParameter =
-  | string
-  | { [key: string]: string }
-  | { [key: string]: string }[];
+type OrderByParameter = string | { [key: string]: string } | { [key: string]: string }[];
 
 type ResponseAttributes<T extends Strapi.ContentTypeUIDs> =
   | null
@@ -89,13 +92,13 @@ type ResponseAttributes<T extends Strapi.ContentTypeUIDs> =
     }> & { id: number });
 
 type PopulateType<T extends Strapi.ContentTypeUIDs> = {
-  [K in keyof GetAttributes<T> as GetAttributes<T>[K] extends Attribute<"relation">
+  [K in keyof GetAttributes<T> as GetAttributes<T>[K] extends Attribute<'relation'>
     ? K
     : never]: GetAttributes<T>[K];
 };
 
 type PopulateParameter<T extends Strapi.ContentTypeUIDs> =
-  | "*"
+  | '*'
   | (keyof PopulateType<T>)[]
   | { [key: string]: boolean }
   | {
@@ -107,7 +110,7 @@ type PopulateParameter<T extends Strapi.ContentTypeUIDs> =
       };
     };
 
-type PublicationStateParameter = "live" | "preview";
+type PublicationStateParameter = 'live' | 'preview';
 
 type Params<T extends Strapi.ContentTypeUIDs> = Partial<{
   fields: (keyof GetAttributes<T>)[];
@@ -161,3 +164,8 @@ export interface EntityService {
     parameters: Params<T>
   ) => Promise<Object>;
 }
+
+export type ParameterizedPermissionsAuth = {
+  ability: ParameterizedPermission[];
+  credentials: UsersPermissionsUser | null;
+};

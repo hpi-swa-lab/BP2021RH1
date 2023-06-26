@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
       archiveTags(sort: $sortBy) {

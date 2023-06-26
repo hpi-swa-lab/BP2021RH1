@@ -6,8 +6,14 @@ module.exports = {
   },
   theme: {
     extend: {
+      gridTemplateColumns: {
+        'autofit-card': 'repeat(auto-fit, minmax(20rem, 1fr))',
+      },
       height: {
         '50vh': '50vh',
+        main: 'calc(100vh - 5rem)',
+      },
+      minHeight: {
         main: 'calc(100vh - 5rem)',
       },
       animation: {

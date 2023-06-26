@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getArchive($archiveId: ID!) {
       archiveTag(id: $archiveId) {
@@ -14,6 +15,7 @@ export default {
             paypalClient
             paypalDonationText
             paypalPurpose
+            restrictImageDownloading
             logo {
               data {
                 id

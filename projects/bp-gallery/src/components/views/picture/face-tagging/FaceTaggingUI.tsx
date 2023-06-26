@@ -1,11 +1,11 @@
 import { Person } from '@mui/icons-material';
 import { Button, Chip } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useCallback } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFaceTagging } from '../../../../hooks/context-hooks';
 import { FlatPersonTagWithoutRelations, TagType } from '../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../provider/AuthProvider';
+import { PictureViewContext } from '../PictureView';
 import PictureInfoField from '../sidebar/picture-info/PictureInfoField';
 import TagSelectionField from '../sidebar/picture-info/TagSelectionField';
 
@@ -17,10 +17,9 @@ export const FaceTaggingUI = ({
 }: {
   tags: FlatPersonTagWithoutRelations[];
   allTags: FlatPersonTagWithoutRelations[];
-  onChange: (tags: FlatPersonTagWithoutRelations[]) => void;
-  createMutation: (attr: any) => Promise<any>;
+  onChange?: (tags: FlatPersonTagWithoutRelations[]) => void;
+  createMutation?: (attr: any) => Promise<any>;
 }) => {
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const context = useFaceTagging();
@@ -40,6 +39,14 @@ export const FaceTaggingUI = ({
     context?.setHideTags(is => !is);
   }, [context]);
 
+  const { setSideBarOpen } = useContext(PictureViewContext);
+
+  useEffect(() => {
+    if (context?.canFaceTag) {
+      setSideBarOpen?.(true);
+    }
+  }, [context?.canFaceTag, setSideBarOpen]);
+
   return (
     <>
       <PictureInfoField title={t('pictureFields.people')} icon={<Person />} type='person'>
@@ -58,7 +65,7 @@ export const FaceTaggingUI = ({
                 title={t('pictureFields.face-tagging-explanation')}
                 className='hover:brightness-150 !transition'
                 onClick={() => {
-                  faceTags?.find(ftag => ftag.personTagId === tag.id)
+                  context.canCreateTag && faceTags?.find(ftag => ftag.personTagId === tag.id)
                     ? null
                     : context.setActiveTagId(current => (current === tag.id ? null : tag.id));
                 }}
@@ -76,7 +83,7 @@ export const FaceTaggingUI = ({
           />
         )}
 
-        {context && role >= AuthRole.CURATOR && (tags.length > 0 || isFaceTagging) && (
+        {context?.canFaceTag && (tags.length > 0 || isFaceTagging) && (
           <Button
             variant='contained'
             color='primary'

@@ -23,7 +23,7 @@ describe('Start view', () => {
 
   it('should have selectable custom overview', () => {
     cy.get('.overview-selection-container');
-    cy.get('[data-testid="AccessTimeIcon"]').click();
+    cy.get('.MuiTab-root').contains('Bestbewertete Bilder').click();
   });
 
   it('should show a picture preview', () => {
