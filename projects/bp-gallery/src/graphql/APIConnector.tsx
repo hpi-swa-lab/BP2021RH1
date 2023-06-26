@@ -20,8 +20,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -12106,6 +12109,94 @@ export function useCanRunMultipleGetDecadePreviewThumbnailsQueries(
   };
 }
 
+export function useCanRunGetExhibitionQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetExhibitionQueryVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetExhibitionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetExhibitionQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetExhibitionQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetExhibitionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunGetExhibitionsQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetExhibitionsQueryVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetExhibitionsDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetExhibitionsQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetExhibitionsQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetExhibitionsDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunGetFaceTagsQuery(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -12139,6 +12230,50 @@ export function useCanRunMultipleGetFaceTagsQueries(
     ...options,
     variables: {
       operation: GetFaceTagsDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunGetIdeaLotContentQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetIdeaLotContentQueryVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetIdeaLotContentDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetIdeaLotContentQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetIdeaLotContentQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetIdeaLotContentDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
@@ -13294,6 +13429,182 @@ export function useCanRunMultipleContactMutations(
   };
 }
 
+export function useCanRunCreateExhibitionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<CreateExhibitionMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateExhibitionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleCreateExhibitionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<CreateExhibitionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateExhibitionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunCreateExhibitionPictureMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<CreateExhibitionPictureMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateExhibitionPictureDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleCreateExhibitionPictureMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<CreateExhibitionPictureMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateExhibitionPictureDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunCreateExhibitionSectionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<CreateExhibitionSectionMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateExhibitionSectionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleCreateExhibitionSectionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<CreateExhibitionSectionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateExhibitionSectionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunCreateExhibitionSourceMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<CreateExhibitionSourceMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateExhibitionSourceDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleCreateExhibitionSourceMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<CreateExhibitionSourceMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateExhibitionSourceDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunCreateFaceTagMutation(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -13723,6 +14034,50 @@ export function useCanRunMultipleDeleteCollectionMutations(
     ...options,
     variables: {
       operation: DeleteCollectionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunDeleteExhibitionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<DeleteExhibitionMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: DeleteExhibitionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleDeleteExhibitionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<DeleteExhibitionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: DeleteExhibitionDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
@@ -14911,6 +15266,182 @@ export function useCanRunMultipleUpdateCollectionMutations(
     ...options,
     variables: {
       operation: UpdateCollectionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateExhibitionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateExhibitionMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateExhibitionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateExhibitionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateExhibitionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateExhibitionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateExhibitionPictureMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateExhibitionPictureMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateExhibitionPictureDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateExhibitionPictureMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateExhibitionPictureMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateExhibitionPictureDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateExhibitionSectionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateExhibitionSectionMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateExhibitionSectionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateExhibitionSectionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateExhibitionSectionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateExhibitionSectionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateExhibitionSourceMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateExhibitionSourceMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateExhibitionSourceDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateExhibitionSourceMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateExhibitionSourceMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateExhibitionSourceDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
