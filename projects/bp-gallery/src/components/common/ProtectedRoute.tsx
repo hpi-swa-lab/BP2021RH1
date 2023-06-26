@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router';
 import { FALLBACK_PATH } from './../routes';
+import Loading from './Loading';
 
 interface ProtectedRouteProps {
   canUse: boolean;
@@ -18,7 +19,7 @@ const ProtectedRoute = (props: ProtectedRouteProps) => {
   if (!canUse) {
     // protect from unauthorized access (e. g. people manually entering the url)
     if (canUseLoading) {
-      return <>{t('common.checkingAuth')}</>;
+      return <Loading label={t('common.checkingAuth')} />;
     } else {
       return <Redirect to={redirectPath} />;
     }
