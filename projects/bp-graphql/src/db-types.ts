@@ -33,3 +33,19 @@ export type FaceTag = ID & {
 export type Link = ID & {
   archive_tag: Maybe<ArchiveTag>;
 };
+
+export type Exhibition = ID & {
+  archive_tag: Maybe<ArchiveTag>;
+};
+
+export type ExhibitionSection = ID & {
+  exhibition: Maybe<Exhibition>;
+};
+
+export type ExhibitionPicture = ID & {
+  exhibition_section: Maybe<ExhibitionSection>;
+};
+
+export type ExhibitionSource = ID & {
+  exhibition: Maybe<Exhibition>;
+};

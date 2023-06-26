@@ -113,6 +113,14 @@ export const checkFaceTag = createCheckEntityFactory('faceTagToArchive');
 
 export const checkLink = createCheckEntityFactory('linkToArchive');
 
+export const checkExhibition = createCheckEntityFactory('exhibitionToArchive');
+
+export const checkExhibitionSection = createCheckEntityFactory('exhibitionSectionToArchive');
+
+export const checkExhibitionPicture = createCheckEntityFactory('exhibitionPictureToArchive');
+
+export const checkExhibitionSource = createCheckEntityFactory('exhibitionSourceToArchive');
+
 const equalOrBothNullish = <T>(a: Maybe<T> | undefined, b: Maybe<T> | undefined) =>
   (a ?? null) === (b ?? null);
 

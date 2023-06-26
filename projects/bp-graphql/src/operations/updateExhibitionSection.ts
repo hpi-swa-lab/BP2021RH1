@@ -1,6 +1,9 @@
 import { Operation, graphql } from '../Operation.js';
+import { checkExhibitionSection } from '../isAllowedHelpers.js';
 
 export default {
+  group: 'exhibition',
+  isAllowed: checkExhibitionSection('id'),
   document: graphql`
     mutation updateExhibitionSection(
       $id: ID!

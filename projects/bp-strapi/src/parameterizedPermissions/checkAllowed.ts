@@ -14,6 +14,10 @@ export const checkAllowed = async (
     faceTag: strapi.db.query('api::face-tag.face-tag'),
     link: strapi.db.query('api::link.link'),
     permission: strapi.db.query('api::parameterized-permission.parameterized-permission'),
+    exhibition: strapi.db.query('api::exhibition.exhibition'),
+    exhibitionSection: strapi.db.query('api::exhibition-section.exhibition-section'),
+    exhibitionPicture: strapi.db.query('api::exhibition-picture.exhibition-picture'),
+    exhibitionSource: strapi.db.query('api::exhibition-source.exhibition-source'),
   });
   const operation = operations[operationName];
 

@@ -1,6 +1,9 @@
 import { Operation, graphql } from '../Operation.js';
+import { checkExhibition } from '../isAllowedHelpers.js';
 
 export default {
+  group: 'exhibition',
+  isAllowed: checkExhibition('exhibitionId'),
   document: graphql`
     query getIdeaLotContent($exhibitionId: ID!) {
       exhibition(id: $exhibitionId) {

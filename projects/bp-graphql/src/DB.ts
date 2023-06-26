@@ -1,4 +1,14 @@
-import { Comment, FaceTag, Link, ParameterizedPermission, Picture } from './db-types';
+import {
+  Comment,
+  Exhibition,
+  ExhibitionPicture,
+  ExhibitionSection,
+  ExhibitionSource,
+  FaceTag,
+  Link,
+  ParameterizedPermission,
+  Picture,
+} from './db-types';
 
 type Query<T> = {
   findOne(params: any): Promise<T | null>;
@@ -10,7 +20,10 @@ export type ID = number | undefined;
 export class Loader<T> {
   private cache: Map<ID, T | null> = new Map();
 
-  public constructor(private query: Query<T>, private populate: any = undefined) {}
+  public constructor(
+    private query: Query<T>,
+    private populate?: Partial<Record<keyof T, boolean>>
+  ) {}
 
   public async load(id: ID) {
     const cached = this.cache.get(id);
@@ -41,6 +54,10 @@ export class DB {
   private faceTagLoader: Loader<FaceTag>;
   private linkLoader: Loader<Link>;
   private permissionLoader: Loader<ParameterizedPermission>;
+  private exhibitionLoader: Loader<Exhibition>;
+  private exhibitionSectionLoader: Loader<ExhibitionSection>;
+  private exhibitionPictureLoader: Loader<ExhibitionPicture>;
+  private exhibitionSourceLoader: Loader<ExhibitionSource>;
 
   public constructor(queries: {
     picture: Query<Picture>;
@@ -48,6 +65,10 @@ export class DB {
     faceTag: Query<FaceTag>;
     link: Query<Link>;
     permission: Query<ParameterizedPermission>;
+    exhibition: Query<Exhibition>;
+    exhibitionSection: Query<ExhibitionSection>;
+    exhibitionPicture: Query<ExhibitionPicture>;
+    exhibitionSource: Query<ExhibitionSource>;
   }) {
     this.pictureLoader = new Loader(queries.picture, { archive_tag: true });
     this.commentLoader = new Loader(queries.comment, { picture: true });
@@ -56,6 +77,18 @@ export class DB {
     this.permissionLoader = new Loader(queries.permission, {
       users_permissions_user: true,
       archive_tag: true,
+    });
+    this.exhibitionLoader = new Loader(queries.exhibition, {
+      archive_tag: true,
+    });
+    this.exhibitionSectionLoader = new Loader(queries.exhibitionSection, {
+      exhibition: true,
+    });
+    this.exhibitionPictureLoader = new Loader(queries.exhibitionPicture, {
+      exhibition_section: true,
+    });
+    this.exhibitionSourceLoader = new Loader(queries.exhibitionSource, {
+      exhibition: true,
     });
   }
 
@@ -81,6 +114,40 @@ export class DB {
 
   public async linkToArchive(linkId: ID) {
     return (await this.linkLoader.load(linkId))?.archive_tag?.id;
+  }
+
+  public async exhibitionToArchive(exhibitionId: ID) {
+    return (await this.exhibitionLoader.load(exhibitionId))?.archive_tag?.id;
+  }
+
+  public async exhibitionSectionToExhibition(exhibitionSectionId: ID) {
+    return (await this.exhibitionSectionLoader.load(exhibitionSectionId))?.exhibition?.id;
+  }
+
+  public async exhibitionSectionToArchive(exhibitionSectionId: ID) {
+    return await this.exhibitionToArchive(
+      await this.exhibitionSectionToExhibition(exhibitionSectionId)
+    );
+  }
+
+  public async exhibitionPictureToExhibitionSection(exhibitionPictureId: ID) {
+    return (await this.exhibitionPictureLoader.load(exhibitionPictureId))?.exhibition_section?.id;
+  }
+
+  public async exhibitionPictureToArchive(exhibitionPictureId: ID) {
+    return await this.exhibitionSectionToArchive(
+      await this.exhibitionPictureToExhibitionSection(exhibitionPictureId)
+    );
+  }
+
+  public async exhibitionSourceToExhibition(exhibitionSourceId: ID) {
+    return (await this.exhibitionSourceLoader.load(exhibitionSourceId))?.exhibition?.id;
+  }
+
+  public async exhibitionSourceToArchive(exhibitionSourceId: ID) {
+    return await this.exhibitionToArchive(
+      await this.exhibitionSourceToExhibition(exhibitionSourceId)
+    );
   }
 
   public async mediaToPictures(mediaId: ID) {
