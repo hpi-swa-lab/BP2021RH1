@@ -1,6 +1,7 @@
 import { MenuItem, Select, TextField } from '@mui/material';
-import { useCallback, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAdvancedSearch } from '../../../hooks/context-hooks';
 
 const SearchFilterInput = ({ key, attribute }: { key: string; attribute: string }) => {
   const [rowKeys, SetRowKeys] = useState([0]);
@@ -193,6 +194,49 @@ const SearchFilterInputItem = ({
   const filter = useMemo(() => {
     return buildFilter(filterProps);
   }, [filterProps, buildFilter]);
+
+  const context = useAdvancedSearch();
+
+  const updateFilter = useCallback(() => {
+    switch (attribute) {
+      case 'keyword':
+        return context?.SetKeywordFilter;
+      case 'description':
+        return context?.SetDescriptionFilter;
+      case 'comment':
+        return context?.SetCommentFilter;
+      case 'person':
+        return context?.SetPersonFilter;
+      case 'face-tag':
+        return context?.SetFaceTagFilter;
+      case 'location':
+        return context?.SetLocationFilter;
+      case 'collection':
+        return context?.SetCollectionFilter;
+      case 'archive':
+        return context?.SetArchiveFilter;
+      default:
+        return () => {
+          console.log("attribute doens't exist", attribute);
+        };
+    }
+  }, [
+    attribute,
+    context?.SetArchiveFilter,
+    context?.SetCollectionFilter,
+    context?.SetCommentFilter,
+    context?.SetDescriptionFilter,
+    context?.SetFaceTagFilter,
+    context?.SetKeywordFilter,
+    context?.SetLocationFilter,
+    context?.SetPersonFilter,
+  ]);
+
+  useEffect(() => {
+    if (updateFilter()) {
+      (updateFilter() as Dispatch<SetStateAction<string>>)(filter);
+    }
+  }, [filter, updateFilter]);
 
   const setFilterOperatorOption = useCallback((option: string) => {
     SetFilterProps(filterProps => ({ ...filterProps, operatorOption: option }));

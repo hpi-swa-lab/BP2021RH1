@@ -6,8 +6,10 @@ import usePromise from 'react-use-promise';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { useAdvancedSearch } from '../../../hooks/context-hooks';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { AdvancedSearchProvider } from '../../provider/AdvancedSearchProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import AdvancedSearch from './AdvancedSearch';
 import NoSearchResultsText from './NoSearchResultsText';
@@ -64,9 +66,26 @@ const SearchView = () => {
     };
   }, [searchParams]);
 
+  const context = useAdvancedSearch();
+
+  const filter = useMemo(() => {
+    return [
+      context?.keywordFilter,
+      context?.descriptionFilter,
+      context?.commentFilter,
+      context?.personFilter,
+      context?.faceTagFilter,
+      context?.locationFilter,
+      context?.collectionFilter,
+      context?.archiveFilter,
+    ].join(' AND ');
+  }, [context]);
+
   const [searchResultIds, error, state] = usePromise(
     async () =>
-      (await getSearchResultPictureIds(queryParams, '')).map(hit => (hit.id as number).toString()),
+      (await getSearchResultPictureIds(queryParams, filter)).map(hit =>
+        (hit.id as number).toString()
+      ),
     [queryParams]
   );
 
@@ -90,51 +109,42 @@ const SearchView = () => {
   }
   const { linkToCollection, bulkEdit } = useBulkOperations();
 
-  const [searchFilters, setSearchFilters] = useState({
-    keywordFilters: [],
-    descriptionFilters: [],
-    commentFilters: [],
-    personFilters: [],
-    faceTagFilters: [],
-    locationFilters: [],
-    collectionFilters: [],
-    archiveFilters: [],
-    timeRangeFilters: [],
-  });
   return (
     <div className='search-content'>
-      <AdvancedSearch setFilters={() => {}}></AdvancedSearch>
-      <div className='search-bar-container'>
-        {(!areResultsEmpty || !search) && (
-          <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
-        )}
-        <HelpTooltip title={t('search.question')} content={t('search.help')} />
-        <div className='breadcrumb'>
-          <SearchBreadcrumbs searchParams={searchParams} />
+      <AdvancedSearchProvider>
+        <AdvancedSearch setFilters={() => {}}></AdvancedSearch>
+        <div className='search-bar-container'>
+          {(!areResultsEmpty || !search) && (
+            <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
+          )}
+          <HelpTooltip title={t('search.question')} content={t('search.help')} />
+          <div className='breadcrumb'>
+            <SearchBreadcrumbs searchParams={searchParams} />
+          </div>
         </div>
-      </div>
-      {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
-      {!search ? (
-        <SearchHub />
-      ) : (
-        <ShowStats>
-          <PictureScrollGrid
-            queryParams={isOldSearchActive ? queryParams : pictureFilter}
-            // if allSearch is active the custom resolver for allSearch will be used, which can only
-            // handle simple queryparams in the format {searchTerms:string[], searchTimes:string[][]} which
-            //  leads to erros when we use queryparams of the type PictureFiltersInput,
-            // so isAllSearchactive has to be false if we want to use the Meilisearch results
-            // by ANDing the isAllsearchActive flag with the isOldsearchActive flag we can make sure
-            // the isAllSearchActive property will always be false if we want to use Meilisearch
-            isAllSearchActive={isOldSearchActive && isAllSearchActive}
-            hashbase={search}
-            bulkOperations={[linkToCollection, bulkEdit]}
-            resultPictureCallback={(pictures: number) => {
-              setAreResultsEmpty(pictures <= 0);
-            }}
-          />
-        </ShowStats>
-      )}
+        {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
+        {!search ? (
+          <SearchHub />
+        ) : (
+          <ShowStats>
+            <PictureScrollGrid
+              queryParams={isOldSearchActive ? queryParams : pictureFilter}
+              // if allSearch is active the custom resolver for allSearch will be used, which can only
+              // handle simple queryparams in the format {searchTerms:string[], searchTimes:string[][]} which
+              //  leads to erros when we use queryparams of the type PictureFiltersInput,
+              // so isAllSearchactive has to be false if we want to use the Meilisearch results
+              // by ANDing the isAllsearchActive flag with the isOldsearchActive flag we can make sure
+              // the isAllSearchActive property will always be false if we want to use Meilisearch
+              isAllSearchActive={isOldSearchActive && isAllSearchActive}
+              hashbase={search}
+              bulkOperations={[linkToCollection, bulkEdit]}
+              resultPictureCallback={(pictures: number) => {
+                setAreResultsEmpty(pictures <= 0);
+              }}
+            />
+          </ShowStats>
+        )}
+      </AdvancedSearchProvider>
     </div>
   );
 };
