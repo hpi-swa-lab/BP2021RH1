@@ -248,11 +248,14 @@ const PictureMap = () => {
           })[],
           tags.length
         )
-      : new DivIcon({
-          html: renderToStaticMarkup(<div></div>),
-          className: 'custom-marker-cluster',
-          iconSize: new Point(0, 0, true),
-        });
+      : getDividerIcon(
+          tags as (FlatTag & {
+            thumbnail: Thumbnail[];
+            pictures: FlatPicture[];
+            verified_pictures: FlatPicture[];
+          })[],
+          tags.length
+        );
   };
 
   if (loading) {
