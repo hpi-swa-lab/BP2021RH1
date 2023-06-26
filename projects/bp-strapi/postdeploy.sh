@@ -1,3 +1,4 @@
+set -e
 export PATH="$PATH:~/.nvm/versions/node/v18.16.0/bin/"
 yarn install --frozen-lockfile
 yarn build:prod
