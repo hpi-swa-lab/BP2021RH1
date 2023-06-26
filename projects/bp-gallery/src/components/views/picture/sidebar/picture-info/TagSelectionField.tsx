@@ -8,7 +8,6 @@ import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnec
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { RelativeTagPosition } from '../../../location-curating/SelectPathPositionDialog';
 import {
@@ -61,7 +60,6 @@ const TagSelectionField = <T extends TagFields>({
   fixedChildTag?: FlatTag;
   customChipOnClick?: (id: string) => void;
 }) => {
-  const { role } = useAuth();
   const { t } = useTranslation();
   const prompt = useDialog();
 
@@ -301,7 +299,7 @@ const TagSelectionField = <T extends TagFields>({
     [options, tags]
   );
 
-  if (role >= AuthRole.CURATOR) {
+  if (onChange) {
     return (
       <div className='tag-selection'>
         <Autocomplete<T, true>
@@ -391,7 +389,6 @@ const TagSelectionField = <T extends TagFields>({
             return filtered;
           }}
           onChange={async (_, newValue) => {
-            if (!onChange) return;
             // newValue is an array, but we are sure that only one element can be created at a time
             const addTag = newValue.find(val => val.createValue);
             if (addTag && createMutation) {

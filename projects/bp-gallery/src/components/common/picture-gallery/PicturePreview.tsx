@@ -1,17 +1,34 @@
 import { isFunction } from 'lodash';
-import { MouseEvent, MouseEventHandler, useRef, useState } from 'react';
+import { FunctionComponent, MouseEvent, MouseEventHandler, useMemo, useRef, useState } from 'react';
 import { PictureOrigin, asUploadPath } from '../../../helpers/app-helpers';
 import { useStats } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import './PicturePreview.scss';
 import PictureStats from './PictureStats';
 
-export interface PicturePreviewAdornment {
-  position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-  onClick: (picture: FlatPicture, event: MouseEvent<HTMLElement>) => void;
-  icon: ((picture: FlatPicture) => JSX.Element) | JSX.Element;
-  title?: string;
-  onlyShowOnHover?: boolean;
+export type PicturePreviewAdornment =
+  | DefaultPicturePreviewAdornmentConfig
+  // any, because sadly, the type is invariant in it's parameter (see below),
+  // so neither unknown nor never works here (and TypeScript doesn't
+  // have existential types yet: https://github.com/Microsoft/TypeScript/issues/14466)
+  | CustomPicturePreviewAdornmentConfig<any>;
+
+export type CustomPicturePreviewAdornmentConfig<T> = {
+  // this type is invariant in T, since
+  // - `component` forces it to be contravariant in T
+  // - `extraProps` forces it to be covariant in T
+  component: CustomPicturePreviewAdornmentComponent<T>;
+  extraProps: T;
+};
+
+export type CustomPicturePreviewAdornmentComponent<T> = FunctionComponent<{
+  context: PicturePreviewAdornmentContext;
+  extraProps: T;
+}>;
+
+export interface PicturePreviewAdornmentContext {
+  picture: FlatPicture;
+  hovered: boolean;
 }
 
 const PicturePreview = ({
@@ -20,6 +37,7 @@ const PicturePreview = ({
   pictureOrigin = PictureOrigin.REMOTE,
   adornments,
   allowClicks = true,
+  height,
   highQuality,
 }: {
   picture: FlatPicture;
@@ -28,10 +46,19 @@ const PicturePreview = ({
   adornments?: PicturePreviewAdornment[];
   allowClicks?: boolean;
   highQuality?: boolean;
+  height?: string;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
   const showStats = useStats();
+
+  const adornmentContext: PicturePreviewAdornmentContext = useMemo(
+    () => ({
+      picture,
+      hovered,
+    }),
+    [picture, hovered]
+  );
 
   return (
     <div
@@ -54,26 +81,25 @@ const PicturePreview = ({
             showStats ? `transition-filter duration-200 ${hovered ? 'brightness-75' : ''}` : ''
           }
           src={asUploadPath(picture.media, { highQuality: highQuality ?? false, pictureOrigin })}
+          style={height ? { height: height } : {}}
         />
         <div className='adornments'>
-          {adornments?.map((adornment, index) => (
-            <div
-              className={`adornment ${adornment.position} ${
-                adornment.onlyShowOnHover
-                  ? `transition-opacity ${hovered ? 'opacity-100' : 'opacity-0'}`
-                  : ''
-              }`}
-              key={index}
-              title={adornment.title}
-              onClick={event => {
-                event.preventDefault();
-                event.stopPropagation();
-                adornment.onClick(picture, event);
-              }}
-            >
-              {isFunction(adornment.icon) ? <>{adornment.icon(picture)}</> : <>{adornment.icon}</>}
-            </div>
-          ))}
+          {adornments?.map((adornment, index) =>
+            'component' in adornment ? (
+              // adornment is a CustomPicturePreviewAdornmentConfig
+              <adornment.component
+                key={index}
+                context={adornmentContext}
+                extraProps={adornment.extraProps}
+              />
+            ) : (
+              <DefaultPicturePreviewAdornment
+                key={index}
+                config={adornment}
+                context={adornmentContext}
+              />
+            )
+          )}
         </div>
         <PictureStats picture={picture} hovered={hovered} />
       </div>
@@ -82,3 +108,37 @@ const PicturePreview = ({
 };
 
 export default PicturePreview;
+
+export interface DefaultPicturePreviewAdornmentConfig {
+  position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+  onClick: (picture: FlatPicture, event: MouseEvent<HTMLElement>) => void;
+  icon: ((picture: FlatPicture) => JSX.Element) | JSX.Element;
+  title?: string;
+  onlyShowOnHover?: boolean;
+}
+
+export const DefaultPicturePreviewAdornment = ({
+  config,
+  context,
+}: {
+  config: DefaultPicturePreviewAdornmentConfig;
+  context: PicturePreviewAdornmentContext;
+}) => {
+  return (
+    <div
+      className={`adornment ${config.position} ${
+        config.onlyShowOnHover
+          ? `transition-opacity ${context.hovered ? 'opacity-100' : 'opacity-0'}`
+          : ''
+      }`}
+      title={config.title}
+      onClick={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        config.onClick(context.picture, event);
+      }}
+    >
+      {isFunction(config.icon) ? <>{config.icon(context.picture)}</> : <>{config.icon}</>}
+    </div>
+  );
+};

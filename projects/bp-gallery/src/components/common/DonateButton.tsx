@@ -49,9 +49,7 @@ const DonateButton = ({
       <Dialog open={isDialogOpen}>
         <div className='border-solid w-[35rem] h-[25rem] justify-center items-center flex flex-col gap-4 text-2xl'>
           <div>{dialogText}</div>
-          <PrimaryButton onClickFn={() => setIsDialogOpen(false)}>
-            {t('common.close')}
-          </PrimaryButton>
+          <PrimaryButton onClick={() => setIsDialogOpen(false)}>{t('common.close')}</PrimaryButton>
         </div>
       </Dialog>
       <PayPalScriptProvider options={paypalOptions}>
@@ -84,7 +82,7 @@ const DonateButton = ({
               </div>
             </>
           ) : (
-            <PrimaryButton onClickFn={() => setIsClicked(true)}>
+            <PrimaryButton onClick={() => setIsClicked(true)}>
               {t('archives.edit.paypal.donation-default')}
             </PrimaryButton>
           )}

@@ -1,6 +1,10 @@
 import { Operation, graphql } from '../Operation.js';
+import { always } from '../isAllowedHelpers.js';
 
 export default {
+  section: 'tags',
+  needsParameters: [],
+  isAllowed: always,
   document: graphql`
     mutation updateLocationCoordinates(
       $tagId: ID!

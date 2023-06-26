@@ -12,7 +12,9 @@ generates:
       - 'typescript'
       - 'typescript-operations'
       - 'typescript-react-apollo'
+      - 'src/graphql/plugins/build/can-run-operation.cjs'
     config:
       skipTypename: true
       defaultBaseOptions:
         errorPolicy: 'all'
+      assumeCanRunOnError: true

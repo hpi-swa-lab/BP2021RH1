@@ -5,6 +5,7 @@ import { useGetDailyPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { useBlockImageContextMenuByPicture } from '../../../hooks/block-image-context-menu.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureView from '../picture/PictureView';
 import RichText from './../../common/RichText';
@@ -80,6 +81,9 @@ const DailyPicture = () => {
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = asUploadPath(picture?.media);
   const description = picture?.descriptions?.[0]?.text ?? '';
+
+  const onImageContextMenu = useBlockImageContextMenuByPicture(picture);
+
   return (
     <div>
       {picture && (
@@ -99,6 +103,7 @@ const DailyPicture = () => {
               onClick={async () => {
                 await navigateToPicture(picture.id);
               }}
+              onContextMenu={onImageContextMenu}
             />
           </Card>
         </div>

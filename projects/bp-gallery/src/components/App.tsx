@@ -8,6 +8,7 @@ import AlertProvider from './provider/AlertProvider';
 import AuthProvider from './provider/AuthProvider';
 import ClipboardEditorProvider from './provider/ClipboardEditorProvider';
 import DialogProvider from './provider/DialogProvider';
+import ExhibitionProvider from './provider/ExhibitionProvider';
 import { GrowthBookProvider } from './provider/GrowthBookProvider';
 import { MobileProvider } from './provider/MobileProvider';
 import { MuiThemeProvider } from './provider/MuiThemeProvider';
@@ -26,8 +27,15 @@ const apolloClient = new ApolloClient({
           'Collection',
           'Comment',
           'Description',
+          'Exhibition',
+          'ExhibitionPicture',
+          'ExhibitionSection',
+          'ExhibitionSource',
+          'FaceTag',
           'KeywordTag',
+          'Link',
           'LocationTag',
+          'ParameterizedPermission',
           'PersonTag',
           'Picture',
           'TimeRangeTag',
@@ -44,7 +52,7 @@ const apolloClient = new ApolloClient({
             merge: mergeByRefWrappedInData,
           },
           findPicturesByAllSearch: {
-            keyArgs: ['searchTerms', 'searchTimes', 'filterOutTexts'],
+            keyArgs: ['searchTerms', 'searchTimes', 'textFilter'],
             merge: mergeByRef,
           },
           keywordTags: {
@@ -77,9 +85,11 @@ const App = () => {
                   <ClipboardEditorProvider>
                     <GrowthBookProvider>
                       <ScrollProvider useWindow>
-                        <TopBar />
-                        <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
-                        <BottomBar />
+                        <ExhibitionProvider>
+                          <TopBar />
+                          <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                          <BottomBar />
+                        </ExhibitionProvider>
                       </ScrollProvider>
                     </GrowthBookProvider>
                   </ClipboardEditorProvider>
