@@ -40,7 +40,9 @@ const LocationEntryActions = ({
   return (
     <div className='location-action-buttons-container'>
       {locationTag.coordinates && (
-        <IconButton>{<LocationOn className='text-[#446ab7]' />}</IconButton>
+        <IconButton>
+          <LocationOn className='text-[#446ab7]' />
+        </IconButton>
       )}
       {canDetachTag && (
         <IconButtonWithTooltip

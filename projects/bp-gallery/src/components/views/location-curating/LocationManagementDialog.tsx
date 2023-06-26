@@ -20,7 +20,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapContainer, Marker, TileLayer, useMapEvent } from 'react-leaflet';
 import {
-  useCanRunCreateLocationTagMutation,
   useCreateLocationTagMutation,
   useUpdateLocationCoordinatesMutation,
 } from '../../../graphql/APIConnector';
@@ -45,6 +44,8 @@ import {
 } from './location-management-helpers';
 import { useGetTagStructures } from './tag-structure-helpers';
 
+const BAD_HARZBURG_POS = new LatLng(51.8392573, 10.5279953);
+
 const LocationMarker = ({
   position,
   setPosition,
@@ -68,7 +69,7 @@ const LocationMarker = ({
     shadowUrl: markerShadow,
   });
 
-  return position ? <Marker icon={myIcon} position={position} /> : <div></div>;
+  return position ? <Marker icon={myIcon} position={position} /> : null;
 };
 
 const LocationManagementDialogPreset = ({
@@ -117,52 +118,36 @@ const LocationManagementDialogPreset = ({
 
   const currentIndex = currentSiblings.indexOf(locationTag);
 
-  const { deleteSynonym, canDeleteSynonym } = useDeleteSynonym(locationTag, refetch);
-  const { addSynonym, canAddSynonym } = useAddSynonym(locationTag, refetch);
-  const { updateName, canUpdateName } = useUpdateName(locationTag, refetch);
-  const { acceptTag, canAcceptTag } = useAcceptTag(locationTag, refetch);
-  const { setVisible, canSetVisible } = useSetVisible(locationTag, refetch);
-  const { setTagAsRoot, canSetTagAsRoot } = useSetRoot(locationTag, refetch);
-  const { setParentTags, canSetParentTags } = useSetParentTags(locationTag, refetch);
-  const { setChildTags, canSetChildTags } = useSetChildTags(locationTag, refetch);
+  const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
+  const { addSynonym } = useAddSynonym(locationTag, refetch);
+  const { updateName } = useUpdateName(locationTag, refetch);
+  const { acceptTag } = useAcceptTag(locationTag, refetch);
+  const { setVisible } = useSetVisible(locationTag, refetch);
+  const { setTagAsRoot } = useSetRoot(locationTag, refetch);
+  const { setParentTags } = useSetParentTags(locationTag, refetch);
+  const { setChildTags } = useSetChildTags(locationTag, refetch);
+
+  const map = useRef<Map>(null);
 
   const [newLocationTagMutation] = useCreateLocationTagMutation({
     refetchQueries: ['getAllLocationTags'],
     awaitRefetchQueries: true,
   });
-  const { canRun: canCreateLocationTag } = useCanRunCreateLocationTagMutation();
-
   const [localVisibility, setLocalVisibility] = useState<boolean>(locationTag.visible ?? false);
   const [isRoot, setIsRoot] = useState<boolean>(
     locationTag.root ?? !locationTag.parent_tags?.length
   );
-
   const [title, setTitle] = useState<string>(locationTag.name);
-
-  useEffect(() => {
-    setLocalVisibility(locationTag.visible ?? false);
-    setIsRoot(locationTag.root ?? !locationTag.parent_tags?.length);
-    setTitle(locationTag.name);
-  }, [locationTag]);
-
-  const [updateLocationCoordinatesMutation] = useUpdateLocationCoordinatesMutation({
-    onCompleted: refetch,
-  });
-
-  const map = useRef<Map>(null);
   const [position, setPosition] = useState<LatLng | undefined>(
     locationTag.coordinates
       ? new LatLng(locationTag.coordinates.latitude, locationTag.coordinates.longitude)
       : undefined
   );
-  const initialMapValues = useMemo(() => {
-    return {
-      center: locationTag.coordinates ? position : new LatLng(51.8392573, 10.5279953),
-      zoom: 10,
-    };
-  }, [locationTag.coordinates, position]);
 
   useEffect(() => {
+    setLocalVisibility(locationTag.visible ?? false);
+    setIsRoot(locationTag.root ?? !locationTag.parent_tags?.length);
+    setTitle(locationTag.name);
     setPosition(
       locationTag.coordinates
         ? new LatLng(locationTag.coordinates.latitude, locationTag.coordinates.longitude)
@@ -170,19 +155,21 @@ const LocationManagementDialogPreset = ({
     );
   }, [locationTag]);
 
+  const [updateLocationCoordinatesMutation] = useUpdateLocationCoordinatesMutation({
+    onCompleted: refetch,
+  });
+
+  const initialMapValues = useMemo(() => {
+    return {
+      center: position ?? BAD_HARZBURG_POS,
+      zoom: 10,
+    };
+  }, [position]);
+
   useEffect(() => {
-    updateLocationCoordinatesMutation({
-      variables: {
-        tagId: locationTag.id,
-        coordinate: position
-          ? {
-              latitude: position.lat,
-              longitude: position.lng,
-            }
-          : null,
-      },
-    });
-  }, [locationTag.id, position, updateLocationCoordinatesMutation]);
+    if (!map.current || !position) return;
+    map.current.flyTo(position, 10);
+  }, [position]);
 
   return (
     <>
@@ -217,7 +204,7 @@ const LocationManagementDialogPreset = ({
                   {title}
                 </h2>
               )}
-              {!locationTag.accepted && !editName && canAcceptTag ? (
+              {!locationTag.accepted && !editName ? (
                 <div className='location-management-accept-location'>
                   <IconButton
                     onClick={() => {
@@ -230,7 +217,7 @@ const LocationManagementDialogPreset = ({
               ) : (
                 <div></div>
               )}
-              {canUpdateName && (
+              {
                 <div className='location-management-edit-location'>
                   <IconButton
                     onClick={() => {
@@ -240,7 +227,7 @@ const LocationManagementDialogPreset = ({
                     {editName ? <Check /> : <Edit />}
                   </IconButton>
                 </div>
-              )}
+              }
             </div>
             <div className='location-management-location-path'>
               <SingleTagElement
@@ -250,7 +237,7 @@ const LocationManagementDialogPreset = ({
               />
             </div>
             <div className='location-management-left-content'>
-              {canAddSynonym && (
+              {
                 <div className='location-management-synonyms-container'>
                   <div>{t('curator.synonyms')}</div>
                   <PictureInfoField
@@ -281,11 +268,7 @@ const LocationManagementDialogPreset = ({
                                     key={synonym.name}
                                     label={synonym.name}
                                     className='location-management-synonym'
-                                    onDelete={
-                                      canDeleteSynonym
-                                        ? () => deleteSynonym(synonym.name)
-                                        : undefined
-                                    }
+                                    onDelete={() => deleteSynonym(synonym.name)}
                                   />
                                 ) : undefined
                               )}
@@ -296,7 +279,7 @@ const LocationManagementDialogPreset = ({
                     </div>
                   </PictureInfoField>
                 </div>
-              )}
+              }
               <div className='location-management-children-container'>
                 <div>{t('common.sublocations')}</div>
                 <PictureInfoField title={t('common.sublocations')} icon={<Place />} type='location'>
@@ -307,13 +290,9 @@ const LocationManagementDialogPreset = ({
                       []
                     }
                     allTags={(flattenedTags as any) ?? []}
-                    onChange={
-                      canSetChildTags
-                        ? locations => {
-                            setChildTags(locations as FlatTag[]);
-                          }
-                        : undefined
-                    }
+                    onChange={locations => {
+                      setChildTags(locations as FlatTag[]);
+                    }}
                     noContentText={''}
                     fixedParentTag={locationTag}
                     customChipOnClick={(id: string) => {
@@ -321,7 +300,7 @@ const LocationManagementDialogPreset = ({
                       setParentTag(locationTag);
                       setLocationTagID(id);
                     }}
-                    createChildMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
+                    createChildMutation={newLocationTagMutation}
                   />
                 </PictureInfoField>
               </div>
@@ -341,20 +320,16 @@ const LocationManagementDialogPreset = ({
                       })) as any) ?? []
                     }
                     allTags={(flattenedTags as any) ?? []}
-                    onChange={
-                      canSetParentTags
-                        ? locations => {
-                            setParentTags(locations as FlatTag[]);
-                          }
-                        : undefined
-                    }
+                    onChange={locations => {
+                      setParentTags(locations as FlatTag[]);
+                    }}
                     noContentText={''}
                     fixedChildTag={locationTag}
                     customChipOnClick={(id: string) => {
                       setParentTag(parentTagHistory.current.pop());
                       setLocationTagID(id);
                     }}
-                    createParentMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
+                    createParentMutation={newLocationTagMutation}
                   />
                 </PictureInfoField>
               </div>
@@ -373,13 +348,33 @@ const LocationManagementDialogPreset = ({
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
-                <LocationMarker position={position} setPosition={setPosition} />
+                <LocationMarker
+                  position={position}
+                  setPosition={pos => {
+                    updateLocationCoordinatesMutation({
+                      variables: {
+                        tagId: locationTag.id,
+                        coordinate: {
+                          latitude: pos.lat,
+                          longitude: pos.lng,
+                        },
+                      },
+                    });
+                    setPosition(pos);
+                  }}
+                />
               </MapContainer>
             </div>
             <div className='location-management-actions'>
               <Button
                 className='location-management-button location-management-primary'
                 onClick={() => {
+                  updateLocationCoordinatesMutation({
+                    variables: {
+                      tagId: locationTag.id,
+                      coordinate: null,
+                    },
+                  });
                   setPosition(undefined);
                 }}
                 endIcon={<Delete />}
@@ -410,7 +405,6 @@ const LocationManagementDialogPreset = ({
                   setVisible(!localVisibility);
                   setLocalVisibility(localVisibility => !localVisibility);
                 }}
-                disabled={!canSetVisible}
                 endIcon={localVisibility ? <Visibility /> : <VisibilityOff />}
               >
                 {localVisibility ? t('common.visible') : t('common.invisible')}
@@ -425,7 +419,6 @@ const LocationManagementDialogPreset = ({
                     setIsRoot(isRoot => !isRoot);
                   }
                 }}
-                disabled={!canSetTagAsRoot}
                 endIcon={<AccountTree />}
               >
                 {isRoot ? t('common.root') : t('common.no-root')}
