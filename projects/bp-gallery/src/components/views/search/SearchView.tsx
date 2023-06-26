@@ -67,19 +67,40 @@ const SearchView = () => {
   }, [searchParams]);
 
   const context = useAdvancedSearch();
+  console.log(context?.keywordFilter);
 
   const filter = useMemo(() => {
-    return [
-      context?.keywordFilter,
-      context?.descriptionFilter,
-      context?.commentFilter,
-      context?.personFilter,
-      context?.faceTagFilter,
-      context?.locationFilter,
-      context?.collectionFilter,
-      context?.archiveFilter,
-    ].join(' AND ');
-  }, [context]);
+    console.log(context?.keywordFilter);
+    const filters = [
+      context?.keywordFilter ? context.keywordFilter : '',
+      context?.descriptionFilter ? context.descriptionFilter : '',
+      context?.commentFilter ? context.commentFilter : '',
+      context?.personFilter ? context.personFilter : '',
+      context?.faceTagFilter ? context.faceTagFilter : '',
+      context?.locationFilter ? context.locationFilter : '',
+      context?.collectionFilter ? context.collectionFilter : '',
+      context?.archiveFilter ? context.archiveFilter : '',
+    ];
+
+    console.log(filters);
+    return (
+      filters
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        .filter(entry => {
+          entry === '' ? false : true;
+        })
+        .join('AND')
+    );
+  }, [
+    context?.keywordFilter,
+    context?.descriptionFilter,
+    context?.commentFilter,
+    context?.personFilter,
+    context?.faceTagFilter,
+    context?.locationFilter,
+    context?.collectionFilter,
+    context?.archiveFilter,
+  ]);
 
   const [searchResultIds, error, state] = usePromise(
     async () =>
@@ -100,19 +121,14 @@ const SearchView = () => {
   const isOldSearchActive = useFlag('old_search');
 
   if (import.meta.env.MODE === 'development') {
-    // getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
     console.log('resultids', searchResultIds);
-    console.log(
-      '31149 key:',
-      searchResultIds?.findIndex(element => element === '31149')
-    );
   }
   const { linkToCollection, bulkEdit } = useBulkOperations();
 
   return (
     <div className='search-content'>
       <AdvancedSearchProvider>
-        <AdvancedSearch setFilters={() => {}}></AdvancedSearch>
+        <AdvancedSearch></AdvancedSearch>
         <div className='search-bar-container'>
           {(!areResultsEmpty || !search) && (
             <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
