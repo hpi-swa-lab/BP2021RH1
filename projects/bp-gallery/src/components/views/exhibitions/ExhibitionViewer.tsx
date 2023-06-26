@@ -1,15 +1,19 @@
 import { Portal } from '@mui/material';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Redirect } from 'react-router-dom';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath, root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { useCanEditExhibition } from '../../../hooks/can-do-hooks';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
 import ProtectedRoute from '../../common/ProtectedRoute';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import RichText from '../../common/RichText';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
+import { FALLBACK_PATH } from '../../routes';
 import PictureView from '../picture/PictureView';
 import { ExhibitionGetContext, ExhibitionStateViewer } from './ExhibitonUtils';
 
@@ -119,7 +123,11 @@ const MainPart = () => {
 };
 
 const ExhibitionViewer = ({ exhibitionId }: { exhibitionId: string }) => {
-  const { data: exhibitionData, loading } = useGetExhibitionQuery({
+  const {
+    data: exhibitionData,
+    error,
+    loading,
+  } = useGetExhibitionQuery({
     variables: { exhibitionId },
   });
   const exhibition: FlatExhibition | undefined =
@@ -132,17 +140,27 @@ const ExhibitionViewer = ({ exhibitionId }: { exhibitionId: string }) => {
       canUse={!!exhibition && (canEditExhibition || (exhibition.is_published ?? false))}
       canUseLoading={canEditExhibitionLoading || loading}
     >
-      {
-        <ExhibitionStateViewer exhibition={exhibition!}>
-          <div className='flex justify-center'>
-            <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700 text-xl'>
-              <Title />
-              <MainPart />
-              <EndCard />
-            </div>
-          </div>
-        </ExhibitionStateViewer>
-      }
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else if (exhibition) {
+          return (
+            <ExhibitionStateViewer exhibition={exhibition}>
+              <div className='flex justify-center'>
+                <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700 text-xl'>
+                  <Title />
+                  <MainPart />
+                  <EndCard />
+                </div>
+              </div>
+            </ExhibitionStateViewer>
+          );
+        } else {
+          return <Redirect to={FALLBACK_PATH} />;
+        }
+      }}
     </ProtectedRoute>
   );
 };
