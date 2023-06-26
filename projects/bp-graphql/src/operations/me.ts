@@ -1,12 +1,11 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query me {
       me {
-        role {
-          name
-        }
+        id
         username
         email
       }

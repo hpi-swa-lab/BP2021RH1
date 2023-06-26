@@ -1,4 +1,6 @@
 import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
+import { AccessTime, AutoStories, ThumbUp } from '@mui/icons-material';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useGetAllArchiveTagsQuery,
@@ -10,21 +12,19 @@ import { useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
 import { IfFlagEnabled } from '../../common/IfFlagEnabled';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import PrimaryButton from '../../common/PrimaryButton';
 import BrowseView from '../browse/BrowseView';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 import { useVisit } from './../../../helpers/history';
 import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
-import { AccessTime, AutoStories, ThumbUp } from '@mui/icons-material';
-import OverviewContainer, {
-  OverviewContainerPosition,
-  OverviewContainerTab,
-} from '../../common/OverviewContainer';
-import { useMemo } from 'react';
-import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 
 const StartView = () => {
   const { visit } = useVisit();
@@ -120,19 +120,19 @@ const StartView = () => {
 
         <div className='flex place-content-center gap-2 m-4 flex-wrap'>
           <PrimaryButton
-            onClickFn={() => {
+            onClick={() => {
               visit('/discover');
             }}
-            isShowMore
+            withRightArrow
           >
             {t('discover.discover-button')}
           </PrimaryButton>
           {!isMobile && (
             <PrimaryButton
-              onClickFn={() => {
+              onClick={() => {
                 visit('/geo');
               }}
-              isShowMore
+              withRightArrow
             >
               {t('geo.geo-game-button')}
             </PrimaryButton>

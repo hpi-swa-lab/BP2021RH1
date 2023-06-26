@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getExhibitions($archiveId: ID, $sortBy: [String] = ["createdAt:desc"]) {
       exhibitions(filters: { archive_tag: { id: { eq: $archiveId } } }, sort: $sortBy) {

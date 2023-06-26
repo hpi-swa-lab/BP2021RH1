@@ -1,27 +1,33 @@
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  UniqueIdentifier,
+  useDroppable,
+} from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Button, IconButton, Paper, TextField } from '@mui/material';
 import { UIEventHandler, useContext, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Redirect } from 'react-router-dom';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { channelFactory } from '../../../helpers/channel-helpers';
+import { useCanEditExhibition } from '../../../hooks/can-do-hooks';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
+import ProtectedRoute from '../../common/ProtectedRoute';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import TextEditor from '../../common/editors/TextEditor';
-import { useTranslation } from 'react-i18next';
+import { FALLBACK_PATH } from '../../routes';
 import {
   ExhibitionGetContext,
   ExhibitionSectionUtilsContext,
   ExhibitionSetContext,
   ExhibitionStateManager,
 } from './ExhibitonUtils';
-import {
-  DndContext,
-  DragOverlay,
-  DragEndEvent,
-  DragStartEvent,
-  UniqueIdentifier,
-  useDroppable,
-} from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
-import { channelFactory } from '../../../helpers/channel-helpers';
 
 const Idealot = () => {
   const { t } = useTranslation();
@@ -321,7 +327,12 @@ const AddPicturesButton = () => {
 };
 
 const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
-  const { data: exhibitionData, refetch } = useGetExhibitionQuery({
+  const {
+    data: exhibitionData,
+    error,
+    loading,
+    refetch,
+  } = useGetExhibitionQuery({
     variables: { exhibitionId },
   });
   const exhibition: FlatExhibition | undefined =
@@ -336,19 +347,30 @@ const ExhibitionTool = ({ exhibitionId }: { exhibitionId: string }) => {
     return () => exhibitionChannel.close();
   });
 
+  const { canEditExhibition, loading: canEditExhibitionLoading } =
+    useCanEditExhibition(exhibitionId);
+
   return (
-    <>
-      {exhibition && (
-        <>
-          <ExhibitionStateManager exhibition={exhibition}>
-            <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
-              <Idealot />
-              <ExhibitionManipulator />
-            </div>
-          </ExhibitionStateManager>
-        </>
-      )}
-    </>
+    <ProtectedRoute canUse={canEditExhibition} canUseLoading={canEditExhibitionLoading}>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else if (exhibition) {
+          return (
+            <ExhibitionStateManager exhibition={exhibition}>
+              <div className='flex gap-7 items-stretch h-full w-full p-7 box-border overflow-hidden'>
+                <Idealot />
+                <ExhibitionManipulator />
+              </div>
+            </ExhibitionStateManager>
+          );
+        } else {
+          return <Redirect to={FALLBACK_PATH} />;
+        }
+      }}
+    </ProtectedRoute>
   );
 };
 

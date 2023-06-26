@@ -21,6 +21,7 @@ const LatestPicturesView = () => {
           queryParams={{}}
           maxNumPictures={500}
           showCount={false}
+          textFilter={null}
         />
       </ShowStats>
     </div>

@@ -1,31 +1,34 @@
-import { PropsWithChildren } from 'react';
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router';
-import { AuthRole, useAuth } from '../provider/AuthProvider';
 import { FALLBACK_PATH } from './../routes';
+import Loading from './Loading';
 
 interface ProtectedRouteProps {
+  canUse: boolean;
+  canUseLoading: boolean;
   redirectPath?: string;
-  minRole?: AuthRole;
+  children: ReactNode | (() => ReactNode);
 }
 
-const ProtectedRoute = ({
-  redirectPath = FALLBACK_PATH,
-  minRole = AuthRole.CURATOR,
-  children,
-}: PropsWithChildren<ProtectedRouteProps>) => {
-  const { role, loading } = useAuth();
+const ProtectedRoute = (props: ProtectedRouteProps) => {
+  const { canUse, canUseLoading, redirectPath = FALLBACK_PATH } = props;
+
   const { t } = useTranslation();
 
-  if (role < minRole) {
+  if (!canUse) {
     // protect from unauthorized access (e. g. people manually entering the url)
-    if (loading) {
-      return <>{t('common.checkingAuth')}</>;
+    if (canUseLoading) {
+      return <Loading label={t('common.checkingAuth')} />;
     } else {
       return <Redirect to={redirectPath} />;
     }
   } else {
-    return <>{children}</>;
+    if (typeof props.children === 'function') {
+      return <>{props.children()}</>;
+    } else {
+      return <>{props.children}</>;
+    }
   }
 };
 

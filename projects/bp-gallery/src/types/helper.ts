@@ -1,1 +1,4 @@
-export type MutationFunction<T extends (...args: never[]) => [unknown, unknown]> = ReturnType<T>[0];
+export type KeysWithValueExtending<T, V> = {
+  [K in keyof T]: T[K] extends V ? K : never;
+}[keyof T] &
+  keyof any;

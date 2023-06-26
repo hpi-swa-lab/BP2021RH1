@@ -6,6 +6,7 @@ import LocationManagementDialogPreset from '../views/location-curating/LocationM
 import PathPositionSelectDialogPreset from '../views/location-curating/SelectPathPositionDialog';
 import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
 import { ScrollProvider } from './ScrollProvider';
+import AddUserDialogPreset from './dialog-presets/AddUserDialogPreset';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
@@ -25,6 +26,7 @@ export enum DialogPreset {
   SELECT_ARCHIVE_TAG,
   SELECT_LOCATION,
   INPUT_FIELD,
+  ADD_USER,
   SELECT_PATH_POSITION,
   LOCATION_MANAGEMENT,
 }
@@ -132,6 +134,9 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         )}
         {dialogState?.preset === DialogPreset.INPUT_FIELD && (
           <InputFieldDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+        )}
+        {dialogState?.preset === DialogPreset.ADD_USER && (
+          <AddUserDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
         {dialogState?.preset === DialogPreset.SELECT_PATH_POSITION && (
           <PathPositionSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />

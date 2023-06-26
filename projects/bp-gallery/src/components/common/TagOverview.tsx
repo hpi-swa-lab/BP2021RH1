@@ -1,17 +1,17 @@
-import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
-import './PictureOverview.scss';
-import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
+import { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
   PersonTagFiltersInput,
   PictureFiltersInput,
 } from '../../graphql/APIConnector';
-import DecadesList from '../views/search/DecadesList';
-import TagList from '../views/search/TagList';
-import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
+import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
+import DecadesList from '../views/search/DecadesList';
+import TagList from '../views/search/TagList';
+import './PictureOverview.scss';
 import PrimaryButton from './PrimaryButton';
 
 const MAX_TAGS_PER_ROW = 3;
@@ -113,7 +113,7 @@ const TagOverview = ({
           )}
         </div>
         {onClick && (
-          <PrimaryButton onClickFn={onClick} isShowMore={true}>
+          <PrimaryButton onClick={onClick} withRightArrow>
             {t('common.showMore')}
           </PrimaryButton>
         )}

@@ -25,7 +25,7 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Install bp-graphql dependencies
         working-directory: ./projects/bp-graphql
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile && tsc
       - name: Generate APIConnector
         run: yarn generate-api
       - name: Lint bp-gallery

@@ -1,10 +1,17 @@
 import { Description, Event, Folder, FolderSpecial, Place, Sell } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { pick } from 'lodash';
-import { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import { ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
+  useCanRunCreateKeywordTagMutation,
+  useCanRunCreateLocationTagMutation,
+  useCanRunCreatePersonTagMutation,
+  useCanRunGetAllCollectionsQuery,
+  useCanRunGetAllKeywordTagsQuery,
+  useCanRunGetAllLocationTagsQuery,
+  useCanRunGetAllPersonTagsQuery,
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
@@ -21,7 +28,6 @@ import {
   TagType,
 } from '../../../../../types/additionalFlatTypes';
 import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
 import { useAddExhibitionPictures } from '../../../exhibitions/add-exhibition-pictures.hook';
 import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
@@ -54,20 +60,22 @@ const PictureInfo = ({
   picture: FlatPicture;
   pictureIds: string[];
   hasHiddenLinks: boolean;
-  onSave: (field: Field) => void;
+  onSave?: (field: Field) => void;
   topInfo?: (anyFieldTouched: boolean, isSaving: boolean) => ReactNode;
 }) => {
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const [anyFieldTouched, setAnyFieldTouched] = useState<boolean>(false);
   const faceTaggingContext = useFaceTagging();
 
-  const savePictureInfo = useCallback(
-    (field: Field) => {
-      setAnyFieldTouched(false);
-      onSave(field);
-    },
+  const savePictureInfo = useMemo(
+    () =>
+      onSave
+        ? (field: Field) => {
+            setAnyFieldTouched(false);
+            onSave(field);
+          }
+        : undefined,
     [onSave]
   );
 
@@ -75,6 +83,11 @@ const PictureInfo = ({
   const [getAllLocations, locationsResponse] = useGetAllLocationTagsLazyQuery();
   const [getAllPeople, peopleResponse] = useGetAllPersonTagsLazyQuery();
   const [getAllCollections, collectionsResponse] = useGetAllCollectionsLazyQuery();
+
+  const { canRun: canGetAllKeywords } = useCanRunGetAllKeywordTagsQuery();
+  const { canRun: canGetAllLocations } = useCanRunGetAllLocationTagsQuery();
+  const { canRun: canGetAllPeople } = useCanRunGetAllPersonTagsQuery();
+  const { canRun: canGetAllCollections } = useCanRunGetAllCollectionsQuery();
 
   const addExhibitionPictures = useAddExhibitionPictures();
   const openAlert = useContext(AlertContext);
@@ -88,14 +101,19 @@ const PictureInfo = ({
     refetchQueries: ['getAllPersonTags'],
     awaitRefetchQueries: true,
   });
+  const { canRun: canCreatePersonTag } = useCanRunCreatePersonTagMutation();
+
   const [newLocationTagMutation, newLocationTagMutationResponse] = useCreateLocationTagMutation({
     refetchQueries: ['getAllLocationTags'],
     awaitRefetchQueries: true,
   });
+  const { canRun: canCreateLocationTag } = useCanRunCreateLocationTagMutation();
+
   const [newKeywordTagMutation, newKeywordTagMutationResponse] = useCreateKeywordTagMutation({
     refetchQueries: ['getAllKeywordTags'],
     awaitRefetchQueries: true,
   });
+  const { canRun: canCreateKeywordTag } = useCanRunCreateKeywordTagMutation();
 
   const isSaving =
     newPersonTagMutationResponse.loading ||
@@ -103,13 +121,25 @@ const PictureInfo = ({
     newKeywordTagMutationResponse.loading;
 
   useEffect(() => {
-    if (role >= AuthRole.CURATOR) {
+    if (canGetAllKeywords) {
       getAllKeywords();
+    }
+  }, [canGetAllKeywords, getAllKeywords]);
+  useEffect(() => {
+    if (canGetAllLocations) {
       getAllLocations();
+    }
+  }, [canGetAllLocations, getAllLocations]);
+  useEffect(() => {
+    if (canGetAllPeople) {
       getAllPeople();
+    }
+  }, [canGetAllPeople, getAllPeople]);
+  useEffect(() => {
+    if (canGetAllCollections) {
       getAllCollections();
     }
-  }, [role, getAllKeywords, getAllLocations, getAllPeople, getAllCollections]);
+  }, [canGetAllCollections, getAllCollections]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
   return (
@@ -140,9 +170,13 @@ const PictureInfo = ({
       <PictureInfoField title={t('pictureFields.time')} icon={<Event />} type='date'>
         <DateRangeSelectionField
           timeRangeTag={picture.time_range_tag}
-          onChange={range => {
-            savePictureInfo({ time_range_tag: range });
-          }}
+          onChange={
+            savePictureInfo
+              ? range => {
+                  savePictureInfo({ time_range_tag: range });
+                }
+              : undefined
+          }
           onTouch={() => setAnyFieldTouched(true)}
           onResetTouch={() => setAnyFieldTouched(false)}
         />
@@ -154,58 +188,74 @@ const PictureInfo = ({
       >
         <DescriptionsEditField
           descriptions={picture.descriptions ?? []}
-          onChange={descriptions => {
-            savePictureInfo({ descriptions });
-          }}
+          onChange={
+            savePictureInfo
+              ? descriptions => {
+                  savePictureInfo({ descriptions });
+                }
+              : undefined
+          }
           onTouch={() => setAnyFieldTouched(true)}
         />
       </PictureInfoField>
       <FaceTaggingUI
         tags={picture.person_tags ?? []}
         allTags={allPeople ?? []}
-        onChange={people => {
-          savePictureInfo({ person_tags: people });
-          /* unfortunately I did not find a way to get the id of a person tag that is being deleted, so i had to go
-             through all facetags and all persontags, every time something about the persontag collection is changed,
-             to find out wether a facetag needs to be deleted */
-          {
-            faceTaggingContext?.tags.forEach(ftag => {
-              if (!people.find(person => person.id === ftag.personTagId) && ftag.id) {
-                faceTaggingContext.removeTag(ftag.id);
+        onChange={
+          savePictureInfo
+            ? people => {
+                savePictureInfo({ person_tags: people });
+                /* unfortunately I did not find a way to get the id of a person tag that is being deleted, so i had to go
+                   through all facetags and all persontags, every time something about the persontag collection is changed,
+                   to find out wether a facetag needs to be deleted */
+                {
+                  faceTaggingContext?.tags.forEach(ftag => {
+                    if (!people.find(person => person.id === ftag.personTagId) && ftag.id) {
+                      faceTaggingContext.removeTag(ftag.id);
+                    }
+                  });
+                }
               }
-            });
-          }
-        }}
-        createMutation={newPersonTagMutation}
+            : undefined
+        }
+        createMutation={canCreatePersonTag ? newPersonTagMutation : undefined}
       />
       <PictureInfoField title={t('pictureFields.locations')} icon={<Place />} type='location'>
         <TagSelectionField
           type={TagType.LOCATION}
           tags={picture.location_tags ?? []}
           allTags={allLocations ?? []}
-          onChange={(locations: (FlatLocationTagWithoutRelations & { verified?: boolean })[]) => {
-            savePictureInfo({
-              location_tags: locations.map(location => {
-                return pick(location, ['name', 'id', 'visible', 'verified']);
-              }),
-            });
-          }}
+          onChange={
+            savePictureInfo
+              ? (locations: (FlatLocationTagWithoutRelations & { verified?: boolean })[]) => {
+                  savePictureInfo({
+                    location_tags: locations.map(location => {
+                      return pick(location, ['name', 'id', 'visible', 'verified']);
+                    }),
+                  });
+                }
+              : undefined
+          }
           noContentText={t('pictureFields.noLocations')}
-          createMutation={newLocationTagMutation}
-          createChildMutation={newLocationTagMutation}
+          createMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
+          createChildMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
         />
       </PictureInfoField>
-      {(role >= AuthRole.CURATOR || Boolean(picture.keyword_tags?.length)) && (
+      {(savePictureInfo || Boolean(picture.keyword_tags?.length)) && (
         <PictureInfoField title={t('pictureFields.keywords')} icon={<Sell />} type='keywords'>
           <TagSelectionField
             type={TagType.KEYWORD}
             tags={picture.keyword_tags ?? []}
             allTags={allKeywords ?? []}
-            onChange={keywords => {
-              savePictureInfo({ keyword_tags: keywords });
-            }}
+            onChange={
+              savePictureInfo
+                ? keywords => {
+                    savePictureInfo({ keyword_tags: keywords });
+                  }
+                : undefined
+            }
             noContentText={t('pictureFields.noKeywords')}
-            createMutation={newKeywordTagMutation}
+            createMutation={canCreateKeywordTag ? newKeywordTagMutation : undefined}
           />
         </PictureInfoField>
       )}
@@ -215,7 +265,7 @@ const PictureInfo = ({
         hasHiddenLinks={hasHiddenLinks}
         savePictureInfo={savePictureInfo}
       />
-      {role >= AuthRole.CURATOR && (
+      {savePictureInfo && (
         <PictureInfoField
           title={t('pictureFields.collections')}
           icon={<Folder />}
@@ -233,7 +283,7 @@ const PictureInfo = ({
           />
         </PictureInfoField>
       )}
-      {(role >= AuthRole.CURATOR || Boolean(picture.archive_tag)) && (
+      {(savePictureInfo || Boolean(picture.archive_tag)) && (
         <PictureInfoField
           title={t('pictureFields.archiveTag')}
           icon={<FolderSpecial />}
@@ -241,7 +291,11 @@ const PictureInfo = ({
         >
           <ArchiveTagField
             archiveTag={picture.archive_tag}
-            onChange={archiveTag => savePictureInfo({ archive_tag: archiveTag.id })}
+            onChange={
+              savePictureInfo
+                ? archiveTag => savePictureInfo({ archive_tag: archiveTag.id })
+                : undefined
+            }
           />
         </PictureInfoField>
       )}

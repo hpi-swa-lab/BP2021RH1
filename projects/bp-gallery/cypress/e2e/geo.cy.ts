@@ -1,4 +1,4 @@
-let oldPictureSrc = '';
+let oldPictureId = '';
 
 describe('Geo View', () => {
   before(() => {
@@ -26,11 +26,11 @@ describe('Geo View', () => {
     //picture container contains a real image
     cy.get('.picture-container').children().should('have.attr', 'src').and('include', 'http://');
 
-    //save the src of the image
+    //save the picture id of the image
     cy.get('[data-testid="geo-image"]')
-      .invoke('attr', 'src')
+      .invoke('attr', 'data-pictureId')
       .then(elem => {
-        oldPictureSrc = elem ?? '';
+        oldPictureId = elem ?? '';
       });
 
     // check if it contains a map
@@ -55,9 +55,9 @@ describe('Geo View', () => {
     cy.get('[data-testid="next-picture"]').click();
 
     cy.get('[data-testid="geo-image"]')
-      .invoke('attr', 'src')
+      .invoke('attr', 'data-pictureId')
       .then(elem => {
-        expect(elem).to.not.equal(oldPictureSrc);
+        expect(elem).to.not.equal(oldPictureId);
       });
   });
 

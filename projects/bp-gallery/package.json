@@ -16,9 +16,13 @@
     "@paypal/react-paypal-js": "^7.8.3",
     "@sentry/react": "^7.24.2",
     "@tailwindcss/line-clamp": "^0.4.2",
+    "@types/apollo-upload-client": "^17.0.2",
+    "apollo-upload-client": "^17.0.0",
+    "bp-graphql": "../bp-graphql",
     "dayjs": "^1.11.7",
     "env-cmd": "^10.1.0",
     "events": "^3.3.0",
+    "extract-files": "^11.0.0",
     "fuse.js": "^6.6.2",
     "graphql": "16.0.1",
     "history": "^5.3.0",
@@ -109,7 +113,7 @@
     "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx .",
     "format": "prettier --write src && yarn lint --fix",
     "replace-error-policy": "replace-in-file \"import { gql } from '@apollo/client\" \"import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && replace-in-file \"errorPolicy: 'all'\" \"errorPolicy: 'all' as ErrorPolicy\" ./src/graphql/APIConnector.tsx && replace-in-file \"/* eslint-disable react-refresh/only-export-components */ import\" \"import\" ./src/graphql/APIConnector.tsx",
-    "generate-api": "tsc -p ../bp-graphql && node ../bp-graphql/build/generateOperationGraphQL.js && graphql-codegen --config src/graphql/codegen.yml && replace-in-file \"import { gql } from '@apollo/client\" \"/* eslint-disable react-refresh/only-export-components */ import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && yarn eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && yarn replace-error-policy",
+    "generate-api": "node ../bp-graphql/build/generateIndexFiles.js && tsc -p ../bp-graphql && (yarn upgrade bp-graphql &) && (cd ../bp-strapi && yarn upgrade bp-graphql &) && node ../bp-graphql/build/generateOperationGraphQL.js && tsc -p src/graphql/plugins && graphql-codegen --config src/graphql/codegen.yml && replace-in-file \"import { gql } from '@apollo/client\" \"/* eslint-disable react-refresh/only-export-components */ import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && yarn eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && yarn replace-error-policy",
     "generate-api:e2e": "env-cmd -f ./environments/.env.test yarn generate-api"
   }
 }

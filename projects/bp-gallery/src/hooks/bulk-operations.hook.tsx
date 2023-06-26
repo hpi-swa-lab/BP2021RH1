@@ -7,6 +7,7 @@ import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
 import { ExhibitionIdContext } from '../components/provider/ExhibitionProvider';
 import { useAddExhibitionPictures } from '../components/views/exhibitions/add-exhibition-pictures.hook';
+import { useCanRunCreateExhibitionPictureMutation } from '../graphql/APIConnector';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
 
@@ -14,7 +15,8 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
   const dialog = useDialog();
 
-  const { addPicturesToCollection, removePicturesFromCollection } = useManageCollectionPictures();
+  const { addPicturesToCollection, removePicturesFromCollection, canManageCollectionPictures } =
+    useManageCollectionPictures();
 
   const selectCollection = useCallback(() => {
     return dialog({
@@ -25,6 +27,11 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
 
   const exhibitionId = useContext(ExhibitionIdContext);
   const addExhibitionPictures = useAddExhibitionPictures();
+  const { canRun: canAddExhibitionPictures } = useCanRunCreateExhibitionPictureMutation({
+    variables: {
+      exhibitionIdealotId: exhibitionId,
+    },
+  });
   const openAlert = useContext(AlertContext);
 
   return {
@@ -42,6 +49,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           );
         });
       },
+      canRun: canManageCollectionPictures,
     },
     removeFromCollection: {
       name: t('curator.removeFromCollection'),
@@ -55,6 +63,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           selectedPictures.map(p => p.id)
         );
       },
+      canRun: canManageCollectionPictures && parentCollection !== undefined,
     },
     moveToCollection: {
       name: t('curator.moveToCollection'),
@@ -76,6 +85,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           }
         });
       },
+      canRun: canManageCollectionPictures,
     },
     bulkEdit: {
       name: t('curator.bulkEdit'),
@@ -83,6 +93,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       action: (_selectedPictures: FlatPicture[], onBulkEdit: () => void) => {
         onBulkEdit();
       },
+      canRun: canBulkEdit => canBulkEdit,
     },
     addToExhibition: {
       name: t('curator.addToExhibition'),
@@ -104,6 +115,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
           duration: 2000,
         });
       },
+      canRun: canAddExhibitionPictures,
     },
   } satisfies Record<string, BulkOperation>;
 };

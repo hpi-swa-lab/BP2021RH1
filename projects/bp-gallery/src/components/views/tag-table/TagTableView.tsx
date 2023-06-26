@@ -1,12 +1,5 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
-import './TagTableView.scss';
-import {
-  ComponentCommonSynonyms,
-  ComponentCommonSynonymsInput,
-} from '../../../graphql/APIConnector';
-import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import Loading from '../../common/Loading';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { Delete } from '@mui/icons-material';
+import { Button, Chip, IconButton } from '@mui/material';
 import {
   DataGrid,
   GridCheckIcon,
@@ -15,14 +8,21 @@ import {
   GridRowModel,
   GridRowsProp,
 } from '@mui/x-data-grid';
-import { AlertContext, AlertType } from '../../provider/AlertProvider';
-import { Button, Chip, IconButton } from '@mui/material';
-import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Delete } from '@mui/icons-material';
-import { useDialog, DialogPreset } from '../../provider/DialogProvider';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
+import {
+  ComponentCommonSynonyms,
+  ComponentCommonSynonymsInput,
+} from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
+import ProtectedRoute from '../../common/ProtectedRoute';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import { AlertContext, AlertType } from '../../provider/AlertProvider';
+import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import './TagTableView.scss';
 
 interface TagRow {
   id: string;
@@ -36,7 +36,6 @@ const TagTableView = ({ type }: { type: TagType }) => {
   const openAlert = useContext(AlertContext);
   const prompt = useDialog();
   const { t } = useTranslation();
-  const { role } = useAuth();
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
 
   const {
@@ -46,6 +45,12 @@ const TagTableView = ({ type }: { type: TagType }) => {
     mergeTagsMutationSource,
     deleteTagMutationSource,
     updateVisibilityMutationSource,
+    canUseTagTableViewQuery,
+    canUpdateTagNameQuery,
+    canUpdateSynonymsQuery,
+    canMergeTagsQuery,
+    canDeleteTagQuery,
+    canUpdateVisibilityQuery,
   } = useGenericTagEndpoints(type);
 
   const { data, loading, error, refetch } = allTagsQuery();
@@ -66,12 +71,14 @@ const TagTableView = ({ type }: { type: TagType }) => {
       refetch();
     },
   });
+  const { canRun: canUpdateSynonyms } = canUpdateSynonymsQuery();
 
   const [updateTagNameMutation] = updateTagNameMutationSource({
     onCompleted: _ => {
       refetch();
     },
   });
+  const { canRun: canUpdateTagName } = canUpdateTagNameQuery();
 
   const [mergeTagsMutation] = mergeTagsMutationSource({
     onCompleted: _ => {
@@ -79,12 +86,14 @@ const TagTableView = ({ type }: { type: TagType }) => {
       refetch();
     },
   });
+  const { canRun: canMergeTags } = canMergeTagsQuery();
 
   const [deleteTagMutation] = deleteTagMutationSource({
     onCompleted: _ => {
       refetch();
     },
   });
+  const { canRun: canDeleteTag } = canDeleteTagQuery();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const [updateVisibilityMutation] = updateVisibilityMutationSource({
@@ -92,6 +101,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
       refetch();
     },
   });
+  const { canRun: canUpdateVisibility } = canUpdateVisibilityQuery();
 
   const addSynonym = useCallback(
     (tagId: string, synonymName: string) => {
@@ -179,7 +189,7 @@ const TagTableView = ({ type }: { type: TagType }) => {
 
   const columns: GridColDef[] = useMemo(
     () => [
-      { field: 'name', headerName: 'Name', flex: 2, editable: true },
+      { field: 'name', headerName: 'Name', flex: 2, editable: canUpdateTagName },
       {
         field: 'synonyms',
         headerName: t('curator.synonyms'),
@@ -194,41 +204,61 @@ const TagTableView = ({ type }: { type: TagType }) => {
             <Chip
               key={s.name}
               label={s.name}
-              onDelete={params.value ? () => deleteSynonym(params.value!.tagId, s.name) : undefined}
+              onDelete={
+                canUpdateSynonyms && params.value
+                  ? () => deleteSynonym(params.value!.tagId, s.name)
+                  : undefined
+              }
             />
           ));
         },
       },
-      {
-        field: 'add',
-        headerName: t('curator.add'),
-        flex: 2,
-        editable: true,
-      },
+      ...(canUpdateSynonyms
+        ? [
+            {
+              field: 'add',
+              headerName: t('curator.add'),
+              flex: 2,
+              editable: true,
+            },
+          ]
+        : []),
       ...additionalColumns,
-      {
-        field: 'delete',
-        headerName: t('common.delete'),
-        flex: 1,
-        renderCell: (
-          params: GridRenderCellParams<{
-            tagId: string;
-            tagName: string;
-          }>
-        ) => {
-          return (
-            <IconButton
-              onClick={() => {
-                deleteTag(params.value?.tagId, params.value?.tagName);
-              }}
-            >
-              <Delete />
-            </IconButton>
-          );
-        },
-      },
+      ...(canDeleteTag
+        ? [
+            {
+              field: 'delete',
+              headerName: t('common.delete'),
+              flex: 1,
+              renderCell: (
+                params: GridRenderCellParams<{
+                  tagId: string;
+                  tagName: string;
+                }>
+              ) => {
+                return (
+                  <IconButton
+                    onClick={() => {
+                      deleteTag(params.value?.tagId, params.value?.tagName);
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                );
+              },
+            },
+          ]
+        : []),
     ],
-    [deleteTag, t, deleteSynonym, additionalColumns]
+    [
+      canUpdateTagName,
+      t,
+      canUpdateSynonyms,
+      deleteSynonym,
+      additionalColumns,
+      canDeleteTag,
+      deleteTag,
+    ]
   );
 
   const rows: GridRowsProp = useMemo(
@@ -287,51 +317,62 @@ const TagTableView = ({ type }: { type: TagType }) => {
     [selectedRowIds, getSelectedRows, updateVisibilityMutation]
   );
 
-  if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading) {
-    return <Loading />;
-  } else if (Object.values(tags).length && role >= AuthRole.CURATOR) {
-    return (
-      <div className='tag-grid'>
-        <Button onClick={mergeTags} className='merge-button'>
-          {t('curator.mergeTag')}
-        </Button>
-        {(type === TagType.LOCATION || type === TagType.KEYWORD) && (
-          <>
-            <Button onClick={() => setVisible(true)} className='merge-button'>
-              {t(`curator.show${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
-            </Button>
-            <Button onClick={() => setVisible(false)} className='merge-button'>
-              {t(`curator.hide${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
-            </Button>
-          </>
-        )}
+  const { canRun: canUseTagTableView, loading: canUseTagTableViewLoading } =
+    canUseTagTableViewQuery();
 
-        <DataGrid
-          className='table'
-          rows={rows}
-          columns={columns}
-          experimentalFeatures={{ newEditingApi: true }}
-          processRowUpdate={processRowUpdate}
-          onProcessRowUpdateError={error => {
-            openAlert({
-              alertType: AlertType.ERROR,
-              message: error.message,
-            });
-          }}
-          checkboxSelection={true}
-          selectionModel={selectedRowIds}
-          onSelectionModelChange={newSelectionModel => {
-            setSelectedRowIds(newSelectionModel as string[]);
-          }}
-          disableSelectionOnClick={true}
-        />
-      </div>
-    );
-  } else {
-    return null;
-  }
+  return (
+    <ProtectedRoute canUse={canUseTagTableView} canUseLoading={canUseTagTableViewLoading}>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else if (Object.values(tags).length) {
+          return (
+            <div className='tag-grid'>
+              {canMergeTags && (
+                <Button onClick={mergeTags} className='merge-button'>
+                  {t('curator.mergeTag')}
+                </Button>
+              )}
+              {canUpdateVisibility && (type === TagType.LOCATION || type === TagType.KEYWORD) && (
+                <>
+                  <Button onClick={() => setVisible(true)} className='merge-button'>
+                    {t(`curator.show${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
+                  </Button>
+                  <Button onClick={() => setVisible(false)} className='merge-button'>
+                    {t(`curator.hide${type === TagType.LOCATION ? 'Location' : 'Keyword'}`)}
+                  </Button>
+                </>
+              )}
+
+              <DataGrid
+                className='table'
+                rows={rows}
+                columns={columns}
+                experimentalFeatures={{ newEditingApi: true }}
+                processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={error => {
+                  openAlert({
+                    alertType: AlertType.ERROR,
+                    message: error.message,
+                  });
+                }}
+                checkboxSelection={true}
+                selectionModel={selectedRowIds}
+                onSelectionModelChange={newSelectionModel => {
+                  setSelectedRowIds(newSelectionModel as string[]);
+                }}
+                disableSelectionOnClick={true}
+              />
+            </div>
+          );
+        } else {
+          return null;
+        }
+      }}
+    </ProtectedRoute>
+  );
 };
 
 export default TagTableView;

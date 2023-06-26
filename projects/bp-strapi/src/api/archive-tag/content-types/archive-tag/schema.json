@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
   "attributes": {
     "name": {
@@ -53,6 +53,9 @@
     },
     "paypalPurpose": {
       "type": "string"
+    },
+    "restrictImageDownloading": {
+      "type": "boolean"
     },
     "email": {
       "type": "email"

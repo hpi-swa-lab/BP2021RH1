@@ -12,12 +12,16 @@ import {
   KeywordTag,
   Link,
   LocationTag,
+  ParameterizedPermission,
   PersonTag,
   Picture,
   PictureGeoInfo,
   Scalars,
   TimeRangeTag,
   UploadFile,
+  UsersPermissionsPermission,
+  UsersPermissionsRole,
+  UsersPermissionsUser,
 } from '../graphql/APIConnector';
 
 type ID = { id: Scalars['ID'] };
@@ -85,6 +89,17 @@ export type FlatArchiveTagWithoutRelations = ID &
 export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatFaceTagWithoutRelations = ID & Omit<FaceTag, 'person_tag' | 'picture'>;
+
+export type FlatUsersPermissionsPermissionWithoutRelations = ID &
+  Omit<UsersPermissionsPermission, 'role'>;
+
+export type FlatUsersPermissionsRoleWithoutRelations = ID &
+  Omit<UsersPermissionsRole, 'users' | 'permissions'>;
+
+export type FlatUsersPermissionsUserWithoutRelations = ID & Omit<UsersPermissionsUser, 'role'>;
+
+export type FlatParameterizedPermissionWithoutRelations = ID &
+  Omit<ParameterizedPermission, 'users_permissions_user' | 'archive_tag'>;
 
 export type FlatExhibitionSource = FlatExhibitionSourceWithoutRelations & {
   exhibition?: FlatExhibition;
@@ -163,6 +178,24 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   linked_pictures?: FlatPictureWithoutRelations[];
   linked_texts?: FlatPictureWithoutRelations[];
   archive_tag?: FlatArchiveTagWithoutRelations;
+};
+
+export type FlatUsersPermissionsPermission = FlatUsersPermissionsPermissionWithoutRelations & {
+  role?: FlatUsersPermissionsRole;
+};
+
+export type FlatUsersPermissionsRole = FlatUsersPermissionsRoleWithoutRelations & {
+  users?: FlatUsersPermissionsUser[];
+  permissions?: FlatUsersPermissionsPermission[];
+};
+
+export type FlatUsersPermissionsUser = FlatUsersPermissionsUserWithoutRelations & {
+  role?: FlatUsersPermissionsRole;
+};
+
+export type FlatParameterizedPermission = FlatParameterizedPermissionWithoutRelations & {
+  users_permissions_user?: FlatUsersPermissionsUser;
+  archive_tag?: FlatArchiveTag;
 };
 
 export type Thumbnail = {
