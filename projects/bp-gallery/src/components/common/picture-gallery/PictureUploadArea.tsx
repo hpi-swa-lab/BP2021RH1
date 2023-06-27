@@ -190,13 +190,13 @@ const PictureUploadArea = ({
         </DndContext>
       </div>
       {Boolean(newFiles.length) && (
-        <Button disabled={loading} className='add-to-collection' onClick={uploadPictures}>
-          {loading ? (
-            <CircularProgress sx={{ mr: '10px' }} />
-          ) : (
-            <ExpandCircleDown sx={{ mr: '10px' }} />
-          )}
-          <p>{t('curator.addPictures')}</p>
+        <Button
+          variant='contained'
+          disabled={loading}
+          onClick={uploadPictures}
+          endIcon={loading ? <CircularProgress /> : <ExpandCircleDown />}
+        >
+          <p>{loading ? t('curator.uploadingPictures') : t('curator.addPictures')}</p>
         </Button>
       )}
     </div>

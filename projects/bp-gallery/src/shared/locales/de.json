@@ -368,6 +368,7 @@
     "addToExhibition": "Zur Geschichte hinzufügen",
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "addPictures": "Bilder hinzufügen",
+    "uploadingPictures": "Bilder werden hochgeladen...",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
     "reallyDeletePicture": "Bild wirklich löschen?",
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
