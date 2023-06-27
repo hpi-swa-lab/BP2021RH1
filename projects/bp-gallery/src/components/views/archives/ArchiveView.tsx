@@ -1,5 +1,7 @@
 import { AccessTime, Edit, Link, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -10,6 +12,11 @@ import {
   PictureOverviewType,
   TagType,
 } from '../../../types/additionalFlatTypes';
+import DonateButton from '../../common/DonateButton';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
@@ -19,11 +26,6 @@ import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
-import DonateButton from '../../common/DonateButton';
-import { useTranslation } from 'react-i18next';
-import OverviewContainer, { OverviewContainerPosition } from '../../common/OverviewContainer';
-import { useMemo } from 'react';
-import { OverviewContainerTab } from '../../common/OverviewContainer';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -149,7 +151,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         <OverviewContainer
           tabs={tabs}
           overviewPosition={OverviewContainerPosition.ARCHIVE_VIEW}
-          archiveID={archiveId}
+          tabID={archiveId}
         />
       </ShowStats>
 

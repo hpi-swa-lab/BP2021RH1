@@ -73,7 +73,11 @@ const DiscoverView = () => {
   return (
     <div className='discover-container'>
       <ShowStats>
-        <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
+        <OverviewContainer
+          tabs={tabs}
+          overviewPosition={OverviewContainerPosition.DISCOVER_VIEW}
+          tabID='0'
+        />
 
         <PictureOverview
           title={t('discover.more-info')}
@@ -87,6 +91,7 @@ const DiscoverView = () => {
         <OverviewContainer
           tabs={timeTabs}
           overviewPosition={OverviewContainerPosition.DISCOVER_VIEW}
+          tabID='1'
         />
       </ShowStats>
 

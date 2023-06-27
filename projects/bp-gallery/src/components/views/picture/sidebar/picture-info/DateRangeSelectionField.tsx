@@ -18,13 +18,11 @@ const DateRangeSelectionField = ({
   onChange,
   onTouch,
   onResetTouch,
-  freeUse,
 }: {
   timeRangeTag?: FlatTimeRangeTag;
   onChange: (timeRangeTag: FlatTimeRangeTag) => void;
   onTouch: () => void;
   onResetTouch: () => void;
-  freeUse?: boolean;
 }) => {
   const { role } = useAuth();
   const { t } = useTranslation();
@@ -56,7 +54,7 @@ const DateRangeSelectionField = ({
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const openPopover = (anchor: HTMLDivElement) => {
-    if (role < AuthRole.CURATOR && !freeUse) return;
+    if (role < AuthRole.CURATOR) return;
     setAnchorElement(anchor);
   };
 
@@ -97,7 +95,7 @@ const DateRangeSelectionField = ({
       >
         {timeRange ? formatEstimate() : `${t('pictureFields.noTime')}`}
       </div>
-      {(role >= AuthRole.CURATOR || freeUse) && (
+      {role >= AuthRole.CURATOR && (
         <Popover
           ref={popoverRef}
           open={open}

@@ -1,5 +1,4 @@
 import { Portal } from '@mui/material';
-import { throttle } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ScrollBar from 'react-perfect-scrollbar';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -10,6 +9,10 @@ import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatT
 import PictureView from '../../views/picture/PictureView';
 import PicturePreview from './PicturePreview';
 import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
+
+const IMAGES_PER_WIDGET = 3;
+const IMAGE_WIDGET_WIDTH = 270;
+const TWO_HOURS = 2 * 60 * 60 * 1000;
 
 const SinglePicture = ({
   picture,
@@ -48,34 +51,36 @@ const SinglePicture = ({
 };
 
 const PicturesWidget = ({
-  variant,
+  reverse,
+  bigPictureFirst,
   pictures,
-  allowClicks,
-  inverse,
-  navigateToPicture,
   loading,
+  allowClicks,
+  navigateToPicture,
 }: {
-  variant?: string;
+  reverse?: boolean;
+  bigPictureFirst?: boolean;
   pictures: FlatPicture[];
-  allowClicks?: boolean;
-  inverse?: boolean;
-  navigateToPicture: (id: string) => void;
   loading: boolean;
+  allowClicks?: boolean;
+  navigateToPicture: (id: string) => void;
 }) => {
-  return variant === 'var-1' ? (
-    <div className={`flex flex-col gap-[10px]`}>
+  const bigPictureIndex = bigPictureFirst !== (reverse ?? false) ? 0 : 2;
+  const smallPictureIndices = bigPictureFirst !== (reverse ?? false) ? [1, 2] : [0, 1];
+  return (
+    <div className={`flex ${bigPictureFirst ? 'flex-col' : 'flex-col-reverse'} gap-[10px]`}>
       <SinglePicture
-        key={inverse ? 2 : 0}
-        picture={pictures.length > (inverse ? 2 : 0) ? pictures[inverse ? 2 : 0] : undefined}
+        key={pictures.length > bigPictureIndex ? pictures[bigPictureIndex].id : bigPictureIndex}
+        picture={pictures.length > bigPictureIndex ? pictures[bigPictureIndex] : undefined}
         size={'big'}
         navigateToPicture={navigateToPicture}
         allowClicks={allowClicks}
         loading={loading}
       />
-      <div className={`flex ${inverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
-        {(inverse ? [0, 1] : [1, 2]).map(i => (
+      <div className={`flex ${reverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
+        {smallPictureIndices.map(i => (
           <SinglePicture
-            key={i}
+            key={pictures.length > i ? pictures[i].id : i}
             picture={pictures.length > i ? pictures[i] : undefined}
             size={'small'}
             navigateToPicture={navigateToPicture}
@@ -84,29 +89,6 @@ const PicturesWidget = ({
           />
         ))}
       </div>
-    </div>
-  ) : (
-    <div className={`flex flex-col gap-[10px]`}>
-      <div className={`flex ${inverse ? 'flex-row-reverse' : 'flex-row'} gap-[10px]`}>
-        {(inverse ? [1, 2] : [0, 1]).map(i => (
-          <SinglePicture
-            key={i}
-            picture={pictures.length > i ? pictures[i] : undefined}
-            size={'small'}
-            navigateToPicture={navigateToPicture}
-            allowClicks={allowClicks}
-            loading={loading}
-          />
-        ))}
-      </div>
-      <SinglePicture
-        key={inverse ? 0 : 2}
-        picture={pictures.length > (inverse ? 0 : 2) ? pictures[inverse ? 0 : 2] : undefined}
-        size={'big'}
-        navigateToPicture={navigateToPicture}
-        allowClicks={allowClicks}
-        loading={loading}
-      />
     </div>
   );
 };
@@ -123,16 +105,20 @@ const HorizontalPictureGrid = ({
   const pictureLength = useRef<number>(0);
   const lastScrollPos = useRef<number>(-1);
   const allowDateUpdate = useRef<boolean>(true);
-  const [scrollBarRef, setScrollBarRef] = useState<HTMLElement>();
+  const scrollBarRef = useRef<HTMLElement>();
 
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
 
-  const [filterDate, setFilterDate] = useState<number>(date);
+  const selectedPicture = useRef<FlatPicture | undefined>();
+
+  const [filterDate, setFilterDate] = useState<Date>(
+    new Date(new Date(`${date.toString().padStart(4, '0')}-01-01T00:00:00`).getTime() - TWO_HOURS)
+  );
 
   const rightResult = useGetPictures(
     {
-      time_range_tag: { start: { gte: new Date(`${filterDate - 1}-12-31`) } },
+      time_range_tag: { start: { gte: filterDate } },
     },
     false,
     ['time_range_tag.start:asc'],
@@ -143,7 +129,9 @@ const HorizontalPictureGrid = ({
   );
 
   const leftResult = useGetPictures(
-    { time_range_tag: { start: { lt: new Date(`${filterDate - 1}-12-31`) } } },
+    {
+      time_range_tag: { start: { lt: filterDate } },
+    },
     false,
     ['time_range_tag.start:desc'],
     true,
@@ -163,43 +151,8 @@ const HorizontalPictureGrid = ({
     return [...[...(leftPictures ?? [])].reverse(), ...(rightPictures ?? [])];
   }, [leftPictures, rightPictures]);
 
-  useEffect(() => {
-    if (leftResult.loading || rightResult.loading) {
-      return;
-    }
-    const lowerBorder = pictures.length
-      ? new Date(pictures[0]?.time_range_tag?.start as Date).getFullYear()
-      : undefined;
-    const upperBorder = pictures.length
-      ? new Date(pictures[pictures.length - 1]?.time_range_tag?.start as Date).getFullYear()
-      : undefined;
-    if (!lowerBorder || !upperBorder || !(lowerBorder <= date && date <= upperBorder)) {
-      setFilterDate(date);
-    } else {
-      const field = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
-      const index = field * 3 + ((leftPictures?.length ?? 0) % 3);
-      const selectedPicture = pictures[index];
-      if (new Date(selectedPicture.time_range_tag?.start as Date).getFullYear() !== date) {
-        if (!scrollBarRef) {
-          return;
-        }
-        const lastIndex = pictures.findLastIndex(
-          value =>
-            value.time_range_tag?.start &&
-            new Date(value.time_range_tag.start as Date).getFullYear() < date
-        );
-        const lastField = Math.floor(lastIndex / 3) + (leftPictures?.length ?? 0 ? 1 : 0);
-        allowDateUpdate.current = false;
-        scrollBarRef.scrollLeft = lastField * 270;
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date]);
-
   const fetchMoreOnScrollRight = useCallback(
     (count: number) => {
-      // @ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       rightResult.fetchMore({
         variables: {
           pagination: {
@@ -214,8 +167,6 @@ const HorizontalPictureGrid = ({
 
   const fetchMoreOnScrollLeft = useCallback(
     (count: number) => {
-      // @ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       leftResult.fetchMore({
         variables: {
           pagination: {
@@ -244,16 +195,16 @@ const HorizontalPictureGrid = ({
     return (
       <div className='flex flex-row-reverse gap-[10px] py-[8px]'>
         {leftPictures?.map((_, index) => {
-          if (!(index % 3)) {
+          if (!(index % IMAGES_PER_WIDGET)) {
             return (
               <PicturesWidget
                 key={index}
-                variant={index % 6 ? 'var-2' : 'var-1'}
-                pictures={leftPictures.slice(index, index + 3)}
+                bigPictureFirst={!(index % (IMAGES_PER_WIDGET * 2))}
+                pictures={leftPictures.slice(index, index + IMAGES_PER_WIDGET)}
                 allowClicks={allowClicks}
-                inverse={true}
                 navigateToPicture={navigateToPicture}
                 loading={leftResult.loading}
+                reverse
               />
             );
           } else {
@@ -268,12 +219,12 @@ const HorizontalPictureGrid = ({
     return (
       <div className='flex gap-[10px] py-[8px]'>
         {rightPictures?.map((_, index) => {
-          if (!(index % 3)) {
+          if (!(index % IMAGES_PER_WIDGET)) {
             return (
               <PicturesWidget
                 key={index}
-                variant={index % 6 ? 'var-1' : 'var-2'}
-                pictures={rightPictures.slice(index, index + 3)}
+                bigPictureFirst={!!(index % (IMAGES_PER_WIDGET * 2))}
+                pictures={rightPictures.slice(index, index + IMAGES_PER_WIDGET)}
                 allowClicks={allowClicks}
                 navigateToPicture={navigateToPicture}
                 loading={rightResult.loading}
@@ -296,28 +247,14 @@ const HorizontalPictureGrid = ({
     );
   }, [contentLeft, contentRight]);
 
-  useEffect(() => {
-    if (!scrollBarRef || leftResult.loading) {
+  const updateCurrentValue = useCallback(() => {
+    const field = Math.ceil((scrollBarRef.current?.scrollLeft ?? 0) / IMAGE_WIDGET_WIDTH);
+    const index = field * IMAGES_PER_WIDGET + ((leftPictures?.length ?? 0) % IMAGES_PER_WIDGET);
+    selectedPicture.current = pictures.length > index && index >= 0 ? pictures[index] : undefined;
+    if (!selectedPicture.current) {
       return;
     }
-    if ((leftPictures?.length ?? 0) <= 3) {
-      scrollBarRef.scrollLeft = 270;
-      lastScrollPos.current = scrollBarRef.scrollLeft;
-    } else {
-      const oldLength = Math.ceil(pictureLength.current / 3);
-      const newLength = Math.ceil((leftPictures?.length ?? 0) / 3);
-      scrollBarRef.scrollLeft += (newLength - oldLength) * 270;
-      lastScrollPos.current = scrollBarRef.scrollLeft;
-    }
-    pictureLength.current = leftPictures?.length ?? 0;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [leftPictures?.length, leftResult.loading]);
-
-  const updateCurrentValue = useCallback(() => {
-    const field = Math.floor((scrollBarRef?.scrollLeft ?? 0) / 270);
-    const index = field * 3 + ((leftPictures?.length ?? 0) % 3);
-    const selectedPicture = pictures[index];
-    const year = new Date(selectedPicture.time_range_tag?.start as Date).getFullYear();
+    const year = new Date(selectedPicture.current.time_range_tag?.start as Date).getFullYear();
     if (leftResult.loading || rightResult.loading) {
       return;
     }
@@ -335,24 +272,75 @@ const HorizontalPictureGrid = ({
     } else if (!allowDateUpdate.current) {
       allowDateUpdate.current = true;
     }
+  }, [leftPictures?.length, leftResult.loading, pictures, rightResult.loading, setDate]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pictures]);
+  useEffect(() => {
+    if (scrollBarRef.current) {
+      scrollBarRef.current.scrollLeft = IMAGE_WIDGET_WIDTH;
+    }
+  }, [filterDate]);
 
-  const updateOnScrollX = useMemo(() => throttle(updateCurrentValue, 0), [updateCurrentValue]);
+  useEffect(() => {
+    if (!scrollBarRef.current || leftResult.loading) return;
+
+    const newWidgetCount = Math.ceil((leftPictures?.length ?? 0) / 3);
+    const oldWidgetCount = Math.ceil(pictureLength.current / 3);
+
+    pictureLength.current = leftPictures?.length ?? 0;
+    lastScrollPos.current = Math.max(newWidgetCount - oldWidgetCount, 1) * IMAGE_WIDGET_WIDTH;
+    scrollBarRef.current.scrollLeft =
+      Math.max(newWidgetCount - oldWidgetCount, 1) * IMAGE_WIDGET_WIDTH;
+  }, [leftPictures, leftResult.loading]);
+
+  useEffect(() => {
+    if (leftResult.loading || rightResult.loading) return;
+    const lowerBorder = pictures.length
+      ? new Date(pictures[0]?.time_range_tag?.start as Date).getFullYear()
+      : undefined;
+    const upperBorder = pictures.length
+      ? new Date(pictures[pictures.length - 1]?.time_range_tag?.start as Date).getFullYear()
+      : undefined;
+    const newDate = new Date(
+      new Date(`${date.toString().padStart(4, '0')}-01-01T00:00:00`).getTime()
+    );
+
+    if (!lowerBorder || !upperBorder || !(lowerBorder <= date && date <= upperBorder)) {
+      setFilterDate(newDate);
+    } else {
+      if (
+        selectedPicture.current &&
+        new Date(selectedPicture.current.time_range_tag?.start as Date).getFullYear() ===
+          newDate.getFullYear()
+      ) {
+        return;
+      }
+      const index = pictures.findLastIndex(picture => {
+        return (
+          new Date(picture.time_range_tag?.start as Date).getFullYear() < newDate.getFullYear()
+        );
+      });
+      if (index !== -1 && scrollBarRef.current) {
+        const field = Math.floor(index / 3) + ((leftPictures?.length ?? 0) % 3 ? 1 : 0);
+
+        scrollBarRef.current.scrollLeft = field * IMAGE_WIDGET_WIDTH;
+      } else {
+        setFilterDate(newDate);
+      }
+    }
+  }, [date, leftPictures?.length, leftResult.loading, pictures, rightResult.loading]);
 
   return (
     <>
       <div className='relative'>
         <ScrollBar
           containerRef={ref => {
-            setScrollBarRef(ref);
+            scrollBarRef.current = ref;
           }}
-          onScrollX={updateOnScrollX}
+          onScrollX={updateCurrentValue}
           onXReachStart={ref => {
             if (!leftResult.loading && lastScrollPos.current !== ref.scrollLeft) {
-              fetchMoreOnScrollLeft(99);
               lastScrollPos.current = ref.scrollLeft;
+              fetchMoreOnScrollLeft(99);
             }
           }}
           onXReachEnd={ref => {

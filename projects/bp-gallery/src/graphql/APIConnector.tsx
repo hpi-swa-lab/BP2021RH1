@@ -2898,6 +2898,12 @@ export type GetPicturesQuery = {
         is_text?: boolean | null;
         likes?: number | null;
         comments?: { data: Array<{ id?: string | null }> } | null;
+        verified_time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
         time_range_tag?: {
           data?: {
             id?: string | null;
@@ -5663,6 +5669,16 @@ export const GetPicturesDocument = gql`
           comments {
             data {
               id
+            }
+          }
+          verified_time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+                isEstimate
+              }
             }
           }
           time_range_tag {

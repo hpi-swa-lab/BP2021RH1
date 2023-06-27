@@ -49,7 +49,7 @@ const TimelineComponent = ({
         date={date}
         setDate={setDate}
       />
-      <HorizontalPictureGrid date={date} setDate={setDate} allowClicks={true} />
+      <HorizontalPictureGrid date={date} setDate={setDate} allowClicks />
     </div>
   );
 };
