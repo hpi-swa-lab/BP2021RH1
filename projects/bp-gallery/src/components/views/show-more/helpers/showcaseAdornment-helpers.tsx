@@ -1,6 +1,10 @@
 import { Star } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { useGetArchiveQuery, useUpdateArchiveMutation } from '../../../../graphql/APIConnector';
+import {
+  useCanRunUpdateArchiveMutation,
+  useGetArchiveQuery,
+  useUpdateArchiveMutation,
+} from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { FlatArchiveTag, FlatPicture } from '../../../../types/additionalFlatTypes';
 import { PicturePreviewAdornment } from '../../../common/picture-gallery/PicturePreview';
@@ -38,8 +42,13 @@ export const useGetShowcaseAdornments = (
   const [updateArchive] = useUpdateArchiveMutation({
     refetchQueries: ['getArchive'],
   });
+  const { canRun: canUpdateArchive } = useCanRunUpdateArchiveMutation({
+    variables: {
+      archiveId: archive?.id,
+    },
+  });
 
-  return archiveId === undefined
+  return archiveId === undefined || !canUpdateArchive
     ? undefined
     : {
         position: 'top-left',

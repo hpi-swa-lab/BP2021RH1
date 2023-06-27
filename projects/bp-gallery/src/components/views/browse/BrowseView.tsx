@@ -1,12 +1,14 @@
 import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   PictureFiltersInput,
-  PublicationState,
+  useCanRunCreateSubCollectionMutation,
+  useCanRunGetCollectionInfoByNameQuery,
   useCreateSubCollectionMutation,
   useGetCollectionInfoByNameQuery,
+  useGetPublishedCollectionInfoByNameQuery,
   useGetRootCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -17,8 +19,8 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import Footer from '../../common/footer/Footer';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import './BrowseView.scss';
 import CollectionDescription from './CollectionDescription';
@@ -39,21 +41,12 @@ const getPictureFilters = (collectionId: string) => {
   return filters;
 };
 
-const BrowseView = ({
-  path,
-  startpage,
-  parentScrollPos,
-  parentScrollHeight,
-}: {
-  path?: string[];
-  startpage?: boolean;
-  parentScrollPos?: number;
-  parentScrollHeight?: number;
-}) => {
+const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean }) => {
   const { t } = useTranslation();
-  const { role } = useAuth();
   const dialog = useDialog();
+
   const [addSubCollection] = useCreateSubCollectionMutation();
+  const { canRun: canAddSubCollection } = useCanRunCreateSubCollectionMutation();
 
   // Query collection info
   const rootCollectionResult = useGetRootCollectionQuery({
@@ -62,23 +55,40 @@ const BrowseView = ({
   const rootCollectionName = useSimplifiedQueryResponseData(rootCollectionResult.data)
     ?.browseRootCollection.current.name;
 
+  const { canRun: canSeeUnpublishedColletions } = useCanRunGetCollectionInfoByNameQuery();
+
   const collectionQueryVariables = {
     collectionName: path?.length
       ? decodeBrowsePathComponent(path[path.length - 1])
       : rootCollectionName,
-    publicationState: role >= AuthRole.CURATOR ? PublicationState.Preview : PublicationState.Live,
   };
-  const { data, loading, error } = useGetCollectionInfoByNameQuery({
+  const {
+    data: unpublishedData,
+    loading: unpublishedLoading,
+    error: unpublishedError,
+  } = useGetCollectionInfoByNameQuery({
     variables: collectionQueryVariables,
-    skip: !!rootCollectionResult.loading,
+    skip: !!rootCollectionResult.loading || !canSeeUnpublishedColletions,
   });
+  const {
+    data: publishedData,
+    loading: publishedLoading,
+    error: publishedError,
+  } = useGetPublishedCollectionInfoByNameQuery({
+    variables: collectionQueryVariables,
+    skip: !!rootCollectionResult.loading || canSeeUnpublishedColletions,
+  });
+  const data = unpublishedData ?? publishedData;
+  const loading = unpublishedLoading || publishedLoading;
+  const error = unpublishedError ?? publishedError;
+
   const collections: FlatCollection[] | undefined =
     useSimplifiedQueryResponseData(data)?.collections;
 
+  const exhibitionId = useContext(ExhibitionIdContext);
   //Curator functionality
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } = useBulkOperations(
-    collections?.[0]
-  );
+  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit, addToExhibition } =
+    useBulkOperations(collections?.[0]);
 
   const addCollection = useCallback(async () => {
     const collectionName = await dialog({
@@ -98,20 +108,17 @@ const BrowseView = ({
   }, [collections, addSubCollection, dialog, t]);
 
   const uploadAreaProps = useCallback(
-    (collection: FlatCollection): Partial<PictureUploadAreaProps> | undefined => {
-      return role >= AuthRole.CURATOR
-        ? {
-            preprocessPictures: (pictures: FlatPicture[]) => {
-              return pictures.map(picture => ({
-                ...picture,
-                collections: [collection.id as any],
-              }));
-            },
-            folderName: collection.name,
-          }
-        : undefined;
-    },
-    [role]
+    (collection: FlatCollection): Partial<PictureUploadAreaProps> | undefined => ({
+      // whether the user actually can upload the picture is handled in PictureUploadArea
+      preprocessPictures: (pictures: FlatPicture[]) => {
+        return pictures.map(picture => ({
+          ...picture,
+          collections: [collection.id as any],
+        }));
+      },
+      folderName: collection.name,
+    }),
+    []
   );
 
   if (error) {
@@ -134,7 +141,7 @@ const BrowseView = ({
           {childCount > 0 && (
             <SubCollections childCollections={collection.child_collections ?? []} path={path} />
           )}
-          {role >= AuthRole.CURATOR && (
+          {canAddSubCollection && (
             <Button startIcon={<Add />} onClick={addCollection}>
               {t('curator.createCollection')}
             </Button>
@@ -144,7 +151,14 @@ const BrowseView = ({
               queryParams={getPictureFilters(collection.id)}
               hashbase={collection.name}
               uploadAreaProps={uploadAreaProps(collection)}
-              bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+              bulkOperations={[
+                removeFromCollection,
+                linkToCollection,
+                moveToCollection,
+                bulkEdit,
+                ...(exhibitionId ? [addToExhibition] : []),
+              ]}
+              textFilter={null}
             />
           </ShowStats>
         </div>

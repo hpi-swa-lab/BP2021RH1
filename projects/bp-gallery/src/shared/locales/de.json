@@ -26,6 +26,9 @@
     "suggestions": "Vorschläge",
     "keywords": "Schlagworte",
     "persons": "Personen",
+    "edit": "Bearbeiten",
+    "yes": "Ja",
+    "no": "Nein",
     "clipboard": {
       "name": "Kopierte Links",
       "clear": "Ablage leeren",
@@ -89,6 +92,11 @@
     "pictureCount_other": "{{count, number}} Bilder",
     "moreThanPictureCount_one": "Mehr als 1 Bild",
     "moreThanPictureCount_other": "Mehr als {{count, number}} Bilder",
+    "textFilter": {
+      "onlyPictures": "Nur Bilder anzeigen",
+      "picturesAndTexts": "Bilder und Texte anzeigen",
+      "onlyTexts": "Nur Texte anzeigen"
+    },
     "and": "und",
     "and-alternative": "sowie",
     "login": "Login",
@@ -96,6 +104,26 @@
     "like": "Mag ich",
     "daily-picture": "Bild des Tages",
     "description": "Beschreibung"
+  },
+  "error": {
+    "Invalid identifier or password": "Benutzername oder Passwort sind falsch",
+    "Unauthorized": "Sie dürfen diese Aktion nicht ausführen",
+    "Unauthorized_login": "Sie dürfen sich nicht anmelden",
+    "Your account email is not confirmed": "Sie haben Ihre E-Mail noch nicht bestätigt",
+    "Your account has been blocked by an administrator": "Ihr Profil wurde von einem Administrator geblockt",
+    "User blocked": "Ihr Profil wurde von einem Administrator geblockt",
+    "You must be authenticated to reset your password": "Sie müssen angemeldet sein, um ihr Passwort zu ändern",
+    "The provided current password is invalid": "Das aktuelle Passwort ist falsch",
+    "Your new password must be different than your current password": "Ihr neues Passwort muss anders als ihr aktuelles Passwort sein",
+    "Passwords do not match": "Das neue Passwort und dessen Wiederholung stimmen nicht überein",
+    "Incorrect code provided": "Dieser Link ist ungültig",
+    "Invalid token": "Dieser Link ist ungültig",
+    "Email or Username are already taken": "Die E-Mail oder der Nutzername ist bereits vergeben",
+    "Username already taken": "Der Nutzername ist bereits vergeben",
+    "Email already taken": "Die E-Mail ist bereits vergeben",
+    "email must be a valid email": "Die E-Mail ist keine gültige E-Mail",
+    "password must be at least 12 characters long and must contain at least a small letter, a capital letter, a number and a special character": "Das Passwort muss mindestens 12 Zeichen lang sein und muss mindestens einen Kleinbuchstaben, einen Großbuchstaben, eine Ziffer und ein Sonderzeichen enthalten",
+    "password must be at least 6 characters": "Das Passwort muss mindestens 6 Zeichen lang sein"
   },
   "comment": {
     "name": "Name",
@@ -152,9 +180,142 @@
     "logout": "Logout",
     "username": "Nutzername",
     "password": "Passwort",
-    "invalid-credentials": "Benutzername oder Passwort sind falsch",
     "successful-login": "Erfolgreich eingeloggt",
     "successful-logout": "Erfolgreich ausgeloggt"
+  },
+  "admin": {
+    "title": "Administration",
+    "dangerZone": "Gefahrenzone",
+    "permissions": {
+      "title": "Rechte des Nutzers {{userName}}",
+      "publicTitle": "Rechte eines unangemeldeten Nutzers",
+      "filterPlaceholder": "Archive filtern",
+      "systemPermissions": "System-Rechte",
+      "withoutArchive": "Ohne Archiv",
+      "reallyGrantAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" vergeben?",
+      "reallyRemoveAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" entziehen?",
+      "reallyEditAllPermissionsContent": "Sie können dies nicht rückgängig machen, sondern müssen den vorigen Stand manuell wiederherstellen.",
+      "section": {
+        "picture": "Bilder",
+        "collection": "Collections",
+        "tags": "Tags: Schlagworte, Personen und Orte",
+        "comment": "Kommentare",
+        "archive": "Archive",
+        "games": "Spiele",
+        "user": "Nutzer"
+      },
+      "group": {
+        "createPicture": "Bild hochladen",
+        "editFaceTags": "Personen markieren",
+        "editPicture": "Bild bearbeiten",
+        "unpublishPicture": "Bild löschen",
+        "createSubCollection": "Collection anlegen",
+        "deleteCollection": "Collection löschen",
+        "getAllCollections": "Liste aller Collections ansehen",
+        "getCollectionInfoByName": "Unsichtbare Collections sehen",
+        "mergeCollections": "Collections zusammenführen",
+        "setPicturesForCollection": "Bilder in einer Collection verwalten",
+        "updateCollection": "Collection-Eigenschaften bearbeiten",
+        "createTag": "Tag anlegen",
+        "deleteTag": "Tag löschen",
+        "getAllTags": "Liste aller Tags ansehen",
+        "mergeTags": "Tags zusammenführen",
+        "updateTagName": "Tag umbenennen",
+        "updateTagSynonyms": "Tag-Synonyme verwalten",
+        "updateTagVisibility": "Tag-Sichtbarkeit verwalten",
+        "updateLocationAcceptance": "Ort akzeptieren",
+        "updateLocationHierarchy": "Orte-Hierarchie verwalten",
+        "acceptComment": "Kommentar akzeptieren",
+        "declineComment": "Kommentar ablehnen",
+        "fixCommentText": "Kommentar editieren",
+        "getUnverifiedComments": "Liste aller noch nicht verifizierten Kommentare ansehen",
+        "pinComment": "Kommentar anpinnen",
+        "postComment": "Kommentar erstellen",
+        "unpinComment": "Kommentar loslösen",
+        "addArchiveTag": "Archiv anlegen",
+        "editArchive": "Archiv-Eigenschaften bearbeiten",
+        "exhibition": "Geschichte erstellen",
+        "removeArchiveTag": "Archiv löschen",
+        "addUser": "Nutzer erstellen",
+        "addPermission": "Recht vergeben",
+        "getParameterizedPermissions": "Rechte ansehen",
+        "deleteParameterizedPermission": "Recht entziehen",
+        "getUser": "Nutzer-Daten ansehen",
+        "updateUser": "Nutzer-Daten bearbeiten",
+        "getUsers": "Liste aller Nutzer sehen",
+        "login": "Sich anmelden",
+        "removeUser": "Nutzer löschen"
+      },
+      "parameter": {
+        "on_other_users": {
+          "removeUser": {
+            "onlyOwn": "Nur sich selbst",
+            "onOtherUsers": "Alle Nutzer"
+          },
+          "getParameterizedPermissions": {
+            "onlyOwn": "Nur eigene",
+            "onOtherUsers": "Von allen Nutzern"
+          }
+        }
+      },
+      "preset": {
+        "public": "Allgemeiner Nutzer"
+      }
+    },
+    "user": {
+      "title": "Nutzer {{userName}}",
+      "publicTitle": "Unangemeldeter Nutzer",
+      "name": "Name",
+      "email": "E-Mail",
+      "permissions": "Rechteverwaltung",
+      "remove": {
+        "button": "Nutzer unwiederruflich löschen",
+        "title": "Nutzer {{name}} wirklich löschen?",
+        "content": "Diese Aktion kann nicht rückgängig gemacht werden. Um zu bestätigen, dass Sie wirklich den Nutzer {{name}} löschen möchten, geben Sie hier den Namen des Nutzers ein:",
+        "success": "Nutzer erfolgreich gelöscht",
+        "aborted": "Aktion abgebrochen: Der Nutzer wurde nicht gelöscht"
+      }
+    },
+    "users": {
+      "title": "Nutzerverwaltung",
+      "add": "Nutzer erstellen",
+      "add-content": "An die angegebene E-Mail wird ein Link zum Passwortsetzen verschickt.",
+      "publicUsername": "Unangemeldeter Nutzer"
+    },
+    "archives": {
+      "title": "Archivverwaltung",
+      "add": "Archiv erstellen",
+      "add-content": "Name des neuen Archivs:",
+      "remove": {
+        "button": "Archiv unwiederruflich löschen",
+        "title": "Archiv {{name}} wirklich löschen?",
+        "content": "Diese Aktion kann nicht rückgängig gemacht werden. Um zu bestätigen, dass Sie wirklich das Archiv {{name}} löschen möchten, geben Sie hier den Namen des Archivs ein:",
+        "success": "Archiv erfolgreich gelöscht",
+        "aborted": "Aktion abgebrochen: Das Archiv wurde nicht gelöscht"
+      }
+    },
+    "myAccount": {
+      "title": "Mein Profil"
+    },
+    "forgotPassword": {
+      "title": "Passwort vergessen",
+      "question": "Passwort vergessen?",
+      "explanation": "Geben Sie die E-Mail ein, mit der sie sich auf der Seite registriert haben. Ihnen wird dann per Mail ein Link zugeschickt, über den Sie Ihr Passwort zurücksetzen können.",
+      "email": "E-Mail",
+      "success": "E-Mail versendet"
+    },
+    "resetPassword": {
+      "title": "Passwort setzen/zurücksetzen",
+      "password": "Neues Passwort",
+      "passwordConfirmation": "Neues Passwort wiederholen"
+    },
+    "changePassword": {
+      "title": "Passwort ändern",
+      "currentPassword": "Aktuelles Passwort",
+      "password": "Neues Passwort",
+      "passwordConfirmation": "Neues Passwort wiederholen",
+      "success": "Passwort erfolgreich geändert"
+    }
   },
   "pictureFields": {
     "time": "Zeit",
@@ -204,6 +365,7 @@
     "delete": "Klicken um die Namensschild zu löschen"
   },
   "curator": {
+    "addToExhibition": "Zur Geschichte hinzufügen",
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "addPictures": "Bilder hinzufügen",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
@@ -226,7 +388,6 @@
     "addedPicturesToCollection": "Bilder erfolgreich zur Collection hinzugefügt",
     "removedPicturesFromCollection": "Bilder erfolgreich aus der Collection entfernt",
     "addCollection": "Collection hinzufügen",
-    "createArchive": "Neues Archiv erstellen",
     "createCollection": "Neue Collection erstellen",
     "linkCollection": "Bestehende Collection verlinken",
     "moveCollection": "Bestehende Collection hierher verschieben",
@@ -325,7 +486,8 @@
         "purpose-placeholder": "Gib an, welchen Verwendungszweck die Spende auf Paypal haben soll",
         "thankyou-label": "Vielen Dank für Ihre Spende von {{amount}}€",
         "error-label": "Es ist ein Fehler aufgetreten. Es wurde nichts von ihrem Konto abgebucht, bitte versuchen Sie es erneut."
-      }
+      },
+      "restrictImageDownloading": "Herunterladen von Bildern einschränken"
     }
   },
   "startpage": {
@@ -370,7 +532,6 @@
   "contact-form": {
     "title": "Kontakt",
     "success": "Ihre Nachricht ist eingegangen.",
-    "error": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
     "choose-archive-helpertext": "Falls das gewünschte Archiv nicht auswählbar ist, hat dieses noch keine E-Mail-Addresse angegeben.",
     "name-label": "Name",
@@ -405,6 +566,49 @@
     "our-categories": "Unsere Kategorien",
     "most-liked": "Bestbewertete Bilder",
     "our-pictures": "Unsere Bilder"
+  },
+  "exhibition": {
+    "overview": {
+      "to-exhibition": "Zur Geschichte",
+      "our-exhibitions": "Unsere Geschichten",
+      "delete-title": "Möchten Sie wirklich die Geschichte \"{{exhibitionName}}\" löschen?",
+      "new-exhibition": "Neue Geschichte"
+    },
+    "viewer": {
+      "epilog": "Epilog",
+      "sources": "Weiterführende Quellen"
+    },
+    "buttons": {
+      "publish": "Veröffentlichen",
+      "unPublish": "Privat stellen",
+      "addPictures": "Bilder hinzufügen"
+    },
+    "idealot": "Ideenparkplatz",
+    "tool": "Geschichte erstellen",
+    "add-picture-to-collection-success_one": "Ausgewähltes Bild wurde zum Ideenparkplatz hinzugefügt",
+    "add-picture-to-collection-success_other": "Ausgewählte Bilder wurden zum Ideenparkplatz hinzugefügt",
+    "add-picture-to-collection-fail": "Fehler. Schließe den Tab und klicke beim Ideenparkplatz nochmals auf \"Bilder hinzufügen\"",
+    "manipulator": {
+      "intro": {
+        "title-placeholder": "Titel",
+        "text-placeholder": "Einführungstext",
+        "title-picture": "Titelbild"
+      },
+      "section": {
+        "text-placeholder": "Abschnittstext",
+        "title-placeholder": "Abschnittstitel",
+        "sort": "Sortieren",
+        "exit-sort": "Fertig sortiert",
+        "add-section": "Neuer Abschnitt",
+        "dropzone": "Ziehe hier Bilder hinein"
+      },
+      "epilog": {
+        "title": "Epilog",
+        "text-placeholder": "Epilogtext",
+        "sources": "Quellen",
+        "add-source": "Quelle hinzufügen"
+      }
+    }
   },
   "tag-panel": {
     "name-of-sub-keyword": "Name des neuen Unterschlagworts für {{ parent }}:",

@@ -1,8 +1,11 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DialogPreset, useDialog } from '../components/provider/DialogProvider';
+import {
+  useCanRunUnpublishPictureMutation,
+  useUnpublishPictureMutation,
+} from '../graphql/APIConnector';
 import { FlatPicture } from '../types/additionalFlatTypes';
-import { useUnpublishPictureMutation } from '../graphql/APIConnector';
-import { useDialog, DialogPreset } from '../components/provider/DialogProvider';
 
 const useDeletePicture = () => {
   const [unpublishPicture] = useUnpublishPictureMutation();
@@ -33,6 +36,18 @@ const useDeletePicture = () => {
     },
     [unpublishPicture, t, dialog]
   );
+};
+
+// placed here instead of in can-do-hooks to put it near the place
+// where the actual mutation is executed (since the mutation name differs
+// from the function name)
+export const useCanDeletePicture = (id: string) => {
+  const { canRun: canDeletePicture, loading } = useCanRunUnpublishPictureMutation({
+    variables: {
+      id,
+    },
+  });
+  return { canDeletePicture, loading };
 };
 
 export default useDeletePicture;

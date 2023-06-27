@@ -133,6 +133,12 @@
       "relation": "oneToMany",
       "target": "api::face-tag.face-tag",
       "mappedBy": "picture"
+    },
+    "exhibition_pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition-picture.exhibition-picture",
+      "mappedBy": "picture"
     }
   }
 }

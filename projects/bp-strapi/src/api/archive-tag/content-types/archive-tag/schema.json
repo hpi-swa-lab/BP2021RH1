@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
   "attributes": {
     "name": {
@@ -43,9 +43,7 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": [
-        "images"
-      ]
+      "allowedTypes": ["images"]
     },
     "paypalClient": {
       "type": "string"
@@ -56,8 +54,17 @@
     "paypalPurpose": {
       "type": "string"
     },
+    "restrictImageDownloading": {
+      "type": "boolean"
+    },
     "email": {
       "type": "email"
+    },
+    "exhibitions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exhibition.exhibition",
+      "mappedBy": "archive_tag"
     }
   }
 }

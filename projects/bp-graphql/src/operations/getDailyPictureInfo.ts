@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getDailyPictureInfo($pictureId: ID!) {
       picture(id: $pictureId) {
@@ -56,6 +57,7 @@ export default {
                 id
                 attributes {
                   name
+                  restrictImageDownloading
                 }
               }
             }

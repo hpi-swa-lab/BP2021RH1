@@ -5,12 +5,16 @@ import dayjs from 'dayjs';
 import { memo, useCallback, useContext, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type TuiImageEditor from 'tui-image-editor';
+import {
+  useMultipleUploadMutation,
+  useRemoveUploadMutation,
+  useUpdatePictureMutation,
+} from '../../../../../graphql/APIConnector';
 import { asUploadPath } from '../../../../../helpers/app-helpers';
 import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import { PictureViewContext } from '../../PictureView';
 import ImageEditor from './../../../../common/editors/ImageEditor';
 import './PictureEditDialog.scss';
-import replaceMediaFile from './replace-media-file';
 
 const isDefaultCropZone = (rect: any) => {
   return rect.width < 1 || rect.height < 1;
@@ -29,6 +33,10 @@ const PictureEditDialog = memo(function PictureEditDialog({
   const editorRef = useRef<TuiImageEditor | null>(null);
   const apolloClient = useApolloClient();
   const { calledViaLink } = useContext(PictureViewContext);
+
+  const [multipleUpload] = useMultipleUploadMutation();
+  const [updatePicture] = useUpdatePictureMutation();
+  const [removeUpload] = useRemoveUploadMutation();
 
   const editorOptions = useMemo(
     () => ({
@@ -67,7 +75,32 @@ const PictureEditDialog = memo(function PictureEditDialog({
       type: 'image/jpeg',
       lastModified: new Date().getTime(),
     });
-    await replaceMediaFile(file, picture.media.id);
+
+    const uploadedPicture = await multipleUpload({
+      variables: {
+        files: [file],
+      },
+    });
+    const uploadedId = uploadedPicture.data?.multipleUpload[0]?.data?.id;
+    if (!uploadedId) {
+      return;
+    }
+
+    await updatePicture({
+      variables: {
+        pictureId: picture.id,
+        data: {
+          media: uploadedId,
+        },
+      },
+    });
+
+    await removeUpload({
+      variables: {
+        id: picture.media.id,
+      },
+    });
+
     // Close dialog
     onClose();
     const queriesToRefetch = ['getPictureInfo'];
@@ -77,7 +110,16 @@ const PictureEditDialog = memo(function PictureEditDialog({
     apolloClient.refetchQueries({
       include: queriesToRefetch,
     });
-  }, [picture.media?.id, onClose, apolloClient, calledViaLink]);
+  }, [
+    picture.media?.id,
+    multipleUpload,
+    updatePicture,
+    picture.id,
+    removeUpload,
+    onClose,
+    apolloClient,
+    calledViaLink,
+  ]);
 
   if (!picture.media?.url) {
     return null;

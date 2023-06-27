@@ -43,6 +43,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Build bp-graphql
+        run: yarn install --frozen-lockfile && tsc
+        working-directory: ./projects/bp-graphql
       - name: Install strapi dependencies
         run: yarn install --frozen-lockfile
       - name: Install bp-gallery dependencies

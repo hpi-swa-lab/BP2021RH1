@@ -1,9 +1,8 @@
 import { Button, FormControl, FormHelperText, MenuItem, Select, TextField } from '@mui/material';
 import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetArchiveNamesQuery } from '../../../graphql/APIConnector';
+import { useContactMutation, useGetArchiveNamesQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { asApiPath } from '../../../helpers/app-helpers';
 import { useVisit } from '../../../helpers/history';
 import { useOnChangeSetter } from '../../../hooks/onchange-setter.hook';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
@@ -19,7 +18,6 @@ const ContactFormView = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
-  const openAlert = useContext(AlertContext);
   const { data } = useGetArchiveNamesQuery({
     variables: { filters: { email: { notNull: true } } },
   });
@@ -35,44 +33,31 @@ const ContactFormView = () => {
     );
   }, [archiveNames, location.state?.archiveId]);
 
-  //replace this with the onSubmit function of the new permission system when it's done, the rest of the component should (hopefully) stay the same
+  const openAlert = useContext(AlertContext);
+
+  const [contact] = useContactMutation();
+
   const onSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      const formData = new FormData();
-      formData.append('recipient', recipient);
-      formData.append('sender_name', senderName);
-      formData.append('reply_email', replyEmail);
-      formData.append('subject', subject);
-      formData.append('message', message);
 
-      try {
-        const res = await fetch(asApiPath('/api/contact'), {
-          method: 'post',
-          body: formData,
-        });
-        if (!res.ok) {
-          const json = await res.json();
-          openAlert({
-            alertType: AlertType.ERROR,
-            message: `Error: ${json.error.message as string}`,
-          });
-          return;
-        }
-        openAlert({
-          alertType: AlertType.SUCCESS,
-          message: t('contact-form.success'),
-        });
-        setSubject('');
-        setMessage('');
-      } catch {
-        openAlert({
-          alertType: AlertType.ERROR,
-          message: t('contact-form.error'),
-        });
-      }
+      await contact({
+        variables: {
+          recipient,
+          sender_name: senderName,
+          reply_email: replyEmail,
+          subject,
+          message,
+        },
+      });
+      openAlert({
+        alertType: AlertType.SUCCESS,
+        message: t('contact-form.success'),
+      });
+      setSubject('');
+      setMessage('');
     },
-    [recipient, senderName, replyEmail, subject, message, openAlert, t]
+    [contact, recipient, senderName, replyEmail, subject, message, openAlert, t]
   );
 
   return (

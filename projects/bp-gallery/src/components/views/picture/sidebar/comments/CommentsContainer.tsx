@@ -1,12 +1,12 @@
 import { ExpandMore, QuestionAnswer } from '@mui/icons-material';
 import { Badge } from '@mui/material';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCanAcceptOrDeclineComment } from '../../../../../hooks/can-do-hooks';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import LikeButton from '../LikeButton';
-import './CommentsContainer.scss';
 import CommentVerification from './CommentVerification';
+import './CommentsContainer.scss';
 import FormattedComment from './FormattedComment';
 import NewCommentForm from './NewCommentForm';
 
@@ -20,13 +20,8 @@ const CommentsContainer = memo(function CommentsContainer({
   likeCount: number;
 }) {
   const { t } = useTranslation();
-  const { role } = useAuth();
 
-  const [isOpen, setIsOpen] = useState<boolean>(role < AuthRole.CURATOR);
-
-  useEffect(() => {
-    setIsOpen(role < AuthRole.CURATOR);
-  }, [role]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const commentTree = useMemo(() => {
     if (!comments) return;
@@ -48,11 +43,16 @@ const CommentsContainer = memo(function CommentsContainer({
     );
   };
 
-  const badgeNumber = (() => {
-    return role < AuthRole.CURATOR
+  // use the first comment (if it exists) as a representative for all,
+  // since the permission is bound to an archive and all comments
+  // belong to the same picture (and therefore to the same archive)
+  const { canAcceptOrDeclineComment } = useCanAcceptOrDeclineComment(comments?.[0]?.id);
+
+  const badgeNumber = useMemo(() => {
+    return !canAcceptOrDeclineComment
       ? comments?.filter(elem => elem.publishedAt).length
       : comments?.length;
-  })();
+  }, [canAcceptOrDeclineComment, comments]);
 
   return (
     <div className={`picture-info-section pictureComments${isOpen ? ' open' : ''}`} id='comments'>

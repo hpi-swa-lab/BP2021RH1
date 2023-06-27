@@ -6,8 +6,8 @@ import {
   useAcceptCommentMutation,
   useDeclineCommentMutation,
 } from '../../../../../graphql/APIConnector';
+import { useCanAcceptOrDeclineComment } from '../../../../../hooks/can-do-hooks';
 import { FlatComment } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import './CommentVerification.scss';
 
@@ -17,7 +17,6 @@ const CommentVerification = ({
 }: PropsWithChildren<{ comment: FlatComment }>) => {
   const dialog = useDialog();
   const { t } = useTranslation();
-  const { role } = useAuth();
 
   const [acceptComment] = useAcceptCommentMutation({
     variables: { commentId: comment.id, currentTime: new Date().toISOString() },
@@ -28,6 +27,7 @@ const CommentVerification = ({
       'getPicturesByAllSearch',
     ],
   });
+
   const [declineComment] = useDeclineCommentMutation({
     variables: {
       commentId: comment.id,
@@ -45,24 +45,31 @@ const CommentVerification = ({
     await declineComment();
   };
 
-  if (role < AuthRole.CURATOR && !comment.publishedAt) {
+  const { canAcceptOrDeclineComment, canAcceptComment, canDeclineComment } =
+    useCanAcceptOrDeclineComment(comment.id);
+
+  if (!comment.publishedAt && !canAcceptOrDeclineComment) {
     return null;
   } else {
     return (
       <div
         className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}${
-          role < AuthRole.CURATOR ? ' unstyled' : ''
+          !canAcceptOrDeclineComment ? ' unstyled' : ''
         }`}
       >
         {children}
         {!comment.publishedAt && (
           <>
-            <Button startIcon={<Close />} onClick={onDecline}>
-              {t('common.decline')}
-            </Button>
-            <Button startIcon={<Done />} onClick={() => acceptComment()} variant='contained'>
-              {t('common.accept')}
-            </Button>
+            {canDeclineComment && (
+              <Button startIcon={<Close />} onClick={onDecline}>
+                {t('common.decline')}
+              </Button>
+            )}
+            {canAcceptComment && (
+              <Button startIcon={<Done />} onClick={() => acceptComment()} variant='contained'>
+                {t('common.accept')}
+              </Button>
+            )}
           </>
         )}
       </div>

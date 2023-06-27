@@ -1,2 +1,5 @@
+export * from './DB.js';
 export * from './Operation.js';
-export * from './generateOperationGraphQL.js';
+export * as groups from './groups.js';
+export * as operations from './operations.js';
+export * as loginOperation from './operations/login.js';

@@ -1,5 +1,5 @@
 import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
-import { AccessTime, ArrowForwardIos, ThumbUp } from '@mui/icons-material';
+import { AccessTime, ArrowForwardIos, AutoStories, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,7 @@ import {
   useGetArchivePictureCountsQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { useVariant } from '../../../helpers/growthbook';
+import { useFlag, useVariant } from '../../../helpers/growthbook';
 import { useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
@@ -19,6 +19,7 @@ import OverviewContainer, {
 } from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import BrowseView from '../browse/BrowseView';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 import { useVisit } from './../../../helpers/history';
 import { ShowStats } from './../../provider/ShowStatsProvider';
 import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
@@ -64,6 +65,7 @@ const StartView = () => {
     );
   });
 
+  const showStories = useFlag('showstories');
   const tabs: OverviewContainerTab[] = useMemo(() => {
     return [
       {
@@ -91,8 +93,17 @@ const StartView = () => {
           />
         ),
       },
+      ...(showStories
+        ? [
+            {
+              title: t('exhibition.overview.our-exhibitions'),
+              icon: <AutoStories key='2' />,
+              content: <ExhibitionOverview backgroundColor='#efeae5' />,
+            },
+          ]
+        : []),
     ];
-  }, [t, visit]);
+  }, [t, visit, showStories]);
 
   const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
 
