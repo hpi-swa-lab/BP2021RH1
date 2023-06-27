@@ -19,6 +19,7 @@ type LocationState = {
   showBack?: boolean;
   scrollPos?: number;
   open?: boolean;
+  archiveId?: string;
 };
 export type LocationWithState = Location & { state?: LocationState };
 

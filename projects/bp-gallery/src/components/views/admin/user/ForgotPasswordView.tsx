@@ -1,9 +1,8 @@
-import { Stack, TextField } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForgotPasswordMutation } from '../../../../graphql/APIConnector';
 import { useCanUseForgotPasswordView } from '../../../../hooks/can-do-hooks';
-import PrimaryButton from '../../../common/PrimaryButton';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import { AlertContext, AlertType } from '../../../provider/AlertProvider';
 import { CenteredContainer } from '../CenteredContainer';
@@ -47,7 +46,9 @@ export const ForgotPasswordView = () => {
             value={email}
             onChange={event => setEmail(event.target.value)}
           />
-          <PrimaryButton onClick={doForgotPassword}>{t('common.confirm')}</PrimaryButton>
+          <Button variant='contained' className='w-fit self-center' onClick={doForgotPassword}>
+            {t('common.confirm')}
+          </Button>
         </Stack>
       </CenteredContainer>
     </ProtectedRoute>

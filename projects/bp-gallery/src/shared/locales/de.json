@@ -432,7 +432,11 @@
     "delete": "Bild entfernen"
   },
   "archives": {
-    "defaultLongDescription": "Dieses Archiv hat noch keine Beschreibung. Als Kurator kannst du jedoch über den roten \"Archiv editieren\" Knopf eine Beschreibung hinzufügen.",
+    "view": {
+      "defaultLongDescription": "Dieses Archiv hat noch keine Beschreibung. Als Kurator kannst du jedoch über den roten \"Archiv editieren\" Knopf eine Beschreibung hinzufügen.",
+      "edit": "Archiv editieren",
+      "contact": "Archiv kontaktieren"
+    },
     "edit": {
       "back": "Zum Archiv",
       "confirm": {
@@ -529,6 +533,7 @@
     "title": "Kontakt",
     "success": "Ihre Nachricht ist eingegangen.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
+    "choose-archive-helpertext": "Falls das gewünschte Archiv nicht auswählbar ist, hat dieses noch keine E-Mail-Addresse angegeben.",
     "name-label": "Name",
     "email-label": "Ihre E-Mail (optional)",
     "subject-label": "Betreff",

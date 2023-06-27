@@ -4,7 +4,6 @@ import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { useCallback, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import { useTranslation } from 'react-i18next';
-import PrimaryButton from './PrimaryButton';
 
 const DonateButton = ({
   clientId,
@@ -49,7 +48,9 @@ const DonateButton = ({
       <Dialog open={isDialogOpen}>
         <div className='border-solid w-[35rem] h-[25rem] justify-center items-center flex flex-col gap-4 text-2xl'>
           <div>{dialogText}</div>
-          <PrimaryButton onClick={() => setIsDialogOpen(false)}>{t('common.close')}</PrimaryButton>
+          <Button variant='contained' onClick={() => setIsDialogOpen(false)}>
+            {t('common.close')}
+          </Button>
         </div>
       </Dialog>
       <PayPalScriptProvider options={paypalOptions}>
@@ -82,9 +83,9 @@ const DonateButton = ({
               </div>
             </>
           ) : (
-            <PrimaryButton onClick={() => setIsClicked(true)}>
+            <Button variant='contained' onClick={() => setIsClicked(true)}>
               {t('archives.edit.paypal.donation-default')}
-            </PrimaryButton>
+            </Button>
           )}
 
           {isOpen && (
