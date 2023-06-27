@@ -1,4 +1,5 @@
-import { Stack, TextField } from '@mui/material';
+import { ArrowForwardIos } from '@mui/icons-material';
+import { Button, Stack, TextField } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVisit } from '../../../../helpers/history';
@@ -7,7 +8,6 @@ import {
   useCanUsePermissionsView,
 } from '../../../../hooks/can-do-hooks';
 import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
-import PrimaryButton from '../../../common/PrimaryButton';
 import { CenteredContainer } from '../CenteredContainer';
 import { RemoveUserButton } from './RemoveUserButton';
 import { PUBLIC_USER_ID } from './helper';
@@ -68,16 +68,30 @@ export const UserView = ({
             disabled={!onSave}
           />
         )}
-        {savePending && <PrimaryButton onClick={save}>{t('curator.save')}</PrimaryButton>}
+        {savePending && (
+          <Button variant='contained' className='w-fit self-center' onClick={save}>
+            {t('curator.save')}
+          </Button>
+        )}
         {canChangePassword && (
-          <PrimaryButton onClick={() => visit('/change-password')} withRightArrow>
+          <Button
+            variant='contained'
+            className='w-fit self-center'
+            onClick={() => visit('/change-password')}
+            endIcon={<ArrowForwardIos />}
+          >
             {t('admin.changePassword.title')}
-          </PrimaryButton>
+          </Button>
         )}
         {canUsePermissionsView && (
-          <PrimaryButton onClick={() => visit(`/admin/user/${id}/permissions`)} withRightArrow>
+          <Button
+            variant='contained'
+            className='w-fit self-center'
+            onClick={() => visit(`/admin/user/${id}/permissions`)}
+            endIcon={<ArrowForwardIos />}
+          >
             {t('admin.user.permissions')}
-          </PrimaryButton>
+          </Button>
         )}
         <RemoveUserButton id={user?.id} />
       </Stack>

@@ -1,15 +1,16 @@
-import { MenuItem, Select, TextField } from '@mui/material';
+import { Button, FormControl, FormHelperText, MenuItem, Select, TextField } from '@mui/material';
 import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useContactMutation, useGetArchiveNamesQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useVisit } from '../../../helpers/history';
 import { useOnChangeSetter } from '../../../hooks/onchange-setter.hook';
 import { FlatArchiveTag } from '../../../types/additionalFlatTypes';
-import PrimaryButton from '../../common/PrimaryButton';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 
 const ContactFormView = () => {
   const { t } = useTranslation();
+  const { location } = useVisit();
 
   const [recipient, setRecipient] = useState('');
   const [senderName, setSenderName] = useState('');
@@ -25,8 +26,12 @@ const ContactFormView = () => {
     useSimplifiedQueryResponseData(data)?.archiveTags;
 
   useEffect(() => {
-    setRecipient(archiveNames?.[0]?.id ?? '');
-  }, [archiveNames]);
+    setRecipient(
+      archiveNames?.find(archiveName => archiveName.id === location.state?.archiveId)?.id ??
+        archiveNames?.[0]?.id ??
+        ''
+    );
+  }, [archiveNames, location.state?.archiveId]);
 
   const openAlert = useContext(AlertContext);
 
@@ -62,18 +67,21 @@ const ContactFormView = () => {
         <form onSubmit={onSubmit} className='flex flex-col w-96'>
           <label className='flex flex-col flex-nowrap text-xl p-0'>
             <p className='mb-1'>{t('contact-form.choose-archive-label')}</p>
-            <Select
-              onChange={useOnChangeSetter(setRecipient)}
-              value={recipient}
-              className='max-w'
-              required
-            >
-              {archiveNames?.map(archiveName => (
-                <MenuItem key={archiveName.id} value={archiveName.id}>
-                  {archiveName.name}
-                </MenuItem>
-              ))}
-            </Select>
+            <FormControl>
+              <Select
+                onChange={useOnChangeSetter(setRecipient)}
+                value={recipient}
+                className='max-w'
+                required
+              >
+                {archiveNames?.map(archiveName => (
+                  <MenuItem key={archiveName.id} value={archiveName.id}>
+                    {archiveName.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>{t('contact-form.choose-archive-helpertext')}</FormHelperText>
+            </FormControl>
           </label>
           <label className='flex flex-col flex-nowrap text-xl p-0'>
             <p className='mb-1'>{t('contact-form.name-label')}</p>
@@ -101,9 +109,9 @@ const ContactFormView = () => {
               required
             />
           </label>
-          <PrimaryButton type='submit' className='!w-full'>
+          <Button variant='contained' type='submit'>
             {t('contact-form.submit-button-label').toString()}
-          </PrimaryButton>
+          </Button>
         </form>
       </div>
     </div>
