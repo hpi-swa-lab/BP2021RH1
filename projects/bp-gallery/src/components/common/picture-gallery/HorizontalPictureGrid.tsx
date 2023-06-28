@@ -4,7 +4,7 @@ import ScrollBar from 'react-perfect-scrollbar';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
-import useGetPictures from '../../../hooks/get-pictures.hook';
+import useGetPictures, { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import PictureView from '../../views/picture/PictureView';
 import PicturePreview from './PicturePreview';
@@ -122,7 +122,7 @@ const HorizontalPictureGrid = ({
     },
     false,
     ['time_range_tag.start:asc'],
-    true,
+    TextFilter.ONLY_PICTURES,
     50,
     'cache-and-network',
     PictureOverviewType.CUSTOM
@@ -134,7 +134,7 @@ const HorizontalPictureGrid = ({
     },
     false,
     ['time_range_tag.start:desc'],
-    true,
+    TextFilter.ONLY_PICTURES,
     2,
     'cache-and-network',
     PictureOverviewType.CUSTOM

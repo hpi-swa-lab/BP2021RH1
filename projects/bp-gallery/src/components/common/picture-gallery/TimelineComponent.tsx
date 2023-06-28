@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import useGetPictures from '../../../hooks/get-pictures.hook';
+import useGetPictures, { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import HorizontalPictureGrid from './HorizontalPictureGrid';
 import PictureTimeline, { TimeStepType } from './PictureTimeline';
@@ -24,7 +24,7 @@ const TimelineComponent = ({
     },
     false,
     ['time_range_tag.start:asc'],
-    true,
+    TextFilter.ONLY_PICTURES,
     1,
     'no-cache',
     PictureOverviewType.CUSTOM
