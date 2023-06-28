@@ -162,7 +162,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         <OverviewContainer
           tabs={tabs}
           overviewPosition={OverviewContainerPosition.ARCHIVE_VIEW}
-          archiveID={archiveId}
+          tabID={archiveId}
         />
       </ShowStats>
 

@@ -6,7 +6,6 @@ import { MobileContext } from '../provider/MobileProvider';
 export interface OverviewContainerTab {
   title: string;
   icon: ReactElement<IconProps>;
-  desktopText?: string;
   content: ReactElement;
 }
 
@@ -18,7 +17,7 @@ export enum OverviewContainerPosition {
 
 type SelectedTabsData = {
   start?: number;
-  discover?: number;
+  discover?: { [tabID: string]: number | undefined };
   archives?: { [archiveID: string]: number | undefined };
 };
 
@@ -26,12 +25,12 @@ const OverviewContainer = ({
   tabs,
   defaultTabIndex = 0,
   overviewPosition,
-  archiveID,
+  tabID,
 }: {
   tabs: OverviewContainerTab[];
   defaultTabIndex?: number;
   overviewPosition: OverviewContainerPosition;
-  archiveID?: string;
+  tabID?: string;
 }) => {
   const { isMobile } = useContext(MobileContext);
   const [selectedTabs, setSelectedTabs] = useStorageState<SelectedTabsData>(
@@ -40,34 +39,36 @@ const OverviewContainer = ({
     localStorage
   );
 
-  const tabIndex = useMemo(
-    () =>
-      overviewPosition === OverviewContainerPosition.ARCHIVE_VIEW
-        ? archiveID
-          ? (selectedTabs[overviewPosition] ?? { [archiveID]: defaultTabIndex })[archiveID] ??
+  const tabIndex = useMemo(() => {
+    const temporaryTabIndex =
+      overviewPosition !== OverviewContainerPosition.START_VIEW
+        ? tabID
+          ? (selectedTabs[overviewPosition] ?? { [tabID]: defaultTabIndex })[tabID] ??
             defaultTabIndex
           : defaultTabIndex
-        : selectedTabs[overviewPosition] ?? defaultTabIndex,
-    [overviewPosition, archiveID, selectedTabs, defaultTabIndex]
-  );
+        : selectedTabs[overviewPosition] ?? defaultTabIndex;
+    return 0 <= temporaryTabIndex && temporaryTabIndex < tabs.length
+      ? temporaryTabIndex
+      : defaultTabIndex;
+  }, [overviewPosition, tabID, selectedTabs, defaultTabIndex, tabs.length]);
 
   const setTabIndex = useCallback(
     (tabIndex: number) => {
-      if (overviewPosition !== OverviewContainerPosition.ARCHIVE_VIEW) {
+      if (overviewPosition === OverviewContainerPosition.START_VIEW) {
         setSelectedTabs(selectedTabs => ({ ...selectedTabs, [overviewPosition]: tabIndex }));
         return;
       }
-      if (archiveID) {
+      if (tabID) {
         setSelectedTabs(selectedTabs => ({
           ...selectedTabs,
           [overviewPosition]: {
             ...selectedTabs[overviewPosition],
-            [archiveID]: tabIndex,
+            [tabID]: tabIndex,
           },
         }));
       }
     },
-    [overviewPosition, archiveID, setSelectedTabs]
+    [overviewPosition, tabID, setSelectedTabs]
   );
   const clampedTabIndex = Math.min(tabIndex, tabs.length - 1);
   return (
@@ -83,7 +84,7 @@ const OverviewContainer = ({
         >
           {tabs.map((tab, index) => (
             <Tooltip key={index} title={tab.title}>
-              <Tab icon={isMobile ? tab.icon : tab.desktopText ?? tab.title} />
+              {isMobile ? <Tab icon={tab.icon} /> : <Tab label={tab.title} />}
             </Tooltip>
           ))}
         </Tabs>
