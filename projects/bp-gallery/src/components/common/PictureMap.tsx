@@ -118,7 +118,7 @@ const PictureMap = () => {
       return new DivIcon({
         html: renderToStaticMarkup(
           <div className='flex relative'>
-            <div className='w-[150px] h-[150px] overflow-hidden z-50 border-solid border-white border-2'>
+            <div className='w-[150px] h-[150px] overflow-hidden z-50 border-solid border-white border-2 z-20'>
               <img
                 className='object-cover !w-full !h-full'
                 src={asUploadPath(thumbnails[0 % thumbnails.length].media, {
@@ -127,7 +127,7 @@ const PictureMap = () => {
                 })}
               />
             </div>
-            <div className='bg-white w-[150px] h-[150px] absolute bottom-2 left-1 z-10 border-solid border-white border-2'>
+            <div className='bg-white w-[150px] h-[150px] absolute bottom-2 left-1 z-10 border-solid border-white border-2 z-20'>
               <img
                 className='object-cover !w-full !h-full'
                 src={asUploadPath(thumbnails[1 % thumbnails.length].media, {
@@ -136,7 +136,7 @@ const PictureMap = () => {
                 })}
               />
             </div>
-            <div className='bg-white w-[150px] h-[150px] absolute bottom-4 left-3 z-0 shadow-[5px_-5px_10px_10px_rgba(0,0,0,0.2)] border-solid border-white border-2'>
+            <div className='bg-white w-[150px] h-[150px] absolute bottom-4 left-3 z-0 shadow-[5px_-5px_10px_10px_rgba(0,0,0,0.2)] border-solid border-white border-2 z-20'>
               <img
                 className='object-cover !w-full !h-full'
                 src={asUploadPath(thumbnails[2 % thumbnails.length].media, {
@@ -145,7 +145,7 @@ const PictureMap = () => {
                 })}
               />
             </div>
-            <div className='absolute bottom-[112px] left-[166px] p-1 flex flex-col bg-white/50 whitespace-nowrap'>
+            <div className='absolute bottom-[112px] left-[166px] p-1 flex flex-col bg-white/50 whitespace-nowrap  z-20'>
               <h2 className='mb-0 ml-0 mt-[-5px] text-black'>{`${
                 clusterLocationCount ?? 0
               } Orte`}</h2>
@@ -164,7 +164,7 @@ const PictureMap = () => {
             <div className='w-[25px] h-[40px] absolute left-[202px] bottom-[52px] z-10'>
               <img className='object-fit !w-full !h-full' src={myMarkerIcon} />
             </div>
-            <div className='w-[40px] h-[40px] absolute left-[202px] bottom-[52px]'>
+            <div className='w-[40px] h-[40px] absolute left-[202px] bottom-[52px] z-0'>
               <img className='object-fit !w-full !h-full' src={markerShadow} />
             </div>
           </div>
@@ -262,7 +262,7 @@ const PictureMap = () => {
     return <Loading />;
   } else {
     return (
-      <div className='h-[500px]'>
+      <div className='h-[500px] z-0'>
         <MapContainer
           center={initialMapValues.center}
           zoom={initialMapValues.zoom}
@@ -278,7 +278,7 @@ const PictureMap = () => {
 
           <MarkerClusterGroup
             iconCreateFunction={createClusterCustomIcon}
-            maxClusterRadius={200}
+            maxClusterRadius={300}
             animate={true}
           >
             {flattenedTags?.map(location =>
