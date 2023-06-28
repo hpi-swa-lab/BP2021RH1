@@ -7,7 +7,7 @@ describe('Archives View', () => {
     cy.visit('/archives/1');
   });
   after(() => {
-    cy.contains('Archiv editieren').click();
+    cy.get('[data-cy="archive-edit"]').click();
     cy.get('#archive-form-name').clear();
     cy.get('#archive-form-name').type('Herbert-Ahrens-Bilderarchiv');
     cy.get('.jodit-react-container').clear();
@@ -19,14 +19,14 @@ describe('Archives View', () => {
 
   it('shows the first archive name and no edit button', () => {
     cy.contains('Herbert-Ahrens-Bilderarchiv');
-    cy.get('.archive-edit-button').should('not.exist');
+    cy.get('[data-cy="archive-edit"]').should('not.exist');
   });
   it('shows an edit button upon login', () => {
     login();
-    cy.get('.archive-edit-button').contains('Archiv editieren');
+    cy.get('[data-cy="archive-edit"]').should('be.visible');
   });
   it('redirects to the archive edit page after pressing on the edit button', () => {
-    cy.contains('Archiv editieren').click();
+    cy.get('[data-cy="archive-edit"]').click();
     urlIs('/archives/1/edit');
   });
   it('successfully edits the archive name and long description', () => {
@@ -40,18 +40,18 @@ describe('Archives View', () => {
   });
   it('successfully adds, removes and edits a link', () => {
     cy.contains('Link hinzufügen').click();
-    cy.get('#archive-form-title').should('be.visible').type('Test-Link 1');
-    cy.get('#archive-form-url').should('be.visible').type('test1.de');
+    cy.get('#archive-form-title').type('Test-Link 1');
+    cy.get('#archive-form-url').type('test1.de');
     cy.get('.archive-link-entry').find('[data-testid="SaveIcon"]').click();
     cy.contains('Link hinzufügen').click();
-    cy.get('#archive-form-title').should('be.visible').type('Test-Link 2');
-    cy.get('#archive-form-url').should('be.visible').type('test2.de').blur();
+    cy.get('#archive-form-title').type('Test-Link 2');
+    cy.get('#archive-form-url').type('test2.de').blur();
     cy.get('.archive-link-entry').first().find('[data-testid="EditIcon"]').click();
     cy.get('#archive-form-title').scrollIntoView();
-    cy.get('#archive-form-title').should('be.visible').type(' Edit').blur();
+    cy.get('#archive-form-title').type(' Edit').blur();
     cy.contains('Link hinzufügen').click();
-    cy.get('#archive-form-title').should('be.visible').type('Test-Link 3');
-    cy.get('#archive-form-url').should('be.visible').type('test3.de').blur();
+    cy.get('#archive-form-title').type('Test-Link 3');
+    cy.get('#archive-form-url').type('test3.de').blur();
     cy.get('.archive-link-entry').eq(1).find(`[data-testid="DeleteIcon"]`).click();
     cy.contains('Test-Link 1 Edit');
     cy.contains('Test-Link 2').should('not.exist');

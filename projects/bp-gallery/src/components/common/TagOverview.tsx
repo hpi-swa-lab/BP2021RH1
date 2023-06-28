@@ -1,18 +1,19 @@
-import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
-import './PictureOverview.scss';
-import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
+import { ArrowForwardIos } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   KeywordTagFiltersInput,
   LocationTagFiltersInput,
   PersonTagFiltersInput,
   PictureFiltersInput,
 } from '../../graphql/APIConnector';
-import DecadesList from '../views/search/DecadesList';
-import TagList from '../views/search/TagList';
-import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
-import PrimaryButton from './PrimaryButton';
+import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
+import DecadesList from '../views/search/DecadesList';
+import TagList from '../views/search/TagList';
+import './PictureOverview.scss';
 
 const MAX_TAGS_PER_ROW = 3;
 
@@ -113,9 +114,14 @@ const TagOverview = ({
           )}
         </div>
         {onClick && (
-          <PrimaryButton onClickFn={onClick} isShowMore={true}>
+          <Button
+            className='w-fit self-center'
+            variant='contained'
+            onClick={onClick}
+            endIcon={<ArrowForwardIos />}
+          >
             {t('common.showMore')}
-          </PrimaryButton>
+          </Button>
         )}
       </div>
     );

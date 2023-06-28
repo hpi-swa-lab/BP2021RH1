@@ -1,6 +1,7 @@
 import { AccessTime, ThumbUp, Widgets } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFlag } from '../../../helpers/growthbook';
 import { useVisit } from '../../../helpers/history';
 import { PictureOverviewType, TagType } from '../../../types/additionalFlatTypes';
 import OverviewContainer, {
@@ -11,6 +12,7 @@ import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import TimelineComponent from '../../common/picture-gallery/TimelineComponent';
 import { ShowStats } from '../../provider/ShowStatsProvider';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 import './DiscoverView.scss';
 
 const DiscoverView = () => {
@@ -69,7 +71,7 @@ const DiscoverView = () => {
       },
     ];
   }, [t, visit]);
-
+  const showStories = useFlag('showstories');
   return (
     <div className='discover-container'>
       <ShowStats>
@@ -78,6 +80,8 @@ const DiscoverView = () => {
           overviewPosition={OverviewContainerPosition.DISCOVER_VIEW}
           tabID='0'
         />
+
+        {showStories && <ExhibitionOverview showTitle margin />}
 
         <PictureOverview
           title={t('discover.more-info')}

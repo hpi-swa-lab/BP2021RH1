@@ -5,17 +5,17 @@ import { useGetUnverifiedCommentsQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { root } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { useCanUseUnverifiedCommentsView } from '../../../hooks/can-do-hooks';
 import { FlatComment, FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
+import ProtectedRoute from '../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import PictureView from '../picture/PictureView';
 import './UnverifiedCommentsView.scss';
 
 const UnverifiedCommentsView = () => {
   const { t } = useTranslation();
-  const { role } = useAuth();
 
   const [openPictureId, setOpenPictureId] = useState<string | undefined>(undefined);
 
@@ -53,71 +53,81 @@ const UnverifiedCommentsView = () => {
     return pictures;
   }, [unverifiedComments]);
 
-  if (role < AuthRole.CURATOR) {
-    return <div>{t('common.authentication-needed')}</div>;
-  } else if (error) {
-    return <QueryErrorDisplay error={error} />;
-  } else if (loading && !groupedComments) {
-    return <Loading />;
-  } else if (groupedComments && allPictures) {
-    return (
-      <>
-        <div className='comments-table'>
-          <table>
-            <thead>
-              <tr>
-                <th></th>
-                <th>{t('curator.unverified-comments')}</th>
-                <th>{t('common.count')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(groupedComments).map(pictureId => {
-                return (
-                  <tr
-                    key={pictureId}
-                    onClick={() => {
-                      pushHistoryWithoutRouter(`/picture/${pictureId}`);
-                      setOpenPictureId(pictureId);
+  const { canUseUnverifiedCommentsView, loading: canUseUnverifiedCommentsViewLoading } =
+    useCanUseUnverifiedCommentsView();
+
+  return (
+    <ProtectedRoute
+      canUse={canUseUnverifiedCommentsView}
+      canUseLoading={canUseUnverifiedCommentsViewLoading}
+    >
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading && !groupedComments) {
+          return <Loading />;
+        } else if (groupedComments && allPictures) {
+          return (
+            <>
+              <div className='comments-table'>
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>{t('curator.unverified-comments')}</th>
+                      <th>{t('common.count')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.keys(groupedComments).map(pictureId => {
+                      return (
+                        <tr
+                          key={pictureId}
+                          onClick={() => {
+                            pushHistoryWithoutRouter(`/picture/${pictureId}`);
+                            setOpenPictureId(pictureId);
+                          }}
+                        >
+                          <td className='picture-content'>
+                            <PicturePreview picture={allPictures[pictureId]} onClick={() => {}} />
+                          </td>
+                          <td>
+                            {groupedComments[pictureId]?.map(comment => (
+                              <div key={comment.id} className='comment-preview'>
+                                <span className='name'>{comment.author}:</span>
+                                <span className='text'></span>
+                                {comment.text.slice(0, 250)}
+                                {comment.text.length >= 251 && '...'}
+                              </div>
+                            ))}
+                          </td>
+                          <td>{groupedComments[pictureId]?.length}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {openPictureId && (
+                <Portal container={root}>
+                  <PictureView
+                    initialPictureId={openPictureId}
+                    siblingIds={Object.keys(groupedComments)}
+                    onBack={() => {
+                      refetch();
+                      setOpenPictureId(undefined);
                     }}
-                  >
-                    <td className='picture-content'>
-                      <PicturePreview picture={allPictures[pictureId]} onClick={() => {}} />
-                    </td>
-                    <td>
-                      {groupedComments[pictureId]?.map(comment => (
-                        <div key={comment.id} className='comment-preview'>
-                          <span className='name'>{comment.author}:</span>
-                          <span className='text'></span>
-                          {comment.text.slice(0, 250)}
-                          {comment.text.length >= 251 && '...'}
-                        </div>
-                      ))}
-                    </td>
-                    <td>{groupedComments[pictureId]?.length}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        {openPictureId && (
-          <Portal container={root}>
-            <PictureView
-              initialPictureId={openPictureId}
-              siblingIds={Object.keys(groupedComments)}
-              onBack={() => {
-                refetch();
-                setOpenPictureId(undefined);
-              }}
-            />
-          </Portal>
-        )}
-      </>
-    );
-  } else {
-    return <div>{t('curator.no-unverified-comments')}</div>;
-  }
+                  />
+                </Portal>
+              )}
+            </>
+          );
+        } else {
+          return <div>{t('curator.no-unverified-comments')}</div>;
+        }
+      }}
+    </ProtectedRoute>
+  );
 };
 
 export default UnverifiedCommentsView;

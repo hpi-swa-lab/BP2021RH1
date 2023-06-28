@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { formatTimeStamp } from '../../../../../helpers/format-timestamp';
 import i18n from '../../../../../i18n';
 import { FlatTimeRangeTag } from '../../../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import './DateRangeSelectionField.scss';
 
 const DateRangeSelectionField = ({
@@ -20,11 +19,10 @@ const DateRangeSelectionField = ({
   onResetTouch,
 }: {
   timeRangeTag?: FlatTimeRangeTag;
-  onChange: (timeRangeTag: FlatTimeRangeTag) => void;
+  onChange?: (timeRangeTag: FlatTimeRangeTag) => void;
   onTouch: () => void;
   onResetTouch: () => void;
 }) => {
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const [anchorElement, setAnchorElement] = useState<HTMLDivElement | null>(null);
@@ -54,7 +52,7 @@ const DateRangeSelectionField = ({
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const openPopover = (anchor: HTMLDivElement) => {
-    if (role < AuthRole.CURATOR) return;
+    if (!onChange) return;
     setAnchorElement(anchor);
   };
 
@@ -95,7 +93,7 @@ const DateRangeSelectionField = ({
       >
         {timeRange ? formatEstimate() : `${t('pictureFields.noTime')}`}
       </div>
-      {role >= AuthRole.CURATOR && (
+      {onChange && (
         <Popover
           ref={popoverRef}
           open={open}

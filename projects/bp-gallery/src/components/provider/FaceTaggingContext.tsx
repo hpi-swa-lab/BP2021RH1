@@ -3,6 +3,8 @@ import { FaceTagData, TagDirection } from '../views/picture/face-tagging/FaceTag
 import { Rect } from '../views/picture/face-tagging/helpers/image-rect';
 
 export type FaceTagging = {
+  canFaceTag: boolean;
+  canCreateTag: boolean;
   activeTagId: string | null;
   setActiveTagId: Dispatch<SetStateAction<string | null>>;
   tags: FaceTagData[];

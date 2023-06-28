@@ -1,11 +1,12 @@
 import { IconProps, Tab, Tabs, Tooltip } from '@mui/material';
-import { ReactElement, useCallback, useMemo } from 'react';
-import { useMobile } from '../../hooks/context-hooks';
+import { ReactElement, useCallback, useContext, useMemo } from 'react';
 import useStorageState from '../../hooks/storage-state.hook';
+import { MobileContext } from '../provider/MobileProvider';
 
 export interface OverviewContainerTab {
   title: string;
   icon: ReactElement<IconProps>;
+  desktopText?: string;
   content: ReactElement;
 }
 
@@ -32,7 +33,7 @@ const OverviewContainer = ({
   overviewPosition: OverviewContainerPosition;
   tabID?: string;
 }) => {
-  const { isMobile } = useMobile();
+  const { isMobile } = useContext(MobileContext);
   const [selectedTabs, setSelectedTabs] = useStorageState<SelectedTabsData>(
     { start: undefined, discover: undefined, archives: undefined },
     'selected_tabs',
@@ -70,15 +71,14 @@ const OverviewContainer = ({
     },
     [overviewPosition, tabID, setSelectedTabs]
   );
-
+  const clampedTabIndex = Math.min(tabIndex, tabs.length - 1);
   return (
     <div className='overview-selection-container'>
       <div className='overview-selection-header'>
-        <h2 className='overview-selection-title'>{tabs[tabIndex].title}</h2>
+        <h2 className='overview-selection-title'>{tabs[clampedTabIndex].title}</h2>
         <Tabs
           variant='scrollable'
-          allowScrollButtonsMobile
-          value={tabIndex}
+          value={clampedTabIndex}
           onChange={(_, value) => {
             setTabIndex(value as number);
           }}
@@ -90,7 +90,7 @@ const OverviewContainer = ({
           ))}
         </Tabs>
       </div>
-      {tabs[tabIndex].content}
+      {tabs[clampedTabIndex].content}
     </div>
   );
 };

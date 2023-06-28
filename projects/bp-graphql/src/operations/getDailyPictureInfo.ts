@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getDailyPictureInfo($pictureId: ID!) {
       picture(id: $pictureId) {
@@ -16,6 +17,16 @@ export default {
               }
             }
             time_range_tag {
+              data {
+                id
+                attributes {
+                  start
+                  end
+                  isEstimate
+                }
+              }
+            }
+            verified_time_range_tag {
               data {
                 id
                 attributes {
@@ -46,6 +57,7 @@ export default {
                 id
                 attributes {
                   name
+                  restrictImageDownloading
                 }
               }
             }

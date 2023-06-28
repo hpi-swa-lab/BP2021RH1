@@ -1,10 +1,12 @@
 import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 import {
+  useCanRunGetPicturesForCollectionQuery,
+  useCanRunSetPicturesForCollectionMutation,
   useGetPicturesForCollectionLazyQuery,
   useSetPicturesForCollectionMutation,
 } from '../graphql/APIConnector';
-import { AlertContext, AlertType } from '../components/provider/AlertProvider';
 
 /**
  * This convoluted function does:
@@ -21,6 +23,7 @@ const useManageCollectionPictures = () => {
   const [setPicturesForCollection] = useSetPicturesForCollectionMutation({
     refetchQueries: ['getPictures'],
   });
+  const { canRun: canSetPicturesForCollection } = useCanRunSetPicturesForCollectionMutation();
 
   const setNewPictures = useCallback(
     (data: any) => {
@@ -82,7 +85,12 @@ const useManageCollectionPictures = () => {
     fetchPolicy: 'network-only',
   });
 
+  const { canRun: canGetPicturesForCollection } = useCanRunGetPicturesForCollectionQuery();
+
+  const canManageCollectionPictures = canSetPicturesForCollection && canGetPicturesForCollection;
+
   return {
+    canManageCollectionPictures,
     addPicturesToCollection: useCallback(
       (collectionId: string, pictureIds: string[]) => {
         setPicturesToAdd(pictureIds);

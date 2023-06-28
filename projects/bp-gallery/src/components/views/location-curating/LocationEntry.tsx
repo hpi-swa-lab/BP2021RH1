@@ -1,5 +1,7 @@
 import { Check, ChevronRight, ExpandMore } from '@mui/icons-material';
-import { Badge, Chip, IconButton } from '@mui/material';
+import { Badge, Chip, IconButton, Skeleton } from '@mui/material';
+import { useState } from 'react';
+import { useElementIsVisible } from '../../../hooks/element-is-visible';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import './LocationEntry.scss';
@@ -21,8 +23,8 @@ const LocationEntry = ({
 }) => {
   const prompt = useDialog();
 
-  const { acceptTag } = useAcceptTag(locationTag, refetch);
-  const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
+  const { acceptTag, canAcceptTag } = useAcceptTag(locationTag, refetch);
+  const { deleteSynonym, canDeleteSynonym } = useDeleteSynonym(locationTag, refetch);
 
   const openLocationManagementDialog = () => {
     prompt({
@@ -33,63 +35,71 @@ const LocationEntry = ({
     });
   };
 
+  const [ref, setRef] = useState<HTMLDivElement | null>(null);
+  const isVisible = useElementIsVisible(ref, false);
+
   return (
     <div
+      ref={setRef}
       className={`location-entry-container ${!locationTag.accepted ? 'location-not-accepted' : ''}`}
       onClick={openLocationManagementDialog}
     >
-      <div className='location-entry-content'>
-        <Badge
-          color='info'
-          overlap='circular'
-          variant='dot'
-          badgeContent={locationTag.unacceptedSubtags}
-        >
-          <IconButton
-            className='show-more-button'
-            onClick={e => {
-              e.stopPropagation();
-              onToggleShowMore();
-            }}
+      {isVisible ? (
+        <div className='location-entry-content'>
+          <Badge
+            color='info'
+            overlap='circular'
+            variant='dot'
+            badgeContent={locationTag.unacceptedSubtags}
           >
-            {showMore ? <ExpandMore /> : <ChevronRight />}
-          </IconButton>
-        </Badge>
-        <div className='location-entry-inner-content-container'>
-          <div className='location-entry-inner-content'>
-            <div className='location-name'>
-              {locationTag.name}
-              {!locationTag.accepted && (
-                <IconButton
-                  className='accept-location-name'
-                  onClick={e => {
-                    e.stopPropagation();
-                    acceptTag();
-                  }}
-                >
-                  <Check />
-                </IconButton>
-              )}
+            <IconButton
+              className='show-more-button'
+              onClick={e => {
+                e.stopPropagation();
+                onToggleShowMore();
+              }}
+            >
+              {showMore ? <ExpandMore /> : <ChevronRight />}
+            </IconButton>
+          </Badge>
+          <div className='location-entry-inner-content-container'>
+            <div className='location-entry-inner-content'>
+              <div className='location-name'>
+                {locationTag.name}
+                {!locationTag.accepted && canAcceptTag && (
+                  <IconButton
+                    className='accept-location-name'
+                    onClick={e => {
+                      e.stopPropagation();
+                      acceptTag();
+                    }}
+                  >
+                    <Check />
+                  </IconButton>
+                )}
+              </div>
+              <div className='location-synonyms'>
+                {locationTag.synonyms?.map(synonym => (
+                  <div key={synonym!.name} className='location-synonym'>
+                    <Chip
+                      key={synonym!.name}
+                      label={synonym!.name}
+                      onDelete={canDeleteSynonym ? () => deleteSynonym(synonym!.name) : undefined}
+                    />
+                  </div>
+                ))}
+              </div>
+              <LocationEntryActions
+                locationTag={locationTag}
+                parentTag={parentTag}
+                refetch={refetch}
+              />
             </div>
-            <div className='location-synonyms'>
-              {locationTag.synonyms?.map(synonym => (
-                <div key={synonym!.name} className='location-synonym'>
-                  <Chip
-                    key={synonym!.name}
-                    label={synonym!.name}
-                    onDelete={() => deleteSynonym(synonym!.name)}
-                  />
-                </div>
-              ))}
-            </div>
-            <LocationEntryActions
-              locationTag={locationTag}
-              parentTag={parentTag}
-              refetch={refetch}
-            />
           </div>
         </div>
-      </div>
+      ) : (
+        <Skeleton variant='rectangular' />
+      )}
     </div>
   );
 };

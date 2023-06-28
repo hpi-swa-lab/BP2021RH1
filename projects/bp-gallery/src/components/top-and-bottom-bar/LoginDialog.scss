@@ -21,19 +21,4 @@
     padding: 24px;
     padding-top: 0;
   }
-
-  .input-with-icon {
-    display: grid;
-
-    .MuiTextField-root,
-    .MuiIconButton-root {
-      grid-area: 1 / 1;
-    }
-
-    .MuiIconButton-root {
-      margin-right: 8px;
-      justify-self: right;
-      align-self: center;
-    }
-  }
 }
