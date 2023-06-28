@@ -1,3 +1,5 @@
+import { ArrowForwardIos } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -12,7 +14,6 @@ import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import DecadesList from '../views/search/DecadesList';
 import TagList from '../views/search/TagList';
 import './PictureOverview.scss';
-import PrimaryButton from './PrimaryButton';
 
 const MAX_TAGS_PER_ROW = 3;
 
@@ -113,9 +114,14 @@ const TagOverview = ({
           )}
         </div>
         {onClick && (
-          <PrimaryButton onClick={onClick} withRightArrow>
+          <Button
+            className='w-fit self-center'
+            variant='contained'
+            onClick={onClick}
+            endIcon={<ArrowForwardIos />}
+          >
             {t('common.showMore')}
-          </PrimaryButton>
+          </Button>
         )}
       </div>
     );
