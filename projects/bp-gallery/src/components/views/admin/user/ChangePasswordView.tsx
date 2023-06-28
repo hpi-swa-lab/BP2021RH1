@@ -1,10 +1,9 @@
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChangePasswordMutation } from '../../../../graphql/APIConnector';
 import { useCanChangePassword } from '../../../../hooks/can-do-hooks';
 import { PasswordInput } from '../../../common/PasswordInput';
-import PrimaryButton from '../../../common/PrimaryButton';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import { AlertContext, AlertType } from '../../../provider/AlertProvider';
 import { CenteredContainer } from '../CenteredContainer';
@@ -56,7 +55,9 @@ export const ChangePasswordView = () => {
             value={passwordConfirmation}
             onChange={event => setPasswordConfirmation(event.target.value)}
           />
-          <PrimaryButton onClick={doChangePassword}>{t('common.confirm')}</PrimaryButton>
+          <Button variant='contained' className='w-fit self-center' onClick={doChangePassword}>
+            {t('common.confirm')}
+          </Button>
         </Stack>
       </CenteredContainer>
     </ProtectedRoute>

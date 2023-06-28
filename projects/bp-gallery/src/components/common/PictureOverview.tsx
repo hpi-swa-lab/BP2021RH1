@@ -1,3 +1,5 @@
+import { ArrowForwardIos } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../graphql/APIConnector';
@@ -6,7 +8,6 @@ import useGetPictures, { TextFilter } from '../../hooks/get-pictures.hook';
 import { useCollapseSequences } from '../../hooks/sequences.hook';
 import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
 import './PictureOverview.scss';
-import PrimaryButton from './PrimaryButton';
 import PictureGrid from './picture-gallery/PictureGrid';
 
 interface PictureOverviewProps {
@@ -58,9 +59,14 @@ const PictureOverview = ({
           />
         </div>
       )}
-      <PrimaryButton onClick={onClick} withRightArrow>
+      <Button
+        onClick={onClick}
+        endIcon={<ArrowForwardIos />}
+        variant='contained'
+        className='w-fit self-center'
+      >
         {t('common.showMore')}
-      </PrimaryButton>
+      </Button>
     </div>
   );
 };
