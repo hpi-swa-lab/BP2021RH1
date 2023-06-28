@@ -4,9 +4,8 @@ import { isEmpty } from 'lodash';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatDescription } from '../../../../../types/additionalFlatTypes';
-import TextEditor from '../../../../common/editors/TextEditor';
 import RichText from '../../../../common/RichText';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
+import TextEditor from '../../../../common/editors/TextEditor';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 
 const DescriptionsEditField = ({
@@ -15,10 +14,9 @@ const DescriptionsEditField = ({
   onTouch,
 }: {
   descriptions: FlatDescription[];
-  onChange: (description: FlatDescription[]) => void;
+  onChange?: (description: FlatDescription[]) => void;
   onTouch: () => void;
 }) => {
-  const { role } = useAuth();
   const { t } = useTranslation();
   const [newDescription, setNewDescription] = useState<FlatDescription | null>(null);
   const dialog = useDialog();
@@ -33,6 +31,9 @@ const DescriptionsEditField = ({
   // problem: jodit keeps stale references to events
   const onBlurCallback = useCallback(
     (newText: string, description: FlatDescription) => {
+      if (!onChange) {
+        return;
+      }
       if (description === newDescription) {
         setNewDescription(null);
       }
@@ -64,10 +65,7 @@ const DescriptionsEditField = ({
   return (
     <>
       {allDescriptions.length <= 0 && (
-        <div
-          className='none-found'
-          style={role >= AuthRole.CURATOR ? { marginBottom: '4rem' } : undefined}
-        >
+        <div className='none-found' style={onChange ? { marginBottom: '4rem' } : undefined}>
           {t('pictureFields.noDescription')}
         </div>
       )}
@@ -78,7 +76,7 @@ const DescriptionsEditField = ({
             key={isEmpty(description.id) ? `new-description-${index}` : description.id}
           >
             <div className='description-content'>
-              {role >= AuthRole.CURATOR ? (
+              {onChange ? (
                 <TextEditor
                   value={description.text}
                   onBlur={newText => onBlurRef.current(newText, description)}
@@ -89,7 +87,7 @@ const DescriptionsEditField = ({
               )}
             </div>
             <div>
-              {role >= AuthRole.CURATOR && (
+              {onChange && (
                 <IconButton
                   onClick={async () => {
                     const reallyDelete = await dialog({
@@ -116,7 +114,7 @@ const DescriptionsEditField = ({
           </div>
         );
       })}
-      {role >= AuthRole.CURATOR && !newDescription && (
+      {onChange && !newDescription && (
         <IconButton
           onClick={() => {
             setNewDescription({

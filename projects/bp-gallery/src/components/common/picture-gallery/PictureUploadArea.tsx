@@ -6,17 +6,16 @@ import { cloneDeep, sortBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { useCreatePictureMutation } from '../../../graphql/APIConnector';
+import { useCreatePictureMutation, useMultipleUploadMutation } from '../../../graphql/APIConnector';
 import { PictureOrigin } from '../../../helpers/app-helpers';
+import { useCanUploadPicture } from '../../../hooks/can-do-hooks';
 import { useObjectIds } from '../../../hooks/object-ids.hook';
 import { useMouseAndTouchSensors } from '../../../hooks/sensors.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import SortableItem from '../SortableItem';
 import PicturePreview from './PicturePreview';
 import './PictureUploadArea.scss';
-import uploadMediaFiles from './helpers/upload-media-files';
 
 export interface PictureUploadAreaProps {
   folderName?: string;
@@ -39,7 +38,6 @@ const PictureUploadArea = ({
   });
   const sensors = useMouseAndTouchSensors();
   const { t } = useTranslation();
-  const { role } = useAuth();
   const dialog = useDialog();
   const { getObjectId } = useObjectIds<NewFile>();
 
@@ -48,6 +46,8 @@ const PictureUploadArea = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const [createPicture] = useCreatePictureMutation();
+
+  const { canUploadPicture } = useCanUploadPicture();
 
   const asFlatPicture = (file: File): FlatPicture => {
     return {
@@ -69,6 +69,8 @@ const PictureUploadArea = ({
     setNewFiles(fileList => [...fileList, ...sortedFiles]);
   }, [acceptedFiles]);
 
+  const [multipleUpload] = useMultipleUploadMutation();
+
   const uploadPictures = useCallback(async () => {
     if (!preprocessPictures) {
       return;
@@ -81,7 +83,7 @@ const PictureUploadArea = ({
       return;
     }
 
-    const initializePictureFromFile = (fileId: any) =>
+    const initializePictureFromFile = (fileId: string | null | undefined) =>
       ({
         media: fileId,
         publishedAt: new Date().toISOString(),
@@ -89,23 +91,32 @@ const PictureUploadArea = ({
       } as unknown as FlatPicture);
 
     setLoading(true);
-    uploadMediaFiles(newFiles.map(f => f.file)).then(async fileIds => {
-      const initialPictures = fileIds.map(initializePictureFromFile);
-      const pictures = preprocessPictures(initialPictures);
-      for (const picture of pictures) {
+    const uploadedPictures = (
+      (
+        await multipleUpload({
+          variables: {
+            files: newFiles.map(f => f.file),
+          },
+        })
+      ).data?.multipleUpload ?? []
+    )
+      .map(upload => upload?.data?.id)
+      .map(initializePictureFromFile);
+    await Promise.all(
+      preprocessPictures(uploadedPictures).map(async picture => {
         await createPicture({
           variables: {
             data: picture as any,
           },
         });
-      }
-      setNewFiles([]);
-      if (onUploaded) {
-        onUploaded();
-      }
-      setLoading(false);
-    });
-  }, [preprocessPictures, dialog, newFiles, onUploaded, createPicture]);
+      })
+    );
+    setNewFiles([]);
+    if (onUploaded) {
+      onUploaded();
+    }
+    setLoading(false);
+  }, [multipleUpload, preprocessPictures, dialog, newFiles, onUploaded, createPicture]);
 
   function onDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -115,7 +126,7 @@ const PictureUploadArea = ({
   }
 
   // Do we really want to allow uploading only when preprocessing is enabled?
-  if (role < AuthRole.CURATOR || !preprocessPictures) {
+  if (!canUploadPicture || !preprocessPictures) {
     return null;
   }
 

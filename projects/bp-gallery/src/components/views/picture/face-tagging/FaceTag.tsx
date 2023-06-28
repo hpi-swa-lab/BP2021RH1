@@ -2,9 +2,12 @@ import { Autorenew, Cancel, OpenWith } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { CSSProperties, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  useCanRunDeleteFaceTagMutation,
+  useCanRunUpdateFaceTagDirectionMutation,
+} from '../../../../graphql/APIConnector';
 import { useFaceTagging } from '../../../../hooks/context-hooks';
 import '../../../../shared/style.module.scss';
-import { AuthRole, useAuth } from '../../../provider/AuthProvider';
 import { FaceTagData, TagDirection } from './FaceTagTypes';
 
 const triangleHeight = 10;
@@ -17,7 +20,6 @@ export const FaceTag = ({
   data: FaceTagData;
 }) => {
   const { t } = useTranslation();
-  const { role } = useAuth();
   const context = useFaceTagging();
   const isFaceTagging = context?.isFaceTagging;
 
@@ -28,6 +30,12 @@ export const FaceTag = ({
     await context?.removeTag(id);
   };
 
+  const { canRun: canDelete } = useCanRunDeleteFaceTagMutation({
+    variables: {
+      id,
+    },
+  });
+
   const handleMove = async () => {
     if (personTagId === undefined) {
       return;
@@ -36,6 +44,8 @@ export const FaceTag = ({
     await handleDelete();
     context?.setActiveTagId(personTagId);
   };
+
+  const canMove = (canDelete && context?.canCreateTag) ?? false;
 
   const toggleSetDirectionMode = () => {
     context?.setTagDirectionReferenceTagId(context.tagDirectionReferenceTagId ? null : id ?? null);
@@ -133,46 +143,58 @@ export const FaceTag = ({
     };
   }, [x, y, position, noPointerEvents, tagDirection]);
 
+  const { canRun: canUpdateDirection } = useCanRunUpdateFaceTagDirectionMutation({
+    variables: {
+      faceTagId: id,
+    },
+  });
+
   const {
     palette: {
-      person: { main: personColor },
+      faceTag: { main: faceTagColor },
     },
   } = useTheme();
-  const transparentPersonColor = personColor + 'bb';
+  const transparentFaceTagColor = faceTagColor + 'bb';
 
   return (
     <div className='fixed z-[999] hover:z-[9999] flex items-center facetag' style={style}>
       <svg width={triangle.width} height={triangle.height} data-testid={triangle.testid}>
-        <polygon fill={transparentPersonColor} points={triangle.points} />
+        <polygon fill={transparentFaceTagColor} points={triangle.points} />
       </svg>
       <div
-        className='flex flex-row items-center space-x-1 p-2 rounded-md text-white'
+        className='flex flex-row items-center space-x-1 p-2 rounded-md text-black'
         style={{
-          background: transparentPersonColor,
+          background: transparentFaceTagColor,
         }}
       >
         <span>{name}</span>
-        {role >= AuthRole.CURATOR && id !== undefined && isFaceTagging && (
+        {id !== undefined && isFaceTagging && (
           <>
-            <OpenWith
-              titleAccess={t('facetag.move')}
-              className='hover:text-[#00000066]'
-              onClick={handleMove}
-            />
-            <Autorenew
-              titleAccess={t('facetag.rotate')}
-              className={
-                id === context.tagDirectionReferenceTagId
-                  ? 'text-[#00000066]'
-                  : 'hover:text-[#00000066]'
-              }
-              onClick={toggleSetDirectionMode}
-            />
-            <Cancel
-              titleAccess={t('facetag.delete')}
-              className='hover:text-[#00000066]'
-              onClick={handleDelete}
-            />
+            {canMove && (
+              <OpenWith
+                titleAccess={t('facetag.move')}
+                className='hover:text-[#00000066]'
+                onClick={handleMove}
+              />
+            )}
+            {canUpdateDirection && (
+              <Autorenew
+                titleAccess={t('facetag.rotate')}
+                className={
+                  id === context.tagDirectionReferenceTagId
+                    ? 'text-[#00000066]'
+                    : 'hover:text-[#00000066]'
+                }
+                onClick={toggleSetDirectionMode}
+              />
+            )}
+            {canDelete && (
+              <Cancel
+                titleAccess={t('facetag.delete')}
+                className='hover:text-[#00000066]'
+                onClick={handleDelete}
+              />
+            )}
           </>
         )}
       </div>

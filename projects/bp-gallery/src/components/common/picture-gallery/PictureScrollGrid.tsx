@@ -7,6 +7,7 @@ import { useCachedOnRefetch } from '../../../hooks/cache-on-refetch.hook';
 import { useScroll } from '../../../hooks/context-hooks';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+  TextFilter,
 } from '../../../hooks/get-pictures.hook';
 import { useCollapseSequences } from '../../../hooks/sequences.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -17,6 +18,7 @@ import PictureGrid from './PictureGrid';
 import { PicturePreviewAdornment } from './PicturePreview';
 import './PictureScrollGrid.scss';
 import PictureUploadArea, { PictureUploadAreaProps } from './PictureUploadArea';
+import { TextFilterSelect } from './TextFilterSelect';
 
 const PictureScrollGrid = ({
   queryParams,
@@ -32,8 +34,8 @@ const PictureScrollGrid = ({
   extraAdornments,
   showDefaultAdornments = true,
   allowClicks = true,
-  filterOutTextsForNonCurators = true,
   collapseSequences = true,
+  textFilter,
   fetchPolicy,
   cacheOnRefetch = false,
   onSort,
@@ -51,8 +53,8 @@ const PictureScrollGrid = ({
   extraAdornments?: PicturePreviewAdornment[];
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
-  filterOutTextsForNonCurators?: boolean;
   collapseSequences?: boolean;
+  textFilter: TextFilter | null;
   fetchPolicy?: WatchQueryFetchPolicy;
   cacheOnRefetch?: boolean;
   onSort?: (newPictures: FlatPicture[]) => void;
@@ -61,11 +63,15 @@ const PictureScrollGrid = ({
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
+  const [selectedTextFilter, setSelectedTextFilter] = useState(
+    textFilter ?? TextFilter.ONLY_PICTURES
+  );
+
   const { data, loading, error, fetchMore, refetch } = useGetPictures(
     queryParams,
     isAllSearchActive,
     sortBy,
-    filterOutTextsForNonCurators,
+    selectedTextFilter,
     NUMBER_OF_PICTURES_LOADED_PER_FETCH,
     fetchPolicy
   );
@@ -153,6 +159,11 @@ const PictureScrollGrid = ({
               count: processedPictures.length,
             })}
           </span>
+        )}
+        {textFilter === null && (
+          <div className='flex flex-row justify-end'>
+            <TextFilterSelect value={selectedTextFilter} onChange={setSelectedTextFilter} />
+          </div>
         )}
         <PictureGrid
           refetch={refetch}

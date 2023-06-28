@@ -5,22 +5,22 @@ import './PrimaryButton.scss';
 
 const PrimaryButton = ({
   children,
-  onClickFn,
-  isShowMore,
+  onClick,
+  withRightArrow,
   type,
   className,
 }: PropsWithChildren<{
-  onClickFn?: MouseEventHandler;
-  isShowMore?: boolean;
+  onClick?: MouseEventHandler;
+  withRightArrow?: boolean;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
 }>) => {
   return (
     <Button
       variant='contained'
-      onClick={onClickFn}
+      onClick={onClick}
       className={`primary-button ${className ?? ''}`}
-      endIcon={isShowMore && <ArrowForwardIos />}
+      endIcon={withRightArrow && <ArrowForwardIos />}
       type={type}
     >
       {children}

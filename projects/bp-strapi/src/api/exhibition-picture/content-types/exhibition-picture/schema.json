@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exhibition_pictures",
+  "info": {
+    "singularName": "exhibition-picture",
+    "pluralName": "exhibition-pictures",
+    "displayName": "Exhibition_Picture",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "picture": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::picture.picture",
+      "inversedBy": "exhibition_pictures"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "exhibition_section": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::exhibition-section.exhibition-section",
+      "inversedBy": "exhibition_pictures"
+    },
+    "exhibition_idealot": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::exhibition.exhibition",
+      "inversedBy": "idealot_pictures"
+    },
+    "order": {
+      "type": "integer"
+    }
+  }
+}

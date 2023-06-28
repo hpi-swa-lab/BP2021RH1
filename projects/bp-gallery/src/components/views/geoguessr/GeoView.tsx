@@ -4,29 +4,22 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStorageState } from 'react-use-storage-state';
 import {
-  useGetAllPicturesByArchiveQuery,
+  useGetAllPictureIdsQuery,
   useGetPictureGeoInfoQuery,
   useGetPicturesForCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useVariant } from '../../../helpers/growthbook';
+import { useBlockImageContextMenuByPictureId } from '../../../hooks/block-image-context-menu.hook';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 import {
-  FlatArchiveTag,
   FlatCollection,
+  FlatPicture,
   FlatPictureGeoInfo,
 } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
-import { useVariant } from '../../../helpers/growthbook';
-
-const getAllPictureIds = (archives: FlatArchiveTag[]) => {
-  const allPictureIds: string[] = archives
-    .map(archive => archive.pictures ?? [])
-    .flat()
-    .map(picture => picture.id);
-  return allPictureIds;
-};
 
 const shufflePictureIds = (pictureIds: string[], seed: number) => {
   const newPictureIds = [...pictureIds];
@@ -45,7 +38,7 @@ const getTodaysPictureQueue = (pictureIds: string[]) => {
   const currentDate = new Date();
   const startDate = new Date(currentDate.getFullYear(), 0, 1);
   const days = Math.floor((currentDate.valueOf() - startDate.valueOf()) / (24 * 60 * 60 * 1000));
-  const resultIndex = pictureIds.length % (days * pictureNumber);
+  const resultIndex = (days * pictureNumber) % pictureIds.length;
   const list = [];
   for (let i = 0; i < pictureNumber; i++) {
     list.push(pictureIds[(resultIndex + i) % pictureIds.length]);
@@ -69,9 +62,9 @@ const GeoView = () => {
   const [isSet, setIsSet] = useState(false);
   const pictureLink = useGetPictureLink(pictureId);
 
-  const { data: picturesData } = useGetAllPicturesByArchiveQuery();
-  const archives: FlatArchiveTag[] | undefined =
-    useSimplifiedQueryResponseData(picturesData)?.archiveTags;
+  const { data: picturesData } = useGetAllPictureIdsQuery();
+  const pictures: FlatPicture[] | undefined =
+    useSimplifiedQueryResponseData(picturesData)?.pictures;
 
   const geoCollectionId = useVariant({ id: 'geopictures_collection_id', fallback: '' });
   const isGeoCollectionPictures = geoCollectionId !== '' && import.meta.env.MODE === 'production';
@@ -98,17 +91,17 @@ const GeoView = () => {
   }, [getNextPicture]);
 
   useEffect(() => {
-    if (!archives || isSet) {
+    if (!pictures || isSet) {
       return;
     }
     const allPictureIds = isGeoCollectionPictures
       ? geoCollectionPictureIds ?? []
-      : getAllPictureIds(archives);
+      : pictures.map(picture => picture.id);
     const shuffledPictureIds = shufflePictureIds(allPictureIds, seed);
     pictureQueue.current = getTodaysPictureQueue(shuffledPictureIds);
     onNextPicture();
     setIsSet(true);
-  }, [archives, geoCollectionPictureIds, isGeoCollectionPictures, isSet, onNextPicture]);
+  }, [pictures, geoCollectionPictureIds, isGeoCollectionPictures, isSet, onNextPicture]);
 
   const dontShowAgain = () => {
     setHasReadInstructions(true);
@@ -121,6 +114,9 @@ const GeoView = () => {
   });
   const allGuesses: FlatPictureGeoInfo[] | undefined =
     useSimplifiedQueryResponseData(geoData)?.pictureGeoInfos;
+
+  const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureId);
+
   return (
     <div className='h-full'>
       <Modal
@@ -149,8 +145,10 @@ const GeoView = () => {
                 <img
                   className='h-full'
                   data-testid='geo-image'
+                  data-pictureId={pictureId}
                   src={pictureLink}
                   alt={pictureLink}
+                  onContextMenu={onImageContextMenu}
                 />
               </div>
             </div>

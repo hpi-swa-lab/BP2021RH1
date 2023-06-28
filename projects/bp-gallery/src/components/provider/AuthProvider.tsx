@@ -8,54 +8,36 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoginMutation, useMeLazyQuery } from '../../graphql/APIConnector';
+import {
+  useLoginMutation,
+  useMeLazyQuery,
+  useResetPasswordMutation,
+} from '../../graphql/APIConnector';
 import { buildHttpLink } from '../../helpers/app-helpers';
 import { useAnonymousId } from '../../hooks/anonymous-id.hook';
 import { AlertContext, AlertType } from './AlertProvider';
 
-export enum AuthRole {
-  PUBLIC,
-  AUTHENTICATED,
-  MODERATOR,
-  CURATOR,
-}
-
-const asAuthRole = (roleName: string) => {
-  switch (roleName) {
-    case 'Curator':
-      return AuthRole.CURATOR;
-    case 'Moderator':
-      return AuthRole.MODERATOR;
-    case 'Authenticated':
-      return AuthRole.AUTHENTICATED;
-    default:
-      return AuthRole.PUBLIC;
-  }
-};
-
 export interface AuthFields {
-  role: AuthRole;
+  userId?: string;
   username?: string;
   email?: string;
+  loggedIn: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  resetPassword: (token: string, password: string, passwordConfirmation: string) => Promise<void>;
   loading: boolean;
 }
 
 export const AuthContext = createContext<AuthFields>({
-  role: AuthRole.PUBLIC,
+  loggedIn: false,
   login: async () => {},
   logout: () => {},
+  resetPassword: async () => {},
   loading: false,
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
 const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
-  const [role, setRole] = useState<AuthRole>(AuthRole.PUBLIC);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);
 
@@ -67,6 +49,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     fetchPolicy: 'network-only',
   });
   const [loginMutation] = useLoginMutation();
+  const [resetPasswordMutation] = useResetPasswordMutation();
 
   const apolloClient = useApolloClient();
   const openAlert = useContext(AlertContext);
@@ -77,7 +60,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     if (called) return;
 
     const token = sessionStorage.getItem('jwt');
-    apolloClient.setLink(buildHttpLink(token, openAlert, anonymousId));
+    apolloClient.setLink(buildHttpLink(token, { openAlert, t }, anonymousId));
 
     if (token) {
       getUserInfo();
@@ -85,13 +68,13 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       // we won't call getUserInfo, because token won't change
       setAuthLoading(false);
     }
-  }, [apolloClient, called, getUserInfo, openAlert, anonymousId]);
+  }, [apolloClient, called, getUserInfo, openAlert, t, anonymousId]);
 
   // Save fetched userInfo in state
   useEffect(() => {
     if (!called || loading || error) return;
 
-    setRole(asAuthRole(data?.me?.role?.name ?? ''));
+    setUserId(data?.me?.id);
     setUsername(data?.me?.username);
     setEmail(data?.me?.email ?? undefined);
     setAuthLoading(false);
@@ -104,41 +87,73 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     [openAlert]
   );
 
-  const login = useCallback(
-    (username: string, password: string) => {
+  const afterLogin = useCallback(
+    (errors?: readonly Error[], token?: string | null) => {
       return new Promise<void>((resolve, reject) => {
-        loginMutation({ variables: { username, password } }).then(({ data, errors }) => {
-          if (errors) {
-            reject(errors.map(error => error.message).join('\n'));
+        if (errors) {
+          reject(errors.map(error => error.message).join('\n'));
+        } else {
+          if (token) {
+            sessionStorage.setItem('jwt', token);
+            apolloClient.setLink(buildHttpLink(token, { openAlert, t }, anonymousId));
+            getUserInfo();
+            displaySuccess(t('login.successful-login'));
+            resolve();
           } else {
-            const token = data?.login.jwt;
-            if (token) {
-              sessionStorage.setItem('jwt', token);
-              apolloClient.setLink(buildHttpLink(token, openAlert, anonymousId));
-              getUserInfo();
-              displaySuccess(t('login.successful-login'));
-              resolve();
-            } else {
-              reject('The Login-Mutation did not return a token');
-            }
+            reject('The Login-Mutation did not return a token');
           }
-        });
+        }
       });
     },
-    [loginMutation, apolloClient, getUserInfo, displaySuccess, t, openAlert, anonymousId]
+    [apolloClient, getUserInfo, displaySuccess, t, openAlert, anonymousId]
+  );
+
+  const login = useCallback(
+    async (username: string, password: string) => {
+      const { errors, data } = await loginMutation({ variables: { username, password } });
+      const token = data?.login.jwt;
+      await afterLogin(errors, token);
+    },
+    [loginMutation, afterLogin]
+  );
+
+  const resetPassword = useCallback(
+    async (token: string, password: string, passwordConfirmation: string) => {
+      const { errors, data } = await resetPasswordMutation({
+        variables: {
+          token,
+          password,
+          passwordConfirmation,
+        },
+      });
+      const jwtToken = data?.resetPassword?.jwt;
+      await afterLogin(errors, jwtToken);
+    },
+    [resetPasswordMutation, afterLogin]
   );
 
   const logout = useCallback(() => {
-    apolloClient.setLink(buildHttpLink(null, openAlert, anonymousId));
+    apolloClient.setLink(buildHttpLink(null, { openAlert, t }, anonymousId));
     sessionStorage.removeItem('jwt');
-    setRole(AuthRole.PUBLIC);
+    setUserId(undefined);
     setUsername(undefined);
     setEmail(undefined);
     displaySuccess(t('login.successful-logout'));
   }, [apolloClient, displaySuccess, t, openAlert, anonymousId]);
 
   return (
-    <AuthContext.Provider value={{ role, username, email, login, logout, loading: authLoading }}>
+    <AuthContext.Provider
+      value={{
+        userId,
+        username,
+        email,
+        loggedIn: username !== undefined,
+        login,
+        logout,
+        resetPassword,
+        loading: authLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

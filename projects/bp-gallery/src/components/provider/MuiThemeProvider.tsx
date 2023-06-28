@@ -10,6 +10,7 @@ type ColorsType = Record<
   | 'decadeColor'
   | 'descriptionColor'
   | 'personColor'
+  | 'faceTagColor'
   | 'locationColor'
   | 'keywordColor'
   | 'markAsTextColor'

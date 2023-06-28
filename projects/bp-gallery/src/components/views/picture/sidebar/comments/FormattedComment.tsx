@@ -11,6 +11,10 @@ import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  useCanRunDeclineCommentMutation,
+  useCanRunFixCommentTextMutation,
+  useCanRunPinCommentMutation,
+  useCanRunUnpinCommentMutation,
   useDeclineCommentMutation,
   useFixCommentTextMutation,
   usePinCommentMutation,
@@ -21,7 +25,6 @@ import { FlatComment } from '../../../../../types/additionalFlatTypes';
 import CollapsibleContainer from '../../../../common/CollapsibleContainer';
 import RichText from '../../../../common/RichText';
 import TextEditor from '../../../../common/editors/TextEditor';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { getIsLong } from './../../../../../helpers/get-linebreaks';
 import CommentVerification from './CommentVerification';
@@ -39,11 +42,9 @@ interface CommentAction {
 const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?: number }) => {
   const { t } = useTranslation();
 
-  const { role } = useAuth();
   const [long, setLong] = useState(false);
 
   const textRef = useRef<HTMLDivElement>(null);
-  const isCurator = role >= AuthRole.CURATOR;
   const dialog = useDialog();
 
   useEffect(() => {
@@ -63,6 +64,11 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     refetchQueries: ['getPictureInfo'],
     onCompleted: () => setPinned(true),
   });
+  const { canRun: canPinComment } = useCanRunPinCommentMutation({
+    variables: {
+      commentId: comment.id,
+    },
+  });
 
   const [unpinComment] = useUnpinCommentMutation({
     variables: {
@@ -70,6 +76,11 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     },
     refetchQueries: ['getPictureInfo'],
     onCompleted: () => setPinned(false),
+  });
+  const { canRun: canUnpinComment } = useCanRunUnpinCommentMutation({
+    variables: {
+      commentId: comment.id,
+    },
   });
 
   const [deleteComment] = useDeclineCommentMutation({
@@ -79,6 +90,14 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
       'getPictures',
       'getPicturesByAllSearch',
     ],
+  });
+  const { canRun: canDeleteComment } = useCanRunDeclineCommentMutation({
+    variables: {
+      // use the current comment as a representative for all the children,
+      // since the permission is bound to an archive and all
+      // child comments belong to the same archive
+      commentId: comment.id,
+    },
   });
 
   const onDelete = useCallback(async () => {
@@ -110,6 +129,12 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
     );
   }, [dialog, t, comment, deleteComment]);
 
+  const { canRun: canUpdateComment } = useCanRunFixCommentTextMutation({
+    variables: {
+      commentId: comment.id,
+    },
+  });
+
   const commentActions: CommentAction[] = useMemo(
     () => [
       {
@@ -119,7 +144,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
         hoverText: 'Antworten',
         state: reply,
       } as CommentAction,
-      ...(role >= AuthRole.CURATOR
+      ...(canUpdateComment
         ? [
             {
               text: 'Editieren',
@@ -128,6 +153,10 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
               hoverText: 'Editieren',
               state: edit,
             },
+          ]
+        : []),
+      ...(canDeleteComment
+        ? [
             {
               text: t('common.delete'),
               action: () => onDelete(),
@@ -136,7 +165,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
           ]
         : []),
     ],
-    [t, role, reply, edit, onDelete]
+    [t, reply, canUpdateComment, edit, canDeleteComment, onDelete]
   );
 
   return (
@@ -160,7 +189,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
             {dayjs(comment.date as string).format('DD.MM.YYYY')}:
           </p>
         </div>
-        {comment.publishedAt && isCurator && !depth ? (
+        {comment.publishedAt && (pinned ? canUnpinComment : canPinComment) && !depth ? (
           <button
             className={`pin-button ${pinned ? 'pinned' : ''}`}
             onClick={() => {
@@ -183,7 +212,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
           long={long && !edit}
           onToggle={open => setIsOpen(open)}
         >
-          {isCurator && edit ? (
+          {canUpdateComment && edit ? (
             <div className={`text-lg break-words bg-neutral-100 mt-1`}>
               <CommentEditField comment={comment} />
             </div>

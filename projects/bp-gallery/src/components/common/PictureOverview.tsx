@@ -2,7 +2,7 @@ import { MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
-import useGetPictures from '../../hooks/get-pictures.hook';
+import useGetPictures, { TextFilter } from '../../hooks/get-pictures.hook';
 import { useCollapseSequences } from '../../hooks/sequences.hook';
 import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
 import './PictureOverview.scss';
@@ -34,7 +34,7 @@ const PictureOverview = ({
     queryParams,
     false,
     sortBy,
-    true,
+    TextFilter.ONLY_PICTURES,
     ABSOLUTE_MAX_PICTURES_PER_ROW * rows,
     'cache-and-network',
     type
@@ -58,7 +58,7 @@ const PictureOverview = ({
           />
         </div>
       )}
-      <PrimaryButton onClickFn={onClick} isShowMore={true}>
+      <PrimaryButton onClick={onClick} withRightArrow>
         {t('common.showMore')}
       </PrimaryButton>
     </div>

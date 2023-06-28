@@ -11,8 +11,7 @@ const Footer = () => {
       <div className='footer-content'>
         <div className='footer-info'>
           <h3>{t('footer.title')}</h3>
-          <p onClick={() => visit('/contact')}>{t('footer.contact')}</p>
-          {/*  
+          {/*
           <p>
           {t('footer.privacy')}
           </p>

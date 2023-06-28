@@ -11,6 +11,8 @@ import OverviewContainer, {
 } from '../../common/OverviewContainer';
 import { AccessTime, ThumbUp } from '@mui/icons-material';
 import { useMemo } from 'react';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
+import { useFlag } from '../../../helpers/growthbook';
 
 const DiscoverView = () => {
   const { visit } = useVisit();
@@ -45,12 +47,12 @@ const DiscoverView = () => {
       },
     ];
   }, [t, visit]);
-
+  const showStories = useFlag('showstories');
   return (
     <div className='discover-container'>
       <ShowStats>
         <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
-
+        {showStories && <ExhibitionOverview showTitle margin />}
         <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}

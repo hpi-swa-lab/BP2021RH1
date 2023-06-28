@@ -1,4 +1,5 @@
 import { Context, useContext } from 'react';
+import { AuthContext } from '../components/provider/AuthProvider';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
 import { FaceTaggingContext } from '../components/provider/FaceTaggingContext';
 import { MobileContext } from '../components/provider/MobileProvider';
@@ -33,4 +34,8 @@ export const useFaceTagging = () => {
 
 export const useMobile = () => {
   return useContext(MobileContext);
+};
+
+export const useAuth = () => {
+  return useContext(AuthContext);
 };
