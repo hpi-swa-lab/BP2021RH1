@@ -51,14 +51,3 @@
     max-height: 160px;
   }
 }
-
-.MuiButton-root.add-to-collection {
-  width: 100%;
-  background-color: $primaryColor;
-  color: white;
-
-  &:hover {
-    background-color: white;
-    color: $primaryColor;
-  }
-}
