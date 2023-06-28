@@ -3,6 +3,7 @@ import {
   Collection,
   Comment,
   ComponentCommonSynonyms,
+  ComponentLocationCoordinates,
   Description,
   Exhibition,
   ExhibitionPicture,
@@ -214,6 +215,7 @@ export type FlatFaceTag = FlatFaceTagWithoutRelations & {
 export interface FlatTag {
   id: string;
   name: string;
+  coordinates?: ComponentLocationCoordinates;
   synonyms?: (ComponentCommonSynonyms | undefined)[];
   visible?: boolean;
   parent_tags?: FlatTag[];
