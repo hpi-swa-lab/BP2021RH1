@@ -192,6 +192,7 @@ const PictureUploadArea = ({
       {Boolean(newFiles.length) && (
         <Button
           variant='contained'
+          data-cy='file-upload'
           disabled={loading}
           onClick={uploadPictures}
           endIcon={loading ? <CircularProgress /> : <ExpandCircleDown />}
