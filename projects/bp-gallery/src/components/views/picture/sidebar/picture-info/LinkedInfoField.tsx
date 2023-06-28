@@ -231,6 +231,7 @@ const LinkedInfoField = ({
                   showCount={false}
                   showDefaultAdornments={false}
                   extraAdornments={adornments}
+                  collapseSequences={false}
                   textFilter={TextFilter.PICTURES_AND_TEXTS}
                 />
               </ScrollContainer>

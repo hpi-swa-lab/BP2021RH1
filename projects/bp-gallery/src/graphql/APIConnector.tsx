@@ -1723,7 +1723,6 @@ export type Picture = {
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
-  exhibition_picture?: Maybe<ExhibitionPictureRelationResponseCollection>;
   exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
   face_tags?: Maybe<FaceTagRelationResponseCollection>;
   is_not_a_place_count?: Maybe<Scalars['Int']>;
@@ -1764,13 +1763,6 @@ export type PictureCommentsArgs = {
 
 export type PictureDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type PictureExhibition_PictureArgs = {
-  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -3781,6 +3773,12 @@ export type GetPicturesByAllSearchQuery = {
           } | null;
         } | null;
       };
+      picture_sequence?: {
+        data?: {
+          id?: string | null;
+          attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+        } | null;
+      } | null;
     } | null;
   } | null> | null;
 };
@@ -7236,6 +7234,18 @@ export const GetPicturesByAllSearchDocument = gql`
               url
               updatedAt
               provider
+            }
+          }
+        }
+        picture_sequence {
+          data {
+            id
+            attributes {
+              pictures(sort: "picture_sequence_order:asc") {
+                data {
+                  id
+                }
+              }
             }
           }
         }
