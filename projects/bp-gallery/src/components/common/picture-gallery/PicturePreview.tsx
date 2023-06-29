@@ -3,6 +3,7 @@ import { FunctionComponent, MouseEvent, MouseEventHandler, useMemo, useRef, useS
 import { PictureOrigin, asUploadPath } from '../../../helpers/app-helpers';
 import { useStats } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
+import PdfPreview from './PdfPreview';
 import './PicturePreview.scss';
 import PictureStats from './PictureStats';
 
@@ -51,6 +52,7 @@ const PicturePreview = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
   const showStats = useStats();
+  const isPdf = picture.media?.ext === '.pdf';
 
   const adornmentContext: PicturePreviewAdornmentContext = useMemo(
     () => ({
@@ -60,9 +62,11 @@ const PicturePreview = ({
     [picture, hovered]
   );
 
-  return (
+  return isPdf ? (
+    <PdfPreview picture={picture} onClick={onClick} adornments={adornments} />
+  ) : (
     <div
-      className='preview-container'
+      className={'preview-container'}
       onMouseOver={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={onClick}

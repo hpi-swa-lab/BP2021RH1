@@ -26,9 +26,7 @@ const PDFViewer = ({ picture }: PDFViewerProps) => {
   useEffect(() => {
     if (!documentRef.current) return;
     const doc = documentRef.current;
-    console.log(doc);
     const onResize = () => {
-      console.log('why');
       setPageWidth(doc.clientWidth);
     };
     doc.addEventListener('resize', onResize);
@@ -37,19 +35,14 @@ const PDFViewer = ({ picture }: PDFViewerProps) => {
   }, []);
 
   return (
-    <div className='overflow-y-auto w-3/4' ref={documentRef}>
+    <div className='overflow-y-auto' ref={documentRef}>
       <Document
         className={'flex flex-col gap-1 w-full'}
         file={asUploadPath(picture.media)}
         onLoadSuccess={onDocumentLoadSuccess}
       >
         {Array.from(Array(numPages).keys()).map(pageIndex => (
-          <Page
-            className='w-full'
-            key={pageIndex}
-            pageIndex={pageIndex}
-            onWheel={() => console.log('WHYYYYY')}
-          />
+          <Page key={pageIndex} pageIndex={pageIndex} />
         ))}
       </Document>
     </div>

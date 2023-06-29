@@ -114,8 +114,6 @@ const PictureView = ({
 
   const [img, setImg] = useState<HTMLImageElement | null>(null);
 
-  console.log('hmmm');
-
   // const minMouseIdleMillisecondsForNoDistractionMode = 3000;
   // const mouseIsIdle = useMouseIsIdle(minMouseIdleMillisecondsForNoDistractionMode);
   // const noDistractionMode = !sideBarOpen && mouseIsIdle;

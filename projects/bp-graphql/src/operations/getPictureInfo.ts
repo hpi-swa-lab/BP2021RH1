@@ -144,7 +144,6 @@ export default {
               }
             }
             is_text
-            is_pdf
             linked_pictures {
               data {
                 id
