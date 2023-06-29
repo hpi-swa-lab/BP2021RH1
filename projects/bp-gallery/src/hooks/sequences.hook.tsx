@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDialog } from '../components/provider/DialogProvider';
 import {
+  useCanRunUpdatePictureMutation,
   useCreatePictureSequenceMutation,
   useUpdatePictureMutation,
 } from '../graphql/APIConnector';
@@ -142,6 +143,13 @@ export const useRemovePictureFromSequence = () => {
 
   return removePictureFromSequence;
 };
+
+export const useCanRemovePictureFromSequence = (pictureId: string | undefined) =>
+  useCanRunUpdatePictureMutation({
+    variables: {
+      pictureId,
+    },
+  }).canRun;
 
 export const collapseSequences = (pictures: FlatPicture[] | undefined) => {
   if (!pictures) {

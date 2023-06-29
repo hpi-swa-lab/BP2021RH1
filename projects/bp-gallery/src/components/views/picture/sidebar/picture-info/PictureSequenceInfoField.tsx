@@ -3,6 +3,8 @@ import { Button } from '@mui/material';
 import { sortBy } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCanRunCreatePictureSequenceMutation } from '../../../../../graphql/APIConnector';
+import { TextFilter } from '../../../../../hooks/get-pictures.hook';
 import {
   useRemovePictureFromSequence,
   useUpdatePictureSequenceOrder,
@@ -11,7 +13,6 @@ import { FlatPicture } from '../../../../../types/additionalFlatTypes';
 import ScrollContainer from '../../../../common/ScrollContainer';
 import { PicturePreviewAdornment } from '../../../../common/picture-gallery/PicturePreview';
 import PictureScrollGrid from '../../../../common/picture-gallery/PictureScrollGrid';
-import { AuthRole, useAuth } from '../../../../provider/AuthProvider';
 import { ScrollProvider } from '../../../../provider/ScrollProvider';
 import { HideStats } from '../../../../provider/ShowStatsProvider';
 import './LinkedInfoField.scss';
@@ -19,7 +20,6 @@ import PictureInfoField from './PictureInfoField';
 
 const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
   const { t } = useTranslation();
-  const { role } = useAuth();
 
   const sequencePictures = picture.picture_sequence?.pictures;
 
@@ -48,6 +48,11 @@ const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
   );
 
   const removePictureFromSequence = useRemovePictureFromSequence();
+  const { canRun: canEdit } = useCanRunCreatePictureSequenceMutation({
+    variables: {
+      pictures: sequencePictureIds,
+    },
+  });
 
   const removeThisPictureFromSequence = useCallback(() => {
     removePictureFromSequence(picture);
@@ -85,19 +90,17 @@ const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
               hashbase={'sequence'}
               showCount={false}
               showDefaultAdornments={false}
-              extraAdornments={
-                role >= AuthRole.CURATOR ? [removePictureFromSequenceAdornment] : undefined
-              }
-              filterOutTextsForNonCurators={false}
+              extraAdornments={canEdit ? [removePictureFromSequenceAdornment] : undefined}
               collapseSequences={false}
+              textFilter={TextFilter.PICTURES_AND_TEXTS}
               cacheOnRefetch
               customSort={customSort}
-              onSort={role >= AuthRole.CURATOR ? onSort : undefined}
+              onSort={canEdit ? onSort : undefined}
             />
           </ScrollContainer>
         </ScrollProvider>
       </HideStats>
-      {role >= AuthRole.CURATOR && (
+      {canEdit && (
         <>
           <Button onClick={removeThisPictureFromSequence} variant='contained' fullWidth>
             {t('pictureFields.sequence.remove')}
