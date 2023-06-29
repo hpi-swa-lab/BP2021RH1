@@ -1,12 +1,13 @@
+import { ArrowForwardIos } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { useVisit } from '../../helpers/history';
-import useGetPictures from '../../hooks/get-pictures.hook';
+import useGetPictures, { TextFilter } from '../../hooks/get-pictures.hook';
 import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
 import './PictureOverview.scss';
-import PrimaryButton from './PrimaryButton';
 import PictureGrid from './picture-gallery/PictureGrid';
 import { pictureGridInitialPictureIdUrlParam } from './picture-gallery/helpers/constants';
 
@@ -36,7 +37,7 @@ const PictureOverview = ({
     queryParams,
     false,
     sortBy,
-    true,
+    TextFilter.ONLY_PICTURES,
     ABSOLUTE_MAX_PICTURES_PER_ROW * rows,
     'cache-and-network',
     type
@@ -71,9 +72,14 @@ const PictureOverview = ({
           />
         </div>
       )}
-      <PrimaryButton onClickFn={onClick} isShowMore={true}>
+      <Button
+        onClick={onClick}
+        endIcon={<ArrowForwardIos />}
+        variant='contained'
+        className='w-fit self-center'
+      >
         {t('common.showMore')}
-      </PrimaryButton>
+      </Button>
     </div>
   );
 };

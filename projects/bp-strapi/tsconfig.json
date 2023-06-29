@@ -3,10 +3,14 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": ".",
+    "sourceMap": true,
     "allowJs": true, //enables the build without .ts files
     "strict": true
   },
-  "include": ["./", "src/**/*.json"],
+  "include": [
+    "./",
+    "src/**/*.json"
+  ],
   "exclude": [
     "node_modules/",
     "build/",

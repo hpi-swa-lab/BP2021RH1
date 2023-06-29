@@ -13,7 +13,10 @@ import {
 import { Button, Chip, DialogContent, IconButton, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCreateLocationTagMutation } from '../../../graphql/APIConnector';
+import {
+  useCanRunCreateLocationTagMutation,
+  useCreateLocationTagMutation,
+} from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVisit } from '../../../helpers/history';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
@@ -81,19 +84,20 @@ const LocationManagementDialogPreset = ({
 
   const currentIndex = currentSiblings.indexOf(locationTag);
 
-  const { deleteSynonym } = useDeleteSynonym(locationTag, refetch);
-  const { addSynonym } = useAddSynonym(locationTag, refetch);
-  const { updateName } = useUpdateName(locationTag, refetch);
-  const { acceptTag } = useAcceptTag(locationTag, refetch);
-  const { setVisible } = useSetVisible(locationTag, refetch);
-  const { setTagAsRoot } = useSetRoot(locationTag, refetch);
-  const { setParentTags } = useSetParentTags(locationTag, refetch);
-  const { setChildTags } = useSetChildTags(locationTag, refetch);
+  const { deleteSynonym, canDeleteSynonym } = useDeleteSynonym(locationTag, refetch);
+  const { addSynonym, canAddSynonym } = useAddSynonym(locationTag, refetch);
+  const { updateName, canUpdateName } = useUpdateName(locationTag, refetch);
+  const { acceptTag, canAcceptTag } = useAcceptTag(locationTag, refetch);
+  const { setVisible, canSetVisible } = useSetVisible(locationTag, refetch);
+  const { setTagAsRoot, canSetTagAsRoot } = useSetRoot(locationTag, refetch);
+  const { setParentTags, canSetParentTags } = useSetParentTags(locationTag, refetch);
+  const { setChildTags, canSetChildTags } = useSetChildTags(locationTag, refetch);
 
   const [newLocationTagMutation] = useCreateLocationTagMutation({
     refetchQueries: ['getAllLocationTags'],
     awaitRefetchQueries: true,
   });
+  const { canRun: canCreateLocationTag } = useCanRunCreateLocationTagMutation();
 
   const [localVisibility, setLocalVisibility] = useState<boolean>(locationTag.visible ?? false);
   const [isRoot, setIsRoot] = useState<boolean>(
@@ -141,7 +145,7 @@ const LocationManagementDialogPreset = ({
                   {title}
                 </h2>
               )}
-              {!locationTag.accepted && !editName ? (
+              {!locationTag.accepted && !editName && canAcceptTag ? (
                 <div className='location-management-accept-location'>
                   <IconButton
                     onClick={() => {
@@ -154,15 +158,17 @@ const LocationManagementDialogPreset = ({
               ) : (
                 <div></div>
               )}
-              <div className='location-management-edit-location'>
-                <IconButton
-                  onClick={() => {
-                    setEditName(editName => !editName);
-                  }}
-                >
-                  {editName ? <Check /> : <Edit />}
-                </IconButton>
-              </div>
+              {canUpdateName && (
+                <div className='location-management-edit-location'>
+                  <IconButton
+                    onClick={() => {
+                      setEditName(editName => !editName);
+                    }}
+                  >
+                    {editName ? <Check /> : <Edit />}
+                  </IconButton>
+                </div>
+              )}
             </div>
             <div className='location-management-location-path'>
               <SingleTagElement
@@ -172,47 +178,53 @@ const LocationManagementDialogPreset = ({
               />
             </div>
             <div className='location-management-left-content'>
-              <div className='location-management-synonyms-container'>
-                <div>{t('curator.synonyms')}</div>
-                <PictureInfoField
-                  title={t('curator.synonyms')}
-                  icon={<Subtitles />}
-                  type='location'
-                >
-                  <div className='location-management-synonyms'>
-                    <TextField
-                      className='location-management-synonyms-input'
-                      variant='standard'
-                      margin='dense'
-                      onKeyDown={(event: any) => {
-                        if (event.key === 'Enter' && event.target.value.length > 0) {
-                          addSynonym(event.target.value as string);
+              {canAddSynonym && (
+                <div className='location-management-synonyms-container'>
+                  <div>{t('curator.synonyms')}</div>
+                  <PictureInfoField
+                    title={t('curator.synonyms')}
+                    icon={<Subtitles />}
+                    type='location'
+                  >
+                    <div className='location-management-synonyms'>
+                      <TextField
+                        className='location-management-synonyms-input'
+                        variant='standard'
+                        margin='dense'
+                        onKeyDown={(event: any) => {
+                          if (event.key === 'Enter' && event.target.value.length > 0) {
+                            addSynonym(event.target.value as string);
+                            event.target.value = '';
+                          }
+                        }}
+                        onBlur={(event: any) => {
                           event.target.value = '';
-                        }
-                      }}
-                      onBlur={(event: any) => {
-                        event.target.value = '';
-                      }}
-                      InputProps={{
-                        startAdornment: (
-                          <>
-                            {locationTag.synonyms?.map(synonym =>
-                              synonym ? (
-                                <Chip
-                                  key={synonym.name}
-                                  label={synonym.name}
-                                  className='location-management-synonym'
-                                  onDelete={() => deleteSynonym(synonym.name)}
-                                />
-                              ) : undefined
-                            )}
-                          </>
-                        ),
-                      }}
-                    />
-                  </div>
-                </PictureInfoField>
-              </div>
+                        }}
+                        InputProps={{
+                          startAdornment: (
+                            <>
+                              {locationTag.synonyms?.map(synonym =>
+                                synonym ? (
+                                  <Chip
+                                    key={synonym.name}
+                                    label={synonym.name}
+                                    className='location-management-synonym'
+                                    onDelete={
+                                      canDeleteSynonym
+                                        ? () => deleteSynonym(synonym.name)
+                                        : undefined
+                                    }
+                                  />
+                                ) : undefined
+                              )}
+                            </>
+                          ),
+                        }}
+                      />
+                    </div>
+                  </PictureInfoField>
+                </div>
+              )}
               <div className='location-management-children-container'>
                 <div>{t('common.sublocations')}</div>
                 <PictureInfoField title={t('common.sublocations')} icon={<Place />} type='location'>
@@ -223,9 +235,13 @@ const LocationManagementDialogPreset = ({
                       []
                     }
                     allTags={(flattenedTags as any) ?? []}
-                    onChange={locations => {
-                      setChildTags(locations as FlatTag[]);
-                    }}
+                    onChange={
+                      canSetChildTags
+                        ? locations => {
+                            setChildTags(locations as FlatTag[]);
+                          }
+                        : undefined
+                    }
                     noContentText={''}
                     fixedParentTag={locationTag}
                     customChipOnClick={(id: string) => {
@@ -233,7 +249,7 @@ const LocationManagementDialogPreset = ({
                       setParentTag(locationTag);
                       setLocationTagID(id);
                     }}
-                    createChildMutation={newLocationTagMutation}
+                    createChildMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
                   />
                 </PictureInfoField>
               </div>
@@ -253,16 +269,20 @@ const LocationManagementDialogPreset = ({
                       })) as any) ?? []
                     }
                     allTags={(flattenedTags as any) ?? []}
-                    onChange={locations => {
-                      setParentTags(locations as FlatTag[]);
-                    }}
+                    onChange={
+                      canSetParentTags
+                        ? locations => {
+                            setParentTags(locations as FlatTag[]);
+                          }
+                        : undefined
+                    }
                     noContentText={''}
                     fixedChildTag={locationTag}
                     customChipOnClick={(id: string) => {
                       setParentTag(parentTagHistory.current.pop());
                       setLocationTagID(id);
                     }}
-                    createParentMutation={newLocationTagMutation}
+                    createParentMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
                   />
                 </PictureInfoField>
               </div>
@@ -297,6 +317,7 @@ const LocationManagementDialogPreset = ({
                   setVisible(!localVisibility);
                   setLocalVisibility(localVisibility => !localVisibility);
                 }}
+                disabled={!canSetVisible}
                 endIcon={localVisibility ? <Visibility /> : <VisibilityOff />}
               >
                 {localVisibility ? t('common.visible') : t('common.invisible')}
@@ -311,6 +332,7 @@ const LocationManagementDialogPreset = ({
                     setIsRoot(isRoot => !isRoot);
                   }
                 }}
+                disabled={!canSetTagAsRoot}
                 endIcon={<AccountTree />}
               >
                 {isRoot ? t('common.root') : t('common.no-root')}

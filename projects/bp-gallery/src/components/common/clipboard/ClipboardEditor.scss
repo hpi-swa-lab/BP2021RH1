@@ -19,6 +19,22 @@
   flex-direction: row;
   align-items: flex-end;
 
+  // pass through pointer events for the region occupied by # below,
+  // which is actually transparent but would otherwise block elements
+  // behind it from receiving pointer events.
+  //
+  // +---------------+####
+  // |               |####
+  // |     Panel     |####
+  // |               +---+
+  // |               | > |
+  // +---------------+---+
+  pointer-events: none;
+
+  > * {
+    pointer-events: initial;
+  }
+
   .clipboard-editor-panel {
     width: $panelWidth;
     background-color: white;

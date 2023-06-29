@@ -1,7 +1,15 @@
 import { RouteConfig, RouteConfigComponentProps } from 'react-router-config';
 import { Redirect } from 'react-router-dom';
 import { TagType } from '../types/additionalFlatTypes';
-import ProtectedRoute from './common/ProtectedRoute';
+import { AdminView } from './views/admin/AdminView';
+import { ArchivesView } from './views/admin/archive/ArchivesView';
+import { ChangePasswordView } from './views/admin/user/ChangePasswordView';
+import { ForgotPasswordView } from './views/admin/user/ForgotPasswordView';
+import { MyAccountView } from './views/admin/user/MyAccountView';
+import PermissionsView from './views/admin/user/PermissionsView';
+import { ResetPasswordView } from './views/admin/user/ResetPasswordView';
+import { UserByIdView } from './views/admin/user/UserByIdView';
+import { UsersView } from './views/admin/user/UsersView';
 import ArchiveEditView from './views/archives/ArchiveEditView';
 import ArchiveView from './views/archives/ArchiveView';
 import BrowseView from './views/browse/BrowseView';
@@ -9,9 +17,9 @@ import BulkEditView from './views/bulk-edit/BulkEditView';
 import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
 import ContactFormView from './views/contact/ContactFormView';
 import DiscoverView from './views/discover/DiscoverView';
-import LocationPanel from './views/location-curating/LocationPanel';
 import GeoView from './views/geoguessr/GeoView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
+import LocationPanel from './views/location-curating/LocationPanel';
 import PictureView from './views/picture/PictureView';
 import SearchView from './views/search/SearchView';
 import ShowMoreView from './views/show-more/ShowMoreView';
@@ -20,6 +28,9 @@ import TagTableView from './views/tag-table/TagTableView';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import UnverifiedCommentsView from './views/unverified-comments/UnverifiedCommentsView';
 import UploadsView from './views/uploads/UploadsView';
+import ExhibitionTool from './views/exhibitions/ExhibitionTool';
+import ExhibitionViewer from './views/exhibitions/ExhibitionViewer';
+import ExhibitionFullOverview from './views/exhibitions/ExhibitionOverview';
 
 export const FALLBACK_PATH = '/start';
 
@@ -74,13 +85,27 @@ const routes: RouteConfig[] = [
     },
   },
   {
+    path: '/exhibitiontool/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ExhibitionTool exhibitionId={match.params.id} />;
+    },
+  },
+  {
+    path: '/exhibitionOverview/:id?',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ExhibitionFullOverview archiveId={match.params.id} />;
+    },
+  },
+  {
+    path: '/exhibition/:id',
+    render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
+      return <ExhibitionViewer exhibitionId={match.params.id} />;
+    },
+  },
+  {
     path: '/bulk-edit/:ids',
     render: ({ match }: RouteConfigComponentProps<{ ids: '' }>) => {
-      return (
-        <ProtectedRoute>
-          <BulkEditView pictureIds={match.params.ids.split(',')} />
-        </ProtectedRoute>
-      );
+      return <BulkEditView pictureIds={match.params.ids.split(',')} />;
     },
   },
   {
@@ -92,11 +117,7 @@ const routes: RouteConfig[] = [
   {
     path: '/tags/locations',
     render: () => {
-      return (
-        <ProtectedRoute>
-          <LocationPanel />
-        </ProtectedRoute>
-      );
+      return <LocationPanel />;
     },
   },
   {
@@ -124,13 +145,63 @@ const routes: RouteConfig[] = [
     },
   },
   {
+    path: '/my-account',
+    render: () => {
+      return <MyAccountView />;
+    },
+  },
+  {
+    path: '/admin/user/:id/permissions',
+    render({ match }: RouteConfigComponentProps<{ id: '' }>) {
+      return <PermissionsView userId={match.params.id} />;
+    },
+  },
+  {
+    path: '/admin/user/:id',
+    render({ match }: RouteConfigComponentProps<{ id: '' }>) {
+      return <UserByIdView id={match.params.id} />;
+    },
+  },
+  {
+    path: '/admin/users',
+    render: () => {
+      return <UsersView />;
+    },
+  },
+  {
+    path: '/admin/archives',
+    render: () => {
+      return <ArchivesView />;
+    },
+  },
+  {
+    path: '/admin',
+    render: () => {
+      return <AdminView />;
+    },
+  },
+  {
+    path: '/forgot-password',
+    render: () => {
+      return <ForgotPasswordView />;
+    },
+  },
+  {
+    path: '/reset-password',
+    render: () => {
+      return <ResetPasswordView />;
+    },
+  },
+  {
+    path: '/change-password',
+    render: () => {
+      return <ChangePasswordView />;
+    },
+  },
+  {
     path: '/archives/:id/edit',
     render: ({ match }: RouteConfigComponentProps<{ id: '' }>) => {
-      return (
-        <ProtectedRoute redirectPath={`/archives/${match.params.id}`}>
-          <ArchiveEditView archiveId={match.params.id} />
-        </ProtectedRoute>
-      );
+      return <ArchiveEditView archiveId={match.params.id} />;
     },
   },
   {

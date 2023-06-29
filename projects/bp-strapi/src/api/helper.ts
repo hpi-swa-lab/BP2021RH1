@@ -1,21 +1,21 @@
 const singular = (key: string) => {
-  if (key[key.length - 1] !== "s") {
+  if (key[key.length - 1] !== 's') {
     return key;
   }
   return key.slice(0, -1);
 };
 
 const plural = (key: string) => {
-  if (key[key.length - 1] === "s") {
+  if (key[key.length - 1] === 's') {
     return key;
   }
-  return key + "s";
+  return key + 's';
 };
 
 const DATABASE_SCHEMA = process.env.DATABASE_SCHEMA;
 
 const table = (name: string) => {
-  return DATABASE_SCHEMA + "." + name;
+  return DATABASE_SCHEMA + '.' + name;
 };
 
 export { singular, plural, table };
