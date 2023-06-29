@@ -20,11 +20,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -2745,6 +2742,7 @@ export type GetAllLocationTagsQuery = {
         visible?: boolean | null;
         root?: boolean | null;
         accepted?: boolean | null;
+        coordinates?: { latitude: number; longitude: number } | null;
         synonyms?: Array<{ name: string } | null> | null;
         child_tags?: {
           data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
@@ -4303,6 +4301,15 @@ export type UpdateLocationChildMutation = {
   updateLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
+export type UpdateLocationCoordinatesMutationVariables = Exact<{
+  tagId: Scalars['ID'];
+  coordinate?: InputMaybe<ComponentLocationCoordinatesInput>;
+}>;
+
+export type UpdateLocationCoordinatesMutation = {
+  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+};
+
 export type UpdateLocationNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
   name: Scalars['String'];
@@ -4662,6 +4669,10 @@ export const GetAllLocationTagsDocument = gql`
           visible
           root
           accepted
+          coordinates {
+            latitude
+            longitude
+          }
           synonyms {
             name
           }
@@ -10950,6 +10961,64 @@ export type UpdateLocationChildMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationChildMutationVariables
 >;
 
+export const UpdateLocationCoordinatesDocument = gql`
+  mutation updateLocationCoordinates($tagId: ID!, $coordinate: ComponentLocationCoordinatesInput) {
+    updateLocationTag(id: $tagId, data: { coordinates: $coordinate }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateLocationCoordinatesMutationFn = Apollo.MutationFunction<
+  UpdateLocationCoordinatesMutation,
+  UpdateLocationCoordinatesMutationVariables
+>;
+
+/**
+ * __useUpdateLocationCoordinatesMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationCoordinatesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationCoordinatesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationCoordinatesMutation, { data, loading, error }] = useUpdateLocationCoordinatesMutation({
+ *   variables: {
+ *      tagId: // value for 'tagId'
+ *      coordinate: // value for 'coordinate'
+ *   },
+ * });
+ */
+export function useUpdateLocationCoordinatesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLocationCoordinatesMutation,
+    UpdateLocationCoordinatesMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateLocationCoordinatesMutation,
+    UpdateLocationCoordinatesMutationVariables
+  >(UpdateLocationCoordinatesDocument, options);
+}
+
+export type UpdateLocationCoordinatesMutationHookResult = ReturnType<
+  typeof useUpdateLocationCoordinatesMutation
+>;
+
+export type UpdateLocationCoordinatesMutationResult =
+  Apollo.MutationResult<UpdateLocationCoordinatesMutation>;
+
+export type UpdateLocationCoordinatesMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLocationCoordinatesMutation,
+  UpdateLocationCoordinatesMutationVariables
+>;
+
 export const UpdateLocationNameDocument = gql`
   mutation updateLocationName($tagId: ID!, $name: String!) {
     updateLocationTag(id: $tagId, data: { name: $name }) {
@@ -15750,6 +15819,50 @@ export function useCanRunMultipleUpdateLocationChildMutations(
     ...options,
     variables: {
       operation: UpdateLocationChildDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateLocationCoordinatesMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateLocationCoordinatesMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateLocationCoordinatesDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateLocationCoordinatesMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateLocationCoordinatesMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateLocationCoordinatesDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
