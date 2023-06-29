@@ -9,7 +9,7 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { ShowStats } from '../../provider/ShowStatsProvider';
-import AdvancedSearch, { AttributeFilterProps } from './AdvancedSearch';
+import AdvancedSearch from './AdvancedSearch';
 import NoSearchResultsText from './NoSearchResultsText';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
@@ -34,6 +34,7 @@ const isValidTimeSpecification = (searchRequest: string) => {
 
 const SearchView = () => {
   const [areResultsEmpty, setAreResultsEmpty] = useState<boolean>(false);
+  const [filter, SetFilter] = useState('');
   const { search }: Location = useLocation();
   const { t } = useTranslation();
 
@@ -64,34 +65,6 @@ const SearchView = () => {
     };
   }, [searchParams]);
 
-  // const context = useAdvancedSearch();
-
-  // const filter = useMemo(() => {
-  //   const filters = [
-  //     context?.keywordFilter,
-  //     context?.descriptionFilter,
-  //     context?.commentFilter,
-  //     context?.personFilter,
-  //     context?.faceTagFilter,
-  //     context?.locationFilter,
-  //     context?.collectionFilter,
-  //     context?.archiveFilter,
-  //   ];
-
-  //   return filters.filter(entry => entry).join('AND');
-  // }, [
-  //   context?.keywordFilter,
-  //   context?.descriptionFilter,
-  //   context?.commentFilter,
-  //   context?.personFilter,
-  //   context?.faceTagFilter,
-  //   context?.locationFilter,
-  //   context?.collectionFilter,
-  //   context?.archiveFilter,
-  // ]);
-
-  const filter = '';
-
   const [searchResultIds, error, state] = usePromise(
     async () =>
       (await getSearchResultPictureIds(queryParams, filter)).map(hit =>
@@ -110,25 +83,9 @@ const SearchView = () => {
   const isOldSearchActive = useFlag('old_search');
 
   const { linkToCollection, bulkEdit } = useBulkOperations();
-  const ATTRIBUTES = [
-    'keyword',
-    'description',
-    'comment',
-    'person',
-    'face-tag',
-    'location',
-    'collection',
-    'archive',
-    'timeRange',
-  ];
-  const advancedSearchProps: AttributeFilterProps[] = ATTRIBUTES.map(attr => ({
-    attribute: attr,
-    filterProps: [{ filterOperator: '', combinationOperator: '', values: [] }],
-  }));
 
   return (
     <div className='search-content'>
-      <AdvancedSearch advancedSearchProps={advancedSearchProps}></AdvancedSearch>
       <div className='search-bar-container'>
         {(!areResultsEmpty || !search) && (
           <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
@@ -136,6 +93,7 @@ const SearchView = () => {
         <HelpTooltip title={t('search.question')} content={t('search.help')} />
         <div className='breadcrumb'>
           <SearchBreadcrumbs searchParams={searchParams} />
+          <AdvancedSearch setFilter={SetFilter}></AdvancedSearch>
         </div>
       </div>
       {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}

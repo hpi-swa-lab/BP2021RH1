@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { AttributeFilterProps, SingleFilterProps } from './AdvancedSearch';
 import { SearchFilterInputItem } from './SearchFilterInputItem';
 
@@ -5,57 +6,58 @@ export const SearchFilterInput = ({
   key,
   attribute,
   advancedSearchProps,
+  setAdvancedSearchProps,
 }: {
   key: string;
   attribute: string;
   advancedSearchProps: AttributeFilterProps[];
+  setAdvancedSearchProps: Dispatch<SetStateAction<AttributeFilterProps[]>>;
 }) => {
-  let filterProps = advancedSearchProps.filter(attrProps => attrProps.attribute === attribute)[0]
+  const filterProps = advancedSearchProps.filter(attrProps => attrProps.attribute === attribute)[0]
     .filterProps;
 
   const updateFilterProps = (index: number, action: string, property: string, value: string) => {
-    let update;
+    let update: SingleFilterProps[];
     if (action === 'add') {
       update = filterProps.map((item: SingleFilterProps) => item);
-      console.log('update pre splice', update);
       update.splice(index + 1, 0, {
         filterOperator: '',
         combinationOperator: '',
         values: [],
       });
-      console.log('filterProps', filterProps);
-      console.log('update post splice', update);
-      filterProps = update;
-      console.log('filterProps', filterProps);
     } else if (action === 'delete') {
-      update = filterProps.map((item: SingleFilterProps) => item).splice(index, 1);
-      filterProps = update;
+      if (filterProps.length === 1) {
+        return;
+      }
+      update = filterProps.slice();
+      update.splice(index, 1);
     } else if (action === 'set') {
       switch (property) {
         case 'filterOperator':
           update = filterProps.map((item: SingleFilterProps) => item);
           update[index].filterOperator = value;
-          filterProps = update;
           break;
         case 'combinationOperator':
           update = filterProps.map((item: SingleFilterProps) => item);
           update[index].combinationOperator = value;
-          filterProps = update;
           break;
         case 'firstValue':
           update = filterProps.map((item: SingleFilterProps) => item);
           update[index].values[0] = value;
-          filterProps = update;
           break;
         case 'secondValue':
           update = filterProps.map((item: SingleFilterProps) => item);
           update[index].values[1] = value;
-          filterProps = update;
+
           break;
         default:
           return;
       }
     }
+    const advancedSearchPropsUpdate: AttributeFilterProps[] = advancedSearchProps.map(entry =>
+      entry.attribute === attribute ? { attribute: attribute, filterProps: update } : entry
+    );
+    setAdvancedSearchProps(advancedSearchPropsUpdate);
 
     return;
   };
@@ -67,6 +69,7 @@ export const SearchFilterInput = ({
           key={index.toString()}
           index={index}
           attribute={attribute}
+          advancedSearchProps={advancedSearchProps}
           updateFilterProps={updateFilterProps}
         ></SearchFilterInputItem>
       ))}
