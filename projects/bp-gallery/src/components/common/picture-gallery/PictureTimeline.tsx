@@ -94,7 +94,7 @@ const PictureTimeline = ({
         <ArrowDropDown className='mx-auto scale-[1.75]' />
       </div>
       <div className='relative'>
-        <div className='overflow-scroll' ref={scrollBarRef} onScroll={updateOnScrollX}>
+        <div className='overflow-x-scroll' ref={scrollBarRef} onScroll={updateOnScrollX}>
           <div className='flex'>
             <ul className='py-[16px] px-[50%] mt-0 whitespace-nowrap'>{listItems}</ul>
           </div>
