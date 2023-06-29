@@ -58,9 +58,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         content: (
           <PictureOverview
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {
-              visit('/archives/' + archiveId + '/show-more/pictures');
-            }}
+            showMoreUrl={'/archives/' + archiveId + '/show-more/pictures'}
           />
         ),
       },
@@ -73,14 +71,12 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             queryParams={{
               archive_tag: { id: { eq: archiveId } },
             }}
-            onClick={() => {
-              visit('/archives/' + archiveId + '/show-more/most-liked');
-            }}
+            showMoreUrl={'/archives/' + archiveId + '/show-more/most-liked'}
           />
         ),
       },
     ];
-  }, [archiveId, t, visit]);
+  }, [archiveId, t]);
 
   const onLogoContextMenu = useBlockImageContextMenu(archive?.restrictImageDownloading);
 

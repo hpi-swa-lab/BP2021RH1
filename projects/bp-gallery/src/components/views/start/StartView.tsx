@@ -71,14 +71,7 @@ const StartView = () => {
       {
         title: t('discover.latest-pictures'),
         icon: <AccessTime key='0' />,
-        content: (
-          <PictureOverview
-            queryParams={{}}
-            onClick={() => {
-              visit('/show-more/latest');
-            }}
-          />
-        ),
+        content: <PictureOverview queryParams={{}} showMoreUrl='/show-more/latest' />,
       },
       {
         title: t('discover.most-liked'),
@@ -87,9 +80,7 @@ const StartView = () => {
           <PictureOverview
             type={PictureOverviewType.MOST_LIKED}
             queryParams={{}}
-            onClick={() => {
-              visit('/show-more/most-liked');
-            }}
+            showMoreUrl='/show-more/most-liked'
           />
         ),
       },
@@ -103,7 +94,7 @@ const StartView = () => {
           ]
         : []),
     ];
-  }, [t, visit, showStories]);
+  }, [t, showStories]);
 
   const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
 

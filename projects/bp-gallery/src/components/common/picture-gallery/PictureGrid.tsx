@@ -7,7 +7,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { useTranslation } from 'react-i18next';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
-import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { pushHistoryWithoutRouter, replaceHistoryWithoutRouter } from '../../../helpers/history';
 import { ExternalCanRun } from '../../../hooks/bulk-operations.hook';
 import {
   useCanBulkEditSomePictures,
@@ -29,6 +29,7 @@ import PicturePreview, {
   DefaultPicturePreviewAdornmentConfig,
   PicturePreviewAdornment,
 } from './PicturePreview';
+import { pictureGridInitialPictureIdUrlParam } from './helpers/constants';
 import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
 export type PictureGridProps = {
@@ -37,6 +38,7 @@ export type PictureGridProps = {
   loading: boolean;
   bulkOperations?: BulkOperation[];
   refetch: () => void;
+  fetchMore?: (currentPictureId: string) => void;
   extraAdornments?: PicturePreviewAdornment[];
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
@@ -50,6 +52,7 @@ const PictureGrid = ({
   loading,
   bulkOperations,
   refetch,
+  fetchMore,
   extraAdornments,
   showDefaultAdornments = true,
   allowClicks = true,
@@ -148,16 +151,31 @@ const PictureGrid = ({
     setTable(buffer);
   }, [pictures, calculatePictureNumber, calculatePicturesPerRow]);
 
-  const navigateToPicture = useCallback(
+  const navigateToPicture = useCallback((id: string, replaceHistory = false) => {
+    setFocusedPicture(id);
+    const changeHistoryWithoutRouter = replaceHistory
+      ? replaceHistoryWithoutRouter
+      : pushHistoryWithoutRouter;
+    changeHistoryWithoutRouter(`/picture/${id}`);
+  }, []);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const initialPictureId = urlParams.get(pictureGridInitialPictureIdUrlParam);
+    if (initialPictureId !== null) {
+      navigateToPicture(initialPictureId, true);
+    }
+  }, [navigateToPicture]);
+
+  const transitionToPicture = useCallback(
     (id: string) => {
       setTransitioning(true);
-      setFocusedPicture(id);
-      pushHistoryWithoutRouter(`/picture/${id}`);
+      navigateToPicture(id);
       zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
         setTransitioning(false);
       });
     },
-    [setFocusedPicture]
+    [navigateToPicture]
   );
 
   const [selectedPictureIds, setSelectedPictureIds] = useState<string[]>([]);
@@ -302,7 +320,7 @@ const PictureGrid = ({
                     picture={picture}
                     onClick={() => {
                       if (!allowClicks) return;
-                      navigateToPicture(picture.id);
+                      transitionToPicture(picture.id);
                     }}
                     adornments={pictureAdornments}
                     allowClicks={allowClicks}
@@ -314,7 +332,7 @@ const PictureGrid = ({
         );
       });
     },
-    [allowClicks, loading, navigateToPicture, pictureAdornments, table]
+    [allowClicks, loading, pictureAdornments, table, transitionToPicture]
   );
 
   const sensors = useMouseAndTouchSensors();
@@ -393,6 +411,7 @@ const PictureGrid = ({
                 setFocusedPicture(undefined);
               });
             }}
+            fetchMore={fetchMore}
           />
         </Portal>
       )}
