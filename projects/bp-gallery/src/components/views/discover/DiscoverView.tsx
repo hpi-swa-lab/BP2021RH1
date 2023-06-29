@@ -47,14 +47,7 @@ const DiscoverView = () => {
       {
         title: t('discover.latest-pictures'),
         icon: <AccessTime key='0' />,
-        content: (
-          <PictureOverview
-            queryParams={{}}
-            onClick={() => {
-              visit('/show-more/latest');
-            }}
-          />
-        ),
+        content: <PictureOverview queryParams={{}} showMoreUrl='/show-more/latest' />,
       },
       {
         title: t('discover.most-liked'),
@@ -63,14 +56,12 @@ const DiscoverView = () => {
           <PictureOverview
             type={PictureOverviewType.MOST_LIKED}
             queryParams={{}}
-            onClick={() => {
-              visit('/show-more/most-liked');
-            }}
+            showMoreUrl='/show-more/most-liked'
           />
         ),
       },
     ];
-  }, [t, visit]);
+  }, [t]);
   const showStories = useFlag('showstories');
   return (
     <div className='discover-container'>
@@ -86,9 +77,7 @@ const DiscoverView = () => {
         <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
-          onClick={() => {
-            visit('/show-more/pictures/Fragezeichen');
-          }}
+          showMoreUrl='/show-more/pictures/Fragezeichen'
           rows={1}
         />
 

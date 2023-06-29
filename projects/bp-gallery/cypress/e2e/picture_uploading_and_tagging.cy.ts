@@ -40,7 +40,7 @@ describe('picture uploading and tagging', () => {
 
   it('uploading picture', () => {
     cy.get('.dropzone').selectFile('./cypress/testFiles/testbild.jpg', { action: 'drag-drop' });
-    cy.get('.add-to-collection').click();
+    cy.get('[data-cy="file-upload"]').click();
     cy.get('.MuiDialogContent-root').find('.MuiOutlinedInput-input').clear();
     cy.get('.MuiDialogContent-root')
       .find('.MuiOutlinedInput-input')

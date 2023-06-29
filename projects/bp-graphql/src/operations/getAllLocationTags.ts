@@ -14,6 +14,10 @@ export default {
             visible
             root
             accepted
+            coordinates {
+              latitude
+              longitude
+            }
             synonyms {
               name
             }
