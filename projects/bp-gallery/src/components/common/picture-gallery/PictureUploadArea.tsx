@@ -40,7 +40,7 @@ const PictureUploadArea = ({
   onUploaded,
 }: PictureUploadAreaProps) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: 'image/jpeg,image/png',
+    accept: 'image/jpeg,image/png,application/pdf',
   });
   const sensors = useSensors(
     useSensor(MouseSensor, {

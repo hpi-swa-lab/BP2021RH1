@@ -1706,6 +1706,7 @@ export type Picture = {
   exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
   face_tags?: Maybe<FaceTagRelationResponseCollection>;
   is_not_a_place_count?: Maybe<Scalars['Int']>;
+  is_pdf?: Maybe<Scalars['Boolean']>;
   is_text?: Maybe<Scalars['Boolean']>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
   likes?: Maybe<Scalars['Int']>;
@@ -1841,6 +1842,7 @@ export type PictureFiltersInput = {
   face_tags?: InputMaybe<FaceTagFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   is_not_a_place_count?: InputMaybe<IntFilterInput>;
+  is_pdf?: InputMaybe<BooleanFilterInput>;
   is_text?: InputMaybe<BooleanFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
   likes?: InputMaybe<IntFilterInput>;
@@ -1917,6 +1919,7 @@ export type PictureInput = {
   exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   face_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   is_not_a_place_count?: InputMaybe<Scalars['Int']>;
+  is_pdf?: InputMaybe<Scalars['Boolean']>;
   is_text?: InputMaybe<Scalars['Boolean']>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   likes?: InputMaybe<Scalars['Int']>;
@@ -3516,6 +3519,7 @@ export type GetPictureInfoQuery = {
       id?: string | null;
       attributes?: {
         is_text?: boolean | null;
+        is_pdf?: boolean | null;
         likes?: number | null;
         descriptions?: {
           data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
@@ -3590,6 +3594,7 @@ export type GetPictureInfoQuery = {
           data?: {
             id?: string | null;
             attributes?: {
+              ext?: string | null;
               width?: number | null;
               height?: number | null;
               formats?: any | null;
@@ -6904,6 +6909,7 @@ export const GetPictureInfoDocument = gql`
             data {
               id
               attributes {
+                ext
                 width
                 height
                 formats
@@ -6914,6 +6920,7 @@ export const GetPictureInfoDocument = gql`
             }
           }
           is_text
+          is_pdf
           linked_pictures {
             data {
               id

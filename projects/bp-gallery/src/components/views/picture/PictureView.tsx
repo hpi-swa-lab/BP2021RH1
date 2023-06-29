@@ -16,7 +16,6 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { replaceHistoryWithoutRouter } from '../../../helpers/history';
 import { useBlockImageContextMenuByPictureId } from '../../../hooks/block-image-context-menu.hook';
-import { useMouseIsIdle } from '../../../hooks/mouse-position.hook';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -26,6 +25,7 @@ import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-pict
 import { PictureNavigationTarget } from './overlay/PictureNavigationButtons';
 import PictureViewUI from './overlay/PictureViewUI';
 import ZoomWrapper from './overlay/ZoomWrapper';
+import PDFViewer from './PDFViewer';
 import './PictureView.scss';
 import PictureSidebar from './sidebar/PictureSidebar';
 
@@ -114,9 +114,11 @@ const PictureView = ({
 
   const [img, setImg] = useState<HTMLImageElement | null>(null);
 
-  const minMouseIdleMillisecondsForNoDistractionMode = 3000;
-  const mouseIsIdle = useMouseIsIdle(minMouseIdleMillisecondsForNoDistractionMode);
-  const noDistractionMode = !sideBarOpen && mouseIsIdle;
+  console.log('hmmm');
+
+  // const minMouseIdleMillisecondsForNoDistractionMode = 3000;
+  // const mouseIsIdle = useMouseIsIdle(minMouseIdleMillisecondsForNoDistractionMode);
+  // const noDistractionMode = !sideBarOpen && mouseIsIdle;
 
   // Wrap all context information in this variable
   const contextValue: PictureViewContextFields = {
@@ -124,7 +126,7 @@ const PictureView = ({
     hasNext,
     hasPrevious,
     sideBarOpen,
-    noDistractionMode,
+    // noDistractionMode,
     setSideBarOpen,
     calledViaLink: !onBack,
     img,
@@ -147,38 +149,61 @@ const PictureView = ({
   const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureId);
 
   return (
-    <div className={`picture-view-container ${noDistractionMode ? 'cursor-none' : ''}`}>
+    <div className={`picture-view-container`}>
       <PictureViewContext.Provider value={contextValue}>
-        <FaceTaggingProvider pictureId={pictureId}>
+        {picture?.media?.ext === '.pdf' ? (
           <div className={`picture-view`} ref={containerRef}>
-            <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
-              <div className='picture-wrapper w-full h-full'>
-                <div className='picture-container w-full h-full'>
-                  <div className='relative w-full h-full flex justify-center align-center'>
-                    <img
-                      className='max-w-full max-h-full object-contain picture'
-                      ref={setImg}
-                      src={pictureLink}
-                      alt={pictureLink}
-                      onContextMenu={onImageContextMenu}
-                    />
-                    <FaceTags />
-                  </div>
+            <div className='picture-wrapper w-full h-full'>
+              <div className='picture-container w-full h-full'>
+                <div className='relative w-full h-full flex justify-center align-center'>
+                  <PDFViewer picture={picture} />
                 </div>
-                {!isPresentationMode && !loading && !error && picture && (
-                  <PictureViewUI
-                    calledViaLink={!onBack}
-                    pictureId={picture.id}
-                    sessionId={sessionId}
-                  />
-                )}
               </div>
-            </ZoomWrapper>
+              {!isPresentationMode && !loading && !error && (
+                <PictureViewUI
+                  calledViaLink={!onBack}
+                  pictureId={picture.id}
+                  sessionId={sessionId}
+                />
+              )}
+            </div>
+
             {!isPresentationMode && (
               <PictureSidebar loading={loading} error={error} picture={picture} />
             )}
           </div>
-        </FaceTaggingProvider>
+        ) : (
+          <FaceTaggingProvider pictureId={pictureId}>
+            <div className={`picture-view`} ref={containerRef}>
+              <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
+                <div className='picture-wrapper w-full h-full'>
+                  <div className='picture-container w-full h-full'>
+                    <div className='relative w-full h-full flex justify-center align-center'>
+                      <img
+                        className='max-w-full max-h-full object-contain picture'
+                        ref={setImg}
+                        src={pictureLink}
+                        alt={pictureLink}
+                        onContextMenu={onImageContextMenu}
+                      />
+                      <FaceTags />
+                    </div>
+                  </div>
+                  {!isPresentationMode && !loading && !error && picture && (
+                    <PictureViewUI
+                      calledViaLink={!onBack}
+                      pictureId={picture.id}
+                      sessionId={sessionId}
+                    />
+                  )}
+                </div>
+              </ZoomWrapper>
+              {!isPresentationMode && (
+                <PictureSidebar loading={loading} error={error} picture={picture} />
+              )}
+            </div>
+          </FaceTaggingProvider>
+        )}
       </PictureViewContext.Provider>
     </div>
   );
