@@ -3,6 +3,7 @@ import { Breakpoint, Dialog } from '@mui/material';
 import { PropsWithChildren, createContext, useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LocationManagementDialogPreset from '../views/location-curating/LocationManagementDialog';
+import { LocationPanelPermissionsProvider } from '../views/location-curating/LocationPanelPermissionsProvider';
 import PathPositionSelectDialogPreset from '../views/location-curating/SelectPathPositionDialog';
 import TagSelectDialogPreset from '../views/location-curating/SelectTagDialog';
 import { ScrollProvider } from './ScrollProvider';
@@ -143,7 +144,9 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         )}
         {dialogState?.preset === DialogPreset.LOCATION_MANAGEMENT && (
           <ScrollProvider>
-            <LocationManagementDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+            <LocationPanelPermissionsProvider>
+              <LocationManagementDialogPreset dialogProps={dialogState} handleClose={handleClose} />
+            </LocationPanelPermissionsProvider>
           </ScrollProvider>
         )}
       </Dialog>

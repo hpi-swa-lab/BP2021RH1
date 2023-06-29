@@ -1,11 +1,12 @@
-import { ApolloLink, from } from '@apollo/client';
+import { ApolloError, ApolloLink, from } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
+import { canRunOperation } from 'bp-graphql/build/operations';
 import { extractFiles } from 'extract-files';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { TFunction } from 'i18next';
-import { isEmpty, unionWith } from 'lodash';
+import { unionWith } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 import { translateErrorMessage } from '../i18n';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
@@ -52,6 +53,49 @@ export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadO
   return asApiPath(imgSrcWithParams);
 };
 
+const errorToStrings = (error: unknown) => {
+  if (!error) {
+    return [];
+  }
+  if (typeof error === 'string') {
+    return [error];
+  }
+  const errors: string[] = [];
+  if (error instanceof ApolloError) {
+    for (const clientError of error.clientErrors) {
+      errors.push(...errorToStrings(clientError));
+    }
+    for (const graphQLError of error.graphQLErrors) {
+      errors.push(...errorToStrings(graphQLError));
+    }
+    if (error.networkError) {
+      errors.push(...errorToStrings(error.networkError));
+    }
+  } else if (typeof error === 'object') {
+    if (
+      // { result: { errors: [...] } }
+      'result' in error &&
+      typeof error.result === 'object' &&
+      error.result &&
+      'errors' in error.result &&
+      error.result.errors instanceof Array
+    ) {
+      for (const resultError of error.result.errors) {
+        errors.push(...errorToStrings(resultError));
+      }
+    } else if ('message' in error) {
+      errors.push(...errorToStrings(error.message));
+    }
+  }
+  return errors;
+};
+
+export const errorToTranslatedString = (error: unknown, t: TFunction, context?: string) => {
+  return Array.from(errorToStrings(error))
+    .map(message => translateErrorMessage(message, t, context))
+    .join('\n');
+};
+
 /**
  * Creates the link-chain for the {@link ApolloClient} consisting of:
  * - an HTTP-Link for using authentication via JWT and
@@ -79,8 +123,11 @@ export const buildHttpLink = (
         : {}),
     },
   };
+  const batchedOperationNames = [canRunOperation].map(operation => operation.document.name);
   let httpLink = ApolloLink.split(
-    operation => extractFiles(operation).files.size > 0,
+    operation =>
+      !batchedOperationNames.includes(operation.operationName) ||
+      extractFiles(operation).files.size > 0,
     createUploadLink(options),
     new BatchHttpLink({
       ...options,
@@ -111,20 +158,17 @@ export const buildHttpLink = (
 
   if (alert) {
     const { openAlert, t } = alert;
-    const errorLink = createErrorLink(({ graphQLErrors, networkError, operation }) => {
-      if (OPERATIONS_WITH_OWN_ERROR_HANDLING.includes(operation.operationName)) return;
+    const errorLink = createErrorLink(error => {
+      if (OPERATIONS_WITH_OWN_ERROR_HANDLING.includes(error.operation.operationName)) return;
 
-      const errorMessages = [];
-      if (networkError) errorMessages.push(networkError.message);
-      if (graphQLErrors) graphQLErrors.forEach(({ message }) => errorMessages.push(message));
-
-      if (isEmpty(errorMessages)) return;
-
-      openAlert({
-        alertType: AlertType.ERROR,
-        message: errorMessages.map(message => translateErrorMessage(message, t)).join('\n'),
-        duration: 5000,
-      });
+      const errorMessage = errorToTranslatedString(error, t);
+      if (errorMessage) {
+        openAlert({
+          alertType: AlertType.ERROR,
+          message: errorMessage,
+          duration: 5000,
+        });
+      }
     });
 
     httpLink = from([errorLink, httpLink]);

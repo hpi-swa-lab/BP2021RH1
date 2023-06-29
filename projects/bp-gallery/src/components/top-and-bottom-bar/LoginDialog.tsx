@@ -9,10 +9,10 @@ import {
 } from '@mui/material';
 import { FormEvent, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { errorToTranslatedString } from '../../helpers/app-helpers';
 import { useVisit } from '../../helpers/history';
 import { useCanUseForgotPasswordView } from '../../hooks/can-do-hooks';
 import { useAuth } from '../../hooks/context-hooks';
-import { translateErrorMessage } from '../../i18n';
 import { PasswordInput } from '../common/PasswordInput';
 import './LoginDialog.scss';
 
@@ -39,8 +39,8 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
     if (username === '' || password === '') return;
     login(username, password)
       .then(close)
-      .catch((err: string) => {
-        setErrorMessage(translateErrorMessage(err, t, 'login'));
+      .catch((err: unknown) => {
+        setErrorMessage(errorToTranslatedString(err, t, 'login'));
       });
   };
 
