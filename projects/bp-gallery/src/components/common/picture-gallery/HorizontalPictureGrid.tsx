@@ -22,7 +22,7 @@ const SinglePicture = ({
   loading,
 }: {
   picture?: FlatPicture;
-  size: string;
+  size: 'big' | 'small';
   allowClicks?: boolean;
   navigateToPicture: (id: string) => void;
   loading: boolean;
@@ -38,7 +38,7 @@ const SinglePicture = ({
             if (!allowClicks) return;
             navigateToPicture(picture.id);
           }}
-          inverse={true}
+          inverse
         />
       ) : (
         <div
@@ -51,7 +51,7 @@ const SinglePicture = ({
 };
 
 const PicturesWidget = ({
-  reverse,
+  reverse = false,
   bigPictureFirst,
   pictures,
   loading,
@@ -65,14 +65,14 @@ const PicturesWidget = ({
   allowClicks?: boolean;
   navigateToPicture: (id: string) => void;
 }) => {
-  const bigPictureIndex = bigPictureFirst !== (reverse ?? false) ? 0 : 2;
-  const smallPictureIndices = bigPictureFirst !== (reverse ?? false) ? [1, 2] : [0, 1];
+  const bigPictureIndex = bigPictureFirst !== reverse ? 0 : 2;
+  const smallPictureIndices = bigPictureFirst !== reverse ? [1, 2] : [0, 1];
   return (
     <div className={`flex ${bigPictureFirst ? 'flex-col' : 'flex-col-reverse'} gap-[10px]`}>
       <SinglePicture
         key={pictures.length > bigPictureIndex ? pictures[bigPictureIndex].id : bigPictureIndex}
         picture={pictures.length > bigPictureIndex ? pictures[bigPictureIndex] : undefined}
-        size={'big'}
+        size='big'
         navigateToPicture={navigateToPicture}
         allowClicks={allowClicks}
         loading={loading}
@@ -82,7 +82,7 @@ const PicturesWidget = ({
           <SinglePicture
             key={pictures.length > i ? pictures[i].id : i}
             picture={pictures.length > i ? pictures[i] : undefined}
-            size={'small'}
+            size='small'
             navigateToPicture={navigateToPicture}
             allowClicks={allowClicks}
             loading={loading}
@@ -283,8 +283,8 @@ const HorizontalPictureGrid = ({
   useEffect(() => {
     if (!scrollBarRef.current || leftResult.loading) return;
 
-    const newWidgetCount = Math.ceil((leftPictures?.length ?? 0) / 3);
-    const oldWidgetCount = Math.ceil(pictureLength.current / 3);
+    const newWidgetCount = Math.ceil((leftPictures?.length ?? 0) / IMAGES_PER_WIDGET);
+    const oldWidgetCount = Math.ceil(pictureLength.current / IMAGES_PER_WIDGET);
 
     pictureLength.current = leftPictures?.length ?? 0;
     lastScrollPos.current = Math.max(newWidgetCount - oldWidgetCount, 1) * IMAGE_WIDGET_WIDTH;

@@ -43,21 +43,6 @@
   }
 }
 
-.selection-buttons {
-  margin-top: 1.5rem;
-  background: #e5e5e5;
-  border-radius: 0.3rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 1rem;
-  gap: 10px;
-
-  .MuiButton-root {
-    background-color: $primaryColor;
-  }
-}
-
 .horizontal-picture-placeholder {
   background: #474747;
   animation: placeholder-sparkle 2.5s;

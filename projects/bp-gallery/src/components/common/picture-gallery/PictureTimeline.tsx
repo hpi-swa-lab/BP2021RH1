@@ -3,6 +3,7 @@ import { debounce } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useAnimate } from '../../../hooks/animate.hook';
 
+// for future work
 export const enum TimeStepType {
   DECADE = 'decade',
   YEAR = 'year',
@@ -55,6 +56,7 @@ const PictureTimeline = ({
 
   const listItems = [];
   for (let year = start; year <= end; year++) {
+    const isHighlighted = date === year || date === year - 1;
     listItems.push(
       <li
         key={year}
@@ -70,14 +72,12 @@ const PictureTimeline = ({
       >
         <div className='relative inline w-full bottom-0'>
           <hr
-            className={`absolute left-0 ${
-              date === year || date === year - 1 ? '-top-1' : 'top-0'
-            } ${date === year || date === year - 1 ? 'h-[20px]' : 'h-[16px]'}`}
+            className={`absolute left-0 ${isHighlighted ? '-top-1 h-[20px]' : 'top-0 h-[16px]'}`}
           />
           <span
             className={`absolute -left-[18px] ${
-              date === year || date === year - 1 ? '-top-5' : '-top-4'
-            } select-none ${date === year || date === year - 1 ? 'text-black' : 'text-slate-500'}`}
+              isHighlighted ? '-top-5 text-black' : '-top-4 text-slate-500'
+            } select-none`}
           >
             {year}
           </span>
