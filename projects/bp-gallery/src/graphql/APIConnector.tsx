@@ -20,8 +20,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -4502,6 +4505,14 @@ export type UpdatePictureMutationVariables = Exact<{
 }>;
 
 export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null };
+
+export type UpdatePictureSequenceDataMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+  pictureSequence?: InputMaybe<Scalars['ID']>;
+  pictureSequenceOrder?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdatePictureSequenceDataMutation = { updatePictureWithTagCleanup?: string | null };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -11726,6 +11737,68 @@ export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
   UpdatePictureMutationVariables
 >;
 
+export const UpdatePictureSequenceDataDocument = gql`
+  mutation updatePictureSequenceData(
+    $pictureId: ID!
+    $pictureSequence: ID
+    $pictureSequenceOrder: Int
+  ) {
+    updatePictureWithTagCleanup(
+      id: $pictureId
+      data: { picture_sequence: $pictureSequence, picture_sequence_order: $pictureSequenceOrder }
+    )
+  }
+`;
+
+export type UpdatePictureSequenceDataMutationFn = Apollo.MutationFunction<
+  UpdatePictureSequenceDataMutation,
+  UpdatePictureSequenceDataMutationVariables
+>;
+
+/**
+ * __useUpdatePictureSequenceDataMutation__
+ *
+ * To run a mutation, you first call `useUpdatePictureSequenceDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePictureSequenceDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePictureSequenceDataMutation, { data, loading, error }] = useUpdatePictureSequenceDataMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *      pictureSequence: // value for 'pictureSequence'
+ *      pictureSequenceOrder: // value for 'pictureSequenceOrder'
+ *   },
+ * });
+ */
+export function useUpdatePictureSequenceDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePictureSequenceDataMutation,
+    UpdatePictureSequenceDataMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdatePictureSequenceDataMutation,
+    UpdatePictureSequenceDataMutationVariables
+  >(UpdatePictureSequenceDataDocument, options);
+}
+
+export type UpdatePictureSequenceDataMutationHookResult = ReturnType<
+  typeof useUpdatePictureSequenceDataMutation
+>;
+
+export type UpdatePictureSequenceDataMutationResult =
+  Apollo.MutationResult<UpdatePictureSequenceDataMutation>;
+
+export type UpdatePictureSequenceDataMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePictureSequenceDataMutation,
+  UpdatePictureSequenceDataMutationVariables
+>;
+
 export const UpdateUserDocument = gql`
   mutation updateUser($id: ID!, $username: String, $email: String) {
     updateUsersPermissionsUser(id: $id, data: { username: $username, email: $email }) {
@@ -16520,6 +16593,50 @@ export function useCanRunMultipleUpdatePictureMutations(
     ...options,
     variables: {
       operation: UpdatePictureDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdatePictureSequenceDataMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdatePictureSequenceDataMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdatePictureSequenceDataMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdatePictureSequenceDataMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

@@ -6,7 +6,7 @@ import { useDialog } from '../components/provider/DialogProvider';
 import {
   useCanRunUpdatePictureMutation,
   useCreatePictureSequenceMutation,
-  useUpdatePictureMutation,
+  useUpdatePictureSequenceDataMutation,
 } from '../graphql/APIConnector';
 import { FlatPicture, FlatPictureSequence } from '../types/additionalFlatTypes';
 
@@ -85,7 +85,7 @@ export const useCreateSequence = () => {
 };
 
 export const useUpdatePictureSequenceOrder = () => {
-  const [updatePicture] = useUpdatePictureMutation({
+  const [updatePicture] = useUpdatePictureSequenceDataMutation({
     refetchQueries: [
       'getPictureInfo',
       'getPictures',
@@ -101,10 +101,8 @@ export const useUpdatePictureSequenceOrder = () => {
           updatePicture({
             variables: {
               pictureId: picture.id,
-              data: {
-                picture_sequence_order: index + 1, // avoid 0
-                picture_sequence: sequence?.id,
-              },
+              pictureSequenceOrder: index + 1, // avoid 0
+              pictureSequence: sequence?.id,
             },
           })
         )
@@ -117,7 +115,7 @@ export const useUpdatePictureSequenceOrder = () => {
 };
 
 export const useRemovePictureFromSequence = () => {
-  const [updatePicture] = useUpdatePictureMutation({
+  const [updatePicture] = useUpdatePictureSequenceDataMutation({
     refetchQueries: [
       'getPictureInfo',
       'getPictures',
@@ -131,10 +129,8 @@ export const useRemovePictureFromSequence = () => {
       updatePicture({
         variables: {
           pictureId: picture.id,
-          data: {
-            picture_sequence: null,
-            picture_sequence_order: null,
-          },
+          pictureSequence: null,
+          pictureSequenceOrder: null,
         },
       });
     },

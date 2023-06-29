@@ -474,6 +474,19 @@ const anyPictureHasLinks = async (
   return false;
 };
 
+const processPictureSequenceUpdates = (data: {
+  picture_sequence?: string;
+  picture_sequence_order?: number;
+}) => {
+  if (!data.picture_sequence && data.picture_sequence_order) {
+    // having a nullish picture_sequence property removes the connection
+    // to the picture sequence - don't do that if the picture_sequence_oder
+    // is set, i. e. the request intended to just update the order and keep
+    // the sequence the same
+    delete data.picture_sequence;
+  }
+};
+
 const removeUnusedPictureSequences = async (strapi: StrapiExtended) => {
   const knexEngine = strapi.db.connection;
   const sequencesTable = table('picture_sequences');
@@ -507,6 +520,8 @@ const updatePictureWithTagCleanup = async (id: string, data: any) => {
   await processTagUpdates(pictureQuery, id, data);
 
   await protectIsTextKey(pictureQuery, [id], data);
+
+  await processPictureSequenceUpdates(data);
 
   // Actually update the picture.
   await pictureQuery.update({

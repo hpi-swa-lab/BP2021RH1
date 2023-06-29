@@ -5,12 +5,15 @@ import { IconButton, Portal } from '@mui/material';
 import { union } from 'lodash';
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCanRunCreatePictureSequenceMutation } from '../../../graphql/APIConnector';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { ExternalCanRun } from '../../../hooks/bulk-operations.hook';
-import { useCanBulkEditSomePictures, useCanUseBulkEditView } from '../../../hooks/can-do-hooks';
+import {
+  useCanBulkEditSomePictures,
+  useCanCreatePictureSequence,
+  useCanUseBulkEditView,
+} from '../../../hooks/can-do-hooks';
 import useDeletePicture, { useCanDeletePicture } from '../../../hooks/delete-picture.hook';
 import { useMouseAndTouchSensors } from '../../../hooks/sensors.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -188,11 +191,7 @@ const PictureGrid = ({
   }, [setBulkEditPictureIds, selectedPictureIds]);
 
   const { canUseBulkEditView: canBulkEdit } = useCanUseBulkEditView(selectedPictureIds);
-  const { canRun: canCreateSequence } = useCanRunCreatePictureSequenceMutation({
-    variables: {
-      pictures: selectedPictureIds,
-    },
-  });
+  const { canCreatePictureSequence } = useCanCreatePictureSequence(selectedPictureIds);
 
   const { canBulkEditSomePictures } = useCanBulkEditSomePictures();
 
@@ -207,9 +206,9 @@ const PictureGrid = ({
         operation =>
           operation.canRun === true ||
           (operation.canRun === ExternalCanRun.canBulkEdit && canBulkEditSomePictures) ||
-          (operation.canRun === ExternalCanRun.canCreateSequence && canCreateSequence)
+          (operation.canRun === ExternalCanRun.canCreatePictureSequence && canCreatePictureSequence)
       ) ?? false,
-    [bulkOperations, canBulkEditSomePictures, canCreateSequence]
+    [bulkOperations, canBulkEditSomePictures, canCreatePictureSequence]
   );
 
   const defaultAdornments: PicturePreviewAdornment[] = useMemo(
@@ -347,7 +346,7 @@ const PictureGrid = ({
             selectedPictures={selectedPictures}
             onBulkEdit={navigateToBulkEdit}
             canBulkEdit={canBulkEdit}
-            canCreateSequence={canCreateSequence}
+            canCreatePictureSequence={canCreatePictureSequence}
           />
         )}
         {canSelect && (

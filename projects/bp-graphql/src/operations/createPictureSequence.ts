@@ -2,8 +2,7 @@ import { Operation, graphql } from '../Operation.js';
 import { checkMultiplePictures } from '../isAllowedHelpers.js';
 
 export default {
-  section: 'picture',
-  needsParameters: ['archive_tag'],
+  group: 'createPictureSequence',
   isAllowed: checkMultiplePictures('pictures'),
   document: graphql`
     mutation createPictureSequence($pictures: [ID!]!) {

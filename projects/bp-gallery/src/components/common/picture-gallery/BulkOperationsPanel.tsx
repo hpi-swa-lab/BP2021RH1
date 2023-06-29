@@ -14,20 +14,20 @@ const BulkOperationsPanel = ({
   selectedPictures,
   onBulkEdit,
   canBulkEdit,
-  canCreateSequence,
+  canCreatePictureSequence,
 }: {
   operations: BulkOperation[];
   selectedPictures: FlatPicture[];
   onBulkEdit: () => void;
   canBulkEdit: boolean;
-  canCreateSequence: boolean;
+  canCreatePictureSequence: boolean;
 }) => {
   const runnableOperations = operations.filter(operation => {
     switch (operation.canRun) {
       case ExternalCanRun.canBulkEdit:
         return canBulkEdit;
-      case ExternalCanRun.canCreateSequence:
-        return canCreateSequence;
+      case ExternalCanRun.canCreatePictureSequence:
+        return canCreatePictureSequence;
       default:
         return operation.canRun satisfies boolean;
     }

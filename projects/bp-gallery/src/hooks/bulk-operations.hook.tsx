@@ -21,7 +21,7 @@ import { useCreateSequence } from './sequences.hook';
 
 export enum ExternalCanRun {
   canBulkEdit,
-  canCreateSequence,
+  canCreatePictureSequence,
 }
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
@@ -108,7 +108,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       action: (selectedPictures: FlatPicture[]) => {
         createSequence(selectedPictures);
       },
-      canRun: ExternalCanRun.canCreateSequence,
+      canRun: ExternalCanRun.canCreatePictureSequence,
     },
     bulkEdit: {
       name: t('curator.bulkEdit'),

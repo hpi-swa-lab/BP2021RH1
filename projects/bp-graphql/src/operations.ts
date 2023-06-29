@@ -107,4 +107,5 @@ export { default as updateMe } from './operations/updateMe.js';
 export { default as updatePersonName } from './operations/updatePersonName.js';
 export { default as updatePersonSynonyms } from './operations/updatePersonSynonyms.js';
 export { default as updatePicture } from './operations/updatePicture.js';
+export { default as updatePictureSequenceData } from './operations/updatePictureSequenceData.js';
 export { default as updateUser } from './operations/updateUser.js';

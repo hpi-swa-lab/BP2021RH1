@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { sortBy } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCanRunCreatePictureSequenceMutation } from '../../../../../graphql/APIConnector';
+import { useCanCreatePictureSequence } from '../../../../../hooks/can-do-hooks';
 import { TextFilter } from '../../../../../hooks/get-pictures.hook';
 import {
   useRemovePictureFromSequence,
@@ -48,11 +48,7 @@ const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
   );
 
   const removePictureFromSequence = useRemovePictureFromSequence();
-  const { canRun: canEdit } = useCanRunCreatePictureSequenceMutation({
-    variables: {
-      pictures: sequencePictureIds,
-    },
-  });
+  const { canCreatePictureSequence: canEdit } = useCanCreatePictureSequence(sequencePictureIds);
 
   const removeThisPictureFromSequence = useCallback(() => {
     removePictureFromSequence(picture);

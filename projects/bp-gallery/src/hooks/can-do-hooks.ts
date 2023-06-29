@@ -6,6 +6,7 @@ import {
   useCanRunAddUserMutation,
   useCanRunBulkEditMutation,
   useCanRunChangePasswordMutation,
+  useCanRunCreatePictureSequenceMutation,
   useCanRunCreateSubCollectionMutation,
   useCanRunDeclineCommentMutation,
   useCanRunDeleteCollectionMutation,
@@ -25,6 +26,7 @@ import {
   useCanRunMergeCollectionsMutation,
   useCanRunMultipleCreatePictureMutations,
   useCanRunMultipleUpdateExhibitionMutations,
+  useCanRunMultipleUpdatePictureSequenceDataMutations,
   useCanRunMultipleUploadMutation,
   useCanRunRemoveArchiveTagMutation,
   useCanRunRemoveUploadMutation,
@@ -124,6 +126,29 @@ export const useCanEditPicture = (pictureId: string, mediaId: string) => {
   return {
     canEditPicture: canUpload && canUpdatePicture && canRemoveUpload,
     loading: canUploadLoading || canUpdatePictureLoading || canRemoveUploadLoading,
+  };
+};
+
+export const useCanCreatePictureSequence = (pictureIds: string[] | undefined) => {
+  const { canRun: canCreatePictureSequence, loading: canCreatePictureSequenceLoading } =
+    useCanRunCreatePictureSequenceMutation({
+      variables: {
+        pictures: pictureIds ?? [],
+      },
+    });
+  const {
+    canRunMultiple: canUpdateMultiplePictureSequenceData,
+    loading: canUpdateMultiplePictureSequenceDataLoading,
+  } = useCanRunMultipleUpdatePictureSequenceDataMutations({
+    variableSets:
+      pictureIds?.map(pictureId => ({
+        pictureId,
+      })) ?? [],
+  });
+  const canUpdatePictureSequenceData = canUpdateMultiplePictureSequenceData.every(can => can);
+  return {
+    canCreatePictureSequence: canCreatePictureSequence && canUpdatePictureSequenceData,
+    loading: canCreatePictureSequenceLoading || canUpdateMultiplePictureSequenceDataLoading,
   };
 };
 
