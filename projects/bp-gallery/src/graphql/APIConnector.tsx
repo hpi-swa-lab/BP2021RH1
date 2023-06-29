@@ -20,8 +20,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -2692,7 +2695,12 @@ export type GetAllArchiveTagsQuery = {
             attributes?: {
               media: {
                 data?: {
-                  attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
+                  attributes?: {
+                    url: string;
+                    updatedAt?: any | null;
+                    provider: string;
+                    ext?: string | null;
+                  } | null;
                 } | null;
               };
             } | null;
@@ -2799,6 +2807,7 @@ export type GetArchiveQuery = {
               formats?: any | null;
               updatedAt?: any | null;
               provider: string;
+              ext?: string | null;
             } | null;
           } | null;
         } | null;
@@ -2816,6 +2825,7 @@ export type GetArchiveQuery = {
                     url: string;
                     updatedAt?: any | null;
                     provider: string;
+                    ext?: string | null;
                   } | null;
                 } | null;
               };
@@ -2940,7 +2950,12 @@ export type GetDailyPictureInfoQuery = {
         media: {
           data?: {
             id?: string | null;
-            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
+            attributes?: {
+              url: string;
+              updatedAt?: any | null;
+              provider: string;
+              ext?: string | null;
+            } | null;
           } | null;
         };
         archive_tag?: {
@@ -2967,42 +2982,66 @@ export type GetDecadePreviewThumbnailsQuery = {
   decade40s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+        media: {
+          data?: {
+            attributes?: { formats?: any | null; provider: string; ext?: string | null } | null;
+          } | null;
+        };
       } | null;
     }>;
   } | null;
   decade50s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+        media: {
+          data?: {
+            attributes?: { formats?: any | null; provider: string; ext?: string | null } | null;
+          } | null;
+        };
       } | null;
     }>;
   } | null;
   decade60s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+        media: {
+          data?: {
+            attributes?: { formats?: any | null; provider: string; ext?: string | null } | null;
+          } | null;
+        };
       } | null;
     }>;
   } | null;
   decade70s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+        media: {
+          data?: {
+            attributes?: { formats?: any | null; provider: string; ext?: string | null } | null;
+          } | null;
+        };
       } | null;
     }>;
   } | null;
   decade80s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+        media: {
+          data?: {
+            attributes?: { formats?: any | null; provider: string; ext?: string | null } | null;
+          } | null;
+        };
       } | null;
     }>;
   } | null;
   decade90s?: {
     data: Array<{
       attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
+        media: {
+          data?: {
+            attributes?: { formats?: any | null; provider: string; ext?: string | null } | null;
+          } | null;
+        };
       } | null;
     }>;
   } | null;
@@ -3040,6 +3079,7 @@ export type GetExhibitionQuery = {
                           url: string;
                           updatedAt?: any | null;
                           provider: string;
+                          ext?: string | null;
                         } | null;
                       } | null;
                     };
@@ -3068,6 +3108,7 @@ export type GetExhibitionQuery = {
                           url: string;
                           updatedAt?: any | null;
                           provider: string;
+                          ext?: string | null;
                         } | null;
                       } | null;
                     };
@@ -3104,6 +3145,7 @@ export type GetExhibitionQuery = {
                                 url: string;
                                 updatedAt?: any | null;
                                 provider: string;
+                                ext?: string | null;
                               } | null;
                             } | null;
                           };
@@ -3156,6 +3198,7 @@ export type GetExhibitionsQuery = {
                           url: string;
                           updatedAt?: any | null;
                           provider: string;
+                          ext?: string | null;
                         } | null;
                       } | null;
                     };
@@ -3218,6 +3261,7 @@ export type GetIdeaLotContentQuery = {
                           url: string;
                           updatedAt?: any | null;
                           provider: string;
+                          ext?: string | null;
                         } | null;
                       } | null;
                     };
@@ -3249,7 +3293,13 @@ export type GetKeywordTagsWithThumbnailQuery = {
           data: Array<{
             attributes?: {
               media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+                data?: {
+                  attributes?: {
+                    formats?: any | null;
+                    provider: string;
+                    ext?: string | null;
+                  } | null;
+                } | null;
               };
             } | null;
           }>;
@@ -3258,7 +3308,13 @@ export type GetKeywordTagsWithThumbnailQuery = {
           data: Array<{
             attributes?: {
               media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+                data?: {
+                  attributes?: {
+                    formats?: any | null;
+                    provider: string;
+                    ext?: string | null;
+                  } | null;
+                } | null;
               };
             } | null;
           }>;
@@ -3285,7 +3341,13 @@ export type GetLocationTagsWithThumbnailQuery = {
           data: Array<{
             attributes?: {
               media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+                data?: {
+                  attributes?: {
+                    formats?: any | null;
+                    provider: string;
+                    ext?: string | null;
+                  } | null;
+                } | null;
               };
             } | null;
           }>;
@@ -3294,7 +3356,13 @@ export type GetLocationTagsWithThumbnailQuery = {
           data: Array<{
             attributes?: {
               media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
+                data?: {
+                  attributes?: {
+                    formats?: any | null;
+                    provider: string;
+                    ext?: string | null;
+                  } | null;
+                } | null;
               };
             } | null;
           }>;
@@ -3327,6 +3395,7 @@ export type GetMostLikedPicturesQuery = {
               url: string;
               updatedAt?: any | null;
               provider: string;
+              ext?: string | null;
             } | null;
           } | null;
         };
@@ -3402,7 +3471,12 @@ export type GetMultiplePictureInfoQuery = {
         media: {
           data?: {
             id?: string | null;
-            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
+            attributes?: {
+              url: string;
+              updatedAt?: any | null;
+              provider: string;
+              ext?: string | null;
+            } | null;
           } | null;
         };
         comments?: {
@@ -3470,7 +3544,12 @@ export type GetPersonTagsWithThumbnailQuery = {
             attributes?: {
               media: {
                 data?: {
-                  attributes?: { formats?: any | null; url: string; provider: string } | null;
+                  attributes?: {
+                    formats?: any | null;
+                    url: string;
+                    provider: string;
+                    ext?: string | null;
+                  } | null;
                 } | null;
               };
             } | null;
@@ -3481,7 +3560,12 @@ export type GetPersonTagsWithThumbnailQuery = {
             attributes?: {
               media: {
                 data?: {
-                  attributes?: { formats?: any | null; url: string; provider: string } | null;
+                  attributes?: {
+                    formats?: any | null;
+                    url: string;
+                    provider: string;
+                    ext?: string | null;
+                  } | null;
                 } | null;
               };
             } | null;
@@ -3594,13 +3678,13 @@ export type GetPictureInfoQuery = {
           data?: {
             id?: string | null;
             attributes?: {
-              ext?: string | null;
               width?: number | null;
               height?: number | null;
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
               provider: string;
+              ext?: string | null;
             } | null;
           } | null;
         };
@@ -3641,6 +3725,7 @@ export type GetPicturesQuery = {
               url: string;
               updatedAt?: any | null;
               provider: string;
+              ext?: string | null;
             } | null;
           } | null;
         };
@@ -3675,6 +3760,7 @@ export type GetPicturesByAllSearchQuery = {
             url: string;
             updatedAt?: any | null;
             provider: string;
+            ext?: string | null;
           } | null;
         } | null;
       };
@@ -3773,6 +3859,7 @@ export type GetUnverifiedCommentsQuery = {
                     formats?: any | null;
                     updatedAt?: any | null;
                     provider: string;
+                    ext?: string | null;
                   } | null;
                 } | null;
               };
@@ -4481,6 +4568,7 @@ export const GetAllArchiveTagsDocument = gql`
                       url
                       updatedAt
                       provider
+                      ext
                     }
                   }
                 }
@@ -4889,6 +4977,7 @@ export const GetArchiveDocument = gql`
                 formats
                 updatedAt
                 provider
+                ext
               }
             }
           }
@@ -4906,6 +4995,7 @@ export const GetArchiveDocument = gql`
                       url
                       updatedAt
                       provider
+                      ext
                     }
                   }
                 }
@@ -5315,6 +5405,7 @@ export const GetDailyPictureInfoDocument = gql`
                 url
                 updatedAt
                 provider
+                ext
               }
             }
           }
@@ -5405,6 +5496,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
               attributes {
                 formats
                 provider
+                ext
               }
             }
           }
@@ -5424,6 +5516,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
               attributes {
                 formats
                 provider
+                ext
               }
             }
           }
@@ -5443,6 +5536,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
               attributes {
                 formats
                 provider
+                ext
               }
             }
           }
@@ -5462,6 +5556,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
               attributes {
                 formats
                 provider
+                ext
               }
             }
           }
@@ -5481,6 +5576,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
               attributes {
                 formats
                 provider
+                ext
               }
             }
           }
@@ -5500,6 +5596,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
               attributes {
                 formats
                 provider
+                ext
               }
             }
           }
@@ -5598,6 +5695,7 @@ export const GetExhibitionDocument = gql`
                             url
                             updatedAt
                             provider
+                            ext
                           }
                         }
                       }
@@ -5626,6 +5724,7 @@ export const GetExhibitionDocument = gql`
                             url
                             updatedAt
                             provider
+                            ext
                           }
                         }
                       }
@@ -5662,6 +5761,7 @@ export const GetExhibitionDocument = gql`
                                   url
                                   updatedAt
                                   provider
+                                  ext
                                 }
                               }
                             }
@@ -5765,6 +5865,7 @@ export const GetExhibitionsDocument = gql`
                             url
                             updatedAt
                             provider
+                            ext
                           }
                         }
                       }
@@ -5916,6 +6017,7 @@ export const GetIdeaLotContentDocument = gql`
                             url
                             updatedAt
                             provider
+                            ext
                           }
                         }
                       }
@@ -5996,6 +6098,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
                     attributes {
                       formats
                       provider
+                      ext
                     }
                   }
                 }
@@ -6013,6 +6116,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
                     attributes {
                       formats
                       provider
+                      ext
                     }
                   }
                 }
@@ -6103,6 +6207,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
                     attributes {
                       formats
                       provider
+                      ext
                     }
                   }
                 }
@@ -6120,6 +6225,7 @@ export const GetLocationTagsWithThumbnailDocument = gql`
                     attributes {
                       formats
                       provider
+                      ext
                     }
                   }
                 }
@@ -6217,6 +6323,7 @@ export const GetMostLikedPicturesDocument = gql`
                 url
                 updatedAt
                 provider
+                ext
               }
             }
           }
@@ -6383,6 +6490,7 @@ export const GetMultiplePictureInfoDocument = gql`
                 url
                 updatedAt
                 provider
+                ext
               }
             }
           }
@@ -6630,6 +6738,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                       formats
                       url
                       provider
+                      ext
                     }
                   }
                 }
@@ -6648,6 +6757,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
                       formats
                       url
                       provider
+                      ext
                     }
                   }
                 }
@@ -6909,13 +7019,13 @@ export const GetPictureInfoDocument = gql`
             data {
               id
               attributes {
-                ext
                 width
                 height
                 formats
                 url
                 updatedAt
                 provider
+                ext
               }
             }
           }
@@ -7019,6 +7129,7 @@ export const GetPicturesDocument = gql`
                 url
                 updatedAt
                 provider
+                ext
               }
             }
           }
@@ -7104,6 +7215,7 @@ export const GetPicturesByAllSearchDocument = gql`
               url
               updatedAt
               provider
+              ext
             }
           }
         }
@@ -7480,6 +7592,7 @@ export const GetUnverifiedCommentsDocument = gql`
                       formats
                       updatedAt
                       provider
+                      ext
                     }
                   }
                 }

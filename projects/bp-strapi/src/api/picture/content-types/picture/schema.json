@@ -139,10 +139,6 @@
       "relation": "oneToMany",
       "target": "api::exhibition-picture.exhibition-picture",
       "mappedBy": "picture"
-    },
-    "is_pdf": {
-      "type": "boolean",
-      "default": false
     }
   }
 }
