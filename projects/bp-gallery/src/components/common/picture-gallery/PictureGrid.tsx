@@ -3,7 +3,6 @@ import { IconButton, Portal } from '@mui/material';
 import { isFunction, union } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
 import { pushHistoryWithoutRouter, replaceHistoryWithoutRouter } from '../../../helpers/history';
@@ -149,14 +148,13 @@ const PictureGrid = ({
     changeHistoryWithoutRouter(`/picture/${id}`);
   }, []);
 
-  const location = useLocation();
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search as string);
+    const urlParams = new URLSearchParams(location.search);
     const initialPictureId = urlParams.get(pictureGridInitialPictureIdUrlParam);
     if (initialPictureId !== null) {
       navigateToPicture(initialPictureId, true);
     }
-  }, [location.search, navigateToPicture]);
+  }, [navigateToPicture]);
 
   const transitionToPicture = useCallback(
     (id: string) => {
