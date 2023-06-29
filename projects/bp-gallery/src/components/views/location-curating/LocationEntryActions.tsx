@@ -2,10 +2,12 @@ import {
   CopyAll,
   Delete,
   Eject,
+  LocationOn,
   MoveDown,
   Visibility,
   VisibilityOffOutlined,
 } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import IconButtonWithTooltip from '../../common/IconButtonWithTooltip';
@@ -37,6 +39,11 @@ const LocationEntryActions = ({
 
   return (
     <div className='location-action-buttons-container'>
+      {locationTag.coordinates && (
+        <IconButton>
+          <LocationOn className='text-[#446ab7]' />
+        </IconButton>
+      )}
       {canDetachTag && (
         <IconButtonWithTooltip
           title={t('tooltips.detach-location')}

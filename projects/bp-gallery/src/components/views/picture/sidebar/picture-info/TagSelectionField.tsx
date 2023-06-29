@@ -63,7 +63,7 @@ const TagSelectionField = <T extends TagFields>({
   const { t } = useTranslation();
   const prompt = useDialog();
 
-  const { allTagsQuery } = useGenericTagEndpoints(type);
+  const { allTagsLazyQuery, canGetAllTagsQuery } = useGenericTagEndpoints(type);
 
   const [options, setOptions] = useState<T[]>(allTags);
   // TODO: check the conditions using this
@@ -71,10 +71,18 @@ const TagSelectionField = <T extends TagFields>({
   const [lastAddedTag, setLastAddedTag] = useState<T | undefined>();
   const [highlight, setHighlight] = useState<T | null>();
 
-  const { data } = allTagsQuery();
+  const [getAllTags, { data }] = allTagsLazyQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined =
     flattened && type !== TagType.COLLECTION ? Object.values(flattened)[0] : undefined;
+
+  const { canRun: canGetAllTags } = canGetAllTagsQuery();
+
+  useEffect(() => {
+    if (onChange && canGetAllTags) {
+      getAllTags();
+    }
+  }, [onChange, canGetAllTags, getAllTags]);
 
   const { tagTree, tagChildTags, tagSiblingTags, tagSupertagList } =
     useGetTagStructures(flattenedTags);
