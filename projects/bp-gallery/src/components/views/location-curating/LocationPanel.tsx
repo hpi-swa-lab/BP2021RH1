@@ -9,6 +9,7 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import AddLocationEntry from './AddLocationEntry';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
+import { LocationPanelPermissionsProvider } from './LocationPanelPermissionsProvider';
 import { useCreateNewTag } from './location-management-helpers';
 import { useGetTagStructures } from './tag-structure-helpers';
 
@@ -59,7 +60,7 @@ const LocationPanel = () => {
           return <Loading />;
         } else {
           return (
-            <>
+            <LocationPanelPermissionsProvider>
               <LocationPanelHeader />
               <div className='location-panel-content'>
                 {tagTree?.map(tag => (
@@ -74,7 +75,7 @@ const LocationPanel = () => {
                   />
                 )}
               </div>
-            </>
+            </LocationPanelPermissionsProvider>
           );
         }
       }}

@@ -122,25 +122,25 @@ const PictureInfo = ({
     newKeywordTagMutationResponse.loading;
 
   useEffect(() => {
-    if (canGetAllKeywords) {
+    if (onSave && canGetAllKeywords) {
       getAllKeywords();
     }
-  }, [canGetAllKeywords, getAllKeywords]);
+  }, [onSave, canGetAllKeywords, getAllKeywords]);
   useEffect(() => {
-    if (canGetAllLocations) {
+    if (onSave && canGetAllLocations) {
       getAllLocations();
     }
-  }, [canGetAllLocations, getAllLocations]);
+  }, [onSave, canGetAllLocations, getAllLocations]);
   useEffect(() => {
-    if (canGetAllPeople) {
+    if (onSave && canGetAllPeople) {
       getAllPeople();
     }
-  }, [canGetAllPeople, getAllPeople]);
+  }, [onSave, canGetAllPeople, getAllPeople]);
   useEffect(() => {
-    if (canGetAllCollections) {
+    if (onSave && canGetAllCollections) {
       getAllCollections();
     }
-  }, [canGetAllCollections, getAllCollections]);
+  }, [onSave, canGetAllCollections, getAllCollections]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
   return (
