@@ -19,6 +19,11 @@ import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
 import { useCreateSequence } from './sequences.hook';
 
+export enum ExternalCanRun {
+  canBulkEdit,
+  canCreateSequence,
+}
+
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
   const dialog = useDialog();
@@ -103,6 +108,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       action: (selectedPictures: FlatPicture[]) => {
         createSequence(selectedPictures);
       },
+      canRun: ExternalCanRun.canCreateSequence,
     },
     bulkEdit: {
       name: t('curator.bulkEdit'),
@@ -110,7 +116,7 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       action: (_selectedPictures: FlatPicture[], onBulkEdit: () => void) => {
         onBulkEdit();
       },
-      canRun: canBulkEdit => canBulkEdit,
+      canRun: ExternalCanRun.canBulkEdit,
     },
     addToExhibition: {
       name: t('curator.addToExhibition'),

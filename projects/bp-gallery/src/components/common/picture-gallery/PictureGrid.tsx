@@ -2,12 +2,14 @@ import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { CheckBox, CheckBoxOutlineBlank, Delete, DoneAll, RemoveDone } from '@mui/icons-material';
 import { IconButton, Portal } from '@mui/material';
-import { isFunction, union } from 'lodash';
+import { union } from 'lodash';
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCanRunCreatePictureSequenceMutation } from '../../../graphql/APIConnector';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
+import { ExternalCanRun } from '../../../hooks/bulk-operations.hook';
 import { useCanBulkEditSomePictures, useCanUseBulkEditView } from '../../../hooks/can-do-hooks';
 import useDeletePicture, { useCanDeletePicture } from '../../../hooks/delete-picture.hook';
 import { useMouseAndTouchSensors } from '../../../hooks/sensors.hook';
@@ -186,6 +188,11 @@ const PictureGrid = ({
   }, [setBulkEditPictureIds, selectedPictureIds]);
 
   const { canUseBulkEditView: canBulkEdit } = useCanUseBulkEditView(selectedPictureIds);
+  const { canRun: canCreateSequence } = useCanRunCreatePictureSequenceMutation({
+    variables: {
+      pictures: selectedPictureIds,
+    },
+  });
 
   const { canBulkEditSomePictures } = useCanBulkEditSomePictures();
 
@@ -198,9 +205,11 @@ const PictureGrid = ({
       // selections being present.
       bulkOperations?.some(
         operation =>
-          operation.canRun === true || (isFunction(operation.canRun) && canBulkEditSomePictures)
+          operation.canRun === true ||
+          (operation.canRun === ExternalCanRun.canBulkEdit && canBulkEditSomePictures) ||
+          (operation.canRun === ExternalCanRun.canCreateSequence && canCreateSequence)
       ) ?? false,
-    [bulkOperations, canBulkEditSomePictures]
+    [bulkOperations, canBulkEditSomePictures, canCreateSequence]
   );
 
   const defaultAdornments: PicturePreviewAdornment[] = useMemo(
@@ -338,6 +347,7 @@ const PictureGrid = ({
             selectedPictures={selectedPictures}
             onBulkEdit={navigateToBulkEdit}
             canBulkEdit={canBulkEdit}
+            canCreateSequence={canCreateSequence}
           />
         )}
         {canSelect && (

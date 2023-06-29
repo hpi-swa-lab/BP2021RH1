@@ -206,6 +206,7 @@
       },
       "group": {
         "createPicture": "Bild hochladen",
+        "createPictureSequence": "Serie erstellen",
         "editFaceTags": "Personen markieren",
         "editPicture": "Bild bearbeiten",
         "unpublishPicture": "Bild löschen",
