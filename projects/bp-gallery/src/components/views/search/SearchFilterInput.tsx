@@ -1,86 +1,73 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
-import { useAdvancedSearch } from '../../../hooks/context-hooks';
+import { AttributeFilterProps, SingleFilterProps } from './AdvancedSearch';
 import { SearchFilterInputItem } from './SearchFilterInputItem';
 
-export const SearchFilterInput = ({ key, attribute }: { key: string; attribute: string }) => {
-  const [rowIds, SetRowIds] = useState([0]);
-  const [filters, SetFilters] = useState(['']);
+export const SearchFilterInput = ({
+  key,
+  attribute,
+  advancedSearchProps,
+}: {
+  key: string;
+  attribute: string;
+  advancedSearchProps: AttributeFilterProps[];
+}) => {
+  let filterProps = advancedSearchProps.filter(attrProps => attrProps.attribute === attribute)[0]
+    .filterProps;
 
-  const setFilter = (id: string, filter: string) => {
-    SetFilters(current => current.splice(parseInt(id), 0, filter));
-  };
-
-  const deleteRow = useCallback(
-    (id: string) => {
-      if (rowIds.length > 1) {
-        SetRowIds(current => current.splice(parseInt(id), 1));
-        SetFilters(current => current.splice(parseInt(id), 1));
+  const updateFilterProps = (index: number, action: string, property: string, value: string) => {
+    let update;
+    if (action === 'add') {
+      update = filterProps.map((item: SingleFilterProps) => item);
+      console.log('update pre splice', update);
+      update.splice(index + 1, 0, {
+        filterOperator: '',
+        combinationOperator: '',
+        values: [],
+      });
+      console.log('filterProps', filterProps);
+      console.log('update post splice', update);
+      filterProps = update;
+      console.log('filterProps', filterProps);
+    } else if (action === 'delete') {
+      update = filterProps.map((item: SingleFilterProps) => item).splice(index, 1);
+      filterProps = update;
+    } else if (action === 'set') {
+      switch (property) {
+        case 'filterOperator':
+          update = filterProps.map((item: SingleFilterProps) => item);
+          update[index].filterOperator = value;
+          filterProps = update;
+          break;
+        case 'combinationOperator':
+          update = filterProps.map((item: SingleFilterProps) => item);
+          update[index].combinationOperator = value;
+          filterProps = update;
+          break;
+        case 'firstValue':
+          update = filterProps.map((item: SingleFilterProps) => item);
+          update[index].values[0] = value;
+          filterProps = update;
+          break;
+        case 'secondValue':
+          update = filterProps.map((item: SingleFilterProps) => item);
+          update[index].values[1] = value;
+          filterProps = update;
+          break;
+        default:
+          return;
       }
-    },
-    [rowIds]
-  );
-
-  const incrementRows = useCallback(() => {
-    SetRowIds(current => current.splice(rowIds.length, 0, rowIds[rowIds.length - 1] + 1));
-  }, [rowIds]);
-
-  const filter = filters.join(' ');
-
-  const context = useAdvancedSearch();
-
-  const updateFilter = useCallback(() => {
-    switch (attribute) {
-      case 'keyword':
-        return context?.SetKeywordFilter;
-      case 'description':
-        return context?.SetDescriptionFilter;
-      case 'comment':
-        return context?.SetCommentFilter;
-      case 'person':
-        return context?.SetPersonFilter;
-      case 'face-tag':
-        return context?.SetFaceTagFilter;
-      case 'location':
-        return context?.SetLocationFilter;
-      case 'collection':
-        return context?.SetCollectionFilter;
-      case 'archive':
-        return context?.SetArchiveFilter;
-      case 'timeRange':
-        return context?.SetTimeRangeFilter;
-      default:
-        return () => {
-          console.log("attribute doens't exist", attribute);
-        };
     }
-  }, [
-    attribute,
-    context?.SetArchiveFilter,
-    context?.SetCollectionFilter,
-    context?.SetCommentFilter,
-    context?.SetDescriptionFilter,
-    context?.SetFaceTagFilter,
-    context?.SetKeywordFilter,
-    context?.SetLocationFilter,
-    context?.SetPersonFilter,
-    context?.SetTimeRangeFilter,
-  ]);
-  useEffect(() => {
-    if (updateFilter()) {
-      (updateFilter() as Dispatch<SetStateAction<string>>)(filter);
-    }
-  }, [filter, updateFilter]);
+
+    return;
+  };
 
   return (
     <>
-      {rowIds.map(id => (
+      {filterProps.map((props, index) => (
         <SearchFilterInputItem
-          key={id.toString()}
-          id={id.toString()}
+          key={index.toString()}
+          index={index}
           attribute={attribute}
-          deleteRow={deleteRow}
-          incrementRows={incrementRows}
-          setFilter={setFilter}
+          updateFilterProps={updateFilterProps}
         ></SearchFilterInputItem>
       ))}
     </>

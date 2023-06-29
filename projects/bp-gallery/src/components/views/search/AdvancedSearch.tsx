@@ -1,24 +1,31 @@
+import { Button } from '@mui/material';
 import { SearchFilterInput } from './SearchFilterInput';
 
-export const AdvancedSearch = () => {
-  const ATTRIBUTES = [
-    'keyword',
-    'description',
-    'comment',
-    'person',
-    'face-tag',
-    'location',
-    'collection',
-    'archive',
-    'timeRange',
-  ];
+export type SingleFilterProps = {
+  filterOperator: string;
+  combinationOperator: string;
+  values: string[];
+};
+
+export type AttributeFilterProps = { attribute: string; filterProps: SingleFilterProps[] };
+
+export const AdvancedSearch = ({
+  advancedSearchProps,
+}: {
+  advancedSearchProps: AttributeFilterProps[];
+}) => {
   return (
     <div className='advanced-search'>
       <div className='advanced-search-content'>
-        {ATTRIBUTES.map(attr => (
-          <SearchFilterInput key={attr} attribute={attr}></SearchFilterInput>
+        {advancedSearchProps.map(props => (
+          <SearchFilterInput
+            key={props.attribute}
+            attribute={props.attribute}
+            advancedSearchProps={advancedSearchProps}
+          ></SearchFilterInput>
         ))}
       </div>
+      <Button onClick={() => console.log(advancedSearchProps)}>press me</Button>
     </div>
   );
 };

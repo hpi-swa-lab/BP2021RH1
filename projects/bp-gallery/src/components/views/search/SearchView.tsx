@@ -6,12 +6,10 @@ import usePromise from 'react-use-promise';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { useAdvancedSearch } from '../../../hooks/context-hooks';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
-import { AdvancedSearchProvider } from '../../provider/AdvancedSearchProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
-import AdvancedSearch from './AdvancedSearch';
+import AdvancedSearch, { AttributeFilterProps } from './AdvancedSearch';
 import NoSearchResultsText from './NoSearchResultsText';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
@@ -66,41 +64,33 @@ const SearchView = () => {
     };
   }, [searchParams]);
 
-  const context = useAdvancedSearch();
-  console.log(context?.keywordFilter);
+  // const context = useAdvancedSearch();
 
-  const filter = useMemo(() => {
-    console.log(context?.keywordFilter);
-    const filters = [
-      context?.keywordFilter ? context.keywordFilter : '',
-      context?.descriptionFilter ? context.descriptionFilter : '',
-      context?.commentFilter ? context.commentFilter : '',
-      context?.personFilter ? context.personFilter : '',
-      context?.faceTagFilter ? context.faceTagFilter : '',
-      context?.locationFilter ? context.locationFilter : '',
-      context?.collectionFilter ? context.collectionFilter : '',
-      context?.archiveFilter ? context.archiveFilter : '',
-    ];
+  // const filter = useMemo(() => {
+  //   const filters = [
+  //     context?.keywordFilter,
+  //     context?.descriptionFilter,
+  //     context?.commentFilter,
+  //     context?.personFilter,
+  //     context?.faceTagFilter,
+  //     context?.locationFilter,
+  //     context?.collectionFilter,
+  //     context?.archiveFilter,
+  //   ];
 
-    console.log(filters);
-    return (
-      filters
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        .filter(entry => {
-          entry === '' ? false : true;
-        })
-        .join('AND')
-    );
-  }, [
-    context?.keywordFilter,
-    context?.descriptionFilter,
-    context?.commentFilter,
-    context?.personFilter,
-    context?.faceTagFilter,
-    context?.locationFilter,
-    context?.collectionFilter,
-    context?.archiveFilter,
-  ]);
+  //   return filters.filter(entry => entry).join('AND');
+  // }, [
+  //   context?.keywordFilter,
+  //   context?.descriptionFilter,
+  //   context?.commentFilter,
+  //   context?.personFilter,
+  //   context?.faceTagFilter,
+  //   context?.locationFilter,
+  //   context?.collectionFilter,
+  //   context?.archiveFilter,
+  // ]);
+
+  const filter = '';
 
   const [searchResultIds, error, state] = usePromise(
     async () =>
@@ -117,50 +107,59 @@ const SearchView = () => {
     }
     return state === 'resolved' ? { id: { in: searchResultIds } } : {};
   }, [searchResultIds, state, error]);
-  console.log(pictureFilter);
   const isOldSearchActive = useFlag('old_search');
 
-  if (import.meta.env.MODE === 'development') {
-    console.log('resultids', searchResultIds);
-  }
   const { linkToCollection, bulkEdit } = useBulkOperations();
+  const ATTRIBUTES = [
+    'keyword',
+    'description',
+    'comment',
+    'person',
+    'face-tag',
+    'location',
+    'collection',
+    'archive',
+    'timeRange',
+  ];
+  const advancedSearchProps: AttributeFilterProps[] = ATTRIBUTES.map(attr => ({
+    attribute: attr,
+    filterProps: [{ filterOperator: '', combinationOperator: '', values: [] }],
+  }));
 
   return (
     <div className='search-content'>
-      <AdvancedSearchProvider>
-        <AdvancedSearch></AdvancedSearch>
-        <div className='search-bar-container'>
-          {(!areResultsEmpty || !search) && (
-            <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
-          )}
-          <HelpTooltip title={t('search.question')} content={t('search.help')} />
-          <div className='breadcrumb'>
-            <SearchBreadcrumbs searchParams={searchParams} />
-          </div>
-        </div>
-        {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
-        {!search ? (
-          <SearchHub />
-        ) : (
-          <ShowStats>
-            <PictureScrollGrid
-              queryParams={isOldSearchActive ? queryParams : pictureFilter}
-              // if allSearch is active the custom resolver for allSearch will be used, which can only
-              // handle simple queryparams in the format {searchTerms:string[], searchTimes:string[][]} which
-              //  leads to erros when we use queryparams of the type PictureFiltersInput,
-              // so isAllSearchactive has to be false if we want to use the Meilisearch results
-              // by ANDing the isAllsearchActive flag with the isOldsearchActive flag we can make sure
-              // the isAllSearchActive property will always be false if we want to use Meilisearch
-              isAllSearchActive={isOldSearchActive && isAllSearchActive}
-              hashbase={search}
-              bulkOperations={[linkToCollection, bulkEdit]}
-              resultPictureCallback={(pictures: number) => {
-                setAreResultsEmpty(pictures <= 0);
-              }}
-            />
-          </ShowStats>
+      <AdvancedSearch advancedSearchProps={advancedSearchProps}></AdvancedSearch>
+      <div className='search-bar-container'>
+        {(!areResultsEmpty || !search) && (
+          <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
         )}
-      </AdvancedSearchProvider>
+        <HelpTooltip title={t('search.question')} content={t('search.help')} />
+        <div className='breadcrumb'>
+          <SearchBreadcrumbs searchParams={searchParams} />
+        </div>
+      </div>
+      {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
+      {!search ? (
+        <SearchHub />
+      ) : (
+        <ShowStats>
+          <PictureScrollGrid
+            queryParams={isOldSearchActive ? queryParams : pictureFilter}
+            // if allSearch is active the custom resolver for allSearch will be used, which can only
+            // handle simple queryparams in the format {searchTerms:string[], searchTimes:string[][]} which
+            //  leads to erros when we use queryparams of the type PictureFiltersInput,
+            // so isAllSearchactive has to be false if we want to use the Meilisearch results
+            // by ANDing the isAllsearchActive flag with the isOldsearchActive flag we can make sure
+            // the isAllSearchActive property will always be false if we want to use Meilisearch
+            isAllSearchActive={isOldSearchActive && isAllSearchActive}
+            hashbase={search}
+            bulkOperations={[linkToCollection, bulkEdit]}
+            resultPictureCallback={(pictures: number) => {
+              setAreResultsEmpty(pictures <= 0);
+            }}
+          />
+        </ShowStats>
+      )}
     </div>
   );
 };

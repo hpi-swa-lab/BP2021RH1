@@ -1,29 +1,18 @@
+import { AddCircleOutlineOutlined, HighlightOff } from '@mui/icons-material';
 import { MenuItem, Select, TextField } from '@mui/material';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-type FilterProps = {
-  attribute: string;
-  operatorOption: string;
-  firstValue: string;
-  secondValue: string;
-  combinatorOption: string;
-};
 
 export const SearchFilterInputItem = ({
   key,
-  id,
+  index,
   attribute,
-  deleteRow,
-  incrementRows,
-  setFilter,
+  updateFilterProps,
 }: {
   key: string;
-  id: string;
+  index: number;
   attribute: string;
-  deleteRow: (id: string) => void;
-  incrementRows: () => void;
-  setFilter: (id: string, filter: string) => void;
+  updateFilterProps: (index: number, action: string, property: string, value: string) => void;
 }) => {
   const { t } = useTranslation();
   const DEFAULT_OPTION = 'default';
@@ -44,166 +33,19 @@ export const SearchFilterInputItem = ({
     'is-empty',
     'is-not-empty',
   ];
-  const Filter_COMBINATOR_OPTIONS = [DEFAULT_OPTION, 'and', 'or'];
+  const Filter_COMBINATOR_OPTIONS = ['and', 'or'];
   const filterOperatorOptions =
     attribute === 'timeRange' ? TIME_FILTER_OPERATOR_OPTIONS : Text_FILTER_OPERATOR_OPTIONS;
 
   const [displayedTextFieldsAmount, SetDisplayedTextFieldsAmount] = useState(1);
-  const [filterProps, SetFilterProps] = useState<FilterProps>({
-    attribute: attribute,
-    operatorOption: '',
-    firstValue: '',
-    secondValue: '',
-    combinatorOption: '',
-  });
-
-  const setFilterOperatorOption = useCallback((option: string) => {
-    SetFilterProps(filterProps => ({ ...filterProps, operatorOption: option }));
-    SetDisplayedTextFieldsAmount(
-      option === 'span' ? 2 : option === 'is-empty' || option === 'is-not-empty' ? 0 : 1
-    );
-  }, []);
-
-  const setFilterValue = useCallback(
-    <T extends keyof FilterProps>(key: T, value: string) => {
-      SetFilterProps(filterProps => ({ ...filterProps, [key]: value }));
-    },
-    [SetFilterProps]
-  );
-
-  const setFilterCombinatorOption = useCallback(
-    (option: string) => {
-      if (option === DEFAULT_OPTION) {
-        SetFilterProps(filterProps => ({ ...filterProps, combinatorOption: '' }));
-        deleteRow(id);
-      } else {
-        SetFilterProps(filterProps => ({ ...filterProps, combinatorOption: option }));
-        incrementRows();
-      }
-    },
-    [deleteRow, incrementRows, id]
-  );
-
-  const optionTranslator = useCallback((option: string) => {
-    switch (option) {
-      case 'equal':
-        return '=';
-      case 'unequal':
-        return '!=';
-      case 'lower':
-        return '<';
-      case 'lower-equal':
-        return '<=';
-      case 'greater':
-        return '>';
-      case 'greater-equal':
-        return '>=';
-      case 'and':
-        return 'and';
-      case 'or':
-        return 'or';
-      default:
-        return '';
-    }
-  }, []);
-
-  const attributeTranslator = useCallback((attribute: string) => {
-    switch (attribute) {
-      case 'keyword':
-        return 'keyword_tags';
-      case 'description':
-        return 'descriptions';
-      case 'comment':
-        return 'comments';
-      case 'person':
-        return 'person_tags';
-      case 'face-tag':
-        return 'face_tags';
-      case 'location':
-        return 'location_tags';
-      case 'collection':
-        return 'collections';
-      case 'archive':
-        return 'archive_tag';
-      default:
-        return '';
-    }
-  }, []);
-
-  const startTimeParser = (startYear: string) => {
-    return Date.parse(`${startYear}-01-01T00:00:00Z`) / 1000;
-  };
-  const endTimeparser = (endYear: string) => {
-    return Date.parse(`${endYear}-12-31T23:59:59Z`) / 1000;
-  };
-
-  const buildFilter = useCallback(
-    ({
-      attribute,
-      operatorOption,
-      firstValue,
-      secondValue,
-      combinatorOption,
-    }: {
-      attribute: string;
-      operatorOption: string;
-      firstValue: string;
-      secondValue: string;
-      combinatorOption: string;
-    }) => {
-      const TIME_START = 'time_range_tag_start';
-      const TIME_END = 'time_range_tag_end';
-
-      if (operatorOption === 'is-empty') {
-        return attribute !== 'timeRange'
-          ? `(${attributeTranslator(attribute)} IS EMPTY OR ${attributeTranslator(
-              attribute
-            )} IS NULL) ${optionTranslator(operatorOption)}`
-          : `((${TIME_START} IS EMPTY OR ${TIME_START} IS NULL) AND (${TIME_END} IS EMPTY OR ${TIME_END} IS NULL)) ${optionTranslator(
-              combinatorOption
-            )}`;
-      } else if (operatorOption === 'is-not-empty') {
-        return attribute !== 'timeRange'
-          ? `(${attributeTranslator(attribute)} IS NOT EMPTY AND ${attributeTranslator(
-              attribute
-            )} IS NOT NULL) ${optionTranslator(operatorOption)}`
-          : `(${TIME_START} IS NOT EMPTY AND ${TIME_START} IS NOT NULL AND ${TIME_END} IS NOT EMPTY AND ${TIME_END} IS NOT NULL) ${optionTranslator(
-              combinatorOption
-            )}`;
-      }
-
-      if (attribute === 'timeRange') {
-        return operatorOption === 'span'
-          ? `(${TIME_START} >= ${startTimeParser(firstValue)} AND ${TIME_END} <= ${endTimeparser(
-              secondValue
-            )}) ${optionTranslator(combinatorOption)}`
-          : `(${TIME_START} ${optionTranslator(operatorOption)} ${startTimeParser(
-              firstValue
-            )} AND ${TIME_END} ${optionTranslator(operatorOption)} ${startTimeParser(
-              firstValue
-            )}) ${optionTranslator(combinatorOption)}`;
-      } else {
-        return `${attributeTranslator(attribute)} ${optionTranslator(
-          operatorOption
-        )} ${firstValue} ${optionTranslator(combinatorOption)}`;
-      }
-    },
-    [optionTranslator, attributeTranslator]
-  );
-
-  const filter = useMemo(() => {
-    return buildFilter(filterProps);
-  }, [buildFilter, filterProps]);
-
-  useEffect(() => {
-    setFilter(id, filter);
-  }, [id, filter, setFilter]);
 
   return (
     <div className='flex flex-row'>
       <span>{t(`search.${attribute}`)}</span>
       <Select
-        onChange={event => setFilterOperatorOption(event.target.value)}
+        onChange={event => {
+          updateFilterProps(index, 'set', 'filterOperator', event.target.value);
+        }}
         defaultValue={'default'}
         renderValue={value => t(`search.${value}`)}
       >
@@ -216,21 +58,31 @@ export const SearchFilterInputItem = ({
       {displayedTextFieldsAmount === 2 ? (
         <>
           <TextField
-            onChange={event => setFilterValue('firstValue', event.target.value)}
+            onChange={event => {
+              updateFilterProps(index, 'set', 'firstValue', event.target.value);
+            }}
           ></TextField>
           <TextField
-            onChange={event => setFilterValue('secondValue', event.target.value)}
+            onChange={event => {
+              updateFilterProps(index, 'set', 'secondValue', event.target.value);
+            }}
           ></TextField>
         </>
       ) : displayedTextFieldsAmount === 1 ? (
-        <TextField onChange={event => setFilterValue('firstValue', event.target.value)}></TextField>
+        <TextField
+          onChange={event => {
+            updateFilterProps(index, 'set', 'firstValue', event.target.value);
+          }}
+        ></TextField>
       ) : (
         <></>
       )}
 
       <Select
-        onChange={event => setFilterCombinatorOption(event.target.value)}
-        defaultValue={'default'}
+        onChange={event => {
+          updateFilterProps(index, 'set', 'combinationOperator', event.target.value);
+        }}
+        defaultValue={'and'}
         renderValue={value => t(`search.${value}`)}
       >
         {Filter_COMBINATOR_OPTIONS.map(option => (
@@ -239,6 +91,10 @@ export const SearchFilterInputItem = ({
           </MenuItem>
         ))}
       </Select>
+      <HighlightOff onClick={() => updateFilterProps(index, 'delete', '', '')}></HighlightOff>
+      <AddCircleOutlineOutlined
+        onClick={() => updateFilterProps(index, 'add', '', '')}
+      ></AddCircleOutlineOutlined>
     </div>
   );
 };
