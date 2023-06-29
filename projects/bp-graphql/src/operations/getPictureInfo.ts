@@ -133,13 +133,13 @@ export default {
               data {
                 id
                 attributes {
-                  ext
                   width
                   height
                   formats
                   url
                   updatedAt
                   provider
+                  ext
                 }
               }
             }

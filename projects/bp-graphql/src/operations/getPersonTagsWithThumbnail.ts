@@ -23,6 +23,7 @@ export default {
                         formats
                         url
                         provider
+                        ext
                       }
                     }
                   }
@@ -41,6 +42,7 @@ export default {
                         formats
                         url
                         provider
+                        ext
                       }
                     }
                   }

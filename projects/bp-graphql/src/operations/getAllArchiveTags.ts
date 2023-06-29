@@ -20,6 +20,7 @@ export default {
                         url
                         updatedAt
                         provider
+                        ext
                       }
                     }
                   }

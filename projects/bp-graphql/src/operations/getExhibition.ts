@@ -31,6 +31,7 @@ export default {
                               url
                               updatedAt
                               provider
+                              ext
                             }
                           }
                         }
@@ -59,6 +60,7 @@ export default {
                               url
                               updatedAt
                               provider
+                              ext
                             }
                           }
                         }
@@ -95,6 +97,7 @@ export default {
                                     url
                                     updatedAt
                                     provider
+                                    ext
                                   }
                                 }
                               }

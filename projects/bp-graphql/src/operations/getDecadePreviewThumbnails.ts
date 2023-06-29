@@ -24,6 +24,7 @@ export default {
                 attributes {
                   formats
                   provider
+                  ext
                 }
               }
             }
@@ -43,6 +44,7 @@ export default {
                 attributes {
                   formats
                   provider
+                  ext
                 }
               }
             }
@@ -62,6 +64,7 @@ export default {
                 attributes {
                   formats
                   provider
+                  ext
                 }
               }
             }
@@ -81,6 +84,7 @@ export default {
                 attributes {
                   formats
                   provider
+                  ext
                 }
               }
             }
@@ -100,6 +104,7 @@ export default {
                 attributes {
                   formats
                   provider
+                  ext
                 }
               }
             }
@@ -119,6 +124,7 @@ export default {
                 attributes {
                   formats
                   provider
+                  ext
                 }
               }
             }
