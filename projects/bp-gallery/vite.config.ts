@@ -2,7 +2,6 @@ import react from '@vitejs/plugin-react-swc';
 import type { Plugin, PluginBuild } from 'esbuild';
 import path from 'path';
 import { defineConfig } from 'vite';
-import eslint from 'vite-plugin-eslint';
 
 const splitPackages = ['@mui/icons-material', '@mui/material'];
 const reactPlugins = [
@@ -29,7 +28,7 @@ const splitPackagesPlugin: Plugin = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({ plugins: reactPlugins }), eslint({ cache: false })],
+  plugins: [react({ plugins: reactPlugins })],
   envDir: 'environments',
   server: {
     port: 3000,
