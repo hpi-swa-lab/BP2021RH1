@@ -6,7 +6,7 @@ import { canRunOperation } from 'bp-graphql/build/operations';
 import { extractFiles } from 'extract-files';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { TFunction } from 'i18next';
-import { unionWith } from 'lodash';
+import { unionWith, uniq } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 import { translateErrorMessage } from '../i18n';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
@@ -96,7 +96,7 @@ const errorToStrings = (error: unknown): string[] => {
 };
 
 export const errorToTranslatedString = (error: unknown, t: TFunction, context?: string) => {
-  return Array.from(errorToStrings(error))
+  return uniq(errorToStrings(error))
     .map(message => translateErrorMessage(message, t, context))
     .join('\n');
 };
