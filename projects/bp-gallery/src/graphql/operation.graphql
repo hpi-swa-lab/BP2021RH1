@@ -3,7 +3,7 @@ query canRunOperation( $operation: String! $variableSets: [JSON!] $withSomeVaria
 query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) { archiveTags(sort: $sortBy) { data { id attributes { name shortDescription showcasePicture { data { id attributes { media { data { attributes { url updatedAt provider } } } } } } } } } }
 query getAllCollections { collections(publicationState: PREVIEW) { data { id attributes { name parent_collections(publicationState: PREVIEW) { data { id attributes { name } } } } } } }
 query getAllKeywordTags { keywordTags { data { id attributes { name visible synonyms { name } } } } }
-query getAllLocationTags { locationTags { data { id attributes { name visible root accepted coordinates { latitude longitude } synonyms { name } child_tags { data { id attributes { name } } } parent_tags { data { id attributes { name } } } } } } }
+query getAllLocationTags { getAllLocationTags }
 query getAllPersonTags { personTags { data { id attributes { name synonyms { name } } } } }
 query getAllPictureIds { pictures { data { id } } }
 query getArchive($archiveId: ID!) { archiveTag(id: $archiveId) { data { id attributes { name shortDescription longDescription email paypalClient paypalDonationText paypalPurpose restrictImageDownloading logo { data { id attributes { width height formats updatedAt provider } } } showcasePicture { data { id attributes { media { data { id attributes { width height formats url updatedAt provider } } } } } } links { data { id attributes { title url } } } } } } }
