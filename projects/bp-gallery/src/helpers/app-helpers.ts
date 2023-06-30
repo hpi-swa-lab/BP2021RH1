@@ -1,4 +1,4 @@
-import { ApolloError, ApolloLink, from } from '@apollo/client';
+import { ApolloLink, from } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
@@ -53,27 +53,32 @@ export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadO
   return asApiPath(imgSrcWithParams);
 };
 
-const errorToStrings = (error: unknown) => {
+const errorToStrings = (error: unknown): string[] => {
   if (!error) {
     return [];
   }
   if (typeof error === 'string') {
     return [error];
   }
+  if (error instanceof Array) {
+    return error.flatMap(element => errorToStrings(element));
+  }
   const errors: string[] = [];
-  if (error instanceof ApolloError) {
-    for (const clientError of error.clientErrors) {
-      errors.push(...errorToStrings(clientError));
+  if (typeof error === 'object') {
+    // ApolloError
+    if ('clientErrors' in error) {
+      errors.push(...errorToStrings(error.clientErrors));
     }
-    for (const graphQLError of error.graphQLErrors) {
-      errors.push(...errorToStrings(graphQLError));
+    if ('graphQLErrors' in error) {
+      errors.push(...errorToStrings(error.graphQLErrors));
     }
-    if (error.networkError) {
+    if ('networkError' in error) {
       errors.push(...errorToStrings(error.networkError));
     }
-  } else if (typeof error === 'object') {
+
+    // { result: { errors: [...] } }
     if (
-      // { result: { errors: [...] } }
+      errors.length === 0 &&
       'result' in error &&
       typeof error.result === 'object' &&
       error.result &&
