@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useVisit } from '../../../helpers/history';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
@@ -27,12 +28,31 @@ const setUnacceptedSubtagsCount = (tag: FlatTag) => {
 
 const LocationPanel = () => {
   const { t } = useTranslation();
+  const { location } = useVisit();
+  const foldoutStatus = useRef<{ [key: string]: { value: boolean } }>();
 
   const { allTagsQuery, canUseTagTableViewQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
   const { data, loading, error, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
+
+  useEffect(() => {
+    if (!flattenedTags) {
+      return;
+    }
+    foldoutStatus.current = Object.fromEntries(
+      flattenedTags.map(tag => [
+        tag.id,
+        {
+          value:
+            location.state?.openBranches && tag.id in location.state.openBranches
+              ? location.state.openBranches[tag.id].value
+              : false,
+        },
+      ])
+    );
+  }, [flattenedTags, location]);
 
   const { createNewTag, canCreateNewTag } = useCreateNewTag(refetch);
 
@@ -64,7 +84,12 @@ const LocationPanel = () => {
               <LocationPanelHeader />
               <div className='location-panel-content'>
                 {tagTree?.map(tag => (
-                  <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
+                  <LocationBranch
+                    key={tag.id}
+                    locationTag={tag}
+                    refetch={refetch}
+                    foldoutStatus={foldoutStatus}
+                  />
                 ))}
                 {canCreateNewTag && (
                   <AddLocationEntry

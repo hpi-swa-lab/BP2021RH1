@@ -20,6 +20,7 @@ type LocationState = {
   scrollPos?: number;
   open?: boolean;
   archiveId?: string;
+  openBranches?: { [key: string]: { value: boolean } };
 };
 export type LocationWithState = Location & { state?: LocationState };
 
@@ -30,11 +31,20 @@ export const useVisit = () => {
   const growthbook = useGrowthBook();
 
   const visit = useCallback(
-    (url: string, options?: { state?: LocationState; wasOpen?: boolean }) => {
+    (
+      url: string,
+      options?: {
+        state?: LocationState;
+        wasOpen?: boolean;
+        openBranches?: { [key: string]: { value: boolean } };
+        scrollPosition?: number;
+      }
+    ) => {
       history.replace(history.location.pathname, {
         ...history.location.state,
-        scrollPos: scrollRef.current,
+        scrollPos: options?.scrollPosition ?? scrollRef.current,
         open: options?.wasOpen,
+        openBranches: options?.openBranches,
       });
       history.push(url, { showBack: options?.state?.showBack ?? true, ...options?.state });
       growthbook?.setURL(window.location.href);

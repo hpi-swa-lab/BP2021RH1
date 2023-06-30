@@ -16,7 +16,7 @@ import { Icon, LatLng, Map } from 'leaflet';
 import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { pick } from 'lodash';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapContainer, Marker, TileLayer, useMapEvent } from 'react-leaflet';
 import {
@@ -82,6 +82,18 @@ const LocationManagementDialogPreset = ({
 }) => {
   const { t } = useTranslation();
   const { visit } = useVisit();
+
+  const foldoutStatus: MutableRefObject<
+    | {
+        [key: string]: {
+          value: boolean;
+        };
+      }
+    | undefined
+  > = dialogProps.content.foldoutStatus;
+
+  const scrollPosition = dialogProps.content.scrollPosition;
+
   const { allTagsQuery, tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
 
   const refetch: () => void = dialogProps.content.refetch;
@@ -406,7 +418,10 @@ const LocationManagementDialogPreset = ({
                 className='location-management-button location-management-primary'
                 onClick={() => {
                   handleClose(undefined);
-                  visit(`/show-more/location/${locationTag.id}`);
+                  visit(`/show-more/location/${locationTag.id}`, {
+                    openBranches: foldoutStatus.current,
+                    scrollPosition,
+                  });
                 }}
                 endIcon={<ArrowForwardIos />}
               >

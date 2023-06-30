@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import AddLocationEntry from './AddLocationEntry';
@@ -10,13 +10,32 @@ const LocationBranch = ({
   locationTag,
   parentTag,
   refetch,
+  foldoutStatus,
 }: {
   locationTag: FlatTag;
   parentTag?: FlatTag;
   refetch: () => void;
+  foldoutStatus: MutableRefObject<
+    | {
+        [key: string]: {
+          value: boolean;
+        };
+      }
+    | undefined
+  >;
 }) => {
   const { t } = useTranslation();
-  const [showMore, setShowMore] = useState<boolean>(false);
+  const [showMore, setShowMore] = useState<boolean>(
+    foldoutStatus.current && locationTag.id in foldoutStatus.current
+      ? foldoutStatus.current[locationTag.id].value
+      : false
+  );
+
+  useEffect(() => {
+    if (foldoutStatus.current && locationTag.id in foldoutStatus.current) {
+      setShowMore(foldoutStatus.current[locationTag.id].value);
+    }
+  }, [foldoutStatus, locationTag.id]);
 
   const renderSubBranches = () => {
     if (locationTag.child_tags?.length) {
@@ -27,6 +46,7 @@ const LocationBranch = ({
             locationTag={childTag}
             parentTag={locationTag}
             refetch={refetch}
+            foldoutStatus={foldoutStatus}
           />
         );
       });
@@ -42,9 +62,17 @@ const LocationBranch = ({
         parentTag={parentTag}
         showMore={showMore}
         onToggleShowMore={() => {
+          if (foldoutStatus.current) {
+            if (locationTag.id in foldoutStatus.current) {
+              foldoutStatus.current[locationTag.id].value = !showMore;
+            } else {
+              foldoutStatus.current[locationTag.id] = { value: !showMore };
+            }
+          }
           setShowMore(prev => !prev);
         }}
         refetch={refetch}
+        foldoutStatus={foldoutStatus}
       />
       {showMore && (
         <div className='sub-location-container'>
