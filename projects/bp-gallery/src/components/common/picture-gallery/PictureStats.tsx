@@ -16,6 +16,7 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
   const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
   const commentsCount = picture.comments?.length ?? 0;
   const picturesInSequenceCount = picture.picture_sequence?.pictures?.length ?? 0;
+  const showSequence = picturesInSequenceCount > 1;
 
   return showStats ? (
     <div
@@ -30,13 +31,17 @@ const PictureStats = ({ picture, hovered }: PictureStatsProps) => {
       >
         <div
           className='items-center flex'
-          title={t('common.like')}
+          title={
+            showSequence
+              ? t('pictureFields.sequence.partOfSequence', { count: picturesInSequenceCount })
+              : t('common.like')
+          }
           onClick={event => {
             event.stopPropagation();
             like(isLiked);
           }}
         >
-          {picturesInSequenceCount > 1 ? (
+          {showSequence ? (
             <SequenceCount count={picturesInSequenceCount} />
           ) : (
             <>

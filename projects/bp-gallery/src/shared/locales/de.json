@@ -353,6 +353,7 @@
     },
     "sequence": {
       "label": "Serie",
+      "partOfSequence": "Teil einer Serie von {{count}} Bildern",
       "remove": "Dieses Bild aus der Serie entfernen",
       "removeEntire": "Alle Bilder aus der Serie entfernen"
     },
