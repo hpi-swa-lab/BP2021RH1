@@ -1,8 +1,8 @@
 import { History } from 'history';
 import {
-  createContext,
   Dispatch,
   SetStateAction,
+  createContext,
   useCallback,
   useEffect,
   useMemo,
@@ -20,13 +20,14 @@ import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { FaceTaggingProvider } from '../../provider/FaceTaggingProvider';
+import PDFViewer from './PDFViewer';
+import './PictureView.scss';
 import { FaceTags } from './face-tagging/FaceTags';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
+import { isPdf } from './helpers/pdf-helpers';
 import { PictureNavigationTarget } from './overlay/PictureNavigationButtons';
 import PictureViewUI from './overlay/PictureViewUI';
 import ZoomWrapper from './overlay/ZoomWrapper';
-import PDFViewer from './PDFViewer';
-import './PictureView.scss';
 import PictureSidebar from './sidebar/PictureSidebar';
 
 export interface PictureViewContextFields {
@@ -146,59 +147,63 @@ const PictureView = ({
 
   const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureId);
 
+  const InnerContent = useMemo(
+    () => (
+      <>
+        <div className={`picture-view`} ref={containerRef}>
+          <div className='picture-wrapper w-full h-full'>
+            <div className='picture-container w-full h-full'>
+              <div className='relative w-full h-full flex justify-center align-center'>
+                {isPdf(picture) ? (
+                  <PDFViewer picture={picture!} />
+                ) : (
+                  <>
+                    <img
+                      className='max-w-full max-h-full object-contain picture'
+                      ref={setImg}
+                      src={pictureLink}
+                      alt={pictureLink}
+                      onContextMenu={onImageContextMenu}
+                    />
+                    <FaceTags />
+                  </>
+                )}
+              </div>
+            </div>
+            {!isPresentationMode && !loading && !error && picture && (
+              <PictureViewUI calledViaLink={!onBack} pictureId={picture.id} sessionId={sessionId} />
+            )}
+          </div>
+
+          {!isPresentationMode && (
+            <PictureSidebar loading={loading} error={error} picture={picture} />
+          )}
+        </div>
+      </>
+    ),
+    [
+      error,
+      isPresentationMode,
+      loading,
+      onBack,
+      onImageContextMenu,
+      picture,
+      pictureLink,
+      sessionId,
+    ]
+  );
+
   return (
     <div className={`picture-view-container`}>
       <PictureViewContext.Provider value={contextValue}>
         {picture?.media?.ext === '.pdf' ? (
-          <div className={`picture-view`} ref={containerRef}>
-            <div className='picture-wrapper w-full h-full'>
-              <div className='picture-container w-full h-full'>
-                <div className='relative w-full h-full flex justify-center align-center'>
-                  <PDFViewer picture={picture} />
-                </div>
-              </div>
-              {!isPresentationMode && !loading && !error && (
-                <PictureViewUI
-                  calledViaLink={!onBack}
-                  pictureId={picture.id}
-                  sessionId={sessionId}
-                />
-              )}
-            </div>
-
-            {!isPresentationMode && (
-              <PictureSidebar loading={loading} error={error} picture={picture} />
-            )}
-          </div>
+          InnerContent
         ) : (
           <FaceTaggingProvider pictureId={pictureId}>
             <div className={`picture-view`} ref={containerRef}>
               <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
-                <div className='picture-wrapper w-full h-full'>
-                  <div className='picture-container w-full h-full'>
-                    <div className='relative w-full h-full flex justify-center align-center'>
-                      <img
-                        className='max-w-full max-h-full object-contain picture'
-                        ref={setImg}
-                        src={pictureLink}
-                        alt={pictureLink}
-                        onContextMenu={onImageContextMenu}
-                      />
-                      <FaceTags />
-                    </div>
-                  </div>
-                  {!isPresentationMode && !loading && !error && picture && (
-                    <PictureViewUI
-                      calledViaLink={!onBack}
-                      pictureId={picture.id}
-                      sessionId={sessionId}
-                    />
-                  )}
-                </div>
+                {InnerContent}
               </ZoomWrapper>
-              {!isPresentationMode && (
-                <PictureSidebar loading={loading} error={error} picture={picture} />
-              )}
             </div>
           </FaceTaggingProvider>
         )}

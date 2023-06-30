@@ -29,6 +29,12 @@ export interface PictureUploadAreaProps {
   onUploaded?: () => void;
 }
 
+enum ACCEPTED_EXTENSIONS {
+  PDF = 'application/pdf',
+  PNG = 'image/png',
+  JPEG = 'image/jpeg',
+}
+
 type NewFile = {
   file: File;
   preview: FlatPicture;
@@ -40,7 +46,9 @@ const PictureUploadArea = ({
   onUploaded,
 }: PictureUploadAreaProps) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: 'image/jpeg,image/png,application/pdf',
+    accept: Object.keys(ACCEPTED_EXTENSIONS)
+      .map(key => ACCEPTED_EXTENSIONS[key])
+      .join(','),
   });
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -73,6 +81,7 @@ const PictureUploadArea = ({
     return {
       id: file.name,
       media: {
+        ext: file.type === ACCEPTED_EXTENSIONS.PDF ? '.pdf' : undefined,
         formats: {
           small: {
             url: URL.createObjectURL(file),
