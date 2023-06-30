@@ -9,6 +9,7 @@ import {
 } from './api/collection/services/custom-resolver';
 import { contact } from './api/contact/services/contact';
 import { mergeSourceTagIntoTargetTag } from './api/custom-tag-resolver';
+import { getAllLocationTags } from './api/location-tag/services/custom-resolver';
 import {
   addPermission,
   addUser,
@@ -102,6 +103,13 @@ export default {
                 sourceId,
                 targetId
               );
+            },
+          }),
+          queryField('getAllLocationTags', {
+            type: 'JSON',
+            args: {},
+            resolve() {
+              return getAllLocationTags(strapi as StrapiExtended);
             },
           }),
           mutationField('updatePictureWithTagCleanup', {
