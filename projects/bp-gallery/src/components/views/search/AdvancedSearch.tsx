@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { SearchFilterInput } from './SearchFilterInput';
 
@@ -25,7 +26,7 @@ export const AdvancedSearch = ({ setFilter }: { setFilter: Dispatch<SetStateActi
   const [advancedSearchProps, SetAdvancedSearchProps] = useState<AttributeFilterProps[]>(
     ATTRIBUTES.map(attr => ({
       attribute: attr,
-      filterProps: [{ filterOperator: '', combinationOperator: '', values: [] }],
+      filterProps: [{ filterOperator: '', combinationOperator: '', values: ['', ''] }],
     }))
   );
 
@@ -44,9 +45,9 @@ export const AdvancedSearch = ({ setFilter }: { setFilter: Dispatch<SetStateActi
       case 'greater-equal':
         return '>=';
       case 'and':
-        return 'and';
+        return 'AND';
       case 'or':
-        return 'or';
+        return 'OR';
       default:
         return '';
     }
@@ -92,60 +93,74 @@ export const AdvancedSearch = ({ setFilter }: { setFilter: Dispatch<SetStateActi
     ) => {
       const TIME_START = 'time_range_tag_start';
       const TIME_END = 'time_range_tag_end';
-
-      if (operatorOption === 'is-empty') {
+      if (operatorOption === 'default' || operatorOption === '') {
+        return '';
+      } else if (operatorOption === 'is-empty') {
         return attribute !== 'timeRange'
           ? `(${attributeTranslator(attribute)} IS EMPTY OR ${attributeTranslator(
               attribute
-            )} IS NULL) ${optionTranslator(operatorOption)}`
+            )} IS NULL) ${optionTranslator(combinatorOption)} `
           : `((${TIME_START} IS EMPTY OR ${TIME_START} IS NULL) AND (${TIME_END} IS EMPTY OR ${TIME_END} IS NULL)) ${optionTranslator(
               combinatorOption
-            )}`;
+            )} `;
       } else if (operatorOption === 'is-not-empty') {
         return attribute !== 'timeRange'
           ? `(${attributeTranslator(attribute)} IS NOT EMPTY AND ${attributeTranslator(
               attribute
-            )} IS NOT NULL) ${optionTranslator(operatorOption)}`
+            )} IS NOT NULL) ${optionTranslator(combinatorOption)} `
           : `(${TIME_START} IS NOT EMPTY AND ${TIME_START} IS NOT NULL AND ${TIME_END} IS NOT EMPTY AND ${TIME_END} IS NOT NULL) ${optionTranslator(
               combinatorOption
-            )}`;
-      }
-
-      if (attribute === 'timeRange') {
+            )} `;
+      } else if (attribute === 'timeRange') {
         return operatorOption === 'span'
           ? `(${TIME_START} >= ${startTimeParser(firstValue)} AND ${TIME_END} <= ${endTimeparser(
               secondValue
-            )}) ${optionTranslator(combinatorOption)}`
+            )}) ${optionTranslator(combinatorOption)} `
           : `(${TIME_START} ${optionTranslator(operatorOption)} ${startTimeParser(
               firstValue
             )} AND ${TIME_END} ${optionTranslator(operatorOption)} ${startTimeParser(
               firstValue
-            )}) ${optionTranslator(combinatorOption)}`;
+            )}) ${optionTranslator(combinatorOption)} `;
       } else {
         return `${attributeTranslator(attribute)} ${optionTranslator(
           operatorOption
-        )} ${firstValue} ${optionTranslator(combinatorOption)}`;
+        )} ${firstValue} ${optionTranslator(combinatorOption)} `;
       }
     },
     [optionTranslator, attributeTranslator]
   );
 
-  // const buildAttributeFilter = useCallback(
-  //   ({ attributeFilterProps }: { attributeFilterProps: AttributeFilterProps }) => {
-  //     return attributeFilterProps.filterProps.reduce(( singleFilterProps =>
-  //       buildSingleFilter(
-  //         attributeFilterProps.attribute,
-  //         singleFilterProps.filterOperator,
-  //         singleFilterProps.values[0],
-  //         singleFilterProps.values[1],
-  //         singleFilterProps.combinationOperator
-  //       )
-  //     ).;
-  //   },
-  //   []
-  // );
+  const buildAttributeFilter = useCallback(
+    (attributeFilterProps: AttributeFilterProps) => {
+      const filter = `${attributeFilterProps.filterProps.reduce(
+        (accumulator, currentValue) =>
+          `${accumulator}${buildSingleFilter(
+            attributeFilterProps.attribute,
+            currentValue.filterOperator,
+            currentValue.values[0],
+            currentValue.values[1],
+            currentValue.combinationOperator
+          )}`,
+        ''
+      )}`;
+      return filter !== '' ? `(${filter})` : '';
+    },
+    [buildSingleFilter]
+  );
 
-  const filter = advancedSearchProps;
+  const filter: string = advancedSearchProps
+    .map(attributeFilterProps => buildAttributeFilter(attributeFilterProps))
+    .reduce((accumulator, currentvalue) => {
+      if (accumulator !== '' && currentvalue === '') {
+        return accumulator;
+      } else if (accumulator === '' && currentvalue !== '') {
+        return currentvalue;
+      } else if (accumulator !== '' && currentvalue !== '') {
+        return `${accumulator} AND ${currentvalue}`;
+      } else {
+        return '';
+      }
+    }, '');
 
   return (
     <div className='advanced-search'>
@@ -159,6 +174,14 @@ export const AdvancedSearch = ({ setFilter }: { setFilter: Dispatch<SetStateActi
           ></SearchFilterInput>
         ))}
       </div>
+      <Button
+        onClick={() => {
+          setFilter(filter);
+          console.log(advancedSearchProps);
+        }}
+      >
+        Filter Anwenden
+      </Button>
     </div>
   );
 };

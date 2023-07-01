@@ -125,7 +125,10 @@ export const SearchFilterInputItem = ({
         <></>
       )}
       <AddCircleOutlineOutlined
-        onClick={() => updateFilterProps(index, 'add', '', '')}
+        onClick={() => {
+          updateFilterProps(index, 'set', 'combinationOperator', 'and');
+          updateFilterProps(index, 'add', '', '');
+        }}
       ></AddCircleOutlineOutlined>
     </div>
   );

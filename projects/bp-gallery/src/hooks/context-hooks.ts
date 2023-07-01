@@ -1,5 +1,4 @@
 import { Context, useContext } from 'react';
-import { AdvancedSearchContext } from '../components/provider/AdvancedSearchContext';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
 import { FaceTaggingContext } from '../components/provider/FaceTaggingContext';
 import { MobileContext } from '../components/provider/MobileProvider';
@@ -34,8 +33,4 @@ export const useFaceTagging = () => {
 
 export const useMobile = () => {
   return useContext(MobileContext);
-};
-
-export const useAdvancedSearch = () => {
-  return useContext(AdvancedSearchContext);
 };

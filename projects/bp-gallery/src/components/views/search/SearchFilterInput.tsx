@@ -48,7 +48,6 @@ export const SearchFilterInput = ({
         case 'secondValue':
           update = filterProps.map((item: SingleFilterProps) => item);
           update[index].values[1] = value;
-
           break;
         default:
           return;
