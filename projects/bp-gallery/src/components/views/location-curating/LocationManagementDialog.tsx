@@ -16,7 +16,7 @@ import { Icon, LatLng, Map } from 'leaflet';
 import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { pick } from 'lodash';
-import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapContainer, Marker, TileLayer, useMapEvent } from 'react-leaflet';
 import {
@@ -32,6 +32,7 @@ import { DialogProps } from '../../provider/DialogProvider';
 import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
 import TagSelectionField from '../picture/sidebar/picture-info/TagSelectionField';
+import { useFoldoutStatus } from './FoldoutStatusContext';
 import './LocationManagementDialog.scss';
 import {
   useAcceptTag,
@@ -83,14 +84,7 @@ const LocationManagementDialogPreset = ({
   const { t } = useTranslation();
   const { visit } = useVisit();
 
-  const foldoutStatus: MutableRefObject<
-    | {
-        [key: string]: {
-          isOpen: boolean;
-        };
-      }
-    | undefined
-  > = dialogProps.content.foldoutStatus;
+  const foldoutStatus = useFoldoutStatus();
 
   const scrollPosition = dialogProps.content.scrollPosition;
 
@@ -419,7 +413,7 @@ const LocationManagementDialogPreset = ({
                 onClick={() => {
                   handleClose(undefined);
                   visit(`/show-more/location/${locationTag.id}`, {
-                    openBranches: foldoutStatus.current,
+                    openBranches: foldoutStatus?.current,
                     customScrollPos: scrollPosition,
                   });
                 }}

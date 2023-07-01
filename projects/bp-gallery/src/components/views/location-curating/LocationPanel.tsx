@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVisit } from '../../../helpers/history';
@@ -8,6 +8,7 @@ import Loading from '../../common/Loading';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import AddLocationEntry from './AddLocationEntry';
+import { useFoldoutStatus } from './FoldoutStatusContext';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
 import { LocationPanelPermissionsProvider } from './LocationPanelPermissionsProvider';
@@ -26,7 +27,7 @@ const setUnacceptedSubtagsCount = (tag: FlatTag) => {
 const LocationPanel = () => {
   const { t } = useTranslation();
   const { location } = useVisit();
-  const foldoutStatus = useRef<{ [key: string]: { isOpen: boolean } }>();
+  const foldoutStatus = useFoldoutStatus();
 
   const { allTagsQuery, canUseTagTableViewQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
@@ -35,19 +36,21 @@ const LocationPanel = () => {
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
   useEffect(() => {
-    if (!flattenedTags) {
+    if (!foldoutStatus) {
       return;
     }
     foldoutStatus.current = Object.fromEntries(
-      flattenedTags.map(tag => [
-        tag.id,
-        {
-          isOpen:
-            location.state?.openBranches && tag.id in location.state.openBranches
-              ? location.state.openBranches[tag.id].isOpen
-              : false,
-        },
-      ])
+      flattenedTags
+        ? flattenedTags.map(tag => [
+            tag.id,
+            {
+              isOpen:
+                location.state?.openBranches && tag.id in location.state.openBranches
+                  ? location.state.openBranches[tag.id].isOpen
+                  : false,
+            },
+          ])
+        : []
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -82,12 +85,7 @@ const LocationPanel = () => {
               <LocationPanelHeader />
               <div className='location-panel-content'>
                 {tagTree?.map(tag => (
-                  <LocationBranch
-                    key={tag.id}
-                    locationTag={tag}
-                    refetch={refetch}
-                    foldoutStatus={foldoutStatus}
-                  />
+                  <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
                 ))}
                 {canCreateNewTag && (
                   <AddLocationEntry

@@ -1,6 +1,6 @@
 import { Check, ChevronRight, ExpandMore } from '@mui/icons-material';
 import { Badge, Chip, IconButton, Skeleton } from '@mui/material';
-import { MutableRefObject, useState } from 'react';
+import { useState } from 'react';
 import { useScrollRef } from '../../../hooks/context-hooks';
 import { useElementIsVisible } from '../../../hooks/element-is-visible';
 import { FlatTag } from '../../../types/additionalFlatTypes';
@@ -15,21 +15,12 @@ const LocationEntry = ({
   showMore,
   onToggleShowMore,
   refetch,
-  foldoutStatus,
 }: {
   locationTag: FlatTag;
   parentTag?: FlatTag;
   showMore: boolean;
   onToggleShowMore: () => void;
   refetch: () => void;
-  foldoutStatus: MutableRefObject<
-    | {
-        [key: string]: {
-          isOpen: boolean;
-        };
-      }
-    | undefined
-  >;
 }) => {
   const prompt = useDialog();
   const scrollRef = useScrollRef();
@@ -45,7 +36,6 @@ const LocationEntry = ({
         locationTag,
         parentTag,
         refetch,
-        foldoutStatus,
         scrollPosition: scrollRef.current,
       },
       maxWidth: false,
