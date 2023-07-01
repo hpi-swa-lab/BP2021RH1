@@ -578,9 +578,7 @@ export const useDeleteTag = (
       if (tags.some((tag: any) => tag.pictures.length)) {
         await prompt({
           preset: DialogPreset.CONFIRM,
-          title: t('tag-panel.not-allowed-to-delete-sublocation', {
-            count: 0,
-          }),
+          title: t('tag-panel.not-allowed-to-delete-sublocation'),
         });
         return;
       }
