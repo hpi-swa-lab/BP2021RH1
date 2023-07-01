@@ -25,17 +25,18 @@ const LocationEntry = ({
   foldoutStatus: MutableRefObject<
     | {
         [key: string]: {
-          value: boolean;
+          isOpen: boolean;
         };
       }
     | undefined
   >;
 }) => {
   const prompt = useDialog();
+  const scrollRef = useScrollRef();
 
   const { acceptTag, canAcceptTag } = useAcceptTag(locationTag, refetch);
   const { deleteSynonym, canDeleteSynonym } = useDeleteSynonym(locationTag, refetch);
-  const scrollRef = useScrollRef();
+
   const openLocationManagementDialog = () => {
     prompt({
       preset: DialogPreset.LOCATION_MANAGEMENT,

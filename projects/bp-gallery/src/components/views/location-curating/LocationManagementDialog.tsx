@@ -86,7 +86,7 @@ const LocationManagementDialogPreset = ({
   const foldoutStatus: MutableRefObject<
     | {
         [key: string]: {
-          value: boolean;
+          isOpen: boolean;
         };
       }
     | undefined
@@ -420,7 +420,7 @@ const LocationManagementDialogPreset = ({
                   handleClose(undefined);
                   visit(`/show-more/location/${locationTag.id}`, {
                     openBranches: foldoutStatus.current,
-                    scrollPosition,
+                    customScrollPos: scrollPosition,
                   });
                 }}
                 endIcon={<ArrowForwardIos />}

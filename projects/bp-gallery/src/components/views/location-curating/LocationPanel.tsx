@@ -29,7 +29,7 @@ const setUnacceptedSubtagsCount = (tag: FlatTag) => {
 const LocationPanel = () => {
   const { t } = useTranslation();
   const { location } = useVisit();
-  const foldoutStatus = useRef<{ [key: string]: { value: boolean } }>();
+  const foldoutStatus = useRef<{ [key: string]: { isOpen: boolean } }>();
 
   const { allTagsQuery, canUseTagTableViewQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
@@ -45,14 +45,15 @@ const LocationPanel = () => {
       flattenedTags.map(tag => [
         tag.id,
         {
-          value:
+          isOpen:
             location.state?.openBranches && tag.id in location.state.openBranches
-              ? location.state.openBranches[tag.id].value
+              ? location.state.openBranches[tag.id].isOpen
               : false,
         },
       ])
     );
-  }, [flattenedTags, location]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { createNewTag, canCreateNewTag } = useCreateNewTag(refetch);
 

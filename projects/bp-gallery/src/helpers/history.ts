@@ -20,7 +20,7 @@ type LocationState = {
   scrollPos?: number;
   open?: boolean;
   archiveId?: string;
-  openBranches?: { [key: string]: { value: boolean } };
+  openBranches?: { [key: string]: { isOpen: boolean } };
 };
 export type LocationWithState = Location & { state?: LocationState };
 
@@ -36,13 +36,13 @@ export const useVisit = () => {
       options?: {
         state?: LocationState;
         wasOpen?: boolean;
-        openBranches?: { [key: string]: { value: boolean } };
-        scrollPosition?: number;
+        openBranches?: { [key: string]: { isOpen: boolean } };
+        customScrollPos?: number;
       }
     ) => {
       history.replace(history.location.pathname, {
         ...history.location.state,
-        scrollPos: options?.scrollPosition ?? scrollRef.current,
+        scrollPos: options?.customScrollPos ?? scrollRef.current,
         open: options?.wasOpen,
         openBranches: options?.openBranches,
       });

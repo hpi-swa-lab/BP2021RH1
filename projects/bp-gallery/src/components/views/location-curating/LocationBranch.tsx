@@ -18,7 +18,7 @@ const LocationBranch = ({
   foldoutStatus: MutableRefObject<
     | {
         [key: string]: {
-          value: boolean;
+          isOpen: boolean;
         };
       }
     | undefined
@@ -27,13 +27,13 @@ const LocationBranch = ({
   const { t } = useTranslation();
   const [showMore, setShowMore] = useState<boolean>(
     foldoutStatus.current && locationTag.id in foldoutStatus.current
-      ? foldoutStatus.current[locationTag.id].value
+      ? foldoutStatus.current[locationTag.id].isOpen
       : false
   );
 
   useEffect(() => {
     if (foldoutStatus.current && locationTag.id in foldoutStatus.current) {
-      setShowMore(foldoutStatus.current[locationTag.id].value);
+      setShowMore(foldoutStatus.current[locationTag.id].isOpen);
     }
   }, [foldoutStatus, locationTag.id]);
 
@@ -63,11 +63,7 @@ const LocationBranch = ({
         showMore={showMore}
         onToggleShowMore={() => {
           if (foldoutStatus.current) {
-            if (locationTag.id in foldoutStatus.current) {
-              foldoutStatus.current[locationTag.id].value = !showMore;
-            } else {
-              foldoutStatus.current[locationTag.id] = { value: !showMore };
-            }
+            foldoutStatus.current[locationTag.id] = { isOpen: !showMore };
           }
           setShowMore(prev => !prev);
         }}
