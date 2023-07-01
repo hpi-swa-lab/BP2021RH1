@@ -1,4 +1,5 @@
 import { History, Location } from 'history';
+import { LatLng } from 'leaflet';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useScrollRef } from '../hooks/context-hooks';
@@ -19,6 +20,7 @@ type LocationState = {
   showBack?: boolean;
   scrollPos?: number;
   open?: boolean;
+  mapState?: { center: LatLng; zoom: number };
 };
 export type LocationWithState = Location & { state?: LocationState };
 
@@ -29,11 +31,19 @@ export const useVisit = () => {
   const growthbook = useGrowthBook();
 
   const visit = useCallback(
-    (url: string, options?: { state?: LocationState; wasOpen?: boolean }) => {
+    (
+      url: string,
+      options?: {
+        state?: LocationState;
+        wasOpen?: boolean;
+        mapState?: { center: LatLng; zoom: number };
+      }
+    ) => {
       history.replace(history.location.pathname, {
         ...history.location.state,
         scrollPos: scrollRef.current,
         open: options?.wasOpen,
+        mapState: options?.mapState,
       });
       history.push(url, { showBack: options?.state?.showBack ?? true, ...options?.state });
       growthbook?.setURL(window.location.href);

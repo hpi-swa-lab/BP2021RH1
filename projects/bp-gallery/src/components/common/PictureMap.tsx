@@ -1,16 +1,20 @@
 import { LatLng, Map } from 'leaflet';
 import { useMemo, useRef, useState } from 'react';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
+import { useVisit } from '../../helpers/history';
 import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
 import { FlatPicture, FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import Loading from './Loading';
 import PictureMapView from './PictureMapView';
 
 const PictureMap = () => {
+  const { location } = useVisit();
+
   const initialMapValues = useMemo(() => {
-    return { center: new LatLng(51.8392573, 10.5279953), zoom: 10 };
-  }, []);
-  const [isMaximized, setIsMaximized] = useState<boolean>(false);
+    return location.state?.mapState ?? { center: new LatLng(51.8392573, 10.5279953), zoom: 10 };
+  }, [location.state?.mapState]);
+
+  const [isMaximized, setIsMaximized] = useState<boolean>(location.state?.open ?? false);
   const map = useRef<Map>(null);
 
   const { data, loading } = useGetTagsWithThumbnail(
@@ -19,7 +23,7 @@ const PictureMap = () => {
     TagType.LOCATION,
     ['name:asc'],
     undefined,
-    'no-cache',
+    'cache-first',
     true
   );
 
@@ -32,19 +36,22 @@ const PictureMap = () => {
       })[]
     | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const localMap = (
-    <PictureMapView
-      isMaximized={isMaximized}
-      setIsMaximized={setIsMaximized}
-      initialMapValues={{
-        center: map.current?.getCenter() ?? initialMapValues.center,
-        zoom: map.current?.getZoom() ?? initialMapValues.zoom,
-      }}
-      locations={flattenedTags}
-      width='w-full'
-      height={isMaximized ? 'h-full' : 'h-[500px]'}
-      map={map}
-    />
+  const localMap = useMemo(
+    () => (
+      <PictureMapView
+        isMaximized={isMaximized}
+        setIsMaximized={setIsMaximized}
+        initialMapValues={{
+          center: map.current?.getCenter() ?? initialMapValues.center,
+          zoom: map.current?.getZoom() ?? initialMapValues.zoom,
+        }}
+        locations={flattenedTags}
+        width='w-full'
+        height={isMaximized ? 'h-full' : 'h-[500px]'}
+        map={map}
+      />
+    ),
+    [flattenedTags, initialMapValues.center, initialMapValues.zoom, isMaximized]
   );
 
   if (loading) {

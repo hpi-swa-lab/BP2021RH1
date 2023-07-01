@@ -139,7 +139,13 @@ const PictureMapView = ({
       position: position,
       eventHandlers: {
         click: (_: any) => {
-          visit('/show-more/location/' + locationTag.id, { wasOpen: true });
+          visit('/show-more/location/' + locationTag.id, {
+            mapState: {
+              center: map.current?.getCenter() ?? initialMapValues.center,
+              zoom: map.current?.getZoom() ?? initialMapValues.zoom,
+            },
+            wasOpen: isMaximized,
+          });
         },
       },
       locationTag: locationTag,
