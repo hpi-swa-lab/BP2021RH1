@@ -15,15 +15,12 @@ import { useCreateNewTag } from './location-management-helpers';
 import { useGetTagStructures } from './tag-structure-helpers';
 
 const setUnacceptedSubtagsCount = (tag: FlatTag) => {
-  if (!tag.child_tags?.length) {
-    return tag.accepted ? 0 : 1;
-  }
   let subtagCount = 0;
-  tag.child_tags.forEach((childTag: FlatTag) => {
+  tag.child_tags?.forEach((childTag: FlatTag) => {
     subtagCount += setUnacceptedSubtagsCount(childTag);
   });
   tag.unacceptedSubtags = subtagCount;
-  return subtagCount;
+  return (tag.accepted ? 0 : 1) + subtagCount;
 };
 
 const LocationPanel = () => {
