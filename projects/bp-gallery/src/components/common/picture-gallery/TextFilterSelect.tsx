@@ -7,27 +7,29 @@ export const TextFilterSelect = ({
   value,
   onChange,
 }: {
-  value: TextFilter;
-  onChange: (newTextFilter: TextFilter) => void;
+  value: TextFilter[];
+  onChange: (newTextFilter: TextFilter[]) => void;
 }) => {
   const { t } = useTranslation();
 
   const onSelectChange = useCallback(
-    (event: SelectChangeEvent<TextFilter>) => {
-      if (event.target.value in TextFilter) {
-        onChange(event.target.value as TextFilter);
+    (event: SelectChangeEvent<TextFilter[]>) => {
+      const textFilters = event.target.value;
+      if (
+        Array.isArray(textFilters) &&
+        !textFilters.some(filter => filter in TextFilter === false)
+      ) {
+        onChange(textFilters);
       }
     },
     [onChange]
   );
 
   return (
-    <Select value={value} onChange={onSelectChange} variant='standard'>
-      <MenuItem value={TextFilter.ONLY_PICTURES}>{t('common.textFilter.onlyPictures')}</MenuItem>
-      <MenuItem value={TextFilter.PICTURES_AND_TEXTS}>
-        {t('common.textFilter.picturesAndTexts')}
-      </MenuItem>
-      <MenuItem value={TextFilter.ONLY_TEXTS}>{t('common.textFilter.onlyTexts')}</MenuItem>
+    <Select<TextFilter[]> value={value} onChange={onSelectChange} variant='standard' multiple>
+      <MenuItem value={TextFilter.INCLUDE_PICTURES}>{t('common.textFilter.onlyPictures')}</MenuItem>
+      <MenuItem value={TextFilter.INCLUDE_PDFS}>{t('common.textFilter.onlyPdfs')}</MenuItem>
+      <MenuItem value={TextFilter.INCLUDE_TEXTS}>{t('common.textFilter.onlyTexts')}</MenuItem>
     </Select>
   );
 };

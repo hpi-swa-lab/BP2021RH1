@@ -9,6 +9,9 @@ export default {
       multipleUpload(files: $files) {
         data {
           id
+          attributes {
+            ext
+          }
         }
       }
     }

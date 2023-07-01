@@ -120,7 +120,7 @@ export default {
               searchTerms: list('String'),
               // Additional search-time tuples (plain search term, parsed start, parsed end)
               searchTimes: list(list('String')),
-              textFilter: 'String',
+              textFilter: list('String'),
               pagination: 'PaginationArg',
             },
             async resolve(_, { searchTerms, searchTimes, textFilter, pagination }) {

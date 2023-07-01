@@ -34,7 +34,7 @@ const PictureOverview = ({
     queryParams,
     false,
     sortBy,
-    TextFilter.ONLY_PICTURES,
+    [TextFilter.INCLUDE_PICTURES],
     ABSOLUTE_MAX_PICTURES_PER_ROW * rows,
     'cache-and-network',
     type

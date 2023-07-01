@@ -20,11 +20,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -1709,6 +1706,7 @@ export type Picture = {
   exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
   face_tags?: Maybe<FaceTagRelationResponseCollection>;
   is_not_a_place_count?: Maybe<Scalars['Int']>;
+  is_pdf?: Maybe<Scalars['Boolean']>;
   is_text?: Maybe<Scalars['Boolean']>;
   keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
   likes?: Maybe<Scalars['Int']>;
@@ -1844,6 +1842,7 @@ export type PictureFiltersInput = {
   face_tags?: InputMaybe<FaceTagFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   is_not_a_place_count?: InputMaybe<IntFilterInput>;
+  is_pdf?: InputMaybe<BooleanFilterInput>;
   is_text?: InputMaybe<BooleanFilterInput>;
   keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
   likes?: InputMaybe<IntFilterInput>;
@@ -1920,6 +1919,7 @@ export type PictureInput = {
   exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   face_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   is_not_a_place_count?: InputMaybe<Scalars['Int']>;
+  is_pdf?: InputMaybe<Scalars['Boolean']>;
   is_text?: InputMaybe<Scalars['Boolean']>;
   keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   likes?: InputMaybe<Scalars['Int']>;
@@ -2109,7 +2109,7 @@ export type QueryFindPicturesByAllSearchArgs = {
   pagination?: InputMaybe<PaginationArg>;
   searchTerms?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   searchTimes?: InputMaybe<Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>>;
-  textFilter?: InputMaybe<Scalars['String']>;
+  textFilter?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type QueryKeywordTagArgs = {
@@ -3380,6 +3380,7 @@ export type GetMostLikedPicturesQuery = {
       id?: string | null;
       attributes?: {
         is_text?: boolean | null;
+        is_pdf?: boolean | null;
         likes?: number | null;
         comments?: { data: Array<{ id?: string | null }> } | null;
         media: {
@@ -3411,6 +3412,7 @@ export type GetMultiplePictureInfoQuery = {
       id?: string | null;
       attributes?: {
         is_text?: boolean | null;
+        is_pdf?: boolean | null;
         descriptions?: {
           data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
         } | null;
@@ -3600,6 +3602,7 @@ export type GetPictureInfoQuery = {
       id?: string | null;
       attributes?: {
         is_text?: boolean | null;
+        is_pdf?: boolean | null;
         likes?: number | null;
         descriptions?: {
           data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
@@ -3709,6 +3712,7 @@ export type GetPicturesQuery = {
       id?: string | null;
       attributes?: {
         is_text?: boolean | null;
+        is_pdf?: boolean | null;
         likes?: number | null;
         comments?: { data: Array<{ id?: string | null }> } | null;
         media: {
@@ -3736,7 +3740,7 @@ export type GetPicturesByAllSearchQueryVariables = Exact<{
   searchTimes:
     | Array<InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>>
     | InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
-  textFilter: Scalars['String'];
+  textFilter: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
 }>;
 
 export type GetPicturesByAllSearchQuery = {
@@ -3744,6 +3748,7 @@ export type GetPicturesByAllSearchQuery = {
     id?: string | null;
     attributes?: {
       is_text?: boolean | null;
+      is_pdf?: boolean | null;
       likes?: number | null;
       comments?: { data: Array<{ id?: string | null }> } | null;
       media: {
@@ -4195,7 +4200,9 @@ export type MultipleUploadMutationVariables = Exact<{
 }>;
 
 export type MultipleUploadMutation = {
-  multipleUpload: Array<{ data?: { id?: string | null } | null } | null>;
+  multipleUpload: Array<{
+    data?: { id?: string | null; attributes?: { ext?: string | null } | null } | null;
+  } | null>;
 };
 
 export type PinCommentMutationVariables = Exact<{
@@ -6303,6 +6310,7 @@ export const GetMostLikedPicturesDocument = gql`
         id
         attributes {
           is_text
+          is_pdf
           comments {
             data {
               id
@@ -6503,6 +6511,7 @@ export const GetMultiplePictureInfoDocument = gql`
             }
           }
           is_text
+          is_pdf
           linked_pictures {
             data {
               id
@@ -7026,6 +7035,7 @@ export const GetPictureInfoDocument = gql`
             }
           }
           is_text
+          is_pdf
           linked_pictures {
             data {
               id
@@ -7108,6 +7118,7 @@ export const GetPicturesDocument = gql`
         id
         attributes {
           is_text
+          is_pdf
           comments {
             data {
               id
@@ -7183,7 +7194,7 @@ export const GetPicturesByAllSearchDocument = gql`
     $pagination: PaginationArg!
     $searchTerms: [String]!
     $searchTimes: [[String]]!
-    $textFilter: String!
+    $textFilter: [String]!
   ) {
     findPicturesByAllSearch(
       pagination: $pagination
@@ -7194,6 +7205,7 @@ export const GetPicturesByAllSearchDocument = gql`
       id
       attributes {
         is_text
+        is_pdf
         comments {
           data {
             id
@@ -9796,6 +9808,9 @@ export const MultipleUploadDocument = gql`
     multipleUpload(files: $files) {
       data {
         id
+        attributes {
+          ext
+        }
       }
     }
   }

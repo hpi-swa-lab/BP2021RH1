@@ -46,7 +46,7 @@ const PictureUploadArea = ({
   onUploaded,
 }: PictureUploadAreaProps) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: Object.keys(ACCEPTED_EXTENSIONS)
+    accept: (Object.keys(ACCEPTED_EXTENSIONS) as Array<keyof typeof ACCEPTED_EXTENSIONS>)
       .map(key => ACCEPTED_EXTENSIONS[key])
       .join(','),
   });
@@ -112,11 +112,18 @@ const PictureUploadArea = ({
       return;
     }
 
-    const initializePictureFromFile = (fileId: string | null | undefined) =>
+    const initializePictureFromFile = ({
+      fileId,
+      isPdf,
+    }: {
+      fileId: string | null | undefined;
+      isPdf: boolean;
+    }) =>
       ({
         media: fileId,
         publishedAt: new Date().toISOString(),
         archive_tag: targetArchiveTag.id,
+        is_pdf: isPdf,
       } as unknown as FlatPicture);
 
     setLoading(true);
@@ -129,7 +136,10 @@ const PictureUploadArea = ({
         })
       ).data?.multipleUpload ?? []
     )
-      .map(upload => upload?.data?.id)
+      .map(upload => ({
+        fileId: upload?.data?.id,
+        isPdf: upload?.data?.attributes?.ext === '.pdf',
+      }))
       .map(initializePictureFromFile);
     await Promise.all(
       preprocessPictures(uploadedPictures).map(async picture => {

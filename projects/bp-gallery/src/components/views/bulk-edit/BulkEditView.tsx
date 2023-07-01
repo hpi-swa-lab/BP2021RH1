@@ -140,7 +140,7 @@ const BulkEditView = ({
                       hashbase={'A'}
                       showDefaultAdornments={false}
                       allowClicks={false}
-                      textFilter={TextFilter.PICTURES_AND_TEXTS}
+                      textFilter={[TextFilter.INCLUDE_PICTURES, TextFilter.INCLUDE_TEXTS]}
                     />
                   </HideStats>
                 </div>

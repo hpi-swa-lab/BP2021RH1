@@ -46,7 +46,7 @@ const PictureScrollGrid = ({
   extraAdornments?: PicturePreviewAdornment[];
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
-  textFilter: TextFilter | null;
+  textFilter: TextFilter[] | null;
   fetchPolicy?: WatchQueryFetchPolicy;
 }) => {
   const { t } = useTranslation();
@@ -54,7 +54,7 @@ const PictureScrollGrid = ({
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const [selectedTextFilter, setSelectedTextFilter] = useState(
-    textFilter ?? TextFilter.ONLY_PICTURES
+    textFilter ?? [TextFilter.INCLUDE_PICTURES]
   );
 
   const { data, loading, error, fetchMore, refetch } = useGetPictures(

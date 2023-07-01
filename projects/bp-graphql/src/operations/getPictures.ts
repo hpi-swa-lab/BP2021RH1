@@ -13,6 +13,7 @@ export default {
           id
           attributes {
             is_text
+            is_pdf
             comments {
               data {
                 id

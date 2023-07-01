@@ -2,6 +2,7 @@ import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { useCanUseUploadsView } from '../../../hooks/can-do-hooks';
+import { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
@@ -43,7 +44,7 @@ const UploadsView = () => {
               bulkEdit,
               ...(exhibitionId ? [addToExhibition] : []),
             ]}
-            textFilter={null}
+            textFilter={[TextFilter.INCLUDE_PICTURES, TextFilter.INCLUDE_PDFS]}
           />
         </HideStats>
       </div>

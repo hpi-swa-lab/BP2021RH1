@@ -5,9 +5,9 @@ import { bulkEdit, like, updatePictureWithTagCleanup } from './custom-update';
 
 // should match the enum in projects/bp-gallery/src/hooks/get-pictures.hook.ts
 export enum TextFilter {
-  ONLY_PICTURES = 'ONLY_PICTURES',
-  PICTURES_AND_TEXTS = 'PICTURES_AND_TEXTS',
-  ONLY_TEXTS = 'ONLY_TEXTS',
+  INCLUDE_PICTURES = 'INCLUDE_PICTURES',
+  INCLUDE_PDFS = 'INCLUDE_PDFS',
+  INCLUDE_TEXTS = 'INCLUDE_TEXTS',
 }
 
 /**
@@ -132,7 +132,7 @@ const buildWhere = (
   queryBuilder: QueryBuilder,
   searchTerms: any,
   searchTimes: any,
-  textFilter: TextFilter,
+  textFilter: TextFilter[],
   knexEngine: KnexEngine
 ) => {
   for (const searchObject of [...searchTerms, ...searchTimes]) {
@@ -173,19 +173,25 @@ const buildWhere = (
   // Only retrieve published pictures
   queryBuilder = queryBuilder.whereNotNull('pictures.published_at');
 
-  switch (textFilter) {
-    case TextFilter.ONLY_PICTURES:
-      queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
-        qb.where('pictures.is_text', false);
-        qb.orWhereNull('pictures.is_text');
+  const picturesQuery = (qb: QueryBuilder) =>
+    qb.orWhere((qb2: QueryBuilder) => {
+      qb2.where((qb3: QueryBuilder) => {
+        qb3.where('pictures.is_text', false).orWhereNull('pictures.is_text');
       });
-      break;
-    case TextFilter.ONLY_TEXTS:
-      queryBuilder = queryBuilder.where('pictures.is_text', true);
-      break;
-    case TextFilter.PICTURES_AND_TEXTS:
-      // no extra conditions
-      break;
+      qb2.andWhere((qb3: QueryBuilder) => {
+        qb3.where('pictures.is_pdf', false).orWhereNull('pictures.is_pdf');
+      });
+    });
+
+  const textQuery = (qb: QueryBuilder) => qb.orWhere('pictures.is_text', true);
+  const pdfQuery = (qb: QueryBuilder) => qb.orWhere('pictures.is_pdf', true);
+
+  if (textFilter.length > 0) {
+    queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
+      if (textFilter.includes(TextFilter.INCLUDE_PICTURES)) picturesQuery(qb);
+      if (textFilter.includes(TextFilter.INCLUDE_TEXTS)) textQuery(qb);
+      if (textFilter.includes(TextFilter.INCLUDE_PDFS)) pdfQuery(qb);
+    });
   }
 
   return queryBuilder;
@@ -199,7 +205,7 @@ const buildQueryForAllSearch = (
   knexEngine: KnexEngine,
   searchTerms: any,
   searchTimes: any,
-  textFilter: TextFilter,
+  textFilter: TextFilter[],
   pagination = { start: 0, limit: 100 }
 ) => {
   const withSelect = knexEngine.distinct('pictures.*').from(table('pictures'));
@@ -223,14 +229,16 @@ const findPicturesByAllSearch = async (
   knexEngine: KnexEngine,
   searchTerms: any,
   searchTimes: any,
-  textFilter: string,
+  textFilter: string[],
   pagination: { start: number; limit: number } | undefined
 ) => {
   const matchingPictures = await buildQueryForAllSearch(
     knexEngine,
     searchTerms,
     searchTimes,
-    textFilter in TextFilter ? (textFilter as TextFilter) : TextFilter.ONLY_PICTURES,
+    textFilter.some(filter => filter in TextFilter === false)
+      ? [TextFilter.INCLUDE_PICTURES]
+      : (textFilter as TextFilter[]),
     pagination
   );
   return matchingPictures.map((picture: { id: number; is_text: boolean; likes: number }) => ({
@@ -259,9 +267,9 @@ const archivePictureCounts = async (knexEngine: KnexEngine) => {
 };
 
 export {
-  findPicturesByAllSearch,
-  updatePictureWithTagCleanup,
-  bulkEdit,
-  like,
   archivePictureCounts,
+  bulkEdit,
+  findPicturesByAllSearch,
+  like,
+  updatePictureWithTagCleanup,
 };

@@ -7,7 +7,7 @@ export default {
       $pagination: PaginationArg!
       $searchTerms: [String]!
       $searchTimes: [[String]]!
-      $textFilter: String!
+      $textFilter: [String]!
     ) {
       findPicturesByAllSearch(
         pagination: $pagination
@@ -18,6 +18,7 @@ export default {
         id
         attributes {
           is_text
+          is_pdf
           comments {
             data {
               id

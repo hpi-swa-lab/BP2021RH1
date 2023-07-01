@@ -13,57 +13,82 @@ export const NUMBER_OF_PICTURES_LOADED_PER_FETCH = 100;
 
 // should match the enum in projects/bp-strapi/src/api/picture/services/custom-resolver.ts
 export enum TextFilter {
-  ONLY_PICTURES = 'ONLY_PICTURES',
-  PICTURES_AND_TEXTS = 'PICTURES_AND_TEXTS',
-  ONLY_TEXTS = 'ONLY_TEXTS',
+  INCLUDE_PICTURES = 'INCLUDE_PICTURES',
+  INCLUDE_PDFS = 'INCLUDE_PDFS',
+  INCLUDE_TEXTS = 'INCLUDE_TEXTS',
 }
 
 const useGetPictures = (
   queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
   isAllSearchActive: boolean,
   sortBy?: string[],
-  textFilter = TextFilter.ONLY_PICTURES,
+  textFilter = [TextFilter.INCLUDE_PICTURES],
   limit: number = NUMBER_OF_PICTURES_LOADED_PER_FETCH,
   fetchPolicy?: WatchQueryFetchPolicy,
   type: PictureOverviewType = PictureOverviewType.CUSTOM
 ) => {
-  const filters = useMemo(() => {
-    switch (textFilter) {
-      case TextFilter.ONLY_PICTURES:
-        return {
-          and: [
-            {
-              or: [
-                {
-                  is_text: {
-                    eq: false,
-                  },
+  const textQuery = useMemo(
+    () => ({
+      is_text: {
+        eq: true,
+      },
+    }),
+    []
+  );
+
+  const pdfQuery: PictureFiltersInput = useMemo(
+    () => ({
+      is_pdf: {
+        eq: true,
+      },
+    }),
+    []
+  );
+
+  const picturesQuery = useMemo(
+    () =>
+      ({
+        and: [
+          {
+            or: [
+              {
+                is_text: {
+                  eq: false,
                 },
-                {
-                  is_text: {
-                    null: true,
-                  },
-                },
-              ],
-            },
-            queryParams as PictureFiltersInput,
-          ],
-        };
-      case TextFilter.ONLY_TEXTS:
-        return {
-          and: [
-            {
-              is_text: {
-                eq: true,
               },
-            },
-            queryParams as PictureFiltersInput,
-          ],
-        };
-      case TextFilter.PICTURES_AND_TEXTS:
-        return queryParams as PictureFiltersInput;
-    }
-  }, [textFilter, queryParams]);
+              {
+                is_text: {
+                  null: true,
+                },
+              },
+            ],
+          },
+          {
+            or: [
+              {
+                is_pdf: {
+                  eq: false,
+                },
+              },
+              {
+                is_pdf: {
+                  null: true,
+                },
+              },
+            ],
+          },
+        ],
+      } as PictureFiltersInput),
+    []
+  );
+
+  const filters = useMemo(() => {
+    const filter: PictureFiltersInput = { and: [{ or: [] }, queryParams as PictureFiltersInput] };
+    if (textFilter.includes(TextFilter.INCLUDE_PICTURES)) filter.and?.[0]?.or?.push(picturesQuery);
+    if (textFilter.includes(TextFilter.INCLUDE_TEXTS)) filter.and?.[0]?.or?.push(textQuery);
+    if (textFilter.includes(TextFilter.INCLUDE_PDFS)) filter.and?.[0]?.or?.push(pdfQuery);
+    return filter;
+  }, [queryParams, textFilter, picturesQuery, textQuery, pdfQuery]);
 
   const queryResult = useGetPicturesQuery({
     variables: {
