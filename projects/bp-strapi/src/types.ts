@@ -92,7 +92,9 @@ type ResponseAttributes<T extends Strapi.ContentTypeUIDs> =
     }> & { id: number });
 
 type PopulateType<T extends Strapi.ContentTypeUIDs> = {
-  [K in keyof GetAttributes<T> as GetAttributes<T>[K] extends Attribute<'relation'>
+  [K in keyof GetAttributes<T> as GetAttributes<T>[K] extends Attribute<
+    'relation' | 'component' | 'dynamiczone'
+  >
     ? K
     : never]: GetAttributes<T>[K];
 };

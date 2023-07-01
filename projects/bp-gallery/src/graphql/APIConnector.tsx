@@ -2037,6 +2037,7 @@ export type Query = {
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
+  getAllLocationTags?: Maybe<Scalars['JSON']>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -2816,27 +2817,7 @@ export type GetAllKeywordTagsQuery = {
 
 export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllLocationTagsQuery = {
-  locationTags?: {
-    data: Array<{
-      id?: string | null;
-      attributes?: {
-        name: string;
-        visible?: boolean | null;
-        root?: boolean | null;
-        accepted?: boolean | null;
-        coordinates?: { latitude: number; longitude: number } | null;
-        synonyms?: Array<{ name: string } | null> | null;
-        child_tags?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
-        parent_tags?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
-      } | null;
-    }>;
-  } | null;
-};
+export type GetAllLocationTagsQuery = { getAllLocationTags?: any | null };
 
 export type GetAllPersonTagsQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -4784,40 +4765,7 @@ export type GetAllKeywordTagsQueryResult = Apollo.QueryResult<
 
 export const GetAllLocationTagsDocument = gql`
   query getAllLocationTags {
-    locationTags {
-      data {
-        id
-        attributes {
-          name
-          visible
-          root
-          accepted
-          coordinates {
-            latitude
-            longitude
-          }
-          synonyms {
-            name
-          }
-          child_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          parent_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-        }
-      }
-    }
+    getAllLocationTags
   }
 `;
 

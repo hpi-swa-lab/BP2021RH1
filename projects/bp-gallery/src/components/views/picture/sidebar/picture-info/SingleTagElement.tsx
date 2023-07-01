@@ -103,7 +103,7 @@ const SingleTagElement = ({
   return (
     <div className='recommendation-item-container'>
       <div className='recommendation-item-content'>
-        {tagSupertags && typeof option.id === 'string' && tagSupertags.length > 0 ? (
+        {tagSupertags && tagSupertags.length > 0 ? (
           <>
             {tagSupertags.length > 1 ? (
               <MultiPathTagElement

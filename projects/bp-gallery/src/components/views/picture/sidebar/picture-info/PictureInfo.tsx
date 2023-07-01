@@ -94,7 +94,7 @@ const PictureInfo = ({
   const openAlert = useContext(AlertContext);
 
   const allKeywords = useSimplifiedQueryResponseData(keywordsResponse.data)?.keywordTags;
-  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.locationTags;
+  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.getAllLocationTags;
   const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
   const allCollections = useSimplifiedQueryResponseData(collectionsResponse.data)?.collections;
 
