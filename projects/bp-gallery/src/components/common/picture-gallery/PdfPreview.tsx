@@ -1,5 +1,5 @@
 import { PictureAsPdf } from '@mui/icons-material';
-import { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react';
+import { MouseEventHandler, useMemo, useRef, useState } from 'react';
 import { Document, Thumbnail } from 'react-pdf';
 import { PageCallback } from 'react-pdf/dist/cjs/shared/types';
 import { PictureOrigin, asUploadPath } from '../../../helpers/app-helpers';
@@ -34,19 +34,6 @@ const PdfPreview = ({
   const [hovered, setHovered] = useState(false);
 
   const test = useRef<HTMLDivElement>(null);
-
-  const width = useMemo(() => {
-    if (!page?.originalWidth || !test.current?.clientWidth) return undefined;
-    if (page.originalWidth > test.current.clientWidth) return test.current.clientWidth;
-    return undefined;
-  }, [page?.originalWidth]);
-
-  const height = useMemo(() => {
-    if (!page?.originalHeight || !test.current?.clientHeight) return undefined;
-    if (page.originalHeight > test.current.clientHeight) return test.current.clientHeight;
-    return undefined;
-  }, [page?.originalHeight]);
-
   const resetCanvas = () => {
     if (!canvasRef.current) return;
     canvasRef.current.style.width = '100%';
@@ -61,11 +48,6 @@ const PdfPreview = ({
     [picture, hovered]
   );
 
-  useEffect(() => {
-    resetCanvas();
-    setLoading(false);
-  }, [page]);
-
   return (
     <div
       className={'preview-container relative'}
@@ -77,35 +59,32 @@ const PdfPreview = ({
         flex: `${String(scale)} 1 0`,
       }}
     >
-      {/* {loading && (
+      {loading && (
         <div className='relative h-full'>
           <PictureAsPdf className='absolute !h-full !w-full opacity-30' />
           <Loading />
         </div>
-      )} */}
+      )}
       <div
         className={`picture-preview ${allowClicks ? 'allow-clicks' : ''}`}
         id={`picture-preview-for-${picture.id}`}
       >
         {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}
         <Document
-          className={`flex ${loading ? 'hidden' : ''}`}
+          className={`${loading ? 'hidden' : ''}`}
           file={asUploadPath(picture.media, { pictureOrigin })}
-          loading={
-            <div className='relative h-full'>
-              <PictureAsPdf className='absolute !h-full !w-full opacity-30' />
-              <Loading />
-            </div>
-          }
         >
           <Thumbnail
             pageIndex={0}
-            width={width}
-            height={height}
+            loading={() => {
+              setLoading(true);
+              return <></>;
+            }}
             onLoadSuccess={page => setPage(page)}
             canvasRef={canvasRef}
             onRenderSuccess={() => {
               resetCanvas();
+              setLoading(false);
             }}
           />
         </Document>
