@@ -113,7 +113,7 @@ const LocationManagementDialogPreset = ({
     : (dialogProps.content.locationTag as FlatTag);
 
   const tagPicturesQueryResponse = tagPictures({
-    variables: { tagID: locationTag.id },
+    variables: { tagIDs: [locationTag.id] },
     fetchPolicy: 'no-cache',
   });
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
@@ -405,7 +405,7 @@ const LocationManagementDialogPreset = ({
               <div className='location-management-picture-count'>
                 {flattenedPictures &&
                   t('tag-panel.location-pictures', {
-                    count: flattenedPictures.locationTag.pictures.length,
+                    count: flattenedPictures.locationTags[0].pictures.length,
                   })}
               </div>
               <Button

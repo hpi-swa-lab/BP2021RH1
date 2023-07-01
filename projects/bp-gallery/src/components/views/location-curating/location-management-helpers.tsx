@@ -6,6 +6,7 @@ import {
   ComponentCommonSynonymsInput,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { getDescendants } from '../../../helpers/tree-helpers';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
@@ -519,26 +520,28 @@ export const useDeleteTag = (
     refetch,
     parentTag
   );
+  const descendants = getDescendants(locationTag, 'child_tags');
+
   const tagPicturesQueryResponse = tagPictures({
-    variables: { tagID: locationTag.id },
+    variables: { tagIDs: [locationTag.id] },
     fetchPolicy: 'no-cache',
   });
-  const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
+  const flattenedTagPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
+
+  const descendantsPicturesQueryResponse = tagPictures({
+    variables: { tagIDs: descendants },
+    fetchPolicy: 'no-cache',
+  });
+
+  const flattenedDescendantsPictures = useSimplifiedQueryResponseData(
+    descendantsPicturesQueryResponse.data
+  );
 
   const { canDeleteTag: canRunDeleteTag, canUpdateTagParent: canRunUpdateTagParent } =
     useLocationPanelPermissions();
   const canDeleteTag = canRunDeleteTag && canRunUpdateTagParent;
 
   const deleteTag = useCallback(async () => {
-    if (flattenedPictures?.locationTag.pictures.length) {
-      await prompt({
-        preset: DialogPreset.CONFIRM,
-        title: t('tag-panel.not-allowed-to-delete', {
-          count: flattenedPictures.locationTag.pictures.length,
-        }),
-      });
-      return;
-    }
     const deleteOption = await prompt({
       title: t(`tag-panel.should-delete-${TagType.LOCATION}`),
       content: locationTag.name,
@@ -561,6 +564,28 @@ export const useDeleteTag = (
       ],
     });
     if (deleteOption === deleteOptions.ABORT) return;
+    if (flattenedTagPictures?.locationTags[0].pictures.length) {
+      await prompt({
+        preset: DialogPreset.CONFIRM,
+        title: t('tag-panel.not-allowed-to-delete', {
+          count: flattenedTagPictures.locationTags[0].pictures.length,
+        }),
+      });
+      return;
+    }
+    if (deleteOption === deleteOptions.DELETE_TAG_AND_CHILDREN) {
+      const tags: any[] = flattenedDescendantsPictures?.locationTags;
+      if (tags.some((tag: any) => tag.pictures.length)) {
+        await prompt({
+          preset: DialogPreset.CONFIRM,
+          title: t('tag-panel.not-allowed-to-delete-sublocation', {
+            count: 0,
+          }),
+        });
+        return;
+      }
+    }
+
     let deleteClones = -1;
     if (
       locationTag.parent_tags &&
@@ -609,7 +634,8 @@ export const useDeleteTag = (
     deleteLocalTagCloneAndMoveUpChildren,
     deleteSingleTag,
     deleteTags,
-    flattenedPictures,
+    flattenedDescendantsPictures,
+    flattenedTagPictures,
     locationTag,
     prompt,
     t,
