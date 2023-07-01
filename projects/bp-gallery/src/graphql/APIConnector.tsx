@@ -1,12 +1,18 @@
-import * as Apollo from '@apollo/client';
-/* eslint-disable react-refresh/only-export-components */ import { gql } from '@apollo/client';
 import { useAuthChangeEffect } from '../hooks/auth-change-effect.hook';
+import { ErrorPolicy, gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+
 export type Maybe<T> = T | null;
+
 export type InputMaybe<T> = Maybe<T>;
+
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions = { errorPolicy: 'all' } as const;
+
+const defaultOptions = { errorPolicy: 'all' as ErrorPolicy } as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -767,6 +773,7 @@ export type GenericMorph =
   | PersonTag
   | Picture
   | PictureGeoInfo
+  | PictureSequence
   | TimeRangeTag
   | UploadFile
   | UploadFolder
@@ -1080,6 +1087,7 @@ export type Mutation = {
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
   createPictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  createPictureSequence?: Maybe<PictureSequenceEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   createUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -1104,6 +1112,7 @@ export type Mutation = {
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
   deletePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  deletePictureSequence?: Maybe<PictureSequenceEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -1150,6 +1159,7 @@ export type Mutation = {
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updatePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  updatePictureSequence?: Maybe<PictureSequenceEntityResponse>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -1255,6 +1265,10 @@ export type MutationCreatePictureGeoInfoArgs = {
   data: PictureGeoInfoInput;
 };
 
+export type MutationCreatePictureSequenceArgs = {
+  data: PictureSequenceInput;
+};
+
 export type MutationCreateTimeRangeTagArgs = {
   data: TimeRangeTagInput;
 };
@@ -1336,6 +1350,10 @@ export type MutationDeletePictureArgs = {
 };
 
 export type MutationDeletePictureGeoInfoArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeletePictureSequenceArgs = {
   id: Scalars['ID'];
 };
 
@@ -1528,6 +1546,11 @@ export type MutationUpdatePictureGeoInfoArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationUpdatePictureSequenceArgs = {
+  data: PictureSequenceInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdatePictureWithTagCleanupArgs = {
   data?: InputMaybe<Scalars['JSON']>;
   id?: InputMaybe<Scalars['ID']>;
@@ -1709,6 +1732,8 @@ export type Picture = {
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
   picture_geo_infos?: Maybe<PictureGeoInfoRelationResponseCollection>;
+  picture_sequence?: Maybe<PictureSequenceEntityResponse>;
+  picture_sequence_order?: Maybe<Scalars['Int']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1845,6 +1870,8 @@ export type PictureFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   person_tags?: InputMaybe<PersonTagFiltersInput>;
   picture_geo_infos?: InputMaybe<PictureGeoInfoFiltersInput>;
+  picture_sequence?: InputMaybe<PictureSequenceFiltersInput>;
+  picture_sequence_order?: InputMaybe<IntFilterInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -1920,6 +1947,8 @@ export type PictureInput = {
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   picture_geo_infos?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  picture_sequence?: InputMaybe<Scalars['ID']>;
+  picture_sequence_order?: InputMaybe<Scalars['Int']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1931,6 +1960,50 @@ export type PictureInput = {
 
 export type PictureRelationResponseCollection = {
   data: Array<PictureEntity>;
+};
+
+export type PictureSequence = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PictureSequencePicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureSequenceEntity = {
+  attributes?: Maybe<PictureSequence>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PictureSequenceEntityResponse = {
+  data?: Maybe<PictureSequenceEntity>;
+};
+
+export type PictureSequenceEntityResponseCollection = {
+  data: Array<PictureSequenceEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type PictureSequenceFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<PictureSequenceFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type PictureSequenceInput = {
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export enum PublicationState {
@@ -1976,6 +2049,8 @@ export type Query = {
   picture?: Maybe<PictureEntityResponse>;
   pictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   pictureGeoInfos?: Maybe<PictureGeoInfoEntityResponseCollection>;
+  pictureSequence?: Maybe<PictureSequenceEntityResponse>;
+  pictureSequences?: Maybe<PictureSequenceEntityResponseCollection>;
   pictures?: Maybe<PictureEntityResponseCollection>;
   timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
@@ -2165,6 +2240,17 @@ export type QueryPictureGeoInfoArgs = {
 export type QueryPictureGeoInfosArgs = {
   filters?: InputMaybe<PictureGeoInfoFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryPictureSequenceArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPictureSequencesArgs = {
+  filters?: InputMaybe<PictureSequenceFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -3302,6 +3388,12 @@ export type GetMostLikedPicturesQuery = {
             } | null;
           } | null;
         };
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
       } | null;
     }>;
   } | null;
@@ -3576,6 +3668,12 @@ export type GetPictureInfoQuery = {
         };
         linked_pictures?: { data: Array<{ id?: string | null }> } | null;
         linked_texts?: { data: Array<{ id?: string | null }> } | null;
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
         archive_tag?: {
           data?: {
             id?: string | null;
@@ -3614,6 +3712,12 @@ export type GetPicturesQuery = {
             } | null;
           } | null;
         };
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
       } | null;
     }>;
   } | null;
@@ -3648,6 +3752,12 @@ export type GetPicturesByAllSearchQuery = {
           } | null;
         } | null;
       };
+      picture_sequence?: {
+        data?: {
+          id?: string | null;
+          attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+        } | null;
+      } | null;
     } | null;
   } | null> | null;
 };
@@ -3932,6 +4042,14 @@ export type CreatePictureGeoInfoMutationVariables = Exact<{
 
 export type CreatePictureGeoInfoMutation = {
   createPictureGeoInfo?: { data?: { id?: string | null } | null } | null;
+};
+
+export type CreatePictureSequenceMutationVariables = Exact<{
+  pictures: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+export type CreatePictureSequenceMutation = {
+  createPictureSequence?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreateSubCollectionMutationVariables = Exact<{
@@ -4366,6 +4484,14 @@ export type UpdatePictureMutationVariables = Exact<{
 
 export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null };
 
+export type UpdatePictureSequenceDataMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+  pictureSequence?: InputMaybe<Scalars['ID']>;
+  pictureSequenceOrder?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdatePictureSequenceDataMutation = { updatePictureWithTagCleanup?: string | null };
+
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];
   username?: InputMaybe<Scalars['String']>;
@@ -4413,6 +4539,7 @@ export function useCanRunOperationQuery(
     options
   );
 }
+
 export function useCanRunOperationLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>
 ) {
@@ -4422,12 +4549,16 @@ export function useCanRunOperationLazyQuery(
     options
   );
 }
+
 export type CanRunOperationQueryHookResult = ReturnType<typeof useCanRunOperationQuery>;
+
 export type CanRunOperationLazyQueryHookResult = ReturnType<typeof useCanRunOperationLazyQuery>;
+
 export type CanRunOperationQueryResult = Apollo.QueryResult<
   CanRunOperationQuery,
   CanRunOperationQueryVariables
 >;
+
 export const GetAllArchiveTagsDocument = gql`
   query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
     archiveTags(sort: $sortBy) {
@@ -4483,6 +4614,7 @@ export function useGetAllArchiveTagsQuery(
     options
   );
 }
+
 export function useGetAllArchiveTagsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetAllArchiveTagsQuery, GetAllArchiveTagsQueryVariables>
 ) {
@@ -4492,12 +4624,16 @@ export function useGetAllArchiveTagsLazyQuery(
     options
   );
 }
+
 export type GetAllArchiveTagsQueryHookResult = ReturnType<typeof useGetAllArchiveTagsQuery>;
+
 export type GetAllArchiveTagsLazyQueryHookResult = ReturnType<typeof useGetAllArchiveTagsLazyQuery>;
+
 export type GetAllArchiveTagsQueryResult = Apollo.QueryResult<
   GetAllArchiveTagsQuery,
   GetAllArchiveTagsQueryVariables
 >;
+
 export const GetAllCollectionsDocument = gql`
   query getAllCollections {
     collections(publicationState: PREVIEW) {
@@ -4543,6 +4679,7 @@ export function useGetAllCollectionsQuery(
     options
   );
 }
+
 export function useGetAllCollectionsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetAllCollectionsQuery, GetAllCollectionsQueryVariables>
 ) {
@@ -4552,12 +4689,16 @@ export function useGetAllCollectionsLazyQuery(
     options
   );
 }
+
 export type GetAllCollectionsQueryHookResult = ReturnType<typeof useGetAllCollectionsQuery>;
+
 export type GetAllCollectionsLazyQueryHookResult = ReturnType<typeof useGetAllCollectionsLazyQuery>;
+
 export type GetAllCollectionsQueryResult = Apollo.QueryResult<
   GetAllCollectionsQuery,
   GetAllCollectionsQueryVariables
 >;
+
 export const GetAllKeywordTagsDocument = gql`
   query getAllKeywordTags {
     keywordTags {
@@ -4599,6 +4740,7 @@ export function useGetAllKeywordTagsQuery(
     options
   );
 }
+
 export function useGetAllKeywordTagsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetAllKeywordTagsQuery, GetAllKeywordTagsQueryVariables>
 ) {
@@ -4608,12 +4750,16 @@ export function useGetAllKeywordTagsLazyQuery(
     options
   );
 }
+
 export type GetAllKeywordTagsQueryHookResult = ReturnType<typeof useGetAllKeywordTagsQuery>;
+
 export type GetAllKeywordTagsLazyQueryHookResult = ReturnType<typeof useGetAllKeywordTagsLazyQuery>;
+
 export type GetAllKeywordTagsQueryResult = Apollo.QueryResult<
   GetAllKeywordTagsQuery,
   GetAllKeywordTagsQueryVariables
 >;
+
 export const GetAllLocationTagsDocument = gql`
   query getAllLocationTags {
     getAllLocationTags
@@ -4644,6 +4790,7 @@ export function useGetAllLocationTagsQuery(
     options
   );
 }
+
 export function useGetAllLocationTagsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetAllLocationTagsQuery,
@@ -4656,14 +4803,18 @@ export function useGetAllLocationTagsLazyQuery(
     options
   );
 }
+
 export type GetAllLocationTagsQueryHookResult = ReturnType<typeof useGetAllLocationTagsQuery>;
+
 export type GetAllLocationTagsLazyQueryHookResult = ReturnType<
   typeof useGetAllLocationTagsLazyQuery
 >;
+
 export type GetAllLocationTagsQueryResult = Apollo.QueryResult<
   GetAllLocationTagsQuery,
   GetAllLocationTagsQueryVariables
 >;
+
 export const GetAllPersonTagsDocument = gql`
   query getAllPersonTags {
     personTags {
@@ -4704,6 +4855,7 @@ export function useGetAllPersonTagsQuery(
     options
   );
 }
+
 export function useGetAllPersonTagsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetAllPersonTagsQuery, GetAllPersonTagsQueryVariables>
 ) {
@@ -4713,12 +4865,16 @@ export function useGetAllPersonTagsLazyQuery(
     options
   );
 }
+
 export type GetAllPersonTagsQueryHookResult = ReturnType<typeof useGetAllPersonTagsQuery>;
+
 export type GetAllPersonTagsLazyQueryHookResult = ReturnType<typeof useGetAllPersonTagsLazyQuery>;
+
 export type GetAllPersonTagsQueryResult = Apollo.QueryResult<
   GetAllPersonTagsQuery,
   GetAllPersonTagsQueryVariables
 >;
+
 export const GetAllPictureIdsDocument = gql`
   query getAllPictureIds {
     pictures {
@@ -4753,6 +4909,7 @@ export function useGetAllPictureIdsQuery(
     options
   );
 }
+
 export function useGetAllPictureIdsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetAllPictureIdsQuery, GetAllPictureIdsQueryVariables>
 ) {
@@ -4762,12 +4919,16 @@ export function useGetAllPictureIdsLazyQuery(
     options
   );
 }
+
 export type GetAllPictureIdsQueryHookResult = ReturnType<typeof useGetAllPictureIdsQuery>;
+
 export type GetAllPictureIdsLazyQueryHookResult = ReturnType<typeof useGetAllPictureIdsLazyQuery>;
+
 export type GetAllPictureIdsQueryResult = Apollo.QueryResult<
   GetAllPictureIdsQuery,
   GetAllPictureIdsQueryVariables
 >;
+
 export const GetArchiveDocument = gql`
   query getArchive($archiveId: ID!) {
     archiveTag(id: $archiveId) {
@@ -4851,6 +5012,7 @@ export function useGetArchiveQuery(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetArchiveQuery, GetArchiveQueryVariables>(GetArchiveDocument, options);
 }
+
 export function useGetArchiveLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetArchiveQuery, GetArchiveQueryVariables>
 ) {
@@ -4860,9 +5022,13 @@ export function useGetArchiveLazyQuery(
     options
   );
 }
+
 export type GetArchiveQueryHookResult = ReturnType<typeof useGetArchiveQuery>;
+
 export type GetArchiveLazyQueryHookResult = ReturnType<typeof useGetArchiveLazyQuery>;
+
 export type GetArchiveQueryResult = Apollo.QueryResult<GetArchiveQuery, GetArchiveQueryVariables>;
+
 export const GetArchiveNamesDocument = gql`
   query getArchiveNames(
     $filters: ArchiveTagFiltersInput = {}
@@ -4905,6 +5071,7 @@ export function useGetArchiveNamesQuery(
     options
   );
 }
+
 export function useGetArchiveNamesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetArchiveNamesQuery, GetArchiveNamesQueryVariables>
 ) {
@@ -4914,12 +5081,16 @@ export function useGetArchiveNamesLazyQuery(
     options
   );
 }
+
 export type GetArchiveNamesQueryHookResult = ReturnType<typeof useGetArchiveNamesQuery>;
+
 export type GetArchiveNamesLazyQueryHookResult = ReturnType<typeof useGetArchiveNamesLazyQuery>;
+
 export type GetArchiveNamesQueryResult = Apollo.QueryResult<
   GetArchiveNamesQuery,
   GetArchiveNamesQueryVariables
 >;
+
 export const GetArchivePictureCountsDocument = gql`
   query getArchivePictureCounts {
     archivePictureCounts {
@@ -4960,6 +5131,7 @@ export function useGetArchivePictureCountsQuery(
     options
   );
 }
+
 export function useGetArchivePictureCountsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetArchivePictureCountsQuery,
@@ -4972,16 +5144,20 @@ export function useGetArchivePictureCountsLazyQuery(
     options
   );
 }
+
 export type GetArchivePictureCountsQueryHookResult = ReturnType<
   typeof useGetArchivePictureCountsQuery
 >;
+
 export type GetArchivePictureCountsLazyQueryHookResult = ReturnType<
   typeof useGetArchivePictureCountsLazyQuery
 >;
+
 export type GetArchivePictureCountsQueryResult = Apollo.QueryResult<
   GetArchivePictureCountsQuery,
   GetArchivePictureCountsQueryVariables
 >;
+
 export const GetCollectionInfoByIdDocument = gql`
   query getCollectionInfoById($collectionId: ID!) {
     collection(id: $collectionId) {
@@ -5051,6 +5227,7 @@ export function useGetCollectionInfoByIdQuery(
     options
   );
 }
+
 export function useGetCollectionInfoByIdLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetCollectionInfoByIdQuery,
@@ -5063,14 +5240,18 @@ export function useGetCollectionInfoByIdLazyQuery(
     options
   );
 }
+
 export type GetCollectionInfoByIdQueryHookResult = ReturnType<typeof useGetCollectionInfoByIdQuery>;
+
 export type GetCollectionInfoByIdLazyQueryHookResult = ReturnType<
   typeof useGetCollectionInfoByIdLazyQuery
 >;
+
 export type GetCollectionInfoByIdQueryResult = Apollo.QueryResult<
   GetCollectionInfoByIdQuery,
   GetCollectionInfoByIdQueryVariables
 >;
+
 export const GetCollectionInfoByNameDocument = gql`
   query getCollectionInfoByName($collectionName: String) {
     collections(filters: { name: { eq: $collectionName } }, publicationState: PREVIEW) {
@@ -5123,6 +5304,7 @@ export function useGetCollectionInfoByNameQuery(
     options
   );
 }
+
 export function useGetCollectionInfoByNameLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetCollectionInfoByNameQuery,
@@ -5135,16 +5317,20 @@ export function useGetCollectionInfoByNameLazyQuery(
     options
   );
 }
+
 export type GetCollectionInfoByNameQueryHookResult = ReturnType<
   typeof useGetCollectionInfoByNameQuery
 >;
+
 export type GetCollectionInfoByNameLazyQueryHookResult = ReturnType<
   typeof useGetCollectionInfoByNameLazyQuery
 >;
+
 export type GetCollectionInfoByNameQueryResult = Apollo.QueryResult<
   GetCollectionInfoByNameQuery,
   GetCollectionInfoByNameQueryVariables
 >;
+
 export const GetDailyPictureInfoDocument = gql`
   query getDailyPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
@@ -5235,6 +5421,7 @@ export function useGetDailyPictureInfoQuery(
     options
   );
 }
+
 export function useGetDailyPictureInfoLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetDailyPictureInfoQuery,
@@ -5247,14 +5434,18 @@ export function useGetDailyPictureInfoLazyQuery(
     options
   );
 }
+
 export type GetDailyPictureInfoQueryHookResult = ReturnType<typeof useGetDailyPictureInfoQuery>;
+
 export type GetDailyPictureInfoLazyQueryHookResult = ReturnType<
   typeof useGetDailyPictureInfoLazyQuery
 >;
+
 export type GetDailyPictureInfoQueryResult = Apollo.QueryResult<
   GetDailyPictureInfoQuery,
   GetDailyPictureInfoQueryVariables
 >;
+
 export const GetDecadePreviewThumbnailsDocument = gql`
   query getDecadePreviewThumbnails(
     $filter40s: PictureFiltersInput!
@@ -5414,6 +5605,7 @@ export function useGetDecadePreviewThumbnailsQuery(
     options
   );
 }
+
 export function useGetDecadePreviewThumbnailsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetDecadePreviewThumbnailsQuery,
@@ -5426,16 +5618,20 @@ export function useGetDecadePreviewThumbnailsLazyQuery(
     GetDecadePreviewThumbnailsQueryVariables
   >(GetDecadePreviewThumbnailsDocument, options);
 }
+
 export type GetDecadePreviewThumbnailsQueryHookResult = ReturnType<
   typeof useGetDecadePreviewThumbnailsQuery
 >;
+
 export type GetDecadePreviewThumbnailsLazyQueryHookResult = ReturnType<
   typeof useGetDecadePreviewThumbnailsLazyQuery
 >;
+
 export type GetDecadePreviewThumbnailsQueryResult = Apollo.QueryResult<
   GetDecadePreviewThumbnailsQuery,
   GetDecadePreviewThumbnailsQueryVariables
 >;
+
 export const GetExhibitionDocument = gql`
   query getExhibition($exhibitionId: ID!) {
     exhibition(id: $exhibitionId) {
@@ -5580,6 +5776,7 @@ export function useGetExhibitionQuery(
     options
   );
 }
+
 export function useGetExhibitionLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetExhibitionQuery, GetExhibitionQueryVariables>
 ) {
@@ -5589,12 +5786,16 @@ export function useGetExhibitionLazyQuery(
     options
   );
 }
+
 export type GetExhibitionQueryHookResult = ReturnType<typeof useGetExhibitionQuery>;
+
 export type GetExhibitionLazyQueryHookResult = ReturnType<typeof useGetExhibitionLazyQuery>;
+
 export type GetExhibitionQueryResult = Apollo.QueryResult<
   GetExhibitionQuery,
   GetExhibitionQueryVariables
 >;
+
 export const GetExhibitionsDocument = gql`
   query getExhibitions($archiveId: ID, $sortBy: [String] = ["createdAt:desc"]) {
     exhibitions(filters: { archive_tag: { id: { eq: $archiveId } } }, sort: $sortBy) {
@@ -5668,6 +5869,7 @@ export function useGetExhibitionsQuery(
     options
   );
 }
+
 export function useGetExhibitionsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetExhibitionsQuery, GetExhibitionsQueryVariables>
 ) {
@@ -5677,12 +5879,16 @@ export function useGetExhibitionsLazyQuery(
     options
   );
 }
+
 export type GetExhibitionsQueryHookResult = ReturnType<typeof useGetExhibitionsQuery>;
+
 export type GetExhibitionsLazyQueryHookResult = ReturnType<typeof useGetExhibitionsLazyQuery>;
+
 export type GetExhibitionsQueryResult = Apollo.QueryResult<
   GetExhibitionsQuery,
   GetExhibitionsQueryVariables
 >;
+
 export const GetFaceTagsDocument = gql`
   query getFaceTags($pictureId: ID!) {
     faceTags(filters: { picture: { id: { eq: $pictureId } } }) {
@@ -5728,6 +5934,7 @@ export function useGetFaceTagsQuery(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetFaceTagsQuery, GetFaceTagsQueryVariables>(GetFaceTagsDocument, options);
 }
+
 export function useGetFaceTagsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetFaceTagsQuery, GetFaceTagsQueryVariables>
 ) {
@@ -5737,12 +5944,16 @@ export function useGetFaceTagsLazyQuery(
     options
   );
 }
+
 export type GetFaceTagsQueryHookResult = ReturnType<typeof useGetFaceTagsQuery>;
+
 export type GetFaceTagsLazyQueryHookResult = ReturnType<typeof useGetFaceTagsLazyQuery>;
+
 export type GetFaceTagsQueryResult = Apollo.QueryResult<
   GetFaceTagsQuery,
   GetFaceTagsQueryVariables
 >;
+
 export const GetIdeaLotContentDocument = gql`
   query getIdeaLotContent($exhibitionId: ID!) {
     exhibition(id: $exhibitionId) {
@@ -5808,6 +6019,7 @@ export function useGetIdeaLotContentQuery(
     options
   );
 }
+
 export function useGetIdeaLotContentLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetIdeaLotContentQuery, GetIdeaLotContentQueryVariables>
 ) {
@@ -5817,12 +6029,16 @@ export function useGetIdeaLotContentLazyQuery(
     options
   );
 }
+
 export type GetIdeaLotContentQueryHookResult = ReturnType<typeof useGetIdeaLotContentQuery>;
+
 export type GetIdeaLotContentLazyQueryHookResult = ReturnType<typeof useGetIdeaLotContentLazyQuery>;
+
 export type GetIdeaLotContentQueryResult = Apollo.QueryResult<
   GetIdeaLotContentQuery,
   GetIdeaLotContentQueryVariables
 >;
+
 export const GetKeywordTagsWithThumbnailDocument = gql`
   query getKeywordTagsWithThumbnail(
     $filters: KeywordTagFiltersInput = {}
@@ -5903,6 +6119,7 @@ export function useGetKeywordTagsWithThumbnailQuery(
     GetKeywordTagsWithThumbnailQueryVariables
   >(GetKeywordTagsWithThumbnailDocument, options);
 }
+
 export function useGetKeywordTagsWithThumbnailLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetKeywordTagsWithThumbnailQuery,
@@ -5915,16 +6132,20 @@ export function useGetKeywordTagsWithThumbnailLazyQuery(
     GetKeywordTagsWithThumbnailQueryVariables
   >(GetKeywordTagsWithThumbnailDocument, options);
 }
+
 export type GetKeywordTagsWithThumbnailQueryHookResult = ReturnType<
   typeof useGetKeywordTagsWithThumbnailQuery
 >;
+
 export type GetKeywordTagsWithThumbnailLazyQueryHookResult = ReturnType<
   typeof useGetKeywordTagsWithThumbnailLazyQuery
 >;
+
 export type GetKeywordTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetKeywordTagsWithThumbnailQuery,
   GetKeywordTagsWithThumbnailQueryVariables
 >;
+
 export const GetLocationTagsWithThumbnailDocument = gql`
   query getLocationTagsWithThumbnail(
     $filters: LocationTagFiltersInput = {}
@@ -6005,6 +6226,7 @@ export function useGetLocationTagsWithThumbnailQuery(
     GetLocationTagsWithThumbnailQueryVariables
   >(GetLocationTagsWithThumbnailDocument, options);
 }
+
 export function useGetLocationTagsWithThumbnailLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetLocationTagsWithThumbnailQuery,
@@ -6017,16 +6239,20 @@ export function useGetLocationTagsWithThumbnailLazyQuery(
     GetLocationTagsWithThumbnailQueryVariables
   >(GetLocationTagsWithThumbnailDocument, options);
 }
+
 export type GetLocationTagsWithThumbnailQueryHookResult = ReturnType<
   typeof useGetLocationTagsWithThumbnailQuery
 >;
+
 export type GetLocationTagsWithThumbnailLazyQueryHookResult = ReturnType<
   typeof useGetLocationTagsWithThumbnailLazyQuery
 >;
+
 export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetLocationTagsWithThumbnailQuery,
   GetLocationTagsWithThumbnailQueryVariables
 >;
+
 export const GetMostLikedPicturesDocument = gql`
   query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
     pictures(
@@ -6054,6 +6280,18 @@ export const GetMostLikedPicturesDocument = gql`
                 url
                 updatedAt
                 provider
+              }
+            }
+          }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
               }
             }
           }
@@ -6092,6 +6330,7 @@ export function useGetMostLikedPicturesQuery(
     options
   );
 }
+
 export function useGetMostLikedPicturesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetMostLikedPicturesQuery,
@@ -6104,14 +6343,18 @@ export function useGetMostLikedPicturesLazyQuery(
     options
   );
 }
+
 export type GetMostLikedPicturesQueryHookResult = ReturnType<typeof useGetMostLikedPicturesQuery>;
+
 export type GetMostLikedPicturesLazyQueryHookResult = ReturnType<
   typeof useGetMostLikedPicturesLazyQuery
 >;
+
 export type GetMostLikedPicturesQueryResult = Apollo.QueryResult<
   GetMostLikedPicturesQuery,
   GetMostLikedPicturesQueryVariables
 >;
+
 export const GetMultiplePictureInfoDocument = gql`
   query getMultiplePictureInfo($pictureIds: [ID!]) {
     pictures(filters: { id: { in: $pictureIds } }) {
@@ -6283,6 +6526,7 @@ export function useGetMultiplePictureInfoQuery(
     options
   );
 }
+
 export function useGetMultiplePictureInfoLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetMultiplePictureInfoQuery,
@@ -6295,16 +6539,20 @@ export function useGetMultiplePictureInfoLazyQuery(
     options
   );
 }
+
 export type GetMultiplePictureInfoQueryHookResult = ReturnType<
   typeof useGetMultiplePictureInfoQuery
 >;
+
 export type GetMultiplePictureInfoLazyQueryHookResult = ReturnType<
   typeof useGetMultiplePictureInfoLazyQuery
 >;
+
 export type GetMultiplePictureInfoQueryResult = Apollo.QueryResult<
   GetMultiplePictureInfoQuery,
   GetMultiplePictureInfoQueryVariables
 >;
+
 export const GetParameterizedPermissionsDocument = gql`
   query getParameterizedPermissions($userId: ID) {
     parameterizedPermissions(filters: { users_permissions_user: { id: { eq: $userId } } }) {
@@ -6352,6 +6600,7 @@ export function useGetParameterizedPermissionsQuery(
     GetParameterizedPermissionsQueryVariables
   >(GetParameterizedPermissionsDocument, options);
 }
+
 export function useGetParameterizedPermissionsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetParameterizedPermissionsQuery,
@@ -6364,16 +6613,20 @@ export function useGetParameterizedPermissionsLazyQuery(
     GetParameterizedPermissionsQueryVariables
   >(GetParameterizedPermissionsDocument, options);
 }
+
 export type GetParameterizedPermissionsQueryHookResult = ReturnType<
   typeof useGetParameterizedPermissionsQuery
 >;
+
 export type GetParameterizedPermissionsLazyQueryHookResult = ReturnType<
   typeof useGetParameterizedPermissionsLazyQuery
 >;
+
 export type GetParameterizedPermissionsQueryResult = Apollo.QueryResult<
   GetParameterizedPermissionsQuery,
   GetParameterizedPermissionsQueryVariables
 >;
+
 export const GetPersonTagDocument = gql`
   query getPersonTag($id: ID!) {
     personTag(id: $id) {
@@ -6411,6 +6664,7 @@ export function useGetPersonTagQuery(
     options
   );
 }
+
 export function useGetPersonTagLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetPersonTagQuery, GetPersonTagQueryVariables>
 ) {
@@ -6420,12 +6674,16 @@ export function useGetPersonTagLazyQuery(
     options
   );
 }
+
 export type GetPersonTagQueryHookResult = ReturnType<typeof useGetPersonTagQuery>;
+
 export type GetPersonTagLazyQueryHookResult = ReturnType<typeof useGetPersonTagLazyQuery>;
+
 export type GetPersonTagQueryResult = Apollo.QueryResult<
   GetPersonTagQuery,
   GetPersonTagQueryVariables
 >;
+
 export const GetPersonTagsWithThumbnailDocument = gql`
   query getPersonTagsWithThumbnail(
     $filters: PersonTagFiltersInput = {}
@@ -6508,6 +6766,7 @@ export function useGetPersonTagsWithThumbnailQuery(
     options
   );
 }
+
 export function useGetPersonTagsWithThumbnailLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetPersonTagsWithThumbnailQuery,
@@ -6520,16 +6779,20 @@ export function useGetPersonTagsWithThumbnailLazyQuery(
     GetPersonTagsWithThumbnailQueryVariables
   >(GetPersonTagsWithThumbnailDocument, options);
 }
+
 export type GetPersonTagsWithThumbnailQueryHookResult = ReturnType<
   typeof useGetPersonTagsWithThumbnailQuery
 >;
+
 export type GetPersonTagsWithThumbnailLazyQueryHookResult = ReturnType<
   typeof useGetPersonTagsWithThumbnailLazyQuery
 >;
+
 export type GetPersonTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetPersonTagsWithThumbnailQuery,
   GetPersonTagsWithThumbnailQueryVariables
 >;
+
 export const GetPictureGeoInfoDocument = gql`
   query getPictureGeoInfo($pictureId: ID!) {
     pictureGeoInfos(filters: { picture: { id: { eq: $pictureId } } }) {
@@ -6570,6 +6833,7 @@ export function useGetPictureGeoInfoQuery(
     options
   );
 }
+
 export function useGetPictureGeoInfoLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetPictureGeoInfoQuery, GetPictureGeoInfoQueryVariables>
 ) {
@@ -6579,12 +6843,16 @@ export function useGetPictureGeoInfoLazyQuery(
     options
   );
 }
+
 export type GetPictureGeoInfoQueryHookResult = ReturnType<typeof useGetPictureGeoInfoQuery>;
+
 export type GetPictureGeoInfoLazyQueryHookResult = ReturnType<typeof useGetPictureGeoInfoLazyQuery>;
+
 export type GetPictureGeoInfoQueryResult = Apollo.QueryResult<
   GetPictureGeoInfoQuery,
   GetPictureGeoInfoQueryVariables
 >;
+
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
     picture(id: $pictureId) {
@@ -6736,6 +7004,18 @@ export const GetPictureInfoDocument = gql`
               id
             }
           }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
           archive_tag {
             data {
               id
@@ -6777,6 +7057,7 @@ export function useGetPictureInfoQuery(
     options
   );
 }
+
 export function useGetPictureInfoLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetPictureInfoQuery, GetPictureInfoQueryVariables>
 ) {
@@ -6786,12 +7067,16 @@ export function useGetPictureInfoLazyQuery(
     options
   );
 }
+
 export type GetPictureInfoQueryHookResult = ReturnType<typeof useGetPictureInfoQuery>;
+
 export type GetPictureInfoLazyQueryHookResult = ReturnType<typeof useGetPictureInfoLazyQuery>;
+
 export type GetPictureInfoQueryResult = Apollo.QueryResult<
   GetPictureInfoQuery,
   GetPictureInfoQueryVariables
 >;
+
 export const GetPicturesDocument = gql`
   query getPictures(
     $filters: PictureFiltersInput!
@@ -6819,6 +7104,18 @@ export const GetPicturesDocument = gql`
                 url
                 updatedAt
                 provider
+              }
+            }
+          }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
               }
             }
           }
@@ -6852,6 +7149,7 @@ export function useGetPicturesQuery(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetPicturesQuery, GetPicturesQueryVariables>(GetPicturesDocument, options);
 }
+
 export function useGetPicturesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetPicturesQuery, GetPicturesQueryVariables>
 ) {
@@ -6861,12 +7159,16 @@ export function useGetPicturesLazyQuery(
     options
   );
 }
+
 export type GetPicturesQueryHookResult = ReturnType<typeof useGetPicturesQuery>;
+
 export type GetPicturesLazyQueryHookResult = ReturnType<typeof useGetPicturesLazyQuery>;
+
 export type GetPicturesQueryResult = Apollo.QueryResult<
   GetPicturesQuery,
   GetPicturesQueryVariables
 >;
+
 export const GetPicturesByAllSearchDocument = gql`
   query getPicturesByAllSearch(
     $pagination: PaginationArg!
@@ -6899,6 +7201,18 @@ export const GetPicturesByAllSearchDocument = gql`
               url
               updatedAt
               provider
+            }
+          }
+        }
+        picture_sequence {
+          data {
+            id
+            attributes {
+              pictures(sort: "picture_sequence_order:asc") {
+                data {
+                  id
+                }
+              }
             }
           }
         }
@@ -6938,6 +7252,7 @@ export function useGetPicturesByAllSearchQuery(
     options
   );
 }
+
 export function useGetPicturesByAllSearchLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetPicturesByAllSearchQuery,
@@ -6950,16 +7265,20 @@ export function useGetPicturesByAllSearchLazyQuery(
     options
   );
 }
+
 export type GetPicturesByAllSearchQueryHookResult = ReturnType<
   typeof useGetPicturesByAllSearchQuery
 >;
+
 export type GetPicturesByAllSearchLazyQueryHookResult = ReturnType<
   typeof useGetPicturesByAllSearchLazyQuery
 >;
+
 export type GetPicturesByAllSearchQueryResult = Apollo.QueryResult<
   GetPicturesByAllSearchQuery,
   GetPicturesByAllSearchQueryVariables
 >;
+
 export const GetPicturesForCollectionDocument = gql`
   query getPicturesForCollection($collectionId: ID!) {
     collection(id: $collectionId) {
@@ -7005,6 +7324,7 @@ export function useGetPicturesForCollectionQuery(
     options
   );
 }
+
 export function useGetPicturesForCollectionLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetPicturesForCollectionQuery,
@@ -7017,16 +7337,20 @@ export function useGetPicturesForCollectionLazyQuery(
     options
   );
 }
+
 export type GetPicturesForCollectionQueryHookResult = ReturnType<
   typeof useGetPicturesForCollectionQuery
 >;
+
 export type GetPicturesForCollectionLazyQueryHookResult = ReturnType<
   typeof useGetPicturesForCollectionLazyQuery
 >;
+
 export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
   GetPicturesForCollectionQuery,
   GetPicturesForCollectionQueryVariables
 >;
+
 export const GetPicturesForLocationDocument = gql`
   query getPicturesForLocation($tagIDs: [ID!]) {
     locationTags(filters: { id: { in: $tagIDs } }) {
@@ -7077,6 +7401,7 @@ export function useGetPicturesForLocationQuery(
     options
   );
 }
+
 export function useGetPicturesForLocationLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetPicturesForLocationQuery,
@@ -7089,16 +7414,20 @@ export function useGetPicturesForLocationLazyQuery(
     options
   );
 }
+
 export type GetPicturesForLocationQueryHookResult = ReturnType<
   typeof useGetPicturesForLocationQuery
 >;
+
 export type GetPicturesForLocationLazyQueryHookResult = ReturnType<
   typeof useGetPicturesForLocationLazyQuery
 >;
+
 export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
   GetPicturesForLocationQuery,
   GetPicturesForLocationQueryVariables
 >;
+
 export const GetPublishedCollectionInfoByNameDocument = gql`
   query getPublishedCollectionInfoByName($collectionName: String) {
     collections(filters: { name: { eq: $collectionName } }) {
@@ -7151,6 +7480,7 @@ export function useGetPublishedCollectionInfoByNameQuery(
     GetPublishedCollectionInfoByNameQueryVariables
   >(GetPublishedCollectionInfoByNameDocument, options);
 }
+
 export function useGetPublishedCollectionInfoByNameLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetPublishedCollectionInfoByNameQuery,
@@ -7163,16 +7493,20 @@ export function useGetPublishedCollectionInfoByNameLazyQuery(
     GetPublishedCollectionInfoByNameQueryVariables
   >(GetPublishedCollectionInfoByNameDocument, options);
 }
+
 export type GetPublishedCollectionInfoByNameQueryHookResult = ReturnType<
   typeof useGetPublishedCollectionInfoByNameQuery
 >;
+
 export type GetPublishedCollectionInfoByNameLazyQueryHookResult = ReturnType<
   typeof useGetPublishedCollectionInfoByNameLazyQuery
 >;
+
 export type GetPublishedCollectionInfoByNameQueryResult = Apollo.QueryResult<
   GetPublishedCollectionInfoByNameQuery,
   GetPublishedCollectionInfoByNameQueryVariables
 >;
+
 export const GetRootCollectionDocument = gql`
   query getRootCollection {
     browseRootCollection {
@@ -7216,6 +7550,7 @@ export function useGetRootCollectionQuery(
     options
   );
 }
+
 export function useGetRootCollectionLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetRootCollectionQuery, GetRootCollectionQueryVariables>
 ) {
@@ -7225,12 +7560,16 @@ export function useGetRootCollectionLazyQuery(
     options
   );
 }
+
 export type GetRootCollectionQueryHookResult = ReturnType<typeof useGetRootCollectionQuery>;
+
 export type GetRootCollectionLazyQueryHookResult = ReturnType<typeof useGetRootCollectionLazyQuery>;
+
 export type GetRootCollectionQueryResult = Apollo.QueryResult<
   GetRootCollectionQuery,
   GetRootCollectionQueryVariables
 >;
+
 export const GetUnverifiedCommentsDocument = gql`
   query getUnverifiedComments {
     comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
@@ -7291,6 +7630,7 @@ export function useGetUnverifiedCommentsQuery(
     options
   );
 }
+
 export function useGetUnverifiedCommentsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetUnverifiedCommentsQuery,
@@ -7303,14 +7643,18 @@ export function useGetUnverifiedCommentsLazyQuery(
     options
   );
 }
+
 export type GetUnverifiedCommentsQueryHookResult = ReturnType<typeof useGetUnverifiedCommentsQuery>;
+
 export type GetUnverifiedCommentsLazyQueryHookResult = ReturnType<
   typeof useGetUnverifiedCommentsLazyQuery
 >;
+
 export type GetUnverifiedCommentsQueryResult = Apollo.QueryResult<
   GetUnverifiedCommentsQuery,
   GetUnverifiedCommentsQueryVariables
 >;
+
 export const GetUserDocument = gql`
   query getUser($id: ID!) {
     usersPermissionsUser(id: $id) {
@@ -7347,15 +7691,20 @@ export function useGetUserQuery(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
 }
+
 export function useGetUserLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
 }
+
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+
 export const GetUsersDocument = gql`
   query getUsers {
     usersPermissionsUsers {
@@ -7390,15 +7739,20 @@ export function useGetUsersQuery(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
 }
+
 export function useGetUsersLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
 }
+
 export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
+
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
+
 export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+
 export const MeDocument = gql`
   query me {
     me {
@@ -7428,15 +7782,20 @@ export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQuer
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
 }
+
 export function useMeLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
 }
+
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+
 export const AcceptCommentDocument = gql`
   mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
     updateComment(id: $commentId, data: { publishedAt: $currentTime }) {
@@ -7446,6 +7805,7 @@ export const AcceptCommentDocument = gql`
     }
   }
 `;
+
 export type AcceptCommentMutationFn = Apollo.MutationFunction<
   AcceptCommentMutation,
   AcceptCommentMutationVariables
@@ -7478,17 +7838,22 @@ export function useAcceptCommentMutation(
     options
   );
 }
+
 export type AcceptCommentMutationHookResult = ReturnType<typeof useAcceptCommentMutation>;
+
 export type AcceptCommentMutationResult = Apollo.MutationResult<AcceptCommentMutation>;
+
 export type AcceptCommentMutationOptions = Apollo.BaseMutationOptions<
   AcceptCommentMutation,
   AcceptCommentMutationVariables
 >;
+
 export const AddArchiveTagDocument = gql`
   mutation addArchiveTag($name: String!) {
     addArchiveTag(name: $name)
   }
 `;
+
 export type AddArchiveTagMutationFn = Apollo.MutationFunction<
   AddArchiveTagMutation,
   AddArchiveTagMutationVariables
@@ -7520,12 +7885,16 @@ export function useAddArchiveTagMutation(
     options
   );
 }
+
 export type AddArchiveTagMutationHookResult = ReturnType<typeof useAddArchiveTagMutation>;
+
 export type AddArchiveTagMutationResult = Apollo.MutationResult<AddArchiveTagMutation>;
+
 export type AddArchiveTagMutationOptions = Apollo.BaseMutationOptions<
   AddArchiveTagMutation,
   AddArchiveTagMutationVariables
 >;
+
 export const AddPermissionDocument = gql`
   mutation addPermission(
     $user_id: ID
@@ -7541,6 +7910,7 @@ export const AddPermissionDocument = gql`
     )
   }
 `;
+
 export type AddPermissionMutationFn = Apollo.MutationFunction<
   AddPermissionMutation,
   AddPermissionMutationVariables
@@ -7575,17 +7945,22 @@ export function useAddPermissionMutation(
     options
   );
 }
+
 export type AddPermissionMutationHookResult = ReturnType<typeof useAddPermissionMutation>;
+
 export type AddPermissionMutationResult = Apollo.MutationResult<AddPermissionMutation>;
+
 export type AddPermissionMutationOptions = Apollo.BaseMutationOptions<
   AddPermissionMutation,
   AddPermissionMutationVariables
 >;
+
 export const AddUserDocument = gql`
   mutation addUser($username: String!, $email: String!) {
     addUser(username: $username, email: $email)
   }
 `;
+
 export type AddUserMutationFn = Apollo.MutationFunction<AddUserMutation, AddUserMutationVariables>;
 
 /**
@@ -7612,17 +7987,22 @@ export function useAddUserMutation(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<AddUserMutation, AddUserMutationVariables>(AddUserDocument, options);
 }
+
 export type AddUserMutationHookResult = ReturnType<typeof useAddUserMutation>;
+
 export type AddUserMutationResult = Apollo.MutationResult<AddUserMutation>;
+
 export type AddUserMutationOptions = Apollo.BaseMutationOptions<
   AddUserMutation,
   AddUserMutationVariables
 >;
+
 export const BulkEditDocument = gql`
   mutation bulkEdit($pictureIds: [ID!]!, $data: JSON!) {
     doBulkEdit(ids: $pictureIds, data: $data)
   }
 `;
+
 export type BulkEditMutationFn = Apollo.MutationFunction<
   BulkEditMutation,
   BulkEditMutationVariables
@@ -7652,12 +8032,16 @@ export function useBulkEditMutation(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<BulkEditMutation, BulkEditMutationVariables>(BulkEditDocument, options);
 }
+
 export type BulkEditMutationHookResult = ReturnType<typeof useBulkEditMutation>;
+
 export type BulkEditMutationResult = Apollo.MutationResult<BulkEditMutation>;
+
 export type BulkEditMutationOptions = Apollo.BaseMutationOptions<
   BulkEditMutation,
   BulkEditMutationVariables
 >;
+
 export const ChangePasswordDocument = gql`
   mutation changePassword(
     $currentPassword: String!
@@ -7673,6 +8057,7 @@ export const ChangePasswordDocument = gql`
     }
   }
 `;
+
 export type ChangePasswordMutationFn = Apollo.MutationFunction<
   ChangePasswordMutation,
   ChangePasswordMutationVariables
@@ -7706,12 +8091,16 @@ export function useChangePasswordMutation(
     options
   );
 }
+
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
+
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<
   ChangePasswordMutation,
   ChangePasswordMutationVariables
 >;
+
 export const ContactDocument = gql`
   mutation contact(
     $recipient: String!
@@ -7729,6 +8118,7 @@ export const ContactDocument = gql`
     )
   }
 `;
+
 export type ContactMutationFn = Apollo.MutationFunction<ContactMutation, ContactMutationVariables>;
 
 /**
@@ -7758,12 +8148,16 @@ export function useContactMutation(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<ContactMutation, ContactMutationVariables>(ContactDocument, options);
 }
+
 export type ContactMutationHookResult = ReturnType<typeof useContactMutation>;
+
 export type ContactMutationResult = Apollo.MutationResult<ContactMutation>;
+
 export type ContactMutationOptions = Apollo.BaseMutationOptions<
   ContactMutation,
   ContactMutationVariables
 >;
+
 export const CreateExhibitionDocument = gql`
   mutation createExhibition($archiveId: ID!, $publishedAt: DateTime!) {
     createExhibition(data: { archive_tag: $archiveId, publishedAt: $publishedAt }) {
@@ -7773,6 +8167,7 @@ export const CreateExhibitionDocument = gql`
     }
   }
 `;
+
 export type CreateExhibitionMutationFn = Apollo.MutationFunction<
   CreateExhibitionMutation,
   CreateExhibitionMutationVariables
@@ -7808,12 +8203,16 @@ export function useCreateExhibitionMutation(
     options
   );
 }
+
 export type CreateExhibitionMutationHookResult = ReturnType<typeof useCreateExhibitionMutation>;
+
 export type CreateExhibitionMutationResult = Apollo.MutationResult<CreateExhibitionMutation>;
+
 export type CreateExhibitionMutationOptions = Apollo.BaseMutationOptions<
   CreateExhibitionMutation,
   CreateExhibitionMutationVariables
 >;
+
 export const CreateExhibitionPictureDocument = gql`
   mutation createExhibitionPicture(
     $exhibitionIdealotId: ID!
@@ -7833,6 +8232,7 @@ export const CreateExhibitionPictureDocument = gql`
     }
   }
 `;
+
 export type CreateExhibitionPictureMutationFn = Apollo.MutationFunction<
   CreateExhibitionPictureMutation,
   CreateExhibitionPictureMutationVariables
@@ -7869,15 +8269,19 @@ export function useCreateExhibitionPictureMutation(
     CreateExhibitionPictureMutationVariables
   >(CreateExhibitionPictureDocument, options);
 }
+
 export type CreateExhibitionPictureMutationHookResult = ReturnType<
   typeof useCreateExhibitionPictureMutation
 >;
+
 export type CreateExhibitionPictureMutationResult =
   Apollo.MutationResult<CreateExhibitionPictureMutation>;
+
 export type CreateExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
   CreateExhibitionPictureMutation,
   CreateExhibitionPictureMutationVariables
 >;
+
 export const CreateExhibitionSectionDocument = gql`
   mutation createExhibitionSection($exhibitionId: ID!, $order: Int, $publishedAt: DateTime!) {
     createExhibitionSection(
@@ -7889,6 +8293,7 @@ export const CreateExhibitionSectionDocument = gql`
     }
   }
 `;
+
 export type CreateExhibitionSectionMutationFn = Apollo.MutationFunction<
   CreateExhibitionSectionMutation,
   CreateExhibitionSectionMutationVariables
@@ -7925,15 +8330,19 @@ export function useCreateExhibitionSectionMutation(
     CreateExhibitionSectionMutationVariables
   >(CreateExhibitionSectionDocument, options);
 }
+
 export type CreateExhibitionSectionMutationHookResult = ReturnType<
   typeof useCreateExhibitionSectionMutation
 >;
+
 export type CreateExhibitionSectionMutationResult =
   Apollo.MutationResult<CreateExhibitionSectionMutation>;
+
 export type CreateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
   CreateExhibitionSectionMutation,
   CreateExhibitionSectionMutationVariables
 >;
+
 export const CreateExhibitionSourceDocument = gql`
   mutation createExhibitionSource($exhibitionId: ID!, $publishedAt: DateTime!) {
     createExhibitionSource(data: { exhibition: $exhibitionId, publishedAt: $publishedAt }) {
@@ -7943,6 +8352,7 @@ export const CreateExhibitionSourceDocument = gql`
     }
   }
 `;
+
 export type CreateExhibitionSourceMutationFn = Apollo.MutationFunction<
   CreateExhibitionSourceMutation,
   CreateExhibitionSourceMutationVariables
@@ -7978,15 +8388,19 @@ export function useCreateExhibitionSourceMutation(
     CreateExhibitionSourceMutationVariables
   >(CreateExhibitionSourceDocument, options);
 }
+
 export type CreateExhibitionSourceMutationHookResult = ReturnType<
   typeof useCreateExhibitionSourceMutation
 >;
+
 export type CreateExhibitionSourceMutationResult =
   Apollo.MutationResult<CreateExhibitionSourceMutation>;
+
 export type CreateExhibitionSourceMutationOptions = Apollo.BaseMutationOptions<
   CreateExhibitionSourceMutation,
   CreateExhibitionSourceMutationVariables
 >;
+
 export const CreateFaceTagDocument = gql`
   mutation createFaceTag(
     $pictureId: ID!
@@ -8010,6 +8424,7 @@ export const CreateFaceTagDocument = gql`
     }
   }
 `;
+
 export type CreateFaceTagMutationFn = Apollo.MutationFunction<
   CreateFaceTagMutation,
   CreateFaceTagMutationVariables
@@ -8045,12 +8460,16 @@ export function useCreateFaceTagMutation(
     options
   );
 }
+
 export type CreateFaceTagMutationHookResult = ReturnType<typeof useCreateFaceTagMutation>;
+
 export type CreateFaceTagMutationResult = Apollo.MutationResult<CreateFaceTagMutation>;
+
 export type CreateFaceTagMutationOptions = Apollo.BaseMutationOptions<
   CreateFaceTagMutation,
   CreateFaceTagMutationVariables
 >;
+
 export const CreateKeywordTagDocument = gql`
   mutation createKeywordTag($name: String!) {
     createKeywordTag(data: { name: $name }) {
@@ -8060,6 +8479,7 @@ export const CreateKeywordTagDocument = gql`
     }
   }
 `;
+
 export type CreateKeywordTagMutationFn = Apollo.MutationFunction<
   CreateKeywordTagMutation,
   CreateKeywordTagMutationVariables
@@ -8094,12 +8514,16 @@ export function useCreateKeywordTagMutation(
     options
   );
 }
+
 export type CreateKeywordTagMutationHookResult = ReturnType<typeof useCreateKeywordTagMutation>;
+
 export type CreateKeywordTagMutationResult = Apollo.MutationResult<CreateKeywordTagMutation>;
+
 export type CreateKeywordTagMutationOptions = Apollo.BaseMutationOptions<
   CreateKeywordTagMutation,
   CreateKeywordTagMutationVariables
 >;
+
 export const CreateLinkDocument = gql`
   mutation createLink($title: String!, $url: String!, $archive_tag: ID!) {
     createLink(data: { title: $title, url: $url, archive_tag: $archive_tag }) {
@@ -8109,6 +8533,7 @@ export const CreateLinkDocument = gql`
     }
   }
 `;
+
 export type CreateLinkMutationFn = Apollo.MutationFunction<
   CreateLinkMutation,
   CreateLinkMutationVariables
@@ -8142,12 +8567,16 @@ export function useCreateLinkMutation(
     options
   );
 }
+
 export type CreateLinkMutationHookResult = ReturnType<typeof useCreateLinkMutation>;
+
 export type CreateLinkMutationResult = Apollo.MutationResult<CreateLinkMutation>;
+
 export type CreateLinkMutationOptions = Apollo.BaseMutationOptions<
   CreateLinkMutation,
   CreateLinkMutationVariables
 >;
+
 export const CreateLocationTagDocument = gql`
   mutation createLocationTag(
     $name: String!
@@ -8171,6 +8600,7 @@ export const CreateLocationTagDocument = gql`
     }
   }
 `;
+
 export type CreateLocationTagMutationFn = Apollo.MutationFunction<
   CreateLocationTagMutation,
   CreateLocationTagMutationVariables
@@ -8209,12 +8639,16 @@ export function useCreateLocationTagMutation(
     options
   );
 }
+
 export type CreateLocationTagMutationHookResult = ReturnType<typeof useCreateLocationTagMutation>;
+
 export type CreateLocationTagMutationResult = Apollo.MutationResult<CreateLocationTagMutation>;
+
 export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationTagMutation,
   CreateLocationTagMutationVariables
 >;
+
 export const CreatePersonTagDocument = gql`
   mutation createPersonTag($name: String!) {
     createPersonTag(data: { name: $name }) {
@@ -8224,6 +8658,7 @@ export const CreatePersonTagDocument = gql`
     }
   }
 `;
+
 export type CreatePersonTagMutationFn = Apollo.MutationFunction<
   CreatePersonTagMutation,
   CreatePersonTagMutationVariables
@@ -8258,12 +8693,16 @@ export function useCreatePersonTagMutation(
     options
   );
 }
+
 export type CreatePersonTagMutationHookResult = ReturnType<typeof useCreatePersonTagMutation>;
+
 export type CreatePersonTagMutationResult = Apollo.MutationResult<CreatePersonTagMutation>;
+
 export type CreatePersonTagMutationOptions = Apollo.BaseMutationOptions<
   CreatePersonTagMutation,
   CreatePersonTagMutationVariables
 >;
+
 export const CreatePictureDocument = gql`
   mutation createPicture($data: PictureInput!) {
     createPicture(data: $data) {
@@ -8273,6 +8712,7 @@ export const CreatePictureDocument = gql`
     }
   }
 `;
+
 export type CreatePictureMutationFn = Apollo.MutationFunction<
   CreatePictureMutation,
   CreatePictureMutationVariables
@@ -8304,12 +8744,16 @@ export function useCreatePictureMutation(
     options
   );
 }
+
 export type CreatePictureMutationHookResult = ReturnType<typeof useCreatePictureMutation>;
+
 export type CreatePictureMutationResult = Apollo.MutationResult<CreatePictureMutation>;
+
 export type CreatePictureMutationOptions = Apollo.BaseMutationOptions<
   CreatePictureMutation,
   CreatePictureMutationVariables
 >;
+
 export const CreatePictureGeoInfoDocument = gql`
   mutation createPictureGeoInfo($data: PictureGeoInfoInput!) {
     createPictureGeoInfo(data: $data) {
@@ -8319,6 +8763,7 @@ export const CreatePictureGeoInfoDocument = gql`
     }
   }
 `;
+
 export type CreatePictureGeoInfoMutationFn = Apollo.MutationFunction<
   CreatePictureGeoInfoMutation,
   CreatePictureGeoInfoMutationVariables
@@ -8353,15 +8798,76 @@ export function useCreatePictureGeoInfoMutation(
     options
   );
 }
+
 export type CreatePictureGeoInfoMutationHookResult = ReturnType<
   typeof useCreatePictureGeoInfoMutation
 >;
+
 export type CreatePictureGeoInfoMutationResult =
   Apollo.MutationResult<CreatePictureGeoInfoMutation>;
+
 export type CreatePictureGeoInfoMutationOptions = Apollo.BaseMutationOptions<
   CreatePictureGeoInfoMutation,
   CreatePictureGeoInfoMutationVariables
 >;
+
+export const CreatePictureSequenceDocument = gql`
+  mutation createPictureSequence($pictures: [ID!]!) {
+    createPictureSequence(data: { pictures: $pictures }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePictureSequenceMutationFn = Apollo.MutationFunction<
+  CreatePictureSequenceMutation,
+  CreatePictureSequenceMutationVariables
+>;
+
+/**
+ * __useCreatePictureSequenceMutation__
+ *
+ * To run a mutation, you first call `useCreatePictureSequenceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePictureSequenceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPictureSequenceMutation, { data, loading, error }] = useCreatePictureSequenceMutation({
+ *   variables: {
+ *      pictures: // value for 'pictures'
+ *   },
+ * });
+ */
+export function useCreatePictureSequenceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePictureSequenceMutation,
+    CreatePictureSequenceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePictureSequenceMutation, CreatePictureSequenceMutationVariables>(
+    CreatePictureSequenceDocument,
+    options
+  );
+}
+
+export type CreatePictureSequenceMutationHookResult = ReturnType<
+  typeof useCreatePictureSequenceMutation
+>;
+
+export type CreatePictureSequenceMutationResult =
+  Apollo.MutationResult<CreatePictureSequenceMutation>;
+
+export type CreatePictureSequenceMutationOptions = Apollo.BaseMutationOptions<
+  CreatePictureSequenceMutation,
+  CreatePictureSequenceMutationVariables
+>;
+
 export const CreateSubCollectionDocument = gql`
   mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
     createCollection(
@@ -8373,6 +8879,7 @@ export const CreateSubCollectionDocument = gql`
     }
   }
 `;
+
 export type CreateSubCollectionMutationFn = Apollo.MutationFunction<
   CreateSubCollectionMutation,
   CreateSubCollectionMutationVariables
@@ -8409,14 +8916,18 @@ export function useCreateSubCollectionMutation(
     options
   );
 }
+
 export type CreateSubCollectionMutationHookResult = ReturnType<
   typeof useCreateSubCollectionMutation
 >;
+
 export type CreateSubCollectionMutationResult = Apollo.MutationResult<CreateSubCollectionMutation>;
+
 export type CreateSubCollectionMutationOptions = Apollo.BaseMutationOptions<
   CreateSubCollectionMutation,
   CreateSubCollectionMutationVariables
 >;
+
 export const DeclineCommentDocument = gql`
   mutation declineComment($commentId: ID!) {
     deleteComment(id: $commentId) {
@@ -8426,6 +8937,7 @@ export const DeclineCommentDocument = gql`
     }
   }
 `;
+
 export type DeclineCommentMutationFn = Apollo.MutationFunction<
   DeclineCommentMutation,
   DeclineCommentMutationVariables
@@ -8457,12 +8969,16 @@ export function useDeclineCommentMutation(
     options
   );
 }
+
 export type DeclineCommentMutationHookResult = ReturnType<typeof useDeclineCommentMutation>;
+
 export type DeclineCommentMutationResult = Apollo.MutationResult<DeclineCommentMutation>;
+
 export type DeclineCommentMutationOptions = Apollo.BaseMutationOptions<
   DeclineCommentMutation,
   DeclineCommentMutationVariables
 >;
+
 export const DeleteCollectionDocument = gql`
   mutation deleteCollection($collectionId: ID!) {
     deleteCollection(id: $collectionId) {
@@ -8472,6 +8988,7 @@ export const DeleteCollectionDocument = gql`
     }
   }
 `;
+
 export type DeleteCollectionMutationFn = Apollo.MutationFunction<
   DeleteCollectionMutation,
   DeleteCollectionMutationVariables
@@ -8506,12 +9023,16 @@ export function useDeleteCollectionMutation(
     options
   );
 }
+
 export type DeleteCollectionMutationHookResult = ReturnType<typeof useDeleteCollectionMutation>;
+
 export type DeleteCollectionMutationResult = Apollo.MutationResult<DeleteCollectionMutation>;
+
 export type DeleteCollectionMutationOptions = Apollo.BaseMutationOptions<
   DeleteCollectionMutation,
   DeleteCollectionMutationVariables
 >;
+
 export const DeleteExhibitionDocument = gql`
   mutation deleteExhibition($id: ID!) {
     deleteExhibition(id: $id) {
@@ -8521,6 +9042,7 @@ export const DeleteExhibitionDocument = gql`
     }
   }
 `;
+
 export type DeleteExhibitionMutationFn = Apollo.MutationFunction<
   DeleteExhibitionMutation,
   DeleteExhibitionMutationVariables
@@ -8555,12 +9077,16 @@ export function useDeleteExhibitionMutation(
     options
   );
 }
+
 export type DeleteExhibitionMutationHookResult = ReturnType<typeof useDeleteExhibitionMutation>;
+
 export type DeleteExhibitionMutationResult = Apollo.MutationResult<DeleteExhibitionMutation>;
+
 export type DeleteExhibitionMutationOptions = Apollo.BaseMutationOptions<
   DeleteExhibitionMutation,
   DeleteExhibitionMutationVariables
 >;
+
 export const DeleteFaceTagDocument = gql`
   mutation deleteFaceTag($id: ID!) {
     deleteFaceTag(id: $id) {
@@ -8570,6 +9096,7 @@ export const DeleteFaceTagDocument = gql`
     }
   }
 `;
+
 export type DeleteFaceTagMutationFn = Apollo.MutationFunction<
   DeleteFaceTagMutation,
   DeleteFaceTagMutationVariables
@@ -8601,12 +9128,16 @@ export function useDeleteFaceTagMutation(
     options
   );
 }
+
 export type DeleteFaceTagMutationHookResult = ReturnType<typeof useDeleteFaceTagMutation>;
+
 export type DeleteFaceTagMutationResult = Apollo.MutationResult<DeleteFaceTagMutation>;
+
 export type DeleteFaceTagMutationOptions = Apollo.BaseMutationOptions<
   DeleteFaceTagMutation,
   DeleteFaceTagMutationVariables
 >;
+
 export const DeleteKeywordTagDocument = gql`
   mutation deleteKeywordTag($id: ID!) {
     deleteKeywordTag(id: $id) {
@@ -8616,6 +9147,7 @@ export const DeleteKeywordTagDocument = gql`
     }
   }
 `;
+
 export type DeleteKeywordTagMutationFn = Apollo.MutationFunction<
   DeleteKeywordTagMutation,
   DeleteKeywordTagMutationVariables
@@ -8650,12 +9182,16 @@ export function useDeleteKeywordTagMutation(
     options
   );
 }
+
 export type DeleteKeywordTagMutationHookResult = ReturnType<typeof useDeleteKeywordTagMutation>;
+
 export type DeleteKeywordTagMutationResult = Apollo.MutationResult<DeleteKeywordTagMutation>;
+
 export type DeleteKeywordTagMutationOptions = Apollo.BaseMutationOptions<
   DeleteKeywordTagMutation,
   DeleteKeywordTagMutationVariables
 >;
+
 export const DeleteLinkDocument = gql`
   mutation deleteLink($id: ID!) {
     deleteLink(id: $id) {
@@ -8665,6 +9201,7 @@ export const DeleteLinkDocument = gql`
     }
   }
 `;
+
 export type DeleteLinkMutationFn = Apollo.MutationFunction<
   DeleteLinkMutation,
   DeleteLinkMutationVariables
@@ -8696,12 +9233,16 @@ export function useDeleteLinkMutation(
     options
   );
 }
+
 export type DeleteLinkMutationHookResult = ReturnType<typeof useDeleteLinkMutation>;
+
 export type DeleteLinkMutationResult = Apollo.MutationResult<DeleteLinkMutation>;
+
 export type DeleteLinkMutationOptions = Apollo.BaseMutationOptions<
   DeleteLinkMutation,
   DeleteLinkMutationVariables
 >;
+
 export const DeleteLocationTagDocument = gql`
   mutation deleteLocationTag($id: ID!) {
     deleteLocationTag(id: $id) {
@@ -8711,6 +9252,7 @@ export const DeleteLocationTagDocument = gql`
     }
   }
 `;
+
 export type DeleteLocationTagMutationFn = Apollo.MutationFunction<
   DeleteLocationTagMutation,
   DeleteLocationTagMutationVariables
@@ -8745,12 +9287,16 @@ export function useDeleteLocationTagMutation(
     options
   );
 }
+
 export type DeleteLocationTagMutationHookResult = ReturnType<typeof useDeleteLocationTagMutation>;
+
 export type DeleteLocationTagMutationResult = Apollo.MutationResult<DeleteLocationTagMutation>;
+
 export type DeleteLocationTagMutationOptions = Apollo.BaseMutationOptions<
   DeleteLocationTagMutation,
   DeleteLocationTagMutationVariables
 >;
+
 export const DeleteParameterizedPermissionDocument = gql`
   mutation deleteParameterizedPermission($id: ID!) {
     deleteParameterizedPermission(id: $id) {
@@ -8760,6 +9306,7 @@ export const DeleteParameterizedPermissionDocument = gql`
     }
   }
 `;
+
 export type DeleteParameterizedPermissionMutationFn = Apollo.MutationFunction<
   DeleteParameterizedPermissionMutation,
   DeleteParameterizedPermissionMutationVariables
@@ -8794,15 +9341,19 @@ export function useDeleteParameterizedPermissionMutation(
     DeleteParameterizedPermissionMutationVariables
   >(DeleteParameterizedPermissionDocument, options);
 }
+
 export type DeleteParameterizedPermissionMutationHookResult = ReturnType<
   typeof useDeleteParameterizedPermissionMutation
 >;
+
 export type DeleteParameterizedPermissionMutationResult =
   Apollo.MutationResult<DeleteParameterizedPermissionMutation>;
+
 export type DeleteParameterizedPermissionMutationOptions = Apollo.BaseMutationOptions<
   DeleteParameterizedPermissionMutation,
   DeleteParameterizedPermissionMutationVariables
 >;
+
 export const DeletePersonTagDocument = gql`
   mutation deletePersonTag($id: ID!) {
     deletePersonTag(id: $id) {
@@ -8812,6 +9363,7 @@ export const DeletePersonTagDocument = gql`
     }
   }
 `;
+
 export type DeletePersonTagMutationFn = Apollo.MutationFunction<
   DeletePersonTagMutation,
   DeletePersonTagMutationVariables
@@ -8846,12 +9398,16 @@ export function useDeletePersonTagMutation(
     options
   );
 }
+
 export type DeletePersonTagMutationHookResult = ReturnType<typeof useDeletePersonTagMutation>;
+
 export type DeletePersonTagMutationResult = Apollo.MutationResult<DeletePersonTagMutation>;
+
 export type DeletePersonTagMutationOptions = Apollo.BaseMutationOptions<
   DeletePersonTagMutation,
   DeletePersonTagMutationVariables
 >;
+
 export const FixCommentTextDocument = gql`
   mutation fixCommentText($commentId: ID!, $text: String!) {
     updateComment(id: $commentId, data: { text: $text }) {
@@ -8861,6 +9417,7 @@ export const FixCommentTextDocument = gql`
     }
   }
 `;
+
 export type FixCommentTextMutationFn = Apollo.MutationFunction<
   FixCommentTextMutation,
   FixCommentTextMutationVariables
@@ -8893,12 +9450,16 @@ export function useFixCommentTextMutation(
     options
   );
 }
+
 export type FixCommentTextMutationHookResult = ReturnType<typeof useFixCommentTextMutation>;
+
 export type FixCommentTextMutationResult = Apollo.MutationResult<FixCommentTextMutation>;
+
 export type FixCommentTextMutationOptions = Apollo.BaseMutationOptions<
   FixCommentTextMutation,
   FixCommentTextMutationVariables
 >;
+
 export const ForgotPasswordDocument = gql`
   mutation forgotPassword($email: String!) {
     forgotPassword(email: $email) {
@@ -8906,6 +9467,7 @@ export const ForgotPasswordDocument = gql`
     }
   }
 `;
+
 export type ForgotPasswordMutationFn = Apollo.MutationFunction<
   ForgotPasswordMutation,
   ForgotPasswordMutationVariables
@@ -8937,17 +9499,22 @@ export function useForgotPasswordMutation(
     options
   );
 }
+
 export type ForgotPasswordMutationHookResult = ReturnType<typeof useForgotPasswordMutation>;
+
 export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
+
 export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<
   ForgotPasswordMutation,
   ForgotPasswordMutationVariables
 >;
+
 export const IncreaseNotAPlaceCountDocument = gql`
   mutation increaseNotAPlaceCount($pictureId: ID!) {
     increaseNotAPlaceCount(id: $pictureId)
   }
 `;
+
 export type IncreaseNotAPlaceCountMutationFn = Apollo.MutationFunction<
   IncreaseNotAPlaceCountMutation,
   IncreaseNotAPlaceCountMutationVariables
@@ -8982,20 +9549,25 @@ export function useIncreaseNotAPlaceCountMutation(
     IncreaseNotAPlaceCountMutationVariables
   >(IncreaseNotAPlaceCountDocument, options);
 }
+
 export type IncreaseNotAPlaceCountMutationHookResult = ReturnType<
   typeof useIncreaseNotAPlaceCountMutation
 >;
+
 export type IncreaseNotAPlaceCountMutationResult =
   Apollo.MutationResult<IncreaseNotAPlaceCountMutation>;
+
 export type IncreaseNotAPlaceCountMutationOptions = Apollo.BaseMutationOptions<
   IncreaseNotAPlaceCountMutation,
   IncreaseNotAPlaceCountMutationVariables
 >;
+
 export const LikeDocument = gql`
   mutation like($pictureId: ID!, $dislike: Boolean) {
     doLike(pictureId: $pictureId, dislike: $dislike)
   }
 `;
+
 export type LikeMutationFn = Apollo.MutationFunction<LikeMutation, LikeMutationVariables>;
 
 /**
@@ -9022,9 +9594,13 @@ export function useLikeMutation(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<LikeMutation, LikeMutationVariables>(LikeDocument, options);
 }
+
 export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
+
 export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
+
 export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
+
 export const LoginDocument = gql`
   mutation login($username: String!, $password: String!) {
     login(input: { identifier: $username, password: $password }) {
@@ -9032,6 +9608,7 @@ export const LoginDocument = gql`
     }
   }
 `;
+
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -9058,17 +9635,22 @@ export function useLoginMutation(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
 }
+
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
 >;
+
 export const MergeCollectionsDocument = gql`
   mutation mergeCollections($targetId: ID!, $sourceId: ID!) {
     mergeCollections(targetId: $targetId, sourceId: $sourceId)
   }
 `;
+
 export type MergeCollectionsMutationFn = Apollo.MutationFunction<
   MergeCollectionsMutation,
   MergeCollectionsMutationVariables
@@ -9104,17 +9686,22 @@ export function useMergeCollectionsMutation(
     options
   );
 }
+
 export type MergeCollectionsMutationHookResult = ReturnType<typeof useMergeCollectionsMutation>;
+
 export type MergeCollectionsMutationResult = Apollo.MutationResult<MergeCollectionsMutation>;
+
 export type MergeCollectionsMutationOptions = Apollo.BaseMutationOptions<
   MergeCollectionsMutation,
   MergeCollectionsMutationVariables
 >;
+
 export const MergeKeywordTagsDocument = gql`
   mutation mergeKeywordTags($targetId: ID!, $sourceId: ID!) {
     mergeKeywordTags(targetId: $targetId, sourceId: $sourceId)
   }
 `;
+
 export type MergeKeywordTagsMutationFn = Apollo.MutationFunction<
   MergeKeywordTagsMutation,
   MergeKeywordTagsMutationVariables
@@ -9150,17 +9737,22 @@ export function useMergeKeywordTagsMutation(
     options
   );
 }
+
 export type MergeKeywordTagsMutationHookResult = ReturnType<typeof useMergeKeywordTagsMutation>;
+
 export type MergeKeywordTagsMutationResult = Apollo.MutationResult<MergeKeywordTagsMutation>;
+
 export type MergeKeywordTagsMutationOptions = Apollo.BaseMutationOptions<
   MergeKeywordTagsMutation,
   MergeKeywordTagsMutationVariables
 >;
+
 export const MergeLocationTagsDocument = gql`
   mutation mergeLocationTags($targetId: ID!, $sourceId: ID!) {
     mergeLocationTags(targetId: $targetId, sourceId: $sourceId)
   }
 `;
+
 export type MergeLocationTagsMutationFn = Apollo.MutationFunction<
   MergeLocationTagsMutation,
   MergeLocationTagsMutationVariables
@@ -9196,17 +9788,22 @@ export function useMergeLocationTagsMutation(
     options
   );
 }
+
 export type MergeLocationTagsMutationHookResult = ReturnType<typeof useMergeLocationTagsMutation>;
+
 export type MergeLocationTagsMutationResult = Apollo.MutationResult<MergeLocationTagsMutation>;
+
 export type MergeLocationTagsMutationOptions = Apollo.BaseMutationOptions<
   MergeLocationTagsMutation,
   MergeLocationTagsMutationVariables
 >;
+
 export const MergePersonTagsDocument = gql`
   mutation mergePersonTags($targetId: ID!, $sourceId: ID!) {
     mergePersonTags(targetId: $targetId, sourceId: $sourceId)
   }
 `;
+
 export type MergePersonTagsMutationFn = Apollo.MutationFunction<
   MergePersonTagsMutation,
   MergePersonTagsMutationVariables
@@ -9242,12 +9839,16 @@ export function useMergePersonTagsMutation(
     options
   );
 }
+
 export type MergePersonTagsMutationHookResult = ReturnType<typeof useMergePersonTagsMutation>;
+
 export type MergePersonTagsMutationResult = Apollo.MutationResult<MergePersonTagsMutation>;
+
 export type MergePersonTagsMutationOptions = Apollo.BaseMutationOptions<
   MergePersonTagsMutation,
   MergePersonTagsMutationVariables
 >;
+
 export const MultipleUploadDocument = gql`
   mutation multipleUpload($files: [Upload!]!) {
     multipleUpload(files: $files) {
@@ -9257,6 +9858,7 @@ export const MultipleUploadDocument = gql`
     }
   }
 `;
+
 export type MultipleUploadMutationFn = Apollo.MutationFunction<
   MultipleUploadMutation,
   MultipleUploadMutationVariables
@@ -9288,12 +9890,16 @@ export function useMultipleUploadMutation(
     options
   );
 }
+
 export type MultipleUploadMutationHookResult = ReturnType<typeof useMultipleUploadMutation>;
+
 export type MultipleUploadMutationResult = Apollo.MutationResult<MultipleUploadMutation>;
+
 export type MultipleUploadMutationOptions = Apollo.BaseMutationOptions<
   MultipleUploadMutation,
   MultipleUploadMutationVariables
 >;
+
 export const PinCommentDocument = gql`
   mutation pinComment($commentId: ID!) {
     updateComment(id: $commentId, data: { pinned: true }) {
@@ -9303,6 +9909,7 @@ export const PinCommentDocument = gql`
     }
   }
 `;
+
 export type PinCommentMutationFn = Apollo.MutationFunction<
   PinCommentMutation,
   PinCommentMutationVariables
@@ -9334,12 +9941,16 @@ export function usePinCommentMutation(
     options
   );
 }
+
 export type PinCommentMutationHookResult = ReturnType<typeof usePinCommentMutation>;
+
 export type PinCommentMutationResult = Apollo.MutationResult<PinCommentMutation>;
+
 export type PinCommentMutationOptions = Apollo.BaseMutationOptions<
   PinCommentMutation,
   PinCommentMutationVariables
 >;
+
 export const PostCommentDocument = gql`
   mutation postComment(
     $id: ID!
@@ -9366,6 +9977,7 @@ export const PostCommentDocument = gql`
     }
   }
 `;
+
 export type PostCommentMutationFn = Apollo.MutationFunction<
   PostCommentMutation,
   PostCommentMutationVariables
@@ -9401,17 +10013,22 @@ export function usePostCommentMutation(
     options
   );
 }
+
 export type PostCommentMutationHookResult = ReturnType<typeof usePostCommentMutation>;
+
 export type PostCommentMutationResult = Apollo.MutationResult<PostCommentMutation>;
+
 export type PostCommentMutationOptions = Apollo.BaseMutationOptions<
   PostCommentMutation,
   PostCommentMutationVariables
 >;
+
 export const RemoveArchiveTagDocument = gql`
   mutation removeArchiveTag($id: ID!) {
     removeArchiveTag(id: $id)
   }
 `;
+
 export type RemoveArchiveTagMutationFn = Apollo.MutationFunction<
   RemoveArchiveTagMutation,
   RemoveArchiveTagMutationVariables
@@ -9446,12 +10063,16 @@ export function useRemoveArchiveTagMutation(
     options
   );
 }
+
 export type RemoveArchiveTagMutationHookResult = ReturnType<typeof useRemoveArchiveTagMutation>;
+
 export type RemoveArchiveTagMutationResult = Apollo.MutationResult<RemoveArchiveTagMutation>;
+
 export type RemoveArchiveTagMutationOptions = Apollo.BaseMutationOptions<
   RemoveArchiveTagMutation,
   RemoveArchiveTagMutationVariables
 >;
+
 export const RemoveUploadDocument = gql`
   mutation removeUpload($id: ID!) {
     removeFile(id: $id) {
@@ -9461,6 +10082,7 @@ export const RemoveUploadDocument = gql`
     }
   }
 `;
+
 export type RemoveUploadMutationFn = Apollo.MutationFunction<
   RemoveUploadMutation,
   RemoveUploadMutationVariables
@@ -9492,17 +10114,22 @@ export function useRemoveUploadMutation(
     options
   );
 }
+
 export type RemoveUploadMutationHookResult = ReturnType<typeof useRemoveUploadMutation>;
+
 export type RemoveUploadMutationResult = Apollo.MutationResult<RemoveUploadMutation>;
+
 export type RemoveUploadMutationOptions = Apollo.BaseMutationOptions<
   RemoveUploadMutation,
   RemoveUploadMutationVariables
 >;
+
 export const RemoveUserDocument = gql`
   mutation removeUser($id: ID!) {
     removeUser(id: $id)
   }
 `;
+
 export type RemoveUserMutationFn = Apollo.MutationFunction<
   RemoveUserMutation,
   RemoveUserMutationVariables
@@ -9534,12 +10161,16 @@ export function useRemoveUserMutation(
     options
   );
 }
+
 export type RemoveUserMutationHookResult = ReturnType<typeof useRemoveUserMutation>;
+
 export type RemoveUserMutationResult = Apollo.MutationResult<RemoveUserMutation>;
+
 export type RemoveUserMutationOptions = Apollo.BaseMutationOptions<
   RemoveUserMutation,
   RemoveUserMutationVariables
 >;
+
 export const ResetPasswordDocument = gql`
   mutation resetPassword($token: String!, $password: String!, $passwordConfirmation: String!) {
     resetPassword(code: $token, password: $password, passwordConfirmation: $passwordConfirmation) {
@@ -9547,6 +10178,7 @@ export const ResetPasswordDocument = gql`
     }
   }
 `;
+
 export type ResetPasswordMutationFn = Apollo.MutationFunction<
   ResetPasswordMutation,
   ResetPasswordMutationVariables
@@ -9580,12 +10212,16 @@ export function useResetPasswordMutation(
     options
   );
 }
+
 export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
+
 export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
+
 export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<
   ResetPasswordMutation,
   ResetPasswordMutationVariables
 >;
+
 export const SetPicturesForCollectionDocument = gql`
   mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
     updateCollection(id: $collectionId, data: { pictures: $pictureIds }) {
@@ -9595,6 +10231,7 @@ export const SetPicturesForCollectionDocument = gql`
     }
   }
 `;
+
 export type SetPicturesForCollectionMutationFn = Apollo.MutationFunction<
   SetPicturesForCollectionMutation,
   SetPicturesForCollectionMutationVariables
@@ -9630,15 +10267,19 @@ export function useSetPicturesForCollectionMutation(
     SetPicturesForCollectionMutationVariables
   >(SetPicturesForCollectionDocument, options);
 }
+
 export type SetPicturesForCollectionMutationHookResult = ReturnType<
   typeof useSetPicturesForCollectionMutation
 >;
+
 export type SetPicturesForCollectionMutationResult =
   Apollo.MutationResult<SetPicturesForCollectionMutation>;
+
 export type SetPicturesForCollectionMutationOptions = Apollo.BaseMutationOptions<
   SetPicturesForCollectionMutation,
   SetPicturesForCollectionMutationVariables
 >;
+
 export const UnpinCommentDocument = gql`
   mutation unpinComment($commentId: ID!) {
     updateComment(id: $commentId, data: { pinned: false }) {
@@ -9648,6 +10289,7 @@ export const UnpinCommentDocument = gql`
     }
   }
 `;
+
 export type UnpinCommentMutationFn = Apollo.MutationFunction<
   UnpinCommentMutation,
   UnpinCommentMutationVariables
@@ -9679,12 +10321,16 @@ export function useUnpinCommentMutation(
     options
   );
 }
+
 export type UnpinCommentMutationHookResult = ReturnType<typeof useUnpinCommentMutation>;
+
 export type UnpinCommentMutationResult = Apollo.MutationResult<UnpinCommentMutation>;
+
 export type UnpinCommentMutationOptions = Apollo.BaseMutationOptions<
   UnpinCommentMutation,
   UnpinCommentMutationVariables
 >;
+
 export const UnpublishPictureDocument = gql`
   mutation unpublishPicture($id: ID!) {
     updatePicture(id: $id, data: { publishedAt: null }) {
@@ -9694,6 +10340,7 @@ export const UnpublishPictureDocument = gql`
     }
   }
 `;
+
 export type UnpublishPictureMutationFn = Apollo.MutationFunction<
   UnpublishPictureMutation,
   UnpublishPictureMutationVariables
@@ -9728,12 +10375,16 @@ export function useUnpublishPictureMutation(
     options
   );
 }
+
 export type UnpublishPictureMutationHookResult = ReturnType<typeof useUnpublishPictureMutation>;
+
 export type UnpublishPictureMutationResult = Apollo.MutationResult<UnpublishPictureMutation>;
+
 export type UnpublishPictureMutationOptions = Apollo.BaseMutationOptions<
   UnpublishPictureMutation,
   UnpublishPictureMutationVariables
 >;
+
 export const UpdateArchiveDocument = gql`
   mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
     updateArchiveTag(id: $archiveId, data: $data) {
@@ -9743,6 +10394,7 @@ export const UpdateArchiveDocument = gql`
     }
   }
 `;
+
 export type UpdateArchiveMutationFn = Apollo.MutationFunction<
   UpdateArchiveMutation,
   UpdateArchiveMutationVariables
@@ -9775,12 +10427,16 @@ export function useUpdateArchiveMutation(
     options
   );
 }
+
 export type UpdateArchiveMutationHookResult = ReturnType<typeof useUpdateArchiveMutation>;
+
 export type UpdateArchiveMutationResult = Apollo.MutationResult<UpdateArchiveMutation>;
+
 export type UpdateArchiveMutationOptions = Apollo.BaseMutationOptions<
   UpdateArchiveMutation,
   UpdateArchiveMutationVariables
 >;
+
 export const UpdateCollectionDocument = gql`
   mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
     updateCollection(id: $collectionId, data: $data) {
@@ -9790,6 +10446,7 @@ export const UpdateCollectionDocument = gql`
     }
   }
 `;
+
 export type UpdateCollectionMutationFn = Apollo.MutationFunction<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
@@ -9825,12 +10482,16 @@ export function useUpdateCollectionMutation(
     options
   );
 }
+
 export type UpdateCollectionMutationHookResult = ReturnType<typeof useUpdateCollectionMutation>;
+
 export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollectionMutation>;
+
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
 >;
+
 export const UpdateExhibitionDocument = gql`
   mutation updateExhibition($id: ID!, $data: ExhibitionInput!) {
     updateExhibition(id: $id, data: $data) {
@@ -9840,6 +10501,7 @@ export const UpdateExhibitionDocument = gql`
     }
   }
 `;
+
 export type UpdateExhibitionMutationFn = Apollo.MutationFunction<
   UpdateExhibitionMutation,
   UpdateExhibitionMutationVariables
@@ -9875,12 +10537,16 @@ export function useUpdateExhibitionMutation(
     options
   );
 }
+
 export type UpdateExhibitionMutationHookResult = ReturnType<typeof useUpdateExhibitionMutation>;
+
 export type UpdateExhibitionMutationResult = Apollo.MutationResult<UpdateExhibitionMutation>;
+
 export type UpdateExhibitionMutationOptions = Apollo.BaseMutationOptions<
   UpdateExhibitionMutation,
   UpdateExhibitionMutationVariables
 >;
+
 export const UpdateExhibitionPictureDocument = gql`
   mutation updateExhibitionPicture($id: ID!, $data: ExhibitionPictureInput!) {
     updateExhibitionPicture(id: $id, data: $data) {
@@ -9890,6 +10556,7 @@ export const UpdateExhibitionPictureDocument = gql`
     }
   }
 `;
+
 export type UpdateExhibitionPictureMutationFn = Apollo.MutationFunction<
   UpdateExhibitionPictureMutation,
   UpdateExhibitionPictureMutationVariables
@@ -9925,15 +10592,19 @@ export function useUpdateExhibitionPictureMutation(
     UpdateExhibitionPictureMutationVariables
   >(UpdateExhibitionPictureDocument, options);
 }
+
 export type UpdateExhibitionPictureMutationHookResult = ReturnType<
   typeof useUpdateExhibitionPictureMutation
 >;
+
 export type UpdateExhibitionPictureMutationResult =
   Apollo.MutationResult<UpdateExhibitionPictureMutation>;
+
 export type UpdateExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
   UpdateExhibitionPictureMutation,
   UpdateExhibitionPictureMutationVariables
 >;
+
 export const UpdateExhibitionSectionDocument = gql`
   mutation updateExhibitionSection(
     $id: ID!
@@ -9957,6 +10628,7 @@ export const UpdateExhibitionSectionDocument = gql`
     }
   }
 `;
+
 export type UpdateExhibitionSectionMutationFn = Apollo.MutationFunction<
   UpdateExhibitionSectionMutation,
   UpdateExhibitionSectionMutationVariables
@@ -9995,15 +10667,19 @@ export function useUpdateExhibitionSectionMutation(
     UpdateExhibitionSectionMutationVariables
   >(UpdateExhibitionSectionDocument, options);
 }
+
 export type UpdateExhibitionSectionMutationHookResult = ReturnType<
   typeof useUpdateExhibitionSectionMutation
 >;
+
 export type UpdateExhibitionSectionMutationResult =
   Apollo.MutationResult<UpdateExhibitionSectionMutation>;
+
 export type UpdateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateExhibitionSectionMutation,
   UpdateExhibitionSectionMutationVariables
 >;
+
 export const UpdateExhibitionSourceDocument = gql`
   mutation updateExhibitionSource($id: ID!, $source: String!) {
     updateExhibitionSource(id: $id, data: { source: $source }) {
@@ -10013,6 +10689,7 @@ export const UpdateExhibitionSourceDocument = gql`
     }
   }
 `;
+
 export type UpdateExhibitionSourceMutationFn = Apollo.MutationFunction<
   UpdateExhibitionSourceMutation,
   UpdateExhibitionSourceMutationVariables
@@ -10048,15 +10725,19 @@ export function useUpdateExhibitionSourceMutation(
     UpdateExhibitionSourceMutationVariables
   >(UpdateExhibitionSourceDocument, options);
 }
+
 export type UpdateExhibitionSourceMutationHookResult = ReturnType<
   typeof useUpdateExhibitionSourceMutation
 >;
+
 export type UpdateExhibitionSourceMutationResult =
   Apollo.MutationResult<UpdateExhibitionSourceMutation>;
+
 export type UpdateExhibitionSourceMutationOptions = Apollo.BaseMutationOptions<
   UpdateExhibitionSourceMutation,
   UpdateExhibitionSourceMutationVariables
 >;
+
 export const UpdateFaceTagDirectionDocument = gql`
   mutation updateFaceTagDirection($faceTagId: ID!, $tag_direction: Int) {
     updateFaceTag(id: $faceTagId, data: { tag_direction: $tag_direction }) {
@@ -10066,6 +10747,7 @@ export const UpdateFaceTagDirectionDocument = gql`
     }
   }
 `;
+
 export type UpdateFaceTagDirectionMutationFn = Apollo.MutationFunction<
   UpdateFaceTagDirectionMutation,
   UpdateFaceTagDirectionMutationVariables
@@ -10101,15 +10783,19 @@ export function useUpdateFaceTagDirectionMutation(
     UpdateFaceTagDirectionMutationVariables
   >(UpdateFaceTagDirectionDocument, options);
 }
+
 export type UpdateFaceTagDirectionMutationHookResult = ReturnType<
   typeof useUpdateFaceTagDirectionMutation
 >;
+
 export type UpdateFaceTagDirectionMutationResult =
   Apollo.MutationResult<UpdateFaceTagDirectionMutation>;
+
 export type UpdateFaceTagDirectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateFaceTagDirectionMutation,
   UpdateFaceTagDirectionMutationVariables
 >;
+
 export const UpdateKeywordNameDocument = gql`
   mutation updateKeywordName($tagId: ID!, $name: String!) {
     updateKeywordTag(id: $tagId, data: { name: $name }) {
@@ -10119,6 +10805,7 @@ export const UpdateKeywordNameDocument = gql`
     }
   }
 `;
+
 export type UpdateKeywordNameMutationFn = Apollo.MutationFunction<
   UpdateKeywordNameMutation,
   UpdateKeywordNameMutationVariables
@@ -10154,12 +10841,16 @@ export function useUpdateKeywordNameMutation(
     options
   );
 }
+
 export type UpdateKeywordNameMutationHookResult = ReturnType<typeof useUpdateKeywordNameMutation>;
+
 export type UpdateKeywordNameMutationResult = Apollo.MutationResult<UpdateKeywordNameMutation>;
+
 export type UpdateKeywordNameMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordNameMutation,
   UpdateKeywordNameMutationVariables
 >;
+
 export const UpdateKeywordSynonymsDocument = gql`
   mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
     updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
@@ -10169,6 +10860,7 @@ export const UpdateKeywordSynonymsDocument = gql`
     }
   }
 `;
+
 export type UpdateKeywordSynonymsMutationFn = Apollo.MutationFunction<
   UpdateKeywordSynonymsMutation,
   UpdateKeywordSynonymsMutationVariables
@@ -10204,15 +10896,19 @@ export function useUpdateKeywordSynonymsMutation(
     options
   );
 }
+
 export type UpdateKeywordSynonymsMutationHookResult = ReturnType<
   typeof useUpdateKeywordSynonymsMutation
 >;
+
 export type UpdateKeywordSynonymsMutationResult =
   Apollo.MutationResult<UpdateKeywordSynonymsMutation>;
+
 export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordSynonymsMutation,
   UpdateKeywordSynonymsMutationVariables
 >;
+
 export const UpdateKeywordVisibilityDocument = gql`
   mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
     updateKeywordTag(id: $tagId, data: { visible: $visible }) {
@@ -10222,6 +10918,7 @@ export const UpdateKeywordVisibilityDocument = gql`
     }
   }
 `;
+
 export type UpdateKeywordVisibilityMutationFn = Apollo.MutationFunction<
   UpdateKeywordVisibilityMutation,
   UpdateKeywordVisibilityMutationVariables
@@ -10257,15 +10954,19 @@ export function useUpdateKeywordVisibilityMutation(
     UpdateKeywordVisibilityMutationVariables
   >(UpdateKeywordVisibilityDocument, options);
 }
+
 export type UpdateKeywordVisibilityMutationHookResult = ReturnType<
   typeof useUpdateKeywordVisibilityMutation
 >;
+
 export type UpdateKeywordVisibilityMutationResult =
   Apollo.MutationResult<UpdateKeywordVisibilityMutation>;
+
 export type UpdateKeywordVisibilityMutationOptions = Apollo.BaseMutationOptions<
   UpdateKeywordVisibilityMutation,
   UpdateKeywordVisibilityMutationVariables
 >;
+
 export const UpdateLinkDocument = gql`
   mutation updateLink($id: ID!, $data: LinkInput!) {
     updateLink(id: $id, data: $data) {
@@ -10275,6 +10976,7 @@ export const UpdateLinkDocument = gql`
     }
   }
 `;
+
 export type UpdateLinkMutationFn = Apollo.MutationFunction<
   UpdateLinkMutation,
   UpdateLinkMutationVariables
@@ -10307,12 +11009,16 @@ export function useUpdateLinkMutation(
     options
   );
 }
+
 export type UpdateLinkMutationHookResult = ReturnType<typeof useUpdateLinkMutation>;
+
 export type UpdateLinkMutationResult = Apollo.MutationResult<UpdateLinkMutation>;
+
 export type UpdateLinkMutationOptions = Apollo.BaseMutationOptions<
   UpdateLinkMutation,
   UpdateLinkMutationVariables
 >;
+
 export const UpdateLocationAcceptanceDocument = gql`
   mutation updateLocationAcceptance($tagId: ID!, $accepted: Boolean) {
     updateLocationTag(id: $tagId, data: { accepted: $accepted }) {
@@ -10322,6 +11028,7 @@ export const UpdateLocationAcceptanceDocument = gql`
     }
   }
 `;
+
 export type UpdateLocationAcceptanceMutationFn = Apollo.MutationFunction<
   UpdateLocationAcceptanceMutation,
   UpdateLocationAcceptanceMutationVariables
@@ -10357,15 +11064,19 @@ export function useUpdateLocationAcceptanceMutation(
     UpdateLocationAcceptanceMutationVariables
   >(UpdateLocationAcceptanceDocument, options);
 }
+
 export type UpdateLocationAcceptanceMutationHookResult = ReturnType<
   typeof useUpdateLocationAcceptanceMutation
 >;
+
 export type UpdateLocationAcceptanceMutationResult =
   Apollo.MutationResult<UpdateLocationAcceptanceMutation>;
+
 export type UpdateLocationAcceptanceMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationAcceptanceMutation,
   UpdateLocationAcceptanceMutationVariables
 >;
+
 export const UpdateLocationChildDocument = gql`
   mutation updateLocationChild($tagID: ID!, $childIDs: [ID!]) {
     updateLocationTag(id: $tagID, data: { child_tags: $childIDs }) {
@@ -10375,6 +11086,7 @@ export const UpdateLocationChildDocument = gql`
     }
   }
 `;
+
 export type UpdateLocationChildMutationFn = Apollo.MutationFunction<
   UpdateLocationChildMutation,
   UpdateLocationChildMutationVariables
@@ -10410,14 +11122,18 @@ export function useUpdateLocationChildMutation(
     options
   );
 }
+
 export type UpdateLocationChildMutationHookResult = ReturnType<
   typeof useUpdateLocationChildMutation
 >;
+
 export type UpdateLocationChildMutationResult = Apollo.MutationResult<UpdateLocationChildMutation>;
+
 export type UpdateLocationChildMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationChildMutation,
   UpdateLocationChildMutationVariables
 >;
+
 export const UpdateLocationCoordinatesDocument = gql`
   mutation updateLocationCoordinates($tagId: ID!, $coordinate: ComponentLocationCoordinatesInput) {
     updateLocationTag(id: $tagId, data: { coordinates: $coordinate }) {
@@ -10427,6 +11143,7 @@ export const UpdateLocationCoordinatesDocument = gql`
     }
   }
 `;
+
 export type UpdateLocationCoordinatesMutationFn = Apollo.MutationFunction<
   UpdateLocationCoordinatesMutation,
   UpdateLocationCoordinatesMutationVariables
@@ -10462,15 +11179,19 @@ export function useUpdateLocationCoordinatesMutation(
     UpdateLocationCoordinatesMutationVariables
   >(UpdateLocationCoordinatesDocument, options);
 }
+
 export type UpdateLocationCoordinatesMutationHookResult = ReturnType<
   typeof useUpdateLocationCoordinatesMutation
 >;
+
 export type UpdateLocationCoordinatesMutationResult =
   Apollo.MutationResult<UpdateLocationCoordinatesMutation>;
+
 export type UpdateLocationCoordinatesMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationCoordinatesMutation,
   UpdateLocationCoordinatesMutationVariables
 >;
+
 export const UpdateLocationNameDocument = gql`
   mutation updateLocationName($tagId: ID!, $name: String!) {
     updateLocationTag(id: $tagId, data: { name: $name }) {
@@ -10480,6 +11201,7 @@ export const UpdateLocationNameDocument = gql`
     }
   }
 `;
+
 export type UpdateLocationNameMutationFn = Apollo.MutationFunction<
   UpdateLocationNameMutation,
   UpdateLocationNameMutationVariables
@@ -10515,12 +11237,16 @@ export function useUpdateLocationNameMutation(
     options
   );
 }
+
 export type UpdateLocationNameMutationHookResult = ReturnType<typeof useUpdateLocationNameMutation>;
+
 export type UpdateLocationNameMutationResult = Apollo.MutationResult<UpdateLocationNameMutation>;
+
 export type UpdateLocationNameMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationNameMutation,
   UpdateLocationNameMutationVariables
 >;
+
 export const UpdateLocationParentDocument = gql`
   mutation updateLocationParent($tagID: ID!, $parentIDs: [ID!]) {
     updateLocationTag(id: $tagID, data: { parent_tags: $parentIDs }) {
@@ -10530,6 +11256,7 @@ export const UpdateLocationParentDocument = gql`
     }
   }
 `;
+
 export type UpdateLocationParentMutationFn = Apollo.MutationFunction<
   UpdateLocationParentMutation,
   UpdateLocationParentMutationVariables
@@ -10565,15 +11292,19 @@ export function useUpdateLocationParentMutation(
     options
   );
 }
+
 export type UpdateLocationParentMutationHookResult = ReturnType<
   typeof useUpdateLocationParentMutation
 >;
+
 export type UpdateLocationParentMutationResult =
   Apollo.MutationResult<UpdateLocationParentMutation>;
+
 export type UpdateLocationParentMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationParentMutation,
   UpdateLocationParentMutationVariables
 >;
+
 export const UpdateLocationRootDocument = gql`
   mutation updateLocationRoot($tagId: ID!, $root: Boolean!) {
     updateLocationTag(id: $tagId, data: { root: $root }) {
@@ -10583,6 +11314,7 @@ export const UpdateLocationRootDocument = gql`
     }
   }
 `;
+
 export type UpdateLocationRootMutationFn = Apollo.MutationFunction<
   UpdateLocationRootMutation,
   UpdateLocationRootMutationVariables
@@ -10618,12 +11350,16 @@ export function useUpdateLocationRootMutation(
     options
   );
 }
+
 export type UpdateLocationRootMutationHookResult = ReturnType<typeof useUpdateLocationRootMutation>;
+
 export type UpdateLocationRootMutationResult = Apollo.MutationResult<UpdateLocationRootMutation>;
+
 export type UpdateLocationRootMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationRootMutation,
   UpdateLocationRootMutationVariables
 >;
+
 export const UpdateLocationSynonymsDocument = gql`
   mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
     updateLocationTag(id: $tagId, data: { synonyms: $synonyms }) {
@@ -10633,6 +11369,7 @@ export const UpdateLocationSynonymsDocument = gql`
     }
   }
 `;
+
 export type UpdateLocationSynonymsMutationFn = Apollo.MutationFunction<
   UpdateLocationSynonymsMutation,
   UpdateLocationSynonymsMutationVariables
@@ -10668,15 +11405,19 @@ export function useUpdateLocationSynonymsMutation(
     UpdateLocationSynonymsMutationVariables
   >(UpdateLocationSynonymsDocument, options);
 }
+
 export type UpdateLocationSynonymsMutationHookResult = ReturnType<
   typeof useUpdateLocationSynonymsMutation
 >;
+
 export type UpdateLocationSynonymsMutationResult =
   Apollo.MutationResult<UpdateLocationSynonymsMutation>;
+
 export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationSynonymsMutation,
   UpdateLocationSynonymsMutationVariables
 >;
+
 export const UpdateLocationVisibilityDocument = gql`
   mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
     updateLocationTag(id: $tagId, data: { visible: $visible }) {
@@ -10686,6 +11427,7 @@ export const UpdateLocationVisibilityDocument = gql`
     }
   }
 `;
+
 export type UpdateLocationVisibilityMutationFn = Apollo.MutationFunction<
   UpdateLocationVisibilityMutation,
   UpdateLocationVisibilityMutationVariables
@@ -10721,20 +11463,25 @@ export function useUpdateLocationVisibilityMutation(
     UpdateLocationVisibilityMutationVariables
   >(UpdateLocationVisibilityDocument, options);
 }
+
 export type UpdateLocationVisibilityMutationHookResult = ReturnType<
   typeof useUpdateLocationVisibilityMutation
 >;
+
 export type UpdateLocationVisibilityMutationResult =
   Apollo.MutationResult<UpdateLocationVisibilityMutation>;
+
 export type UpdateLocationVisibilityMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationVisibilityMutation,
   UpdateLocationVisibilityMutationVariables
 >;
+
 export const UpdateMeDocument = gql`
   mutation updateMe($username: String, $email: String) {
     updateMe(username: $username, email: $email)
   }
 `;
+
 export type UpdateMeMutationFn = Apollo.MutationFunction<
   UpdateMeMutation,
   UpdateMeMutationVariables
@@ -10764,12 +11511,16 @@ export function useUpdateMeMutation(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<UpdateMeMutation, UpdateMeMutationVariables>(UpdateMeDocument, options);
 }
+
 export type UpdateMeMutationHookResult = ReturnType<typeof useUpdateMeMutation>;
+
 export type UpdateMeMutationResult = Apollo.MutationResult<UpdateMeMutation>;
+
 export type UpdateMeMutationOptions = Apollo.BaseMutationOptions<
   UpdateMeMutation,
   UpdateMeMutationVariables
 >;
+
 export const UpdatePersonNameDocument = gql`
   mutation updatePersonName($tagId: ID!, $name: String!) {
     updatePersonTag(id: $tagId, data: { name: $name }) {
@@ -10779,6 +11530,7 @@ export const UpdatePersonNameDocument = gql`
     }
   }
 `;
+
 export type UpdatePersonNameMutationFn = Apollo.MutationFunction<
   UpdatePersonNameMutation,
   UpdatePersonNameMutationVariables
@@ -10814,12 +11566,16 @@ export function useUpdatePersonNameMutation(
     options
   );
 }
+
 export type UpdatePersonNameMutationHookResult = ReturnType<typeof useUpdatePersonNameMutation>;
+
 export type UpdatePersonNameMutationResult = Apollo.MutationResult<UpdatePersonNameMutation>;
+
 export type UpdatePersonNameMutationOptions = Apollo.BaseMutationOptions<
   UpdatePersonNameMutation,
   UpdatePersonNameMutationVariables
 >;
+
 export const UpdatePersonSynonymsDocument = gql`
   mutation updatePersonSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
     updatePersonTag(id: $tagId, data: { synonyms: $synonyms }) {
@@ -10829,6 +11585,7 @@ export const UpdatePersonSynonymsDocument = gql`
     }
   }
 `;
+
 export type UpdatePersonSynonymsMutationFn = Apollo.MutationFunction<
   UpdatePersonSynonymsMutation,
   UpdatePersonSynonymsMutationVariables
@@ -10864,20 +11621,25 @@ export function useUpdatePersonSynonymsMutation(
     options
   );
 }
+
 export type UpdatePersonSynonymsMutationHookResult = ReturnType<
   typeof useUpdatePersonSynonymsMutation
 >;
+
 export type UpdatePersonSynonymsMutationResult =
   Apollo.MutationResult<UpdatePersonSynonymsMutation>;
+
 export type UpdatePersonSynonymsMutationOptions = Apollo.BaseMutationOptions<
   UpdatePersonSynonymsMutation,
   UpdatePersonSynonymsMutationVariables
 >;
+
 export const UpdatePictureDocument = gql`
   mutation updatePicture($pictureId: ID!, $data: JSON!) {
     updatePictureWithTagCleanup(id: $pictureId, data: $data)
   }
 `;
+
 export type UpdatePictureMutationFn = Apollo.MutationFunction<
   UpdatePictureMutation,
   UpdatePictureMutationVariables
@@ -10910,12 +11672,78 @@ export function useUpdatePictureMutation(
     options
   );
 }
+
 export type UpdatePictureMutationHookResult = ReturnType<typeof useUpdatePictureMutation>;
+
 export type UpdatePictureMutationResult = Apollo.MutationResult<UpdatePictureMutation>;
+
 export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
   UpdatePictureMutation,
   UpdatePictureMutationVariables
 >;
+
+export const UpdatePictureSequenceDataDocument = gql`
+  mutation updatePictureSequenceData(
+    $pictureId: ID!
+    $pictureSequence: ID
+    $pictureSequenceOrder: Int
+  ) {
+    updatePictureWithTagCleanup(
+      id: $pictureId
+      data: { picture_sequence: $pictureSequence, picture_sequence_order: $pictureSequenceOrder }
+    )
+  }
+`;
+
+export type UpdatePictureSequenceDataMutationFn = Apollo.MutationFunction<
+  UpdatePictureSequenceDataMutation,
+  UpdatePictureSequenceDataMutationVariables
+>;
+
+/**
+ * __useUpdatePictureSequenceDataMutation__
+ *
+ * To run a mutation, you first call `useUpdatePictureSequenceDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePictureSequenceDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePictureSequenceDataMutation, { data, loading, error }] = useUpdatePictureSequenceDataMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *      pictureSequence: // value for 'pictureSequence'
+ *      pictureSequenceOrder: // value for 'pictureSequenceOrder'
+ *   },
+ * });
+ */
+export function useUpdatePictureSequenceDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePictureSequenceDataMutation,
+    UpdatePictureSequenceDataMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdatePictureSequenceDataMutation,
+    UpdatePictureSequenceDataMutationVariables
+  >(UpdatePictureSequenceDataDocument, options);
+}
+
+export type UpdatePictureSequenceDataMutationHookResult = ReturnType<
+  typeof useUpdatePictureSequenceDataMutation
+>;
+
+export type UpdatePictureSequenceDataMutationResult =
+  Apollo.MutationResult<UpdatePictureSequenceDataMutation>;
+
+export type UpdatePictureSequenceDataMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePictureSequenceDataMutation,
+  UpdatePictureSequenceDataMutationVariables
+>;
+
 export const UpdateUserDocument = gql`
   mutation updateUser($id: ID!, $username: String, $email: String) {
     updateUsersPermissionsUser(id: $id, data: { username: $username, email: $email }) {
@@ -10925,6 +11753,7 @@ export const UpdateUserDocument = gql`
     }
   }
 `;
+
 export type UpdateUserMutationFn = Apollo.MutationFunction<
   UpdateUserMutation,
   UpdateUserMutationVariables
@@ -10958,8 +11787,11 @@ export function useUpdateUserMutation(
     options
   );
 }
+
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
@@ -13385,6 +14217,50 @@ export function useCanRunMultipleCreatePictureGeoInfoMutations(
   };
 }
 
+export function useCanRunCreatePictureSequenceMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<CreatePictureSequenceMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreatePictureSequenceDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleCreatePictureSequenceMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<CreatePictureSequenceMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreatePictureSequenceDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunCreateSubCollectionMutation(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -15662,6 +16538,50 @@ export function useCanRunMultipleUpdatePictureMutations(
     ...options,
     variables: {
       operation: UpdatePictureDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdatePictureSequenceDataMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdatePictureSequenceDataMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdatePictureSequenceDataMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdatePictureSequenceDataMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

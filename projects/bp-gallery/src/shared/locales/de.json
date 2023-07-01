@@ -206,6 +206,7 @@
       },
       "group": {
         "createPicture": "Bild hochladen",
+        "createPictureSequence": "Serie erstellen",
         "editFaceTags": "Personen markieren",
         "editPicture": "Bild bearbeiten",
         "unpublishPicture": "Bild löschen",
@@ -350,6 +351,12 @@
         "really-prompt": "Wollen Sie wirklich alle Links entfernen?"
       }
     },
+    "sequence": {
+      "label": "Serie",
+      "partOfSequence": "Teil einer Serie von {{count}} Bildern",
+      "remove": "Dieses Bild aus der Serie entfernen",
+      "removeEntire": "Alle Bilder aus der Serie entfernen"
+    },
     "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",
     "noLocations": "Keine Orte bekannt",
@@ -384,6 +391,13 @@
     "addToCollection": "In eine Collection kopieren",
     "moveToCollection": "In eine Collection verschieben",
     "removeFromCollection": "Aus dieser Collection entfernen",
+    "createSequence": "Neue Serie erstellen",
+    "alreadyInSequence": {
+      "title": "Manche Bilder sind bereits Teil von Serien",
+      "content": "Sie können die bestehenden Serien zusammenführen und die Bilder ohne Serien zu der zusammengeführten Serien hinzufügen oder aus den ausgewählten Bildern eine neue Serie erstellen. Wenn Sie letzeres wählen, werden die ausgewählten Bilder aus ihren aktellen Serien entfernt.",
+      "joinAllSequences": "Serien zusammenführen",
+      "newSequence": "Neue Serie erstellen"
+    },
     "bulkEdit": "Mehrere Bilder editieren",
     "moveFromAll": "Aus allen Collections hierher verschieben?",
     "moveFromHere": "Die ausgewählte Collection befindet sich noch in den folgenden anderen Collections: [{{parents}}].\nBeim Verschieben würde diese Collection aus all diesen anderen Collections hierher verschoben werden.",

@@ -12,7 +12,8 @@
   }
 }
 
-.picture-info-field[data-type='links'] {
+.picture-info-field[data-type='links'],
+.picture-info-field[data-type='sequence'] {
   .field-content {
     overflow: hidden;
     max-height: 500px;
@@ -27,7 +28,9 @@
     .picture-grid {
       margin-top: 0;
     }
+  }
 
+  .picture-info-field[data-type='links'] {
     .MuiButton-root:not(:disabled) {
       background: $linkColor;
     }

@@ -1,12 +1,12 @@
 import { IconButton } from '@mui/material';
-import { isFunction } from 'lodash';
+import { ExternalCanRun } from '../../../hooks/bulk-operations.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 
 export interface BulkOperation {
   icon: JSX.Element;
   name: string;
   action: (selectedPictures: FlatPicture[], onBulkEdit: () => void) => void;
-  canRun: boolean | ((canBulkEdit: boolean) => boolean);
+  canRun: boolean | ExternalCanRun;
 }
 
 const BulkOperationsPanel = ({
@@ -14,15 +14,24 @@ const BulkOperationsPanel = ({
   selectedPictures,
   onBulkEdit,
   canBulkEdit,
+  canCreatePictureSequence,
 }: {
   operations: BulkOperation[];
   selectedPictures: FlatPicture[];
   onBulkEdit: () => void;
   canBulkEdit: boolean;
+  canCreatePictureSequence: boolean;
 }) => {
-  const runnableOperations = operations.filter(operation =>
-    isFunction(operation.canRun) ? operation.canRun(canBulkEdit) : operation.canRun
-  );
+  const runnableOperations = operations.filter(operation => {
+    switch (operation.canRun) {
+      case ExternalCanRun.canBulkEdit:
+        return canBulkEdit;
+      case ExternalCanRun.canCreatePictureSequence:
+        return canCreatePictureSequence;
+      default:
+        return operation.canRun satisfies boolean;
+    }
+  });
   if (runnableOperations.length === 0) {
     return null;
   }
