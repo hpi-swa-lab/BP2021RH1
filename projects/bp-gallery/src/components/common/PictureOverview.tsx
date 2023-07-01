@@ -6,6 +6,7 @@ import { PictureFiltersInput } from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { useVisit } from '../../helpers/history';
 import useGetPictures, { TextFilter } from '../../hooks/get-pictures.hook';
+import { useCollapseSequences } from '../../hooks/sequences.hook';
 import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
 import './PictureOverview.scss';
 import PictureGrid from './picture-gallery/PictureGrid';
@@ -44,6 +45,7 @@ const PictureOverview = ({
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+  const collapsedPictures = useCollapseSequences(pictures);
 
   const onClick = useCallback(() => {
     visit(showMoreUrl);
@@ -59,10 +61,10 @@ const PictureOverview = ({
   return (
     <div className='overview-container'>
       {title && <h2 className='overview-title'>{title}</h2>}
-      {pictures && (
+      {collapsedPictures && (
         <div className='overview-picture-grid-container'>
           <PictureGrid
-            pictures={pictures}
+            pictures={collapsedPictures}
             hashBase={'overview'}
             loading={loading}
             refetch={refetch}

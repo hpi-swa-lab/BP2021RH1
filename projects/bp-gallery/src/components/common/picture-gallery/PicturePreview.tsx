@@ -13,7 +13,7 @@ export type PicturePreviewAdornment =
   // have existential types yet: https://github.com/Microsoft/TypeScript/issues/14466)
   | CustomPicturePreviewAdornmentConfig<any>;
 
-export type CustomPicturePreviewAdornmentConfig<T> = {
+export type CustomPicturePreviewAdornmentConfig<T = Record<string, never>> = {
   // this type is invariant in T, since
   // - `component` forces it to be contravariant in T
   // - `extraProps` forces it to be covariant in T
@@ -21,7 +21,7 @@ export type CustomPicturePreviewAdornmentConfig<T> = {
   extraProps: T;
 };
 
-export type CustomPicturePreviewAdornmentComponent<T> = FunctionComponent<{
+export type CustomPicturePreviewAdornmentComponent<T = Record<string, never>> = FunctionComponent<{
   context: PicturePreviewAdornmentContext;
   extraProps: T;
 }>;

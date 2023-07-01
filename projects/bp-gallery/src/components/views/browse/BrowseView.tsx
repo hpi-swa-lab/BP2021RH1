@@ -87,8 +87,14 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
 
   const exhibitionId = useContext(ExhibitionIdContext);
   //Curator functionality
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit, addToExhibition } =
-    useBulkOperations(collections?.[0]);
+  const {
+    linkToCollection,
+    moveToCollection,
+    removeFromCollection,
+    createSequence,
+    bulkEdit,
+    addToExhibition,
+  } = useBulkOperations(collections?.[0]);
 
   const addCollection = useCallback(async () => {
     const collectionName = await dialog({
@@ -155,6 +161,7 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
                 removeFromCollection,
                 linkToCollection,
                 moveToCollection,
+                createSequence,
                 bulkEdit,
                 ...(exhibitionId ? [addToExhibition] : []),
               ]}

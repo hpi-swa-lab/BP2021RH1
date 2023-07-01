@@ -37,6 +37,7 @@ import DescriptionsEditField from './DescriptionsEditField';
 import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
+import PictureSequenceInfoField from './PictureSequenceInfoField';
 import TagSelectionField from './TagSelectionField';
 
 export type Field = Pick<
@@ -265,6 +266,7 @@ const PictureInfo = ({
         hasHiddenLinks={hasHiddenLinks}
         savePictureInfo={savePictureInfo}
       />
+      <PictureSequenceInfoField picture={picture} />
       {savePictureInfo && (
         <PictureInfoField
           title={t('pictureFields.collections')}
