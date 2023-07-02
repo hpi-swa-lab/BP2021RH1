@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGetPictures, { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
+import Loading from '../Loading';
 import HorizontalPictureGrid from './HorizontalPictureGrid';
 import PictureTimeline, { TimeStepType } from './PictureTimeline';
 
@@ -40,18 +41,22 @@ const TimelineComponent = ({
       : defaultValue;
   const upperBound = new Date(Date.now()).getFullYear();
 
-  return (
-    <div>
-      <PictureTimeline
-        start={start ?? lowerBound}
-        end={end ?? upperBound}
-        type={timeStep}
-        date={date}
-        setDate={setDate}
-      />
-      <HorizontalPictureGrid date={date} setDate={setDate} allowClicks />
-    </div>
-  );
+  if (oldestResult.loading) {
+    <Loading />;
+  } else {
+    return (
+      <div>
+        <PictureTimeline
+          start={start ?? lowerBound}
+          end={end ?? upperBound}
+          type={timeStep}
+          date={date}
+          setDate={setDate}
+        />
+        <HorizontalPictureGrid date={date} setDate={setDate} allowClicks />
+      </div>
+    );
+  }
 };
 
 export default TimelineComponent;
