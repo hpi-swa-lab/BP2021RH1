@@ -59,6 +59,7 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for single keywords', () => {
+    cy.scrollTo('bottom');
     // IDs of the six keywords shown in tag overview
     const targetIDs = [9, 10, 11, 13, 14, 15];
     // iterate over the six keywords shown in tag overview
