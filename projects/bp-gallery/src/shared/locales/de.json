@@ -658,6 +658,7 @@
     "location-pictures_other": "{{ count }} Bilder in diesem Ort",
     "not-allowed-to-delete_one": "Für diesen Ort existiert {{ count }} Bild. Er kann erst entfernt werden, wenn es keine Bilder für diesen Ort gibt.",
     "not-allowed-to-delete_other": "Für diesen Ort existieren {{ count }} Bilder. Er kann erst entfernt werden, wenn es keine Bilder für diesen Ort gibt.",
+    "not-allowed-to-delete-sublocation": "Für einen der Unterorte existieren Bilder. Dieser Ort kann erst entfernt werden, wenn es keine Bilder für seine Unterorte gibt",
     "delete-coordinate": "Koordinate löschen"
   },
   "tooltips": {

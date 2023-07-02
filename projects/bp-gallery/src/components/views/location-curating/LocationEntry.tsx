@@ -1,6 +1,7 @@
 import { Check, ChevronRight, ExpandMore } from '@mui/icons-material';
 import { Badge, Chip, IconButton, Skeleton } from '@mui/material';
 import { useState } from 'react';
+import { useScrollRef } from '../../../hooks/context-hooks';
 import { useElementIsVisible } from '../../../hooks/element-is-visible';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -22,6 +23,7 @@ const LocationEntry = ({
   refetch: () => void;
 }) => {
   const prompt = useDialog();
+  const scrollRef = useScrollRef();
 
   const { acceptTag, canAcceptTag } = useAcceptTag(locationTag, refetch);
   const { deleteSynonym, canDeleteSynonym } = useDeleteSynonym(locationTag, refetch);
@@ -30,7 +32,12 @@ const LocationEntry = ({
     prompt({
       preset: DialogPreset.LOCATION_MANAGEMENT,
       title: locationTag.name,
-      content: { locationTag, parentTag, refetch },
+      content: {
+        locationTag,
+        parentTag,
+        refetch,
+        scrollPosition: scrollRef.current,
+      },
       maxWidth: false,
     });
   };
