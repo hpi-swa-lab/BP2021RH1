@@ -13,7 +13,7 @@ import './UploadsView.scss';
 const UploadsView = () => {
   const { t } = useTranslation();
 
-  const { moveToCollection, bulkEdit, addToExhibition } = useBulkOperations();
+  const { moveToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
 
   const uploadAreaProps = useMemo(
     () => ({
@@ -40,6 +40,7 @@ const UploadsView = () => {
             uploadAreaProps={uploadAreaProps}
             bulkOperations={[
               moveToCollection,
+              createSequence,
               bulkEdit,
               ...(exhibitionId ? [addToExhibition] : []),
             ]}

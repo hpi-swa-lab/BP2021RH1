@@ -1,4 +1,11 @@
-import { Add, CreateNewFolder, DriveFileMove, Edit, FolderDelete } from '@mui/icons-material';
+import {
+  Add,
+  CreateNewFolder,
+  DriveFileMove,
+  Edit,
+  Filter,
+  FolderDelete,
+} from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +17,12 @@ import { useAddExhibitionPictures } from '../components/views/exhibitions/add-ex
 import { useCanRunCreateExhibitionPictureMutation } from '../graphql/APIConnector';
 import { FlatCollection, FlatPicture } from '../types/additionalFlatTypes';
 import useManageCollectionPictures from './manage-collection-pictures.hook';
+import { useCreateSequence } from './sequences.hook';
+
+export enum ExternalCanRun {
+  canBulkEdit,
+  canCreatePictureSequence,
+}
 
 const useBulkOperations = (parentCollection?: FlatCollection) => {
   const { t } = useTranslation();
@@ -24,6 +37,8 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       preset: DialogPreset.SELECT_COLLECTION,
     });
   }, [dialog]);
+
+  const createSequence = useCreateSequence();
 
   const exhibitionId = useContext(ExhibitionIdContext);
   const addExhibitionPictures = useAddExhibitionPictures();
@@ -87,13 +102,21 @@ const useBulkOperations = (parentCollection?: FlatCollection) => {
       },
       canRun: canManageCollectionPictures,
     },
+    createSequence: {
+      name: t('curator.createSequence'),
+      icon: <Filter />,
+      action: (selectedPictures: FlatPicture[]) => {
+        createSequence(selectedPictures);
+      },
+      canRun: ExternalCanRun.canCreatePictureSequence,
+    },
     bulkEdit: {
       name: t('curator.bulkEdit'),
       icon: <Edit />,
       action: (_selectedPictures: FlatPicture[], onBulkEdit: () => void) => {
         onBulkEdit();
       },
-      canRun: canBulkEdit => canBulkEdit,
+      canRun: ExternalCanRun.canBulkEdit,
     },
     addToExhibition: {
       name: t('curator.addToExhibition'),

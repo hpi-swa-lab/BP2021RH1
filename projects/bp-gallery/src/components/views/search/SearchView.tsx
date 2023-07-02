@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import NoSearchResultsText from './NoSearchResultsText';
 import SearchBar from './SearchBar';
@@ -18,7 +19,6 @@ import {
   paramToTime,
 } from './helpers/search-filters';
 import { toURLSearchParam } from './helpers/url-search-params';
-import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 
 const isValidTimeSpecification = (searchRequest: string) => {
   // Specification of year range e.g. '1970-1979'
@@ -68,7 +68,8 @@ const SearchView = () => {
   }, [isAllSearchActive, searchParams]);
   // if (import.meta.env.MODE === 'development')
   //   getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
-  const { linkToCollection, bulkEdit, addToExhibition } = useBulkOperations();
+
+  const { linkToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
 
   const exhibitionId = useContext(ExhibitionIdContext);
 
@@ -95,6 +96,7 @@ const SearchView = () => {
             hashbase={search}
             bulkOperations={[
               linkToCollection,
+              createSequence,
               bulkEdit,
               ...(exhibitionId ? [addToExhibition] : []),
             ]}
