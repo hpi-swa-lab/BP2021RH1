@@ -52,6 +52,7 @@ const LocationPanel = () => {
           ])
         : []
     );
+    // only trigger at first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

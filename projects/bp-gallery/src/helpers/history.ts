@@ -1,6 +1,7 @@
 import { History, Location } from 'history';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { FoldoutStatus } from '../components/views/location-curating/FoldoutStatusContext';
 import { useScrollRef } from '../hooks/context-hooks';
 import { trackHistory } from '../matomo-config/matomo';
 import { useGrowthBook } from './growthbook';
@@ -20,7 +21,7 @@ type LocationState = {
   scrollPos?: number;
   open?: boolean;
   archiveId?: string;
-  openBranches?: { [key: string]: { isOpen: boolean } };
+  openBranches?: FoldoutStatus;
 };
 export type LocationWithState = Location & { state?: LocationState };
 
@@ -36,7 +37,7 @@ export const useVisit = () => {
       options?: {
         state?: LocationState;
         wasOpen?: boolean;
-        openBranches?: { [key: string]: { isOpen: boolean } };
+        openBranches?: FoldoutStatus;
         customScrollPos?: number;
       }
     ) => {

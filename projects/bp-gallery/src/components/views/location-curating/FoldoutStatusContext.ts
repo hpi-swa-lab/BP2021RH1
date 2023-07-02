@@ -1,12 +1,13 @@
 import { MutableRefObject, createContext, useContext } from 'react';
 
+export type FoldoutStatus = {
+  [key: string]: {
+    isOpen: boolean;
+  };
+};
+
 export const FoldoutStatusContext = createContext<MutableRefObject<
-  | {
-      [key: string]: {
-        isOpen: boolean;
-      };
-    }
-  | undefined
+  FoldoutStatus | undefined
 > | null>(null);
 
 export const useFoldoutStatus = () => {
