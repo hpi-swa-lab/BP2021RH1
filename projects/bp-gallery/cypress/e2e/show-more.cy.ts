@@ -33,18 +33,20 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for "Orte"', () => {
-    cy.get('.overview-container:contains(Orte)').contains('Mehr anzeigen').click();
+    cy.get('.overview-selection-container:eq(1)').contains('Orte').click();
+    cy.get('.overview-selection-container:contains(Orte)').contains('Mehr anzeigen').click();
     urlIs('/show-more/location');
   });
 
   it('works for single locations', () => {
+    cy.get('.overview-selection-container:eq(1)').contains('Orte').click();
     // IDs of the six locations shown in tag overview
     const targetIDs = [7, 8, 9, 10, 11, 13];
     // iterate over the six locations shown in tag overview
     //for (const targetID of targetIDs) {
     targetIDs.forEach((targetID, index) => {
       cy.get(
-        `.overview-container:contains(Orte) .overview-collection-grid-container .items .item:eq(${index})`
+        `.overview-selection-container:contains(Orte) .overview-collection-grid-container .items .item:eq(${index})`
       ).click();
       urlIs(`/show-more/location/${targetID}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
