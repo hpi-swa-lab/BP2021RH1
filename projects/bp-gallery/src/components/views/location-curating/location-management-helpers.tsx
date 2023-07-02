@@ -10,6 +10,7 @@ import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { useLocationPanelPermissions } from './LocationPanelPermissionsContext';
 import { useDeleteSingleTag, useDeleteTagAndChildren } from './delete-tag-helpers';
 
 const enum deleteOptions {
@@ -52,13 +53,11 @@ const useClosesLoop = () => {
 
 export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
   const { closesLoop } = useClosesLoop();
-  const { updateTagParentMutationSource, canUpdateTagParentQuery } = useGenericTagEndpoints(
-    TagType.LOCATION
-  );
+  const { updateTagParentMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateTagParentMutation] = updateTagParentMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canSetParentTags } = canUpdateTagParentQuery();
+  const { canUpdateTagParent: canSetParentTags } = useLocationPanelPermissions();
 
   const setParentTags = useCallback(
     (parentTags: FlatTag[]) => {
@@ -85,13 +84,11 @@ export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
 
 export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
   const { closesLoop } = useClosesLoop();
-  const { updateTagChildMutationSource, canUpdateTagChildQuery } = useGenericTagEndpoints(
-    TagType.LOCATION
-  );
+  const { updateTagChildMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateTagChildMutation] = updateTagChildMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canSetChildTags } = canUpdateTagChildQuery();
+  const { canUpdateTagChild: canSetChildTags } = useLocationPanelPermissions();
 
   const setChildTags = useCallback(
     (childTags: FlatTag[]) => {
@@ -117,13 +114,11 @@ export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
 };
 
 export const useSetVisible = (locationTag: FlatTag, refetch: () => void) => {
-  const { updateVisibilityMutationSource, canUpdateVisibilityQuery } = useGenericTagEndpoints(
-    TagType.LOCATION
-  );
+  const { updateVisibilityMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateVisibilityMutation] = updateVisibilityMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canSetVisible } = canUpdateVisibilityQuery();
+  const { canUpdateVisibility: canSetVisible } = useLocationPanelPermissions();
   const setVisible = useCallback(
     (value: boolean) => {
       updateVisibilityMutation({
@@ -140,11 +135,11 @@ export const useSetVisible = (locationTag: FlatTag, refetch: () => void) => {
 };
 
 export const useSetRoot = (locationTag: FlatTag, refetch: () => void) => {
-  const { updateRootMutationSource, canUpdateRootQuery } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateRootMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canSetTagAsRoot } = canUpdateRootQuery();
+  const { canUpdateRoot: canSetTagAsRoot } = useLocationPanelPermissions();
 
   const setTagAsRoot = useCallback(
     async (isRoot: boolean) => {
@@ -166,20 +161,16 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
   const { t } = useTranslation();
   const { closesLoop } = useClosesLoop();
 
-  const {
-    updateTagParentMutationSource,
-    updateRootMutationSource,
-    canUpdateTagParentQuery,
-    canUpdateRootQuery,
-  } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateTagParentMutationSource, updateRootMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
   const [updateTagParentMutation] = updateTagParentMutationSource({
     onCompleted: refetch,
   });
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canUpdateTagParent } = canUpdateTagParentQuery();
-  const { canRun: canUpdateRoot } = canUpdateRootQuery();
+  const { canUpdateTagParent, canUpdateRoot } = useLocationPanelPermissions();
   const canRelocateTag = canUpdateTagParent && canUpdateRoot;
   const relocateTag = useCallback(async () => {
     const selectedTag: FlatTag | undefined = await prompt({
@@ -233,20 +224,16 @@ export const useDetachTag = (locationTag: FlatTag, refetch: () => void, parentTa
   const prompt = useDialog();
   const { t } = useTranslation();
 
-  const {
-    updateTagParentMutationSource,
-    updateRootMutationSource,
-    canUpdateTagParentQuery,
-    canUpdateRootQuery,
-  } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateTagParentMutationSource, updateRootMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
   const [updateTagParentMutation] = updateTagParentMutationSource({
     onCompleted: refetch,
   });
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canUpdateTagParent } = canUpdateTagParentQuery();
-  const { canRun: canUpdateRoot } = canUpdateRootQuery();
+  const { canUpdateTagParent, canUpdateRoot } = useLocationPanelPermissions();
   const canDetachTag = canUpdateTagParent && canUpdateRoot;
   const detachTag = useCallback(async () => {
     const reallyDetach = await prompt({
@@ -292,20 +279,16 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
   const { t } = useTranslation();
   const { closesLoop } = useClosesLoop();
 
-  const {
-    updateTagParentMutationSource,
-    updateRootMutationSource,
-    canUpdateTagParentQuery,
-    canUpdateRootQuery,
-  } = useGenericTagEndpoints(TagType.LOCATION);
+  const { updateTagParentMutationSource, updateRootMutationSource } = useGenericTagEndpoints(
+    TagType.LOCATION
+  );
   const [updateTagParentMutation] = updateTagParentMutationSource({
     onCompleted: refetch,
   });
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canUpdateTagParent } = canUpdateTagParentQuery();
-  const { canRun: canUpdateRoot } = canUpdateRootQuery();
+  const { canUpdateTagParent, canUpdateRoot } = useLocationPanelPermissions();
   const canCopyTag = canUpdateTagParent && canUpdateRoot;
   const copyTag = useCallback(async () => {
     const selectedTag: FlatTag | undefined = await prompt({
@@ -351,13 +334,11 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
 };
 
 export const useAcceptTag = (locationTag: FlatTag, refetch: () => void) => {
-  const { updateTagAcceptanceMutationSource, canUpdateTagAcceptanceQuery } = useGenericTagEndpoints(
-    TagType.LOCATION
-  );
+  const { updateTagAcceptanceMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateAcceptedMutation] = updateTagAcceptanceMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canAcceptTag } = canUpdateTagAcceptanceQuery();
+  const { canUpdateTagAcceptance: canAcceptTag } = useLocationPanelPermissions();
   const acceptTag = useCallback(() => {
     updateAcceptedMutation({
       variables: {
@@ -371,13 +352,11 @@ export const useAcceptTag = (locationTag: FlatTag, refetch: () => void) => {
 };
 
 export const useDeleteSynonym = (locationTag: FlatTag, refetch: () => void) => {
-  const { updateSynonymsMutationSource, canUpdateSynonymsQuery } = useGenericTagEndpoints(
-    TagType.LOCATION
-  );
+  const { updateSynonymsMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canDeleteSynonym } = canUpdateSynonymsQuery();
+  const { canUpdateSynonyms: canDeleteSynonym } = useLocationPanelPermissions();
   const deleteSynonym = useCallback(
     (synonymName: string) => {
       updateSynonymsMutation({
@@ -397,13 +376,11 @@ export const useDeleteSynonym = (locationTag: FlatTag, refetch: () => void) => {
 };
 
 export const useAddSynonym = (locationTag: FlatTag, refetch: () => void) => {
-  const { updateSynonymsMutationSource, canUpdateSynonymsQuery } = useGenericTagEndpoints(
-    TagType.LOCATION
-  );
+  const { updateSynonymsMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canAddSynonym } = canUpdateSynonymsQuery();
+  const { canUpdateSynonyms: canAddSynonym } = useLocationPanelPermissions();
   const addSynonym = useCallback(
     (synonymName: string) => {
       if (synonymName.length) {
@@ -548,9 +525,8 @@ export const useDeleteTag = (
   });
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
 
-  const { canDeleteTagQuery, canUpdateTagParentQuery } = useGenericTagEndpoints(TagType.LOCATION);
-  const { canRun: canRunDeleteTag } = canDeleteTagQuery();
-  const { canRun: canRunUpdateTagParent } = canUpdateTagParentQuery();
+  const { canDeleteTag: canRunDeleteTag, canUpdateTagParent: canRunUpdateTagParent } =
+    useLocationPanelPermissions();
   const canDeleteTag = canRunDeleteTag && canRunUpdateTagParent;
 
   const deleteTag = useCallback(async () => {
@@ -643,13 +619,11 @@ export const useDeleteTag = (
 };
 
 export const useUpdateName = (locationTag: FlatTag, refetch: () => void) => {
-  const { updateTagNameMutationSource, canUpdateTagNameQuery } = useGenericTagEndpoints(
-    TagType.LOCATION
-  );
+  const { updateTagNameMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [updateTagNameMutation] = updateTagNameMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canUpdateName } = canUpdateTagNameQuery();
+  const { canUpdateTagName: canUpdateName } = useLocationPanelPermissions();
 
   const updateName = useCallback(
     (newName: string = '') => {
@@ -669,11 +643,11 @@ export const useUpdateName = (locationTag: FlatTag, refetch: () => void) => {
 export const useCreateNewTag = (refetch: () => void) => {
   const dialog = useDialog();
   const { t } = useTranslation();
-  const { createTagMutationSource, canCreateTagQuery } = useGenericTagEndpoints(TagType.LOCATION);
+  const { createTagMutationSource } = useGenericTagEndpoints(TagType.LOCATION);
   const [createTagMutation] = createTagMutationSource({
     onCompleted: refetch,
   });
-  const { canRun: canCreateNewTag } = canCreateTagQuery();
+  const { canCreateTag: canCreateNewTag } = useLocationPanelPermissions();
 
   const createNewTag = useCallback(
     async (potentialSiblings?: FlatTag[], parent?: FlatTag) => {

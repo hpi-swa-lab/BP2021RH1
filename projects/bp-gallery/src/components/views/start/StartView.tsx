@@ -1,5 +1,6 @@
 import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
-import { AccessTime, AutoStories, ThumbUp } from '@mui/icons-material';
+import { AccessTime, ArrowForwardIos, AutoStories, ThumbUp } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,7 +18,6 @@ import OverviewContainer, {
   OverviewContainerTab,
 } from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
-import PrimaryButton from '../../common/PrimaryButton';
 import BrowseView from '../browse/BrowseView';
 import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 import { useVisit } from './../../../helpers/history';
@@ -71,14 +71,7 @@ const StartView = () => {
       {
         title: t('discover.latest-pictures'),
         icon: <AccessTime key='0' />,
-        content: (
-          <PictureOverview
-            queryParams={{}}
-            onClick={() => {
-              visit('/show-more/latest');
-            }}
-          />
-        ),
+        content: <PictureOverview queryParams={{}} showMoreUrl='/show-more/latest' />,
       },
       {
         title: t('discover.most-liked'),
@@ -87,9 +80,7 @@ const StartView = () => {
           <PictureOverview
             type={PictureOverviewType.MOST_LIKED}
             queryParams={{}}
-            onClick={() => {
-              visit('/show-more/most-liked');
-            }}
+            showMoreUrl='/show-more/most-liked'
           />
         ),
       },
@@ -103,7 +94,7 @@ const StartView = () => {
           ]
         : []),
     ];
-  }, [t, visit, showStories]);
+  }, [t, showStories]);
 
   const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
 
@@ -119,23 +110,25 @@ const StartView = () => {
         <DailyPicture />
 
         <div className='flex place-content-center gap-2 m-4 flex-wrap'>
-          <PrimaryButton
+          <Button
+            variant='contained'
+            endIcon={<ArrowForwardIos />}
             onClick={() => {
               visit('/discover');
             }}
-            withRightArrow
           >
             {t('discover.discover-button')}
-          </PrimaryButton>
+          </Button>
           {!isMobile && (
-            <PrimaryButton
+            <Button
+              variant='contained'
+              endIcon={<ArrowForwardIos />}
               onClick={() => {
                 visit('/geo');
               }}
-              withRightArrow
             >
               {t('geo.geo-game-button')}
-            </PrimaryButton>
+            </Button>
           )}
           <div className='flex basis-full' />
           <IfFeatureEnabled feature='paypal_mainpage'>

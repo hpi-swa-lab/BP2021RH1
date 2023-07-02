@@ -37,6 +37,7 @@ import DescriptionsEditField from './DescriptionsEditField';
 import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
+import PictureSequenceInfoField from './PictureSequenceInfoField';
 import TagSelectionField from './TagSelectionField';
 
 export type Field = Pick<
@@ -93,7 +94,7 @@ const PictureInfo = ({
   const openAlert = useContext(AlertContext);
 
   const allKeywords = useSimplifiedQueryResponseData(keywordsResponse.data)?.keywordTags;
-  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.locationTags;
+  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.getAllLocationTags;
   const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
   const allCollections = useSimplifiedQueryResponseData(collectionsResponse.data)?.collections;
 
@@ -121,25 +122,25 @@ const PictureInfo = ({
     newKeywordTagMutationResponse.loading;
 
   useEffect(() => {
-    if (canGetAllKeywords) {
+    if (onSave && canGetAllKeywords) {
       getAllKeywords();
     }
-  }, [canGetAllKeywords, getAllKeywords]);
+  }, [onSave, canGetAllKeywords, getAllKeywords]);
   useEffect(() => {
-    if (canGetAllLocations) {
+    if (onSave && canGetAllLocations) {
       getAllLocations();
     }
-  }, [canGetAllLocations, getAllLocations]);
+  }, [onSave, canGetAllLocations, getAllLocations]);
   useEffect(() => {
-    if (canGetAllPeople) {
+    if (onSave && canGetAllPeople) {
       getAllPeople();
     }
-  }, [canGetAllPeople, getAllPeople]);
+  }, [onSave, canGetAllPeople, getAllPeople]);
   useEffect(() => {
-    if (canGetAllCollections) {
+    if (onSave && canGetAllCollections) {
       getAllCollections();
     }
-  }, [canGetAllCollections, getAllCollections]);
+  }, [onSave, canGetAllCollections, getAllCollections]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
   return (
@@ -265,6 +266,7 @@ const PictureInfo = ({
         hasHiddenLinks={hasHiddenLinks}
         savePictureInfo={savePictureInfo}
       />
+      <PictureSequenceInfoField picture={picture} />
       {savePictureInfo && (
         <PictureInfoField
           title={t('pictureFields.collections')}

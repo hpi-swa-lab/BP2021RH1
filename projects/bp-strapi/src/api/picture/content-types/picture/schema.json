@@ -134,6 +134,15 @@
       "target": "api::face-tag.face-tag",
       "mappedBy": "picture"
     },
+    "picture_sequence": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::picture-sequence.picture-sequence",
+      "inversedBy": "pictures"
+    },
+    "picture_sequence_order": {
+      "type": "integer"
+    },
     "exhibition_pictures": {
       "type": "relation",
       "relation": "oneToMany",

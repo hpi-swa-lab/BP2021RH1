@@ -1,5 +1,6 @@
 // NOTE: this file is auto-generated, run yarn generate-api instead
 export { default as createPicture } from './groups/createPicture.js';
+export { default as createPictureSequence } from './groups/createPictureSequence.js';
 export { default as createTag } from './groups/createTag.js';
 export { default as deleteTag } from './groups/deleteTag.js';
 export { default as editArchive } from './groups/editArchive.js';

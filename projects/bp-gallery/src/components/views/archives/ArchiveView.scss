@@ -19,19 +19,6 @@ h1 {
     margin-top: 2rem;
   }
 
-  .edit-button-wrapper {
-    display: flex;
-
-    .archive-edit-button {
-      background: $primaryColor !important;
-      color: white !important;
-      z-index: 99;
-      margin-left: auto;
-      padding-inline: 1rem;
-      margin-bottom: 1rem;
-    }
-  }
-
   .archive-data {
     display: flex;
     width: 100%;

@@ -4,6 +4,7 @@ import {
   ArrowForwardIos,
   Check,
   Close,
+  Delete,
   Edit,
   Place,
   Subtitles,
@@ -11,11 +12,17 @@ import {
   VisibilityOff,
 } from '@mui/icons-material';
 import { Button, Chip, DialogContent, IconButton, TextField } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { Icon, LatLng, Map } from 'leaflet';
+import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import { pick } from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MapContainer, Marker, TileLayer, useMapEvent } from 'react-leaflet';
 import {
   useCanRunCreateLocationTagMutation,
   useCreateLocationTagMutation,
+  useUpdateLocationCoordinatesMutation,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVisit } from '../../../helpers/history';
@@ -37,6 +44,34 @@ import {
   useUpdateName,
 } from './location-management-helpers';
 import { useGetTagStructures } from './tag-structure-helpers';
+
+const BAD_HARZBURG_POS = new LatLng(51.8392573, 10.5279953);
+
+const LocationMarker = ({
+  position,
+  setPosition,
+}: {
+  position?: LatLng;
+  setPosition: (pos: LatLng) => void;
+}) => {
+  useMapEvent('click', event => {
+    setPosition(event.latlng.clone());
+  });
+
+  const myIcon = new Icon({
+    ...pick(Icon.Default.prototype.options, [
+      'iconSize',
+      'iconAnchor',
+      'popupAnchor',
+      'shadowSize',
+      'shadowAnchor',
+    ]),
+    iconUrl: myMarkerIcon,
+    shadowUrl: markerShadow,
+  });
+
+  return position ? <Marker icon={myIcon} position={position} /> : null;
+};
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -93,6 +128,8 @@ const LocationManagementDialogPreset = ({
   const { setParentTags, canSetParentTags } = useSetParentTags(locationTag, refetch);
   const { setChildTags, canSetChildTags } = useSetChildTags(locationTag, refetch);
 
+  const map = useRef<Map>(null);
+
   const [newLocationTagMutation] = useCreateLocationTagMutation({
     refetchQueries: ['getAllLocationTags'],
     awaitRefetchQueries: true,
@@ -103,14 +140,39 @@ const LocationManagementDialogPreset = ({
   const [isRoot, setIsRoot] = useState<boolean>(
     locationTag.root ?? !locationTag.parent_tags?.length
   );
-
   const [title, setTitle] = useState<string>(locationTag.name);
+  const [position, setPosition] = useState<LatLng | undefined>(
+    locationTag.coordinates
+      ? new LatLng(locationTag.coordinates.latitude, locationTag.coordinates.longitude)
+      : undefined
+  );
 
   useEffect(() => {
     setLocalVisibility(locationTag.visible ?? false);
     setIsRoot(locationTag.root ?? !locationTag.parent_tags?.length);
     setTitle(locationTag.name);
+    setPosition(
+      locationTag.coordinates
+        ? new LatLng(locationTag.coordinates.latitude, locationTag.coordinates.longitude)
+        : undefined
+    );
   }, [locationTag]);
+
+  const [updateLocationCoordinatesMutation] = useUpdateLocationCoordinatesMutation({
+    onCompleted: refetch,
+  });
+
+  const initialMapValues = useMemo(() => {
+    return {
+      center: position ?? BAD_HARZBURG_POS,
+      zoom: 10,
+    };
+  }, [position]);
+
+  useEffect(() => {
+    if (!map.current || !position) return;
+    map.current.flyTo(position, 10);
+  }, [position]);
 
   return (
     <>
@@ -290,9 +352,50 @@ const LocationManagementDialogPreset = ({
           </div>
           <div className='location-management-right'>
             <div className='location-management-map'>
-              Work in Progress/Hier wird noch dran gearbeitet
+              <MapContainer
+                center={initialMapValues.center}
+                zoom={initialMapValues.zoom}
+                className='map-container w-full h-full mb-1'
+                scrollWheelZoom={true}
+                ref={map}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                />
+                <LocationMarker
+                  position={position}
+                  setPosition={pos => {
+                    updateLocationCoordinatesMutation({
+                      variables: {
+                        tagId: locationTag.id,
+                        coordinate: {
+                          latitude: pos.lat,
+                          longitude: pos.lng,
+                        },
+                      },
+                    });
+                    setPosition(pos);
+                  }}
+                />
+              </MapContainer>
             </div>
             <div className='location-management-actions'>
+              <Button
+                className='location-management-button location-management-primary'
+                onClick={() => {
+                  updateLocationCoordinatesMutation({
+                    variables: {
+                      tagId: locationTag.id,
+                      coordinate: null,
+                    },
+                  });
+                  setPosition(undefined);
+                }}
+                endIcon={<Delete />}
+              >
+                {t('tag-panel.delete-coordinate')}
+              </Button>
               <div className='location-management-picture-count'>
                 {flattenedPictures &&
                   t('tag-panel.location-pictures', {

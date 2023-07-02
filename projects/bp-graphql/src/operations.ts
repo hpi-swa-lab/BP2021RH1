@@ -18,6 +18,7 @@ export { default as createLocationTag } from './operations/createLocationTag.js'
 export { default as createPersonTag } from './operations/createPersonTag.js';
 export { default as createPicture } from './operations/createPicture.js';
 export { default as createPictureGeoInfo } from './operations/createPictureGeoInfo.js';
+export { default as createPictureSequence } from './operations/createPictureSequence.js';
 export { default as createSubCollection } from './operations/createSubCollection.js';
 export { default as declineComment } from './operations/declineComment.js';
 export { default as deleteCollection } from './operations/deleteCollection.js';
@@ -96,6 +97,7 @@ export { default as updateKeywordVisibility } from './operations/updateKeywordVi
 export { default as updateLink } from './operations/updateLink.js';
 export { default as updateLocationAcceptance } from './operations/updateLocationAcceptance.js';
 export { default as updateLocationChild } from './operations/updateLocationChild.js';
+export { default as updateLocationCoordinates } from './operations/updateLocationCoordinates.js';
 export { default as updateLocationName } from './operations/updateLocationName.js';
 export { default as updateLocationParent } from './operations/updateLocationParent.js';
 export { default as updateLocationRoot } from './operations/updateLocationRoot.js';
@@ -105,4 +107,5 @@ export { default as updateMe } from './operations/updateMe.js';
 export { default as updatePersonName } from './operations/updatePersonName.js';
 export { default as updatePersonSynonyms } from './operations/updatePersonSynonyms.js';
 export { default as updatePicture } from './operations/updatePicture.js';
+export { default as updatePictureSequenceData } from './operations/updatePictureSequenceData.js';
 export { default as updateUser } from './operations/updateUser.js';

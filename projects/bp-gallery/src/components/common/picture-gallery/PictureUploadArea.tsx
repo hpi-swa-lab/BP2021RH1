@@ -1,11 +1,4 @@
-import {
-  DndContext,
-  DragEndEvent,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { Close, ExpandCircleDown, Upload } from '@mui/icons-material';
 import { Button, CircularProgress } from '@mui/material';
@@ -17,6 +10,7 @@ import { useCreatePictureMutation, useMultipleUploadMutation } from '../../../gr
 import { PictureOrigin } from '../../../helpers/app-helpers';
 import { useCanUploadPicture } from '../../../hooks/can-do-hooks';
 import { useObjectIds } from '../../../hooks/object-ids.hook';
+import { useMouseAndTouchSensors } from '../../../hooks/sensors.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 import SortableItem from '../SortableItem';
@@ -42,21 +36,7 @@ const PictureUploadArea = ({
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: 'image/jpeg,image/png',
   });
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      // Require the mouse to move by 10 pixels before activating
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
-    useSensor(TouchSensor, {
-      // Press delay of 250ms, with tolerance of 5px of movement
-      activationConstraint: {
-        delay: 250,
-        tolerance: 5,
-      },
-    })
-  );
+  const sensors = useMouseAndTouchSensors();
   const { t } = useTranslation();
   const dialog = useDialog();
   const { getObjectId } = useObjectIds<NewFile>();
@@ -190,13 +170,14 @@ const PictureUploadArea = ({
         </DndContext>
       </div>
       {Boolean(newFiles.length) && (
-        <Button disabled={loading} className='add-to-collection' onClick={uploadPictures}>
-          {loading ? (
-            <CircularProgress sx={{ mr: '10px' }} />
-          ) : (
-            <ExpandCircleDown sx={{ mr: '10px' }} />
-          )}
-          <p>{t('curator.addPictures')}</p>
+        <Button
+          variant='contained'
+          data-cy='file-upload'
+          disabled={loading}
+          onClick={uploadPictures}
+          endIcon={loading ? <CircularProgress /> : <ExpandCircleDown />}
+        >
+          <p>{loading ? t('curator.uploadingPictures') : t('curator.addPictures')}</p>
         </Button>
       )}
     </div>

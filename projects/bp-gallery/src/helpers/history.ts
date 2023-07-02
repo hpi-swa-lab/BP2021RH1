@@ -21,6 +21,7 @@ type LocationState = {
   scrollPos?: number;
   open?: boolean;
   mapState?: { center: LatLng; zoom: number };
+  archiveId?: string;
 };
 export type LocationWithState = Location & { state?: LocationState };
 

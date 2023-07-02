@@ -46,7 +46,7 @@
 
     .location-management-left-content {
       height: 510px;
-      overflow: scroll;
+      overflow: auto;
       padding-right: 16px;
 
       .location-management-synonyms {
@@ -82,8 +82,7 @@
     max-width: 400px;
     .location-management-map {
       width: 400px;
-      height: 406px;
-      background-color: greenyellow;
+      height: 400px;
     }
 
     .location-management-actions {
@@ -91,7 +90,7 @@
         width: 100%;
         text-align: center;
         color: $archiveColor;
-        margin-top: 8px;
+        margin-top: 1rem;
       }
 
       .location-management-button {

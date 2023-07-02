@@ -74,6 +74,7 @@ export const ClipboardEditor = () => {
                     showCount={false}
                     showDefaultAdornments={false}
                     extraAdornments={[remove]}
+                    collapseSequences={false}
                     textFilter={TextFilter.PICTURES_AND_TEXTS}
                   />
                 </HideStats>

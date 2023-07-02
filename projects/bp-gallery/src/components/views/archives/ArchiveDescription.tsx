@@ -30,7 +30,7 @@ const ArchiveDescription = ({ description }: { description: Maybe<string> | unde
           !open ? 'line-clamp-[16] !overflow-visible' : ''
         }`}
       >
-        <RichText value={description ?? t('archives.defaultLongDescription')} />
+        <RichText value={description ?? t('archives.view.defaultLongDescription')} />
       </div>
     </CollapsibleContainer>
   );

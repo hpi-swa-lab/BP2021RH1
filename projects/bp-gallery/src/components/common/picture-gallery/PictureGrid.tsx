@@ -1,16 +1,25 @@
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { CheckBox, CheckBoxOutlineBlank, Delete, DoneAll, RemoveDone } from '@mui/icons-material';
 import { IconButton, Portal } from '@mui/material';
-import { isFunction, union } from 'lodash';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { union } from 'lodash';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
-import { pushHistoryWithoutRouter } from '../../../helpers/history';
-import { useCanBulkEditSomePictures, useCanUseBulkEditView } from '../../../hooks/can-do-hooks';
+import { pushHistoryWithoutRouter, replaceHistoryWithoutRouter } from '../../../helpers/history';
+import { ExternalCanRun } from '../../../hooks/bulk-operations.hook';
+import {
+  useCanBulkEditSomePictures,
+  useCanCreatePictureSequence,
+  useCanUseBulkEditView,
+} from '../../../hooks/can-do-hooks';
 import useDeletePicture, { useCanDeletePicture } from '../../../hooks/delete-picture.hook';
+import { useMouseAndTouchSensors } from '../../../hooks/sensors.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import BulkEditView from '../../views/bulk-edit/BulkEditView';
 import PictureView from '../../views/picture/PictureView';
+import SortableItem from '../SortableItem';
 import BulkOperationsPanel, { BulkOperation } from './BulkOperationsPanel';
 import './PictureGrid.scss';
 import PicturePreview, {
@@ -20,6 +29,7 @@ import PicturePreview, {
   DefaultPicturePreviewAdornmentConfig,
   PicturePreviewAdornment,
 } from './PicturePreview';
+import { pictureGridInitialPictureIdUrlParam } from './helpers/constants';
 import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
 export type PictureGridProps = {
@@ -28,10 +38,12 @@ export type PictureGridProps = {
   loading: boolean;
   bulkOperations?: BulkOperation[];
   refetch: () => void;
+  fetchMore?: (currentPictureId: string) => void;
   extraAdornments?: PicturePreviewAdornment[];
   showDefaultAdornments?: boolean;
   allowClicks?: boolean;
   rows?: number;
+  onSort?: (newPictures: FlatPicture[]) => void;
 };
 
 const PictureGrid = ({
@@ -40,10 +52,12 @@ const PictureGrid = ({
   loading,
   bulkOperations,
   refetch,
+  fetchMore,
   extraAdornments,
   showDefaultAdornments = true,
   allowClicks = true,
   rows,
+  onSort,
 }: PictureGridProps) => {
   const ref = useRef<any>();
 
@@ -137,16 +151,31 @@ const PictureGrid = ({
     setTable(buffer);
   }, [pictures, calculatePictureNumber, calculatePicturesPerRow]);
 
-  const navigateToPicture = useCallback(
+  const navigateToPicture = useCallback((id: string, replaceHistory = false) => {
+    setFocusedPicture(id);
+    const changeHistoryWithoutRouter = replaceHistory
+      ? replaceHistoryWithoutRouter
+      : pushHistoryWithoutRouter;
+    changeHistoryWithoutRouter(`/picture/${id}`);
+  }, []);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const initialPictureId = urlParams.get(pictureGridInitialPictureIdUrlParam);
+    if (initialPictureId !== null) {
+      navigateToPicture(initialPictureId, true);
+    }
+  }, [navigateToPicture]);
+
+  const transitionToPicture = useCallback(
     (id: string) => {
       setTransitioning(true);
-      setFocusedPicture(id);
-      pushHistoryWithoutRouter(`/picture/${id}`);
+      navigateToPicture(id);
       zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
         setTransitioning(false);
       });
     },
-    [setFocusedPicture]
+    [navigateToPicture]
   );
 
   const [selectedPictureIds, setSelectedPictureIds] = useState<string[]>([]);
@@ -180,6 +209,7 @@ const PictureGrid = ({
   }, [setBulkEditPictureIds, selectedPictureIds]);
 
   const { canUseBulkEditView: canBulkEdit } = useCanUseBulkEditView(selectedPictureIds);
+  const { canCreatePictureSequence } = useCanCreatePictureSequence(selectedPictureIds);
 
   const { canBulkEditSomePictures } = useCanBulkEditSomePictures();
 
@@ -192,9 +222,11 @@ const PictureGrid = ({
       // selections being present.
       bulkOperations?.some(
         operation =>
-          operation.canRun === true || (isFunction(operation.canRun) && canBulkEditSomePictures)
+          operation.canRun === true ||
+          (operation.canRun === ExternalCanRun.canBulkEdit && canBulkEditSomePictures) ||
+          (operation.canRun === ExternalCanRun.canCreatePictureSequence && canCreatePictureSequence)
       ) ?? false,
-    [bulkOperations, canBulkEditSomePictures]
+    [bulkOperations, canBulkEditSomePictures, canCreatePictureSequence]
   );
 
   const defaultAdornments: PicturePreviewAdornment[] = useMemo(
@@ -264,6 +296,65 @@ const PictureGrid = ({
     [defaultAdornments, extraAdornments]
   );
 
+  const renderGrid = useCallback(
+    (
+      wrap: (picture: FlatPicture, preview: ReactNode) => ReactNode = (_picture, preview) => preview
+    ) => {
+      return table.map((row, rowindex) => {
+        return (
+          <div key={rowindex} className='row'>
+            {row.map((picture, colindex) => {
+              if (!picture) {
+                return (
+                  <div
+                    key={`${rowindex}${colindex}`}
+                    className='picture-placeholder'
+                    style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
+                  />
+                );
+              } else {
+                return wrap(
+                  picture,
+                  <PicturePreview
+                    key={picture.id}
+                    picture={picture}
+                    onClick={() => {
+                      if (!allowClicks) return;
+                      transitionToPicture(picture.id);
+                    }}
+                    adornments={pictureAdornments}
+                    allowClicks={allowClicks}
+                  />
+                );
+              }
+            })}
+          </div>
+        );
+      });
+    },
+    [allowClicks, loading, pictureAdornments, table, transitionToPicture]
+  );
+
+  const sensors = useMouseAndTouchSensors();
+  const onDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      if (!onSort) {
+        return;
+      }
+      const { active, over } = event;
+
+      if (!over || active.id === over.id) return;
+      onSort(
+        arrayMove(
+          pictures,
+          pictures.findIndex(picture => picture.id === active.id),
+          pictures.findIndex(picture => picture.id === over.id)
+        )
+      );
+    },
+    [onSort, pictures]
+  );
+
   return (
     <div className={`${transitioning ? 'transitioning' : ''}`} ref={ref}>
       <div className='empty:hidden sticky top-2 z-10 bg-[#ccccccee] p-2 mt-8 rounded-md [&>.MuiIconButton-root>svg]:!text-[28px]'>
@@ -273,6 +364,7 @@ const PictureGrid = ({
             selectedPictures={selectedPictures}
             onBulkEdit={navigateToBulkEdit}
             canBulkEdit={canBulkEdit}
+            canCreatePictureSequence={canCreatePictureSequence}
           />
         )}
         {canSelect && (
@@ -287,36 +379,25 @@ const PictureGrid = ({
         )}
       </div>
       <div className='picture-grid'>
-        {table.map((row, rowindex) => {
-          return (
-            <div key={rowindex} className='row'>
-              {row.map((picture, colindex) => {
-                if (!picture) {
-                  return (
-                    <div
-                      key={`${rowindex}${colindex}`}
-                      className='picture-placeholder'
-                      style={{ flex: `1 1 0`, visibility: loading ? 'visible' : 'hidden' }}
-                    />
-                  );
-                } else {
-                  return (
-                    <PicturePreview
-                      key={`${rowindex}${colindex}`}
-                      picture={picture}
-                      onClick={() => {
-                        if (!allowClicks) return;
-                        navigateToPicture(picture.id);
-                      }}
-                      adornments={pictureAdornments}
-                      allowClicks={allowClicks}
-                    />
-                  );
-                }
-              })}
-            </div>
-          );
-        })}
+        {onSort ? (
+          <DndContext onDragEnd={onDragEnd} sensors={sensors}>
+            <SortableContext
+              items={table.flatMap(row =>
+                row
+                  .filter((picture): picture is FlatPicture => !!picture)
+                  .map(picture => picture.id)
+              )}
+            >
+              {renderGrid((picture, preview) => (
+                <SortableItem id={picture.id} key={picture.id}>
+                  {preview}{' '}
+                </SortableItem>
+              ))}
+            </SortableContext>
+          </DndContext>
+        ) : (
+          renderGrid()
+        )}
       </div>
       {focusedPicture && !transitioning && (
         <Portal container={root}>
@@ -330,6 +411,7 @@ const PictureGrid = ({
                 setFocusedPicture(undefined);
               });
             }}
+            fetchMore={fetchMore}
           />
         </Portal>
       )}

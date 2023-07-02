@@ -49,10 +49,12 @@ const PictureView = ({
   initialPictureId,
   siblingIds,
   onBack,
+  fetchMore,
 }: {
   initialPictureId: string;
   siblingIds?: string[];
   onBack?: (picid: string) => void;
+  fetchMore?: (currentPictureId: string) => void;
 }) => {
   const history: History = useHistory();
 
@@ -66,6 +68,12 @@ const PictureView = ({
       setSideBarOpen(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (fetchMore && siblingIds && siblingIds.indexOf(pictureId) === siblingIds.length - 1) {
+      fetchMore(pictureId);
+    }
+  }, [fetchMore, siblingIds, pictureId]);
 
   const search = window.location.search;
   const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {

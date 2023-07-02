@@ -206,6 +206,7 @@
       },
       "group": {
         "createPicture": "Bild hochladen",
+        "createPictureSequence": "Serie erstellen",
         "editFaceTags": "Personen markieren",
         "editPicture": "Bild bearbeiten",
         "unpublishPicture": "Bild löschen",
@@ -225,6 +226,7 @@
         "updateTagVisibility": "Tag-Sichtbarkeit verwalten",
         "updateLocationAcceptance": "Ort akzeptieren",
         "updateLocationHierarchy": "Orte-Hierarchie verwalten",
+        "updateLocationCoordinates": "Koordinaten für Ort setzen",
         "acceptComment": "Kommentar akzeptieren",
         "declineComment": "Kommentar ablehnen",
         "fixCommentText": "Kommentar editieren",
@@ -234,6 +236,7 @@
         "unpinComment": "Kommentar loslösen",
         "addArchiveTag": "Archiv anlegen",
         "editArchive": "Archiv-Eigenschaften bearbeiten",
+        "exhibition": "Geschichte erstellen",
         "removeArchiveTag": "Archiv löschen",
         "addUser": "Nutzer erstellen",
         "addPermission": "Recht vergeben",
@@ -348,6 +351,12 @@
         "really-prompt": "Wollen Sie wirklich alle Links entfernen?"
       }
     },
+    "sequence": {
+      "label": "Serie",
+      "partOfSequence": "Teil einer Serie von {{count}} Bildern",
+      "remove": "Dieses Bild aus der Serie entfernen",
+      "removeEntire": "Alle Bilder aus der Serie entfernen"
+    },
     "archiveTag": "Archiv",
     "noTime": "Keine Zeit bekannt",
     "noLocations": "Keine Orte bekannt",
@@ -367,6 +376,7 @@
     "addToExhibition": "Zur Geschichte hinzufügen",
     "uploadHere": "Dateien hierhin ziehen, um sie in \"{{folderName}}\" hochzuladen",
     "addPictures": "Bilder hinzufügen",
+    "uploadingPictures": "Bilder werden hochgeladen...",
     "reallyDeleteTag": "Soll folgender Tag gelöscht werden?",
     "reallyDeletePicture": "Bild wirklich löschen?",
     "reallyDeletePictureText": "Wenn das Bild gelöscht ist, kann nur ein Administrator es wiederherstellen! Wirklich löschen?",
@@ -381,6 +391,13 @@
     "addToCollection": "In eine Collection kopieren",
     "moveToCollection": "In eine Collection verschieben",
     "removeFromCollection": "Aus dieser Collection entfernen",
+    "createSequence": "Neue Serie erstellen",
+    "alreadyInSequence": {
+      "title": "Manche Bilder sind bereits Teil von Serien",
+      "content": "Sie können die bestehenden Serien zusammenführen und die Bilder ohne Serien zu der zusammengeführten Serien hinzufügen oder aus den ausgewählten Bildern eine neue Serie erstellen. Wenn Sie letzeres wählen, werden die ausgewählten Bilder aus ihren aktellen Serien entfernt.",
+      "joinAllSequences": "Serien zusammenführen",
+      "newSequence": "Neue Serie erstellen"
+    },
     "bulkEdit": "Mehrere Bilder editieren",
     "moveFromAll": "Aus allen Collections hierher verschieben?",
     "moveFromHere": "Die ausgewählte Collection befindet sich noch in den folgenden anderen Collections: [{{parents}}].\nBeim Verschieben würde diese Collection aus all diesen anderen Collections hierher verschoben werden.",
@@ -431,7 +448,11 @@
     "delete": "Bild entfernen"
   },
   "archives": {
-    "defaultLongDescription": "Dieses Archiv hat noch keine Beschreibung. Als Kurator kannst du jedoch über den roten \"Archiv editieren\" Knopf eine Beschreibung hinzufügen.",
+    "view": {
+      "defaultLongDescription": "Dieses Archiv hat noch keine Beschreibung. Als Kurator kannst du jedoch über den roten \"Archiv editieren\" Knopf eine Beschreibung hinzufügen.",
+      "edit": "Archiv editieren",
+      "contact": "Archiv kontaktieren"
+    },
     "edit": {
       "back": "Zum Archiv",
       "confirm": {
@@ -528,6 +549,7 @@
     "title": "Kontakt",
     "success": "Ihre Nachricht ist eingegangen.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
+    "choose-archive-helpertext": "Falls das gewünschte Archiv nicht auswählbar ist, hat dieses noch keine E-Mail-Addresse angegeben.",
     "name-label": "Name",
     "email-label": "Ihre E-Mail (optional)",
     "subject-label": "Betreff",
@@ -635,7 +657,8 @@
     "location-pictures_one": "{{ count }} Bild in diesem Ort",
     "location-pictures_other": "{{ count }} Bilder in diesem Ort",
     "not-allowed-to-delete_one": "Für diesen Ort existiert {{ count }} Bild. Er kann erst entfernt werden, wenn es keine Bilder für diesen Ort gibt.",
-    "not-allowed-to-delete_other": "Für diesen Ort existieren {{ count }} Bilder. Er kann erst entfernt werden, wenn es keine Bilder für diesen Ort gibt."
+    "not-allowed-to-delete_other": "Für diesen Ort existieren {{ count }} Bilder. Er kann erst entfernt werden, wenn es keine Bilder für diesen Ort gibt.",
+    "delete-coordinate": "Koordinate löschen"
   },
   "tooltips": {
     "detach-location": "Ort aus der Hierarchie lösen.",

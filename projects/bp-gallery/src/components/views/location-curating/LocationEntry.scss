@@ -71,7 +71,7 @@
         .location-synonyms {
           display: flex;
           flex-direction: row;
-          overflow: scroll;
+          overflow: auto;
 
           .location-synonym {
             margin: auto 4px auto 4px;

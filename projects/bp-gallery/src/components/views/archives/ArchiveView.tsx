@@ -1,4 +1,4 @@
-import { AccessTime, Edit, Link, ThumbUp } from '@mui/icons-material';
+import { AccessTime, Edit, Link, Mail, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -58,9 +58,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         content: (
           <PictureOverview
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {
-              visit('/archives/' + archiveId + '/show-more/pictures');
-            }}
+            showMoreUrl={'/archives/' + archiveId + '/show-more/pictures'}
           />
         ),
       },
@@ -73,14 +71,12 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             queryParams={{
               archive_tag: { id: { eq: archiveId } },
             }}
-            onClick={() => {
-              visit('/archives/' + archiveId + '/show-more/most-liked');
-            }}
+            showMoreUrl={'/archives/' + archiveId + '/show-more/most-liked'}
           />
         ),
       },
     ];
-  }, [archiveId, t, visit]);
+  }, [archiveId, t]);
 
   const onLogoContextMenu = useBlockImageContextMenu(archive?.restrictImageDownloading);
 
@@ -95,10 +91,11 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   return (
     <div className='archive-container'>
       {canUseEditArchiveView && (
-        <p className='edit-button-wrapper'>
+        <div className='flex justify-end mb-4'>
           <Button
-            className='archive-edit-button'
-            startIcon={<Edit />}
+            variant='contained'
+            data-cy='archive-edit'
+            endIcon={<Edit />}
             onClick={() => {
               visit(
                 `${history.location.pathname}${
@@ -107,9 +104,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               );
             }}
           >
-            Archiv editieren
+            {t('archives.view.edit')}
           </Button>
-        </p>
+        </div>
       )}
       <h1>{archive.name}</h1>
       <div className='archive-data'>
@@ -145,16 +142,29 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             </div>
           </div>
         </div>
-        {showcasePicture && (
-          <div className='archive-showcase'>
+        <div className='archive-showcase'>
+          {showcasePicture && (
             <PicturePreview
               picture={showcasePicture}
               onClick={() => {}}
               allowClicks={false}
               highQuality={true}
             />
-          </div>
-        )}
+          )}
+          {archive.email && (
+            <Button
+              fullWidth
+              className='!mt-2'
+              variant='contained'
+              endIcon={<Mail />}
+              onClick={() => {
+                visit('/contact', { state: { archiveId: archive.id } });
+              }}
+            >
+              {t('archives.view.contact')}
+            </Button>
+          )}
+        </div>
       </div>
 
       {showStories && <ExhibitionOverview archiveId={archive.id} showTitle />}
