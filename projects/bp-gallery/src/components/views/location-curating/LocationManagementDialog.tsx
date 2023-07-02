@@ -28,7 +28,6 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVisit } from '../../../helpers/history';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
-import { BAD_HARZBURG_COORDINATES } from '../../common/PictureMap';
 import { DialogProps } from '../../provider/DialogProvider';
 import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
@@ -44,7 +43,7 @@ import {
   useSetVisible,
   useUpdateName,
 } from './location-management-helpers';
-import { useGetTagStructures } from './tag-structure-helpers';
+import { BAD_HARZBURG_COORDINATES, useGetTagStructures } from './tag-structure-helpers';
 
 const LocationMarker = ({
   position,

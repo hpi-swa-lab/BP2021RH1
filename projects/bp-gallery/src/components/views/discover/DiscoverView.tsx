@@ -1,4 +1,4 @@
-import { AccessTime, ThumbUp, Widgets } from '@mui/icons-material';
+import { AccessTime, GridView, Map, ThumbUp } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFlag } from '../../../helpers/growthbook';
@@ -44,12 +44,12 @@ const DiscoverView = () => {
     return [
       {
         title: t('discover.map'),
-        icon: <AccessTime key='0' />,
+        icon: <Map key='0' />,
         content: <PictureMap />,
       },
       {
         title: t('discover.locations'),
-        icon: <Widgets key='1' />,
+        icon: <GridView key='1' />,
         content: (
           <TagOverview
             type={TagType.LOCATION}

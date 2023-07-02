@@ -1,6 +1,9 @@
+import { LatLng } from 'leaflet';
 import { uniqBy } from 'lodash';
 import { useMemo } from 'react';
 import { FlatTag } from '../../../types/additionalFlatTypes';
+
+export const BAD_HARZBURG_COORDINATES = new LatLng(51.8392573, 10.5279953);
 
 const useGetTagsById = (flattenedTags: FlatTag[] | undefined) => {
   return useMemo(() => {
@@ -204,15 +207,15 @@ export const useGetBreadthFirstOrder = (
   return tagOrder;
 };
 
-export const useGetChildMatrix = (flattenedTags: FlatTag[] | undefined) => {
+export const useGetDescendantsMatrix = (flattenedTags: FlatTag[] | undefined) => {
   const tagsById = useGetTagsById(flattenedTags);
   const tagTree = useGetTagTree(flattenedTags, tagsById);
   const topologicalOrder = useGetTopologicalOrder(tagsById);
 
-  const childMatrix = useMemo(() => {
+  const descendantsMatrix = useMemo(() => {
     if (!tagTree || !topologicalOrder || !flattenedTags) return;
 
-    const childrenMatrix = Object.fromEntries(
+    const tempDescendantsMatrix = Object.fromEntries(
       topologicalOrder.map(tag => [
         tag.id,
         Object.fromEntries(topologicalOrder.map(otherTag => [otherTag.id, false])),
@@ -220,15 +223,15 @@ export const useGetChildMatrix = (flattenedTags: FlatTag[] | undefined) => {
     );
 
     const visit = (tag: FlatTag) => {
+      tempDescendantsMatrix[tag.id][tag.id] = true;
       if (!tag.child_tags) {
         return;
       }
       for (const child of tag.child_tags) {
         flattenedTags.forEach(flatTag => {
-          childrenMatrix[child.id][flatTag.id] =
-            childrenMatrix[child.id][flatTag.id] || childrenMatrix[tag.id][flatTag.id];
+          tempDescendantsMatrix[child.id][flatTag.id] ||= tempDescendantsMatrix[tag.id][flatTag.id];
         });
-        childrenMatrix[child.id][tag.id] = true;
+        tempDescendantsMatrix[child.id][tag.id] = true;
       }
     };
 
@@ -236,10 +239,10 @@ export const useGetChildMatrix = (flattenedTags: FlatTag[] | undefined) => {
       visit(tag);
     }
 
-    return childrenMatrix;
+    return tempDescendantsMatrix;
   }, [flattenedTags, tagTree, topologicalOrder]);
 
   return {
-    childMatrix,
+    descendantsMatrix,
   };
 };

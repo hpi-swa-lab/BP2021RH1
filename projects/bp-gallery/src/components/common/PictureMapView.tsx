@@ -10,16 +10,39 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import { PictureOrigin, asUploadPath } from '../../helpers/app-helpers';
 import { useVisit } from '../../helpers/history';
 import { FlatPicture, FlatTag, Thumbnail } from '../../types/additionalFlatTypes';
-import { useGetChildMatrix } from '../views/location-curating/tag-structure-helpers';
+import { useGetDescendantsMatrix } from '../views/location-curating/tag-structure-helpers';
 
-interface ExtendedFlatTag extends FlatTag {
+export interface ExtendedFlatTag extends FlatTag {
   thumbnail: Thumbnail[];
   pictures: FlatPicture[];
   verified_pictures: FlatPicture[];
 }
+
 interface ExtendedMarkerOptions extends MarkerOptions {
   locationTag?: ExtendedFlatTag;
 }
+
+const getCommonSupertag = (
+  tags: ExtendedFlatTag[],
+  descendantsMatrix?: {
+    [k: string]: {
+      [k: string]: boolean;
+    };
+  }
+) => {
+  if (!tags.length || !descendantsMatrix) {
+    return;
+  }
+  let potentialCommonSupertag = tags[0];
+  for (const tag of tags) {
+    if (descendantsMatrix[potentialCommonSupertag.id][tag.id]) {
+      potentialCommonSupertag = tag;
+    } else if (!descendantsMatrix[tag.id][potentialCommonSupertag.id]) {
+      return;
+    }
+  }
+  return potentialCommonSupertag;
+};
 
 const PictureMapView = ({
   isMaximized,
@@ -41,7 +64,7 @@ const PictureMapView = ({
   heightStyle: string;
   map: RefObject<Map>;
 }) => {
-  const { childMatrix } = useGetChildMatrix(locations);
+  const { descendantsMatrix } = useGetDescendantsMatrix(locations);
   const { t } = useTranslation();
 
   const getDividerIcon = (locationTags: ExtendedFlatTag[], clusterLocationCount?: number) => {
@@ -56,33 +79,24 @@ const PictureMapView = ({
     return new DivIcon({
       html: renderToStaticMarkup(
         <div className='flex relative'>
-          <div className='w-[150px] h-[150px] absolute bottom-0 left-0 border-solid border-white border-2 z-50'>
-            <img
-              className='object-cover !w-full !h-full'
-              src={asUploadPath(thumbnails[0 % thumbnails.length].media, {
-                highQuality: false,
-                pictureOrigin: PictureOrigin.REMOTE,
-              })}
-            />
-          </div>
-          <div className='bg-white w-[150px] h-[150px] absolute bottom-2 left-2 border-solid border-white border-2 z-40'>
-            <img
-              className='object-cover !w-full !h-full'
-              src={asUploadPath(thumbnails[1 % thumbnails.length].media, {
-                highQuality: false,
-                pictureOrigin: PictureOrigin.REMOTE,
-              })}
-            />
-          </div>
-          <div className='bg-white w-[150px] h-[150px] absolute bottom-4 left-4 shadow-[5px_-5px_10px_10px_rgba(0,0,0,0.2)] border-solid border-white border-2 z-30'>
-            <img
-              className='object-cover !w-full !h-full'
-              src={asUploadPath(thumbnails[2 % thumbnails.length].media, {
-                highQuality: false,
-                pictureOrigin: PictureOrigin.REMOTE,
-              })}
-            />
-          </div>
+          {[
+            'bottom-0 left-0 z-50',
+            'bg-white bottom-2 left-2 z-40',
+            'bg-white bottom-4 left-4 shadow-[5px_-5px_10px_10px_rgba(0,0,0,0.2)] z-30',
+          ].map((extraClassNames, index) => (
+            <div
+              key={index}
+              className={`w-[150px] h-[150px] absolute border-solid border-white border-2 ${extraClassNames}`}
+            >
+              <img
+                className='object-cover !w-full !h-full'
+                src={asUploadPath(thumbnails[index % thumbnails.length].media, {
+                  highQuality: false,
+                  pictureOrigin: PictureOrigin.REMOTE,
+                })}
+              />
+            </div>
+          ))}
           <div className='absolute bottom-[112px] left-[170px] p-1 flex flex-col bg-white/50 whitespace-nowrap z-20'>
             <h2 className='mb-0 ml-0 mt-[-5px] text-black'>
               {locationTag
@@ -149,29 +163,18 @@ const PictureMapView = ({
   const createCustomClusterIcon = (cluster: MarkerCluster) => {
     const tags = cluster
       .getAllChildMarkers()
-      .map(marker => (marker.options as ExtendedMarkerOptions).locationTag);
-    const tagsWithoutParents = tags.filter(tag => tag && !tag.parent_tags?.length);
-    return tagsWithoutParents.length
-      ? getDividerIcon(tagsWithoutParents as ExtendedFlatTag[], tags.length)
-      : childMatrix &&
-        tags.some(
-          parent =>
-            parent &&
-            tags.every(
-              child => child && (parent.id === child.id || childMatrix[child.id][parent.id])
-            )
-        )
-      ? getDividerIcon(
-          tags.filter(
-            parent =>
-              parent &&
-              tags.every(
-                child => child && (parent.id === child.id || childMatrix[child.id][parent.id])
-              )
-          ) as ExtendedFlatTag[],
-          tags.length
-        )
-      : getDividerIcon(tags as ExtendedFlatTag[], tags.length);
+      .map(marker => (marker.options as ExtendedMarkerOptions).locationTag!);
+    const tagsWithoutParents = tags.filter(tag => !tag.parent_tags?.length);
+    if (tagsWithoutParents.length) {
+      return getDividerIcon(tagsWithoutParents, tags.length);
+    } else {
+      const commonSupertag = getCommonSupertag(tags, descendantsMatrix);
+      if (commonSupertag) {
+        return getDividerIcon([commonSupertag], tags.length);
+      } else {
+        return getDividerIcon(tags, tags.length);
+      }
+    }
   };
 
   return (
@@ -202,7 +205,7 @@ const PictureMapView = ({
 
         <MarkerClusterGroup
           iconCreateFunction={createCustomClusterIcon}
-          maxClusterRadius={400}
+          maxClusterRadius={350}
           animate={true}
         >
           {locations?.map(location =>

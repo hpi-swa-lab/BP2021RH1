@@ -1,13 +1,13 @@
-import { LatLng, Map } from 'leaflet';
+import { Map } from 'leaflet';
 import { useMemo, useRef, useState } from 'react';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { useVisit } from '../../helpers/history';
-import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
-import { FlatPicture, FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
+import useGetTagsWithThumbnail, { NO_LIMIT } from '../../hooks/get-tags-with-thumbnail.hook';
+import { TagType } from '../../types/additionalFlatTypes';
+import { BAD_HARZBURG_COORDINATES } from '../views/location-curating/tag-structure-helpers';
 import Loading from './Loading';
-import PictureMapView from './PictureMapView';
-
-export const BAD_HARZBURG_COORDINATES = new LatLng(51.8392573, 10.5279953);
+import PictureMapView, { ExtendedFlatTag } from './PictureMapView';
+import QueryErrorDisplay from './QueryErrorDisplay';
 
 const PictureMap = () => {
   const { location } = useVisit();
@@ -19,24 +19,19 @@ const PictureMap = () => {
   const [isMaximized, setIsMaximized] = useState<boolean>(location.state?.open ?? false);
   const map = useRef<Map>(null);
 
-  const { data, loading } = useGetTagsWithThumbnail(
+  const { data, loading, error } = useGetTagsWithThumbnail(
     {},
     {},
     TagType.LOCATION,
     ['name:asc'],
-    undefined,
-    'cache-first',
-    true
+    NO_LIMIT,
+    'cache-first'
   );
 
   const flattened = useSimplifiedQueryResponseData(data);
-  const flattenedTags:
-    | (FlatTag & {
-        thumbnail: Thumbnail[];
-        pictures: FlatPicture[];
-        verified_pictures: FlatPicture[];
-      })[]
-    | undefined = flattened ? Object.values(flattened)[0] : undefined;
+  const flattenedTags: ExtendedFlatTag[] | undefined = flattened
+    ? Object.values(flattened)[0]
+    : undefined;
 
   const localMap = useMemo(
     () => (
@@ -56,7 +51,9 @@ const PictureMap = () => {
     [flattenedTags, initialMapValues.center, initialMapValues.zoom, isMaximized]
   );
 
-  if (loading) {
+  if (error) {
+    return <QueryErrorDisplay error={error} />;
+  } else if (loading) {
     return <Loading />;
   } else {
     return (
