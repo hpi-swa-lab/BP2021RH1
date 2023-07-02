@@ -226,7 +226,6 @@ export interface FlatTag {
   name: string;
   coordinates?: ComponentLocationCoordinates;
   synonyms?: (ComponentCommonSynonyms | undefined)[];
-  coordinates?: ComponentLocationCoordinates | undefined;
   visible?: boolean;
   parent_tags?: FlatTag[];
   child_tags?: FlatTag[];
