@@ -12,13 +12,22 @@ import { useVisit } from '../../helpers/history';
 import { FlatPicture, FlatTag, Thumbnail } from '../../types/additionalFlatTypes';
 import { useGetChildMatrix } from '../views/location-curating/tag-structure-helpers';
 
+interface ExtendedFlatTag extends FlatTag {
+  thumbnail: Thumbnail[];
+  pictures: FlatPicture[];
+  verified_pictures: FlatPicture[];
+}
+interface ExtendedMarkerOptions extends MarkerOptions {
+  locationTag?: ExtendedFlatTag;
+}
+
 const PictureMapView = ({
   isMaximized,
   setIsMaximized,
   initialMapValues,
   locations,
-  width,
-  height,
+  widthStyle,
+  heightStyle,
   map,
 }: {
   isMaximized: boolean;
@@ -27,28 +36,15 @@ const PictureMapView = ({
     center: LatLng;
     zoom: number;
   };
-  locations:
-    | (FlatTag & {
-        thumbnail: Thumbnail[];
-        pictures: FlatPicture[];
-        verified_pictures: FlatPicture[];
-      })[]
-    | undefined;
-  width: string;
-  height: string;
+  locations: ExtendedFlatTag[] | undefined;
+  widthStyle: string;
+  heightStyle: string;
   map: RefObject<Map>;
 }) => {
   const { childMatrix } = useGetChildMatrix(locations);
   const { t } = useTranslation();
 
-  const getDividerIcon = (
-    locationTags: (FlatTag & {
-      thumbnail: Thumbnail[];
-      pictures: FlatPicture[];
-      verified_pictures: FlatPicture[];
-    })[],
-    clusterLocationCount?: number
-  ) => {
+  const getDividerIcon = (locationTags: ExtendedFlatTag[], clusterLocationCount?: number) => {
     const locationTag = locationTags.length === 1 ? locationTags[0] : undefined;
     let pictureCount = 0;
     let subLocationCount = 0;
@@ -125,11 +121,7 @@ const PictureMapView = ({
     locationTag,
   }: {
     position: LatLng;
-    locationTag: FlatTag & {
-      thumbnail: Thumbnail[];
-      pictures: FlatPicture[];
-      verified_pictures: FlatPicture[];
-    };
+    locationTag: ExtendedFlatTag;
   }) => {
     const { visit } = useVisit();
     const dividerIcon = getDividerIcon([locationTag]);
@@ -154,29 +146,13 @@ const PictureMapView = ({
     return <Marker {...options}></Marker>;
   };
 
-  const createClusterCustomIcon = (cluster: MarkerCluster) => {
-    const tags = cluster.getAllChildMarkers().map(
-      marker =>
-        (
-          marker.options as MarkerOptions & {
-            locationTag?: FlatTag & {
-              thumbnail: Thumbnail[];
-              pictures: FlatPicture[];
-              verified_pictures: FlatPicture[];
-            };
-          }
-        ).locationTag
-    );
+  const createCustomClusterIcon = (cluster: MarkerCluster) => {
+    const tags = cluster
+      .getAllChildMarkers()
+      .map(marker => (marker.options as ExtendedMarkerOptions).locationTag);
     const tagsWithoutParents = tags.filter(tag => tag && !tag.parent_tags?.length);
     return tagsWithoutParents.length
-      ? getDividerIcon(
-          tagsWithoutParents as (FlatTag & {
-            thumbnail: Thumbnail[];
-            pictures: FlatPicture[];
-            verified_pictures: FlatPicture[];
-          })[],
-          tags.length
-        )
+      ? getDividerIcon(tagsWithoutParents as ExtendedFlatTag[], tags.length)
       : childMatrix &&
         tags.some(
           parent =>
@@ -192,25 +168,14 @@ const PictureMapView = ({
               tags.every(
                 child => child && (parent.id === child.id || childMatrix[child.id][parent.id])
               )
-          ) as (FlatTag & {
-            thumbnail: Thumbnail[];
-            pictures: FlatPicture[];
-            verified_pictures: FlatPicture[];
-          })[],
+          ) as ExtendedFlatTag[],
           tags.length
         )
-      : getDividerIcon(
-          tags as (FlatTag & {
-            thumbnail: Thumbnail[];
-            pictures: FlatPicture[];
-            verified_pictures: FlatPicture[];
-          })[],
-          tags.length
-        );
+      : getDividerIcon(tags as ExtendedFlatTag[], tags.length);
   };
 
   return (
-    <div className={`${width} ${height} z-0 relative`}>
+    <div className={`${widthStyle} ${heightStyle} z-0 relative`}>
       <div
         className='w-fit p-2 absolute z-[999] right-2 top-4 cursor-pointer decoration-black bg-white border-solid flex justify-center border-gray-400'
         onClick={event => {
@@ -236,8 +201,8 @@ const PictureMapView = ({
         />
 
         <MarkerClusterGroup
-          iconCreateFunction={createClusterCustomIcon}
-          maxClusterRadius={200}
+          iconCreateFunction={createCustomClusterIcon}
+          maxClusterRadius={400}
           animate={true}
         >
           {locations?.map(location =>

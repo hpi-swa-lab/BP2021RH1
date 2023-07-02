@@ -28,6 +28,7 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVisit } from '../../../helpers/history';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import { BAD_HARZBURG_COORDINATES } from '../../common/PictureMap';
 import { DialogProps } from '../../provider/DialogProvider';
 import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
@@ -44,8 +45,6 @@ import {
   useUpdateName,
 } from './location-management-helpers';
 import { useGetTagStructures } from './tag-structure-helpers';
-
-const BAD_HARZBURG_POS = new LatLng(51.8392573, 10.5279953);
 
 const LocationMarker = ({
   position,
@@ -164,7 +163,7 @@ const LocationManagementDialogPreset = ({
 
   const initialMapValues = useMemo(() => {
     return {
-      center: position ?? BAD_HARZBURG_POS,
+      center: position ?? BAD_HARZBURG_COORDINATES,
       zoom: 10,
     };
   }, [position]);

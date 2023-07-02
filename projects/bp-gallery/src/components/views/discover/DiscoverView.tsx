@@ -43,7 +43,7 @@ const DiscoverView = () => {
   const locationTabs: OverviewContainerTab[] = useMemo(() => {
     return [
       {
-        title: 'Karte',
+        title: t('discover.map'),
         icon: <AccessTime key='0' />,
         content: <PictureMap />,
       },

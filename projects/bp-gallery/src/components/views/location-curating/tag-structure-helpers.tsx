@@ -2,6 +2,54 @@ import { uniqBy } from 'lodash';
 import { useMemo } from 'react';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 
+const useGetTagsById = (flattenedTags: FlatTag[] | undefined) => {
+  return useMemo(() => {
+    if (!flattenedTags) return;
+    return Object.fromEntries(
+      flattenedTags.map(tag => [
+        tag.id,
+        { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
+      ])
+    );
+  }, [flattenedTags]);
+};
+
+const useGetTagTree = (
+  flattenedTags: FlatTag[] | undefined,
+  tagsById: { [k: string]: FlatTag } | undefined
+) => {
+  return useMemo(() => {
+    if (!flattenedTags || !tagsById) return undefined;
+
+    // set child tags for each tag in tree
+    for (const tag of Object.values(tagsById)) {
+      tag.parent_tags?.forEach(parentTag => {
+        tagsById[parentTag.id].child_tags?.push(tag);
+      });
+    }
+    for (const tag of Object.values(tagsById)) {
+      tagsById[tag.id].child_tags?.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    // filter for roots of tree
+    const sortedTagTree = Object.values(tagsById)
+      .filter(tag => !tag.parent_tags?.length || tag.root)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    //replace stubs with complete parent tags
+    for (const flatTag of flattenedTags) {
+      if (!(flatTag.id in tagsById)) {
+        continue;
+      }
+      const tag = tagsById[flatTag.id];
+      tag.parent_tags = tag.parent_tags
+        ?.map(parentTag => tagsById[parentTag.id])
+        .filter(parentTag => !!parentTag);
+    }
+
+    return sortedTagTree;
+  }, [flattenedTags, tagsById]);
+};
+
 const useGetTopologicalOrder = (tagsById: { [k: string]: FlatTag } | undefined) => {
   return useMemo(() => {
     if (!tagsById) {
@@ -44,46 +92,9 @@ export const useGetTagStructures = (
   currentParentTag?: FlatTag,
   currentIsRoot?: boolean
 ) => {
-  const tagsById = useMemo(() => {
-    if (!flattenedTags) return;
-    return Object.fromEntries(
-      flattenedTags.map(tag => [
-        tag.id,
-        { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
-      ])
-    );
-  }, [flattenedTags]);
+  const tagsById = useGetTagsById(flattenedTags);
 
-  const tagTree = useMemo(() => {
-    if (!flattenedTags || !tagsById) return undefined;
-
-    // set child tags for each tag in tree
-    for (const tag of Object.values(tagsById)) {
-      tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags.push(tag);
-      });
-    }
-    for (const tag of Object.values(tagsById)) {
-      tagsById[tag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    // filter for roots of tree
-    const sortedTagTree = Object.values(tagsById)
-      .filter(tag => !tag.parent_tags?.length || tag.root)
-      .sort((a, b) => a.name.localeCompare(b.name));
-
-    //replace stubs with complete parent tags
-    for (const flatTag of flattenedTags) {
-      if (!(flatTag.id in tagsById)) {
-        continue;
-      }
-      const tag = tagsById[flatTag.id];
-      tag.parent_tags = tag.parent_tags
-        ?.map(parentTag => tagsById[parentTag.id])
-        .filter(parentTag => !!parentTag);
-    }
-
-    return sortedTagTree;
-  }, [flattenedTags, tagsById]);
+  const tagTree = useGetTagTree(flattenedTags, tagsById);
 
   const tagChildTags = useMemo(() => {
     return flattenedTags && tagsById
@@ -194,48 +205,10 @@ export const useGetBreadthFirstOrder = (
 };
 
 export const useGetChildMatrix = (flattenedTags: FlatTag[] | undefined) => {
-  const tagsById = useMemo(() => {
-    if (!flattenedTags) return;
-    return Object.fromEntries(
-      flattenedTags.map(tag => [
-        tag.id,
-        { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
-      ])
-    );
-  }, [flattenedTags]);
-
-  const tagTree = useMemo(() => {
-    if (!flattenedTags || !tagsById) return undefined;
-
-    // set child tags for each tag in tree
-    for (const tag of Object.values(tagsById)) {
-      tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags.push(tag);
-      });
-    }
-    for (const tag of Object.values(tagsById)) {
-      tagsById[tag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    // filter for roots of tree
-    const sortedTagTree = Object.values(tagsById)
-      .filter(tag => !tag.parent_tags?.length || tag.root)
-      .sort((a, b) => a.name.localeCompare(b.name));
-
-    //replace stubs with complete parent tags
-    for (const flatTag of flattenedTags) {
-      if (!(flatTag.id in tagsById)) {
-        continue;
-      }
-      const tag = tagsById[flatTag.id];
-      tag.parent_tags = tag.parent_tags
-        ?.map(parentTag => tagsById[parentTag.id])
-        .filter(parentTag => !!parentTag);
-    }
-
-    return sortedTagTree;
-  }, [flattenedTags, tagsById]);
-
+  const tagsById = useGetTagsById(flattenedTags);
+  const tagTree = useGetTagTree(flattenedTags, tagsById);
   const topologicalOrder = useGetTopologicalOrder(tagsById);
+
   const childMatrix = useMemo(() => {
     if (!tagTree || !topologicalOrder || !flattenedTags) return;
 

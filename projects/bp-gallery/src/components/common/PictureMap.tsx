@@ -7,11 +7,13 @@ import { FlatPicture, FlatTag, TagType, Thumbnail } from '../../types/additional
 import Loading from './Loading';
 import PictureMapView from './PictureMapView';
 
+export const BAD_HARZBURG_COORDINATES = new LatLng(51.8392573, 10.5279953);
+
 const PictureMap = () => {
   const { location } = useVisit();
 
   const initialMapValues = useMemo(() => {
-    return location.state?.mapState ?? { center: new LatLng(51.8392573, 10.5279953), zoom: 10 };
+    return location.state?.mapState ?? { center: BAD_HARZBURG_COORDINATES, zoom: 10 };
   }, [location.state?.mapState]);
 
   const [isMaximized, setIsMaximized] = useState<boolean>(location.state?.open ?? false);
@@ -46,8 +48,8 @@ const PictureMap = () => {
           zoom: map.current?.getZoom() ?? initialMapValues.zoom,
         }}
         locations={flattenedTags}
-        width='w-full'
-        height={isMaximized ? 'h-full' : 'h-[500px]'}
+        widthStyle='w-full'
+        heightStyle={isMaximized ? 'h-full' : 'h-[500px]'}
         map={map}
       />
     ),
