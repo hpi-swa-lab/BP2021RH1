@@ -60,76 +60,78 @@ export const SearchFilterInputItem = ({
   )[0];
 
   return (
-    <div className='flex flex-row'>
-      <span>{t(`search.${attribute}`)}</span>
-      <Select
-        onChange={event => {
-          switchTextFieldsAmount(event.target.value);
-          updateFilterProps(index, 'set', 'filterOperator', event.target.value);
-        }}
-        defaultValue={'default'}
-        renderValue={value => t(`search.${value}`)}
-      >
-        {filterOperatorOptions.map(option => (
-          <MenuItem key={option} value={option}>
-            {t(`search.${option}`)}
-          </MenuItem>
-        ))}
-      </Select>
-      {displayedTextFieldsAmount === 2 ? (
-        <>
+    <div className='flex flex-col'>
+      {index === 0 ? <span>{t(`search.${attribute}`)}</span> : <></>}
+      <div className='flex flex-row items-center'>
+        <Select
+          onChange={event => {
+            switchTextFieldsAmount(event.target.value);
+            updateFilterProps(index, 'set', 'filterOperator', event.target.value);
+          }}
+          defaultValue={'default'}
+          renderValue={value => t(`search.${value}`)}
+        >
+          {filterOperatorOptions.map(option => (
+            <MenuItem key={option} value={option}>
+              {t(`search.${option}`)}
+            </MenuItem>
+          ))}
+        </Select>
+        {displayedTextFieldsAmount === 2 ? (
+          <>
+            <TextField
+              value={AttributeFilterProps.filterProps[index].values[0] ?? ''}
+              onChange={event => {
+                updateFilterProps(index, 'set', 'firstValue', event.target.value);
+              }}
+            ></TextField>
+            <TextField
+              value={AttributeFilterProps.filterProps[index].values[1] ?? ''}
+              onChange={event => {
+                updateFilterProps(index, 'set', 'secondValue', event.target.value);
+              }}
+            ></TextField>
+          </>
+        ) : displayedTextFieldsAmount === 1 ? (
           <TextField
             value={AttributeFilterProps.filterProps[index].values[0] ?? ''}
             onChange={event => {
               updateFilterProps(index, 'set', 'firstValue', event.target.value);
             }}
           ></TextField>
-          <TextField
-            value={AttributeFilterProps.filterProps[index].values[1] ?? ''}
-            onChange={event => {
-              updateFilterProps(index, 'set', 'secondValue', event.target.value);
-            }}
-          ></TextField>
-        </>
-      ) : displayedTextFieldsAmount === 1 ? (
-        <TextField
-          value={AttributeFilterProps.filterProps[index].values[0] ?? ''}
-          onChange={event => {
-            updateFilterProps(index, 'set', 'firstValue', event.target.value);
-          }}
-        ></TextField>
-      ) : (
-        <></>
-      )}
+        ) : (
+          <></>
+        )}
 
-      {AttributeFilterProps.filterProps[index + 1] ? (
-        <Select
-          onChange={event => {
-            updateFilterProps(index, 'set', 'combinationOperator', event.target.value);
+        {AttributeFilterProps.filterProps[index + 1] ? (
+          <Select
+            onChange={event => {
+              updateFilterProps(index, 'set', 'combinationOperator', event.target.value);
+            }}
+            defaultValue={'and'}
+            renderValue={value => t(`search.${value}`)}
+          >
+            {Filter_COMBINATOR_OPTIONS.map(option => (
+              <MenuItem key={option} value={option}>
+                {t(`search.${option}`)}
+              </MenuItem>
+            ))}
+          </Select>
+        ) : (
+          <></>
+        )}
+        {index !== 0 ? (
+          <HighlightOff onClick={() => updateFilterProps(index, 'delete', '', '')}></HighlightOff>
+        ) : (
+          <></>
+        )}
+        <AddCircleOutlineOutlined
+          onClick={() => {
+            updateFilterProps(index, 'set', 'combinationOperator', 'and');
+            updateFilterProps(index, 'add', '', '');
           }}
-          defaultValue={'and'}
-          renderValue={value => t(`search.${value}`)}
-        >
-          {Filter_COMBINATOR_OPTIONS.map(option => (
-            <MenuItem key={option} value={option}>
-              {t(`search.${option}`)}
-            </MenuItem>
-          ))}
-        </Select>
-      ) : (
-        <></>
-      )}
-      {index !== 0 ? (
-        <HighlightOff onClick={() => updateFilterProps(index, 'delete', '', '')}></HighlightOff>
-      ) : (
-        <></>
-      )}
-      <AddCircleOutlineOutlined
-        onClick={() => {
-          updateFilterProps(index, 'set', 'combinationOperator', 'and');
-          updateFilterProps(index, 'add', '', '');
-        }}
-      ></AddCircleOutlineOutlined>
+        ></AddCircleOutlineOutlined>
+      </div>
     </div>
   );
 };

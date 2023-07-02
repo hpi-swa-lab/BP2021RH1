@@ -1,5 +1,8 @@
-import { Button } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
+import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SearchFilterInput } from './SearchFilterInput';
 
 export type SingleFilterProps = {
@@ -11,6 +14,13 @@ export type SingleFilterProps = {
 export type AttributeFilterProps = { attribute: string; filterProps: SingleFilterProps[] };
 
 export const AdvancedSearch = ({ setFilter }: { setFilter: Dispatch<SetStateAction<string>> }) => {
+  const { t } = useTranslation();
+  const {
+    palette: {
+      primary: { main: $primaryColor },
+    },
+  } = useTheme();
+
   const ATTRIBUTES = [
     'keyword',
     'description',
@@ -163,26 +173,54 @@ export const AdvancedSearch = ({ setFilter }: { setFilter: Dispatch<SetStateActi
     }, '');
 
   return (
-    <div className='advanced-search'>
-      <div className='advanced-search-content'>
-        {advancedSearchProps.map(props => (
-          <SearchFilterInput
-            key={props.attribute}
-            attribute={props.attribute}
-            advancedSearchProps={advancedSearchProps}
-            setAdvancedSearchProps={SetAdvancedSearchProps}
-          ></SearchFilterInput>
-        ))}
+    <Accordion key={0} sx={{ backgroundColor: '#e9e9e9' }}>
+      <AccordionSummary expandIcon={<ExpandMore />}>
+        <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
+      </AccordionSummary>
+      <div className='advanced-search m-auto p-4'>
+        <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
+          <div className='advanced-left-filters flex flex-col flex-nowrap'>
+            {advancedSearchProps
+              .filter(props => ATTRIBUTES.slice(0, 4).includes(props.attribute))
+              .map(props => (
+                <div className='flex flex-col flex-nowrap' key={props.attribute}>
+                  <SearchFilterInput
+                    key={props.attribute}
+                    attribute={props.attribute}
+                    advancedSearchProps={advancedSearchProps}
+                    setAdvancedSearchProps={SetAdvancedSearchProps}
+                  ></SearchFilterInput>
+                </div>
+              ))}
+          </div>
+          <div className='advanced-right-filters flex flex-col flex-nowrap'>
+            {advancedSearchProps
+              .filter(props => ATTRIBUTES.slice(4, 8).includes(props.attribute))
+              .map(props => (
+                <div className='flex flex-col flex-nowrap' key={props.attribute}>
+                  <SearchFilterInput
+                    key={props.attribute}
+                    attribute={props.attribute}
+                    advancedSearchProps={advancedSearchProps}
+                    setAdvancedSearchProps={SetAdvancedSearchProps}
+                  ></SearchFilterInput>
+                </div>
+              ))}
+          </div>
+        </div>
+        <div className='advanced-search-button flex flex-row justify-end m-auto pt-4'>
+          <Button
+            sx={{ backgroundColor: `${$primaryColor} !important`, color: 'white' }}
+            onClick={() => {
+              setFilter(filter);
+              console.log(advancedSearchProps);
+            }}
+          >
+            Filter Anwenden
+          </Button>
+        </div>
       </div>
-      <Button
-        onClick={() => {
-          setFilter(filter);
-          console.log(advancedSearchProps);
-        }}
-      >
-        Filter Anwenden
-      </Button>
-    </div>
+    </Accordion>
   );
 };
 
