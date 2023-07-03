@@ -6,13 +6,10 @@ import usePromise from 'react-use-promise';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { HelpTooltip } from '../../common/HelpTooltip';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import AdvancedSearch from './AdvancedSearch';
 import NoSearchResultsText from './NoSearchResultsText';
-import SearchBar from './SearchBar';
-import SearchBreadcrumbs from './SearchBreadcrumbs';
 import './SearchView.scss';
 import { isValidYear } from './helpers/addNewParamToSearchPath';
 import getSearchResultPictureIds from './helpers/getSearchResultPictureIds';
@@ -85,16 +82,11 @@ const SearchView = () => {
 
   return (
     <div className='search-content'>
-      <div className='search-bar-container'>
-        {(!areResultsEmpty || !search) && (
-          <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
-        )}
-        <HelpTooltip title={t('search.question')} content={t('search.help')} />
-        <div className='breadcrumb'>
-          <SearchBreadcrumbs searchParams={searchParams} />
-          <AdvancedSearch setFilter={SetFilter}></AdvancedSearch>
-        </div>
-      </div>
+      <AdvancedSearch
+        setFilter={SetFilter}
+        searchParams={searchParams}
+        isAllSearchActive={isAllSearchActive}
+      ></AdvancedSearch>
       {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
 
       <ShowStats>

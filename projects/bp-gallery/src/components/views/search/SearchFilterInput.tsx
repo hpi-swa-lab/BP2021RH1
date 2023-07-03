@@ -62,7 +62,7 @@ export const SearchFilterInput = ({
   };
 
   return (
-    <>
+    <div className='m-1 p-1 bg-gray-100'>
       {filterProps.map((props, index) => (
         <SearchFilterInputItem
           key={index.toString()}
@@ -72,6 +72,6 @@ export const SearchFilterInput = ({
           updateFilterProps={updateFilterProps}
         ></SearchFilterInputItem>
       ))}
-    </>
+    </div>
   );
 };

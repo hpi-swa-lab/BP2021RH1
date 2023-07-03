@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, HighlightOff } from '@mui/icons-material';
-import { MenuItem, Select, TextField } from '@mui/material';
+import { MenuItem, Select, TextField, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AttributeFilterProps } from './AdvancedSearch';
@@ -60,10 +60,15 @@ export const SearchFilterInputItem = ({
   )[0];
 
   return (
-    <div className='flex flex-col'>
-      {index === 0 ? <span>{t(`search.${attribute}`)}</span> : <></>}
+    <div className='flex flex-col pr-1 '>
+      {index === 0 ? (
+        <Typography gutterBottom={true}>{t(`search.${attribute}`)}</Typography>
+      ) : (
+        <></>
+      )}
       <div className='flex flex-row items-center'>
         <Select
+          sx={{ marginRight: '0.25rem' }}
           onChange={event => {
             switchTextFieldsAmount(event.target.value);
             updateFilterProps(index, 'set', 'filterOperator', event.target.value);
@@ -80,12 +85,14 @@ export const SearchFilterInputItem = ({
         {displayedTextFieldsAmount === 2 ? (
           <>
             <TextField
+              sx={{ marginRight: '0.25rem' }}
               value={AttributeFilterProps.filterProps[index].values[0] ?? ''}
               onChange={event => {
                 updateFilterProps(index, 'set', 'firstValue', event.target.value);
               }}
             ></TextField>
             <TextField
+              sx={{ marginRight: '0.25rem' }}
               value={AttributeFilterProps.filterProps[index].values[1] ?? ''}
               onChange={event => {
                 updateFilterProps(index, 'set', 'secondValue', event.target.value);
@@ -94,6 +101,7 @@ export const SearchFilterInputItem = ({
           </>
         ) : displayedTextFieldsAmount === 1 ? (
           <TextField
+            sx={{ marginRight: '0.25rem' }}
             value={AttributeFilterProps.filterProps[index].values[0] ?? ''}
             onChange={event => {
               updateFilterProps(index, 'set', 'firstValue', event.target.value);
@@ -105,6 +113,7 @@ export const SearchFilterInputItem = ({
 
         {AttributeFilterProps.filterProps[index + 1] ? (
           <Select
+            sx={{ marginRight: '0.25rem' }}
             onChange={event => {
               updateFilterProps(index, 'set', 'combinationOperator', event.target.value);
             }}
@@ -121,11 +130,16 @@ export const SearchFilterInputItem = ({
           <></>
         )}
         {index !== 0 ? (
-          <HighlightOff onClick={() => updateFilterProps(index, 'delete', '', '')}></HighlightOff>
+          <HighlightOff
+            sx={{ padding: '0.25rem', fontSize: 30 }}
+            onClick={() => updateFilterProps(index, 'delete', '', '')}
+          ></HighlightOff>
         ) : (
           <></>
         )}
         <AddCircleOutlineOutlined
+          sx={{ padding: '0.25rem', fontSize: 30 }}
+          fontSize='large'
           onClick={() => {
             updateFilterProps(index, 'set', 'combinationOperator', 'and');
             updateFilterProps(index, 'add', '', '');

@@ -1,8 +1,12 @@
 import { ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { HelpTooltip } from '../../common/HelpTooltip';
+import PrimaryButton from '../../common/PrimaryButton';
+import SearchBar from './SearchBar';
+import SearchBreadcrumbs from './SearchBreadcrumbs';
 import { SearchFilterInput } from './SearchFilterInput';
 
 export type SingleFilterProps = {
@@ -13,7 +17,15 @@ export type SingleFilterProps = {
 
 export type AttributeFilterProps = { attribute: string; filterProps: SingleFilterProps[] };
 
-export const AdvancedSearch = ({ setFilter }: { setFilter: Dispatch<SetStateAction<string>> }) => {
+export const AdvancedSearch = ({
+  setFilter,
+  searchParams,
+  isAllSearchActive,
+}: {
+  setFilter: Dispatch<SetStateAction<string>>;
+  searchParams: URLSearchParams;
+  isAllSearchActive: boolean;
+}) => {
   const { t } = useTranslation();
   const {
     palette: {
@@ -173,54 +185,77 @@ export const AdvancedSearch = ({ setFilter }: { setFilter: Dispatch<SetStateActi
     }, '');
 
   return (
-    <Accordion key={0} sx={{ backgroundColor: '#e9e9e9' }}>
-      <AccordionSummary expandIcon={<ExpandMore />}>
-        <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
-      </AccordionSummary>
-      <div className='advanced-search m-auto p-4'>
-        <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
-          <div className='advanced-left-filters flex flex-col flex-nowrap'>
-            {advancedSearchProps
-              .filter(props => ATTRIBUTES.slice(0, 4).includes(props.attribute))
-              .map(props => (
-                <div className='flex flex-col flex-nowrap' key={props.attribute}>
-                  <SearchFilterInput
-                    key={props.attribute}
-                    attribute={props.attribute}
-                    advancedSearchProps={advancedSearchProps}
-                    setAdvancedSearchProps={SetAdvancedSearchProps}
-                  ></SearchFilterInput>
-                </div>
-              ))}
-          </div>
-          <div className='advanced-right-filters flex flex-col flex-nowrap'>
-            {advancedSearchProps
-              .filter(props => ATTRIBUTES.slice(4, 8).includes(props.attribute))
-              .map(props => (
-                <div className='flex flex-col flex-nowrap' key={props.attribute}>
-                  <SearchFilterInput
-                    key={props.attribute}
-                    attribute={props.attribute}
-                    advancedSearchProps={advancedSearchProps}
-                    setAdvancedSearchProps={SetAdvancedSearchProps}
-                  ></SearchFilterInput>
-                </div>
-              ))}
-          </div>
-        </div>
-        <div className='advanced-search-button flex flex-row justify-end m-auto pt-4'>
-          <Button
-            sx={{ backgroundColor: `${$primaryColor} !important`, color: 'white' }}
-            onClick={() => {
-              setFilter(filter);
-              console.log(advancedSearchProps);
+    <div className='flex flex-col'>
+      <div className='breadcrumb m-1'>
+        <SearchBreadcrumbs searchParams={searchParams} />
+      </div>
+      <div className='flex flex-row'>
+        <div className='search-bar-container shadow'>
+          <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
+          <Accordion
+            key={0}
+            disableGutters={true}
+            square={true}
+            sx={{
+              backgroundColor: '#e9e9e9',
+              boxShadow: '0px -1px 0px rgba(0, 0, 0, 0.3)',
+              width: 'fit-content',
             }}
           >
-            Filter Anwenden
-          </Button>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
+            </AccordionSummary>
+            <div className='advanced-search w-fit p-4'>
+              <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
+                <div className='advanced-left-filters flex flex-col flex-nowrap'>
+                  {advancedSearchProps
+                    .filter(props => ATTRIBUTES.slice(0, 4).includes(props.attribute))
+                    .map(props => (
+                      <div className='flex flex-col flex-nowrap' key={props.attribute}>
+                        <SearchFilterInput
+                          key={props.attribute}
+                          attribute={props.attribute}
+                          advancedSearchProps={advancedSearchProps}
+                          setAdvancedSearchProps={SetAdvancedSearchProps}
+                        ></SearchFilterInput>
+                      </div>
+                    ))}
+                </div>
+                <div className='advanced-right-filters flex flex-col flex-nowrap'>
+                  {advancedSearchProps
+                    .filter(props => ATTRIBUTES.slice(4, 8).includes(props.attribute))
+                    .map(props => (
+                      <div className='flex flex-col flex-nowrap' key={props.attribute}>
+                        <SearchFilterInput
+                          key={props.attribute}
+                          attribute={props.attribute}
+                          advancedSearchProps={advancedSearchProps}
+                          setAdvancedSearchProps={SetAdvancedSearchProps}
+                        ></SearchFilterInput>
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div className='advanced-search-button-wrapper  m-auto pt-4'>
+                <div className='advanced-search-button flex flex-row justifiy-start  w-fit'>
+                  <PrimaryButton
+                    onClickFn={() => {
+                      setFilter(filter);
+                      console.log(advancedSearchProps);
+                    }}
+                  >
+                    {t('search.appy-filter')}
+                  </PrimaryButton>
+                </div>
+              </div>
+            </div>
+          </Accordion>
+        </div>
+        <div className='help'>
+          <HelpTooltip title={t('search.question')} content={t('search.help')} />
         </div>
       </div>
-    </Accordion>
+    </div>
   );
 };
 
