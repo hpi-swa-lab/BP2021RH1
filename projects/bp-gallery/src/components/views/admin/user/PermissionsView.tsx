@@ -296,7 +296,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                       coverage={combineCoverages(section.groups.map(group => group.coverage))}
                       operations={section.groups.flatMap(group => group.operations)}
                       archive={archive}
-                      label={t(`admin.permissions.section.${section.name}`)}
+                      label={t(`admin.permissions.section.${section.name}`, { context: type })}
                       prompt
                       toggleOperations={toggleOperations}
                     />

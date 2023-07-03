@@ -200,7 +200,8 @@
         "collection": "Collections",
         "tags": "Tags: Schlagworte, Personen und Orte",
         "comment": "Kommentare",
-        "archive": "Archive",
+        "archive_system": "Archive",
+        "archive_archive": "Archiv",
         "games": "Spiele",
         "user": "Nutzer"
       },
