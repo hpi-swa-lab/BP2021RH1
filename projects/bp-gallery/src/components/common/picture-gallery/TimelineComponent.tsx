@@ -42,7 +42,7 @@ const TimelineComponent = ({
   const upperBound = new Date(Date.now()).getFullYear();
 
   if (oldestResult.loading) {
-    <Loading />;
+    return <Loading />;
   } else {
     return (
       <div>
