@@ -114,17 +114,25 @@ const PictureSidebar = ({
             hasHiddenLinks={false}
             onSave={canUpdatePicture ? onSave : undefined}
             topInfo={(anyFieldTouched, isSaving) =>
-              canEditPicture && (
+              (canEditPicture || canUpdatePicture) && (
                 <div className='curator-ops'>
-                  <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
-                    {t('curator.editPicture')}
-                  </Button>
-                  <PictureEditDialog
-                    picture={picture}
-                    open={editDialogOpen}
-                    onClose={onDialogClose}
-                  />
-                  <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
+                  {canEditPicture && (
+                    <>
+                      <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
+                        {t('curator.editPicture')}
+                      </Button>
+                      <PictureEditDialog
+                        picture={picture}
+                        open={editDialogOpen}
+                        onClose={onDialogClose}
+                      />
+                    </>
+                  )}
+                  {canUpdatePicture && (
+                    <span className='save-state ml-auto'>
+                      {saveStatus(anyFieldTouched, isSaving)}
+                    </span>
+                  )}
                 </div>
               )
             }
