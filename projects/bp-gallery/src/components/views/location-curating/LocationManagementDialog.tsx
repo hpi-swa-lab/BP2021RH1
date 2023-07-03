@@ -18,9 +18,10 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { pick } from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapContainer, Marker, TileLayer, useMapEvent } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, ZoomControl, useMapEvent } from 'react-leaflet';
 import {
   useCanRunCreateLocationTagMutation,
+  useCanRunUpdateLocationCoordinatesMutation,
   useCreateLocationTagMutation,
   useUpdateLocationCoordinatesMutation,
 } from '../../../graphql/APIConnector';
@@ -53,10 +54,10 @@ const LocationMarker = ({
   setPosition,
 }: {
   position?: LatLng;
-  setPosition: (pos: LatLng) => void;
+  setPosition?: (pos: LatLng) => void;
 }) => {
   useMapEvent('click', event => {
-    setPosition(event.latlng.clone());
+    setPosition?.(event.latlng.clone());
   });
 
   const myIcon = new Icon({
@@ -73,6 +74,15 @@ const LocationMarker = ({
 
   return position ? <Marker icon={myIcon} position={position} /> : null;
 };
+
+const mapControlKeys = [
+  'dragging',
+  'touchZoom',
+  'scrollWheelZoom',
+  'boxZoom',
+  'doubleClickZoom',
+  'keyboard',
+] as const;
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -167,6 +177,22 @@ const LocationManagementDialogPreset = ({
   const [updateLocationCoordinatesMutation] = useUpdateLocationCoordinatesMutation({
     onCompleted: refetch,
   });
+  const { canRun: canUpdateLocationCoordinates } = useCanRunUpdateLocationCoordinatesMutation({
+    variables: {
+      tagId: locationTag.id,
+    },
+  });
+
+  useEffect(() => {
+    for (const key of mapControlKeys) {
+      const handler = map.current?.[key];
+      if (canUpdateLocationCoordinates) {
+        handler?.enable();
+      } else {
+        handler?.disable();
+    }
+    }
+  }, [canUpdateLocationCoordinates]);
 
   const initialMapValues = useMemo(() => {
     return {
@@ -357,21 +383,31 @@ const LocationManagementDialogPreset = ({
             </div>
           </div>
           <div className='location-management-right'>
-            <div className='location-management-map'>
+            <div
+              className={`location-management-map ${
+                canUpdateLocationCoordinates ? '' : 'grayscale'
+              }`}
+            >
               <MapContainer
                 center={initialMapValues.center}
                 zoom={initialMapValues.zoom}
                 className='map-container w-full h-full mb-1'
-                scrollWheelZoom={true}
+                {...Object.fromEntries(
+                  mapControlKeys.map(key => [key, canUpdateLocationCoordinates] as const)
+                )}
+                zoomControl={false}
                 ref={map}
               >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
+                {canUpdateLocationCoordinates && <ZoomControl />}
                 <LocationMarker
                   position={position}
-                  setPosition={pos => {
+                  setPosition={
+                    canUpdateLocationCoordinates
+                      ? pos => {
                     updateLocationCoordinatesMutation({
                       variables: {
                         tagId: locationTag.id,
@@ -382,7 +418,9 @@ const LocationManagementDialogPreset = ({
                       },
                     });
                     setPosition(pos);
-                  }}
+                        }
+                      : undefined
+                  }
                 />
               </MapContainer>
             </div>
@@ -398,6 +436,7 @@ const LocationManagementDialogPreset = ({
                   });
                   setPosition(undefined);
                 }}
+                disabled={!canUpdateLocationCoordinates}
                 endIcon={<Delete />}
               >
                 {t('tag-panel.delete-coordinate')}
