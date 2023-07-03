@@ -1,4 +1,4 @@
-import { ApolloError, ApolloLink, from } from '@apollo/client';
+import { ApolloLink, from } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
@@ -6,7 +6,7 @@ import { canRunOperation } from 'bp-graphql/build/operations';
 import { extractFiles } from 'extract-files';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { TFunction } from 'i18next';
-import { unionWith } from 'lodash';
+import { unionWith, uniq } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
 import { translateErrorMessage } from '../i18n';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
@@ -53,27 +53,32 @@ export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadO
   return asApiPath(imgSrcWithParams);
 };
 
-const errorToStrings = (error: unknown) => {
+const errorToStrings = (error: unknown): string[] => {
   if (!error) {
     return [];
   }
   if (typeof error === 'string') {
     return [error];
   }
+  if (error instanceof Array) {
+    return error.flatMap(element => errorToStrings(element));
+  }
   const errors: string[] = [];
-  if (error instanceof ApolloError) {
-    for (const clientError of error.clientErrors) {
-      errors.push(...errorToStrings(clientError));
+  if (typeof error === 'object') {
+    // ApolloError
+    if ('clientErrors' in error) {
+      errors.push(...errorToStrings(error.clientErrors));
     }
-    for (const graphQLError of error.graphQLErrors) {
-      errors.push(...errorToStrings(graphQLError));
+    if ('graphQLErrors' in error) {
+      errors.push(...errorToStrings(error.graphQLErrors));
     }
-    if (error.networkError) {
+    if ('networkError' in error) {
       errors.push(...errorToStrings(error.networkError));
     }
-  } else if (typeof error === 'object') {
+
+    // { result: { errors: [...] } }
     if (
-      // { result: { errors: [...] } }
+      errors.length === 0 &&
       'result' in error &&
       typeof error.result === 'object' &&
       error.result &&
@@ -91,7 +96,7 @@ const errorToStrings = (error: unknown) => {
 };
 
 export const errorToTranslatedString = (error: unknown, t: TFunction, context?: string) => {
-  return Array.from(errorToStrings(error))
+  return uniq(errorToStrings(error))
     .map(message => translateErrorMessage(message, t, context))
     .join('\n');
 };
