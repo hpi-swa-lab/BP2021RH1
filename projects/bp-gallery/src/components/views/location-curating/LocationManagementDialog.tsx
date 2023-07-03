@@ -11,7 +11,7 @@ import {
   Visibility,
   VisibilityOff,
 } from '@mui/icons-material';
-import { Button, Chip, DialogContent, IconButton, TextField } from '@mui/material';
+import { Button, ButtonProps, Chip, DialogContent, IconButton, TextField } from '@mui/material';
 import { Icon, LatLng, Map } from 'leaflet';
 import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -190,7 +190,7 @@ const LocationManagementDialogPreset = ({
         handler?.enable();
       } else {
         handler?.disable();
-    }
+      }
     }
   }, [canUpdateLocationCoordinates]);
 
@@ -408,16 +408,16 @@ const LocationManagementDialogPreset = ({
                   setPosition={
                     canUpdateLocationCoordinates
                       ? pos => {
-                    updateLocationCoordinatesMutation({
-                      variables: {
-                        tagId: locationTag.id,
-                        coordinate: {
-                          latitude: pos.lat,
-                          longitude: pos.lng,
-                        },
-                      },
-                    });
-                    setPosition(pos);
+                          updateLocationCoordinatesMutation({
+                            variables: {
+                              tagId: locationTag.id,
+                              coordinate: {
+                                latitude: pos.lat,
+                                longitude: pos.lng,
+                              },
+                            },
+                          });
+                          setPosition(pos);
                         }
                       : undefined
                   }
@@ -425,8 +425,7 @@ const LocationManagementDialogPreset = ({
               </MapContainer>
             </div>
             <div className='location-management-actions'>
-              <Button
-                className='location-management-button location-management-primary'
+              <LocationManagementButton
                 onClick={() => {
                   updateLocationCoordinatesMutation({
                     variables: {
@@ -440,15 +439,14 @@ const LocationManagementDialogPreset = ({
                 endIcon={<Delete />}
               >
                 {t('tag-panel.delete-coordinate')}
-              </Button>
+              </LocationManagementButton>
               <div className='location-management-picture-count'>
                 {flattenedPictures &&
                   t('tag-panel.location-pictures', {
                     count: flattenedPictures.locationTags[0].pictures.length,
                   })}
               </div>
-              <Button
-                className='location-management-button location-management-primary'
+              <LocationManagementButton
                 onClick={() => {
                   handleClose(undefined);
                   visit(`/show-more/location/${locationTag.id}`, {
@@ -459,35 +457,31 @@ const LocationManagementDialogPreset = ({
                 endIcon={<ArrowForwardIos />}
               >
                 {t('common.show-pictures')}
-              </Button>
-              <Button
-                className={`${
-                  localVisibility ? 'location-management-primary' : 'location-management-gray'
-                } location-management-button`}
+              </LocationManagementButton>
+              <LocationManagementButton
                 onClick={() => {
                   setVisible(!localVisibility);
                   setLocalVisibility(localVisibility => !localVisibility);
                 }}
                 disabled={!canSetVisible}
+                color={localVisibility ? 'primary' : 'grey'}
                 endIcon={localVisibility ? <Visibility /> : <VisibilityOff />}
               >
                 {localVisibility ? t('common.visible') : t('common.invisible')}
-              </Button>
-              <Button
-                className={`${
-                  isRoot ? 'location-management-primary' : 'location-management-gray'
-                } location-management-button`}
+              </LocationManagementButton>
+              <LocationManagementButton
                 onClick={() => {
                   if (locationTag.parent_tags?.length) {
                     setTagAsRoot(!isRoot);
                     setIsRoot(isRoot => !isRoot);
                   }
                 }}
+                color={isRoot ? 'primary' : 'grey'}
                 disabled={!canSetTagAsRoot}
                 endIcon={<AccountTree />}
               >
                 {isRoot ? t('common.root') : t('common.no-root')}
-              </Button>
+              </LocationManagementButton>
             </div>
           </div>
         </div>
@@ -524,6 +518,10 @@ const LocationManagementDialogPreset = ({
       </div>
     </>
   );
+};
+
+const LocationManagementButton = (props: ButtonProps) => {
+  return <Button className='!my-1' fullWidth color='primary' variant='contained' {...props} />;
 };
 
 export default LocationManagementDialogPreset;
