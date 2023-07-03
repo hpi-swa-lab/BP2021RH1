@@ -1,11 +1,11 @@
-import { ExpandMore } from '@mui/icons-material';
+import { ExpandMore, Search } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Button,
-  Input,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import { Operation, Parameter } from 'bp-graphql/build';
@@ -365,11 +365,15 @@ const PermissionsView = ({ userId }: { userId: string }) => {
               titleOnLeftSideOfScreenAfterScroll
             >
               <div className='mb-2'>
-                <Input
+                <TextField
                   fullWidth
                   value={filter}
                   onChange={onFilterChange}
                   placeholder={t('admin.permissions.filterPlaceholder')}
+                  variant='outlined'
+                  InputProps={{
+                    endAdornment: <Search />,
+                  }}
                 />
               </div>
               {renderSections('system')}
