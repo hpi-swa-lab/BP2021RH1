@@ -3,8 +3,8 @@ import { Operation, graphql } from '../Operation.js';
 export default {
   isEssential: true,
   document: graphql`
-    query getPicturesForLocation($tagID: ID!) {
-      locationTag(id: $tagID) {
+    query getPicturesForLocation($tagIDs: [ID!]) {
+      locationTags(filters: { id: { in: $tagIDs } }) {
         data {
           id
           attributes {

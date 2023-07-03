@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "picture_sequences",
+  "info": {
+    "singularName": "picture-sequence",
+    "pluralName": "picture-sequences",
+    "displayName": "Picture_Sequence",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "pictures": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::picture.picture",
+      "mappedBy": "picture_sequence"
+    }
+  }
+}

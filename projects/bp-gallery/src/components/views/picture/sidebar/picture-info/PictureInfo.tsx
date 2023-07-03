@@ -37,6 +37,7 @@ import DescriptionsEditField from './DescriptionsEditField';
 import LinkedInfoField from './LinkedInfoField';
 import './PictureInfo.scss';
 import PictureInfoField from './PictureInfoField';
+import PictureSequenceInfoField from './PictureSequenceInfoField';
 import TagSelectionField from './TagSelectionField';
 
 export type Field = Pick<
@@ -93,7 +94,7 @@ const PictureInfo = ({
   const openAlert = useContext(AlertContext);
 
   const allKeywords = useSimplifiedQueryResponseData(keywordsResponse.data)?.keywordTags;
-  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.locationTags;
+  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.getAllLocationTags;
   const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
   const allCollections = useSimplifiedQueryResponseData(collectionsResponse.data)?.collections;
 
@@ -265,6 +266,7 @@ const PictureInfo = ({
         hasHiddenLinks={hasHiddenLinks}
         savePictureInfo={savePictureInfo}
       />
+      <PictureSequenceInfoField picture={picture} />
       {savePictureInfo && (
         <PictureInfoField
           title={t('pictureFields.collections')}

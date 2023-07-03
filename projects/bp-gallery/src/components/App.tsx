@@ -16,6 +16,7 @@ import { ScrollProvider } from './provider/ScrollProvider';
 import routes from './routes';
 import BottomBar from './top-and-bottom-bar/BottomBar';
 import TopBar from './top-and-bottom-bar/TopBar';
+import { FoldoutStatusProvider } from './views/location-curating/FoldoutStatusProvider';
 
 const apolloClient = new ApolloClient({
   link: buildHttpLink(sessionStorage.getItem('jwt')),
@@ -79,23 +80,25 @@ const App = () => {
       <MuiThemeProvider>
         <AlertProvider>
           <AuthProvider>
-            <DialogProvider>
-              <MobileProvider>
-                <div className='App'>
-                  <ClipboardEditorProvider>
-                    <GrowthBookProvider>
-                      <ScrollProvider useWindow>
-                        <ExhibitionProvider>
-                          <TopBar />
-                          <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
-                          <BottomBar />
-                        </ExhibitionProvider>
-                      </ScrollProvider>
-                    </GrowthBookProvider>
-                  </ClipboardEditorProvider>
-                </div>
-              </MobileProvider>
-            </DialogProvider>
+            <FoldoutStatusProvider>
+              <DialogProvider>
+                <MobileProvider>
+                  <div className='App'>
+                    <ClipboardEditorProvider>
+                      <GrowthBookProvider>
+                        <ScrollProvider useWindow>
+                          <ExhibitionProvider>
+                            <TopBar />
+                            <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                            <BottomBar />
+                          </ExhibitionProvider>
+                        </ScrollProvider>
+                      </GrowthBookProvider>
+                    </ClipboardEditorProvider>
+                  </div>
+                </MobileProvider>
+              </DialogProvider>
+            </FoldoutStatusProvider>
           </AuthProvider>
         </AlertProvider>
       </MuiThemeProvider>

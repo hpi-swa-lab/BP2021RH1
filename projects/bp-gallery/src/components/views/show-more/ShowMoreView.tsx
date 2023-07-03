@@ -22,8 +22,14 @@ const ShowMoreView = ({
   categoryType: string;
   categoryId?: string;
 }) => {
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit, addToExhibition } =
-    useBulkOperations();
+  const {
+    linkToCollection,
+    moveToCollection,
+    removeFromCollection,
+    createSequence,
+    bulkEdit,
+    addToExhibition,
+  } = useBulkOperations();
 
   const exhibitionId = useContext(ExhibitionIdContext);
 
@@ -96,6 +102,7 @@ const ShowMoreView = ({
               removeFromCollection,
               linkToCollection,
               moveToCollection,
+              createSequence,
               bulkEdit,
               ...(exhibitionId ? [addToExhibition] : []),
             ]}

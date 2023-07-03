@@ -1,6 +1,6 @@
 import { QueryFromContentType } from '@strapi/database';
 import { pick } from 'lodash';
-import type { KnexEngine } from '../../../types';
+import type { KnexEngine, StrapiExtended } from '../../../types';
 import { plural, singular, table } from '../../helper';
 
 const { ApplicationError } = require('@strapi/utils').errors;
@@ -474,6 +474,41 @@ const anyPictureHasLinks = async (
   return false;
 };
 
+const processPictureSequenceUpdates = (data: {
+  picture_sequence?: string;
+  picture_sequence_order?: number;
+}) => {
+  if (!data.picture_sequence && data.picture_sequence_order) {
+    // having a nullish picture_sequence property removes the connection
+    // to the picture sequence - don't do that if the picture_sequence_oder
+    // is set, i. e. the request intended to just update the order and keep
+    // the sequence the same
+    delete data.picture_sequence;
+  }
+};
+
+const removeUnusedPictureSequences = async (strapi: StrapiExtended) => {
+  const knexEngine = strapi.db.connection;
+  const sequencesTable = table('picture_sequences');
+  const linksTable = table('pictures_picture_sequence_links');
+  // remove links to sequences of length 1
+  await knexEngine(linksTable)
+    .whereIn(
+      'picture_sequence_id',
+      knexEngine(linksTable)
+        .select('picture_sequence_id')
+        .groupBy('picture_sequence_id')
+        .havingRaw('count(picture_sequence_id) <= 1')
+    )
+    .del();
+  // remove sequences without links
+  await knexEngine(sequencesTable)
+    .whereNotExists(
+      knexEngine(linksTable).whereRaw(`${linksTable}.picture_sequence_id = ${sequencesTable}.id`)
+    )
+    .del();
+};
+
 const updatePictureWithTagCleanup = async (id: string, data: any) => {
   // No special handling needed if no data is passed.
   if (!data) return;
@@ -486,11 +521,15 @@ const updatePictureWithTagCleanup = async (id: string, data: any) => {
 
   await protectIsTextKey(pictureQuery, [id], data);
 
+  await processPictureSequenceUpdates(data);
+
   // Actually update the picture.
   await pictureQuery.update({
     where: { id },
     data,
   });
+
+  await removeUnusedPictureSequences(strapi as StrapiExtended);
 
   return id;
 };
@@ -820,4 +859,4 @@ const incNotAPlaceCount = async (knexEngine: KnexEngine, pictureId: number) => {
   );
 };
 
-export { updatePictureWithTagCleanup, bulkEdit, like, incNotAPlaceCount };
+export { bulkEdit, incNotAPlaceCount, like, updatePictureWithTagCleanup };

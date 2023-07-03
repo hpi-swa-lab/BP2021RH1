@@ -773,6 +773,7 @@ export type GenericMorph =
   | PersonTag
   | Picture
   | PictureGeoInfo
+  | PictureSequence
   | TimeRangeTag
   | UploadFile
   | UploadFolder
@@ -1086,6 +1087,7 @@ export type Mutation = {
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
   createPictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  createPictureSequence?: Maybe<PictureSequenceEntityResponse>;
   createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   createUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -1110,6 +1112,7 @@ export type Mutation = {
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
   deletePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  deletePictureSequence?: Maybe<PictureSequenceEntityResponse>;
   deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -1156,6 +1159,7 @@ export type Mutation = {
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
   updatePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
+  updatePictureSequence?: Maybe<PictureSequenceEntityResponse>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
   updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -1261,6 +1265,10 @@ export type MutationCreatePictureGeoInfoArgs = {
   data: PictureGeoInfoInput;
 };
 
+export type MutationCreatePictureSequenceArgs = {
+  data: PictureSequenceInput;
+};
+
 export type MutationCreateTimeRangeTagArgs = {
   data: TimeRangeTagInput;
 };
@@ -1342,6 +1350,10 @@ export type MutationDeletePictureArgs = {
 };
 
 export type MutationDeletePictureGeoInfoArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeletePictureSequenceArgs = {
   id: Scalars['ID'];
 };
 
@@ -1534,6 +1546,11 @@ export type MutationUpdatePictureGeoInfoArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationUpdatePictureSequenceArgs = {
+  data: PictureSequenceInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdatePictureWithTagCleanupArgs = {
   data?: InputMaybe<Scalars['JSON']>;
   id?: InputMaybe<Scalars['ID']>;
@@ -1715,6 +1732,8 @@ export type Picture = {
   media: UploadFileEntityResponse;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
   picture_geo_infos?: Maybe<PictureGeoInfoRelationResponseCollection>;
+  picture_sequence?: Maybe<PictureSequenceEntityResponse>;
+  picture_sequence_order?: Maybe<Scalars['Int']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1851,6 +1870,8 @@ export type PictureFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
   person_tags?: InputMaybe<PersonTagFiltersInput>;
   picture_geo_infos?: InputMaybe<PictureGeoInfoFiltersInput>;
+  picture_sequence?: InputMaybe<PictureSequenceFiltersInput>;
+  picture_sequence_order?: InputMaybe<IntFilterInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -1926,6 +1947,8 @@ export type PictureInput = {
   media?: InputMaybe<Scalars['ID']>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   picture_geo_infos?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  picture_sequence?: InputMaybe<Scalars['ID']>;
+  picture_sequence_order?: InputMaybe<Scalars['Int']>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1937,6 +1960,50 @@ export type PictureInput = {
 
 export type PictureRelationResponseCollection = {
   data: Array<PictureEntity>;
+};
+
+export type PictureSequence = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  pictures?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PictureSequencePicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureSequenceEntity = {
+  attributes?: Maybe<PictureSequence>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PictureSequenceEntityResponse = {
+  data?: Maybe<PictureSequenceEntity>;
+};
+
+export type PictureSequenceEntityResponseCollection = {
+  data: Array<PictureSequenceEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type PictureSequenceFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<PictureSequenceFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
+  pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type PictureSequenceInput = {
+  pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export enum PublicationState {
@@ -1967,6 +2034,7 @@ export type Query = {
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
+  getAllLocationTags?: Maybe<Scalars['JSON']>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -1981,6 +2049,8 @@ export type Query = {
   picture?: Maybe<PictureEntityResponse>;
   pictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
   pictureGeoInfos?: Maybe<PictureGeoInfoEntityResponseCollection>;
+  pictureSequence?: Maybe<PictureSequenceEntityResponse>;
+  pictureSequences?: Maybe<PictureSequenceEntityResponseCollection>;
   pictures?: Maybe<PictureEntityResponseCollection>;
   timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
   timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
@@ -2170,6 +2240,17 @@ export type QueryPictureGeoInfoArgs = {
 export type QueryPictureGeoInfosArgs = {
   filters?: InputMaybe<PictureGeoInfoFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryPictureSequenceArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryPictureSequencesArgs = {
+  filters?: InputMaybe<PictureSequenceFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2733,27 +2814,7 @@ export type GetAllKeywordTagsQuery = {
 
 export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllLocationTagsQuery = {
-  locationTags?: {
-    data: Array<{
-      id?: string | null;
-      attributes?: {
-        name: string;
-        visible?: boolean | null;
-        root?: boolean | null;
-        accepted?: boolean | null;
-        coordinates?: { latitude: number; longitude: number } | null;
-        synonyms?: Array<{ name: string } | null> | null;
-        child_tags?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
-        parent_tags?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
-      } | null;
-    }>;
-  } | null;
-};
+export type GetAllLocationTagsQuery = { getAllLocationTags?: any | null };
 
 export type GetAllPersonTagsQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -3327,6 +3388,12 @@ export type GetMostLikedPicturesQuery = {
             } | null;
           } | null;
         };
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
       } | null;
     }>;
   } | null;
@@ -3601,6 +3668,12 @@ export type GetPictureInfoQuery = {
         };
         linked_pictures?: { data: Array<{ id?: string | null }> } | null;
         linked_texts?: { data: Array<{ id?: string | null }> } | null;
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
         archive_tag?: {
           data?: {
             id?: string | null;
@@ -3651,6 +3724,12 @@ export type GetPicturesQuery = {
             } | null;
           } | null;
         };
+        picture_sequence?: {
+          data?: {
+            id?: string | null;
+            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+          } | null;
+        } | null;
       } | null;
     }>;
   } | null;
@@ -3685,6 +3764,12 @@ export type GetPicturesByAllSearchQuery = {
           } | null;
         } | null;
       };
+      picture_sequence?: {
+        data?: {
+          id?: string | null;
+          attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
+        } | null;
+      } | null;
     } | null;
   } | null> | null;
 };
@@ -3703,18 +3788,18 @@ export type GetPicturesForCollectionQuery = {
 };
 
 export type GetPicturesForLocationQueryVariables = Exact<{
-  tagID: Scalars['ID'];
+  tagIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
 export type GetPicturesForLocationQuery = {
-  locationTag?: {
-    data?: {
+  locationTags?: {
+    data: Array<{
       id?: string | null;
       attributes?: {
         pictures?: { data: Array<{ id?: string | null }> } | null;
         verified_pictures?: { data: Array<{ id?: string | null }> } | null;
       } | null;
-    } | null;
+    }>;
   } | null;
 };
 
@@ -3969,6 +4054,14 @@ export type CreatePictureGeoInfoMutationVariables = Exact<{
 
 export type CreatePictureGeoInfoMutation = {
   createPictureGeoInfo?: { data?: { id?: string | null } | null } | null;
+};
+
+export type CreatePictureSequenceMutationVariables = Exact<{
+  pictures: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+export type CreatePictureSequenceMutation = {
+  createPictureSequence?: { data?: { id?: string | null } | null } | null;
 };
 
 export type CreateSubCollectionMutationVariables = Exact<{
@@ -4403,6 +4496,14 @@ export type UpdatePictureMutationVariables = Exact<{
 
 export type UpdatePictureMutation = { updatePictureWithTagCleanup?: string | null };
 
+export type UpdatePictureSequenceDataMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+  pictureSequence?: InputMaybe<Scalars['ID']>;
+  pictureSequenceOrder?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdatePictureSequenceDataMutation = { updatePictureWithTagCleanup?: string | null };
+
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];
   username?: InputMaybe<Scalars['String']>;
@@ -4673,40 +4774,7 @@ export type GetAllKeywordTagsQueryResult = Apollo.QueryResult<
 
 export const GetAllLocationTagsDocument = gql`
   query getAllLocationTags {
-    locationTags {
-      data {
-        id
-        attributes {
-          name
-          visible
-          root
-          accepted
-          coordinates {
-            latitude
-            longitude
-          }
-          synonyms {
-            name
-          }
-          child_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          parent_tags {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-        }
-      }
-    }
+    getAllLocationTags
   }
 `;
 
@@ -6227,6 +6295,18 @@ export const GetMostLikedPicturesDocument = gql`
               }
             }
           }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -6936,6 +7016,18 @@ export const GetPictureInfoDocument = gql`
               id
             }
           }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
           archive_tag {
             data {
               id
@@ -7047,6 +7139,18 @@ export const GetPicturesDocument = gql`
               }
             }
           }
+          picture_sequence {
+            data {
+              id
+              attributes {
+                pictures(sort: "picture_sequence_order:asc") {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -7129,6 +7233,18 @@ export const GetPicturesByAllSearchDocument = gql`
               url
               updatedAt
               provider
+            }
+          }
+        }
+        picture_sequence {
+          data {
+            id
+            attributes {
+              pictures(sort: "picture_sequence_order:asc") {
+                data {
+                  id
+                }
+              }
             }
           }
         }
@@ -7268,8 +7384,8 @@ export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
 >;
 
 export const GetPicturesForLocationDocument = gql`
-  query getPicturesForLocation($tagID: ID!) {
-    locationTag(id: $tagID) {
+  query getPicturesForLocation($tagIDs: [ID!]) {
+    locationTags(filters: { id: { in: $tagIDs } }) {
       data {
         id
         attributes {
@@ -7301,12 +7417,12 @@ export const GetPicturesForLocationDocument = gql`
  * @example
  * const { data, loading, error } = useGetPicturesForLocationQuery({
  *   variables: {
- *      tagID: // value for 'tagID'
+ *      tagIDs: // value for 'tagIDs'
  *   },
  * });
  */
 export function useGetPicturesForLocationQuery(
-  baseOptions: Apollo.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetPicturesForLocationQuery,
     GetPicturesForLocationQueryVariables
   >
@@ -8725,6 +8841,63 @@ export type CreatePictureGeoInfoMutationResult =
 export type CreatePictureGeoInfoMutationOptions = Apollo.BaseMutationOptions<
   CreatePictureGeoInfoMutation,
   CreatePictureGeoInfoMutationVariables
+>;
+
+export const CreatePictureSequenceDocument = gql`
+  mutation createPictureSequence($pictures: [ID!]!) {
+    createPictureSequence(data: { pictures: $pictures }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreatePictureSequenceMutationFn = Apollo.MutationFunction<
+  CreatePictureSequenceMutation,
+  CreatePictureSequenceMutationVariables
+>;
+
+/**
+ * __useCreatePictureSequenceMutation__
+ *
+ * To run a mutation, you first call `useCreatePictureSequenceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePictureSequenceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPictureSequenceMutation, { data, loading, error }] = useCreatePictureSequenceMutation({
+ *   variables: {
+ *      pictures: // value for 'pictures'
+ *   },
+ * });
+ */
+export function useCreatePictureSequenceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePictureSequenceMutation,
+    CreatePictureSequenceMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePictureSequenceMutation, CreatePictureSequenceMutationVariables>(
+    CreatePictureSequenceDocument,
+    options
+  );
+}
+
+export type CreatePictureSequenceMutationHookResult = ReturnType<
+  typeof useCreatePictureSequenceMutation
+>;
+
+export type CreatePictureSequenceMutationResult =
+  Apollo.MutationResult<CreatePictureSequenceMutation>;
+
+export type CreatePictureSequenceMutationOptions = Apollo.BaseMutationOptions<
+  CreatePictureSequenceMutation,
+  CreatePictureSequenceMutationVariables
 >;
 
 export const CreateSubCollectionDocument = gql`
@@ -11541,6 +11714,68 @@ export type UpdatePictureMutationOptions = Apollo.BaseMutationOptions<
   UpdatePictureMutationVariables
 >;
 
+export const UpdatePictureSequenceDataDocument = gql`
+  mutation updatePictureSequenceData(
+    $pictureId: ID!
+    $pictureSequence: ID
+    $pictureSequenceOrder: Int
+  ) {
+    updatePictureWithTagCleanup(
+      id: $pictureId
+      data: { picture_sequence: $pictureSequence, picture_sequence_order: $pictureSequenceOrder }
+    )
+  }
+`;
+
+export type UpdatePictureSequenceDataMutationFn = Apollo.MutationFunction<
+  UpdatePictureSequenceDataMutation,
+  UpdatePictureSequenceDataMutationVariables
+>;
+
+/**
+ * __useUpdatePictureSequenceDataMutation__
+ *
+ * To run a mutation, you first call `useUpdatePictureSequenceDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePictureSequenceDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePictureSequenceDataMutation, { data, loading, error }] = useUpdatePictureSequenceDataMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *      pictureSequence: // value for 'pictureSequence'
+ *      pictureSequenceOrder: // value for 'pictureSequenceOrder'
+ *   },
+ * });
+ */
+export function useUpdatePictureSequenceDataMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePictureSequenceDataMutation,
+    UpdatePictureSequenceDataMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdatePictureSequenceDataMutation,
+    UpdatePictureSequenceDataMutationVariables
+  >(UpdatePictureSequenceDataDocument, options);
+}
+
+export type UpdatePictureSequenceDataMutationHookResult = ReturnType<
+  typeof useUpdatePictureSequenceDataMutation
+>;
+
+export type UpdatePictureSequenceDataMutationResult =
+  Apollo.MutationResult<UpdatePictureSequenceDataMutation>;
+
+export type UpdatePictureSequenceDataMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePictureSequenceDataMutation,
+  UpdatePictureSequenceDataMutationVariables
+>;
+
 export const UpdateUserDocument = gql`
   mutation updateUser($id: ID!, $username: String, $email: String) {
     updateUsersPermissionsUser(id: $id, data: { username: $username, email: $email }) {
@@ -14014,6 +14249,50 @@ export function useCanRunMultipleCreatePictureGeoInfoMutations(
   };
 }
 
+export function useCanRunCreatePictureSequenceMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<CreatePictureSequenceMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreatePictureSequenceDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleCreatePictureSequenceMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<CreatePictureSequenceMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreatePictureSequenceDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunCreateSubCollectionMutation(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -16291,6 +16570,50 @@ export function useCanRunMultipleUpdatePictureMutations(
     ...options,
     variables: {
       operation: UpdatePictureDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdatePictureSequenceDataMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdatePictureSequenceDataMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdatePictureSequenceDataMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdatePictureSequenceDataMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

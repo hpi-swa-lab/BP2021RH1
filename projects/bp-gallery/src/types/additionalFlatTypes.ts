@@ -17,6 +17,7 @@ import {
   PersonTag,
   Picture,
   PictureGeoInfo,
+  PictureSequence,
   Scalars,
   TimeRangeTag,
   UploadFile,
@@ -71,7 +72,10 @@ type FlatPictureWithoutRelations = ID &
     | 'linked_pictures'
     | 'linked_texts'
     | 'archive_tag'
+    | 'picture_sequence'
   >;
+
+export type FlatPictureSequenceWithoutRelations = ID & Omit<PictureSequence, 'pictures'>;
 
 export type FlatPictureGeoInfo = ID &
   Omit<PictureGeoInfo, 'notAPlaceCount' | 'radius' | 'createdAt' | 'updatedAt'>;
@@ -179,6 +183,11 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   linked_pictures?: FlatPictureWithoutRelations[];
   linked_texts?: FlatPictureWithoutRelations[];
   archive_tag?: FlatArchiveTagWithoutRelations;
+  picture_sequence?: FlatPictureSequence;
+};
+
+export type FlatPictureSequence = FlatPictureSequenceWithoutRelations & {
+  pictures?: FlatPicture[];
 };
 
 export type FlatUsersPermissionsPermission = FlatUsersPermissionsPermissionWithoutRelations & {
