@@ -238,9 +238,24 @@ const PermissionsView = ({ userId }: { userId: string }) => {
             })
           ),
         }));
+      const accordionStyle = {
+        backgroundColor: '#e9e9e9',
+      };
       return (
-        <Accordion key={archive?.id ?? type} sx={{ backgroundColor: '#e9e9e9' }}>
-          <AccordionSummary expandIcon={<ExpandMore />}>
+        <Accordion
+          key={archive?.id ?? type}
+          sx={accordionStyle}
+          classes={{
+            root: 'before:z-20', // ::before is the divider between Accordions
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+            classes={{
+              root: '!sticky top-0 z-10 ',
+            }}
+            sx={accordionStyle}
+          >
             <Typography fontWeight='bold'>
               <CoverageCheckbox
                 coverage={combineCoverages(
@@ -347,6 +362,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                   ? t('admin.permissions.publicTitle')
                   : t('admin.permissions.title', { userName: user?.username })
               }
+              titleOnLeftSideOfScreenAfterScroll
             >
               <div className='mb-2'>
                 <Input
