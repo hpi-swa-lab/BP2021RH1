@@ -1,15 +1,17 @@
-import { useGetCollectionInfoByNameQuery } from '../../../graphql/APIConnector';
+import { useContext } from 'react';
+import { useGetPublishedCollectionInfoByNameQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType, Thumbnail } from '../../../types/additionalFlatTypes';
-import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
-import { getPictureQueryParams } from './helpers/queryParams-helpers';
-import { useGetShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 import './ShowMoreView.scss';
 import ShowMoreViewHeader from './ShowMoreViewHeader';
+import { getPictureQueryParams } from './helpers/queryParams-helpers';
+import { useGetShowcaseAdornments } from './helpers/showcaseAdornment-helpers';
 
 const ShowMoreView = ({
   archiveId,
@@ -20,12 +22,20 @@ const ShowMoreView = ({
   categoryType: string;
   categoryId?: string;
 }) => {
-  const { linkToCollection, moveToCollection, removeFromCollection, bulkEdit } =
-    useBulkOperations();
+  const {
+    linkToCollection,
+    moveToCollection,
+    removeFromCollection,
+    createSequence,
+    bulkEdit,
+    addToExhibition,
+  } = useBulkOperations();
+
+  const exhibitionId = useContext(ExhibitionIdContext);
 
   const showcaseAdornment = useGetShowcaseAdornments(archiveId);
 
-  const { data, error } = useGetCollectionInfoByNameQuery({
+  const { data, error } = useGetPublishedCollectionInfoByNameQuery({
     variables: {
       collectionName: categoryId ? categoryId : '',
     },
@@ -88,10 +98,18 @@ const ShowMoreView = ({
             }
             hashbase={'show-more'}
             extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
-            bulkOperations={[removeFromCollection, linkToCollection, moveToCollection, bulkEdit]}
+            bulkOperations={[
+              removeFromCollection,
+              linkToCollection,
+              moveToCollection,
+              createSequence,
+              bulkEdit,
+              ...(exhibitionId ? [addToExhibition] : []),
+            ]}
             maxNumPictures={
               categoryType === 'latest' || categoryType === 'most-liked' ? 500 : undefined
             }
+            textFilter={null}
             fetchPolicy='cache-and-network'
           />
         </ShowStats>

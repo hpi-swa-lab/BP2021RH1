@@ -15,11 +15,11 @@ import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { replaceHistoryWithoutRouter } from '../../../helpers/history';
+import { useBlockImageContextMenuByPictureId } from '../../../hooks/block-image-context-menu.hook';
 import { useMouseIsIdle } from '../../../hooks/mouse-position.hook';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { FaceTaggingProvider } from '../../provider/FaceTaggingProvider';
 import { FaceTags } from './face-tagging/FaceTags';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
@@ -49,23 +49,31 @@ const PictureView = ({
   initialPictureId,
   siblingIds,
   onBack,
+  fetchMore,
 }: {
   initialPictureId: string;
   siblingIds?: string[];
   onBack?: (picid: string) => void;
+  fetchMore?: (currentPictureId: string) => void;
 }) => {
   const history: History = useHistory();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const { role } = useAuth();
 
   const [pictureId, setPictureId] = useState<string>(initialPictureId);
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
 
-  // Open the sidebar per default if logged in as a curators
   useEffect(() => {
-    setSideBarOpen(role >= AuthRole.CURATOR || window.innerWidth > MOBILE_BREAKPOINT);
-  }, [role]);
+    if (window.innerWidth > MOBILE_BREAKPOINT) {
+      setSideBarOpen(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (fetchMore && siblingIds && siblingIds.indexOf(pictureId) === siblingIds.length - 1) {
+      fetchMore(pictureId);
+    }
+  }, [fetchMore, siblingIds, pictureId]);
 
   const search = window.location.search;
   const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {
@@ -144,6 +152,8 @@ const PictureView = ({
     };
   }, [history, pictureId, onBack]);
 
+  const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureId);
+
   return (
     <div className={`picture-view-container ${noDistractionMode ? 'cursor-none' : ''}`}>
       <PictureViewContext.Provider value={contextValue}>
@@ -158,6 +168,7 @@ const PictureView = ({
                       ref={setImg}
                       src={pictureLink}
                       alt={pictureLink}
+                      onContextMenu={onImageContextMenu}
                     />
                     <FaceTags />
                   </div>

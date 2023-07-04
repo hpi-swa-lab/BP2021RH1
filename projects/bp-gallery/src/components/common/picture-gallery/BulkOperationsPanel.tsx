@@ -1,24 +1,43 @@
 import { IconButton } from '@mui/material';
+import { ExternalCanRun } from '../../../hooks/bulk-operations.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 
 export interface BulkOperation {
   icon: JSX.Element;
   name: string;
   action: (selectedPictures: FlatPicture[], onBulkEdit: () => void) => void;
+  canRun: boolean | ExternalCanRun;
 }
 
 const BulkOperationsPanel = ({
   operations,
   selectedPictures,
   onBulkEdit,
+  canBulkEdit,
+  canCreatePictureSequence,
 }: {
   operations: BulkOperation[];
   selectedPictures: FlatPicture[];
   onBulkEdit: () => void;
+  canBulkEdit: boolean;
+  canCreatePictureSequence: boolean;
 }) => {
+  const runnableOperations = operations.filter(operation => {
+    switch (operation.canRun) {
+      case ExternalCanRun.canBulkEdit:
+        return canBulkEdit;
+      case ExternalCanRun.canCreatePictureSequence:
+        return canCreatePictureSequence;
+      default:
+        return operation.canRun satisfies boolean;
+    }
+  });
+  if (runnableOperations.length === 0) {
+    return null;
+  }
   return (
     <>
-      {operations.map((operation, index) => (
+      {runnableOperations.map((operation, index) => (
         <IconButton
           key={index}
           onClick={() => operation.action(selectedPictures, onBulkEdit)}

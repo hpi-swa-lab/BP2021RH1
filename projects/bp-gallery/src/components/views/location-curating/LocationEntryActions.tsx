@@ -2,10 +2,12 @@ import {
   CopyAll,
   Delete,
   Eject,
+  LocationOn,
   MoveDown,
   Visibility,
   VisibilityOffOutlined,
 } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { FlatTag } from '../../../types/additionalFlatTypes';
 import IconButtonWithTooltip from '../../common/IconButtonWithTooltip';
@@ -28,58 +30,72 @@ const LocationEntryActions = ({
   refetch: () => void;
 }) => {
   const { t } = useTranslation();
-  const { setVisible } = useSetVisible(locationTag, refetch);
-  const { relocateTag } = useRelocateTag(locationTag, refetch, parentTag);
-  const { detachTag } = useDetachTag(locationTag, refetch, parentTag);
-  const { copyTag } = useCopyTag(locationTag, refetch);
-  const { deleteTag } = useDeleteTag(locationTag, refetch, parentTag);
-  const { setTagAsRoot } = useSetRoot(locationTag, refetch);
+  const { setVisible, canSetVisible } = useSetVisible(locationTag, refetch);
+  const { relocateTag, canRelocateTag } = useRelocateTag(locationTag, refetch, parentTag);
+  const { detachTag, canDetachTag } = useDetachTag(locationTag, refetch, parentTag);
+  const { copyTag, canCopyTag } = useCopyTag(locationTag, refetch);
+  const { deleteTag, canDeleteTag } = useDeleteTag(locationTag, refetch, parentTag);
+  const { setTagAsRoot, canSetTagAsRoot } = useSetRoot(locationTag, refetch);
 
   return (
     <div className='location-action-buttons-container'>
-      <IconButtonWithTooltip
-        title={t('tooltips.detach-location')}
-        onClick={e => {
-          e.stopPropagation();
-          detachTag();
-        }}
-        icon={<Eject />}
-      />
-      <IconButtonWithTooltip
-        title={t('tooltips.relocate-location')}
-        onClick={e => {
-          e.stopPropagation();
-          relocateTag();
-        }}
-        icon={<MoveDown />}
-      />
-      <IconButtonWithTooltip
-        title={t('tooltips.copy-location')}
-        onClick={e => {
-          e.stopPropagation();
-          if (!locationTag.parent_tags?.length) {
-            setTagAsRoot(true);
-          }
-          copyTag();
-        }}
-        icon={<CopyAll />}
-      />
+      {locationTag.coordinates && (
+        <IconButton>
+          <LocationOn className='text-[#446ab7]' />
+        </IconButton>
+      )}
+      {canDetachTag && (
+        <IconButtonWithTooltip
+          title={t('tooltips.detach-location')}
+          onClick={e => {
+            e.stopPropagation();
+            detachTag();
+          }}
+          icon={<Eject />}
+        />
+      )}
+      {canRelocateTag && (
+        <IconButtonWithTooltip
+          title={t('tooltips.relocate-location')}
+          onClick={e => {
+            e.stopPropagation();
+            relocateTag();
+          }}
+          icon={<MoveDown />}
+        />
+      )}
+      {canCopyTag && (!locationTag.parent_tags?.length ? canSetTagAsRoot : true) && (
+        <IconButtonWithTooltip
+          title={t('tooltips.copy-location')}
+          onClick={e => {
+            e.stopPropagation();
+            if (!locationTag.parent_tags?.length) {
+              setTagAsRoot(true);
+            }
+            copyTag();
+          }}
+          icon={<CopyAll />}
+        />
+      )}
       <IconButtonWithTooltip
         title={locationTag.visible ? t('tooltips.hide-location') : t('tooltips.show-location')}
         onClick={e => {
           e.stopPropagation();
           setVisible(!locationTag.visible);
         }}
+        disabled={!canSetVisible}
         icon={locationTag.visible ? <Visibility /> : <VisibilityOffOutlined />}
       />
-      <IconButtonWithTooltip
-        title={t('tooltips.delete-location')}
-        onClick={e => {
-          e.stopPropagation();
-          deleteTag();
-        }}
-        icon={<Delete />}
-      />
+      {canDeleteTag && (
+        <IconButtonWithTooltip
+          title={t('tooltips.delete-location')}
+          onClick={e => {
+            e.stopPropagation();
+            deleteTag();
+          }}
+          icon={<Delete />}
+        />
+      )}
     </div>
   );
 };

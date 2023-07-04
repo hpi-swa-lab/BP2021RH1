@@ -1,4 +1,5 @@
 import { login, logout } from '../utils/login-utils';
+import { waitForCuratorPictureInfo } from './helper';
 
 describe('picture uploading and tagging', () => {
   before(() => {
@@ -22,7 +23,7 @@ describe('picture uploading and tagging', () => {
 
     cy.get('.nav-bar').contains('Mehr...').click();
     cy.get('.MuiPaper-root').contains('Orte').click();
-    cy.contains('.location-entry-content', 'TestOrt').find('[data-testid="DeleteIcon"]').click();
+    cy.get('.location-entry-container:eq(2)').find('[data-testid="DeleteIcon"]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
 
     cy.get('.nav-bar').contains('Mehr...').click();
@@ -39,7 +40,7 @@ describe('picture uploading and tagging', () => {
 
   it('uploading picture', () => {
     cy.get('.dropzone').selectFile('./cypress/testFiles/testbild.jpg', { action: 'drag-drop' });
-    cy.get('.add-to-collection').click();
+    cy.get('[data-cy="file-upload"]').click();
     cy.get('.MuiDialogContent-root').find('.MuiOutlinedInput-input').clear();
     cy.get('.MuiDialogContent-root')
       .find('.MuiOutlinedInput-input')
@@ -51,6 +52,7 @@ describe('picture uploading and tagging', () => {
   it('tagging picture with year', () => {
     cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-grid .picture-preview:last').click();
+    waitForCuratorPictureInfo();
     cy.get('.date-indicator').click();
     cy.contains('.rdrInputRange', 'Jahr').find('input').clear();
     cy.contains('.rdrInputRange', 'Jahr').find('input').type('1000{esc}');
@@ -110,13 +112,13 @@ describe('picture uploading and tagging', () => {
 
     cy.get('.picture-preview:last').click();
 
-    cy.get('.picture-info-field').contains('1000').should('exist');
-    cy.get('.picture-info-field').contains('TestBeschreibung').should('exist');
-    cy.get('.picture-info-field').contains('TestPerson').should('exist');
-    cy.get('.picture-info-field').contains('TestOrt').should('exist');
-    cy.get('.picture-info-field').contains('TestSchlagwort').should('exist');
-    cy.get('.picture-info-field').contains('TestCollection').should('exist');
-    cy.get('.picture-info-field').contains('Herbert-Ahrens-Bilderarchiv').should('exist');
+    cy.contains('.picture-info-field', '1000').should('exist');
+    cy.contains('.picture-info-field', 'TestBeschreibung').should('exist');
+    cy.contains('.picture-info-field', 'TestPerson').should('exist');
+    cy.contains('.picture-info-field', 'TestOrt').should('exist');
+    cy.contains('.picture-info-field', 'TestSchlagwort').should('exist');
+    cy.contains('.picture-info-field', 'TestCollection').should('exist');
+    cy.contains('.picture-info-field', 'Herbert-Ahrens-Bilderarchiv').should('exist');
   });
 
   it('deleting picture', () => {

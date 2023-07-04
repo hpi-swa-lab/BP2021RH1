@@ -3,17 +3,27 @@ import {
   Collection,
   Comment,
   ComponentCommonSynonyms,
+  ComponentLocationCoordinates,
   Description,
+  Exhibition,
+  ExhibitionPicture,
+  ExhibitionSection,
+  ExhibitionSource,
   FaceTag,
   KeywordTag,
   Link,
   LocationTag,
+  ParameterizedPermission,
   PersonTag,
   Picture,
   PictureGeoInfo,
+  PictureSequence,
   Scalars,
   TimeRangeTag,
   UploadFile,
+  UsersPermissionsPermission,
+  UsersPermissionsRole,
+  UsersPermissionsUser,
 } from '../graphql/APIConnector';
 
 type ID = { id: Scalars['ID'] };
@@ -29,6 +39,20 @@ type FlatDescriptionWithoutRelations = ID & Omit<Description, 'pictures'>;
 type FlatKeywordTagWithoutRelations = ID & Omit<KeywordTag, 'pictures' | 'verified_pictures'>;
 
 export type FlatUploadFile = ID & UploadFile;
+
+type FlatExhibitionPictureWithoutRelations = ID &
+  Omit<ExhibitionPicture, 'picture' | 'exhibition_section' | 'exhibition_idealot'>;
+
+type FlatExhibitionWithoutRelations = ID &
+  Omit<
+    Exhibition,
+    'title_picture' | 'exhibition_sections' | 'exhibition_sources' | 'idealot_pictures'
+  >;
+
+type FlatExhibitionSectionWithoutRelations = ID &
+  Omit<ExhibitionSection, 'exhibition' | 'exhibition_pictures'>;
+
+type FlatExhibitionSourceWithoutRelations = ID & Omit<ExhibitionSource, 'exhibition'>;
 
 type FlatPictureWithoutRelations = ID &
   Omit<
@@ -48,7 +72,10 @@ type FlatPictureWithoutRelations = ID &
     | 'linked_pictures'
     | 'linked_texts'
     | 'archive_tag'
+    | 'picture_sequence'
   >;
+
+export type FlatPictureSequenceWithoutRelations = ID & Omit<PictureSequence, 'pictures'>;
 
 export type FlatPictureGeoInfo = ID &
   Omit<PictureGeoInfo, 'notAPlaceCount' | 'radius' | 'createdAt' | 'updatedAt'>;
@@ -67,6 +94,39 @@ export type FlatArchiveTagWithoutRelations = ID &
 export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatFaceTagWithoutRelations = ID & Omit<FaceTag, 'person_tag' | 'picture'>;
+
+export type FlatUsersPermissionsPermissionWithoutRelations = ID &
+  Omit<UsersPermissionsPermission, 'role'>;
+
+export type FlatUsersPermissionsRoleWithoutRelations = ID &
+  Omit<UsersPermissionsRole, 'users' | 'permissions'>;
+
+export type FlatUsersPermissionsUserWithoutRelations = ID & Omit<UsersPermissionsUser, 'role'>;
+
+export type FlatParameterizedPermissionWithoutRelations = ID &
+  Omit<ParameterizedPermission, 'users_permissions_user' | 'archive_tag'>;
+
+export type FlatExhibitionSource = FlatExhibitionSourceWithoutRelations & {
+  exhibition?: FlatExhibition;
+};
+
+export type FlatExhibitionSection = FlatExhibitionSectionWithoutRelations & {
+  exhibition_pictures?: FlatExhibitionPicture[];
+  exhibition?: FlatExhibition;
+};
+
+export type FlatExhibitionPicture = FlatExhibitionPictureWithoutRelations & {
+  picture?: FlatPicture;
+  exhibition_section?: FlatExhibitionSection;
+  exhibition_idealot?: FlatExhibition;
+};
+
+export type FlatExhibition = FlatExhibitionWithoutRelations & {
+  title_picture?: FlatExhibitionPicture;
+  exhibition_sections?: FlatExhibitionSection[];
+  exhibition_sources?: FlatExhibitionSource[];
+  idealot_pictures?: FlatExhibitionPicture[];
+};
 
 export type FlatComment = FlatCommentWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
@@ -123,6 +183,29 @@ export type FlatPicture = FlatPictureWithoutRelations & {
   linked_pictures?: FlatPictureWithoutRelations[];
   linked_texts?: FlatPictureWithoutRelations[];
   archive_tag?: FlatArchiveTagWithoutRelations;
+  picture_sequence?: FlatPictureSequence;
+};
+
+export type FlatPictureSequence = FlatPictureSequenceWithoutRelations & {
+  pictures?: FlatPicture[];
+};
+
+export type FlatUsersPermissionsPermission = FlatUsersPermissionsPermissionWithoutRelations & {
+  role?: FlatUsersPermissionsRole;
+};
+
+export type FlatUsersPermissionsRole = FlatUsersPermissionsRoleWithoutRelations & {
+  users?: FlatUsersPermissionsUser[];
+  permissions?: FlatUsersPermissionsPermission[];
+};
+
+export type FlatUsersPermissionsUser = FlatUsersPermissionsUserWithoutRelations & {
+  role?: FlatUsersPermissionsRole;
+};
+
+export type FlatParameterizedPermission = FlatParameterizedPermissionWithoutRelations & {
+  users_permissions_user?: FlatUsersPermissionsUser;
+  archive_tag?: FlatArchiveTag;
 };
 
 export type Thumbnail = {
@@ -141,6 +224,7 @@ export type FlatFaceTag = FlatFaceTagWithoutRelations & {
 export interface FlatTag {
   id: string;
   name: string;
+  coordinates?: ComponentLocationCoordinates;
   synonyms?: (ComponentCommonSynonyms | undefined)[];
   visible?: boolean;
   parent_tags?: FlatTag[];

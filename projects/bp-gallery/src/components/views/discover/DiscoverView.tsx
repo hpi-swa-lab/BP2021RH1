@@ -1,34 +1,53 @@
+import { AccessTime, ThumbUp, Widgets } from '@mui/icons-material';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFlag } from '../../../helpers/growthbook';
 import { useVisit } from '../../../helpers/history';
 import { PictureOverviewType, TagType } from '../../../types/additionalFlatTypes';
-import PictureOverview from '../../common/PictureOverview';
-import TagOverview from '../../common/TagOverview';
-import { ShowStats } from '../../provider/ShowStatsProvider';
-import './DiscoverView.scss';
 import OverviewContainer, {
   OverviewContainerPosition,
   OverviewContainerTab,
 } from '../../common/OverviewContainer';
-import { AccessTime, ThumbUp } from '@mui/icons-material';
-import { useMemo } from 'react';
+import PictureOverview from '../../common/PictureOverview';
+import TagOverview from '../../common/TagOverview';
+import TimelineComponent from '../../common/picture-gallery/TimelineComponent';
+import { ShowStats } from '../../provider/ShowStatsProvider';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
+import './DiscoverView.scss';
 
 const DiscoverView = () => {
   const { visit } = useVisit();
   const { t } = useTranslation();
+
+  const timeTabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.timeline'),
+        icon: <AccessTime key='0' />,
+        content: <TimelineComponent defaultValue={1950} />,
+      },
+      {
+        title: t('discover.decades'),
+        icon: <Widgets key='1' />,
+        content: (
+          <TagOverview
+            type={TagType.TIME_RANGE}
+            onClick={() => {
+              visit('/show-more/date');
+            }}
+            rows={2}
+          />
+        ),
+      },
+    ];
+  }, [t, visit]);
 
   const tabs: OverviewContainerTab[] = useMemo(() => {
     return [
       {
         title: t('discover.latest-pictures'),
         icon: <AccessTime key='0' />,
-        content: (
-          <PictureOverview
-            queryParams={{}}
-            onClick={() => {
-              visit('/show-more/latest');
-            }}
-          />
-        ),
+        content: <PictureOverview queryParams={{}} showMoreUrl='/show-more/latest' />,
       },
       {
         title: t('discover.most-liked'),
@@ -37,38 +56,37 @@ const DiscoverView = () => {
           <PictureOverview
             type={PictureOverviewType.MOST_LIKED}
             queryParams={{}}
-            onClick={() => {
-              visit('/show-more/most-liked');
-            }}
+            showMoreUrl='/show-more/most-liked'
           />
         ),
       },
     ];
-  }, [t, visit]);
-
+  }, [t]);
+  const showStories = useFlag('showstories');
   return (
     <div className='discover-container'>
       <ShowStats>
-        <OverviewContainer tabs={tabs} overviewPosition={OverviewContainerPosition.DISCOVER_VIEW} />
+        <OverviewContainer
+          tabs={tabs}
+          overviewPosition={OverviewContainerPosition.DISCOVER_VIEW}
+          tabID='0'
+        />
+
+        {showStories && <ExhibitionOverview showTitle margin />}
 
         <PictureOverview
           title={t('discover.more-info')}
           queryParams={{ collections: { name: { eq: 'Fragezeichen' } } }}
-          onClick={() => {
-            visit('/show-more/pictures/Fragezeichen');
-          }}
+          showMoreUrl='/show-more/pictures/Fragezeichen'
           rows={1}
         />
-      </ShowStats>
 
-      <TagOverview
-        title={t('discover.decades')}
-        type={TagType.TIME_RANGE}
-        onClick={() => {
-          visit('/show-more/date');
-        }}
-        rows={2}
-      />
+        <OverviewContainer
+          tabs={timeTabs}
+          overviewPosition={OverviewContainerPosition.DISCOVER_VIEW}
+          tabID='1'
+        />
+      </ShowStats>
 
       <TagOverview
         title={t('discover.locations')}

@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getPictures(
       $filters: PictureFiltersInput!
@@ -17,6 +18,26 @@ export default {
                 id
               }
             }
+            verified_time_range_tag {
+              data {
+                id
+                attributes {
+                  start
+                  end
+                  isEstimate
+                }
+              }
+            }
+            time_range_tag {
+              data {
+                id
+                attributes {
+                  start
+                  end
+                  isEstimate
+                }
+              }
+            }
             likes
             media {
               data {
@@ -28,6 +49,18 @@ export default {
                   url
                   updatedAt
                   provider
+                }
+              }
+            }
+            picture_sequence {
+              data {
+                id
+                attributes {
+                  pictures(sort: "picture_sequence_order:asc") {
+                    data {
+                      id
+                    }
+                  }
                 }
               }
             }

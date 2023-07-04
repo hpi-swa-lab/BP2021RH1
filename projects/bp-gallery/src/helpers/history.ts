@@ -1,6 +1,7 @@
 import { History, Location } from 'history';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { FoldoutStatus } from '../components/views/location-curating/FoldoutStatusContext';
 import { useScrollRef } from '../hooks/context-hooks';
 import { trackHistory } from '../matomo-config/matomo';
 import { useGrowthBook } from './growthbook';
@@ -19,6 +20,8 @@ type LocationState = {
   showBack?: boolean;
   scrollPos?: number;
   open?: boolean;
+  archiveId?: string;
+  openBranches?: FoldoutStatus;
 };
 export type LocationWithState = Location & { state?: LocationState };
 
@@ -29,11 +32,20 @@ export const useVisit = () => {
   const growthbook = useGrowthBook();
 
   const visit = useCallback(
-    (url: string, options?: { state?: LocationState; wasOpen?: boolean }) => {
+    (
+      url: string,
+      options?: {
+        state?: LocationState;
+        wasOpen?: boolean;
+        openBranches?: FoldoutStatus;
+        customScrollPos?: number;
+      }
+    ) => {
       history.replace(history.location.pathname, {
         ...history.location.state,
-        scrollPos: scrollRef.current,
+        scrollPos: options?.customScrollPos ?? scrollRef.current,
         open: options?.wasOpen,
+        openBranches: options?.openBranches,
       });
       history.push(url, { showBack: options?.state?.showBack ?? true, ...options?.state });
       growthbook?.setURL(window.location.href);

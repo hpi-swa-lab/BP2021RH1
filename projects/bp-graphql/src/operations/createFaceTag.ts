@@ -1,6 +1,9 @@
 import { Operation, graphql } from '../Operation.js';
+import { checkPicture } from '../isAllowedHelpers.js';
 
 export default {
+  group: 'editFaceTags',
+  isAllowed: checkPicture('pictureId'),
   document: graphql`
     mutation createFaceTag(
       $pictureId: ID!

@@ -5,10 +5,13 @@ import {
   ComponentCommonSynonyms,
   ComponentCommonSynonymsInput,
 } from '../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { getDescendants } from '../../../helpers/tree-helpers';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
+import { useLocationPanelPermissions } from './LocationPanelPermissionsContext';
 import { useDeleteSingleTag, useDeleteTagAndChildren } from './delete-tag-helpers';
 
 const enum deleteOptions {
@@ -55,6 +58,7 @@ export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
   const [updateTagParentMutation] = updateTagParentMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateTagParent: canSetParentTags } = useLocationPanelPermissions();
 
   const setParentTags = useCallback(
     (parentTags: FlatTag[]) => {
@@ -76,7 +80,7 @@ export const useSetParentTags = (locationTag: FlatTag, refetch: () => void) => {
     [closesLoop, locationTag, updateTagParentMutation]
   );
 
-  return { setParentTags };
+  return { setParentTags, canSetParentTags };
 };
 
 export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
@@ -85,6 +89,7 @@ export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
   const [updateTagChildMutation] = updateTagChildMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateTagChild: canSetChildTags } = useLocationPanelPermissions();
 
   const setChildTags = useCallback(
     (childTags: FlatTag[]) => {
@@ -106,7 +111,7 @@ export const useSetChildTags = (locationTag: FlatTag, refetch: () => void) => {
     [closesLoop, locationTag, updateTagChildMutation]
   );
 
-  return { setChildTags };
+  return { setChildTags, canSetChildTags };
 };
 
 export const useSetVisible = (locationTag: FlatTag, refetch: () => void) => {
@@ -114,6 +119,7 @@ export const useSetVisible = (locationTag: FlatTag, refetch: () => void) => {
   const [updateVisibilityMutation] = updateVisibilityMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateVisibility: canSetVisible } = useLocationPanelPermissions();
   const setVisible = useCallback(
     (value: boolean) => {
       updateVisibilityMutation({
@@ -126,7 +132,7 @@ export const useSetVisible = (locationTag: FlatTag, refetch: () => void) => {
     [locationTag.id, updateVisibilityMutation]
   );
 
-  return { setVisible };
+  return { setVisible, canSetVisible };
 };
 
 export const useSetRoot = (locationTag: FlatTag, refetch: () => void) => {
@@ -134,6 +140,7 @@ export const useSetRoot = (locationTag: FlatTag, refetch: () => void) => {
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateRoot: canSetTagAsRoot } = useLocationPanelPermissions();
 
   const setTagAsRoot = useCallback(
     async (isRoot: boolean) => {
@@ -147,7 +154,7 @@ export const useSetRoot = (locationTag: FlatTag, refetch: () => void) => {
     [locationTag.id, updateRootMutation]
   );
 
-  return { setTagAsRoot };
+  return { setTagAsRoot, canSetTagAsRoot };
 };
 
 export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parentTag?: FlatTag) => {
@@ -164,6 +171,8 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateTagParent, canUpdateRoot } = useLocationPanelPermissions();
+  const canRelocateTag = canUpdateTagParent && canUpdateRoot;
   const relocateTag = useCallback(async () => {
     const selectedTag: FlatTag | undefined = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
@@ -209,7 +218,7 @@ export const useRelocateTag = (locationTag: FlatTag, refetch: () => void, parent
     }
   }, [closesLoop, locationTag, parentTag, prompt, t, updateRootMutation, updateTagParentMutation]);
 
-  return { relocateTag };
+  return { relocateTag, canRelocateTag };
 };
 
 export const useDetachTag = (locationTag: FlatTag, refetch: () => void, parentTag?: FlatTag) => {
@@ -225,6 +234,8 @@ export const useDetachTag = (locationTag: FlatTag, refetch: () => void, parentTa
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateTagParent, canUpdateRoot } = useLocationPanelPermissions();
+  const canDetachTag = canUpdateTagParent && canUpdateRoot;
   const detachTag = useCallback(async () => {
     const reallyDetach = await prompt({
       preset: DialogPreset.CONFIRM,
@@ -261,7 +272,7 @@ export const useDetachTag = (locationTag: FlatTag, refetch: () => void, parentTa
     updateTagParentMutation,
   ]);
 
-  return { detachTag };
+  return { detachTag, canDetachTag };
 };
 
 export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
@@ -278,6 +289,8 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
   const [updateRootMutation] = updateRootMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateTagParent, canUpdateRoot } = useLocationPanelPermissions();
+  const canCopyTag = canUpdateTagParent && canUpdateRoot;
   const copyTag = useCallback(async () => {
     const selectedTag: FlatTag | undefined = await prompt({
       preset: DialogPreset.SELECT_LOCATION,
@@ -318,7 +331,7 @@ export const useCopyTag = (locationTag: FlatTag, refetch: () => void) => {
     }
   }, [closesLoop, locationTag, prompt, t, updateRootMutation, updateTagParentMutation]);
 
-  return { copyTag };
+  return { copyTag, canCopyTag };
 };
 
 export const useAcceptTag = (locationTag: FlatTag, refetch: () => void) => {
@@ -326,6 +339,7 @@ export const useAcceptTag = (locationTag: FlatTag, refetch: () => void) => {
   const [updateAcceptedMutation] = updateTagAcceptanceMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateTagAcceptance: canAcceptTag } = useLocationPanelPermissions();
   const acceptTag = useCallback(() => {
     updateAcceptedMutation({
       variables: {
@@ -335,7 +349,7 @@ export const useAcceptTag = (locationTag: FlatTag, refetch: () => void) => {
     });
   }, [locationTag.id, updateAcceptedMutation]);
 
-  return { acceptTag };
+  return { acceptTag, canAcceptTag };
 };
 
 export const useDeleteSynonym = (locationTag: FlatTag, refetch: () => void) => {
@@ -343,6 +357,7 @@ export const useDeleteSynonym = (locationTag: FlatTag, refetch: () => void) => {
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateSynonyms: canDeleteSynonym } = useLocationPanelPermissions();
   const deleteSynonym = useCallback(
     (synonymName: string) => {
       updateSynonymsMutation({
@@ -358,7 +373,7 @@ export const useDeleteSynonym = (locationTag: FlatTag, refetch: () => void) => {
     [locationTag.id, locationTag.synonyms, updateSynonymsMutation]
   );
 
-  return { deleteSynonym };
+  return { deleteSynonym, canDeleteSynonym };
 };
 
 export const useAddSynonym = (locationTag: FlatTag, refetch: () => void) => {
@@ -366,6 +381,7 @@ export const useAddSynonym = (locationTag: FlatTag, refetch: () => void) => {
   const [updateSynonymsMutation] = updateSynonymsMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateSynonyms: canAddSynonym } = useLocationPanelPermissions();
   const addSynonym = useCallback(
     (synonymName: string) => {
       if (synonymName.length) {
@@ -384,7 +400,7 @@ export const useAddSynonym = (locationTag: FlatTag, refetch: () => void) => {
     },
     [locationTag.id, locationTag.synonyms, updateSynonymsMutation]
   );
-  return { addSynonym };
+  return { addSynonym, canAddSynonym };
 };
 
 const useDeleteLocalTagCloneAndMoveUpChildren = (
@@ -491,6 +507,7 @@ export const useDeleteTag = (
   const prompt = useDialog();
   const { t } = useTranslation();
 
+  const { tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
   const { deleteTags } = useDeleteTagAndChildren(refetch, TagType.LOCATION);
   const { deleteSingleTag } = useDeleteSingleTag(refetch, TagType.LOCATION);
   const { deleteLocalTagCloneAndMoveUpChildren } = useDeleteLocalTagCloneAndMoveUpChildren(
@@ -503,6 +520,27 @@ export const useDeleteTag = (
     refetch,
     parentTag
   );
+  const descendants = getDescendants(locationTag, 'child_tags');
+
+  const tagPicturesQueryResponse = tagPictures({
+    variables: { tagIDs: [locationTag.id] },
+    fetchPolicy: 'no-cache',
+  });
+  const flattenedTagPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
+
+  const descendantsPicturesQueryResponse = tagPictures({
+    variables: { tagIDs: descendants },
+    fetchPolicy: 'no-cache',
+  });
+
+  const flattenedDescendantsPictures = useSimplifiedQueryResponseData(
+    descendantsPicturesQueryResponse.data
+  );
+
+  const { canDeleteTag: canRunDeleteTag, canUpdateTagParent: canRunUpdateTagParent } =
+    useLocationPanelPermissions();
+  const canDeleteTag = canRunDeleteTag && canRunUpdateTagParent;
+
   const deleteTag = useCallback(async () => {
     const deleteOption = await prompt({
       title: t(`tag-panel.should-delete-${TagType.LOCATION}`),
@@ -526,6 +564,26 @@ export const useDeleteTag = (
       ],
     });
     if (deleteOption === deleteOptions.ABORT) return;
+    if (flattenedTagPictures?.locationTags[0].pictures.length) {
+      await prompt({
+        preset: DialogPreset.CONFIRM,
+        title: t('tag-panel.not-allowed-to-delete', {
+          count: flattenedTagPictures.locationTags[0].pictures.length,
+        }),
+      });
+      return;
+    }
+    if (deleteOption === deleteOptions.DELETE_TAG_AND_CHILDREN) {
+      const tags: any[] = flattenedDescendantsPictures?.locationTags;
+      if (tags.some((tag: any) => tag.pictures.length)) {
+        await prompt({
+          preset: DialogPreset.CONFIRM,
+          title: t('tag-panel.not-allowed-to-delete-sublocation'),
+        });
+        return;
+      }
+    }
+
     let deleteClones = -1;
     if (
       locationTag.parent_tags &&
@@ -574,12 +632,14 @@ export const useDeleteTag = (
     deleteLocalTagCloneAndMoveUpChildren,
     deleteSingleTag,
     deleteTags,
+    flattenedDescendantsPictures,
+    flattenedTagPictures,
     locationTag,
     prompt,
     t,
   ]);
 
-  return { deleteTag };
+  return { deleteTag, canDeleteTag };
 };
 
 export const useUpdateName = (locationTag: FlatTag, refetch: () => void) => {
@@ -587,6 +647,7 @@ export const useUpdateName = (locationTag: FlatTag, refetch: () => void) => {
   const [updateTagNameMutation] = updateTagNameMutationSource({
     onCompleted: refetch,
   });
+  const { canUpdateTagName: canUpdateName } = useLocationPanelPermissions();
 
   const updateName = useCallback(
     (newName: string = '') => {
@@ -600,7 +661,7 @@ export const useUpdateName = (locationTag: FlatTag, refetch: () => void) => {
     [locationTag.id, updateTagNameMutation]
   );
 
-  return { updateName };
+  return { updateName, canUpdateName };
 };
 
 export const useCreateNewTag = (refetch: () => void) => {
@@ -610,6 +671,7 @@ export const useCreateNewTag = (refetch: () => void) => {
   const [createTagMutation] = createTagMutationSource({
     onCompleted: refetch,
   });
+  const { canCreateTag: canCreateNewTag } = useLocationPanelPermissions();
 
   const createNewTag = useCallback(
     async (potentialSiblings?: FlatTag[], parent?: FlatTag) => {
@@ -632,5 +694,5 @@ export const useCreateNewTag = (refetch: () => void) => {
     [createTagMutation, dialog, t]
   );
 
-  return { createNewTag };
+  return { createNewTag, canCreateNewTag };
 };

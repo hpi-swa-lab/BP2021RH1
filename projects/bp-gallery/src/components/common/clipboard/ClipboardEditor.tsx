@@ -3,10 +3,11 @@ import { Badge, Button } from '@mui/material';
 import { difference } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNeedsClipboard } from '../../../hooks/can-do-hooks';
 import { useClipboard } from '../../../hooks/clipboard.hook';
 import { useClipboardEditorButtons } from '../../../hooks/context-hooks';
+import { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { ScrollProvider } from '../../provider/ScrollProvider';
 import { HideStats } from '../../provider/ShowStatsProvider';
 import ScrollContainer from '../ScrollContainer';
@@ -19,7 +20,6 @@ export const ClipboardEditor = () => {
 
   const [open, setOpen] = useState(false);
 
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const clear = useCallback(() => {
@@ -42,7 +42,9 @@ export const ClipboardEditor = () => {
 
   const clipboardButtons = useClipboardEditorButtons();
 
-  if (role < AuthRole.CURATOR) {
+  const { needsClipboard } = useNeedsClipboard();
+
+  if (!needsClipboard) {
     return null;
   }
 
@@ -72,6 +74,8 @@ export const ClipboardEditor = () => {
                     showCount={false}
                     showDefaultAdornments={false}
                     extraAdornments={[remove]}
+                    collapseSequences={false}
+                    textFilter={TextFilter.PICTURES_AND_TEXTS}
                   />
                 </HideStats>
               </ScrollContainer>

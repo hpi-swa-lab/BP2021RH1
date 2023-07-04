@@ -18,5 +18,7 @@ export const operationGraphQLPath = resolve(
   bpGraphqlDirectoryPath,
   '../bp-gallery/src/graphql/operation.graphql'
 );
-export const compiledOperationsDirectoryPath = resolve(moduleDirectory, './operations');
-export const sourceOperationsDirectoryPath = resolve(bpGraphqlDirectoryPath, 'src/operations');
+export const operationsDirectoryPath = resolve(bpGraphqlDirectoryPath, 'src/operations');
+export const operationsTsPath = resolve(bpGraphqlDirectoryPath, 'src/operations.ts');
+export const groupsDirectoryPath = resolve(bpGraphqlDirectoryPath, 'src/groups');
+export const groupsTsPath = resolve(bpGraphqlDirectoryPath, 'src/groups.ts');

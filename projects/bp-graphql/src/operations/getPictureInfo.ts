@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getPictureInfo($pictureId: ID!) {
       picture(id: $pictureId) {
@@ -152,11 +153,24 @@ export default {
                 id
               }
             }
+            picture_sequence {
+              data {
+                id
+                attributes {
+                  pictures(sort: "picture_sequence_order:asc") {
+                    data {
+                      id
+                    }
+                  }
+                }
+              }
+            }
             archive_tag {
               data {
                 id
                 attributes {
                   name
+                  restrictImageDownloading
                 }
               }
             }

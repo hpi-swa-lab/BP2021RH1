@@ -1,29 +1,34 @@
-import { AccessTime, Edit, Link, ThumbUp } from '@mui/icons-material';
+import { AccessTime, Edit, Link, Mail, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
+import { useFlag } from '../../../helpers/growthbook';
+import { useBlockImageContextMenu } from '../../../hooks/block-image-context-menu.hook';
+import { useCanUseEditArchiveView } from '../../../hooks/can-do-hooks';
 import {
   FlatArchiveTag,
   FlatPicture,
   PictureOverviewType,
   TagType,
 } from '../../../types/additionalFlatTypes';
+import DonateButton from '../../common/DonateButton';
+import OverviewContainer, {
+  OverviewContainerPosition,
+  OverviewContainerTab,
+} from '../../common/OverviewContainer';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
-import { AuthRole, useAuth } from '../../provider/AuthProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
+import { ExhibitionOverview } from '../exhibitions/ExhibitionOverview';
 import { useVisit } from './../../../helpers/history';
 import { FALLBACK_PATH } from './../../routes';
 import ArchiveDescription from './ArchiveDescription';
 import './ArchiveView.scss';
-import DonateButton from '../../common/DonateButton';
-import { useTranslation } from 'react-i18next';
-import OverviewContainer, { OverviewContainerPosition } from '../../common/OverviewContainer';
-import { useMemo } from 'react';
-import { OverviewContainerTab } from '../../common/OverviewContainer';
 
 interface ArchiveViewProps {
   archiveId: string;
@@ -38,7 +43,6 @@ const addUrlProtocol = (url: string) => {
 
 const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const { visit, history } = useVisit();
-  const { role } = useAuth();
   const { t } = useTranslation();
 
   const { data, loading } = useGetArchiveQuery({ variables: { archiveId } });
@@ -54,9 +58,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         content: (
           <PictureOverview
             queryParams={{ archive_tag: { id: { eq: archiveId } } }}
-            onClick={() => {
-              visit('/archives/' + archiveId + '/show-more/pictures');
-            }}
+            showMoreUrl={'/archives/' + archiveId + '/show-more/pictures'}
           />
         ),
       },
@@ -69,14 +71,18 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             queryParams={{
               archive_tag: { id: { eq: archiveId } },
             }}
-            onClick={() => {
-              visit('/archives/' + archiveId + '/show-more/most-liked');
-            }}
+            showMoreUrl={'/archives/' + archiveId + '/show-more/most-liked'}
           />
         ),
       },
     ];
-  }, [archiveId, t, visit]);
+  }, [archiveId, t]);
+
+  const onLogoContextMenu = useBlockImageContextMenu(archive?.restrictImageDownloading);
+
+  const { canUseEditArchiveView } = useCanUseEditArchiveView(archiveId);
+
+  const showStories = useFlag('showstories');
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -84,11 +90,12 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
 
   return (
     <div className='archive-container'>
-      {role >= AuthRole.CURATOR && (
-        <p className='edit-button-wrapper'>
+      {canUseEditArchiveView && (
+        <div className='flex justify-end mb-4'>
           <Button
-            className='archive-edit-button'
-            startIcon={<Edit />}
+            variant='contained'
+            data-cy='archive-edit'
+            endIcon={<Edit />}
             onClick={() => {
               visit(
                 `${history.location.pathname}${
@@ -97,9 +104,9 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
               );
             }}
           >
-            Archiv editieren
+            {t('archives.view.edit')}
           </Button>
-        </p>
+        </div>
       )}
       <h1>{archive.name}</h1>
       <div className='archive-data'>
@@ -112,6 +119,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
                 <img
                   className='archive-logo'
                   src={asUploadPath(archive.logo, { highQuality: false })}
+                  onContextMenu={onLogoContextMenu}
                 />
               </div>
             )}
@@ -134,22 +142,37 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
             </div>
           </div>
         </div>
-        {showcasePicture && (
-          <div className='archive-showcase'>
+        <div className='archive-showcase'>
+          {showcasePicture && (
             <PicturePreview
               picture={showcasePicture}
               onClick={() => {}}
               allowClicks={false}
               highQuality={true}
             />
-          </div>
-        )}
+          )}
+          {archive.email && (
+            <Button
+              fullWidth
+              className='!mt-2'
+              variant='contained'
+              endIcon={<Mail />}
+              onClick={() => {
+                visit('/contact', { state: { archiveId: archive.id } });
+              }}
+            >
+              {t('archives.view.contact')}
+            </Button>
+          )}
+        </div>
       </div>
+
+      {showStories && <ExhibitionOverview archiveId={archive.id} showTitle />}
       <ShowStats>
         <OverviewContainer
           tabs={tabs}
           overviewPosition={OverviewContainerPosition.ARCHIVE_VIEW}
-          archiveID={archiveId}
+          tabID={archiveId}
         />
       </ShowStats>
 

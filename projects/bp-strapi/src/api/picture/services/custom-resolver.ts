@@ -1,18 +1,26 @@
-"use strict";
-import { KnexEngine, QueryBuilder } from "../../../types";
-import { plural, table } from "../../helper";
-import { bulkEdit, like, updatePictureWithTagCleanup } from "./custom-update";
+'use strict';
+import { KnexEngine, QueryBuilder } from '../../../types';
+import { plural, table } from '../../helper';
+import { bulkEdit, like, updatePictureWithTagCleanup } from './custom-update';
+
+// should match the enum in projects/bp-gallery/src/hooks/get-pictures.hook.ts
+export enum TextFilter {
+  ONLY_PICTURES = 'ONLY_PICTURES',
+  PICTURES_AND_TEXTS = 'PICTURES_AND_TEXTS',
+  ONLY_TEXTS = 'ONLY_TEXTS',
+}
+
 /**
  * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
  * in both a verified and an unverified relation.
  */
-const manyToManyWithVerified = ["keyword_tag", "location_tag", "person_tag"];
+const manyToManyWithVerified = ['keyword_tag', 'location_tag', 'person_tag'];
 
 /**
  * These are the (singular) table names of tags related to the pictures type in a many-to-many manner
  * in just a regular relation.
  */
-const manyToManyWithoutVerified = ["description", "collection"];
+const manyToManyWithoutVerified = ['description', 'collection'];
 
 const buildJoinsForTableWithVerifiedHandling = (
   knexEngine: QueryBuilder,
@@ -22,30 +30,27 @@ const buildJoinsForTableWithVerifiedHandling = (
 ) => {
   knexEngine = knexEngine.leftJoin(
     unverifiedLinkTable,
-    "pictures.id",
+    'pictures.id',
     `${unverifiedLinkTable}.picture_id`
   );
   knexEngine = knexEngine.leftJoin(
     verifiedLinkTable,
-    "pictures.id",
+    'pictures.id',
     `${verifiedLinkTable}.picture_id`
   );
 
   // This special join syntax is needed in order to only join the tag table once to the aggregate
-  knexEngine = knexEngine.leftJoin(
-    table(plural(singularTableName)),
-    function () {
-      this.on(
-        `${verifiedLinkTable}.${singularTableName}_id`,
-        "=",
-        `${plural(singularTableName)}.id`
-      ).orOn(
-        `${unverifiedLinkTable}.${singularTableName}_id`,
-        "=",
-        `${plural(singularTableName)}.id`
-      );
-    }
-  );
+  knexEngine = knexEngine.leftJoin(table(plural(singularTableName)), function () {
+    this.on(
+      `${verifiedLinkTable}.${singularTableName}_id`,
+      '=',
+      `${plural(singularTableName)}.id`
+    ).orOn(
+      `${unverifiedLinkTable}.${singularTableName}_id`,
+      '=',
+      `${plural(singularTableName)}.id`
+    );
+  });
 
   return knexEngine;
 };
@@ -55,11 +60,7 @@ const buildJoinsForTableWithoutVerifiedHandling = (
   singularTableName: string,
   linkTable: string
 ) => {
-  knexEngine = knexEngine.leftJoin(
-    linkTable,
-    "pictures.id",
-    `${linkTable}.picture_id`
-  );
+  knexEngine = knexEngine.leftJoin(linkTable, 'pictures.id', `${linkTable}.picture_id`);
   knexEngine = knexEngine.leftJoin(
     table(plural(singularTableName)),
     `${linkTable}.${singularTableName}_id`,
@@ -70,12 +71,8 @@ const buildJoinsForTableWithoutVerifiedHandling = (
 
 const buildJoins = (knexEngine: QueryBuilder) => {
   for (const singularTableName of manyToManyWithVerified) {
-    const verifiedLinkTable = table(
-      `pictures_verified_${plural(singularTableName)}_links`
-    );
-    const unverifiedLinkTable = table(
-      `pictures_${plural(singularTableName)}_links`
-    );
+    const verifiedLinkTable = table(`pictures_verified_${plural(singularTableName)}_links`);
+    const unverifiedLinkTable = table(`pictures_${plural(singularTableName)}_links`);
     knexEngine = buildJoinsForTableWithVerifiedHandling(
       knexEngine,
       singularTableName,
@@ -85,13 +82,11 @@ const buildJoins = (knexEngine: QueryBuilder) => {
   }
 
   // Special handling for time-range-tags as these are in 1:n relation to the picture type
-  const verifiedTimeRangeLinkTable = table(
-    "pictures_verified_time_range_tag_links"
-  );
-  const unverifiedTimeRangeLinkTable = table("pictures_time_range_tag_links");
+  const verifiedTimeRangeLinkTable = table('pictures_verified_time_range_tag_links');
+  const unverifiedTimeRangeLinkTable = table('pictures_time_range_tag_links');
   knexEngine = buildJoinsForTableWithVerifiedHandling(
     knexEngine,
-    "time_range_tag",
+    'time_range_tag',
     verifiedTimeRangeLinkTable,
     unverifiedTimeRangeLinkTable
   );
@@ -107,20 +102,17 @@ const buildJoins = (knexEngine: QueryBuilder) => {
 
   // Special handling for our archive-tags as these are in 1:n relation to the picture type
   // and don't have a special verified relation.
-  const archiveTagLinkTable = table("pictures_archive_tag_links");
+  const archiveTagLinkTable = table('pictures_archive_tag_links');
   knexEngine = buildJoinsForTableWithoutVerifiedHandling(
     knexEngine,
-    "archive_tag",
+    'archive_tag',
     archiveTagLinkTable
   );
 
   return knexEngine;
 };
 
-const buildLikeWhereForSearchTerm = (
-  knexEngine: QueryBuilder,
-  searchTerm: string
-) => {
+const buildLikeWhereForSearchTerm = (knexEngine: QueryBuilder, searchTerm: string) => {
   const searchTermForLikeQuery = `%${searchTerm}%`;
   for (const singularTableName of manyToManyWithVerified) {
     knexEngine = knexEngine.orWhereILike(
@@ -129,18 +121,9 @@ const buildLikeWhereForSearchTerm = (
     );
   }
 
-  knexEngine = knexEngine.orWhereILike(
-    "collections.name",
-    searchTermForLikeQuery
-  );
-  knexEngine = knexEngine.orWhereILike(
-    "archive_tags.name",
-    searchTermForLikeQuery
-  );
-  knexEngine = knexEngine.orWhereILike(
-    "descriptions.text",
-    searchTermForLikeQuery
-  );
+  knexEngine = knexEngine.orWhereILike('collections.name', searchTermForLikeQuery);
+  knexEngine = knexEngine.orWhereILike('archive_tags.name', searchTermForLikeQuery);
+  knexEngine = knexEngine.orWhereILike('descriptions.text', searchTermForLikeQuery);
 
   return knexEngine;
 };
@@ -149,13 +132,13 @@ const buildWhere = (
   queryBuilder: QueryBuilder,
   searchTerms: any,
   searchTimes: any,
-  filterOutTexts: any,
+  textFilter: TextFilter,
   knexEngine: KnexEngine
 ) => {
   for (const searchObject of [...searchTerms, ...searchTimes]) {
     // Function syntax for where in order to use correct bracing in the query
     queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
-      if (typeof searchObject === "string") {
+      if (typeof searchObject === 'string') {
         qb = buildLikeWhereForSearchTerm(qb, searchObject);
       } else if (Array.isArray(searchObject)) {
         //the timestamps of the time range tags are incorrectly saved in the data bank due to time zone shenanigans
@@ -172,12 +155,12 @@ const buildWhere = (
         qb = qb.orWhere((timeRangeQb: QueryBuilder) => {
           timeRangeQb = timeRangeQb.where(
             knexEngine.raw("time_range_tags.start + interval '1 hour'"),
-            ">=",
+            '>=',
             searchObject[1]
           );
           timeRangeQb = timeRangeQb.andWhere(
             knexEngine.raw("time_range_tags.end + interval '1 hour'"),
-            "<=",
+            '<=',
             searchObject[2]
           );
           return timeRangeQb;
@@ -188,13 +171,21 @@ const buildWhere = (
   }
 
   // Only retrieve published pictures
-  queryBuilder = queryBuilder.whereNotNull("pictures.published_at");
+  queryBuilder = queryBuilder.whereNotNull('pictures.published_at');
 
-  if (filterOutTexts) {
-    queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
-      qb.where("pictures.is_text", false);
-      qb.orWhereNull("pictures.is_text");
-    });
+  switch (textFilter) {
+    case TextFilter.ONLY_PICTURES:
+      queryBuilder = queryBuilder.where((qb: QueryBuilder) => {
+        qb.where('pictures.is_text', false);
+        qb.orWhereNull('pictures.is_text');
+      });
+      break;
+    case TextFilter.ONLY_TEXTS:
+      queryBuilder = queryBuilder.where('pictures.is_text', true);
+      break;
+    case TextFilter.PICTURES_AND_TEXTS:
+      // no extra conditions
+      break;
   }
 
   return queryBuilder;
@@ -208,22 +199,16 @@ const buildQueryForAllSearch = (
   knexEngine: KnexEngine,
   searchTerms: any,
   searchTimes: any,
-  filterOutTexts: any,
+  textFilter: TextFilter,
   pagination = { start: 0, limit: 100 }
 ) => {
-  const withSelect = knexEngine.distinct("pictures.*").from(table("pictures"));
+  const withSelect = knexEngine.distinct('pictures.*').from(table('pictures'));
 
   const withJoins = buildJoins(withSelect);
 
-  const withWhere = buildWhere(
-    withJoins,
-    searchTerms,
-    searchTimes,
-    filterOutTexts,
-    knexEngine
-  );
+  const withWhere = buildWhere(withJoins, searchTerms, searchTimes, textFilter, knexEngine);
 
-  const withOrder = withWhere.orderBy("pictures.published_at", "asc");
+  const withOrder = withWhere.orderBy('pictures.published_at', 'asc');
 
   return withOrder.limit(pagination.limit).offset(pagination.start);
 };
@@ -238,41 +223,35 @@ const findPicturesByAllSearch = async (
   knexEngine: KnexEngine,
   searchTerms: any,
   searchTimes: any,
-  filterOutTexts: any,
+  textFilter: string,
   pagination: { start: number; limit: number } | undefined
 ) => {
   const matchingPictures = await buildQueryForAllSearch(
     knexEngine,
     searchTerms,
     searchTimes,
-    filterOutTexts,
+    textFilter in TextFilter ? (textFilter as TextFilter) : TextFilter.ONLY_PICTURES,
     pagination
   );
-  return matchingPictures.map(
-    (picture: { id: number; is_text: boolean; likes: number }) => ({
-      id: picture.id,
-      is_text: picture.is_text,
-      likes: picture.likes,
-    })
-  );
+  return matchingPictures.map((picture: { id: number; is_text: boolean; likes: number }) => ({
+    id: picture.id,
+    is_text: picture.is_text,
+    likes: picture.likes,
+  }));
 };
 
 const archivePictureCounts = async (knexEngine: KnexEngine) => {
-  const archivePictures = table("pictures_archive_tag_links");
+  const archivePictures = table('pictures_archive_tag_links');
   const archivePictureCounts = await knexEngine(archivePictures)
     //necessary to sort out unpublished pictures
-    .join(
-      table("pictures"),
-      `${archivePictures}.picture_id`,
-      `${table("pictures")}.id`
-    )
-    .select("archive_tag_id as id")
-    .whereNotNull("published_at")
-    .count("picture_id")
-    .groupBy("archive_tag_id")
-    .orderBy("id", "asc");
+    .join(table('pictures'), `${archivePictures}.picture_id`, `${table('pictures')}.id`)
+    .select('archive_tag_id as id')
+    .whereNotNull('published_at')
+    .count('picture_id')
+    .groupBy('archive_tag_id')
+    .orderBy('id', 'asc');
   return {
-    data: archivePictureCounts.map((archive) => ({
+    data: archivePictureCounts.map(archive => ({
       id: archive.id,
       attributes: { count: archive.count },
     })),

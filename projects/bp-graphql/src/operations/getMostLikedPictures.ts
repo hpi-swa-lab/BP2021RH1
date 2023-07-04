@@ -1,6 +1,7 @@
 import { Operation, graphql } from '../Operation.js';
 
 export default {
+  isEssential: true,
   document: graphql`
     query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
       pictures(
@@ -28,6 +29,18 @@ export default {
                   url
                   updatedAt
                   provider
+                }
+              }
+            }
+            picture_sequence {
+              data {
+                id
+                attributes {
+                  pictures(sort: "picture_sequence_order:asc") {
+                    data {
+                      id
+                    }
+                  }
                 }
               }
             }

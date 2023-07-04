@@ -3,6 +3,10 @@ import { IconButton } from '@mui/material';
 import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  useCanRunCreateSubCollectionMutation,
+  useCanRunDeleteCollectionMutation,
+  useCanRunMergeCollectionsMutation,
+  useCanRunUpdateCollectionMutation,
   useDeleteCollectionMutation,
   useGetCollectionInfoByIdQuery,
   useMergeCollectionsMutation,
@@ -34,15 +38,23 @@ const CollectionsPanel = ({
     },
     fetchPolicy: 'cache-and-network',
   });
+
   const [updateCollection] = useUpdateCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
+  const { canRun: canUpdateCollection } = useCanRunUpdateCollectionMutation();
+
   const [deleteCollection] = useDeleteCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
+  const { canRun: canDeleteCollection } = useCanRunDeleteCollectionMutation();
+
   const [mergeCollections] = useMergeCollectionsMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
+  const { canRun: canMergeCollections } = useCanRunMergeCollectionsMutation();
+
+  const { canRun: canCreateSubCollection } = useCanRunCreateSubCollectionMutation();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -140,64 +152,78 @@ const CollectionsPanel = ({
               key={child.id}
               onClick={() => selectChild(child)}
             >
-              {(child.parent_collections?.length ?? 0) > 1 && parentCollection && (
-                <UnlinkCollectionAction
-                  childCollection={child}
-                  parentCollection={parentCollection}
-                />
-              )}
+              {canUpdateCollection &&
+                (child.parent_collections?.length ?? 0) > 1 &&
+                parentCollection && (
+                  <UnlinkCollectionAction
+                    childCollection={child}
+                    parentCollection={parentCollection}
+                  />
+                )}
               <span className='text'>{child.name}</span>
               <span className='actions'>
-                <IconButton
-                  onClick={event => {
-                    event.stopPropagation();
-                    toggleVisibility(child);
-                  }}
-                >
-                  {child.publishedAt ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-                <IconButton
-                  onClick={event => {
-                    event.stopPropagation();
-                    onDelete(child);
-                  }}
-                >
-                  <Delete />
-                </IconButton>
-                <IconButton
-                  onClick={event => {
-                    event.stopPropagation();
-                    onEditName(child);
-                  }}
-                >
-                  <Edit />
-                </IconButton>
-                <IconButton
-                  onClick={event => {
-                    event.stopPropagation();
-                    onMerge(child);
-                  }}
-                >
-                  <MergeType />
-                </IconButton>
+                {canUpdateCollection && (
+                  <IconButton
+                    onClick={event => {
+                      event.stopPropagation();
+                      toggleVisibility(child);
+                    }}
+                  >
+                    {child.publishedAt ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                )}
+                {canDeleteCollection && (
+                  <IconButton
+                    onClick={event => {
+                      event.stopPropagation();
+                      onDelete(child);
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                )}
+                {canUpdateCollection && (
+                  <IconButton
+                    onClick={event => {
+                      event.stopPropagation();
+                      onEditName(child);
+                    }}
+                  >
+                    <Edit />
+                  </IconButton>
+                )}
+                {canMergeCollections && (
+                  <IconButton
+                    onClick={event => {
+                      event.stopPropagation();
+                      onMerge(child);
+                    }}
+                  >
+                    <MergeType />
+                  </IconButton>
+                )}
               </span>
             </div>
           );
         })}
-        <div
-          className='panel-entry new'
-          onClick={event => {
-            setAnchorEl(event.currentTarget);
-          }}
-        >
-          <Add />
-          {t('curator.addCollection')}
-        </div>
-        <AddCollectionMenu
-          anchorEl={anchorEl}
-          setAnchorEl={setAnchorEl}
-          parentCollectionId={parentId}
-        />
+        {(canUpdateCollection || canCreateSubCollection) && (
+          <>
+            <div
+              className='panel-entry new'
+              onClick={event => {
+                setAnchorEl(event.currentTarget);
+              }}
+            >
+              <Add />
+              {t('curator.addCollection')}
+            </div>
+            <AddCollectionMenu
+              anchorEl={anchorEl}
+              setAnchorEl={setAnchorEl}
+              parentCollectionId={parentId}
+            />
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,19 @@
 import { login, logout } from '../utils/login-utils';
 
+const checkTextDisplay = ({ prefix = '', pictureId = '2', textId = '1' } = {}) => {
+  cy.contains('Nur Bilder anzeigen');
+  cy.get(`${prefix} #picture-preview-for-${pictureId}`);
+  cy.get(`${prefix} #picture-preview-for-${textId}`).should('not.exist');
+  cy.contains('Nur Bilder anzeigen').click();
+  cy.contains('Bilder und Texte anzeigen').click();
+  cy.get(`${prefix} #picture-preview-for-${pictureId}`);
+  cy.get(`${prefix} #picture-preview-for-${textId}`);
+  cy.contains('Bilder und Texte anzeigen').click();
+  cy.contains('Nur Texte anzeigen').click();
+  cy.get(`${prefix} #picture-preview-for-${pictureId}`).should('not.exist');
+  cy.get(`${prefix} #picture-preview-for-${textId}`);
+};
+
 describe('link pictures with texts', () => {
   before(() => {
     cy.visit('/browse');
@@ -19,65 +33,37 @@ describe('link pictures with texts', () => {
     cy.contains('Verlinkte Bilder');
   });
 
-  it('texts are shown only for curators in search', () => {
+  it('texts are shown only when explicitly asked for in search', () => {
     cy.visit('/search');
     cy.get('.search-bar-container').find('input').type('Yet another description{enter}');
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1');
-    logout();
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1').should('not.exist');
-    login();
+    checkTextDisplay();
   });
 
-  it('texts are shown only for curators in archives view picture overview', () => {
+  it('texts are shown only when explicitly asked for in archives view picture overview', () => {
     cy.visit('/archives/1');
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1');
-    logout();
+    // always shows pictures only
     cy.get('#picture-preview-for-2');
     cy.get('#picture-preview-for-1').should('not.exist');
-    login();
   });
 
-  it('texts are shown only for curators in archives view show more', () => {
+  it('texts are shown only when explicitly asked for in archives view show more', () => {
     cy.visit('/archives/1/show-more/pictures');
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1');
-    logout();
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1').should('not.exist');
-    login();
+    checkTextDisplay();
   });
 
-  it('texts are shown only for curators in start view', () => {
+  it('texts are shown only when explicitly asked for in start view', () => {
     cy.visit('/start');
-    cy.get('#picture-preview-for-25');
-    cy.get('#picture-preview-for-1');
-    logout();
-    cy.get('#picture-preview-for-25');
-    cy.get('#picture-preview-for-1').should('not.exist');
-    login();
+    checkTextDisplay({ prefix: '.browse-container', pictureId: '25' });
   });
 
-  it('texts are shown only for curators in archives view keywords show more', () => {
+  it('texts are shown only when explicitly asked for in archives view keywords show more', () => {
     cy.visit('/archives/1/show-more/keyword');
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1');
-    logout();
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1').should('not.exist');
-    login();
+    checkTextDisplay();
   });
 
-  it('texts are shown only for curators in archives view single keyword show more', () => {
+  it('texts are shown only when explicitly asked for in archives view single keyword show more', () => {
     cy.visit('/archives/1/show-more/keyword/9');
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1');
-    logout();
-    cy.get('#picture-preview-for-2');
-    cy.get('#picture-preview-for-1').should('not.exist');
-    login();
+    checkTextDisplay();
   });
 
   it('texts do not reduce the number of fetched pictures', () => {

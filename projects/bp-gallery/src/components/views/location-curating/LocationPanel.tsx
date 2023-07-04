@@ -1,36 +1,62 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useVisit } from '../../../helpers/history';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import Loading from '../../common/Loading';
+import ProtectedRoute from '../../common/ProtectedRoute';
+import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import AddLocationEntry from './AddLocationEntry';
+import { useFoldoutStatus } from './FoldoutStatusContext';
 import LocationBranch from './LocationBranch';
 import LocationPanelHeader from './LocationPanelHeader';
+import { LocationPanelPermissionsProvider } from './LocationPanelPermissionsProvider';
 import { useCreateNewTag } from './location-management-helpers';
 import { useGetTagStructures } from './tag-structure-helpers';
 
 const setUnacceptedSubtagsCount = (tag: FlatTag) => {
-  if (!tag.child_tags?.length) {
-    return tag.accepted ? 0 : 1;
-  }
   let subtagCount = 0;
-  tag.child_tags.forEach((childTag: FlatTag) => {
+  tag.child_tags?.forEach((childTag: FlatTag) => {
     subtagCount += setUnacceptedSubtagsCount(childTag);
   });
   tag.unacceptedSubtags = subtagCount;
-  return subtagCount;
+  return (tag.accepted ? 0 : 1) + subtagCount;
 };
 
 const LocationPanel = () => {
   const { t } = useTranslation();
+  const { location } = useVisit();
+  const foldoutStatus = useFoldoutStatus();
 
-  const { allTagsQuery } = useGenericTagEndpoints(TagType.LOCATION);
+  const { allTagsQuery, canUseTagTableViewQuery } = useGenericTagEndpoints(TagType.LOCATION);
 
-  const { data, refetch } = allTagsQuery();
+  const { data, loading, error, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
 
-  const { createNewTag } = useCreateNewTag(refetch);
+  useEffect(() => {
+    if (!foldoutStatus) {
+      return;
+    }
+    foldoutStatus.current = Object.fromEntries(
+      flattenedTags
+        ? flattenedTags.map(tag => [
+            tag.id,
+            {
+              isOpen:
+                location.state?.openBranches && tag.id in location.state.openBranches
+                  ? location.state.openBranches[tag.id].isOpen
+                  : false,
+            },
+          ])
+        : []
+    );
+    // only trigger at first render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { createNewTag, canCreateNewTag } = useCreateNewTag(refetch);
 
   const { tagTree: sortedTagTree } = useGetTagStructures(flattenedTags);
 
@@ -44,21 +70,38 @@ const LocationPanel = () => {
     return sortedTagTree;
   }, [sortedTagTree]);
 
+  const { canRun: canUseLocationPanel, loading: canUseLocationPanelLoading } =
+    canUseTagTableViewQuery();
+
   return (
-    <div>
-      <LocationPanelHeader />
-      <div className='location-panel-content'>
-        {tagTree?.map(tag => (
-          <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
-        ))}
-        <AddLocationEntry
-          text={t(`tag-panel.add-location`)}
-          onClick={() => {
-            createNewTag(tagTree);
-          }}
-        />
-      </div>
-    </div>
+    <ProtectedRoute canUse={canUseLocationPanel} canUseLoading={canUseLocationPanelLoading}>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else {
+          return (
+            <LocationPanelPermissionsProvider>
+              <LocationPanelHeader />
+              <div className='location-panel-content'>
+                {tagTree?.map(tag => (
+                  <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
+                ))}
+                {canCreateNewTag && (
+                  <AddLocationEntry
+                    text={t(`tag-panel.add-location`)}
+                    onClick={() => {
+                      createNewTag(tagTree);
+                    }}
+                  />
+                )}
+              </div>
+            </LocationPanelPermissionsProvider>
+          );
+        }
+      }}
+    </ProtectedRoute>
   );
 };
 

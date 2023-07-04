@@ -1,14 +1,41 @@
 import { noop } from 'lodash';
 import { useMemo } from 'react';
 import {
+  useCanRunCreateKeywordTagMutation,
+  useCanRunCreateLocationTagMutation,
+  useCanRunCreatePersonTagMutation,
+  useCanRunDeleteKeywordTagMutation,
+  useCanRunDeleteLocationTagMutation,
+  useCanRunDeletePersonTagMutation,
+  useCanRunGetAllKeywordTagsQuery,
+  useCanRunGetAllLocationTagsQuery,
+  useCanRunGetAllPersonTagsQuery,
+  useCanRunMergeKeywordTagsMutation,
+  useCanRunMergeLocationTagsMutation,
+  useCanRunMergePersonTagsMutation,
+  useCanRunUpdateKeywordNameMutation,
+  useCanRunUpdateKeywordSynonymsMutation,
+  useCanRunUpdateKeywordVisibilityMutation,
+  useCanRunUpdateLocationAcceptanceMutation,
+  useCanRunUpdateLocationChildMutation,
+  useCanRunUpdateLocationNameMutation,
+  useCanRunUpdateLocationParentMutation,
+  useCanRunUpdateLocationRootMutation,
+  useCanRunUpdateLocationSynonymsMutation,
+  useCanRunUpdateLocationVisibilityMutation,
+  useCanRunUpdatePersonNameMutation,
+  useCanRunUpdatePersonSynonymsMutation,
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
   useDeleteKeywordTagMutation,
   useDeleteLocationTagMutation,
   useDeletePersonTagMutation,
+  useGetAllKeywordTagsLazyQuery,
   useGetAllKeywordTagsQuery,
+  useGetAllLocationTagsLazyQuery,
   useGetAllLocationTagsQuery,
+  useGetAllPersonTagsLazyQuery,
   useGetAllPersonTagsQuery,
   useGetKeywordTagsWithThumbnailQuery,
   useGetLocationTagsWithThumbnailQuery,
@@ -31,9 +58,18 @@ import {
   useUpdatePersonSynonymsMutation,
 } from '../graphql/APIConnector';
 import { TagType } from '../types/additionalFlatTypes';
+import {
+  useCanUseKeywordTagTableView,
+  useCanUseLocationTagTableView,
+  useCanUsePersonTagTableView,
+} from './can-do-hooks';
 
 const dummy = (_?: unknown) => {
   return [noop];
+};
+
+const cantRun = () => {
+  return { canRun: false, loading: false };
 };
 
 const useGenericTagEndpoints = (type: TagType) => {
@@ -42,6 +78,7 @@ const useGenericTagEndpoints = (type: TagType) => {
       case TagType.LOCATION:
         return {
           allTagsQuery: useGetAllLocationTagsQuery,
+          allTagsLazyQuery: useGetAllLocationTagsLazyQuery,
           tagsWithThumbnailQuery: useGetLocationTagsWithThumbnailQuery,
           tagPictures: useGetPicturesForLocationQuery,
           updateTagNameMutationSource: useUpdateLocationNameMutation,
@@ -54,10 +91,23 @@ const useGenericTagEndpoints = (type: TagType) => {
           mergeTagsMutationSource: useMergeLocationTagsMutation,
           deleteTagMutationSource: useDeleteLocationTagMutation,
           createTagMutationSource: useCreateLocationTagMutation,
+          canUseTagTableViewQuery: useCanUseLocationTagTableView,
+          canGetAllTagsQuery: useCanRunGetAllLocationTagsQuery,
+          canUpdateTagNameQuery: useCanRunUpdateLocationNameMutation,
+          canUpdateSynonymsQuery: useCanRunUpdateLocationSynonymsMutation,
+          canUpdateVisibilityQuery: useCanRunUpdateLocationVisibilityMutation,
+          canUpdateTagParentQuery: useCanRunUpdateLocationParentMutation,
+          canUpdateTagAcceptanceQuery: useCanRunUpdateLocationAcceptanceMutation,
+          canUpdateTagChildQuery: useCanRunUpdateLocationChildMutation,
+          canUpdateRootQuery: useCanRunUpdateLocationRootMutation,
+          canMergeTagsQuery: useCanRunMergeLocationTagsMutation,
+          canDeleteTagQuery: useCanRunDeleteLocationTagMutation,
+          canCreateTagQuery: useCanRunCreateLocationTagMutation,
         };
       case TagType.PERSON:
         return {
           allTagsQuery: useGetAllPersonTagsQuery,
+          allTagsLazyQuery: useGetAllPersonTagsLazyQuery,
           tagsWithThumbnailQuery: useGetPersonTagsWithThumbnailQuery,
           tagPictures: () => {
             return { data: undefined };
@@ -72,11 +122,24 @@ const useGenericTagEndpoints = (type: TagType) => {
           mergeTagsMutationSource: useMergePersonTagsMutation,
           deleteTagMutationSource: useDeletePersonTagMutation,
           createTagMutationSource: useCreatePersonTagMutation,
+          canUseTagTableViewQuery: useCanUsePersonTagTableView,
+          canGetAllTagsQuery: useCanRunGetAllPersonTagsQuery,
+          canUpdateTagNameQuery: useCanRunUpdatePersonNameMutation,
+          canUpdateSynonymsQuery: useCanRunUpdatePersonSynonymsMutation,
+          canUpdateVisibilityQuery: cantRun,
+          canUpdateTagParentQuery: cantRun,
+          canUpdateTagAcceptanceQuery: cantRun,
+          canUpdateTagChildQuery: cantRun,
+          canUpdateRootQuery: cantRun,
+          canMergeTagsQuery: useCanRunMergePersonTagsMutation,
+          canDeleteTagQuery: useCanRunDeletePersonTagMutation,
+          canCreateTagQuery: useCanRunCreatePersonTagMutation,
         };
       case TagType.KEYWORD:
       default:
         return {
           allTagsQuery: useGetAllKeywordTagsQuery,
+          allTagsLazyQuery: useGetAllKeywordTagsLazyQuery,
           tagsWithThumbnailQuery: useGetKeywordTagsWithThumbnailQuery,
           tagPictures: () => {
             return { data: undefined };
@@ -91,6 +154,18 @@ const useGenericTagEndpoints = (type: TagType) => {
           mergeTagsMutationSource: useMergeKeywordTagsMutation,
           deleteTagMutationSource: useDeleteKeywordTagMutation,
           createTagMutationSource: useCreateKeywordTagMutation,
+          canUseTagTableViewQuery: useCanUseKeywordTagTableView,
+          canGetAllTagsQuery: useCanRunGetAllKeywordTagsQuery,
+          canUpdateTagNameQuery: useCanRunUpdateKeywordNameMutation,
+          canUpdateSynonymsQuery: useCanRunUpdateKeywordSynonymsMutation,
+          canUpdateVisibilityQuery: useCanRunUpdateKeywordVisibilityMutation,
+          canUpdateTagParentQuery: cantRun,
+          canUpdateTagAcceptanceQuery: cantRun,
+          canUpdateTagChildQuery: cantRun,
+          canUpdateRootQuery: cantRun,
+          canMergeTagsQuery: useCanRunMergeKeywordTagsMutation,
+          canDeleteTagQuery: useCanRunDeleteKeywordTagMutation,
+          canCreateTagQuery: useCanRunCreateKeywordTagMutation,
         };
     }
   }, [type]);

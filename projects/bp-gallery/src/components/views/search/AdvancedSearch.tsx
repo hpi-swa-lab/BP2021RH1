@@ -1,10 +1,9 @@
 import { ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionSummary, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVisit } from '../../../helpers/history';
 import { HelpTooltip } from '../../common/HelpTooltip';
-import PrimaryButton from '../../common/PrimaryButton';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
 import { SearchFilterInput } from './SearchFilterInput';
@@ -234,14 +233,14 @@ export const AdvancedSearch = ({
               </div>
               <div className='advanced-search-button-wrapper  m-auto pt-4'>
                 <div className='advanced-search-button flex flex-row justifiy-start  w-fit'>
-                  <PrimaryButton
-                    onClickFn={() => {
+                  <Button
+                    onClick={() => {
                       setFilter(filter);
                       console.log(advancedSearchProps);
                     }}
                   >
                     {t('search.appy-filter')}
-                  </PrimaryButton>
+                  </Button>
                 </div>
               </div>
             </div>

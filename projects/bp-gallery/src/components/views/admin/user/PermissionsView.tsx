@@ -1,0 +1,422 @@
+import { ExpandMore } from '@mui/icons-material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Input,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { Operation, Parameter } from 'bp-graphql/build';
+import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Redirect } from 'react-router-dom';
+import {
+  useAddPermissionMutation,
+  useDeleteParameterizedPermissionMutation,
+  useGetAllArchiveTagsQuery,
+  useGetParameterizedPermissionsQuery,
+  useGetUserQuery,
+} from '../../../../graphql/APIConnector';
+import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
+import { useCanUsePermissionsView } from '../../../../hooks/can-do-hooks';
+import {
+  FlatArchiveTag,
+  FlatParameterizedPermission,
+  FlatUsersPermissionsUser,
+} from '../../../../types/additionalFlatTypes';
+import Loading from '../../../common/Loading';
+import ProtectedRoute from '../../../common/ProtectedRoute';
+import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
+import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
+import { FALLBACK_PATH } from '../../../routes';
+import { CenteredContainer } from '../CenteredContainer';
+import { equalOrBothNullish, parseUserId } from './helper';
+import { BooleanParameter } from './permissions/BooleanParamater';
+import { Coverage, CoverageCheckbox } from './permissions/Coverage';
+import { combineCoverages } from './permissions/combineCoverages';
+import { GroupStructure, sections } from './permissions/operations';
+import { ParametersWithoutArchive, PresetType, presets } from './permissions/presets';
+
+export type Parameters = Pick<FlatParameterizedPermission, Parameter>;
+
+const PermissionsView = ({ userId }: { userId: string }) => {
+  const { t } = useTranslation();
+
+  const { parsedUserId, isPublic } = parseUserId(userId);
+
+  const {
+    data: userData,
+    loading: userLoading,
+    error: userError,
+  } = useGetUserQuery({
+    variables: {
+      id: parsedUserId ?? '',
+    },
+    skip: isPublic,
+  });
+  const user: FlatUsersPermissionsUser | undefined =
+    useSimplifiedQueryResponseData(userData)?.usersPermissionsUser;
+
+  const {
+    data: permissionsData,
+    loading: permissionsLoading,
+    error: permissionsError,
+  } = useGetParameterizedPermissionsQuery({
+    variables: {
+      userId: parsedUserId,
+    },
+  });
+  const permissions: FlatParameterizedPermission[] | undefined =
+    useSimplifiedQueryResponseData(permissionsData)?.parameterizedPermissions;
+
+  const permissionLookup = useMemo(() => {
+    if (!permissions) {
+      return undefined;
+    }
+    const lookup: Partial<Record<string, Map<string | null, FlatParameterizedPermission>>> = {};
+    for (const permission of permissions) {
+      const operationName = permission.operation_name ?? '';
+      const map = (lookup[operationName] ??= new Map());
+      map.set(permission.archive_tag?.id ?? null, permission);
+    }
+    return lookup;
+  }, [permissions]);
+
+  const findPermission = useCallback(
+    (operation: Operation, archive: FlatArchiveTag | null) =>
+      permissionLookup?.[operation.document.name]?.get(archive?.id ?? null) ?? null,
+    [permissionLookup]
+  );
+
+  const groupCoverage = useCallback(
+    (group: GroupStructure, archive: FlatArchiveTag | null) => {
+      const hasOperations = group.operations.map(operation => {
+        const permission = findPermission(operation, archive);
+        return !!permission && equalOrBothNullish(archive?.id, permission.archive_tag?.id);
+      });
+      return combineCoverages(hasOperations.map(has => (has ? Coverage.ALL : Coverage.NONE)));
+    },
+    [findPermission]
+  );
+
+  const {
+    data: archivesData,
+    loading: archivesLoading,
+    error: archivesError,
+  } = useGetAllArchiveTagsQuery();
+  const archives: FlatArchiveTag[] | undefined =
+    useSimplifiedQueryResponseData(archivesData)?.archiveTags;
+
+  const [createPermission] = useAddPermissionMutation({
+    refetchQueries: ['getParameterizedPermissions'],
+  });
+  const [deletePermission] = useDeleteParameterizedPermissionMutation({
+    refetchQueries: ['getParameterizedPermissions'],
+  });
+
+  const loading = userLoading || permissionsLoading || archivesLoading;
+  const error = userError ?? permissionsError ?? archivesError;
+
+  const dialog = useDialog();
+
+  const addPermission = useCallback(
+    (operation: Operation, { archive_tag, ...parameters }: Parameters) => {
+      createPermission({
+        variables: {
+          operation_name: operation.document.name,
+          user_id: parsedUserId,
+          archive_tag: archive_tag?.id,
+          ...parameters,
+        },
+      });
+    },
+    [createPermission, parsedUserId]
+  );
+
+  const addPreset = useCallback(
+    (
+      operations: { operation: Operation; parameters: ParametersWithoutArchive }[],
+      archive: FlatArchiveTag | null
+    ) => {
+      for (const { operation, parameters } of operations) {
+        addPermission(operation, { archive_tag: archive ?? undefined, ...parameters });
+      }
+    },
+    [addPermission]
+  );
+
+  const toggleOperations = useCallback(
+    async (
+      operations: Operation[],
+      archive: FlatArchiveTag | null,
+      coverage: Coverage,
+      header: string,
+      prompt = false
+    ) => {
+      const removeAll = coverage !== Coverage.NONE;
+      if (prompt) {
+        const really = await dialog({
+          preset: DialogPreset.CONFIRM,
+          title: removeAll
+            ? t('admin.permissions.reallyRemoveAllPermissions', { header })
+            : t('admin.permissions.reallyGrantAllPermissions', { header }),
+          content: t('admin.permissions.reallyEditAllPermissionsContent'),
+        });
+        if (!really) {
+          return;
+        }
+      }
+      if (removeAll) {
+        for (const operation of operations) {
+          const permission = findPermission(operation, archive);
+          if (!permission) {
+            continue;
+          }
+          deletePermission({
+            variables: {
+              id: permission.id,
+            },
+          });
+        }
+      } else {
+        for (const operation of operations) {
+          addPermission(operation, { archive_tag: archive ?? undefined });
+        }
+      }
+    },
+    [dialog, t, findPermission, deletePermission, addPermission]
+  );
+
+  const [filter, setFilter] = useState('');
+
+  const onFilterChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = useCallback(
+    event => {
+      setFilter(event.currentTarget.value);
+    },
+    []
+  );
+
+  const renderSections = useCallback(
+    (type: PresetType, archive: FlatArchiveTag | null = null) => {
+      const summary =
+        type === 'system'
+          ? t('admin.permissions.systemPermissions')
+          : archive
+          ? archive.name
+          : t('admin.permissions.withoutArchive');
+      if (!summary.toLocaleLowerCase().includes(filter.toLocaleLowerCase())) {
+        return null;
+      }
+
+      const sectionsForType = type === 'system' ? sections.system : sections.perArchive;
+      const sectionsWithCoverages = sectionsForType.map(section => ({
+        ...section,
+        groups: section.groups.map(group => ({
+          ...group,
+          coverage: groupCoverage(group, archive),
+        })),
+      }));
+      const relevantPresets = presets
+        .filter(preset => preset.type === type)
+        .map(preset => ({
+          ...preset,
+          operations: sectionsWithCoverages.flatMap(section =>
+            section.groups.flatMap(group => {
+              const permission = preset.permissions.find(permission => {
+                const name = typeof permission === 'string' ? permission : permission.name;
+                return group.name === name;
+              });
+              if (!permission) {
+                return [];
+              }
+              return group.operations.map(operation => ({
+                operation,
+                parameters: typeof permission === 'string' ? {} : permission.parameters,
+              }));
+            })
+          ),
+        }));
+      return (
+        <Accordion key={archive?.id ?? type} sx={{ backgroundColor: '#e9e9e9' }}>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography fontWeight='bold'>
+              <CoverageCheckbox
+                coverage={combineCoverages(
+                  sectionsWithCoverages.flatMap(section =>
+                    section.groups.map(group => group.coverage)
+                  )
+                )}
+                operations={sectionsWithCoverages.flatMap(section =>
+                  section.groups.flatMap(group => group.operations)
+                )}
+                archive={archive}
+                label={summary}
+                prompt
+                toggleOperations={toggleOperations}
+              />
+            </Typography>
+          </AccordionSummary>
+          <div className='m-4'>
+            {relevantPresets.length > 0 && (
+              <Stack direction='row' spacing={1}>
+                {relevantPresets.map(preset => (
+                  <Button
+                    key={preset.name}
+                    color='info'
+                    variant='outlined'
+                    onClick={() => addPreset(preset.operations, archive)}
+                  >
+                    {t(`admin.permissions.preset.${preset.name}`)}
+                  </Button>
+                ))}
+              </Stack>
+            )}
+            <div className='mt-2'>
+              {sectionsWithCoverages.map(section => (
+                <Accordion key={section.name}>
+                  <AccordionSummary expandIcon={<ExpandMore />}>
+                    <CoverageCheckbox
+                      coverage={combineCoverages(section.groups.map(group => group.coverage))}
+                      operations={section.groups.flatMap(group => group.operations)}
+                      archive={archive}
+                      label={t(`admin.permissions.section.${section.name}`)}
+                      prompt
+                      toggleOperations={toggleOperations}
+                    />
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {section.groups
+                      .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([name, group]) => (
+                        // div forces every checkbox on a separate line
+                        <div key={group.name}>
+                          <CoverageCheckbox
+                            coverage={group.coverage}
+                            operations={group.operations}
+                            archive={archive}
+                            label={name}
+                            toggleOperations={toggleOperations}
+                          />
+                          <ParameterInputs
+                            group={group}
+                            findPermission={findPermission}
+                            archive={archive}
+                            deletePermission={deletePermission}
+                            addPermission={addPermission}
+                          />
+                        </div>
+                      ))}
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </div>
+          </div>
+        </Accordion>
+      );
+    },
+    [
+      filter,
+      toggleOperations,
+      groupCoverage,
+      t,
+      addPreset,
+      findPermission,
+      addPermission,
+      deletePermission,
+    ]
+  );
+
+  const { canUsePermissionsView, loading: canUsePermissionsViewLoading } =
+    useCanUsePermissionsView(userId);
+
+  return (
+    <ProtectedRoute canUse={canUsePermissionsView} canUseLoading={canUsePermissionsViewLoading}>
+      {() => {
+        if (error) {
+          return <QueryErrorDisplay error={error} />;
+        } else if (loading) {
+          return <Loading />;
+        } else if (permissionLookup && archives) {
+          return (
+            <CenteredContainer
+              title={
+                isPublic
+                  ? t('admin.permissions.publicTitle')
+                  : t('admin.permissions.title', { userName: user?.username })
+              }
+            >
+              <div className='mb-2'>
+                <Input
+                  fullWidth
+                  value={filter}
+                  onChange={onFilterChange}
+                  placeholder={t('admin.permissions.filterPlaceholder')}
+                />
+              </div>
+              {renderSections('system')}
+              {renderSections('archive', null)}
+              {archives.map(archive => renderSections('archive', archive))}
+            </CenteredContainer>
+          );
+        } else {
+          return <Redirect to={FALLBACK_PATH} />;
+        }
+      }}
+    </ProtectedRoute>
+  );
+};
+
+export default PermissionsView;
+
+const ParameterInputs = ({
+  group,
+  findPermission,
+  archive,
+  deletePermission,
+  addPermission,
+}: {
+  group: GroupStructure;
+  findPermission: (
+    operation: Operation,
+    archive: FlatArchiveTag | null
+  ) => FlatParameterizedPermission | null;
+  archive: FlatArchiveTag | null;
+  deletePermission: (parameters: { variables: { id: string } }) => Promise<unknown>;
+  addPermission: (operation: Operation, parameters: Parameters) => void;
+}) => {
+  const { t } = useTranslation();
+
+  const sharedProps = {
+    operations: group.operations,
+    findPermission,
+    addPermission,
+    deletePermission,
+    archive,
+  };
+
+  return (
+    <>
+      {group.needsParameters.map(parameter => {
+        switch (parameter) {
+          case 'on_other_users':
+            return (
+              <BooleanParameter
+                key={parameter}
+                parameter={'on_other_users'}
+                falseTitle={t(`admin.permissions.parameter.on_other_users.${group.name}.onlyOwn`)}
+                trueTitle={t(
+                  `admin.permissions.parameter.on_other_users.${group.name}.onOtherUsers`
+                )}
+                {...sharedProps}
+              />
+            );
+          case 'archive_tag':
+            return null;
+        }
+      })}
+    </>
+  );
+};

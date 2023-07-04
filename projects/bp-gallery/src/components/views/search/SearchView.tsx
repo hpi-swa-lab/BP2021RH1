@@ -1,5 +1,5 @@
 import { Location } from 'history';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import usePromise from 'react-use-promise';
@@ -7,6 +7,7 @@ import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import AdvancedSearch from './AdvancedSearch';
 import NoSearchResultsText from './NoSearchResultsText';
@@ -78,7 +79,9 @@ const SearchView = () => {
   }, [searchResultIds, state, error]);
   const isOldSearchActive = useFlag('old_search');
 
-  const { linkToCollection, bulkEdit } = useBulkOperations();
+  const { linkToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
+
+  const exhibitionId = useContext(ExhibitionIdContext);
 
   return (
     <div className='search-content'>
@@ -100,10 +103,16 @@ const SearchView = () => {
           // the isAllSearchActive property will always be false if we want to use Meilisearch
           isAllSearchActive={isOldSearchActive && isAllSearchActive}
           hashbase={search}
-          bulkOperations={[linkToCollection, bulkEdit]}
+          bulkOperations={[
+            linkToCollection,
+            createSequence,
+            bulkEdit,
+            ...(exhibitionId ? [addToExhibition] : []),
+          ]}
           resultPictureCallback={(pictures: number) => {
             setAreResultsEmpty(pictures <= 0);
           }}
+          textFilter={null}
         />
       </ShowStats>
     </div>
