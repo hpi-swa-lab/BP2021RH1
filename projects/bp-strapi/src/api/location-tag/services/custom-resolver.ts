@@ -41,7 +41,7 @@ export const getLocationTagsWithThumbnail = async (
       filters: thumbnailFilters,
     },
     {
-      contentType: 'api::picture.picture',
+      contentType: strapi.contentTypes['api::picture.picture'],
     }
   );
 

@@ -89,6 +89,11 @@ const TagOverview = ({
     ? Object.values(flattened)[0]
     : undefined;
 
+  // recalculate when done loading
+  useEffect(() => {
+    setRowLength(calculateMaxCategoriesPerRow(ref.current?.clientWidth ?? 0));
+  }, [calculateMaxCategoriesPerRow, loading]);
+
   if (error) {
     return <QueryErrorDisplay error={error} />;
   } else if (loading) {
