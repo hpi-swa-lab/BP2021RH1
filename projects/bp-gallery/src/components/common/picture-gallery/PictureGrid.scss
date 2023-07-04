@@ -42,3 +42,23 @@
     }
   }
 }
+
+.horizontal-picture-placeholder {
+  background: #474747;
+  animation: placeholder-sparkle 2.5s;
+  animation-iteration-count: infinite;
+
+  @keyframes placeholder-sparkle {
+    0% {
+      opacity: 0.7;
+    }
+
+    50% {
+      opacity: 0.2;
+    }
+
+    100% {
+      opacity: 0.7;
+    }
+  }
+}
