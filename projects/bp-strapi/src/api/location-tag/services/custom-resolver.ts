@@ -25,7 +25,7 @@ export const getLocationTagsWithThumbnail = async (
       sortBy,
     },
     {
-      contentType: 'api::location-tag.location-tag',
+      contentType: strapi.contentTypes['api::location-tag.location-tag'],
       usePagination: true,
     }
   );
