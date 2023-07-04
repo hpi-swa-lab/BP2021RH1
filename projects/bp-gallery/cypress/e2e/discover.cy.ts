@@ -85,15 +85,15 @@ describe('Discover View', () => {
   });
 
   it('shows "Orte" tag overview', () => {
-    cy.get('.overview-selection-container:eq(1)').contains('Orte').click();
+    cy.get('.overview-selection-container:eq(2)').contains('Orte').click();
     // check for basic components (title, show more button)
-    cy.get('.overview-selection-container:eq(1)')
+    cy.get('.overview-selection-container:eq(2)')
       .children()
       .should('contain.text', 'Orte')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains first 6 verified locations
-    cy.get('.overview-selection-container:eq(1) .overview-collection-grid-container .items')
+    cy.get('.overview-selection-container:eq(2) .overview-collection-grid-container .items')
       .should('contain.text', 'VERIFIZIERTER TESTORT 1')
       .and('contain.text', 'VERIFIZIERTER TESTORT 2')
       .and('contain.text', 'VERIFIZIERTER TESTORT 3')
@@ -104,13 +104,13 @@ describe('Discover View', () => {
 
   it('shows "Unsere Kategorien" tag overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.overview-container:eq(4)')
+    cy.get('.overview-container:eq(3)')
       .children()
       .should('contain.text', 'Unsere Kategorien')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains first 6 verified locations
-    cy.get('.overview-container:eq(4) .overview-collection-grid-container .items')
+    cy.get('.overview-container:eq(3) .overview-collection-grid-container .items')
       .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')

@@ -35,13 +35,13 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for "Orte"', () => {
-    cy.get('.overview-selection-container:eq(1)').contains('Orte').click();
+    cy.get('.overview-selection-container:eq(2)').contains('Orte').click();
     cy.get('.overview-selection-container:contains(Orte)').contains('Mehr anzeigen').click();
     urlIs('/show-more/location');
   });
 
   it('works for single locations', () => {
-    cy.get('.overview-selection-container:eq(1)').contains('Orte').click();
+    cy.get('.overview-selection-container:eq(2)').contains('Orte').click();
     // IDs of the six locations shown in tag overview
     const targetIDs = [7, 8, 9, 10, 11, 13];
     // iterate over the six locations shown in tag overview
@@ -61,7 +61,6 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for single keywords', () => {
-    cy.scrollTo('bottom');
     // IDs of the six keywords shown in tag overview
     const targetIDs = [9, 10, 11, 13, 14, 15];
     // iterate over the six keywords shown in tag overview
