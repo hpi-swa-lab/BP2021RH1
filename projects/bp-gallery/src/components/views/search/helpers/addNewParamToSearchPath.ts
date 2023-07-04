@@ -1,4 +1,4 @@
-// import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { SearchType } from './search-filters';
 import { fromURLSearchParam, toURLSearchParam } from './url-search-params';
 
@@ -34,7 +34,7 @@ export const addNewParamToSearchPath = (
   }
 
   paramValues.forEach(element => {
-    if (!isDuplicatedSearchParam(element, newParamType, searchParams) /* && !isEmpty(element) */) {
+    if (!isDuplicatedSearchParam(element, newParamType, searchParams) && !isEmpty(element)) {
       searchParams.append(toURLSearchParam(newParamType), element);
     }
   });

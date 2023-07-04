@@ -1,8 +1,8 @@
 import { ExpandMore } from '@mui/icons-material';
 import { Accordion, AccordionSummary, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useVisit } from '../../../helpers/history';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import PrimaryButton from '../../common/PrimaryButton';
 import SearchBar from './SearchBar';
@@ -27,11 +27,7 @@ export const AdvancedSearch = ({
   isAllSearchActive: boolean;
 }) => {
   const { t } = useTranslation();
-  const {
-    palette: {
-      primary: { main: $primaryColor },
-    },
-  } = useTheme();
+  const { visit } = useVisit();
 
   const ATTRIBUTES = [
     'keyword',
@@ -185,7 +181,7 @@ export const AdvancedSearch = ({
     }, '');
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col m-auto w-fit'>
       <div className='breadcrumb m-1'>
         <SearchBreadcrumbs searchParams={searchParams} />
       </div>
