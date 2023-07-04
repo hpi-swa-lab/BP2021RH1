@@ -62,9 +62,9 @@ const ContactFormView = () => {
 
   return (
     <div className='max-w-[1200px] min-h-full flex flex-col flex-nowrap items-center m-auto bg-white shadow-lg'>
-      <div className='mx-auto mt-20 p-4'>
+      <div className='mx-auto p-6'>
         <h1 className='pt-8'>{t('contact-form.title')}</h1>
-        <form onSubmit={onSubmit} className='flex flex-col w-96'>
+        <form onSubmit={onSubmit} className='flex flex-col max-w-[24rem]'>
           <label className='flex flex-col flex-nowrap text-xl p-0'>
             <p className='mb-1'>{t('contact-form.choose-archive-label')}</p>
             <FormControl>
