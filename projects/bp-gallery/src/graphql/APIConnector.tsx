@@ -3680,6 +3680,18 @@ export type GetPicturesQuery = {
         is_text?: boolean | null;
         likes?: number | null;
         comments?: { data: Array<{ id?: string | null }> } | null;
+        verified_time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
+        time_range_tag?: {
+          data?: {
+            id?: string | null;
+            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
+          } | null;
+        } | null;
         media: {
           data?: {
             id?: string | null;
@@ -3757,18 +3769,18 @@ export type GetPicturesForCollectionQuery = {
 };
 
 export type GetPicturesForLocationQueryVariables = Exact<{
-  tagID: Scalars['ID'];
+  tagIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
 export type GetPicturesForLocationQuery = {
-  locationTag?: {
-    data?: {
+  locationTags?: {
+    data: Array<{
       id?: string | null;
       attributes?: {
         pictures?: { data: Array<{ id?: string | null }> } | null;
         verified_pictures?: { data: Array<{ id?: string | null }> } | null;
       } | null;
-    } | null;
+    }>;
   } | null;
 };
 
@@ -7041,6 +7053,26 @@ export const GetPicturesDocument = gql`
               id
             }
           }
+          verified_time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+                isEstimate
+              }
+            }
+          }
+          time_range_tag {
+            data {
+              id
+              attributes {
+                start
+                end
+                isEstimate
+              }
+            }
+          }
           likes
           media {
             data {
@@ -7300,8 +7332,8 @@ export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
 >;
 
 export const GetPicturesForLocationDocument = gql`
-  query getPicturesForLocation($tagID: ID!) {
-    locationTag(id: $tagID) {
+  query getPicturesForLocation($tagIDs: [ID!]) {
+    locationTags(filters: { id: { in: $tagIDs } }) {
       data {
         id
         attributes {
@@ -7333,12 +7365,12 @@ export const GetPicturesForLocationDocument = gql`
  * @example
  * const { data, loading, error } = useGetPicturesForLocationQuery({
  *   variables: {
- *      tagID: // value for 'tagID'
+ *      tagIDs: // value for 'tagIDs'
  *   },
  * });
  */
 export function useGetPicturesForLocationQuery(
-  baseOptions: Apollo.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetPicturesForLocationQuery,
     GetPicturesForLocationQueryVariables
   >

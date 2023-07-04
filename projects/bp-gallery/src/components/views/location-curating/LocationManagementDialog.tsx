@@ -32,6 +32,7 @@ import { DialogProps } from '../../provider/DialogProvider';
 import PictureInfoField from '../picture/sidebar/picture-info/PictureInfoField';
 import SingleTagElement from '../picture/sidebar/picture-info/SingleTagElement';
 import TagSelectionField from '../picture/sidebar/picture-info/TagSelectionField';
+import { useFoldoutStatus } from './FoldoutStatusContext';
 import './LocationManagementDialog.scss';
 import {
   useAcceptTag,
@@ -80,6 +81,11 @@ const LocationManagementDialogPreset = ({
 }) => {
   const { t } = useTranslation();
   const { visit } = useVisit();
+
+  const foldoutStatus = useFoldoutStatus();
+
+  const scrollPosition = dialogProps.content.scrollPosition;
+
   const { allTagsQuery, tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
 
   const refetch: () => void = dialogProps.content.refetch;
@@ -105,7 +111,7 @@ const LocationManagementDialogPreset = ({
     : (dialogProps.content.locationTag as FlatTag);
 
   const tagPicturesQueryResponse = tagPictures({
-    variables: { tagID: locationTag.id },
+    variables: { tagIDs: [locationTag.id] },
     fetchPolicy: 'no-cache',
   });
   const flattenedPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
@@ -397,14 +403,17 @@ const LocationManagementDialogPreset = ({
               <div className='location-management-picture-count'>
                 {flattenedPictures &&
                   t('tag-panel.location-pictures', {
-                    count: flattenedPictures.locationTag.pictures.length,
+                    count: flattenedPictures.locationTags[0].pictures.length,
                   })}
               </div>
               <Button
                 className='location-management-button location-management-primary'
                 onClick={() => {
                   handleClose(undefined);
-                  visit(`/show-more/location/${locationTag.id}`);
+                  visit(`/show-more/location/${locationTag.id}`, {
+                    openBranches: foldoutStatus?.current,
+                    customScrollPos: scrollPosition,
+                  });
                 }}
                 endIcon={<ArrowForwardIos />}
               >

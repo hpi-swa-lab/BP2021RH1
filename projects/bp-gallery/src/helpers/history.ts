@@ -2,6 +2,7 @@ import { History, Location } from 'history';
 import { LatLng } from 'leaflet';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { FoldoutStatus } from '../components/views/location-curating/FoldoutStatusContext';
 import { useScrollRef } from '../hooks/context-hooks';
 import { trackHistory } from '../matomo-config/matomo';
 import { useGrowthBook } from './growthbook';
@@ -22,6 +23,7 @@ type LocationState = {
   open?: boolean;
   mapState?: { center: LatLng; zoom: number };
   archiveId?: string;
+  openBranches?: FoldoutStatus;
 };
 export type LocationWithState = Location & { state?: LocationState };
 
@@ -38,13 +40,16 @@ export const useVisit = () => {
         state?: LocationState;
         wasOpen?: boolean;
         mapState?: { center: LatLng; zoom: number };
+        openBranches?: FoldoutStatus;
+        customScrollPos?: number;
       }
     ) => {
       history.replace(history.location.pathname, {
         ...history.location.state,
-        scrollPos: scrollRef.current,
+        scrollPos: options?.customScrollPos ?? scrollRef.current,
         open: options?.wasOpen,
         mapState: options?.mapState,
+        openBranches: options?.openBranches,
       });
       history.push(url, { showBack: options?.state?.showBack ?? true, ...options?.state });
       growthbook?.setURL(window.location.href);

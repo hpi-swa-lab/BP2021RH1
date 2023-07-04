@@ -39,6 +39,7 @@ const PicturePreview = ({
   allowClicks = true,
   height,
   highQuality,
+  inverse = false,
 }: {
   picture: FlatPicture;
   onClick: MouseEventHandler<HTMLDivElement>;
@@ -46,6 +47,7 @@ const PicturePreview = ({
   adornments?: PicturePreviewAdornment[];
   allowClicks?: boolean;
   highQuality?: boolean;
+  inverse?: boolean;
   height?: string;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -62,17 +64,21 @@ const PicturePreview = ({
 
   return (
     <div
-      className='preview-container'
+      className='preview-container h-full'
       onMouseOver={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={onClick}
       ref={containerRef}
       style={{
-        flex: `${String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))} 1 0`,
+        flex: `${
+          inverse ? '0' : String((picture.media?.width ?? 0) / (picture.media?.height ?? 1))
+        } 1 0`,
       }}
     >
       <div
-        className={`picture-preview ${allowClicks ? 'allow-clicks' : ''}`}
+        className={`picture-preview ${allowClicks ? 'allow-clicks' : ''} ${
+          inverse ? 'inverse' : ''
+        }`}
         id={`picture-preview-for-${picture.id}`}
       >
         {/* https://stackoverflow.com/questions/728616/disable-cache-for-some-images */}

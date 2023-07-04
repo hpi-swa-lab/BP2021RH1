@@ -17,6 +17,9 @@ import BulkEditView from './views/bulk-edit/BulkEditView';
 import CollectionCuratingView from './views/collection-curating/CollectionCuratingView';
 import ContactFormView from './views/contact/ContactFormView';
 import DiscoverView from './views/discover/DiscoverView';
+import ExhibitionFullOverview from './views/exhibitions/ExhibitionOverview';
+import ExhibitionTool from './views/exhibitions/ExhibitionTool';
+import ExhibitionViewer from './views/exhibitions/ExhibitionViewer';
 import GeoView from './views/geoguessr/GeoView';
 import LatestPicturesView from './views/latest-pictures/LatestPicturesView';
 import LocationPanel from './views/location-curating/LocationPanel';
@@ -28,9 +31,6 @@ import TagTableView from './views/tag-table/TagTableView';
 import TermsOfServiceView from './views/terms-of-service/TermsOfServiceView';
 import UnverifiedCommentsView from './views/unverified-comments/UnverifiedCommentsView';
 import UploadsView from './views/uploads/UploadsView';
-import ExhibitionTool from './views/exhibitions/ExhibitionTool';
-import ExhibitionViewer from './views/exhibitions/ExhibitionViewer';
-import ExhibitionFullOverview from './views/exhibitions/ExhibitionOverview';
 
 export const FALLBACK_PATH = '/start';
 
