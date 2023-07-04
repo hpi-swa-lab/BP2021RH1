@@ -231,7 +231,6 @@ export const useGetDescendantsMatrix = (flattenedTags: FlatTag[] | undefined) =>
         flattenedTags.forEach(flatTag => {
           tempDescendantsMatrix[child.id][flatTag.id] ||= tempDescendantsMatrix[tag.id][flatTag.id];
         });
-        tempDescendantsMatrix[child.id][tag.id] = true;
       }
     };
 
