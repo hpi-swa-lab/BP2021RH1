@@ -1,11 +1,13 @@
 import { Location } from 'history';
-import { useContext, useMemo, useState } from 'react';
+import { sortBy } from 'lodash';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import usePromise from 'react-use-promise';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { FlatPicture } from '../../../types/additionalFlatTypes';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
@@ -69,6 +71,7 @@ const SearchView = () => {
       ),
     [queryParams, filter]
   );
+  console.log(searchResultIds);
 
   const pictureFilter: PictureFiltersInput = useMemo(() => {
     if (error) {
@@ -77,6 +80,12 @@ const SearchView = () => {
     }
     return state === 'resolved' ? { id: { in: searchResultIds } } : {};
   }, [searchResultIds, state, error]);
+
+  const customSort = useCallback(
+    (pictures: FlatPicture[]) => sortBy(pictures, picture => searchResultIds?.indexOf(picture.id)),
+    [searchResultIds]
+  );
+
   const isOldSearchActive = useFlag('old_search');
 
   const { linkToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
@@ -102,6 +111,7 @@ const SearchView = () => {
           // by ANDing the isAllsearchActive flag with the isOldsearchActive flag we can make sure
           // the isAllSearchActive property will always be false if we want to use Meilisearch
           isAllSearchActive={isOldSearchActive && isAllSearchActive}
+          customSort={customSort}
           hashbase={search}
           bulkOperations={[
             linkToCollection,

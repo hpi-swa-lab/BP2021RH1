@@ -2,7 +2,6 @@ import { ExpandMore } from '@mui/icons-material';
 import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useVisit } from '../../../helpers/history';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
@@ -26,7 +25,6 @@ export const AdvancedSearch = ({
   isAllSearchActive: boolean;
 }) => {
   const { t } = useTranslation();
-  const { visit } = useVisit();
 
   const ATTRIBUTES = [
     'keyword',
@@ -50,21 +48,21 @@ export const AdvancedSearch = ({
   const optionTranslator = useCallback((option: string) => {
     switch (option) {
       case 'equal':
-        return '=';
+        return ' = ';
       case 'unequal':
-        return '!=';
+        return ' != ';
       case 'lower':
-        return '<';
+        return ' < ';
       case 'lower-equal':
-        return '<=';
+        return ' <= ';
       case 'greater':
-        return '>';
+        return ' > ';
       case 'greater-equal':
-        return '>=';
+        return ' >= ';
       case 'and':
-        return 'AND';
+        return ' AND ';
       case 'or':
-        return 'OR';
+        return ' OR ';
       default:
         return '';
     }
@@ -116,32 +114,32 @@ export const AdvancedSearch = ({
         return attribute !== 'timeRange'
           ? `(${attributeTranslator(attribute)} IS EMPTY OR ${attributeTranslator(
               attribute
-            )} IS NULL) ${optionTranslator(combinatorOption)} `
-          : `((${TIME_START} IS EMPTY OR ${TIME_START} IS NULL) AND (${TIME_END} IS EMPTY OR ${TIME_END} IS NULL)) ${optionTranslator(
+            )} IS NULL)${optionTranslator(combinatorOption)}`
+          : `((${TIME_START} IS EMPTY OR ${TIME_START} IS NULL) AND (${TIME_END} IS EMPTY OR ${TIME_END} IS NULL))${optionTranslator(
               combinatorOption
-            )} `;
+            )}`;
       } else if (operatorOption === 'is-not-empty') {
         return attribute !== 'timeRange'
           ? `(${attributeTranslator(attribute)} IS NOT EMPTY AND ${attributeTranslator(
               attribute
-            )} IS NOT NULL) ${optionTranslator(combinatorOption)} `
-          : `(${TIME_START} IS NOT EMPTY AND ${TIME_START} IS NOT NULL AND ${TIME_END} IS NOT EMPTY AND ${TIME_END} IS NOT NULL) ${optionTranslator(
+            )} IS NOT NULL)${optionTranslator(combinatorOption)}`
+          : `(${TIME_START} IS NOT EMPTY AND ${TIME_START} IS NOT NULL AND ${TIME_END} IS NOT EMPTY AND ${TIME_END} IS NOT NULL)${optionTranslator(
               combinatorOption
-            )} `;
+            )}`;
       } else if (attribute === 'timeRange') {
         return operatorOption === 'span'
           ? `(${TIME_START} >= ${startTimeParser(firstValue)} AND ${TIME_END} <= ${endTimeparser(
               secondValue
-            )}) ${optionTranslator(combinatorOption)} `
-          : `(${TIME_START} ${optionTranslator(operatorOption)} ${startTimeParser(
+            )})${optionTranslator(combinatorOption)}`
+          : `(${TIME_START}${optionTranslator(operatorOption)}${startTimeParser(
               firstValue
-            )} AND ${TIME_END} ${optionTranslator(operatorOption)} ${startTimeParser(
+            )} AND ${TIME_END}${optionTranslator(operatorOption)}${startTimeParser(
               firstValue
-            )}) ${optionTranslator(combinatorOption)} `;
+            )})${optionTranslator(combinatorOption)}`;
       } else {
-        return `${attributeTranslator(attribute)} ${optionTranslator(
+        return `${attributeTranslator(attribute)}${optionTranslator(
           operatorOption
-        )} ${firstValue} ${optionTranslator(combinatorOption)} `;
+        )}${firstValue}${optionTranslator(combinatorOption)}`;
       }
     },
     [optionTranslator, attributeTranslator]
