@@ -244,8 +244,8 @@
         "addPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
         "deleteParameterizedPermission": "Recht entziehen",
-        "getUser": "Nutzer-Daten ansehen",
-        "updateUser": "Nutzer-Daten bearbeiten",
+        "getUser": "Alle Nutzer-Daten ansehen",
+        "updateUser": "Alle Nutzer-Daten bearbeiten",
         "getUsers": "Liste aller Nutzer sehen",
         "login": "Sich anmelden",
         "removeUser": "Nutzer löschen"
