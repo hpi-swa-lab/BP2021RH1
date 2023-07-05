@@ -37,7 +37,10 @@ const getCommonSupertag = (
   for (const tag of tags) {
     if (descendantsMatrix[potentialCommonSupertag.id][tag.id]) {
       potentialCommonSupertag = tag;
-    } else if (!descendantsMatrix[tag.id][potentialCommonSupertag.id]) {
+    }
+  }
+  for (const tag of tags) {
+    if (!descendantsMatrix[tag.id][potentialCommonSupertag.id]) {
       return;
     }
   }
@@ -164,16 +167,11 @@ const PictureMapView = ({
     const tags = cluster
       .getAllChildMarkers()
       .map(marker => (marker.options as ExtendedMarkerOptions).locationTag!);
-    const tagsWithoutParents = tags.filter(tag => !tag.parent_tags?.length);
-    if (tagsWithoutParents.length) {
-      return getDividerIcon(tagsWithoutParents, tags.length);
+    const commonSupertag = getCommonSupertag(tags, descendantsMatrix);
+    if (commonSupertag) {
+      return getDividerIcon([commonSupertag], tags.length);
     } else {
-      const commonSupertag = getCommonSupertag(tags, descendantsMatrix);
-      if (commonSupertag) {
-        return getDividerIcon([commonSupertag], tags.length);
-      } else {
-        return getDividerIcon(tags, tags.length);
-      }
+      return getDividerIcon(tags, tags.length);
     }
   };
 
