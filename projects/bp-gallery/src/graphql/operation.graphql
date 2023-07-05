@@ -86,6 +86,7 @@ mutation unpinComment($commentId: ID!) { updateComment(id: $commentId data: { pi
 mutation unpublishPicture($id: ID!) { updatePicture(id: $id data: { publishedAt: null }) { data { id } } }
 mutation updateArchive($archiveId: ID! $data: ArchiveTagInput!) { updateArchiveTag(id: $archiveId data: $data) { data { id } } }
 mutation updateCollection($collectionId: ID! $data: CollectionInput!) { updateCollection(id: $collectionId data: $data) { data { id } } }
+mutation updateCollectionParents($collectionId: ID! $parentCollectionIds: [ID]!) { updateCollection(id: $collectionId data: { parent_collections: $parentCollectionIds }) { data { id } } }
 mutation updateExhibition($id: ID! $data: ExhibitionInput!) { updateExhibition(id: $id data: $data) { data { id } } }
 mutation updateExhibitionPicture($id: ID! $data: ExhibitionPictureInput!) { updateExhibitionPicture(id: $id data: $data) { data { id } } }
 mutation updateExhibitionSection( $id: ID! $title: String $text: String $order: Int $exhibitionPictureIds: [ID] ) { updateExhibitionSection( id: $id data: { title: $title text: $text exhibition_pictures: $exhibitionPictureIds order: $order } ) { data { id } } }

@@ -219,6 +219,7 @@
         "mergeCollections": "Collections zusammenführen",
         "setPicturesForCollection": "Bilder in einer Collection verwalten",
         "updateCollection": "Collection-Eigenschaften bearbeiten",
+        "updateCollectionParents": "Collection-Hierarchie verwalten",
         "createTag": "Tag anlegen",
         "deleteTag": "Tag löschen",
         "getAllTags": "Liste aller Tags ansehen",

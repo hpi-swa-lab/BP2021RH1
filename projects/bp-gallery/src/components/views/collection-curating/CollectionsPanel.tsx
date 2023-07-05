@@ -7,6 +7,7 @@ import {
   useCanRunDeleteCollectionMutation,
   useCanRunMergeCollectionsMutation,
   useCanRunUpdateCollectionMutation,
+  useCanRunUpdateCollectionParentsMutation,
   useDeleteCollectionMutation,
   useGetCollectionInfoByIdQuery,
   useMergeCollectionsMutation,
@@ -54,6 +55,7 @@ const CollectionsPanel = ({
   });
   const { canRun: canMergeCollections } = useCanRunMergeCollectionsMutation();
 
+  const { canRun: canUpdateCollectionParents } = useCanRunUpdateCollectionParentsMutation();
   const { canRun: canCreateSubCollection } = useCanRunCreateSubCollectionMutation();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -152,14 +154,12 @@ const CollectionsPanel = ({
               key={child.id}
               onClick={() => selectChild(child)}
             >
-              {canUpdateCollection &&
-                (child.parent_collections?.length ?? 0) > 1 &&
-                parentCollection && (
-                  <UnlinkCollectionAction
-                    childCollection={child}
-                    parentCollection={parentCollection}
-                  />
-                )}
+              {(child.parent_collections?.length ?? 0) > 1 && parentCollection && (
+                <UnlinkCollectionAction
+                  childCollection={child}
+                  parentCollection={parentCollection}
+                />
+              )}
               <span className='text'>{child.name}</span>
               <span className='actions'>
                 {canUpdateCollection && (
@@ -206,7 +206,7 @@ const CollectionsPanel = ({
             </div>
           );
         })}
-        {(canUpdateCollection || canCreateSubCollection) && (
+        {(canUpdateCollectionParents || canCreateSubCollection) && (
           <>
             <div
               className='panel-entry new'

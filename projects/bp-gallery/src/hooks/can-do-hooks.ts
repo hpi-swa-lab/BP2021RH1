@@ -36,6 +36,7 @@ import {
   useCanRunRemoveUserMutation,
   useCanRunUpdateArchiveMutation,
   useCanRunUpdateCollectionMutation,
+  useCanRunUpdateCollectionParentsMutation,
   useCanRunUpdateExhibitionMutation,
   useCanRunUpdatePictureMutation,
   useCanRunUpdateUserMutation,
@@ -254,6 +255,8 @@ export const useCanUseCollectionCuratingView = () => {
 
   const { canRun: canUpdateCollection, loading: canUpdateCollectionLoading } =
     useCanRunUpdateCollectionMutation();
+  const { canRun: canUpdateCollectionParents, loading: canUpdateCollectionParentsLoading } =
+    useCanRunUpdateCollectionParentsMutation();
   const { canRun: canDeleteCollection, loading: canDeleteCollectionLoading } =
     useCanRunDeleteCollectionMutation();
   const { canRun: canMergeCollections, loading: canMergeCollectionsLoading } =
@@ -265,11 +268,16 @@ export const useCanUseCollectionCuratingView = () => {
     canUseCollectionCuratingView:
       canGetRootCollection &&
       canGetCollectionInfoById &&
-      (canUpdateCollection || canDeleteCollection || canMergeCollections || canCreateSubCollection),
+      (canUpdateCollection ||
+        canUpdateCollectionParents ||
+        canDeleteCollection ||
+        canMergeCollections ||
+        canCreateSubCollection),
     loading:
       canGetRootCollectionLoading ||
       canGetCollectionInfoByIdLoading ||
       canUpdateCollectionLoading ||
+      canUpdateCollectionParentsLoading ||
       canDeleteCollectionLoading ||
       canMergeCollectionsLoading ||
       canCreateSubCollectionLoading,
