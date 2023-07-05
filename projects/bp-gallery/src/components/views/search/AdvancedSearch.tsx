@@ -196,7 +196,13 @@ export const AdvancedSearch = ({
             }}
           >
             <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
+              <div className='flex flex-row flex-nowrap items-center'>
+                <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
+                <HelpTooltip
+                  title={t('search.advanced-question')}
+                  content={t('search.advanced-help')}
+                />
+              </div>
             </AccordionSummary>
             <div className='advanced-search w-fit p-4'>
               <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
@@ -232,6 +238,7 @@ export const AdvancedSearch = ({
               <div className='advanced-search-button-wrapper  m-auto pt-4'>
                 <div className='advanced-search-button flex flex-row justifiy-start  w-fit'>
                   <Button
+                    variant='contained'
                     onClick={() => {
                       setFilter(filter);
                       console.log(advancedSearchProps);
