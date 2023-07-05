@@ -22,7 +22,7 @@ export const getLocationTagsWithThumbnail = async (
     {
       filters,
       pagination,
-      sortBy,
+      sort: sortBy,
     },
     {
       contentType: strapi.contentTypes['api::location-tag.location-tag'],
