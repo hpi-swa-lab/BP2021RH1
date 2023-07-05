@@ -203,6 +203,7 @@ const PictureMapView = ({
 
         <MarkerClusterGroup
           iconCreateFunction={createCustomClusterIcon}
+          removeOutsideVisibleBounds={false}
           maxClusterRadius={350}
           animate={true}
         >
