@@ -2,7 +2,7 @@ import { ZoomInMapOutlined, ZoomOutMapOutlined } from '@mui/icons-material';
 import { DivIcon, LatLng, Map, MarkerCluster, MarkerOptions, Point } from 'leaflet';
 import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import { Dispatch, RefObject, SetStateAction } from 'react';
+import { Dispatch, RefObject, SetStateAction, useContext } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
@@ -10,6 +10,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import { PictureOrigin, asUploadPath } from '../../helpers/app-helpers';
 import { useVisit } from '../../helpers/history';
 import { FlatPicture, FlatTag, Thumbnail } from '../../types/additionalFlatTypes';
+import { MobileContext } from '../provider/MobileProvider';
 import { useGetDescendantsMatrix } from '../views/location-curating/tag-structure-helpers';
 
 export interface ExtendedFlatTag extends FlatTag {
@@ -69,6 +70,7 @@ const PictureMapView = ({
 }) => {
   const { descendantsMatrix } = useGetDescendantsMatrix(locations);
   const { t } = useTranslation();
+  const { isMobile } = useContext(MobileContext);
 
   const getDividerIcon = (locationTags: ExtendedFlatTag[], clusterLocationCount?: number) => {
     const locationTag = locationTags.length === 1 ? locationTags[0] : undefined;
@@ -81,7 +83,7 @@ const PictureMapView = ({
     });
     return new DivIcon({
       html: renderToStaticMarkup(
-        <div className='flex relative'>
+        <div className={`flex relative ${isMobile ? 'scale-[0.5]' : ''}`}>
           {[
             'bottom-0 left-0 z-50',
             'bg-white bottom-2 left-2 z-40',
@@ -129,7 +131,7 @@ const PictureMapView = ({
         </div>
       ),
       iconSize: new Point(0, 0),
-      iconAnchor: new Point(214.5, -52),
+      iconAnchor: isMobile ? new Point(107.25, -26) : new Point(214.5, -52),
     });
   };
 
@@ -204,7 +206,7 @@ const PictureMapView = ({
         <MarkerClusterGroup
           iconCreateFunction={createCustomClusterIcon}
           removeOutsideVisibleBounds={false}
-          maxClusterRadius={350}
+          maxClusterRadius={isMobile ? 175 : 350}
           animate={true}
         >
           {locations?.map(location =>
