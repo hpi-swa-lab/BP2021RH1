@@ -1,11 +1,16 @@
-import { Edit } from '@mui/icons-material';
+import { ChevronRight, Edit } from '@mui/icons-material';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetUsersQuery } from '../../../../graphql/APIConnector';
+import {
+  useCanRunGetUserQuery,
+  useCanRunUpdateUserMutation,
+  useGetUsersQuery,
+} from '../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
 import { useVisit } from '../../../../helpers/history';
 import { useCanUseUsersView } from '../../../../hooks/can-do-hooks';
+import { useAuth } from '../../../../hooks/context-hooks';
 import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import ProtectedRoute from '../../../common/ProtectedRoute';
@@ -17,13 +22,17 @@ import { PUBLIC_USER_ID } from './helper';
 export const UsersView = () => {
   const { t } = useTranslation();
   const { visit } = useVisit();
+  const { userId } = useAuth();
 
   const { data, error, loading } = useGetUsersQuery();
   const users: FlatUsersPermissionsUser[] | undefined =
     useSimplifiedQueryResponseData(data)?.usersPermissionsUsers;
 
+  const { canRun: canGetUser } = useCanRunGetUserQuery();
+  const { canRun: canUpdateUser } = useCanRunUpdateUserMutation();
+
   const sortedUsers = useMemo(
-    () => (users ? users.slice().sort((a, b) => a.username.localeCompare(b.username)) : undefined),
+    () => (users ? users.sort((a, b) => a.username.localeCompare(b.username)) : undefined),
     [users]
   );
 
@@ -44,14 +53,24 @@ export const UsersView = () => {
                 {[
                   { id: PUBLIC_USER_ID, username: t('admin.users.publicUsername') },
                   ...sortedUsers,
-                ].map(user => (
-                  <ListItemButton key={user.id} onClick={() => visit(`/admin/user/${user.id}`)}>
-                    <ListItemText primary={user.username} />
-                    <ListItemIcon>
-                      <Edit />
-                    </ListItemIcon>
-                  </ListItemButton>
-                ))}
+                ].map(user => {
+                  const isMe = user.id === userId;
+                  const visible = canGetUser || isMe;
+                  const editable = canUpdateUser || isMe;
+                  const path = isMe ? '/my-account' : `/admin/user/${user.id}`;
+                  return (
+                    <ListItemButton
+                      key={user.id}
+                      onClick={visible ? () => visit(path) : undefined}
+                      disabled={!visible}
+                    >
+                      <ListItemText primary={user.username} />
+                      {visible && (
+                        <ListItemIcon>{editable ? <Edit /> : <ChevronRight />}</ListItemIcon>
+                      )}
+                    </ListItemButton>
+                  );
+                })}
               </List>
             </CenteredContainer>
           );
