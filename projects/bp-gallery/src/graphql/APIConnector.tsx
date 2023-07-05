@@ -3942,7 +3942,7 @@ export type ChangePasswordMutationVariables = Exact<{
   passwordConfirmation: Scalars['String'];
 }>;
 
-export type ChangePasswordMutation = { changePassword?: { jwt?: string | null } | null };
+export type ChangePasswordMutation = { changePassword?: { user: { id: string } } | null };
 
 export type ContactMutationVariables = Exact<{
   recipient: Scalars['String'];
@@ -4259,7 +4259,7 @@ export type ResetPasswordMutationVariables = Exact<{
   passwordConfirmation: Scalars['String'];
 }>;
 
-export type ResetPasswordMutation = { resetPassword?: { jwt?: string | null } | null };
+export type ResetPasswordMutation = { resetPassword?: { user: { id: string } } | null };
 
 export type SetPicturesForCollectionMutationVariables = Exact<{
   pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
@@ -8085,7 +8085,9 @@ export const ChangePasswordDocument = gql`
       password: $password
       passwordConfirmation: $passwordConfirmation
     ) {
-      jwt
+      user {
+        id
+      }
     }
   }
 `;
@@ -10206,7 +10208,9 @@ export type RemoveUserMutationOptions = Apollo.BaseMutationOptions<
 export const ResetPasswordDocument = gql`
   mutation resetPassword($token: String!, $password: String!, $passwordConfirmation: String!) {
     resetPassword(code: $token, password: $password, passwordConfirmation: $passwordConfirmation) {
-      jwt
+      user {
+        id
+      }
     }
   }
 `;

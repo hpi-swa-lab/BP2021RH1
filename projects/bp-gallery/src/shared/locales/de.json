@@ -310,7 +310,8 @@
     "resetPassword": {
       "title": "Passwort setzen/zurücksetzen",
       "password": "Neues Passwort",
-      "passwordConfirmation": "Neues Passwort wiederholen"
+      "passwordConfirmation": "Neues Passwort wiederholen",
+      "success": "Passwort erfolgreich gesetzt/zurückgesetzt"
     },
     "changePassword": {
       "title": "Passwort ändern",

@@ -126,10 +126,11 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
           passwordConfirmation,
         },
       });
-      const jwtToken = data?.resetPassword?.jwt;
-      await afterLogin(errors, jwtToken);
+      if (!errors && data?.resetPassword) {
+        displaySuccess(t('admin.resetPassword.success'));
+      }
     },
-    [resetPasswordMutation, afterLogin]
+    [resetPasswordMutation, displaySuccess, t]
   );
 
   const logout = useCallback(() => {
