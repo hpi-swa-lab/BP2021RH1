@@ -150,7 +150,7 @@ const PictureMapView = ({
               center: map.current?.getCenter() ?? initialMapValues.center,
               zoom: map.current?.getZoom() ?? initialMapValues.zoom,
             },
-            wasOpen: isMaximized,
+            wasOpenMap: isMaximized,
           });
         },
       },

@@ -16,7 +16,7 @@ const PictureMap = () => {
     return location.state?.mapState ?? { center: BAD_HARZBURG_COORDINATES, zoom: 10 };
   }, [location.state?.mapState]);
 
-  const [isMaximized, setIsMaximized] = useState<boolean>(location.state?.open ?? false);
+  const [isMaximized, setIsMaximized] = useState<boolean>(location.state?.openMap ?? false);
   const map = useRef<Map>(null);
 
   const { data, loading, error } = useGetTagsWithThumbnail(

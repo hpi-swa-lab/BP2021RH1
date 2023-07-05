@@ -21,6 +21,7 @@ type LocationState = {
   showBack?: boolean;
   scrollPos?: number;
   open?: boolean;
+  openMap?: boolean;
   mapState?: { center: LatLng; zoom: number };
   archiveId?: string;
   openBranches?: FoldoutStatus;
@@ -39,6 +40,7 @@ export const useVisit = () => {
       options?: {
         state?: LocationState;
         wasOpen?: boolean;
+        wasOpenMap?: boolean;
         mapState?: { center: LatLng; zoom: number };
         openBranches?: FoldoutStatus;
         customScrollPos?: number;
@@ -48,6 +50,7 @@ export const useVisit = () => {
         ...history.location.state,
         scrollPos: options?.customScrollPos ?? scrollRef.current,
         open: options?.wasOpen,
+        openMap: options?.wasOpenMap,
         mapState: options?.mapState,
         openBranches: options?.openBranches,
       });

@@ -43,7 +43,7 @@ describe('Navigation to Show More View from Discover View', () => {
   it('works for single locations', () => {
     cy.get('.overview-selection-container:eq(2)').contains('Orte').click();
     // IDs of the six locations shown in tag overview
-    const targetIDs = [7, 8, 9, 10, 11, 13];
+    const targetIDs = [7, 13, 10, 11, 9, 8];
     // iterate over the six locations shown in tag overview
     //for (const targetID of targetIDs) {
     targetIDs.forEach((targetID, index) => {

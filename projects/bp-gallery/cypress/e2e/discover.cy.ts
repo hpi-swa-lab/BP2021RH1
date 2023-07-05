@@ -104,13 +104,13 @@ describe('Discover View', () => {
 
   it('shows "Unsere Kategorien" tag overview', () => {
     // check for basic components (title, show more button)
-    cy.get('.overview-container:eq(3)')
+    cy.get('.overview-container:eq(4)')
       .children()
       .should('contain.text', 'Unsere Kategorien')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains first 6 verified locations
-    cy.get('.overview-container:eq(3) .overview-collection-grid-container .items')
+    cy.get('.overview-container:eq(4) .overview-collection-grid-container .items')
       .should('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 2')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 3')
       .and('contain.text', 'VERIFIZIERTES TESTSCHLAGWORT 4')
