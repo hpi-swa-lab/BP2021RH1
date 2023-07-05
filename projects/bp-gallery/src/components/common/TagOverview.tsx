@@ -13,7 +13,9 @@ import useGetTagsWithThumbnail from '../../hooks/get-tags-with-thumbnail.hook';
 import { FlatTag, TagType, Thumbnail } from '../../types/additionalFlatTypes';
 import DecadesList from '../views/search/DecadesList';
 import TagList from '../views/search/TagList';
+import Loading from './Loading';
 import './PictureOverview.scss';
+import QueryErrorDisplay from './QueryErrorDisplay';
 
 const MAX_TAGS_PER_ROW = 3;
 
@@ -73,7 +75,7 @@ const TagOverview = ({
   }, [onResize]);
 
   // check if there is a tag
-  const { data } = useGetTagsWithThumbnail(
+  const { data, loading, error } = useGetTagsWithThumbnail(
     queryParams,
     thumbnailQueryParams,
     type,
@@ -87,7 +89,16 @@ const TagOverview = ({
     ? Object.values(flattened)[0]
     : undefined;
 
-  if (flattenedTags?.length === 0 && type !== TagType.TIME_RANGE) {
+  // recalculate when done loading
+  useEffect(() => {
+    setRowLength(calculateMaxCategoriesPerRow(ref.current?.clientWidth ?? 0));
+  }, [calculateMaxCategoriesPerRow, loading]);
+
+  if (error) {
+    return <QueryErrorDisplay error={error} />;
+  } else if (loading) {
+    return <Loading />;
+  } else if (flattenedTags?.length === 0 && type !== TagType.TIME_RANGE) {
     return <div></div>;
   } else {
     return (

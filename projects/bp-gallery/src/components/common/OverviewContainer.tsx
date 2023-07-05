@@ -6,7 +6,6 @@ import { MobileContext } from '../provider/MobileProvider';
 export interface OverviewContainerTab {
   title: string;
   icon: ReactElement<IconProps>;
-  desktopText?: string;
   content: ReactElement;
 }
 
