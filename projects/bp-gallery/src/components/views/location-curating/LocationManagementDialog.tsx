@@ -45,9 +45,7 @@ import {
   useSetVisible,
   useUpdateName,
 } from './location-management-helpers';
-import { useGetTagStructures } from './tag-structure-helpers';
-
-const BAD_HARZBURG_POS = new LatLng(51.8392573, 10.5279953);
+import { BAD_HARZBURG_COORDINATES, useGetTagStructures } from './tag-structure-helpers';
 
 const LocationMarker = ({
   position,
@@ -196,7 +194,7 @@ const LocationManagementDialogPreset = ({
 
   const initialMapValues = useMemo(() => {
     return {
-      center: position ?? BAD_HARZBURG_POS,
+      center: position ?? BAD_HARZBURG_COORDINATES,
       zoom: 10,
     };
   }, [position]);

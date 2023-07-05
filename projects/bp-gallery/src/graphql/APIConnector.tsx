@@ -2035,6 +2035,7 @@ export type Query = {
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
   getAllLocationTags?: Maybe<Scalars['JSON']>;
+  getLocationTagsWithThumbnail?: Maybe<Scalars['JSON']>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -2177,6 +2178,13 @@ export type QueryFindPicturesByAllSearchArgs = {
   searchTerms?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   searchTimes?: InputMaybe<Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>>;
   textFilter?: InputMaybe<Scalars['String']>;
+};
+
+export type QueryGetLocationTagsWithThumbnailArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
 };
 
 export type QueryKeywordTagArgs = {
@@ -3333,34 +3341,7 @@ export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
-export type GetLocationTagsWithThumbnailQuery = {
-  locationTags?: {
-    data: Array<{
-      id?: string | null;
-      attributes?: {
-        name: string;
-        thumbnail?: {
-          data: Array<{
-            attributes?: {
-              media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
-              };
-            } | null;
-          }>;
-        } | null;
-        verified_thumbnail?: {
-          data: Array<{
-            attributes?: {
-              media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
-              };
-            } | null;
-          }>;
-        } | null;
-      } | null;
-    }>;
-  } | null;
-};
+export type GetLocationTagsWithThumbnailQuery = { getLocationTagsWithThumbnail?: any | null };
 
 export type GetMostLikedPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
@@ -6174,45 +6155,12 @@ export const GetLocationTagsWithThumbnailDocument = gql`
     $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    locationTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
-      data {
-        id
-        attributes {
-          name
-          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
-            data {
-              attributes {
-                media {
-                  data {
-                    attributes {
-                      formats
-                      provider
-                    }
-                  }
-                }
-              }
-            }
-          }
-          verified_thumbnail: verified_pictures(
-            filters: $thumbnailFilters
-            pagination: { limit: 1 }
-          ) {
-            data {
-              attributes {
-                media {
-                  data {
-                    attributes {
-                      formats
-                      provider
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    getLocationTagsWithThumbnail(
+      filters: $filters
+      thumbnailFilters: $thumbnailFilters
+      pagination: $pagination
+      sortBy: $sortBy
+    )
   }
 `;
 

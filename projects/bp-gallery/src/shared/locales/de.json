@@ -586,6 +586,7 @@
     "our-categories": "Unsere Kategorien",
     "most-liked": "Bestbewertete Bilder",
     "our-pictures": "Unsere Bilder",
+    "map": "Karte",
     "timeline": "Zeitstrahl"
   },
   "exhibition": {
@@ -673,5 +674,11 @@
     "show-location": "Ort anzeigen.",
     "hide-location": "Ort verstecken.",
     "delete-location": "Ort löschen."
+  },
+  "map": {
+    "locations_other": "{{ count }} Orte",
+    "locations_one": "{{ count }} Ort",
+    "sublocations_other": "{{ count }} Unterorte",
+    "sublocations_one": "{{ count }} Unterort"
   }
 }

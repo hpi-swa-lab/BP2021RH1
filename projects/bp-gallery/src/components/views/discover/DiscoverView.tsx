@@ -1,4 +1,4 @@
-import { AccessTime, ThumbUp, Widgets } from '@mui/icons-material';
+import { AccessTime, GridView, Map, ThumbUp } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFlag } from '../../../helpers/growthbook';
@@ -8,6 +8,7 @@ import OverviewContainer, {
   OverviewContainerPosition,
   OverviewContainerTab,
 } from '../../common/OverviewContainer';
+import PictureMap from '../../common/PictureMap';
 import PictureOverview from '../../common/PictureOverview';
 import TagOverview from '../../common/TagOverview';
 import TimelineComponent from '../../common/picture-gallery/TimelineComponent';
@@ -28,7 +29,7 @@ const DiscoverView = () => {
       },
       {
         title: t('discover.decades'),
-        icon: <Widgets key='1' />,
+        icon: <GridView key='1' />,
         content: (
           <TagOverview
             type={TagType.TIME_RANGE}
@@ -62,6 +63,36 @@ const DiscoverView = () => {
       },
     ];
   }, [t]);
+
+  const locationTabs: OverviewContainerTab[] = useMemo(() => {
+    return [
+      {
+        title: t('discover.map'),
+        icon: <Map key='0' />,
+        content: <PictureMap />,
+      },
+      {
+        title: t('discover.locations'),
+        icon: <GridView key='1' />,
+        content: (
+          <TagOverview
+            type={TagType.LOCATION}
+            queryParams={{
+              and: [
+                { verified_pictures: { id: { not: { eq: '-1' } } } },
+                { visible: { eq: true } },
+              ],
+            }}
+            onClick={() => {
+              visit('/show-more/location');
+            }}
+            rows={2}
+          />
+        ),
+      },
+    ];
+  }, [t, visit]);
+
   const showStories = useFlag('showstories');
   return (
     <div className='discover-container'>
@@ -88,16 +119,10 @@ const DiscoverView = () => {
         />
       </ShowStats>
 
-      <TagOverview
-        title={t('discover.locations')}
-        type={TagType.LOCATION}
-        queryParams={{
-          and: [{ verified_pictures: { id: { not: { eq: '-1' } } } }, { visible: { eq: true } }],
-        }}
-        onClick={() => {
-          visit('/show-more/location');
-        }}
-        rows={2}
+      <OverviewContainer
+        tabs={locationTabs}
+        overviewPosition={OverviewContainerPosition.DISCOVER_VIEW}
+        tabID='2'
       />
 
       <TagOverview
