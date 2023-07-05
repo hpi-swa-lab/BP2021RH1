@@ -88,7 +88,9 @@ const errorToStrings = (error: unknown): string[] => {
       for (const resultError of error.result.errors) {
         errors.push(...errorToStrings(resultError));
       }
-    } else if ('message' in error) {
+    }
+
+    if (errors.length === 0 && 'message' in error) {
       errors.push(...errorToStrings(error.message));
     }
   }
