@@ -40,6 +40,7 @@ export const sections = [
   'picture',
   'collection',
   'tags',
+  'locations',
   'comment',
   'archive',
   'games',
