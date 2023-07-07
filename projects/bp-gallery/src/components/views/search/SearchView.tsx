@@ -34,6 +34,7 @@ const isValidTimeSpecification = (searchRequest: string) => {
 const SearchView = () => {
   const [areResultsEmpty, setAreResultsEmpty] = useState<boolean>(false);
   const [filter, setFilter] = useState('');
+  const [searchIndex, setSearchIndex] = useState('picture');
   const { search }: Location = useLocation();
   const { t } = useTranslation();
 

@@ -169,6 +169,175 @@ module.exports = ({ env }) => ({
                 },
               },
             },
+            comment: {
+              transformEntry({ entry }) {
+                const transformedEntry = {
+                  author: entry.author,
+                  text: entry.text,
+                  date: dateToTimeStamp(entry.date),
+                  pictureId: entry.picture.id,
+                  pinned: entry.pinned,
+                  childComments: entry.childComments,
+                  parentComments: entry.parentComments,
+                };
+                return transformedEntry;
+              },
+              settings: {
+                //for reference: https://www.meilisearch.com/docs/reference/api/settings
+                displayedAttributes: [
+                  'author',
+                  'text',
+                  'date',
+                  'pictureId',
+                  'pinned',
+                  'childComments',
+                  'parentComments',
+                ],
+                // the order of the attributes in searchableAttributes determines the priorization
+                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
+                searchableAttributes: ['text', 'author', 'date'],
+                filterableAttributes: [
+                  'author',
+                  'text',
+                  'date',
+                  'pictureId',
+                  'pinned',
+                  'childComments',
+                  'parentComments',
+                ],
+                sortableAttributes: ['date'],
+                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+                // words that are ignored during searches, useful for common words
+                //  that do not carry a meaning on their own like articles, pronomina etc.
+                // we do not use this setting, since our data on user searchers suggests, that
+                // users only search for proper names, people, locations and nouns in general
+                stopWords: [],
+                synonyms: {},
+                // returned documents will always be unigue in this attribute
+                distinctAttribute: null,
+                typoTolerance: {
+                  enabled: true,
+                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
+                  disableOnWords: [],
+                  disableOnAttributes: [],
+                },
+                faceting: {
+                  maxValuesPerFacet: 100,
+                },
+                pagination: {
+                  maxTotalHits: 1000,
+                },
+              },
+            },
+            'location-tag': {
+              transformEntry({ entry }) {
+                const transformedEntry = {
+                  name: entry.name,
+                  coordinates: entry.coordinates,
+                  pictureIds: entry?.pictures
+                    .map(picture => picture.id)
+                    .concat(entry?.verified_pictures.map(picture => picture.id)),
+                  synonyms: entry.synonyms.map(synonym => synonym.name),
+                  visible: entry.visible,
+                  parent_tags: entry.parent_tags,
+                  child_tags: entry.child_tags,
+                  accepted: entry.accepted,
+                  root: entry.root,
+                };
+                return transformedEntry;
+              },
+              settings: {
+                //for reference: https://www.meilisearch.com/docs/reference/api/settings
+                displayedAttributes: [
+                  'name',
+                  'coordinates',
+                  'pictureIds',
+                  'synonyms',
+                  'visible',
+                  'parent_tags',
+                  'child_tags',
+                  'accepted',
+                  'root',
+                ],
+                // the order of the attributes in searchableAttributes determines the priorization
+                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
+                searchableAttributes: ['name', 'coordinates'],
+                filterableAttributes: [
+                  'name',
+                  'coordinates',
+                  'pictureIds',
+                  'visible',
+                  'parent_tags',
+                  'child_tags',
+                  'accepted',
+                  'root',
+                ],
+                sortableAttributes: ['name', 'coordinates'],
+                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+                // words that are ignored during searches, useful for common words
+                //  that do not carry a meaning on their own like articles, pronomina etc.
+                // we do not use this setting, since our data on user searchers suggests, that
+                // users only search for proper names, people, locations and nouns in general
+                stopWords: [],
+                synonyms: {},
+                // returned documents will always be unigue in this attribute
+                distinctAttribute: null,
+                typoTolerance: {
+                  enabled: true,
+                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
+                  disableOnWords: [],
+                  disableOnAttributes: [],
+                },
+                faceting: {
+                  maxValuesPerFacet: 100,
+                },
+                pagination: {
+                  maxTotalHits: 1000,
+                },
+              },
+            },
+            'person-tag': {
+              transformEntry({ entry }) {
+                const transformedEntry = {
+                  name: entry.name,
+                  pictureIds: entry?.pictures
+                    .map(picture => picture.id)
+                    .concat(entry?.verified_pictures.map(picture => picture.id)),
+                  synonyms: entry.synonyms.map(synonym => synonym.name),
+                };
+                return transformedEntry;
+              },
+              settings: {
+                //for reference: https://www.meilisearch.com/docs/reference/api/settings
+                displayedAttributes: ['name', 'pictureIds', 'synonyms'],
+                // the order of the attributes in searchableAttributes determines the priorization
+                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
+                searchableAttributes: ['name'],
+                filterableAttributes: ['name', 'pictureIds'],
+                sortableAttributes: ['name'],
+                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+                // words that are ignored during searches, useful for common words
+                //  that do not carry a meaning on their own like articles, pronomina etc.
+                // we do not use this setting, since our data on user searchers suggests, that
+                // users only search for proper names, people, locations and nouns in general
+                stopWords: [],
+                synonyms: {},
+                // returned documents will always be unigue in this attribute
+                distinctAttribute: null,
+                typoTolerance: {
+                  enabled: true,
+                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
+                  disableOnWords: [],
+                  disableOnAttributes: [],
+                },
+                faceting: {
+                  maxValuesPerFacet: 100,
+                },
+                pagination: {
+                  maxTotalHits: 1000,
+                },
+              },
+            },
           },
         }
       : null,
