@@ -230,6 +230,7 @@ module.exports = ({ env }) => ({
               },
             },
             'location-tag': {
+              indexName: 'location',
               transformEntry({ entry }) {
                 const transformedEntry = {
                   name: entry.name,
@@ -297,6 +298,7 @@ module.exports = ({ env }) => ({
               },
             },
             'person-tag': {
+              indexName: 'person',
               transformEntry({ entry }) {
                 const transformedEntry = {
                   name: entry.name,

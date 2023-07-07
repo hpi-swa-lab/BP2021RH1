@@ -4,15 +4,16 @@ const dateToTimeStamp = (date: string) => {
   return Date.parse(date) / 1000;
 };
 
-const getSearchResultPictureIds = async (
+const getSearchResultHits = async (
   { searchTerms, searchTimes }: { searchTerms: string[]; searchTimes: string[][] },
-  filter: string
+  filter: string,
+  searchIndex: string
 ) => {
   const client = new MeiliSearch({
     host: 'localhost:7700',
     apiKey: '',
   });
-  const index = client.index('picture');
+  const index = client.index(searchIndex);
 
   const TIME_RANGE_START = 'time_range_tag_start';
   const TIME_RANGE_END = 'time_range_tag_end';
@@ -44,4 +45,4 @@ const getSearchResultPictureIds = async (
   return searchResult.hits;
 };
 
-export default getSearchResultPictureIds;
+export default getSearchResultHits;

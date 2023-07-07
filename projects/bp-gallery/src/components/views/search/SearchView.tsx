@@ -15,7 +15,7 @@ import AdvancedSearch from './AdvancedSearch';
 import NoSearchResultsText from './NoSearchResultsText';
 import './SearchView.scss';
 import { isValidYear } from './helpers/addNewParamToSearchPath';
-import getSearchResultPictureIds from './helpers/getSearchResultPictureIds';
+import getSearchResultHits from './helpers/getSearchResultHits';
 import { SearchType, paramToTime } from './helpers/search-filters';
 import { toURLSearchParam } from './helpers/url-search-params';
 
@@ -67,7 +67,7 @@ const SearchView = () => {
 
   const [searchResultIds, error, state] = usePromise(
     async () =>
-      (await getSearchResultPictureIds(queryParams, filter)).map(hit =>
+      (await getSearchResultHits(queryParams, filter, searchIndex)).map(hit =>
         (hit.id as number).toString()
       ),
     [queryParams, filter]
@@ -97,6 +97,8 @@ const SearchView = () => {
     <div className='search-content'>
       <AdvancedSearch
         setFilter={setFilter}
+        searchIndex={searchIndex}
+        setSearchIndex={setSearchIndex}
         searchParams={searchParams}
         isAllSearchActive={isAllSearchActive}
       ></AdvancedSearch>

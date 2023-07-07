@@ -1,5 +1,5 @@
 import { ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, Button, MenuItem, Select, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HelpTooltip } from '../../common/HelpTooltip';
@@ -17,10 +17,14 @@ export type AttributeFilterProps = { attribute: string; filterProps: SingleFilte
 
 export const AdvancedSearch = ({
   setFilter,
+  searchIndex,
+  setSearchIndex,
   searchParams,
   isAllSearchActive,
 }: {
   setFilter: Dispatch<SetStateAction<string>>;
+  searchIndex: string;
+  setSearchIndex: Dispatch<SetStateAction<string>>;
   searchParams: URLSearchParams;
   isAllSearchActive: boolean;
 }) => {
@@ -177,6 +181,8 @@ export const AdvancedSearch = ({
       }
     }, '');
 
+  const searchIndices = ['picture', 'comment', 'location', 'person'];
+
   return (
     <div className='flex flex-col m-auto w-fit'>
       <div className='breadcrumb m-1'>
@@ -204,7 +210,17 @@ export const AdvancedSearch = ({
                 />
               </div>
             </AccordionSummary>
-            <div className='advanced-search w-fit p-4'>
+            <div className='advanced-search w-fit p-4 flex flex-col'>
+              <div className='flex flex-row flex-nowrap justify-start items-center'>
+                <Typography fontWeight={'bold'}>{t(`search.setIndex`)}</Typography>
+                <Select value={searchIndex} onChange={event => setSearchIndex(event.target.value)}>
+                  {searchIndices.map(searchIndex => (
+                    <MenuItem key={searchIndex} value={searchIndex}>
+                      {t(`search.${searchIndex}`)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
               <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
                 <div className='advanced-left-filters flex flex-col flex-nowrap'>
                   {advancedSearchProps
@@ -235,8 +251,8 @@ export const AdvancedSearch = ({
                     ))}
                 </div>
               </div>
-              <div className='advanced-search-button-wrapper  m-auto pt-4'>
-                <div className='advanced-search-button flex flex-row justifiy-start  w-fit'>
+              <div className='advanced-search-button-wrapper w-full justifiy-start m-auto pt-4'>
+                <div className='advanced-search-button flex flex-row w-fit'>
                   <Button
                     variant='contained'
                     onClick={() => {
