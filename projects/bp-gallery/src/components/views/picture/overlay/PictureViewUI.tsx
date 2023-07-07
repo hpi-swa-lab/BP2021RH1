@@ -1,8 +1,6 @@
-import { PresentToAll } from '@mui/icons-material';
-import { Button } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import PictureNavigationButtons from './PictureNavigationButtons';
 import { PictureToolbar } from './PictureToolbar';
+import { PresentationModeButton } from './PresentationModeButton';
 
 export const PictureViewUI = ({
   calledViaLink,
@@ -13,21 +11,11 @@ export const PictureViewUI = ({
   pictureId: string;
   sessionId: string;
 }) => {
-  const { t } = useTranslation();
-
   return (
     <div className='picture-ui'>
       <PictureNavigationButtons />
       <PictureToolbar calledViaLink={calledViaLink} />
-      <Button
-        className='presentation-mode-button'
-        onClick={() => {
-          window.open(`/picture/${pictureId}?presentation=${sessionId}`, '_blank', 'fullscreen=1');
-        }}
-      >
-        <PresentToAll />
-        {t('common.presentationMode')}
-      </Button>
+      <PresentationModeButton pictureId={pictureId} sessionId={sessionId} />
     </div>
   );
 };
