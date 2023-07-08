@@ -17,16 +17,18 @@ const getSearchResultHits = async (
 
   const TIME_RANGE_START = 'time_range_tag_start';
   const TIME_RANGE_END = 'time_range_tag_end';
+  const DATE = 'date';
   // when building a filter for meilisearch the filtered attribute always
   //  has to come first i.e. time_range_start >= 0 works but 0 <= time_range_start does not work
-  if (searchTimes.length !== 0) {
+  if (searchTimes.length !== 0 && (searchIndex === 'picture' || searchIndex === 'comment')) {
     const timeFilters = searchTimes.map(
       searchTime =>
-        `(${TIME_RANGE_START} >= ${dateToTimeStamp(
+        `(${searchIndex === 'picture' ? TIME_RANGE_START : DATE} >= ${dateToTimeStamp(
           searchTime[1]
-        )} AND ${TIME_RANGE_END} <= ${dateToTimeStamp(searchTime[2])})`
+        )} AND ${searchIndex === 'picture' ? TIME_RANGE_END : DATE} <= ${dateToTimeStamp(
+          searchTime[2]
+        )})`
     );
-
     const timeFilter = timeFilters.join(' OR ');
     filter = filter === '' ? timeFilter : filter.concat(' AND ', timeFilter);
   }

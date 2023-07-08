@@ -81,7 +81,7 @@ module.exports = ({ env }) => ({
             picture: {
               transformEntry({ entry }) {
                 const transformedEntry = {
-                  id: entry.id,
+                  pictureId: entry.id,
                   likes: entry.likes,
                   descriptions: entry.descriptions.map(description => description.text),
                   comments: entry.comments.map(comment => comment.text),
@@ -113,7 +113,7 @@ module.exports = ({ env }) => ({
               },
               settings: {
                 //for reference: https://www.meilisearch.com/docs/reference/api/settings
-                displayedAttributes: ['id'],
+                displayedAttributes: ['pictureId'],
                 // the order of the attributes in searchableAttributes determines the priorization
                 // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
                 searchableAttributes: [
@@ -172,13 +172,13 @@ module.exports = ({ env }) => ({
             comment: {
               transformEntry({ entry }) {
                 const transformedEntry = {
-                  author: entry.author,
-                  text: entry.text,
-                  date: dateToTimeStamp(entry.date),
-                  pictureId: entry.picture.id,
-                  pinned: entry.pinned,
-                  childComments: entry.childComments,
-                  parentComments: entry.parentComments,
+                  author: entry?.author,
+                  text: entry?.text,
+                  date: entry?.date ? dateToTimeStamp(entry.date) : null,
+                  pictureId: entry?.picture.id,
+                  pinned: entry?.pinned,
+                  childComments: entry?.childComments,
+                  parentComments: entry?.parentComments,
                 };
                 return transformedEntry;
               },
@@ -234,16 +234,16 @@ module.exports = ({ env }) => ({
               transformEntry({ entry }) {
                 const transformedEntry = {
                   name: entry.name,
-                  coordinates: entry.coordinates,
+                  _geo: { lat: entry?.coordinates.latitude, lng: entry.coordinates?.longitude },
                   pictureIds: entry?.pictures
                     .map(picture => picture.id)
                     .concat(entry?.verified_pictures.map(picture => picture.id)),
                   synonyms: entry.synonyms.map(synonym => synonym.name),
                   visible: entry.visible,
-                  parent_tags: entry.parent_tags,
-                  child_tags: entry.child_tags,
-                  accepted: entry.accepted,
-                  root: entry.root,
+                  parent_tags: entry?.parent_tags,
+                  child_tags: entry?.child_tags,
+                  accepted: entry?.accepted,
+                  root: entry?.root,
                 };
                 return transformedEntry;
               },
@@ -305,7 +305,7 @@ module.exports = ({ env }) => ({
                   pictureIds: entry?.pictures
                     .map(picture => picture.id)
                     .concat(entry?.verified_pictures.map(picture => picture.id)),
-                  synonyms: entry.synonyms.map(synonym => synonym.name),
+                  synonyms: entry?.synonyms.map(synonym => synonym.name),
                 };
                 return transformedEntry;
               },
