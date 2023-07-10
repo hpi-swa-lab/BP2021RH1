@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client';
 import { ExpandMore, Search } from '@mui/icons-material';
 import {
   Accordion,
@@ -29,6 +30,7 @@ import {
 import Loading from '../../../common/Loading';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
+import { SaveStatus } from '../../../common/SaveStatus';
 import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
 import { CenteredContainer } from '../CenteredContainer';
@@ -61,14 +63,17 @@ const PermissionsView = ({ userId }: { userId: string }) => {
 
   const {
     data: permissionsData,
-    loading: permissionsLoading,
+    loading: rawPermissionsLoading,
     error: permissionsError,
     refetch: refetchPermissions,
+    networkStatus,
   } = useGetParameterizedPermissionsQuery({
     variables: {
       userId: parsedUserId,
     },
+    notifyOnNetworkStatusChange: true,
   });
+  const permissionsLoading = rawPermissionsLoading && networkStatus !== NetworkStatus.refetch;
   const permissions: FlatParameterizedPermission[] | undefined =
     useSimplifiedQueryResponseData(permissionsData)?.parameterizedPermissions;
 
@@ -110,8 +115,12 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(archivesData)?.archiveTags;
 
-  const [createPermission] = useAddPermissionMutation();
-  const [deletePermission] = useDeleteParameterizedPermissionMutation();
+  const [createPermission, { loading: createPermissionLoading }] = useAddPermissionMutation();
+  const [deletePermission, { loading: deletePermissionLoading }] =
+    useDeleteParameterizedPermissionMutation();
+
+  const working =
+    createPermissionLoading || deletePermissionLoading || networkStatus === NetworkStatus.refetch;
 
   const loading = userLoading || permissionsLoading || archivesLoading;
   const error = userError ?? permissionsError ?? archivesError;
@@ -365,30 +374,37 @@ const PermissionsView = ({ userId }: { userId: string }) => {
           return <Loading />;
         } else if (permissionLookup && archives) {
           return (
-            <CenteredContainer
-              title={
-                isPublic
-                  ? t('admin.permissions.publicTitle')
-                  : t('admin.permissions.title', { userName: user?.username })
-              }
-              titleOnLeftSideOfScreenAfterScroll
-            >
-              <div className='mb-2'>
-                <TextField
-                  fullWidth
-                  value={filter}
-                  onChange={onFilterChange}
-                  placeholder={t('admin.permissions.filterPlaceholder')}
-                  variant='outlined'
-                  InputProps={{
-                    endAdornment: <Search />,
-                  }}
+            <>
+              <CenteredContainer
+                title={
+                  isPublic
+                    ? t('admin.permissions.publicTitle')
+                    : t('admin.permissions.title', { userName: user?.username })
+                }
+                titleOnLeftSideOfScreenAfterScroll
+              >
+                <div className='mb-2'>
+                  <TextField
+                    fullWidth
+                    value={filter}
+                    onChange={onFilterChange}
+                    placeholder={t('admin.permissions.filterPlaceholder')}
+                    variant='outlined'
+                    InputProps={{
+                      endAdornment: <Search />,
+                    }}
+                  />
+                </div>
+                {renderSections('system')}
+                {renderSections('archive', null)}
+                {archives.map(archive => renderSections('archive', archive))}
+              </CenteredContainer>
+              <div className='absolute right-5 top-[6.75rem]'>
+                <SaveStatus
+                  label={t(working ? 'curator.saveStatus.saving' : 'curator.saveStatus.saved')}
                 />
               </div>
-              {renderSections('system')}
-              {renderSections('archive', null)}
-              {archives.map(archive => renderSections('archive', archive))}
-            </CenteredContainer>
+            </>
           );
         } else {
           return <Redirect to={FALLBACK_PATH} />;

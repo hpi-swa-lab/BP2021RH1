@@ -20,7 +20,7 @@ export const CenteredContainer = ({
   }, [titleOnLeftSideOfScreenAfterScroll, scrollPos]);
 
   return (
-    <div className='w-[800px] mx-auto mt-4'>
+    <div className='relative w-[800px] mx-auto mt-4'>
       <h1 className={titleClassName}>{title}</h1>
       {children}
     </div>
