@@ -63,6 +63,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
     data: permissionsData,
     loading: permissionsLoading,
     error: permissionsError,
+    refetch: refetchPermissions,
   } = useGetParameterizedPermissionsQuery({
     variables: {
       userId: parsedUserId,
@@ -109,12 +110,8 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(archivesData)?.archiveTags;
 
-  const [createPermission] = useAddPermissionMutation({
-    refetchQueries: ['getParameterizedPermissions'],
-  });
-  const [deletePermission] = useDeleteParameterizedPermissionMutation({
-    refetchQueries: ['getParameterizedPermissions'],
-  });
+  const [createPermission] = useAddPermissionMutation();
+  const [deletePermission] = useDeleteParameterizedPermissionMutation();
 
   const loading = userLoading || permissionsLoading || archivesLoading;
   const error = userError ?? permissionsError ?? archivesError;
@@ -122,8 +119,8 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const dialog = useDialog();
 
   const addPermission = useCallback(
-    (operation: Operation, { archive_tag, ...parameters }: Parameters) => {
-      createPermission({
+    async (operation: Operation, { archive_tag, ...parameters }: Parameters) => {
+      await createPermission({
         variables: {
           operation_name: operation.document.name,
           user_id: parsedUserId,
@@ -136,15 +133,18 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   );
 
   const addPreset = useCallback(
-    (
+    async (
       operations: { operation: Operation; parameters: ParametersWithoutArchive }[],
       archive: FlatArchiveTag | null
     ) => {
-      for (const { operation, parameters } of operations) {
-        addPermission(operation, { archive_tag: archive ?? undefined, ...parameters });
-      }
+      await Promise.all(
+        operations.map(async ({ operation, parameters }) => {
+          await addPermission(operation, { archive_tag: archive ?? undefined, ...parameters });
+        })
+      );
+      await refetchPermissions();
     },
-    [addPermission]
+    [addPermission, refetchPermissions]
   );
 
   const toggleOperations = useCallback(
@@ -169,24 +169,29 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         }
       }
       if (removeAll) {
-        for (const operation of operations) {
-          const permission = findPermission(operation, archive);
-          if (!permission) {
-            continue;
-          }
-          deletePermission({
-            variables: {
-              id: permission.id,
-            },
-          });
-        }
+        await Promise.all(
+          operations.map(async operation => {
+            const permission = findPermission(operation, archive);
+            if (!permission) {
+              return;
+            }
+            await deletePermission({
+              variables: {
+                id: permission.id,
+              },
+            });
+          })
+        );
       } else {
-        for (const operation of operations) {
-          addPermission(operation, { archive_tag: archive ?? undefined });
-        }
+        await Promise.all(
+          operations.map(async operation => {
+            await addPermission(operation, { archive_tag: archive ?? undefined });
+          })
+        );
       }
+      await refetchPermissions();
     },
-    [dialog, t, findPermission, deletePermission, addPermission]
+    [dialog, t, findPermission, deletePermission, addPermission, refetchPermissions]
   );
 
   const [filter, setFilter] = useState('');
@@ -321,6 +326,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                             archive={archive}
                             deletePermission={deletePermission}
                             addPermission={addPermission}
+                            refetchPermissions={refetchPermissions}
                           />
                         </div>
                       ))}
@@ -341,6 +347,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
       findPermission,
       addPermission,
       deletePermission,
+      refetchPermissions,
     ]
   );
 
@@ -397,6 +404,7 @@ const ParameterInputs = ({
   archive,
   deletePermission,
   addPermission,
+  refetchPermissions,
 }: {
   group: GroupStructure;
   findPermission: (
@@ -405,7 +413,8 @@ const ParameterInputs = ({
   ) => FlatParameterizedPermission | null;
   archive: FlatArchiveTag | null;
   deletePermission: (parameters: { variables: { id: string } }) => Promise<unknown>;
-  addPermission: (operation: Operation, parameters: Parameters) => void;
+  addPermission: (operation: Operation, parameters: Parameters) => Promise<unknown>;
+  refetchPermissions: () => Promise<unknown>;
 }) => {
   const { t } = useTranslation();
 
@@ -414,6 +423,7 @@ const ParameterInputs = ({
     findPermission,
     addPermission,
     deletePermission,
+    refetchPermissions,
     archive,
   };
 
