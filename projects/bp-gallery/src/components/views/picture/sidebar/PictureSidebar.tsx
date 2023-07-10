@@ -11,6 +11,7 @@ import { useCanEditPicture } from '../../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
+import { SaveStatus } from '../../../common/SaveStatus';
 import { PictureViewContext } from '../PictureView';
 import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import './PictureSidebar.scss';
@@ -129,9 +130,7 @@ const PictureSidebar = ({
                     </>
                   )}
                   {canUpdatePicture && (
-                    <span className='save-state ml-auto'>
-                      {saveStatus(anyFieldTouched, isSaving)}
-                    </span>
+                    <SaveStatus className='ml-auto' label={saveStatus(anyFieldTouched, isSaving)} />
                   )}
                 </div>
               )
