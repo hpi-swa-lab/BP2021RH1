@@ -264,7 +264,7 @@
         }
       },
       "preset": {
-        "public": "Allgemeiner Nutzer"
+        "basic": "Basis-Nutzer"
       }
     },
     "user": {
