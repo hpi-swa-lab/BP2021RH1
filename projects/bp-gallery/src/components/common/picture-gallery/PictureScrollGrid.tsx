@@ -68,6 +68,12 @@ const PictureScrollGrid = ({
     textFilter ?? (loggedIn ? TextFilter.PICTURES_AND_TEXTS : TextFilter.ONLY_PICTURES)
   );
 
+  useEffect(() => {
+    if (textFilter === null) {
+      setSelectedTextFilter(loggedIn ? TextFilter.PICTURES_AND_TEXTS : TextFilter.ONLY_PICTURES);
+    }
+  }, [textFilter, loggedIn]);
+
   const { data, loading, error, fetchMore, refetch } = useGetPictures(
     queryParams,
     isAllSearchActive,
