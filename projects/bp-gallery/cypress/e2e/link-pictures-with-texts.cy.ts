@@ -1,14 +1,18 @@
 import { login, logout } from '../utils/login-utils';
 
 const checkTextDisplay = ({ prefix = '', pictureId = '2', textId = '1' } = {}) => {
-  cy.contains('Nur Bilder anzeigen');
+  // wait for page to settle
+  cy.contains('Bilder und Texte anzeigen');
+  // go through each text filter option
+  cy.get('[data-testid="text-filter-select"]').click();
+  cy.contains('Nur Bilder anzeigen').click();
   cy.get(`${prefix} #picture-preview-for-${pictureId}`);
   cy.get(`${prefix} #picture-preview-for-${textId}`).should('not.exist');
-  cy.contains('Nur Bilder anzeigen').click();
+  cy.get('[data-testid="text-filter-select"]').click();
   cy.contains('Bilder und Texte anzeigen').click();
   cy.get(`${prefix} #picture-preview-for-${pictureId}`);
   cy.get(`${prefix} #picture-preview-for-${textId}`);
-  cy.contains('Bilder und Texte anzeigen').click();
+  cy.get('[data-testid="text-filter-select"]').click();
   cy.contains('Nur Texte anzeigen').click();
   cy.get(`${prefix} #picture-preview-for-${pictureId}`).should('not.exist');
   cy.get(`${prefix} #picture-preview-for-${textId}`);

@@ -22,7 +22,12 @@ export const TextFilterSelect = ({
   );
 
   return (
-    <Select value={value} onChange={onSelectChange} variant='standard'>
+    <Select
+      value={value}
+      onChange={onSelectChange}
+      variant='standard'
+      data-testid='text-filter-select'
+    >
       <MenuItem value={TextFilter.ONLY_PICTURES}>{t('common.textFilter.onlyPictures')}</MenuItem>
       <MenuItem value={TextFilter.PICTURES_AND_TEXTS}>
         {t('common.textFilter.picturesAndTexts')}
