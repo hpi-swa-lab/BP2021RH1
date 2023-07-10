@@ -8,7 +8,6 @@ import {
   Exhibition,
   ExhibitionPicture,
   ExhibitionSection,
-  ExhibitionSource,
   FaceTag,
   KeywordTag,
   Link,
@@ -44,15 +43,10 @@ type FlatExhibitionPictureWithoutRelations = ID &
   Omit<ExhibitionPicture, 'picture' | 'exhibition_section' | 'exhibition_idealot'>;
 
 type FlatExhibitionWithoutRelations = ID &
-  Omit<
-    Exhibition,
-    'title_picture' | 'exhibition_sections' | 'exhibition_sources' | 'idealot_pictures'
-  >;
+  Omit<Exhibition, 'title_picture' | 'exhibition_sections' | 'idealot_pictures'>;
 
 type FlatExhibitionSectionWithoutRelations = ID &
   Omit<ExhibitionSection, 'exhibition' | 'exhibition_pictures'>;
-
-type FlatExhibitionSourceWithoutRelations = ID & Omit<ExhibitionSource, 'exhibition'>;
 
 type FlatPictureWithoutRelations = ID &
   Omit<
@@ -106,10 +100,6 @@ export type FlatUsersPermissionsUserWithoutRelations = ID & Omit<UsersPermission
 export type FlatParameterizedPermissionWithoutRelations = ID &
   Omit<ParameterizedPermission, 'users_permissions_user' | 'archive_tag'>;
 
-export type FlatExhibitionSource = FlatExhibitionSourceWithoutRelations & {
-  exhibition?: FlatExhibition;
-};
-
 export type FlatExhibitionSection = FlatExhibitionSectionWithoutRelations & {
   exhibition_pictures?: FlatExhibitionPicture[];
   exhibition?: FlatExhibition;
@@ -124,7 +114,6 @@ export type FlatExhibitionPicture = FlatExhibitionPictureWithoutRelations & {
 export type FlatExhibition = FlatExhibitionWithoutRelations & {
   title_picture?: FlatExhibitionPicture;
   exhibition_sections?: FlatExhibitionSection[];
-  exhibition_sources?: FlatExhibitionSource[];
   idealot_pictures?: FlatExhibitionPicture[];
 };
 

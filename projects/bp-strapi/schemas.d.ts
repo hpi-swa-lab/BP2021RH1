@@ -640,12 +640,6 @@ export interface ApiExhibitionExhibition extends CollectionTypeSchema {
       'oneToMany',
       'api::exhibition-section.exhibition-section'
     >;
-    epilog: RichTextAttribute;
-    exhibition_sources: RelationAttribute<
-      'api::exhibition.exhibition',
-      'oneToMany',
-      'api::exhibition-source.exhibition-source'
-    >;
     idealot_pictures: RelationAttribute<
       'api::exhibition.exhibition',
       'oneToMany',
@@ -748,40 +742,6 @@ export interface ApiExhibitionSectionExhibitionSection extends CollectionTypeSch
       PrivateAttribute;
     updatedBy: RelationAttribute<
       'api::exhibition-section.exhibition-section',
-      'oneToOne',
-      'admin::user'
-    > &
-      PrivateAttribute;
-  };
-}
-
-export interface ApiExhibitionSourceExhibitionSource extends CollectionTypeSchema {
-  info: {
-    singularName: 'exhibition-source';
-    pluralName: 'exhibition-sources';
-    displayName: 'Exhibition_Source';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    source: StringAttribute;
-    exhibition: RelationAttribute<
-      'api::exhibition-source.exhibition-source',
-      'manyToOne',
-      'api::exhibition.exhibition'
-    >;
-    createdAt: DateTimeAttribute;
-    updatedAt: DateTimeAttribute;
-    publishedAt: DateTimeAttribute;
-    createdBy: RelationAttribute<
-      'api::exhibition-source.exhibition-source',
-      'oneToOne',
-      'admin::user'
-    > &
-      PrivateAttribute;
-    updatedBy: RelationAttribute<
-      'api::exhibition-source.exhibition-source',
       'oneToOne',
       'admin::user'
     > &
@@ -1208,7 +1168,6 @@ declare global {
       'api::exhibition.exhibition': ApiExhibitionExhibition;
       'api::exhibition-picture.exhibition-picture': ApiExhibitionPictureExhibitionPicture;
       'api::exhibition-section.exhibition-section': ApiExhibitionSectionExhibitionSection;
-      'api::exhibition-source.exhibition-source': ApiExhibitionSourceExhibitionSource;
       'api::face-tag.face-tag': ApiFaceTagFaceTag;
       'api::keyword-tag.keyword-tag': ApiKeywordTagKeywordTag;
       'api::link.link': ApiLinkLink;

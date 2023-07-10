@@ -26,23 +26,14 @@ import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import {
   useCreateExhibitionPictureMutation,
   useCreateExhibitionSectionMutation,
-  useCreateExhibitionSourceMutation,
   useUpdateExhibitionMutation,
   useUpdateExhibitionPictureMutation,
   useUpdateExhibitionSectionMutation,
-  useUpdateExhibitionSourceMutation,
 } from '../../../graphql/APIConnector';
-
-interface ExhibitionSource {
-  id: string;
-  source: string;
-}
 
 interface ExhibitionText {
   title: string;
   introduction: string;
-  epilog: string;
-  sources: ExhibitionSource[];
   isPublished: boolean;
 }
 
@@ -70,8 +61,6 @@ export const ExhibitionGetContext = createContext<{
   getIntroduction: () => string;
   getSectionTitle: (sectionId: string) => string | undefined;
   getSectionText: (sectionId: string) => string | undefined;
-  getEpilog: () => string | undefined;
-  getSources: () => ExhibitionSource[] | undefined;
   getIsPublished: () => boolean;
   getSection: (sectionId: string) => SectionState | undefined;
   getAllSections: () => SectionState[] | undefined;
@@ -83,8 +72,6 @@ export const ExhibitionGetContext = createContext<{
   getIntroduction: () => '',
   getSectionTitle: () => '',
   getSectionText: () => '',
-  getEpilog: () => '',
-  getSources: () => [],
   getIsPublished: () => false,
   getSection: () => undefined,
   getAllSections: () => undefined,
@@ -97,18 +84,12 @@ export const ExhibitionSetContext = createContext<{
   setIntroduction: (introduction: string) => void;
   setSectionTitle: (sectionId: string, title: string) => void;
   setSectionText: (sectionId: string, text: string) => void;
-  setEpilog: (epilog: string) => void;
-  setSource: (source: string, sourceId: string) => void;
-  addSource: () => void;
   toggleIsPublished: () => void;
 }>({
   setTitle: () => {},
   setIntroduction: () => {},
   setSectionTitle: () => {},
   setSectionText: () => {},
-  setEpilog: () => {},
-  setSource: () => {},
-  addSource: () => {},
   toggleIsPublished: () => {},
 });
 
@@ -239,11 +220,6 @@ const buildExhibitionTextState = (exhibition: FlatExhibition) => {
   return {
     title: exhibition.title ?? '',
     introduction: exhibition.introduction ?? '',
-    epilog: exhibition.epilog ?? '',
-    sources:
-      exhibition.exhibition_sources?.map(source => {
-        return { id: source.id, source: source.source ?? '' } as ExhibitionSource;
-      }) ?? [],
     isPublished: exhibition.is_published ?? false,
   };
 };
@@ -300,16 +276,6 @@ export const ExhibitionStateGetter = ({
     return exhibitionText.introduction;
   };
 
-  //getter and setter for epilog in exhibitionText
-  const getEpilog = () => {
-    return exhibitionText.epilog;
-  };
-
-  //getter and setter for sources in exhibitionText
-  const getSources = () => {
-    return exhibitionText.sources;
-  };
-
   const getIsPublished = () => {
     return exhibitionText.isPublished;
   };
@@ -322,8 +288,6 @@ export const ExhibitionStateGetter = ({
         getIntroduction,
         getSectionTitle,
         getSectionText,
-        getEpilog,
-        getSources,
         getSection,
         getAllSections,
         getIdealot,
@@ -376,29 +340,6 @@ export const ExhibitionStateChanger = ({
     setExhibitionText({ ...exhibitionText, introduction: introduction });
   };
 
-  const setEpilog = (epilog: string) => {
-    databaseSaver.setEpilog(exhibitionId, epilog);
-    setExhibitionText({ ...exhibitionText, epilog: epilog });
-  };
-
-  const setSource = (source: string, sourceId: string) => {
-    setExhibitionText({
-      ...exhibitionText,
-      sources: exhibitionText.sources.map(s =>
-        s.id === sourceId ? { id: s.id, source: source } : s
-      ),
-    });
-  };
-
-  const addSource = async () => {
-    const id = await databaseSaver.addSource(exhibitionId);
-    id &&
-      setExhibitionText({
-        ...exhibitionText,
-        sources: [...exhibitionText.sources.concat({ id: id, source: '' })],
-      });
-  };
-
   const toggleIsPublished = () => {
     databaseSaver.setIsPublished(!exhibitionText.isPublished, exhibitionId);
     setExhibitionText({ ...exhibitionText, isPublished: !exhibitionText.isPublished });
@@ -411,9 +352,6 @@ export const ExhibitionStateChanger = ({
         setIntroduction,
         setSectionTitle,
         setSectionText,
-        setEpilog,
-        setSource,
-        addSource,
         toggleIsPublished,
       }}
     >
@@ -593,13 +531,7 @@ const useExhibitionDatabaseSaver = () => {
     refetchQueries: ['getExhibition'],
   });
 
-  const [updateExhibitionSource] = useUpdateExhibitionSourceMutation({
-    refetchQueries: ['getExhibition'],
-  });
-
   const [updateExhibition] = useUpdateExhibitionMutation({ refetchQueries: ['getExhibition'] });
-
-  const [createSource] = useCreateExhibitionSourceMutation({ refetchQueries: ['getExhibition'] });
 
   const [createSection] = useCreateExhibitionSectionMutation({ refetchQueries: ['getExhibition'] });
 
@@ -775,28 +707,6 @@ const useExhibitionDatabaseSaver = () => {
       });
     },
 
-    setEpilog: (exhibitionId: string, epilog: string) => {
-      updateExhibition({
-        variables: {
-          id: exhibitionId,
-          data: {
-            epilog: epilog,
-          },
-        },
-      });
-    },
-
-    setSource: (source: string, sourceId: string) => {
-      updateExhibitionSource({ variables: { id: sourceId, source: source } });
-    },
-
-    addSource: async (exhibitionId: string) => {
-      const result = await createSource({
-        variables: { exhibitionId: exhibitionId, publishedAt: new Date().toISOString() },
-      });
-      const id = result.data?.createExhibitionSource?.data?.id;
-      return id;
-    },
     setIsPublished: (isPublished: boolean, exhibitionId: string) => {
       updateExhibition({
         variables: {

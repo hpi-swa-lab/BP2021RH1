@@ -1,6 +1,5 @@
 import { Portal } from '@mui/material';
 import { useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -86,31 +85,6 @@ const Section = ({ sectionId }: { sectionId: string }) => {
   );
 };
 
-const EndCard = () => {
-  const { t } = useTranslation();
-  const { getEpilog, getSources } = useContext(ExhibitionGetContext);
-  const epilog = getEpilog();
-  const sources = getSources();
-  return (
-    <div className='p-11 box-border gap-4 flex flex-col'>
-      {epilog && (
-        <div className='flex flex-col gap-4'>
-          <div className='text-4xl font-semibold'>{t('exhibition.viewer.epilog')}</div>
-          <RichText value={epilog} />
-        </div>
-      )}
-      {sources && sources.length > 0 && (
-        <div>
-          <div className='text-4xl font-semibold'>{t('exhibition.viewer.sources')}</div>
-          <ul>
-            {sources.map((source, key) => source.source && <li key={key}>{source.source}</li>)}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-};
-
 const MainPart = () => {
   const { getAllSections } = useContext(ExhibitionGetContext);
   const sectionsWithContent = getAllSections()?.filter(
@@ -152,7 +126,6 @@ const ExhibitionViewer = ({ exhibitionId }: { exhibitionId: string }) => {
                 <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700 text-xl'>
                   <Title />
                   <MainPart />
-                  <EndCard />
                 </div>
               </div>
             </ExhibitionStateViewer>

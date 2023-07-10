@@ -165,7 +165,6 @@ const ExhibitionManipulator = () => {
             {t('exhibition.manipulator.section.add-section')}
           </Button>
         </div>
-        <EndCard />
       </div>
     </div>
   );
@@ -253,49 +252,6 @@ const Section = ({ id }: { id: string }) => {
         )}
       </div>
     </Paper>
-  );
-};
-
-const EndCard = () => {
-  const { t } = useTranslation();
-  const { getEpilog, getSources } = useContext(ExhibitionGetContext);
-
-  const { setEpilog, setSource, addSource } = useContext(ExhibitionSetContext);
-
-  const extraOptions = {
-    height: 300,
-    allowReziseX: false,
-    allowReziseY: false,
-    preset: undefined,
-    placeholder: t('exhibition.manipulator.epilog.text-placeholder'),
-    statusbar: false,
-    tabIndex: 0,
-    className: 'z-0',
-  };
-
-  return (
-    <div className='flex flex-col gap-2'>
-      <label className='text-xl'>{t('exhibition.manipulator.epilog.title')}</label>
-      <TextEditor
-        value={getEpilog() ?? ''}
-        extraOptions={extraOptions}
-        onBlur={text => setEpilog(text)}
-      />
-      <label className='text-xl'>{t('exhibition.manipulator.epilog.sources')}</label>
-      {getSources()?.map((source, index) => (
-        <TextField
-          key={index}
-          defaultValue={source.source}
-          onChange={event => event.target.value}
-          onBlur={event => setSource(event.target.value, source.id)}
-        />
-      ))}
-      <div className='grid place-content-center'>
-        <Button onClick={addSource} variant='outlined'>
-          {t('exhibition.manipulator.epilog.add-source')}
-        </Button>
-      </div>
-    </div>
   );
 };
 
