@@ -275,6 +275,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                 label={summary}
                 prompt
                 toggleOperations={toggleOperations}
+                clickThrough
               />
             </Typography>
           </AccordionSummary>
@@ -304,6 +305,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                       label={t(`admin.permissions.section.${section.name}`, { context: type })}
                       prompt
                       toggleOperations={toggleOperations}
+                      clickThrough
                     />
                   </AccordionSummary>
                   <AccordionDetails>
