@@ -1,4 +1,5 @@
 import { History, Location } from 'history';
+import { LatLng } from 'leaflet';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { FoldoutStatus } from '../components/views/location-curating/FoldoutStatusContext';
@@ -20,6 +21,8 @@ type LocationState = {
   showBack?: boolean;
   scrollPos?: number;
   open?: boolean;
+  openMap?: boolean;
+  mapState?: { center: LatLng; zoom: number };
   archiveId?: string;
   openBranches?: FoldoutStatus;
 };
@@ -37,6 +40,8 @@ export const useVisit = () => {
       options?: {
         state?: LocationState;
         wasOpen?: boolean;
+        wasOpenMap?: boolean;
+        mapState?: { center: LatLng; zoom: number };
         openBranches?: FoldoutStatus;
         customScrollPos?: number;
       }
@@ -45,6 +50,8 @@ export const useVisit = () => {
         ...history.location.state,
         scrollPos: options?.customScrollPos ?? scrollRef.current,
         open: options?.wasOpen,
+        openMap: options?.wasOpenMap,
+        mapState: options?.mapState,
         openBranches: options?.openBranches,
       });
       history.push(url, { showBack: options?.state?.showBack ?? true, ...options?.state });

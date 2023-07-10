@@ -22,8 +22,7 @@ describe('Start view', () => {
   });
 
   it('should have selectable custom overview', () => {
-    cy.get('.overview-selection-container');
-    cy.get('.MuiTab-root').contains('Bestbewertete Bilder').click();
+    cy.get('.overview-selection-container').contains('Neuzugänge').click();
   });
 
   it('should show a picture preview', () => {

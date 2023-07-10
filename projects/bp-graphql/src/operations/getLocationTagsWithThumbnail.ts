@@ -9,45 +9,12 @@ export default {
       $pagination: PaginationArg!
       $sortBy: [String]
     ) {
-      locationTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
-        data {
-          id
-          attributes {
-            name
-            thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
-              data {
-                attributes {
-                  media {
-                    data {
-                      attributes {
-                        formats
-                        provider
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            verified_thumbnail: verified_pictures(
-              filters: $thumbnailFilters
-              pagination: { limit: 1 }
-            ) {
-              data {
-                attributes {
-                  media {
-                    data {
-                      attributes {
-                        formats
-                        provider
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      getLocationTagsWithThumbnail(
+        filters: $filters
+        thumbnailFilters: $thumbnailFilters
+        pagination: $pagination
+        sortBy: $sortBy
+      )
     }
   `,
 } satisfies Operation;

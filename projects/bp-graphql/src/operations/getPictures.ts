@@ -18,6 +18,26 @@ export default {
                 id
               }
             }
+            verified_time_range_tag {
+              data {
+                id
+                attributes {
+                  start
+                  end
+                  isEstimate
+                }
+              }
+            }
+            time_range_tag {
+              data {
+                id
+                attributes {
+                  start
+                  end
+                  isEstimate
+                }
+              }
+            }
             likes
             media {
               data {

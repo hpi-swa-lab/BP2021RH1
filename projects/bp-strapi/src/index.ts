@@ -9,7 +9,10 @@ import {
 } from './api/collection/services/custom-resolver';
 import { contact } from './api/contact/services/contact';
 import { mergeSourceTagIntoTargetTag } from './api/custom-tag-resolver';
-import { getAllLocationTags } from './api/location-tag/services/custom-resolver';
+import {
+  getAllLocationTags,
+  getLocationTagsWithThumbnail,
+} from './api/location-tag/services/custom-resolver';
 import {
   addPermission,
   addUser,
@@ -110,6 +113,24 @@ export default {
             args: {},
             resolve() {
               return getAllLocationTags(strapi as StrapiExtended);
+            },
+          }),
+          queryField('getLocationTagsWithThumbnail', {
+            type: 'JSON',
+            args: {
+              filters: 'LocationTagFiltersInput',
+              thumbnailFilters: 'PictureFiltersInput',
+              pagination: 'PaginationArg',
+              sortBy: list('String'),
+            },
+            resolve(_, { filters = {}, thumbnailFilters = {}, pagination, sortBy }) {
+              return getLocationTagsWithThumbnail(
+                strapi as StrapiExtended,
+                filters,
+                thumbnailFilters,
+                pagination,
+                sortBy
+              );
             },
           }),
           mutationField('updatePictureWithTagCleanup', {

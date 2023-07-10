@@ -18,14 +18,16 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for "Jahrzehnte"', () => {
-    cy.get('.overview-container:contains(Jahrzehnte)').contains('Mehr anzeigen').click();
+    cy.get('.overview-selection-container:eq(1)').contains('Jahrzehnte').click();
+    cy.get('.overview-selection-container:contains(Jahrzehnte)').contains('Mehr anzeigen').click();
     urlIs('/show-more/date');
   });
 
   it('works for single decades', () => {
+    cy.get('.overview-selection-container:eq(1)').contains('Jahrzehnte').click();
     for (let i = 0; i < 6; i++) {
       cy.get(
-        `.overview-container:contains(Jahrzehnte) .overview-collection-grid-container .items .item:eq(${i})`
+        `.overview-selection-container:contains(Jahrzehnte) .overview-collection-grid-container .items .item:eq(${i})`
       ).click();
       urlIs(`/show-more/date/${i + 4}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)
@@ -33,18 +35,20 @@ describe('Navigation to Show More View from Discover View', () => {
   });
 
   it('works for "Orte"', () => {
-    cy.get('.overview-container:contains(Orte)').contains('Mehr anzeigen').click();
+    cy.get('.overview-selection-container:eq(2)').contains('Orte').click();
+    cy.get('.overview-selection-container:contains(Orte)').contains('Mehr anzeigen').click();
     urlIs('/show-more/location');
   });
 
   it('works for single locations', () => {
+    cy.get('.overview-selection-container:eq(2)').contains('Orte').click();
     // IDs of the six locations shown in tag overview
     const targetIDs = [7, 8, 9, 10, 11, 13];
     // iterate over the six locations shown in tag overview
     //for (const targetID of targetIDs) {
     targetIDs.forEach((targetID, index) => {
       cy.get(
-        `.overview-container:contains(Orte) .overview-collection-grid-container .items .item:eq(${index})`
+        `.overview-selection-container:contains(Orte) .overview-collection-grid-container .items .item:eq(${index})`
       ).click();
       urlIs(`/show-more/location/${targetID}`);
       cy.go(-1); // is a bit faster using cy.go(-1) instead of cy.visit('/discover)

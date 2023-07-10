@@ -55,42 +55,45 @@ describe('Discover View', () => {
   });
 
   it('shows decades tag overview', () => {
+    cy.get('.overview-selection-container:eq(1)').contains('Jahrzehnte').click();
+
     // check for basic components (title, show more button)
-    cy.get('.overview-container:eq(2)')
+    cy.get('.overview-selection-container:eq(1)')
       .children()
       .should('contain.text', 'Jahrzehnte')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains all decades in correct order
     cy.get(
-      '.overview-container:eq(2) .overview-collection-grid-container .items .item:eq(0)'
+      '.overview-selection-container:eq(1) .overview-collection-grid-container .items .item:eq(0)'
     ).should('contain.text', 'FRÜHER');
     cy.get(
-      '.overview-container:eq(2) .overview-collection-grid-container .items .item:eq(1)'
+      '.overview-selection-container:eq(1) .overview-collection-grid-container .items .item:eq(1)'
     ).should('contain.text', '50ER');
     cy.get(
-      '.overview-container:eq(2) .overview-collection-grid-container .items .item:eq(2)'
+      '.overview-selection-container:eq(1) .overview-collection-grid-container .items .item:eq(2)'
     ).should('contain.text', '60ER');
     cy.get(
-      '.overview-container:eq(2) .overview-collection-grid-container .items .item:eq(3)'
+      '.overview-selection-container:eq(1) .overview-collection-grid-container .items .item:eq(3)'
     ).should('contain.text', '70ER');
     cy.get(
-      '.overview-container:eq(2) .overview-collection-grid-container .items .item:eq(4)'
+      '.overview-selection-container:eq(1) .overview-collection-grid-container .items .item:eq(4)'
     ).should('contain.text', '80ER');
     cy.get(
-      '.overview-container:eq(2) .overview-collection-grid-container .items .item:eq(5)'
+      '.overview-selection-container:eq(1) .overview-collection-grid-container .items .item:eq(5)'
     ).should('contain.text', '90ER');
   });
 
   it('shows "Orte" tag overview', () => {
+    cy.get('.overview-selection-container:eq(2)').contains('Orte').click();
     // check for basic components (title, show more button)
-    cy.get('.overview-container:eq(3)')
+    cy.get('.overview-selection-container:eq(2)')
       .children()
       .should('contain.text', 'Orte')
       .and('contain.text', 'Mehr anzeigen');
 
     // check if it contains first 6 verified locations
-    cy.get('.overview-container:eq(3) .overview-collection-grid-container .items')
+    cy.get('.overview-selection-container:eq(2) .overview-collection-grid-container .items')
       .should('contain.text', 'VERIFIZIERTER TESTORT 1')
       .and('contain.text', 'VERIFIZIERTER TESTORT 2')
       .and('contain.text', 'VERIFIZIERTER TESTORT 3')
