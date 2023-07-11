@@ -16,6 +16,7 @@ export const CoverageCheckbox = ({
   label,
   prompt,
   toggleOperations,
+  clickThrough = false,
 }: {
   coverage: Coverage;
   operations: Operation[];
@@ -29,6 +30,7 @@ export const CoverageCheckbox = ({
     header: string,
     prompt?: boolean
   ) => void;
+  clickThrough?: boolean;
 }) => {
   const checked = coverage === Coverage.ALL;
   const indeterminate = coverage === Coverage.SOME;
@@ -44,8 +46,16 @@ export const CoverageCheckbox = ({
 
   return (
     <FormControlLabel
-      control={<Checkbox indeterminate={indeterminate} checked={checked} onChange={onClick} />}
+      control={
+        <Checkbox
+          className={clickThrough ? 'pointer-events-auto' : ''}
+          indeterminate={indeterminate}
+          checked={checked}
+          onChange={onClick}
+        />
+      }
       label={label}
+      className={clickThrough ? 'pointer-events-none' : ''}
     />
   );
 };

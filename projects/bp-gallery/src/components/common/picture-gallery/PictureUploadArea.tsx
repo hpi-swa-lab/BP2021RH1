@@ -102,15 +102,15 @@ const PictureUploadArea = ({
     )
       .map(upload => upload?.data?.id)
       .map(initializePictureFromFile);
-    await Promise.all(
-      preprocessPictures(uploadedPictures).map(async picture => {
-        await createPicture({
-          variables: {
-            data: picture as any,
-          },
-        });
-      })
-    );
+    // don't turn into Promise.all, as the order of the pictures
+    // (specifically their ids) should be preserved
+    for (const picture of preprocessPictures(uploadedPictures)) {
+      await createPicture({
+        variables: {
+          data: picture as any,
+        },
+      });
+    }
     setNewFiles([]);
     if (onUploaded) {
       onUploaded();

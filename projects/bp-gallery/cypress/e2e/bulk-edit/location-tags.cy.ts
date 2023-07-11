@@ -50,7 +50,7 @@ describe('bulk edit location tags', () => {
     selectPictures('1', '25');
     bulkEdit();
     cy.contains('.picture-info-field', 'Orte').find('input').type('Verifizierter Testort 3{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Verifizierter Testort 3');
     cy.visit('/picture/1');
     cy.contains('.MuiChip-root', 'Bad Harzburg');
@@ -67,7 +67,7 @@ describe('bulk edit location tags', () => {
     cy.contains('.MuiChip-root', 'Verifizierter Testort 3')
       .find('[data-testid="CancelIcon"]')
       .click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('.MuiChip-root', 'Bad Harzburg').should('not.exist');
     cy.contains('Verifizierter Testort 3').should('not.exist');
     cy.visit('/picture/1');
@@ -89,7 +89,7 @@ describe('bulk edit location tags', () => {
     selectPictures('1', '4');
     bulkEdit();
     cy.contains('.picture-info-field', 'Orte').find('input').type('Market{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('.MuiChip-root', 'Bad Harzburg');
     cy.contains('Market place');
     cy.visit('/picture/1');
@@ -101,7 +101,7 @@ describe('bulk edit location tags', () => {
     // cleanup
     cy.get('[data-testid="CancelIcon"]'); // wait for auth
     cy.contains('.MuiChip-root', 'Market place').find('[data-testid="CancelIcon"]').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Bad Harzburg');
     cy.contains('Market place').should('not.exist');
   });

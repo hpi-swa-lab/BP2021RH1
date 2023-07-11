@@ -29,7 +29,7 @@ describe('bulk edit collections', () => {
     // create a picture without collections
     cy.visit('/picture/1');
     cy.contains('.MuiChip-root', 'Top-Level collection').find('[data-testid="CancelIcon"]').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
 
     cy.visit('/picture/3');
     cy.contains('Collection 1');
@@ -48,7 +48,7 @@ describe('bulk edit collections', () => {
     cy.contains('.picture-info-field', 'Collections')
       .find('input')
       .type('Top-Level collection{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
   });
 
   it('adds new collections while keeping old ones', () => {
@@ -62,7 +62,7 @@ describe('bulk edit collections', () => {
     selectPictures('2', '1');
     bulkEdit();
     cy.contains('.picture-info-field', 'Collections').find('input').type('Collection 2{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Collection 2');
     cy.visit('/picture/2');
     cy.contains('Collection 1');
@@ -77,7 +77,7 @@ describe('bulk edit collections', () => {
     selectPictures('2', '1');
     bulkEdit();
     cy.contains('.MuiChip-root', 'Collection 2').find('[data-testid="CancelIcon"]').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Collection 1').should('not.exist');
     cy.contains('Collection 2').should('not.exist');
     cy.visit('/picture/2');
@@ -100,7 +100,7 @@ describe('bulk edit collections', () => {
     bulkEdit();
     cy.contains('.picture-info-field', 'Collections').find('input').type('Collection 2');
     cy.get('.MuiAutocomplete-popper').contains('Collection 2').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Collection 1');
     cy.contains('Collection 2');
     cy.visit('/picture/3');
@@ -112,7 +112,7 @@ describe('bulk edit collections', () => {
     // cleanup
     cy.get('[data-testid="CancelIcon"]'); // wait for auth
     cy.contains('.MuiChip-root', 'Collection 2').find('[data-testid="CancelIcon"]').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Collection 1');
     cy.contains('Collection 2').should('not.exist');
   });

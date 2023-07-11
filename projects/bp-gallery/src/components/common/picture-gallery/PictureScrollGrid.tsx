@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useCachedOnRefetch } from '../../../hooks/cache-on-refetch.hook';
-import { useScroll } from '../../../hooks/context-hooks';
+import { useAuth, useScroll } from '../../../hooks/context-hooks';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
   TextFilter,
@@ -63,9 +63,16 @@ const PictureScrollGrid = ({
   const [lastScrollHeight, setLastScrollHeight] = useState<number>(0);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
+  const { loggedIn } = useAuth();
   const [selectedTextFilter, setSelectedTextFilter] = useState(
-    textFilter ?? TextFilter.ONLY_PICTURES
+    textFilter ?? (loggedIn ? TextFilter.PICTURES_AND_TEXTS : TextFilter.ONLY_PICTURES)
   );
+
+  useEffect(() => {
+    if (textFilter === null) {
+      setSelectedTextFilter(loggedIn ? TextFilter.PICTURES_AND_TEXTS : TextFilter.ONLY_PICTURES);
+    }
+  }, [textFilter, loggedIn]);
 
   const { data, loading, error, fetchMore, refetch } = useGetPictures(
     queryParams,

@@ -20,12 +20,21 @@ export const ArchivesView = () => {
   const { data, error, loading } = useGetAllArchiveTagsQuery();
   const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
 
-  const sortedArchives = useMemo(
-    () => (archives ? archives.slice().sort((a, b) => a.name.localeCompare(b.name)) : undefined),
-    [archives]
-  );
+  const {
+    canUseArchivesView,
+    canUseMultipleEditArchiveViews,
+    loading: canUseArchivesViewLoading,
+  } = useCanUseArchivesView();
 
-  const { canUseArchivesView, loading: canUseArchivesViewLoading } = useCanUseArchivesView();
+  const sortedArchives = useMemo(
+    () =>
+      archives
+        ? archives
+            .filter(archive => canUseMultipleEditArchiveViews[archive.id])
+            .sort((a, b) => a.name.localeCompare(b.name))
+        : undefined,
+    [archives, canUseMultipleEditArchiveViews]
+  );
 
   return (
     <ProtectedRoute canUse={canUseArchivesView} canUseLoading={canUseArchivesViewLoading}>

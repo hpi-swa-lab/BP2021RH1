@@ -18,6 +18,7 @@ $archiveColor: #446ab7;
 $titleColor: #5f5e5e;
 $allSearchColor: #84b0c4;
 $likeColor: #60a5fa; // blue-400 from tailwind
+$greyColor: #d3d3d3;
 
 :export {
   primaryColor: $primaryColor;
@@ -38,6 +39,7 @@ $likeColor: #60a5fa; // blue-400 from tailwind
   titleColor: $titleColor;
   allSearchColor: $allSearchColor;
   likeColor: $likeColor;
+  greyColor: $greyColor;
 }
 
 $mobile-breakpoint: 750px;

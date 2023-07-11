@@ -2,15 +2,12 @@ import { Operation, graphql } from '../Operation.js';
 import { always } from '../isAllowedHelpers.js';
 
 export default {
-  section: 'locations',
+  section: 'collection',
   needsParameters: [],
   isAllowed: always,
   document: graphql`
-    mutation updateLocationCoordinates(
-      $tagId: ID!
-      $coordinate: ComponentLocationCoordinatesInput
-    ) {
-      updateLocationTag(id: $tagId, data: { coordinates: $coordinate }) {
+    mutation updateCollectionParents($collectionId: ID!, $parentCollectionIds: [ID]!) {
+      updateCollection(id: $collectionId, data: { parent_collections: $parentCollectionIds }) {
         data {
           id
         }

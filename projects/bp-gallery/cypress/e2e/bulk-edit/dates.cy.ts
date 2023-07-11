@@ -34,14 +34,14 @@ describe('bulk edit dates', () => {
     cy.contains('Keine Zeit bekannt').click();
     cy.get('.rdrDateInput').eq(0).clear();
     cy.get('.rdrDateInput').eq(0).type('20.04.1969{enter}{esc}');
-    cy.contains('.save-state', 'Gespeichert.');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert.');
     cy.visit('/picture/5');
     waitForCuratorPictureInfo();
     cy.contains('20.04.1969').click();
     // cleanup
     cy.get('.rdrDateInput').eq(0).clear();
     cy.get('.rdrDateInput').eq(0).type('01.04.1970{enter}{esc}');
-    cy.contains('.save-state', 'Gespeichert.');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert.');
     cy.contains('01.04.1970');
 
     cy.visit('/picture/1');
@@ -52,7 +52,7 @@ describe('bulk edit dates', () => {
     cy.get('.rdrDateInput').eq(0).type('01.01.1961{enter}');
     cy.get('.rdrDateInput').eq(1).clear();
     cy.get('.rdrDateInput').eq(1).type('31.01.2022{enter}{esc}');
-    cy.contains('.save-state', 'Gespeichert.');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert.');
     cy.contains('01.01.1961 - 31.01.2022');
   });
 });

@@ -9,7 +9,9 @@ export default {
         password: $password
         passwordConfirmation: $passwordConfirmation
       ) {
-        jwt
+        user {
+          id
+        }
       }
     }
   `,

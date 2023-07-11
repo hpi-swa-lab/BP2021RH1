@@ -11,6 +11,7 @@ import { useCanEditPicture } from '../../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
+import { SaveStatus } from '../../../common/SaveStatus';
 import { PictureViewContext } from '../PictureView';
 import PictureViewNavigationBar from '../overlay/PictureViewNavigationBar';
 import './PictureSidebar.scss';
@@ -114,17 +115,23 @@ const PictureSidebar = ({
             hasHiddenLinks={false}
             onSave={canUpdatePicture ? onSave : undefined}
             topInfo={(anyFieldTouched, isSaving) =>
-              canEditPicture && (
+              (canEditPicture || canUpdatePicture) && (
                 <div className='curator-ops'>
-                  <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
-                    {t('curator.editPicture')}
-                  </Button>
-                  <PictureEditDialog
-                    picture={picture}
-                    open={editDialogOpen}
-                    onClose={onDialogClose}
-                  />
-                  <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
+                  {canEditPicture && (
+                    <>
+                      <Button startIcon={<Crop />} onClick={() => setEditDialogOpen(true)}>
+                        {t('curator.editPicture')}
+                      </Button>
+                      <PictureEditDialog
+                        picture={picture}
+                        open={editDialogOpen}
+                        onClose={onDialogClose}
+                      />
+                    </>
+                  )}
+                  {canUpdatePicture && (
+                    <SaveStatus className='ml-auto' label={saveStatus(anyFieldTouched, isSaving)} />
+                  )}
                 </div>
               )
             }

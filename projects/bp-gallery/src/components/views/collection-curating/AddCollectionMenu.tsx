@@ -4,9 +4,9 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useCanRunCreateSubCollectionMutation,
-  useCanRunUpdateCollectionMutation,
+  useCanRunUpdateCollectionParentsMutation,
   useCreateSubCollectionMutation,
-  useUpdateCollectionMutation,
+  useUpdateCollectionParentsMutation,
 } from '../../../graphql/APIConnector';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -25,10 +25,10 @@ const AddCollectionMenu = ({
 
   const open = Boolean(anchorEl);
 
-  const [updateCollection] = useUpdateCollectionMutation({
+  const [updateCollectionParents] = useUpdateCollectionParentsMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
-  const { canRun: canUpdateCollection } = useCanRunUpdateCollectionMutation();
+  const { canRun: canUpdateCollectionParents } = useCanRunUpdateCollectionParentsMutation();
 
   const [createSubCollection] = useCreateSubCollectionMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
@@ -73,18 +73,16 @@ const AddCollectionMenu = ({
           }
           const parents = moveCollection ? [] : originalParents.map(c => c.id);
           parents.push(parentCollectionId);
-          updateCollection({
+          updateCollectionParents({
             variables: {
               collectionId: selectedCollection.id,
-              data: {
-                parent_collections: parents,
-              },
+              parentCollectionIds: parents,
             },
           });
         }
       });
     },
-    [updateCollection, parentCollectionId, dialog, t]
+    [updateCollectionParents, parentCollectionId, dialog, t]
   );
 
   return (
@@ -97,7 +95,7 @@ const AddCollectionMenu = ({
           <ListItemText>{t('curator.createCollection')}</ListItemText>
         </MenuItem>
       )}
-      {canUpdateCollection && (
+      {canUpdateCollectionParents && (
         <MenuItem onClick={() => onLinkOrMoveSubcollection(false)}>
           <ListItemIcon>
             <Link />
@@ -105,7 +103,7 @@ const AddCollectionMenu = ({
           <ListItemText>{t('curator.linkCollection')}</ListItemText>
         </MenuItem>
       )}
-      {canUpdateCollection && (
+      {canUpdateCollectionParents && (
         <MenuItem onClick={() => onLinkOrMoveSubcollection(true)}>
           <ListItemIcon>
             <MoveDown />
