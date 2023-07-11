@@ -32,7 +32,7 @@ export const UsersView = () => {
   const { canRun: canUpdateUser } = useCanRunUpdateUserMutation();
 
   const sortedUsers = useMemo(
-    () => (users ? users.sort((a, b) => a.username.localeCompare(b.username)) : undefined),
+    () => (users ? users.slice().sort((a, b) => a.username.localeCompare(b.username)) : undefined),
     [users]
   );
 
