@@ -68,7 +68,7 @@ const SearchView = () => {
   const [searchResultIds, error, state] = usePromise(
     async () =>
       (await getSearchResultHits(queryParams, filter, searchIndex)).map(hit =>
-        (hit.pictureId as number).toString()
+        (hit.id as number).toString()
       ),
     [queryParams, filter]
   );

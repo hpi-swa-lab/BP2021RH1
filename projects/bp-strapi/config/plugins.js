@@ -81,7 +81,7 @@ module.exports = ({ env }) => ({
             picture: {
               transformEntry({ entry }) {
                 const transformedEntry = {
-                  pictureId: entry.id,
+                  id: entry.id,
                   likes: entry.likes,
                   descriptions: entry.descriptions.map(description => description.text),
                   comments: entry.comments.map(comment => comment.text),
@@ -119,14 +119,13 @@ module.exports = ({ env }) => ({
                 searchableAttributes: [
                   'descriptions',
                   'location_tags',
+                  'keyword_tags',
                   'face_tags',
                   'person_tags',
-                  'keyword_tags',
                   'time_range_tag_start',
                   'time_range_tag_end',
                   'collections',
                   'archive_tag',
-                  'comments',
                 ],
                 filterableAttributes: [
                   'keyword_tags',
@@ -136,13 +135,12 @@ module.exports = ({ env }) => ({
                   'face_tags',
                   'person_tags',
                   'descriptions',
-                  'comments',
                   'collections',
                   'archive_tag',
                   'is_text',
                 ],
                 sortableAttributes: ['time_range_tag_start', 'time_range_tag_end', 'likes'],
-                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'exactness', 'sort'],
                 // words that are ignored during searches, useful for common words
                 //  that do not carry a meaning on their own like articles, pronomina etc.
                 // we do not use this setting, since our data on user searchers suggests, that
@@ -172,10 +170,11 @@ module.exports = ({ env }) => ({
             comment: {
               transformEntry({ entry }) {
                 const transformedEntry = {
+                  id: entry?.id,
+                  pictureId: entry?.picture,
                   author: entry?.author,
                   text: entry?.text,
                   date: entry?.date ? dateToTimeStamp(entry.date) : null,
-                  pictureId: entry?.picture.id,
                   pinned: entry?.pinned,
                   childComments: entry?.childComments,
                   parentComments: entry?.parentComments,
@@ -206,117 +205,6 @@ module.exports = ({ env }) => ({
                   'parentComments',
                 ],
                 sortableAttributes: ['date'],
-                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
-                // words that are ignored during searches, useful for common words
-                //  that do not carry a meaning on their own like articles, pronomina etc.
-                // we do not use this setting, since our data on user searchers suggests, that
-                // users only search for proper names, people, locations and nouns in general
-                stopWords: [],
-                synonyms: {},
-                // returned documents will always be unigue in this attribute
-                distinctAttribute: null,
-                typoTolerance: {
-                  enabled: true,
-                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
-                  disableOnWords: [],
-                  disableOnAttributes: [],
-                },
-                faceting: {
-                  maxValuesPerFacet: 100,
-                },
-                pagination: {
-                  maxTotalHits: 1000,
-                },
-              },
-            },
-            'location-tag': {
-              indexName: 'location',
-              transformEntry({ entry }) {
-                const transformedEntry = {
-                  name: entry.name,
-                  _geo: { lat: entry?.coordinates.latitude, lng: entry.coordinates?.longitude },
-                  pictureIds: entry?.pictures
-                    .map(picture => picture.id)
-                    .concat(entry?.verified_pictures.map(picture => picture.id)),
-                  synonyms: entry.synonyms.map(synonym => synonym.name),
-                  visible: entry.visible,
-                  parent_tags: entry?.parent_tags,
-                  child_tags: entry?.child_tags,
-                  accepted: entry?.accepted,
-                  root: entry?.root,
-                };
-                return transformedEntry;
-              },
-              settings: {
-                //for reference: https://www.meilisearch.com/docs/reference/api/settings
-                displayedAttributes: [
-                  'name',
-                  'coordinates',
-                  'pictureIds',
-                  'synonyms',
-                  'visible',
-                  'parent_tags',
-                  'child_tags',
-                  'accepted',
-                  'root',
-                ],
-                // the order of the attributes in searchableAttributes determines the priorization
-                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
-                searchableAttributes: ['name', 'coordinates'],
-                filterableAttributes: [
-                  'name',
-                  'coordinates',
-                  'pictureIds',
-                  'visible',
-                  'parent_tags',
-                  'child_tags',
-                  'accepted',
-                  'root',
-                ],
-                sortableAttributes: ['name', 'coordinates'],
-                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
-                // words that are ignored during searches, useful for common words
-                //  that do not carry a meaning on their own like articles, pronomina etc.
-                // we do not use this setting, since our data on user searchers suggests, that
-                // users only search for proper names, people, locations and nouns in general
-                stopWords: [],
-                synonyms: {},
-                // returned documents will always be unigue in this attribute
-                distinctAttribute: null,
-                typoTolerance: {
-                  enabled: true,
-                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
-                  disableOnWords: [],
-                  disableOnAttributes: [],
-                },
-                faceting: {
-                  maxValuesPerFacet: 100,
-                },
-                pagination: {
-                  maxTotalHits: 1000,
-                },
-              },
-            },
-            'person-tag': {
-              indexName: 'person',
-              transformEntry({ entry }) {
-                const transformedEntry = {
-                  name: entry.name,
-                  pictureIds: entry?.pictures
-                    .map(picture => picture.id)
-                    .concat(entry?.verified_pictures.map(picture => picture.id)),
-                  synonyms: entry?.synonyms.map(synonym => synonym.name),
-                };
-                return transformedEntry;
-              },
-              settings: {
-                //for reference: https://www.meilisearch.com/docs/reference/api/settings
-                displayedAttributes: ['name', 'pictureIds', 'synonyms'],
-                // the order of the attributes in searchableAttributes determines the priorization
-                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
-                searchableAttributes: ['name'],
-                filterableAttributes: ['name', 'pictureIds'],
-                sortableAttributes: ['name'],
                 rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
                 // words that are ignored during searches, useful for common words
                 //  that do not carry a meaning on their own like articles, pronomina etc.

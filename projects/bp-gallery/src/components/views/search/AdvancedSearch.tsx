@@ -1,5 +1,5 @@
 import { ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionSummary, Button, MenuItem, Select, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HelpTooltip } from '../../common/HelpTooltip';
@@ -33,7 +33,6 @@ export const AdvancedSearch = ({
   const ATTRIBUTES = [
     'keyword',
     'description',
-    'comment',
     'person',
     'face-tag',
     'location',
@@ -181,7 +180,8 @@ export const AdvancedSearch = ({
       }
     }, '');
 
-  const searchIndices = ['picture', 'comment', 'location', 'person'];
+  // no in use as long as the comment index doesn't work properly
+  // const searchIndices = ['picture', 'comment'];
 
   return (
     <div className='flex flex-col m-auto w-fit'>
@@ -211,7 +211,7 @@ export const AdvancedSearch = ({
               </div>
             </AccordionSummary>
             <div className='advanced-search w-fit p-4 flex flex-col'>
-              <div className='flex flex-row flex-nowrap justify-start items-center'>
+              {/* <div className='flex flex-row flex-nowrap justify-start items-center'>
                 <Typography fontWeight={'bold'}>{t(`search.setIndex`)}</Typography>
                 <Select value={searchIndex} onChange={event => setSearchIndex(event.target.value)}>
                   {searchIndices.map(searchIndex => (
@@ -220,7 +220,7 @@ export const AdvancedSearch = ({
                     </MenuItem>
                   ))}
                 </Select>
-              </div>
+              </div> */}
               <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
                 <div className='advanced-left-filters flex flex-col flex-nowrap'>
                   {advancedSearchProps
