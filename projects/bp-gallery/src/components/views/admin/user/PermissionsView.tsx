@@ -119,7 +119,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const [deletePermission, { loading: deletePermissionLoading }] =
     useDeleteParameterizedPermissionMutation();
 
-  const working =
+  const isWorking =
     createPermissionLoading || deletePermissionLoading || networkStatus === NetworkStatus.refetch;
 
   const loading = userLoading || permissionsLoading || archivesLoading;
@@ -401,7 +401,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
               </CenteredContainer>
               <div className='absolute right-5 top-[6.75rem]'>
                 <SaveStatus
-                  label={t(working ? 'curator.saveStatus.saving' : 'curator.saveStatus.saved')}
+                  label={t(isWorking ? 'curator.saveStatus.saving' : 'curator.saveStatus.saved')}
                 />
               </div>
             </>
