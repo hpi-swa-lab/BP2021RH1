@@ -18,8 +18,10 @@ export enum TextFilter {
   ONLY_TEXTS = 'ONLY_TEXTS',
 }
 
+export type QueryParams = PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
+
 const useGetPictures = (
-  queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
+  queryParams: QueryParams,
   isAllSearchActive: boolean,
   sortBy?: string[],
   textFilter = TextFilter.ONLY_PICTURES,

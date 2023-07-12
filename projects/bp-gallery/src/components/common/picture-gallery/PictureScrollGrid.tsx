@@ -7,6 +7,7 @@ import { useCachedOnRefetch } from '../../../hooks/cache-on-refetch.hook';
 import { useScroll } from '../../../hooks/context-hooks';
 import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
+  QueryParams,
   TextFilter,
 } from '../../../hooks/get-pictures.hook';
 import { useCollapseSequences } from '../../../hooks/sequences.hook';
@@ -40,7 +41,7 @@ const PictureScrollGrid = ({
   cacheOnRefetch = false,
   onSort,
 }: {
-  queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
+  queryParams: QueryParams;
   hashbase: string;
   isAllSearchActive?: boolean;
   uploadAreaProps?: Partial<PictureUploadAreaProps>;
