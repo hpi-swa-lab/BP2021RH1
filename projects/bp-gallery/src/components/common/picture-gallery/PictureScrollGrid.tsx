@@ -1,7 +1,6 @@
 import { WatchQueryFetchPolicy } from '@apollo/client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PictureFiltersInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useCachedOnRefetch } from '../../../hooks/cache-on-refetch.hook';
 import { useScroll } from '../../../hooks/context-hooks';
@@ -9,6 +8,8 @@ import useGetPictures, {
   NUMBER_OF_PICTURES_LOADED_PER_FETCH,
   QueryParams,
   TextFilter,
+  createIdArrayFilter,
+  wrapQueryParamsWithTextFilter,
 } from '../../../hooks/get-pictures.hook';
 import { useCollapseSequences } from '../../../hooks/sequences.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -29,7 +30,6 @@ const PictureScrollGrid = ({
   resultPictureCallback,
   bulkOperations,
   sortBy,
-  customSort,
   maxNumPictures,
   showCount = true,
   extraAdornments,
@@ -48,7 +48,6 @@ const PictureScrollGrid = ({
   resultPictureCallback?: (pictures: number) => void;
   bulkOperations?: BulkOperation[];
   sortBy?: string[];
-  customSort?: (pictures: FlatPicture[]) => FlatPicture[];
   maxNumPictures?: number;
   showCount?: boolean;
   extraAdornments?: PicturePreviewAdornment[];
@@ -78,10 +77,25 @@ const PictureScrollGrid = ({
   );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
+
+  const pictureIdToIndex = useMemo(() => {
+    if (!(queryParams instanceof Array)) {
+      return null;
+    }
+    const map = new Map<string, number>();
+    let index = 0;
+    for (const id of queryParams) {
+      map.set(id, index);
+      index++;
+    }
+    return map;
+  }, [queryParams]);
+
   const sortedPictures = useMemo(
-    () => (customSort && pictures ? customSort(pictures) : pictures),
-    [customSort, pictures]
+    () => (pictureIdToIndex && pictures ? sortPictures(pictures, pictureIdToIndex) : pictures),
+    [pictureIdToIndex, pictures]
   );
+
   const collapsedPictures = useCollapseSequences(sortedPictures, collapseSequences);
 
   const processedPictures = useCachedOnRefetch(collapsedPictures, cacheOnRefetch);
@@ -94,7 +108,14 @@ const PictureScrollGrid = ({
     }
   }, [pictures, resultPictureCallback, loading]);
 
-  const maybeFetchMore = useCallback(() => {
+  const [nextFetchMoreIdArrayStart, setNextFetchMoreIdArrayStart] = useState(
+    NUMBER_OF_PICTURES_LOADED_PER_FETCH
+  );
+  useEffect(() => {
+    setNextFetchMoreIdArrayStart(NUMBER_OF_PICTURES_LOADED_PER_FETCH);
+  }, [queryParams]);
+
+  const maybeFetchMore = useCallback(async () => {
     if (loading) {
       return;
     }
@@ -104,16 +125,41 @@ const PictureScrollGrid = ({
     }
     if (fetchCount > 0) {
       setIsFetching(true);
-      fetchMore({
-        variables: {
-          pagination: {
-            start: pictures?.length,
-            limit: fetchCount,
+      if (queryParams instanceof Array) {
+        setNextFetchMoreIdArrayStart(nextFetchMoreIdArrayStart + fetchCount);
+        await fetchMore({
+          variables: {
+            filters: wrapQueryParamsWithTextFilter(
+              selectedTextFilter,
+              createIdArrayFilter(queryParams, nextFetchMoreIdArrayStart, fetchCount)
+            ),
+            pagination: {
+              start: 0,
+              limit: fetchCount,
+            },
           },
-        },
-      }).then(() => setIsFetching(false));
+        });
+      } else {
+        await fetchMore({
+          variables: {
+            pagination: {
+              start: pictures?.length,
+              limit: fetchCount,
+            },
+          },
+        });
+      }
+      setIsFetching(false);
     }
-  }, [fetchMore, loading, maxNumPictures, pictures]);
+  }, [
+    loading,
+    maxNumPictures,
+    pictures,
+    queryParams,
+    fetchMore,
+    selectedTextFilter,
+    nextFetchMoreIdArrayStart,
+  ]);
 
   // Loads the next NUMBER_OF_PICTURES_LOADED_PER_FETCH Pictures when the user scrolled to the bottom
   useEffect(() => {
@@ -195,3 +241,12 @@ const PictureScrollGrid = ({
 };
 
 export default PictureScrollGrid;
+
+const sortPictures = (pictures: FlatPicture[], pictureIdToIndex: Map<string, number>) => {
+  const sorted = new Array<FlatPicture | undefined>(pictures.length);
+  for (const picture of pictures) {
+    const index = pictureIdToIndex.get(picture.id)!;
+    sorted[index] = picture;
+  }
+  return sorted.filter((element): element is FlatPicture => !!element);
+};
