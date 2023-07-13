@@ -82,6 +82,7 @@ module.exports = ({ env }) => ({
               transformEntry({ entry }) {
                 const transformedEntry = {
                   id: entry.id,
+                  is_text: entry.is_text,
                   likes: entry.likes,
                   descriptions: entry.descriptions.map(description => description.text),
                   comments: entry.comments.map(comment => comment.text),

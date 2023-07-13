@@ -4,7 +4,9 @@ import { useLocation } from 'react-router-dom';
 import usePromise from 'react-use-promise';
 import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
+import { TextFilter } from '../../../hooks/get-pictures.hook';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { TextFilterSelect } from '../../common/picture-gallery/TextFilterSelect';
 import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
 import AdvancedSearch from './AdvancedSearch';
@@ -60,9 +62,11 @@ const SearchView = () => {
     };
   }, [searchParams]);
 
+  const [textFilter, setTextFilter] = useState(TextFilter.ONLY_PICTURES);
+
   const [searchResultIds] = usePromise(
     async () =>
-      (await getSearchResultHits(queryParams, filter, searchIndex)).map(hit =>
+      (await getSearchResultHits(queryParams, filter, textFilter, searchIndex)).map(hit =>
         (hit.id as number).toString()
       ),
     [queryParams, textFilter, filter]
@@ -84,6 +88,9 @@ const SearchView = () => {
         isAllSearchActive={isAllSearchActive}
       ></AdvancedSearch>
       {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
+      <div className='flex flex-row justify-end mt-4'>
+        <TextFilterSelect value={textFilter} onChange={setTextFilter} />
+      </div>
 
       <ShowStats>
         <PictureScrollGrid
@@ -105,7 +112,7 @@ const SearchView = () => {
           resultPictureCallback={(pictures: number) => {
             setAreResultsEmpty(pictures <= 0);
           }}
-          textFilter={null}
+          textFilter={TextFilter.PICTURES_AND_TEXTS} // text filtering is handled by meilisearch filters
         />
       </ShowStats>
     </div>

@@ -1,4 +1,5 @@
 import { MeiliSearch } from 'meilisearch';
+import { TextFilter } from '../../../../hooks/get-pictures.hook';
 
 const dateToTimeStamp = (date: string) => {
   return Date.parse(date) / 1000;
@@ -7,6 +8,7 @@ const dateToTimeStamp = (date: string) => {
 const getSearchResultHits = async (
   { searchTerms, searchTimes }: { searchTerms: string[]; searchTimes: string[][] },
   filter: string,
+  textFilter: TextFilter,
   searchIndex: string
 ) => {
   const SEARCH_API_KEY = '81986a6ab6d805aa090e2c576295532bebd9708bd77ad054a06b9688c611a8b6';
@@ -15,6 +17,10 @@ const getSearchResultHits = async (
     apiKey: SEARCH_API_KEY,
   });
   const index = client.index('picture');
+
+  const addFilter = (part: string) => {
+    filter += (filter === '' ? '' : ' AND ') + part;
+  };
 
   const TIME_RANGE_START = 'time_range_tag_start';
   const TIME_RANGE_END = 'time_range_tag_end';
@@ -30,8 +36,20 @@ const getSearchResultHits = async (
           searchTime[2]
         )})`
     );
-    const timeFilter = timeFilters.join(' OR ');
-    filter = filter === '' ? timeFilter : filter.concat(' AND ', timeFilter);
+    addFilter(timeFilters.join(' OR '));
+  }
+
+  switch (textFilter) {
+    case TextFilter.ONLY_PICTURES:
+      addFilter('(is_text = false OR is_text IS NULL)');
+      break;
+    case TextFilter.ONLY_TEXTS:
+      addFilter('is_text = true');
+      break;
+    case TextFilter.PICTURES_AND_TEXTS:
+    default:
+      // nothing
+      break;
   }
 
   // for reference: https://www.meilisearch.com/docs/reference/api/search
