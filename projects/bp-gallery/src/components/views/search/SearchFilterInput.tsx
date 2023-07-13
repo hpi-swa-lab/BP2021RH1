@@ -3,12 +3,10 @@ import { AttributeFilterProps, SingleFilterProps } from './AdvancedSearch';
 import { SearchFilterInputItem } from './SearchFilterInputItem';
 
 export const SearchFilterInput = ({
-  key,
   attribute,
   advancedSearchProps,
   setAdvancedSearchProps,
 }: {
-  key: string;
   attribute: string;
   advancedSearchProps: AttributeFilterProps[];
   setAdvancedSearchProps: Dispatch<SetStateAction<AttributeFilterProps[]>>;

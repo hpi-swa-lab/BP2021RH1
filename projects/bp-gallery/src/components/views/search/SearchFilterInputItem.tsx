@@ -5,13 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { AttributeFilterProps } from './AdvancedSearch';
 
 export const SearchFilterInputItem = ({
-  key,
   index,
   attribute,
   updateFilterProps,
   advancedSearchProps,
 }: {
-  key: string;
   index: number;
   attribute: string;
   advancedSearchProps: AttributeFilterProps[];
