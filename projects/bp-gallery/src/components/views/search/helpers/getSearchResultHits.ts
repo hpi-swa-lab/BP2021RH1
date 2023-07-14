@@ -13,7 +13,6 @@ const getSearchResultHits = async (
 ) => {
   const SEARCH_API_KEY = import.meta.env.VITE_MEILISEARCH_API_KEY;
 
-  console.log(SEARCH_API_KEY);
   const client = new MeiliSearch({
     host: 'localhost:7700',
     apiKey: SEARCH_API_KEY,
@@ -65,7 +64,6 @@ const getSearchResultHits = async (
   };
   const query = searchTerms.length !== 0 ? searchTerms.join(' ') : '';
   const searchResult = await index.search(query, settings);
-  console.log(searchResult);
   return searchResult.hits;
 };
 

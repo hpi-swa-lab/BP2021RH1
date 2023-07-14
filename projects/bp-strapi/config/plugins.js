@@ -81,32 +81,32 @@ module.exports = ({ env }) => ({
             picture: {
               transformEntry({ entry }) {
                 const transformedEntry = {
-                  id: entry.id,
-                  is_text: entry.is_text,
-                  likes: entry.likes,
-                  descriptions: entry.descriptions.map(description => description.text),
-                  comments: entry.comments.map(comment => comment.text),
-                  keyword_tags: entry.keyword_tags
+                  id: entry?.id,
+                  is_text: entry?.is_text,
+                  likes: entry?.likes,
+                  descriptions: entry?.descriptions.map(description => description.text),
+                  comments: entry?.comments.map(comment => comment.text),
+                  keyword_tags: entry?.keyword_tags
                     .map(tag => tag.name)
-                    .concat(entry.verified_keyword_tags.map(tag => tag.name)),
-                  person_tags: entry.person_tags
+                    .concat(entry?.verified_keyword_tags.map(tag => tag.name)),
+                  person_tags: entry?.person_tags
                     .map(tag => tag.name)
-                    .concat(entry.verified_person_tags.map(tag => tag.name)),
-                  location_tags: entry.location_tags
+                    .concat(entry?.verified_person_tags.map(tag => tag.name)),
+                  location_tags: entry?.location_tags
                     .map(tag => tag.name)
-                    .concat(entry.verified_location_tags.map(tag => tag.name)),
-                  face_tags: entry.face_tags.map(tag => tag.name),
-                  collections: entry.collections.map(tag => tag.name),
-                  archive_tag: entry.archive_tag,
+                    .concat(entry?.verified_location_tags.map(tag => tag.name)),
+                  face_tags: entry?.face_tags.map(tag => tag.name),
+                  collections: entry?.collections.map(tag => tag.name),
+                  archive_tag: entry?.archive_tag,
                   time_range_tag_start: entry?.time_range_tag
-                    ? dateToTimeStamp(entry.time_range_tag.start)
-                    : entry.verified_time_range_tag
-                    ? dateToTimeStamp(entry.verified_time_range_tag.start)
+                    ? dateToTimeStamp(entry?.time_range_tag.start)
+                    : entry?.verified_time_range_tag
+                    ? dateToTimeStamp(entry?.verified_time_range_tag.start)
                     : null,
                   time_range_tag_end: entry?.time_range_tag
-                    ? dateToTimeStamp(entry.time_range_tag.end)
-                    : entry.verified_time_range_tag
-                    ? dateToTimeStamp(entry.verified_time_range_tag.end)
+                    ? dateToTimeStamp(entry?.time_range_tag.end)
+                    : entry?.verified_time_range_tag
+                    ? dateToTimeStamp(entry?.verified_time_range_tag.end)
                     : null,
                 };
 
@@ -175,7 +175,7 @@ module.exports = ({ env }) => ({
                   pictureId: entry?.picture,
                   author: entry?.author,
                   text: entry?.text,
-                  date: entry?.date ? dateToTimeStamp(entry.date) : null,
+                  date: entry?.date ? dateToTimeStamp(entry?.date) : null,
                   pinned: entry?.pinned,
                   childComments: entry?.childComments,
                   parentComments: entry?.parentComments,

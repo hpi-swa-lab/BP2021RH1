@@ -257,7 +257,6 @@ export const AdvancedSearch = ({
                     variant='contained'
                     onClick={() => {
                       setFilter(filter);
-                      console.log(advancedSearchProps);
                     }}
                   >
                     {t('search.appy-filter')}
