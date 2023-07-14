@@ -11,7 +11,9 @@ const getSearchResultHits = async (
   textFilter: TextFilter,
   searchIndex: string
 ) => {
-  const SEARCH_API_KEY = '81986a6ab6d805aa090e2c576295532bebd9708bd77ad054a06b9688c611a8b6';
+  const SEARCH_API_KEY = import.meta.env.VITE_MEILISEARCH_API_KEY;
+
+  console.log(SEARCH_API_KEY);
   const client = new MeiliSearch({
     host: 'localhost:7700',
     apiKey: SEARCH_API_KEY,
