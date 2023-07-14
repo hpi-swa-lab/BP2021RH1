@@ -11,10 +11,11 @@ const getSearchResultHits = async (
   textFilter: TextFilter,
   searchIndex: string
 ) => {
+  const SEARCH_API_HOST = import.meta.env.VITE_MEILISEARCH_HOST;
   const SEARCH_API_KEY = import.meta.env.VITE_MEILISEARCH_API_KEY;
 
   const client = new MeiliSearch({
-    host: 'localhost:7700',
+    host: SEARCH_API_HOST,
     apiKey: SEARCH_API_KEY,
   });
   const index = client.index('picture');

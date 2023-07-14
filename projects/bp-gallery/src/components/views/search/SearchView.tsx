@@ -71,7 +71,9 @@ const SearchView = () => {
       ),
     [queryParams, textFilter, filter]
   );
-
+  if (import.meta.env.MODE === 'development') {
+    console.log(searchResultIds);
+  }
   const isOldSearchActive = useFlag('old_search');
 
   const { linkToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
