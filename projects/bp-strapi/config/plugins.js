@@ -172,13 +172,13 @@ module.exports = ({ env }) => ({
               transformEntry({ entry }) {
                 const transformedEntry = {
                   id: entry?.id,
-                  pictureId: entry?.picture,
+                  pictureId: entry?.picture.id,
                   author: entry?.author,
                   text: entry?.text,
                   date: entry?.date ? dateToTimeStamp(entry?.date) : null,
                   pinned: entry?.pinned,
-                  childComments: entry?.childComments,
-                  parentComments: entry?.parentComments,
+                  hasChildComments: !!entry?.childComments,
+                  hasParentComments: !!entry?.parentComments,
                 };
                 return transformedEntry;
               },
@@ -190,8 +190,8 @@ module.exports = ({ env }) => ({
                   'date',
                   'pictureId',
                   'pinned',
-                  'childComments',
-                  'parentComments',
+                  'hasChildComments',
+                  'hasParentComments',
                 ],
                 // the order of the attributes in searchableAttributes determines the priorization
                 // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
@@ -202,8 +202,8 @@ module.exports = ({ env }) => ({
                   'date',
                   'pictureId',
                   'pinned',
-                  'childComments',
-                  'parentComments',
+                  'hasChildComments',
+                  'hasParentComments',
                 ],
                 sortableAttributes: ['date'],
                 rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
