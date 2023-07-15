@@ -97,7 +97,7 @@ module.exports = ({ env }) => ({
                     .concat(entry?.verified_location_tags.map(tag => tag.name)),
                   face_tags: entry?.face_tags.map(tag => tag.name),
                   collections: entry?.collections.map(tag => tag.name),
-                  archive_tag: entry?.archive_tag,
+                  archive_tag: entry?.archive_tag.name,
                   time_range_tag_start: entry?.time_range_tag
                     ? dateToTimeStamp(entry?.time_range_tag.start)
                     : entry?.verified_time_range_tag
