@@ -66,7 +66,7 @@ export const SearchFilterInputItem = ({
       )}
       <div className='flex flex-row items-center'>
         <Select
-          sx={{ marginRight: '0.25rem' }}
+          className='mr-1'
           onChange={event => {
             switchTextFieldsAmount(event.target.value);
             updateFilterProps(index, 'set', 'filterOperator', event.target.value);

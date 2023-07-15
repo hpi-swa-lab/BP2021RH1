@@ -17,14 +17,14 @@ export type AttributeFilterProps = { attribute: string; filterProps: SingleFilte
 
 export const AdvancedSearch = ({
   setFilter,
-  searchIndex,
-  setSearchIndex,
+  /* searchIndex,
+  setSearchIndex, */
   searchParams,
   isAllSearchActive,
 }: {
   setFilter: Dispatch<SetStateAction<string>>;
-  searchIndex: string;
-  setSearchIndex: Dispatch<SetStateAction<string>>;
+  /* searchIndex: string;
+  setSearchIndex: Dispatch<SetStateAction<string>>; */
   searchParams: URLSearchParams;
   isAllSearchActive: boolean;
 }) => {

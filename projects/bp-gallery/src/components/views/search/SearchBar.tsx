@@ -58,8 +58,6 @@ const SearchBar = ({
     !isAllSearchActive && Array.from(searchParams.entries()).length !== 0;
 
   const onSearchStart = (searchInput: string) => {
-    // if (searchInput === '') return;
-
     // Spaces are our delimiter for different search terms
     const newSearchRequest = searchInput.split(' ').map(encodeURIComponent).join(' ');
 

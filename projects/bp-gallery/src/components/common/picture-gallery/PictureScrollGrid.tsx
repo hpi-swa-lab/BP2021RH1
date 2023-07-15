@@ -82,12 +82,7 @@ const PictureScrollGrid = ({
     if (!(queryParams instanceof Array)) {
       return null;
     }
-    const map = new Map<string, number>();
-    let index = 0;
-    for (const id of queryParams) {
-      map.set(id, index);
-      index++;
-    }
+    const map = new Map(queryParams.map((id, index) => [id, index]));
     return map;
   }, [queryParams]);
 

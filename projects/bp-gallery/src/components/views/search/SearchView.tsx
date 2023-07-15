@@ -32,7 +32,8 @@ const isValidTimeSpecification = (searchRequest: string) => {
 const SearchView = () => {
   const [areResultsEmpty, setAreResultsEmpty] = useState<boolean>(false);
   const [filter, setFilter] = useState('');
-  const [searchIndex, setSearchIndex] = useState('picture');
+  // const [searchIndex, setSearchIndex] = useState('picture');
+  const [textFilter, setTextFilter] = useState(TextFilter.ONLY_PICTURES);
   const { search }: Location = useLocation();
 
   const searchParams = useMemo(() => {
@@ -62,12 +63,10 @@ const SearchView = () => {
     };
   }, [searchParams]);
 
-  const [textFilter, setTextFilter] = useState(TextFilter.ONLY_PICTURES);
-
   const [searchResultIds] = usePromise(
     async () =>
-      (await getSearchResultHits(queryParams, filter, textFilter, searchIndex)).map(hit =>
-        (hit.id as number).toString()
+      (await getSearchResultHits(queryParams, filter, textFilter, 'picture' /* searchIndex */)).map(
+        hit => (hit.id as number).toString()
       ),
     [queryParams, textFilter, filter]
   );
@@ -84,8 +83,8 @@ const SearchView = () => {
     <div className='search-content'>
       <AdvancedSearch
         setFilter={setFilter}
-        searchIndex={searchIndex}
-        setSearchIndex={setSearchIndex}
+        /* searchIndex={searchIndex}
+        setSearchIndex={setSearchIndex} */
         searchParams={searchParams}
         isAllSearchActive={isAllSearchActive}
       ></AdvancedSearch>

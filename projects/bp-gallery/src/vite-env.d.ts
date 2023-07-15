@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly VITE_REACT_APP_GROWTHBOOK_APIHOST: string;
   readonly VITE_REACT_APP_GROWTHBOOK_CLIENTKEY: string;
   readonly VITE_MEILISEARCH_API_KEY: string;
+  readonly VITE_MEILISEARCH_HOST: string;
 }
 
 interface ImportMeta {

@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import { useObjectIds } from '../../../hooks/object-ids.hook';
 import { AttributeFilterProps, SingleFilterProps } from './AdvancedSearch';
 import { SearchFilterInputItem } from './SearchFilterInputItem';
 
@@ -11,6 +12,8 @@ export const SearchFilterInput = ({
   advancedSearchProps: AttributeFilterProps[];
   setAdvancedSearchProps: Dispatch<SetStateAction<AttributeFilterProps[]>>;
 }) => {
+  const { getObjectId } = useObjectIds<SingleFilterProps>();
+
   const filterProps = advancedSearchProps.filter(attrProps => attrProps.attribute === attribute)[0]
     .filterProps;
 
@@ -30,21 +33,18 @@ export const SearchFilterInput = ({
       update = filterProps.slice();
       update.splice(index, 1);
     } else if (action === 'set') {
+      update = filterProps.slice();
       switch (property) {
         case 'filterOperator':
-          update = filterProps.map((item: SingleFilterProps) => item);
           update[index].filterOperator = value;
           break;
         case 'combinationOperator':
-          update = filterProps.map((item: SingleFilterProps) => item);
           update[index].combinationOperator = value;
           break;
         case 'firstValue':
-          update = filterProps.map((item: SingleFilterProps) => item);
           update[index].values[0] = value;
           break;
         case 'secondValue':
-          update = filterProps.map((item: SingleFilterProps) => item);
           update[index].values[1] = value;
           break;
         default:
@@ -63,7 +63,7 @@ export const SearchFilterInput = ({
     <div className='m-1 p-1 bg-gray-100'>
       {filterProps.map((props, index) => (
         <SearchFilterInputItem
-          key={index.toString()}
+          key={getObjectId(props)}
           index={index}
           attribute={attribute}
           advancedSearchProps={advancedSearchProps}
