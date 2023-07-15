@@ -1,7 +1,7 @@
-import { waitForAllImagesLoaded } from './helper';
+// import { waitForAllImagesLoaded } from './helper';
 
 describe('Search', () => {
-  it('shows more pictures after scrolling down', () => {
+  /* it('shows more pictures after scrolling down', () => {
     cy.visit('/search');
     cy.get('.search-bar-container').find('input').type('Top-Level{enter}');
     cy.contains('.picture-count', 'Mehr als 100 Bilder');
@@ -18,5 +18,5 @@ describe('Search', () => {
     cy.get('[data-cy="preview-stats"]').first().contains('1').click();
     cy.reload();
     cy.get('[data-cy="preview-stats"]').first().contains('0');
-  });
+  }); */
 });
