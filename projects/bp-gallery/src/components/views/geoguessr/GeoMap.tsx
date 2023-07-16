@@ -1,7 +1,10 @@
+import { ZoomInMapOutlined, ZoomOutMapOutlined } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { Icon, LatLng, latLngBounds, Map } from 'leaflet';
+import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
+import { pick } from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapContainer, Marker, TileLayer, useMap, useMapEvent } from 'react-leaflet';
@@ -11,9 +14,6 @@ import {
 } from '../../../graphql/APIConnector';
 import { FlatPictureGeoInfo } from '../../../types/additionalFlatTypes';
 import otherMarkerIcon from './location-map-pin.svg';
-import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
-import { ZoomInMapOutlined, ZoomOutMapOutlined } from '@mui/icons-material';
-import { pick } from 'lodash';
 
 const PlayerMarkers = ({
   allGuesses,

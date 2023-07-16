@@ -11,16 +11,17 @@ import {
   Visibility,
   VisibilityOff,
 } from '@mui/icons-material';
-import { Button, Chip, DialogContent, IconButton, TextField } from '@mui/material';
+import { Button, ButtonProps, Chip, DialogContent, IconButton, TextField } from '@mui/material';
 import { Icon, LatLng, Map } from 'leaflet';
 import myMarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { pick } from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapContainer, Marker, TileLayer, useMapEvent } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, ZoomControl, useMapEvent } from 'react-leaflet';
 import {
   useCanRunCreateLocationTagMutation,
+  useCanRunUpdateLocationCoordinatesMutation,
   useCreateLocationTagMutation,
   useUpdateLocationCoordinatesMutation,
 } from '../../../graphql/APIConnector';
@@ -44,19 +45,17 @@ import {
   useSetVisible,
   useUpdateName,
 } from './location-management-helpers';
-import { useGetTagStructures } from './tag-structure-helpers';
-
-const BAD_HARZBURG_POS = new LatLng(51.8392573, 10.5279953);
+import { BAD_HARZBURG_COORDINATES, useGetTagStructures } from './tag-structure-helpers';
 
 const LocationMarker = ({
   position,
   setPosition,
 }: {
   position?: LatLng;
-  setPosition: (pos: LatLng) => void;
+  setPosition?: (pos: LatLng) => void;
 }) => {
   useMapEvent('click', event => {
-    setPosition(event.latlng.clone());
+    setPosition?.(event.latlng.clone());
   });
 
   const myIcon = new Icon({
@@ -73,6 +72,15 @@ const LocationMarker = ({
 
   return position ? <Marker icon={myIcon} position={position} /> : null;
 };
+
+const mapControlKeys = [
+  'dragging',
+  'touchZoom',
+  'scrollWheelZoom',
+  'boxZoom',
+  'doubleClickZoom',
+  'keyboard',
+] as const;
 
 const LocationManagementDialogPreset = ({
   handleClose,
@@ -167,10 +175,26 @@ const LocationManagementDialogPreset = ({
   const [updateLocationCoordinatesMutation] = useUpdateLocationCoordinatesMutation({
     onCompleted: refetch,
   });
+  const { canRun: canUpdateLocationCoordinates } = useCanRunUpdateLocationCoordinatesMutation({
+    variables: {
+      tagId: locationTag.id,
+    },
+  });
+
+  useEffect(() => {
+    for (const key of mapControlKeys) {
+      const handler = map.current?.[key];
+      if (canUpdateLocationCoordinates) {
+        handler?.enable();
+      } else {
+        handler?.disable();
+      }
+    }
+  }, [canUpdateLocationCoordinates]);
 
   const initialMapValues = useMemo(() => {
     return {
-      center: position ?? BAD_HARZBURG_POS,
+      center: position ?? BAD_HARZBURG_COORDINATES,
       zoom: 10,
     };
   }, [position]);
@@ -357,38 +381,49 @@ const LocationManagementDialogPreset = ({
             </div>
           </div>
           <div className='location-management-right'>
-            <div className='location-management-map'>
+            <div
+              className={`location-management-map ${
+                canUpdateLocationCoordinates ? '' : 'grayscale'
+              }`}
+            >
               <MapContainer
                 center={initialMapValues.center}
                 zoom={initialMapValues.zoom}
                 className='map-container w-full h-full mb-1'
-                scrollWheelZoom={true}
+                {...Object.fromEntries(
+                  mapControlKeys.map(key => [key, canUpdateLocationCoordinates] as const)
+                )}
+                zoomControl={false}
                 ref={map}
               >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
+                {canUpdateLocationCoordinates && <ZoomControl />}
                 <LocationMarker
                   position={position}
-                  setPosition={pos => {
-                    updateLocationCoordinatesMutation({
-                      variables: {
-                        tagId: locationTag.id,
-                        coordinate: {
-                          latitude: pos.lat,
-                          longitude: pos.lng,
-                        },
-                      },
-                    });
-                    setPosition(pos);
-                  }}
+                  setPosition={
+                    canUpdateLocationCoordinates
+                      ? pos => {
+                          updateLocationCoordinatesMutation({
+                            variables: {
+                              tagId: locationTag.id,
+                              coordinate: {
+                                latitude: pos.lat,
+                                longitude: pos.lng,
+                              },
+                            },
+                          });
+                          setPosition(pos);
+                        }
+                      : undefined
+                  }
                 />
               </MapContainer>
             </div>
             <div className='location-management-actions'>
-              <Button
-                className='location-management-button location-management-primary'
+              <LocationManagementButton
                 onClick={() => {
                   updateLocationCoordinatesMutation({
                     variables: {
@@ -398,18 +433,18 @@ const LocationManagementDialogPreset = ({
                   });
                   setPosition(undefined);
                 }}
+                disabled={!canUpdateLocationCoordinates}
                 endIcon={<Delete />}
               >
                 {t('tag-panel.delete-coordinate')}
-              </Button>
+              </LocationManagementButton>
               <div className='location-management-picture-count'>
                 {flattenedPictures &&
                   t('tag-panel.location-pictures', {
                     count: flattenedPictures.locationTags[0].pictures.length,
                   })}
               </div>
-              <Button
-                className='location-management-button location-management-primary'
+              <LocationManagementButton
                 onClick={() => {
                   handleClose(undefined);
                   visit(`/show-more/location/${locationTag.id}`, {
@@ -420,35 +455,31 @@ const LocationManagementDialogPreset = ({
                 endIcon={<ArrowForwardIos />}
               >
                 {t('common.show-pictures')}
-              </Button>
-              <Button
-                className={`${
-                  localVisibility ? 'location-management-primary' : 'location-management-gray'
-                } location-management-button`}
+              </LocationManagementButton>
+              <LocationManagementButton
                 onClick={() => {
                   setVisible(!localVisibility);
                   setLocalVisibility(localVisibility => !localVisibility);
                 }}
                 disabled={!canSetVisible}
+                color={localVisibility ? 'primary' : 'grey'}
                 endIcon={localVisibility ? <Visibility /> : <VisibilityOff />}
               >
                 {localVisibility ? t('common.visible') : t('common.invisible')}
-              </Button>
-              <Button
-                className={`${
-                  isRoot ? 'location-management-primary' : 'location-management-gray'
-                } location-management-button`}
+              </LocationManagementButton>
+              <LocationManagementButton
                 onClick={() => {
                   if (locationTag.parent_tags?.length) {
                     setTagAsRoot(!isRoot);
                     setIsRoot(isRoot => !isRoot);
                   }
                 }}
+                color={isRoot ? 'primary' : 'grey'}
                 disabled={!canSetTagAsRoot}
                 endIcon={<AccountTree />}
               >
                 {isRoot ? t('common.root') : t('common.no-root')}
-              </Button>
+              </LocationManagementButton>
             </div>
           </div>
         </div>
@@ -485,6 +516,10 @@ const LocationManagementDialogPreset = ({
       </div>
     </>
   );
+};
+
+const LocationManagementButton = (props: ButtonProps) => {
+  return <Button className='!my-1' fullWidth color='primary' variant='contained' {...props} />;
 };
 
 export default LocationManagementDialogPreset;

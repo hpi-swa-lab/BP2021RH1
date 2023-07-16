@@ -1,22 +1,13 @@
 import { useMemo } from 'react';
-import { useGetUserQuery, useRemoveUserMutation } from '../../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../../graphql/queryUtils';
+import { useRemoveUserMutation } from '../../../../graphql/APIConnector';
 import { useCanRemoveUser } from '../../../../hooks/can-do-hooks';
 import { FlatUsersPermissionsUser } from '../../../../types/additionalFlatTypes';
 import { DangerousRemoveButton } from '../DangerousRemoveButton';
 
-export const RemoveUserButton = ({ id }: { id: string | undefined }) => {
-  const { data } = useGetUserQuery({
-    variables: {
-      id: id ?? '-1',
-    },
-  });
-  const user: FlatUsersPermissionsUser | undefined =
-    useSimplifiedQueryResponseData(data)?.usersPermissionsUser;
-
+export const RemoveUserButton = ({ user }: { user: FlatUsersPermissionsUser | undefined }) => {
   const [removeUserMutation] = useRemoveUserMutation();
 
-  const { canRemoveUser } = useCanRemoveUser(id);
+  const { canRemoveUser } = useCanRemoveUser(user?.id);
 
   const entity = useMemo(
     () =>

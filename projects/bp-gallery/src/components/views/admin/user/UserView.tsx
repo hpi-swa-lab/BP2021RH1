@@ -93,7 +93,7 @@ export const UserView = ({
             {t('admin.user.permissions')}
           </Button>
         )}
-        <RemoveUserButton id={user?.id} />
+        <RemoveUserButton user={user} />
       </Stack>
     </CenteredContainer>
   );

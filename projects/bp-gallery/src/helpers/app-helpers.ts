@@ -2,7 +2,11 @@ import { ApolloLink, from } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
-import { canRunOperation } from 'bp-graphql/build/operations';
+import {
+  addPermission,
+  canRunOperation,
+  deleteParameterizedPermission,
+} from 'bp-graphql/build/operations';
 import { extractFiles } from 'extract-files';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { TFunction } from 'i18next';
@@ -89,7 +93,9 @@ const errorToStrings = (error: unknown): string[] => {
       for (const resultError of error.result.errors) {
         errors.push(...errorToStrings(resultError));
       }
-    } else if ('message' in error) {
+    }
+
+    if (errors.length === 0 && 'message' in error) {
       errors.push(...errorToStrings(error.message));
     }
   }
@@ -129,7 +135,9 @@ export const buildHttpLink = (
         : {}),
     },
   };
-  const batchedOperationNames = [canRunOperation].map(operation => operation.document.name);
+  const batchedOperationNames = [canRunOperation, addPermission, deleteParameterizedPermission].map(
+    operation => operation.document.name
+  );
   let httpLink = ApolloLink.split(
     operation =>
       !batchedOperationNames.includes(operation.operationName) ||

@@ -250,10 +250,8 @@ const HorizontalPictureGrid = ({
   const updateCurrentValue = useCallback(() => {
     const field = Math.ceil((scrollBarRef.current?.scrollLeft ?? 0) / IMAGE_WIDGET_WIDTH);
     const index = field * IMAGES_PER_WIDGET + ((leftPictures?.length ?? 0) % IMAGES_PER_WIDGET);
-    selectedPicture.current = pictures.length > index && index >= 0 ? pictures[index] : undefined;
-    if (!selectedPicture.current) {
-      return;
-    }
+    selectedPicture.current =
+      pictures.length > index && index >= 0 ? pictures[index] : pictures[pictures.length - 1];
     const year = new Date(selectedPicture.current.time_range_tag?.start as Date).getFullYear();
     if (leftResult.loading || rightResult.loading) {
       return;
@@ -321,7 +319,6 @@ const HorizontalPictureGrid = ({
       });
       if (index !== -1 && scrollBarRef.current) {
         const field = Math.floor(index / 3) + ((leftPictures?.length ?? 0) % 3 ? 1 : 0);
-
         scrollBarRef.current.scrollLeft = field * IMAGE_WIDGET_WIDTH;
       } else {
         setFilterDate(newDate);

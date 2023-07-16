@@ -212,7 +212,7 @@
       "publicTitle": "Rechte eines unangemeldeten Nutzers",
       "filterPlaceholder": "Archive filtern",
       "systemPermissions": "System-Rechte",
-      "withoutArchive": "Ohne Archiv",
+      "withoutArchive": "Bilder ohne Archivzuordnung",
       "reallyGrantAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" vergeben?",
       "reallyRemoveAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" entziehen?",
       "reallyEditAllPermissionsContent": "Sie können dies nicht rückgängig machen, sondern müssen den vorigen Stand manuell wiederherstellen.",
@@ -220,8 +220,10 @@
         "picture": "Bilder",
         "collection": "Collections",
         "tags": "Tags: Schlagworte, Personen und Orte",
+        "locations": "Orte",
         "comment": "Kommentare",
-        "archive": "Archive",
+        "archive_system": "Archive",
+        "archive_archive": "Archiv",
         "games": "Spiele",
         "user": "Nutzer"
       },
@@ -238,6 +240,7 @@
         "mergeCollections": "Collections zusammenführen",
         "setPicturesForCollection": "Bilder in einer Collection verwalten",
         "updateCollection": "Collection-Eigenschaften bearbeiten",
+        "updateCollectionParents": "Collection-Hierarchie verwalten",
         "createTag": "Tag anlegen",
         "deleteTag": "Tag löschen",
         "getAllTags": "Liste aller Tags ansehen",
@@ -263,8 +266,8 @@
         "addPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
         "deleteParameterizedPermission": "Recht entziehen",
-        "getUser": "Nutzer-Daten ansehen",
-        "updateUser": "Nutzer-Daten bearbeiten",
+        "getUser": "Alle Nutzer-Daten ansehen",
+        "updateUser": "Alle Nutzer-Daten bearbeiten",
         "getUsers": "Liste aller Nutzer sehen",
         "login": "Sich anmelden",
         "removeUser": "Nutzer löschen"
@@ -282,7 +285,7 @@
         }
       },
       "preset": {
-        "public": "Allgemeiner Nutzer"
+        "basic": "Basis-Nutzer"
       }
     },
     "user": {
@@ -330,7 +333,8 @@
     "resetPassword": {
       "title": "Passwort setzen/zurücksetzen",
       "password": "Neues Passwort",
-      "passwordConfirmation": "Neues Passwort wiederholen"
+      "passwordConfirmation": "Neues Passwort wiederholen",
+      "success": "Passwort erfolgreich gesetzt/zurückgesetzt"
     },
     "changePassword": {
       "title": "Passwort ändern",
@@ -603,6 +607,7 @@
     "our-categories": "Unsere Kategorien",
     "most-liked": "Bestbewertete Bilder",
     "our-pictures": "Unsere Bilder",
+    "map": "Karte",
     "timeline": "Zeitstrahl"
   },
   "exhibition": {
@@ -690,5 +695,11 @@
     "show-location": "Ort anzeigen.",
     "hide-location": "Ort verstecken.",
     "delete-location": "Ort löschen."
+  },
+  "map": {
+    "locations_other": "{{ count }} Orte",
+    "locations_one": "{{ count }} Ort",
+    "sublocations_other": "{{ count }} Unterorte",
+    "sublocations_one": "{{ count }} Unterort"
   }
 }

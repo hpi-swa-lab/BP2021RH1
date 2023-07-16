@@ -24,9 +24,9 @@ describe('bulk edit', () => {
     bulkEdit();
     cy.contains('.picture-info-field', 'Personen').find('input').type('Simon');
     cy.contains('Simon Heraldson').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('.MuiChip-root', 'Simon Heraldson').find('[data-testid="CancelIcon"]').click(); // cleanup
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Zurück').click();
     cy.get('.picture-preview .adornment [data-testid="CheckBoxIcon"]').should('not.exist');
   });

@@ -68,7 +68,7 @@ describe('bulk edit descriptions', () => {
       .find('.jodit-wysiwyg:empty')
       .type('Irgendwas cooles');
     cy.contains('.field-title', 'Beschreibungen').click();
-    cy.contains('.save-state', 'Gespeichert.');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert.');
 
     cy.visit('/picture/1');
     cy.contains('Yet another description');
@@ -87,7 +87,7 @@ describe('bulk edit descriptions', () => {
       .find('.MuiIconButton-root [data-testid="DeleteIcon"]')
       .click();
     cy.contains('Bestätigen').click();
-    cy.contains('.save-state', 'Gespeichert.');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert.');
     cy.contains('Yet another description');
     cy.contains('Irgendwas cooles').should('not.exist');
 

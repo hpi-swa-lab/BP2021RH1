@@ -14,6 +14,7 @@ import { FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
+import { SaveStatus } from '../../common/SaveStatus';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { HideStats } from '../../provider/ShowStatsProvider';
 import { PictureToolbar } from '../picture/overlay/PictureToolbar';
@@ -153,7 +154,10 @@ const BulkEditView = ({
                   onSave={onSave}
                   topInfo={(anyFieldTouched, isSaving) => (
                     <div className='curator-ops'>
-                      <span className='save-state'>{saveStatus(anyFieldTouched, isSaving)}</span>
+                      <SaveStatus
+                        className='ml-auto'
+                        label={saveStatus(anyFieldTouched, isSaving)}
+                      />
                     </div>
                   )}
                 />

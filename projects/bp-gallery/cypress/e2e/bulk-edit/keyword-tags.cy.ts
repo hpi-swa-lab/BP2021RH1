@@ -52,7 +52,7 @@ describe('bulk edit keyword tags', () => {
     cy.contains('.picture-info-field', 'Schlagworte')
       .find('input')
       .type('Verifiziertes Testschlagwort 4{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Verifiziertes Testschlagwort 4');
     cy.visit('/picture/3');
     cy.contains('Verifiziertes Testschlagwort 2');
@@ -69,7 +69,7 @@ describe('bulk edit keyword tags', () => {
     cy.contains('.MuiChip-root', 'Verifiziertes Testschlagwort 4')
       .find('[data-testid="CancelIcon"]')
       .click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Verifiziertes Testschlagwort 2').should('not.exist');
     cy.contains('Verifiziertes Testschlagwort 4').should('not.exist');
     cy.visit('/picture/3');
@@ -93,7 +93,7 @@ describe('bulk edit keyword tags', () => {
     cy.contains('.picture-info-field', 'Schlagworte')
       .find('input')
       .type('Verifiziertes Testschlagwort 4{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Verifiziertes Testschlagwort 2');
     cy.contains('Verifiziertes Testschlagwort 4');
     cy.visit('/picture/4');
@@ -107,7 +107,7 @@ describe('bulk edit keyword tags', () => {
     cy.contains('.MuiChip-root', 'Verifiziertes Testschlagwort 4')
       .find('[data-testid="CancelIcon"]')
       .click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Verifiziertes Testschlagwort 2');
     cy.contains('Verifiziertes Testschlagwort 4').should('not.exist');
   });

@@ -2035,6 +2035,7 @@ export type Query = {
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
   getAllLocationTags?: Maybe<Scalars['JSON']>;
+  getLocationTagsWithThumbnail?: Maybe<Scalars['JSON']>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
   link?: Maybe<LinkEntityResponse>;
@@ -2177,6 +2178,13 @@ export type QueryFindPicturesByAllSearchArgs = {
   searchTerms?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   searchTimes?: InputMaybe<Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>>;
   textFilter?: InputMaybe<Scalars['String']>;
+};
+
+export type QueryGetLocationTagsWithThumbnailArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  thumbnailFilters?: InputMaybe<PictureFiltersInput>;
 };
 
 export type QueryKeywordTagArgs = {
@@ -3333,34 +3341,7 @@ export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   sortBy?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
 }>;
 
-export type GetLocationTagsWithThumbnailQuery = {
-  locationTags?: {
-    data: Array<{
-      id?: string | null;
-      attributes?: {
-        name: string;
-        thumbnail?: {
-          data: Array<{
-            attributes?: {
-              media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
-              };
-            } | null;
-          }>;
-        } | null;
-        verified_thumbnail?: {
-          data: Array<{
-            attributes?: {
-              media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
-              };
-            } | null;
-          }>;
-        } | null;
-      } | null;
-    }>;
-  } | null;
-};
+export type GetLocationTagsWithThumbnailQuery = { getLocationTagsWithThumbnail?: any | null };
 
 export type GetMostLikedPicturesQueryVariables = Exact<{
   filters: PictureFiltersInput;
@@ -3942,7 +3923,7 @@ export type ChangePasswordMutationVariables = Exact<{
   passwordConfirmation: Scalars['String'];
 }>;
 
-export type ChangePasswordMutation = { changePassword?: { jwt?: string | null } | null };
+export type ChangePasswordMutation = { changePassword?: { user: { id: string } } | null };
 
 export type ContactMutationVariables = Exact<{
   recipient: Scalars['String'];
@@ -4259,7 +4240,7 @@ export type ResetPasswordMutationVariables = Exact<{
   passwordConfirmation: Scalars['String'];
 }>;
 
-export type ResetPasswordMutation = { resetPassword?: { jwt?: string | null } | null };
+export type ResetPasswordMutation = { resetPassword?: { user: { id: string } } | null };
 
 export type SetPicturesForCollectionMutationVariables = Exact<{
   pictureIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
@@ -4301,6 +4282,15 @@ export type UpdateCollectionMutationVariables = Exact<{
 }>;
 
 export type UpdateCollectionMutation = {
+  updateCollection?: { data?: { id?: string | null } | null } | null;
+};
+
+export type UpdateCollectionParentsMutationVariables = Exact<{
+  collectionId: Scalars['ID'];
+  parentCollectionIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
+}>;
+
+export type UpdateCollectionParentsMutation = {
   updateCollection?: { data?: { id?: string | null } | null } | null;
 };
 
@@ -6165,45 +6155,12 @@ export const GetLocationTagsWithThumbnailDocument = gql`
     $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    locationTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
-      data {
-        id
-        attributes {
-          name
-          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
-            data {
-              attributes {
-                media {
-                  data {
-                    attributes {
-                      formats
-                      provider
-                    }
-                  }
-                }
-              }
-            }
-          }
-          verified_thumbnail: verified_pictures(
-            filters: $thumbnailFilters
-            pagination: { limit: 1 }
-          ) {
-            data {
-              attributes {
-                media {
-                  data {
-                    attributes {
-                      formats
-                      provider
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    getLocationTagsWithThumbnail(
+      filters: $filters
+      thumbnailFilters: $thumbnailFilters
+      pagination: $pagination
+      sortBy: $sortBy
+    )
   }
 `;
 
@@ -8085,7 +8042,9 @@ export const ChangePasswordDocument = gql`
       password: $password
       passwordConfirmation: $passwordConfirmation
     ) {
-      jwt
+      user {
+        id
+      }
     }
   }
 `;
@@ -10206,7 +10165,9 @@ export type RemoveUserMutationOptions = Apollo.BaseMutationOptions<
 export const ResetPasswordDocument = gql`
   mutation resetPassword($token: String!, $password: String!, $passwordConfirmation: String!) {
     resetPassword(code: $token, password: $password, passwordConfirmation: $passwordConfirmation) {
-      jwt
+      user {
+        id
+      }
     }
   }
 `;
@@ -10522,6 +10483,64 @@ export type UpdateCollectionMutationResult = Apollo.MutationResult<UpdateCollect
 export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
   UpdateCollectionMutation,
   UpdateCollectionMutationVariables
+>;
+
+export const UpdateCollectionParentsDocument = gql`
+  mutation updateCollectionParents($collectionId: ID!, $parentCollectionIds: [ID]!) {
+    updateCollection(id: $collectionId, data: { parent_collections: $parentCollectionIds }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateCollectionParentsMutationFn = Apollo.MutationFunction<
+  UpdateCollectionParentsMutation,
+  UpdateCollectionParentsMutationVariables
+>;
+
+/**
+ * __useUpdateCollectionParentsMutation__
+ *
+ * To run a mutation, you first call `useUpdateCollectionParentsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCollectionParentsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCollectionParentsMutation, { data, loading, error }] = useUpdateCollectionParentsMutation({
+ *   variables: {
+ *      collectionId: // value for 'collectionId'
+ *      parentCollectionIds: // value for 'parentCollectionIds'
+ *   },
+ * });
+ */
+export function useUpdateCollectionParentsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCollectionParentsMutation,
+    UpdateCollectionParentsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateCollectionParentsMutation,
+    UpdateCollectionParentsMutationVariables
+  >(UpdateCollectionParentsDocument, options);
+}
+
+export type UpdateCollectionParentsMutationHookResult = ReturnType<
+  typeof useUpdateCollectionParentsMutation
+>;
+
+export type UpdateCollectionParentsMutationResult =
+  Apollo.MutationResult<UpdateCollectionParentsMutation>;
+
+export type UpdateCollectionParentsMutationOptions = Apollo.BaseMutationOptions<
+  UpdateCollectionParentsMutation,
+  UpdateCollectionParentsMutationVariables
 >;
 
 export const UpdateExhibitionDocument = gql`
@@ -15646,6 +15665,50 @@ export function useCanRunMultipleUpdateCollectionMutations(
     ...options,
     variables: {
       operation: UpdateCollectionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateCollectionParentsMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateCollectionParentsMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateCollectionParentsDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateCollectionParentsMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateCollectionParentsMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateCollectionParentsDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

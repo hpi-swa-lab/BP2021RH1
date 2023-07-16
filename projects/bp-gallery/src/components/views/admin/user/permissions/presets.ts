@@ -17,7 +17,29 @@ export type Preset = {
 export const presets: Preset[] = [
   {
     type: 'system',
-    name: 'public',
-    permissions: ['login'],
+    name: 'basic',
+    permissions: [
+      'setPicturesForCollection',
+      'getAllCollections',
+      'getAllTags',
+      'createTag',
+      'updateLocationCoordinates',
+      'getUnverifiedComments',
+      'getUser',
+      'getUsers',
+      {
+        name: 'removeUser',
+        parameters: {
+          on_other_users: false,
+        },
+      },
+      {
+        name: 'getParameterizedPermissions',
+        parameters: {
+          on_other_users: false,
+        },
+      },
+      'login',
+    ],
   },
 ];

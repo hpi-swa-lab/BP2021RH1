@@ -83,7 +83,7 @@ type FilterParameters = Partial<
   >
 >;
 
-type OrderByParameter = string | { [key: string]: string } | { [key: string]: string }[];
+type OrderByParameter = string | string[] | { [key: string]: string } | { [key: string]: string }[];
 
 type ResponseAttributes<T extends Strapi.ContentTypeUIDs> =
   | null

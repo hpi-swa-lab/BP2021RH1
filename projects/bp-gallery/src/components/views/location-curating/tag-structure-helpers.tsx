@@ -1,6 +1,57 @@
+import { LatLng } from 'leaflet';
 import { uniqBy } from 'lodash';
 import { useMemo } from 'react';
 import { FlatTag } from '../../../types/additionalFlatTypes';
+
+export const BAD_HARZBURG_COORDINATES = new LatLng(51.8392573, 10.5279953);
+
+const useGetTagsById = (flattenedTags: FlatTag[] | undefined) => {
+  return useMemo(() => {
+    if (!flattenedTags) return;
+    return Object.fromEntries(
+      flattenedTags.map(tag => [
+        tag.id,
+        { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
+      ])
+    );
+  }, [flattenedTags]);
+};
+
+const useGetTagTree = (
+  flattenedTags: FlatTag[] | undefined,
+  tagsById: { [k: string]: FlatTag } | undefined
+) => {
+  return useMemo(() => {
+    if (!flattenedTags || !tagsById) return undefined;
+
+    // set child tags for each tag in tree
+    for (const tag of Object.values(tagsById)) {
+      tag.parent_tags?.forEach(parentTag => {
+        tagsById[parentTag.id].child_tags?.push(tag);
+      });
+    }
+    for (const tag of Object.values(tagsById)) {
+      tagsById[tag.id].child_tags?.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    // filter for roots of tree
+    const sortedTagTree = Object.values(tagsById)
+      .filter(tag => !tag.parent_tags?.length || tag.root)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    //replace stubs with complete parent tags
+    for (const flatTag of flattenedTags) {
+      if (!(flatTag.id in tagsById)) {
+        continue;
+      }
+      const tag = tagsById[flatTag.id];
+      tag.parent_tags = tag.parent_tags
+        ?.map(parentTag => tagsById[parentTag.id])
+        .filter(parentTag => !!parentTag);
+    }
+
+    return sortedTagTree;
+  }, [flattenedTags, tagsById]);
+};
 
 const useGetTopologicalOrder = (tagsById: { [k: string]: FlatTag } | undefined) => {
   return useMemo(() => {
@@ -44,46 +95,9 @@ export const useGetTagStructures = (
   currentParentTag?: FlatTag,
   currentIsRoot?: boolean
 ) => {
-  const tagsById = useMemo(() => {
-    if (!flattenedTags) return;
-    return Object.fromEntries(
-      flattenedTags.map(tag => [
-        tag.id,
-        { ...tag, child_tags: [] as FlatTag[], unacceptedSubtags: 0 },
-      ])
-    );
-  }, [flattenedTags]);
+  const tagsById = useGetTagsById(flattenedTags);
 
-  const tagTree = useMemo(() => {
-    if (!flattenedTags || !tagsById) return undefined;
-
-    // set child tags for each tag in tree
-    for (const tag of Object.values(tagsById)) {
-      tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags.push(tag);
-      });
-    }
-    for (const tag of Object.values(tagsById)) {
-      tagsById[tag.id].child_tags.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    // filter for roots of tree
-    const sortedTagTree = Object.values(tagsById)
-      .filter(tag => !tag.parent_tags?.length || tag.root)
-      .sort((a, b) => a.name.localeCompare(b.name));
-
-    //replace stubs with complete parent tags
-    for (const flatTag of flattenedTags) {
-      if (!(flatTag.id in tagsById)) {
-        continue;
-      }
-      const tag = tagsById[flatTag.id];
-      tag.parent_tags = tag.parent_tags
-        ?.map(parentTag => tagsById[parentTag.id])
-        .filter(parentTag => !!parentTag);
-    }
-
-    return sortedTagTree;
-  }, [flattenedTags, tagsById]);
+  const tagTree = useGetTagTree(flattenedTags, tagsById);
 
   const tagChildTags = useMemo(() => {
     return flattenedTags && tagsById
@@ -191,4 +205,43 @@ export const useGetBreadthFirstOrder = (
   }, [tagTree, prioritizedOptions]);
 
   return tagOrder;
+};
+
+export const useGetDescendantsMatrix = (flattenedTags: FlatTag[] | undefined) => {
+  const tagsById = useGetTagsById(flattenedTags);
+  const tagTree = useGetTagTree(flattenedTags, tagsById);
+  const topologicalOrder = useGetTopologicalOrder(tagsById);
+
+  const descendantsMatrix = useMemo(() => {
+    if (!tagTree || !topologicalOrder || !flattenedTags) return;
+
+    const tempDescendantsMatrix = Object.fromEntries(
+      topologicalOrder.map(tag => [
+        tag.id,
+        Object.fromEntries(topologicalOrder.map(otherTag => [otherTag.id, false])),
+      ])
+    );
+
+    const visit = (tag: FlatTag) => {
+      tempDescendantsMatrix[tag.id][tag.id] = true;
+      if (!tag.child_tags) {
+        return;
+      }
+      for (const child of tag.child_tags) {
+        flattenedTags.forEach(flatTag => {
+          tempDescendantsMatrix[child.id][flatTag.id] ||= tempDescendantsMatrix[tag.id][flatTag.id];
+        });
+      }
+    };
+
+    for (const tag of topologicalOrder) {
+      visit(tag);
+    }
+
+    return tempDescendantsMatrix;
+  }, [flattenedTags, tagTree, topologicalOrder]);
+
+  return {
+    descendantsMatrix,
+  };
 };

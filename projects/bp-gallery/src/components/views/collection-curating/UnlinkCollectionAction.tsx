@@ -2,7 +2,10 @@ import { Link } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useUpdateCollectionMutation } from '../../../graphql/APIConnector';
+import {
+  useCanRunUpdateCollectionParentsMutation,
+  useUpdateCollectionParentsMutation,
+} from '../../../graphql/APIConnector';
 import { FlatCollection } from '../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
 
@@ -15,9 +18,10 @@ const UnlinkCollectionAction = ({
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
-  const [updateCollection] = useUpdateCollectionMutation({
+  const [updateCollectionParents] = useUpdateCollectionParentsMutation({
     refetchQueries: ['getCollectionInfoById', 'getAllCollections'],
   });
+  const { canRun: canUpdateCollectionParents } = useCanRunUpdateCollectionParentsMutation();
 
   const onUnlinkChildCollection = useCallback(
     (collection: FlatCollection) => {
@@ -34,17 +38,15 @@ const UnlinkCollectionAction = ({
         const newParents = (collection.parent_collections?.map(p => p.id) ?? []).filter(
           id => id !== parentCollection.id
         );
-        updateCollection({
+        updateCollectionParents({
           variables: {
             collectionId: collection.id,
-            data: {
-              parent_collections: newParents,
-            },
+            parentCollectionIds: newParents,
           },
         });
       });
     },
-    [parentCollection, dialog, t, updateCollection]
+    [parentCollection, dialog, t, updateCollectionParents]
   );
 
   return (
@@ -60,10 +62,14 @@ const UnlinkCollectionAction = ({
     >
       <span
         className='link-indicator'
-        onClick={event => {
-          event.stopPropagation();
-          onUnlinkChildCollection(childCollection);
-        }}
+        onClick={
+          canUpdateCollectionParents
+            ? event => {
+                event.stopPropagation();
+                onUnlinkChildCollection(childCollection);
+              }
+            : undefined
+        }
       >
         <Link />
         <span>{childCollection.parent_collections?.length}</span>
