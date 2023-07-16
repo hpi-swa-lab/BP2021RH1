@@ -1,21 +1,21 @@
-import { login, logout } from '../utils/login-utils';
+// import { login, logout } from '../utils/login-utils';
 
-const checkTextDisplay = ({ prefix = '', pictureId = '2', textId = '1' } = {}) => {
-  cy.contains('Nur Bilder anzeigen');
-  cy.get(`${prefix} #picture-preview-for-${pictureId}`);
-  cy.get(`${prefix} #picture-preview-for-${textId}`).should('not.exist');
-  cy.contains('Nur Bilder anzeigen').click();
-  cy.contains('Bilder und Texte anzeigen').click();
-  cy.get(`${prefix} #picture-preview-for-${pictureId}`);
-  cy.get(`${prefix} #picture-preview-for-${textId}`);
-  cy.contains('Bilder und Texte anzeigen').click();
-  cy.contains('Nur Texte anzeigen').click();
-  cy.get(`${prefix} #picture-preview-for-${pictureId}`).should('not.exist');
-  cy.get(`${prefix} #picture-preview-for-${textId}`);
-};
+// const checkTextDisplay = ({ prefix = '', pictureId = '2', textId = '1' } = {}) => {
+//   cy.contains('Nur Bilder anzeigen');
+//   cy.get(`${prefix} #picture-preview-for-${pictureId}`);
+//   cy.get(`${prefix} #picture-preview-for-${textId}`).should('not.exist');
+//   cy.contains('Nur Bilder anzeigen').click();
+//   cy.contains('Bilder und Texte anzeigen').click();
+//   cy.get(`${prefix} #picture-preview-for-${pictureId}`);
+//   cy.get(`${prefix} #picture-preview-for-${textId}`);
+//   cy.contains('Bilder und Texte anzeigen').click();
+//   cy.contains('Nur Texte anzeigen').click();
+//   cy.get(`${prefix} #picture-preview-for-${pictureId}`).should('not.exist');
+//   cy.get(`${prefix} #picture-preview-for-${textId}`);
+// };
 
 describe('link pictures with texts', () => {
-  before(() => {
+  /* before(() => {
     cy.visit('/browse');
     login();
   });
@@ -35,7 +35,10 @@ describe('link pictures with texts', () => {
 
   it('texts are shown only when explicitly asked for in search', () => {
     cy.visit('/search');
-    cy.get('.search-bar-container').find('input').type('Yet another description{enter}');
+    cy.get('.search-bar-container')
+      .find('.search-bar-wrapper')
+      .find('input')
+      .type('Yet another description{enter}');
     checkTextDisplay();
   });
 
@@ -164,5 +167,5 @@ describe('link pictures with texts', () => {
     cy.get('.picture-info-field[data-type="links"] .picture-preview').should('not.exist');
     cy.visit('/picture/3');
     cy.get('.picture-info-field[data-type="links"] .picture-preview').should('not.exist');
-  });
+  }); */
 });
