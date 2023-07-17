@@ -16,7 +16,7 @@ import {
 } from '../../../location-curating/tag-structure-helpers';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 import { SearchType } from '../../../search/helpers/search-filters';
-import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import useAdvancedSearch from '../../../search/helpers/useDeprecatedAdvancedSearch';
 import SingleTagElement from './SingleTagElement';
 import './TagSelection.scss';
 

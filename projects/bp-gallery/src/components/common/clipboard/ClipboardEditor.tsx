@@ -69,7 +69,7 @@ export const ClipboardEditor = () => {
               <ScrollContainer>
                 <HideStats>
                   <PictureScrollGrid
-                    queryParams={{ id: { in: data.pictureIds } }}
+                    queryParams={data.pictureIds}
                     hashbase={'clipboard'}
                     showCount={false}
                     showDefaultAdornments={false}

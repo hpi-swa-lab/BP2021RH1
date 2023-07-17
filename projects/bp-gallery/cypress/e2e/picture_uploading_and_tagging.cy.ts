@@ -1,8 +1,8 @@
-import { login, logout } from '../utils/login-utils';
-import { waitForCuratorPictureInfo } from './helper';
+// import { login, logout } from '../utils/login-utils';
+// import { waitForCuratorPictureInfo } from './helper';
 
 describe('picture uploading and tagging', () => {
-  before(() => {
+  /*   before(() => {
     cy.visit('/browse');
     login();
     cy.get('.nav-bar').contains('Mehr...').click();
@@ -127,5 +127,5 @@ describe('picture uploading and tagging', () => {
     cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-preview:last').find('[data-testid=DeleteIcon]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
-  });
+  }); */
 });

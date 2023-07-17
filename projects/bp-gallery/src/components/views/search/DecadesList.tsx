@@ -18,7 +18,7 @@ import {
   getDecadeSearchTermForAllSearch,
 } from './helpers/search-filters';
 import { getDecadeTranslation } from './helpers/search-translation';
-import useAdvancedSearch from './helpers/useAdvancedSearch';
+import useAdvancedSearch from './helpers/useDeprecatedAdvancedSearch';
 
 const DECADES: string[] = ['4', '5', '6', '7', '8', '9'];
 

@@ -12,6 +12,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 import { TFunction } from 'i18next';
 import { unionWith, uniq } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
+import { isIdArrayFilters } from '../hooks/get-pictures.hook';
 import { translateErrorMessage } from '../i18n';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
 
@@ -198,7 +199,7 @@ export const mergeByRef = (
   incoming: Ref[],
   args: any
 ): Ref[] => {
-  if (args?.pagination?.start === 0) {
+  if (args?.pagination?.start === 0 && !isIdArrayFilters(args?.filters)) {
     return incoming;
   }
   return unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);

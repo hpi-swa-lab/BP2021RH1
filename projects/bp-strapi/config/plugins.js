@@ -4,7 +4,7 @@ const {
 
 /* eslint-disable no-unused-vars */
 
-const dateToTimeStamp = (date) => {
+const dateToTimeStamp = date => {
   return Date.parse(date) / 1000;
 };
 
@@ -73,90 +73,75 @@ module.exports = ({ env }) => ({
     },
   },
   meilisearch:
-    env("MEILISEARCH_ENABLED", "false") === "true"
+    env('MEILISEARCH_ENABLED', 'false') === 'true'
       ? {
           config: {
-            host: env("MEILISEARCH_HOST"),
-            apiKey: env("MEILISEARCH_API_KEY"),
+            host: env('MEILISEARCH_HOST'),
+            apiKey: env('MEILISEARCH_API_KEY'),
             picture: {
               transformEntry({ entry }) {
                 const transformedEntry = {
-                  id: entry.id,
-                  likes: entry.likes,
-                  descriptions: entry.descriptions.map(
-                    (description) => description.text
-                  ),
-                  comments: entry.comments.map((comment) => comment.text),
-                  keyword_tags: entry.keyword_tags
-                    .map((tag) => tag.name)
-                    .concat(entry.verified_keyword_tags.map((tag) => tag.name)),
-                  person_tags: entry.person_tags
-                    .map((tag) => tag.name)
-                    .concat(entry.verified_person_tags.map((tag) => tag.name)),
-                  location_tags: entry.location_tags
-                    .map((tag) => tag.name)
-                    .concat(
-                      entry.verified_location_tags.map((tag) => tag.name)
-                    ),
-                  face_tags: entry.face_tags.map((tag) => tag.name),
-                  collections: entry.collections.map((tag) => tag.name),
-                  archive_tag: entry.archive_tag,
+                  id: entry?.id,
+                  is_text: entry?.is_text,
+                  likes: entry?.likes,
+                  descriptions: entry?.descriptions.map(description => description.text),
+                  comments: entry?.comments.map(comment => comment.text),
+                  keyword_tags: entry?.keyword_tags
+                    .map(tag => tag.name)
+                    .concat(entry?.verified_keyword_tags.map(tag => tag.name)),
+                  person_tags: entry?.person_tags
+                    .map(tag => tag.name)
+                    .concat(entry?.verified_person_tags.map(tag => tag.name)),
+                  location_tags: entry?.location_tags
+                    .map(tag => tag.name)
+                    .concat(entry?.verified_location_tags.map(tag => tag.name)),
+                  face_tags: entry?.face_tags.map(tag => tag.name),
+                  collections: entry?.collections.map(tag => tag.name),
+                  archive_tag: entry?.archive_tag.name,
                   time_range_tag_start: entry?.time_range_tag
-                    ? dateToTimeStamp(entry.time_range_tag.start)
-                    : entry.verified_time_range_tag
-                    ? dateToTimeStamp(entry.verified_time_range_tag.start)
+                    ? dateToTimeStamp(entry?.time_range_tag.start)
+                    : entry?.verified_time_range_tag
+                    ? dateToTimeStamp(entry?.verified_time_range_tag.start)
                     : null,
                   time_range_tag_end: entry?.time_range_tag
-                    ? dateToTimeStamp(entry.time_range_tag.end)
-                    : entry.verified_time_range_tag
-                    ? dateToTimeStamp(entry.verified_time_range_tag.end)
+                    ? dateToTimeStamp(entry?.time_range_tag.end)
+                    : entry?.verified_time_range_tag
+                    ? dateToTimeStamp(entry?.verified_time_range_tag.end)
                     : null,
                 };
 
                 return transformedEntry;
               },
               settings: {
-                displayedAttributes: ["id"],
+                //for reference: https://www.meilisearch.com/docs/reference/api/settings
+                displayedAttributes: ['id'],
                 // the order of the attributes in searchableAttributes determines the priorization
                 // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
                 searchableAttributes: [
-                  "descriptions",
-                  "keyword_tags",
-                  "location_tags",
-                  "time_range_tag_start",
-                  "time_range_tag_end",
-                  "face_tags",
-                  "person_tags",
-                  "collections",
-                  "archive_tag",
-                  "comments",
+                  'descriptions',
+                  'location_tags',
+                  'keyword_tags',
+                  'face_tags',
+                  'person_tags',
+                  'time_range_tag_start',
+                  'time_range_tag_end',
+                  'collections',
+                  'archive_tag',
                 ],
                 filterableAttributes: [
-                  "keyword_tags",
-                  "location_tags",
-                  "time_range_tag_start",
-                  "time_range_tag_end",
-                  "face_tags",
-                  "person_tags",
-                  "descriptions",
-                  "comments",
-                  "collections",
-                  "archive_tag",
-                  "is_text",
+                  'keyword_tags',
+                  'location_tags',
+                  'time_range_tag_start',
+                  'time_range_tag_end',
+                  'face_tags',
+                  'person_tags',
+                  'descriptions',
+                  'collections',
+                  'archive_tag',
+                  'is_text',
                 ],
-                sortableAttributes: [
-                  "time_range_tag_start",
-                  "time_range_tag_end",
-                  "likes",
-                ],
-                rankingRules: [
-                  "words",
-                  "typo",
-                  "proximity",
-                  "attribute",
-                  "sort",
-                  "exactness",
-                ],
+                sortableAttributes: ['time_range_tag_start', 'time_range_tag_end', 'likes'],
+                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'exactness', 'sort'],
                 // words that are ignored during searches, useful for common words
                 //  that do not carry a meaning on their own like articles, pronomina etc.
                 // we do not use this setting, since our data on user searchers suggests, that
@@ -178,6 +163,67 @@ module.exports = ({ env }) => ({
                 // maxtotalHits determines the maximal possible amount
                 // of search results and overrides any other settings
                 // like the result_limit of the search settings in this regard
+                pagination: {
+                  maxTotalHits: 1000,
+                },
+              },
+            },
+            comment: {
+              transformEntry({ entry }) {
+                const transformedEntry = {
+                  id: entry?.id,
+                  pictureId: entry?.picture.id,
+                  author: entry?.author,
+                  text: entry?.text,
+                  date: entry?.date ? dateToTimeStamp(entry?.date) : null,
+                  pinned: entry?.pinned,
+                  hasChildComments: !!entry?.childComments,
+                  hasParentComments: !!entry?.parentComments,
+                };
+                return transformedEntry;
+              },
+              settings: {
+                //for reference: https://www.meilisearch.com/docs/reference/api/settings
+                displayedAttributes: [
+                  'author',
+                  'text',
+                  'date',
+                  'pictureId',
+                  'pinned',
+                  'hasChildComments',
+                  'hasParentComments',
+                ],
+                // the order of the attributes in searchableAttributes determines the priorization
+                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
+                searchableAttributes: ['text', 'author', 'date'],
+                filterableAttributes: [
+                  'author',
+                  'text',
+                  'date',
+                  'pictureId',
+                  'pinned',
+                  'hasChildComments',
+                  'hasParentComments',
+                ],
+                sortableAttributes: ['date'],
+                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+                // words that are ignored during searches, useful for common words
+                //  that do not carry a meaning on their own like articles, pronomina etc.
+                // we do not use this setting, since our data on user searchers suggests, that
+                // users only search for proper names, people, locations and nouns in general
+                stopWords: [],
+                synonyms: {},
+                // returned documents will always be unigue in this attribute
+                distinctAttribute: null,
+                typoTolerance: {
+                  enabled: true,
+                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
+                  disableOnWords: [],
+                  disableOnAttributes: [],
+                },
+                faceting: {
+                  maxValuesPerFacet: 100,
+                },
                 pagination: {
                   maxTotalHits: 1000,
                 },

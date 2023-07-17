@@ -4,12 +4,12 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertContext, AlertType } from '../../provider/AlertProvider';
 import { useVisit } from './../../../helpers/history';
+import './SearchBar.scss';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import { SearchType } from './helpers/search-filters';
 import { getSearchTypeTranslation } from './helpers/search-translation';
 import { fromURLSearchParam } from './helpers/url-search-params';
-import useAdvancedSearch from './helpers/useAdvancedSearch';
-import './SearchBar.scss';
+import useAdvancedSearch from './helpers/useDeprecatedAdvancedSearch';
 
 const SearchBar = ({
   searchParams,
@@ -58,8 +58,6 @@ const SearchBar = ({
     !isAllSearchActive && Array.from(searchParams.entries()).length !== 0;
 
   const onSearchStart = (searchInput: string) => {
-    if (searchInput === '') return;
-
     // Spaces are our delimiter for different search terms
     const newSearchRequest = searchInput.split(' ').map(encodeURIComponent).join(' ');
 

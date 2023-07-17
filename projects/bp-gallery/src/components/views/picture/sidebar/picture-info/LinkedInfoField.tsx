@@ -226,7 +226,7 @@ const LinkedInfoField = ({
             <ScrollProvider>
               <ScrollContainer>
                 <PictureScrollGrid
-                  queryParams={{ id: { in: linked.collection?.map(link => link.id) ?? [] } }}
+                  queryParams={linked.collection?.map(link => link.id) ?? []}
                   hashbase={'links'}
                   showCount={false}
                   showDefaultAdornments={false}

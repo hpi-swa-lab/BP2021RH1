@@ -2,10 +2,9 @@ import { ArrowForwardIos } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PictureFiltersInput } from '../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../graphql/queryUtils';
 import { useVisit } from '../../helpers/history';
-import useGetPictures, { TextFilter } from '../../hooks/get-pictures.hook';
+import useGetPictures, { QueryParams, TextFilter } from '../../hooks/get-pictures.hook';
 import { useCollapseSequences } from '../../hooks/sequences.hook';
 import { FlatPicture, PictureOverviewType } from '../../types/additionalFlatTypes';
 import './PictureOverview.scss';
@@ -14,7 +13,7 @@ import { pictureGridInitialPictureIdUrlParam } from './picture-gallery/helpers/c
 
 interface PictureOverviewProps {
   title?: string;
-  queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] };
+  queryParams: QueryParams;
   showMoreUrl: string;
   sortBy?: string[];
   rows?: number;
