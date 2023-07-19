@@ -86,13 +86,15 @@ const ExhibitionBigCard = ({
   const { visit } = useVisit();
   return (
     <div className='relative flex gap-4 p-4'>
-      <img
-        height='200'
-        width='250'
-        style={{ objectFit: 'cover' }}
-        src={titlePictureLink}
-        alt='exhibition picture'
-      />
+      <div className='w-[250px]'>
+        <img
+          height='200'
+          width='250'
+          style={{ objectFit: 'cover' }}
+          src={titlePictureLink}
+          alt='exhibition picture'
+        />
+      </div>
       <div className='flex flex-col justify-between'>
         <div className='flex flex-col gap-2'>
           <div className='text-xl font-bold'>{exhibitionTitle}</div>
