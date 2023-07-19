@@ -1,4 +1,5 @@
 import { WatchQueryFetchPolicy } from '@apollo/client';
+import { KeyArgsFunction } from '@apollo/client/cache/inmemory/policies';
 import { useMemo } from 'react';
 import {
   GetPicturesByAllSearchQueryVariables,
@@ -18,8 +19,15 @@ export enum TextFilter {
   ONLY_TEXTS = 'ONLY_TEXTS',
 }
 
+type IdArray = string[];
+
+export type QueryParams =
+  | PictureFiltersInput
+  | IdArray
+  | { searchTerms: string[]; searchTimes: string[][] };
+
 const useGetPictures = (
-  queryParams: PictureFiltersInput | { searchTerms: string[]; searchTimes: string[][] },
+  queryParams: QueryParams,
   isAllSearchActive: boolean,
   sortBy?: string[],
   textFilter = TextFilter.ONLY_PICTURES,
@@ -28,42 +36,12 @@ const useGetPictures = (
   type: PictureOverviewType = PictureOverviewType.CUSTOM
 ) => {
   const filters = useMemo(() => {
-    switch (textFilter) {
-      case TextFilter.ONLY_PICTURES:
-        return {
-          and: [
-            {
-              or: [
-                {
-                  is_text: {
-                    eq: false,
-                  },
-                },
-                {
-                  is_text: {
-                    null: true,
-                  },
-                },
-              ],
-            },
-            queryParams as PictureFiltersInput,
-          ],
-        };
-      case TextFilter.ONLY_TEXTS:
-        return {
-          and: [
-            {
-              is_text: {
-                eq: true,
-              },
-            },
-            queryParams as PictureFiltersInput,
-          ],
-        };
-      case TextFilter.PICTURES_AND_TEXTS:
-        return queryParams as PictureFiltersInput;
-    }
-  }, [textFilter, queryParams]);
+    const innerFilters =
+      queryParams instanceof Array
+        ? createIdArrayFilter(queryParams, 0, limit)
+        : (queryParams as PictureFiltersInput);
+    return wrapQueryParamsWithTextFilter(textFilter, innerFilters);
+  }, [textFilter, queryParams, limit]);
 
   const queryResult = useGetPicturesQuery({
     variables: {
@@ -126,3 +104,73 @@ const useGetPictures = (
 };
 
 export default useGetPictures;
+
+const fullIdArray = Symbol('fullIdArray');
+
+// Treat picture queries as the same query, as long as the filters clause is equal or
+// they are part of the same multi-part idArray query.
+// Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
+// get treated as one query and the results get merged.
+export const picturesKeyArgsFunction: KeyArgsFunction = args => {
+  if (!args) {
+    return undefined;
+  }
+  if (isIdArrayFilters(args.filters)) {
+    return JSON.stringify(args.filters[fullIdArray]);
+  }
+  return ['filters'];
+};
+
+export const isIdArrayFilters = (filters: unknown) => {
+  return typeof filters === 'object' && !!filters && fullIdArray in filters;
+};
+
+export const createIdArrayFilter = (idArray: IdArray, start: number, limit: number) => {
+  return {
+    [fullIdArray]: idArray,
+    id: {
+      in: idArray.slice(start, start + limit),
+    },
+  } as PictureFiltersInput;
+};
+
+export const wrapQueryParamsWithTextFilter = (
+  textFilter: TextFilter,
+  innerFilters: PictureFiltersInput
+) => {
+  switch (textFilter) {
+    case TextFilter.ONLY_PICTURES:
+      return {
+        and: [
+          {
+            or: [
+              {
+                is_text: {
+                  eq: false,
+                },
+              },
+              {
+                is_text: {
+                  null: true,
+                },
+              },
+            ],
+          },
+          innerFilters,
+        ],
+      };
+    case TextFilter.ONLY_TEXTS:
+      return {
+        and: [
+          {
+            is_text: {
+              eq: true,
+            },
+          },
+          innerFilters,
+        ],
+      };
+    case TextFilter.PICTURES_AND_TEXTS:
+      return innerFilters;
+  }
+};

@@ -4,7 +4,7 @@ import { FlatArchiveTag } from '../../../../../types/additionalFlatTypes';
 import { DialogPreset, useDialog } from '../../../../provider/DialogProvider';
 import { addNewParamToSearchPath } from '../../../search/helpers/addNewParamToSearchPath';
 import { SearchType } from '../../../search/helpers/search-filters';
-import useAdvancedSearch from '../../../search/helpers/useAdvancedSearch';
+import useAdvancedSearch from '../../../search/helpers/useDeprecatedAdvancedSearch';
 
 const ArchiveTagField = ({
   archiveTag,

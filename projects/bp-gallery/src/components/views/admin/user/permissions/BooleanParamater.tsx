@@ -16,6 +16,7 @@ export const BooleanParameter = ({
   findPermission,
   deletePermission,
   addPermission,
+  refetchPermissions,
   falseTitle,
   trueTitle,
 }: {
@@ -27,7 +28,8 @@ export const BooleanParameter = ({
     archive: FlatArchiveTag | null
   ) => FlatParameterizedPermission | null;
   deletePermission: (options: { variables: { id: string } }) => Promise<unknown>;
-  addPermission: (operation: Operation, parameters: Parameters) => void;
+  addPermission: (operation: Operation, parameters: Parameters) => Promise<unknown>;
+  refetchPermissions: () => Promise<unknown>;
   falseTitle: string;
   trueTitle: string;
 }) => {
@@ -43,15 +45,24 @@ export const BooleanParameter = ({
               },
             });
           }
-          addPermission(operation, {
+          await addPermission(operation, {
             archive_tag: archive ?? undefined,
             ...permission,
             [parameter]: Boolean(event.target.value),
           });
+          await refetchPermissions();
         });
       }
     },
-    [operations, findPermission, archive, addPermission, parameter, deletePermission]
+    [
+      operations,
+      findPermission,
+      archive,
+      addPermission,
+      parameter,
+      deletePermission,
+      refetchPermissions,
+    ]
   );
 
   const allTrue = useMemo(

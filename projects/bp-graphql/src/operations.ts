@@ -85,6 +85,7 @@ export { default as unpinComment } from './operations/unpinComment.js';
 export { default as unpublishPicture } from './operations/unpublishPicture.js';
 export { default as updateArchive } from './operations/updateArchive.js';
 export { default as updateCollection } from './operations/updateCollection.js';
+export { default as updateCollectionParents } from './operations/updateCollectionParents.js';
 export { default as updateExhibition } from './operations/updateExhibition.js';
 export { default as updateExhibitionPicture } from './operations/updateExhibitionPicture.js';
 export { default as updateExhibitionSection } from './operations/updateExhibitionSection.js';

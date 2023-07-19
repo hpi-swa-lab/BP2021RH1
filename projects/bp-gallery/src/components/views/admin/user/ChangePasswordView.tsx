@@ -26,7 +26,7 @@ export const ChangePasswordView = () => {
         passwordConfirmation,
       },
     });
-    if (result.data?.changePassword?.jwt) {
+    if (result.data?.changePassword?.user.id) {
       openAlert({
         alertType: AlertType.SUCCESS,
         message: t('admin.changePassword.success'),

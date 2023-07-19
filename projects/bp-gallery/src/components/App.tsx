@@ -2,6 +2,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { renderRoutes } from 'react-router-config';
 import { buildHttpLink, mergeByRef, mergeByRefWrappedInData } from '../helpers/app-helpers';
+import { picturesKeyArgsFunction } from '../hooks/get-pictures.hook';
 import './App.scss';
 import ScrollContainer from './common/ScrollContainer';
 import AlertProvider from './provider/AlertProvider';
@@ -45,10 +46,7 @@ const apolloClient = new ApolloClient({
       Query: {
         fields: {
           pictures: {
-            // Treat picture queries as the same query, as long as the filters clause is equal.
-            // Queries which only differ in other fields (e.g. the pagination fields 'start' or 'limit')
-            // get treated as one query and the results get merged.
-            keyArgs: ['filters'],
+            keyArgs: picturesKeyArgsFunction,
             merge: mergeByRefWrappedInData,
           },
           findPicturesByAllSearch: {

@@ -2,12 +2,17 @@ import { ApolloLink, from } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
-import { canRunOperation } from 'bp-graphql/build/operations';
+import {
+  addPermission,
+  canRunOperation,
+  deleteParameterizedPermission,
+} from 'bp-graphql/build/operations';
 import { extractFiles } from 'extract-files';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { TFunction } from 'i18next';
 import { unionWith, uniq } from 'lodash';
 import { AlertOptions, AlertType } from '../components/provider/AlertProvider';
+import { isIdArrayFilters } from '../hooks/get-pictures.hook';
 import { translateErrorMessage } from '../i18n';
 import type { FlatUploadFile } from '../types/additionalFlatTypes';
 
@@ -88,7 +93,9 @@ const errorToStrings = (error: unknown): string[] => {
       for (const resultError of error.result.errors) {
         errors.push(...errorToStrings(resultError));
       }
-    } else if ('message' in error) {
+    }
+
+    if (errors.length === 0 && 'message' in error) {
       errors.push(...errorToStrings(error.message));
     }
   }
@@ -128,7 +135,9 @@ export const buildHttpLink = (
         : {}),
     },
   };
-  const batchedOperationNames = [canRunOperation].map(operation => operation.document.name);
+  const batchedOperationNames = [canRunOperation, addPermission, deleteParameterizedPermission].map(
+    operation => operation.document.name
+  );
   let httpLink = ApolloLink.split(
     operation =>
       !batchedOperationNames.includes(operation.operationName) ||
@@ -190,7 +199,7 @@ export const mergeByRef = (
   incoming: Ref[],
   args: any
 ): Ref[] => {
-  if (args?.pagination?.start === 0) {
+  if (args?.pagination?.start === 0 && !isIdArrayFilters(args?.filters)) {
     return incoming;
   }
   return unionWith<Ref>(existing ?? [], incoming, (a, b) => a.__ref === b.__ref);

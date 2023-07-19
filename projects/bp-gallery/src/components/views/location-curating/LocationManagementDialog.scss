@@ -23,6 +23,7 @@
 
   .location-management-left {
     padding-right: 8px;
+
     .location-management-name-container {
       display: flex;
 
@@ -80,6 +81,7 @@
   .location-management-right {
     padding-left: 8px;
     max-width: 400px;
+
     .location-management-map {
       width: 400px;
       height: 400px;
@@ -92,32 +94,18 @@
         color: $archiveColor;
         margin-top: 1rem;
       }
-
-      .location-management-button {
-        color: #ffffff;
-        margin-top: 0.5rem;
-        width: 100%;
-        padding-inline: 1rem;
-        align-self: center;
-      }
-
-      .location-management-primary {
-        background-color: $primaryColor;
-      }
-
-      .location-management-gray {
-        background-color: lightgray;
-      }
     }
   }
 }
 
 .location-management-navigation {
   display: flex;
+
   .location-management-previous-button {
     margin-left: 10px;
     margin-right: auto;
   }
+
   .location-management-next-button {
     margin-left: auto;
     margin-right: 4px;

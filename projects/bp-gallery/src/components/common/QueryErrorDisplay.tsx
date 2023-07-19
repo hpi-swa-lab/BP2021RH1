@@ -1,10 +1,9 @@
-import { ApolloError } from '@apollo/client';
 import { useTranslation } from 'react-i18next';
-import { translateErrorMessage } from '../../i18n';
+import { errorToTranslatedString } from '../../helpers/app-helpers';
 
-const QueryErrorDisplay = ({ error }: { error: ApolloError }) => {
+const QueryErrorDisplay = ({ error }: { error: unknown }) => {
   const { t } = useTranslation();
-  return <div>{translateErrorMessage(error.message, t)}</div>;
+  return <div>{errorToTranslatedString(error, t)}</div>;
 };
 
 export default QueryErrorDisplay;

@@ -828,6 +828,13 @@ const bulkEdit = async (knexEngine: KnexEngine, pictureIds: number[], data: any)
   );
   shouldWriteUpdatedAt |= await bulkEditLinks(knexEngine, pictureIds, data, LINKED_TEXTS_KEY, true);
   shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, COLLECTIONS_KEY, false);
+  // added to trigger a change to the picture index of Meilisearch
+  strapi.db.lifecycles.run('afterUpdateMany', 'api::picture.picture', {
+    params: {
+      where: { id: { $in: pictureIds } },
+    },
+    result: { count: pictureIds.length },
+  });
 
   if (shouldWriteUpdatedAt) {
     const updatedAt = new Date();
@@ -849,6 +856,10 @@ const like = async (knexEngine: KnexEngine, pictureId: number, dislike?: boolean
     'likes',
     knexEngine.raw(dislike ? 'GREATEST(COALESCE(likes, 0) - 1, 0)' : 'COALESCE(likes, 0) + 1')
   );
+  // added to trigger a change to the picture index of Meilisearch
+  strapi.db.lifecycles.run('afterUpdate', 'api::picture.picture', {
+    result: { id: pictureId },
+  });
 };
 
 const incNotAPlaceCount = async (knexEngine: KnexEngine, pictureId: number) => {
@@ -857,6 +868,10 @@ const incNotAPlaceCount = async (knexEngine: KnexEngine, pictureId: number) => {
     'is_not_a_place_count',
     knexEngine.raw('COALESCE(is_not_a_place_count, 0) + 1')
   );
+  // added to trigger a change to the picture index of Meilisearch
+  strapi.db.lifecycles.run('afterUpdate', 'api::picture.picture', {
+    result: { id: pictureId },
+  });
 };
 
 export { bulkEdit, incNotAPlaceCount, like, updatePictureWithTagCleanup };

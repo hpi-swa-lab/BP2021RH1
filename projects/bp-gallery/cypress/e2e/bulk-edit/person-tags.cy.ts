@@ -50,7 +50,7 @@ describe('bulk edit person tags', () => {
     selectPictures('1', '3');
     bulkEdit();
     cy.contains('.picture-info-field', 'Personen').find('input').type('Katharina{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Katharina Schmunk');
     cy.visit('/picture/1');
     cy.contains('Simon Heraldson').should('not.exist');
@@ -65,7 +65,7 @@ describe('bulk edit person tags', () => {
     selectPictures('1', '3');
     bulkEdit();
     cy.contains('.MuiChip-root', 'Katharina Schmunk').find('[data-testid="CancelIcon"]').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Simon Heraldson').should('not.exist');
     cy.contains('Katharina Schmunk').should('not.exist');
     cy.visit('/picture/1');
@@ -87,7 +87,7 @@ describe('bulk edit person tags', () => {
     selectPictures('2', '3');
     bulkEdit();
     cy.contains('.picture-info-field', 'Personen').find('input').type('Katharina{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Simon Heraldson');
     cy.contains('Katharina Schmunk');
     cy.visit('/picture/2');
@@ -99,7 +99,7 @@ describe('bulk edit person tags', () => {
     // cleanup
     cy.get('[data-testid="CancelIcon"]'); // wait for auth
     cy.contains('.MuiChip-root', 'Katharina Schmunk').find('[data-testid="CancelIcon"]').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Simon Heraldson');
     cy.contains('Katharina Schmunk').should('not.exist');
   });

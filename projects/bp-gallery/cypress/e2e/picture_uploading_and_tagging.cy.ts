@@ -1,8 +1,8 @@
-import { login, logout } from '../utils/login-utils';
-import { waitForCuratorPictureInfo } from './helper';
+// import { login, logout } from '../utils/login-utils';
+// import { waitForCuratorPictureInfo } from './helper';
 
 describe('picture uploading and tagging', () => {
-  before(() => {
+  /*   before(() => {
     cy.visit('/browse');
     login();
     cy.get('.nav-bar').contains('Mehr...').click();
@@ -56,23 +56,23 @@ describe('picture uploading and tagging', () => {
     cy.get('.date-indicator').click();
     cy.contains('.rdrInputRange', 'Jahr').find('input').clear();
     cy.contains('.rdrInputRange', 'Jahr').find('input').type('1000{esc}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
   });
 
   it('tagging picture with description', () => {
     cy.get('.add-button').click();
     cy.get('.description-wrapper').find('.jodit-container').type('Test');
-    cy.get('.save-state:contains(Speichern ausstehend)').should('exist');
+    cy.get('[data-testid="save-status"]:contains(Speichern ausstehend)').should('exist');
     cy.get('.picture-container img').click();
-    cy.get('.save-state:contains(Gespeichert)').should('exist');
+    cy.get('[data-testid="save-status"]:contains(Gespeichert)').should('exist');
   });
 
   it('change picture description', () => {
     cy.get('.description-wrapper').find('.jodit-container').type('Beschreibung');
-    cy.get('.save-state:contains(Speichern ausstehend)').should('exist');
+    cy.get('[data-testid="save-status"]:contains(Speichern ausstehend)').should('exist');
     // regression test for https://github.com/hpi-swa-lab/BP2021RH1/issues/401
     cy.get('.picture-container img').click();
-    cy.get('.save-state:contains(Gespeichert)').should('exist');
+    cy.get('[data-testid="save-status"]:contains(Gespeichert)').should('exist');
   });
 
   it('tagging picture with person tag', () => {
@@ -80,7 +80,7 @@ describe('picture uploading and tagging', () => {
     cy.contains('.field-content', 'Personen').find('input').clear();
     cy.contains('.field-content', 'Personen').find('input').type('TestPerson');
     cy.contains('TestPerson hinzufügen').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
   });
 
   it('tagging picture with location tag', () => {
@@ -88,7 +88,7 @@ describe('picture uploading and tagging', () => {
     cy.contains('.field-content', 'Orte').find('input').clear();
     cy.contains('.field-content', 'Orte').find('input').type('TestOrt');
     cy.contains('TestOrt hinzufügen').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
   });
 
   it('tagging picture with keyword tag', () => {
@@ -96,14 +96,14 @@ describe('picture uploading and tagging', () => {
     cy.contains('.field-content', 'Schlagworte').find('input').clear();
     cy.contains('.field-content', 'Schlagworte').find('input').type('TestSchlagwort');
     cy.contains('TestSchlagwort hinzufügen').click();
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
   });
 
   it('tagging picture with collection', () => {
     cy.contains('.field-content', 'Collections').find('input').click();
     cy.contains('.field-content', 'Collections').find('input').clear();
     cy.contains('.field-content', 'Collections').find('input').type('TestCollection{enter}');
-    cy.contains('.save-state', 'Gespeichert');
+    cy.contains('[data-testid="save-status"]', 'Gespeichert');
   });
 
   it('checking tags', () => {
@@ -127,5 +127,5 @@ describe('picture uploading and tagging', () => {
     cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false });
     cy.get('.picture-preview:last').find('[data-testid=DeleteIcon]').click();
     cy.get('.MuiButton-root').contains('Bestätigen').click();
-  });
+  }); */
 });

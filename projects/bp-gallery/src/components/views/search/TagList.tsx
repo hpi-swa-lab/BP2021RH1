@@ -20,7 +20,7 @@ import { useVisit } from './../../../helpers/history';
 import './TagList.scss';
 import { addNewParamToSearchPath } from './helpers/addNewParamToSearchPath';
 import { SearchType } from './helpers/search-filters';
-import useAdvancedSearch from './helpers/useAdvancedSearch';
+import useAdvancedSearch from './helpers/useDeprecatedAdvancedSearch';
 
 const TagList = ({
   type,

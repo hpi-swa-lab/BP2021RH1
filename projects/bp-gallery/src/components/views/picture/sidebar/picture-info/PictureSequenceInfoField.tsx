@@ -1,6 +1,5 @@
 import { Filter, LinkOff } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { sortBy } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCanCreatePictureSequence } from '../../../../../hooks/can-do-hooks';
@@ -32,11 +31,6 @@ const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
   useEffect(() => {
     setCurrentOrder(sequencePictureIds);
   }, [sequencePictureIds]);
-
-  const customSort = useCallback(
-    (pictures: FlatPicture[]) => sortBy(pictures, picture => currentOrder?.indexOf(picture.id)),
-    [currentOrder]
-  );
 
   const updatePictureSequenceOrder = useUpdatePictureSequenceOrder();
   const onSort = useCallback(
@@ -82,7 +76,7 @@ const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
         <ScrollProvider>
           <ScrollContainer>
             <PictureScrollGrid
-              queryParams={{ id: { in: sequencePictureIds } }}
+              queryParams={currentOrder ?? []}
               hashbase={'sequence'}
               showCount={false}
               showDefaultAdornments={false}
@@ -90,7 +84,6 @@ const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
               collapseSequences={false}
               textFilter={TextFilter.PICTURES_AND_TEXTS}
               cacheOnRefetch
-              customSort={customSort}
               onSort={canEdit ? onSort : undefined}
             />
           </ScrollContainer>

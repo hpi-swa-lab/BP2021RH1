@@ -156,10 +156,29 @@
     "decade": "Jahrzehnte",
     "keyword": "Schlagworte",
     "description": "Beschreibungen",
+    "comment": "Kommentare",
     "person": "Personen",
+    "face-tag": "Personenmarkierungen",
     "location": "Orte",
     "collection": "Sammlungen",
     "archive": "Archive",
+    "advanced-search-title": "Erweiterte Suche",
+    "appy-filter": "Filter Anwenden",
+    "setIndex": "Suche einschränken auf",
+    "picture": "Alle Bildinformationen",
+    "timeRange": "Zeitspannen",
+    "default": "Nichts ausgewählt",
+    "equal": "sind gleich",
+    "unequal": "sind nicht gleich",
+    "is-empty": "sind leer",
+    "is-not-empty": "sind nicht leer",
+    "lower": "kleiner als",
+    "lower-equal": "kleiner gleich als",
+    "greater": "größer als",
+    "greater-equal": "größer gleich als",
+    "span": "von ... bis ...",
+    "and": "und",
+    "or": "oder",
     "all": "Alle Bildinformationen",
     "start-search": "Suche starten",
     "picture-found": "Bild wurde gefunden",
@@ -169,6 +188,8 @@
     "explanation": "Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Wenn du ohne zurückzugehen weitere\n Suchbegriffe eingibst, werden nur Bilder angezeigt, auf die alle bisherigen Suchbegriffe zutreffen.",
     "question": "Die Suche effektiv nutzen:",
     "help": "Jeder zusätzliche Suchbegriff schränkt die Suche weiter ein. Um den Suchradius wieder zu erweitern, können die unter dem Eingabefeld aufgeführten Suchbegriffe einzeln gelöscht werden. Eingeschränkt werden kann die Suche auch auf Zeiträume, dazu die Schreibweise JJJJ-JJJJ (also z.B. 1979-1982, ohne Leerzeichen) verwenden.",
+    "advanced-question": "Nutzung der Erweiterten Suche",
+    "advanced-help": "Mithilfe der erweiterten Suche können für die verschiedenen Bildinformationen spezielle Bedingungen aufgestellt und über das 'Plus'-Icon aneinandergereicht werden. Bei der Nutzung der 'sind gleich'-Option ist dabei besondere Vorsicht zu genießen, da sie nur auf exakte Gleichheit überprüft. Wenn also z.B. 'Beschreibungen sind gleich Haus' als Bedingung angegeben wird, dann werden nur Bilder zurückgegeben, deren Beschreibung nichts anderes als das Wort 'Haus' enthalten. Beschreibungen, die irgendwo in ihren Texten das Wort 'Haus' enthalten, werden nicht zurückgegeben.",
     "explanation-headline": "Was passiert, wenn ich Schlagworte suche?",
     "for": "nach",
     "no-results-info": "Im Archiv gibt es leider keine Bilder, die {{searchQueryText}} {{paramEnumeration}} erfüllen.",
@@ -191,7 +212,7 @@
       "publicTitle": "Rechte eines unangemeldeten Nutzers",
       "filterPlaceholder": "Archive filtern",
       "systemPermissions": "System-Rechte",
-      "withoutArchive": "Ohne Archiv",
+      "withoutArchive": "Bilder ohne Archivzuordnung",
       "reallyGrantAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" vergeben?",
       "reallyRemoveAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" entziehen?",
       "reallyEditAllPermissionsContent": "Sie können dies nicht rückgängig machen, sondern müssen den vorigen Stand manuell wiederherstellen.",
@@ -199,8 +220,10 @@
         "picture": "Bilder",
         "collection": "Collections",
         "tags": "Tags: Schlagworte, Personen und Orte",
+        "locations": "Orte",
         "comment": "Kommentare",
-        "archive": "Archive",
+        "archive_system": "Archive",
+        "archive_archive": "Archiv",
         "games": "Spiele",
         "user": "Nutzer"
       },
@@ -217,6 +240,7 @@
         "mergeCollections": "Collections zusammenführen",
         "setPicturesForCollection": "Bilder in einer Collection verwalten",
         "updateCollection": "Collection-Eigenschaften bearbeiten",
+        "updateCollectionParents": "Collection-Hierarchie verwalten",
         "createTag": "Tag anlegen",
         "deleteTag": "Tag löschen",
         "getAllTags": "Liste aller Tags ansehen",
@@ -242,8 +266,8 @@
         "addPermission": "Recht vergeben",
         "getParameterizedPermissions": "Rechte ansehen",
         "deleteParameterizedPermission": "Recht entziehen",
-        "getUser": "Nutzer-Daten ansehen",
-        "updateUser": "Nutzer-Daten bearbeiten",
+        "getUser": "Alle Nutzer-Daten ansehen",
+        "updateUser": "Alle Nutzer-Daten bearbeiten",
         "getUsers": "Liste aller Nutzer sehen",
         "login": "Sich anmelden",
         "removeUser": "Nutzer löschen"
@@ -261,7 +285,7 @@
         }
       },
       "preset": {
-        "public": "Allgemeiner Nutzer"
+        "basic": "Basis-Nutzer"
       }
     },
     "user": {
@@ -309,7 +333,8 @@
     "resetPassword": {
       "title": "Passwort setzen/zurücksetzen",
       "password": "Neues Passwort",
-      "passwordConfirmation": "Neues Passwort wiederholen"
+      "passwordConfirmation": "Neues Passwort wiederholen",
+      "success": "Passwort erfolgreich gesetzt/zurückgesetzt"
     },
     "changePassword": {
       "title": "Passwort ändern",

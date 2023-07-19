@@ -1,23 +1,20 @@
 import { Location } from 'history';
 import { useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import usePromise from 'react-use-promise';
+import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
-import { HelpTooltip } from '../../common/HelpTooltip';
+import { TextFilter } from '../../../hooks/get-pictures.hook';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
+import { TextFilterSelect } from '../../common/picture-gallery/TextFilterSelect';
 import { ExhibitionIdContext } from '../../provider/ExhibitionProvider';
 import { ShowStats } from '../../provider/ShowStatsProvider';
+import AdvancedSearch from './AdvancedSearch';
 import NoSearchResultsText from './NoSearchResultsText';
-import SearchBar from './SearchBar';
-import SearchBreadcrumbs from './SearchBreadcrumbs';
-import SearchHub from './SearchHub';
 import './SearchView.scss';
 import { isValidYear } from './helpers/addNewParamToSearchPath';
-import {
-  SearchType,
-  convertSearchParamsToPictureFilters,
-  paramToTime,
-} from './helpers/search-filters';
+import getSearchResultHits from './helpers/getSearchResultHits';
+import { SearchType, paramToTime } from './helpers/search-filters';
 import { toURLSearchParam } from './helpers/url-search-params';
 
 const isValidTimeSpecification = (searchRequest: string) => {
@@ -34,8 +31,10 @@ const isValidTimeSpecification = (searchRequest: string) => {
 
 const SearchView = () => {
   const [areResultsEmpty, setAreResultsEmpty] = useState<boolean>(false);
+  const [filter, setFilter] = useState('');
+  // const [searchIndex, setSearchIndex] = useState('picture');
+  const [textFilter, setTextFilter] = useState(TextFilter.ONLY_PICTURES);
   const { search }: Location = useLocation();
-  const { t } = useTranslation();
 
   const searchParams = useMemo(() => {
     return new URLSearchParams(search);
@@ -48,26 +47,33 @@ const SearchView = () => {
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
-    if (isAllSearchActive) {
-      const allSearchTerms = searchParams
-        .getAll(toURLSearchParam(SearchType.ALL))
-        .map(decodeURIComponent);
-      const searchTimes: string[][] = [];
-      allSearchTerms.forEach(searchTerm => {
-        if (isValidTimeSpecification(searchTerm)) {
-          const { startTime, endTime } = paramToTime(searchTerm);
-          searchTimes.push([searchTerm, startTime, endTime]);
-        }
-      });
-      return {
-        searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
-        searchTimes,
-      };
-    }
-    return convertSearchParamsToPictureFilters(searchParams);
-  }, [isAllSearchActive, searchParams]);
-  // if (import.meta.env.MODE === 'development')
-  //   getSearchResultPictureIds(queryParams, '').then(res => console.log('search results:', res));
+    const allSearchTerms = searchParams
+      .getAll(toURLSearchParam(SearchType.ALL))
+      .map(decodeURIComponent);
+    const searchTimes: string[][] = [];
+    allSearchTerms.forEach(searchTerm => {
+      if (isValidTimeSpecification(searchTerm)) {
+        const { startTime, endTime } = paramToTime(searchTerm);
+        searchTimes.push([searchTerm, startTime, endTime]);
+      }
+    });
+    return {
+      searchTerms: allSearchTerms.filter(searchTerm => !isValidTimeSpecification(searchTerm)),
+      searchTimes,
+    };
+  }, [searchParams]);
+
+  const [searchResultIds] = usePromise(
+    async () =>
+      (await getSearchResultHits(queryParams, filter, textFilter, 'picture' /* searchIndex */)).map(
+        hit => (hit.id as number).toString()
+      ),
+    [queryParams, textFilter, filter]
+  );
+  if (import.meta.env.MODE === 'development') {
+    console.log(searchResultIds);
+  }
+  const isOldSearchActive = useFlag('old_search');
 
   const { linkToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
 
@@ -75,38 +81,41 @@ const SearchView = () => {
 
   return (
     <div className='search-content'>
-      <div className='search-bar-container'>
-        {' '}
-        {(!areResultsEmpty || !search) && (
-          <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
-        )}
-        <HelpTooltip title={t('search.question')} content={t('search.help')} />
-        <div className='breadcrumb'>
-          <SearchBreadcrumbs searchParams={searchParams} />
-        </div>
-      </div>
+      <AdvancedSearch
+        setFilter={setFilter}
+        /* searchIndex={searchIndex}
+        setSearchIndex={setSearchIndex} */
+        searchParams={searchParams}
+        isAllSearchActive={isAllSearchActive}
+      ></AdvancedSearch>
       {areResultsEmpty && search && <NoSearchResultsText searchParams={searchParams} />}
-      {!search ? (
-        <SearchHub />
-      ) : (
-        <ShowStats>
-          <PictureScrollGrid
-            queryParams={queryParams}
-            isAllSearchActive={isAllSearchActive}
-            hashbase={search}
-            bulkOperations={[
-              linkToCollection,
-              createSequence,
-              bulkEdit,
-              ...(exhibitionId ? [addToExhibition] : []),
-            ]}
-            resultPictureCallback={(pictures: number) => {
-              setAreResultsEmpty(pictures <= 0);
-            }}
-            textFilter={null}
-          />
-        </ShowStats>
-      )}
+      <div className='flex flex-row justify-end mt-4'>
+        <TextFilterSelect value={textFilter} onChange={setTextFilter} />
+      </div>
+
+      <ShowStats>
+        <PictureScrollGrid
+          queryParams={isOldSearchActive ? queryParams : searchResultIds ?? []}
+          // if allSearch is active the custom resolver for allSearch will be used, which can only
+          // handle simple queryparams in the format {searchTerms:string[], searchTimes:string[][]} which
+          //  leads to erros when we use queryparams of the type PictureFiltersInput,
+          // so isAllSearchactive has to be false if we want to use the Meilisearch results
+          // by ANDing the isAllsearchActive flag with the isOldsearchActive flag we can make sure
+          // the isAllSearchActive property will always be false if we want to use Meilisearch
+          isAllSearchActive={isOldSearchActive && isAllSearchActive}
+          hashbase={search}
+          bulkOperations={[
+            linkToCollection,
+            createSequence,
+            bulkEdit,
+            ...(exhibitionId ? [addToExhibition] : []),
+          ]}
+          resultPictureCallback={(pictures: number) => {
+            setAreResultsEmpty(pictures <= 0);
+          }}
+          textFilter={TextFilter.PICTURES_AND_TEXTS} // text filtering is handled by meilisearch filters
+        />
+      </ShowStats>
     </div>
   );
 };

@@ -1,11 +1,12 @@
-import { ExpandMore } from '@mui/icons-material';
+import { NetworkStatus } from '@apollo/client';
+import { ExpandMore, Search } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Button,
-  Input,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import { Operation, Parameter } from 'bp-graphql/build';
@@ -29,6 +30,7 @@ import {
 import Loading from '../../../common/Loading';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
+import { SaveStatus } from '../../../common/SaveStatus';
 import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
 import { FALLBACK_PATH } from '../../../routes';
 import { CenteredContainer } from '../CenteredContainer';
@@ -61,13 +63,17 @@ const PermissionsView = ({ userId }: { userId: string }) => {
 
   const {
     data: permissionsData,
-    loading: permissionsLoading,
+    loading: rawPermissionsLoading,
     error: permissionsError,
+    refetch: refetchPermissions,
+    networkStatus,
   } = useGetParameterizedPermissionsQuery({
     variables: {
       userId: parsedUserId,
     },
+    notifyOnNetworkStatusChange: true,
   });
+  const permissionsLoading = rawPermissionsLoading && networkStatus !== NetworkStatus.refetch;
   const permissions: FlatParameterizedPermission[] | undefined =
     useSimplifiedQueryResponseData(permissionsData)?.parameterizedPermissions;
 
@@ -109,12 +115,12 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const archives: FlatArchiveTag[] | undefined =
     useSimplifiedQueryResponseData(archivesData)?.archiveTags;
 
-  const [createPermission] = useAddPermissionMutation({
-    refetchQueries: ['getParameterizedPermissions'],
-  });
-  const [deletePermission] = useDeleteParameterizedPermissionMutation({
-    refetchQueries: ['getParameterizedPermissions'],
-  });
+  const [createPermission, { loading: createPermissionLoading }] = useAddPermissionMutation();
+  const [deletePermission, { loading: deletePermissionLoading }] =
+    useDeleteParameterizedPermissionMutation();
+
+  const isWorking =
+    createPermissionLoading || deletePermissionLoading || networkStatus === NetworkStatus.refetch;
 
   const loading = userLoading || permissionsLoading || archivesLoading;
   const error = userError ?? permissionsError ?? archivesError;
@@ -122,8 +128,8 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   const dialog = useDialog();
 
   const addPermission = useCallback(
-    (operation: Operation, { archive_tag, ...parameters }: Parameters) => {
-      createPermission({
+    async (operation: Operation, { archive_tag, ...parameters }: Parameters) => {
+      await createPermission({
         variables: {
           operation_name: operation.document.name,
           user_id: parsedUserId,
@@ -136,15 +142,18 @@ const PermissionsView = ({ userId }: { userId: string }) => {
   );
 
   const addPreset = useCallback(
-    (
+    async (
       operations: { operation: Operation; parameters: ParametersWithoutArchive }[],
       archive: FlatArchiveTag | null
     ) => {
-      for (const { operation, parameters } of operations) {
-        addPermission(operation, { archive_tag: archive ?? undefined, ...parameters });
-      }
+      await Promise.all(
+        operations.map(async ({ operation, parameters }) => {
+          await addPermission(operation, { archive_tag: archive ?? undefined, ...parameters });
+        })
+      );
+      await refetchPermissions();
     },
-    [addPermission]
+    [addPermission, refetchPermissions]
   );
 
   const toggleOperations = useCallback(
@@ -169,24 +178,29 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         }
       }
       if (removeAll) {
-        for (const operation of operations) {
-          const permission = findPermission(operation, archive);
-          if (!permission) {
-            continue;
-          }
-          deletePermission({
-            variables: {
-              id: permission.id,
-            },
-          });
-        }
+        await Promise.all(
+          operations.map(async operation => {
+            const permission = findPermission(operation, archive);
+            if (!permission) {
+              return;
+            }
+            await deletePermission({
+              variables: {
+                id: permission.id,
+              },
+            });
+          })
+        );
       } else {
-        for (const operation of operations) {
-          addPermission(operation, { archive_tag: archive ?? undefined });
-        }
+        await Promise.all(
+          operations.map(async operation => {
+            await addPermission(operation, { archive_tag: archive ?? undefined });
+          })
+        );
       }
+      await refetchPermissions();
     },
-    [dialog, t, findPermission, deletePermission, addPermission]
+    [dialog, t, findPermission, deletePermission, addPermission, refetchPermissions]
   );
 
   const [filter, setFilter] = useState('');
@@ -238,9 +252,24 @@ const PermissionsView = ({ userId }: { userId: string }) => {
             })
           ),
         }));
+      const accordionStyle = {
+        backgroundColor: '#e9e9e9',
+      };
       return (
-        <Accordion key={archive?.id ?? type} sx={{ backgroundColor: '#e9e9e9' }}>
-          <AccordionSummary expandIcon={<ExpandMore />}>
+        <Accordion
+          key={archive?.id ?? type}
+          sx={accordionStyle}
+          classes={{
+            root: 'before:z-20', // ::before is the divider between Accordions
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+            classes={{
+              root: '!sticky top-0 z-10 ',
+            }}
+            sx={accordionStyle}
+          >
             <Typography fontWeight='bold'>
               <CoverageCheckbox
                 coverage={combineCoverages(
@@ -255,6 +284,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                 label={summary}
                 prompt
                 toggleOperations={toggleOperations}
+                clickThrough
               />
             </Typography>
           </AccordionSummary>
@@ -281,9 +311,10 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                       coverage={combineCoverages(section.groups.map(group => group.coverage))}
                       operations={section.groups.flatMap(group => group.operations)}
                       archive={archive}
-                      label={t(`admin.permissions.section.${section.name}`)}
+                      label={t(`admin.permissions.section.${section.name}`, { context: type })}
                       prompt
                       toggleOperations={toggleOperations}
+                      clickThrough
                     />
                   </AccordionSummary>
                   <AccordionDetails>
@@ -306,6 +337,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                             archive={archive}
                             deletePermission={deletePermission}
                             addPermission={addPermission}
+                            refetchPermissions={refetchPermissions}
                           />
                         </div>
                       ))}
@@ -326,6 +358,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
       findPermission,
       addPermission,
       deletePermission,
+      refetchPermissions,
     ]
   );
 
@@ -341,25 +374,37 @@ const PermissionsView = ({ userId }: { userId: string }) => {
           return <Loading />;
         } else if (permissionLookup && archives) {
           return (
-            <CenteredContainer
-              title={
-                isPublic
-                  ? t('admin.permissions.publicTitle')
-                  : t('admin.permissions.title', { userName: user?.username })
-              }
-            >
-              <div className='mb-2'>
-                <Input
-                  fullWidth
-                  value={filter}
-                  onChange={onFilterChange}
-                  placeholder={t('admin.permissions.filterPlaceholder')}
+            <>
+              <CenteredContainer
+                title={
+                  isPublic
+                    ? t('admin.permissions.publicTitle')
+                    : t('admin.permissions.title', { userName: user?.username })
+                }
+                titleOnLeftSideOfScreenAfterScroll
+              >
+                <div className='mb-2'>
+                  <TextField
+                    fullWidth
+                    value={filter}
+                    onChange={onFilterChange}
+                    placeholder={t('admin.permissions.filterPlaceholder')}
+                    variant='outlined'
+                    InputProps={{
+                      endAdornment: <Search />,
+                    }}
+                  />
+                </div>
+                {renderSections('system')}
+                {renderSections('archive', null)}
+                {archives.map(archive => renderSections('archive', archive))}
+              </CenteredContainer>
+              <div className='absolute right-5 top-[6.75rem]'>
+                <SaveStatus
+                  label={t(isWorking ? 'curator.saveStatus.saving' : 'curator.saveStatus.saved')}
                 />
               </div>
-              {renderSections('system')}
-              {renderSections('archive', null)}
-              {archives.map(archive => renderSections('archive', archive))}
-            </CenteredContainer>
+            </>
           );
         } else {
           return <Redirect to={FALLBACK_PATH} />;
@@ -377,6 +422,7 @@ const ParameterInputs = ({
   archive,
   deletePermission,
   addPermission,
+  refetchPermissions,
 }: {
   group: GroupStructure;
   findPermission: (
@@ -385,7 +431,8 @@ const ParameterInputs = ({
   ) => FlatParameterizedPermission | null;
   archive: FlatArchiveTag | null;
   deletePermission: (parameters: { variables: { id: string } }) => Promise<unknown>;
-  addPermission: (operation: Operation, parameters: Parameters) => void;
+  addPermission: (operation: Operation, parameters: Parameters) => Promise<unknown>;
+  refetchPermissions: () => Promise<unknown>;
 }) => {
   const { t } = useTranslation();
 
@@ -394,6 +441,7 @@ const ParameterInputs = ({
     findPermission,
     addPermission,
     deletePermission,
+    refetchPermissions,
     archive,
   };
 

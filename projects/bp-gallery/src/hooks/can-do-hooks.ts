@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { parseUserId } from '../components/views/admin/user/helper';
 import {
   useCanRunAcceptCommentMutation,
@@ -25,6 +26,8 @@ import {
   useCanRunGetUsersQuery,
   useCanRunMergeCollectionsMutation,
   useCanRunMultipleCreatePictureMutations,
+  useCanRunMultipleRemoveArchiveTagMutations,
+  useCanRunMultipleUpdateArchiveMutations,
   useCanRunMultipleUpdateExhibitionMutations,
   useCanRunMultipleUpdatePictureSequenceDataMutations,
   useCanRunMultipleUploadMutation,
@@ -33,6 +36,7 @@ import {
   useCanRunRemoveUserMutation,
   useCanRunUpdateArchiveMutation,
   useCanRunUpdateCollectionMutation,
+  useCanRunUpdateCollectionParentsMutation,
   useCanRunUpdateExhibitionMutation,
   useCanRunUpdatePictureMutation,
   useCanRunUpdateUserMutation,
@@ -71,18 +75,36 @@ export const useCanUseEditArchiveView = (id: string) => {
   };
 };
 
-export const useCanUseSomeEditArchiveView = () => {
-  const { canRun: canEditSomeArchive, loading: canEditSomeArchiveLoading } =
-    useCanRunUpdateArchiveMutation({
-      withSomeVariables: true,
+export const useCanUseMultipleEditArchiveViews = () => {
+  const { data, loading: archivesLoading } = useGetAllArchiveTagsQuery();
+  const archives: FlatArchiveTag[] | undefined = useSimplifiedQueryResponseData(data)?.archiveTags;
+  const { canRunMultiple: canEditMultipleArchives, loading: canEditMultipleArchivesLoading } =
+    useCanRunMultipleUpdateArchiveMutations({
+      variableSets:
+        archives?.map(archive => ({
+          archiveId: archive.id,
+        })) ?? [],
     });
-  const { canRun: canRemoveSomeArchive, loading: canRemoveSomeArchiveLoading } =
-    useCanRunRemoveArchiveTagMutation({
-      withSomeVariables: true,
+  const { canRunMultiple: canRemoveMultipleArchives, loading: canRemoveMultipleArchivesLoading } =
+    useCanRunMultipleRemoveArchiveTagMutations({
+      variableSets:
+        archives?.map(archive => ({
+          id: archive.id,
+        })) ?? [],
     });
+  const canUseMultipleEditArchiveViews = useMemo(
+    () =>
+      Object.fromEntries(
+        archives?.map((archive, index) => [
+          archive.id,
+          (canEditMultipleArchives[index] ?? false) || (canRemoveMultipleArchives[index] ?? false),
+        ]) ?? []
+      ),
+    [archives, canEditMultipleArchives, canRemoveMultipleArchives]
+  );
   return {
-    canUseSomeEditArchiveView: canEditSomeArchive || canRemoveSomeArchive,
-    loading: canEditSomeArchiveLoading || canRemoveSomeArchiveLoading,
+    canUseMultipleEditArchiveViews,
+    loading: archivesLoading || canEditMultipleArchivesLoading || canRemoveMultipleArchivesLoading,
   };
 };
 
@@ -233,6 +255,8 @@ export const useCanUseCollectionCuratingView = () => {
 
   const { canRun: canUpdateCollection, loading: canUpdateCollectionLoading } =
     useCanRunUpdateCollectionMutation();
+  const { canRun: canUpdateCollectionParents, loading: canUpdateCollectionParentsLoading } =
+    useCanRunUpdateCollectionParentsMutation();
   const { canRun: canDeleteCollection, loading: canDeleteCollectionLoading } =
     useCanRunDeleteCollectionMutation();
   const { canRun: canMergeCollections, loading: canMergeCollectionsLoading } =
@@ -244,11 +268,16 @@ export const useCanUseCollectionCuratingView = () => {
     canUseCollectionCuratingView:
       canGetRootCollection &&
       canGetCollectionInfoById &&
-      (canUpdateCollection || canDeleteCollection || canMergeCollections || canCreateSubCollection),
+      (canUpdateCollection ||
+        canUpdateCollectionParents ||
+        canDeleteCollection ||
+        canMergeCollections ||
+        canCreateSubCollection),
     loading:
       canGetRootCollectionLoading ||
       canGetCollectionInfoByIdLoading ||
       canUpdateCollectionLoading ||
+      canUpdateCollectionParentsLoading ||
       canDeleteCollectionLoading ||
       canMergeCollectionsLoading ||
       canCreateSubCollectionLoading,
@@ -394,16 +423,18 @@ export const useCanUseUsersView = () => {
 };
 
 export const useCanUseArchivesView = () => {
-  const { canRun: canGetAllArchiveTags, loading: canGetAllArchiveTagsLoading } =
-    useCanRunGetAllArchiveTagsQuery();
-  const { canUseSomeEditArchiveView, loading: canUseSomeEditArchiveViewLoading } =
-    useCanUseSomeEditArchiveView();
+  const { canUseMultipleEditArchiveViews, loading: canUseMultipleEditArchiveViewsLoading } =
+    useCanUseMultipleEditArchiveViews();
   const { canAddArchive, loading: canAddArchiveLoading } = useCanAddArchive();
 
+  const canUseSomeEditArchiveView =
+    !canUseMultipleEditArchiveViewsLoading &&
+    Object.values(canUseMultipleEditArchiveViews).some(can => can);
+
   return {
-    canUseArchivesView: canGetAllArchiveTags && (canUseSomeEditArchiveView || canAddArchive),
-    loading:
-      canGetAllArchiveTagsLoading || canUseSomeEditArchiveViewLoading || canAddArchiveLoading,
+    canUseArchivesView: canUseSomeEditArchiveView || canAddArchive,
+    canUseMultipleEditArchiveViews,
+    loading: canUseMultipleEditArchiveViewsLoading || canAddArchiveLoading,
   };
 };
 

@@ -41,7 +41,7 @@ mutation addArchiveTag($name: String!) { addArchiveTag(name: $name) }
 mutation addPermission( $user_id: ID $operation_name: String $archive_tag: ID $on_other_users: Boolean ) { addPermission( user_id: $user_id operation_name: $operation_name archive_tag: $archive_tag on_other_users: $on_other_users ) }
 mutation addUser($username: String! $email: String!) { addUser(username: $username email: $email) }
 mutation bulkEdit($pictureIds: [ID!]! $data: JSON!) { doBulkEdit(ids: $pictureIds data: $data) }
-mutation changePassword( $currentPassword: String! $password: String! $passwordConfirmation: String! ) { changePassword( currentPassword: $currentPassword password: $password passwordConfirmation: $passwordConfirmation ) { jwt } }
+mutation changePassword( $currentPassword: String! $password: String! $passwordConfirmation: String! ) { changePassword( currentPassword: $currentPassword password: $password passwordConfirmation: $passwordConfirmation ) { user { id } } }
 mutation contact( $recipient: String! $sender_name: String! $reply_email: String! $subject: String! $message: String! ) { contact( recipient: $recipient sender_name: $sender_name reply_email: $reply_email subject: $subject message: $message ) }
 mutation createExhibition($archiveId: ID! $publishedAt: DateTime!) { createExhibition(data: { archive_tag: $archiveId publishedAt: $publishedAt }) { data { id } } }
 mutation createExhibitionPicture( $exhibitionIdealotId: ID! $pictureId: ID! $publishedAt: DateTime! ) { createExhibitionPicture( data: { exhibition_idealot: $exhibitionIdealotId picture: $pictureId publishedAt: $publishedAt } ) { data { id } } }
@@ -79,12 +79,13 @@ mutation postComment( $id: ID! $author: String! $text: String! $date: DateTime! 
 mutation removeArchiveTag($id: ID!) { removeArchiveTag(id: $id) }
 mutation removeUpload($id: ID!) { removeFile(id: $id) { data { id } } }
 mutation removeUser($id: ID!) { removeUser(id: $id) }
-mutation resetPassword($token: String! $password: String! $passwordConfirmation: String!) { resetPassword( code: $token password: $password passwordConfirmation: $passwordConfirmation ) { jwt } }
+mutation resetPassword($token: String! $password: String! $passwordConfirmation: String!) { resetPassword( code: $token password: $password passwordConfirmation: $passwordConfirmation ) { user { id } } }
 mutation setPicturesForCollection($pictureIds: [ID]! $collectionId: ID!) { updateCollection(id: $collectionId data: { pictures: $pictureIds }) { data { id } } }
 mutation unpinComment($commentId: ID!) { updateComment(id: $commentId data: { pinned: false }) { data { id } } }
 mutation unpublishPicture($id: ID!) { updatePicture(id: $id data: { publishedAt: null }) { data { id } } }
 mutation updateArchive($archiveId: ID! $data: ArchiveTagInput!) { updateArchiveTag(id: $archiveId data: $data) { data { id } } }
 mutation updateCollection($collectionId: ID! $data: CollectionInput!) { updateCollection(id: $collectionId data: $data) { data { id } } }
+mutation updateCollectionParents($collectionId: ID! $parentCollectionIds: [ID]!) { updateCollection(id: $collectionId data: { parent_collections: $parentCollectionIds }) { data { id } } }
 mutation updateExhibition($id: ID! $data: ExhibitionInput!) { updateExhibition(id: $id data: $data) { data { id } } }
 mutation updateExhibitionPicture($id: ID! $data: ExhibitionPictureInput!) { updateExhibitionPicture(id: $id data: $data) { data { id } } }
 mutation updateExhibitionSection( $id: ID! $title: String $text: String $order: Int $exhibitionPictureIds: [ID] ) { updateExhibitionSection( id: $id data: { title: $title text: $text exhibition_pictures: $exhibitionPictureIds order: $order } ) { data { id } } }
