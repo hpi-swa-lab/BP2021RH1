@@ -76,11 +76,9 @@ const SearchView = () => {
       ),
     [queryParams, textFilter, filter, searchIndex]
   );
-  // useEffect(() => {
-  //   if (import.meta.env.MODE === 'development') {
-  //     console.log('resultIds:', searchResultIds);
-  //   }
-  // }, [searchResultIds]);
+
+  console.log('resultIds:', searchResultIds);
+
   const isOldSearchActive = useFlag('old_search');
 
   const { linkToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
