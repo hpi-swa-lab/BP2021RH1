@@ -1,7 +1,8 @@
 import { ExpandMore } from '@mui/icons-material';
 import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../../hooks/context-hooks';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
@@ -28,6 +29,9 @@ export const AdvancedSearch = ({
   searchParams: URLSearchParams;
   isAllSearchActive: boolean;
 }) => {
+  const authContext = useAuth();
+  const isLoggedIn = authContext.loggedIn;
+
   const { t } = useTranslation();
 
   const ATTRIBUTES = [
@@ -36,16 +40,21 @@ export const AdvancedSearch = ({
     'person',
     'face-tag',
     'location',
-    'collection',
     'archive',
     'timeRange',
   ];
 
-  const [advancedSearchProps, SetAdvancedSearchProps] = useState<AttributeFilterProps[]>(
-    ATTRIBUTES.map(attr => ({
-      attribute: attr,
-      filterProps: [{ filterOperator: '', combinationOperator: '', values: ['', ''] }],
-    }))
+  const emptyProps = ATTRIBUTES.map(attr => ({
+    attribute: attr,
+    filterProps: [{ filterOperator: '', combinationOperator: '', values: ['', ''] }],
+  }));
+
+  const [advancedSearchProps, SetAdvancedSearchProps] =
+    useState<AttributeFilterProps[]>(emptyProps);
+
+  const resetProps = useCallback(
+    () => SetAdvancedSearchProps(currentProps => emptyProps),
+    [emptyProps, SetAdvancedSearchProps]
   );
 
   const optionTranslator = useCallback((option: string) => {
@@ -166,19 +175,21 @@ export const AdvancedSearch = ({
     [buildSingleFilter]
   );
 
-  const filter: string = advancedSearchProps
-    .map(attributeFilterProps => buildAttributeFilter(attributeFilterProps))
-    .reduce((accumulator, currentvalue) => {
-      if (accumulator !== '' && currentvalue === '') {
-        return accumulator;
-      } else if (accumulator === '' && currentvalue !== '') {
-        return currentvalue;
-      } else if (accumulator !== '' && currentvalue !== '') {
-        return `${accumulator} AND ${currentvalue}`;
-      } else {
-        return '';
-      }
-    }, '');
+  const filter: string = useMemo(() => {
+    return advancedSearchProps
+      .map(attributeFilterProps => buildAttributeFilter(attributeFilterProps))
+      .reduce((accumulator, currentvalue) => {
+        if (accumulator !== '' && currentvalue === '') {
+          return accumulator;
+        } else if (accumulator === '' && currentvalue !== '') {
+          return currentvalue;
+        } else if (accumulator !== '' && currentvalue !== '') {
+          return `${accumulator} AND ${currentvalue}`;
+        } else {
+          return '';
+        }
+      }, '');
+  }, [advancedSearchProps, buildAttributeFilter]);
 
   // no in use as long as the comment index doesn't work properly
   // const searchIndices = ['picture', 'comment'];
@@ -226,7 +237,15 @@ export const AdvancedSearch = ({
                   {advancedSearchProps
                     .filter(props => ATTRIBUTES.slice(0, 4).includes(props.attribute))
                     .map(props => (
-                      <div className='flex flex-col flex-nowrap' key={props.attribute}>
+                      <div
+                        className={`flex flex-col flex-nowrap ${
+                          !isLoggedIn &&
+                          (props.attribute === 'description' || props.attribute === 'face-tag')
+                            ? 'hidden'
+                            : ''
+                        }`}
+                        key={props.attribute}
+                      >
                         <SearchFilterInput
                           key={props.attribute}
                           attribute={props.attribute}
@@ -240,7 +259,15 @@ export const AdvancedSearch = ({
                   {advancedSearchProps
                     .filter(props => ATTRIBUTES.slice(4, 8).includes(props.attribute))
                     .map(props => (
-                      <div className='flex flex-col flex-nowrap' key={props.attribute}>
+                      <div
+                        className={`flex flex-col flex-nowrap ${
+                          !isLoggedIn &&
+                          (props.attribute === 'description' || props.attribute === 'face-tag')
+                            ? 'hidden'
+                            : ''
+                        }`}
+                        key={props.attribute}
+                      >
                         <SearchFilterInput
                           key={props.attribute}
                           attribute={props.attribute}
@@ -254,12 +281,23 @@ export const AdvancedSearch = ({
               <div className='advanced-search-button-wrapper w-full justifiy-start m-auto pt-4'>
                 <div className='advanced-search-button flex flex-row w-fit'>
                   <Button
+                    className='!m-2'
                     variant='contained'
                     onClick={() => {
                       setFilter(filter);
                     }}
                   >
                     {t('search.appy-filter')}
+                  </Button>
+                  <Button
+                    className='!m-2'
+                    variant='contained'
+                    onClick={() => {
+                      resetProps;
+                      setFilter('');
+                    }}
+                  >
+                    {t('search.reset-filter')}
                   </Button>
                 </div>
               </div>
