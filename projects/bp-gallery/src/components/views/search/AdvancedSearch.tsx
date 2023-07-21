@@ -1,5 +1,5 @@
 import { ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, Button, MenuItem, Select, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
@@ -20,15 +20,15 @@ export type AttributeFilterProps = { attribute: string; filterProps: SingleFilte
 export const AdvancedSearch = ({
   activeFilter,
   setFilter,
-  /* searchIndex,
-  setSearchIndex, */
+  searchIndex,
+  setSearchIndex,
   searchParams,
   isAllSearchActive,
 }: {
   activeFilter: string;
   setFilter: Dispatch<SetStateAction<string>>;
-  /* searchIndex: string;
-  setSearchIndex: Dispatch<SetStateAction<string>>; */
+  searchIndex: string;
+  setSearchIndex: Dispatch<SetStateAction<string>>;
   searchParams: URLSearchParams;
   isAllSearchActive: boolean;
 }) => {
@@ -201,7 +201,7 @@ export const AdvancedSearch = ({
   }, [advancedSearchProps, buildAttributeFilter]);
 
   // no in use as long as the comment index doesn't work properly
-  // const searchIndices = ['picture', 'comment'];
+  const searchIndices = ['picture', 'comment'];
 
   return (
     <div className='flex flex-col m-auto w-fit'>
@@ -231,16 +231,21 @@ export const AdvancedSearch = ({
               </div>
             </AccordionSummary>
             <div className='advanced-search w-fit p-4 flex flex-col'>
-              {/* <div className='flex flex-row flex-nowrap justify-start items-center'>
-                <Typography fontWeight={'bold'}>{t(`search.setIndex`)}</Typography>
-                <Select value={searchIndex} onChange={event => setSearchIndex(event.target.value)}>
-                  {searchIndices.map(searchIndex => (
-                    <MenuItem key={searchIndex} value={searchIndex}>
-                      {t(`search.${searchIndex}`)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </div> */}
+              {
+                <div className='flex flex-row flex-nowrap justify-start items-center'>
+                  <Typography fontWeight={'bold'}>{t(`search.setIndex`)}</Typography>
+                  <Select
+                    value={searchIndex}
+                    onChange={event => setSearchIndex(event.target.value)}
+                  >
+                    {searchIndices.map(searchIndex => (
+                      <MenuItem key={searchIndex} value={searchIndex}>
+                        {t(`search.${searchIndex}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+              }
               <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
                 <div className='advanced-left-filters flex flex-col flex-nowrap'>
                   {advancedSearchProps

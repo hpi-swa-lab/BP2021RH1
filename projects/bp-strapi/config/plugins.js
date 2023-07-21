@@ -152,7 +152,7 @@ module.exports = ({ env }) => ({
                 distinctAttribute: null,
                 typoTolerance: {
                   enabled: true,
-                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
+                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 50 },
                   disableOnWords: [],
                   disableOnAttributes: [],
                 },
@@ -217,7 +217,7 @@ module.exports = ({ env }) => ({
                 distinctAttribute: null,
                 typoTolerance: {
                   enabled: true,
-                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 4 },
+                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 50 },
                   disableOnWords: [],
                   disableOnAttributes: [],
                 },
