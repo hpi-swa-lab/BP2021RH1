@@ -2,6 +2,7 @@ import { ExpandMore } from '@mui/icons-material';
 import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
 import { useAuth } from '../../../hooks/context-hooks';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import SearchBar from './SearchBar';
@@ -17,12 +18,14 @@ export type SingleFilterProps = {
 export type AttributeFilterProps = { attribute: string; filterProps: SingleFilterProps[] };
 
 export const AdvancedSearch = ({
+  activeFilter,
   setFilter,
   /* searchIndex,
   setSearchIndex, */
   searchParams,
   isAllSearchActive,
 }: {
+  activeFilter: string;
   setFilter: Dispatch<SetStateAction<string>>;
   /* searchIndex: string;
   setSearchIndex: Dispatch<SetStateAction<string>>; */
@@ -31,6 +34,12 @@ export const AdvancedSearch = ({
 }) => {
   const authContext = useAuth();
   const isLoggedIn = authContext.loggedIn;
+  const { data } = useGetAllArchiveTagsQuery();
+  const archiveTags = data?.archiveTags?.data
+    ? data.archiveTags.data.map(tagData =>
+        tagData.attributes?.name ? tagData.attributes.name : ''
+      )
+    : [''];
 
   const { t } = useTranslation();
 
@@ -151,7 +160,7 @@ export const AdvancedSearch = ({
       } else {
         return `${attributeTranslator(attribute)}${optionTranslator(
           operatorOption
-        )}${firstValue}${optionTranslator(combinatorOption)}`;
+        )}'${firstValue}'${optionTranslator(combinatorOption)}`;
       }
     },
     [optionTranslator, attributeTranslator]
@@ -236,7 +245,7 @@ export const AdvancedSearch = ({
                 <div className='advanced-left-filters flex flex-col flex-nowrap'>
                   {advancedSearchProps
                     .filter(props => ATTRIBUTES.slice(0, 4).includes(props.attribute))
-                    .map(props => (
+                    .map((props, index) => (
                       <div
                         className={`flex flex-col flex-nowrap ${
                           !isLoggedIn &&
@@ -248,9 +257,11 @@ export const AdvancedSearch = ({
                       >
                         <SearchFilterInput
                           key={props.attribute}
+                          filterIndex={index}
                           attribute={props.attribute}
                           advancedSearchProps={advancedSearchProps}
                           setAdvancedSearchProps={SetAdvancedSearchProps}
+                          archiveTags={archiveTags}
                         ></SearchFilterInput>
                       </div>
                     ))}
@@ -258,7 +269,7 @@ export const AdvancedSearch = ({
                 <div className='advanced-right-filters flex flex-col flex-nowrap'>
                   {advancedSearchProps
                     .filter(props => ATTRIBUTES.slice(4, 8).includes(props.attribute))
-                    .map(props => (
+                    .map((props, index) => (
                       <div
                         className={`flex flex-col flex-nowrap ${
                           !isLoggedIn &&
@@ -270,18 +281,25 @@ export const AdvancedSearch = ({
                       >
                         <SearchFilterInput
                           key={props.attribute}
+                          filterIndex={index}
                           attribute={props.attribute}
                           advancedSearchProps={advancedSearchProps}
                           setAdvancedSearchProps={SetAdvancedSearchProps}
+                          archiveTags={archiveTags}
                         ></SearchFilterInput>
                       </div>
                     ))}
                 </div>
               </div>
-              <div className='advanced-search-button-wrapper w-full justifiy-start m-auto pt-4'>
-                <div className='advanced-search-button flex flex-row w-fit'>
+              <div className='advanced-search-button-wrapper w-full flex flex-col flex-nowrap justifiy-start m-auto pt-4'>
+                {filter !== activeFilter ? (
+                  <Typography>{t('search.filter-mismatch')}</Typography>
+                ) : (
+                  <></>
+                )}
+                <div className='advanced-search-button flex flex-row w-fit justify-between'>
                   <Button
-                    className='!m-2'
+                    className='!m-1'
                     variant='contained'
                     onClick={() => {
                       setFilter(filter);
@@ -289,8 +307,9 @@ export const AdvancedSearch = ({
                   >
                     {t('search.appy-filter')}
                   </Button>
+
                   <Button
-                    className='!m-2'
+                    className='!m-1'
                     variant='contained'
                     onClick={() => {
                       resetProps;

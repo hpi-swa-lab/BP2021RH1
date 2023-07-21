@@ -82,6 +82,7 @@ const SearchView = () => {
   return (
     <div className='search-content'>
       <AdvancedSearch
+        activeFilter={filter}
         setFilter={setFilter}
         /* searchIndex={searchIndex}
         setSearchIndex={setSearchIndex} */
