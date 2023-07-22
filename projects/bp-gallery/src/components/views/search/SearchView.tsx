@@ -63,8 +63,6 @@ const SearchView = () => {
     };
   }, [searchParams]);
 
-  console.log(getSearchResultHits(queryParams, filter, textFilter, searchIndex));
-
   const [searchResultIds] = usePromise(
     async () =>
       (await getSearchResultHits(queryParams, filter, textFilter, searchIndex))
@@ -78,8 +76,6 @@ const SearchView = () => {
         .filter(id => id !== ''),
     [queryParams, textFilter, filter, searchIndex]
   );
-
-  console.log('resultIds:', searchResultIds);
 
   const isOldSearchActive = useFlag('old_search');
 
