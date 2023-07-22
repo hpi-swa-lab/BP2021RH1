@@ -1,16 +1,7 @@
 @import 'src/shared/style.module';
 
 .search-bar-container {
-  display: flex;
-  flex-flow: column nowrap;
-  margin: none;
-  width: fit-content;
-
-  .search-bar-wrapper {
-    grid-row: 1;
-    grid-column: 1;
-  }
-
+  width: 80%;
   .breadcrumb {
     background: rgba(255, 255, 255, 0.1);
 

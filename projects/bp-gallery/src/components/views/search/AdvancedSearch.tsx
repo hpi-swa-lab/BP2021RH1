@@ -203,149 +203,143 @@ export const AdvancedSearch = ({
   const searchIndices = ['picture', 'comment'];
 
   return (
-    <div className='flex flex-col m-auto w-fit'>
+    <div className='flex flex-col m-auto w-inherit items-center'>
       <div className='breadcrumb m-1'>
         <SearchBreadcrumbs searchParams={searchParams} />
       </div>
-      <div className='flex flex-row'>
-        <div className='search-bar-container shadow'>
-          <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
-          <Accordion
-            key={0}
-            disableGutters={true}
-            square={true}
-            sx={{
-              backgroundColor: '#e9e9e9',
-              boxShadow: '0px -1px 0px rgba(0, 0, 0, 0.3)',
-              width: 'fit-content',
-            }}
-          >
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <div className='flex flex-row flex-nowrap items-center'>
-                <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
-                <HelpTooltip
-                  title={t('search.advanced-question')}
-                  content={t('search.advanced-help')}
-                />
-              </div>
-            </AccordionSummary>
-            <div className='advanced-search w-fit p-4 flex flex-col'>
-              {
-                <div className='flex flex-row flex-nowrap justify-start items-center'>
-                  <Typography fontWeight={'bold'}>{t(`search.setIndex`)}</Typography>
-                  <Select
-                    value={searchIndex}
-                    onChange={event => setSearchIndex(event.target.value)}
-                  >
-                    {searchIndices.map(searchIndex => (
-                      <MenuItem key={searchIndex} value={searchIndex}>
-                        {t(`search.${searchIndex}`)}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
-              }
-              {searchIndex === 'picture' ? (
-                <>
-                  <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
-                    <div className='advanced-left-filters flex flex-col flex-nowrap'>
-                      {advancedSearchProps
-                        .filter(props =>
-                          ATTRIBUTES.slice(0, Math.round(ATTRIBUTES.length / 2)).includes(
-                            props.attribute
-                          )
-                        )
-                        .map((props, index) => (
-                          <div
-                            className={`flex flex-col flex-nowrap ${
-                              !isLoggedIn &&
-                              (props.attribute === 'description' || props.attribute === 'face-tag')
-                                ? 'hidden'
-                                : ''
-                            }`}
-                            key={props.attribute}
-                          >
-                            <SearchFilterInput
-                              key={props.attribute}
-                              filterIndex={index}
-                              attribute={props.attribute}
-                              advancedSearchProps={advancedSearchProps}
-                              setAdvancedSearchProps={SetAdvancedSearchProps}
-                              archiveTags={archiveTags}
-                            ></SearchFilterInput>
-                          </div>
-                        ))}
-                    </div>
-                    <div className='advanced-right-filters flex flex-col flex-nowrap'>
-                      {advancedSearchProps
-                        .filter(props =>
-                          ATTRIBUTES.slice(
-                            Math.round(ATTRIBUTES.length / 2),
-                            ATTRIBUTES.length
-                          ).includes(props.attribute)
-                        )
-                        .map((props, index) => (
-                          <div
-                            className={`flex flex-col flex-nowrap ${
-                              !isLoggedIn &&
-                              (props.attribute === 'description' || props.attribute === 'face-tag')
-                                ? 'hidden'
-                                : ''
-                            }`}
-                            key={props.attribute}
-                          >
-                            <SearchFilterInput
-                              key={props.attribute}
-                              filterIndex={index}
-                              attribute={props.attribute}
-                              advancedSearchProps={advancedSearchProps}
-                              setAdvancedSearchProps={SetAdvancedSearchProps}
-                              archiveTags={archiveTags}
-                            ></SearchFilterInput>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-
-                  <div className='advanced-search-button-wrapper w-full flex flex-col flex-nowrap justifiy-start m-auto pt-4'>
-                    {filter !== activeFilter ? (
-                      <Typography>{t('search.filter-mismatch')}</Typography>
-                    ) : (
-                      <></>
-                    )}
-                    <div className='advanced-search-button flex flex-row w-fit justify-between'>
-                      <Button
-                        className='!m-1'
-                        variant='contained'
-                        onClick={() => {
-                          setFilter(filter);
-                        }}
-                      >
-                        {t('search.appy-filter')}
-                      </Button>
-
-                      <Button
-                        className='!m-1'
-                        variant='contained'
-                        onClick={() => {
-                          resetProps;
-                          setFilter('');
-                        }}
-                      >
-                        {t('search.reset-filter')}
-                      </Button>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
+      <div className='search-bar-container shadow'>
+        <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
+        <Accordion
+          key={0}
+          disableGutters={true}
+          square={true}
+          sx={{
+            backgroundColor: '#e9e9e9',
+            boxShadow: '0px -1px 0px rgba(0, 0, 0, 0.3)',
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <div className='flex flex-row flex-nowrap items-center'>
+              <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
+              <HelpTooltip
+                title={t('search.advanced-question')}
+                content={t('search.advanced-help')}
+              />
             </div>
-          </Accordion>
-        </div>
-        <div className='help'>
-          <HelpTooltip title={t('search.question')} content={t('search.help')} />
-        </div>
+          </AccordionSummary>
+          <div className='advanced-search w-fit p-4 flex flex-col'>
+            {
+              <div className='flex flex-row flex-nowrap justify-start items-center'>
+                <Typography fontWeight={'bold'}>{t(`search.setIndex`)}</Typography>
+                <Select value={searchIndex} onChange={event => setSearchIndex(event.target.value)}>
+                  {searchIndices.map(searchIndex => (
+                    <MenuItem key={searchIndex} value={searchIndex}>
+                      {t(`search.${searchIndex}`)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
+            }
+            {searchIndex === 'picture' ? (
+              <>
+                <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
+                  <div className='advanced-left-filters flex flex-col flex-nowrap'>
+                    {advancedSearchProps
+                      .filter(props =>
+                        ATTRIBUTES.slice(0, Math.round(ATTRIBUTES.length / 2)).includes(
+                          props.attribute
+                        )
+                      )
+                      .map((props, index) => (
+                        <div
+                          className={`flex flex-col flex-nowrap ${
+                            !isLoggedIn &&
+                            (props.attribute === 'description' || props.attribute === 'face-tag')
+                              ? 'hidden'
+                              : ''
+                          }`}
+                          key={props.attribute}
+                        >
+                          <SearchFilterInput
+                            key={props.attribute}
+                            filterIndex={index}
+                            attribute={props.attribute}
+                            advancedSearchProps={advancedSearchProps}
+                            setAdvancedSearchProps={SetAdvancedSearchProps}
+                            archiveTags={archiveTags}
+                          ></SearchFilterInput>
+                        </div>
+                      ))}
+                  </div>
+                  <div className='advanced-right-filters flex flex-col flex-nowrap'>
+                    {advancedSearchProps
+                      .filter(props =>
+                        ATTRIBUTES.slice(
+                          Math.round(ATTRIBUTES.length / 2),
+                          ATTRIBUTES.length
+                        ).includes(props.attribute)
+                      )
+                      .map((props, index) => (
+                        <div
+                          className={`flex flex-col flex-nowrap ${
+                            !isLoggedIn &&
+                            (props.attribute === 'description' || props.attribute === 'face-tag')
+                              ? 'hidden'
+                              : ''
+                          }`}
+                          key={props.attribute}
+                        >
+                          <SearchFilterInput
+                            key={props.attribute}
+                            filterIndex={index}
+                            attribute={props.attribute}
+                            advancedSearchProps={advancedSearchProps}
+                            setAdvancedSearchProps={SetAdvancedSearchProps}
+                            archiveTags={archiveTags}
+                          ></SearchFilterInput>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+
+                <div className='advanced-search-button-wrapper w-full flex flex-col flex-nowrap justifiy-start m-auto pt-4'>
+                  {filter !== activeFilter ? (
+                    <Typography>{t('search.filter-mismatch')}</Typography>
+                  ) : (
+                    <></>
+                  )}
+                  <div className='advanced-search-button flex flex-row w-fit justify-between'>
+                    <Button
+                      className='!m-1'
+                      variant='contained'
+                      onClick={() => {
+                        setFilter(filter);
+                      }}
+                    >
+                      {t('search.appy-filter')}
+                    </Button>
+
+                    <Button
+                      className='!m-1'
+                      variant='contained'
+                      onClick={() => {
+                        resetProps;
+                        setFilter('');
+                      }}
+                    >
+                      {t('search.reset-filter')}
+                    </Button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+        </Accordion>
+      </div>
+      <div className='help'>
+        <HelpTooltip title={t('search.question')} content={t('search.help')} />
       </div>
     </div>
   );
