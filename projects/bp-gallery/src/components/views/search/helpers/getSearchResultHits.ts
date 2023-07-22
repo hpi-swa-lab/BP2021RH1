@@ -18,7 +18,7 @@ const getSearchResultHits = async (
     host: SEARCH_API_HOST,
     apiKey: SEARCH_API_KEY,
   });
-  const index = client.index('picture');
+  const index = client.index(searchIndex);
 
   const addFilter = (part: string) => {
     filter += (filter === '' ? '' : ' AND ') + part;
@@ -41,19 +41,20 @@ const getSearchResultHits = async (
     addFilter(timeFilters.join(' OR '));
   }
 
-  switch (textFilter) {
-    case TextFilter.ONLY_PICTURES:
-      addFilter('(is_text = false OR is_text IS NULL)');
-      break;
-    case TextFilter.ONLY_TEXTS:
-      addFilter('is_text = true');
-      break;
-    case TextFilter.PICTURES_AND_TEXTS:
-    default:
-      // nothing
-      break;
+  if (searchIndex === 'picture') {
+    switch (textFilter) {
+      case TextFilter.ONLY_PICTURES:
+        addFilter('(is_text = false OR is_text IS NULL)');
+        break;
+      case TextFilter.ONLY_TEXTS:
+        addFilter('is_text = true');
+        break;
+      case TextFilter.PICTURES_AND_TEXTS:
+      default:
+        // nothing
+        break;
+    }
   }
-
   // for reference: https://www.meilisearch.com/docs/reference/api/search
   const RESULT_LIMIT = 1000;
   const MATCHING_STRATEGY = 'all';

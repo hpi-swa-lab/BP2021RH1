@@ -32,7 +32,7 @@ const isValidTimeSpecification = (searchRequest: string) => {
 const SearchView = () => {
   const [areResultsEmpty, setAreResultsEmpty] = useState<boolean>(false);
   const [filter, setFilter] = useState('');
-  // const [searchIndex, setSearchIndex] = useState('picture');
+  const [searchIndex, setSearchIndex] = useState('picture');
   const [textFilter, setTextFilter] = useState(TextFilter.ONLY_PICTURES);
   const { search }: Location = useLocation();
 
@@ -65,14 +65,18 @@ const SearchView = () => {
 
   const [searchResultIds] = usePromise(
     async () =>
-      (await getSearchResultHits(queryParams, filter, textFilter, 'picture' /* searchIndex */)).map(
-        hit => (hit.id as number).toString()
-      ),
-    [queryParams, textFilter, filter]
+      (await getSearchResultHits(queryParams, filter, textFilter, searchIndex))
+        .map(hit =>
+          searchIndex === 'picture'
+            ? (hit.id as number).toString()
+            : hit.pictureId
+            ? (hit.pictureId as number).toString()
+            : ''
+        )
+        .filter(id => id !== ''),
+    [queryParams, textFilter, filter, searchIndex]
   );
-  if (import.meta.env.MODE === 'development') {
-    console.log(searchResultIds);
-  }
+
   const isOldSearchActive = useFlag('old_search');
 
   const { linkToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
@@ -82,9 +86,10 @@ const SearchView = () => {
   return (
     <div className='search-content'>
       <AdvancedSearch
+        activeFilter={filter}
         setFilter={setFilter}
-        /* searchIndex={searchIndex}
-        setSearchIndex={setSearchIndex} */
+        searchIndex={searchIndex}
+        setSearchIndex={setSearchIndex}
         searchParams={searchParams}
         isAllSearchActive={isAllSearchActive}
       ></AdvancedSearch>

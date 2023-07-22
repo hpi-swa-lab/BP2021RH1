@@ -1,7 +1,9 @@
 import { ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionSummary, Button, Typography } from '@mui/material';
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { Accordion, AccordionSummary, Button, MenuItem, Select, Typography } from '@mui/material';
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useGetAllArchiveTagsQuery } from '../../../graphql/APIConnector';
+import { useAuth } from '../../../hooks/context-hooks';
 import { HelpTooltip } from '../../common/HelpTooltip';
 import SearchBar from './SearchBar';
 import SearchBreadcrumbs from './SearchBreadcrumbs';
@@ -16,18 +18,29 @@ export type SingleFilterProps = {
 export type AttributeFilterProps = { attribute: string; filterProps: SingleFilterProps[] };
 
 export const AdvancedSearch = ({
+  activeFilter,
   setFilter,
-  /* searchIndex,
-  setSearchIndex, */
+  searchIndex,
+  setSearchIndex,
   searchParams,
   isAllSearchActive,
 }: {
+  activeFilter: string;
   setFilter: Dispatch<SetStateAction<string>>;
-  /* searchIndex: string;
-  setSearchIndex: Dispatch<SetStateAction<string>>; */
+  searchIndex: string;
+  setSearchIndex: Dispatch<SetStateAction<string>>;
   searchParams: URLSearchParams;
   isAllSearchActive: boolean;
 }) => {
+  const authContext = useAuth();
+  const isLoggedIn = authContext.loggedIn;
+  const { data } = useGetAllArchiveTagsQuery();
+  const archiveTags = data?.archiveTags?.data
+    ? data.archiveTags.data.map(tagData =>
+        tagData.attributes?.name ? tagData.attributes.name : ''
+      )
+    : [''];
+
   const { t } = useTranslation();
 
   const ATTRIBUTES = [
@@ -36,16 +49,21 @@ export const AdvancedSearch = ({
     'person',
     'face-tag',
     'location',
-    'collection',
     'archive',
     'timeRange',
   ];
 
-  const [advancedSearchProps, SetAdvancedSearchProps] = useState<AttributeFilterProps[]>(
-    ATTRIBUTES.map(attr => ({
-      attribute: attr,
-      filterProps: [{ filterOperator: '', combinationOperator: '', values: ['', ''] }],
-    }))
+  const emptyProps = ATTRIBUTES.map(attr => ({
+    attribute: attr,
+    filterProps: [{ filterOperator: '', combinationOperator: '', values: ['', ''] }],
+  }));
+
+  const [advancedSearchProps, SetAdvancedSearchProps] =
+    useState<AttributeFilterProps[]>(emptyProps);
+
+  const resetProps = useCallback(
+    () => SetAdvancedSearchProps(currentProps => emptyProps),
+    [emptyProps, SetAdvancedSearchProps]
   );
 
   const optionTranslator = useCallback((option: string) => {
@@ -142,7 +160,7 @@ export const AdvancedSearch = ({
       } else {
         return `${attributeTranslator(attribute)}${optionTranslator(
           operatorOption
-        )}${firstValue}${optionTranslator(combinatorOption)}`;
+        )}'${firstValue}'${optionTranslator(combinatorOption)}`;
       }
     },
     [optionTranslator, attributeTranslator]
@@ -166,52 +184,52 @@ export const AdvancedSearch = ({
     [buildSingleFilter]
   );
 
-  const filter: string = advancedSearchProps
-    .map(attributeFilterProps => buildAttributeFilter(attributeFilterProps))
-    .reduce((accumulator, currentvalue) => {
-      if (accumulator !== '' && currentvalue === '') {
-        return accumulator;
-      } else if (accumulator === '' && currentvalue !== '') {
-        return currentvalue;
-      } else if (accumulator !== '' && currentvalue !== '') {
-        return `${accumulator} AND ${currentvalue}`;
-      } else {
-        return '';
-      }
-    }, '');
+  const filter: string = useMemo(() => {
+    return advancedSearchProps
+      .map(attributeFilterProps => buildAttributeFilter(attributeFilterProps))
+      .reduce((accumulator, currentvalue) => {
+        if (accumulator !== '' && currentvalue === '') {
+          return accumulator;
+        } else if (accumulator === '' && currentvalue !== '') {
+          return currentvalue;
+        } else if (accumulator !== '' && currentvalue !== '') {
+          return `${accumulator} AND ${currentvalue}`;
+        } else {
+          return '';
+        }
+      }, '');
+  }, [advancedSearchProps, buildAttributeFilter]);
 
-  // no in use as long as the comment index doesn't work properly
-  // const searchIndices = ['picture', 'comment'];
+  const searchIndices = ['picture', 'comment'];
 
   return (
-    <div className='flex flex-col m-auto w-fit'>
+    <div className='flex flex-col m-auto w-inherit items-center'>
       <div className='breadcrumb m-1'>
         <SearchBreadcrumbs searchParams={searchParams} />
       </div>
-      <div className='flex flex-row'>
-        <div className='search-bar-container shadow'>
-          <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
-          <Accordion
-            key={0}
-            disableGutters={true}
-            square={true}
-            sx={{
-              backgroundColor: '#e9e9e9',
-              boxShadow: '0px -1px 0px rgba(0, 0, 0, 0.3)',
-              width: 'fit-content',
-            }}
-          >
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <div className='flex flex-row flex-nowrap items-center'>
-                <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
-                <HelpTooltip
-                  title={t('search.advanced-question')}
-                  content={t('search.advanced-help')}
-                />
-              </div>
-            </AccordionSummary>
-            <div className='advanced-search w-fit p-4 flex flex-col'>
-              {/* <div className='flex flex-row flex-nowrap justify-start items-center'>
+      <div className='search-bar-container shadow'>
+        <SearchBar searchParams={searchParams} isAllSearchActive={isAllSearchActive} />
+        <Accordion
+          key={0}
+          disableGutters={true}
+          square={true}
+          sx={{
+            backgroundColor: '#e9e9e9',
+            boxShadow: '0px -1px 0px rgba(0, 0, 0, 0.3)',
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <div className='flex flex-row flex-nowrap items-center'>
+              <Typography fontWeight='bold'>{t('search.advanced-search-title')}</Typography>
+              <HelpTooltip
+                title={t('search.advanced-question')}
+                content={t('search.advanced-help')}
+              />
+            </div>
+          </AccordionSummary>
+          <div className='advanced-search w-fit p-4 flex flex-col'>
+            {
+              <div className='flex flex-row flex-nowrap justify-start items-center'>
                 <Typography fontWeight={'bold'}>{t(`search.setIndex`)}</Typography>
                 <Select value={searchIndex} onChange={event => setSearchIndex(event.target.value)}>
                   {searchIndices.map(searchIndex => (
@@ -220,55 +238,108 @@ export const AdvancedSearch = ({
                     </MenuItem>
                   ))}
                 </Select>
-              </div> */}
-              <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
-                <div className='advanced-left-filters flex flex-col flex-nowrap'>
-                  {advancedSearchProps
-                    .filter(props => ATTRIBUTES.slice(0, 4).includes(props.attribute))
-                    .map(props => (
-                      <div className='flex flex-col flex-nowrap' key={props.attribute}>
-                        <SearchFilterInput
-                          key={props.attribute}
-                          attribute={props.attribute}
-                          advancedSearchProps={advancedSearchProps}
-                          setAdvancedSearchProps={SetAdvancedSearchProps}
-                        ></SearchFilterInput>
-                      </div>
-                    ))}
-                </div>
-                <div className='advanced-right-filters flex flex-col flex-nowrap'>
-                  {advancedSearchProps
-                    .filter(props => ATTRIBUTES.slice(4, 8).includes(props.attribute))
-                    .map(props => (
-                      <div className='flex flex-col flex-nowrap' key={props.attribute}>
-                        <SearchFilterInput
-                          key={props.attribute}
-                          attribute={props.attribute}
-                          advancedSearchProps={advancedSearchProps}
-                          setAdvancedSearchProps={SetAdvancedSearchProps}
-                        ></SearchFilterInput>
-                      </div>
-                    ))}
-                </div>
               </div>
-              <div className='advanced-search-button-wrapper w-full justifiy-start m-auto pt-4'>
-                <div className='advanced-search-button flex flex-row w-fit'>
-                  <Button
-                    variant='contained'
-                    onClick={() => {
-                      setFilter(filter);
-                    }}
-                  >
-                    {t('search.appy-filter')}
-                  </Button>
+            }
+            {searchIndex === 'picture' ? (
+              <>
+                <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
+                  <div className='advanced-left-filters flex flex-col flex-nowrap'>
+                    {advancedSearchProps
+                      .filter(props =>
+                        ATTRIBUTES.slice(0, Math.round(ATTRIBUTES.length / 2)).includes(
+                          props.attribute
+                        )
+                      )
+                      .map((props, index) => (
+                        <div
+                          className={`flex flex-col flex-nowrap ${
+                            !isLoggedIn &&
+                            (props.attribute === 'description' || props.attribute === 'face-tag')
+                              ? 'hidden'
+                              : ''
+                          }`}
+                          key={props.attribute}
+                        >
+                          <SearchFilterInput
+                            key={props.attribute}
+                            filterIndex={index}
+                            attribute={props.attribute}
+                            advancedSearchProps={advancedSearchProps}
+                            setAdvancedSearchProps={SetAdvancedSearchProps}
+                            archiveTags={archiveTags}
+                          ></SearchFilterInput>
+                        </div>
+                      ))}
+                  </div>
+                  <div className='advanced-right-filters flex flex-col flex-nowrap'>
+                    {advancedSearchProps
+                      .filter(props =>
+                        ATTRIBUTES.slice(
+                          Math.round(ATTRIBUTES.length / 2),
+                          ATTRIBUTES.length
+                        ).includes(props.attribute)
+                      )
+                      .map((props, index) => (
+                        <div
+                          className={`flex flex-col flex-nowrap ${
+                            !isLoggedIn &&
+                            (props.attribute === 'description' || props.attribute === 'face-tag')
+                              ? 'hidden'
+                              : ''
+                          }`}
+                          key={props.attribute}
+                        >
+                          <SearchFilterInput
+                            key={props.attribute}
+                            filterIndex={index}
+                            attribute={props.attribute}
+                            advancedSearchProps={advancedSearchProps}
+                            setAdvancedSearchProps={SetAdvancedSearchProps}
+                            archiveTags={archiveTags}
+                          ></SearchFilterInput>
+                        </div>
+                      ))}
+                  </div>
                 </div>
-              </div>
-            </div>
-          </Accordion>
-        </div>
-        <div className='help'>
-          <HelpTooltip title={t('search.question')} content={t('search.help')} />
-        </div>
+
+                <div className='advanced-search-button-wrapper w-full flex flex-col flex-nowrap justifiy-start m-auto pt-4'>
+                  {filter !== activeFilter ? (
+                    <Typography>{t('search.filter-mismatch')}</Typography>
+                  ) : (
+                    <></>
+                  )}
+                  <div className='advanced-search-button flex flex-row w-fit justify-between'>
+                    <Button
+                      className='!m-1'
+                      variant='contained'
+                      onClick={() => {
+                        setFilter(filter);
+                      }}
+                    >
+                      {t('search.appy-filter')}
+                    </Button>
+
+                    <Button
+                      className='!m-1'
+                      variant='contained'
+                      onClick={() => {
+                        resetProps;
+                        setFilter('');
+                      }}
+                    >
+                      {t('search.reset-filter')}
+                    </Button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+        </Accordion>
+      </div>
+      <div className='help'>
+        <HelpTooltip title={t('search.question')} content={t('search.help')} />
       </div>
     </div>
   );
