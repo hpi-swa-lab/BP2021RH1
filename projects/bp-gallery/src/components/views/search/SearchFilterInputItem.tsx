@@ -1,4 +1,4 @@
-import { AddCircleOutlineOutlined, HighlightOff } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import { MenuItem, Select, TextField, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -151,10 +151,10 @@ export const SearchFilterInputItem = ({
           <></>
         )}
         {itemIndex !== 0 ? (
-          <HighlightOff
+          <RemoveCircleOutlineOutlined
             sx={{ padding: '0.25rem', fontSize: 30 }}
             onClick={() => updateFilterProps(itemIndex, 'delete', '', '')}
-          ></HighlightOff>
+          ></RemoveCircleOutlineOutlined>
         ) : (
           <></>
         )}

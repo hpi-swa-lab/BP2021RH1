@@ -67,13 +67,15 @@ const SearchView = () => {
 
   const [searchResultIds] = usePromise(
     async () =>
-      (await getSearchResultHits(queryParams, filter, textFilter, searchIndex)).map(hit =>
-        searchIndex === 'picture'
-          ? (hit.id as number).toString()
-          : hit.pictureId
-          ? (hit.pictureId as number).toString()
-          : ''
-      ),
+      (await getSearchResultHits(queryParams, filter, textFilter, searchIndex))
+        .map(hit =>
+          searchIndex === 'picture'
+            ? (hit.id as number).toString()
+            : hit.pictureId
+            ? (hit.pictureId as number).toString()
+            : ''
+        )
+        .filter(id => id !== ''),
     [queryParams, textFilter, filter, searchIndex]
   );
 

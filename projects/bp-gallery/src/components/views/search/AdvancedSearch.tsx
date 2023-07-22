@@ -200,7 +200,6 @@ export const AdvancedSearch = ({
       }, '');
   }, [advancedSearchProps, buildAttributeFilter]);
 
-  // no in use as long as the comment index doesn't work properly
   const searchIndices = ['picture', 'comment'];
 
   return (
@@ -246,85 +245,101 @@ export const AdvancedSearch = ({
                   </Select>
                 </div>
               }
-              <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
-                <div className='advanced-left-filters flex flex-col flex-nowrap'>
-                  {advancedSearchProps
-                    .filter(props => ATTRIBUTES.slice(0, 4).includes(props.attribute))
-                    .map((props, index) => (
-                      <div
-                        className={`flex flex-col flex-nowrap ${
-                          !isLoggedIn &&
-                          (props.attribute === 'description' || props.attribute === 'face-tag')
-                            ? 'hidden'
-                            : ''
-                        }`}
-                        key={props.attribute}
-                      >
-                        <SearchFilterInput
-                          key={props.attribute}
-                          filterIndex={index}
-                          attribute={props.attribute}
-                          advancedSearchProps={advancedSearchProps}
-                          setAdvancedSearchProps={SetAdvancedSearchProps}
-                          archiveTags={archiveTags}
-                        ></SearchFilterInput>
-                      </div>
-                    ))}
-                </div>
-                <div className='advanced-right-filters flex flex-col flex-nowrap'>
-                  {advancedSearchProps
-                    .filter(props => ATTRIBUTES.slice(4, 8).includes(props.attribute))
-                    .map((props, index) => (
-                      <div
-                        className={`flex flex-col flex-nowrap ${
-                          !isLoggedIn &&
-                          (props.attribute === 'description' || props.attribute === 'face-tag')
-                            ? 'hidden'
-                            : ''
-                        }`}
-                        key={props.attribute}
-                      >
-                        <SearchFilterInput
-                          key={props.attribute}
-                          filterIndex={index}
-                          attribute={props.attribute}
-                          advancedSearchProps={advancedSearchProps}
-                          setAdvancedSearchProps={SetAdvancedSearchProps}
-                          archiveTags={archiveTags}
-                        ></SearchFilterInput>
-                      </div>
-                    ))}
-                </div>
-              </div>
-              <div className='advanced-search-button-wrapper w-full flex flex-col flex-nowrap justifiy-start m-auto pt-4'>
-                {filter !== activeFilter ? (
-                  <Typography>{t('search.filter-mismatch')}</Typography>
-                ) : (
-                  <></>
-                )}
-                <div className='advanced-search-button flex flex-row w-fit justify-between'>
-                  <Button
-                    className='!m-1'
-                    variant='contained'
-                    onClick={() => {
-                      setFilter(filter);
-                    }}
-                  >
-                    {t('search.appy-filter')}
-                  </Button>
+              {searchIndex === 'picture' ? (
+                <>
+                  <div className='advanced-search-filters flex flex-row flex-nowrap justify-evenly m-auto'>
+                    <div className='advanced-left-filters flex flex-col flex-nowrap'>
+                      {advancedSearchProps
+                        .filter(props =>
+                          ATTRIBUTES.slice(0, Math.round(ATTRIBUTES.length / 2)).includes(
+                            props.attribute
+                          )
+                        )
+                        .map((props, index) => (
+                          <div
+                            className={`flex flex-col flex-nowrap ${
+                              !isLoggedIn &&
+                              (props.attribute === 'description' || props.attribute === 'face-tag')
+                                ? 'hidden'
+                                : ''
+                            }`}
+                            key={props.attribute}
+                          >
+                            <SearchFilterInput
+                              key={props.attribute}
+                              filterIndex={index}
+                              attribute={props.attribute}
+                              advancedSearchProps={advancedSearchProps}
+                              setAdvancedSearchProps={SetAdvancedSearchProps}
+                              archiveTags={archiveTags}
+                            ></SearchFilterInput>
+                          </div>
+                        ))}
+                    </div>
+                    <div className='advanced-right-filters flex flex-col flex-nowrap'>
+                      {advancedSearchProps
+                        .filter(props =>
+                          ATTRIBUTES.slice(
+                            Math.round(ATTRIBUTES.length / 2),
+                            ATTRIBUTES.length
+                          ).includes(props.attribute)
+                        )
+                        .map((props, index) => (
+                          <div
+                            className={`flex flex-col flex-nowrap ${
+                              !isLoggedIn &&
+                              (props.attribute === 'description' || props.attribute === 'face-tag')
+                                ? 'hidden'
+                                : ''
+                            }`}
+                            key={props.attribute}
+                          >
+                            <SearchFilterInput
+                              key={props.attribute}
+                              filterIndex={index}
+                              attribute={props.attribute}
+                              advancedSearchProps={advancedSearchProps}
+                              setAdvancedSearchProps={SetAdvancedSearchProps}
+                              archiveTags={archiveTags}
+                            ></SearchFilterInput>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
 
-                  <Button
-                    className='!m-1'
-                    variant='contained'
-                    onClick={() => {
-                      resetProps;
-                      setFilter('');
-                    }}
-                  >
-                    {t('search.reset-filter')}
-                  </Button>
-                </div>
-              </div>
+                  <div className='advanced-search-button-wrapper w-full flex flex-col flex-nowrap justifiy-start m-auto pt-4'>
+                    {filter !== activeFilter ? (
+                      <Typography>{t('search.filter-mismatch')}</Typography>
+                    ) : (
+                      <></>
+                    )}
+                    <div className='advanced-search-button flex flex-row w-fit justify-between'>
+                      <Button
+                        className='!m-1'
+                        variant='contained'
+                        onClick={() => {
+                          setFilter(filter);
+                        }}
+                      >
+                        {t('search.appy-filter')}
+                      </Button>
+
+                      <Button
+                        className='!m-1'
+                        variant='contained'
+                        onClick={() => {
+                          resetProps;
+                          setFilter('');
+                        }}
+                      >
+                        {t('search.reset-filter')}
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
             </div>
           </Accordion>
         </div>

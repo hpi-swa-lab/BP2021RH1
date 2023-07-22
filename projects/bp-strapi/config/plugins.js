@@ -172,7 +172,7 @@ module.exports = ({ env }) => ({
               transformEntry({ entry }) {
                 const transformedEntry = {
                   id: entry?.id,
-                  pictureId: entry?.picture.id,
+                  pictureId: entry?.picture?.id ?? null,
                   author: entry?.author,
                   text: entry?.text,
                   date: entry?.date ? dateToTimeStamp(entry?.date) : null,
@@ -214,7 +214,7 @@ module.exports = ({ env }) => ({
                 stopWords: [],
                 synonyms: {},
                 // returned documents will always be unigue in this attribute
-                distinctAttribute: null,
+                distinctAttribute: 'pictureId',
                 typoTolerance: {
                   enabled: true,
                   minWordSizeForTypos: { oneTypo: 3, twoTypos: 50 },
