@@ -85,7 +85,10 @@ const ExhibitionBigCard = ({
   const { t } = useTranslation();
   const { visit } = useVisit();
   return (
-    <div className='relative flex gap-4 p-4'>
+    <div
+      className={`relative flex gap-4 p-4 ${!canEdit ? 'cursor-pointer' : ''}`}
+      onClick={() => !canEdit && visit(link)}
+    >
       <div className='w-[250px]'>
         <img
           height='200'
@@ -100,17 +103,17 @@ const ExhibitionBigCard = ({
           <div className='text-xl font-bold'>{exhibitionTitle}</div>
           <RichText value={exhibitionIntroduction} className='line-clamp-5' />
         </div>
+        {canEdit && (
+          <div className='flex gap-2 flex-row-reverse w-max'>
+            <Button
+              onClick={e => {
+                e.stopPropagation();
+                visit(link);
+              }}
+            >
+              {t('exhibition.overview.to-exhibition')}
+            </Button>
 
-        <div className='flex gap-2 flex-row-reverse w-max'>
-          <Button
-            onClick={e => {
-              e.stopPropagation();
-              visit(link);
-            }}
-          >
-            {t('exhibition.overview.to-exhibition')}
-          </Button>
-          {canEdit && (
             <Button
               onClick={e => {
                 e.stopPropagation();
@@ -119,8 +122,8 @@ const ExhibitionBigCard = ({
             >
               {t('common.edit')}
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       {canEdit && (
         <div className='absolute top-2 right-2 bg-white rounded-full'>

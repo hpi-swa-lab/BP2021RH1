@@ -3,6 +3,7 @@ import {
   PropsWithChildren,
   SetStateAction,
   createContext,
+  useContext,
   useEffect,
   useState,
 } from 'react';
@@ -26,10 +27,13 @@ import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import {
   useCreateExhibitionPictureMutation,
   useCreateExhibitionSectionMutation,
+  useDeleteExhibitionPictureMutation,
   useUpdateExhibitionMutation,
   useUpdateExhibitionPictureMutation,
   useUpdateExhibitionSectionMutation,
 } from '../../../graphql/APIConnector';
+import { Delete } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 
 interface ExhibitionText {
   title: string;
@@ -85,12 +89,14 @@ export const ExhibitionSetContext = createContext<{
   setSectionTitle: (sectionId: string, title: string) => void;
   setSectionText: (sectionId: string, text: string) => void;
   toggleIsPublished: () => void;
+  deleteExhibitionPicture: (exhibitionPictureId: string) => void;
 }>({
   setTitle: () => {},
   setIntroduction: () => {},
   setSectionTitle: () => {},
   setSectionText: () => {},
   toggleIsPublished: () => {},
+  deleteExhibitionPicture: () => {},
 });
 
 export const ExhibitionSectionUtilsContext = createContext<{
@@ -166,9 +172,23 @@ const ExhibitionPicture = ({
   attributes: DraggableAttributes;
 }) => {
   const picture = exhibitionPicture.picture;
+  const { deleteExhibitionPicture } = useContext(ExhibitionSetContext);
   return (
-    <div className='z-[9] relative' ref={setNodeRef} {...listeners} {...attributes}>
-      {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
+    <div className='relative'>
+      <div className='z-[99] absolute top-0 right-0'>
+        <IconButton
+          style={{ backgroundColor: 'white' }}
+          onClick={() => {
+            console.log('press');
+            deleteExhibitionPicture(exhibitionPicture.id);
+          }}
+        >
+          <Delete />
+        </IconButton>
+      </div>
+      <div className='z-[9]' ref={setNodeRef} {...listeners} {...attributes}>
+        {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
+      </div>
     </div>
   );
 };
@@ -307,6 +327,10 @@ export const ExhibitionStateChanger = ({
   sections,
   setSections,
   databaseSaver,
+  titlePicture,
+  setTitlePicture,
+  idealot,
+  setIdealot,
   children,
 }: PropsWithChildren<{
   exhibitionId: string;
@@ -315,7 +339,24 @@ export const ExhibitionStateChanger = ({
   sections: SectionState[];
   setSections: Dispatch<SetStateAction<SectionState[]>>;
   databaseSaver: ReturnType<typeof useExhibitionDatabaseSaver>;
+  titlePicture: DragElement | undefined;
+  setTitlePicture: Dispatch<SetStateAction<DragElement | undefined>>;
+  idealot: DragElement[] | undefined;
+  setIdealot: Dispatch<SetStateAction<DragElement[]>>;
 }>) => {
+  const deleteExhibitionPicture = (exhibitionPictureId: string) => {
+    databaseSaver.deletePicture(exhibitionPictureId);
+    setSections(
+      sections.map(section => ({
+        ...section,
+        dragElements: section.dragElements.filter(elem => elem.id !== exhibitionPictureId),
+      }))
+    );
+    setTitlePicture(titlePicture =>
+      titlePicture?.id === exhibitionPictureId ? undefined : titlePicture
+    );
+    setIdealot(idealot => idealot.filter(elem => elem.id !== exhibitionPictureId));
+  };
   const setSectionText = (sectionId: string, text: string) => {
     databaseSaver.setSectionText(sectionId, text);
     setSections(
@@ -353,6 +394,7 @@ export const ExhibitionStateChanger = ({
         setSectionTitle,
         setSectionText,
         toggleIsPublished,
+        deleteExhibitionPicture,
       }}
     >
       {children}
@@ -538,7 +580,17 @@ const useExhibitionDatabaseSaver = () => {
   const [createExhibitionPicture] = useCreateExhibitionPictureMutation({
     refetchQueries: ['getExhibition'],
   });
+
+  const [deleteExhibitionPicture] = useDeleteExhibitionPictureMutation({
+    refetchQueries: ['getExhibition'],
+  });
   return {
+    deletePicture: (id: string) => {
+      console.log(id);
+      deleteExhibitionPicture({
+        variables: { id: id },
+      });
+    },
     setSectionText: (id: string, text: string) => {
       updateExhibitionSection({
         variables: {
@@ -768,6 +820,10 @@ export const ExhibitionStateManager = ({
         sections={sections}
         setSections={setSections}
         databaseSaver={databaseSaver}
+        titlePicture={titlePicture}
+        setTitlePicture={setTitlePicture}
+        idealot={idealot}
+        setIdealot={setIdealot}
       >
         <ExhibitionDragNDrop
           sections={sections}

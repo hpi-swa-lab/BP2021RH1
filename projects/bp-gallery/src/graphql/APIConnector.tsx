@@ -3980,6 +3980,22 @@ export type DeleteExhibitionMutation = {
   deleteExhibition?: { data?: { id?: string | null } | null } | null;
 };
 
+export type DeleteExhibitionPictureMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteExhibitionPictureMutation = {
+  deleteExhibitionPicture?: { data?: { id?: string | null } | null } | null;
+};
+
+export type DeleteExhibitionSectionMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteExhibitionSectionMutation = {
+  deleteExhibitionSection?: { data?: { id?: string | null } | null } | null;
+};
+
 export type DeleteFaceTagMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -8901,6 +8917,120 @@ export type DeleteExhibitionMutationResult = Apollo.MutationResult<DeleteExhibit
 export type DeleteExhibitionMutationOptions = Apollo.BaseMutationOptions<
   DeleteExhibitionMutation,
   DeleteExhibitionMutationVariables
+>;
+
+export const DeleteExhibitionPictureDocument = gql`
+  mutation deleteExhibitionPicture($id: ID!) {
+    deleteExhibitionPicture(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteExhibitionPictureMutationFn = Apollo.MutationFunction<
+  DeleteExhibitionPictureMutation,
+  DeleteExhibitionPictureMutationVariables
+>;
+
+/**
+ * __useDeleteExhibitionPictureMutation__
+ *
+ * To run a mutation, you first call `useDeleteExhibitionPictureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteExhibitionPictureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteExhibitionPictureMutation, { data, loading, error }] = useDeleteExhibitionPictureMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteExhibitionPictureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteExhibitionPictureMutation,
+    DeleteExhibitionPictureMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteExhibitionPictureMutation,
+    DeleteExhibitionPictureMutationVariables
+  >(DeleteExhibitionPictureDocument, options);
+}
+
+export type DeleteExhibitionPictureMutationHookResult = ReturnType<
+  typeof useDeleteExhibitionPictureMutation
+>;
+
+export type DeleteExhibitionPictureMutationResult =
+  Apollo.MutationResult<DeleteExhibitionPictureMutation>;
+
+export type DeleteExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
+  DeleteExhibitionPictureMutation,
+  DeleteExhibitionPictureMutationVariables
+>;
+
+export const DeleteExhibitionSectionDocument = gql`
+  mutation deleteExhibitionSection($id: ID!) {
+    deleteExhibitionSection(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteExhibitionSectionMutationFn = Apollo.MutationFunction<
+  DeleteExhibitionSectionMutation,
+  DeleteExhibitionSectionMutationVariables
+>;
+
+/**
+ * __useDeleteExhibitionSectionMutation__
+ *
+ * To run a mutation, you first call `useDeleteExhibitionSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteExhibitionSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteExhibitionSectionMutation, { data, loading, error }] = useDeleteExhibitionSectionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteExhibitionSectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteExhibitionSectionMutation,
+    DeleteExhibitionSectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteExhibitionSectionMutation,
+    DeleteExhibitionSectionMutationVariables
+  >(DeleteExhibitionSectionDocument, options);
+}
+
+export type DeleteExhibitionSectionMutationHookResult = ReturnType<
+  typeof useDeleteExhibitionSectionMutation
+>;
+
+export type DeleteExhibitionSectionMutationResult =
+  Apollo.MutationResult<DeleteExhibitionSectionMutation>;
+
+export type DeleteExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
+  DeleteExhibitionSectionMutation,
+  DeleteExhibitionSectionMutationVariables
 >;
 
 export const DeleteFaceTagDocument = gql`
@@ -14200,6 +14330,94 @@ export function useCanRunMultipleDeleteExhibitionMutations(
     ...options,
     variables: {
       operation: DeleteExhibitionDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunDeleteExhibitionPictureMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<DeleteExhibitionPictureMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: DeleteExhibitionPictureDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleDeleteExhibitionPictureMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<DeleteExhibitionPictureMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: DeleteExhibitionPictureDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunDeleteExhibitionSectionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<DeleteExhibitionSectionMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: DeleteExhibitionSectionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleDeleteExhibitionSectionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<DeleteExhibitionSectionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: DeleteExhibitionSectionDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

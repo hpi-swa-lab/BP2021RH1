@@ -58,6 +58,8 @@ mutation createSubCollection($name: String! $parentId: ID! $publishedAt: DateTim
 mutation declineComment($commentId: ID!) { deleteComment(id: $commentId) { data { id } } }
 mutation deleteCollection($collectionId: ID!) { deleteCollection(id: $collectionId) { data { id } } }
 mutation deleteExhibition($id: ID!) { deleteExhibition(id: $id) { data { id } } }
+mutation deleteExhibitionPicture($id: ID!) { deleteExhibitionPicture(id: $id) { data { id } } }
+mutation deleteExhibitionSection($id: ID!) { deleteExhibitionSection(id: $id) { data { id } } }
 mutation deleteFaceTag($id: ID!) { deleteFaceTag(id: $id) { data { id } } }
 mutation deleteKeywordTag($id: ID!) { deleteKeywordTag(id: $id) { data { id } } }
 mutation deleteLink($id: ID!) { deleteLink(id: $id) { data { id } } }

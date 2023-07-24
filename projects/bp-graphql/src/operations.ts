@@ -22,6 +22,8 @@ export { default as createSubCollection } from './operations/createSubCollection
 export { default as declineComment } from './operations/declineComment.js';
 export { default as deleteCollection } from './operations/deleteCollection.js';
 export { default as deleteExhibition } from './operations/deleteExhibition.js';
+export { default as deleteExhibitionPicture } from './operations/deleteExhibitionPicture.js';
+export { default as deleteExhibitionSection } from './operations/deleteExhibitionSection.js';
 export { default as deleteFaceTag } from './operations/deleteFaceTag.js';
 export { default as deleteKeywordTag } from './operations/deleteKeywordTag.js';
 export { default as deleteLink } from './operations/deleteLink.js';
