@@ -28,6 +28,7 @@ import {
   useCreateExhibitionPictureMutation,
   useCreateExhibitionSectionMutation,
   useDeleteExhibitionPictureMutation,
+  useDeleteExhibitionSectionMutation,
   useUpdateExhibitionMutation,
   useUpdateExhibitionPictureMutation,
   useUpdateExhibitionSectionMutation,
@@ -105,12 +106,14 @@ export const ExhibitionSectionUtilsContext = createContext<{
   setSorting: (isSorting: boolean) => void;
   getDraggable: (dragElementId: string) => DragElement | undefined;
   addSection: () => void;
+  deleteSection: (sectionId: string) => void;
 }>({
   swapSectionDraggables: () => {},
   getSorting: () => false,
   setSorting: () => {},
   getDraggable: () => undefined,
   addSection: () => {},
+  deleteSection: () => {},
 });
 
 const DraggablePicture = ({
@@ -357,6 +360,7 @@ export const ExhibitionStateChanger = ({
     );
     setIdealot(idealot => idealot.filter(elem => elem.id !== exhibitionPictureId));
   };
+
   const setSectionText = (sectionId: string, text: string) => {
     databaseSaver.setSectionText(sectionId, text);
     setSections(
@@ -424,6 +428,10 @@ const ExhibitionDragNDrop = ({
 }>) => {
   const [isSorting, setIsSorting] = useState(false);
 
+  const deleteSection = (sectionId: string) => {
+    databaseSaver.deleteSection(sectionId);
+    setSections(sections => sections.filter(section => section.id !== sectionId));
+  };
   const swapSectionDraggables = (oldIndex: number, newIndex: number, sectionId: string) => {
     databaseSaver.swapOrderInExhibitionPicture(sections, oldIndex, newIndex, sectionId);
     setSections(
@@ -550,6 +558,7 @@ const ExhibitionDragNDrop = ({
         getSorting,
         getDraggable,
         addSection,
+        deleteSection,
       }}
     >
       <DragNDropHandler
@@ -584,9 +593,14 @@ const useExhibitionDatabaseSaver = () => {
   const [deleteExhibitionPicture] = useDeleteExhibitionPictureMutation({
     refetchQueries: ['getExhibition'],
   });
+  const [deleteExhibitionSection] = useDeleteExhibitionSectionMutation({
+    refetchQueries: ['getExhibition'],
+  });
   return {
+    deleteSection: (id: string) => {
+      deleteExhibitionSection({ variables: { id: id } });
+    },
     deletePicture: (id: string) => {
-      console.log(id);
       deleteExhibitionPicture({
         variables: { id: id },
       });

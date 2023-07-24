@@ -7,7 +7,7 @@ import {
   useDroppable,
 } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { Delete, ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Button, IconButton, Paper, TextField } from '@mui/material';
 import { UIEventHandler, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -216,7 +216,7 @@ const Section = ({ id }: { id: string }) => {
   const { getSectionTitle, getSectionText } = useContext(ExhibitionGetContext);
 
   const { setSectionTitle, setSectionText } = useContext(ExhibitionSetContext);
-
+  const { deleteSection } = useContext(ExhibitionSectionUtilsContext);
   const extraOptions = {
     preset: undefined,
     placeholder: t('exhibition.manipulator.section.text-placeholder'),
@@ -236,6 +236,9 @@ const Section = ({ id }: { id: string }) => {
             defaultValue={getSectionTitle(id)}
             onBlur={event => setSectionTitle(id, event.target.value)}
           />
+          <IconButton onClick={() => deleteSection(id)}>
+            <Delete />
+          </IconButton>
           <IconButton onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
