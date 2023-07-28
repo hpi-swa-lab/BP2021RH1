@@ -4,13 +4,17 @@ import { AttributeFilterProps, SingleFilterProps } from './AdvancedSearch';
 import { SearchFilterInputItem } from './SearchFilterInputItem';
 
 export const SearchFilterInput = ({
+  filterIndex,
   attribute,
   advancedSearchProps,
   setAdvancedSearchProps,
+  archiveTags,
 }: {
+  filterIndex: number;
   attribute: string;
   advancedSearchProps: AttributeFilterProps[];
   setAdvancedSearchProps: Dispatch<SetStateAction<AttributeFilterProps[]>>;
+  archiveTags: string[];
 }) => {
   const { getObjectId } = useObjectIds<SingleFilterProps>();
 
@@ -37,6 +41,10 @@ export const SearchFilterInput = ({
       switch (property) {
         case 'filterOperator':
           update[index].filterOperator = value;
+          if (value === 'default') {
+            update[index].values[0] = '';
+            update[index].values[1] = '';
+          }
           break;
         case 'combinationOperator':
           update[index].combinationOperator = value;
@@ -64,10 +72,12 @@ export const SearchFilterInput = ({
       {filterProps.map((props, index) => (
         <SearchFilterInputItem
           key={getObjectId(props)}
-          index={index}
+          filterIndex={filterIndex}
+          itemIndex={index}
           attribute={attribute}
           advancedSearchProps={advancedSearchProps}
           updateFilterProps={updateFilterProps}
+          archiveTags={archiveTags}
         ></SearchFilterInputItem>
       ))}
     </div>
