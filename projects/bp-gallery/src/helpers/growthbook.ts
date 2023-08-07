@@ -21,6 +21,7 @@ export type AppFeatures = {
   start_view_default_tab_index: number;
   old_search: boolean;
   showstories: boolean;
+  show_old_browse_view_on_start_page: boolean;
 };
 
 export type FeatureId = keyof AppFeatures;
