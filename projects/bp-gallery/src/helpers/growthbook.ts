@@ -20,7 +20,6 @@ export type AppFeatures = {
   geopictures_collection_id: string;
   start_view_default_tab_index: number;
   old_search: boolean;
-  old_search_dev: boolean;
   showstories: boolean;
   show_old_browse_view_on_start_page: boolean;
 };
