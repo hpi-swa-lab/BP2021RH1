@@ -152,7 +152,9 @@ const StartView = () => {
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>
       </div>
-      <BrowseView startpage={true} />
+      <IfFlagEnabled feature='show_old_browse_view_on_start_page'>
+        <BrowseView startpage={true} />
+      </IfFlagEnabled>
     </div>
   );
 };
