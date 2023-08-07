@@ -9,7 +9,7 @@ import {
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useFlag, useVariant } from '../../../helpers/growthbook';
-import { useMobile } from '../../../hooks/context-hooks';
+import { useAuth, useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
 import { IfFlagEnabled } from '../../common/IfFlagEnabled';
@@ -35,6 +35,9 @@ const StartView = () => {
   const { data: countData } = useGetArchivePictureCountsQuery();
   const pictureCounts: { id: string; count: number }[] | undefined =
     useSimplifiedQueryResponseData(countData)?.archivePictureCounts;
+  const authContext = useAuth();
+  const isLoggedIn = authContext.loggedIn;
+  const show_old_browse_view_on_start_page = useFlag('show_old_browse_view_on_start_page');
 
   const {
     clientId: paypalClientId,
@@ -152,9 +155,8 @@ const StartView = () => {
         <h2 className='archives-title'>{t('startpage.our-archives')}</h2>
         <div className='archives'>{archiveCards}</div>
       </div>
-      <IfFlagEnabled feature='show_old_browse_view_on_start_page'>
-        <BrowseView startpage={true} />
-      </IfFlagEnabled>
+
+      {(isLoggedIn || show_old_browse_view_on_start_page) && <BrowseView startpage={true} />}
     </div>
   );
 };
