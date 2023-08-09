@@ -1,4 +1,5 @@
-import { ArrowDropDown } from '@mui/icons-material';
+import { ArrowDropDown, FastForward, FastRewind } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { debounce } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useAnimate } from '../../../hooks/animate.hook';
@@ -93,11 +94,33 @@ const PictureTimeline = ({
       <div className='flex'>
         <ArrowDropDown className='mx-auto scale-[1.75]' />
       </div>
-      <div className='relative'>
-        <div className='overflow-x-scroll' ref={scrollBarRef} onScroll={updateOnScrollX}>
-          <div className='flex'>
-            <ul className='py-[16px] px-[50%] mt-0 whitespace-nowrap'>{listItems}</ul>
+      <div className='relative mb-2'>
+        <div className='overflow-x-scroll z-0' ref={scrollBarRef} onScroll={updateOnScrollX}>
+          <div className='flex pb-2'>
+            <ul className='py-[16px] px-[50%] my-0 whitespace-nowrap'>{listItems}</ul>
           </div>
+        </div>
+        <div className='absolute top-0 left-0 h-full py-2 box-border flex'>
+          <IconButton
+            className='m-auto'
+            color='primary'
+            onClick={() => {
+              setDate(prev => Math.max(start, prev - 1));
+            }}
+          >
+            <FastRewind className='icon scale-[1.25]' />
+          </IconButton>
+        </div>
+        <div className='absolute top-0 right-0 h-full py-2 box-border flex'>
+          <IconButton
+            className='m-auto'
+            color='primary'
+            onClick={() => {
+              setDate(prev => Math.min(end, prev + 1));
+            }}
+          >
+            <FastForward className='icon scale-[1.25] p-0' />
+          </IconButton>
         </div>
       </div>
     </div>
