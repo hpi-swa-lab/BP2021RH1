@@ -1,4 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+
+const fs = require('fs');
+const { kebabCase } = require('lodash');
+
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   corePlugins: {
@@ -6,6 +10,7 @@ module.exports = {
   },
   theme: {
     extend: {
+      colors: loadSharedColors(),
       gridTemplateColumns: {
         'autofit-card': 'repeat(auto-fit, minmax(20rem, 1fr))',
       },
@@ -36,3 +41,16 @@ module.exports = {
   },
   plugins: [require('@tailwindcss/line-clamp')],
 };
+
+function loadSharedColors() {
+  const styles = fs.readFileSync('./src/shared/style.module.scss');
+  const regex = /^\$([a-zA-Z]+)Color:\s*(.+)\s*;$/gm;
+  const colors = {};
+  let match;
+  while ((match = regex.exec(styles))) {
+    const [_line, name, color] = match;
+    const kebabCaseName = kebabCase(name);
+    colors[kebabCaseName] = color;
+  }
+  return colors;
+}
