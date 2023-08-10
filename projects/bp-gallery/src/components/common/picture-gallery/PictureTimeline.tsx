@@ -1,8 +1,8 @@
-import { ArrowDropDown, FastForward, FastRewind } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { ArrowDropDown } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useAnimate } from '../../../hooks/animate.hook';
+import ScrollNavigationArrows from '../ScrollNavigationArrows';
 
 // for future work
 export const enum TimeStepType {
@@ -100,28 +100,16 @@ const PictureTimeline = ({
             <ul className='py-[16px] px-[50%] my-0 whitespace-nowrap'>{listItems}</ul>
           </div>
         </div>
-        <div className='absolute top-0 left-0 h-full py-2 box-border flex'>
-          <IconButton
-            className='m-auto'
-            color='primary'
-            onClick={() => {
-              setDate(prev => Math.max(start, prev - 1));
-            }}
-          >
-            <FastRewind className='icon scale-[1.25]' />
-          </IconButton>
-        </div>
-        <div className='absolute top-0 right-0 h-full py-2 box-border flex'>
-          <IconButton
-            className='m-auto'
-            color='primary'
-            onClick={() => {
-              setDate(prev => Math.min(end, prev + 1));
-            }}
-          >
-            <FastForward className='icon scale-[1.25] p-0' />
-          </IconButton>
-        </div>
+        <ScrollNavigationArrows
+          onClickLeft={() => {
+            setDate(prev => Math.max(start, prev - 1));
+          }}
+          onClickRight={() => {
+            setDate(prev => Math.min(end, prev + 1));
+          }}
+          isVisibleLeft={date > start}
+          isVisibleRight={date < end}
+        />
       </div>
     </div>
   );
