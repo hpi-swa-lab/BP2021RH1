@@ -7,6 +7,7 @@ import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import useGetPictures, { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import PictureView from '../../views/picture/PictureView';
+import ScrollNavigationArrows from '../ScrollNavigationArrows';
 import PicturePreview from './PicturePreview';
 import { zoomIntoPicture, zoomOutOfPicture } from './helpers/picture-animations';
 
@@ -109,6 +110,8 @@ const HorizontalPictureGrid = ({
 
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [transitioning, setTransitioning] = useState<boolean>(false);
+  const [isVisibleLeft, setVisibleLeft] = useState<boolean>(true);
+  const [isVisibleRight, setVisibleRight] = useState<boolean>(true);
 
   const selectedPicture = useRef<FlatPicture | undefined>();
 
@@ -270,6 +273,13 @@ const HorizontalPictureGrid = ({
     } else if (!allowDateUpdate.current) {
       allowDateUpdate.current = true;
     }
+
+    if (!scrollBarRef.current) return;
+    setVisibleLeft(scrollBarRef.current.scrollLeft > 0);
+    setVisibleRight(
+      scrollBarRef.current.scrollLeft <
+        scrollBarRef.current.scrollWidth - scrollBarRef.current.clientWidth
+    );
   }, [leftPictures?.length, leftResult.loading, pictures, rightResult.loading, setDate]);
 
   useEffect(() => {
@@ -289,6 +299,14 @@ const HorizontalPictureGrid = ({
     scrollBarRef.current.scrollLeft =
       Math.max(newWidgetCount - oldWidgetCount, 1) * IMAGE_WIDGET_WIDTH;
   }, [leftPictures, leftResult.loading]);
+
+  useEffect(() => {
+    if (!scrollBarRef.current) return;
+    setVisibleRight(
+      scrollBarRef.current.scrollLeft <
+        scrollBarRef.current.scrollWidth - scrollBarRef.current.clientWidth - 5 //offset
+    );
+  }, [rightResult.loading]);
 
   useEffect(() => {
     if (leftResult.loading || rightResult.loading) return;
@@ -349,6 +367,20 @@ const HorizontalPictureGrid = ({
         >
           {content}
         </ScrollBar>
+        <ScrollNavigationArrows
+          onClickLeft={() => {
+            if (scrollBarRef.current) {
+              scrollBarRef.current.scrollLeft -= IMAGE_WIDGET_WIDTH;
+            }
+          }}
+          onClickRight={() => {
+            if (scrollBarRef.current) {
+              scrollBarRef.current.scrollLeft += IMAGE_WIDGET_WIDTH;
+            }
+          }}
+          isVisibleLeft={isVisibleLeft}
+          isVisibleRight={isVisibleRight}
+        />
       </div>
       {focusedPicture && !transitioning && (
         <Portal container={root}>
