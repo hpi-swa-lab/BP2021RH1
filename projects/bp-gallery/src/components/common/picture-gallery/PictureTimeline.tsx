@@ -107,6 +107,8 @@ const PictureTimeline = ({
           onClickRight={() => {
             setDate(prev => Math.min(end, prev + 1));
           }}
+          longPressTimeoutLeft={500}
+          longPressTimeoutRight={500}
           isVisibleLeft={date > start}
           isVisibleRight={date < end}
           showOnMobile={false}

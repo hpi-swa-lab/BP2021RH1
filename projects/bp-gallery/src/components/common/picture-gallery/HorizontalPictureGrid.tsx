@@ -378,6 +378,18 @@ const HorizontalPictureGrid = ({
               scrollBarRef.current.scrollLeft += IMAGE_WIDGET_WIDTH;
             }
           }}
+          onLongPressLeft={() => {
+            if (scrollBarRef.current) {
+              scrollBarRef.current.scrollLeft--;
+            }
+          }}
+          onLongPressRight={() => {
+            if (scrollBarRef.current) {
+              scrollBarRef.current.scrollLeft++;
+            }
+          }}
+          longPressTimeoutLeft={100}
+          longPressTimeoutRight={100}
           isVisibleLeft={isVisibleLeft}
           isVisibleRight={isVisibleRight}
           showOnMobile={false}
