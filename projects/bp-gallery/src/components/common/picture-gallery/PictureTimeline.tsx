@@ -109,6 +109,7 @@ const PictureTimeline = ({
           }}
           isVisibleLeft={date > start}
           isVisibleRight={date < end}
+          showOnMobile={false}
         />
       </div>
     </div>

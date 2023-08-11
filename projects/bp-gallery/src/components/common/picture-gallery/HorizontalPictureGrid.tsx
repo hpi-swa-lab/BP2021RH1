@@ -380,6 +380,7 @@ const HorizontalPictureGrid = ({
           }}
           isVisibleLeft={isVisibleLeft}
           isVisibleRight={isVisibleRight}
+          showOnMobile={false}
         />
       </div>
       {focusedPicture && !transitioning && (
