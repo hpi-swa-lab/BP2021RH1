@@ -102,13 +102,17 @@ const PictureTimeline = ({
         </div>
         <ScrollNavigationArrows
           onClickLeft={() => {
-            setDate(prev => Math.max(start, prev - 1));
+            if (scrollBarRef.current) {
+              scrollBarRef.current.scrollLeft -= singleElementWidth;
+            }
           }}
           onClickRight={() => {
-            setDate(prev => Math.min(end, prev + 1));
+            if (scrollBarRef.current) {
+              scrollBarRef.current.scrollLeft += singleElementWidth;
+            }
           }}
-          longPressTimeoutLeft={500}
-          longPressTimeoutRight={500}
+          longPressTimeoutLeft={250}
+          longPressTimeoutRight={250}
           isVisibleLeft={date > start}
           isVisibleRight={date < end}
           showOnMobile={false}
