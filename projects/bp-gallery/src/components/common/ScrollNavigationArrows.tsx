@@ -106,10 +106,17 @@ const ScrollNavigationArrows = ({
               setPressedLeft(true);
               onPressLeft(e);
             }}
+            onTouchStart={e => {
+              setPressedLeft(true);
+              onPressLeft(e);
+            }}
             onMouseUp={() => {
               setPressedLeft(false);
             }}
             onMouseLeave={() => {
+              setPressedLeft(false);
+            }}
+            onTouchEnd={() => {
               setPressedLeft(false);
             }}
           >
@@ -128,10 +135,17 @@ const ScrollNavigationArrows = ({
               setPressedRight(true);
               onPressRight(e);
             }}
+            onTouchStart={e => {
+              setPressedRight(true);
+              onPressRight(e);
+            }}
             onMouseUp={() => {
               setPressedRight(false);
             }}
             onMouseLeave={() => {
+              setPressedRight(false);
+            }}
+            onTouchEnd={() => {
               setPressedRight(false);
             }}
           >
