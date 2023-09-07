@@ -27,6 +27,7 @@ interface TagOverviewProps {
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
   archiveId?: string;
+  allowFold?: boolean;
 }
 
 const TagOverview = ({
@@ -37,6 +38,7 @@ const TagOverview = ({
   queryParams,
   thumbnailQueryParams,
   archiveId,
+  allowFold,
 }: TagOverviewProps) => {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement | null>(null);
@@ -114,6 +116,7 @@ const TagOverview = ({
               currentItemAmount={rows ? rowLength * rows : undefined}
               queryParams={queryParams}
               thumbnailQueryParams={thumbnailQueryParams}
+              allowFold={allowFold}
             />
           ) : (
             <DecadesList

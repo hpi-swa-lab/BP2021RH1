@@ -148,12 +148,6 @@ describe('Global Show More View', () => {
         targetText
       );
     });
-
-    // check for images in show more view
-    cy.contains('Mehr als 100 Bilder');
-    for (const id of [2, 3, 4, 5]) {
-      cy.get(`.picture-grid .row #picture-preview-for-${id}`).should('exist');
-    }
   });
 
   it('shows show more view for single decade "70er"', () => {
@@ -180,12 +174,6 @@ describe('Global Show More View', () => {
         'contain.text',
         `VERIFIZIERTER TESTORT ${num}`
       );
-    }
-
-    // check for images in show more view
-    cy.contains('Mehr als 100 Bilder');
-    for (const id of [2, 3, 4, 5]) {
-      cy.get(`.picture-grid .row #picture-preview-for-${id}`).should('exist');
     }
   });
 

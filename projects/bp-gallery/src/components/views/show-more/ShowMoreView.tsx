@@ -82,36 +82,38 @@ const ShowMoreView = ({
           flattenedTags={flattenedTags}
         />
         <ShowStats>
-          <PictureScrollGrid
-            queryParams={getPictureQueryParams(
-              categoryType,
-              categoryId,
-              archiveId,
-              collectionsInfo
-            )}
-            sortBy={
-              categoryType !== 'pictures' && categoryId
-                ? ['time_range_tag.start:asc']
-                : categoryType === 'most-liked'
-                ? ['likes:desc']
-                : ['createdAt:desc']
-            }
-            hashbase={'show-more'}
-            extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
-            bulkOperations={[
-              removeFromCollection,
-              linkToCollection,
-              moveToCollection,
-              createSequence,
-              bulkEdit,
-              ...(exhibitionId ? [addToExhibition] : []),
-            ]}
-            maxNumPictures={
-              categoryType === 'latest' || categoryType === 'most-liked' ? 500 : undefined
-            }
-            textFilter={null}
-            fetchPolicy='cache-and-network'
-          />
+          {((categoryType !== 'location' && categoryType !== 'date') || categoryId) && (
+            <PictureScrollGrid
+              queryParams={getPictureQueryParams(
+                categoryType,
+                categoryId,
+                archiveId,
+                collectionsInfo
+              )}
+              sortBy={
+                categoryType !== 'pictures' && categoryId
+                  ? ['time_range_tag.start:asc']
+                  : categoryType === 'most-liked'
+                  ? ['likes:desc']
+                  : ['createdAt:desc']
+              }
+              hashbase={'show-more'}
+              extraAdornments={showcaseAdornment ? [showcaseAdornment] : []}
+              bulkOperations={[
+                removeFromCollection,
+                linkToCollection,
+                moveToCollection,
+                createSequence,
+                bulkEdit,
+                ...(exhibitionId ? [addToExhibition] : []),
+              ]}
+              maxNumPictures={
+                categoryType === 'latest' || categoryType === 'most-liked' ? 500 : undefined
+              }
+              textFilter={null}
+              fetchPolicy='cache-and-network'
+            />
+          )}
         </ShowStats>
       </div>
     );
