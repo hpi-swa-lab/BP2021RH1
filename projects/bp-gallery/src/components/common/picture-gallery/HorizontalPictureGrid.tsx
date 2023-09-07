@@ -300,7 +300,7 @@ const HorizontalPictureGrid = ({
     pictureLength.current = leftPictures?.length ?? 0;
     lastScrollPos.current = Math.max(newWidgetCount - oldWidgetCount, 1) * IMAGE_WIDGET_WIDTH;
     scrollBarRef.current.scrollLeft =
-      Math.max(newWidgetCount - oldWidgetCount, 1) * IMAGE_WIDGET_WIDTH;
+      Math.max(newWidgetCount - oldWidgetCount, 0) * IMAGE_WIDGET_WIDTH;
   }, [leftPictures, leftResult.loading]);
 
   useEffect(() => {
