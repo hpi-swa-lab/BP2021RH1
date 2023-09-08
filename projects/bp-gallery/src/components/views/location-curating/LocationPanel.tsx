@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useVisit } from '../../../helpers/history';
@@ -10,6 +10,7 @@ import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import AddLocationEntry from './AddLocationEntry';
 import { useFoldoutStatus } from './FoldoutStatusContext';
 import LocationBranch from './LocationBranch';
+import LocationFilter, { LocationFilterType } from './LocationFilter';
 import LocationPanelHeader from './LocationPanelHeader';
 import { LocationPanelPermissionsProvider } from './LocationPanelPermissionsProvider';
 import { useCreateNewTag } from './location-management-helpers';
@@ -73,6 +74,10 @@ const LocationPanel = () => {
   const { canRun: canUseLocationPanel, loading: canUseLocationPanelLoading } =
     canUseTagTableViewQuery();
 
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const [filterType, setFilterType] = useState<LocationFilterType>(LocationFilterType.CONTAINS);
+  const [filterValue, setFilterValue] = useState<string | string[] | undefined>();
+
   return (
     <ProtectedRoute canUse={canUseLocationPanel} canUseLoading={canUseLocationPanelLoading}>
       {() => {
@@ -83,7 +88,25 @@ const LocationPanel = () => {
         } else {
           return (
             <LocationPanelPermissionsProvider>
-              <LocationPanelHeader />
+              <LocationPanelHeader
+                setOpen={(value: boolean) => {
+                  setOpen(value);
+                }}
+              />
+              {isOpen && (
+                <LocationFilter
+                  filterType={filterType}
+                  setFilterType={(value: LocationFilterType) => {
+                    setFilterType(value);
+                  }}
+                  setFilterValue={(value: string | string[] | undefined) => {
+                    setFilterValue(value);
+                  }}
+                  setOpen={(value: boolean) => {
+                    setOpen(value);
+                  }}
+                />
+              )}
               <div className='location-panel-content'>
                 {tagTree?.map(tag => (
                   <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
