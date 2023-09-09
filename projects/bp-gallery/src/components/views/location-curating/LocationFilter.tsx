@@ -1,7 +1,7 @@
 import { Close } from '@mui/icons-material';
 import { Autocomplete, MenuItem, Select, TextField } from '@mui/material';
 import { debounce } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export enum LocationFilterType {
   CONTAINS = 'contains',
@@ -34,13 +34,17 @@ const LocationFilter = ({
   const [localFilterValue, setLocalFilterValue] = useState<string | string[]>(
     filterType === LocationFilterType.IS_ANY_OF ? [] : ''
   );
+  const localFilterRef = useRef<string | string[] | undefined>(
+    filterType === LocationFilterType.IS_ANY_OF ? [] : ''
+  );
 
   useEffect(() => {
     setLocalFilterValue(filterType === LocationFilterType.IS_ANY_OF ? [] : '');
+    localFilterRef.current = filterType === LocationFilterType.IS_ANY_OF ? [] : '';
   }, [filterType]);
 
   const updateFilterValue = debounce(() => {
-    setFilterValue(localFilterValue);
+    setFilterValue(localFilterRef.current);
   }, 1000);
 
   return (
@@ -49,7 +53,9 @@ const LocationFilter = ({
         className='my-auto mr-2 cursor-pointer'
         onClick={() => {
           if (localFilterValue) {
+            localFilterRef.current = '';
             setLocalFilterValue('');
+            updateFilterValue();
             return;
           }
           setOpen(false);
@@ -76,6 +82,7 @@ const LocationFilter = ({
         <TextField
           value={localFilterValue}
           onChange={value => {
+            localFilterRef.current = value.target.value;
             setLocalFilterValue(value.target.value);
             updateFilterValue();
           }}
@@ -88,6 +95,7 @@ const LocationFilter = ({
           freeSolo
           renderInput={props => <TextField {...props} />}
           onChange={(_, values) => {
+            localFilterRef.current = values;
             setLocalFilterValue(values);
             updateFilterValue();
           }}

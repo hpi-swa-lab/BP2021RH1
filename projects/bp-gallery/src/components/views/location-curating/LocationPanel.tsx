@@ -14,7 +14,7 @@ import LocationFilter, { LocationFilterType } from './LocationFilter';
 import LocationPanelHeader from './LocationPanelHeader';
 import { LocationPanelPermissionsProvider } from './LocationPanelPermissionsProvider';
 import { useCreateNewTag } from './location-management-helpers';
-import { useGetTagStructures } from './tag-structure-helpers';
+import { useGetSubtags, useGetTagStructures } from './tag-structure-helpers';
 
 const setUnacceptedSubtagsCount = (tag: FlatTag) => {
   let subtagCount = 0;
@@ -35,6 +35,39 @@ const LocationPanel = () => {
   const { data, loading, error, refetch } = allTagsQuery();
   const flattened = useSimplifiedQueryResponseData(data);
   const flattenedTags: FlatTag[] | undefined = flattened ? Object.values(flattened)[0] : undefined;
+
+  const [filteredFlattenedTags, setFilteredFlattenedTags] = useState<FlatTag[] | undefined>(
+    flattenedTags
+  );
+
+  const { tagTree: sortedTagTree } = useGetTagStructures(filteredFlattenedTags);
+  const tagSubtagList = useGetSubtags(flattenedTags);
+
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const [filterType, setFilterType] = useState<LocationFilterType>(LocationFilterType.CONTAINS);
+  const [filterValue, setFilterValue] = useState<string | string[] | undefined>();
+
+  useEffect(() => {
+    if (!flattenedTags || !tagSubtagList) {
+      return;
+    }
+    // convert everything to lowercase before matching
+    switch (filterType) {
+      case LocationFilterType.CONTAINS:
+        setFilteredFlattenedTags(
+          flattenedTags.filter(
+            flattenedTag =>
+              !filterValue?.length ||
+              flattenedTag.name.toLowerCase().includes((filterValue as string).toLowerCase()) ||
+              tagSubtagList[flattenedTag.id].findIndex(subtag =>
+                subtag.name.toLowerCase().includes((filterValue as string).toLowerCase())
+              ) !== -1
+          )
+        );
+        break;
+      default:
+    }
+  }, [filterValue, filterType, flattenedTags, tagSubtagList]);
 
   useEffect(() => {
     if (!foldoutStatus) {
@@ -59,8 +92,6 @@ const LocationPanel = () => {
 
   const { createNewTag, canCreateNewTag } = useCreateNewTag(refetch);
 
-  const { tagTree: sortedTagTree } = useGetTagStructures(flattenedTags);
-
   const tagTree = useMemo(() => {
     if (!sortedTagTree) return;
 
@@ -73,10 +104,6 @@ const LocationPanel = () => {
 
   const { canRun: canUseLocationPanel, loading: canUseLocationPanelLoading } =
     canUseTagTableViewQuery();
-
-  const [isOpen, setOpen] = useState<boolean>(false);
-  const [filterType, setFilterType] = useState<LocationFilterType>(LocationFilterType.CONTAINS);
-  const [filterValue, setFilterValue] = useState<string | string[] | undefined>();
 
   return (
     <ProtectedRoute canUse={canUseLocationPanel} canUseLoading={canUseLocationPanelLoading}>
