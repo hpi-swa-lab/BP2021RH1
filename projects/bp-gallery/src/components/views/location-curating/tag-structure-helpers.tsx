@@ -172,7 +172,7 @@ export const useGetTagStructures = (
         return [];
       }
       for (const childTag of tag.child_tags) {
-        tagSubtags[tag.id] = [...tagSubtags[tag.id].concat(visit(childTag)), tag];
+        tagSubtags[tag.id] = [...tagSubtags[tag.id].concat(visit(childTag)), childTag];
       }
       return tagSubtags[tag.id];
     };
