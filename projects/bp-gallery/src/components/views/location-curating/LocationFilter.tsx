@@ -61,10 +61,13 @@ const LocationFilter = ({
       <Select
         value={filterType}
         onChange={value => {
-          setFilterType(value.target.value as LocationFilterType);
-          setLocalFilterValue(filterType === LocationFilterType.IS_ANY_OF ? [] : '');
-          localFilterRef.current = filterType === LocationFilterType.IS_ANY_OF ? [] : '';
+          setLocalFilterValue(
+            (value.target.value as LocationFilterType) === LocationFilterType.IS_ANY_OF ? [] : ''
+          );
+          localFilterRef.current =
+            (value.target.value as LocationFilterType) === LocationFilterType.IS_ANY_OF ? [] : '';
           updateFilterValue();
+          setFilterType(value.target.value as LocationFilterType);
         }}
         className='mr-1'
       >
@@ -90,6 +93,7 @@ const LocationFilter = ({
       )}
       {showAutocomplete() && (
         <Autocomplete
+          value={filterValue && Array.isArray(filterValue) ? filterValue : []}
           options={[]}
           multiple
           freeSolo

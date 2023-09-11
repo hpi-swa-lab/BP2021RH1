@@ -51,6 +51,13 @@ const LocationPanel = () => {
     if (!flattenedTags || !tagSubtagList) {
       return;
     }
+    // check for correct filterValue type
+    if (typeof filterValue === 'string' && filterType === LocationFilterType.IS_ANY_OF) {
+      return;
+    }
+    if (Array.isArray(filterValue) && filterType !== LocationFilterType.IS_ANY_OF) {
+      return;
+    }
     switch (filterType) {
       case LocationFilterType.CONTAINS:
         setFilteredFlattenedTags(
