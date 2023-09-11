@@ -14,7 +14,7 @@ import LocationFilter, { LocationFilterType } from './LocationFilter';
 import LocationPanelHeader from './LocationPanelHeader';
 import { LocationPanelPermissionsProvider } from './LocationPanelPermissionsProvider';
 import { useCreateNewTag } from './location-management-helpers';
-import { useGetSubtags, useGetTagStructures } from './tag-structure-helpers';
+import { useGetTagStructures } from './tag-structure-helpers';
 
 const setUnacceptedSubtagsCount = (tag: FlatTag) => {
   let subtagCount = 0;
@@ -41,7 +41,7 @@ const LocationPanel = () => {
   );
 
   const { tagTree: sortedTagTree } = useGetTagStructures(filteredFlattenedTags);
-  const tagSubtagList = useGetSubtags(flattenedTags);
+  const { tagSubtagList } = useGetTagStructures(flattenedTags);
 
   const [isOpen, setOpen] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<LocationFilterType>(LocationFilterType.CONTAINS);

@@ -161,34 +161,36 @@ export const useGetTagStructures = (
     return paths;
   }, [tagTree, topologicalOrder]);
 
+  const tagSubtagList = useMemo(() => {
+    if (!tagsById || !flattenedTags || !tagTree) {
+      return undefined;
+    }
+    const tagSubtags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
+
+    const visit = (tag: FlatTag) => {
+      if (!tag.child_tags) {
+        return [];
+      }
+      for (const childTag of tag.child_tags) {
+        tagSubtags[tag.id] = [...tagSubtags[tag.id].concat(visit(childTag)), tag];
+      }
+      return tagSubtags[tag.id];
+    };
+
+    for (const tag of tagTree) {
+      visit(tag);
+    }
+    return tagSubtags;
+  }, [flattenedTags, tagsById, tagTree]);
+
   return {
     tagTree,
     flattenedTagTree: tagsById,
     tagChildTags,
     tagSiblingTags,
     tagSupertagList,
+    tagSubtagList,
   };
-};
-
-export const useGetSubtags = (flattenedTags?: FlatTag[]) => {
-  const tagsById = useGetTagsById(flattenedTags);
-
-  const tagSubtagList = useMemo(() => {
-    if (!tagsById || !flattenedTags) {
-      return undefined;
-    }
-    const tagSubtags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
-    for (const tag of flattenedTags) {
-      tagsById[tag.id].parent_tags?.forEach(parent => {
-        if (tagSubtags[parent.id].findIndex(subtag => subtag.id === parent.id) === -1) {
-          tagSubtags[parent.id].push(tagsById[tag.id]);
-        }
-      });
-    }
-    return tagSubtags;
-  }, [flattenedTags, tagsById]);
-
-  return tagSubtagList;
 };
 
 export const useGetBreadthFirstOrder = (
