@@ -27,7 +27,9 @@ const useGetTagTree = (
     // set child tags for each tag in tree
     for (const tag of Object.values(tagsById)) {
       tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags?.push(tag);
+        if (parentTag.id in tagsById) {
+          tagsById[parentTag.id].child_tags?.push(tag);
+        }
       });
     }
     for (const tag of Object.values(tagsById)) {

@@ -116,13 +116,16 @@ const LocationPanel = () => {
           return (
             <LocationPanelPermissionsProvider>
               <LocationPanelHeader
+                isOpen={isOpen}
                 setOpen={(value: boolean) => {
                   setOpen(value);
                 }}
+                showFilter={filterValue?.length ? true : false}
               />
               {isOpen && (
                 <LocationFilter
                   filterType={filterType}
+                  filterValue={filterValue}
                   setFilterType={(value: LocationFilterType) => {
                     setFilterType(value);
                   }}

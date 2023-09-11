@@ -3,7 +3,15 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './LocationEntry.scss';
 
-const LocationPanelHeader = ({ setOpen }: { setOpen: (value: boolean) => void }) => {
+const LocationPanelHeader = ({
+  isOpen,
+  setOpen,
+  showFilter,
+}: {
+  isOpen: boolean;
+  setOpen: (value: boolean) => void;
+  showFilter: boolean;
+}) => {
   const { t } = useTranslation();
 
   const [isHoveredName, setHoveredName] = useState<boolean>(false);
@@ -23,9 +31,11 @@ const LocationPanelHeader = ({ setOpen }: { setOpen: (value: boolean) => void })
           <div className='location-header-name'>{t('common.name')}</div>
           <FilterAlt
             sx={{ color: '#808080' }}
-            className={`my-auto ml-auto ${isHoveredName ? 'visible' : 'invisible'} cursor-pointer`}
+            className={`my-auto ml-auto ${
+              isHoveredName || showFilter ? 'visible' : 'invisible'
+            } cursor-pointer`}
             onClick={() => {
-              setOpen(true);
+              setOpen(!isOpen);
             }}
           />
         </div>

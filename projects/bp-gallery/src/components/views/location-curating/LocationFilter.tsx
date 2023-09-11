@@ -1,7 +1,7 @@
 import { Close } from '@mui/icons-material';
 import { Autocomplete, MenuItem, Select, TextField } from '@mui/material';
 import { debounce } from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 export enum LocationFilterType {
   CONTAINS = 'contains',
@@ -15,11 +15,13 @@ export enum LocationFilterType {
 
 const LocationFilter = ({
   filterType,
+  filterValue,
   setFilterType,
   setFilterValue,
   setOpen,
 }: {
   filterType: LocationFilterType;
+  filterValue?: string | string[];
   setFilterType: (value: LocationFilterType) => void;
   setFilterValue: (value: string | string[] | undefined) => void;
   setOpen: (value: boolean) => void;
@@ -32,23 +34,18 @@ const LocationFilter = ({
   const showAutocomplete = () => filterType === LocationFilterType.IS_ANY_OF;
 
   const [localFilterValue, setLocalFilterValue] = useState<string | string[]>(
-    filterType === LocationFilterType.IS_ANY_OF ? [] : ''
+    filterValue ?? (filterType === LocationFilterType.IS_ANY_OF ? [] : '')
   );
   const localFilterRef = useRef<string | string[] | undefined>(
-    filterType === LocationFilterType.IS_ANY_OF ? [] : ''
+    filterValue ?? (filterType === LocationFilterType.IS_ANY_OF ? [] : '')
   );
-
-  useEffect(() => {
-    setLocalFilterValue(filterType === LocationFilterType.IS_ANY_OF ? [] : '');
-    localFilterRef.current = filterType === LocationFilterType.IS_ANY_OF ? [] : '';
-  }, [filterType]);
 
   const updateFilterValue = debounce(() => {
     setFilterValue(localFilterRef.current);
   }, 1000);
 
   return (
-    <div className='p-2 fixed top-30 left-0 z-20 bg-white shadow-lg flex'>
+    <div className='p-2 fixed top-30 left-0 z-20 bg-white shadow-lg flex rounded-[5px]'>
       <Close
         className='my-auto mr-2 cursor-pointer'
         onClick={() => {
@@ -65,6 +62,9 @@ const LocationFilter = ({
         value={filterType}
         onChange={value => {
           setFilterType(value.target.value as LocationFilterType);
+          setLocalFilterValue(filterType === LocationFilterType.IS_ANY_OF ? [] : '');
+          localFilterRef.current = filterType === LocationFilterType.IS_ANY_OF ? [] : '';
+          updateFilterValue();
         }}
         className='mr-1'
       >
