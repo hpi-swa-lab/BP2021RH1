@@ -217,7 +217,12 @@ const LocationPanel = () => {
               )}
               <div className='location-panel-content'>
                 {tagTree?.map(tag => (
-                  <LocationBranch key={tag.id} locationTag={tag} refetch={refetch} />
+                  <LocationBranch
+                    key={tag.id}
+                    locationTag={tag}
+                    refetch={refetch}
+                    forceFoldout={filterValue?.length && tag.child_tags?.length ? true : false}
+                  />
                 ))}
                 {canCreateNewTag && (
                   <AddLocationEntry
