@@ -1,6 +1,7 @@
 import { FilterAlt } from '@mui/icons-material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import IconButtonWithTooltip from '../../common/IconButtonWithTooltip';
 import './LocationEntry.scss';
 
 const LocationPanelHeader = ({
@@ -29,15 +30,17 @@ const LocationPanelHeader = ({
           }}
         >
           <div className='location-header-name'>{t('common.name')}</div>
-          <FilterAlt
-            sx={{ color: '#808080' }}
-            className={`my-auto ml-auto ${
-              isHoveredName || showFilter ? 'visible' : 'invisible'
-            } cursor-pointer`}
-            onClick={() => {
-              setOpen(!isOpen);
-            }}
-          />
+          <div
+            className={`py-auto ml-auto ${isHoveredName || showFilter ? 'visible' : 'invisible'}`}
+          >
+            <IconButtonWithTooltip
+              title={t('tag-panel.apply-filter')}
+              onClick={() => {
+                setOpen(!isOpen);
+              }}
+              icon={<FilterAlt />}
+            />
+          </div>
         </div>
         <div className='location-header-synonyms'>{t('curator.synonyms')}</div>
       </div>
