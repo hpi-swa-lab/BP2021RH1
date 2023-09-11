@@ -51,7 +51,6 @@ const LocationPanel = () => {
     if (!flattenedTags || !tagSubtagList) {
       return;
     }
-    // convert everything to lowercase before matching
     switch (filterType) {
       case LocationFilterType.CONTAINS:
         setFilteredFlattenedTags(
@@ -65,7 +64,79 @@ const LocationPanel = () => {
           )
         );
         break;
+      case LocationFilterType.EQUALS:
+        setFilteredFlattenedTags(
+          flattenedTags.filter(
+            flattenedTag =>
+              !filterValue?.length ||
+              flattenedTag.name.toLowerCase() === (filterValue as string).toLowerCase() ||
+              tagSubtagList[flattenedTag.id].findIndex(
+                subtag => subtag.name.toLowerCase() === (filterValue as string).toLowerCase()
+              ) !== -1
+          )
+        );
+        break;
+      case LocationFilterType.STARTS_WITH:
+        setFilteredFlattenedTags(
+          flattenedTags.filter(
+            flattenedTag =>
+              !filterValue?.length ||
+              flattenedTag.name.toLowerCase().startsWith((filterValue as string).toLowerCase()) ||
+              tagSubtagList[flattenedTag.id].findIndex(subtag =>
+                subtag.name.toLowerCase().startsWith((filterValue as string).toLowerCase())
+              ) !== -1
+          )
+        );
+        break;
+      case LocationFilterType.ENDS_WITH:
+        setFilteredFlattenedTags(
+          flattenedTags.filter(
+            flattenedTag =>
+              !filterValue?.length ||
+              flattenedTag.name.toLowerCase().endsWith((filterValue as string).toLowerCase()) ||
+              tagSubtagList[flattenedTag.id].findIndex(subtag =>
+                subtag.name.toLowerCase().endsWith((filterValue as string).toLowerCase())
+              ) !== -1
+          )
+        );
+        break;
+      case LocationFilterType.IS_EMPTY:
+        setFilteredFlattenedTags(
+          flattenedTags.filter(
+            flattenedTag =>
+              flattenedTag.name === '' ||
+              tagSubtagList[flattenedTag.id].findIndex(subtag => subtag.name === '') !== -1
+          )
+        );
+        break;
+      case LocationFilterType.IS_NOT_EMPTY:
+        setFilteredFlattenedTags(
+          flattenedTags.filter(
+            flattenedTag =>
+              flattenedTag.name !== '' ||
+              tagSubtagList[flattenedTag.id].findIndex(subtag => subtag.name !== '') !== -1
+          )
+        );
+        break;
+      case LocationFilterType.IS_ANY_OF:
+        setFilteredFlattenedTags(
+          flattenedTags.filter(
+            flattenedTag =>
+              !filterValue?.length ||
+              (filterValue as string[]).findIndex(
+                value => value.toLowerCase() === flattenedTag.name.toLowerCase()
+              ) !== -1 ||
+              tagSubtagList[flattenedTag.id].findIndex(
+                subtag =>
+                  (filterValue as string[]).findIndex(
+                    value => value.toLowerCase() === subtag.name.toLowerCase()
+                  ) !== -1
+              ) !== -1
+          )
+        );
+        break;
       default:
+        setFilteredFlattenedTags(flattenedTags);
     }
   }, [filterValue, filterType, flattenedTags, tagSubtagList]);
 
