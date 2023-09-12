@@ -6,6 +6,7 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { useBlockImageContextMenuByPicture } from '../../../hooks/block-image-context-menu.hook';
+import { useMobile } from '../../../hooks/context-hooks';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import RichText from '../../common/RichText';
 import PictureView from '../picture/PictureView';
@@ -65,6 +66,7 @@ const DailyPicture = () => {
     '14064',
   ];
   const { t } = useTranslation();
+  const { isMobile } = useMobile();
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const navigateToPicture = useCallback(
     async (id: string) => {
@@ -82,14 +84,16 @@ const DailyPicture = () => {
   const onImageContextMenu = useBlockImageContextMenuByPicture(picture);
 
   return (
-    <div className='rounded-[15px] p-4'>
+    <div className={`rounded-[15px] ${isMobile ? 'py-4' : 'p-4'}`}>
       {picture && (
         <div>
           <h2 className='ml-0'>{t('common.daily-picture')}</h2>
 
           <div className={`flex flex-col justify-center`}>
             <img
-              className={'w-auto h-96 cursor-pointer max-w-2xl object-cover rounded'}
+              className={`${
+                isMobile ? 'w-full h-auto' : 'w-auto h-96'
+              } cursor-pointer max-w-2xl object-cover rounded`}
               id='daily-picture'
               src={pictureLink}
               alt={t('common.daily-picture')}

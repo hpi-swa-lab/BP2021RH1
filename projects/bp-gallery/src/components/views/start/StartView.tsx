@@ -1,4 +1,4 @@
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
 import { AccessTime, ArrowForwardIos, AutoStories, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useMemo } from 'react';
@@ -11,6 +11,8 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { useFlag, useVariant } from '../../../helpers/growthbook';
 import { useAuth, useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
+import ContentBanner from '../../common/ContentBanner';
+import DonateButton from '../../common/DonateButton';
 import OverviewContainer, {
   OverviewContainerPosition,
   OverviewContainerTab,
@@ -103,8 +105,8 @@ const StartView = () => {
   return (
     <div className='main-start-view'>
       <div className='welcome-container'>
-        <div className='flex mb-4'>
-          <div className='welcome px-8 my-auto'>
+        <div className={`flex ${isMobile ? 'flex-col' : ''}`}>
+          <div className={`welcome ${isMobile ? '' : 'px-8'} my-auto`}>
             <h1 className='mb-0 ml-0'>{t('startpage.welcome-title')}</h1>
             <p className='mt-2'>{t('startpage.welcome-text')}</p>
             <Button
@@ -122,54 +124,58 @@ const StartView = () => {
           </div>
         </div>
 
-        {/* <div className='flex place-content-center gap-2 m-4 flex-wrap'>
-          <div className='flex basis-full' />
-          <IfFeatureEnabled feature='paypal_mainpage'>
-            {paypalClientId !== '' && (
-              <DonateButton
-                donationText={paypalDonationText}
-                clientId={paypalClientId}
-                purposeText={paypalPurposeText}
-              />
-            )}
-          </IfFeatureEnabled>
-        </div> */}
+        <ContentBanner
+          color='#169BD7'
+          title='Spenden'
+          text='Unterstützen Sie das Projekt dabei weiter zu bestehen, indem sie uns helfen die laufenden Kosten für den Betrieb zu decken.'
+          actionButton={
+            <IfFeatureEnabled feature='paypal_mainpage'>
+              {paypalClientId !== '' && (
+                <DonateButton
+                  donationText={paypalDonationText}
+                  clientId={paypalClientId}
+                  purposeText={paypalPurposeText}
+                />
+              )}
+            </IfFeatureEnabled>
+          }
+          imgSrc='/bad-harzburg-stiftung-logo.png'
+        />
 
-        <ShowStats>
-          <OverviewContainer
-            defaultTabIndex={defaultTabIndex < tabs.length ? defaultTabIndex : 0}
-            tabs={tabs}
-            overviewPosition={OverviewContainerPosition.START_VIEW}
-          />
-        </ShowStats>
-
-        <div className='bg-[#C1E1C1] -mx-8 my-8'>
-          <div className='flex max-h-[187px]'>
-            <div className='ml-8 w-2/5 my-4'>
-              <h2 className='ml-0 mb-0'>{t('geo.geo-game-button')}</h2>
-              <p className='mt-2 pr-4'>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-                tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
-                eos et accusam et
-              </p>
-              <Button
-                variant='contained'
-                endIcon={<ArrowForwardIos />}
-                onClick={() => {
-                  visit('/geo');
-                }}
-              >
-                Jetzt spielen!
-              </Button>
-            </div>
-            <div className='overflow-hidden -skew-x-[16deg]'>
-              <img src='/bad-harzburg-stiftung-logo.png' alt='bh-logo' className='-mt-32' />
-            </div>
-          </div>
+        <div className='my-8'>
+          <ShowStats>
+            <OverviewContainer
+              defaultTabIndex={defaultTabIndex < tabs.length ? defaultTabIndex : 0}
+              tabs={tabs}
+              overviewPosition={OverviewContainerPosition.START_VIEW}
+            />
+          </ShowStats>
         </div>
 
-        <h2 className='ml-0'>{t('startpage.our-archives')}</h2>
-        <div className='archives'>{archiveCards}</div>
+        <ContentBanner
+          color='#C1E1C1'
+          title={t('geo.geo-game-button')}
+          text='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+            accusam et'
+          actionButton={
+            <Button
+              variant='contained'
+              endIcon={<ArrowForwardIos />}
+              onClick={() => {
+                visit('/geo');
+              }}
+            >
+              Jetzt spielen!
+            </Button>
+          }
+          imgSrc='/bad-harzburg-stiftung-logo.png'
+        />
+
+        <div className='mt-8'>
+          <h2 className='ml-0'>{t('startpage.our-archives')}</h2>
+          <div className='archives'>{archiveCards}</div>
+        </div>
       </div>
 
       {(isLoggedIn || show_old_browse_view_on_start_page) && <BrowseView startpage={true} />}
