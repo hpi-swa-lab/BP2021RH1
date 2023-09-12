@@ -1,25 +1,17 @@
+@import 'src/shared/style.module';
+
 .main-start-view {
   max-width: 1200px;
   margin: auto;
 
   .welcome-container {
     padding: 1rem 2rem;
-    background: white;
+    background: $backgroundColor;
+    color: $textColor;
 
     .welcome {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-
-      h1 {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-      }
-
-      p {
-        text-align: center;
-      }
     }
   }
 

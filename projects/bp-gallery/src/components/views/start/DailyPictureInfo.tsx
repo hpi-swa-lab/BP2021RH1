@@ -24,7 +24,7 @@ const DailyPictureInfo = ({ picture }: DailyPictureInfoProps) => {
   const { likeCount, like, isLiked } = useLike(picture.id, picture.likes ?? 0);
 
   return (
-    <div className='flex mt-auto flex-col'>
+    <div className='flex mt-0 flex-col'>
       <div className='flex gap-4 mt-4'>
         <div
           className='items-center flex gap-2 mb-0.5'

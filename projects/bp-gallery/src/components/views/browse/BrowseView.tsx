@@ -16,7 +16,6 @@ import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { FlatCollection, FlatPicture } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
-import Footer from '../../common/footer/Footer';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
 import { PictureUploadAreaProps } from '../../common/picture-gallery/PictureUploadArea';
 import { DialogPreset, useDialog } from '../../provider/DialogProvider';
@@ -169,7 +168,6 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
             />
           </ShowStats>
         </div>
-        <Footer />
       </div>
     );
   } else {
