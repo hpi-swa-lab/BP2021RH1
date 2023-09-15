@@ -98,7 +98,7 @@ const ScrollNavigationArrows = ({
           className={`absolute top-0 left-0 h-full flex ${isVisibleLeft ? 'visible' : 'hidden'}`}
         >
           <IconButton
-            className='!bg-[#7e241d] !text-white !my-auto !shadow-xl'
+            className='!bg-[#7e241d] !text-white !my-auto !shadow-xl !ml-1'
             onClick={e => {
               onPressLeft(e);
             }}
@@ -127,7 +127,7 @@ const ScrollNavigationArrows = ({
           className={`absolute top-0 right-0 h-full flex ${isVisibleRight ? 'visible' : 'hidden'}`}
         >
           <IconButton
-            className='!bg-[#7e241d] !text-white !my-auto !shadow-xl'
+            className='!bg-[#7e241d] !text-white !my-auto !shadow-xl !mr-1'
             onClick={e => {
               onPressRight(e);
             }}
