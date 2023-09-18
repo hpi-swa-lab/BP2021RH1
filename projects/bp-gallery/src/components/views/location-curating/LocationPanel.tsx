@@ -44,6 +44,7 @@ const LocationPanel = () => {
   const { tagSubtagList } = useGetTagStructures(flattenedTags);
 
   const [isOpen, setOpen] = useState<boolean>(false);
+  const [showFlat, setShowFlat] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<LocationFilterType>(LocationFilterType.CONTAINS);
   const [filterValue, setFilterValue] = useState<string | string[] | undefined>();
 
@@ -61,91 +62,112 @@ const LocationPanel = () => {
     switch (filterType) {
       case LocationFilterType.CONTAINS:
         setFilteredFlattenedTags(
-          flattenedTags.filter(
-            flattenedTag =>
-              !filterValue?.length ||
-              flattenedTag.name.toLowerCase().includes((filterValue as string).toLowerCase()) ||
-              tagSubtagList[flattenedTag.id].findIndex(subtag =>
-                subtag.name.toLowerCase().includes((filterValue as string).toLowerCase())
-              ) !== -1
-          )
+          flattenedTags
+            .filter(
+              flattenedTag =>
+                !filterValue?.length ||
+                flattenedTag.name.toLowerCase().includes((filterValue as string).toLowerCase()) ||
+                (!showFlat &&
+                  tagSubtagList[flattenedTag.id].findIndex(subtag =>
+                    subtag.name.toLowerCase().includes((filterValue as string).toLowerCase())
+                  ) !== -1)
+            )
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
         );
         break;
       case LocationFilterType.EQUALS:
         setFilteredFlattenedTags(
-          flattenedTags.filter(
-            flattenedTag =>
-              !filterValue?.length ||
-              flattenedTag.name.toLowerCase() === (filterValue as string).toLowerCase() ||
-              tagSubtagList[flattenedTag.id].findIndex(
-                subtag => subtag.name.toLowerCase() === (filterValue as string).toLowerCase()
-              ) !== -1
-          )
+          flattenedTags
+            .filter(
+              flattenedTag =>
+                !filterValue?.length ||
+                flattenedTag.name.toLowerCase() === (filterValue as string).toLowerCase() ||
+                (!showFlat &&
+                  tagSubtagList[flattenedTag.id].findIndex(
+                    subtag => subtag.name.toLowerCase() === (filterValue as string).toLowerCase()
+                  ) !== -1)
+            )
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
         );
         break;
       case LocationFilterType.STARTS_WITH:
         setFilteredFlattenedTags(
-          flattenedTags.filter(
-            flattenedTag =>
-              !filterValue?.length ||
-              flattenedTag.name.toLowerCase().startsWith((filterValue as string).toLowerCase()) ||
-              tagSubtagList[flattenedTag.id].findIndex(subtag =>
-                subtag.name.toLowerCase().startsWith((filterValue as string).toLowerCase())
-              ) !== -1
-          )
+          flattenedTags
+            .filter(
+              flattenedTag =>
+                !filterValue?.length ||
+                flattenedTag.name.toLowerCase().startsWith((filterValue as string).toLowerCase()) ||
+                (!showFlat &&
+                  tagSubtagList[flattenedTag.id].findIndex(subtag =>
+                    subtag.name.toLowerCase().startsWith((filterValue as string).toLowerCase())
+                  ) !== -1)
+            )
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
         );
         break;
       case LocationFilterType.ENDS_WITH:
         setFilteredFlattenedTags(
-          flattenedTags.filter(
-            flattenedTag =>
-              !filterValue?.length ||
-              flattenedTag.name.toLowerCase().endsWith((filterValue as string).toLowerCase()) ||
-              tagSubtagList[flattenedTag.id].findIndex(subtag =>
-                subtag.name.toLowerCase().endsWith((filterValue as string).toLowerCase())
-              ) !== -1
-          )
+          flattenedTags
+            .filter(
+              flattenedTag =>
+                !filterValue?.length ||
+                flattenedTag.name.toLowerCase().endsWith((filterValue as string).toLowerCase()) ||
+                (!showFlat &&
+                  tagSubtagList[flattenedTag.id].findIndex(subtag =>
+                    subtag.name.toLowerCase().endsWith((filterValue as string).toLowerCase())
+                  ) !== -1)
+            )
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
         );
         break;
       case LocationFilterType.IS_EMPTY:
         setFilteredFlattenedTags(
-          flattenedTags.filter(
-            flattenedTag =>
-              flattenedTag.name === '' ||
-              tagSubtagList[flattenedTag.id].findIndex(subtag => subtag.name === '') !== -1
-          )
+          flattenedTags
+            .filter(
+              flattenedTag =>
+                flattenedTag.name === '' ||
+                (!showFlat &&
+                  tagSubtagList[flattenedTag.id].findIndex(subtag => subtag.name === '') !== -1)
+            )
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
         );
         break;
       case LocationFilterType.IS_NOT_EMPTY:
         setFilteredFlattenedTags(
-          flattenedTags.filter(
-            flattenedTag =>
-              flattenedTag.name !== '' ||
-              tagSubtagList[flattenedTag.id].findIndex(subtag => subtag.name !== '') !== -1
-          )
+          flattenedTags
+            .filter(
+              flattenedTag =>
+                flattenedTag.name !== '' ||
+                (!showFlat &&
+                  tagSubtagList[flattenedTag.id].findIndex(subtag => subtag.name !== '') !== -1)
+            )
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
         );
         break;
       case LocationFilterType.IS_ANY_OF:
         setFilteredFlattenedTags(
-          flattenedTags.filter(
-            flattenedTag =>
-              !filterValue?.length ||
-              (filterValue as string[]).findIndex(
-                value => value.toLowerCase() === flattenedTag.name.toLowerCase()
-              ) !== -1 ||
-              tagSubtagList[flattenedTag.id].findIndex(
-                subtag =>
-                  (filterValue as string[]).findIndex(
-                    value => value.toLowerCase() === subtag.name.toLowerCase()
-                  ) !== -1
-              ) !== -1
-          )
+          flattenedTags
+            .filter(
+              flattenedTag =>
+                !filterValue?.length ||
+                (filterValue as string[]).findIndex(
+                  value => value.toLowerCase() === flattenedTag.name.toLowerCase()
+                ) !== -1 ||
+                (!showFlat &&
+                  tagSubtagList[flattenedTag.id].findIndex(
+                    subtag =>
+                      (filterValue as string[]).findIndex(
+                        value => value.toLowerCase() === subtag.name.toLowerCase()
+                      ) !== -1
+                  ) !== -1)
+            )
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
         );
         break;
       default:
         setFilteredFlattenedTags(flattenedTags);
     }
-  }, [filterValue, filterType, flattenedTags, tagSubtagList]);
+  }, [filterValue, filterType, flattenedTags, tagSubtagList, showFlat]);
 
   useEffect(() => {
     if (!foldoutStatus) {
@@ -198,6 +220,10 @@ const LocationPanel = () => {
                 setOpen={(value: boolean) => {
                   setOpen(value);
                 }}
+                showFlat={showFlat}
+                setShowFlat={(value: boolean) => {
+                  setShowFlat(value);
+                }}
                 showFilter={filterValue?.length ? true : false}
               />
               {isOpen && (
@@ -216,7 +242,7 @@ const LocationPanel = () => {
                 />
               )}
               <div className='location-panel-content'>
-                {tagTree?.map(tag => (
+                {(showFlat ? filteredFlattenedTags : tagTree)?.map(tag => (
                   <LocationBranch
                     key={tag.id}
                     locationTag={tag}

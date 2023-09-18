@@ -1,4 +1,4 @@
-import { FilterAlt } from '@mui/icons-material';
+import { AccountTree, FilterAlt, TableRows } from '@mui/icons-material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import IconButtonWithTooltip from '../../common/IconButtonWithTooltip';
@@ -7,10 +7,14 @@ import './LocationEntry.scss';
 const LocationPanelHeader = ({
   isOpen,
   setOpen,
+  showFlat,
+  setShowFlat,
   showFilter,
 }: {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
+  showFlat: boolean;
+  setShowFlat: (value: boolean) => void;
   showFilter: boolean;
 }) => {
   const { t } = useTranslation();
@@ -20,6 +24,15 @@ const LocationPanelHeader = ({
   return (
     <>
       <div className='location-header-container'>
+        <div>
+          <IconButtonWithTooltip
+            title={showFlat ? 'Hierarchische Struktur' : 'Flache Struktur'}
+            onClick={() => {
+              setShowFlat(!showFlat);
+            }}
+            icon={showFlat ? <AccountTree /> : <TableRows />}
+          />
+        </div>
         <div
           className='flex'
           onMouseEnter={() => {
