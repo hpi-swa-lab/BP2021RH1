@@ -106,7 +106,7 @@ const StartView = () => {
     <div className='main-start-view'>
       <div className='welcome-container'>
         <div className={`flex ${isMobile ? 'flex-col' : ''}`}>
-          <div className={`welcome ${isMobile ? '' : 'px-8'} my-auto`}>
+          <div className={`welcome ${isMobile ? '' : 'p-4'} my-auto`}>
             <h1 className='mb-0 ml-0'>{t('startpage.welcome-title')}</h1>
             <p className='mt-2'>{t('startpage.welcome-text')}</p>
             <Button
