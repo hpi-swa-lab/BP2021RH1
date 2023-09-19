@@ -26,7 +26,7 @@ const LocationPanelHeader = ({
       <div className='location-header-container'>
         <div>
           <IconButtonWithTooltip
-            title={showFlat ? 'Hierarchische Struktur' : 'Flache Struktur'}
+            title={showFlat ? t('tag-panel.hierarchical') : t('tag-panel.flat')}
             onClick={() => {
               setShowFlat(!showFlat);
             }}
