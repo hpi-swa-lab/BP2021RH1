@@ -62,10 +62,7 @@ const StartView = () => {
           };
 
           return (
-            <div
-              className={`archive ${archive.hidden ? 'brightness-90 opacity-50' : ''}`}
-              key={archive.id}
-            >
+            <div className={archive.hidden ? 'brightness-90 opacity-50' : ''} key={archive.id}>
               {archive.showcasePicture ? (
                 <ArchiveCard picture={archive.showcasePicture} {...sharedProps} />
               ) : (
