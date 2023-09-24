@@ -362,7 +362,7 @@
       }
     },
     "users": {
-      "title": "Nutzerverwaltung",
+      "title": "Nutzer- und Rechteverwaltung",
       "add": "Nutzer erstellen",
       "add-content": "An die angegebene E-Mail wird ein Link zum Passwortsetzen verschickt.",
       "publicUsername": "Unangemeldeter Nutzer"
