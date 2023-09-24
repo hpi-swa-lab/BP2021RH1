@@ -320,7 +320,7 @@
         "addArchiveTag": "Erlaubt dem Nutzer, ein neues Archiv/eine neue Sammlung anzulegen.",
         "editArchive": "Erlaubt dem Nutzer, den Namen, die Kurz- und Archiv-Beschreibung, die E-Mail-Adresse, die Links und die Einstellungen zu PayPal-Spenden zu bearbeiten. Das Recht wird auch benötigt, um das Herunterladen von Bildern aus dem Archiv einzuschränken.",
         "exhibition": "Erlaubt dem Nutzer, Geschichten zu erstellen, zu bearbeiten, zu veröffentlichen, privat zu stellen und zu löschen.",
-        "removeArchiveTag": "Erlaubt dem Nutzer, dieses Archiv zu unwiederruflich löschen.",
+        "removeArchiveTag": "Erlaubt dem Nutzer, dieses Archiv zu unwiderruflich löschen.",
         "addUser": "Erlaubt dem Nutzer, neue Nutzer zu registrieren.",
         "addPermission": "Erlaubt dem Nutzer, anderen Nutzern Rechte zu vergeben. Der Nutzer kann anderen Nutzern nur die Rechte vergeben, die er selbst hat.",
         "getParameterizedPermissions": "Erlaubt dem Nutzer, die Rechte der angegebenen Nutzer anzusehen. Das Recht wird benötigt, um Rechte zu vergeben.",
@@ -329,7 +329,7 @@
         "updateUser": "Erlaubt dem Nutzer, die Nutzernamen und E-Mail-Adressen aller Nutzer zu bearbeiten.",
         "getUsers": "Erlaubt dem Nutzer, eine Übersicht über alle Nutzer, die auf der Plattform angemeldet sind. Das Recht wird benötigt, um die Nutzerverwaltung zu benutzen.",
         "login": "Erlaubt dem Nutzer, sich anzumelden. Wenn Sie dieses Recht nicht vergeben, wird dem Nutzer jeder Loginversuch verwehrt.",
-        "removeUser": "Erlaubt dem Nutzer, die angegebenen Nutzer unwiederruflich zu löschen."
+        "removeUser": "Erlaubt dem Nutzer, die angegebenen Nutzer unwiderruflich zu löschen."
       },
       "parameter": {
         "on_other_users": {
@@ -354,7 +354,7 @@
       "email": "E-Mail",
       "permissions": "Rechteverwaltung",
       "remove": {
-        "button": "Nutzer unwiederruflich löschen",
+        "button": "Nutzer unwiderruflich löschen",
         "title": "Nutzer {{name}} wirklich löschen?",
         "content": "Diese Aktion kann nicht rückgängig gemacht werden. Um zu bestätigen, dass Sie wirklich den Nutzer {{name}} löschen möchten, geben Sie hier den Namen des Nutzers ein:",
         "success": "Nutzer erfolgreich gelöscht",
@@ -372,7 +372,7 @@
       "add": "Archiv erstellen",
       "add-content": "Name des neuen Archivs:",
       "remove": {
-        "button": "Archiv unwiederruflich löschen",
+        "button": "Archiv unwiderruflich löschen",
         "title": "Archiv {{name}} wirklich löschen?",
         "content": "Diese Aktion kann nicht rückgängig gemacht werden. Um zu bestätigen, dass Sie wirklich das Archiv {{name}} löschen möchten, geben Sie hier den Namen des Archivs ein:",
         "success": "Archiv erfolgreich gelöscht",
