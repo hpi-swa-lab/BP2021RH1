@@ -27,6 +27,7 @@ import {
   FlatParameterizedPermission,
   FlatUsersPermissionsUser,
 } from '../../../../types/additionalFlatTypes';
+import { HelpTooltip } from '../../../common/HelpTooltip';
 import Loading from '../../../common/Loading';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
@@ -220,6 +221,12 @@ const PermissionsView = ({ userId }: { userId: string }) => {
           : archive
           ? archive.name
           : t('admin.permissions.withoutArchive');
+      const summaryTooltip =
+        type === 'system'
+          ? t('admin.permissions.systemPermissionsTooltip')
+          : archive
+          ? t('admin.permissions.archiveTooltip', { archiveName: archive.name })
+          : t('admin.permissions.withoutArchiveTooltip');
       if (!summary.toLocaleLowerCase().includes(filter.toLocaleLowerCase())) {
         return null;
       }
@@ -287,6 +294,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                 clickThrough
               />
             </Typography>
+            <HelpTooltip title={summary} content={summaryTooltip} iconClassName='!ml-auto' />
           </AccordionSummary>
           <div className='m-4'>
             {relevantPresets.length > 0 && (
@@ -304,46 +312,62 @@ const PermissionsView = ({ userId }: { userId: string }) => {
               </Stack>
             )}
             <div className='mt-2'>
-              {sectionsWithCoverages.map(section => (
-                <Accordion key={section.name}>
-                  <AccordionSummary expandIcon={<ExpandMore />}>
-                    <CoverageCheckbox
-                      coverage={combineCoverages(section.groups.map(group => group.coverage))}
-                      operations={section.groups.flatMap(group => group.operations)}
-                      archive={archive}
-                      label={t(`admin.permissions.section.${section.name}`, { context: type })}
-                      prompt
-                      toggleOperations={toggleOperations}
-                      clickThrough
-                    />
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {section.groups
-                      .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
-                      .sort(([a], [b]) => a.localeCompare(b))
-                      .map(([name, group]) => (
-                        // div forces every checkbox on a separate line
-                        <div key={group.name}>
-                          <CoverageCheckbox
-                            coverage={group.coverage}
-                            operations={group.operations}
-                            archive={archive}
-                            label={name}
-                            toggleOperations={toggleOperations}
-                          />
-                          <ParameterInputs
-                            group={group}
-                            findPermission={findPermission}
-                            archive={archive}
-                            deletePermission={deletePermission}
-                            addPermission={addPermission}
-                            refetchPermissions={refetchPermissions}
-                          />
-                        </div>
-                      ))}
-                  </AccordionDetails>
-                </Accordion>
-              ))}
+              {sectionsWithCoverages.map(section => {
+                const label = t(`admin.permissions.section.${section.name}`, { context: type });
+                return (
+                  <Accordion key={section.name}>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <CoverageCheckbox
+                        coverage={combineCoverages(section.groups.map(group => group.coverage))}
+                        operations={section.groups.flatMap(group => group.operations)}
+                        archive={archive}
+                        label={label}
+                        prompt
+                        toggleOperations={toggleOperations}
+                        clickThrough
+                      />
+                      <HelpTooltip
+                        title={label}
+                        content={t(`admin.permissions.section-tooltip.${section.name}`, {
+                          context: type,
+                          archiveName: archive?.name,
+                        })}
+                        iconClassName='!ml-auto'
+                      />
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {section.groups
+                        .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
+                        .sort(([a], [b]) => a.localeCompare(b))
+                        .map(([name, group]) => (
+                          // div forces every checkbox on a separate line
+                          <div key={group.name}>
+                            <CoverageCheckbox
+                              coverage={group.coverage}
+                              operations={group.operations}
+                              archive={archive}
+                              label={name}
+                              toggleOperations={toggleOperations}
+                            />
+                            <ParameterInputs
+                              group={group}
+                              findPermission={findPermission}
+                              archive={archive}
+                              deletePermission={deletePermission}
+                              addPermission={addPermission}
+                              refetchPermissions={refetchPermissions}
+                            />
+                            <HelpTooltip
+                              title={name}
+                              content={t(`admin.permissions.group-tooltip.${group.name}`)}
+                              iconClassName='float-right'
+                            />
+                          </div>
+                        ))}
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
             </div>
           </div>
         </Accordion>
