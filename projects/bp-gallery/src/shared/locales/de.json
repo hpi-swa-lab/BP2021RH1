@@ -221,6 +221,8 @@
       "reallyGrantAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" vergeben?",
       "reallyRemoveAllPermissions": "Wirklich alle Rechte aus \"{{header}}\" entziehen?",
       "reallyEditAllPermissionsContent": "Sie können dies nicht rückgängig machen, sondern müssen den vorigen Stand manuell wiederherstellen.",
+      "reallyEditPublicUserTitle": "Wirklich die Rechte eines UNANGEMELDETEN Nutzers bearbeiten?",
+      "reallyEditPublicUserContent": "Wenn Sie diese Rechte bearbeiten, wirkt sich das auf alle Nutzer aus, die NICHT angemeldet sind. Wollen Sie fortfahren?",
       "section": {
         "picture": "Bilder",
         "collection": "Collections",
