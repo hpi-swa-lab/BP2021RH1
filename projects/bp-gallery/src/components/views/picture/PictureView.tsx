@@ -98,9 +98,6 @@ const PictureView = ({
     ];
   }, [search]);
 
-  // Api connection
-  usePrefetchPictureHook(pictureInSiblingsId, siblingIds);
-
   const { data, loading, error } = useGetPictureInfoQuery({
     variables: { pictureId: pictureInSequenceId },
   });
@@ -109,6 +106,12 @@ const PictureView = ({
   const pictureSequenceIds = useMemo(
     () => picture?.picture_sequence?.pictures?.map(picture => picture.id),
     [picture]
+  );
+
+  usePrefetchPictureHook(
+    { pictureInSiblingsId, pictureInSequenceId },
+    siblingIds,
+    pictureSequenceIds
   );
 
   const [hasPrevious, hasNext, hasPreviousInSequence, hasNextInSequence] = useMemo(() => {
