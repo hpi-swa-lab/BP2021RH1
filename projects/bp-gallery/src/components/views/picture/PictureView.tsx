@@ -33,6 +33,8 @@ export interface PictureViewContextFields {
   navigatePicture?: (target: PictureNavigationTarget) => void;
   hasNext?: boolean;
   hasPrevious?: boolean;
+  hasNextInSequence?: boolean;
+  hasPreviousInSequence?: boolean;
   sideBarOpen?: boolean;
   noDistractionMode?: boolean;
   setSideBarOpen?: Dispatch<SetStateAction<boolean>>;
@@ -44,6 +46,11 @@ export const PictureViewContext = createContext<PictureViewContextFields>({ img:
 
 // Used for the sidebar (in px) --> same as in shared.scss
 const MOBILE_BREAKPOINT = 750;
+
+export type PictureIds = {
+  pictureInSiblingsId: string;
+  pictureInSequenceId: string;
+};
 
 const PictureView = ({
   initialPictureId,
@@ -60,7 +67,9 @@ const PictureView = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [pictureId, setPictureId] = useState<string>(initialPictureId);
+  const [pictureInSiblingsId, setPictureInSiblingsId] = useState<string>(initialPictureId);
+  const [pictureInSequenceId, setPictureInSequenceId] = useState<string>(initialPictureId);
+
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -70,10 +79,14 @@ const PictureView = ({
   }, []);
 
   useEffect(() => {
-    if (fetchMore && siblingIds && siblingIds.indexOf(pictureId) === siblingIds.length - 1) {
-      fetchMore(pictureId);
+    if (
+      fetchMore &&
+      siblingIds &&
+      siblingIds.indexOf(pictureInSiblingsId) === siblingIds.length - 1
+    ) {
+      fetchMore(pictureInSiblingsId);
     }
-  }, [fetchMore, siblingIds, pictureId]);
+  }, [fetchMore, siblingIds, pictureInSiblingsId]);
 
   const search = window.location.search;
   const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {
@@ -85,39 +98,71 @@ const PictureView = ({
     ];
   }, [search]);
 
-  const [hasPrevious, hasNext] = useMemo(() => {
-    return [
-      Boolean(getPreviousPictureId(pictureId, siblingIds)),
-      Boolean(getNextPictureId(pictureId, siblingIds)),
-    ];
-  }, [pictureId, siblingIds]);
-
   // Api connection
-  usePrefetchPictureHook(pictureId, siblingIds);
+  usePrefetchPictureHook(pictureInSiblingsId, siblingIds);
 
-  const { data, loading, error } = useGetPictureInfoQuery({ variables: { pictureId } });
+  const { data, loading, error } = useGetPictureInfoQuery({
+    variables: { pictureId: pictureInSequenceId },
+  });
   const picture: FlatPicture | undefined = useSimplifiedQueryResponseData(data)?.picture;
   const pictureLink = asUploadPath(picture?.media);
+  const pictureSequenceIds = useMemo(
+    () => picture?.picture_sequence?.pictures?.map(picture => picture.id),
+    [picture]
+  );
 
-  const onNavigateMessage = useCallback((pictureId: string) => {
-    replaceHistoryWithoutRouter(`/picture/${pictureId}${window.location.search}`);
-    setPictureId(pictureId);
-  }, []);
+  const [hasPrevious, hasNext, hasPreviousInSequence, hasNextInSequence] = useMemo(() => {
+    return [
+      Boolean(getPreviousPictureId(pictureInSiblingsId, siblingIds)),
+      Boolean(getNextPictureId(pictureInSiblingsId, siblingIds)),
+      Boolean(getPreviousPictureId(pictureInSequenceId, pictureSequenceIds)),
+      Boolean(getNextPictureId(pictureInSequenceId, pictureSequenceIds)),
+    ];
+  }, [pictureInSequenceId, pictureInSiblingsId, pictureSequenceIds, siblingIds]);
+
+  const onNavigateMessage = useCallback(
+    ({ pictureInSiblingsId, pictureInSequenceId }: PictureIds) => {
+      replaceHistoryWithoutRouter(`/picture/${pictureInSequenceId}${window.location.search}`);
+      setPictureInSiblingsId(pictureInSiblingsId);
+      setPictureInSequenceId(pictureInSequenceId);
+    },
+    []
+  );
 
   const navigateToPicture = usePresentationChannel(sessionId, onNavigateMessage);
 
   // Call the previous or next picture
   const navigatePicture = useCallback(
     (target: PictureNavigationTarget) => {
-      const targetId =
-        target === PictureNavigationTarget.NEXT
-          ? getNextPictureId(pictureId, siblingIds)
-          : getPreviousPictureId(pictureId, siblingIds);
-      if (targetId) {
-        navigateToPicture(targetId);
+      const targetIds: Partial<PictureIds> = {
+        pictureInSequenceId,
+        pictureInSiblingsId,
+      };
+      switch (target) {
+        case PictureNavigationTarget.NEXT:
+          targetIds.pictureInSiblingsId = getNextPictureId(pictureInSiblingsId, siblingIds);
+          break;
+        case PictureNavigationTarget.PREVIOUS:
+          targetIds.pictureInSiblingsId = getPreviousPictureId(pictureInSiblingsId, siblingIds);
+          break;
+        case PictureNavigationTarget.NEXT_IN_SEQUENCE:
+          targetIds.pictureInSequenceId = getNextPictureId(pictureInSequenceId, pictureSequenceIds);
+          break;
+        case PictureNavigationTarget.PREVIOUS_IN_SEQUENCE:
+          targetIds.pictureInSequenceId = getPreviousPictureId(
+            pictureInSequenceId,
+            pictureSequenceIds
+          );
+          break;
+      }
+      if (targetIds.pictureInSiblingsId && targetIds.pictureInSequenceId) {
+        if (targetIds.pictureInSiblingsId !== pictureInSiblingsId) {
+          targetIds.pictureInSequenceId = targetIds.pictureInSiblingsId;
+        }
+        navigateToPicture(targetIds as PictureIds);
       }
     },
-    [pictureId, siblingIds, navigateToPicture]
+    [pictureInSequenceId, pictureInSiblingsId, siblingIds, pictureSequenceIds, navigateToPicture]
   );
 
   const [img, setImg] = useState<HTMLImageElement | null>(null);
@@ -131,6 +176,8 @@ const PictureView = ({
     navigatePicture,
     hasNext,
     hasPrevious,
+    hasNextInSequence,
+    hasPreviousInSequence,
     sideBarOpen,
     noDistractionMode,
     setSideBarOpen,
@@ -144,20 +191,20 @@ const PictureView = ({
     const unblock = history.block(() => {
       setSideBarOpen(false);
       if (onBack) {
-        onBack(pictureId);
+        onBack(pictureInSiblingsId);
       }
     });
     return () => {
       unblock();
     };
-  }, [history, pictureId, onBack]);
+  }, [history, pictureInSiblingsId, onBack]);
 
-  const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureId);
+  const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureInSequenceId);
 
   return (
     <div className={`picture-view-container ${noDistractionMode ? 'cursor-none' : ''}`}>
       <PictureViewContext.Provider value={contextValue}>
-        <FaceTaggingProvider pictureId={pictureId}>
+        <FaceTaggingProvider pictureId={pictureInSequenceId}>
           <div className={`picture-view`} ref={containerRef}>
             <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
               <div className='picture-wrapper w-full h-full'>
