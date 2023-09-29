@@ -30,6 +30,7 @@ const TagList = ({
   currentItemAmount,
   queryParams,
   thumbnailQueryParams,
+  allowFold = true,
 }: {
   type: TagType;
   scroll?: boolean;
@@ -38,6 +39,7 @@ const TagList = ({
   currentItemAmount?: number;
   queryParams?: LocationTagFiltersInput | PersonTagFiltersInput | KeywordTagFiltersInput;
   thumbnailQueryParams?: PictureFiltersInput;
+  allowFold?: boolean;
 }) => {
   const { visit, location } = useVisit();
   const { t } = useTranslation();
@@ -73,7 +75,8 @@ const TagList = ({
   );
 
   const isFoldable = Boolean(
-    flattenedTags &&
+    allowFold &&
+      flattenedTags &&
       elementsPerRow &&
       flattenedTags.length > MAX_ROWS_WITHOUT_FOLDING * elementsPerRow &&
       !currentItemAmount
