@@ -22,7 +22,7 @@ import {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import { useSortable } from '@dnd-kit/sortable';
+import { useSortable, arrayMove } from '@dnd-kit/sortable';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import {
   useCreateExhibitionPictureMutation,
@@ -101,6 +101,7 @@ export const ExhibitionSetContext = createContext<{
 });
 
 export const ExhibitionSectionUtilsContext = createContext<{
+  moveSections: (oldSectionId: string, newSectionId: string) => void;
   swapSectionDraggables: (oldIndex: number, newIndex: number, sectionId: string) => void;
   getSorting: () => boolean;
   setSorting: (isSorting: boolean) => void;
@@ -108,6 +109,7 @@ export const ExhibitionSectionUtilsContext = createContext<{
   addSection: () => void;
   deleteSection: (sectionId: string) => void;
 }>({
+  moveSections: () => {},
   swapSectionDraggables: () => {},
   getSorting: () => false,
   setSorting: () => {},
@@ -428,6 +430,14 @@ const ExhibitionDragNDrop = ({
 }>) => {
   const [isSorting, setIsSorting] = useState(false);
 
+  const sectionMove = (oldIndex: string, newIndex: string) => {};
+  const moveSections = (oldSectionId: string, newSectionId: string) => {
+    const oldIndex = sections.indexOf(sections.find(section => section.id === oldSectionId)!);
+    const newIndex = sections.indexOf(sections.find(section => section.id === newSectionId)!);
+    const newSectionOrder = arrayMove(sections, oldIndex, newIndex);
+    databaseSaver.updateSectionsOrder(newSectionOrder);
+    setSections(newSectionOrder);
+  };
   const deleteSection = (sectionId: string) => {
     databaseSaver.deleteSection(sectionId);
     setSections(sections => sections.filter(section => section.id !== sectionId));
@@ -559,6 +569,7 @@ const ExhibitionDragNDrop = ({
         getDraggable,
         addSection,
         deleteSection,
+        moveSections,
       }}
     >
       <DragNDropHandler
@@ -728,6 +739,17 @@ const useExhibitionDatabaseSaver = () => {
             },
           },
         });
+    },
+    updateSectionsOrder: (sections: SectionState[]) => {
+      sections.forEach((section, index) => {
+        console.log(`${section.title} : ${index}`);
+        updateExhibitionSection({
+          variables: {
+            id: section.id,
+            order: index,
+          },
+        });
+      });
     },
 
     setSectionTitle: (sectionId: string, title: string) => {
