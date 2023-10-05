@@ -57,11 +57,12 @@ const DropZone = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { setNodeRef } = useDroppable({ id });
   const section = useContext(ExhibitionGetContext).getSection(id);
-  const { getSorting, setSorting, swapSectionDraggables } = useContext(
-    ExhibitionSectionUtilsContext
-  );
-  const itemIds = section?.dragElements.map(elem => elem.id);
-  const dragItems = section?.dragElements;
+  const {
+    getSorting,
+    setSorting,
+    moveSectionDraggables: swapSectionDraggables,
+  } = useContext(ExhibitionSectionUtilsContext);
+  const [dragItems, setDragItems] = useState(section!.dragElements);
   const [activeId, setActiveId] = useState<UniqueIdentifier | undefined>(undefined);
   const activeSortable = section?.dragElements.find(elem => elem.id === activeId)?.sortableElement;
 
@@ -75,6 +76,7 @@ const DropZone = ({ id }: { id: string }) => {
         swapSectionDraggables(oldIndex, newIndex, id);
       setActiveId(undefined);
     }
+    setDragItems(section!.dragElements);
   };
 
   const dragHandleStart = (event: DragStartEvent) => {
@@ -82,6 +84,7 @@ const DropZone = ({ id }: { id: string }) => {
     setActiveId(active.id);
   };
 
+  const sensors = useMouseAndTouchSensors();
   return (
     <div
       ref={setNodeRef}
@@ -99,11 +102,16 @@ const DropZone = ({ id }: { id: string }) => {
           </Button>
         </div>
       </div>
-      {getSorting() && itemIds ? (
-        <DndContext onDragEnd={dragHandleEnd} onDragStart={dragHandleStart}>
+      {getSorting() ? (
+        <DndContext
+          onDragEnd={dragHandleEnd}
+          onDragStart={dragHandleStart}
+          sensors={sensors}
+          collisionDetection={closestCenter}
+        >
           <DragOverlay>{activeId && activeSortable}</DragOverlay>
-          <SortableContext items={itemIds}>
-            {dragItems?.map(item =>
+          <SortableContext items={dragItems}>
+            {dragItems.map(item =>
               item.id === activeId ? (
                 <div key={item.id} className='opacity-25'>
                   {item.sortableElement}
@@ -115,7 +123,7 @@ const DropZone = ({ id }: { id: string }) => {
           </SortableContext>
         </DndContext>
       ) : (
-        <>{dragItems?.map(item => item.element)}</>
+        <>{dragItems.map(item => item.element)}</>
       )}
     </div>
   );

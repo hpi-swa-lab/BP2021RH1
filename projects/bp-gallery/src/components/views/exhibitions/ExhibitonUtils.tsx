@@ -102,7 +102,7 @@ export const ExhibitionSetContext = createContext<{
 
 export const ExhibitionSectionUtilsContext = createContext<{
   moveSections: (oldSectionId: string, newSectionId: string) => void;
-  swapSectionDraggables: (oldIndex: number, newIndex: number, sectionId: string) => void;
+  moveSectionDraggables: (oldIndex: number, newIndex: number, sectionId: string) => void;
   getSorting: () => boolean;
   setSorting: (isSorting: boolean) => void;
   getDraggable: (dragElementId: string) => DragElement | undefined;
@@ -110,7 +110,7 @@ export const ExhibitionSectionUtilsContext = createContext<{
   deleteSection: (sectionId: string) => void;
 }>({
   moveSections: () => {},
-  swapSectionDraggables: () => {},
+  moveSectionDraggables: () => {},
   getSorting: () => false,
   setSorting: () => {},
   getDraggable: () => undefined,
@@ -430,7 +430,6 @@ const ExhibitionDragNDrop = ({
 }>) => {
   const [isSorting, setIsSorting] = useState(false);
 
-  const sectionMove = (oldIndex: string, newIndex: string) => {};
   const moveSections = (oldSectionId: string, newSectionId: string) => {
     const oldIndex = sections.indexOf(sections.find(section => section.id === oldSectionId)!);
     const newIndex = sections.indexOf(sections.find(section => section.id === newSectionId)!);
@@ -442,23 +441,14 @@ const ExhibitionDragNDrop = ({
     databaseSaver.deleteSection(sectionId);
     setSections(sections => sections.filter(section => section.id !== sectionId));
   };
-  const swapSectionDraggables = (oldIndex: number, newIndex: number, sectionId: string) => {
-    databaseSaver.swapOrderInExhibitionPicture(sections, oldIndex, newIndex, sectionId);
-    setSections(
-      sections.map(section =>
-        section.id === sectionId
-          ? ({
-              id: section.id,
-              text: section.text,
-              dragElements: section.dragElements.map((elem, index) => {
-                if (index === oldIndex) return section.dragElements[newIndex];
-                if (index === newIndex) return section.dragElements[oldIndex];
-                return elem;
-              }),
-            } as SectionState)
-          : section
-      )
+  const moveSectionDraggables = (oldIndex: number, newIndex: number, sectionId: string) => {
+    const newDraggablesOrder = sections.map(section =>
+      section.id === sectionId
+        ? { ...section, dragElements: arrayMove(section.dragElements, oldIndex, newIndex) }
+        : section
     );
+    setSections(newDraggablesOrder);
+    databaseSaver.moveOrderInExhibitionPicture(sections, sectionId);
   };
 
   const getSorting = () => {
@@ -563,7 +553,7 @@ const ExhibitionDragNDrop = ({
   return (
     <ExhibitionSectionUtilsContext.Provider
       value={{
-        swapSectionDraggables,
+        moveSectionDraggables,
         setSorting,
         getSorting,
         getDraggable,
@@ -707,42 +697,14 @@ const useExhibitionDatabaseSaver = () => {
         },
       });
     },
-    swapOrderInExhibitionPicture: (
-      sections: SectionState[],
-      oldIndex: number,
-      newIndex: number,
-      sectionId: string
-    ) => {
-      const currentDragElement = sections.find(section => section.id === sectionId)?.dragElements[
-        oldIndex
-      ];
-      const otherDragElement = sections.find(section => section.id === sectionId)?.dragElements[
-        newIndex
-      ];
-      currentDragElement &&
-        updateExhibitionPicture({
-          variables: {
-            id: currentDragElement.id,
-            data: {
-              order: newIndex,
-              subtitle: currentDragElement.subtitle,
-            },
-          },
-        });
-      otherDragElement &&
-        updateExhibitionPicture({
-          variables: {
-            id: otherDragElement.id,
-            data: {
-              order: oldIndex,
-              subtitle: otherDragElement.subtitle,
-            },
-          },
-        });
+    moveOrderInExhibitionPicture: (sections: SectionState[], sectionId: string) => {
+      const currentSection = sections.find(section => section.id === sectionId);
+      currentSection?.dragElements.forEach((elem, index) =>
+        updateExhibitionPicture({ variables: { id: elem.id, data: { order: index } } })
+      );
     },
     updateSectionsOrder: (sections: SectionState[]) => {
       sections.forEach((section, index) => {
-        console.log(`${section.title} : ${index}`);
         updateExhibitionSection({
           variables: {
             id: section.id,
