@@ -29,6 +29,8 @@ const isValidTimeSpecification = (searchRequest: string) => {
   return isValidYear(searchRequest);
 };
 
+const isExhibitionId = (searchRequest: string) => {};
+
 const SearchView = () => {
   const [areResultsEmpty, setAreResultsEmpty] = useState<boolean>(false);
   const [filter, setFilter] = useState('');
@@ -47,6 +49,7 @@ const SearchView = () => {
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
+    searchParams.delete('exhibitionId');
     const allSearchTerms = searchParams
       .getAll(toURLSearchParam(SearchType.ALL))
       .map(decodeURIComponent);
