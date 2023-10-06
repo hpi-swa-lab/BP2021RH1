@@ -29,8 +29,6 @@ const isValidTimeSpecification = (searchRequest: string) => {
   return isValidYear(searchRequest);
 };
 
-const isExhibitionId = (searchRequest: string) => {};
-
 const SearchView = () => {
   const [areResultsEmpty, setAreResultsEmpty] = useState<boolean>(false);
   const [filter, setFilter] = useState('');

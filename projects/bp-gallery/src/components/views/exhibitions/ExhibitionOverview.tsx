@@ -252,7 +252,6 @@ const ExhibitionOverview = ({
   });
   const exhibitions: FlatExhibition[] | undefined =
     useSimplifiedQueryResponseData(exhibitionsData)?.exhibitions;
-  const { userId } = useAuth();
   const { visit } = useVisit();
   const { t } = useTranslation();
   const { isMobile } = useContext(MobileContext);
