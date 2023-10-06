@@ -76,6 +76,7 @@ const ShowMoreViewHeader = ({
           type={categoryType as TagType}
           queryParams={getCategoryQueryParams(archiveId)}
           archiveId={archiveId}
+          allowFold={false}
         />
       </div>
     );
