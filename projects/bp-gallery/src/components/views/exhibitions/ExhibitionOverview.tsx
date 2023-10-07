@@ -13,7 +13,6 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { useVisit } from '../../../helpers/history';
 import { useCanEditMultipleExhibitions } from '../../../hooks/can-do-hooks';
-import { useAuth } from '../../../hooks/context-hooks';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import RichText from '../../common/RichText';
 import { MobileContext } from '../../provider/MobileProvider';
