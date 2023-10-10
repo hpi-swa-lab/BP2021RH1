@@ -15,6 +15,7 @@ export default {
             paypalClient
             paypalDonationText
             paypalPurpose
+            hidden
             restrictImageDownloading
             logo {
               data {
