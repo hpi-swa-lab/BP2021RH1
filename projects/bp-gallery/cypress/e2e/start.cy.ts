@@ -5,12 +5,12 @@ describe('Start view', () => {
 
   it('shows the archive cards and browse view', () => {
     cy.get('.archives').should('exist');
-    cy.get('.archive').should('exist');
+    cy.get('[data-testid="archive"]').should('exist');
     cy.get('.browse-container').should('exist');
   });
 
   it('shows the picture count for the archive cards', () => {
-    cy.contains('.archive', 'Herbert-Ahrens-Bilderarchiv').contains('5 Bilder');
+    cy.contains('[data-testid="archive"]', 'Herbert-Ahrens-Bilderarchiv').contains('5 Bilder');
   });
 
   it('should have a visible navigation bar', () => {
