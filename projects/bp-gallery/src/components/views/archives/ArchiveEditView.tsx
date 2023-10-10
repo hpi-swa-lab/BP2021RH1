@@ -40,6 +40,7 @@ interface ArchiveForm {
   paypalPurpose: string;
   logo?: File;
   links: LinkInfo[];
+  hidden: boolean;
   restrictImageDownloading: boolean;
   dirty: boolean;
   invalid?: boolean;
@@ -82,6 +83,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
     paypalDonationText: '',
     paypalPurpose: '',
     links: [],
+    hidden: false,
     restrictImageDownloading: false,
     dirty: false,
   });
@@ -97,6 +99,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
       paypalDonationText: archive?.paypalDonationText ?? '',
       paypalPurpose: archive?.paypalPurpose ?? '',
       links: archive?.links ?? [],
+      hidden: archive?.hidden ?? false,
       restrictImageDownloading: archive?.restrictImageDownloading ?? false,
     });
   }, [archive]);
@@ -180,6 +183,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
                 'paypalClient',
                 'paypalDonationText',
                 'paypalPurpose',
+                'hidden',
                 'restrictImageDownloading',
               ]),
               logo,
@@ -200,6 +204,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               'paypalClient',
               'paypalDonationText',
               'paypalPurpose',
+              'hidden',
               'restrictImageDownloading',
             ]),
           },
@@ -330,6 +335,12 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
               id='purpose'
               onBlur={value => updateForm({ paypalPurpose: value, dirty: true })}
               placeholder={t('archives.edit.paypal.purpose-placeholder')}
+            />
+            <ArchiveCheckboxField
+              defaultValue={archive.hidden ?? false}
+              label={t('archives.edit.hidden')}
+              id='hidden'
+              onChange={value => updateForm({ hidden: value, dirty: true })}
             />
             <ArchiveCheckboxField
               defaultValue={archive.restrictImageDownloading ?? false}

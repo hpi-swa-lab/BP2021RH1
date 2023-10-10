@@ -25,7 +25,7 @@ const ArchiveCheckboxField = ({ defaultValue, id, onChange, label }: ArchiveInpu
   );
 
   return (
-    <div className='archive-form-div'>
+    <div className='archive-form-div my-2'>
       <label className='archive-form-label' htmlFor={`archive-form-${id}`} />
       <FormControlLabel
         label={label}

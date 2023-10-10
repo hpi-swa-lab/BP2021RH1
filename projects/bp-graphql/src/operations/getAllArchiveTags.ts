@@ -10,6 +10,7 @@ export default {
           attributes {
             name
             shortDescription
+            hidden
             showcasePicture {
               data {
                 id
