@@ -48,25 +48,35 @@ const StartView = () => {
     fallback: { clientId: '', donationText: '', purposeText: '' },
   });
 
-  const archiveCards = archives?.map(archive => {
-    const sharedProps = {
-      archiveName: archive.name,
-      archiveDescription: archive.shortDescription ?? '',
-      archiveId: archive.id,
-      archivePictureCount: pictureCounts?.find(pictureCount => pictureCount.id === archive.id)
-        ?.count,
-    };
+  const archiveCards = useMemo(
+    () =>
+      archives
+        ?.filter(archive => isLoggedIn || !archive.hidden)
+        ?.map(archive => {
+          const sharedProps = {
+            archiveName: archive.name,
+            archiveDescription: archive.shortDescription ?? '',
+            archiveId: archive.id,
+            archivePictureCount: pictureCounts?.find(pictureCount => pictureCount.id === archive.id)
+              ?.count,
+          };
 
-    return (
-      <div className='archive' key={archive.id}>
-        {archive.showcasePicture ? (
-          <ArchiveCard picture={archive.showcasePicture} {...sharedProps} />
-        ) : (
-          <ArchiveCardWithoutPicture {...sharedProps} />
-        )}
-      </div>
-    );
-  });
+          return (
+            <div
+              className={archive.hidden ? 'brightness-90 opacity-50' : ''}
+              key={archive.id}
+              data-testid='archive'
+            >
+              {archive.showcasePicture ? (
+                <ArchiveCard picture={archive.showcasePicture} {...sharedProps} />
+              ) : (
+                <ArchiveCardWithoutPicture {...sharedProps} />
+              )}
+            </div>
+          );
+        }),
+    [archives, isLoggedIn, pictureCounts]
+  );
 
   const showStories = useFlag('showstories');
   const tabs: OverviewContainerTab[] = useMemo(() => {
