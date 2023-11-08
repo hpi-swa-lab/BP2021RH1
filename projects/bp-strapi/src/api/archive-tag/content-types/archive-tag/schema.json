@@ -67,6 +67,10 @@
       "relation": "oneToMany",
       "target": "api::exhibition.exhibition",
       "mappedBy": "archive_tag"
+    },
+    "hidden": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

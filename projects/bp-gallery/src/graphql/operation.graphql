@@ -1,12 +1,12 @@
 # NOTE: this file is auto-generated, edit /projects/bp-graphql/operations instead
 query canRunOperation( $operation: String! $variableSets: [JSON!] $withSomeVariables: Boolean ) { canRunOperation( operation: $operation variableSets: $variableSets withSomeVariables: $withSomeVariables ) }
-query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) { archiveTags(sort: $sortBy) { data { id attributes { name shortDescription showcasePicture { data { id attributes { media { data { attributes { url updatedAt provider } } } } } } } } } }
+query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) { archiveTags(sort: $sortBy) { data { id attributes { name shortDescription hidden showcasePicture { data { id attributes { media { data { attributes { url updatedAt provider } } } } } } } } } }
 query getAllCollections { collections(publicationState: PREVIEW) { data { id attributes { name parent_collections(publicationState: PREVIEW) { data { id attributes { name } } } } } } }
 query getAllKeywordTags { keywordTags { data { id attributes { name visible synonyms { name } } } } }
 query getAllLocationTags { getAllLocationTags }
 query getAllPersonTags { personTags { data { id attributes { name synonyms { name } } } } }
 query getAllPictureIds { pictures { data { id } } }
-query getArchive($archiveId: ID!) { archiveTag(id: $archiveId) { data { id attributes { name shortDescription longDescription email paypalClient paypalDonationText paypalPurpose restrictImageDownloading logo { data { id attributes { width height formats updatedAt provider } } } showcasePicture { data { id attributes { media { data { id attributes { width height formats url updatedAt provider } } } } } } links { data { id attributes { title url } } } } } } }
+query getArchive($archiveId: ID!) { archiveTag(id: $archiveId) { data { id attributes { name shortDescription longDescription email paypalClient paypalDonationText paypalPurpose hidden restrictImageDownloading logo { data { id attributes { width height formats updatedAt provider } } } showcasePicture { data { id attributes { media { data { id attributes { width height formats url updatedAt provider } } } } } } links { data { id attributes { title url } } } } } } }
 query getArchiveNames( $filters: ArchiveTagFiltersInput = {} $sortBy: [String] = ["createdAt:asc"] ) { archiveTags(filters: $filters sort: $sortBy) { data { id attributes { name } } } }
 query getArchivePictureCounts { archivePictureCounts { data { id attributes { count } } } }
 query getCollectionInfoById($collectionId: ID!) { collection(id: $collectionId) { data { id attributes { name description child_collections(sort: "name:asc" publicationState: PREVIEW) { data { id attributes { name publishedAt pictures(pagination: { limit: 1 }) { data { id } } child_collections(pagination: { limit: 1 } publicationState: PREVIEW) { data { id } } parent_collections(publicationState: PREVIEW) { data { id attributes { name } } } } } } } } } }

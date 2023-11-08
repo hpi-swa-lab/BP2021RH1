@@ -42,6 +42,7 @@ export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
   email?: Maybe<Scalars['String']>;
   exhibitions?: Maybe<ExhibitionRelationResponseCollection>;
+  hidden?: Maybe<Scalars['Boolean']>;
   links?: Maybe<LinkRelationResponseCollection>;
   logo?: Maybe<UploadFileEntityResponse>;
   longDescription?: Maybe<Scalars['String']>;
@@ -96,6 +97,7 @@ export type ArchiveTagFiltersInput = {
   createdAt?: InputMaybe<DateTimeFilterInput>;
   email?: InputMaybe<StringFilterInput>;
   exhibitions?: InputMaybe<ExhibitionFiltersInput>;
+  hidden?: InputMaybe<BooleanFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   links?: InputMaybe<LinkFiltersInput>;
   longDescription?: InputMaybe<StringFilterInput>;
@@ -116,6 +118,7 @@ export type ArchiveTagFiltersInput = {
 export type ArchiveTagInput = {
   email?: InputMaybe<Scalars['String']>;
   exhibitions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
   links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
@@ -2686,6 +2689,7 @@ export type GetAllArchiveTagsQuery = {
       attributes?: {
         name: string;
         shortDescription?: string | null;
+        hidden?: boolean | null;
         showcasePicture?: {
           data?: {
             id?: string | null;
@@ -2769,6 +2773,7 @@ export type GetArchiveQuery = {
         paypalClient?: string | null;
         paypalDonationText?: string | null;
         paypalPurpose?: string | null;
+        hidden?: boolean | null;
         restrictImageDownloading?: boolean | null;
         logo?: {
           data?: {
@@ -4477,6 +4482,7 @@ export const GetAllArchiveTagsDocument = gql`
         attributes {
           name
           shortDescription
+          hidden
           showcasePicture {
             data {
               id
@@ -4852,6 +4858,7 @@ export const GetArchiveDocument = gql`
           paypalClient
           paypalDonationText
           paypalPurpose
+          hidden
           restrictImageDownloading
           logo {
             data {
