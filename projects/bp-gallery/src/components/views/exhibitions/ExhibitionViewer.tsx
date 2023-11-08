@@ -47,14 +47,12 @@ const Section = ({ sectionId }: { sectionId: string }) => {
   const { getSection } = useContext(ExhibitionGetContext);
   const mySection = getSection(sectionId);
   const [focusedPicture, setFocusedPicture] = useState<string>();
-  const images = mySection?.dragElements.map(elem => {
-    return {
-      src: asUploadPath(elem.picture.media),
-      width: elem.picture.media?.width ?? 0,
-      height: elem.picture.media?.height ?? 0,
-      id: elem.picture.id,
-    };
-  });
+  const images = mySection?.dragElements.map(elem => ({
+    src: asUploadPath(elem.picture.media),
+    width: elem.picture.media?.width ?? 0,
+    height: elem.picture.media?.height ?? 0,
+    id: elem.picture.id,
+  }));
   return (
     <>
       {focusedPicture && (
