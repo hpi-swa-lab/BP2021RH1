@@ -184,7 +184,6 @@ const ExhibitionPicture = ({
         <IconButton
           style={{ backgroundColor: 'white' }}
           onClick={() => {
-            console.log('press');
             deleteExhibitionPicture(exhibitionPicture.id);
           }}
         >
@@ -332,9 +331,7 @@ export const ExhibitionStateChanger = ({
   sections,
   setSections,
   databaseSaver,
-  titlePicture,
   setTitlePicture,
-  idealot,
   setIdealot,
   children,
 }: PropsWithChildren<{
@@ -344,9 +341,7 @@ export const ExhibitionStateChanger = ({
   sections: SectionState[];
   setSections: Dispatch<SetStateAction<SectionState[]>>;
   databaseSaver: ReturnType<typeof useExhibitionDatabaseSaver>;
-  titlePicture: DragElement | undefined;
   setTitlePicture: Dispatch<SetStateAction<DragElement | undefined>>;
-  idealot: DragElement[] | undefined;
   setIdealot: Dispatch<SetStateAction<DragElement[]>>;
 }>) => {
   const deleteExhibitionPicture = (exhibitionPictureId: string) => {
@@ -431,8 +426,8 @@ const ExhibitionDragNDrop = ({
   const [isSorting, setIsSorting] = useState(false);
 
   const moveSections = (oldSectionId: string, newSectionId: string) => {
-    const oldIndex = sections.indexOf(sections.find(section => section.id === oldSectionId)!);
-    const newIndex = sections.indexOf(sections.find(section => section.id === newSectionId)!);
+    const oldIndex = sections.findIndex(section => section.id === oldSectionId);
+    const newIndex = sections.findIndex(section => section.id === newSectionId);
     const newSectionOrder = arrayMove(sections, oldIndex, newIndex);
     databaseSaver.updateSectionsOrder(newSectionOrder);
     setSections(newSectionOrder);
@@ -448,7 +443,7 @@ const ExhibitionDragNDrop = ({
         : section
     );
     setSections(newDraggablesOrder);
-    databaseSaver.moveOrderInExhibitionPicture(sections, sectionId);
+    databaseSaver.moveOrderInExhibitionPicture(newDraggablesOrder, sectionId);
   };
 
   const getSorting = () => {

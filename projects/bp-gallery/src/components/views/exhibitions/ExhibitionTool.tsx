@@ -159,7 +159,6 @@ const ExhibitionManipulator = () => {
     if (node.currentTarget.scrollTop !== 0) scroll.current = Number(node.currentTarget.scrollTop);
   };
 
-  //const [sortableIds, setSortableIds] = useState(sections!); //(sections?.map(elem => elem.id) ?? []);
   const [activeId, setActiveId] = useState<string | undefined>(undefined);
   const [isDragMode, setIsDragMode] = useState(false);
 
@@ -171,7 +170,6 @@ const ExhibitionManipulator = () => {
     if (over && active.id !== over.id) {
       moveSections(active.id.toString(), over.id.toString());
     }
-    //setSortableIds(sections!);
     setActiveId(undefined);
   };
 
