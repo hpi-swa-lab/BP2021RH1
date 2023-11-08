@@ -471,12 +471,11 @@ const ExhibitionDragNDrop = ({
   ) => {
     if (sectionId) return addToSection(dragElement, sectionId);
     if (isTitle) {
-      if (idealot && titlePicture) setIdealot([...idealot, titlePicture]);
-      setTitlePicture(dragElement);
       if (titlePicture) {
-        databaseSaver.addToIdealot(exhibitionId, idealot, dragElement.id);
+        databaseSaver.addToIdealot(exhibitionId, idealot, titlePicture.id);
       }
       databaseSaver.setTitlePicture(exhibitionId, dragElement.id);
+      setTitlePicture(dragElement);
       return;
     }
     if (isIdeaLot && idealot) {
