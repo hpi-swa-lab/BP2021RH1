@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       gridTemplateColumns: {
-        'autofit-card': 'repeat(auto-fit, minmax(20rem, 1fr))',
+        'autofill-card': 'repeat(auto-fill, minmax(20rem, 1fr))',
       },
       height: {
         '50vh': '50vh',

@@ -3,6 +3,7 @@ import {
   PropsWithChildren,
   SetStateAction,
   createContext,
+  useContext,
   useEffect,
   useState,
 } from 'react';
@@ -21,28 +22,23 @@ import {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import { useSortable } from '@dnd-kit/sortable';
+import { useSortable, arrayMove } from '@dnd-kit/sortable';
 import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import {
   useCreateExhibitionPictureMutation,
   useCreateExhibitionSectionMutation,
-  useCreateExhibitionSourceMutation,
+  useDeleteExhibitionPictureMutation,
+  useDeleteExhibitionSectionMutation,
   useUpdateExhibitionMutation,
   useUpdateExhibitionPictureMutation,
   useUpdateExhibitionSectionMutation,
-  useUpdateExhibitionSourceMutation,
 } from '../../../graphql/APIConnector';
-
-interface ExhibitionSource {
-  id: string;
-  source: string;
-}
+import { Delete } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 
 interface ExhibitionText {
   title: string;
   introduction: string;
-  epilog: string;
-  sources: ExhibitionSource[];
   isPublished: boolean;
 }
 
@@ -70,8 +66,6 @@ export const ExhibitionGetContext = createContext<{
   getIntroduction: () => string;
   getSectionTitle: (sectionId: string) => string | undefined;
   getSectionText: (sectionId: string) => string | undefined;
-  getEpilog: () => string | undefined;
-  getSources: () => ExhibitionSource[] | undefined;
   getIsPublished: () => boolean;
   getSection: (sectionId: string) => SectionState | undefined;
   getAllSections: () => SectionState[] | undefined;
@@ -83,8 +77,6 @@ export const ExhibitionGetContext = createContext<{
   getIntroduction: () => '',
   getSectionTitle: () => '',
   getSectionText: () => '',
-  getEpilog: () => '',
-  getSources: () => [],
   getIsPublished: () => false,
   getSection: () => undefined,
   getAllSections: () => undefined,
@@ -97,33 +89,33 @@ export const ExhibitionSetContext = createContext<{
   setIntroduction: (introduction: string) => void;
   setSectionTitle: (sectionId: string, title: string) => void;
   setSectionText: (sectionId: string, text: string) => void;
-  setEpilog: (epilog: string) => void;
-  setSource: (source: string, sourceId: string) => void;
-  addSource: () => void;
   toggleIsPublished: () => void;
+  deleteExhibitionPicture: (exhibitionPictureId: string) => void;
 }>({
   setTitle: () => {},
   setIntroduction: () => {},
   setSectionTitle: () => {},
   setSectionText: () => {},
-  setEpilog: () => {},
-  setSource: () => {},
-  addSource: () => {},
   toggleIsPublished: () => {},
+  deleteExhibitionPicture: () => {},
 });
 
 export const ExhibitionSectionUtilsContext = createContext<{
-  swapSectionDraggables: (oldIndex: number, newIndex: number, sectionId: string) => void;
+  moveSections: (oldSectionId: string, newSectionId: string) => void;
+  moveSectionDraggables: (oldIndex: number, newIndex: number, sectionId: string) => void;
   getSorting: () => boolean;
   setSorting: (isSorting: boolean) => void;
   getDraggable: (dragElementId: string) => DragElement | undefined;
   addSection: () => void;
+  deleteSection: (sectionId: string) => void;
 }>({
-  swapSectionDraggables: () => {},
+  moveSections: () => {},
+  moveSectionDraggables: () => {},
   getSorting: () => false,
   setSorting: () => {},
   getDraggable: () => undefined,
   addSection: () => {},
+  deleteSection: () => {},
 });
 
 const DraggablePicture = ({
@@ -185,9 +177,22 @@ const ExhibitionPicture = ({
   attributes: DraggableAttributes;
 }) => {
   const picture = exhibitionPicture.picture;
+  const { deleteExhibitionPicture } = useContext(ExhibitionSetContext);
   return (
-    <div className='z-[9] relative' ref={setNodeRef} {...listeners} {...attributes}>
-      {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
+    <div className='relative'>
+      <div className='z-[99] absolute top-0 right-0'>
+        <IconButton
+          style={{ backgroundColor: 'white' }}
+          onClick={() => {
+            deleteExhibitionPicture(exhibitionPicture.id);
+          }}
+        >
+          <Delete />
+        </IconButton>
+      </div>
+      <div className='z-[9]' ref={setNodeRef} {...listeners} {...attributes}>
+        {picture && <PicturePreview height='9rem' picture={picture} onClick={() => {}} />}
+      </div>
     </div>
   );
 };
@@ -239,11 +244,6 @@ const buildExhibitionTextState = (exhibition: FlatExhibition) => {
   return {
     title: exhibition.title ?? '',
     introduction: exhibition.introduction ?? '',
-    epilog: exhibition.epilog ?? '',
-    sources:
-      exhibition.exhibition_sources?.map(source => {
-        return { id: source.id, source: source.source ?? '' } as ExhibitionSource;
-      }) ?? [],
     isPublished: exhibition.is_published ?? false,
   };
 };
@@ -300,16 +300,6 @@ export const ExhibitionStateGetter = ({
     return exhibitionText.introduction;
   };
 
-  //getter and setter for epilog in exhibitionText
-  const getEpilog = () => {
-    return exhibitionText.epilog;
-  };
-
-  //getter and setter for sources in exhibitionText
-  const getSources = () => {
-    return exhibitionText.sources;
-  };
-
   const getIsPublished = () => {
     return exhibitionText.isPublished;
   };
@@ -322,8 +312,6 @@ export const ExhibitionStateGetter = ({
         getIntroduction,
         getSectionTitle,
         getSectionText,
-        getEpilog,
-        getSources,
         getSection,
         getAllSections,
         getIdealot,
@@ -343,6 +331,8 @@ export const ExhibitionStateChanger = ({
   sections,
   setSections,
   databaseSaver,
+  setTitlePicture,
+  setIdealot,
   children,
 }: PropsWithChildren<{
   exhibitionId: string;
@@ -351,7 +341,23 @@ export const ExhibitionStateChanger = ({
   sections: SectionState[];
   setSections: Dispatch<SetStateAction<SectionState[]>>;
   databaseSaver: ReturnType<typeof useExhibitionDatabaseSaver>;
+  setTitlePicture: Dispatch<SetStateAction<DragElement | undefined>>;
+  setIdealot: Dispatch<SetStateAction<DragElement[]>>;
 }>) => {
+  const deleteExhibitionPicture = (exhibitionPictureId: string) => {
+    databaseSaver.deletePicture(exhibitionPictureId);
+    setSections(
+      sections.map(section => ({
+        ...section,
+        dragElements: section.dragElements.filter(elem => elem.id !== exhibitionPictureId),
+      }))
+    );
+    setTitlePicture(titlePicture =>
+      titlePicture?.id === exhibitionPictureId ? undefined : titlePicture
+    );
+    setIdealot(idealot => idealot.filter(elem => elem.id !== exhibitionPictureId));
+  };
+
   const setSectionText = (sectionId: string, text: string) => {
     databaseSaver.setSectionText(sectionId, text);
     setSections(
@@ -376,29 +382,6 @@ export const ExhibitionStateChanger = ({
     setExhibitionText({ ...exhibitionText, introduction: introduction });
   };
 
-  const setEpilog = (epilog: string) => {
-    databaseSaver.setEpilog(exhibitionId, epilog);
-    setExhibitionText({ ...exhibitionText, epilog: epilog });
-  };
-
-  const setSource = (source: string, sourceId: string) => {
-    setExhibitionText({
-      ...exhibitionText,
-      sources: exhibitionText.sources.map(s =>
-        s.id === sourceId ? { id: s.id, source: source } : s
-      ),
-    });
-  };
-
-  const addSource = async () => {
-    const id = await databaseSaver.addSource(exhibitionId);
-    id &&
-      setExhibitionText({
-        ...exhibitionText,
-        sources: [...exhibitionText.sources.concat({ id: id, source: '' })],
-      });
-  };
-
   const toggleIsPublished = () => {
     databaseSaver.setIsPublished(!exhibitionText.isPublished, exhibitionId);
     setExhibitionText({ ...exhibitionText, isPublished: !exhibitionText.isPublished });
@@ -411,10 +394,8 @@ export const ExhibitionStateChanger = ({
         setIntroduction,
         setSectionTitle,
         setSectionText,
-        setEpilog,
-        setSource,
-        addSource,
         toggleIsPublished,
+        deleteExhibitionPicture,
       }}
     >
       {children}
@@ -444,23 +425,25 @@ const ExhibitionDragNDrop = ({
 }>) => {
   const [isSorting, setIsSorting] = useState(false);
 
-  const swapSectionDraggables = (oldIndex: number, newIndex: number, sectionId: string) => {
-    databaseSaver.swapOrderInExhibitionPicture(sections, oldIndex, newIndex, sectionId);
-    setSections(
-      sections.map(section =>
-        section.id === sectionId
-          ? ({
-              id: section.id,
-              text: section.text,
-              dragElements: section.dragElements.map((elem, index) => {
-                if (index === oldIndex) return section.dragElements[newIndex];
-                if (index === newIndex) return section.dragElements[oldIndex];
-                return elem;
-              }),
-            } as SectionState)
-          : section
-      )
+  const moveSections = (oldSectionId: string, newSectionId: string) => {
+    const oldIndex = sections.findIndex(section => section.id === oldSectionId);
+    const newIndex = sections.findIndex(section => section.id === newSectionId);
+    const newSectionOrder = arrayMove(sections, oldIndex, newIndex);
+    databaseSaver.updateSectionsOrder(newSectionOrder);
+    setSections(newSectionOrder);
+  };
+  const deleteSection = (sectionId: string) => {
+    databaseSaver.deleteSection(sectionId);
+    setSections(sections => sections.filter(section => section.id !== sectionId));
+  };
+  const moveSectionDraggables = (oldIndex: number, newIndex: number, sectionId: string) => {
+    const newDraggablesOrder = sections.map(section =>
+      section.id === sectionId
+        ? { ...section, dragElements: arrayMove(section.dragElements, oldIndex, newIndex) }
+        : section
     );
+    setSections(newDraggablesOrder);
+    databaseSaver.moveOrderInExhibitionPicture(newDraggablesOrder, sectionId);
   };
 
   const getSorting = () => {
@@ -488,12 +471,11 @@ const ExhibitionDragNDrop = ({
   ) => {
     if (sectionId) return addToSection(dragElement, sectionId);
     if (isTitle) {
-      if (idealot && titlePicture) setIdealot([...idealot, titlePicture]);
-      setTitlePicture(dragElement);
       if (titlePicture) {
-        databaseSaver.addToIdealot(exhibitionId, idealot, dragElement.id);
+        databaseSaver.addToIdealot(exhibitionId, idealot, titlePicture.id);
       }
       databaseSaver.setTitlePicture(exhibitionId, dragElement.id);
+      setTitlePicture(dragElement);
       return;
     }
     if (isIdeaLot && idealot) {
@@ -565,11 +547,13 @@ const ExhibitionDragNDrop = ({
   return (
     <ExhibitionSectionUtilsContext.Provider
       value={{
-        swapSectionDraggables,
+        moveSectionDraggables,
         setSorting,
         getSorting,
         getDraggable,
         addSection,
+        deleteSection,
+        moveSections,
       }}
     >
       <DragNDropHandler
@@ -593,20 +577,29 @@ const useExhibitionDatabaseSaver = () => {
     refetchQueries: ['getExhibition'],
   });
 
-  const [updateExhibitionSource] = useUpdateExhibitionSourceMutation({
-    refetchQueries: ['getExhibition'],
-  });
-
   const [updateExhibition] = useUpdateExhibitionMutation({ refetchQueries: ['getExhibition'] });
-
-  const [createSource] = useCreateExhibitionSourceMutation({ refetchQueries: ['getExhibition'] });
 
   const [createSection] = useCreateExhibitionSectionMutation({ refetchQueries: ['getExhibition'] });
 
   const [createExhibitionPicture] = useCreateExhibitionPictureMutation({
     refetchQueries: ['getExhibition'],
   });
+
+  const [deleteExhibitionPicture] = useDeleteExhibitionPictureMutation({
+    refetchQueries: ['getExhibition'],
+  });
+  const [deleteExhibitionSection] = useDeleteExhibitionSectionMutation({
+    refetchQueries: ['getExhibition'],
+  });
   return {
+    deleteSection: (id: string) => {
+      deleteExhibitionSection({ variables: { id: id } });
+    },
+    deletePicture: (id: string) => {
+      deleteExhibitionPicture({
+        variables: { id: id },
+      });
+    },
     setSectionText: (id: string, text: string) => {
       updateExhibitionSection({
         variables: {
@@ -698,38 +691,21 @@ const useExhibitionDatabaseSaver = () => {
         },
       });
     },
-    swapOrderInExhibitionPicture: (
-      sections: SectionState[],
-      oldIndex: number,
-      newIndex: number,
-      sectionId: string
-    ) => {
-      const currentDragElement = sections.find(section => section.id === sectionId)?.dragElements[
-        oldIndex
-      ];
-      const otherDragElement = sections.find(section => section.id === sectionId)?.dragElements[
-        newIndex
-      ];
-      currentDragElement &&
-        updateExhibitionPicture({
+    moveOrderInExhibitionPicture: (sections: SectionState[], sectionId: string) => {
+      const currentSection = sections.find(section => section.id === sectionId);
+      currentSection?.dragElements.forEach((elem, index) =>
+        updateExhibitionPicture({ variables: { id: elem.id, data: { order: index } } })
+      );
+    },
+    updateSectionsOrder: (sections: SectionState[]) => {
+      sections.forEach((section, index) => {
+        updateExhibitionSection({
           variables: {
-            id: currentDragElement.id,
-            data: {
-              order: newIndex,
-              subtitle: currentDragElement.subtitle,
-            },
+            id: section.id,
+            order: index,
           },
         });
-      otherDragElement &&
-        updateExhibitionPicture({
-          variables: {
-            id: otherDragElement.id,
-            data: {
-              order: oldIndex,
-              subtitle: otherDragElement.subtitle,
-            },
-          },
-        });
+      });
     },
 
     setSectionTitle: (sectionId: string, title: string) => {
@@ -775,28 +751,6 @@ const useExhibitionDatabaseSaver = () => {
       });
     },
 
-    setEpilog: (exhibitionId: string, epilog: string) => {
-      updateExhibition({
-        variables: {
-          id: exhibitionId,
-          data: {
-            epilog: epilog,
-          },
-        },
-      });
-    },
-
-    setSource: (source: string, sourceId: string) => {
-      updateExhibitionSource({ variables: { id: sourceId, source: source } });
-    },
-
-    addSource: async (exhibitionId: string) => {
-      const result = await createSource({
-        variables: { exhibitionId: exhibitionId, publishedAt: new Date().toISOString() },
-      });
-      const id = result.data?.createExhibitionSource?.data?.id;
-      return id;
-    },
     setIsPublished: (isPublished: boolean, exhibitionId: string) => {
       updateExhibition({
         variables: {
@@ -858,6 +812,8 @@ export const ExhibitionStateManager = ({
         sections={sections}
         setSections={setSections}
         databaseSaver={databaseSaver}
+        setTitlePicture={setTitlePicture}
+        setIdealot={setIdealot}
       >
         <ExhibitionDragNDrop
           sections={sections}

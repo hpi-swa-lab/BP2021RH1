@@ -3,7 +3,6 @@ import {
   Exhibition,
   ExhibitionPicture,
   ExhibitionSection,
-  ExhibitionSource,
   FaceTag,
   Link,
   ParameterizedPermission,
@@ -57,7 +56,6 @@ export class DB {
   private exhibitionLoader: Loader<Exhibition>;
   private exhibitionSectionLoader: Loader<ExhibitionSection>;
   private exhibitionPictureLoader: Loader<ExhibitionPicture>;
-  private exhibitionSourceLoader: Loader<ExhibitionSource>;
 
   public constructor(queries: {
     picture: Query<Picture>;
@@ -68,7 +66,6 @@ export class DB {
     exhibition: Query<Exhibition>;
     exhibitionSection: Query<ExhibitionSection>;
     exhibitionPicture: Query<ExhibitionPicture>;
-    exhibitionSource: Query<ExhibitionSource>;
   }) {
     this.pictureLoader = new Loader(queries.picture, { archive_tag: true });
     this.commentLoader = new Loader(queries.comment, { picture: true });
@@ -86,9 +83,6 @@ export class DB {
     });
     this.exhibitionPictureLoader = new Loader(queries.exhibitionPicture, {
       exhibition_section: true,
-    });
-    this.exhibitionSourceLoader = new Loader(queries.exhibitionSource, {
-      exhibition: true,
     });
   }
 
@@ -137,16 +131,6 @@ export class DB {
   public async exhibitionPictureToArchive(exhibitionPictureId: ID) {
     return await this.exhibitionSectionToArchive(
       await this.exhibitionPictureToExhibitionSection(exhibitionPictureId)
-    );
-  }
-
-  public async exhibitionSourceToExhibition(exhibitionSourceId: ID) {
-    return (await this.exhibitionSourceLoader.load(exhibitionSourceId))?.exhibition?.id;
-  }
-
-  public async exhibitionSourceToArchive(exhibitionSourceId: ID) {
-    return await this.exhibitionToArchive(
-      await this.exhibitionSourceToExhibition(exhibitionSourceId)
     );
   }
 

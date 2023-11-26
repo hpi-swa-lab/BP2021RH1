@@ -1,7 +1,7 @@
-import { Delete } from '@mui/icons-material';
+import { ArrowForwardIos, Delete } from '@mui/icons-material';
 import { Box, Button, Card, CardContent, CardMedia, IconButton, Modal } from '@mui/material';
 import { t } from 'i18next';
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useCanRunCreateExhibitionMutation,
@@ -13,7 +13,6 @@ import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
 import { useVisit } from '../../../helpers/history';
 import { useCanEditMultipleExhibitions } from '../../../hooks/can-do-hooks';
-import { useAuth } from '../../../hooks/context-hooks';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import RichText from '../../common/RichText';
 import { MobileContext } from '../../provider/MobileProvider';
@@ -85,30 +84,35 @@ const ExhibitionBigCard = ({
   const { t } = useTranslation();
   const { visit } = useVisit();
   return (
-    <div className='relative flex gap-4 p-4'>
-      <img
-        height='200'
-        width='250'
-        style={{ objectFit: 'cover' }}
-        src={titlePictureLink}
-        alt='exhibition picture'
-      />
+    <div
+      className={`relative flex gap-4 p-4 ${!canEdit ? 'cursor-pointer' : ''}`}
+      onClick={() => !canEdit && visit(link)}
+    >
+      <div className='w-[250px]'>
+        <img
+          height='200'
+          width='250'
+          style={{ objectFit: 'cover' }}
+          src={titlePictureLink}
+          alt='exhibition picture'
+        />
+      </div>
       <div className='flex flex-col justify-between'>
         <div className='flex flex-col gap-2'>
           <div className='text-xl font-bold'>{exhibitionTitle}</div>
           <RichText value={exhibitionIntroduction} className='line-clamp-5' />
         </div>
+        {canEdit && (
+          <div className='flex gap-2 flex-row-reverse w-max'>
+            <Button
+              onClick={e => {
+                e.stopPropagation();
+                visit(link);
+              }}
+            >
+              {t('exhibition.overview.to-exhibition')}
+            </Button>
 
-        <div className='flex gap-2 flex-row-reverse w-max'>
-          <Button
-            onClick={e => {
-              e.stopPropagation();
-              visit(link);
-            }}
-          >
-            {t('exhibition.overview.to-exhibition')}
-          </Button>
-          {canEdit && (
             <Button
               onClick={e => {
                 e.stopPropagation();
@@ -117,8 +121,8 @@ const ExhibitionBigCard = ({
             >
               {t('common.edit')}
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       {canEdit && (
         <div className='absolute top-2 right-2 bg-white rounded-full'>
@@ -247,27 +251,9 @@ const ExhibitionOverview = ({
   });
   const exhibitions: FlatExhibition[] | undefined =
     useSimplifiedQueryResponseData(exhibitionsData)?.exhibitions;
-  const { userId } = useAuth();
   const { visit } = useVisit();
   const { t } = useTranslation();
   const { isMobile } = useContext(MobileContext);
-  const [showMore, setShowMore] = useState(false);
-  const isOverflow = (node: HTMLDivElement | null) => {
-    if (!node) return false;
-    return node.offsetWidth < node.scrollWidth;
-  };
-
-  const [exhibitionsContainer, setExhibitionsContainer] = useState<HTMLDivElement | null>(null);
-  useEffect(() => {
-    if (!exhibitionsContainer) {
-      return;
-    }
-    setShowMore(isOverflow(exhibitionsContainer) && (exhibitions?.length ?? 0) > 1);
-  }, [
-    exhibitionsContainer,
-    exhibitions,
-    /* content of exhibitionsContainer changes depending on permissions of user */ userId,
-  ]);
 
   const [createExhibition] = useCreateExhibitionMutation();
   const { canRun: canCreateExhibition } = useCanRunCreateExhibitionMutation({
@@ -298,12 +284,9 @@ const ExhibitionOverview = ({
           {showTitle && (filteredExhibitions?.length ?? 0) > 0 && (
             <h2 className='m-2'>{t('exhibition.overview.our-exhibitions')}</h2>
           )}
-          <div className={`flex ${isMobile ? 'flex-col' : ''}`}>
+          <div className={`flex flex-col`}>
             <div className='relative overflow-hidden'>
-              <div
-                ref={setExhibitionsContainer}
-                className={`grid grid-cols-autofit-card gap-2 grid-rows-1 auto-rows-fr grid-flow-col overflow-hidden whitespace-nowrap`}
-              >
+              <div className={`grid grid-cols-autofill-card gap-2 max-h-[20rem]`}>
                 {filteredExhibitions?.map(([exhibition, canEdit], index) => (
                   <ExhibitionCard
                     isBig={false}
@@ -313,37 +296,22 @@ const ExhibitionOverview = ({
                   />
                 ))}
               </div>
-              {showMore && !isMobile && (
-                <div
-                  className={`absolute bg-gradient-to-r from-transparent from-10% to-${
-                    backgroundColor ? `[${backgroundColor}]` : 'white'
-                  } to-90% w-[10rem] top-0 right-0 h-[20rem]`}
-                />
+            </div>
+            <div className='grid place-content-center gap-2 p-8'>
+              <Button
+                className='w-fit self-center'
+                variant='contained'
+                onClick={() => visit(`/exhibitionOverview/${archiveId ?? ''}`)}
+                endIcon={<ArrowForwardIos />}
+              >
+                {t('common.showMore')}
+              </Button>
+              {canCreateExhibition && archiveId && !isMobile && (
+                <Button variant='contained' onClick={newExhibition}>
+                  {t('exhibition.overview.new-exhibition')}
+                </Button>
               )}
             </div>
-            {showMore ? (
-              <div className='grid place-content-center gap-2 p-8'>
-                <Button
-                  variant='outlined'
-                  onClick={() => visit(`/exhibitionOverview/${archiveId ?? ''}`)}
-                >
-                  {t('common.more')}
-                </Button>
-                {canCreateExhibition && archiveId && !isMobile && (
-                  <Button variant='contained' onClick={newExhibition}>
-                    {t('exhibition.overview.new-exhibition')}
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div className='grid place-content-center p-8'>
-                {canCreateExhibition && archiveId && (
-                  <Button variant='contained' onClick={newExhibition}>
-                    {t('exhibition.overview.new-exhibition')}
-                  </Button>
-                )}
-              </div>
-            )}
           </div>
         </div>
       )}

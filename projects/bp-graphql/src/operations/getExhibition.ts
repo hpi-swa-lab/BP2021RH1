@@ -10,7 +10,6 @@ export default {
           attributes {
             title
             introduction
-            epilog
             is_published
             title_picture {
               data {
@@ -104,14 +103,6 @@ export default {
                       }
                     }
                   }
-                }
-              }
-            }
-            exhibition_sources {
-              data {
-                id
-                attributes {
-                  source
                 }
               }
             }

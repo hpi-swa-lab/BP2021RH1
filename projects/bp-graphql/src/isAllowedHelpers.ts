@@ -119,8 +119,6 @@ export const checkExhibitionSection = createCheckEntityFactory('exhibitionSectio
 
 export const checkExhibitionPicture = createCheckEntityFactory('exhibitionPictureToArchive');
 
-export const checkExhibitionSource = createCheckEntityFactory('exhibitionSourceToArchive');
-
 const equalOrBothNullish = <T>(a: Maybe<T> | undefined, b: Maybe<T> | undefined) =>
   (a ?? null) === (b ?? null);
 

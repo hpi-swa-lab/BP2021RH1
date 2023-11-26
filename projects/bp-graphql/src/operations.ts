@@ -10,7 +10,6 @@ export { default as contact } from './operations/contact.js';
 export { default as createExhibition } from './operations/createExhibition.js';
 export { default as createExhibitionPicture } from './operations/createExhibitionPicture.js';
 export { default as createExhibitionSection } from './operations/createExhibitionSection.js';
-export { default as createExhibitionSource } from './operations/createExhibitionSource.js';
 export { default as createFaceTag } from './operations/createFaceTag.js';
 export { default as createKeywordTag } from './operations/createKeywordTag.js';
 export { default as createLink } from './operations/createLink.js';
@@ -23,6 +22,8 @@ export { default as createSubCollection } from './operations/createSubCollection
 export { default as declineComment } from './operations/declineComment.js';
 export { default as deleteCollection } from './operations/deleteCollection.js';
 export { default as deleteExhibition } from './operations/deleteExhibition.js';
+export { default as deleteExhibitionPicture } from './operations/deleteExhibitionPicture.js';
+export { default as deleteExhibitionSection } from './operations/deleteExhibitionSection.js';
 export { default as deleteFaceTag } from './operations/deleteFaceTag.js';
 export { default as deleteKeywordTag } from './operations/deleteKeywordTag.js';
 export { default as deleteLink } from './operations/deleteLink.js';
@@ -90,7 +91,6 @@ export { default as updateCollectionParents } from './operations/updateCollectio
 export { default as updateExhibition } from './operations/updateExhibition.js';
 export { default as updateExhibitionPicture } from './operations/updateExhibitionPicture.js';
 export { default as updateExhibitionSection } from './operations/updateExhibitionSection.js';
-export { default as updateExhibitionSource } from './operations/updateExhibitionSource.js';
 export { default as updateFaceTagDirection } from './operations/updateFaceTagDirection.js';
 export { default as updateKeywordName } from './operations/updateKeywordName.js';
 export { default as updateKeywordSynonyms } from './operations/updateKeywordSynonyms.js';

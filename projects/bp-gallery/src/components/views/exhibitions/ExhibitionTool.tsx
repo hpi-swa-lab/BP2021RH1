@@ -3,11 +3,14 @@ import {
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
+  DraggableAttributes,
   UniqueIdentifier,
+  closestCenter,
   useDroppable,
 } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Delete, DragIndicator, ExpandLess, ExpandMore, SwapHoriz } from '@mui/icons-material';
 import { Button, IconButton, Paper, TextField } from '@mui/material';
 import { UIEventHandler, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +31,8 @@ import {
   ExhibitionSetContext,
   ExhibitionStateManager,
 } from './ExhibitonUtils';
+import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import { useMouseAndTouchSensors } from '../../../hooks/sensors.hook';
 
 const Idealot = () => {
   const { t } = useTranslation();
@@ -52,11 +57,9 @@ const DropZone = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { setNodeRef } = useDroppable({ id });
   const section = useContext(ExhibitionGetContext).getSection(id);
-  const { getSorting, setSorting, swapSectionDraggables } = useContext(
+  const { getSorting, setSorting, moveSectionDraggables } = useContext(
     ExhibitionSectionUtilsContext
   );
-  const itemIds = section?.dragElements.map(elem => elem.id);
-  const dragItems = section?.dragElements;
   const [activeId, setActiveId] = useState<UniqueIdentifier | undefined>(undefined);
   const activeSortable = section?.dragElements.find(elem => elem.id === activeId)?.sortableElement;
 
@@ -67,7 +70,7 @@ const DropZone = ({ id }: { id: string }) => {
       const oldIndex = section?.dragElements.findIndex(x => x.id === active.id);
       const newIndex = section?.dragElements.findIndex(x => x.id === over.id);
       if (oldIndex !== undefined && newIndex !== undefined)
-        swapSectionDraggables(oldIndex, newIndex, id);
+        moveSectionDraggables(oldIndex, newIndex, id);
       setActiveId(undefined);
     }
   };
@@ -77,6 +80,7 @@ const DropZone = ({ id }: { id: string }) => {
     setActiveId(active.id);
   };
 
+  const sensors = useMouseAndTouchSensors();
   return (
     <div
       ref={setNodeRef}
@@ -87,18 +91,28 @@ const DropZone = ({ id }: { id: string }) => {
       </div>
       <div className='relative w-full'>
         <div className='absolute right-0 z-[2000]'>
-          <Button variant='contained' onClick={() => setSorting(!getSorting())}>
+          <Button
+            variant='contained'
+            onClick={() => {
+              setSorting(!getSorting());
+            }}
+          >
             {getSorting()
               ? t('exhibition.manipulator.section.exit-sort')
               : t('exhibition.manipulator.section.sort')}
           </Button>
         </div>
       </div>
-      {getSorting() && itemIds ? (
-        <DndContext onDragEnd={dragHandleEnd} onDragStart={dragHandleStart}>
+      {getSorting() ? (
+        <DndContext
+          onDragEnd={dragHandleEnd}
+          onDragStart={dragHandleStart}
+          sensors={sensors}
+          collisionDetection={closestCenter}
+        >
           <DragOverlay>{activeId && activeSortable}</DragOverlay>
-          <SortableContext items={itemIds}>
-            {dragItems?.map(item =>
+          <SortableContext items={section?.dragElements ?? []}>
+            {section?.dragElements.map(item =>
               item.id === activeId ? (
                 <div key={item.id} className='opacity-25'>
                   {item.sortableElement}
@@ -110,7 +124,7 @@ const DropZone = ({ id }: { id: string }) => {
           </SortableContext>
         </DndContext>
       ) : (
-        <>{dragItems?.map(item => item.element)}</>
+        <>{section?.dragElements.map(elem => elem.element)}</>
       )}
     </div>
   );
@@ -136,7 +150,8 @@ const TitleDropzone = () => {
 const ExhibitionManipulator = () => {
   const { t } = useTranslation();
   const sections = useContext(ExhibitionGetContext).getAllSections();
-  const addSection = useContext(ExhibitionSectionUtilsContext).addSection;
+  const { getSectionTitle } = useContext(ExhibitionGetContext);
+  const { addSection, moveSections } = useContext(ExhibitionSectionUtilsContext);
   const scroll = useRef(0);
   const scrollDivRef = useRef<HTMLDivElement | null>(null);
 
@@ -144,7 +159,22 @@ const ExhibitionManipulator = () => {
     if (node.currentTarget.scrollTop !== 0) scroll.current = Number(node.currentTarget.scrollTop);
   };
 
+  const [activeId, setActiveId] = useState<string | undefined>(undefined);
+  const [isDragMode, setIsDragMode] = useState(false);
+
+  const dragStart = (event: DragStartEvent) => {
+    setActiveId(String(event.active.id));
+  };
+  const dragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      moveSections(active.id.toString(), over.id.toString());
+    }
+    setActiveId(undefined);
+  };
+
   useEffect(() => scrollDivRef.current?.scrollTo(0, scroll.current));
+  const sensors = useMouseAndTouchSensors();
   return (
     <div className='flex flex-col items-stretch h-full w-full'>
       <div className='absolute z-[999] right-7 top-[6rem]'>
@@ -157,20 +187,127 @@ const ExhibitionManipulator = () => {
         onScroll={handleScroll}
       >
         <Introduction />
-        {sections?.map(section => (
-          <Section key={section.id} id={section.id} />
-        ))}
+        {isDragMode ? (
+          <DndContext
+            onDragStart={dragStart}
+            onDragEnd={dragEnd}
+            collisionDetection={closestCenter}
+            sensors={sensors}
+          >
+            <SortableContext items={sections!} strategy={verticalListSortingStrategy}>
+              {sections!.map(section => (
+                <SortableSection
+                  key={section.id}
+                  id={section.id}
+                  closeDrag={() => {
+                    setIsDragMode(false);
+                  }}
+                  isGrayedOut={section.id === activeId ? true : false}
+                />
+              ))}
+            </SortableContext>
+            <DragOverlay>
+              {activeId ? (
+                <SortableSectionUI key={activeId} sectionTitle={getSectionTitle(activeId)} />
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+        ) : (
+          <>
+            {sections?.map(section => (
+              <Section key={section.id} id={section.id} dragClick={() => setIsDragMode(true)} />
+            ))}
+          </>
+        )}
         <div className='grid place-content-center'>
           <Button onClick={addSection} variant='outlined'>
             {t('exhibition.manipulator.section.add-section')}
           </Button>
         </div>
-        <EndCard />
       </div>
     </div>
   );
 };
 
+const SortableSectionUI = ({
+  sectionTitle,
+  deleteThisSection,
+  setNodeRef,
+  attributes,
+  listeners,
+  style,
+  isGrayedOut,
+  closeThisDrag,
+}: {
+  sectionTitle: string | undefined;
+  deleteThisSection?: () => void;
+  setNodeRef?: (node: HTMLElement | null) => void;
+  attributes?: DraggableAttributes | undefined;
+  listeners?: SyntheticListenerMap | undefined;
+  style?: { transform: string | undefined; transition: string | undefined };
+  isGrayedOut?: boolean;
+  closeThisDrag?: () => void;
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Paper elevation={3} ref={setNodeRef} style={style} sx={{ opacity: isGrayedOut ? 0.2 : 1 }}>
+      <div className='flex flex-col m-4 gap-2 p-4'>
+        <div className='flex'>
+          <IconButton {...attributes} {...listeners} disableRipple>
+            <DragIndicator />
+          </IconButton>
+          <TextField
+            className='flex-1'
+            placeholder={t('exhibition.manipulator.section.title-placeholder')}
+            variant='standard'
+            defaultValue={sectionTitle}
+          />
+          <IconButton onClick={deleteThisSection}>
+            <Delete />
+          </IconButton>
+          <IconButton onClick={closeThisDrag}>
+            <ExpandMore />
+          </IconButton>
+        </div>
+      </div>
+    </Paper>
+  );
+};
+const SortableSection = ({
+  id,
+  closeDrag,
+  isGrayedOut,
+}: {
+  id: string;
+  closeDrag: (sectionId: string) => void;
+  isGrayedOut?: boolean;
+}) => {
+  const { getSectionTitle } = useContext(ExhibitionGetContext);
+  const { deleteSection } = useContext(ExhibitionSectionUtilsContext);
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: id,
+    data: {
+      type: 'section',
+    },
+  });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <SortableSectionUI
+      sectionTitle={getSectionTitle(id)}
+      deleteThisSection={() => deleteSection(id)}
+      setNodeRef={setNodeRef}
+      attributes={attributes}
+      listeners={listeners}
+      style={style}
+      isGrayedOut={isGrayedOut}
+      closeThisDrag={() => closeDrag(id)}
+    />
+  );
+};
 const Introduction = () => {
   const { t } = useTranslation();
   const { getTitle, getIntroduction } = useContext(ExhibitionGetContext);
@@ -210,14 +347,14 @@ const Introduction = () => {
   );
 };
 
-const Section = ({ id }: { id: string }) => {
+const Section = ({ id, dragClick }: { id: string; dragClick: (sectionId: string) => void }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(true);
   const section = useContext(ExhibitionGetContext).getSection(id);
   const { getSectionTitle, getSectionText } = useContext(ExhibitionGetContext);
 
   const { setSectionTitle, setSectionText } = useContext(ExhibitionSetContext);
-
+  const { deleteSection } = useContext(ExhibitionSectionUtilsContext);
   const extraOptions = {
     preset: undefined,
     placeholder: t('exhibition.manipulator.section.text-placeholder'),
@@ -230,6 +367,9 @@ const Section = ({ id }: { id: string }) => {
     <Paper elevation={3}>
       <div className='flex flex-col gap-2 p-2 m-2'>
         <div className='flex'>
+          <IconButton onClick={() => dragClick(id)}>
+            <SwapHoriz />
+          </IconButton>
           <TextField
             className='flex-1'
             placeholder={t('exhibition.manipulator.section.title-placeholder')}
@@ -237,6 +377,9 @@ const Section = ({ id }: { id: string }) => {
             defaultValue={getSectionTitle(id)}
             onBlur={event => setSectionTitle(id, event.target.value)}
           />
+          <IconButton onClick={() => deleteSection(id)}>
+            <Delete />
+          </IconButton>
           <IconButton onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
@@ -253,49 +396,6 @@ const Section = ({ id }: { id: string }) => {
         )}
       </div>
     </Paper>
-  );
-};
-
-const EndCard = () => {
-  const { t } = useTranslation();
-  const { getEpilog, getSources } = useContext(ExhibitionGetContext);
-
-  const { setEpilog, setSource, addSource } = useContext(ExhibitionSetContext);
-
-  const extraOptions = {
-    height: 300,
-    allowReziseX: false,
-    allowReziseY: false,
-    preset: undefined,
-    placeholder: t('exhibition.manipulator.epilog.text-placeholder'),
-    statusbar: false,
-    tabIndex: 0,
-    className: 'z-0',
-  };
-
-  return (
-    <div className='flex flex-col gap-2'>
-      <label className='text-xl'>{t('exhibition.manipulator.epilog.title')}</label>
-      <TextEditor
-        value={getEpilog() ?? ''}
-        extraOptions={extraOptions}
-        onBlur={text => setEpilog(text)}
-      />
-      <label className='text-xl'>{t('exhibition.manipulator.epilog.sources')}</label>
-      {getSources()?.map((source, index) => (
-        <TextField
-          key={index}
-          defaultValue={source.source}
-          onChange={event => event.target.value}
-          onBlur={event => setSource(event.target.value, source.id)}
-        />
-      ))}
-      <div className='grid place-content-center'>
-        <Button onClick={addSource} variant='outlined'>
-          {t('exhibition.manipulator.epilog.add-source')}
-        </Button>
-      </div>
-    </div>
   );
 };
 

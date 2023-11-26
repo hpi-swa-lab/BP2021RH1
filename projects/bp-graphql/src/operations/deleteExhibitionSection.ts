@@ -3,10 +3,10 @@ import { checkExhibition } from '../isAllowedHelpers.js';
 
 export default {
   group: 'exhibition',
-  isAllowed: checkExhibition('exhibitionId'),
+  isAllowed: checkExhibition('id'),
   document: graphql`
-    mutation createExhibitionSource($exhibitionId: ID!, $publishedAt: DateTime!) {
-      createExhibitionSource(data: { exhibition: $exhibitionId, publishedAt: $publishedAt }) {
+    mutation deleteExhibitionSection($id: ID!) {
+      deleteExhibitionSection(id: $id) {
         data {
           id
         }

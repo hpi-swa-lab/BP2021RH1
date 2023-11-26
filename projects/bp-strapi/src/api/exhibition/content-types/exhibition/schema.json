@@ -28,15 +28,6 @@
       "target": "api::exhibition-section.exhibition-section",
       "mappedBy": "exhibition"
     },
-    "epilog": {
-      "type": "richtext"
-    },
-    "exhibition_sources": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::exhibition-source.exhibition-source",
-      "mappedBy": "exhibition"
-    },
     "idealot_pictures": {
       "type": "relation",
       "relation": "oneToMany",

@@ -1,21 +1,20 @@
 import { Portal } from '@mui/material';
 import { useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import { useGetExhibitionQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath, root } from '../../../helpers/app-helpers';
-import { pushHistoryWithoutRouter } from '../../../helpers/history';
 import { useCanEditExhibition } from '../../../hooks/can-do-hooks';
 import { FlatExhibition } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';
 import RichText from '../../common/RichText';
-import PicturePreview from '../../common/picture-gallery/PicturePreview';
 import { FALLBACK_PATH } from '../../routes';
 import PictureView from '../picture/PictureView';
 import { ExhibitionGetContext, ExhibitionStateViewer } from './ExhibitonUtils';
+import { Gallery } from 'react-grid-gallery';
+import { pushHistoryWithoutRouter } from '../../../helpers/history';
 
 const Title = () => {
   const { getTitlePicture, getTitle, getIntroduction } = useContext(ExhibitionGetContext);
@@ -48,7 +47,12 @@ const Section = ({ sectionId }: { sectionId: string }) => {
   const { getSection } = useContext(ExhibitionGetContext);
   const mySection = getSection(sectionId);
   const [focusedPicture, setFocusedPicture] = useState<string>();
-
+  const images = mySection?.dragElements.map(elem => ({
+    src: asUploadPath(elem.picture.media),
+    width: elem.picture.media?.width ?? 0,
+    height: elem.picture.media?.height ?? 0,
+    id: elem.picture.id,
+  }));
   return (
     <>
       {focusedPicture && (
@@ -66,48 +70,18 @@ const Section = ({ sectionId }: { sectionId: string }) => {
         <div className='flex flex-col gap-4'>
           <div className='text-4xl font-semibold'>{mySection.title}</div>
           <RichText value={mySection.text} />
-          <div className='flex flex-row gap-4 flex-wrap justify-center'>
-            {mySection.dragElements.map((drag, index) => (
-              <div key={index} className='w-max'>
-                <PicturePreview
-                  picture={drag.picture}
-                  height='15rem'
-                  onClick={() => {
-                    setFocusedPicture(drag.picture.id);
-                    pushHistoryWithoutRouter(`/picture/${drag.picture.id}`);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+          <Gallery
+            images={images ?? []}
+            enableImageSelection={false}
+            rowHeight={360}
+            onClick={(index, item) => {
+              setFocusedPicture(item.id);
+              pushHistoryWithoutRouter(`/picture/${item.id}`);
+            }}
+          />
         </div>
       )}
     </>
-  );
-};
-
-const EndCard = () => {
-  const { t } = useTranslation();
-  const { getEpilog, getSources } = useContext(ExhibitionGetContext);
-  const epilog = getEpilog();
-  const sources = getSources();
-  return (
-    <div className='p-11 box-border gap-4 flex flex-col'>
-      {epilog && (
-        <div className='flex flex-col gap-4'>
-          <div className='text-4xl font-semibold'>{t('exhibition.viewer.epilog')}</div>
-          <RichText value={epilog} />
-        </div>
-      )}
-      {sources && sources.length > 0 && (
-        <div>
-          <div className='text-4xl font-semibold'>{t('exhibition.viewer.sources')}</div>
-          <ul>
-            {sources.map((source, key) => source.source && <li key={key}>{source.source}</li>)}
-          </ul>
-        </div>
-      )}
-    </div>
   );
 };
 
@@ -152,7 +126,6 @@ const ExhibitionViewer = ({ exhibitionId }: { exhibitionId: string }) => {
                 <div className='flex flex-col max-w-screen-lg w-full min-w-screen-sm bg-white drop-shadow shadow-gray-700 text-xl'>
                   <Title />
                   <MainPart />
-                  <EndCard />
                 </div>
               </div>
             </ExhibitionStateViewer>

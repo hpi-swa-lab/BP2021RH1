@@ -45,7 +45,3 @@ export type ExhibitionSection = ID & {
 export type ExhibitionPicture = ID & {
   exhibition_section: Maybe<ExhibitionSection>;
 };
-
-export type ExhibitionSource = ID & {
-  exhibition: Maybe<Exhibition>;
-};

@@ -47,6 +47,7 @@ const SearchView = () => {
 
   // Builds query from search params in the path
   const queryParams = useMemo(() => {
+    searchParams.delete('exhibitionId');
     const allSearchTerms = searchParams
       .getAll(toURLSearchParam(SearchType.ALL))
       .map(decodeURIComponent);

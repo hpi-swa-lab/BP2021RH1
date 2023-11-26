@@ -620,10 +620,6 @@
       "delete-title": "Möchten Sie wirklich die Geschichte \"{{exhibitionName}}\" löschen?",
       "new-exhibition": "Neue Geschichte"
     },
-    "viewer": {
-      "epilog": "Epilog",
-      "sources": "Weiterführende Quellen"
-    },
     "buttons": {
       "publish": "Veröffentlichen",
       "unPublish": "Privat stellen",
@@ -647,12 +643,6 @@
         "exit-sort": "Fertig sortiert",
         "add-section": "Neuer Abschnitt",
         "dropzone": "Ziehe hier Bilder hinein"
-      },
-      "epilog": {
-        "title": "Epilog",
-        "text-placeholder": "Epilogtext",
-        "sources": "Quellen",
-        "add-source": "Quelle hinzufügen"
       }
     }
   },
