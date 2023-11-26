@@ -812,9 +812,7 @@ export const ExhibitionStateManager = ({
         sections={sections}
         setSections={setSections}
         databaseSaver={databaseSaver}
-        titlePicture={titlePicture}
         setTitlePicture={setTitlePicture}
-        idealot={idealot}
         setIdealot={setIdealot}
       >
         <ExhibitionDragNDrop
