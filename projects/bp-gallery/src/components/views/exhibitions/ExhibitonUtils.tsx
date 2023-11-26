@@ -359,10 +359,14 @@ export const ExhibitionStateChanger = ({
   };
 
   const setSectionText = (sectionId: string, text: string) => {
-    databaseSaver.setSectionText(sectionId, text);
-    setSections(
-      sections.map(section => (section.id === sectionId ? { ...section, text: text } : section))
-    );
+    setSections(sections => {
+      // if unchanged, just return the identical value
+      if (sections.some(section => section.id === sectionId && section.text === text))
+        return sections;
+
+      databaseSaver.setSectionText(sectionId, text);
+      return sections.map(section => (section.id === sectionId ? { ...section, text } : section));
+    });
   };
 
   const setSectionTitle = (sectionId: string, title: string) => {
@@ -378,8 +382,12 @@ export const ExhibitionStateChanger = ({
   };
 
   const setIntroduction = (introduction: string) => {
-    databaseSaver.setIntroduction(exhibitionId, introduction);
-    setExhibitionText({ ...exhibitionText, introduction: introduction });
+    setExhibitionText(e => {
+      if (e.introduction !== introduction) {
+        databaseSaver.setIntroduction(exhibitionId, introduction);
+        return { ...exhibitionText, introduction };
+      } else return e;
+    });
   };
 
   const toggleIsPublished = () => {
