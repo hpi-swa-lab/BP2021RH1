@@ -485,6 +485,7 @@ export interface ApiArchiveTagArchiveTag extends CollectionTypeSchema {
       'oneToMany',
       'api::exhibition.exhibition'
     >;
+    hidden: BooleanAttribute & DefaultTo<false>;
     createdAt: DateTimeAttribute;
     updatedAt: DateTimeAttribute;
     publishedAt: DateTimeAttribute;
@@ -1031,6 +1032,12 @@ export interface ApiPicturePicture extends CollectionTypeSchema {
     >;
     is_not_a_place_count: IntegerAttribute;
     face_tags: RelationAttribute<'api::picture.picture', 'oneToMany', 'api::face-tag.face-tag'>;
+    picture_sequence: RelationAttribute<
+      'api::picture.picture',
+      'manyToOne',
+      'api::picture-sequence.picture-sequence'
+    >;
+    picture_sequence_order: IntegerAttribute;
     exhibition_pictures: RelationAttribute<
       'api::picture.picture',
       'oneToMany',
@@ -1075,6 +1082,40 @@ export interface ApiPictureGeoInfoPictureGeoInfo extends CollectionTypeSchema {
       PrivateAttribute;
     updatedBy: RelationAttribute<
       'api::picture-geo-info.picture-geo-info',
+      'oneToOne',
+      'admin::user'
+    > &
+      PrivateAttribute;
+  };
+}
+
+export interface ApiPictureSequencePictureSequence extends CollectionTypeSchema {
+  info: {
+    singularName: 'picture-sequence';
+    pluralName: 'picture-sequences';
+    displayName: 'Picture_Sequence';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    pictures: RelationAttribute<
+      'api::picture-sequence.picture-sequence',
+      'oneToMany',
+      'api::picture.picture'
+    >;
+    createdAt: DateTimeAttribute;
+    updatedAt: DateTimeAttribute;
+    publishedAt: DateTimeAttribute;
+    createdBy: RelationAttribute<
+      'api::picture-sequence.picture-sequence',
+      'oneToOne',
+      'admin::user'
+    > &
+      PrivateAttribute;
+    updatedBy: RelationAttribute<
+      'api::picture-sequence.picture-sequence',
       'oneToOne',
       'admin::user'
     > &
@@ -1176,6 +1217,7 @@ declare global {
       'api::person-tag.person-tag': ApiPersonTagPersonTag;
       'api::picture.picture': ApiPicturePicture;
       'api::picture-geo-info.picture-geo-info': ApiPictureGeoInfoPictureGeoInfo;
+      'api::picture-sequence.picture-sequence': ApiPictureSequencePictureSequence;
       'api::time-range-tag.time-range-tag': ApiTimeRangeTagTimeRangeTag;
       'common.synonyms': CommonSynonyms;
       'location.coordinates': LocationCoordinates;

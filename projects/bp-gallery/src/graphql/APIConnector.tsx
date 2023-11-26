@@ -494,7 +494,6 @@ export type ExhibitionFiltersInput = {
 export type ExhibitionInput = {
   archive_tag?: InputMaybe<Scalars['ID']>;
   exhibition_sections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  exhibition_sources?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   idealot_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   introduction?: InputMaybe<Scalars['String']>;
   is_published?: InputMaybe<Scalars['Boolean']>;
