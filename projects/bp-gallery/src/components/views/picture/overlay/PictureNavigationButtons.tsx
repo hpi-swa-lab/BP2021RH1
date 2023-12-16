@@ -39,6 +39,7 @@ const PictureNavigationButtons = () => {
           navigatePicture ? () => navigatePicture(PictureNavigationTarget.PREVIOUS) : undefined
         }
         size='large'
+        data-testid='previous'
       >
         <ChevronLeft />
       </IconButton>
@@ -46,6 +47,7 @@ const PictureNavigationButtons = () => {
         style={{ visibility: hasNext ? 'visible' : 'hidden' }}
         onClick={navigatePicture ? () => navigatePicture(PictureNavigationTarget.NEXT) : undefined}
         size='large'
+        data-testid='next'
       >
         <ChevronRight />
       </IconButton>
@@ -58,6 +60,7 @@ const PictureNavigationButtons = () => {
               : undefined
           }
           size='large'
+          data-testid='previous-in-sequence'
         >
           <ChevronLeft />
           <Filter />
@@ -70,6 +73,7 @@ const PictureNavigationButtons = () => {
               : undefined
           }
           size='large'
+          data-testid='next-in-sequence'
         >
           <Filter />
           <ChevronRight />
