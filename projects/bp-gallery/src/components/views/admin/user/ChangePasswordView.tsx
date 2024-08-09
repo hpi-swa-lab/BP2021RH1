@@ -40,6 +40,7 @@ export const ChangePasswordView = () => {
     <ProtectedRoute canUse={canChangePassword} canUseLoading={canChangePasswordLoading}>
       <CenteredContainer title={t('admin.changePassword.title')}>
         <Stack gap={4}>
+          <p>{t('admin.passwordRequirements')}</p>
           <PasswordInput
             label={t('admin.changePassword.currentPassword')}
             value={currentPassword}

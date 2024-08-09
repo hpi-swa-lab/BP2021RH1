@@ -7,28 +7,28 @@ import {
   FlatParameterizedPermission,
 } from '../../../../../types/additionalFlatTypes';
 import { KeysWithValueExtending } from '../../../../../types/helper';
-import { Parameters } from '../PermissionsView';
+import { PermissionParameters } from '../PermissionsView';
 
 export const BooleanParameter = ({
   parameter,
   operations,
   archive,
   findPermission,
-  deletePermission,
+  removePermission,
   addPermission,
   refetchPermissions,
   falseTitle,
   trueTitle,
 }: {
-  parameter: KeysWithValueExtending<Parameters, Maybe<boolean> | undefined>;
+  parameter: KeysWithValueExtending<PermissionParameters, Maybe<boolean> | undefined>;
   operations: Operation[];
   archive: FlatArchiveTag | null;
   findPermission: (
     operation: Operation,
     archive: FlatArchiveTag | null
   ) => FlatParameterizedPermission | null;
-  deletePermission: (options: { variables: { id: string } }) => Promise<unknown>;
-  addPermission: (operation: Operation, parameters: Parameters) => Promise<unknown>;
+  removePermission: (options: { variables: { id: string } }) => Promise<unknown>;
+  addPermission: (operation: Operation, parameters: PermissionParameters) => Promise<unknown>;
   refetchPermissions: () => Promise<unknown>;
   falseTitle: string;
   trueTitle: string;
@@ -39,7 +39,7 @@ export const BooleanParameter = ({
         operations.forEach(async operation => {
           const permission = findPermission(operation, archive);
           if (permission) {
-            await deletePermission({
+            await removePermission({
               variables: {
                 id: permission.id,
               },
@@ -60,7 +60,7 @@ export const BooleanParameter = ({
       archive,
       addPermission,
       parameter,
-      deletePermission,
+      removePermission,
       refetchPermissions,
     ]
   );

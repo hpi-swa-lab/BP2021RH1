@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Operation, Parameter } from 'bp-graphql/build';
-import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
+import { ChangeEventHandler, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import {
@@ -27,6 +27,7 @@ import {
   FlatParameterizedPermission,
   FlatUsersPermissionsUser,
 } from '../../../../types/additionalFlatTypes';
+import { HelpTooltip } from '../../../common/HelpTooltip';
 import Loading from '../../../common/Loading';
 import ProtectedRoute from '../../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
@@ -39,9 +40,9 @@ import { BooleanParameter } from './permissions/BooleanParamater';
 import { Coverage, CoverageCheckbox } from './permissions/Coverage';
 import { combineCoverages } from './permissions/combineCoverages';
 import { GroupStructure, sections } from './permissions/operations';
-import { ParametersWithoutArchive, PresetType, presets } from './permissions/presets';
+import { PermissionParametersWithoutArchive, PresetType, presets } from './permissions/presets';
 
-export type Parameters = Pick<FlatParameterizedPermission, Parameter>;
+export type PermissionParameters = Pick<FlatParameterizedPermission, Parameter>;
 
 const PermissionsView = ({ userId }: { userId: string }) => {
   const { t } = useTranslation();
@@ -127,8 +128,26 @@ const PermissionsView = ({ userId }: { userId: string }) => {
 
   const dialog = useDialog();
 
+  const warnedAboutPublicUserEditing = useRef(false);
+  const warnAboutPublicUserEditing = useCallback(async () => {
+    if (warnedAboutPublicUserEditing.current || !isPublic) {
+      return;
+    }
+    const really = await dialog({
+      preset: DialogPreset.CONFIRM,
+      title: t('admin.permissions.reallyEditPublicUserTitle'),
+      content: t('admin.permissions.reallyEditPublicUserContent'),
+    });
+    if (really) {
+      warnedAboutPublicUserEditing.current = true;
+      return;
+    }
+    return Promise.race([]); // never resolves - prevent the actual editing from happening
+  }, [warnedAboutPublicUserEditing, isPublic, dialog, t]);
+
   const addPermission = useCallback(
-    async (operation: Operation, { archive_tag, ...parameters }: Parameters) => {
+    async (operation: Operation, { archive_tag, ...parameters }: PermissionParameters) => {
+      await warnAboutPublicUserEditing();
       await createPermission({
         variables: {
           operation_name: operation.document.name,
@@ -138,14 +157,23 @@ const PermissionsView = ({ userId }: { userId: string }) => {
         },
       });
     },
-    [createPermission, parsedUserId]
+    [warnAboutPublicUserEditing, createPermission, parsedUserId]
+  );
+
+  const removePermission = useCallback(
+    async (options: Parameters<typeof deletePermission>[0]) => {
+      await warnAboutPublicUserEditing();
+      await deletePermission(options);
+    },
+    [warnAboutPublicUserEditing, deletePermission]
   );
 
   const addPreset = useCallback(
     async (
-      operations: { operation: Operation; parameters: ParametersWithoutArchive }[],
+      operations: { operation: Operation; parameters: PermissionParametersWithoutArchive }[],
       archive: FlatArchiveTag | null
     ) => {
+      await warnAboutPublicUserEditing();
       await Promise.all(
         operations.map(async ({ operation, parameters }) => {
           await addPermission(operation, { archive_tag: archive ?? undefined, ...parameters });
@@ -153,7 +181,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
       );
       await refetchPermissions();
     },
-    [addPermission, refetchPermissions]
+    [warnAboutPublicUserEditing, addPermission, refetchPermissions]
   );
 
   const toggleOperations = useCallback(
@@ -164,6 +192,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
       header: string,
       prompt = false
     ) => {
+      await warnAboutPublicUserEditing();
       const removeAll = coverage !== Coverage.NONE;
       if (prompt) {
         const really = await dialog({
@@ -184,7 +213,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
             if (!permission) {
               return;
             }
-            await deletePermission({
+            await removePermission({
               variables: {
                 id: permission.id,
               },
@@ -200,7 +229,15 @@ const PermissionsView = ({ userId }: { userId: string }) => {
       }
       await refetchPermissions();
     },
-    [dialog, t, findPermission, deletePermission, addPermission, refetchPermissions]
+    [
+      warnAboutPublicUserEditing,
+      dialog,
+      t,
+      findPermission,
+      removePermission,
+      addPermission,
+      refetchPermissions,
+    ]
   );
 
   const [filter, setFilter] = useState('');
@@ -220,6 +257,12 @@ const PermissionsView = ({ userId }: { userId: string }) => {
           : archive
           ? archive.name
           : t('admin.permissions.withoutArchive');
+      const summaryTooltip =
+        type === 'system'
+          ? t('admin.permissions.systemPermissionsTooltip')
+          : archive
+          ? t('admin.permissions.archiveTooltip', { archiveName: archive.name })
+          : t('admin.permissions.withoutArchiveTooltip');
       if (!summary.toLocaleLowerCase().includes(filter.toLocaleLowerCase())) {
         return null;
       }
@@ -287,6 +330,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
                 clickThrough
               />
             </Typography>
+            <HelpTooltip title={summary} content={summaryTooltip} iconClassName='!ml-auto' />
           </AccordionSummary>
           <div className='m-4'>
             {relevantPresets.length > 0 && (
@@ -304,46 +348,62 @@ const PermissionsView = ({ userId }: { userId: string }) => {
               </Stack>
             )}
             <div className='mt-2'>
-              {sectionsWithCoverages.map(section => (
-                <Accordion key={section.name}>
-                  <AccordionSummary expandIcon={<ExpandMore />}>
-                    <CoverageCheckbox
-                      coverage={combineCoverages(section.groups.map(group => group.coverage))}
-                      operations={section.groups.flatMap(group => group.operations)}
-                      archive={archive}
-                      label={t(`admin.permissions.section.${section.name}`, { context: type })}
-                      prompt
-                      toggleOperations={toggleOperations}
-                      clickThrough
-                    />
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {section.groups
-                      .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
-                      .sort(([a], [b]) => a.localeCompare(b))
-                      .map(([name, group]) => (
-                        // div forces every checkbox on a separate line
-                        <div key={group.name}>
-                          <CoverageCheckbox
-                            coverage={group.coverage}
-                            operations={group.operations}
-                            archive={archive}
-                            label={name}
-                            toggleOperations={toggleOperations}
-                          />
-                          <ParameterInputs
-                            group={group}
-                            findPermission={findPermission}
-                            archive={archive}
-                            deletePermission={deletePermission}
-                            addPermission={addPermission}
-                            refetchPermissions={refetchPermissions}
-                          />
-                        </div>
-                      ))}
-                  </AccordionDetails>
-                </Accordion>
-              ))}
+              {sectionsWithCoverages.map(section => {
+                const label = t(`admin.permissions.section.${section.name}`, { context: type });
+                return (
+                  <Accordion key={section.name}>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <CoverageCheckbox
+                        coverage={combineCoverages(section.groups.map(group => group.coverage))}
+                        operations={section.groups.flatMap(group => group.operations)}
+                        archive={archive}
+                        label={label}
+                        prompt
+                        toggleOperations={toggleOperations}
+                        clickThrough
+                      />
+                      <HelpTooltip
+                        title={label}
+                        content={t(`admin.permissions.section-tooltip.${section.name}`, {
+                          context: type,
+                          archiveName: archive?.name,
+                        })}
+                        iconClassName='!ml-auto'
+                      />
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {section.groups
+                        .map(group => [t(`admin.permissions.group.${group.name}`), group] as const)
+                        .sort(([a], [b]) => a.localeCompare(b))
+                        .map(([name, group]) => (
+                          // div forces every checkbox on a separate line
+                          <div key={group.name}>
+                            <CoverageCheckbox
+                              coverage={group.coverage}
+                              operations={group.operations}
+                              archive={archive}
+                              label={name}
+                              toggleOperations={toggleOperations}
+                            />
+                            <ParameterInputs
+                              group={group}
+                              findPermission={findPermission}
+                              archive={archive}
+                              removePermission={removePermission}
+                              addPermission={addPermission}
+                              refetchPermissions={refetchPermissions}
+                            />
+                            <HelpTooltip
+                              title={name}
+                              content={t(`admin.permissions.group-tooltip.${group.name}`)}
+                              iconClassName='float-right'
+                            />
+                          </div>
+                        ))}
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
             </div>
           </div>
         </Accordion>
@@ -357,7 +417,7 @@ const PermissionsView = ({ userId }: { userId: string }) => {
       addPreset,
       findPermission,
       addPermission,
-      deletePermission,
+      removePermission,
       refetchPermissions,
     ]
   );
@@ -420,7 +480,7 @@ const ParameterInputs = ({
   group,
   findPermission,
   archive,
-  deletePermission,
+  removePermission,
   addPermission,
   refetchPermissions,
 }: {
@@ -430,8 +490,8 @@ const ParameterInputs = ({
     archive: FlatArchiveTag | null
   ) => FlatParameterizedPermission | null;
   archive: FlatArchiveTag | null;
-  deletePermission: (parameters: { variables: { id: string } }) => Promise<unknown>;
-  addPermission: (operation: Operation, parameters: Parameters) => Promise<unknown>;
+  removePermission: (parameters: { variables: { id: string } }) => Promise<unknown>;
+  addPermission: (operation: Operation, parameters: PermissionParameters) => Promise<unknown>;
   refetchPermissions: () => Promise<unknown>;
 }) => {
   const { t } = useTranslation();
@@ -440,7 +500,7 @@ const ParameterInputs = ({
     operations: group.operations,
     findPermission,
     addPermission,
-    deletePermission,
+    removePermission,
     refetchPermissions,
     archive,
   };
