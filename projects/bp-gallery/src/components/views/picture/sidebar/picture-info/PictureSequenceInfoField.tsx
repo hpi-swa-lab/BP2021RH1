@@ -85,6 +85,7 @@ const PictureSequenceInfoField = ({ picture }: { picture: FlatPicture }) => {
               textFilter={TextFilter.PICTURES_AND_TEXTS}
               cacheOnRefetch
               onSort={canEdit ? onSort : undefined}
+              fetchPolicy='cache-and-network'
             />
           </ScrollContainer>
         </ScrollProvider>
