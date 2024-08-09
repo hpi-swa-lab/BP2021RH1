@@ -116,7 +116,7 @@
     "The provided current password is invalid": "Das aktuelle Passwort ist falsch",
     "Your new password must be different than your current password": "Ihr neues Passwort muss anders als ihr aktuelles Passwort sein",
     "Passwords do not match": "Das neue Passwort und dessen Wiederholung stimmen nicht überein",
-    "Incorrect code provided": "Dieser Link ist ungültig",
+    "Incorrect code provided": "Dieser Link ist nicht mehr gültig, bitte erzeugen Sie einen neuen Link mithilfe der 'Passwort vergessen?' Funktion im Login-Dialog",
     "Invalid token": "Dieser Link ist ungültig",
     "Email or Username are already taken": "Die E-Mail oder der Nutzername ist bereits vergeben",
     "Username already taken": "Der Nutzername ist bereits vergeben",
