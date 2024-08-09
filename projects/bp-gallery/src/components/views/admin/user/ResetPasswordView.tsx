@@ -44,6 +44,7 @@ export const ResetPasswordView = () => {
     <ProtectedRoute canUse={canResetPassword} canUseLoading={canResetPasswordLoading}>
       <CenteredContainer title={t('admin.resetPassword.title')}>
         <Stack gap={4}>
+          <p>{t('admin.passwordRequirements')}</p>
           <PasswordInput
             label={t('admin.resetPassword.password')}
             value={password}
