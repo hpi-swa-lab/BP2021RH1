@@ -11,8 +11,8 @@ const usePrefetchPictureHook = (
   siblings?: string[],
   pictureSequenceIds?: string[]
 ) => {
-  const [previousQuery] = useGetPictureInfoLazyQuery();
-  const [nextQuery] = useGetPictureInfoLazyQuery();
+  const [previousInSiblingsQuery] = useGetPictureInfoLazyQuery();
+  const [nextInSiblingsQuery] = useGetPictureInfoLazyQuery();
   const [previousInSequenceQuery] = useGetPictureInfoLazyQuery();
   const [nextInSequenceQuery] = useGetPictureInfoLazyQuery();
 
@@ -20,7 +20,7 @@ const usePrefetchPictureHook = (
     if (siblings?.includes(pictureInSiblingsId)) {
       const previousId = getPreviousPictureId(pictureInSiblingsId, siblings);
       if (previousId) {
-        previousQuery({
+        previousInSiblingsQuery({
           variables: {
             pictureId: previousId,
           },
@@ -28,7 +28,7 @@ const usePrefetchPictureHook = (
       }
       const nextId = getNextPictureId(pictureInSiblingsId, siblings);
       if (nextId) {
-        nextQuery({
+        nextInSiblingsQuery({
           variables: {
             pictureId: nextId,
           },
@@ -56,8 +56,8 @@ const usePrefetchPictureHook = (
   }, [
     pictureInSiblingsId,
     siblings,
-    previousQuery,
-    nextQuery,
+    previousInSiblingsQuery,
+    nextInSiblingsQuery,
     pictureSequenceIds,
     pictureInSequenceId,
     previousInSequenceQuery,

@@ -114,14 +114,15 @@ const PictureView = ({
     pictureSequenceIds
   );
 
-  const [hasPrevious, hasNext, hasPreviousInSequence, hasNextInSequence] = useMemo(() => {
-    return [
+  const [hasPrevious, hasNext, hasPreviousInSequence, hasNextInSequence] = useMemo(
+    () => [
       Boolean(getPreviousPictureId(pictureInSiblingsId, siblingIds)),
       Boolean(getNextPictureId(pictureInSiblingsId, siblingIds)),
       Boolean(getPreviousPictureId(pictureInSequenceId, pictureSequenceIds)),
       Boolean(getNextPictureId(pictureInSequenceId, pictureSequenceIds)),
-    ];
-  }, [pictureInSequenceId, pictureInSiblingsId, pictureSequenceIds, siblingIds]);
+    ],
+    [pictureInSequenceId, pictureInSiblingsId, pictureSequenceIds, siblingIds]
+  );
 
   const onNavigateMessage = useCallback(
     ({ pictureInSiblingsId, pictureInSequenceId }: PictureIds) => {

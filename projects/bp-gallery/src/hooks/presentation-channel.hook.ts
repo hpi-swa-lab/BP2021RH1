@@ -8,9 +8,7 @@ const usePresentationChannel = (id: string, onNavigate: (ids: PictureIds) => voi
   useEffect(() => {
     const consumer = channelFactory(id);
     producer.current = channelFactory(id);
-    consumer.onmessage = (
-      event: MessageEvent<{ pictureInSiblingsId: string; pictureInSequenceId: string }>
-    ) => {
+    consumer.onmessage = (event: MessageEvent<PictureIds>) => {
       onNavigate(event.data);
     };
 
