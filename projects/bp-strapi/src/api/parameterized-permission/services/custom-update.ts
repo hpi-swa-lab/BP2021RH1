@@ -198,12 +198,6 @@ export const removeUser = async (id: string) => {
     return;
   }
 
-  await userQuery.delete({
-    where: {
-      id,
-    },
-  });
-
   const permissionQuery = strapi.db.query('api::parameterized-permission.parameterized-permission');
   // deleteMany currently doesn't support relational filters:
   // https://github.com/strapi/strapi/issues/11998
@@ -214,15 +208,19 @@ export const removeUser = async (id: string) => {
       },
     },
   });
-  await Promise.all(
-    permissionsToDelete.map(permission => {
-      permissionQuery.delete({
-        where: {
-          id: permission.id,
-        },
-      });
-    })
-  );
+  await permissionQuery.delete({
+    where: {
+      id: {
+        $in: permissionsToDelete.map(permission => permission.id),
+      },
+    },
+  });
+
+  await userQuery.delete({
+    where: {
+      id,
+    },
+  });
 
   return 1;
 };
