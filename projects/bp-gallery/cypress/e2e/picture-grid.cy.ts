@@ -17,8 +17,8 @@ describe('picture grid', () => {
     cy.visit('/archives/1');
     cy.get('.overview-container .picture-preview').first().click();
     cy.url().should('contain', '/picture/');
-    cy.get('.picture-navigation-buttons [data-testid="ChevronRightIcon"]').click();
-    cy.get('.picture-navigation-buttons [data-testid="ChevronRightIcon"]').click();
+    cy.get('.picture-navigation-buttons [data-testid="next"]').click();
+    cy.get('.picture-navigation-buttons [data-testid="next"]').click();
     cy.contains('Zurück').click();
     urlIs('/archives/1');
   });

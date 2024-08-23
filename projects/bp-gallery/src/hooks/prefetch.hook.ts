@@ -1,34 +1,68 @@
 import { useEffect } from 'react';
-import { useGetPictureInfoLazyQuery } from '../graphql/APIConnector';
+import { PictureIds } from '../components/views/picture/PictureView';
 import {
   getNextPictureId,
   getPreviousPictureId,
 } from '../components/views/picture/helpers/next-prev-picture';
+import { useGetPictureInfoLazyQuery } from '../graphql/APIConnector';
 
-const usePrefetchPictureHook = (id: string, siblings?: string[]) => {
-  const [previousQuery] = useGetPictureInfoLazyQuery();
-  const [nextQuery] = useGetPictureInfoLazyQuery();
+const usePrefetchPictureHook = (
+  { pictureInSiblingsId, pictureInSequenceId }: PictureIds,
+  siblings?: string[],
+  pictureSequenceIds?: string[]
+) => {
+  const [previousInSiblingsQuery] = useGetPictureInfoLazyQuery();
+  const [nextInSiblingsQuery] = useGetPictureInfoLazyQuery();
+  const [previousInSequenceQuery] = useGetPictureInfoLazyQuery();
+  const [nextInSequenceQuery] = useGetPictureInfoLazyQuery();
 
   useEffect(() => {
-    if (siblings?.includes(id)) {
-      const previousId = getPreviousPictureId(id, siblings);
+    if (siblings?.includes(pictureInSiblingsId)) {
+      const previousId = getPreviousPictureId(pictureInSiblingsId, siblings);
       if (previousId) {
-        previousQuery({
+        previousInSiblingsQuery({
           variables: {
             pictureId: previousId,
           },
         });
       }
-      const nextId = getNextPictureId(id, siblings);
+      const nextId = getNextPictureId(pictureInSiblingsId, siblings);
       if (nextId) {
-        nextQuery({
+        nextInSiblingsQuery({
           variables: {
             pictureId: nextId,
           },
         });
       }
     }
-  }, [id, siblings, previousQuery, nextQuery]);
+    if (pictureSequenceIds?.includes(pictureInSequenceId)) {
+      const previousId = getPreviousPictureId(pictureInSequenceId, pictureSequenceIds);
+      if (previousId) {
+        previousInSequenceQuery({
+          variables: {
+            pictureId: previousId,
+          },
+        });
+      }
+      const nextId = getNextPictureId(pictureInSequenceId, pictureSequenceIds);
+      if (nextId) {
+        nextInSequenceQuery({
+          variables: {
+            pictureId: nextId,
+          },
+        });
+      }
+    }
+  }, [
+    pictureInSiblingsId,
+    siblings,
+    previousInSiblingsQuery,
+    nextInSiblingsQuery,
+    pictureSequenceIds,
+    pictureInSequenceId,
+    previousInSequenceQuery,
+    nextInSequenceQuery,
+  ]);
 };
 
 export default usePrefetchPictureHook;
