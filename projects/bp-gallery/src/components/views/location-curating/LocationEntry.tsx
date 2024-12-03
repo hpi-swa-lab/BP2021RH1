@@ -57,7 +57,7 @@ const LocationEntry = ({
             color='info'
             overlap='circular'
             variant='dot'
-            badgeContent={locationTag.unacceptedSubtags}
+            badgeContent={locationTag.unacceptedSubtags ?? 0}
           >
             <IconButton
               className='show-more-button'
