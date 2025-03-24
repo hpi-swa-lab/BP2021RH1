@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client';
-import { Close, Save } from '@mui/icons-material';
+import { Close, Save, UploadFile } from '@mui/icons-material';
 import { AppBar, Button, Dialog, DialogContent, Toolbar, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { memo, useCallback, useContext, useMemo, useRef } from 'react';
@@ -53,6 +53,24 @@ const PictureEditDialog = memo(function PictureEditDialog({
     }),
     [picture.media]
   );
+
+  const replace = useCallback(() => {
+    const editor = editorRef.current;
+    if (!editor) {
+      return;
+    }
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/jpeg,image/png';
+    input.click();
+    input.addEventListener('change', () => {
+      if (!input.files || input.files.length === 0) {
+        return;
+      }
+      const file = input.files[0];
+      editor.loadImageFromFile(file, file.name);
+    });
+  }, []);
 
   const save = useCallback(async () => {
     if (!picture.media?.id || !editorRef.current) {
@@ -141,6 +159,9 @@ const PictureEditDialog = memo(function PictureEditDialog({
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             {t('curator.editPicture')}
           </Typography>
+          <Button startIcon={<UploadFile />} color='inherit' onClick={replace}>
+            {t('curator.replacePicture')}
+          </Button>
           <Button startIcon={<Save />} autoFocus color='inherit' onClick={save}>
             {t('curator.save')}
           </Button>

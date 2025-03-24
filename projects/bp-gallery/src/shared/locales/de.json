@@ -512,7 +512,8 @@
       "pending": "Speichern ausstehend"
     },
     "save": "Speichern",
-    "editPicture": "Bild zuschneiden",
+    "editPicture": "Bild bearbeiten",
+    "replacePicture": "Bild ersetzen",
     "uploads": "Uploads",
     "insertDescriptionHere": "Beschreibung hinzufügen...",
     "no-unverified-comments": "Es gibt aktuell keine nicht verifizierten Kommentare",
