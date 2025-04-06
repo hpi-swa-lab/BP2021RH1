@@ -5,6 +5,7 @@ export { default as createTag } from './groups/createTag.js';
 export { default as deleteTag } from './groups/deleteTag.js';
 export { default as editArchive } from './groups/editArchive.js';
 export { default as editFaceTags } from './groups/editFaceTags.js';
+export { default as editOrientationTags } from './groups/editOrientationTags.js';
 export { default as editPicture } from './groups/editPicture.js';
 export { default as exhibition } from './groups/exhibition.js';
 export { default as getAllCollections } from './groups/getAllCollections.js';

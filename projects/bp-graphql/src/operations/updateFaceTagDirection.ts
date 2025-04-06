@@ -3,10 +3,10 @@ import { checkFaceTag } from '../isAllowedHelpers.js';
 
 export default {
   group: 'editFaceTags',
-  isAllowed: checkFaceTag('faceTagId'),
+  isAllowed: checkFaceTag('id'),
   document: graphql`
-    mutation updateFaceTagDirection($faceTagId: ID!, $tag_direction: Int) {
-      updateFaceTag(id: $faceTagId, data: { tag_direction: $tag_direction }) {
+    mutation updateFaceTagDirection($id: ID!, $tag_direction: Int) {
+      updateFaceTag(id: $id, data: { tag_direction: $tag_direction }) {
         data {
           id
         }

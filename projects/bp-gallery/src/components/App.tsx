@@ -33,6 +33,7 @@ const apolloClient = new ApolloClient({
           'ExhibitionPicture',
           'ExhibitionSection',
           'FaceTag',
+          'OrientationTag',
           'KeywordTag',
           'Link',
           'LocationTag',

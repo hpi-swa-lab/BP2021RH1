@@ -249,6 +249,7 @@
         "createPicture": "Bild hochladen",
         "createPictureSequence": "Serie erstellen",
         "editFaceTags": "Personen markieren",
+        "editOrientationTags": "Orientierungspunkte bearbeiten",
         "editPicture": "Bild bearbeiten",
         "unpublishPicture": "Bild löschen",
         "createSubCollection": "Collection anlegen",

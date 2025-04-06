@@ -67,6 +67,8 @@ type FlatPictureWithoutRelations = ID &
     | 'linked_texts'
     | 'archive_tag'
     | 'picture_sequence'
+    | 'face_tags'
+    | 'orientation_tags'
   >;
 
 export type FlatPictureSequenceWithoutRelations = ID & Omit<PictureSequence, 'pictures'>;
@@ -88,6 +90,8 @@ export type FlatArchiveTagWithoutRelations = ID &
 export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatFaceTagWithoutRelations = ID & Omit<FaceTag, 'person_tag' | 'picture'>;
+
+export type FlatOrientationTagWithoutRelations = ID & Omit<FaceTag, 'location_tag' | 'picture'>;
 
 export type FlatUsersPermissionsPermissionWithoutRelations = ID &
   Omit<UsersPermissionsPermission, 'role'>;
@@ -207,6 +211,11 @@ export type FlatDecadeThumbnails = {
 
 export type FlatFaceTag = FlatFaceTagWithoutRelations & {
   person_tag?: FlatPersonTagWithoutRelations;
+  picture?: FlatPictureWithoutRelations;
+};
+
+export type FlatOrientationTag = FlatOrientationTagWithoutRelations & {
+  location_tag?: FlatLocationTagWithoutRelations;
   picture?: FlatPictureWithoutRelations;
 };
 
