@@ -31,7 +31,7 @@ import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
 import { useAddExhibitionPictures } from '../../../exhibitions/add-exhibition-pictures.hook';
 import { FaceTaggingUI } from '../../anchor-tagging/FaceTaggingUI';
-import { OrientationTaggingUI } from '../../anchor-tagging/OrientationgTaggingUI';
+import { OrientationTaggingUI } from '../../anchor-tagging/OrientationTaggingUI';
 import ArchiveTagField from './ArchiveTagField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import DescriptionsEditField from './DescriptionsEditField';
@@ -242,8 +242,8 @@ const PictureInfo = ({
           createMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
           createChildMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
         />
-        <OrientationTaggingUI />
       </PictureInfoField>
+      <OrientationTaggingUI allLocations={allLocations ?? []} />
       {(savePictureInfo || Boolean(picture.keyword_tags?.length)) && (
         <PictureInfoField title={t('pictureFields.keywords')} icon={<Sell />} type='keywords'>
           <TagSelectionField

@@ -1,13 +1,10 @@
 import { Context, useContext } from 'react';
-import {
-  FaceTaggingContext,
-  OrientationTaggingContext,
-} from '../components/provider/AnchorTaggingContext';
+import { FaceTaggingContext } from '../components/provider/AnchorTaggingContext';
 import { AuthContext } from '../components/provider/AuthProvider';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
-import { ScrollContext, ScrollRefContext } from '../components/provider/contexts';
 import { MobileContext } from '../components/provider/MobileProvider';
 import { ShowStatsContext } from '../components/provider/ShowStatsProvider';
+import { ScrollContext, ScrollRefContext } from '../components/provider/contexts';
 
 const useErrorContext = <T>(context: Context<T>, title: string) => {
   const value = useContext(context);
@@ -33,10 +30,6 @@ export const useSetClipboardEditorButtons = () => {
 
 export const useFaceTagging = () => {
   return useContext(FaceTaggingContext);
-};
-
-export const useOrientationTagging = () => {
-  return useContext(OrientationTaggingContext);
 };
 
 export const useMobile = () => {

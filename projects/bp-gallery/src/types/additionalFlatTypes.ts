@@ -219,20 +219,23 @@ export type FlatOrientationTag = FlatOrientationTagWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
 };
 
-export interface FlatTag {
+export interface FlatTagWithoutRelations {
   id: string;
   name: string;
   coordinates?: ComponentLocationCoordinates;
-  synonyms?: (ComponentCommonSynonyms | undefined)[];
   visible?: boolean;
-  parent_tags?: FlatTag[];
-  child_tags?: FlatTag[];
   accepted?: boolean;
   root?: boolean;
   unacceptedSubtags?: number;
   markedTemporary?: boolean;
   markedPermanent?: boolean;
   isNew?: boolean;
+}
+
+export interface FlatTag extends FlatTagWithoutRelations {
+  parent_tags?: FlatTag[];
+  child_tags?: FlatTag[];
+  synonyms?: (ComponentCommonSynonyms | undefined)[];
 }
 
 export enum TagType {
