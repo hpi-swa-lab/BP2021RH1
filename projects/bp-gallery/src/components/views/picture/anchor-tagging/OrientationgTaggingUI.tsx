@@ -1,87 +1,109 @@
-import { Button } from '@mui/material';
-import { useCallback, useContext, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useOrientationTagging } from '../../../../hooks/context-hooks';
-import { FlatTag } from '../../../../types/additionalFlatTypes';
-import CheckboxButton from '../../../common/CheckboxButton';
-import { DialogPreset, useDialog } from '../../../provider/DialogProvider';
-import { PictureViewContext } from '../PictureView';
+import { GpsFixed } from '@mui/icons-material';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  useCanRunCreateLocationTagMutation,
+  useCanRunDeleteOrientationTagMutation,
+  useCreateLocationTagMutation,
+  useDeleteOrientationTagMutation,
+} from '../../../../graphql/APIConnector';
+import { FlatTagWithoutRelations, TagType } from '../../../../types/additionalFlatTypes';
+import { OrientationTaggingContext } from '../../../provider/AnchorTaggingContext';
+import { createAnchorTaggingUI } from './AnchorTaggingUI';
 
-export const OrientationTaggingUI = () => {
-  const { t } = useTranslation();
+const BaseOrientationTaggingUI = createAnchorTaggingUI({
+  Context: OrientationTaggingContext,
+  Icon: GpsFixed,
+  tagType: TagType.LOCATION,
+  tagTypeName: 'location',
+  translationNamespace: 'orientation-tagging',
+  titleTranslationKey: 'pictureFields.orientation-tags',
+  noTagsTranslationKey: 'pictureFields.noLocations',
+});
 
-  const context = useOrientationTagging();
-  const orientationTags = context?.tags;
+export const OrientationTaggingUI = ({
+  allLocations,
+}: {
+  allLocations: FlatTagWithoutRelations[];
+}) => {
+  const context = useContext(OrientationTaggingContext);
 
-  const isOrientationTagging = context?.isAnchorTagging;
-  const setIsOrientationTagging = context?.setIsAnchorTagging;
+  const [pendingTags, setPendingTags] = useState<FlatTagWithoutRelations[]>([]);
 
-  const toggleHideTags = useCallback(() => {
-    context?.setHideTags(is => !is);
-  }, [context]);
+  const existingTags = useMemo(
+    () => context?.tags.map(({ name, tagId }) => ({ id: tagId ?? '', name, verified: true })) ?? [],
+    [context]
+  );
 
-  const dialog = useDialog();
-
-  const canCreate = context?.canCreateTag;
-  const addOrientationTag = useCallback(async () => {
-    const tag: FlatTag | undefined = await dialog({
-      title: t('pictureFields.add-orientation-tag'),
-      preset: DialogPreset.SELECT_OR_CREATE_LOCATION,
-    });
-    if (!tag) {
-      return;
-    }
-    context?.setActiveTagId(tag.id);
-  }, [dialog, t, context]);
-
-  const cancelAddOrientationTag = useCallback(() => {
-    context?.setActiveTagId(null);
-  }, [context]);
-
-  const { setSideBarOpen } = useContext(PictureViewContext);
+  const withoutExistingTags = useCallback(
+    (pendingTags: FlatTagWithoutRelations[]) =>
+      pendingTags.filter(pending => !existingTags.find(existing => existing.id === pending.id)),
+    [existingTags]
+  );
 
   useEffect(() => {
-    if (context?.canAnchorTag) {
-      setSideBarOpen?.(true);
-    }
-  }, [context?.canAnchorTag, setSideBarOpen]);
+    setPendingTags(pendingTags => withoutExistingTags(pendingTags));
+  }, [withoutExistingTags]);
+
+  const tags = useMemo(
+    () => [...existingTags, ...withoutExistingTags(pendingTags)],
+    [existingTags, withoutExistingTags, pendingTags]
+  );
+
+  const [deleteOrientationTag] = useDeleteOrientationTagMutation({
+    refetchQueries: ['getOrientationTags'],
+  });
+  const { canRun: canDeleteOrientationTag } = useCanRunDeleteOrientationTagMutation({
+    withSomeVariables: true,
+  });
+
+  const setTags = useCallback(
+    (wantedTags: FlatTagWithoutRelations[]) => {
+      const deletedPendingTags = new Map(pendingTags.map(tag => [tag.id, tag]));
+      const deletedExistingTags = new Map(context?.tags.map(tag => [tag.tagId, tag]));
+      const newTags = [];
+      for (const newTag of wantedTags) {
+        if (deletedPendingTags.delete(newTag.id)) {
+          continue;
+        }
+        if (deletedExistingTags.delete(newTag.id)) {
+          continue;
+        }
+        newTags.push(newTag);
+      }
+      setPendingTags([...pendingTags.filter(tag => !deletedPendingTags.has(tag.id)), ...newTags]);
+      if (!canDeleteOrientationTag) {
+        return;
+      }
+      for (const [_, deletedExistingTag] of Array.from(deletedExistingTags.entries())) {
+        if (!deletedExistingTag.id) {
+          continue;
+        }
+        deleteOrientationTag({
+          variables: {
+            id: deletedExistingTag.id,
+          },
+        });
+      }
+    },
+    [pendingTags, context?.tags, canDeleteOrientationTag, deleteOrientationTag]
+  );
+
+  const [createLocationTagMutation] = useCreateLocationTagMutation({
+    refetchQueries: ['getAllLocationTags'],
+    awaitRefetchQueries: true,
+  });
+  const { canRun: canCreateLocationTag } = useCanRunCreateLocationTagMutation();
+
+  if (!context || !(context.canAnchorTag || existingTags.length > 0)) {
+    return null;
+  }
 
   return (
-    <>
-      {context?.canAnchorTag && (
-        <CheckboxButton
-          checked={isOrientationTagging ?? false}
-          onChange={setIsOrientationTagging ?? (() => {})}
-          className='!mt-5'
-          fullWidth
-        >
-          {t('pictureFields.edit-orientation-tags')}
-        </CheckboxButton>
-      )}
-      {isOrientationTagging && canCreate && (
-        <Button
-          variant='contained'
-          color='primary'
-          fullWidth
-          className='!mt-5'
-          onClick={context.activeTagId ? cancelAddOrientationTag : addOrientationTag}
-        >
-          {context.activeTagId ? t('common.abort') : t('pictureFields.add-orientation-tag')}
-        </Button>
-      )}
-      {orientationTags !== undefined && orientationTags.length > 0 && !isOrientationTagging && (
-        <Button
-          variant='contained'
-          color='primary'
-          fullWidth
-          className='!mt-5'
-          onClick={toggleHideTags}
-        >
-          {context?.hideTags
-            ? t('pictureFields.display-orientation-tags')
-            : t('pictureFields.hide-orientation-tags')}
-        </Button>
-      )}
-    </>
+    <BaseOrientationTaggingUI
+      tags={tags}
+      allTags={allLocations}
+      createMutation={canCreateLocationTag ? createLocationTagMutation : undefined}
+      onChange={context.canAnchorTag ? setTags : undefined} // TODO: only when permissions
+    />
   );
 };

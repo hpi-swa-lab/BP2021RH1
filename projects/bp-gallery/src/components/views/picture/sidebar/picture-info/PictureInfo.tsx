@@ -242,8 +242,8 @@ const PictureInfo = ({
           createMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
           createChildMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
         />
-        <OrientationTaggingUI />
       </PictureInfoField>
+      <OrientationTaggingUI allLocations={allLocations ?? []} />
       {(savePictureInfo || Boolean(picture.keyword_tags?.length)) && (
         <PictureInfoField title={t('pictureFields.keywords')} icon={<Sell />} type='keywords'>
           <TagSelectionField

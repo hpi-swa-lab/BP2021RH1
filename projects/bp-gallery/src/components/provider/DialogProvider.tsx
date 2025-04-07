@@ -11,7 +11,6 @@ import AddUserDialogPreset from './dialog-presets/AddUserDialogPreset';
 import ArchiveTagSelectDialogPreset from './dialog-presets/ArchiveTagSelectDialogPreset';
 import CollectionSelectDialogPreset from './dialog-presets/CollectionSelectDialogPreset';
 import InputFieldDialogPreset from './dialog-presets/InputFieldDialogPreset';
-import SelectOrCreateLocationDialogPreset from './dialog-presets/SelectOrCreateLocationDialogPreset';
 import StatelessDialogPreset from './dialog-presets/StatelessDialogPreset';
 
 export interface DialogOption {
@@ -27,7 +26,6 @@ export enum DialogPreset {
   SELECT_COLLECTION,
   SELECT_ARCHIVE_TAG,
   SELECT_LOCATION,
-  SELECT_OR_CREATE_LOCATION,
   INPUT_FIELD,
   ADD_USER,
   SELECT_PATH_POSITION,
@@ -131,9 +129,6 @@ const DialogProvider = ({ children }: PropsWithChildren<{}>) => {
         )}
         {dialogState?.preset === DialogPreset.SELECT_LOCATION && (
           <TagSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />
-        )}
-        {dialogState?.preset === DialogPreset.SELECT_OR_CREATE_LOCATION && (
-          <SelectOrCreateLocationDialogPreset dialogProps={dialogState} handleClose={handleClose} />
         )}
         {dialogState?.preset === DialogPreset.SELECT_ARCHIVE_TAG && (
           <ArchiveTagSelectDialogPreset dialogProps={dialogState} handleClose={handleClose} />

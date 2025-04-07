@@ -413,15 +413,21 @@
     "locations": "Orte",
     "descriptions": "Beschreibungen",
     "people": "Personen",
-    "tag-faces": "Personen markieren",
-    "edit-faces": "Personen bearbeiten",
-    "display-facetags": "Personenmarkierungen anzeigen",
-    "hide-facetags": "Personenmarkierungen ausblenden",
-    "face-tagging-explanation": "Hier klicken, dann im Bild auf die Person klicken",
-    "edit-orientation-tags": "Orientierungspunkte markieren",
-    "add-orientation-tag": "Orientierungspunkt hinzufügen",
-    "display-orientation-tags": "Orientierungspunkte anzeigen",
-    "hide-orientation-tags": "Orientierungspunkte ausblenden",
+    "face-tagging": {
+      "tag": "Personen markieren",
+      "edit": "Personen bearbeiten",
+      "display": "Personenmarkierungen anzeigen",
+      "hide": "Personenmarkierungen ausblenden",
+      "explanation": "Hier klicken, dann im Bild auf die Person klicken"
+    },
+    "orientation-tagging": {
+      "tag": "Orientierungspunkte markieren",
+      "edit": "Orientierungspunkte bearbeiten",
+      "display": "Orientierungspunkte anzeigen",
+      "hide": "Orientierungspunkte ausblenden",
+      "explanation": "Hier klicken, dann im Bild auf den Orientierungspunkt klicken"
+    },
+    "orientation-tags": "Orientierungspunkte",
     "keywords": "Schlagworte",
     "links": {
       "pictures": {
