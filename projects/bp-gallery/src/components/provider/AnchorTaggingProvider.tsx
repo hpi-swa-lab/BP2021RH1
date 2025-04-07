@@ -56,9 +56,7 @@ export const createAnchorTaggingProvider = <
       y?: Maybe<number>;
       tag_direction?: Maybe<number>;
       pictureId: Scalars['ID'];
-    } & {
-      [K in TagIdKey]: Scalars['ID'];
-    }
+    } & Record<TagIdKey, Scalars['ID']>
   >;
   useCanRunCreateAnchorTagMutation: CanRunQuery<{ pictureId?: Scalars['ID'] }>;
   useDeleteAnchorTagMutation: Mutation<{
@@ -193,12 +191,16 @@ export const createAnchorTaggingProvider = <
         return;
       }
       const [x, y] = position;
+      // to convince TypeScript that this computed key covers "all" members of TagIdKey
+      const tagId = {
+        [tagIdKey]: activeTagId,
+      } as Record<TagIdKey, Scalars['ID']>;
       createTag({
         variables: {
           x,
           y,
           tag_direction: activeTagDirection ? activeTagDirection : TagDirection.DEFAULT,
-          [tagIdKey]: activeTagId,
+          ...tagId,
           pictureId,
         },
       });
