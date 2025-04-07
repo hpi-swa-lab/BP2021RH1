@@ -12,6 +12,7 @@ type ColorsType = Record<
   | 'personColor'
   | 'faceTagColor'
   | 'locationColor'
+  | 'orientationTagColor'
   | 'keywordColor'
   | 'markAsTextColor'
   | 'linkColor'

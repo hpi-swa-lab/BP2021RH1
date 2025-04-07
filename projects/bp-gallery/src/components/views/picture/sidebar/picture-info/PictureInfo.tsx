@@ -30,7 +30,8 @@ import {
 import { AlertContext, AlertType } from '../../../../provider/AlertProvider';
 import { ExhibitionIdContext } from '../../../../provider/ExhibitionProvider';
 import { useAddExhibitionPictures } from '../../../exhibitions/add-exhibition-pictures.hook';
-import { FaceTaggingUI } from '../../face-tagging/FaceTaggingUI';
+import { FaceTaggingUI } from '../../anchor-tagging/FaceTaggingUI';
+import { OrientationTaggingUI } from '../../anchor-tagging/OrientationgTaggingUI';
 import ArchiveTagField from './ArchiveTagField';
 import DateRangeSelectionField from './DateRangeSelectionField';
 import DescriptionsEditField from './DescriptionsEditField';
@@ -211,7 +212,7 @@ const PictureInfo = ({
                    to find out wether a facetag needs to be deleted */
                 {
                   faceTaggingContext?.tags.forEach(ftag => {
-                    if (!people.find(person => person.id === ftag.personTagId) && ftag.id) {
+                    if (!people.find(person => person.id === ftag.tagId) && ftag.id) {
                       faceTaggingContext.removeTag(ftag.id);
                     }
                   });
@@ -241,6 +242,7 @@ const PictureInfo = ({
           createMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
           createChildMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
         />
+        <OrientationTaggingUI />
       </PictureInfoField>
       {(savePictureInfo || Boolean(picture.keyword_tags?.length)) && (
         <PictureInfoField title={t('pictureFields.keywords')} icon={<Sell />} type='keywords'>

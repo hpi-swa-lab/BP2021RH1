@@ -23,10 +23,10 @@ export const FaceTaggingUI = ({
   const { t } = useTranslation();
 
   const context = useFaceTagging();
-  const faceTags = context?.tags;
+  const anchorTags = context?.tags;
 
-  const isFaceTagging = context?.isFaceTagging;
-  const setIsFaceTagging = context?.setIsFaceTagging;
+  const isFaceTagging = context?.isAnchorTagging;
+  const setIsFaceTagging = context?.setIsAnchorTagging;
 
   const toggleFaceTagging = useCallback(() => {
     if (!setIsFaceTagging) {
@@ -42,10 +42,10 @@ export const FaceTaggingUI = ({
   const { setSideBarOpen } = useContext(PictureViewContext);
 
   useEffect(() => {
-    if (context?.canFaceTag) {
+    if (context?.canAnchorTag) {
       setSideBarOpen?.(true);
     }
-  }, [context?.canFaceTag, setSideBarOpen]);
+  }, [context?.canAnchorTag, setSideBarOpen]);
 
   return (
     <>
@@ -56,7 +56,7 @@ export const FaceTaggingUI = ({
               <Chip
                 variant={tag.id === context.activeTagId ? 'outlined' : 'filled'}
                 sx={
-                  faceTags?.find(ftag => ftag.personTagId === tag.id)
+                  anchorTags?.find(ftag => ftag.tagId === tag.id)
                     ? { background: 'gray !important' }
                     : {}
                 }
@@ -65,7 +65,7 @@ export const FaceTaggingUI = ({
                 title={t('pictureFields.face-tagging-explanation')}
                 className='hover:brightness-150 !transition'
                 onClick={() => {
-                  context.canCreateTag && faceTags?.find(ftag => ftag.personTagId === tag.id)
+                  context.canCreateTag && anchorTags?.find(ftag => ftag.tagId === tag.id)
                     ? null
                     : context.setActiveTagId(current => (current === tag.id ? null : tag.id));
                 }}
@@ -83,7 +83,7 @@ export const FaceTaggingUI = ({
           />
         )}
 
-        {context?.canFaceTag && (tags.length > 0 || isFaceTagging) && (
+        {context?.canAnchorTag && (tags.length > 0 || isFaceTagging) && (
           <Button
             variant='contained'
             color='primary'
@@ -94,7 +94,7 @@ export const FaceTaggingUI = ({
             {isFaceTagging ? t('pictureFields.edit-faces') : t('pictureFields.tag-faces')}
           </Button>
         )}
-        {faceTags !== undefined && faceTags.length > 0 && !isFaceTagging && (
+        {anchorTags !== undefined && anchorTags.length > 0 && !isFaceTagging && (
           <Button
             variant='contained'
             color='primary'
