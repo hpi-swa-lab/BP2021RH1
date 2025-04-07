@@ -1,18 +1,18 @@
 import { Dispatch, SetStateAction, createContext } from 'react';
-import { FaceTagData, TagDirection } from '../views/picture/face-tagging/FaceTagTypes';
-import { Rect } from '../views/picture/face-tagging/helpers/image-rect';
+import { AnchorTagData, TagDirection } from '../views/picture/anchor-tagging/AnchorTagTypes';
+import { Rect } from '../views/picture/anchor-tagging/helpers/image-rect';
 
-export type FaceTagging = {
-  canFaceTag: boolean;
+export type AnchorTagging = {
+  canAnchorTag: boolean;
   canCreateTag: boolean;
   activeTagId: string | null;
   setActiveTagId: Dispatch<SetStateAction<string | null>>;
-  tags: FaceTagData[];
+  tags: AnchorTagData[];
   hideTags: boolean | null;
   setHideTags: Dispatch<SetStateAction<boolean>>;
   removeTag: (id: string) => Promise<void>;
-  isFaceTagging: boolean;
-  setIsFaceTagging: Dispatch<SetStateAction<boolean>>;
+  isAnchorTagging: boolean;
+  setIsAnchorTagging: Dispatch<SetStateAction<boolean>>;
   tagDirectionReferenceTagId: string | null;
   setTagDirectionReferenceTagId: Dispatch<SetStateAction<string | null>>;
   activeTagDirection: TagDirection | null;
@@ -20,4 +20,6 @@ export type FaceTagging = {
   imageRect: Rect | null;
 };
 
-export const FaceTaggingContext = createContext<FaceTagging | null>(null);
+export const FaceTaggingContext = createContext<AnchorTagging | null>(null);
+
+export const OrientationTaggingContext = createContext<AnchorTagging | null>(null);

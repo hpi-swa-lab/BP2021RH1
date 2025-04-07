@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orientation_tags",
+  "info": {
+    "singularName": "orientation-tag",
+    "pluralName": "orientation-tags",
+    "displayName": "Orientation_Tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "x": {
+      "type": "float"
+    },
+    "y": {
+      "type": "float"
+    },
+    "location_tag": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::location-tag.location-tag"
+    },
+    "picture": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::picture.picture",
+      "inversedBy": "orientation_tags"
+    },
+    "tag_direction": {
+      "type": "integer"
+    }
+  }
+}

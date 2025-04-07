@@ -148,6 +148,12 @@
       "relation": "oneToMany",
       "target": "api::exhibition-picture.exhibition-picture",
       "mappedBy": "picture"
+    },
+    "orientation_tags": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::orientation-tag.orientation-tag",
+      "mappedBy": "picture"
     }
   }
 }

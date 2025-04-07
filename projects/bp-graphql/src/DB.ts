@@ -5,6 +5,7 @@ import {
   ExhibitionSection,
   FaceTag,
   Link,
+  OrientationTag,
   ParameterizedPermission,
   Picture,
 } from './db-types';
@@ -51,6 +52,7 @@ export class DB {
   private pictureLoader: Loader<Picture>;
   private commentLoader: Loader<Comment>;
   private faceTagLoader: Loader<FaceTag>;
+  private orientationTagLoader: Loader<OrientationTag>;
   private linkLoader: Loader<Link>;
   private permissionLoader: Loader<ParameterizedPermission>;
   private exhibitionLoader: Loader<Exhibition>;
@@ -61,6 +63,7 @@ export class DB {
     picture: Query<Picture>;
     comment: Query<Comment>;
     faceTag: Query<FaceTag>;
+    orientationTag: Query<OrientationTag>;
     link: Query<Link>;
     permission: Query<ParameterizedPermission>;
     exhibition: Query<Exhibition>;
@@ -70,6 +73,7 @@ export class DB {
     this.pictureLoader = new Loader(queries.picture, { archive_tag: true });
     this.commentLoader = new Loader(queries.comment, { picture: true });
     this.faceTagLoader = new Loader(queries.faceTag, { picture: true });
+    this.orientationTagLoader = new Loader(queries.orientationTag, { picture: true });
     this.linkLoader = new Loader(queries.link, { archive_tag: true });
     this.permissionLoader = new Loader(queries.permission, {
       users_permissions_user: true,
@@ -104,6 +108,14 @@ export class DB {
 
   public async faceTagToArchive(faceTagId: ID) {
     return await this.pictureToArchive(await this.faceTagToPicture(faceTagId));
+  }
+
+  public async orientationTagToPicture(orientationTagId: ID) {
+    return (await this.orientationTagLoader.load(orientationTagId))?.picture?.id;
+  }
+
+  public async orientationTagToArchive(orientationTagId: ID) {
+    return await this.pictureToArchive(await this.orientationTagToPicture(orientationTagId));
   }
 
   public async linkToArchive(linkId: ID) {

@@ -111,6 +111,8 @@ export const checkComment = createCheckEntityFactory('commentToArchive');
 
 export const checkFaceTag = createCheckEntityFactory('faceTagToArchive');
 
+export const checkOrientationTag = createCheckEntityFactory('orientationTagToArchive');
+
 export const checkLink = createCheckEntityFactory('linkToArchive');
 
 export const checkExhibition = createCheckEntityFactory('exhibitionToArchive');

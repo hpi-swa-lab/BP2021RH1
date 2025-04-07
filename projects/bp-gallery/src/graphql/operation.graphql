@@ -18,9 +18,11 @@ query getExhibitions($archiveId: ID $sortBy: [String] = ["updatedAt:desc"]) { ex
 query getFaceTags($pictureId: ID!) { faceTags(filters: { picture: { id: { eq: $pictureId } } }) { data { id attributes { x y tag_direction person_tag { data { id attributes { name } } } } } } }
 query getIdeaLotContent($exhibitionId: ID!) { exhibition(id: $exhibitionId) { data { id attributes { idealot_pictures { data { id attributes { subtitle picture { data { id attributes { media { data { id attributes { width height formats url updatedAt provider } } } } } } } } } } } } }
 query getKeywordTagsWithThumbnail( $filters: KeywordTagFiltersInput = {} $thumbnailFilters: PictureFiltersInput = {} $pagination: PaginationArg! $sortBy: [String] ) { keywordTags(filters: $filters pagination: $pagination sort: $sortBy) { data { id attributes { name thumbnail: pictures(filters: $thumbnailFilters pagination: { limit: 1 }) { data { attributes { media { data { attributes { formats provider } } } } } } verified_thumbnail: verified_pictures( filters: $thumbnailFilters pagination: { limit: 1 } ) { data { attributes { media { data { attributes { formats provider } } } } } } } } } }
+query getLocationTag($id: ID!) { locationTag(id: $id) { data { attributes { name } } } }
 query getLocationTagsWithThumbnail( $filters: LocationTagFiltersInput = {} $thumbnailFilters: PictureFiltersInput = {} $pagination: PaginationArg! $sortBy: [String] ) { getLocationTagsWithThumbnail( filters: $filters thumbnailFilters: $thumbnailFilters pagination: $pagination sortBy: $sortBy ) }
 query getMostLikedPictures($filters: PictureFiltersInput! $pagination: PaginationArg!) { pictures( filters: { and: [{ likes: { gt: 0 } } $filters] } pagination: $pagination sort: ["likes:desc"] ) { data { id attributes { is_text comments { data { id } } likes media { data { id attributes { width height formats url updatedAt provider } } } picture_sequence { data { id attributes { pictures(sort: "picture_sequence_order:asc") { data { id } } } } } } } } }
 query getMultiplePictureInfo($pictureIds: [ID!]) { pictures(filters: { id: { in: $pictureIds } }) { data { id attributes { descriptions(sort: "createdAt:asc") { data { id attributes { text } } } time_range_tag { data { id attributes { start end isEstimate } } } verified_time_range_tag { data { id attributes { start end isEstimate } } } keyword_tags(sort: "updatedAt:asc") { data { id attributes { name updatedAt } } } verified_keyword_tags(sort: "updatedAt:asc") { data { id attributes { name updatedAt } } } location_tags(sort: "updatedAt:asc") { data { id attributes { name updatedAt } } } verified_location_tags(sort: "updatedAt:asc") { data { id attributes { name updatedAt } } } person_tags(sort: "updatedAt:asc") { data { id attributes { name updatedAt } } } verified_person_tags(sort: "updatedAt:asc") { data { id attributes { name updatedAt } } } collections(publicationState: PREVIEW) { data { id attributes { name } } } media { data { id attributes { url updatedAt provider } } } comments(publicationState: PREVIEW sort: "date:asc") { data { id attributes { text author date publishedAt pinned } } } is_text linked_pictures { data { id } } linked_texts { data { id } } archive_tag { data { id attributes { name } } } } } } }
+query getOrientationTags($pictureId: ID!) { orientationTags(filters: { picture: { id: { eq: $pictureId } } }) { data { id attributes { x y tag_direction location_tag { data { id attributes { name } } } } } } }
 query getParameterizedPermissions($userId: ID) { parameterizedPermissions(filters: { users_permissions_user: { id: { eq: $userId } } }) { data { id attributes { operation_name archive_tag { data { id } } on_other_users } } } }
 query getPersonTag($id: ID!) { personTag(id: $id) { data { attributes { name } } } }
 query getPersonTagsWithThumbnail( $filters: PersonTagFiltersInput = {} $thumbnailFilters: PictureFiltersInput = {} $pagination: PaginationArg! $sortBy: [String] ) { personTags(filters: $filters pagination: $pagination sort: $sortBy) { data { id attributes { name thumbnail: pictures(filters: $thumbnailFilters pagination: { limit: 1 }) { data { attributes { media { data { attributes { formats url provider } } } } } } verified_thumbnail: verified_pictures( filters: $thumbnailFilters pagination: { limit: 1 } ) { data { attributes { media { data { attributes { formats url provider } } } } } } } } } }
@@ -50,6 +52,7 @@ mutation createFaceTag( $pictureId: ID! $personTagId: ID! $x: Float $y: Float $t
 mutation createKeywordTag($name: String!) { createKeywordTag(data: { name: $name }) { data { id } } }
 mutation createLink($title: String! $url: String! $archive_tag: ID!) { createLink(data: { title: $title url: $url archive_tag: $archive_tag }) { data { id } } }
 mutation createLocationTag( $name: String! $parentIDs: [ID!] $childIDs: [ID!] $accepted: Boolean $root: Boolean ) { createLocationTag( data: { name: $name parent_tags: $parentIDs child_tags: $childIDs accepted: $accepted root: $root } ) { data { id } } }
+mutation createOrientationTag( $pictureId: ID! $locationTagId: ID! $x: Float $y: Float $tag_direction: Int ) { createOrientationTag( data: { picture: $pictureId location_tag: $locationTagId x: $x y: $y tag_direction: $tag_direction } ) { data { id } } }
 mutation createPersonTag($name: String!) { createPersonTag(data: { name: $name }) { data { id } } }
 mutation createPicture($data: PictureInput!) { createPicture(data: $data) { data { id } } }
 mutation createPictureGeoInfo($data: PictureGeoInfoInput!) { createPictureGeoInfo(data: $data) { data { id } } }
@@ -64,6 +67,7 @@ mutation deleteFaceTag($id: ID!) { deleteFaceTag(id: $id) { data { id } } }
 mutation deleteKeywordTag($id: ID!) { deleteKeywordTag(id: $id) { data { id } } }
 mutation deleteLink($id: ID!) { deleteLink(id: $id) { data { id } } }
 mutation deleteLocationTag($id: ID!) { deleteLocationTag(id: $id) { data { id } } }
+mutation deleteOrientationTag($id: ID!) { deleteOrientationTag(id: $id) { data { id } } }
 mutation deleteParameterizedPermission($id: ID!) { deleteParameterizedPermission(id: $id) { data { id } } }
 mutation deletePersonTag($id: ID!) { deletePersonTag(id: $id) { data { id } } }
 mutation fixCommentText($commentId: ID! $text: String!) { updateComment(id: $commentId data: { text: $text }) { data { id } } }
@@ -91,7 +95,7 @@ mutation updateCollectionParents($collectionId: ID! $parentCollectionIds: [ID]!)
 mutation updateExhibition($id: ID! $data: ExhibitionInput!) { updateExhibition(id: $id data: $data) { data { id } } }
 mutation updateExhibitionPicture($id: ID! $data: ExhibitionPictureInput!) { updateExhibitionPicture(id: $id data: $data) { data { id } } }
 mutation updateExhibitionSection( $id: ID! $title: String $text: String $order: Int $exhibitionPictureIds: [ID] ) { updateExhibitionSection( id: $id data: { title: $title text: $text exhibition_pictures: $exhibitionPictureIds order: $order } ) { data { id } } }
-mutation updateFaceTagDirection($faceTagId: ID! $tag_direction: Int) { updateFaceTag(id: $faceTagId data: { tag_direction: $tag_direction }) { data { id } } }
+mutation updateFaceTagDirection($id: ID! $tag_direction: Int) { updateFaceTag(id: $id data: { tag_direction: $tag_direction }) { data { id } } }
 mutation updateKeywordName($tagId: ID! $name: String!) { updateKeywordTag(id: $tagId data: { name: $name }) { data { id } } }
 mutation updateKeywordSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updateKeywordTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updateKeywordVisibility($tagId: ID! $visible: Boolean!) { updateKeywordTag(id: $tagId data: { visible: $visible }) { data { id } } }
@@ -105,6 +109,7 @@ mutation updateLocationRoot($tagId: ID! $root: Boolean!) { updateLocationTag(id:
 mutation updateLocationSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updateLocationTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updateLocationVisibility($tagId: ID! $visible: Boolean!) { updateLocationTag(id: $tagId data: { visible: $visible }) { data { id } } }
 mutation updateMe($username: String $email: String) { updateMe(username: $username email: $email) }
+mutation updateOrientationTagDirection($id: ID! $tag_direction: Int) { updateOrientationTag(id: $id data: { tag_direction: $tag_direction }) { data { id } } }
 mutation updatePersonName($tagId: ID! $name: String!) { updatePersonTag(id: $tagId data: { name: $name }) { data { id } } }
 mutation updatePersonSynonyms($tagId: ID! $synonyms: [ComponentCommonSynonymsInput]!) { updatePersonTag(id: $tagId data: { synonyms: $synonyms }) { data { id } } }
 mutation updatePicture($pictureId: ID! $data: JSON!) { updatePictureWithTagCleanup(id: $pictureId data: $data) }
