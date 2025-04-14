@@ -67,6 +67,8 @@ type FlatPictureWithoutRelations = ID &
     | 'linked_texts'
     | 'archive_tag'
     | 'picture_sequence'
+    | 'face_tags'
+    | 'orientation_tags'
   >;
 
 export type FlatPictureSequenceWithoutRelations = ID & Omit<PictureSequence, 'pictures'>;
@@ -88,6 +90,8 @@ export type FlatArchiveTagWithoutRelations = ID &
 export type FlatLinkWithoutRelations = ID & Omit<Link, 'archive_tag'>;
 
 export type FlatFaceTagWithoutRelations = ID & Omit<FaceTag, 'person_tag' | 'picture'>;
+
+export type FlatOrientationTagWithoutRelations = ID & Omit<FaceTag, 'location_tag' | 'picture'>;
 
 export type FlatUsersPermissionsPermissionWithoutRelations = ID &
   Omit<UsersPermissionsPermission, 'role'>;
@@ -210,20 +214,28 @@ export type FlatFaceTag = FlatFaceTagWithoutRelations & {
   picture?: FlatPictureWithoutRelations;
 };
 
-export interface FlatTag {
+export type FlatOrientationTag = FlatOrientationTagWithoutRelations & {
+  location_tag?: FlatLocationTagWithoutRelations;
+  picture?: FlatPictureWithoutRelations;
+};
+
+export interface FlatTagWithoutRelations {
   id: string;
   name: string;
   coordinates?: ComponentLocationCoordinates;
-  synonyms?: (ComponentCommonSynonyms | undefined)[];
   visible?: boolean;
-  parent_tags?: FlatTag[];
-  child_tags?: FlatTag[];
   accepted?: boolean;
   root?: boolean;
   unacceptedSubtags?: number;
   markedTemporary?: boolean;
   markedPermanent?: boolean;
   isNew?: boolean;
+}
+
+export interface FlatTag extends FlatTagWithoutRelations {
+  parent_tags?: FlatTag[];
+  child_tags?: FlatTag[];
+  synonyms?: (ComponentCommonSynonyms | undefined)[];
 }
 
 export enum TagType {

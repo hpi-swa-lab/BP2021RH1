@@ -4,7 +4,6 @@ import Fuse from 'fuse.js';
 import { unionWith } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ComponentCommonSynonyms, Maybe } from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../../../types/additionalFlatTypes';
@@ -25,7 +24,6 @@ interface TagFields {
   id: string;
   verified?: boolean;
   createValue?: string;
-  synonyms?: Maybe<Maybe<ComponentCommonSynonyms>[]> | undefined;
   icon?: JSX.Element;
   isNew?: boolean;
   isNewRoot?: boolean;

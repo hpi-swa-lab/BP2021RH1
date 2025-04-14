@@ -30,6 +30,10 @@ export type FaceTag = ID & {
   picture: Maybe<Picture>;
 };
 
+export type OrientationTag = ID & {
+  picture: Maybe<Picture>;
+};
+
 export type Link = ID & {
   archive_tag: Maybe<ArchiveTag>;
 };

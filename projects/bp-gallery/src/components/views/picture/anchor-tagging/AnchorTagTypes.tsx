@@ -6,9 +6,9 @@ export enum TagDirection {
   DEFAULT,
 }
 
-export type FaceTagData = {
+export type AnchorTagData = {
   id: string | undefined;
-  personTagId: string | undefined | null;
+  tagId: string | undefined | null;
   name: string;
   x: number;
   y: number;

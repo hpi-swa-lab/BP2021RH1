@@ -21,7 +21,9 @@ import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
 import usePresentationChannel from '../../../hooks/presentation-channel.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
 import { FaceTaggingProvider } from '../../provider/FaceTaggingProvider';
-import { FaceTags } from './face-tagging/FaceTags';
+import { OrientationTaggingProvider } from '../../provider/OrientationTaggingProvider';
+import { FaceTags } from './anchor-tagging/FaceTags';
+import { OrientationTags } from './anchor-tagging/OrientationTags';
 import { getNextPictureId, getPreviousPictureId } from './helpers/next-prev-picture';
 import { PictureNavigationTarget } from './overlay/PictureNavigationButtons';
 import PictureViewUI from './overlay/PictureViewUI';
@@ -209,34 +211,37 @@ const PictureView = ({
     <div className={`picture-view-container ${noDistractionMode ? 'cursor-none' : ''}`}>
       <PictureViewContext.Provider value={contextValue}>
         <FaceTaggingProvider pictureId={pictureInSequenceId}>
-          <div className={`picture-view`} ref={containerRef}>
-            <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
-              <div className='picture-wrapper w-full h-full'>
-                <div className='picture-container w-full h-full'>
-                  <div className='relative w-full h-full flex justify-center align-center'>
-                    <img
-                      className='max-w-full max-h-full object-contain picture'
-                      ref={setImg}
-                      src={pictureLink}
-                      alt={pictureLink}
-                      onContextMenu={onImageContextMenu}
-                    />
-                    <FaceTags />
+          <OrientationTaggingProvider pictureId={pictureInSequenceId}>
+            <div className={`picture-view`} ref={containerRef}>
+              <ZoomWrapper blockScroll={true} pictureId={picture?.id ?? ''}>
+                <div className='picture-wrapper w-full h-full'>
+                  <div className='picture-container w-full h-full'>
+                    <div className='relative w-full h-full flex justify-center align-center'>
+                      <img
+                        className='max-w-full max-h-full object-contain picture'
+                        ref={setImg}
+                        src={pictureLink}
+                        alt={pictureLink}
+                        onContextMenu={onImageContextMenu}
+                      />
+                      <FaceTags />
+                      <OrientationTags />
+                    </div>
                   </div>
+                  {!isPresentationMode && !loading && !error && picture && (
+                    <PictureViewUI
+                      calledViaLink={!onBack}
+                      pictureId={picture.id}
+                      sessionId={sessionId}
+                    />
+                  )}
                 </div>
-                {!isPresentationMode && !loading && !error && picture && (
-                  <PictureViewUI
-                    calledViaLink={!onBack}
-                    pictureId={picture.id}
-                    sessionId={sessionId}
-                  />
-                )}
-              </div>
-            </ZoomWrapper>
-            {!isPresentationMode && (
-              <PictureSidebar loading={loading} error={error} picture={picture} />
-            )}
-          </div>
+              </ZoomWrapper>
+              {!isPresentationMode && (
+                <PictureSidebar loading={loading} error={error} picture={picture} />
+              )}
+            </div>
+          </OrientationTaggingProvider>
         </FaceTaggingProvider>
       </PictureViewContext.Provider>
     </div>

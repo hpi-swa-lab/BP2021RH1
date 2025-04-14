@@ -714,6 +714,7 @@ export type GenericMorph =
   | KeywordTag
   | Link
   | LocationTag
+  | OrientationTag
   | ParameterizedPermission
   | PersonTag
   | Picture
@@ -1027,6 +1028,7 @@ export type Mutation = {
   createKeywordTag?: Maybe<KeywordTagEntityResponse>;
   createLink?: Maybe<LinkEntityResponse>;
   createLocationTag?: Maybe<LocationTagEntityResponse>;
+  createOrientationTag?: Maybe<OrientationTagEntityResponse>;
   createParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
   createPersonTag?: Maybe<PersonTagEntityResponse>;
   createPicture?: Maybe<PictureEntityResponse>;
@@ -1051,6 +1053,7 @@ export type Mutation = {
   deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
   deleteLink?: Maybe<LinkEntityResponse>;
   deleteLocationTag?: Maybe<LocationTagEntityResponse>;
+  deleteOrientationTag?: Maybe<OrientationTagEntityResponse>;
   deleteParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
   deletePersonTag?: Maybe<PersonTagEntityResponse>;
   deletePicture?: Maybe<PictureEntityResponse>;
@@ -1097,6 +1100,7 @@ export type Mutation = {
   updateLink?: Maybe<LinkEntityResponse>;
   updateLocationTag?: Maybe<LocationTagEntityResponse>;
   updateMe?: Maybe<Scalars['Int']>;
+  updateOrientationTag?: Maybe<OrientationTagEntityResponse>;
   updateParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
   updatePersonTag?: Maybe<PersonTagEntityResponse>;
   updatePicture?: Maybe<PictureEntityResponse>;
@@ -1187,6 +1191,10 @@ export type MutationCreateLocationTagArgs = {
   data: LocationTagInput;
 };
 
+export type MutationCreateOrientationTagArgs = {
+  data: OrientationTagInput;
+};
+
 export type MutationCreateParameterizedPermissionArgs = {
   data: ParameterizedPermissionInput;
 };
@@ -1268,6 +1276,10 @@ export type MutationDeleteLinkArgs = {
 };
 
 export type MutationDeleteLocationTagArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationDeleteOrientationTagArgs = {
   id: Scalars['ID'];
 };
 
@@ -1455,6 +1467,11 @@ export type MutationUpdateMeArgs = {
   username?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationUpdateOrientationTagArgs = {
+  data: OrientationTagInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdateParameterizedPermissionArgs = {
   data: ParameterizedPermissionInput;
   id: Scalars['ID'];
@@ -1516,6 +1533,56 @@ export type MutationUploadArgs = {
   info?: InputMaybe<FileInfoInput>;
   ref?: InputMaybe<Scalars['String']>;
   refId?: InputMaybe<Scalars['ID']>;
+};
+
+export type OrientationTag = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  location_tag?: Maybe<LocationTagEntityResponse>;
+  picture?: Maybe<PictureEntityResponse>;
+  tag_direction?: Maybe<Scalars['Int']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  x?: Maybe<Scalars['Float']>;
+  y?: Maybe<Scalars['Float']>;
+};
+
+export type OrientationTagEntity = {
+  attributes?: Maybe<OrientationTag>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type OrientationTagEntityResponse = {
+  data?: Maybe<OrientationTagEntity>;
+};
+
+export type OrientationTagEntityResponseCollection = {
+  data: Array<OrientationTagEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type OrientationTagFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<OrientationTagFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  location_tag?: InputMaybe<LocationTagFiltersInput>;
+  not?: InputMaybe<OrientationTagFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<OrientationTagFiltersInput>>>;
+  picture?: InputMaybe<PictureFiltersInput>;
+  tag_direction?: InputMaybe<IntFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  x?: InputMaybe<FloatFilterInput>;
+  y?: InputMaybe<FloatFilterInput>;
+};
+
+export type OrientationTagInput = {
+  location_tag?: InputMaybe<Scalars['ID']>;
+  picture?: InputMaybe<Scalars['ID']>;
+  tag_direction?: InputMaybe<Scalars['Int']>;
+  x?: InputMaybe<Scalars['Float']>;
+  y?: InputMaybe<Scalars['Float']>;
+};
+
+export type OrientationTagRelationResponseCollection = {
+  data: Array<OrientationTagEntity>;
 };
 
 export type Pagination = {
@@ -1659,6 +1726,7 @@ export type Picture = {
   linked_texts?: Maybe<PictureRelationResponseCollection>;
   location_tags?: Maybe<LocationTagRelationResponseCollection>;
   media: UploadFileEntityResponse;
+  orientation_tags?: Maybe<OrientationTagRelationResponseCollection>;
   person_tags?: Maybe<PersonTagRelationResponseCollection>;
   picture_geo_infos?: Maybe<PictureGeoInfoRelationResponseCollection>;
   picture_sequence?: Maybe<PictureSequenceEntityResponse>;
@@ -1733,6 +1801,12 @@ export type PictureLocation_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureOrientation_TagsArgs = {
+  filters?: InputMaybe<OrientationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PicturePerson_TagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
@@ -1797,6 +1871,7 @@ export type PictureFiltersInput = {
   location_tags?: InputMaybe<LocationTagFiltersInput>;
   not?: InputMaybe<PictureFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureFiltersInput>>>;
+  orientation_tags?: InputMaybe<OrientationTagFiltersInput>;
   person_tags?: InputMaybe<PersonTagFiltersInput>;
   picture_geo_infos?: InputMaybe<PictureGeoInfoFiltersInput>;
   picture_sequence?: InputMaybe<PictureSequenceFiltersInput>;
@@ -1874,6 +1949,7 @@ export type PictureInput = {
   linked_texts?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
+  orientation_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   person_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   picture_geo_infos?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   picture_sequence?: InputMaybe<Scalars['ID']>;
@@ -1970,6 +2046,8 @@ export type Query = {
   locationTag?: Maybe<LocationTagEntityResponse>;
   locationTags?: Maybe<LocationTagEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
+  orientationTag?: Maybe<OrientationTagEntityResponse>;
+  orientationTags?: Maybe<OrientationTagEntityResponseCollection>;
   parameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
   parameterizedPermissions?: Maybe<ParameterizedPermissionEntityResponseCollection>;
   personTag?: Maybe<PersonTagEntityResponse>;
@@ -2129,6 +2207,16 @@ export type QueryLocationTagArgs = {
 
 export type QueryLocationTagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryOrientationTagArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryOrientationTagsArgs = {
+  filters?: InputMaybe<OrientationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
@@ -3248,6 +3336,14 @@ export type GetKeywordTagsWithThumbnailQuery = {
   } | null;
 };
 
+export type GetLocationTagQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type GetLocationTagQuery = {
+  locationTag?: { data?: { attributes?: { name: string } | null } | null } | null;
+};
+
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<LocationTagFiltersInput>;
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
@@ -3379,6 +3475,26 @@ export type GetMultiplePictureInfoQuery = {
         linked_pictures?: { data: Array<{ id?: string | null }> } | null;
         linked_texts?: { data: Array<{ id?: string | null }> } | null;
         archive_tag?: {
+          data?: { id?: string | null; attributes?: { name: string } | null } | null;
+        } | null;
+      } | null;
+    }>;
+  } | null;
+};
+
+export type GetOrientationTagsQueryVariables = Exact<{
+  pictureId: Scalars['ID'];
+}>;
+
+export type GetOrientationTagsQuery = {
+  orientationTags?: {
+    data: Array<{
+      id?: string | null;
+      attributes?: {
+        x?: number | null;
+        y?: number | null;
+        tag_direction?: number | null;
+        location_tag?: {
           data?: { id?: string | null; attributes?: { name: string } | null } | null;
         } | null;
       } | null;
@@ -3918,6 +4034,18 @@ export type CreateLocationTagMutation = {
   createLocationTag?: { data?: { id?: string | null } | null } | null;
 };
 
+export type CreateOrientationTagMutationVariables = Exact<{
+  pictureId: Scalars['ID'];
+  locationTagId: Scalars['ID'];
+  x?: InputMaybe<Scalars['Float']>;
+  y?: InputMaybe<Scalars['Float']>;
+  tag_direction?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type CreateOrientationTagMutation = {
+  createOrientationTag?: { data?: { id?: string | null } | null } | null;
+};
+
 export type CreatePersonTagMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
@@ -4028,6 +4156,14 @@ export type DeleteLocationTagMutationVariables = Exact<{
 
 export type DeleteLocationTagMutation = {
   deleteLocationTag?: { data?: { id?: string | null } | null } | null;
+};
+
+export type DeleteOrientationTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type DeleteOrientationTagMutation = {
+  deleteOrientationTag?: { data?: { id?: string | null } | null } | null;
 };
 
 export type DeleteParameterizedPermissionMutationVariables = Exact<{
@@ -4246,7 +4382,7 @@ export type UpdateExhibitionSectionMutation = {
 };
 
 export type UpdateFaceTagDirectionMutationVariables = Exact<{
-  faceTagId: Scalars['ID'];
+  id: Scalars['ID'];
   tag_direction?: InputMaybe<Scalars['Int']>;
 }>;
 
@@ -4370,6 +4506,15 @@ export type UpdateMeMutationVariables = Exact<{
 }>;
 
 export type UpdateMeMutation = { updateMe?: number | null };
+
+export type UpdateOrientationTagDirectionMutationVariables = Exact<{
+  id: Scalars['ID'];
+  tag_direction?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdateOrientationTagDirectionMutation = {
+  updateOrientationTag?: { data?: { id?: string | null } | null } | null;
+};
 
 export type UpdatePersonNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
@@ -6053,6 +6198,63 @@ export type GetKeywordTagsWithThumbnailQueryResult = Apollo.QueryResult<
   GetKeywordTagsWithThumbnailQueryVariables
 >;
 
+export const GetLocationTagDocument = gql`
+  query getLocationTag($id: ID!) {
+    locationTag(id: $id) {
+      data {
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLocationTagQuery__
+ *
+ * To run a query within a React component, call `useGetLocationTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLocationTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLocationTagQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetLocationTagQuery(
+  baseOptions: Apollo.QueryHookOptions<GetLocationTagQuery, GetLocationTagQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetLocationTagQuery, GetLocationTagQueryVariables>(
+    GetLocationTagDocument,
+    options
+  );
+}
+
+export function useGetLocationTagLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetLocationTagQuery, GetLocationTagQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetLocationTagQuery, GetLocationTagQueryVariables>(
+    GetLocationTagDocument,
+    options
+  );
+}
+
+export type GetLocationTagQueryHookResult = ReturnType<typeof useGetLocationTagQuery>;
+
+export type GetLocationTagLazyQueryHookResult = ReturnType<typeof useGetLocationTagLazyQuery>;
+
+export type GetLocationTagQueryResult = Apollo.QueryResult<
+  GetLocationTagQuery,
+  GetLocationTagQueryVariables
+>;
+
 export const GetLocationTagsWithThumbnailDocument = gql`
   query getLocationTagsWithThumbnail(
     $filters: LocationTagFiltersInput = {}
@@ -6425,6 +6627,79 @@ export type GetMultiplePictureInfoLazyQueryHookResult = ReturnType<
 export type GetMultiplePictureInfoQueryResult = Apollo.QueryResult<
   GetMultiplePictureInfoQuery,
   GetMultiplePictureInfoQueryVariables
+>;
+
+export const GetOrientationTagsDocument = gql`
+  query getOrientationTags($pictureId: ID!) {
+    orientationTags(filters: { picture: { id: { eq: $pictureId } } }) {
+      data {
+        id
+        attributes {
+          x
+          y
+          tag_direction
+          location_tag {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetOrientationTagsQuery__
+ *
+ * To run a query within a React component, call `useGetOrientationTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrientationTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrientationTagsQuery({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *   },
+ * });
+ */
+export function useGetOrientationTagsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetOrientationTagsQuery, GetOrientationTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetOrientationTagsQuery, GetOrientationTagsQueryVariables>(
+    GetOrientationTagsDocument,
+    options
+  );
+}
+
+export function useGetOrientationTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetOrientationTagsQuery,
+    GetOrientationTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetOrientationTagsQuery, GetOrientationTagsQueryVariables>(
+    GetOrientationTagsDocument,
+    options
+  );
+}
+
+export type GetOrientationTagsQueryHookResult = ReturnType<typeof useGetOrientationTagsQuery>;
+
+export type GetOrientationTagsLazyQueryHookResult = ReturnType<
+  typeof useGetOrientationTagsLazyQuery
+>;
+
+export type GetOrientationTagsQueryResult = Apollo.QueryResult<
+  GetOrientationTagsQuery,
+  GetOrientationTagsQueryVariables
 >;
 
 export const GetParameterizedPermissionsDocument = gql`
@@ -8487,6 +8762,81 @@ export type CreateLocationTagMutationOptions = Apollo.BaseMutationOptions<
   CreateLocationTagMutationVariables
 >;
 
+export const CreateOrientationTagDocument = gql`
+  mutation createOrientationTag(
+    $pictureId: ID!
+    $locationTagId: ID!
+    $x: Float
+    $y: Float
+    $tag_direction: Int
+  ) {
+    createOrientationTag(
+      data: {
+        picture: $pictureId
+        location_tag: $locationTagId
+        x: $x
+        y: $y
+        tag_direction: $tag_direction
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type CreateOrientationTagMutationFn = Apollo.MutationFunction<
+  CreateOrientationTagMutation,
+  CreateOrientationTagMutationVariables
+>;
+
+/**
+ * __useCreateOrientationTagMutation__
+ *
+ * To run a mutation, you first call `useCreateOrientationTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrientationTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrientationTagMutation, { data, loading, error }] = useCreateOrientationTagMutation({
+ *   variables: {
+ *      pictureId: // value for 'pictureId'
+ *      locationTagId: // value for 'locationTagId'
+ *      x: // value for 'x'
+ *      y: // value for 'y'
+ *      tag_direction: // value for 'tag_direction'
+ *   },
+ * });
+ */
+export function useCreateOrientationTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateOrientationTagMutation,
+    CreateOrientationTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateOrientationTagMutation, CreateOrientationTagMutationVariables>(
+    CreateOrientationTagDocument,
+    options
+  );
+}
+
+export type CreateOrientationTagMutationHookResult = ReturnType<
+  typeof useCreateOrientationTagMutation
+>;
+
+export type CreateOrientationTagMutationResult =
+  Apollo.MutationResult<CreateOrientationTagMutation>;
+
+export type CreateOrientationTagMutationOptions = Apollo.BaseMutationOptions<
+  CreateOrientationTagMutation,
+  CreateOrientationTagMutationVariables
+>;
+
 export const CreatePersonTagDocument = gql`
   mutation createPersonTag($name: String!) {
     createPersonTag(data: { name: $name }) {
@@ -9247,6 +9597,63 @@ export type DeleteLocationTagMutationResult = Apollo.MutationResult<DeleteLocati
 export type DeleteLocationTagMutationOptions = Apollo.BaseMutationOptions<
   DeleteLocationTagMutation,
   DeleteLocationTagMutationVariables
+>;
+
+export const DeleteOrientationTagDocument = gql`
+  mutation deleteOrientationTag($id: ID!) {
+    deleteOrientationTag(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type DeleteOrientationTagMutationFn = Apollo.MutationFunction<
+  DeleteOrientationTagMutation,
+  DeleteOrientationTagMutationVariables
+>;
+
+/**
+ * __useDeleteOrientationTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrientationTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrientationTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteOrientationTagMutation, { data, loading, error }] = useDeleteOrientationTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteOrientationTagMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteOrientationTagMutation,
+    DeleteOrientationTagMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteOrientationTagMutation, DeleteOrientationTagMutationVariables>(
+    DeleteOrientationTagDocument,
+    options
+  );
+}
+
+export type DeleteOrientationTagMutationHookResult = ReturnType<
+  typeof useDeleteOrientationTagMutation
+>;
+
+export type DeleteOrientationTagMutationResult =
+  Apollo.MutationResult<DeleteOrientationTagMutation>;
+
+export type DeleteOrientationTagMutationOptions = Apollo.BaseMutationOptions<
+  DeleteOrientationTagMutation,
+  DeleteOrientationTagMutationVariables
 >;
 
 export const DeleteParameterizedPermissionDocument = gql`
@@ -10693,8 +11100,8 @@ export type UpdateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const UpdateFaceTagDirectionDocument = gql`
-  mutation updateFaceTagDirection($faceTagId: ID!, $tag_direction: Int) {
-    updateFaceTag(id: $faceTagId, data: { tag_direction: $tag_direction }) {
+  mutation updateFaceTagDirection($id: ID!, $tag_direction: Int) {
+    updateFaceTag(id: $id, data: { tag_direction: $tag_direction }) {
       data {
         id
       }
@@ -10720,7 +11127,7 @@ export type UpdateFaceTagDirectionMutationFn = Apollo.MutationFunction<
  * @example
  * const [updateFaceTagDirectionMutation, { data, loading, error }] = useUpdateFaceTagDirectionMutation({
  *   variables: {
- *      faceTagId: // value for 'faceTagId'
+ *      id: // value for 'id'
  *      tag_direction: // value for 'tag_direction'
  *   },
  * });
@@ -11473,6 +11880,64 @@ export type UpdateMeMutationResult = Apollo.MutationResult<UpdateMeMutation>;
 export type UpdateMeMutationOptions = Apollo.BaseMutationOptions<
   UpdateMeMutation,
   UpdateMeMutationVariables
+>;
+
+export const UpdateOrientationTagDirectionDocument = gql`
+  mutation updateOrientationTagDirection($id: ID!, $tag_direction: Int) {
+    updateOrientationTag(id: $id, data: { tag_direction: $tag_direction }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export type UpdateOrientationTagDirectionMutationFn = Apollo.MutationFunction<
+  UpdateOrientationTagDirectionMutation,
+  UpdateOrientationTagDirectionMutationVariables
+>;
+
+/**
+ * __useUpdateOrientationTagDirectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrientationTagDirectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrientationTagDirectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrientationTagDirectionMutation, { data, loading, error }] = useUpdateOrientationTagDirectionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      tag_direction: // value for 'tag_direction'
+ *   },
+ * });
+ */
+export function useUpdateOrientationTagDirectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateOrientationTagDirectionMutation,
+    UpdateOrientationTagDirectionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateOrientationTagDirectionMutation,
+    UpdateOrientationTagDirectionMutationVariables
+  >(UpdateOrientationTagDirectionDocument, options);
+}
+
+export type UpdateOrientationTagDirectionMutationHookResult = ReturnType<
+  typeof useUpdateOrientationTagDirectionMutation
+>;
+
+export type UpdateOrientationTagDirectionMutationResult =
+  Apollo.MutationResult<UpdateOrientationTagDirectionMutation>;
+
+export type UpdateOrientationTagDirectionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateOrientationTagDirectionMutation,
+  UpdateOrientationTagDirectionMutationVariables
 >;
 
 export const UpdatePersonNameDocument = gql`
@@ -12587,6 +13052,50 @@ export function useCanRunMultipleGetKeywordTagsWithThumbnailQueries(
   };
 }
 
+export function useCanRunGetLocationTagQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetLocationTagQueryVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetLocationTagDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetLocationTagQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetLocationTagQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetLocationTagDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunGetLocationTagsWithThumbnailQuery(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -12708,6 +13217,50 @@ export function useCanRunMultipleGetMultiplePictureInfoQueries(
     ...options,
     variables: {
       operation: GetMultiplePictureInfoDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunGetOrientationTagsQuery(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<GetOrientationTagsQueryVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetOrientationTagsDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleGetOrientationTagsQueries(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<GetOrientationTagsQueryVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: GetOrientationTagsDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
@@ -13995,6 +14548,50 @@ export function useCanRunMultipleCreateLocationTagMutations(
   };
 }
 
+export function useCanRunCreateOrientationTagMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<CreateOrientationTagMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateOrientationTagDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleCreateOrientationTagMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<CreateOrientationTagMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: CreateOrientationTagDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
 export function useCanRunCreatePersonTagMutation(
   options?: Omit<
     Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
@@ -14600,6 +15197,50 @@ export function useCanRunMultipleDeleteLocationTagMutations(
     ...options,
     variables: {
       operation: DeleteLocationTagDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunDeleteOrientationTagMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<DeleteOrientationTagMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: DeleteOrientationTagDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleDeleteOrientationTagMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<DeleteOrientationTagMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: DeleteOrientationTagDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });
@@ -16404,6 +17045,50 @@ export function useCanRunMultipleUpdateMeMutations(
     ...options,
     variables: {
       operation: UpdateMeDocument.loc?.source.body ?? '',
+      variableSets: options.variableSets,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return {
+    canRunMultiple:
+      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
+    loading,
+  };
+}
+
+export function useCanRunUpdateOrientationTagDirectionMutation(
+  options?: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variables?: Partial<UpdateOrientationTagDirectionMutationVariables>;
+    withSomeVariables?: boolean;
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateOrientationTagDirectionDocument.loc?.source.body ?? '',
+      variableSets: [options?.variables ?? {}],
+      withSomeVariables: options?.withSomeVariables,
+    },
+  });
+  useAuthChangeEffect(refetch);
+  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+}
+
+export function useCanRunMultipleUpdateOrientationTagDirectionMutations(
+  options: Omit<
+    Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+    'variables'
+  > & {
+    variableSets: Partial<UpdateOrientationTagDirectionMutationVariables>[];
+  }
+) {
+  const { data, loading, refetch } = useCanRunOperationQuery({
+    ...options,
+    variables: {
+      operation: UpdateOrientationTagDirectionDocument.loc?.source.body ?? '',
       variableSets: options.variableSets,
     },
   });

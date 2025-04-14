@@ -1,7 +1,7 @@
 import { Context, useContext } from 'react';
+import { FaceTaggingContext } from '../components/provider/AnchorTaggingContext';
 import { AuthContext } from '../components/provider/AuthProvider';
 import { ClipboardEditorContext } from '../components/provider/ClipboardEditorProvider';
-import { FaceTaggingContext } from '../components/provider/FaceTaggingContext';
 import { MobileContext } from '../components/provider/MobileProvider';
 import { ShowStatsContext } from '../components/provider/ShowStatsProvider';
 import { ScrollContext, ScrollRefContext } from '../components/provider/contexts';

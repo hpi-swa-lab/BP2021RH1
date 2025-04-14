@@ -249,6 +249,7 @@
         "createPicture": "Bild hochladen",
         "createPictureSequence": "Serie erstellen",
         "editFaceTags": "Personen markieren",
+        "editOrientationTags": "Orientierungspunkte bearbeiten",
         "editPicture": "Bild bearbeiten",
         "unpublishPicture": "Bild löschen",
         "createSubCollection": "Collection anlegen",
@@ -412,11 +413,21 @@
     "locations": "Orte",
     "descriptions": "Beschreibungen",
     "people": "Personen",
-    "tag-faces": "Personen markieren",
-    "edit-faces": "Personen bearbeiten",
-    "display-facetags": "Personenmarkierungen anzeigen",
-    "hide-facetags": "Personenmarkierungen ausblenden",
-    "face-tagging-explanation": "Hier klicken, dann im Bild auf die Person klicken",
+    "face-tagging": {
+      "tag": "Personen markieren",
+      "edit": "Personen bearbeiten",
+      "display": "Personenmarkierungen anzeigen",
+      "hide": "Personenmarkierungen ausblenden",
+      "explanation": "Hier klicken, dann im Bild auf die Person klicken"
+    },
+    "orientation-tagging": {
+      "tag": "Orientierungspunkte markieren",
+      "edit": "Orientierungspunkte bearbeiten",
+      "display": "Orientierungspunkte anzeigen",
+      "hide": "Orientierungspunkte ausblenden",
+      "explanation": "Hier klicken, dann im Bild auf den Orientierungspunkt klicken"
+    },
+    "orientation-tags": "Orientierungspunkte",
     "keywords": "Schlagworte",
     "links": {
       "pictures": {
@@ -455,10 +466,10 @@
     "collections": "Collections",
     "around": "etwa "
   },
-  "facetag": {
-    "move": "Einmal klicken um das Namensschild bewegbar zu machen. Diese kann dann mit der Maus an eine neue Position bewegt und mit einem weiteren Klick platziert werden",
-    "rotate": "Einmal klicken um die Namensschild drehbar zu machen. Die Namensschild kann dann durch Bewegen der Maus gedreht werden. Sobald die Namensschild korrekt ausgerichtet ist, kann die neue Ausrichtung per Mausklick festgehalten werden",
-    "delete": "Klicken um die Namensschild zu löschen"
+  "anchortag": {
+    "move": "Einmal klicken um das Namensschild bewegbar zu machen. Dieses kann dann mit der Maus an eine neue Position bewegt und mit einem weiteren Klick platziert werden",
+    "rotate": "Einmal klicken um das Namensschild drehbar zu machen. Das Namensschild kann dann durch Bewegen der Maus gedreht werden. Sobald das Namensschild korrekt ausgerichtet ist, kann die neue Ausrichtung per Mausklick festgehalten werden",
+    "delete": "Klicken um das Namensschild zu löschen"
   },
   "curator": {
     "addToExhibition": "Zur Geschichte hinzufügen",
