@@ -79,34 +79,53 @@ module.exports = ({ env }) => ({
             host: env('MEILISEARCH_HOST'),
             apiKey: env('MEILISEARCH_API_KEY'),
             picture: {
+              entriesQuery: {
+                populate: [
+                  'descriptions',
+                  'comments',
+                  'keyword_tags',
+                  'verified_keyword_tags',
+                  'person_tags',
+                  'verified_person_tags',
+                  'location_tags',
+                  'verified_location_tags',
+                  'face_tags.person_tag',
+                  'orientation_tags.location_tag',
+                  'collections',
+                  'archive_tag',
+                  'time_range_tag',
+                  'verified_time_range_tag',
+                ],
+              },
               transformEntry({ entry }) {
                 const transformedEntry = {
                   id: entry?.id,
                   is_text: entry?.is_text,
-                  likes: entry?.likes,
-                  descriptions: entry?.descriptions.map(description => description.text),
-                  comments: entry?.comments.map(comment => comment.text),
+                  likes: entry?.likes ?? 0,
+                  descriptions: entry?.descriptions.map(description => description?.text),
+                  comments: entry?.comments.map(comment => comment?.text),
                   keyword_tags: entry?.keyword_tags
-                    .map(tag => tag.name)
-                    .concat(entry?.verified_keyword_tags.map(tag => tag.name)),
+                    .map(tag => tag?.name)
+                    .concat(entry?.verified_keyword_tags.map(tag => tag?.name)),
                   person_tags: entry?.person_tags
-                    .map(tag => tag.name)
-                    .concat(entry?.verified_person_tags.map(tag => tag.name)),
+                    .map(tag => tag?.name)
+                    .concat(entry?.verified_person_tags.map(tag => tag?.name)),
                   location_tags: entry?.location_tags
-                    .map(tag => tag.name)
-                    .concat(entry?.verified_location_tags.map(tag => tag.name)),
-                  face_tags: entry?.face_tags.map(tag => tag.name),
-                  collections: entry?.collections.map(tag => tag.name),
-                  archive_tag: entry?.archive_tag.name,
+                    .map(tag => tag?.name)
+                    .concat(entry?.verified_location_tags.map(tag => tag?.name)),
+                  face_tags: entry?.face_tags.map(tag => tag?.person_tag?.name),
+                  orientation_tags: entry?.orientation_tags.map(tag => tag?.location_tag?.name),
+                  collections: entry?.collections.map(tag => tag?.name),
+                  archive_tag: entry?.archive_tag?.name,
                   time_range_tag_start: entry?.time_range_tag
-                    ? dateToTimeStamp(entry?.time_range_tag.start)
+                    ? dateToTimeStamp(entry?.time_range_tag?.start)
                     : entry?.verified_time_range_tag
-                    ? dateToTimeStamp(entry?.verified_time_range_tag.start)
+                    ? dateToTimeStamp(entry?.verified_time_range_tag?.start)
                     : null,
                   time_range_tag_end: entry?.time_range_tag
-                    ? dateToTimeStamp(entry?.time_range_tag.end)
+                    ? dateToTimeStamp(entry?.time_range_tag?.end)
                     : entry?.verified_time_range_tag
-                    ? dateToTimeStamp(entry?.verified_time_range_tag.end)
+                    ? dateToTimeStamp(entry?.verified_time_range_tag?.end)
                     : null,
                 };
 
@@ -123,6 +142,7 @@ module.exports = ({ env }) => ({
                   'keyword_tags',
                   'face_tags',
                   'person_tags',
+                  'orientation_tags',
                   'time_range_tag_start',
                   'time_range_tag_end',
                   'collections',
@@ -136,6 +156,7 @@ module.exports = ({ env }) => ({
                   'face_tags',
                   'person_tags',
                   'descriptions',
+                  'orientation_tags',
                   'collections',
                   'archive_tag',
                   'is_text',
