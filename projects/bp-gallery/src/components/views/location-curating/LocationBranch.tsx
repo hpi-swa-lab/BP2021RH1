@@ -11,19 +11,26 @@ const LocationBranch = ({
   locationTag,
   parentTag,
   refetch,
+  forceFoldout,
 }: {
   locationTag: FlatTag;
   parentTag?: FlatTag;
   refetch: () => void;
+  forceFoldout?: boolean;
 }) => {
   const foldoutStatus = useFoldoutStatus();
 
   const { t } = useTranslation();
+  const [localForceFoldout, setLocalForceFoldout] = useState<boolean>(forceFoldout ?? false);
   const [showMore, setShowMore] = useState<boolean>(
     foldoutStatus?.current && locationTag.id in foldoutStatus.current
       ? foldoutStatus.current[locationTag.id].isOpen
       : false
   );
+
+  useEffect(() => {
+    setLocalForceFoldout(forceFoldout ?? false);
+  }, [forceFoldout]);
 
   useEffect(() => {
     if (foldoutStatus?.current && locationTag.id in foldoutStatus.current) {
@@ -40,6 +47,7 @@ const LocationBranch = ({
             locationTag={childTag}
             parentTag={locationTag}
             refetch={refetch}
+            forceFoldout={forceFoldout && (childTag.child_tags?.length ? true : false)}
           />
         );
       });
@@ -53,16 +61,17 @@ const LocationBranch = ({
       <LocationEntry
         locationTag={locationTag}
         parentTag={parentTag}
-        showMore={showMore}
+        showMore={showMore || localForceFoldout}
         onToggleShowMore={() => {
           if (foldoutStatus?.current) {
-            foldoutStatus.current[locationTag.id] = { isOpen: !showMore };
+            foldoutStatus.current[locationTag.id] = { isOpen: !(showMore || localForceFoldout) };
           }
-          setShowMore(prev => !prev);
+          setShowMore(prev => !(prev || localForceFoldout));
+          setLocalForceFoldout(false);
         }}
         refetch={refetch}
       />
-      {showMore && (
+      {(showMore || localForceFoldout) && (
         <div className='sub-location-container'>
           {renderSubBranches()}
           {canCreateNewTag && (
