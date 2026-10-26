@@ -120,19 +120,12 @@ export const buildHttpLink = (
   alert?: {
     openAlert: (alertOptions: AlertOptions) => void;
     t: TFunction;
-  },
-  anonymousId?: string | null
+  }
 ) => {
   const options = {
     uri: `${apiBase}/graphql`,
     headers: {
-      'Access-Control-Request-Headers': 'anonymousId',
       authorization: token ? `Bearer ${token}` : '',
-      ...(typeof anonymousId === 'string'
-        ? {
-            anonymousId,
-          }
-        : {}),
     },
   };
   const batchedOperationNames = [canRunOperation, addPermission, deleteParameterizedPermission].map(
@@ -148,27 +141,6 @@ export const buildHttpLink = (
       batchMax: 50,
     })
   );
-
-  const growthbookLink = new ApolloLink((operation, forward) => {
-    return forward(operation).map(response => {
-      const experimentData: { experimentId: string; variationId: string }[] | null = JSON.parse(
-        (operation.getContext().response as Response).headers.get('x-growthbook') ?? 'null'
-      );
-      experimentData?.forEach(experiment => {
-        const w: any = window;
-        const _paq: Array<any> = (w._paq = w._paq || []);
-        _paq.push([
-          'trackEvent',
-          'ExperimentViewed',
-          experiment.experimentId,
-          experiment.variationId,
-        ]);
-      });
-      return response;
-    });
-  });
-
-  httpLink = from([growthbookLink, httpLink]);
 
   if (alert) {
     const { openAlert, t } = alert;

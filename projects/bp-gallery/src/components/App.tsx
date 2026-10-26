@@ -10,7 +10,6 @@ import AuthProvider from './provider/AuthProvider';
 import ClipboardEditorProvider from './provider/ClipboardEditorProvider';
 import DialogProvider from './provider/DialogProvider';
 import ExhibitionProvider from './provider/ExhibitionProvider';
-import { GrowthBookProvider } from './provider/GrowthBookProvider';
 import { MobileProvider } from './provider/MobileProvider';
 import { MuiThemeProvider } from './provider/MuiThemeProvider';
 import { ScrollProvider } from './provider/ScrollProvider';
@@ -83,15 +82,13 @@ const App = () => {
                 <MobileProvider>
                   <div className='App'>
                     <ClipboardEditorProvider>
-                      <GrowthBookProvider>
-                        <ScrollProvider useWindow>
-                          <ExhibitionProvider>
-                            <TopBar />
-                            <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
-                            <BottomBar />
-                          </ExhibitionProvider>
-                        </ScrollProvider>
-                      </GrowthBookProvider>
+                      <ScrollProvider useWindow>
+                        <ExhibitionProvider>
+                          <TopBar />
+                          <ScrollContainer>{renderRoutes(routes)}</ScrollContainer>
+                          <BottomBar />
+                        </ExhibitionProvider>
+                      </ScrollProvider>
                     </ClipboardEditorProvider>
                   </div>
                 </MobileProvider>

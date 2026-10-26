@@ -6,7 +6,6 @@ import { Redirect } from 'react-router-dom';
 import { useGetArchiveQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
-import { useFlag } from '../../../helpers/growthbook';
 import { useBlockImageContextMenu } from '../../../hooks/block-image-context-menu.hook';
 import { useCanUseEditArchiveView } from '../../../hooks/can-do-hooks';
 import {
@@ -81,8 +80,6 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
   const onLogoContextMenu = useBlockImageContextMenu(archive?.restrictImageDownloading);
 
   const { canUseEditArchiveView } = useCanUseEditArchiveView(archiveId);
-
-  const showStories = useFlag('showstories');
 
   if (!archive) {
     return !loading ? <Redirect to={FALLBACK_PATH} /> : <></>;
@@ -167,7 +164,7 @@ const ArchiveView = ({ archiveId }: ArchiveViewProps) => {
         </div>
       </div>
 
-      {showStories && <ExhibitionOverview archiveId={archive.id} showTitle />}
+      <ExhibitionOverview archiveId={archive.id} showTitle />
       <ShowStats>
         <OverviewContainer
           tabs={tabs}

@@ -1,4 +1,3 @@
-import { IfFeatureEnabled, useFeatureValue } from '@growthbook/growthbook-react';
 import { AccessTime, ArrowForwardIos, AutoStories, ThumbUp } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useMemo } from 'react';
@@ -8,11 +7,9 @@ import {
   useGetArchivePictureCountsQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { useFlag, useVariant } from '../../../helpers/growthbook';
 import { useAuth, useMobile } from '../../../hooks/context-hooks';
 import { FlatArchiveTag, PictureOverviewType } from '../../../types/additionalFlatTypes';
 import DonateButton from '../../common/DonateButton';
-import { IfFlagEnabled } from '../../common/IfFlagEnabled';
 import OverviewContainer, {
   OverviewContainerPosition,
   OverviewContainerTab,
@@ -26,6 +23,8 @@ import { ArchiveCard, ArchiveCardWithoutPicture } from './ArchiveCard';
 import DailyPicture from './DailyPicture';
 import './StartView.scss';
 
+const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+
 const StartView = () => {
   const { visit } = useVisit();
   const { t } = useTranslation();
@@ -37,16 +36,6 @@ const StartView = () => {
     useSimplifiedQueryResponseData(countData)?.archivePictureCounts;
   const authContext = useAuth();
   const isLoggedIn = authContext.loggedIn;
-  const show_old_browse_view_on_start_page = useFlag('show_old_browse_view_on_start_page');
-
-  const {
-    clientId: paypalClientId,
-    donationText: paypalDonationText,
-    purposeText: paypalPurposeText,
-  } = useVariant({
-    id: 'paypal_mainpage',
-    fallback: { clientId: '', donationText: '', purposeText: '' },
-  });
 
   const archiveCards = useMemo(
     () =>
@@ -78,7 +67,6 @@ const StartView = () => {
     [archives, isLoggedIn, pictureCounts]
   );
 
-  const showStories = useFlag('showstories');
   const tabs: OverviewContainerTab[] = useMemo(() => {
     return [
       {
@@ -97,29 +85,21 @@ const StartView = () => {
           />
         ),
       },
-      ...(showStories
-        ? [
-            {
-              title: t('exhibition.overview.our-exhibitions'),
-              icon: <AutoStories key='2' />,
-              content: <ExhibitionOverview backgroundColor='#efeae5' />,
-            },
-          ]
-        : []),
+      {
+        title: t('exhibition.overview.our-exhibitions'),
+        icon: <AutoStories key='2' />,
+        content: <ExhibitionOverview backgroundColor='#efeae5' />,
+      },
     ];
-  }, [t, showStories]);
-
-  const defaultTabIndex = useFeatureValue('start_view_default_tab_index', 0);
+  }, [t]);
 
   return (
     <div className='main-start-view'>
       <div className='welcome-container'>
-        <IfFlagEnabled feature='dummy_experiment'>
-          <div className='welcome'>
-            <h1>{t('startpage.welcome-title')}</h1>
-            <p>{t('startpage.welcome-text')}</p>
-          </div>
-        </IfFlagEnabled>
+        <div className='welcome'>
+          <h1>{t('startpage.welcome-title')}</h1>
+          <p>{t('startpage.welcome-text')}</p>
+        </div>
         <DailyPicture />
 
         <div className='flex place-content-center gap-2 m-4 flex-wrap'>
@@ -144,20 +124,18 @@ const StartView = () => {
             </Button>
           )}
           <div className='flex basis-full' />
-          <IfFeatureEnabled feature='paypal_mainpage'>
-            {paypalClientId !== '' && (
-              <DonateButton
-                donationText={paypalDonationText}
-                clientId={paypalClientId}
-                purposeText={paypalPurposeText}
-              />
-            )}
-          </IfFeatureEnabled>
+          {paypalClientId && (
+            <DonateButton
+              donationText={t('startpage.donation-text')}
+              clientId={paypalClientId}
+              purposeText={t('startpage.donation-purpose')}
+            />
+          )}
         </div>
 
         <ShowStats>
           <OverviewContainer
-            defaultTabIndex={defaultTabIndex < tabs.length ? defaultTabIndex : 0}
+            defaultTabIndex={1}
             tabs={tabs}
             overviewPosition={OverviewContainerPosition.START_VIEW}
           />
@@ -166,7 +144,7 @@ const StartView = () => {
         <div className='archives'>{archiveCards}</div>
       </div>
 
-      {(isLoggedIn || show_old_browse_view_on_start_page) && <BrowseView startpage={true} />}
+      <BrowseView startpage={true} />
     </div>
   );
 };

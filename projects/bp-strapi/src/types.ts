@@ -15,13 +15,11 @@ export type GqlExtension = {
 
 type ContextState = {
   user: UsersPermissionsUser;
-  withGrowthBook?: (theCtx: StrapiGqlContext, f: any) => void;
 };
 
 // See https://koajs.com/#context and https://github.com/jeffijoe/koa-respond
 type Context = {
   send: (statusCode: number, body: string | Object) => StrapiContext;
-  req?: { headers?: { anonymousid?: string } };
   request: { body: unknown };
 } & Record<
   | 'created'

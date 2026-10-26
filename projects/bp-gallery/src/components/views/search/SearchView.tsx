@@ -2,7 +2,6 @@ import { Location } from 'history';
 import { useContext, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import usePromise from 'react-use-promise';
-import { useFlag } from '../../../helpers/growthbook';
 import useBulkOperations from '../../../hooks/bulk-operations.hook';
 import { TextFilter } from '../../../hooks/get-pictures.hook';
 import PictureScrollGrid from '../../common/picture-gallery/PictureScrollGrid';
@@ -78,8 +77,6 @@ const SearchView = () => {
     [queryParams, textFilter, filter, searchIndex]
   );
 
-  const isOldSearchActive = useFlag('old_search');
-
   const { linkToCollection, createSequence, bulkEdit, addToExhibition } = useBulkOperations();
 
   const exhibitionId = useContext(ExhibitionIdContext);
@@ -101,14 +98,7 @@ const SearchView = () => {
 
       <ShowStats>
         <PictureScrollGrid
-          queryParams={isOldSearchActive ? queryParams : searchResultIds ?? []}
-          // if allSearch is active the custom resolver for allSearch will be used, which can only
-          // handle simple queryparams in the format {searchTerms:string[], searchTimes:string[][]} which
-          //  leads to erros when we use queryparams of the type PictureFiltersInput,
-          // so isAllSearchactive has to be false if we want to use the Meilisearch results
-          // by ANDing the isAllsearchActive flag with the isOldsearchActive flag we can make sure
-          // the isAllSearchActive property will always be false if we want to use Meilisearch
-          isAllSearchActive={isOldSearchActive && isAllSearchActive}
+          queryParams={searchResultIds ?? []}
           hashbase={search}
           bulkOperations={[
             linkToCollection,

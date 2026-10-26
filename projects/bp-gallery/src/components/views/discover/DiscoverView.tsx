@@ -1,7 +1,6 @@
 import { AccessTime, GridView, Map, ThumbUp } from '@mui/icons-material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useFlag } from '../../../helpers/growthbook';
 import { useVisit } from '../../../helpers/history';
 import { PictureOverviewType, TagType } from '../../../types/additionalFlatTypes';
 import OverviewContainer, {
@@ -93,7 +92,6 @@ const DiscoverView = () => {
     ];
   }, [t, visit]);
 
-  const showStories = useFlag('showstories');
   return (
     <div className='discover-container'>
       <ShowStats>
@@ -103,7 +101,7 @@ const DiscoverView = () => {
           tabID='0'
         />
 
-        {showStories && <ExhibitionOverview showTitle margin />}
+        <ExhibitionOverview showTitle margin />
 
         <PictureOverview
           title={t('discover.more-info')}

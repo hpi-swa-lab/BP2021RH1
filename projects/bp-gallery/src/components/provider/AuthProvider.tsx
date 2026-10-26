@@ -14,7 +14,6 @@ import {
   useResetPasswordMutation,
 } from '../../graphql/APIConnector';
 import { buildHttpLink } from '../../helpers/app-helpers';
-import { useAnonymousId } from '../../hooks/anonymous-id.hook';
 import { AlertContext, AlertType } from './AlertProvider';
 
 export interface AuthFields {
@@ -53,14 +52,13 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const apolloClient = useApolloClient();
   const openAlert = useContext(AlertContext);
-  const anonymousId = useAnonymousId();
 
   // Fetch userInfo on mount
   useEffect(() => {
     if (called) return;
 
     const token = sessionStorage.getItem('jwt');
-    apolloClient.setLink(buildHttpLink(token, { openAlert, t }, anonymousId));
+    apolloClient.setLink(buildHttpLink(token, { openAlert, t }));
 
     if (token) {
       getUserInfo();
@@ -68,7 +66,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       // we won't call getUserInfo, because token won't change
       setAuthLoading(false);
     }
-  }, [apolloClient, called, getUserInfo, openAlert, t, anonymousId]);
+  }, [apolloClient, called, getUserInfo, openAlert, t]);
 
   // Save fetched userInfo in state
   useEffect(() => {
@@ -95,7 +93,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
         } else {
           if (token) {
             sessionStorage.setItem('jwt', token);
-            apolloClient.setLink(buildHttpLink(token, { openAlert, t }, anonymousId));
+            apolloClient.setLink(buildHttpLink(token, { openAlert, t }));
             getUserInfo();
             displaySuccess(t('login.successful-login'));
             resolve();
@@ -105,7 +103,7 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
         }
       });
     },
-    [apolloClient, getUserInfo, displaySuccess, t, openAlert, anonymousId]
+    [apolloClient, getUserInfo, displaySuccess, t, openAlert]
   );
 
   const login = useCallback(
@@ -134,13 +132,13 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   );
 
   const logout = useCallback(() => {
-    apolloClient.setLink(buildHttpLink(null, { openAlert, t }, anonymousId));
+    apolloClient.setLink(buildHttpLink(null, { openAlert, t }));
     sessionStorage.removeItem('jwt');
     setUserId(undefined);
     setUsername(undefined);
     setEmail(undefined);
     displaySuccess(t('login.successful-logout'));
-  }, [apolloClient, displaySuccess, t, openAlert, anonymousId]);
+  }, [apolloClient, displaySuccess, t, openAlert]);
 
   return (
     <AuthContext.Provider

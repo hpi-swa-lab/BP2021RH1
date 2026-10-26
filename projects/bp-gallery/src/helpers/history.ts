@@ -5,7 +5,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { FoldoutStatus } from '../components/views/location-curating/FoldoutStatusContext';
 import { useScrollRef } from '../hooks/context-hooks';
 import { trackHistory } from '../matomo-config/matomo';
-import { useGrowthBook } from './growthbook';
 
 export const pushHistoryWithoutRouter = (newLocation: string) => {
   window.history.pushState({}, '', newLocation);
@@ -32,7 +31,6 @@ export const useVisit = () => {
   const history: History & { location: LocationWithState } = useHistory();
   const location: LocationWithState = useLocation();
   const scrollRef = useScrollRef();
-  const growthbook = useGrowthBook();
 
   const visit = useCallback(
     (
@@ -55,10 +53,8 @@ export const useVisit = () => {
         openBranches: options?.openBranches,
       });
       history.push(url, { showBack: options?.state?.showBack ?? true, ...options?.state });
-      growthbook?.setURL(window.location.href);
-      growthbook?.refreshFeatures();
     },
-    [history, scrollRef, growthbook]
+    [history, scrollRef]
   );
 
   return { visit, history, location };
