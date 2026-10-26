@@ -92,7 +92,8 @@ describe('bulk edit keyword tags', () => {
     bulkEdit();
     cy.contains('.picture-info-field', 'Schlagworte')
       .find('input')
-      .type('Verifiziertes Testschlagwort 4{enter}');
+      .type('Verifiziertes Testschlagwort 4');
+    cy.contains('[role="option"]', 'Verifiziertes Testschlagwort 4').click();
     cy.contains('[data-testid="save-status"]', 'Gespeichert');
     cy.contains('Verifiziertes Testschlagwort 2');
     cy.contains('Verifiziertes Testschlagwort 4');
