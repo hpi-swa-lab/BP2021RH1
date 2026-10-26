@@ -33,6 +33,20 @@ services:
     ports:
       - 127.0.0.1:8025:8025
 
+  s3:
+    image: chrislusf/seaweedfs:4.50
+    entrypoint: /repo/compose/s3.sh
+    ports:
+      - 127.0.0.1:8333:8333
+    volumes:
+      - s3-data:/data
+      - ./compose:/repo/compose:ro
+      - ./compose/s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      test: test -f /tmp/ready
+      interval: 1s
+      retries: 120
+
   install:
     image: node:18-bookworm
     volumes:
@@ -63,6 +77,8 @@ services:
         condition: service_healthy
       meilisearch:
         condition: service_started
+      s3:
+        condition: service_healthy
     environment:
       HOST: 0.0.0.0
       PORT: 9000
@@ -84,6 +100,14 @@ services:
       EMAIL_SMTP_PORT: 1025
       EMAIL_ADDRESS_FROM: strapi@localhost
       EMAIL_ADDRESS_REPLY: strapi@localhost
+      AWS_ENABLED: 'true'
+      AWS_ENDPOINT: http://s3:8333
+      AWS_FORCE_PATH_STYLE: 'true'
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: local-dev-access-key
+      AWS_ACCESS_SECRET: local-dev-secret-key
+      AWS_BUCKET_NAME: bp-uploads
+      CDN_BASE_URL: http://localhost:8333/bp-uploads
     ports:
       # bp-gallery shares this network namespace so its /api proxy reaches 127.0.0.1:9000
       - 127.0.0.1:9000:9000
@@ -108,4 +132,5 @@ services:
 volumes:
   postgres-data:
   meilisearch-data:
+  s3-data:
   yarn-cache:

@@ -1,0 +1,13 @@
+{
+  "identities": [
+    {
+      "name": "strapi",
+      "credentials": [{ "accessKey": "local-dev-access-key", "secretKey": "local-dev-secret-key" }],
+      "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+    },
+    {
+      "name": "anonymous",
+      "actions": ["Read:bp-uploads"]
+    }
+  ]
+}
