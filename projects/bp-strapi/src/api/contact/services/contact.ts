@@ -7,19 +7,37 @@ enum MailError {
 }
 type EmailOptions = Partial<Parameters<ReturnType<typeof init>['send']>[0]>;
 
+const MIN_FILL_TIME_MS = 3000;
+
+// Bots fill fields with strings like "aZLYEpmJitLYJWMqkMg": one long word of
+// letters with several capitals after the first character.
+const looksRandom = (text: string) =>
+  /^[A-Za-z]{10,}$/.test(text) &&
+  (text.slice(1).match(/[A-Z]/g)?.length ?? 0) >= 5 &&
+  (text.match(/[a-z]/g)?.length ?? 0) >= 3;
+
 export const contact = async ({
   recipient,
   sender_name,
   reply_email,
   subject,
   message,
+  honeypot,
+  fill_time,
 }: {
   recipient: string;
   sender_name: string;
   reply_email: string;
   subject: string;
   message: string;
+  honeypot?: string | null;
+  fill_time?: number | null;
 }) => {
+  if (honeypot || fill_time == null || fill_time < MIN_FILL_TIME_MS) {
+    strapi.log.info('Rejected contact form message that looks automated');
+    throw new Error('Contact form message looks automated');
+  }
+
   let archive;
 
   try {
@@ -44,7 +62,9 @@ export const contact = async ({
   try {
     const emailOptions: EmailOptions = {
       to: sendTo,
-      subject: `Neue Nachricht über das Kontaktformular: ${subject}`,
+      subject: `${
+        looksRandom(subject) ? '[Spamverdacht] ' : ''
+      }Neue Nachricht über das Kontaktformular: ${subject}`,
       replyTo: reply_email ? reply_email : undefined,
       html: mailText(
         archive?.name ?? '',

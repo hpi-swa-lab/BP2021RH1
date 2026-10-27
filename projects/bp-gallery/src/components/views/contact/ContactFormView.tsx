@@ -1,5 +1,5 @@
 import { Button, FormControl, FormHelperText, MenuItem, Select, TextField } from '@mui/material';
-import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useContactMutation, useGetArchiveNamesQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
@@ -17,6 +17,8 @@ const ContactFormView = () => {
   const [replyEmail, setReplyEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [honeypot, setHoneypot] = useState('');
+  const openedAt = useRef(Date.now());
 
   const { data } = useGetArchiveNamesQuery({
     variables: { filters: { email: { notNull: true } } },
@@ -41,15 +43,24 @@ const ContactFormView = () => {
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      await contact({
+      const { errors } = await contact({
         variables: {
           recipient,
           sender_name: senderName,
           reply_email: replyEmail,
           subject,
           message,
+          honeypot,
+          fill_time: Date.now() - openedAt.current,
         },
       });
+      if (errors?.length) {
+        openAlert({
+          alertType: AlertType.ERROR,
+          message: t('contact-form.error'),
+        });
+        return;
+      }
       openAlert({
         alertType: AlertType.SUCCESS,
         message: t('contact-form.success'),
@@ -57,7 +68,7 @@ const ContactFormView = () => {
       setSubject('');
       setMessage('');
     },
-    [contact, recipient, senderName, replyEmail, subject, message, openAlert, t]
+    [contact, recipient, senderName, replyEmail, subject, message, honeypot, openAlert, t]
   );
 
   return (
@@ -109,6 +120,15 @@ const ContactFormView = () => {
               required
             />
           </label>
+          <input
+            className='absolute -left-[10000px] w-px h-px opacity-0'
+            name='contact_check'
+            aria-hidden='true'
+            tabIndex={-1}
+            autoComplete='off'
+            value={honeypot}
+            onChange={event => setHoneypot(event.target.value)}
+          />
           <Button variant='contained' type='submit'>
             {t('contact-form.submit-button-label').toString()}
           </Button>

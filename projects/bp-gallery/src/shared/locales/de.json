@@ -651,6 +651,7 @@
   "contact-form": {
     "title": "Kontakt",
     "success": "Ihre Nachricht ist eingegangen.",
+    "error": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
     "choose-archive-label": "Wen möchten Sie kontaktieren?",
     "choose-archive-helpertext": "Falls das gewünschte Archiv nicht auswählbar ist, hat dieses noch keine E-Mail-Addresse angegeben.",
     "name-label": "Name",

@@ -44,7 +44,7 @@ mutation addPermission( $user_id: ID $operation_name: String $archive_tag: ID $o
 mutation addUser($username: String! $email: String!) { addUser(username: $username email: $email) }
 mutation bulkEdit($pictureIds: [ID!]! $data: JSON!) { doBulkEdit(ids: $pictureIds data: $data) }
 mutation changePassword( $currentPassword: String! $password: String! $passwordConfirmation: String! ) { changePassword( currentPassword: $currentPassword password: $password passwordConfirmation: $passwordConfirmation ) { user { id } } }
-mutation contact( $recipient: String! $sender_name: String! $reply_email: String! $subject: String! $message: String! ) { contact( recipient: $recipient sender_name: $sender_name reply_email: $reply_email subject: $subject message: $message ) }
+mutation contact( $recipient: String! $sender_name: String! $reply_email: String! $subject: String! $message: String! $honeypot: String! $fill_time: Int! ) { contact( recipient: $recipient sender_name: $sender_name reply_email: $reply_email subject: $subject message: $message honeypot: $honeypot fill_time: $fill_time ) }
 mutation createExhibition($archiveId: ID! $publishedAt: DateTime!) { createExhibition(data: { archive_tag: $archiveId publishedAt: $publishedAt }) { data { id } } }
 mutation createExhibitionPicture( $exhibitionIdealotId: ID! $pictureId: ID! $publishedAt: DateTime! ) { createExhibitionPicture( data: { exhibition_idealot: $exhibitionIdealotId picture: $pictureId publishedAt: $publishedAt } ) { data { id } } }
 mutation createExhibitionSection($exhibitionId: ID! $order: Int $publishedAt: DateTime!) { createExhibitionSection( data: { exhibition: $exhibitionId order: $order publishedAt: $publishedAt } ) { data { id } } }

@@ -1140,6 +1140,8 @@ export type MutationChangePasswordArgs = {
 };
 
 export type MutationContactArgs = {
+  fill_time?: InputMaybe<Scalars['Int']>;
+  honeypot?: InputMaybe<Scalars['String']>;
   message?: InputMaybe<Scalars['String']>;
   recipient?: InputMaybe<Scalars['String']>;
   reply_email?: InputMaybe<Scalars['String']>;
@@ -3961,6 +3963,8 @@ export type ContactMutationVariables = Exact<{
   reply_email: Scalars['String'];
   subject: Scalars['String'];
   message: Scalars['String'];
+  honeypot: Scalars['String'];
+  fill_time: Scalars['Int'];
 }>;
 
 export type ContactMutation = { contact?: number | null };
@@ -8279,6 +8283,8 @@ export const ContactDocument = gql`
     $reply_email: String!
     $subject: String!
     $message: String!
+    $honeypot: String!
+    $fill_time: Int!
   ) {
     contact(
       recipient: $recipient
@@ -8286,6 +8292,8 @@ export const ContactDocument = gql`
       reply_email: $reply_email
       subject: $subject
       message: $message
+      honeypot: $honeypot
+      fill_time: $fill_time
     )
   }
 `;
