@@ -307,6 +307,8 @@ export default {
               reply_email: 'String',
               subject: 'String',
               message: 'String',
+              honeypot: 'String',
+              fill_time: 'Int',
             },
             async resolve(_, args) {
               return contact(args);

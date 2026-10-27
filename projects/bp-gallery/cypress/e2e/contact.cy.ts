@@ -24,6 +24,7 @@ describe('Contact form', () => {
   });
 
   it('sends the message to the archive by email', () => {
+    cy.clock(Date.now(), ['Date']);
     cy.visit('/contact');
     cy.contains('Herbert-Ahrens-Bilderarchiv');
     cy.contains('label', 'Name').find('input').type('Erika Muster');
@@ -32,6 +33,8 @@ describe('Contact form', () => {
     cy.contains('label', 'Nachricht')
       .find('textarea:not([aria-hidden])')
       .type('Wer ist auf dem Bild zu sehen?');
+    // The server rejects messages sent within 3 seconds as automated
+    cy.tick(3000);
     cy.contains('Anfrage versenden').click();
     cy.contains('Ihre Nachricht ist eingegangen.');
 

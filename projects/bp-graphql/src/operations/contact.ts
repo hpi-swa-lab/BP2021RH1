@@ -9,6 +9,8 @@ export default {
       $reply_email: String!
       $subject: String!
       $message: String!
+      $honeypot: String!
+      $fill_time: Int!
     ) {
       contact(
         recipient: $recipient
@@ -16,6 +18,8 @@ export default {
         reply_email: $reply_email
         subject: $subject
         message: $message
+        honeypot: $honeypot
+        fill_time: $fill_time
       )
     }
   `,
