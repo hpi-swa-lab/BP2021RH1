@@ -14,3 +14,7 @@ WITH admin AS (
 INSERT INTO admin_users_roles_links (user_id, role_id)
 SELECT admin.id, admin_roles.id FROM admin, admin_roles WHERE admin_roles.code = 'strapi-super-admin';
 SQL
+
+# The contact form only lists archives with an email address; Mailpit catches the mail
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
+  -c "UPDATE archive_tags SET email = 'archiv@example.com' WHERE id = 1"

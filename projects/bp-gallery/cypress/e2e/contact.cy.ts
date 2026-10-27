@@ -1,26 +1,8 @@
-import { login, logout } from '../utils/login-utils';
-
 const mailpit = 'http://mailpit:8025/api/v1/messages';
-
-const setArchiveEmail = (email: string) => {
-  cy.visit('/archives/1');
-  login();
-  cy.get('[data-cy="archive-edit"]').click();
-  cy.get('#archive-form-email').scrollIntoView().clear();
-  if (email) cy.get('#archive-form-email').type(email);
-  cy.get('#archive-form-email').blur();
-  cy.contains('Änderungen speichern').click();
-  cy.contains('Änderungen gespeichert');
-  logout();
-};
 
 describe('Contact form', () => {
   before(() => {
-    setArchiveEmail('archiv@example.com');
     cy.request('DELETE', mailpit);
-  });
-  after(() => {
-    setArchiveEmail('');
   });
 
   it('sends the message to the archive by email', () => {
