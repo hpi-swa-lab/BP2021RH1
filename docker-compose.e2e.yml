@@ -1,0 +1,56 @@
+# Runs the Cypress tests in a stack of their own, see docs/e2e.md.
+# Used on top of docker-compose.yml by compose/e2e.sh; publishes no ports, so it runs next to the dev stack.
+services:
+  postgres:
+    ports: !reset []
+
+  meilisearch:
+    ports: !reset []
+
+  mailpit:
+    ports: !reset []
+
+  s3:
+    ports: !reset []
+
+  # The Node services use the Cypress image, which has the same Debian and Node, so CI pulls one image less
+  install:
+    image: cypress/base:18.20.3
+    # compose/e2e.sh installs, compiles Strapi and builds the gallery once for all stacks
+    command: 'true'
+
+  strapi:
+    # Runs the dist folder that compose/e2e.sh compiled; the tests don't use the admin panel, so it isn't built
+    image: cypress/base:18.20.3
+    command: node /repo/compose/strapi.mjs yarn strapi start
+    ports: !reset []
+
+  gallery:
+    image: cypress/base:18.20.3
+    command: >-
+      sh -c 'until [ -f build/.done ] || [ -f build/.failed ]; do sleep 1; done;
+      [ -f build/.done ] && exec yarn vite preview --port 3000 --host 127.0.0.1'
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 2s
+      retries: 300
+
+  cypress:
+    # No browsers inside; the tests use Electron from the Cypress binary, which compose/e2e.sh installs into the cache
+    image: cypress/base:18.20.3
+    working_dir: /repo/projects/bp-gallery
+    entrypoint: node_modules/.bin/cypress
+    environment:
+      CYPRESS_CACHE_FOLDER: /cypress-cache
+    # Shares the network namespace with strapi and gallery, so the tests reach both on localhost
+    network_mode: service:strapi
+    volumes:
+      - .:/repo
+      - ${E2E_CYPRESS_CACHE:-${HOME}/.cache/bp-e2e-cypress}:/cypress-cache
+    depends_on:
+      strapi:
+        condition: service_healthy
+      gallery:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
