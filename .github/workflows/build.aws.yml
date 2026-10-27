@@ -27,7 +27,7 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Install bp-graphql dependencies
         working-directory: ./projects/bp-graphql
-        run: yarn install --frozen-lockfile && tsc
+        run: yarn install --frozen-lockfile && yarn tsc
       - name: Generate APIConnector
         run: yarn generate-api
       - name: Build bp-gallery
@@ -60,6 +60,25 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Build bp-graphql
+        working-directory: ./projects/bp-graphql
+        run: yarn install --frozen-lockfile && yarn build
+      - name: Install bp-strapi dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build bp-strapi
+        run: yarn build:prod
+        env:
+          URL: https://harz-history.de/api/
+      - name: Copy the build to the server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.AWS_REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          source: "projects/bp-strapi/dist/"
+          strip_components: 3
+          target: /home/github/harz-history/strapi-dist
+          rm: true
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh/
