@@ -28,6 +28,11 @@ services:
     volumes:
       - meilisearch-data:/meili_data
 
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - 127.0.0.1:8025:8025
+
   install:
     image: node:18-bookworm
     volumes:
@@ -74,6 +79,11 @@ services:
       MEILISEARCH_ENABLED: 'true'
       MEILISEARCH_HOST: http://meilisearch:7700
       MEILISEARCH_API_KEY: local-dev-master-key
+      EMAIL_PROVIDER: nodemailer
+      EMAIL_SMTP_HOST: mailpit
+      EMAIL_SMTP_PORT: 1025
+      EMAIL_ADDRESS_FROM: strapi@localhost
+      EMAIL_ADDRESS_REPLY: strapi@localhost
     ports:
       # bp-gallery shares this network namespace so its /api proxy reaches 127.0.0.1:9000
       - 127.0.0.1:9000:9000

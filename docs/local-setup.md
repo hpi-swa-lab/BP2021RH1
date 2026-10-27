@@ -14,8 +14,9 @@ The first start installs all dependencies (`compose/install.sh`, a few minutes) 
 | Strapi API and GraphQL | http://localhost:9000, http://localhost:9000/graphql |
 | Strapi admin panel | http://localhost:9000/admin |
 | Meilisearch (search) | http://localhost:7700, key `local-dev-master-key` |
+| Mailpit (catches all emails Strapi sends) | http://localhost:8025 |
 
-Nothing talks to the hosted services: search uses the local Meilisearch, and Sentry and Matomo are off.
+Nothing talks to the hosted services: search uses the local Meilisearch, emails go to Mailpit, and Sentry and Matomo are off.
 
 ## Logins
 
