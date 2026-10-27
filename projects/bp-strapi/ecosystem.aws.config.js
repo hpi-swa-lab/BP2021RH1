@@ -2,7 +2,10 @@ module.exports = {
   apps: [
     {
       name: "Bad-Harzburg Archive Strapi Instance",
-      script: "yarn start",
+      script: "node_modules/.bin/strapi",
+      args: "start",
+      env: { ENV_PATH: "./config/env/production/.env" },
+      exec_mode: "fork",
       append_env_to_name: true,
       instances: 1,
       autorestart: true,
