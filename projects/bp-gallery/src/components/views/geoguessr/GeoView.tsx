@@ -9,7 +9,6 @@ import {
   useGetPicturesForCollectionQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
-import { useVariant } from '../../../helpers/growthbook';
 import { useBlockImageContextMenuByPictureId } from '../../../hooks/block-image-context-menu.hook';
 import useGetPictureLink from '../../../hooks/get-pictureLink.hook';
 import {
@@ -20,6 +19,9 @@ import {
 import Loading from '../../common/Loading';
 import ZoomWrapper from '../picture/overlay/ZoomWrapper';
 import GeoMap from './GeoMap';
+
+// without a collection, the game uses all pictures
+const geoCollectionId = import.meta.env.VITE_GEO_COLLECTION_ID;
 
 const shufflePictureIds = (pictureIds: string[], seed: number) => {
   const newPictureIds = [...pictureIds];
@@ -66,10 +68,10 @@ const GeoView = () => {
   const pictures: FlatPicture[] | undefined =
     useSimplifiedQueryResponseData(picturesData)?.pictures;
 
-  const geoCollectionId = useVariant({ id: 'geopictures_collection_id', fallback: '' });
-  const isGeoCollectionPictures = geoCollectionId !== '' && import.meta.env.MODE === 'production';
+  const isGeoCollectionPictures = !!geoCollectionId;
   const { data: geoCollectionPictureData } = useGetPicturesForCollectionQuery({
-    variables: { collectionId: geoCollectionId },
+    variables: { collectionId: geoCollectionId ?? '' },
+    skip: !isGeoCollectionPictures,
   });
 
   const geoCollection: FlatCollection | undefined =
@@ -91,7 +93,7 @@ const GeoView = () => {
   }, [getNextPicture]);
 
   useEffect(() => {
-    if (!pictures || isSet) {
+    if (!pictures || isSet || (isGeoCollectionPictures && !geoCollectionPictureIds)) {
       return;
     }
     const allPictureIds = isGeoCollectionPictures
