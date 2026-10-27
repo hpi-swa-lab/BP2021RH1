@@ -1,0 +1,136 @@
+# Local development setup, see docs/local-setup.md
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bpgallery
+    ports:
+      - 127.0.0.1:5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./projects/bp-strapi/e2e/data.sql:/seed/data.sql:ro
+      - ./compose/seed-db.sh:/docker-entrypoint-initdb.d/seed-db.sh:ro
+    healthcheck:
+      test: pg_isready -h 127.0.0.1 -U postgres -d bpgallery
+      interval: 2s
+      retries: 30
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.2
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: local-dev-master-key
+      MEILI_NO_ANALYTICS: 'true'
+    ports:
+      - 127.0.0.1:7700:7700
+    volumes:
+      - meilisearch-data:/meili_data
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - 127.0.0.1:8025:8025
+
+  s3:
+    image: chrislusf/seaweedfs:4.50
+    entrypoint: /repo/compose/s3.sh
+    ports:
+      - 127.0.0.1:8333:8333
+    volumes:
+      - s3-data:/data
+      - ./compose:/repo/compose:ro
+      - ./compose/s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      test: test -f /tmp/ready
+      interval: 1s
+      retries: 120
+
+  install:
+    image: node:18-bookworm
+    volumes:
+      - .:/repo
+      - yarn-cache:/usr/local/share/.cache/yarn
+    environment:
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
+      CYPRESS_INSTALL_BINARY: '0'
+      # The pre-commit hook needs yarn on the host, so don't register it from the container
+      HUSKY: '0'
+    command: /repo/compose/install.sh
+
+  strapi:
+    image: node:18-bookworm
+    volumes:
+      - .:/repo
+      - yarn-cache:/usr/local/share/.cache/yarn
+    working_dir: /repo/projects/bp-strapi
+    command: node /repo/compose/strapi.mjs yarn develop
+    healthcheck:
+      test: test -f /tmp/ready
+      interval: 2s
+      retries: 300
+    depends_on:
+      install:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      meilisearch:
+        condition: service_started
+      s3:
+        condition: service_healthy
+    environment:
+      HOST: 0.0.0.0
+      PORT: 9000
+      URL: http://localhost:9000/
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: bpgallery
+      DATABASE_SCHEMA: public
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: password
+      JWT_SECRET: local-dev-jwt-secret
+      ADMIN_JWT_SECRET: local-dev-admin-jwt-secret
+      API_TOKEN_SALT: local-dev-api-token-salt
+      MEILISEARCH_ENABLED: 'true'
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_API_KEY: local-dev-master-key
+      EMAIL_PROVIDER: nodemailer
+      EMAIL_SMTP_HOST: mailpit
+      EMAIL_SMTP_PORT: 1025
+      EMAIL_ADDRESS_FROM: strapi@localhost
+      EMAIL_ADDRESS_REPLY: strapi@localhost
+      AWS_ENABLED: 'true'
+      AWS_ENDPOINT: http://s3:8333
+      AWS_FORCE_PATH_STYLE: 'true'
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: local-dev-access-key
+      AWS_ACCESS_SECRET: local-dev-secret-key
+      AWS_BUCKET_NAME: bp-uploads
+      CDN_BASE_URL: http://localhost:8333/bp-uploads
+    ports:
+      # bp-gallery shares this network namespace so its /api proxy reaches 127.0.0.1:9000
+      - 127.0.0.1:9000:9000
+      - 127.0.0.1:3000:3000
+
+  gallery:
+    image: node:18-bookworm
+    volumes:
+      - .:/repo
+      - yarn-cache:/usr/local/share/.cache/yarn
+    working_dir: /repo/projects/bp-gallery
+    command: yarn start --host 0.0.0.0
+    network_mode: service:strapi
+    depends_on:
+      install:
+        condition: service_completed_successfully
+    environment:
+      # Override the hosted services from environments/.env.development
+      VITE_MEILISEARCH_HOST: http://localhost:7700
+      VITE_MEILISEARCH_API_KEY: local-dev-master-key
+
+volumes:
+  postgres-data:
+  meilisearch-data:
+  s3-data:
+  yarn-cache:

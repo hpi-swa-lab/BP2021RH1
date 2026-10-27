@@ -20,7 +20,6 @@
     "apollo-upload-client": "^17.0.0",
     "bp-graphql": "../bp-graphql",
     "dayjs": "^1.11.7",
-    "env-cmd": "^10.1.0",
     "events": "^3.3.0",
     "extract-files": "^11.0.0",
     "fuse.js": "^6.6.2",
@@ -97,7 +96,6 @@
     "pretty-quick": "^3.1.3",
     "replace-in-file": "^6.3.5",
     "sass": "^1.56.2",
-    "start-server-and-test": "^1.15.2",
     "typescript": "^5.0.0 <5.1",
     "vite": "4.1.1",
     "vite-plugin-eslint": "^1.8.1"
@@ -108,17 +106,12 @@
     "build": "tsc && vite build",
     "build:dev": "tsc && vite build --mode development",
     "preview": "vite preview",
-    "cy:run": "cypress run -c video=false,videoUploadOnPasses=false",
     "cy:open": "cypress open",
-    "start:e2e": "tsc && vite build -m test && vite preview --port 3000",
-    "cy": "start-server-and-test start:e2e http://localhost:3000 cy:open",
-    "cy:ci": "start-server-and-test start:e2e http://localhost:3000 cy:run",
     "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
     "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx .",
     "format": "prettier --write src && yarn lint --fix",
     "replace-error-policy": "replace-in-file \"import { gql } from '@apollo/client\" \"import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && replace-in-file \"errorPolicy: 'all'\" \"errorPolicy: 'all' as ErrorPolicy\" ./src/graphql/APIConnector.tsx && replace-in-file \"/* eslint-disable react-refresh/only-export-components */ import\" \"import\" ./src/graphql/APIConnector.tsx",
     "generate-api": "node ../bp-graphql/build/generateIndexFiles.js && cd ../bp-graphql && yarn build && cd ../bp-gallery && yarn upgrade bp-graphql && cd ../bp-strapi && yarn upgrade bp-graphql && cd ../bp-gallery && node ../bp-graphql/build/generateOperationGraphQL.js && tsc -p src/graphql/plugins && graphql-codegen --config src/graphql/codegen.yml && replace-in-file \"import { gql } from '@apollo/client\" \"/* eslint-disable react-refresh/only-export-components */ import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && yarn eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && yarn replace-error-policy",
-    "generate-api:e2e": "env-cmd -f ./environments/.env.test yarn generate-api",
     "simple-generate-api": "node ../bp-graphql/build/generateIndexFiles.js && cd ../bp-graphql && yarn build && cd ../bp-gallery && yarn upgrade bp-graphql && cd ../bp-strapi && yarn upgrade bp-graphql",
     "generate-api:win": "node ../bp-graphql/build/generateIndexFiles.js && tsc -p ../bp-graphql && start /b yarn upgrade bp-graphql && start /d ..\\bp-strapi /b yarn upgrade bp-graphql && node ../bp-graphql/build/generateOperationGraphQL.js && tsc -p src/graphql/plugins && graphql-codegen --config src/graphql/codegen.yml && replace-in-file \"import { gql } from '@apollo/client\" \"/* eslint-disable react-refresh/only-export-components */ import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && yarn eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && yarn replace-error-policy"
   }

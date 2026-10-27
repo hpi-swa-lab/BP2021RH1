@@ -262,6 +262,9 @@ module.exports = ({ env }) => ({
               accessKeyId: env('AWS_ACCESS_KEY_ID'),
               secretAccessKey: env('AWS_ACCESS_SECRET'),
               region: env('AWS_REGION'),
+              // only set for a local S3 server, see docs/local-setup.md
+              endpoint: env('AWS_ENDPOINT'),
+              forcePathStyle: env.bool('AWS_FORCE_PATH_STYLE', false),
               params: {
                 bucket: env('AWS_BUCKET_NAME'),
               },
