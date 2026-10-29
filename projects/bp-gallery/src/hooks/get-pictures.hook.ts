@@ -43,6 +43,14 @@ const useGetPictures = (
     return wrapQueryParamsWithTextFilter(textFilter, innerFilters);
   }, [textFilter, queryParams, limit]);
 
+  // Without a unique last sort key, pages of tied rows overlap and pagination stalls.
+  // createdAt:desc is the query's default.
+  const stableSortBy = useMemo(() => {
+    const keys = sortBy ?? ['createdAt:desc'];
+    const direction = keys[keys.length - 1]?.endsWith(':desc') ? 'desc' : 'asc';
+    return [...keys, `id:${direction}`];
+  }, [sortBy]);
+
   const queryResult = useGetPicturesQuery({
     variables: {
       filters,
@@ -50,7 +58,7 @@ const useGetPictures = (
         start: 0,
         limit: limit,
       },
-      sortBy,
+      sortBy: stableSortBy,
     },
     fetchPolicy,
     notifyOnNetworkStatusChange: true,
