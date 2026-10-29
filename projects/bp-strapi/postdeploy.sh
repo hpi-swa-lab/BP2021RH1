@@ -1,8 +1,12 @@
 set -e
 export PATH="$PATH:~/.nvm/versions/node/v18.16.0/bin/"
-(cd ../bp-graphql && yarn install --frozen-lockfile && yarn build)
-yarn install --frozen-lockfile
-yarn upgrade bp-graphql
+npm install --global "$(node -p "require('./package.json').packageManager")"
+# pnpm doesn't replace a node_modules folder that yarn made
+for project in . ../bp-graphql; do
+  [ ! -f $project/node_modules/.yarn-integrity ] || rm -rf $project/node_modules
+done
+(cd ../bp-graphql && pnpm install --frozen-lockfile && pnpm build)
+pnpm install --frozen-lockfile
 rm -rf dist && cp -r /home/github/harz-history/strapi-dist dist
-yarn pm2 reload ecosystem.aws.config.js --env production
-yarn pm2 save
+pnpm pm2 reload ecosystem.aws.config.js --env production
+pnpm pm2 save

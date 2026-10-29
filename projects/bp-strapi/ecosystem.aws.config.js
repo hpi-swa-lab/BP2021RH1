@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "Bad-Harzburg Archive Strapi Instance",
-      script: "yarn start",
+      script: "pnpm start",
       append_env_to_name: true,
       instances: 1,
       autorestart: true,

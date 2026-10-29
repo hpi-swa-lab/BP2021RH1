@@ -17,18 +17,26 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: projects/bp-graphql/package.json
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
+          cache-dependency-path: |
+            projects/bp-gallery/pnpm-lock.yaml
+            projects/bp-graphql/pnpm-lock.yaml
       - name: Install bp-gallery dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Install bp-graphql dependencies
         working-directory: ./projects/bp-graphql
-        run: yarn install --frozen-lockfile && yarn tsc
+        run: pnpm install --frozen-lockfile && pnpm tsc
       - name: Generate APIConnector
-        run: yarn generate-api
+        run: pnpm generate-api
       - name: Lint bp-gallery
-        run: yarn lint
+        run: pnpm lint
       - name: Type check bp-gallery
-        run: yarn tsc
+        run: pnpm tsc

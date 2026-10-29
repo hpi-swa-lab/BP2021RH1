@@ -2,6 +2,6 @@
 . "$(dirname "$0")/_/husky.sh"
 
 cd projects/bp-gallery
-yarn pretty-quick --staged --verbose \
+pnpm pretty-quick --staged --verbose \
     --ignore-path .husky/pretty-quick-ignore \
     --pattern "projects/bp-gallery/src/**/*"

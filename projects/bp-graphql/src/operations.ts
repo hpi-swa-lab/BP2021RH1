@@ -1,4 +1,4 @@
-// NOTE: this file is auto-generated, run yarn generate-api instead
+// NOTE: this file is auto-generated, run pnpm generate-api instead
 export { default as acceptComment } from './operations/acceptComment.js';
 export { default as addArchiveTag } from './operations/addArchiveTag.js';
 export { default as addPermission } from './operations/addPermission.js';

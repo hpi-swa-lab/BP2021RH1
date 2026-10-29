@@ -18,5 +18,6 @@
   },
   "scripts": {
     "build": "tsc"
-  }
+  },
+  "packageManager": "pnpm@10.34.9"
 }

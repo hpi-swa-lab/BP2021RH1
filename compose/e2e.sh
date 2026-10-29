@@ -80,9 +80,9 @@ step gallery '/repo/compose/install.sh bp-graphql bp-gallery &&
   cd /repo/projects/bp-gallery && rm -rf build cypress/screenshots && node_modules/.bin/cypress install'
 compose "$prefix" run --rm --no-deps --entrypoint sh \
   -e VITE_MEILISEARCH_HOST=http://meilisearch:7700 -e VITE_MEILISEARCH_API_KEY=local-dev-master-key \
-  install -c 'cd /repo/projects/bp-gallery && if yarn vite build -m test; then touch build/.done;
+  install -c 'cd /repo/projects/bp-gallery && if pnpm vite build -m test; then touch build/.done;
     else mkdir -p build && touch build/.failed; fi' 2>&1 | show "$logs/build.log" build &
-step strapi '/repo/compose/install.sh bp-strapi && cd /repo/projects/bp-strapi && rm -rf dist && yarn tsc'
+step strapi '/repo/compose/install.sh bp-strapi && cd /repo/projects/bp-strapi && rm -rf dist && pnpm tsc'
 wait $services
 
 run_stack() { # project, cypress arguments...
