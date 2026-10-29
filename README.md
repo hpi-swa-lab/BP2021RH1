@@ -14,3 +14,11 @@ By using the command `yarn start` in the [`bp-gallery`](/projects/bp-gallery) di
 
 The whole Documentation can be found [here](https://lilac-oriole-6ab.notion.site/1ac4cd0f3bc54968a87e24a63653322a?v=06ffdc8582af49d9a9e7a4a33603399a).
 
+
+## Use of AI
+
+From commit [`1164a3b`](https://github.com/hpi-swa-lab/BP2021RH1/commit/1164a3b) (#652, October 2026) on, changes were made with AI coding agents. Earlier contributors may have used AI tools such as autocomplete in their editors. The agent work looks like this:
+
+- Claude Code (Claude Opus 5.5, as of October 2026) wrote most of the code, the e2e tests, the commit messages and the PR descriptions. Codex reviewed the changes.
+- A maintainer chose what to work on, steered the agents while they worked, and read every change before it was merged, usually as the diff of its PR on GitHub. Every PR is reviewed and merged by a person.
+- Text that people read in the app (labels, messages, translations, emails) stays human-written. The developer documentation in [`docs`](docs) was written with AI.
