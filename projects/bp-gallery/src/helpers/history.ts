@@ -1,4 +1,4 @@
-import { History, Location } from 'history';
+import { Location } from 'history';
 import { LatLng } from 'leaflet';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -28,7 +28,7 @@ type LocationState = {
 export type LocationWithState = Location & { state?: LocationState };
 
 export const useVisit = () => {
-  const history: History & { location: LocationWithState } = useHistory();
+  const history = useHistory<LocationState | undefined>();
   const location: LocationWithState = useLocation();
   const scrollRef = useScrollRef();
 
