@@ -14,3 +14,9 @@ export const visitArchive1Pictures = () => {
   cy.visit('/archives/1');
   cy.contains('.overview-selection-container', 'Unsere Bilder').contains('Mehr anzeigen').click();
 };
+
+export const visitStartAndLoadNextPage = () => {
+  cy.visit('/start');
+  cy.get('.picture-grid .picture-preview').first();
+  cy.get('[data-testid="scrollable-container"]').scrollTo('bottom');
+};

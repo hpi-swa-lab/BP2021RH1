@@ -1,5 +1,10 @@
 import { login, logout } from '../../utils/login-utils';
-import { bulkEdit, selectPictures, visitArchive1Pictures } from './helper';
+import {
+  bulkEdit,
+  selectPictures,
+  visitArchive1Pictures,
+  visitStartAndLoadNextPage,
+} from './helper';
 
 describe('bulk edit location tags', () => {
   before(() => {
@@ -32,7 +37,7 @@ describe('bulk edit location tags', () => {
     cy.visit('/picture/25');
     cy.contains('.picture-info-field', 'Orte').find('input');
     cy.contains('.picture-info-field', 'Orte').find('.MuiChip-root').should('not.exist');
-    cy.visit('/start');
+    visitStartAndLoadNextPage();
     selectPictures('1', '25');
     bulkEdit();
     cy.contains('.picture-info-field', 'Orte').find('input');
@@ -46,7 +51,7 @@ describe('bulk edit location tags', () => {
     cy.visit('/picture/25');
     cy.contains('.MuiChip-root', 'Bad Harzburg').should('not.exist');
     cy.contains('Verifizierter Testort 3').should('not.exist');
-    cy.visit('/start');
+    visitStartAndLoadNextPage();
     selectPictures('1', '25');
     bulkEdit();
     cy.contains('.picture-info-field', 'Orte').find('input').type('Verifizierter Testort 3{enter}');
@@ -61,7 +66,7 @@ describe('bulk edit location tags', () => {
   });
 
   it('removes tags while keeping untouched ones', () => {
-    cy.visit('/start');
+    visitStartAndLoadNextPage();
     selectPictures('1', '25');
     bulkEdit();
     cy.contains('.MuiChip-root', 'Verifizierter Testort 3')
