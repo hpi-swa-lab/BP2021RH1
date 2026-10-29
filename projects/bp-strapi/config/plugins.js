@@ -19,6 +19,7 @@ module.exports = ({ env }) => ({
       shadowCRUD: true,
       playgroundAlways: false,
       defaultLimit: -1,
+      // Any other value turns off the batched relation loading in src/batchRelationLoads.ts.
       maxLimit: -1,
       apolloServer: {
         tracing: false,
