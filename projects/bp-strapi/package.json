@@ -27,6 +27,7 @@
     "@strapi/strapi": "4.4.5",
     "bp-graphql": "../bp-graphql",
     "cross-env": "^7.0.3",
+    "dataloader": "2.2.3",
     "isomorphic-dompurify": "^1.6.0",
     "lodash": "^4.17.21",
     "pg": "8.6.0",

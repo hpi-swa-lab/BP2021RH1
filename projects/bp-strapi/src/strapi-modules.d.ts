@@ -23,3 +23,7 @@ declare module '@strapi/plugin-users-permissions/server/controllers/validation/a
     password: string;
   };
 }
+
+declare module '@strapi/strapi/lib/services/entity-service/params' {
+  export const transformParamsToQuery: (uid: string, params: object) => object;
+}
