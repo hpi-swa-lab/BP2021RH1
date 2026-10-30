@@ -71,6 +71,7 @@
     "@graphql-codegen/typescript-operations": "^2.2.1",
     "@graphql-codegen/typescript-react-apollo": "^3.2.2",
     "@graphql-codegen/visitor-plugin-common": "2.13.8",
+    "@playwright/test": "1.64.1",
     "@swc/plugin-transform-imports": "^1.5.41",
     "@types/history": "4.7.11",
     "@types/leaflet": "^1.9.3",
@@ -90,7 +91,6 @@
     "@vitejs/plugin-react-swc": "3.1.0",
     "autoprefixer": "^10.4.13",
     "c8": "^7.12.0",
-    "cypress": "^11.0.0",
     "esbuild": "0.16.17",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
@@ -116,9 +116,9 @@
     "build": "tsc && vite build",
     "build:dev": "tsc && vite build --mode development",
     "preview": "vite preview",
-    "cy:open": "cypress open",
     "prepare": "cd ../.. && husky install projects/bp-gallery/.husky",
     "lint": "eslint --cache --ext .ts,.tsx,.js,.jsx .",
+    "check": "tsc && tsc -p e2e && pnpm lint",
     "format": "prettier --write src && pnpm lint --fix",
     "replace-error-policy": "replace-in-file \"import { gql } from '@apollo/client\" \"import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && replace-in-file \"errorPolicy: 'all'\" \"errorPolicy: 'all' as ErrorPolicy\" ./src/graphql/APIConnector.tsx && replace-in-file \"/* eslint-disable react-refresh/only-export-components */ import\" \"import\" ./src/graphql/APIConnector.tsx",
     "generate-api": "node ../bp-graphql/build/generateIndexFiles.js && pnpm --dir ../bp-graphql build && node ../bp-graphql/build/generateOperationGraphQL.js && tsc -p src/graphql/plugins && graphql-codegen --config src/graphql/codegen.yml && replace-in-file \"import { gql } from '@apollo/client\" \"/* eslint-disable react-refresh/only-export-components */ import { ErrorPolicy, gql } from '@apollo/client\" ./src/graphql/APIConnector.tsx && eslint --fix --no-ignore ./src/graphql/APIConnector.tsx && pnpm replace-error-policy",
@@ -128,7 +128,6 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@swc/core",
-      "cypress",
       "esbuild",
       "puppeteer"
     ],

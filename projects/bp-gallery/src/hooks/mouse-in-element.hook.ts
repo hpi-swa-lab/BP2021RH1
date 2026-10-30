@@ -9,7 +9,7 @@ export const useMouseInElement = (element: HTMLElement | null | undefined) => {
       return;
     }
     // use flushSync to ensure state is up-to-date
-    // when events fire quickly in succession, e. g. in cypress
+    // when events fire quickly in succession
     const over = () => {
       flushSync(() => {
         setInElement(true);

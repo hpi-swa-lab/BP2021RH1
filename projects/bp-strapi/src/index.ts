@@ -28,6 +28,7 @@ import {
 } from './api/picture/services/custom-resolver';
 import { incNotAPlaceCount } from './api/picture/services/custom-update';
 import { batchRelationLoads } from './batchRelationLoads';
+import { registerE2eReset } from './e2eReset';
 import { updateMe } from './extensions/users-permissions/content-types/user/custom-update';
 import {
   canRunOperation,
@@ -46,6 +47,7 @@ export default {
    */
   register({ strapi }: { strapi: StrapiExtended }) {
     batchRelationLoads(strapi);
+    if (process.env.E2E_RESET === 'true') registerE2eReset(strapi);
     const gqlExtensionService = strapi.plugin('graphql').service('extension');
     const gqlExtension = (extensionArgs: GqlExtension) => {
       const { list, mutationField, queryField, objectType } = extensionArgs.nexus;

@@ -15,7 +15,7 @@ const getSearchResultHits = async (
   const SEARCH_API_KEY = import.meta.env.VITE_MEILISEARCH_API_KEY;
 
   const client = new MeiliSearch({
-    host: SEARCH_API_HOST,
+    host: new URL(SEARCH_API_HOST, window.location.origin).href,
     apiKey: SEARCH_API_KEY,
   });
   const index = client.index(searchIndex);

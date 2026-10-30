@@ -27,16 +27,36 @@ const splitPackagesPlugin: Plugin = {
   },
 };
 
+const apiProxy = {
+  '/api': {
+    target: 'http://127.0.0.1:9000',
+    rewrite: (path: string) => path.replace(/^\/api/, ''),
+  },
+};
+
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react({ plugins: reactPlugins }), eslint({ cache: false })],
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    react({ plugins: reactPlugins }),
+    ...(mode === 'test' ? [] : [eslint({ cache: false })]),
+  ],
   envDir: 'environments',
   server: {
     port: 3000,
+    proxy: apiProxy,
+  },
+  // vite preview serves the build of the e2e tests (environments/.env.test, docs/e2e.md)
+  preview: {
     proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:9000',
-        rewrite: path => path.replace(/^\/api/, ''),
+      ...apiProxy,
+      '/meilisearch': {
+        target: 'http://meilisearch:7700',
+        rewrite: path => path.replace(/^\/meilisearch/, ''),
+      },
+      // Lets the tests read the stack's emails
+      '/mailpit': {
+        target: 'http://mailpit:8025',
+        rewrite: path => path.replace(/^\/mailpit/, ''),
       },
     },
   },
@@ -47,6 +67,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'build',
+    reportCompressedSize: mode !== 'test',
     commonjsOptions: { include: [/bp-graphql/, /node_modules/] },
     rollupOptions: {
       output: {
@@ -62,4 +83,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

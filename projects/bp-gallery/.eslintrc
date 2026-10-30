@@ -20,7 +20,7 @@
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": ["./tsconfig.json", "./cypress/tsconfig.json", "./vite.config.ts"]
+    "project": ["./tsconfig.json", "./e2e/tsconfig.json", "./vite.config.ts"]
   },
   "plugins": [
     "react",
@@ -112,8 +112,34 @@
       }
     ]
   },
-  "ignorePatterns": ["/build/"],
+  "ignorePatterns": ["/build/", "/playwright-report/", "/test-results/"],
   "overrides": [
+    {
+      "files": ["e2e/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-floating-promises": "error",
+        // Playwright matches strings case-insensitively and as substrings, so "Orte" also finds "Schlagworte"
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "CallExpression[callee.property.name=/^getBy(Text|Label|Placeholder|AltText|Title)$/][arguments.length=1] > :matches(Literal[raw=/^['\"]/], TemplateLiteral)",
+            "message": "Add { exact: true } or pass a regular expression."
+          },
+          {
+            "selector": "CallExpression[callee.property.name=/^getBy(Text|Label|Placeholder|AltText|Title)$/]:matches([arguments.0.raw=/^['\"]/], [arguments.0.type='TemplateLiteral']) > ObjectExpression:not(:has(Property[key.name='exact'][value.value=true]))",
+            "message": "Add exact: true or pass a regular expression."
+          },
+          {
+            "selector": "CallExpression[callee.property.name='getByRole'] > ObjectExpression:not(:has(Property[key.name='exact'][value.value=true])) > Property[key.name='name'] > :matches(Literal[raw=/^['\"]/], TemplateLiteral)",
+            "message": "Add exact: true or pass a regular expression."
+          },
+          {
+            "selector": "Property[key.name=/^has(Not)?Text$/] > :matches(Literal[raw=/^['\"]/], TemplateLiteral)",
+            "message": "Use caseSensitive() from helper.ts or a regular expression."
+          }
+        ]
+      }
+    },
     {
       "files": ["src/**/*.tsx"],
       "rules": {

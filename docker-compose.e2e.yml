@@ -1,8 +1,11 @@
-# Runs the Cypress tests in a stack of their own, see docs/e2e.md.
+# Runs the Playwright tests against stacks of their own, see docs/e2e.md.
 # Used on top of docker-compose.yml by compose/e2e.sh; publishes no ports, so it runs next to the dev stack.
 services:
   postgres:
     ports: !reset []
+    environment:
+      # Strapi uses schema dev as staging does on the server; see compose/seed-db.sh
+      DATABASE_SCHEMA: dev
 
   meilisearch:
     ports: !reset []
@@ -13,44 +16,51 @@ services:
   s3:
     ports: !reset []
 
-  # The Node services use the Cypress image, which has the same Debian and Node, so CI pulls one image less
   install:
-    image: cypress/base:22.21.0
     # compose/e2e.sh installs and builds Strapi and the gallery once for all stacks
     command: 'true'
 
   strapi:
     # Runs the dist folder that compose/e2e.sh built
-    image: cypress/base:22.21.0
     command: node /repo/compose/strapi.mjs npx strapi start
+    environment:
+      DATABASE_SCHEMA: dev
+      # Lets the tests reset the data before each test (projects/bp-strapi/src/e2eReset.ts)
+      E2E_RESET: 'true'
     ports: !reset []
+    # The Playwright container reaches the gallery on port 3000 of this container and Strapi on port 9000. No other
+    # service joins e2e, since there each stack's services would answer to the same name (like mailpit)
+    networks: [default, e2e]
 
   gallery:
-    image: cypress/base:22.21.0
     command: >-
       sh -c 'until [ -f build/.done ] || [ -f build/.failed ]; do sleep 1; done;
-      [ -f build/.done ] && exec npx vite preview --port 3000 --host 127.0.0.1'
+      [ -f build/.done ] && exec npx vite preview --port 3000 --host 0.0.0.0'
     healthcheck:
       test: [CMD, node, -e, "fetch('http://127.0.0.1:3000').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 2s
       retries: 300
 
-  cypress:
-    # No browsers inside; the tests use Electron from the Cypress binary, which compose/e2e.sh installs into the cache
-    image: cypress/base:22.21.0
+  playwright:
+    # Comes with Node 24 and the browsers; keep the tag at the version of @playwright/test in bp-gallery
+    image: mcr.microsoft.com/playwright:v1.64.1-noble
     working_dir: /repo/projects/bp-gallery
-    entrypoint: node_modules/.bin/cypress
+    entrypoint: node_modules/.bin/playwright
     environment:
-      CYPRESS_CACHE_FOLDER: /cypress-cache
-    # Shares the network namespace with strapi and gallery, so the tests reach both on localhost
-    network_mode: service:strapi
+      - CI
+      - E2E_PROJECTS
+      - E2E_SHARD
+      # The github reporter writes file paths relative to it
+      - GITHUB_WORKSPACE=/repo
+    # Chromium needs more shared memory than Docker's default 64 MB
+    ipc: host
+    init: true
+    networks: [e2e]
     volumes:
       - .:/repo
-      - ${E2E_CYPRESS_CACHE:-${HOME}/.cache/bp-e2e-cypress}:/cypress-cache
-    depends_on:
-      strapi:
-        condition: service_healthy
-      gallery:
-        condition: service_healthy
-      mailpit:
-        condition: service_started
+
+networks:
+  # Connects the Playwright container with the stacks, which compose/e2e.sh starts as projects of their own
+  e2e:
+    external: true
+    name: ${E2E_NETWORK:?set by compose/e2e.sh}

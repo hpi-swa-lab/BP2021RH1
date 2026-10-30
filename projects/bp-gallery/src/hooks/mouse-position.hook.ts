@@ -31,7 +31,7 @@ export const useMousePosition = () => {
 
   const listener = useCallback((position: MousePosition) => {
     // use flushSync to ensure state is up-to-date
-    // when events fire quickly in succession, e. g. in cypress
+    // when events fire quickly in succession
     flushSync(() => {
       setMousePosition(position);
     });

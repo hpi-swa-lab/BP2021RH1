@@ -21,25 +21,26 @@ Nothing talks to the hosted services: search uses the local Meilisearch, uploads
 
 ## Logins
 
-- Gallery: user `testCurator`, password `1234abc` (the curator account the Cypress tests use).
+- Gallery: user `testCurator`, password `1234abc` (the curator account the end-to-end tests use).
 - Strapi admin panel: `dev@example.com`, password `Dev12345` (added by `compose/dev-admin.sql`).
 
 ## Search index
 
-The test data has no Meilisearch index. On every start, the `strapi` container (`compose/strapi.mjs`) asks the Strapi Meilisearch plugin to index pictures and comments unless they are indexed already; after that Strapi keeps the index up to date.
+The test data has no Meilisearch index. On every start, the `strapi` container indexes pictures and comments unless they are indexed already; after that Strapi keeps the index up to date.
 
 ## Uploads
 
-Like production, Strapi stores new uploads in S3. Locally that is SeaweedFS, which speaks the S3 API: Strapi writes with the key pair from `compose/s3.json`, and anyone can read from the bucket, like the production CDN. `AWS_ENDPOINT` and `AWS_FORCE_PATH_STYLE` in `docker-compose.yml` point Strapi at it; production leaves both unset. `compose/s3.sh` starts SeaweedFS and creates the bucket.
+Like production, Strapi stores new uploads in S3. Locally that is SeaweedFS, which speaks the S3 API; anyone can read from the bucket, like the production CDN.
 
 The pictures from the test data were uploaded before, so they still come from `projects/bp-strapi/public/uploads`.
 
 ## Common tasks
 
 - Reset the database to the test data: `docker compose down -v` (also deletes the search index and the S3 uploads), then `docker compose up`.
-- Run the stack on a copy of a server database, for example to try an upgrade or a migration on real data: `compose/load-dump.sh <file from pg_dump -Fc> [schema]`, with the schema the dump holds (`public` for production, `dev` for staging). It uses its own Compose project with Meilisearch indexing off and starts from an empty database on every run; stop the dev stack first, both use the same ports. `docker compose -p bp-dump down -v` deletes the copy. The pictures' URLs still point to production's CDN, so opening the gallery or the admin media library loads them from the real hosting; uploads and deletes go to the local S3.
+- Run the stack on a copy of a server database, for example to try an upgrade or a migration on real data: `compose/load-dump.sh <file from pg_dump -Fc> [schema]`, with the schema the dump holds (`public` for production, `dev` for staging). It starts from an empty database on every run, with search indexing off; stop the dev stack first, both use the same ports. `docker compose -p bp-dump down -v` deletes the copy. The pictures' URLs still point to production's CDN, so opening the gallery or the admin media library loads them from the real hosting; uploads and deletes go to the local S3.
 - Reinstall dependencies after a `package.json` change or a change in `projects/bp-graphql`: `docker compose run --rm install`.
 - Run a command in a project: `docker compose exec gallery pnpm lint`, `docker compose exec strapi pnpm strapi …`.
+- Type-check and lint the gallery and its e2e tests, also without the stack running: `docker compose run --rm --no-deps install sh -c 'cd /repo/projects/bp-gallery && pnpm check'`. CI runs the same checks.
 - Format the gallery code before committing: `docker compose exec gallery pnpm format`. The gallery's pre-commit hook (Husky) normally does this, but this setup doesn't install it because it needs pnpm on the host.
 
 The services listen on 127.0.0.1 only.

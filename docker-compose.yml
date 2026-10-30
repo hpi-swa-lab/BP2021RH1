@@ -58,7 +58,6 @@ services:
       PATH: /pnpm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       npm_config_store_dir: /pnpm/store
       PUPPETEER_SKIP_DOWNLOAD: 'true'
-      CYPRESS_INSTALL_BINARY: '0'
       # The pre-commit hook needs pnpm on the host, so don't register it from the container
       HUSKY: '0'
     command: /repo/compose/install.sh

@@ -3,7 +3,8 @@
 # order) inside the node:22 container.
 set -e
 
-npm install --global --prefix /pnpm "$(node -p "require('/repo/projects/bp-gallery/package.json').packageManager")"
+pnpm=$(node -p "require('/repo/projects/bp-gallery/package.json').packageManager")
+[ "pnpm@$(pnpm --version 2> /dev/null)" = "$pnpm" ] || npm install --global --prefix /pnpm "$pnpm"
 
 for project in ${*:-bp-graphql bp-strapi bp-gallery}; do
   cd /repo/projects/$project
