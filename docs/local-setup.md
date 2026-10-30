@@ -1,6 +1,6 @@
 # Running everything locally
 
-Everything runs in Docker: you only need Docker with Compose. Node 18 runs inside the containers, because Strapi 4.4 does not support newer Node versions.
+Everything runs in Docker: you only need Docker with Compose. Node 22 runs inside the containers, because Strapi 4.26 does not support newer Node versions.
 
 ```sh
 docker compose up

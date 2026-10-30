@@ -8,7 +8,7 @@ To understand our code it is important to know the fundamentals of TypeScript (i
 
 There are two main projects: [`bp-gallery`](/projects/bp-gallery) and [`bp-strapi`](/projects/bp-strapi). The [`bp-gallery`](/projects/bp-gallery) project includes the frontend code (React), [`bp-strapi`](/projects/bp-strapi) the backend code (Strapi).
 
-To start local development you first have to install [node](https://nodejs.org) (≥14, recommended: 16) and [pnpm](https://pnpm.io/installation). After that you have to execute `pnpm install` in the [`bp-gallery`](/projects/bp-gallery) directory to install the dependencies.
+To start local development you first have to install [node](https://nodejs.org) (22) and [pnpm](https://pnpm.io/installation). After that you have to execute `pnpm install` in the [`bp-gallery`](/projects/bp-gallery) directory to install the dependencies.
 
 By using the command `pnpm start` in the [`bp-gallery`](/projects/bp-gallery) directory you now can start a local instance of the React application. By default, this instance communicates with our production backend. How to set up a local backend instance and use it gets described [here](https://lilac-oriole-6ab.notion.site/How-to-setup-a-local-Strapi-instance-ffecc3d084e744dbb931715cc955ddfb).
 

@@ -1,6 +1,8 @@
 import { Maybe, ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
 import crypto from 'crypto';
 import { omit } from 'lodash';
+import { getAuthController } from '../../../extensions/users-permissions/helper';
+import type { StrapiContext } from '../../../types';
 import { minimalPasswordSatisfyingRequirements } from '../../../extensions/users-permissions/passwordRequirements';
 
 type AddPermissionArgs = {
@@ -101,22 +103,23 @@ export const addUser = async (
     throw new Error('Ungültiger Name oder ungültige E-Mail');
   }
 
-  const usersPermissionsAuthController = strapi.plugin('users-permissions').controllers.auth;
+  const usersPermissionsAuthController = getAuthController();
 
   // fake a koaContext to prevent the controller from sending an answer
   // to the user, instead, capture the answer
   let response = undefined as { user: UsersPermissionsUser | undefined } | undefined;
-  const fakeKoaContextWithParameters = <T>(params: T) => ({
-    request: {
-      body: params,
-    },
-    state: {
-      auth: context.koaContext.state.auth,
-    },
-    send(something: { user: UsersPermissionsUser | undefined }) {
-      response = something;
-    },
-  });
+  const fakeKoaContextWithParameters = <T>(params: T) =>
+    ({
+      request: {
+        body: params,
+      },
+      state: {
+        auth: context.koaContext.state.auth,
+      },
+      send(something: { user: UsersPermissionsUser | undefined }) {
+        response = something;
+      },
+    } as unknown as StrapiContext);
 
   // register won't work without a password, so we use a random temporary one
   // to prevent the unlikely event of anyone trying to log in between register

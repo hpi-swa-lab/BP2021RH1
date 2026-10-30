@@ -1,5 +1,5 @@
 set -e
-export PATH="$PATH:~/.nvm/versions/node/v18.16.0/bin/"
+export PATH="$HOME/.nvm/versions/node/v22.23.4/bin:$PATH"
 npm install --global "$(node -p "require('./package.json').packageManager")"
 # pnpm doesn't replace a node_modules folder that yarn made
 for project in . ../bp-graphql; do
@@ -8,5 +8,5 @@ done
 (cd ../bp-graphql && pnpm install --frozen-lockfile && pnpm build)
 pnpm install --frozen-lockfile
 rm -rf dist && cp -r /home/github/harz-history/strapi-dist dist
-pnpm pm2 reload ecosystem.aws.config.js --env production
+pnpm pm2 reload ecosystem.aws.config.js --env production --update-env
 pnpm pm2 save

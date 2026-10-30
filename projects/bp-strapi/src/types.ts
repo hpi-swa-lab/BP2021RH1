@@ -1,4 +1,4 @@
-import type { Attribute, GetAttributeValue, GetAttributes, Strapi } from '@strapi/strapi';
+import type { Attribute, Common, Strapi } from '@strapi/strapi';
 import { ParameterizedPermission, UsersPermissionsUser } from 'bp-graphql/build/db-types';
 import type { knex } from 'knex';
 import type { ParameterizedContext } from 'koa';
@@ -46,14 +46,6 @@ export type StrapiExtended = Omit<Strapi, 'entityService'> & {
   entityService: EntityService;
 };
 
-declare module '@strapi/strapi' {
-  export interface Strapi {
-    requestContext: {
-      get(): { url: string };
-    };
-  }
-}
-
 type FilterParameters = Partial<
   Record<
     | '$and'
@@ -83,21 +75,21 @@ type FilterParameters = Partial<
 
 type OrderByParameter = string | string[] | { [key: string]: string } | { [key: string]: string }[];
 
-type ResponseAttributes<T extends Strapi.ContentTypeUIDs> =
+type ResponseAttributes<T extends Common.UID.ContentType> =
   | null
   | (Partial<{
-      [K in keyof GetAttributes<T>]: DefaultType<T, K>;
+      [K in keyof Attribute.GetAll<T>]: DefaultType<T, K>;
     }> & { id: number });
 
-type PopulateType<T extends Strapi.ContentTypeUIDs> = {
-  [K in keyof GetAttributes<T> as GetAttributes<T>[K] extends Attribute<
+type PopulateType<T extends Common.UID.ContentType> = {
+  [K in keyof Attribute.GetAll<T> as Attribute.GetAll<T>[K] extends Attribute.OfType<
     'relation' | 'component' | 'dynamiczone'
   >
     ? K
-    : never]: GetAttributes<T>[K];
+    : never]: Attribute.GetAll<T>[K];
 };
 
-type PopulateParameter<T extends Strapi.ContentTypeUIDs> =
+type PopulateParameter<T extends Common.UID.ContentType> =
   | '*'
   | (keyof PopulateType<T>)[]
   | { [key: string]: boolean }
@@ -112,12 +104,12 @@ type PopulateParameter<T extends Strapi.ContentTypeUIDs> =
 
 type PublicationStateParameter = 'live' | 'preview';
 
-type Params<T extends Strapi.ContentTypeUIDs> = Partial<{
-  fields: (keyof GetAttributes<T>)[];
+type Params<T extends Common.UID.ContentType> = Partial<{
+  fields: (keyof Attribute.GetAll<T>)[];
   populate: PopulateParameter<T>;
 }>;
 
-type FindManyParams<T extends Strapi.ContentTypeUIDs> = Partial<
+type FindManyParams<T extends Common.UID.ContentType> = Partial<
   Params<T> & {
     filters: FilterParameters;
     start: Number;
@@ -128,37 +120,37 @@ type FindManyParams<T extends Strapi.ContentTypeUIDs> = Partial<
 >;
 
 type DefaultType<
-  T extends Strapi.ContentTypeUIDs,
-  L extends keyof GetAttributes<T>
-> = GetAttributes<T>[L] extends Attribute
-  ? GetAttributeValue<GetAttributes<T>[L]> extends boolean
+  T extends Common.UID.ContentType,
+  L extends keyof Attribute.GetAll<T>
+> = Attribute.GetAll<T>[L] extends Attribute.Any
+  ? Attribute.GetValue<Attribute.GetAll<T>[L]> extends boolean
     ? boolean
-    : GetAttributeValue<GetAttributes<T>[L]>
+    : Attribute.GetValue<Attribute.GetAll<T>[L]>
   : any;
 
-type MutateParams<T extends Strapi.ContentTypeUIDs> = Params<T> & {
-  data: Partial<{ [K in keyof GetAttributes<T>]: DefaultType<T, K> }>;
+type MutateParams<T extends Common.UID.ContentType> = Params<T> & {
+  data: Partial<{ [K in keyof Attribute.GetAll<T>]: DefaultType<T, K> }>;
 };
 
 export interface EntityService {
-  findOne: <T extends Strapi.ContentTypeUIDs>(
+  findOne: <T extends Common.UID.ContentType>(
     uid: T,
     id: number,
     parameters: Params<T>
   ) => Promise<ResponseAttributes<T>>;
-  findMany: <T extends Strapi.ContentTypeUIDs, K extends FindManyParams<T>>(
+  findMany: <T extends Common.UID.ContentType, K extends FindManyParams<T>>(
     uid: T,
     parameters: K
   ) => Promise<ResponseAttributes<T>[]>;
-  create: <T extends Strapi.ContentTypeUIDs>(
+  create: <T extends Common.UID.ContentType>(
     uid: T,
     parameters: Params<T> & { data: Object }
   ) => Promise<Object>;
-  update: <T extends Strapi.ContentTypeUIDs>(
+  update: <T extends Common.UID.ContentType>(
     uid: T,
     parameters: MutateParams<T>
   ) => Promise<Object>;
-  delete: <T extends Strapi.ContentTypeUIDs>(
+  delete: <T extends Common.UID.ContentType>(
     uid: T,
     id: number,
     parameters: Params<T>

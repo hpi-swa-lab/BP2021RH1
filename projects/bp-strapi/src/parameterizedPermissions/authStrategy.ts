@@ -76,7 +76,7 @@ const verify = async (
 const isGraphQLRequest = () => {
   const request = strapi.requestContext.get();
   const graphqlEndpoint = strapi.plugin('graphql').config('endpoint');
-  return request.url === graphqlEndpoint;
+  return request?.url === graphqlEndpoint;
 };
 
 export const authStrategy = {

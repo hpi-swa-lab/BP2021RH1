@@ -1,11 +1,11 @@
-import type { init } from '@strapi/provider-email-amazon-ses/dist/index';
+import type amazonSes from '@strapi/provider-email-amazon-ses';
 import mailText from '../services/mailText';
 
 enum MailError {
   ARCHIVE_NOT_FOUND = 'Das gewünschte Archiv konnte nicht gefunden werden.',
   EMAIL_NOT_FOUND = 'Das gewünschte Archiv hat noch keine E-Mail-Adresse angegeben.',
 }
-type EmailOptions = Partial<Parameters<ReturnType<typeof init>['send']>[0]>;
+type EmailOptions = Partial<Parameters<ReturnType<typeof amazonSes.init>['send']>[0]>;
 
 const MIN_FILL_TIME_MS = 3000;
 

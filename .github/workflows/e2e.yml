@@ -41,8 +41,8 @@ jobs:
           path: |
             projects/*/node_modules
             ${{ env.E2E_CYPRESS_CACHE }}
-          key: e2e-${{ hashFiles('projects/*/pnpm-lock.yaml') }}
-          restore-keys: e2e-
+          key: e2e-node22-${{ hashFiles('projects/*/pnpm-lock.yaml') }}
+          restore-keys: e2e-node22-
       - name: Run E2E tests
         run: compose/e2e.sh
       - name: Let the cache step read the files the containers wrote as root

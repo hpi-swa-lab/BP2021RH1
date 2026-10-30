@@ -1,10 +1,12 @@
-import { Strapi } from '@strapi/strapi';
 import { env } from '@strapi/utils';
+import type { StrapiExtended } from '../types';
 
-export const initializeEmailSettings = async ({ strapi }: { strapi: Strapi }) => {
-  const pluginStore = strapi.store({ type: 'plugin', name: 'users-permissions' });
+type EmailSettings = { reset_password: { options: object } };
 
-  const email = await pluginStore.get({ key: 'email' });
+export const initializeEmailSettings = async ({ strapi }: { strapi: StrapiExtended }) => {
+  const pluginStore = strapi.store!({ type: 'plugin', name: 'users-permissions' });
+
+  const email = (await pluginStore.get({ key: 'email' })) as EmailSettings;
   await pluginStore.set({
     key: 'email',
     value: {
@@ -29,7 +31,7 @@ ignorieren Sie diese E-Mail bitte.</p>
     },
   });
 
-  const advanced = await pluginStore.get({ key: 'advanced' });
+  const advanced = (await pluginStore.get({ key: 'advanced' })) as object;
   await pluginStore.set({
     key: 'advanced',
     value: {

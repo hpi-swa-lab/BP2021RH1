@@ -9,8 +9,6 @@ const dateToTimeStamp = date => {
 };
 
 module.exports = ({ env }) => ({
-  // disable i18n (all content is explicitly german as it's a german photo archive)
-  i18n: false,
   // https://docs.strapi.io/developer-docs/latest/setup-deployment-guides/configurations/optional/plugins.html#graphql-configuration
   graphql: {
     enabled: true,
@@ -36,6 +34,8 @@ module.exports = ({ env }) => ({
   'users-permissions': {
     config: {
       jwtSecret: env('JWT_SECRET'),
+      // addUser in src/api/parameterized-permission/services/custom-update.ts only sends the default fields
+      register: { allowedFields: [] },
       resetPasswordTokenExpirationTimeMilliseconds:
         Number(env('RESET_PASSWORD_TOKEN_EXPIRATION_TIME_MILLISECONDS')) ||
         // default: 1 day
@@ -73,206 +73,203 @@ module.exports = ({ env }) => ({
       },
     },
   },
-  meilisearch:
-    env('MEILISEARCH_ENABLED', 'false') === 'true'
-      ? {
-          config: {
-            host: env('MEILISEARCH_HOST'),
-            apiKey: env('MEILISEARCH_API_KEY'),
-            picture: {
-              entriesQuery: {
-                populate: [
-                  'descriptions',
-                  'comments',
-                  'keyword_tags',
-                  'verified_keyword_tags',
-                  'person_tags',
-                  'verified_person_tags',
-                  'location_tags',
-                  'verified_location_tags',
-                  'face_tags.person_tag',
-                  'orientation_tags.location_tag',
-                  'collections',
-                  'archive_tag',
-                  'time_range_tag',
-                  'verified_time_range_tag',
-                ],
-              },
-              transformEntry({ entry }) {
-                const transformedEntry = {
-                  id: entry?.id,
-                  is_text: entry?.is_text,
-                  likes: entry?.likes ?? 0,
-                  descriptions: entry?.descriptions.map(description => description?.text),
-                  comments: entry?.comments.map(comment => comment?.text),
-                  keyword_tags: entry?.keyword_tags
-                    .map(tag => tag?.name)
-                    .concat(entry?.verified_keyword_tags.map(tag => tag?.name)),
-                  person_tags: entry?.person_tags
-                    .map(tag => tag?.name)
-                    .concat(entry?.verified_person_tags.map(tag => tag?.name)),
-                  location_tags: entry?.location_tags
-                    .map(tag => tag?.name)
-                    .concat(entry?.verified_location_tags.map(tag => tag?.name)),
-                  face_tags: entry?.face_tags.map(tag => tag?.person_tag?.name),
-                  orientation_tags: entry?.orientation_tags.map(tag => tag?.location_tag?.name),
-                  collections: entry?.collections.map(tag => tag?.name),
-                  archive_tag: entry?.archive_tag?.name,
-                  time_range_tag_start: entry?.time_range_tag
-                    ? dateToTimeStamp(entry?.time_range_tag?.start)
-                    : entry?.verified_time_range_tag
-                    ? dateToTimeStamp(entry?.verified_time_range_tag?.start)
-                    : null,
-                  time_range_tag_end: entry?.time_range_tag
-                    ? dateToTimeStamp(entry?.time_range_tag?.end)
-                    : entry?.verified_time_range_tag
-                    ? dateToTimeStamp(entry?.verified_time_range_tag?.end)
-                    : null,
-                };
+  meilisearch: {
+    enabled: env('MEILISEARCH_ENABLED', 'false') === 'true',
+    config: {
+      host: env('MEILISEARCH_HOST'),
+      apiKey: env('MEILISEARCH_API_KEY'),
+      picture: {
+        entriesQuery: {
+          populate: [
+            'descriptions',
+            'comments',
+            'keyword_tags',
+            'verified_keyword_tags',
+            'person_tags',
+            'verified_person_tags',
+            'location_tags',
+            'verified_location_tags',
+            'face_tags.person_tag',
+            'orientation_tags.location_tag',
+            'collections',
+            'archive_tag',
+            'time_range_tag',
+            'verified_time_range_tag',
+          ],
+        },
+        transformEntry({ entry }) {
+          const transformedEntry = {
+            id: entry?.id,
+            is_text: entry?.is_text,
+            likes: entry?.likes ?? 0,
+            descriptions: entry?.descriptions.map(description => description?.text),
+            comments: entry?.comments.map(comment => comment?.text),
+            keyword_tags: entry?.keyword_tags
+              .map(tag => tag?.name)
+              .concat(entry?.verified_keyword_tags.map(tag => tag?.name)),
+            person_tags: entry?.person_tags
+              .map(tag => tag?.name)
+              .concat(entry?.verified_person_tags.map(tag => tag?.name)),
+            location_tags: entry?.location_tags
+              .map(tag => tag?.name)
+              .concat(entry?.verified_location_tags.map(tag => tag?.name)),
+            face_tags: entry?.face_tags.map(tag => tag?.person_tag?.name),
+            orientation_tags: entry?.orientation_tags.map(tag => tag?.location_tag?.name),
+            collections: entry?.collections.map(tag => tag?.name),
+            archive_tag: entry?.archive_tag?.name,
+            time_range_tag_start: entry?.time_range_tag
+              ? dateToTimeStamp(entry?.time_range_tag?.start)
+              : entry?.verified_time_range_tag
+              ? dateToTimeStamp(entry?.verified_time_range_tag?.start)
+              : null,
+            time_range_tag_end: entry?.time_range_tag
+              ? dateToTimeStamp(entry?.time_range_tag?.end)
+              : entry?.verified_time_range_tag
+              ? dateToTimeStamp(entry?.verified_time_range_tag?.end)
+              : null,
+          };
 
-                return transformedEntry;
-              },
-              settings: {
-                //for reference: https://www.meilisearch.com/docs/reference/api/settings
-                displayedAttributes: ['id'],
-                // the order of the attributes in searchableAttributes determines the priorization
-                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
-                searchableAttributes: [
-                  'descriptions',
-                  'location_tags',
-                  'keyword_tags',
-                  'face_tags',
-                  'person_tags',
-                  'orientation_tags',
-                  'time_range_tag_start',
-                  'time_range_tag_end',
-                  'collections',
-                  'archive_tag',
-                ],
-                filterableAttributes: [
-                  'keyword_tags',
-                  'location_tags',
-                  'time_range_tag_start',
-                  'time_range_tag_end',
-                  'face_tags',
-                  'person_tags',
-                  'descriptions',
-                  'orientation_tags',
-                  'collections',
-                  'archive_tag',
-                  'is_text',
-                ],
-                sortableAttributes: ['time_range_tag_start', 'time_range_tag_end', 'likes'],
-                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'exactness', 'sort'],
-                // words that are ignored during searches, useful for common words
-                //  that do not carry a meaning on their own like articles, pronomina etc.
-                // we do not use this setting, since our data on user searchers suggests, that
-                // users only search for proper names, people, locations and nouns in general
-                stopWords: [],
-                synonyms: {},
-                // returned documents will always be unigue in this attribute
-                distinctAttribute: null,
-                typoTolerance: {
-                  enabled: true,
-                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 50 },
-                  disableOnWords: [],
-                  disableOnAttributes: [],
-                },
-                // faceting is currently not in use
-                faceting: {
-                  maxValuesPerFacet: 100,
-                },
-                // maxtotalHits determines the maximal possible amount
-                // of search results and overrides any other settings
-                // like the result_limit of the search settings in this regard
-                pagination: {
-                  maxTotalHits: 1000,
-                },
-              },
-            },
-            comment: {
-              transformEntry({ entry }) {
-                const transformedEntry = {
-                  id: entry?.id,
-                  pictureId: entry?.picture?.id ?? null,
-                  author: entry?.author,
-                  text: entry?.text,
-                  date: entry?.date ? dateToTimeStamp(entry?.date) : null,
-                  pinned: entry?.pinned,
-                  hasChildComments: !!entry?.childComments,
-                  hasParentComments: !!entry?.parentComments,
-                };
-                return transformedEntry;
-              },
-              settings: {
-                //for reference: https://www.meilisearch.com/docs/reference/api/settings
-                displayedAttributes: [
-                  'author',
-                  'text',
-                  'date',
-                  'pictureId',
-                  'pinned',
-                  'hasChildComments',
-                  'hasParentComments',
-                ],
-                // the order of the attributes in searchableAttributes determines the priorization
-                // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
-                searchableAttributes: ['text', 'author', 'date'],
-                filterableAttributes: [
-                  'author',
-                  'text',
-                  'date',
-                  'pictureId',
-                  'pinned',
-                  'hasChildComments',
-                  'hasParentComments',
-                ],
-                sortableAttributes: ['date'],
-                rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
-                // words that are ignored during searches, useful for common words
-                //  that do not carry a meaning on their own like articles, pronomina etc.
-                // we do not use this setting, since our data on user searchers suggests, that
-                // users only search for proper names, people, locations and nouns in general
-                stopWords: [],
-                synonyms: {},
-                // returned documents will always be unigue in this attribute
-                distinctAttribute: 'pictureId',
-                typoTolerance: {
-                  enabled: true,
-                  minWordSizeForTypos: { oneTypo: 3, twoTypos: 50 },
-                  disableOnWords: [],
-                  disableOnAttributes: [],
-                },
-                faceting: {
-                  maxValuesPerFacet: 100,
-                },
-                pagination: {
-                  maxTotalHits: 1000,
-                },
-              },
-            },
+          return transformedEntry;
+        },
+        settings: {
+          //for reference: https://www.meilisearch.com/docs/reference/api/settings
+          displayedAttributes: ['id'],
+          // the order of the attributes in searchableAttributes determines the priorization
+          // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
+          searchableAttributes: [
+            'descriptions',
+            'location_tags',
+            'keyword_tags',
+            'face_tags',
+            'person_tags',
+            'orientation_tags',
+            'time_range_tag_start',
+            'time_range_tag_end',
+            'collections',
+            'archive_tag',
+          ],
+          filterableAttributes: [
+            'keyword_tags',
+            'location_tags',
+            'time_range_tag_start',
+            'time_range_tag_end',
+            'face_tags',
+            'person_tags',
+            'descriptions',
+            'orientation_tags',
+            'collections',
+            'archive_tag',
+            'is_text',
+          ],
+          sortableAttributes: ['time_range_tag_start', 'time_range_tag_end', 'likes'],
+          rankingRules: ['words', 'typo', 'proximity', 'attribute', 'exactness', 'sort'],
+          // words that are ignored during searches, useful for common words
+          //  that do not carry a meaning on their own like articles, pronomina etc.
+          // we do not use this setting, since our data on user searchers suggests, that
+          // users only search for proper names, people, locations and nouns in general
+          stopWords: [],
+          synonyms: {},
+          // returned documents will always be unigue in this attribute
+          distinctAttribute: null,
+          typoTolerance: {
+            enabled: true,
+            minWordSizeForTypos: { oneTypo: 3, twoTypos: 50 },
+            disableOnWords: [],
+            disableOnAttributes: [],
           },
-        }
-      : null,
-  upload:
-    env('AWS_ENABLED', 'false') === 'true'
-      ? {
-          config: {
-            provider: 'strapi-provider-upload-aws-s3-advanced',
-            providerOptions: {
-              accessKeyId: env('AWS_ACCESS_KEY_ID'),
-              secretAccessKey: env('AWS_ACCESS_SECRET'),
-              region: env('AWS_REGION'),
-              // only set for a local S3 server, see docs/local-setup.md
-              endpoint: env('AWS_ENDPOINT'),
-              forcePathStyle: env.bool('AWS_FORCE_PATH_STYLE', false),
-              params: {
-                bucket: env('AWS_BUCKET_NAME'),
-              },
-              baseUrl: env('CDN_BASE_URL'), // e.g. "https://cdn.example.com", this is stored in strapi's database to point to the file
-              prefix: env('BUCKET_PREFIX'), // e.g. "strapi-assets". If BUCKET_PREFIX contains leading or trailing slashes, they are removed internally to construct the URL safely
-            },
+          // faceting is currently not in use
+          faceting: {
+            maxValuesPerFacet: 100,
           },
-        }
-      : undefined,
+          // maxtotalHits determines the maximal possible amount
+          // of search results and overrides any other settings
+          // like the result_limit of the search settings in this regard
+          pagination: {
+            maxTotalHits: 1000,
+          },
+        },
+      },
+      comment: {
+        transformEntry({ entry }) {
+          const transformedEntry = {
+            id: entry?.id,
+            pictureId: entry?.picture?.id ?? null,
+            author: entry?.author,
+            text: entry?.text,
+            date: entry?.date ? dateToTimeStamp(entry?.date) : null,
+            pinned: entry?.pinned,
+            hasChildComments: !!entry?.childComments,
+            hasParentComments: !!entry?.parentComments,
+          };
+          return transformedEntry;
+        },
+        settings: {
+          //for reference: https://www.meilisearch.com/docs/reference/api/settings
+          displayedAttributes: [
+            'author',
+            'text',
+            'date',
+            'pictureId',
+            'pinned',
+            'hasChildComments',
+            'hasParentComments',
+          ],
+          // the order of the attributes in searchableAttributes determines the priorization
+          // of search results i.e. a match in the first searchable attribute will always outrank a match in any other searchable attribute
+          searchableAttributes: ['text', 'author', 'date'],
+          filterableAttributes: [
+            'author',
+            'text',
+            'date',
+            'pictureId',
+            'pinned',
+            'hasChildComments',
+            'hasParentComments',
+          ],
+          sortableAttributes: ['date'],
+          rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+          // words that are ignored during searches, useful for common words
+          //  that do not carry a meaning on their own like articles, pronomina etc.
+          // we do not use this setting, since our data on user searchers suggests, that
+          // users only search for proper names, people, locations and nouns in general
+          stopWords: [],
+          synonyms: {},
+          // returned documents will always be unigue in this attribute
+          distinctAttribute: 'pictureId',
+          typoTolerance: {
+            enabled: true,
+            minWordSizeForTypos: { oneTypo: 3, twoTypos: 50 },
+            disableOnWords: [],
+            disableOnAttributes: [],
+          },
+          faceting: {
+            maxValuesPerFacet: 100,
+          },
+          pagination: {
+            maxTotalHits: 1000,
+          },
+        },
+      },
+    },
+  },
+  ...(env('AWS_ENABLED', 'false') === 'true' && {
+    upload: {
+      config: {
+        provider: 'strapi-provider-upload-aws-s3-advanced',
+        providerOptions: {
+          accessKeyId: env('AWS_ACCESS_KEY_ID'),
+          secretAccessKey: env('AWS_ACCESS_SECRET'),
+          region: env('AWS_REGION'),
+          // only set for a local S3 server, see docs/local-setup.md
+          endpoint: env('AWS_ENDPOINT'),
+          forcePathStyle: env.bool('AWS_FORCE_PATH_STYLE', false),
+          params: {
+            bucket: env('AWS_BUCKET_NAME'),
+          },
+          baseUrl: env('CDN_BASE_URL'), // e.g. "https://cdn.example.com", this is stored in strapi's database to point to the file
+          prefix: env('BUCKET_PREFIX'), // e.g. "strapi-assets". If BUCKET_PREFIX contains leading or trailing slashes, they are removed internally to construct the URL safely
+        },
+      },
+    },
+  }),
 });

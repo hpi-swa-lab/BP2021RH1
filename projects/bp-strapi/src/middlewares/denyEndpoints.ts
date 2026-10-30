@@ -1,4 +1,3 @@
-import { authenticate as adminAuthenticate } from '@strapi/admin/server/strategies/admin';
 import { errors } from '@strapi/utils';
 import { StrapiContext, StrapiExtended } from '../types';
 
@@ -55,7 +54,16 @@ export default (_config: unknown, { strapi }: { strapi: StrapiExtended }) => {
   };
 };
 
+// Same checks as the admin panel's auth strategy, which Strapi doesn't export.
 const isAdminUser = async (context: StrapiContext) => {
-  const { authenticated = false } = await adminAuthenticate(context);
-  return authenticated;
+  const [scheme, token, ...rest] = (context.request.header.authorization ?? '').split(/\s+/);
+  if (scheme.toLowerCase() !== 'bearer' || !token || rest.length > 0) {
+    return false;
+  }
+  const { payload, isValid } = strapi.service('admin::token').decodeJwtToken(token);
+  if (!isValid) {
+    return false;
+  }
+  const user = await strapi.query('admin::user').findOne({ where: { id: payload.id } });
+  return user?.isActive === true;
 };

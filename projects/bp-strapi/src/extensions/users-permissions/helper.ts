@@ -1,4 +1,5 @@
 import { noop } from 'lodash';
+import type { StrapiContext } from '../../types';
 
 export const wrap = <Args extends unknown[], Key extends keyof any>(
   object: { [K in Key]: (...args: Args) => Promise<void> },
@@ -11,6 +12,11 @@ export const wrap = <Args extends unknown[], Key extends keyof any>(
   };
 };
 
+type AuthController = Record<
+  'register' | 'changePassword' | 'resetPassword' | 'forgotPassword',
+  (ctx: StrapiContext) => Promise<void>
+>;
+
 export const getAuthController = () => {
-  return strapi.plugin('users-permissions').controllers.auth;
+  return strapi.plugin('users-permissions').controllers.auth as unknown as AuthController;
 };
