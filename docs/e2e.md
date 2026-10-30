@@ -24,7 +24,7 @@ The number of stacks is half the CPU cores, at most 5; set `E2E_SHARDS` to chang
 `docker-compose.e2e.yml` changes the dev stack as follows:
 
 - No ports are opened on the host, so the tests can run while the dev stack is up. Cypress shares the network namespace of the `strapi` container and reaches Strapi on `localhost:9000`, the gallery on `localhost:3000`, and the other services by name (`http://mailpit:8025`, `http://meilisearch:7700`).
-- Strapi runs with `strapi start` from the compiled `dist` folder, without the admin panel, which the tests don't use.
+- Strapi runs with `strapi start` from the `dist` folder that `strapi build` made, admin panel included.
 - The gallery is a production build, not the Vite dev server. The type check (`tsc`) runs in the lint workflow instead.
 - The tests use the committed GraphQL client (`src/graphql/APIConnector.tsx`) as it is.
 
