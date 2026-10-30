@@ -1,6 +1,6 @@
 #!/bin/sh
 # Installs the dependencies of the given projects (default: all three, in this
-# order) inside the node:18 container.
+# order) inside the node:22 container.
 set -e
 
 npm install --global --prefix /pnpm "$(node -p "require('/repo/projects/bp-gallery/package.json').packageManager")"

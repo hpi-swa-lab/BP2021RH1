@@ -1,9 +1,7 @@
-import { getService } from '@strapi/plugin-users-permissions/server/utils/index.js';
-
 export const getJwtService = () => {
-  return getService('jwt');
+  return strapi.plugin('users-permissions').service('jwt');
 };
 
 export const getUserService = () => {
-  return getService('user');
+  return strapi.plugin('users-permissions').service('user');
 };

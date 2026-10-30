@@ -1,7 +1,4 @@
-import {
-  validateForgotPasswordBody,
-  validateResetPasswordBody,
-} from '@strapi/plugin-users-permissions/server/controllers/validation/auth';
+import { validateForgotPasswordBody, validateResetPasswordBody } from './authValidation';
 import { StrapiContext } from '../../types';
 import { getAuthController, wrap } from './helper';
 

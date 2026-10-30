@@ -48,7 +48,7 @@ services:
       retries: 120
 
   install:
-    image: node:18-bookworm
+    image: node:22-bookworm
     volumes:
       - .:/repo
       - pnpm:/pnpm
@@ -63,7 +63,7 @@ services:
     command: /repo/compose/install.sh
 
   strapi:
-    image: node:18-bookworm
+    image: node:22-bookworm
     volumes:
       - .:/repo
       - pnpm:/pnpm
@@ -119,7 +119,7 @@ services:
       - 127.0.0.1:3000:3000
 
   gallery:
-    image: node:18-bookworm
+    image: node:22-bookworm
     volumes:
       - .:/repo
       - pnpm:/pnpm

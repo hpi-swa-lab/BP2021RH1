@@ -27,4 +27,5 @@ module.exports = ({ env }) => [
   'strapi::favicon',
   'strapi::public',
   'global::denyEndpoints',
+  'global::readGraphQLBody',
 ];

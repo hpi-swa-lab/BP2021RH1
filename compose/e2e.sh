@@ -67,7 +67,7 @@ fi
 } > "$logs/services.log" 2>&1 &
 services=$!
 
-# Install the gallery and build it while Strapi is installed and compiled and the stacks start;
+# Install the gallery and build it while Strapi and its admin panel are installed and built and the stacks start;
 # their gallery containers wait for build/.done (see docker-compose.e2e.yml)
 cypress_cache=${E2E_CYPRESS_CACHE:-$HOME/.cache/bp-e2e-cypress}
 mkdir -p "$cypress_cache"
@@ -82,7 +82,7 @@ compose "$prefix" run --rm --no-deps --entrypoint sh \
   -e VITE_MEILISEARCH_HOST=http://meilisearch:7700 -e VITE_MEILISEARCH_API_KEY=local-dev-master-key \
   install -c 'cd /repo/projects/bp-gallery && if pnpm vite build -m test; then touch build/.done;
     else mkdir -p build && touch build/.failed; fi' 2>&1 | show "$logs/build.log" build &
-step strapi '/repo/compose/install.sh bp-strapi && cd /repo/projects/bp-strapi && rm -rf dist && pnpm tsc'
+step strapi '/repo/compose/install.sh bp-strapi && cd /repo/projects/bp-strapi && URL=http://localhost:9000/ pnpm build'
 wait $services
 
 run_stack() { # project, cypress arguments...

@@ -39,7 +39,6 @@
     "lodash": "^4.17.21",
     "meilisearch": "^0.33.0",
     "nanoid": "^4.0.2",
-    "node-sass": "^8.0.0",
     "puppeteer": "^19.4.0",
     "react": "^18.2.0",
     "react-currency-input-field": "^3.6.10",
@@ -129,13 +128,12 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@swc/core",
-      "canvas",
       "cypress",
       "esbuild",
-      "node-sass",
       "puppeteer"
     ],
     "ignoredBuiltDependencies": [
+      "canvas",
       "core-js"
     ]
   }

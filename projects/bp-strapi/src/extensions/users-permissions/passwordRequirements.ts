@@ -2,7 +2,7 @@ import {
   validateChangePasswordBody,
   validateRegisterBody,
   validateResetPasswordBody,
-} from '@strapi/plugin-users-permissions/server/controllers/validation/auth';
+} from './authValidation';
 import { StrapiContext } from '../../types';
 import { getAuthController, wrap } from './helper';
 

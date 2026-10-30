@@ -1,7 +1,9 @@
-import { QueryFromContentType } from '@strapi/database';
+import type { Database } from '@strapi/database';
 import { pick } from 'lodash';
 import type { KnexEngine, StrapiExtended } from '../../../types';
 import { plural, singular, table } from '../../helper';
+
+type Query = ReturnType<Database['query']>;
 
 const { ApplicationError } = require('@strapi/utils').errors;
 
@@ -101,7 +103,7 @@ const findExistingOrCreateNewTag = async (
 const updatePreviousOrMergeWithExistingDescription = async (
   pictureQuery: any,
   currentPictureId: number,
-  descriptionQuery: QueryFromContentType<`api::${string}.${string}`>,
+  descriptionQuery: Query,
   previousDescriptionId: any,
   newDescriptionData: { text: any }
 ) => {
@@ -181,7 +183,7 @@ const updatePreviousOrMergeWithExistingDescription = async (
  */
 const deletePreviousTagIfNeeded = async (
   pictureQuery: any,
-  tagQuery: QueryFromContentType<`api::${string}.${string}`>,
+  tagQuery: Query,
   tagKeyInPictureRelation: string,
   previousTagId: number,
   tagHasVerifiedHandling = true
@@ -421,11 +423,7 @@ const processUpdatesForLocationTags = async (data: any) =>
 const processUpdatesForPersonTags = async (data: any) =>
   processSimpleTagRelationUpdates(PERSON_TAGS_KEY, data);
 
-const processTagUpdates = async (
-  pictureQuery: QueryFromContentType<'api::picture.picture'>,
-  currentPictureId: string,
-  data: any
-) => {
+const processTagUpdates = async (pictureQuery: Query, currentPictureId: string, data: any) => {
   // Process updates of tag relations with additional editing capabilities.
   await processUpdatesForDescriptions(pictureQuery, currentPictureId, data);
   await processUpdatesForTimeRangeTag(pictureQuery, data);
@@ -437,7 +435,7 @@ const processTagUpdates = async (
 };
 
 const protectIsTextKey = async (
-  pictureQuery: QueryFromContentType<'api::picture.picture'>,
+  pictureQuery: Query,
   pictureIds: string[] | number[],
   data: { [x: string]: any }
 ) => {
@@ -529,7 +527,7 @@ const updatePictureWithTagCleanup = async (id: string, data: any) => {
     data,
   });
 
-  await removeUnusedPictureSequences(strapi as StrapiExtended);
+  await removeUnusedPictureSequences(strapi as unknown as StrapiExtended);
 
   return id;
 };
@@ -561,7 +559,7 @@ const insertCrossProductIgnoreDuplicates = async (
 
 const bulkEditTimeRangeTag = async (
   knexEngine: KnexEngine,
-  pictureQuery: QueryFromContentType<'api::picture.picture'>,
+  pictureQuery: Query,
   pictureIds: number[],
   data: { [x: string]: any }
 ) => {
@@ -858,6 +856,7 @@ const like = async (knexEngine: KnexEngine, pictureId: number, dislike?: boolean
   );
   // added to trigger a change to the picture index of Meilisearch
   strapi.db.lifecycles.run('afterUpdate', 'api::picture.picture', {
+    params: { where: { id: pictureId } },
     result: { id: pictureId },
   });
 };
@@ -870,6 +869,7 @@ const incNotAPlaceCount = async (knexEngine: KnexEngine, pictureId: number) => {
   );
   // added to trigger a change to the picture index of Meilisearch
   strapi.db.lifecycles.run('afterUpdate', 'api::picture.picture', {
+    params: { where: { id: pictureId } },
     result: { id: pictureId },
   });
 };
