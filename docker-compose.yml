@@ -51,11 +51,14 @@ services:
     image: node:18-bookworm
     volumes:
       - .:/repo
-      - yarn-cache:/usr/local/share/.cache/yarn
+      - pnpm:/pnpm
     environment:
+      # compose/install.sh installs pnpm into the pnpm volume
+      PATH: /pnpm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      npm_config_store_dir: /pnpm/store
       PUPPETEER_SKIP_DOWNLOAD: 'true'
       CYPRESS_INSTALL_BINARY: '0'
-      # The pre-commit hook needs yarn on the host, so don't register it from the container
+      # The pre-commit hook needs pnpm on the host, so don't register it from the container
       HUSKY: '0'
     command: /repo/compose/install.sh
 
@@ -63,9 +66,9 @@ services:
     image: node:18-bookworm
     volumes:
       - .:/repo
-      - yarn-cache:/usr/local/share/.cache/yarn
+      - pnpm:/pnpm
     working_dir: /repo/projects/bp-strapi
-    command: node /repo/compose/strapi.mjs yarn develop
+    command: node /repo/compose/strapi.mjs pnpm develop
     healthcheck:
       test: test -f /tmp/ready
       interval: 2s
@@ -80,6 +83,8 @@ services:
       s3:
         condition: service_healthy
     environment:
+      PATH: /pnpm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      npm_config_store_dir: /pnpm/store
       HOST: 0.0.0.0
       PORT: 9000
       URL: http://localhost:9000/
@@ -117,14 +122,16 @@ services:
     image: node:18-bookworm
     volumes:
       - .:/repo
-      - yarn-cache:/usr/local/share/.cache/yarn
+      - pnpm:/pnpm
     working_dir: /repo/projects/bp-gallery
-    command: yarn start --host 0.0.0.0
+    command: pnpm start --host 0.0.0.0
     network_mode: service:strapi
     depends_on:
       install:
         condition: service_completed_successfully
     environment:
+      PATH: /pnpm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      npm_config_store_dir: /pnpm/store
       # Override the hosted services from environments/.env.development
       VITE_MEILISEARCH_HOST: http://localhost:7700
       VITE_MEILISEARCH_API_KEY: local-dev-master-key
@@ -133,4 +140,4 @@ volumes:
   postgres-data:
   meilisearch-data:
   s3-data:
-  yarn-cache:
+  pnpm:

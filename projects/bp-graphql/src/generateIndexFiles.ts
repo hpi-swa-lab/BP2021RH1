@@ -10,7 +10,7 @@ import {
 const generateIndexFile = async (directoryPath: string, indexFilePath: string) => {
   const fileNames = await readdir(directoryPath);
   const directory = basename(directoryPath);
-  const generatedNote = '// NOTE: this file is auto-generated, run yarn generate-api instead';
+  const generatedNote = '// NOTE: this file is auto-generated, run pnpm generate-api instead';
   const exports = fileNames
     .slice()
     .sort()

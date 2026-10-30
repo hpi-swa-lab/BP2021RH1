@@ -22,14 +22,14 @@ services:
   strapi:
     # Runs the dist folder that compose/e2e.sh compiled; the tests don't use the admin panel, so it isn't built
     image: cypress/base:18.20.3
-    command: node /repo/compose/strapi.mjs yarn strapi start
+    command: node /repo/compose/strapi.mjs npx strapi start
     ports: !reset []
 
   gallery:
     image: cypress/base:18.20.3
     command: >-
       sh -c 'until [ -f build/.done ] || [ -f build/.failed ]; do sleep 1; done;
-      [ -f build/.done ] && exec yarn vite preview --port 3000 --host 127.0.0.1'
+      [ -f build/.done ] && exec npx vite preview --port 3000 --host 127.0.0.1'
     healthcheck:
       test: [CMD, node, -e, "fetch('http://127.0.0.1:3000').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 2s

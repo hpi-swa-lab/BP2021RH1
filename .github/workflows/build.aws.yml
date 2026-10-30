@@ -19,19 +19,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: projects/bp-graphql/package.json
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
+          cache-dependency-path: |
+            projects/bp-gallery/pnpm-lock.yaml
+            projects/bp-graphql/pnpm-lock.yaml
       - name: Install bp-gallery dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Install bp-graphql dependencies
         working-directory: ./projects/bp-graphql
-        run: yarn install --frozen-lockfile && yarn tsc
+        run: pnpm install --frozen-lockfile && pnpm tsc
       - name: Generate APIConnector
-        run: yarn generate-api
+        run: pnpm generate-api
       - name: Build bp-gallery
-        run: yarn build
+        run: pnpm build
       - name: Deploy build files on the server
         uses: appleboy/scp-action@master
         with:
@@ -56,17 +64,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: projects/bp-graphql/package.json
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
+          cache-dependency-path: |
+            projects/bp-graphql/pnpm-lock.yaml
+            projects/bp-strapi/pnpm-lock.yaml
       - name: Build bp-graphql
         working-directory: ./projects/bp-graphql
-        run: yarn install --frozen-lockfile && yarn build
+        run: pnpm install --frozen-lockfile && pnpm build
       - name: Install bp-strapi dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Build bp-strapi
-        run: yarn build:prod
+        run: pnpm build:prod
         env:
           URL: https://harz-history.de/api/
       - name: Copy the build to the server
@@ -89,10 +105,8 @@ jobs:
         env:
           SSH_KEY: ${{secrets.AWS_SSH_KEY}}
           SSH_KNOWN_HOSTS: ${{secrets.AWS_SSH_KNOWN_HOSTS}}
-      - name: Install PM2 for deployment
-        run: yarn global add pm2
       - name: Deploy strapi on the server
-        run: pm2 deploy ecosystem.aws.config.js production
+        run: pnpm pm2 deploy ecosystem.aws.config.js production
         env:
           REMOTE_HOST: ${{secrets.AWS_REMOTE_HOST}}
           REMOTE_USER: ${{secrets.REMOTE_USER}}

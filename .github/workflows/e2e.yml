@@ -41,7 +41,7 @@ jobs:
           path: |
             projects/*/node_modules
             ${{ env.E2E_CYPRESS_CACHE }}
-          key: e2e-${{ hashFiles('projects/*/yarn.lock') }}
+          key: e2e-${{ hashFiles('projects/*/pnpm-lock.yaml') }}
           restore-keys: e2e-
       - name: Run E2E tests
         run: compose/e2e.sh

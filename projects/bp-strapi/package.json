@@ -48,5 +48,23 @@
     "node": ">=14.x.x <=18.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "packageManager": "pnpm@10.34.9",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild",
+      "sharp"
+    ],
+    "ignoredBuiltDependencies": [
+      "@apollo/protobufjs",
+      "@fortawesome/fontawesome-common-types",
+      "@fortawesome/fontawesome-free",
+      "@fortawesome/fontawesome-svg-core",
+      "@fortawesome/free-brands-svg-icons",
+      "@fortawesome/free-solid-svg-icons",
+      "@strapi/strapi",
+      "core-js-pure"
+    ]
+  }
 }

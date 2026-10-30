@@ -38,7 +38,7 @@ The pictures from the test data were uploaded before, so they still come from `p
 
 - Reset the database to the test data: `docker compose down -v` (also deletes the search index and the S3 uploads), then `docker compose up`.
 - Reinstall dependencies after a `package.json` change or a change in `projects/bp-graphql`: `docker compose run --rm install`.
-- Run a command in a project: `docker compose exec gallery yarn lint`, `docker compose exec strapi yarn strapi …`.
-- Format the gallery code before committing: `docker compose exec gallery yarn format`. The gallery's pre-commit hook (Husky) normally does this, but this setup doesn't install it because it needs yarn on the host.
+- Run a command in a project: `docker compose exec gallery pnpm lint`, `docker compose exec strapi pnpm strapi …`.
+- Format the gallery code before committing: `docker compose exec gallery pnpm format`. The gallery's pre-commit hook (Husky) normally does this, but this setup doesn't install it because it needs pnpm on the host.
 
 The services listen on 127.0.0.1 only.

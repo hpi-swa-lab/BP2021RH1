@@ -42,12 +42,12 @@ export default defineConfig({
   },
   optimizeDeps: {
     esbuildOptions: { plugins: [splitPackagesPlugin] },
-  },
-  resolve: {
-    preserveSymlinks: true,
+    // bp-graphql is linked from outside node_modules, so Vite would otherwise not convert it from CommonJS
+    include: ['bp-graphql'],
   },
   build: {
     outDir: 'build',
+    commonjsOptions: { include: [/bp-graphql/, /node_modules/] },
     rollupOptions: {
       output: {
         manualChunks: {
