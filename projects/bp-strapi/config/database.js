@@ -9,6 +9,9 @@ module.exports = ({ env }) => ({
       password: env('DATABASE_PASSWORD'),
       schema: env('DATABASE_SCHEMA'),
     },
+    // Production and staging share one database, so SQL that names a table without its schema
+    // must not fall back to production's public schema.
+    searchPath: [env('DATABASE_SCHEMA')],
     debug: false,
   },
 });
