@@ -47,9 +47,11 @@ export const expectPicture = (page: Page, id: string, shown: string[], hidden: s
     for (const value of hidden) await expectNoText(page, value);
   });
 
+// The page's scroll container comes before those of the clipboard and the link fields
 export const scrollToBottom = (page: Page) =>
   page
     .getByTestId('scrollable-container')
+    .first()
     .evaluate(container => container.scrollTo(0, container.scrollHeight));
 
 export const waitForAllImagesLoaded = (page: Page) =>

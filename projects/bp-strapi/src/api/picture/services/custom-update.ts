@@ -791,8 +791,14 @@ const bulkEditLinks = async (
 
   const addedIds = diff.added.map((picture: { id: any }) => picture.id);
 
-  console.log('inserting', linksKey, linksTable, left, right, pictureIds, addedIds);
-  insertCrossProductIgnoreDuplicates(knexEngine, linksTable, left, right, pictureIds, addedIds);
+  await insertCrossProductIgnoreDuplicates(
+    knexEngine,
+    linksTable,
+    left,
+    right,
+    pictureIds,
+    addedIds
+  );
 
   return 1;
 };
