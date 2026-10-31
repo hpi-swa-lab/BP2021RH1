@@ -1,0 +1,18 @@
+# Runs the local stack on a copy of a server database, see compose/load-dump.sh.
+services:
+  postgres:
+    # Starts empty; load-dump.sh restores the dump instead of the test data
+    volumes: !reset
+      - postgres-data:/var/lib/postgresql/data
+
+  strapi:
+    environment:
+      DATABASE_SCHEMA: ${DUMP_SCHEMA:-public}
+      # Indexing a copy of production's pictures takes long and isn't needed to look at the data
+      MEILISEARCH_ENABLED: 'false'
+
+volumes:
+  # The dev stack's package store, so the install step doesn't download every package again
+  pnpm:
+    name: ${DEV_PNPM_VOLUME}
+    external: true

@@ -1,5 +1,6 @@
 // Starts Strapi with the given command, then has its Meilisearch plugin index pictures and comments
-// unless they are indexed already. The healthcheck in docker-compose.yml waits for /tmp/ready.
+// unless they are indexed already or Meilisearch is off. The healthcheck in docker-compose.yml waits
+// for /tmp/ready.
 import { spawn } from 'node:child_process';
 import { rmSync, writeFileSync } from 'node:fs';
 
@@ -26,16 +27,18 @@ while (!(await request('/admin/init').catch(() => false))) {
   await new Promise(resolve => setTimeout(resolve, 1000));
 }
 
-const { token } = (
-  await request('/admin/login', { body: { email: 'dev@example.com', password: 'Dev12345' } })
-).data;
-const { contentTypes } = (await request('/meilisearch/content-type', { token })).data;
-for (const contentType of ['api::picture.picture', 'api::comment.comment']) {
-  if (contentTypes.some(type => type.contentType === contentType && type.indexed)) {
-    console.log(`${contentType} is indexed already`);
-  } else {
-    await request('/meilisearch/content-type', { token, body: { contentType } });
-    console.log(`indexing ${contentType}`);
+if (process.env.MEILISEARCH_ENABLED === 'true') {
+  const { token } = (
+    await request('/admin/login', { body: { email: 'dev@example.com', password: 'Dev12345' } })
+  ).data;
+  const { contentTypes } = (await request('/meilisearch/content-type', { token })).data;
+  for (const contentType of ['api::picture.picture', 'api::comment.comment']) {
+    if (contentTypes.some(type => type.contentType === contentType && type.indexed)) {
+      console.log(`${contentType} is indexed already`);
+    } else {
+      await request('/meilisearch/content-type', { token, body: { contentType } });
+      console.log(`indexing ${contentType}`);
+    }
   }
 }
 
