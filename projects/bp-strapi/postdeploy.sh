@@ -9,4 +9,5 @@ done
 pnpm install --frozen-lockfile
 rm -rf dist && cp -r /home/github/harz-history/strapi-dist dist
 pnpm pm2 reload ecosystem.aws.config.js --env production --update-env
+./wait-for-start.sh production
 pnpm pm2 save
