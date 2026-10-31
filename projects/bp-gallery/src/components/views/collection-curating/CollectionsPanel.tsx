@@ -75,9 +75,8 @@ const CollectionsPanel = ({
 
   const toggleVisibility = useCallback(
     (collection: FlatCollection) => {
-      const newPublicationState = collection.publishedAt ? null : new Date().toISOString();
       updateCollection({
-        variables: { collectionId: collection.id, data: { publishedAt: newPublicationState } },
+        variables: { collectionId: collection.id, data: { visible: !collection.visible } },
       });
     },
     [updateCollection]
@@ -169,7 +168,7 @@ const CollectionsPanel = ({
                       toggleVisibility(child);
                     }}
                   >
-                    {child.publishedAt ? <Visibility /> : <VisibilityOff />}
+                    {child.visible ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 )}
                 {canDeleteCollection && (

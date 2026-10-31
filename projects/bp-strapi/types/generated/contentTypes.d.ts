@@ -318,6 +318,7 @@ export interface ApiArchiveTagArchiveTag extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::archive-tag.archive-tag', 'oneToOne', 'admin::user'> &
       Attribute.Private;
+    deleted: Attribute.Boolean & Attribute.DefaultTo<false>;
     email: Attribute.Email;
     exhibitions: Attribute.Relation<
       'api::archive-tag.archive-tag',
@@ -422,6 +423,7 @@ export interface ApiCollectionCollection extends Schema.CollectionType {
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<'api::collection.collection', 'oneToOne', 'admin::user'> &
       Attribute.Private;
+    visible: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<true>;
   };
 }
 
@@ -437,6 +439,7 @@ export interface ApiCommentComment extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
+    accepted: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
     author: Attribute.String;
     childComments: Attribute.Relation<'api::comment.comment', 'oneToMany', 'api::comment.comment'>;
     createdAt: Attribute.DateTime;
@@ -964,6 +967,7 @@ export interface ApiPicturePicture extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::picture.picture', 'oneToOne', 'admin::user'> &
       Attribute.Private;
+    deleted: Attribute.Boolean & Attribute.DefaultTo<false>;
     descriptions: Attribute.Relation<
       'api::picture.picture',
       'manyToMany',

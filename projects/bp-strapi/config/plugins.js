@@ -79,6 +79,9 @@ module.exports = ({ env }) => ({
       host: env('MEILISEARCH_HOST'),
       apiKey: env('MEILISEARCH_API_KEY'),
       picture: {
+        filterEntry({ entry }) {
+          return !entry.deleted;
+        },
         entriesQuery: {
           populate: [
             'descriptions',
@@ -103,7 +106,9 @@ module.exports = ({ env }) => ({
             is_text: entry?.is_text,
             likes: entry?.likes ?? 0,
             descriptions: entry?.descriptions.map(description => description?.text),
-            comments: entry?.comments.map(comment => comment?.text),
+            comments: entry?.comments
+              .filter(comment => comment?.accepted)
+              .map(comment => comment?.text),
             keyword_tags: entry?.keyword_tags
               .map(tag => tag?.name)
               .concat(entry?.verified_keyword_tags.map(tag => tag?.name)),
@@ -115,7 +120,9 @@ module.exports = ({ env }) => ({
               .concat(entry?.verified_location_tags.map(tag => tag?.name)),
             face_tags: entry?.face_tags.map(tag => tag?.person_tag?.name),
             orientation_tags: entry?.orientation_tags.map(tag => tag?.location_tag?.name),
-            collections: entry?.collections.map(tag => tag?.name),
+            collections: entry?.collections
+              .filter(collection => collection?.visible)
+              .map(collection => collection?.name),
             archive_tag: entry?.archive_tag?.name,
             time_range_tag_start: entry?.time_range_tag
               ? dateToTimeStamp(entry?.time_range_tag?.start)
@@ -190,6 +197,9 @@ module.exports = ({ env }) => ({
         },
       },
       comment: {
+        filterEntry({ entry }) {
+          return entry.accepted;
+        },
         transformEntry({ entry }) {
           const transformedEntry = {
             id: entry?.id,

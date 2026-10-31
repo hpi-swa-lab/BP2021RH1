@@ -92,7 +92,7 @@ export default {
                 }
               }
             }
-            collections(publicationState: PREVIEW) {
+            collections {
               data {
                 id
                 attributes {
@@ -110,14 +110,14 @@ export default {
                 }
               }
             }
-            comments(publicationState: PREVIEW, sort: "date:asc") {
+            comments(sort: "date:asc") {
               data {
                 id
                 attributes {
                   text
                   author
                   date
-                  publishedAt
+                  accepted
                   pinned
                 }
               }

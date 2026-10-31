@@ -39,7 +39,7 @@ const SubCollections = ({
 
   const buildItem = (collection: FlatCollectionWithoutRelations, index: number) => {
     let color = index % 2 === 0 ? primaryColor : secondaryColor;
-    if (!collection.publishedAt) {
+    if (!collection.visible) {
       color = '#EEEEEE';
     }
     return {
